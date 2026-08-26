@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
+import {
+  DEMO_HEIGHT,
+  usePrefersReducedMotion,
+  useVisibleAutoplay,
+} from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
 interface Agent {
@@ -45,10 +49,34 @@ const AGENTS: readonly Agent[] = [
 ];
 
 const AGENTS_EN: readonly Agent[] = [
-  { id: "scout", n: "Scout", r: "Research", model: "Haiku 4.5", task: "Searches a sample archive for relevant prior cases" },
-  { id: "analyst", n: "Analyst", r: "Synthesis", model: "Opus 4.5", task: "Combines claims and rates the available evidence" },
-  { id: "critic", n: "Critic", r: "Red team", model: "Sonnet 4.6", task: "Identifies weak claims and counterarguments" },
-  { id: "writer", n: "Editor", r: "Output", model: "Sonnet 4.6", task: "Writes a structured memo for management review" },
+  {
+    id: "scout",
+    n: "Scout",
+    r: "Research",
+    model: "Haiku 4.5",
+    task: "Searches a sample archive for relevant prior cases",
+  },
+  {
+    id: "analyst",
+    n: "Analyst",
+    r: "Synthesis",
+    model: "Opus 4.5",
+    task: "Combines claims and rates the available evidence",
+  },
+  {
+    id: "critic",
+    n: "Critic",
+    r: "Red team",
+    model: "Sonnet 4.6",
+    task: "Identifies weak claims and counterarguments",
+  },
+  {
+    id: "writer",
+    n: "Editor",
+    r: "Output",
+    model: "Sonnet 4.6",
+    task: "Writes a structured memo for management review",
+  },
 ];
 
 // Tint per agent index for log color-coding
@@ -130,11 +158,23 @@ export default function AgentPipelineDemo() {
 
   useEffect(() => {
     if (reduced) {
-      setLogs(script.map(([ag, src, t, delay], id) => ({ id, ag, src, t, ts: fmtTs(delay) })));
+      setActive(-1);
+      setLogs(
+        script.map(([ag, src, t, delay], id) => ({
+          id,
+          ag,
+          src,
+          t,
+          ts: fmtTs(delay),
+        })),
+      );
       setDone(true);
       return;
     }
-    if (!visible) return;
+    if (!visible) {
+      setActive(-1);
+      return;
+    }
     setActive(0);
     setLogs([]);
     setDone(false);
@@ -148,22 +188,21 @@ export default function AgentPipelineDemo() {
       setActive(-1);
       setDone(true);
     }, 5100);
-    const restart = setTimeout(() => {
-      setDone(false);
-    }, 10500);
     return () => {
       timers.forEach(clearTimeout);
       clearTimeout(endT);
-      clearTimeout(restart);
     };
-  }, [visible, reduced, done, script]);
+  }, [visible, reduced, script]);
 
   return (
     <div
       ref={ref}
       data-demo-id="agent-pipeline"
       role="region"
-      aria-label={text("Aufgezeichnete Agenten-Pipeline", "Recorded agent pipeline")}
+      aria-label={text(
+        "Aufgezeichnete Agenten-Pipeline",
+        "Recorded agent pipeline",
+      )}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -196,7 +235,7 @@ export default function AgentPipelineDemo() {
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -251,7 +290,7 @@ export default function AgentPipelineDemo() {
                 position: "relative",
                 minWidth: 0,
                 animation:
-                  activeCard && !reduced
+                  activeCard && visible && !reduced
                     ? "agent-pipeline-pulse 1.4s ease-in-out infinite"
                     : undefined,
               }}
@@ -270,7 +309,7 @@ export default function AgentPipelineDemo() {
                     ? "var(--color-brand-orange)"
                     : "rgba(243,240,233,0.22)",
                   animation:
-                    activeCard && !reduced
+                    activeCard && visible && !reduced
                       ? "agent-pipeline-dot 1.2s ease-in-out infinite"
                       : undefined,
                 }}
@@ -278,8 +317,10 @@ export default function AgentPipelineDemo() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
-                  color: activeCard ? "var(--color-brand-orange)" : "rgba(243,240,233,0.5)",
+                  fontSize: 12,
+                  color: activeCard
+                    ? "var(--color-brand-orange)"
+                    : "rgba(243,240,233,0.5)",
                   letterSpacing: "0.12em",
                   fontWeight: 700,
                 }}
@@ -300,8 +341,10 @@ export default function AgentPipelineDemo() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
-                  color: activeCard ? "rgba(243,240,233,0.8)" : inactiveTextBase,
+                  fontSize: 12,
+                  color: activeCard
+                    ? "rgba(243,240,233,0.8)"
+                    : inactiveTextBase,
                   marginTop: 3,
                   letterSpacing: "0.04em",
                 }}
@@ -310,10 +353,12 @@ export default function AgentPipelineDemo() {
               </div>
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   lineHeight: 1.4,
                   marginTop: 6,
-                  color: activeCard ? "rgba(243,240,233,0.88)" : "rgba(243,240,233,0.65)",
+                  color: activeCard
+                    ? "rgba(243,240,233,0.88)"
+                    : "rgba(243,240,233,0.65)",
                   overflowWrap: "anywhere",
                 }}
               >
@@ -341,7 +386,7 @@ export default function AgentPipelineDemo() {
             color: DEMO.kalk,
             padding: 14,
             fontFamily: DEMO.font.mono,
-            fontSize: 11,
+            fontSize: 12,
             overflowY: "auto",
             maxHeight: 260,
             minHeight: 180,
@@ -357,20 +402,28 @@ export default function AgentPipelineDemo() {
               marginBottom: 10,
               paddingBottom: 6,
               borderBottom: "1px solid rgba(243,240,233,0.08)",
-              fontSize: 10,
+              fontSize: 12,
               color: "rgba(243,240,233,0.55)",
               letterSpacing: "0.14em",
             }}
           >
-            <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+            <span
+              style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+            >
               <span
                 aria-hidden
                 style={{
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  background: active >= 0 ? "var(--color-brand-orange)" : "rgba(243,240,233,0.3)",
-                  animation: active >= 0 && !reduced ? "agent-pipeline-dot 1.2s ease-in-out infinite" : undefined,
+                  background:
+                    active >= 0
+                      ? "var(--color-brand-orange)"
+                      : "rgba(243,240,233,0.3)",
+                  animation:
+                    active >= 0 && visible && !reduced
+                      ? "agent-pipeline-dot 1.2s ease-in-out infinite"
+                      : undefined,
                 }}
               />
               › AGENT.LOG
@@ -381,24 +434,14 @@ export default function AgentPipelineDemo() {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {String(logs.length).padStart(2, "0")} {text("EREIGNISSE", "EVENTS")}
+              {String(logs.length).padStart(2, "0")}{" "}
+              {text("EREIGNISSE", "EVENTS")}
             </span>
           </div>
-          {logs.length === 0 && (
+          {logs.length === 0 && active < 0 && (
             <div style={{ color: "rgba(243,240,233,0.45)" }}>
-              // {text("warten auf pipeline start", "waiting for pipeline start")}
-              <span
-                aria-hidden
-                style={{
-                  display: "inline-block",
-                  width: 7,
-                  height: 12,
-                  marginLeft: 4,
-                  verticalAlign: "-2px",
-                  background: "var(--color-brand-orange)",
-                  animation: reduced ? undefined : "agent-pipeline-caret 1s step-end infinite",
-                }}
-              />
+              //{" "}
+              {text("warten auf pipeline start", "waiting for pipeline start")}
             </div>
           )}
           {logs.map((l, i) => {
@@ -413,13 +456,21 @@ export default function AgentPipelineDemo() {
                   padding: "2px 0",
                   color: "rgba(243,240,233,0.85)",
                   fontVariantNumeric: "tabular-nums",
-                  animation: reduced ? undefined : "agent-pipeline-log-in 200ms ease-out",
+                  animation: reduced
+                    ? undefined
+                    : "agent-pipeline-log-in 200ms ease-out",
                 }}
               >
-                <span style={{ color: "rgba(243,240,233,0.32)", flexShrink: 0 }}>
+                <span
+                  style={{ color: "rgba(243,240,233,0.32)", flexShrink: 0 }}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span style={{ color: "rgba(243,240,233,0.42)", flexShrink: 0 }}>{l.ts}</span>
+                <span
+                  style={{ color: "rgba(243,240,233,0.42)", flexShrink: 0 }}
+                >
+                  {l.ts}
+                </span>
                 <span
                   style={{
                     color: tint,
@@ -429,7 +480,15 @@ export default function AgentPipelineDemo() {
                 >
                   {l.src}
                 </span>
-                <span style={{ minWidth: 0, flex: "1 1 140px", overflowWrap: "anywhere" }}>{l.t}</span>
+                <span
+                  style={{
+                    minWidth: 0,
+                    flex: "1 1 140px",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {l.t}
+                </span>
               </div>
             );
           })}
@@ -461,7 +520,7 @@ export default function AgentPipelineDemo() {
                 justifyContent: "center",
                 color: "rgba(243,240,233,0.5)",
                 fontFamily: DEMO.font.mono,
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: "0.14em",
                 textAlign: "center",
                 padding: 20,
@@ -472,22 +531,16 @@ export default function AgentPipelineDemo() {
                   "→ MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS",
                   "→ MEMO APPEARS AFTER THE PIPELINE FINISHES",
                 )}
-                <span
-                  aria-hidden
-                  style={{
-                    display: "inline-block",
-                    width: 7,
-                    height: 10,
-                    marginLeft: 5,
-                    verticalAlign: "-1px",
-                    background: "var(--color-brand-orange)",
-                    animation: reduced ? undefined : "agent-pipeline-caret 1s step-end infinite",
-                  }}
-                />
               </span>
             </div>
           ) : (
-            <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
@@ -501,19 +554,20 @@ export default function AgentPipelineDemo() {
                 <div
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 10,
+                    fontSize: 12,
                     color: "var(--color-brand-orange)",
                     letterSpacing: "0.14em",
                     textTransform: "uppercase",
                     fontWeight: 700,
                   }}
                 >
-                  ◆ {text("Memo · Geschäftsführung", "Memo · management review")}
+                  ◆{" "}
+                  {text("Memo · Geschäftsführung", "Memo · management review")}
                 </div>
                 <span
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: "rgba(243,240,233,0.6)",
                     letterSpacing: "0.1em",
                     fontVariantNumeric: "tabular-nums",
@@ -542,7 +596,7 @@ export default function AgentPipelineDemo() {
               </h3>
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   lineHeight: 1.55,
                   color: "rgba(243,240,233,0.82)",
                   flex: 1,
@@ -600,7 +654,7 @@ function MemoSection({ title, body }: { title: string; body: string }) {
       <div
         style={{
           fontFamily: DEMO.font.mono,
-          fontSize: 9,
+          fontSize: 12,
           color: "var(--color-brand-orange)",
           letterSpacing: "0.14em",
           fontWeight: 700,

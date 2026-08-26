@@ -30,13 +30,6 @@ const CONTENT_WIDTH_CLASS: Record<LessonShellContentMode, string> = {
   workspace: "max-w-[1600px]",
 };
 
-// Next's development tools occupy the lower-left corner. Production keeps the
-// expected edge inset; local browser verification keeps the control clickable.
-const MOBILE_TOGGLE_LEFT_CLASS =
-  process.env.NODE_ENV === "development"
-    ? "left-[max(5rem,env(safe-area-inset-left))]"
-    : "left-[max(1.5rem,env(safe-area-inset-left))]";
-
 function readPersistedSidebarState(): boolean {
   try {
     return (
@@ -158,10 +151,7 @@ export function LessonShell({
 }: LessonShellProps) {
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const previousNavOpenRef = useRef(navOpen);
-  const closeNav = useCallback(
-    () => onNavOpenChange(false),
-    [onNavOpenChange],
-  );
+  const closeNav = useCallback(() => onNavOpenChange(false), [onNavOpenChange]);
   const drawerRef = useFocusTrap<HTMLElement>(navOpen, closeNav, {
     restoreFocus: false,
   });
@@ -281,8 +271,8 @@ export function LessonShell({
         data-lesson-shell-desktop-sidebar
         data-collapsed={desktopSidebarCollapsed ? "true" : "false"}
         className={cn(
-          "hidden shrink-0 self-start overflow-hidden border-r border-border bg-background transition-[width] duration-200 lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
-          desktopSidebarCollapsed ? "lg:w-16" : "lg:w-64",
+          "hidden shrink-0 self-start overflow-hidden border-r border-border bg-background lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
+          desktopSidebarCollapsed ? "lg:w-14" : "lg:w-60",
         )}
       >
         <div className="flex h-full min-h-0 flex-col">
@@ -298,11 +288,9 @@ export function LessonShell({
               aria-expanded={!desktopSidebarCollapsed}
               aria-controls={desktopSidebarId}
               aria-label={
-                desktopSidebarCollapsed
-                  ? expandNavLabel
-                  : collapseNavLabel
+                desktopSidebarCollapsed ? expandNavLabel : collapseNavLabel
               }
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center border-2 border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {desktopSidebarCollapsed ? (
                 <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
@@ -317,32 +305,15 @@ export function LessonShell({
               "min-h-0 flex-1 overscroll-contain [scrollbar-gutter:stable]",
               desktopSidebarCollapsed
                 ? "overflow-hidden p-0"
-                : "overflow-y-auto p-4",
+                : "overflow-y-auto p-3",
             )}
           >
             {desktopSidebarCollapsed
               ? null
-              : renderSidebar?.("desktop") ?? sidebar}
+              : (renderSidebar?.("desktop") ?? sidebar)}
           </div>
         </div>
       </aside>
-
-      {/* Mobile toggle */}
-      <button
-        ref={toggleButtonRef}
-        type="button"
-        onClick={() => onNavOpenChange(true)}
-        tabIndex={navOpen ? -1 : undefined}
-        aria-hidden={navOpen || undefined}
-        aria-expanded={navOpen}
-        aria-controls={navId}
-        aria-label={openNavLabel}
-        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] ${MOBILE_TOGGLE_LEFT_CLASS} z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] lg:hidden ${
-          navOpen ? "pointer-events-none invisible" : ""
-        }`}
-      >
-        <Menu className="h-5 w-5" aria-hidden="true" />
-      </button>
 
       {/* Mobile overlay */}
       {navOpen && (
@@ -363,16 +334,16 @@ export function LessonShell({
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain border-r border-border bg-background pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-4 pt-[max(1rem,env(safe-area-inset-top))] lg:hidden"
+              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-border bg-background pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-3 pt-[max(1rem,env(safe-area-inset-top))] lg:hidden"
             >
-              <div className="mb-4 flex justify-end">
+              <div className="mb-2 flex justify-end">
                 <button
                   type="button"
                   onClick={closeNav}
                   aria-expanded="true"
                   aria-controls={navId}
                   aria-label={closeNavLabel}
-                  className="inline-flex h-11 w-11 items-center justify-center border-2 border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-11 w-11 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -384,7 +355,27 @@ export function LessonShell({
       )}
 
       {/* Main content */}
-      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 py-8 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 py-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
+        <div
+          data-lesson-shell-mobile-toolbar
+          className="sticky top-28 z-40 -mx-4 mb-4 flex h-12 items-center border-y border-border bg-background px-4 sm:-mx-5 sm:px-5 lg:hidden"
+        >
+          <button
+            ref={toggleButtonRef}
+            type="button"
+            onClick={() => onNavOpenChange(true)}
+            tabIndex={navOpen ? -1 : undefined}
+            aria-hidden={navOpen || undefined}
+            aria-expanded={navOpen}
+            aria-controls={navId}
+            aria-label={openNavLabel}
+            className={`flex h-11 w-11 items-center justify-center border border-foreground bg-brand-orange text-white outline-none transition-colors hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden ${
+              navOpen ? "pointer-events-none invisible" : ""
+            }`}
+          >
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
         <div
           data-lesson-shell-content
           data-content-mode={contentMode}

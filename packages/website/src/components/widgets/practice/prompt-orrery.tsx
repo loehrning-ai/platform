@@ -158,7 +158,6 @@ export function PromptOrreryWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+15 XP"
     >
       <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-start">
         <div
@@ -175,13 +174,13 @@ export function PromptOrreryWidget({
                 aria-pressed={on}
                 onClick={() => toggle(p.id)}
                 className={cn(
-                  "flex flex-col gap-0.5 border-2 px-3 py-2 text-left transition-colors",
+                  "flex min-h-11 flex-col gap-0.5 border-2 px-3 py-2 text-left transition-colors",
                   on
                     ? "border-brand-orange bg-brand-orange/10"
                     : "border-border bg-background hover:border-brand-orange/60",
                 )}
               >
-                <span className="flex items-center justify-between font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+                <span className="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {p.label}
                   <span className="text-muted-foreground">
                     {on ? "an" : "aus"} · +{p.weight}
@@ -196,7 +195,7 @@ export function PromptOrreryWidget({
         </div>
 
         <div className="min-w-[150px] border-2 border-border bg-background p-4 text-right">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground">
             Qualität
           </p>
           <p
@@ -207,7 +206,7 @@ export function PromptOrreryWidget({
           >
             {quality}
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
+          <p className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
             {qualityLabel(quality)}
           </p>
           <div className="mt-3 h-[5px] w-full overflow-hidden rounded-full bg-border">
@@ -220,7 +219,7 @@ export function PromptOrreryWidget({
       </div>
 
       <details className="mt-5 border-l-[3px] border-border pl-3">
-        <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+        <summary className="inline-flex min-h-11 cursor-pointer items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           Zusammengesetzter Prompt
         </summary>
         <pre className="mt-2 whitespace-pre-wrap font-mono text-[12.5px] leading-[1.55] text-foreground">
@@ -234,7 +233,7 @@ export function PromptOrreryWidget({
           onClick={run}
           disabled={api.loading || !assembled.trim()}
           className={cn(
-            "border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
+            "min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
           )}
         >
           {api.loading ? "Läuft …" : "Prompt live ausführen"}

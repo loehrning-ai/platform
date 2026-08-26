@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Book } from "@/lib/books";
@@ -90,13 +92,20 @@ describe("ChapterReader locale-aware server shell", () => {
     expect(readerClientMocks.runtime.mock.calls[0]?.[0]).not.toHaveProperty(
       "children",
     );
-    expect(
-      screen.getByRole("article", { name: "The iceberg problem" }),
-    ).toBeVisible();
-    expect(screen.getByTestId("reader-ready-marker")).toHaveAttribute(
+    const article = screen.getByRole("article", {
+      name: "The iceberg problem",
+    });
+    const runtime = screen.getByTestId("reader-ready-marker");
+    expect(article).toBeVisible();
+    expect(article).toHaveClass("max-w-[70ch]");
+    expect(runtime).toHaveAttribute(
       "data-book-reader-runtime",
       "ki-landschaft:01_eisberg",
     );
+    expect(
+      article.compareDocumentPosition(runtime) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(screen.getByTestId("toc-links")).toBeVisible();
     expect(screen.getByRole("link", { name: "Course" })).toHaveAttribute(
       "href",
@@ -114,6 +123,7 @@ describe("ChapterReader locale-aware server shell", () => {
       "href",
       "/en/buecher",
     );
+    expect(screen.getByRole("link", { name: "Books" })).toHaveClass("min-h-11");
     expect(screen.getByText("Chapter 1 of 1")).toBeVisible();
     expect(screen.getByText("Reading time: approx. 1 minute")).toBeVisible();
     expect(
@@ -121,6 +131,11 @@ describe("ChapterReader locale-aware server shell", () => {
         name: "Back to the course: Open the EU AI Act course",
       }),
     ).toHaveAttribute("href", "/en/eu-ai-act-kurs");
+    expect(
+      screen.getByRole("link", {
+        name: "Back to the course: Open the EU AI Act course",
+      }),
+    ).toHaveClass("min-h-11");
   });
 
   it("retains canonical German content links and table label", () => {
@@ -143,5 +158,18 @@ describe("ChapterReader locale-aware server shell", () => {
     expect(
       screen.getByRole("group", { name: "Tabelle, horizontal scrollbar" }),
     ).toBeVisible();
+  });
+
+  it("keeps the reader compact, printable, and free of decorative chrome", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "src/components/book-reader/chapter-reader.tsx"),
+      "utf8",
+    );
+
+    expect(source).toContain("max-w-[70ch]");
+    expect(source).toContain("dangerouslySetInnerHTML");
+    expect(source).toContain("no-print");
+    expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
+    expect(source).not.toMatch(/shadow-|motion-safe|animate-|transition-all/);
   });
 });

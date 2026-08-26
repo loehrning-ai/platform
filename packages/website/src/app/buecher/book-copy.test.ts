@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { allBooks } from "@/lib/books";
-import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
+import {
+  BOOK_PAGE_COPY,
+  getBookDisplay,
+  getBookSourceInputs,
+} from "./book-copy";
 
 describe("book locale copy", () => {
   it("provides complete English display data for every catalog record", () => {
@@ -18,10 +22,7 @@ describe("book locale copy", () => {
     const copy = BOOK_PAGE_COPY.en;
     const display = getBookDisplay(allBooks[0], "en");
 
-    expect(copy.catalog.ledgerFacts).toContainEqual({
-      label: "Material language",
-      value: "English",
-    });
+    expect(copy.catalog.materialLanguageValue).toBe("English");
     expect(copy.detail.contentsIntro).toContain("English reader");
     expect(copy.metadata.detailDescription(display)).toContain(
       "English HTML reading edition",
@@ -33,6 +34,17 @@ describe("book locale copy", () => {
     const serialized = JSON.stringify(BOOK_PAGE_COPY);
     expect(serialized).not.toMatch(
       /revolutionary|game[- ]changing|unlock|transformative|cutting[- ]edge|world[- ]class|einzigartig|bahnbrechend/i,
+    );
+  });
+
+  it("keeps the visible source record in the selected interface language", () => {
+    const book = allBooks[0];
+
+    expect(getBookSourceInputs(book, "de")).toContain(
+      "Im Buch zitierte öffentliche Primärquellen",
+    );
+    expect(getBookSourceInputs(book, "en")).toContain(
+      "Public primary sources cited in the book",
     );
   });
 });

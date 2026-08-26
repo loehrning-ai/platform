@@ -140,6 +140,29 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("<FluencyTest>", () => {
+  it("keeps the first decision and every scenario/navigation target at 44px or larger", () => {
+    const { container } = render(<FluencyTest />);
+    expect(
+      container.querySelector(
+        '[data-technical-course="ai-native-fluency-test"]',
+      ),
+    ).not.toBeNull();
+    for (const button of screen.getAllByRole("button", {
+      name: /Szenario \d+/,
+    })) {
+      expect(button).toHaveClass("h-11", "w-11");
+    }
+    for (const button of optionButtons(container)) {
+      expect(button).toHaveClass("min-h-12");
+    }
+    expect(screen.getByRole("button", { name: /Zurück/ })).toHaveClass(
+      "min-h-11",
+    );
+    expect(screen.getByRole("button", { name: /Weiter/ })).toHaveClass(
+      "min-h-11",
+    );
+  });
+
   it("opens on the first scenario with the 01/10 counter", () => {
     render(<FluencyTest />);
     expect(screen.getByText("Wie arbeitest du heute?")).toBeInTheDocument();

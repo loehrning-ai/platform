@@ -253,7 +253,7 @@ export function PipelineProgress() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 700,
                     background: done
                       ? "rgba(100,226,181,0.2)"

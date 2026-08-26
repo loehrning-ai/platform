@@ -12,151 +12,272 @@
      (.hash, row CTAs, overlines). #C4431A was 4.43:1 on Kalkweiß and 3.94:1
      on Birke (sub-AA); #A5370F clears ≥5.2:1 everywhere. --muted #9C8F85 was
      2.76:1 as text; #655c54 reaches ≥5.1:1 incl. the Birke card. */
-  --kupfer:#A5370F; --kupfer-dark:#A5370F; --kupfer-light:#E07050; --kupfer-mist:#F5E8E2;
-  --kalkweiss:#F3F0E9; --birke:#E8E3D9; --leinen:#D4CEC5;
-  --druckertinte:#0B0908; --schiefer:#68605A; --muted:#655c54;
-  --bg-dark:#0d0b09; --card-dark:#161310; --border-dark:#2d2720;
-  --fg-cream:#f5efe8;
+  --kupfer: #a5370f;
+  --kupfer-dark: #a5370f;
+  --kupfer-light: #e07050;
+  --kupfer-mist: #f5e8e2;
+  --kalkweiss: #f3f0e9;
+  --birke: #e8e3d9;
+  --leinen: #d4cec5;
+  --druckertinte: #0b0908;
+  --schiefer: #68605a;
+  --muted: #655c54;
+  --bg-dark: #0d0b09;
+  --card-dark: #161310;
+  --border-dark: #2d2720;
+  --fg-cream: #f5efe8;
 
   /* editorial axis palette (post-internal only, never UI)
      --axis-org darkened #B45309→#9a4708 (4.41→5.63:1) and --axis-strat
      #C4431A→#A5370F (4.43→5.85:1) so axis labels meet AA on Kalkweiß. */
-  --axis-daten:#7C3AED; --axis-tech:#1E40AF; --axis-org:#9a4708;
-  --axis-strat:#A5370F; --axis-comp:#065F46;
+  --axis-daten: #7c3aed;
+  --axis-tech: #1e40af;
+  --axis-org: #9a4708;
+  --axis-strat: #a5370f;
+  --axis-comp: #065f46;
 
   /* type — local brand face plus deterministic installed/system fallbacks */
-  --font-sans: var(--font-typing), 'Inter Tight', 'Inter', -apple-system, 'Helvetica Neue', system-ui, sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif;
-  --font-mono: var(--font-geist-mono), 'Menlo', 'Courier New', monospace;
+  --font-sans:
+    var(--font-typing), "Inter Tight", "Inter", -apple-system, "Helvetica Neue",
+    system-ui, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), "Menlo", "Courier New", monospace;
 
   /* motion */
-  --ease-out:cubic-bezier(0.16,1,0.3,1);
-  --ease-brand:cubic-bezier(0.2,0.9,0.3,1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-brand: cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 /* The four static Typing faces add roughly 240 KiB before compression. Keep
    the editorial face on wider canvases, but use the deterministic system
    stack on constrained mobile viewports where the article's serif copy is the
    visual anchor and those extra sans transfers compete with text LCP. */
-@media (max-width:900px) {
+@media (max-width: 900px) {
   .blog-root {
-    --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 }
 
 /* Blog-scoped reset — limited to .blog-root so it doesn't affect the dark shell */
 .blog-root *,
 .blog-root *::before,
-.blog-root *::after { box-sizing:border-box; margin:0; padding:0; }
+.blog-root *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .blog-root *,
   .blog-root *::before,
   .blog-root *::after {
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
-    scroll-behavior:auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 .blog-root {
-  font-family:var(--font-sans);
-  background:var(--kalkweiss);
-  color:var(--druckertinte);
-  line-height:1.55;
-  font-size:16px;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-  min-height:100svh;
-  position:relative;
+  font-family: var(--font-sans);
+  background: var(--kalkweiss);
+  color: var(--druckertinte);
+  line-height: 1.55;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100svh;
+  position: relative;
 }
 
 /* paper grain — scoped to the blog body */
 .blog-root::before {
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.55; mix-blend-mode:multiply;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.82' numOctaves='1' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.82' numOctaves='1' seed='3'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
 }
-.blog-root.no-grain::before { display:none; }
+.blog-root.no-grain::before {
+  display: none;
+}
 
 /* Zero-specificity anchor reset so class-based rules always win. */
-:where(.blog-root a) { color:inherit; text-decoration:none; }
+:where(.blog-root a) {
+  color: inherit;
+  text-decoration: none;
+}
 
 /* ---------- masthead / nav (used by post pages) ---------- */
 .blog-root .mast {
-  position:sticky; top:0; z-index:60;
-  background:var(--kalkweiss);
-  border-bottom:1px solid var(--leinen);
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--kalkweiss);
+  border-bottom: 1px solid var(--leinen);
 }
 .blog-root .mast__inner {
-  max-width:1440px; margin:0 auto;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:32px; align-items:center;
-  padding:16px 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: 16px 40px;
 }
 .blog-root .mast__brand {
-  font-family:var(--font-sans); font-weight:700; font-size:18px;
-  letter-spacing:-0.03em;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.03em;
 }
-.blog-root .mast__brand .dot { color:var(--kupfer); }
+.blog-root .mast__brand .dot {
+  color: var(--kupfer);
+}
 .blog-root .mast__dateline {
-  font-family:var(--font-mono); font-size:10px;
-  letter-spacing:0.18em; text-transform:uppercase; color:var(--schiefer);
-  display:flex; gap:20px; justify-content:center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--schiefer);
+  display: flex;
+  gap: 20px;
+  justify-content: center;
 }
-.blog-root .mast__dateline .sep { color:var(--leinen); }
-.blog-root .mast__nav { display:flex; gap:28px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--schiefer); }
-.blog-root .mast__nav a { transition:color .15s; }
-.blog-root .mast__nav a:hover, .blog-root .mast__nav a.active { color:var(--kupfer); }
-@media (max-width:900px){
-  .blog-root .mast__inner { grid-template-columns:auto auto; gap:16px; padding:14px 20px; }
-  .blog-root .mast__dateline { display:none; }
-  .blog-root .mast__nav { gap:16px; font-size:10px; }
+.blog-root .mast__dateline .sep {
+  color: var(--leinen);
+}
+.blog-root .mast__nav {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--schiefer);
+}
+.blog-root .mast__nav a {
+  transition: color 0.15s;
+}
+.blog-root .mast__nav a:hover,
+.blog-root .mast__nav a.active {
+  color: var(--kupfer);
+}
+@media (max-width: 900px) {
+  .blog-root .mast__inner {
+    grid-template-columns: auto auto;
+    gap: 16px;
+    padding: 14px 20px;
+  }
+  .blog-root .mast__dateline {
+    display: none;
+  }
+  .blog-root .mast__nav {
+    gap: 16px;
+    font-size: 12px;
+  }
 }
 
 /* ---------- buttons ---------- */
 .blog-root .btn {
-  display:inline-flex; align-items:center; gap:10px;
-  padding:13px 22px;
-  border:2px solid var(--druckertinte);
-  background:transparent; color:var(--druckertinte);
-  font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700;
-  cursor:pointer; text-decoration:none;
-  box-shadow:4px 4px 0 0 var(--druckertinte);
-  transition:transform .12s, box-shadow .12s, background .12s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border: 2px solid var(--druckertinte);
+  background: transparent;
+  color: var(--druckertinte);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 0 var(--druckertinte);
+  transition:
+    transform 0.12s,
+    box-shadow 0.12s,
+    background 0.12s;
 }
-.blog-root .btn:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 0 var(--druckertinte); }
-.blog-root .btn:active { transform:translate(2px,2px); box-shadow:1px 1px 0 0 var(--druckertinte); }
+.blog-root .btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--druckertinte);
+}
+.blog-root .btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--druckertinte);
+}
 .blog-root .btn--primary {
-  background:var(--kupfer); border-color:var(--kupfer); color:#ffffff;
-  box-shadow:4px 4px 0 0 var(--kupfer-dark);
+  background: var(--kupfer);
+  border-color: var(--kupfer);
+  color: #ffffff;
+  box-shadow: 4px 4px 0 0 var(--kupfer-dark);
 }
-.blog-root .btn--primary:hover { box-shadow:6px 6px 0 0 var(--kupfer-dark); }
-.blog-root .btn--primary:active { box-shadow:1px 1px 0 0 var(--kupfer-dark); }
+.blog-root .btn--primary:hover {
+  box-shadow: 6px 6px 0 0 var(--kupfer-dark);
+}
+.blog-root .btn--primary:active {
+  box-shadow: 1px 1px 0 0 var(--kupfer-dark);
+}
 
 /* ---------- tag chip (hard rect) ---------- */
 .blog-root .chip {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:5px 10px;
-  border:1px solid var(--leinen);
-  font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--schiefer);
-  background:transparent; cursor:pointer; transition:background-color .15s, border-color .15s, color .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--leinen);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--schiefer);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    color 0.15s;
 }
-.blog-root .chip:hover { border-color:var(--druckertinte); color:var(--druckertinte); }
-.blog-root .chip--active { background:var(--druckertinte); color:var(--kalkweiss); border-color:var(--druckertinte); }
-.blog-root .chip--kupfer { border-color:var(--kupfer); color:var(--kupfer); }
-.blog-root .chip--kupfer.chip--active { background:var(--kupfer); color:var(--kalkweiss); border-color:var(--kupfer); }
+.blog-root .chip:hover {
+  border-color: var(--druckertinte);
+  color: var(--druckertinte);
+}
+.blog-root .chip--active {
+  background: var(--druckertinte);
+  color: var(--kalkweiss);
+  border-color: var(--druckertinte);
+}
+.blog-root .chip--kupfer {
+  border-color: var(--kupfer);
+  color: var(--kupfer);
+}
+.blog-root .chip--kupfer.chip--active {
+  background: var(--kupfer);
+  color: var(--kalkweiss);
+  border-color: var(--kupfer);
+}
 
 /* ---------- utility ---------- */
 .blog-root .overline {
-  font-family:var(--font-mono); font-size:11px; font-weight:700;
-  letter-spacing:0.14em; text-transform:uppercase; color:var(--kupfer);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kupfer);
 }
-.blog-root .top-rule { width:154px; height:3px; background:var(--kupfer); }
-.blog-root .hairline { width:100%; height:1px; background:var(--leinen); }
-
-.blog-root .reveal { opacity:1; transform:none;
-  transition:opacity .9s var(--ease-brand), transform .9s var(--ease-brand); }
-.blog-root[data-scroll-reveal="active"] .reveal { opacity:0; transform:translateY(16px); }
-.blog-root[data-scroll-reveal="active"] .reveal.revealed { opacity:1; transform:translateY(0); }
+.blog-root .top-rule {
+  width: 154px;
+  height: 3px;
+  background: var(--kupfer);
+}
+.blog-root .hairline {
+  width: 100%;
+  height: 1px;
+  background: var(--leinen);
+}

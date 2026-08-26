@@ -1,8 +1,31 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+import {
+  act,
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ClaudeLessonReader } from "./claude-lesson-reader";
-import { isLessonCompleted, __resetCacheForTests } from "@/lib/progress";
+import {
+  isEvidenceBackedLessonCompleted,
+  isLessonCompleted,
+  __resetCacheForTests,
+} from "@/lib/progress";
+import {
+  activateAnonymousProgress,
+  activateUnknownProgress,
+} from "@/lib/progress/store";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
 
 function installLocalStoragePolyfill(): void {
@@ -58,6 +81,24 @@ const LESSON: ClaudeLesson = {
       content: "Section two content.",
       keyTakeaway: "The key takeaway.",
     },
+    {
+      id: "constitutional-ai",
+      title: "Section Three",
+      readTimeMinutes: 1,
+      content: "Section three content.",
+    },
+    {
+      id: "feel-it",
+      title: "Section Four",
+      readTimeMinutes: 1,
+      content: "Section four content.",
+    },
+    {
+      id: "failure-modes",
+      title: "Section Five",
+      readTimeMinutes: 1,
+      content: "Section five content.",
+    },
   ],
   widgets: [
     {
@@ -106,17 +147,17 @@ describe("ClaudeLessonReader ", () => {
     const host = document.createElement("div");
     host.innerHTML = markup;
     const buttons = Array.from(host.querySelectorAll("button"));
-    const markAsRead = buttons.filter((button) =>
-      button.textContent?.includes("Mark as read"),
+    const sectionChecks = buttons.filter((button) =>
+      button.textContent?.includes("Confirm section reviewed"),
     );
-    const completeLesson = buttons.find((button) =>
-      button.textContent?.includes("Complete lesson"),
+    const completionCheckpoint = buttons.find((button) =>
+      button.textContent?.includes("Loading progress"),
     );
 
-    expect(markAsRead).toHaveLength(LESSON.sections.length);
-    expect(markAsRead.every((button) => button.disabled)).toBe(true);
-    expect(completeLesson).toBeDefined();
-    expect(completeLesson?.disabled).toBe(true);
+    expect(sectionChecks).toHaveLength(LESSON.sections.length);
+    expect(sectionChecks.every((button) => button.disabled)).toBe(true);
+    expect(completionCheckpoint).toBeDefined();
+    expect(completionCheckpoint?.disabled).toBe(true);
   });
 
   it("renders the lesson header, sections, and key takeaway", () => {
@@ -149,9 +190,14 @@ describe("ClaudeLessonReader ", () => {
     expect(
       await screen.findByText("A test question?", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Quick check")).toBeInTheDocument();
+    expect(
+      screen.getByRole("radiogroup", { name: "Answer options" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Kurze Prüfung")).not.toBeInTheDocument();
   });
 
-  it("gates the complete-lesson button until every section is marked read", () => {
+  it("drops transient widget answers when the learning owner changes", async () => {
     render(
       <ClaudeLessonReader
         lesson={LESSON}
@@ -161,21 +207,95 @@ describe("ClaudeLessonReader ", () => {
         locale="en"
       />,
     );
-    const completeButton = screen.getByRole("button", {
-      name: /Complete lesson/i,
-    });
-    expect(completeButton).toBeDisabled();
+    await screen.findByText("A test question?", {}, { timeout: 5_000 });
+    fireEvent.click(screen.getByRole("radio", { name: /^B/ }));
+    expect(screen.getByRole("status")).toHaveTextContent("Not quite.");
 
-    const markReadButtons = screen.getAllByRole("button", {
-      name: /Mark as read/i,
+    act(() => {
+      activateUnknownProgress();
+      activateAnonymousProgress();
     });
-    fireEvent.click(markReadButtons[0]);
-    expect(completeButton).toBeDisabled();
 
-    fireEvent.click(
-      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    await screen.findByText("A test question?", {}, { timeout: 5_000 });
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      for (const radio of screen.getAllByRole("radio")) {
+        expect(radio).toHaveAttribute("aria-checked", "false");
+        expect(radio).not.toBeDisabled();
+      }
+    });
+  });
+
+  it("requires every section checkpoint and a transfer decision", () => {
+    render(
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
     );
-    expect(completeButton).not.toBeDisabled();
+    const saveCheckpoint = screen.getByRole("button", {
+      name: /Save checkpoint/i,
+    });
+    const decision = screen.getByLabelText("Decision or revision");
+    expect(decision).toBeDisabled();
+    expect(saveCheckpoint).toBeDisabled();
+
+    const sectionChecks = screen.getAllByRole("button", {
+      name: /Confirm section reviewed/i,
+    });
+    fireEvent.click(sectionChecks[0]);
+    expect(decision).toBeDisabled();
+
+    while (
+      screen.getAllByRole("button", { name: /Confirm section reviewed/i })
+        .length > 1
+    ) {
+      fireEvent.click(
+        screen.getAllByRole("button", {
+          name: /Confirm section reviewed/i,
+        })[0],
+      );
+    }
+    expect(decision).toBeDisabled();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Confirm section reviewed/i }),
+    );
+    expect(decision).not.toBeDisabled();
+    expect(saveCheckpoint).toBeDisabled();
+    fireEvent.change(decision, {
+      target: { value: "I will test the narrower prompt contract" },
+    });
+    expect(saveCheckpoint).not.toBeDisabled();
+  });
+
+  it("keeps every progress mutation disabled while ownership is unresolved", () => {
+    activateUnknownProgress();
+    render(
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
+    );
+
+    expect(
+      screen
+        .getAllByRole("button", { name: /Confirm section reviewed/i })
+        .every((button) => button.hasAttribute("disabled")),
+    ).toBe(true);
+    expect(screen.getByLabelText("Decision or revision")).toBeDisabled();
+    expect(
+      screen.getByText("Choose account or local progress above first."),
+    ).toBeVisible();
+    expect(isLessonCompleted("claude", LESSON.id)).toBe(false);
+    expect(
+      screen.queryByText("Navigation checkpoint saved"),
+    ).not.toBeInTheDocument();
   });
 
   it("marks the lesson complete in the unified store", () => {
@@ -189,13 +309,56 @@ describe("ClaudeLessonReader ", () => {
       />,
     );
     for (const button of screen.getAllByRole("button", {
-      name: /Mark as read/i,
+      name: /Confirm section reviewed/i,
     })) {
       fireEvent.click(button);
     }
-    fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
+    fireEvent.change(screen.getByLabelText("Decision or revision"), {
+      target: { value: "I will test the narrower prompt contract" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Save checkpoint/i }));
     expect(isLessonCompleted("claude", "mental-model")).toBe(true);
-    expect(screen.getByText("Lesson complete")).toBeInTheDocument();
+    expect(screen.getByText("Navigation checkpoint saved")).toBeInTheDocument();
+  });
+
+  it("does not claim completion when the final durable write is rejected", () => {
+    render(
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
+    );
+    for (const button of screen.getAllByRole("button", {
+      name: /Confirm section reviewed/i,
+    })) {
+      fireEvent.click(button);
+    }
+    fireEvent.change(screen.getByLabelText("Decision or revision"), {
+      target: { value: "I will test the narrower prompt contract" },
+    });
+    const setItem = vi
+      .spyOn(window.localStorage, "setItem")
+      .mockImplementation(() => {
+        throw new DOMException("quota", "QuotaExceededError");
+      });
+
+    fireEvent.click(screen.getByRole("button", { name: /Save checkpoint/i }));
+    expect(isLessonCompleted("claude", "mental-model")).toBe(false);
+    expect(isEvidenceBackedLessonCompleted("claude", "mental-model")).toBe(
+      false,
+    );
+    expect(
+      screen.queryByText("Navigation checkpoint saved"),
+    ).not.toBeInTheDocument();
+
+    setItem.mockRestore();
+    __resetCacheForTests();
+    expect(isEvidenceBackedLessonCompleted("claude", "mental-model")).toBe(
+      false,
+    );
   });
 
   it("renders prev/next links when provided", () => {
@@ -215,6 +378,14 @@ describe("ClaudeLessonReader ", () => {
     expect(
       screen.getByRole("link", { name: /Previous lesson/i }),
     ).toHaveAttribute("href", "/kurse/open-source/claude/kurs/prev");
+    const routeLinks = Array.from(
+      screen
+        .getByRole("navigation", { name: "Lesson route" })
+        .querySelectorAll("a"),
+    );
+    expect(routeLinks[0]).toHaveTextContent(/Previous lesson/i);
+    expect(routeLinks[1]).toHaveTextContent(/Next lesson/i);
+    expect(routeLinks[1]).toHaveClass("ml-auto");
   });
 
   it("renders German reader chrome without changing progress identities", () => {
@@ -244,16 +415,20 @@ describe("ClaudeLessonReader ", () => {
     expect(screen.getByText("Lektion 3 von 12")).toBeInTheDocument();
     expect(screen.getByText("Kernaussage")).toBeInTheDocument();
     expect(
-      screen.getAllByRole("button", { name: /Als gelesen markieren/i }),
-    ).toHaveLength(2);
+      screen.getAllByRole("button", {
+        name: /Abschnitt als geprüft bestätigen/i,
+      }),
+    ).toHaveLength(germanLesson.sections.length);
     expect(
-      screen.getByRole("button", { name: /Lektion abschließen/i }),
+      screen.getByRole("button", { name: /Checkpoint speichern/i }),
     ).toBeDisabled();
     expect(
       screen.getByRole("link", { name: /Nächste Lektion/i }),
     ).toHaveAttribute("href", "/kurse/open-source/claude/kurs/anatomy");
     expect(
-      screen.queryByText(/Mark as read|Complete lesson|Key takeaway/),
+      screen.queryByText(
+        /Confirm section reviewed|Save checkpoint|Key takeaway/,
+      ),
     ).not.toBeInTheDocument();
   });
 });

@@ -118,7 +118,7 @@ export function WordDemo(): JSX.Element {
           <DemoOverline>{text("Eckdaten", "Inputs")}</DemoOverline>
           {fields.map(([key, label, placeholder]) => (
             <label key={key} className="flex flex-col gap-1">
-              <span className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+              <span className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {label}
               </span>
               <input
@@ -127,7 +127,7 @@ export function WordDemo(): JSX.Element {
                 onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                 placeholder={placeholder}
                 maxLength={120}
-                className="border border-border bg-card/60 px-3 py-2.5 text-[13px] text-foreground outline-none focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="min-h-11 border border-border bg-card/60 px-3 py-2.5 text-[13px] text-foreground outline-none focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
               />
             </label>
           ))}
@@ -139,10 +139,10 @@ export function WordDemo(): JSX.Element {
               W
             </div>
             <div>
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground">
+              <div className="font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-foreground">
                 {text("Vorlage", "Template")}: Projektbrief_Standard.docx
               </div>
-              <div className="mt-0.5 font-mono text-[9px] text-muted-foreground">
+              <div className="mt-0.5 font-mono text-[12px] text-muted-foreground">
                 +{" "}
                 {text(
                   "Musterreferenzen als Stilvorlage",
@@ -156,7 +156,7 @@ export function WordDemo(): JSX.Element {
             onClick={generate}
             disabled={genStep > 0}
             className={cn(
-              "border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "min-h-11 border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
               genStep > 0
                 ? "cursor-wait opacity-75"
                 : "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
@@ -169,7 +169,7 @@ export function WordDemo(): JSX.Element {
                 : text("▶ Projektbrief erstellen", "▶ Create project brief")}
           </button>
           {genStep > 0 && (
-            <div className="font-mono text-[10px] leading-[1.8] tracking-[0.1em]">
+            <div className="font-mono text-[12px] leading-[1.8] tracking-[0.1em]">
               {[
                 [1, text("Musterreferenzen lesen", "Read sample references")],
                 [2, text("Modellaufruf · Entwurf", "Model call · draft")],
@@ -195,13 +195,13 @@ export function WordDemo(): JSX.Element {
         </div>
 
         {/* Doc preview */}
-        <div className="relative min-h-[440px] overflow-hidden border border-foreground bg-white">
+        <div className="relative min-h-[520px] overflow-hidden border border-foreground bg-white">
           <div
-            className="flex items-center gap-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white"
+            className="flex items-center gap-2 px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-white"
             style={{ backgroundColor: "#2B579A" }}
           >
             <div
-              className="flex h-4 w-4 items-center justify-center text-[11px] font-bold"
+              className="flex h-5 w-5 items-center justify-center text-[12px] font-bold"
               style={{ backgroundColor: "white", color: "#2B579A" }}
             >
               W
@@ -209,7 +209,7 @@ export function WordDemo(): JSX.Element {
             Projektbrief_{fileStub}_{iso}.docx
           </div>
           <div
-            className="p-7 text-[11px] leading-[1.5] text-[#222]"
+            className="p-7 text-[12px] leading-[1.5] text-[#222]"
             style={{ fontFamily: "Georgia, serif" }}
           >
             <AnimatePresence mode="wait">
@@ -219,7 +219,7 @@ export function WordDemo(): JSX.Element {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="px-5 py-20 text-center italic text-[#999]"
+                  className="px-5 py-12 text-center italic text-[#999]"
                 >
                   {text(
                     "Wähle „Projektbrief erstellen“. Die Simulation fügt einen prüfbaren Entwurf ein.",
@@ -234,14 +234,14 @@ export function WordDemo(): JSX.Element {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
                 >
-                  <div className="font-mono text-[9px] tracking-[0.08em] text-[#666]">
+                  <div className="font-mono text-[12px] tracking-[0.08em] text-[#666]">
                     {text(
                       "MUSTERWERK GMBH · INTERNE PROJEKTNOTIZ",
                       "SAMPLE WORKS LTD · INTERNAL PROJECT NOTE",
                     )}
                   </div>
                   <hr className="my-2.5 border-t border-black" />
-                  <div className="mt-3.5 text-[10px] text-[#555]">
+                  <div className="mt-3.5 text-[12px] text-[#555]">
                     {form.kunde}
                     <br />
                     {text(
@@ -251,7 +251,7 @@ export function WordDemo(): JSX.Element {
                     <br />
                     <br />
                   </div>
-                  <div className="text-right text-[10px] text-[#777]">
+                  <div className="text-right text-[12px] text-[#777]">
                     Berlin, {today}
                   </div>
                   <h4 className="mb-2.5 mt-4 text-[15px] font-bold">
@@ -285,13 +285,13 @@ export function WordDemo(): JSX.Element {
                       "and is marked as an assumption. No approval without data-protection, security, and subject-matter review.",
                     )}
                   </p>
-                  <p className="mb-2.5 text-[10px] italic text-[#555]">
+                  <p className="mb-2.5 text-[12px] italic text-[#555]">
                     {text(
                       "[…] weitere Abschnitte: Annahmen, Risiken, Datenquellen, Freigaben.",
                       "[…] further sections: assumptions, risks, data sources, approvals.",
                     )}
                   </p>
-                  <div className="mt-4 flex gap-5 text-[10px] text-[#555]">
+                  <div className="mt-4 flex gap-5 text-[12px] text-[#555]">
                     <div className="flex-1">
                       {text("Interne Notiz", "Internal note")}
                       <br />
@@ -306,7 +306,7 @@ export function WordDemo(): JSX.Element {
                       )}
                     </div>
                     <div className="border-l border-[#ddd] pl-4 text-right">
-                      <div className="text-[9px] text-[#888]">
+                      <div className="text-[12px] text-[#888]">
                         {text("SEITE 1 VON 2", "PAGE 1 OF 2")}
                       </div>
                     </div>
@@ -320,7 +320,7 @@ export function WordDemo(): JSX.Element {
               initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
-              className="absolute right-2 top-7 bg-brand-orange px-2 py-0.5 font-mono text-[9px] font-bold tracking-[0.12em] text-white"
+              className="absolute right-2 top-8 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-white"
             >
               ◆ {text("SIMULATION", "SIMULATION")}
             </m.div>
@@ -351,7 +351,7 @@ export function WordDemo(): JSX.Element {
               key={label}
               className="border border-l-[3px] border-border border-l-brand-orange bg-background p-3"
             >
-              <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 {label}
               </div>
               <div className="mt-1 font-mono text-[18px] font-bold tracking-[-0.02em] text-foreground md:text-[22px]">

@@ -75,8 +75,14 @@ describe("STEPS journey data", () => {
 
 describe("HeroNetwork render branches", () => {
   it("desktop animated mode emits no static geometry but still lays out label + cursor", () => {
-    const { container } = render(<HeroNetwork scrollProgress={motionValue(0)} />);
+    const { container } = render(
+      <HeroNetwork scrollProgress={motionValue(0)} />,
+    );
 
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "running",
+    );
     expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
     expect(container.querySelector("svg")).not.toBeNull();
     // Grid + country <g> groups are filled by the rAF loop, which the jsdom
@@ -94,14 +100,34 @@ describe("HeroNetwork render branches", () => {
     // buildGrid produced real front-facing graticule segments.
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // Country outlines are desktop-reduced-motion only -> no Kupfer strokes here.
-    expect(container.querySelectorAll('path[stroke="#C4431A"]')).toHaveLength(0);
+    expect(container.querySelectorAll('path[stroke="#C4431A"]')).toHaveLength(
+      0,
+    );
     // Label + cursor are gated behind !mobile.
     expect(container.querySelectorAll("text")).toHaveLength(0);
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "static",
+    );
+  });
+
+  it("marks an explicit user pause without switching to reduced-motion geometry", () => {
+    const { container } = render(
+      <HeroNetwork scrollProgress={motionValue(0)} paused />,
+    );
+
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "paused",
+    );
+    expect(container.querySelectorAll("path")).toHaveLength(0);
   });
 
   it("reduced-motion mode renders the full static composition: grid + Kupfer countries + hatch fills + label", () => {
     mockedReducedMotion.mockReturnValue(true);
-    const { container } = render(<HeroNetwork scrollProgress={motionValue(0)} />);
+    const { container } = render(
+      <HeroNetwork scrollProgress={motionValue(0)} />,
+    );
 
     // Graticule.
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
@@ -117,5 +143,9 @@ describe("HeroNetwork render branches", () => {
     const texts = Array.from(container.querySelectorAll("text"));
     expect(texts).toHaveLength(2);
     expect(texts.some((t) => t.textContent === "_")).toBe(true);
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "static",
+    );
   });
 });

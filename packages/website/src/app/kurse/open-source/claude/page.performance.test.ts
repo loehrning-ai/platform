@@ -18,7 +18,7 @@ describe("Claude landing performance", () => {
       );
     });
 
-    expect(lessonLinks).toHaveLength(3);
+    expect(lessonLinks).toHaveLength(2);
     for (const link of lessonLinks) {
       expect(link).toContain("prefetch={false}");
     }

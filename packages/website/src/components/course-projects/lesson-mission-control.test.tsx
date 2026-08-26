@@ -134,18 +134,17 @@ async function renderAtRetrieval() {
 
   fireEvent.click(screen.getByRole("radio", { name: /Target leakage/ }));
   fireEvent.click(screen.getByRole("button", { name: /Commit prediction/ }));
-  fireEvent.click(screen.getByRole("button", { name: /Manipulate/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
   view.rerender(
     <LessonMissionControl {...props} workspaceActive instrumentRevision={1} />,
   );
   await waitFor(() => {
-    expect(screen.getByRole("button", { name: /Run/ })).toHaveAttribute(
-      "aria-disabled",
-      "false",
-    );
+    expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
   });
-  expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
-  fireEvent.click(screen.getByRole("button", { name: /Run/ }));
+  expect(
+    screen.getByRole("button", { name: /^Revise: locked/ }),
+  ).toBeDisabled();
+  fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
   view.rerender(
     <LessonMissionControl
       {...props}
@@ -155,10 +154,10 @@ async function renderAtRetrieval() {
       executionRevision={1}
     />,
   );
-  await waitFor(() =>
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeEnabled(),
-  );
-  fireEvent.click(screen.getByRole("button", { name: /Inspect/ }));
+  await waitFor(() => {
+    expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+  });
+  fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
   fireEvent.click(
     screen.getByRole("button", { name: /feature-availability audit/i }),
   );
@@ -265,14 +264,13 @@ describe("LessonMissionControl", () => {
     expect(signal).toHaveAttribute("hidden");
     expect(reveal).toBeDisabled();
     expect(screen.queryByText(/resolved_at/)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Manipulate/ })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: /Manipulate/ })).toBeDisabled();
     expect(
-      screen.getByText(/Complete the previous signal first/),
-    ).toBeVisible();
+      screen.getByRole("button", { name: /^Test: locked/ }),
+    ).toHaveAttribute("aria-disabled", "true");
+    expect(
+      screen.getByRole("button", { name: /^Test: locked/ }),
+    ).toBeDisabled();
+    expect(screen.getByText(/Complete the previous beat first/)).toBeVisible();
 
     const prediction = screen.getByRole("radio", { name: /Target leakage/ });
     prediction.focus();
@@ -284,10 +282,74 @@ describe("LessonMissionControl", () => {
     expect(await screen.findByText(/resolved_at/)).toBeInTheDocument();
     expect(signal).toHaveFocus();
     expect(prediction).toBeDisabled();
-    expect(screen.getByRole("button", { name: /Manipulate/ })).toHaveAttribute(
-      "aria-disabled",
-      "false",
+    expect(
+      screen.getByRole("button", { name: /^Test: incomplete/ }),
+    ).toHaveAttribute("aria-disabled", "false");
+  });
+
+  it("maps each learner-facing beat to its first incomplete internal step and completed tail", async () => {
+    const props = missionProps();
+    const view = render(<LessonMissionControl {...props} />);
+    await screen.findByRole("button", { name: /Commit prediction/ });
+
+    expect(
+      screen.getByRole("button", { name: /^Commit: incomplete, current/ }),
+    ).toHaveAttribute("aria-current", "step");
+    expect(screen.getByText(/Current step: 01\/07 · Predict/)).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: /^Test: locked/ }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /^Revise: locked/ }),
+    ).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("radio", { name: /Target leakage/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Commit prediction/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Test: incomplete/ }));
+    expect(screen.getByText(/Current step: 02\/07 · Manipulate/)).toBeVisible();
+
+    view.rerender(
+      <LessonMissionControl
+        {...props}
+        workspaceActive
+        instrumentRevision={1}
+      />,
     );
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Commit: complete/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Test: incomplete/ }));
+    expect(screen.getByText(/Current step: 03\/07 · Run/)).toBeVisible();
+
+    view.rerender(
+      <LessonMissionControl
+        {...props}
+        workspaceActive
+        instrumentRevision={1}
+        executionReceipt={expectedExecutionReceipt}
+        executionRevision={1}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /^Test: incomplete, current/ }),
+    );
+    expect(screen.getByText(/Current step: 04\/07 · Inspect/)).toBeVisible();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /feature-availability audit/i }),
+    );
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /^Test: complete, current/ }),
+      ).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Commit: complete/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Test: complete/ }));
+    expect(screen.getByText(/Current step: 04\/07 · Inspect/)).toBeVisible();
   });
 
   it("separates authored manipulation from a fresh successful run receipt", async () => {
@@ -301,10 +363,9 @@ describe("LessonMissionControl", () => {
     fireEvent.click(screen.getByRole("button", { name: /Open instrument/ }));
 
     expect(props.onOpenWorkspace).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /Inspect/ })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(
+      screen.getByRole("button", { name: /^Revise: locked/ }),
+    ).toBeDisabled();
 
     view.rerender(
       <LessonMissionControl
@@ -313,10 +374,9 @@ describe("LessonMissionControl", () => {
         instrumentRevision={0}
       />,
     );
-    expect(screen.getByRole("button", { name: /Inspect/ })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(
+      screen.queryByRole("button", { name: /Next signal/ }),
+    ).not.toBeInTheDocument();
 
     view.rerender(
       <LessonMissionControl
@@ -326,15 +386,13 @@ describe("LessonMissionControl", () => {
       />,
     );
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Run/ })).toHaveAttribute(
-        "aria-disabled",
-        "false",
-      );
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
     });
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
     expect(
       screen.getByText(/instrument change was detected/i),
     ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
+    expect(screen.getByText(/Current step: 03\/07 · Run/)).toBeVisible();
 
     view.rerender(
       <LessonMissionControl
@@ -345,7 +403,9 @@ describe("LessonMissionControl", () => {
         executionRevision={0}
       />,
     );
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: /Next signal/ }),
+    ).not.toBeInTheDocument();
 
     view.rerender(
       <LessonMissionControl
@@ -356,9 +416,9 @@ describe("LessonMissionControl", () => {
         executionRevision={1}
       />,
     );
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Inspect/ })).toBeEnabled(),
-    );
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+    });
   });
 
   it("captures the revision epoch at reveal so pre-prediction edits cannot satisfy manipulation", async () => {
@@ -376,7 +436,9 @@ describe("LessonMissionControl", () => {
     expect(
       screen.getByRole("heading", { name: profile.manipulation.en }),
     ).toHaveFocus();
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /^Revise: locked/ }),
+    ).toBeDisabled();
 
     view.rerender(
       <LessonMissionControl
@@ -385,7 +447,9 @@ describe("LessonMissionControl", () => {
         instrumentRevision={2}
       />,
     );
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
+    expect(
+      screen.queryByRole("button", { name: /Next signal/ }),
+    ).not.toBeInTheDocument();
 
     view.rerender(
       <LessonMissionControl
@@ -395,9 +459,9 @@ describe("LessonMissionControl", () => {
       />,
     );
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Run/ })).toBeEnabled();
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
     });
-    expect(screen.getByRole("button", { name: /Inspect/ })).toBeDisabled();
+    expect(screen.getByText(/Current step: 02\/07 · Manipulate/)).toBeVisible();
   });
 
   it("uses scored evidence, retrieval, revision, and transfer rather than self-report checkboxes", async () => {
@@ -508,7 +572,12 @@ describe("LessonMissionControl", () => {
       }),
     );
     expect(props.onRetrievalScheduleChange).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("button", { name: /Transfer/ })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /^Revise: incomplete, current/ }),
+    ).toBeEnabled();
+    expect(
+      screen.queryByRole("button", { name: /Next signal/ }),
+    ).not.toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", { name: "Begin repair retrieval" }),
@@ -539,7 +608,7 @@ describe("LessonMissionControl", () => {
       screen.getByText(`First retrieval choice: ${wrongChoice.label.en}`),
     ).toBeInTheDocument();
     expect(screen.getByText(/Next retrieval interval: 1 day/)).toBeVisible();
-    expect(screen.getByRole("button", { name: /Transfer/ })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
 
     await waitFor(() => {
       const stored = window.localStorage.getItem(key) ?? "{}";
@@ -629,7 +698,9 @@ describe("LessonMissionControl", () => {
     expect(
       screen.getByRole("radio", { name: /Target leakage/ }),
     ).toBeDisabled();
-    expect(screen.getByRole("button", { name: /Manipulate/ })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /^Test: locked/ }),
+    ).toBeDisabled();
     expect(props.onOpenWorkspace).not.toHaveBeenCalled();
     expect(props.onMissionComplete).not.toHaveBeenCalled();
   });
@@ -641,7 +712,9 @@ describe("LessonMissionControl", () => {
     expect(
       await screen.findByText(/activate local learning before/i),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/project phase is locked/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/project phase is locked/i),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("radio", { name: /Target leakage/ }),
     ).toBeDisabled();
@@ -732,7 +805,9 @@ describe("LessonMissionControl", () => {
       priorScheduleChanges,
     );
     expect(
-      screen.getByRole("button", { name: /Retrieve: complete/i }),
+      screen.getByRole("button", {
+        name: /^Revise: incomplete, current/i,
+      }),
     ).toBeEnabled();
     removeItem.mockRestore();
 
@@ -746,8 +821,11 @@ describe("LessonMissionControl", () => {
       />,
     );
     expect(
-      await screen.findByRole("button", { name: /Retrieve: complete/i }),
+      await screen.findByRole("button", {
+        name: /^Revise: incomplete, current/i,
+      }),
     ).toBeEnabled();
+    expect(screen.getByText(/Current step: 07\/07 · Transfer/)).toBeVisible();
   });
 
   it("does not report completion when the completed mission write is denied", async () => {
@@ -793,7 +871,7 @@ describe("LessonMissionControl", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: /Transfer: complete/i }),
+        screen.getByRole("button", { name: /^Revise: complete, current/i }),
       ).toBeEnabled(),
     );
     expect(props.onMissionComplete).not.toHaveBeenCalled();
@@ -846,7 +924,7 @@ describe("LessonMissionControl", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: /Target leakage/ }));
     fireEvent.click(screen.getByRole("button", { name: /Commit prediction/ }));
-    fireEvent.click(screen.getByRole("button", { name: /Manipulate/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     view.rerender(
       <LessonMissionControl
         {...props}
@@ -856,10 +934,10 @@ describe("LessonMissionControl", () => {
         executionRevision={1}
       />,
     );
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Run/ })).toBeEnabled(),
-    );
-    fireEvent.click(screen.getByRole("button", { name: /Run/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     view.rerender(
       <LessonMissionControl
         {...props}
@@ -869,10 +947,10 @@ describe("LessonMissionControl", () => {
         executionRevision={2}
       />,
     );
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Inspect/ })).toBeEnabled(),
-    );
-    fireEvent.click(screen.getByRole("button", { name: /Inspect/ }));
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     const evidence = profile.evidence.choices.find(
       (choice) => choice.id === profile.evidence.correctId,
     )!;
@@ -965,33 +1043,44 @@ describe("LessonMissionControl", () => {
         screen.queryByDisplayValue("account-a-private-scratch"),
       ).not.toBeInTheDocument(),
     );
-    expect(screen.getByRole("button", { name: /Manipulate/ })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /^Test: locked/ }),
+    ).toBeDisabled();
     expect(getOwnedLocalLearningItem(key)).toBeNull();
   });
 
-  it("keeps all seven step targets in a bounded responsive grid", async () => {
+  it("keeps three 44px beat targets in a bounded responsive grid", async () => {
     render(<LessonMissionControl {...missionProps({ locale: "de" })} />);
 
     const circuit = await screen.findByRole("list", { name: "Signalstrecke" });
-    expect(circuit).toHaveClass("grid", "grid-cols-4", "lg:grid-cols-7");
+    expect(circuit).toHaveClass("grid", "grid-cols-3");
+    expect(circuit).not.toHaveClass("grid-cols-4", "lg:grid-cols-7");
     expect(circuit).not.toHaveClass("overflow-x-auto");
     expect(circuit).not.toHaveAttribute("tabindex");
     expect(circuit).not.toHaveAttribute("style");
     const targets = within(circuit).getAllByRole("button");
-    expect(targets).toHaveLength(7);
+    expect(targets).toHaveLength(3);
     for (const target of targets) {
-      expect(target).toHaveClass(
-        "min-h-16",
-        "flex-col",
-        "lg:min-h-11",
-        "lg:flex-row",
-        "motion-reduce:transition-none",
-      );
+      expect(target).toHaveClass("min-h-11", "motion-reduce:transition-none");
       expect(target.closest("li")).toHaveClass("min-w-0");
       expect(target.querySelector("span:last-child")).toHaveClass(
         "max-w-full",
         "[overflow-wrap:anywhere]",
       );
     }
+    expect(
+      within(circuit).getByRole("button", {
+        name: "Festlegen: offen, aktuell",
+      }),
+    ).toHaveAttribute("aria-current", "step");
+    expect(
+      within(circuit).getByRole("button", { name: "Testen: gesperrt" }),
+    ).toBeDisabled();
+    expect(
+      within(circuit).getByRole("button", { name: "Revidieren: gesperrt" }),
+    ).toBeDisabled();
+    expect(
+      screen.getByText(/Aktueller Schritt: 01\/07 · Prognose/),
+    ).toBeVisible();
   });
 });

@@ -1,8 +1,12 @@
-import { describe, it, expect, afterEach } from "vitest";
-import { DS_NUMBERED_CHAPTER_IDS } from "./types";
-import { getCourseSlice } from "@/lib/progress/store";
+import { afterEach, describe, expect, it } from "vitest";
+import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
 import {
-  markChapterVisited,
+  completeCheckpoint,
+  getCourseSlice,
+  markLessonCompleted,
+} from "@/lib/progress/store";
+import { DS_NUMBERED_CHAPTER_IDS, type DsNumberedChapterId } from "./types";
+import {
   isChapterVisited,
   getVisitedChapterIds,
   getVisitedChapterCount,
@@ -11,13 +15,21 @@ import {
   __resetCacheForTests,
 } from "./progress";
 
-describe("data-science progress facade ", () => {
+const COURSE = "data-science" as const;
+const CHECKPOINT_ID = lessonCompletionEvidenceCheckpointId(COURSE);
+
+function recordTransfer(chapterId: DsNumberedChapterId): void {
+  completeCheckpoint(chapterId, CHECKPOINT_ID);
+  markLessonCompleted(COURSE, chapterId);
+}
+
+describe("data-science evidence-backed progress facade", () => {
   afterEach(() => {
     resetProgress();
     __resetCacheForTests();
   });
 
-  it("starts with no chapter marked visited", () => {
+  it("starts without evidence-backed chapter progress", () => {
     __resetCacheForTests();
     for (const id of DS_NUMBERED_CHAPTER_IDS) {
       expect(isChapterVisited(id)).toBe(false);
@@ -26,51 +38,42 @@ describe("data-science progress facade ", () => {
     expect(getVisitedChapterIds().size).toBe(0);
   });
 
-  it("markChapterVisited marks exactly the given chapter, idempotently", () => {
-    markChapterVisited("fund");
-    expect(isChapterVisited("fund")).toBe(true);
-    expect(isChapterVisited("explore")).toBe(false);
-    expect(getVisitedChapterCount()).toBe(1);
-
-    markChapterVisited("fund");
-    expect(getVisitedChapterCount()).toBe(1);
-  });
-
-  it("getVisitedChapterIds returns the exact set of marked chapters", () => {
-    markChapterVisited("fund");
-    markChapterVisited("cap");
-    const ids = getVisitedChapterIds();
-    expect(ids.size).toBe(2);
-    expect(ids.has("fund")).toBe(true);
-    expect(ids.has("cap")).toBe(true);
-  });
-
-  it("getOverallProgress reports percent complete out of the 12 numbered chapters", () => {
+  it("does not expose a historical raw completion boolean", () => {
+    markLessonCompleted(COURSE, "fund");
+    expect(getCourseSlice(COURSE).lessons.fund?.completed).toBe(true);
+    expect(isChapterVisited("fund")).toBe(false);
+    expect(getVisitedChapterCount()).toBe(0);
     expect(getOverallProgress()).toBe(0);
+  });
+
+  it("counts only chapters with the current versioned transfer checkpoint", () => {
+    recordTransfer("fund");
+    recordTransfer("cap");
+
+    const ids = getVisitedChapterIds();
+    expect(ids).toEqual(new Set(["fund", "cap"]));
+    expect(getVisitedChapterCount()).toBe(2);
+    expect(isChapterVisited("explore")).toBe(false);
+  });
+
+  it("reports evidence-backed progress across all twelve chapters", () => {
     for (const id of DS_NUMBERED_CHAPTER_IDS.slice(0, 6)) {
-      markChapterVisited(id);
+      recordTransfer(id);
     }
     expect(getOverallProgress()).toBe(50);
-  });
 
-  it("marking every one of the 12 numbered chapters reaches 100% and satisfies the unified store's certificate-eligibility fallback", () => {
-    for (const id of DS_NUMBERED_CHAPTER_IDS) {
-      markChapterVisited(id);
+    for (const id of DS_NUMBERED_CHAPTER_IDS.slice(6)) {
+      recordTransfer(id);
     }
     expect(getOverallProgress()).toBe(100);
-    expect(getVisitedChapterCount()).toBe(12);
+    expect(getVisitedChapterCount()).toBe(DS_NUMBERED_CHAPTER_IDS.length);
   });
 
-  it("writes to the 'data-science' slice of the unified store, not some other course", () => {
-    markChapterVisited("fund");
-    const slice = getCourseSlice("data-science");
-    expect(slice.lessons["fund"]?.completed).toBe(true);
-  });
-
-  it("resetProgress clears every visited chapter", () => {
-    markChapterVisited("fund");
-    markChapterVisited("explore");
+  it("reset clears both legacy bits and current evidence", () => {
+    recordTransfer("fund");
+    recordTransfer("explore");
     resetProgress();
+
     expect(getVisitedChapterCount()).toBe(0);
     expect(isChapterVisited("fund")).toBe(false);
   });

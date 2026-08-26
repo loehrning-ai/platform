@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { SectionHeader } from "./section-header";
 
 describe("<SectionHeader>", () => {
-  it("marks all motion-hidden copy for the no-script fallback", () => {
-    render(
+  it("renders static editorial copy without a reveal-on-scroll wrapper", () => {
+    const { container } = render(
       <SectionHeader
         eyebrow="Curriculum"
         heading="Vier Module"
@@ -12,12 +12,28 @@ describe("<SectionHeader>", () => {
       />,
     );
 
-    expect(screen.getByText("Curriculum")).toHaveClass("js-reveal");
-    expect(screen.getByRole("heading", { name: "Vier Module" })).toHaveClass(
-      "js-reveal",
-    );
+    expect(screen.getByText("Curriculum")).toHaveClass("text-xs");
+    expect(screen.getByRole("heading", { name: "Vier Module" })).toBeVisible();
     expect(screen.getByText("Ein öffentlicher Lernweg.")).toHaveClass(
-      "js-reveal",
+      "text-base",
+      "max-w-[68ch]",
     );
+    expect(container.querySelector(".js-reveal")).toBeNull();
+  });
+
+  it("compacts the header rhythm and only centers copy when requested", () => {
+    const { rerender } = render(
+      <SectionHeader heading="Links" description="Direkt." centered={false} />,
+    );
+    const description = screen.getByText("Direkt.");
+    expect(description.parentElement).toHaveClass("mb-8", "sm:mb-12");
+    expect(description.parentElement).not.toHaveClass("text-center");
+    expect(description).not.toHaveClass("mx-auto");
+
+    rerender(<SectionHeader heading="Mitte" description="Zentriert." />);
+    expect(screen.getByText("Zentriert.").parentElement).toHaveClass(
+      "text-center",
+    );
+    expect(screen.getByText("Zentriert.")).toHaveClass("mx-auto");
   });
 });

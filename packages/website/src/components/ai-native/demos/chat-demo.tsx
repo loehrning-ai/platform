@@ -155,6 +155,7 @@ interface ChatMessage {
   readonly text: string;
   readonly sources?: readonly Source[];
   readonly follow?: readonly string[];
+  readonly queryContext?: string;
 }
 
 function findAnswer(q: string): KnownAnswer {
@@ -224,6 +225,7 @@ export function ChatDemo(): JSX.Element {
             text: a.answer,
             sources: a.sources,
             follow: a.follow,
+            queryContext: q,
           },
         ]);
       }, 1200 * scale),
@@ -253,12 +255,12 @@ export function ChatDemo(): JSX.Element {
             <div className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
               Vertrags-Assistent
             </div>
-            <div className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
+            <div className="font-mono text-[12px] tracking-[0.08em] text-muted-foreground">
               Keyword-Suche · 8 Beispieldokumente
             </div>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 text-[11px] text-risk-green">
+        <span className="inline-flex items-center gap-1.5 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 text-[12px] text-risk-green">
           <span
             className="h-1.5 w-1.5 rounded-full bg-risk-green"
             aria-hidden="true"
@@ -294,8 +296,8 @@ export function ChatDemo(): JSX.Element {
                   type="button"
                   onClick={() => submit(s)}
                   className={cn(
-                    "border border-border bg-card/60 px-3 py-2.5 text-left text-[12px] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                    "hover:border-foreground hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0_0_var(--color-foreground)]",
+                    "min-h-11 border border-border bg-card/60 px-3 py-2.5 text-left text-[12px] transition-colors",
+                    "hover:border-foreground hover:bg-background",
                   )}
                 >
                   <span className="mr-1.5 font-bold text-brand-orange">→</span>
@@ -342,11 +344,14 @@ export function ChatDemo(): JSX.Element {
                       onClick={() =>
                         setExpanded((e) => ({ ...e, [msg.id]: !e[msg.id] }))
                       }
-                      className="inline-flex items-center gap-2 border border-border bg-transparent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+                      className="inline-flex min-h-11 items-center gap-2 border border-border bg-transparent px-3 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
                       aria-expanded={!!expanded[msg.id]}
+                      aria-label={`${expanded[msg.id] ? "Quellen ausblenden" : "Quellen anzeigen"}: ${msg.sources.length} Quellen zur Antwort auf „${msg.queryContext}“`}
                     >
                       {expanded[msg.id] ? "▼" : "▶"} {msg.sources.length}{" "}
-                      Quellen zeigen
+                      {expanded[msg.id]
+                        ? "Quellen ausblenden"
+                        : "Quellen zeigen"}
                     </button>
                     {expanded[msg.id] && (
                       <div className="grid gap-1.5 pt-1">
@@ -370,7 +375,7 @@ export function ChatDemo(): JSX.Element {
                         key={i}
                         type="button"
                         onClick={() => submit(f)}
-                        className="border border-brand-orange bg-transparent px-2.5 py-1.5 text-[12px] font-semibold text-brand-orange transition-colors hover:bg-brand-orange hover:text-white"
+                        className="min-h-11 border border-brand-orange bg-transparent px-3 py-2 text-[12px] font-semibold text-brand-orange transition-colors hover:bg-brand-orange hover:text-white"
                       >
                         {f} →
                       </button>
@@ -415,7 +420,7 @@ export function ChatDemo(): JSX.Element {
                     <span className="text-[12px] font-semibold text-foreground">
                       {s.label}
                     </span>
-                    <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                    <span className="ml-auto font-mono text-[12px] text-muted-foreground">
                       {s.detail}
                     </span>
                   </div>
@@ -438,13 +443,13 @@ export function ChatDemo(): JSX.Element {
           onKeyDown={onKeyDown}
           maxLength={500}
           placeholder="Fragen Sie zu Ihren Verträgen…"
-          className="min-w-0 flex-1 border border-border bg-card/40 px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-h-11 min-w-0 flex-1 border border-border bg-card/40 px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
           aria-label="Frage eingeben"
         />
         <button
           type="button"
           onClick={() => submit()}
-          className="shrink-0 bg-brand-orange px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-brand-amber"
+          className="min-h-11 shrink-0 bg-brand-orange px-4 py-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-brand-amber"
         >
           Senden →
         </button>

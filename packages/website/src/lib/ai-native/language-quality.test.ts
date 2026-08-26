@@ -134,9 +134,6 @@ describe("AI-Native bilingual language quality", () => {
   it("keeps removed claims and versioned provider labels out of learner-facing source", () => {
     const componentFiles = [
       "src/components/ai-native/fluency-test.tsx",
-      "src/components/ai-native/hero.tsx",
-      "src/components/ai-native/prompt-playground.tsx",
-      "src/components/ai-native/terminal-demo.tsx",
       "src/components/ai-native/demos/agent-demo.tsx",
       "src/components/ai-native/demos/doc-demo.tsx",
       "src/components/ai-native/demos/finetune-demo.tsx",

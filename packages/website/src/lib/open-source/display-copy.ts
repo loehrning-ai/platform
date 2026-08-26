@@ -1,8 +1,5 @@
 import type { Locale } from "@/lib/i18n/locale";
-import type {
-  OpenSourceArtifact,
-  SoftwareArtifactStatus,
-} from "./artifacts";
+import type { OpenSourceArtifact, SoftwareArtifactStatus } from "./artifacts";
 
 export const OPEN_SOURCE_PAGE_COPY = {
   de: {
@@ -15,33 +12,23 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     eyebrow: "Open Source",
     title: "Veröffentlichte Werkzeuge. Quellstand prüfbar.",
-    introductionPrefix: "Hier stehen veröffentlichte Artefakte der GitHub-Organisation",
+    introductionPrefix:
+      "Hier stehen veröffentlichte Artefakte der GitHub-Organisation",
     introductionSuffix:
       ". Jeder Eintrag nennt Repository, unveränderlichen Commit, Lizenz, Installationsweg, Datenfluss und bekannte Grenzen. Andere Repositories der Organisation sind nicht automatisch veröffentlichte Plattform-Artefakte.",
     coursesPrefix: "Die technischen Lernkurse findest du unter",
-    sourcePrinciple: "Quellenprinzip",
-    sourcePlatform: "Quellplattform",
-    snapshot: "Stand",
     externalTab: ", öffnet in neuem Tab",
-    repositoryLanguage:
-      "Die Repositories, Anleitungen und Commits auf GitHub sind auf Englisch. Diese Seite bleibt deutsch.",
     publicationStandard: "Veröffentlichungsstandard",
     publicationStandardBody:
       "Ein Eintrag erscheint hier erst mit vier Nachweisen: einem öffentlichen GitHub-Repository, einem unveränderlichen Commit als geprüftem Quellstand, einer eindeutigen Lizenz mit lokal gespeicherter Kopie und einer Anleitung für Installation, Verwendung und Integration. Unvollständige Einträge werden nicht gelistet.",
     codeAndEditorial: "Code und redaktionelle Inhalte",
     platformCode: "Plattform-Code auf GitHub",
-    codeAndEditorialBefore:
-      "Der",
+    codeAndEditorialBefore: "Der",
     codeAndEditorialMiddle:
       "steht unter MIT. Sichtbarer Quelltext bedeutet nicht automatisch freie Wiederverwendung aller Lerntexte, Marken- oder Medieninhalte. Die verbindliche Zuordnung steht in der",
     licensePolicy: "Lizenzrichtlinie",
     codeAndEditorialAfter:
       "und in den Lizenzangaben jedes veröffentlichten Eintrags.",
-    publishedStatus: (count: number) => {
-      if (count === 0) return "Noch kein Eintrag veröffentlicht";
-      if (count === 1) return "1 veröffentlichter Eintrag";
-      return `${count} veröffentlichte Einträge`;
-    },
   },
   en: {
     metadata: {
@@ -53,16 +40,12 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     eyebrow: "Open source",
     title: "Published tools. Verifiable source.",
-    introductionPrefix: "This directory lists published artifacts from the GitHub organisation",
+    introductionPrefix:
+      "This directory lists published artifacts from the GitHub organisation",
     introductionSuffix:
       ". Every entry identifies its repository, immutable commit, license, installation path, data flow, and known limits. Other repositories in the organisation are not automatically published platform artifacts.",
     coursesPrefix: "Technical learning courses are listed under",
-    sourcePrinciple: "Source policy",
-    sourcePlatform: "Source platform",
-    snapshot: "Current state",
     externalTab: ", opens in a new tab",
-    repositoryLanguage:
-      "The repositories, guides, and commits on GitHub are written in English. This page provides the English platform description.",
     publicationStandard: "Publication standard",
     publicationStandardBody:
       "An entry appears here only after four checks: a public GitHub repository, an immutable commit as the reviewed source revision, an unambiguous license with a locally stored copy, and a guide covering installation, use, and integration. Incomplete entries are not listed.",
@@ -74,18 +57,14 @@ export const OPEN_SOURCE_PAGE_COPY = {
     licensePolicy: "license policy",
     codeAndEditorialAfter:
       "and in the license information for each published entry.",
-    publishedStatus: (count: number) => {
-      if (count === 0) return "No published entries";
-      if (count === 1) return "1 published entry";
-      return `${count} published entries`;
-    },
   },
 } as const;
 
 export const OPEN_SOURCE_SHARED_COPY = {
   de: {
     published: "Veröffentlicht",
-    entries: (count: number) => (count === 1 ? "1 Eintrag" : `${count} Einträge`),
+    entries: (count: number) =>
+      count === 1 ? "1 Eintrag" : `${count} Einträge`,
     kinds: { tool: "Werkzeug", project: "Projekt", video: "Video" },
     statuses: {
       experimental: "Experimentell",
@@ -356,10 +335,15 @@ const CV_ENGINE_ENGLISH_COPY = {
  * hashes, licenses, dimensions, and lifecycle fields always come from the
  * validated registry record.
  */
-export function localizeOpenSourceArtifact<
-  Artifact extends OpenSourceArtifact,
->(artifact: Artifact, locale: Locale): Artifact {
-  if (locale === "de" || artifact.id !== "tool:cv-engine" || artifact.kind !== "tool") {
+export function localizeOpenSourceArtifact<Artifact extends OpenSourceArtifact>(
+  artifact: Artifact,
+  locale: Locale,
+): Artifact {
+  if (
+    locale === "de" ||
+    artifact.id !== "tool:cv-engine" ||
+    artifact.kind !== "tool"
+  ) {
     return artifact;
   }
 

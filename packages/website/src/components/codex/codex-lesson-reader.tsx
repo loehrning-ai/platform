@@ -2,20 +2,31 @@
 
 import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
-import { CheckCircle2, Circle, Lightbulb, Tag } from "lucide-react";
+import { Lightbulb, Tag } from "lucide-react";
 import { CompletionCertificateCta } from "@/components/course/kurs/completion-certificate-cta";
-import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
 import {
-  markSectionRead,
-  markLessonCompleted,
-  getReadSectionIds,
-  isLessonCompleted,
-} from "@/lib/course/progress";
+  LessonProofCheckpoint,
+  LessonSectionCheckpoint,
+} from "@/components/course/lesson-proof-checkpoint";
+import {
+  RenderWidget,
+  resolveWidgetsForSlot,
+} from "@/components/widgets/registry";
+import { markSectionRead, getReadSectionIds } from "@/lib/course/progress";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import type { CodexLesson } from "@/lib/codex/types";
 import type { Locale } from "@/lib/i18n/locale";
-import { cn } from "@/lib/utils";
-import { subscribe } from "@/lib/progress";
+import {
+  isEvidenceBackedLessonCompleted,
+  recordLessonCompletionEvidenceDurably,
+  subscribe,
+} from "@/lib/progress";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  getOwnerRequiredHint,
+  persistForActiveLearningOwner,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
 import { CodexBlockView } from "./codex-blocks";
 import { CodexBespokeInteractive } from "./bespoke-registry";
 
@@ -48,53 +59,83 @@ export function CodexLessonReader({
   const [readIds, setReadIds] = useState<ReadonlySet<string>>(new Set());
   const [completed, setCompleted] = useState(false);
   const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
+  const identity = `codex:${lesson.id}`;
 
   useEffect(() => {
     return subscribe(() => {
-      setReadIds(getReadSectionIds("codex", lesson.id));
-      setCompleted(isLessonCompleted("codex", lesson.id));
+      const owner = getLearningOwnerContext();
+      const resolved = owner.kind !== "unknown";
+      setReadIds(resolved ? getReadSectionIds("codex", lesson.id) : new Set());
+      setCompleted(
+        resolved && isEvidenceBackedLessonCompleted("codex", lesson.id),
+      );
+      setLoadedOwnerGeneration(owner.generation);
       setReadyLessonId(lesson.id);
     });
   }, [lesson.id]);
 
-  const progressReady = readyLessonId === lesson.id;
+  const readiness = useOwnerAwareProgressReadiness(
+    identity,
+    readyLessonId === lesson.id ? identity : null,
+    loadedOwnerGeneration,
+  );
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
-  const afterIntroWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "after-intro"), [widgets]);
-  const beforeQuizWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "before-quiz"), [widgets]);
-  const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
+  const afterIntroWidgets = useMemo(
+    () => resolveWidgetsForSlot(widgets, "after-intro"),
+    [widgets],
+  );
+  const beforeQuizWidgets = useMemo(
+    () => resolveWidgetsForSlot(widgets, "before-quiz"),
+    [widgets],
+  );
+  const endWidgets = useMemo(
+    () => resolveWidgetsForSlot(widgets, "end"),
+    [widgets],
+  );
 
   const markRead = (sectionId: string) => {
-    markSectionRead("codex", lesson.id, sectionId);
-    setReadIds(getReadSectionIds("codex", lesson.id));
+    if (
+      persistForActiveLearningOwner(
+        () => markSectionRead("codex", lesson.id, sectionId),
+        () => getReadSectionIds("codex", lesson.id).has(sectionId),
+      )
+    ) {
+      setReadIds(getReadSectionIds("codex", lesson.id));
+    }
   };
 
   const allSectionsRead = lesson.sections.every((s) => readIds.has(s.id));
-  const canCompleteLesson = progressReady && allSectionsRead;
-  const lessonCompleted = progressReady && completed;
+  const lessonCompleted = readiness.interactionReady && completed;
 
   const completeLesson = () => {
-    markLessonCompleted("codex", lesson.id);
-    setCompleted(true);
+    if (recordLessonCompletionEvidenceDurably("codex", lesson.id)) {
+      setCompleted(true);
+    }
   };
 
   return (
-    <div className="min-w-0">
-      <header className="mb-8 min-w-0">
-        <p className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+    <div key={readiness.checkpointKey} className="min-w-0">
+      <header className="mb-6 min-w-0 border-b border-border pb-5">
+        <p className="mb-1 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
           {copy.progress(lesson.number, totalLessons)}
         </p>
         <h1 className="break-words text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
           {lesson.title}
         </h1>
-        <p className="mt-2 text-[16px] leading-[1.5] text-muted-foreground">{lesson.subtitle}</p>
+        <p className="mt-2 text-[16px] leading-[1.5] text-muted-foreground">
+          {lesson.subtitle}
+        </p>
         {lesson.keyConcepts.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center gap-1.5">
-            <Tag className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <Tag className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
             {lesson.keyConcepts.map((concept) => (
               <span
                 key={concept}
-                className="border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+                className="border border-border bg-card px-2 py-1 text-[12px] font-medium text-muted-foreground"
               >
                 {concept}
               </span>
@@ -103,16 +144,16 @@ export function CodexLessonReader({
         )}
       </header>
 
-      <div className="min-w-0 space-y-8">
+      <div className="min-w-0 space-y-6">
         {lesson.sections.map((section, i) => (
           <div key={section.id} className="min-w-0">
-            {i > 0 && <div className="mb-8 h-px bg-border" />}
-            <div className="min-w-0 space-y-4">
+            {i > 0 && <div className="mb-6 h-px bg-border" />}
+            <div className="min-w-0 space-y-3">
               <div className="flex items-center justify-between gap-4">
                 <h2 className="min-w-0 break-words text-[19px] font-semibold text-foreground">
                   {section.title}
                 </h2>
-                <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                <span className="shrink-0 font-mono text-[12px] text-muted-foreground">
                   {copy.duration(section.readTimeMinutes)}
                 </span>
               </div>
@@ -122,11 +163,14 @@ export function CodexLessonReader({
                 ))}
               </div>
               {section.keyTakeaway && (
-                <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-5 py-4">
+                <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-4 py-3">
                   <div className="flex items-start gap-2.5">
-                    <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" aria-hidden="true" />
+                    <Lightbulb
+                      className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
+                      aria-hidden="true"
+                    />
                     <div className="min-w-0">
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
+                      <p className="text-[12px] font-bold uppercase tracking-wider text-brand-orange">
                         {copy.takeaway}
                       </p>
                       <p className="mt-1.5 text-[14px] leading-relaxed text-foreground">
@@ -136,29 +180,37 @@ export function CodexLessonReader({
                   </div>
                 </div>
               )}
-              <button
-                type="button"
-                onClick={() => markRead(section.id)}
-                disabled={!progressReady || readIds.has(section.id)}
-                className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
-              >
-                {readIds.has(section.id) ? (
-                  <span className="inline-flex items-center gap-2 text-risk-green">
-                    <CheckCircle2 className="h-4 w-4" />
-                    {copy.read}
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-orange">
-                    <Circle className="h-4 w-4" />
-                    {copy.markRead}
-                  </span>
-                )}
-              </button>
+              <LessonSectionCheckpoint
+                locale={locale}
+                checked={readiness.interactionReady && readIds.has(section.id)}
+                progressReady={readiness.interactionReady}
+                onCheck={() => markRead(section.id)}
+              />
             </div>
             {i === 0 &&
               afterIntroWidgets.map((widget, w) => (
-                <WidgetSlot key={`after-intro-${w}`} locale={locale} widget={widget} />
+                <WidgetSlot
+                  key={`after-intro-${w}`}
+                  locale={locale}
+                  widget={widget}
+                />
               ))}
+            {i === 0 && (
+              <section className="mt-6 border border-border p-4">
+                <h2 className="text-[19px] font-semibold text-foreground">
+                  {copy.practiceTitle}
+                </h2>
+                <p className="mt-1 text-[14px] leading-relaxed text-muted-foreground">
+                  {copy.practiceBody}
+                </p>
+                <div className="mt-4 min-w-0">
+                  <CodexBespokeInteractive
+                    locale={locale}
+                    lessonId={lesson.id}
+                  />
+                </div>
+              </section>
+            )}
           </div>
         ))}
 
@@ -166,56 +218,43 @@ export function CodexLessonReader({
           <WidgetSlot key={`end-${w}`} locale={locale} widget={widget} />
         ))}
 
-        <section className="mt-10 border-t border-border pt-8">
-          <h2 className="text-[19px] font-semibold text-foreground">{copy.practiceTitle}</h2>
-          <p className="mt-1 text-[13.5px] text-muted-foreground">
-            {copy.practiceBody}
-          </p>
-          <div className="mt-5 min-w-0">
-            <CodexBespokeInteractive locale={locale} lessonId={lesson.id} />
-          </div>
-        </section>
-
-        <div className="border-t border-border pt-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            {lessonCompleted ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
-                <CheckCircle2 className="h-4 w-4" />
-                {copy.completed}
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={completeLesson}
-                disabled={!canCompleteLesson}
-                className={cn(
-                  "inline-flex items-center gap-2 border-2 border-foreground px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                  canCompleteLesson
-                    ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                    : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
-                )}
+        <div className="border-t border-border pt-5">
+          <LessonProofCheckpoint
+            key={readiness.checkpointKey}
+            locale={locale}
+            completed={lessonCompleted}
+            progressReady={readiness.hydrated}
+            prerequisitesMet={readiness.ownerReady && allSectionsRead}
+            prerequisiteHint={
+              !readiness.ownerReady
+                ? getOwnerRequiredHint(locale)
+                : locale === "de"
+                  ? "Bestätige zuerst jeden Abschnitt als geprüft."
+                  : "Confirm every section as reviewed first."
+            }
+            onCommit={completeLesson}
+          />
+          <nav
+            aria-label={locale === "de" ? "Lektionsroute" : "Lesson route"}
+            className="mt-4 flex flex-wrap items-center justify-between gap-3"
+          >
+            {prevHref && (
+              <Link
+                href={prevHref}
+                className="inline-flex min-h-11 items-center border-b border-border text-[13px] text-muted-foreground transition-colors hover:border-brand-orange hover:text-foreground"
               >
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                {copy.complete}
-              </button>
+                {copy.previous}
+              </Link>
             )}
             {nextHref && (
               <Link
                 href={nextHref}
-                className="inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-orange transition-colors hover:opacity-80"
+                className="ml-auto inline-flex min-h-11 items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white transition-colors hover:bg-foreground"
               >
                 {copy.next}
               </Link>
             )}
-          </div>
-          {prevHref && (
-            <Link
-              href={prevHref}
-              className="mt-4 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {copy.previous}
-            </Link>
-          )}
+          </nav>
           {!nextHref && (
             <CompletionCertificateCta
               courseSlug="codex"
@@ -241,7 +280,11 @@ function WidgetSlot({
       data-widget-kind={widget.kind}
       className="mt-6 min-w-0 max-w-full [&_*]:min-w-0 [&_button>span:last-child]:break-words [&_p]:break-words"
     >
-      <RenderWidget locale={locale} kind={widget.kind} props={widget.props ?? {}} />
+      <RenderWidget
+        locale={locale}
+        kind={widget.kind}
+        props={widget.props ?? {}}
+      />
     </div>
   );
 }

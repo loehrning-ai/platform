@@ -134,7 +134,7 @@ export function CUPEDExplainer() {
           <div
             style={{
               fontFamily: "var(--font-mono,monospace)",
-              fontSize: 11,
+              fontSize: 12,
               color: BLUE,
               marginBottom: 8,
             }}
@@ -199,7 +199,7 @@ export function CUPEDExplainer() {
         <div style={{ flex: "2 1 280px" }}>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: INK3,
               marginBottom: 6,
               textTransform: "uppercase",
@@ -248,7 +248,7 @@ export function CUPEDExplainer() {
                     stroke={color}
                     strokeWidth={3}
                     strokeLinecap="round"
-                    style={{ transition: "all 0.5s ease" }}
+                    style={{ transition: "x1 500ms ease, x2 500ms ease" }}
                   />
                   <line
                     x1={scale(m - ci)}
@@ -257,7 +257,7 @@ export function CUPEDExplainer() {
                     y2={y + 6}
                     stroke={color}
                     strokeWidth={2}
-                    style={{ transition: "all 0.5s ease" }}
+                    style={{ transition: "x1 500ms ease, x2 500ms ease" }}
                   />
                   <line
                     x1={scale(m + ci)}
@@ -266,14 +266,14 @@ export function CUPEDExplainer() {
                     y2={y + 6}
                     stroke={color}
                     strokeWidth={2}
-                    style={{ transition: "all 0.5s ease" }}
+                    style={{ transition: "x1 500ms ease, x2 500ms ease" }}
                   />
                   <circle
                     cx={x}
                     cy={y}
                     r={5}
                     fill={color}
-                    style={{ transition: "all 0.5s ease" }}
+                    style={{ transition: "cx 500ms ease" }}
                   />
                   <text
                     x={x}
@@ -281,7 +281,7 @@ export function CUPEDExplainer() {
                     fontSize={10}
                     fill={color}
                     textAnchor="middle"
-                    style={{ transition: "all 0.5s ease" }}
+                    style={{ transition: "x 500ms ease" }}
                   >
                     {round(m, 3)} ± {round(ci, 3)}
                   </text>

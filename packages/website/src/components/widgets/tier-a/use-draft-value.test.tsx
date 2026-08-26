@@ -1,6 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
+import { renderHook, act, waitFor } from "@testing-library/react";
+import {
+  __resetLearningOwnerForTests,
+  continueWithAnonymousLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 import { useDraftValue } from "./use-draft-value";
 
 /**
@@ -74,7 +77,9 @@ describe("useDraftValue", () => {
       result.current[1]({ n: 42 });
     });
     expect(result.current[0]).toEqual({ n: 42 });
-    expect(window.localStorage.getItem("draft:c")).toBe(JSON.stringify({ n: 42 }));
+    expect(window.localStorage.getItem("draft:c")).toBe(
+      JSON.stringify({ n: 42 }),
+    );
   });
 
   it("keeps the initial value when the stored payload is unparseable", () => {
@@ -91,6 +96,31 @@ describe("useDraftValue", () => {
     expect(result.current[0]).toBe("Notiz mit Umlaut: über");
     expect(window.localStorage.getItem("draft:e")).toBe(
       JSON.stringify("Notiz mit Umlaut: über"),
+    );
+  });
+
+  it("rejects optimistic edits until the exact learning owner is loaded", async () => {
+    __resetLearningOwnerForTests("unknown");
+    const { result } = renderHook(() => useDraftValue("draft:owner", ""));
+
+    expect(result.current[2]).toBe(false);
+    act(() => {
+      result.current[1]("must not survive");
+    });
+    expect(result.current[0]).toBe("");
+    expect(window.localStorage.getItem("draft:owner")).toBeNull();
+
+    act(() => {
+      continueWithAnonymousLearningOwner();
+    });
+    await waitFor(() => expect(result.current[2]).toBe(true));
+
+    act(() => {
+      result.current[1]("owned draft");
+    });
+    expect(result.current[0]).toBe("owned draft");
+    expect(window.localStorage.getItem("draft:owner")).toBe(
+      JSON.stringify("owned draft"),
     );
   });
 });

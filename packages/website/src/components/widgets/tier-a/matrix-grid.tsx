@@ -48,17 +48,17 @@ export function MatrixGridWidget({
   locale = "en",
 }: MatrixGridWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [picks, setPicks] = useDraftValue<Picks>(
+  const [picks, setPicks, draftReady] = useDraftValue<Picks>(
     `matrix::${lessonId}::${cpId}`,
     {},
   );
 
   const allRowsPicked =
-    rows.length > 0 && rows.every((row) => picks[row] != null);
+    draftReady && rows.length > 0 && rows.every((row) => picks[row] != null);
 
   useEffect(() => {
-    if (allRowsPicked) complete();
-  }, [allRowsPicked, complete]);
+    if (draftReady && allRowsPicked) complete();
+  }, [draftReady, allRowsPicked, complete]);
 
   const pick = (row: string, colIndex: number) =>
     setPicks({ ...picks, [row]: colIndex });
@@ -69,7 +69,6 @@ export function MatrixGridWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+10 XP"
       doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div
@@ -85,7 +84,7 @@ export function MatrixGridWidget({
               {cols.map((col) => (
                 <th
                   key={col}
-                  className="p-2 text-center font-mono text-[10.5px] font-bold uppercase tracking-[0.08em] text-muted-foreground"
+                  className="p-2 text-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground"
                 >
                   {col}
                 </th>
@@ -104,8 +103,8 @@ export function MatrixGridWidget({
                   {row}
                 </td>
                 {cols.map((col, colIndex) => {
-                  const active = picks[row] === colIndex;
-                  const storedIndex = picks[row];
+                  const active = draftReady && picks[row] === colIndex;
+                  const storedIndex = draftReady ? picks[row] : undefined;
                   const selectedIndex =
                     storedIndex != null &&
                     storedIndex >= 0 &&
@@ -120,7 +119,12 @@ export function MatrixGridWidget({
                         aria-checked={active}
                         aria-label={`${row}, ${col}`}
                         data-roving-item
-                        tabIndex={rovingTabIndex(selectedIndex, colIndex)}
+                        tabIndex={
+                          draftReady
+                            ? rovingTabIndex(selectedIndex, colIndex)
+                            : -1
+                        }
+                        disabled={!draftReady}
                         onClick={() => pick(row, colIndex)}
                         onKeyDown={(event) =>
                           handleRovingFocusKeyDown(event, {
@@ -131,10 +135,10 @@ export function MatrixGridWidget({
                           })
                         }
                         className={cn(
-                          "inline-flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
+                          "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border-2 transition-colors",
                           active
                             ? "border-brand-orange bg-brand-orange text-white"
-                            : "border-border bg-background text-transparent hover:border-brand-orange/60",
+                            : "border-border bg-background text-transparent hover:border-brand-orange/60 disabled:cursor-wait disabled:opacity-60",
                         )}
                       >
                         <span aria-hidden="true">{active ? "●" : ""}</span>

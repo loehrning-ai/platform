@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -115,26 +111,20 @@ function FreeResponseBody({
 
   useEffect(() => {
     const onBeforeUnload = () => {
-      setOwnedSessionLearningItem(
-        storageKey,
-        draft,
-        ownerGeneration,
-      );
+      setOwnedSessionLearningItem(storageKey, draft, ownerGeneration);
     };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [draft, ownerGeneration, storageKey]);
 
   const saveDraft = () => {
-    setOwnedSessionLearningItem(
-      storageKey,
-      draft,
-      ownerGeneration,
-    );
+    setOwnedSessionLearningItem(storageKey, draft, ownerGeneration);
   };
 
   const handleSubmit = async () => {
-    const ownerGeneration = getLearningOwnerContext().generation;
+    const owner = getLearningOwnerContext();
+    if (owner.kind === "unknown") return;
+    const ownerGeneration = owner.generation;
     saveDraft();
     setGrading(true);
     setUnavailable(false);
@@ -157,9 +147,7 @@ function FreeResponseBody({
       if (!res.ok) throw new Error(`status ${res.status}`);
       const data = (await res.json()) as ApiResponse;
       if (getLearningOwnerContext().generation !== ownerGeneration) return;
-      setResult(data);
-      setSubmitted(true);
-      submitExercise({
+      const persisted = submitExercise({
         moduleId,
         lessonId,
         exerciseId,
@@ -168,14 +156,16 @@ function FreeResponseBody({
         aiFeedback: data.rubric,
         summary: data.summary,
         gradingSource: "ai",
+        expectedOwnerGeneration: ownerGeneration,
       });
+      if (!persisted) return;
+      setResult(data);
+      setSubmitted(true);
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
       if (getLearningOwnerContext().generation !== ownerGeneration) return;
       // No fallback grader for free-response; mark completed with null score.
-      setUnavailable(true);
-      setSubmitted(true);
-      submitExercise({
+      const persisted = submitExercise({
         moduleId,
         lessonId,
         exerciseId,
@@ -185,7 +175,11 @@ function FreeResponseBody({
           ? "AI evaluation is currently unavailable. Try again later."
           : "AI-Bewertung gerade nicht verfügbar. Versuch's später nochmal.",
         gradingSource: "fallback",
+        expectedOwnerGeneration: ownerGeneration,
       });
+      if (!persisted) return;
+      setUnavailable(true);
+      setSubmitted(true);
     } finally {
       setGrading(false);
     }
@@ -205,7 +199,7 @@ function FreeResponseBody({
     <div>
       <label
         htmlFor={`${exerciseId}-textarea`}
-        className="mb-2 block font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
+        className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {text("Deine Antwort", "Your response")}
       </label>
@@ -218,16 +212,17 @@ function FreeResponseBody({
         rows={9}
         disabled={submitted || grading}
         placeholder={
-          placeholder ?? text("Schreib deine Antwort hier …", "Write your response here …")
+          placeholder ??
+          text("Schreib deine Antwort hier …", "Write your response here …")
         }
         className={cn(
-          "w-full resize-y border border-border bg-background p-3.5 font-mono text-[13px] leading-[1.6] text-foreground outline-none",
+          "min-h-11 w-full resize-y border border-border bg-background p-3.5 font-mono text-[13px] leading-[1.6] text-foreground outline-none",
           submitted || grading
             ? "cursor-not-allowed opacity-80"
             : "focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange",
         )}
       />
-      <div className="mt-1 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+      <div className="mt-1 flex items-center justify-between font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
         <span>
           {draft.length} / {maxLength}
         </span>
@@ -256,7 +251,7 @@ function FreeResponseBody({
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >
-              <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-foreground">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground">
                 {text("AI-Zusammenfassung", "AI summary")}
               </p>
               <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
@@ -300,8 +295,11 @@ function FreeResponseBody({
               })}
             </ul>
             {result.cached && (
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                {text("Cache-Hit · identische Eingabe", "Cached · identical input")}
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+                {text(
+                  "Cache-Hit · identische Eingabe",
+                  "Cached · identical input",
+                )}
               </p>
             )}
           </m.div>
@@ -313,8 +311,11 @@ function FreeResponseBody({
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
             className="mt-4 border-l-[3px] border-brand-amber bg-brand-amber/5 px-4 py-3"
           >
-            <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-amber">
-              {text("AI-Bewertung nicht verfügbar", "AI evaluation unavailable")}
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-amber">
+              {text(
+                "AI-Bewertung nicht verfügbar",
+                "AI evaluation unavailable",
+              )}
             </p>
             <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
               {text(
@@ -334,10 +335,10 @@ function FreeResponseBody({
             onClick={handleSubmit}
             disabled={draft.trim().length < 20 || grading}
             className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
               draft.trim().length < 20 || grading
                 ? "cursor-not-allowed bg-muted-foreground opacity-60"
-                : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
+                : "bg-brand-orange hover:bg-foreground hover:text-background",
             )}
           >
             {grading ? (

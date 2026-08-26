@@ -2,12 +2,19 @@ import { describe, expect, it } from "vitest";
 import type { BlockId, CourseSlug } from "@/lib/course/types";
 import { getCourseConfig } from "@/lib/course/config";
 import { getBlock } from "@/lib/course/data";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  isEvidenceGatedCourseSlug,
+  lessonCompletionEvidenceCheckpointId,
+  operatorLessonEvidenceCheckpointIds,
+} from "@/lib/courses/completion";
 import type {
   UnifiedCourseSlice,
   UnifiedLessonProgress,
   UnifiedProgress,
 } from "@/lib/progress/types";
+import { checkpointKey } from "@/lib/progress/types";
 import { generateStaticParams as kiFuehrerscheinBlockParams } from "@/app/ki-fuehrerschein/kurs/[blockId]/page";
 import { generateStaticParams as gesellschaftBlockParams } from "@/app/ki-und-gesellschaft/kurs/[blockId]/page";
 import { generateStaticParams as euAiActBlockParams } from "@/app/eu-ai-act-kurs/kurs/[blockId]/page";
@@ -39,16 +46,30 @@ function progress(
 ): UnifiedProgress {
   const slice: UnifiedCourseSlice = {
     lessons: Object.fromEntries(
-      CANONICAL_LESSON_IDS[slug]
-        .slice(0, completedCount)
-        .map((lessonId) => [lessonId, COMPLETED_LESSON]),
+      CANONICAL_LESSON_IDS[slug].slice(0, completedCount).map((lessonId) => [
+        lessonId,
+        isEvidenceGatedCourseSlug(slug)
+          ? {
+              ...COMPLETED_LESSON,
+              sectionsRead: CANONICAL_SECTION_IDS[slug][lessonId] ?? [],
+              quizScore:
+                slug === "data-engineering-fundamentals" ||
+                slug === "data-science"
+                  ? null
+                  : 1,
+              quizTotal:
+                slug === "data-engineering-fundamentals" ||
+                slug === "data-science"
+                  ? null
+                  : 1,
+            }
+          : COMPLETED_LESSON,
+      ]),
     ),
     workshopQuiz: {
       passed: assessmentPassed,
       score: assessmentPassed ? 0.9 : 0,
-      completedAt: assessmentPassed
-        ? "2026-07-29T12:00:00.000Z"
-        : null,
+      completedAt: assessmentPassed ? "2026-07-29T12:00:00.000Z" : null,
     },
     capstoneSubmitted: false,
     startedAt: "2026-07-29T10:00:00.000Z",
@@ -58,7 +79,29 @@ function progress(
     schemaVersion: 3,
     courses: { [slug]: slice },
     xp: 0,
-    checkpoints: {},
+    checkpoints: isEvidenceGatedCourseSlug(slug)
+      ? Object.fromEntries(
+          CANONICAL_LESSON_IDS[slug]
+            .slice(0, completedCount)
+            .flatMap((lessonId) => [
+              [
+                checkpointKey(
+                  lessonId,
+                  lessonCompletionEvidenceCheckpointId(slug),
+                ),
+                true,
+              ],
+              ...(slug === "ai-native-operator"
+                ? operatorLessonEvidenceCheckpointIds(lessonId).map(
+                    (checkpointId) => [
+                      checkpointKey(lessonId, checkpointId),
+                      true,
+                    ],
+                  )
+                : []),
+            ]),
+        )
+      : {},
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-07-29T12:00:00.000Z",
@@ -70,7 +113,9 @@ describe("course resume routes", () => {
     const expected = new Map<string, string>();
     const register = (slug: CourseSlug, lessonId: string, href: string) => {
       const key = `${slug}:${lessonId}`;
-      expect(expected.has(key), `duplicate route registry key ${key}`).toBe(false);
+      expect(expected.has(key), `duplicate route registry key ${key}`).toBe(
+        false,
+      );
       expected.set(key, href);
     };
 
@@ -108,11 +153,7 @@ describe("course resume routes", () => {
       );
     }
     for (const { lessonId } of codexLessonParams()) {
-      register(
-        "codex",
-        lessonId,
-        `/kurse/open-source/codex/kurs/${lessonId}`,
-      );
+      register("codex", lessonId, `/kurse/open-source/codex/kurs/${lessonId}`);
     }
     for (const { lessonId } of dataInfrastructureLessonParams()) {
       register(
@@ -144,8 +185,7 @@ describe("course resume routes", () => {
     }
 
     const canonicalKeys = Object.entries(CANONICAL_LESSON_IDS).flatMap(
-      ([slug, lessonIds]) =>
-        lessonIds.map((lessonId) => `${slug}:${lessonId}`),
+      ([slug, lessonIds]) => lessonIds.map((lessonId) => `${slug}:${lessonId}`),
     );
     expect([...expected.keys()].sort()).toEqual([...canonicalKeys].sort());
 
@@ -159,18 +199,17 @@ describe("course resume routes", () => {
 
   it("deep-links block readers to the first incomplete lesson", () => {
     expect(
-      resolveCourseResumeHref(progress("ki-fuehrerschein", 1), "ki-fuehrerschein"),
-    ).toBe(
-      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2",
-    );
+      resolveCourseResumeHref(
+        progress("ki-fuehrerschein", 1),
+        "ki-fuehrerschein",
+      ),
+    ).toBe("/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2");
     expect(
       resolveCourseResumeHref(
         progress("ki-und-gesellschaft", 3),
         "ki-und-gesellschaft",
       ),
-    ).toBe(
-      "/ki-und-gesellschaft/kurs/block_2#lesson=deepfake-2-1",
-    );
+    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=deepfake-2-1");
   });
 
   it("routes one-page lessons and chapters directly", () => {
@@ -186,6 +225,15 @@ describe("course resume routes", () => {
         "ai-native-operator",
       ),
     ).toBe("/kurse/open-source/ai-native-operator/mindset/2");
+  });
+
+  it("retains legacy navigation data without skipping its first ungated proof", () => {
+    const withEvidence = progress("ki-fuehrerschein", 1);
+    const legacy = { ...withEvidence, checkpoints: {} };
+
+    expect(resolveCourseResumeHref(legacy, "ki-fuehrerschein")).toBe(
+      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_1",
+    );
   });
 
   it("routes completed lesson sets to their assessment or record", () => {

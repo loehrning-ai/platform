@@ -33,7 +33,6 @@ import {
   getReadSectionIds as uGetReadSectionIds,
   markLessonCompleted as uMarkLessonCompleted,
   isLessonCompleted as uIsLessonCompleted,
-  getCompletedLessonIds as uGetCompletedLessonIds,
   getCompletedLessonsCount as uGetCompletedLessonsCount,
   saveLessonQuizScore as uSaveLessonQuizScore,
   saveExerciseResult as uSaveExerciseResult,
@@ -44,6 +43,7 @@ import {
   resetCourse,
   __resetCacheForTests as uResetCacheForTests,
 } from "@/lib/progress/store";
+import { getEvidenceBackedCompletedLessonIds } from "@/lib/progress/completion-evidence";
 import {
   isCanonicalLessonId,
   isCanonicalSectionId,
@@ -100,7 +100,7 @@ export function isLessonCompleted(lessonId: string): boolean {
 }
 
 export function getCompletedLessonIds(): ReadonlySet<string> {
-  return uGetCompletedLessonIds(SLUG);
+  return getEvidenceBackedCompletedLessonIds(SLUG);
 }
 
 // ─── Exercise Progress ─────────────────────────────────────────
@@ -109,8 +109,9 @@ export function saveExerciseResult(
   moduleId: ModuleId,
   lessonId: string,
   result: ExerciseResult,
-): void {
-  uSaveExerciseResult(SLUG, lessonId, result);
+): boolean {
+  const durable = uSaveExerciseResult(SLUG, lessonId, result);
+  if (!durable) return false;
   const merged = uGetExerciseResult(SLUG, lessonId, result.exerciseId);
   const evt: {
     name: "ai_native_exercise_submit";
@@ -129,6 +130,7 @@ export function saveExerciseResult(
   };
   trackEvent(evt);
   recordForDebug(evt);
+  return true;
 }
 
 export function getExerciseResult(
@@ -157,16 +159,16 @@ export function getModuleCompletedLessonCount(
   moduleId: ModuleId,
   lessonIds: readonly string[],
 ): number {
-  const slice = getCourseSlice(SLUG);
-  return lessonIds.filter((id) => slice.lessons[id]?.completed).length;
+  const completedIds = getEvidenceBackedCompletedLessonIds(SLUG);
+  return lessonIds.filter((id) => completedIds.has(id)).length;
 }
 
 export function areAllModuleLessonsCompleted(
   lessonIds: readonly string[],
 ): boolean {
   if (lessonIds.length === 0) return false;
-  const slice = getCourseSlice(SLUG);
-  return lessonIds.every((id) => slice.lessons[id]?.completed);
+  const completedIds = getEvidenceBackedCompletedLessonIds(SLUG);
+  return lessonIds.every((id) => completedIds.has(id));
 }
 
 export function notifyModuleCompleted(
@@ -532,9 +534,9 @@ function deserializeAndValidate(encoded: string): SerializedProgress | null {
       };
       hasMeaningfulProgress ||= Boolean(
         sectionIds.length > 0 ||
-          lesson.quizScore !== null ||
-          lesson.completed ||
-          exEntries.length > 0,
+        lesson.quizScore !== null ||
+        lesson.completed ||
+        exEntries.length > 0,
       );
     }
     if (!hasMeaningfulProgress) return null;

@@ -45,7 +45,7 @@ export function SectionShell({
     <section
       id={id}
       className={cn(
-        "relative py-24 md:py-28",
+        "relative py-12",
         dark && "dark-section bg-[var(--color-dark-bg)]",
         dotGrid && (dark ? "bg-dot-pattern-dark" : "bg-dot-pattern"),
         className,
@@ -78,12 +78,10 @@ export function VoiceAnchor({
   readonly className?: string;
 }) {
   return (
-    <div
-      className={cn("relative max-w-[720px] py-3 pl-8", className)}
-    >
+    <div className={cn("relative max-w-[720px] py-3 pl-8", className)}>
       <p className="ai-voice-anchor text-foreground">{children}</p>
       {author && (
-        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mt-4 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
           {author}
         </p>
       )}
@@ -101,7 +99,7 @@ export function TierChip({
 }) {
   void tier; // always "FREE", the type guards against accidental extension
   return (
-    <span className="inline-flex items-baseline gap-1.5 border-b-2 pb-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+    <span className="inline-flex items-baseline gap-1.5 border-b-2 pb-0.5 font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
       {locale === "en" ? "FREE" : "KOSTENLOS"}
     </span>
   );
@@ -207,11 +205,7 @@ export function FadeBlock({
   readonly className?: string;
 }) {
   void delay;
-  return (
-    <div className={className}>
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 /* Eyebrow — Kupfer mono overline used by most section tops */
@@ -225,7 +219,7 @@ export function Eyebrow({
   return (
     <p
       className={cn(
-        "font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange",
+        "font-mono text-xs font-semibold uppercase tracking-[0.16em] text-brand-orange",
         className,
       )}
     >

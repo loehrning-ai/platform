@@ -1,4 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import {
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
@@ -49,7 +54,7 @@ const MOBILE_REFLOW_LESSON_IDS = [
   "L12",
 ] as const;
 
-/** A minimal unified-store payload with the selected codex lessons completed. */
+/** A minimal unified-store payload with selected Codex lessons evidence-backed. */
 function completedCodexState(
   completedLessonIds: readonly string[] = CODEX_LESSON_IDS,
 ) {
@@ -58,7 +63,7 @@ function completedCodexState(
     completedLessonIds.map((id) => [
       id,
       {
-        sectionsRead: [],
+        sectionsRead: [...CANONICAL_SECTION_IDS.codex[id]],
         quizScore: null,
         quizTotal: null,
         completed: true,
@@ -78,7 +83,12 @@ function completedCodexState(
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      completedLessonIds.map((id) => [
+        checkpointKey(id, lessonCompletionEvidenceCheckpointId("codex")),
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -210,24 +220,32 @@ test.describe("Codex Course golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await openLessonReference(page);
 
-    const markAsRead = page.getByRole("button", {
-      name: "Mark as read",
+    const uncheckedSections = page.getByRole("button", {
+      name: "Confirm section reviewed",
       exact: true,
     });
-    const sectionCount = await markAsRead.count();
+    const sectionCount = await uncheckedSections.count();
     expect(sectionCount).toBeGreaterThan(0);
     for (let remaining = sectionCount; remaining > 0; remaining -= 1) {
-      await markAsRead.first().click();
-      await expect(markAsRead).toHaveCount(remaining - 1);
+      await uncheckedSections.first().click();
+      await expect(uncheckedSections).toHaveCount(remaining - 1);
     }
-    const completeLesson = page.getByRole("button", {
-      name: "Complete lesson",
+    await page
+      .getByRole("textbox", { name: "Decision or revision" })
+      .fill("I will test this change in practice.");
+    const saveCheckpoint = page.getByRole("button", {
+      name: "Save checkpoint",
     });
-    await expect(completeLesson).toBeEnabled();
-    await completeLesson.click();
+    await expect(saveCheckpoint).toBeEnabled();
+    await saveCheckpoint.click();
+    await expect(
+      page.getByText("Navigation checkpoint saved", { exact: true }),
+    ).toBeVisible();
 
     const finalLessonCertificate = page.getByRole("link", {
       name: "Open Certificate of Completion",
@@ -287,7 +305,9 @@ test.describe("Codex Course 320px reflow", () => {
           waitUntil: "load",
         });
         expect(response?.status()).toBe(200);
-        await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+        await page
+          .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+          .waitFor({ state: "attached" });
         await settleFontsAndFrame(page);
         await openLessonReference(page);
 
@@ -319,7 +339,8 @@ test.describe("Codex Course 320px reflow", () => {
                 const overflowX = getComputedStyle(ancestor).overflowX;
                 const isContainedScroller =
                   (overflowX === "auto" || overflowX === "scroll") &&
-                  ancestor.scrollWidth > ancestor.clientWidth + viewportTolerance &&
+                  ancestor.scrollWidth >
+                    ancestor.clientWidth + viewportTolerance &&
                   ancestorRect.left >= -viewportTolerance &&
                   ancestorRect.right <= viewportRight;
                 if (isContainedScroller) return false;
@@ -333,8 +354,10 @@ test.describe("Codex Course 320px reflow", () => {
               return {
                 tag: element.tagName.toLowerCase(),
                 text:
-                  element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) ??
-                  "",
+                  element.textContent
+                    ?.trim()
+                    .replace(/\s+/g, " ")
+                    .slice(0, 80) ?? "",
                 left: Math.round(rect.left),
                 right: Math.round(rect.right),
               };

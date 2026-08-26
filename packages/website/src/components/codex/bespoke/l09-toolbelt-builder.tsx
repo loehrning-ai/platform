@@ -157,10 +157,10 @@ export function L09ToolbeltBuilder({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
-      <p className="mb-4 font-mono text-[11px] text-muted-foreground">
+      <p className="mb-4 font-mono text-xs text-muted-foreground">
         {copy.scenario}
       </p>
       <div className="grid gap-2 sm:grid-cols-2">
@@ -174,7 +174,7 @@ export function L09ToolbeltBuilder({
               onClick={() => pick(tool)}
               disabled={isPlaced}
               className={cn(
-                "min-w-0 break-words border-2 border-border bg-background px-3 py-2 text-left font-mono transition-colors",
+                "min-h-11 min-w-0 break-words border-2 border-border bg-background px-3 py-2 text-left font-mono transition-colors",
                 isPlaced && "border-risk-green bg-risk-green/10",
                 isRejected && "border-brand-amber bg-brand-amber/10",
                 !isPlaced && "hover:border-brand-orange/60",
@@ -183,16 +183,14 @@ export function L09ToolbeltBuilder({
               <span className="block text-[12.5px] font-bold text-foreground">
                 {tool.id}
               </span>
-              <span className="block text-[11px] text-muted-foreground">
+              <span className="block text-xs text-muted-foreground">
                 {tool.purpose[locale]}
               </span>
               {isPlaced && (
-                <span className="text-[10px] text-risk-green">
-                  ✓ {copy.fit}
-                </span>
+                <span className="text-xs text-risk-green">✓ {copy.fit}</span>
               )}
               {isRejected && (
-                <span className="text-[10px] text-brand-amber">
+                <span className="text-xs text-brand-amber">
                   ⚠ {copy.overkill}
                 </span>
               )}
@@ -201,10 +199,10 @@ export function L09ToolbeltBuilder({
         })}
       </div>
       <div className="mt-4 border-2 border-border bg-background p-3">
-        <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+        <p className="mb-1 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
           {copy.belt}: {placed.size} / {NEEDED_COUNT}
         </p>
-        <div className="flex flex-col gap-0.5 font-mono text-[11.5px] text-foreground">
+        <div className="flex flex-col gap-0.5 font-mono text-xs text-foreground">
           {log.map((line, i) => (
             <span key={i} className="break-words">
               &gt; {line}

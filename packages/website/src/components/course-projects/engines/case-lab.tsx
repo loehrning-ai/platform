@@ -880,7 +880,7 @@ export default function CaseLab({
                 {prompt.text[locale]}
               </p>
               <div className="mt-3 border-l-2 border-brand-orange pl-3">
-                <p className="font-mono text-[0.65rem] font-black uppercase tracking-wide text-brand-orange-dark">
+                <p className="font-mono text-xs font-black uppercase tracking-wide text-brand-orange-dark">
                   {copy.evidenceLabel}
                 </p>
                 <p className="mt-1 break-words text-xs leading-relaxed text-muted-foreground">

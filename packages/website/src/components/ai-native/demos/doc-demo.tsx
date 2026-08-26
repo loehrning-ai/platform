@@ -40,7 +40,11 @@ const STAGE_META: readonly {
   readonly detail: string;
 }[] = [
   { stage: 1, title: "OCR", detail: "Azure Form Recognizer" },
-  { stage: 2, title: "Struktur-Parsing", detail: "Schema-Extraktion · simuliert" },
+  {
+    stage: 2,
+    title: "Struktur-Parsing",
+    detail: "Schema-Extraktion · simuliert",
+  },
   { stage: 3, title: "Validierung", detail: "UStG §14 · SKR03" },
   { stage: 4, title: "Export-Entwurf", detail: "Beispieldatensatz" },
 ];
@@ -183,14 +187,14 @@ export function DocDemo(): JSX.Element {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[220px_1fr] md:gap-5">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(240px,0.75fr)_1.25fr] md:gap-5">
         {/* Doc panel */}
         <div>
           <div
-            className="relative aspect-[210/297] overflow-hidden border border-border bg-card/60 p-3"
+            className="relative min-h-[420px] overflow-hidden border border-border bg-card/60 p-3"
             aria-label="Rechnungs-Preview"
           >
-            <div className="relative z-[1] font-mono text-[8px] leading-[1.3] text-foreground">
+            <div className="relative z-[1] font-mono text-[12px] leading-[1.3] text-foreground">
               FIKTIVWERK-BEISPIEL AG
               <br />
               Beispielweg 0 (DUMMY)
@@ -287,7 +291,7 @@ export function DocDemo(): JSX.Element {
                           stiffness: 400,
                           damping: 15,
                         }}
-                        className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center bg-risk-green font-mono text-[9px] font-bold text-white"
+                        className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-risk-green font-mono text-[12px] font-bold text-white"
                       >
                         ✓
                       </m.div>
@@ -312,7 +316,7 @@ export function DocDemo(): JSX.Element {
             onClick={run}
             disabled={running}
             className={cn(
-              "mt-3 w-full border-2 border-foreground px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "mt-3 min-h-11 w-full border-2 border-foreground px-4 py-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
               running
                 ? "cursor-wait bg-muted-foreground opacity-75"
                 : stage === 4
@@ -349,7 +353,7 @@ export function DocDemo(): JSX.Element {
                 >
                   <div
                     className={cn(
-                      "flex h-5 w-5 items-center justify-center font-mono text-[10px] font-bold text-white",
+                      "flex h-5 w-5 items-center justify-center font-mono text-[12px] font-bold text-white",
                       done
                         ? "bg-risk-green"
                         : active
@@ -363,7 +367,7 @@ export function DocDemo(): JSX.Element {
                   <span className="text-[13px] font-semibold text-foreground">
                     {st.title}
                   </span>
-                  <span className="ml-auto font-mono text-[10px] text-muted-foreground">
+                  <span className="ml-auto font-mono text-[12px] text-muted-foreground">
                     {st.detail}
                   </span>
                 </div>
@@ -382,13 +386,13 @@ export function DocDemo(): JSX.Element {
               >
                 <div className="mb-2.5 flex items-center justify-between">
                   <DemoOverline>Extrahierte Daten</DemoOverline>
-                  <span className="inline-flex items-center gap-1 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 font-mono text-[10px] text-risk-green">
+                  <span className="inline-flex items-center gap-1 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 font-mono text-[12px] text-risk-green">
                     <span className="h-1.5 w-1.5 rounded-full bg-risk-green" />
                     Simulationswert {Math.round(extracted.confidence * 100)} % ·
                     nicht kalibriert
                   </span>
                 </div>
-                <div className="mb-2.5 grid grid-cols-1 gap-x-3 gap-y-1 font-mono text-[11px] md:grid-cols-2">
+                <div className="mb-2.5 grid grid-cols-1 gap-x-3 gap-y-1 font-mono text-[12px] md:grid-cols-2">
                   {[
                     ["Nr", extracted.nr],
                     ["Datum", extracted.datum],
@@ -408,7 +412,7 @@ export function DocDemo(): JSX.Element {
                     </div>
                   ))}
                 </div>
-                <table className="w-full border-collapse font-mono text-[11px]">
+                <table className="w-full border-collapse font-mono text-[12px]">
                   <thead>
                     <tr className="border-b border-foreground">
                       {["Pos", "Leistung", "Menge", "EP", "Summe"].map(
@@ -416,7 +420,7 @@ export function DocDemo(): JSX.Element {
                           <th
                             key={h}
                             className={cn(
-                              "px-1 py-1.5 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground",
+                              "px-1 py-1.5 font-mono text-[12px] uppercase tracking-[0.1em] text-muted-foreground",
                               i === 1 ? "text-left" : "text-right",
                             )}
                           >

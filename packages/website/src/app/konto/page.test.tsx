@@ -1,12 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  isEvidenceGatedCourseSlug,
+  lessonCompletionEvidenceCheckpointId,
+} from "@/lib/courses/completion";
 import type { CourseSlug } from "@/lib/course/types";
 import type {
   UnifiedCourseSlice,
   UnifiedLessonProgress,
   UnifiedProgress,
 } from "@/lib/progress/types";
+import { checkpointKey } from "@/lib/progress/types";
 
 const mocks = vi.hoisted(() => ({
   getAuthenticatedUser: vi.fn(),
@@ -58,9 +64,25 @@ function courseSlice(
 ): UnifiedCourseSlice {
   return {
     lessons: Object.fromEntries(
-      CANONICAL_LESSON_IDS[slug]
-        .slice(0, completedCount)
-        .map((lessonId) => [lessonId, COMPLETED_LESSON]),
+      CANONICAL_LESSON_IDS[slug].slice(0, completedCount).map((lessonId) => [
+        lessonId,
+        isEvidenceGatedCourseSlug(slug)
+          ? {
+              ...COMPLETED_LESSON,
+              sectionsRead: CANONICAL_SECTION_IDS[slug][lessonId] ?? [],
+              quizScore:
+                slug === "data-engineering-fundamentals" ||
+                slug === "data-science"
+                  ? null
+                  : 1,
+              quizTotal:
+                slug === "data-engineering-fundamentals" ||
+                slug === "data-science"
+                  ? null
+                  : 1,
+            }
+          : COMPLETED_LESSON,
+      ]),
     ),
     workshopQuiz: {
       passed: assessmentPassed,
@@ -74,11 +96,26 @@ function courseSlice(
 }
 
 function progress(courses: UnifiedProgress["courses"]): UnifiedProgress {
+  const checkpoints = Object.fromEntries(
+    Object.entries(courses).flatMap(([slug, slice]) => {
+      const courseSlug = slug as CourseSlug;
+      if (!slice || !isEvidenceGatedCourseSlug(courseSlug)) return [];
+      return Object.entries(slice.lessons)
+        .filter(([, lesson]) => lesson.completed)
+        .map(([lessonId]) => [
+          checkpointKey(
+            lessonId,
+            lessonCompletionEvidenceCheckpointId(courseSlug),
+          ),
+          true,
+        ]);
+    }),
+  );
   return {
     schemaVersion: 3,
     courses,
     xp: 0,
-    checkpoints: {},
+    checkpoints,
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-07-29T12:00:00.000Z",
@@ -209,7 +246,7 @@ describe("KontoPage course resume integration", () => {
       screen.queryByRole("heading", { name: "Deine Kurse" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Deine Kompetenzen" }),
+      screen.queryByRole("heading", { name: "Behandelte Lernergebnisse" }),
     ).not.toBeInTheDocument();
     expect(mocks.fetchUnifiedProgressForUser).toHaveBeenCalledWith(
       AUTH_CLIENT,
@@ -239,6 +276,11 @@ describe("KontoPage course resume integration", () => {
       screen.getByRole("heading", { level: 1, name: "Your learning record." }),
     ).toBeInTheDocument();
     expect(screen.getByText("Courses completed")).toBeInTheDocument();
+    expect(screen.getByText("Course outcomes covered")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Covered course outcomes" }),
+    ).toBeVisible();
+    expect(document.body).not.toHaveTextContent(/competenc(?:y|ies) earned/i);
     expect(screen.getAllByText("AI Fundamentals").length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Start" })[0]).toHaveAttribute(
       "href",
@@ -247,6 +289,13 @@ describe("KontoPage course resume integration", () => {
     expect(
       screen.getByRole("link", { name: "Privacy and data controls" }),
     ).toHaveAttribute("href", "/en/konto/datenschutz");
+    expect(
+      screen.getByRole("navigation", { name: "Account privacy" }),
+    ).toBeVisible();
+    expect(document.body).toHaveTextContent(
+      "Historical activity data remains in exports for compatibility",
+    );
+    expect(document.body).not.toHaveTextContent(/\bXP\b|streak|badge/i);
     expect(document.body).not.toHaveTextContent("Deine Kurse");
 
     const metadata = await generateMetadata();

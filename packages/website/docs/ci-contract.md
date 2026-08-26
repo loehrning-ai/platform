@@ -4,19 +4,19 @@ The repository root defines the authoritative command contract. Continuous integ
 
 ## Required blocking gates
 
-| Gate                        | Root command                                                  | Purpose                                                                                                                                                                                                                                                                                          |
-| --------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Public-tree scan            | `bun run scan:public`                                         | Blocks secrets, private paths, unlicensed binaries, stale paths, and manifest drift in scanner-visible files. Known generated directories are deliberately pruned.                                                                                                                               |
-| Post-clean publication tree | `bun run publication:check`                                   | Final pre-`git init` packaging gate. After dependencies and build reports are removed, blocks Git metadata, secrets, symlinks, generated/cache/report directories, authenticated storage state, and local-only excluded E2E specs. It intentionally cannot run after a root `.git` entry exists. |
-| Dependency licenses         | `bun run license:audit`                                       | Requires license metadata or a bundled license file for every installed package/version, blocks unreviewed strong-copyleft, source-available, and conditional identifiers, and reports exact reviewed package/version exceptions for distribution review.                                        |
-| Lighthouse route contract   | `bun run lighthouse:check`                                    | Proves that every static public-indexable page and one published representative per dynamic public pattern are present in `lighthouserc.json`; rejects duplicate, stale, non-indexable, and non-canonical URLs.                                                                                  |
-| Content validation          | `bun run content:lint`                                        | Validates registries, dates, links, and content invariants.                                                                                                                                                                                                                                      |
-| Environment contract        | `bun run --cwd packages/website test:env-contract` | Proves that partial, insecure, or unattested optional-provider configuration fails gated builds.                                                                                                                                                                                                 |
-| Type safety                 | `bun run typecheck` and `bun run --cwd packages/website typecheck:test` | Compiles production code and the separate strict test configuration without emitting files.                                                                                                                                                                                     |
-| Static analysis             | `bun run lint`                                                | Runs ESLint across the application.                                                                                                                                                                                                                                                              |
-| Unit tests and coverage     | `bun run --cwd packages/website test:coverage`                | Runs the complete Vitest suite with blocking line, branch, function, and statement coverage floors.                                                                                                                                                                                             |
-| Production build            | `bun run verify`                                              | Runs production compilation and static generation inside the provider-free verification wrapper. A plain `bun run build` intentionally validates the current environment and is not provider-free release evidence.                                                                               |
-| Server-log privacy          | `bun run --cwd packages/website test:server-log-privacy`      | Builds and starts the production Next.js Node runtime, then proves synthetic uncaught-error and primitive-rejection canaries are replaced by the fixed redaction marker while validated structured API logging remains available.                                                               |
+| Gate                        | Root command                                                            | Purpose                                                                                                                                                                                                                                                                                          |
+| --------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Public-tree scan            | `bun run scan:public`                                                   | Blocks secrets, private paths, unlicensed binaries, stale paths, and manifest drift in scanner-visible files. Known generated directories are deliberately pruned.                                                                                                                               |
+| Post-clean publication tree | `bun run publication:check`                                             | Final pre-`git init` packaging gate. After dependencies and build reports are removed, blocks Git metadata, secrets, symlinks, generated/cache/report directories, authenticated storage state, and local-only excluded E2E specs. It intentionally cannot run after a root `.git` entry exists. |
+| Dependency licenses         | `bun run license:audit`                                                 | Requires license metadata or a bundled license file for every installed package/version, blocks unreviewed strong-copyleft, source-available, and conditional identifiers, and reports exact reviewed package/version exceptions for distribution review.                                        |
+| Lighthouse route contract   | `bun run lighthouse:check`                                              | Proves that every static public-indexable page and one published representative per dynamic public pattern are present in `lighthouserc.json`; rejects duplicate, stale, non-indexable, and non-canonical URLs.                                                                                  |
+| Content validation          | `bun run content:lint`                                                  | Validates registries, dates, links, and content invariants.                                                                                                                                                                                                                                      |
+| Environment contract        | `bun run --cwd packages/website test:env-contract`                      | Proves that partial, insecure, or unattested optional-provider configuration fails gated builds.                                                                                                                                                                                                 |
+| Type safety                 | `bun run typecheck` and `bun run --cwd packages/website typecheck:test` | Compiles production code and the separate strict test configuration without emitting files.                                                                                                                                                                                                      |
+| Static analysis             | `bun run lint`                                                          | Runs ESLint across the application.                                                                                                                                                                                                                                                              |
+| Unit tests and coverage     | `bun run --cwd packages/website test:coverage`                          | Runs the complete Vitest suite with blocking line, branch, function, and statement coverage floors.                                                                                                                                                                                              |
+| Production build            | `bun run verify`                                                        | Runs production compilation and static generation inside the provider-free verification wrapper. A plain `bun run build` intentionally validates the current environment and is not provider-free release evidence.                                                                              |
+| Server-log privacy          | `bun run --cwd packages/website test:server-log-privacy`                | Builds and starts the production Next.js Node runtime, then proves synthetic uncaught-error and primitive-rejection canaries are replaced by the fixed redaction marker while validated structured API logging remains available.                                                                |
 
 The root workflow and Vercel must install with
 `bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
@@ -45,15 +45,15 @@ bootstrap (Node, checksum-verified Bun, `bun install --frozen-lockfile
 --ignore-scripts`, and optional Playwright browsers) lives in the composite
 action at `.github/actions/setup`.
 
-| Job | Command | Needs a build |
-| --- | --- | --- |
-| `fast` | `bun run verify:static` | no |
-| `unit` | `bun run --cwd packages/website verify:unit` | no |
-| `lighthouse` | `bun run lighthouse:ci:built` | yes |
-| `e2e` (18-way matrix) | `bun run --cwd packages/website e2e:shard:built` | yes |
-| `auth-scaffold` | `bun run test:e2e:auth-scaffold:built` | yes |
-| `server-log-privacy` | `bun run --cwd packages/website test:server-log-privacy:built` | yes |
-| `verify` | aggregation only | no |
+| Job                   | Command                                                        | Needs a build |
+| --------------------- | -------------------------------------------------------------- | ------------- |
+| `fast`                | `bun run verify:static`                                        | no            |
+| `unit`                | `bun run --cwd packages/website verify:unit`                   | no            |
+| `lighthouse`          | `bun run lighthouse:ci:built`                                  | yes           |
+| `e2e` (18-way matrix) | `bun run --cwd packages/website e2e:shard:built`               | yes           |
+| `auth-scaffold`       | `bun run test:e2e:auth-scaffold:built`                         | yes           |
+| `server-log-privacy`  | `bun run --cwd packages/website test:server-log-privacy:built` | yes           |
+| `verify`              | aggregation only                                               | no            |
 
 Each build-dependent job runs `bun run --cwd packages/website verify:build`
 itself. The build is deliberately **not** passed between jobs as an artifact:
@@ -65,7 +65,7 @@ that cannot fail for transport reasons.
 
 `verify` is the only required status check. It declares `if: always()` and fails
 when any dependency did not succeed. That `always()` is load-bearing — a
-required job that is *skipped* is treated as passing by branch protection.
+required job that is _skipped_ is treated as passing by branch protection.
 
 The public browser gate is sharded across the matrix instead of looping shards
 inside one process. `scripts/run-e2e-suite.mjs` retains the serial loop for
@@ -78,9 +78,9 @@ route contracts remain runnable without provider credentials.
 
 ### Authentication proof tiers
 
-| Tier                   | Command                               | Credential/network contract                                                                                               | What it proves                                                                                                                               |
-| ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Provider-free scaffold | `bun run test:e2e:auth-scaffold`      | No credentials and no Supabase request.                                                                                   | Mock storage-state wiring, browser auth affordance where public config exists, and fail-closed signed-out routes. It is not live-auth proof. |
+| Tier                     | Command                               | Credential/network contract                                                                                                                                  | What it proves                                                                                                                                             |
+| ------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Provider-free scaffold   | `bun run test:e2e:auth-scaffold`      | No credentials and no Supabase request.                                                                                                                      | Mock storage-state wiring, browser auth affordance where public config exists, and fail-closed signed-out routes. It is not live-auth proof.               |
 | Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
 CI runs `test:e2e:auth-scaffold:built`; its green state must never be described
@@ -148,7 +148,7 @@ budget or score regression is reviewed. Reports are written only to
 `.lighthouseci/reports`; they are local release evidence and remain excluded
 from the public tree. The complete 35-route, three-run measurement remains
 outside ordinary CI because performance scores vary with runner load and
-Chromium conditions. Ordinary CI retains its five-route, one-run smoke; route
+Chromium conditions. Ordinary CI retains its five-route, three-run smoke; route
 coverage itself is deterministic and blocking there.
 
 ## Release validation

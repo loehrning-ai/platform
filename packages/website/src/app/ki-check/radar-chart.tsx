@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import type { DimensionResult } from "@/lib/ki-check/types";
 
 /*
@@ -43,6 +43,7 @@ export function RadarChart({
 }: {
   readonly dimensions: readonly DimensionResult[];
 }) {
+  const prefersReducedMotion = useReducedMotion();
   const count = dimensions.length;
   const dataRadii = dimensions.map((d) => (d.normalizedScore / 100) * R);
 
@@ -90,9 +91,9 @@ export function RadarChart({
         stroke="var(--color-brand-orange)"
         strokeWidth={2}
         strokeLinejoin="round"
-        initial={{ opacity: 0 }}
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.4 }}
       />
 
       {/* Vertex dots */}
@@ -120,7 +121,7 @@ export function RadarChart({
             textAnchor={anchorFor(p.x)}
             dominantBaseline="middle"
             fill="var(--color-muted-foreground)"
-            className="text-[11px] font-medium"
+            className="text-xs font-medium"
           >
             <tspan x={p.x} dy="-0.35em">
               {dim.short}
@@ -129,7 +130,7 @@ export function RadarChart({
               x={p.x}
               dy="1.2em"
               fill="var(--color-foreground)"
-              className="text-[10px] font-semibold"
+              className="text-xs font-semibold"
             >
               {Math.round(dim.normalizedScore)}
             </tspan>

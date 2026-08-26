@@ -37,8 +37,6 @@ export interface DataEngineeringFundamentalsCourseCopy {
     readonly previous: string;
     readonly next: string;
     readonly certificate: string;
-    readonly markComplete: string;
-    readonly completed: string;
     readonly notFoundTitle: string;
   };
   readonly certificateMetadata: {
@@ -120,8 +118,6 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       previous: "← Vorheriges Kapitel",
       next: "Nächstes Kapitel →",
       certificate: "Teilnahmebestätigung öffnen →",
-      markComplete: "Kapitel abschließen",
-      completed: "Kapitel abgeschlossen",
       notFoundTitle: "Kapitel nicht gefunden",
     },
     certificateMetadata: {
@@ -204,8 +200,6 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       previous: "← Previous chapter",
       next: "Next chapter →",
       certificate: "Open completion record →",
-      markComplete: "Complete chapter",
-      completed: "Chapter completed",
       notFoundTitle: "Chapter not found",
     },
     certificateMetadata: {

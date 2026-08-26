@@ -15,7 +15,9 @@ import type { Locale } from "@/lib/i18n/locale";
 
 const DEMO_OPEN_SOURCE_SET = new Set<string>(DEMO_OPEN_SOURCES);
 
-function parseDemoOpenSource(value: string | null | undefined): DemoOpenSource | null {
+function parseDemoOpenSource(
+  value: string | null | undefined,
+): DemoOpenSource | null {
   return value && DEMO_OPEN_SOURCE_SET.has(value)
     ? (value as DemoOpenSource)
     : null;
@@ -26,15 +28,21 @@ function parseDemoOpenSource(value: string | null | undefined): DemoOpenSource |
  * and derives the optional analytics source in the browser. Keeping query-string
  * access out of the server page preserves static metadata in the initial HTML.
  */
-export function DemoShell({ demo, locale = "de" }: { demo: Demo; locale?: Locale }) {
+export function DemoShell({
+  demo,
+  locale = "de",
+}: {
+  demo: Demo;
+  locale?: Locale;
+}) {
   const Comp = getDemoComponent(demo.slug);
   const trackedKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const querySource = new URLSearchParams(window.location.search).get("source");
-    const origin =
-      parseDemoOpenSource(querySource) ??
-      "deeplink";
+    const querySource = new URLSearchParams(window.location.search).get(
+      "source",
+    );
+    const origin = parseDemoOpenSource(querySource) ?? "deeplink";
     const trackingKey = `${demo.slug}:${origin}`;
     if (trackedKeyRef.current === trackingKey) return;
     trackedKeyRef.current = trackingKey;
@@ -43,7 +51,7 @@ export function DemoShell({ demo, locale = "de" }: { demo: Demo; locale?: Locale
 
   return (
     <div
-      className={`min-w-0 overflow-hidden border-2 ${demo.dark ? "dark-section border-border" : "border-foreground bg-background"} p-2 shadow-[4px_4px_0_0_var(--color-brand-orange)] sm:p-4 sm:shadow-[6px_6px_0_0_var(--color-brand-orange)] lg:p-6`}
+      className={`min-w-0 overflow-hidden border border-t-[3px] border-t-brand-orange ${demo.dark ? "dark-section border-border" : "border-border bg-background"} p-2 sm:p-3 lg:p-4`}
     >
       <DemoLocaleProvider locale={locale}>
         {Comp ? (

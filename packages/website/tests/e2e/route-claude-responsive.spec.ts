@@ -1,4 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import {
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { settleWholePage } from "./fixtures/settle";
 
 const LESSON_IDS = [
@@ -24,14 +29,14 @@ const LOCALES = [
     prefix: "",
     landingTitle: "Claude mit klarer Struktur einsetzen.",
     firstLessonTitle: "Was Claude tatsächlich ist",
-    completedLabel: "Lektion abgeschlossen",
+    completedLabel: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
     landingTitle: "Use Claude with clear structure.",
     firstLessonTitle: "What Claude actually is",
-    completedLabel: "Lesson complete",
+    completedLabel: "Navigation checkpoint saved",
   },
 ] as const;
 
@@ -58,7 +63,7 @@ function completedClaudeState(quizPassed: boolean) {
           LESSON_IDS.map((id) => [
             id,
             {
-              sectionsRead: [],
+              sectionsRead: [...CANONICAL_SECTION_IDS.claude[id]],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -77,7 +82,12 @@ function completedClaudeState(quizPassed: boolean) {
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      LESSON_IDS.map((id) => [
+        checkpointKey(id, lessonCompletionEvidenceCheckpointId("claude")),
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -188,194 +198,195 @@ async function waitForWorkshopQuestionTransition(page: Page) {
 }
 
 async function expectClaudeGeometryContained(page: Page, context: string) {
-  const measure = () => page.evaluate(() => {
-    const root = document.querySelector("main");
-    if (!root) throw new Error("Main content region is missing");
+  const measure = () =>
+    page.evaluate(() => {
+      const root = document.querySelector("main");
+      if (!root) throw new Error("Main content region is missing");
 
-    // The 200%-zoom audit sets documentElement.style.zoom, and under CSS zoom
-    // getBoundingClientRect() reports zoomed pixels while window.innerWidth
-    // stays in CSS pixels. Comparing them directly makes every full-width
-    // element look twice as wide as the viewport at zoom 2 — an element that
-    // exactly fills the layout width lands on innerWidth and tips over on any
-    // sub-pixel rounding. Normalise the rect back to CSS pixels first, which
-    // is the space the viewport is measured in.
-    const cssPixelRect = (element: Element) => {
-      const rect = element.getBoundingClientRect();
-      const zoom = (element as HTMLElement).currentCSSZoom || 1;
-      return {
-        left: rect.left / zoom,
-        right: rect.right / zoom,
-        width: rect.width / zoom,
-        height: rect.height / zoom,
-      };
-    };
-
-    const isVisible = (element: Element) => {
-      const style = getComputedStyle(element);
-      const rect = cssPixelRect(element);
-      return (
-        style.display !== "none" &&
-        style.visibility !== "hidden" &&
-        rect.width > 1 &&
-        rect.height > 1
-      );
-    };
-    // Geometry belongs in the failure message. A tag/class/text triple names
-    // the offender but not by how much it escapes, and the difference between
-    // a sub-pixel rounding artifact and a genuinely wide box decides the fix.
-    // Reproducing this locally is expensive when it only appears on CI, so the
-    // numbers have to survive in the report itself.
-    const description = (element: Element) => {
-      const rect = cssPixelRect(element);
-      return {
-        tag: element.tagName.toLowerCase(),
-        className:
-          typeof element.className === "string"
-            ? element.className.slice(0, 120)
-            : "",
-        text: (element.textContent ?? "")
-          .trim()
-          .replace(/\s+/g, " ")
-          .slice(0, 120),
-        left: Math.round(rect.left * 100) / 100,
-        right: Math.round(rect.right * 100) / 100,
-        width: Math.round(rect.width * 100) / 100,
-        viewport: window.innerWidth,
-      };
-    };
-
-    const descendants = Array.from(root.querySelectorAll("*"));
-    const viewportOffenders = descendants
-      .filter((element) => {
-        if (!isVisible(element) || element.closest(".sr-only")) return false;
-        const scroller = element.closest<HTMLElement>(
-          '[data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
-        );
-        if (scroller && element !== scroller) return false;
-        const rect = cssPixelRect(element);
-        return rect.left < -1 || rect.right > window.innerWidth + 1;
-      })
-      .map(description);
-
-    const clippedContent = descendants
-      .filter((element) => {
-        if (!(element instanceof HTMLElement) || !isVisible(element)) {
-          return false;
-        }
-        if (
-          element.closest(
-            '.sr-only, [data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
-          )
-        ) {
-          return false;
-        }
-        // Diagram canvases deliberately crop absolutely positioned labels at
-        // their plotted edge. Their accessible equivalent is the role/img
-        // label, so this is not hidden prose or an inaccessible scroller.
-        if (
-          element.getAttribute("role") === "img" ||
-          element.matches("input, textarea, select")
-        ) {
-          return false;
-        }
-        const style = getComputedStyle(element);
-        return (
-          ["hidden", "clip"].includes(style.overflowX) &&
-          element.clientWidth > 0 &&
-          element.scrollWidth > element.clientWidth + 1
-        );
-      })
-      // Naming the clipping ancestor is not enough to fix anything: the box
-      // that has to change is whichever descendant sticks out past it. Report
-      // by right-edge overhang rather than by width, because a child can be
-      // narrower than the container and still overflow it by being offset.
-      .map((element) => {
-        const clipper = cssPixelRect(element);
-        const overhanging: {
-          tag: string;
-          className: string;
-          text: string;
-          right: number;
-          overhangBy: number;
-        }[] = [];
-        for (const child of element.querySelectorAll("*")) {
-          const rect = cssPixelRect(child);
-          const overhangBy = rect.right - clipper.right;
-          if (overhangBy <= 0.5) continue;
-          overhanging.push({
-            tag: child.tagName.toLowerCase(),
-            className:
-              typeof child.className === "string"
-                ? child.className.slice(0, 90)
-                : "",
-            text: (child.textContent ?? "")
-              .trim()
-              .replace(/\s+/g, " ")
-              .slice(0, 50),
-            right: Math.round(rect.right * 100) / 100,
-            overhangBy: Math.round(overhangBy * 100) / 100,
-          });
-        }
-        overhanging.sort((a, b) => b.overhangBy - a.overhangBy);
+      // The 200%-zoom audit sets documentElement.style.zoom, and under CSS zoom
+      // getBoundingClientRect() reports zoomed pixels while window.innerWidth
+      // stays in CSS pixels. Comparing them directly makes every full-width
+      // element look twice as wide as the viewport at zoom 2 — an element that
+      // exactly fills the layout width lands on innerWidth and tips over on any
+      // sub-pixel rounding. Normalise the rect back to CSS pixels first, which
+      // is the space the viewport is measured in.
+      const cssPixelRect = (element: Element) => {
+        const rect = element.getBoundingClientRect();
+        const zoom = (element as HTMLElement).currentCSSZoom || 1;
         return {
-          ...description(element),
-          clientWidth: element.clientWidth,
-          scrollWidth: element.scrollWidth,
-          overflowBy: element.scrollWidth - element.clientWidth,
-          overhanging: overhanging.slice(0, 3),
+          left: rect.left / zoom,
+          right: rect.right / zoom,
+          width: rect.width / zoom,
+          height: rect.height / zoom,
         };
-      });
+      };
 
-    const horizontalScrollers = descendants
-      .filter((element): element is HTMLElement => {
-        if (!(element instanceof HTMLElement) || !isVisible(element)) {
-          return false;
-        }
+      const isVisible = (element: Element) => {
         const style = getComputedStyle(element);
+        const rect = cssPixelRect(element);
         return (
-          ["auto", "scroll"].includes(style.overflowX) &&
-          element.scrollWidth > element.clientWidth + 1
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          rect.width > 1 &&
+          rect.height > 1
         );
-      })
-      .map((element) => {
+      };
+      // Geometry belongs in the failure message. A tag/class/text triple names
+      // the offender but not by how much it escapes, and the difference between
+      // a sub-pixel rounding artifact and a genuinely wide box decides the fix.
+      // Reproducing this locally is expensive when it only appears on CI, so the
+      // numbers have to survive in the report itself.
+      const description = (element: Element) => {
         const rect = cssPixelRect(element);
         return {
-          ...description(element),
-          role: element.getAttribute("role"),
-          ariaLabel: element.getAttribute("aria-label"),
-          tabIndex: element.tabIndex,
-          left: rect.left,
-          right: rect.right,
+          tag: element.tagName.toLowerCase(),
+          className:
+            typeof element.className === "string"
+              ? element.className.slice(0, 120)
+              : "",
+          text: (element.textContent ?? "")
+            .trim()
+            .replace(/\s+/g, " ")
+            .slice(0, 120),
+          left: Math.round(rect.left * 100) / 100,
+          right: Math.round(rect.right * 100) / 100,
+          width: Math.round(rect.width * 100) / 100,
+          viewport: window.innerWidth,
         };
-      });
+      };
 
-    const focusableOffenders = Array.from(
-      root.querySelectorAll<HTMLElement>(
-        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      ),
-    )
-      .filter((element) => {
-        if (!isVisible(element)) return false;
-        const rect = cssPixelRect(element);
-        return (
-          rect.left < -1 ||
-          rect.right > window.innerWidth + 1 ||
-          element.clientWidth === 0 ||
-          element.clientHeight === 0
-        );
-      })
-      .map(description);
+      const descendants = Array.from(root.querySelectorAll("*"));
+      const viewportOffenders = descendants
+        .filter((element) => {
+          if (!isVisible(element) || element.closest(".sr-only")) return false;
+          const scroller = element.closest<HTMLElement>(
+            '[data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
+          );
+          if (scroller && element !== scroller) return false;
+          const rect = cssPixelRect(element);
+          return rect.left < -1 || rect.right > window.innerWidth + 1;
+        })
+        .map(description);
 
-    return {
-      viewportWidth: window.innerWidth,
-      bodyScrollWidth: document.body.scrollWidth,
-      documentScrollWidth: document.documentElement.scrollWidth,
-      viewportOffenders,
-      clippedContent,
-      horizontalScrollers,
-      focusableOffenders,
-    };
-  });
+      const clippedContent = descendants
+        .filter((element) => {
+          if (!(element instanceof HTMLElement) || !isVisible(element)) {
+            return false;
+          }
+          if (
+            element.closest(
+              '.sr-only, [data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
+            )
+          ) {
+            return false;
+          }
+          // Diagram canvases deliberately crop absolutely positioned labels at
+          // their plotted edge. Their accessible equivalent is the role/img
+          // label, so this is not hidden prose or an inaccessible scroller.
+          if (
+            element.getAttribute("role") === "img" ||
+            element.matches("input, textarea, select")
+          ) {
+            return false;
+          }
+          const style = getComputedStyle(element);
+          return (
+            ["hidden", "clip"].includes(style.overflowX) &&
+            element.clientWidth > 0 &&
+            element.scrollWidth > element.clientWidth + 1
+          );
+        })
+        // Naming the clipping ancestor is not enough to fix anything: the box
+        // that has to change is whichever descendant sticks out past it. Report
+        // by right-edge overhang rather than by width, because a child can be
+        // narrower than the container and still overflow it by being offset.
+        .map((element) => {
+          const clipper = cssPixelRect(element);
+          const overhanging: {
+            tag: string;
+            className: string;
+            text: string;
+            right: number;
+            overhangBy: number;
+          }[] = [];
+          for (const child of element.querySelectorAll("*")) {
+            const rect = cssPixelRect(child);
+            const overhangBy = rect.right - clipper.right;
+            if (overhangBy <= 0.5) continue;
+            overhanging.push({
+              tag: child.tagName.toLowerCase(),
+              className:
+                typeof child.className === "string"
+                  ? child.className.slice(0, 90)
+                  : "",
+              text: (child.textContent ?? "")
+                .trim()
+                .replace(/\s+/g, " ")
+                .slice(0, 50),
+              right: Math.round(rect.right * 100) / 100,
+              overhangBy: Math.round(overhangBy * 100) / 100,
+            });
+          }
+          overhanging.sort((a, b) => b.overhangBy - a.overhangBy);
+          return {
+            ...description(element),
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            overflowBy: element.scrollWidth - element.clientWidth,
+            overhanging: overhanging.slice(0, 3),
+          };
+        });
+
+      const horizontalScrollers = descendants
+        .filter((element): element is HTMLElement => {
+          if (!(element instanceof HTMLElement) || !isVisible(element)) {
+            return false;
+          }
+          const style = getComputedStyle(element);
+          return (
+            ["auto", "scroll"].includes(style.overflowX) &&
+            element.scrollWidth > element.clientWidth + 1
+          );
+        })
+        .map((element) => {
+          const rect = cssPixelRect(element);
+          return {
+            ...description(element),
+            role: element.getAttribute("role"),
+            ariaLabel: element.getAttribute("aria-label"),
+            tabIndex: element.tabIndex,
+            left: rect.left,
+            right: rect.right,
+          };
+        });
+
+      const focusableOffenders = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      )
+        .filter((element) => {
+          if (!isVisible(element)) return false;
+          const rect = cssPixelRect(element);
+          return (
+            rect.left < -1 ||
+            rect.right > window.innerWidth + 1 ||
+            element.clientWidth === 0 ||
+            element.clientHeight === 0
+          );
+        })
+        .map(description);
+
+      return {
+        viewportWidth: window.innerWidth,
+        bodyScrollWidth: document.body.scrollWidth,
+        documentScrollWidth: document.documentElement.scrollWidth,
+        viewportOffenders,
+        clippedContent,
+        horizontalScrollers,
+        focusableOffenders,
+      };
+    });
 
   // One sample can land mid-animation. The quiz slides its question frame in
   // horizontally, so a child is legitimately outside the viewport for a few
@@ -476,8 +487,8 @@ async function expectLocalizedInterfaceChrome(
   ).replace(/\s+/g, " ");
   const forbidden =
     locale === "de"
-      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude actually is)\b/i
-      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude tatsächlich ist)/i;
+      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Confirm section reviewed|Section reviewed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude actually is)\b/i
+      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Abschnitt als geprüft bestätigen|Abschnitt geprüft|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude tatsächlich ist)/i;
   expect(chrome, `${context}: foreign-language interface chrome`).not.toMatch(
     forbidden,
   );
@@ -584,25 +595,25 @@ test.describe("Claude locale continuity and record surfaces", () => {
     await continueLocally(page, "de");
     await openLessonReference(page);
 
-    const unread = page.getByRole("button", {
-      name: "Als gelesen markieren",
+    const uncheckedSections = page.getByRole("button", {
+      name: "Abschnitt als geprüft bestätigen",
     });
-    while ((await unread.count()) > 0) {
-      await unread.first().click();
+    while ((await uncheckedSections.count()) > 0) {
+      await uncheckedSections.first().click();
     }
-    const complete = page.getByRole("button", {
-      name: "Lektion abschließen",
+    await page
+      .getByRole("textbox", { name: "Entscheidung oder Änderung" })
+      .fill("Ich prüfe diese Änderung in der Praxis.");
+    const saveCheckpoint = page.getByRole("button", {
+      name: "Checkpoint speichern",
     });
-    await expect(complete).toBeEnabled();
-    await complete.click();
+    await expect(saveCheckpoint).toBeEnabled();
+    await saveCheckpoint.click();
     await expect(
-      page.getByText("Lektion abgeschlossen", { exact: true }),
+      page.getByText("Navigations-Checkpoint gespeichert", { exact: true }),
     ).toBeVisible();
 
-    const englishLink = visibleLanguageSwitchLink(
-      page,
-      /Englische Oberfläche/,
-    );
+    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
     await englishLink.click();
     await expect(page).toHaveURL(
       /\/en\/kurse\/open-source\/claude\/kurs\/mental-model$/,
@@ -611,7 +622,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
     await continueLocally(page, "en");
     await openLessonReference(page);
     await expect(
-      page.getByText("Lesson complete", { exact: true }),
+      page.getByText("Navigation checkpoint saved", { exact: true }),
     ).toBeVisible();
   });
 
@@ -731,10 +742,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settleFullPage(page);
-    const englishLink = visibleLanguageSwitchLink(
-      page,
-      /Englische Oberfläche/,
-    );
+    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/claude/verifizierung#${hash}`,

@@ -93,7 +93,7 @@ export function PermutationImportance() {
               </div>
               <div
                 className="v"
-                style={{ color: "var(--warn-ink)", fontSize: 11 }}
+                style={{ color: "var(--warn-ink)", fontSize: 12 }}
               >
                 {locale === "de"
                   ? PERM_LABELS_DE[
@@ -116,7 +116,7 @@ export function PermutationImportance() {
           </button>
           <p
             className="prose"
-            style={{ fontSize: 11, marginTop: 10, lineHeight: 1.5 }}
+            style={{ fontSize: 12, marginTop: 10, lineHeight: 1.5 }}
           >
             {text(
               "The ranking is stable here because the fixed gaps exceed the seeded jitter. That construction is not evidence that an empirical ranking would be stable.",

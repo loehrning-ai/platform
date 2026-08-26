@@ -1,18 +1,17 @@
 // ─── Progress-budget audit ────────────────────────
 //
-// This course has no quiz/capstone/checkpoint mechanism. The learner explicitly
-// marks all 12 numbered chapters complete, so
-// `exercisesCompleted` stays permanently empty and there is no
-// cross-course "_meta" row contribution to measure (unlike
-// data-infrastructure/claude/codex, which award per-widget checkpoints).
-// This test only needs to prove this course's own per-course row
-// (course_slug="data-science") stays far under the 65536-byte
-// pg_column_size CHECK constraint
-// (supabase/migrations/009_user_course_progress_per_course.sql).
+// The learner records one versioned transfer checkpoint per numbered chapter.
+// The response stays ephemeral, so `exercisesCompleted` remains empty. This
+// audit covers both the per-course row and compact checkpoint map.
 
 import { describe, it, expect } from "vitest";
 import { DS_NUMBERED_CHAPTER_IDS } from "./types";
-import type { UnifiedCourseSlice, UnifiedLessonProgress } from "@/lib/progress/types";
+import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
+import {
+  checkpointKey,
+  type UnifiedCourseSlice,
+  type UnifiedLessonProgress,
+} from "@/lib/progress/types";
 
 const ROW_BYTE_CAP = 65536;
 
@@ -43,6 +42,15 @@ describe("data-science's contribution to the per-course progress-budget row ", (
 
     const bytes = byteLength(slice);
     expect(bytes).toBeLessThan(ROW_BYTE_CAP * 0.05);
+
+    const checkpointId = lessonCompletionEvidenceCheckpointId("data-science");
+    const checkpoints = Object.fromEntries(
+      DS_NUMBERED_CHAPTER_IDS.map((chapterId) => [
+        checkpointKey(chapterId, checkpointId),
+        true,
+      ]),
+    );
+    expect(byteLength(checkpoints)).toBeLessThan(ROW_BYTE_CAP * 0.05);
   });
 
   it("has exactly 12 numbered-chapter entries, matching App.js's real CHAPTERS array minus Overview — no phantom or missing chapters", () => {

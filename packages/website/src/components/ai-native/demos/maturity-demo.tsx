@@ -338,7 +338,7 @@ export function MaturityDemo(): JSX.Element {
 
       {!done ? (
         <div className="flex flex-1 flex-col">
-          <div className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+          <div className="mb-1.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
             {copy.question} {step + 1} / {questions.length}
           </div>
           <h4 className="mb-4 text-[20px] font-bold tracking-[-0.02em] text-foreground md:text-[22px]">
@@ -386,7 +386,7 @@ export function MaturityDemo(): JSX.Element {
           >
             <div
               className={cn(
-                "font-mono text-[10px] font-bold uppercase tracking-[0.14em]",
+                "font-mono text-xs font-bold uppercase tracking-[0.14em]",
                 band.accentClass,
               )}
             >
@@ -408,7 +408,7 @@ export function MaturityDemo(): JSX.Element {
             <p className="mt-3.5 max-w-[540px] text-[14px] leading-[1.55] text-[var(--color-dark-fg)]/85 md:text-[15px]">
               {band.description[locale]}
             </p>
-            <p className="mt-3 max-w-[540px] font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-dark-muted)]">
+            <p className="mt-3 max-w-[540px] font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-dark-muted)]">
               {copy.boundary}
             </p>
           </div>
@@ -441,7 +441,7 @@ export function MaturityDemo(): JSX.Element {
                         )}
                       />
                     </div>
-                    <div className="text-right font-mono text-[11px] font-bold text-foreground">
+                    <div className="text-right font-mono text-xs font-bold text-foreground">
                       {score}/4
                     </div>
                   </div>
@@ -454,14 +454,14 @@ export function MaturityDemo(): JSX.Element {
             <button
               type="button"
               onClick={restart}
-              className="border border-foreground bg-transparent px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+              className="border border-foreground bg-transparent px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
             >
               ↺ {copy.restart}
             </button>
             <Link
               href={localizeHref("/ai-native/kurs/modul_1", locale)}
               prefetch={false}
-              className="inline-flex flex-1 items-center justify-center border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+              className="inline-flex flex-1 items-center justify-center border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
             >
               {copy.continue} →
             </Link>

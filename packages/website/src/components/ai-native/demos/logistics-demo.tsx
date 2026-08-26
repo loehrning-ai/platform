@@ -223,7 +223,7 @@ export function LogisticsDemo(): JSX.Element {
         {COLUMNS.map((col, ci) => (
           <Fragment key={ci}>
             <div className="flex min-w-0 flex-col gap-2.5">
-              <div className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+              <div className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 {col.label}
               </div>
               {col.nodes.map((n, ni) => {
@@ -266,7 +266,7 @@ export function LogisticsDemo(): JSX.Element {
                         </div>
                         <div
                           className={cn(
-                            "mt-0.5 font-mono text-[8px] uppercase tracking-[0.12em]",
+                            "mt-0.5 font-mono text-xs uppercase tracking-[0.12em]",
                             isCurrent
                               ? "text-white/70"
                               : "text-muted-foreground",
@@ -278,7 +278,7 @@ export function LogisticsDemo(): JSX.Element {
                     </div>
                     <div
                       className={cn(
-                        "mt-1.5 font-mono text-[9px] leading-[1.4] tracking-[0.04em]",
+                        "mt-1.5 font-mono text-xs leading-[1.4] tracking-[0.04em]",
                         isCurrent ? "text-white/85" : "text-muted-foreground",
                       )}
                     >
@@ -314,7 +314,7 @@ export function LogisticsDemo(): JSX.Element {
           onClick={run}
           disabled={running}
           className={cn(
-            "border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+            "border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
             running
               ? "cursor-wait opacity-75"
               : "shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
@@ -322,7 +322,7 @@ export function LogisticsDemo(): JSX.Element {
         >
           {running ? "◆ Läuft" : "▶ Verzug simulieren"}
         </button>
-        <div className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
+        <div className="font-mono text-xs tracking-[0.08em] text-muted-foreground">
           {running
             ? "Webhook eingegangen…"
             : "Klicken → Beispielsignal mit 31h Verzug → Review-Pfad läuft"}
@@ -330,8 +330,8 @@ export function LogisticsDemo(): JSX.Element {
       </div>
 
       {/* Simulated log */}
-      <div className="dark-section min-h-[170px] border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-4 py-3.5 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
-        <div className="mb-2 flex items-center justify-between font-mono text-[9px] tracking-[0.14em] text-[var(--color-dark-muted)]">
+      <div className="dark-section min-h-[170px] border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-4 py-3.5 font-mono text-xs leading-[1.7] text-[var(--color-dark-fg)]">
+        <div className="mb-2 flex items-center justify-between font-mono text-xs tracking-[0.14em] text-[var(--color-dark-muted)]">
           <span>› BEISPIEL-LOG · WORKFLOW SC-042</span>
           <span>{events.length}/6 Ereignisse</span>
         </div>
@@ -366,7 +366,7 @@ export function LogisticsDemo(): JSX.Element {
           ["Ausführung", "simuliert"],
         ].map(([label, val]) => (
           <div key={label} className="border border-border bg-background p-3">
-            <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </div>
             <div className="mt-1 font-mono text-[18px] font-bold tracking-[-0.02em] text-foreground md:text-[20px]">

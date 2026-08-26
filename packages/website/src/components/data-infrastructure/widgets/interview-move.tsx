@@ -126,7 +126,7 @@ export function InterviewMove({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 break-words font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
+      <p className="mb-4 break-words font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
         {locale === "de"
           ? "Ablauf · Staff-Systemdesign · Schritt für Schritt"
           : "Walkthrough · IC5 design · step through the moves"}{" "}
@@ -163,7 +163,7 @@ export function InterviewMove({
 
       <div className="mt-4 min-w-0 max-w-full border-2 border-border bg-background p-3 sm:p-4">
         <span
-          className="inline-block px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-white"
+          className="inline-block px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wide text-white"
           style={{ backgroundColor: currentColor }}
         >
           {current.tag}
@@ -171,7 +171,7 @@ export function InterviewMove({
         <h3 className="mt-2 break-words text-[15px] font-semibold text-foreground [overflow-wrap:anywhere]">
           {current.title}
         </h3>
-        <div className="prose-sm mt-2 min-w-0 max-w-full break-words text-[13.5px] leading-relaxed text-foreground [overflow-wrap:anywhere] [&_code]:break-all [&_code]:font-mono [&_code]:text-[12px] [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-[11px]">
+        <div className="prose-sm mt-2 min-w-0 max-w-full break-words text-[13.5px] leading-relaxed text-foreground [overflow-wrap:anywhere] [&_code]:break-all [&_code]:font-mono [&_code]:text-[12px] [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs">
           <SafeLessonMarkup html={current.body} />
         </div>
         <p className="mt-2 break-words border-l-2 border-brand-orange/60 pl-3 text-[12px] italic text-muted-foreground [overflow-wrap:anywhere]">
@@ -185,7 +185,7 @@ export function InterviewMove({
           onClick={() => show(cur - 1)}
           disabled={cur === 0}
           className={cn(
-            "max-w-full break-words border-2 border-border px-3 py-1.5 text-left font-mono text-[11px] font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
+            "min-h-11 max-w-full break-words border-2 border-border px-3 py-1.5 text-left font-mono text-xs font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
             cur === 0
               ? "cursor-not-allowed text-muted-foreground"
               : "text-foreground hover:border-brand-orange/60",
@@ -193,7 +193,7 @@ export function InterviewMove({
         >
           {locale === "de" ? "vorheriger Schritt" : "◀ prev move"}
         </button>
-        <span className="max-w-full break-words font-mono text-[11px] text-muted-foreground [overflow-wrap:anywhere]">
+        <span className="max-w-full break-words font-mono text-xs text-muted-foreground [overflow-wrap:anywhere]">
           {locale === "de" ? "Schritt" : "move"}{" "}
           <b className="text-foreground">{cur + 1}</b> /{" "}
           <b className="text-foreground">{moves.length}</b> · {current.tag}
@@ -203,7 +203,7 @@ export function InterviewMove({
           onClick={() => show(cur + 1)}
           disabled={cur === moves.length - 1}
           className={cn(
-            "max-w-full break-words border-2 border-foreground px-3 py-1.5 text-left font-mono text-[11px] font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
+            "min-h-11 max-w-full break-words border-2 border-foreground px-3 py-1.5 text-left font-mono text-xs font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
             cur === moves.length - 1
               ? "cursor-not-allowed border-border text-muted-foreground"
               : "bg-brand-orange text-white",

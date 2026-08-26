@@ -36,6 +36,22 @@ function installLocalStoragePolyfill(): void {
   });
 }
 
+function setReducedMotion(matches: boolean): void {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+}
+
 beforeAll(() => {
   if (
     typeof window.localStorage === "undefined" ||
@@ -48,11 +64,14 @@ beforeAll(() => {
 beforeEach(() => {
   window.localStorage.clear();
   __resetCacheForTests();
+  setReducedMotion(false);
 });
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("Watermark", () => {
@@ -99,6 +118,30 @@ describe("Watermark", () => {
     });
     expect(isCheckpointDone("di-streaming", "wm")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
+  });
+
+  it("resolves to one static final state without an interval under reduced motion", () => {
+    vi.useFakeTimers();
+    setReducedMotion(true);
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
+    render(<Watermark lessonId="di-streaming" cpId="wm" />);
+
+    fireEvent.click(screen.getByRole("button", { name: /run stream/ }));
+
+    expect(intervalSpy).not.toHaveBeenCalled();
+    expect(isCheckpointDone("di-streaming", "wm")).toBe(true);
+    expect(screen.getByRole("button", { name: /run stream/ })).toBeEnabled();
+  });
+
+  it("clears an active stream interval when unmounted", () => {
+    vi.useFakeTimers();
+    const clearIntervalSpy = vi.spyOn(globalThis, "clearInterval");
+    const { unmount } = render(<Watermark lessonId="di-streaming" cpId="wm" />);
+    fireEvent.click(screen.getByRole("button", { name: /run stream/ }));
+
+    unmount();
+
+    expect(clearIntervalSpy).toHaveBeenCalled();
   });
 
   it("reset clears the on-time/late/dropped counters", () => {

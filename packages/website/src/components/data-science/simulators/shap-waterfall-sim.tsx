@@ -238,7 +238,7 @@ export function SHAPWaterfallSim() {
                     height={BAR_H}
                     fill={color}
                     rx="2"
-                    style={{ transition: "all 200ms ease" }}
+                    style={{ transition: "x 200ms ease, width 200ms ease" }}
                   />
                   <text
                     x={labelX}

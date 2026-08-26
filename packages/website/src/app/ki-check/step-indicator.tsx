@@ -28,60 +28,61 @@ export function StepIndicator({
   totalByDimension,
   dimensions = DIMENSIONS,
 }: StepIndicatorProps) {
-  const lastIndex = dimensions.length - 1;
-
   return (
-    <ol className="flex items-start justify-between gap-1" aria-hidden="true">
+    <ol
+      className="grid grid-cols-5 divide-x divide-border border-y border-border"
+      aria-hidden="true"
+    >
       {dimensions.map((dim, i) => {
         const answered = answeredByDimension[dim.id] ?? 0;
         const total = totalByDimension[dim.id] ?? 0;
         const isDone = total > 0 && answered >= total;
         const isCurrent = dim.id === currentDimensionId;
+        const percentage = total > 0 ? Math.round((answered / total) * 100) : 0;
         return (
-          <li key={dim.id} className="flex flex-1 flex-col items-center gap-2">
-            <div className="flex w-full items-center">
+          <li
+            key={dim.id}
+            className={cn(
+              "min-w-0 border-b-2 px-1.5 py-2",
+              isCurrent ? "border-brand-orange" : "border-transparent",
+            )}
+          >
+            <div className="flex min-w-0 items-center justify-between gap-1">
               <span
                 className={cn(
-                  "h-0.5 flex-1 rounded-full transition-colors",
-                  i === 0
-                    ? "bg-transparent"
-                    : answered > 0 || isDone
-                      ? "bg-brand-orange/40"
-                      : "bg-border",
-                )}
-              />
-              <span
-                className={cn(
-                  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors",
-                  isDone && "bg-kupfer-mist text-brand-orange",
-                  isCurrent && "bg-brand-orange text-white shadow-tile",
-                  !isDone && !isCurrent && "bg-card text-muted-foreground",
+                  "font-mono text-xs font-bold tabular-nums",
+                  isDone || isCurrent
+                    ? "text-brand-orange"
+                    : "text-muted-foreground",
                 )}
               >
                 {isDone ? (
-                  <Check className="h-4 w-4" strokeWidth={2.5} />
+                  <Check
+                    className="h-3.5 w-3.5"
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
                 ) : (
-                  i + 1
+                  String(i + 1).padStart(2, "0")
                 )}
               </span>
-              <span
-                className={cn(
-                  "h-0.5 flex-1 rounded-full transition-colors",
-                  i === lastIndex
-                    ? "bg-transparent"
-                    : isDone
-                      ? "bg-brand-orange/40"
-                      : "bg-border",
-                )}
-              />
+              <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                {answered}/{total}
+              </span>
             </div>
             <span
               className={cn(
-                "text-center text-[11px] font-medium leading-tight transition-colors",
+                "mt-1 hidden text-xs font-medium leading-tight sm:block",
                 isCurrent ? "text-foreground" : "text-muted-foreground",
               )}
             >
               {dim.short}
+            </span>
+            <span className="mt-1 block h-0.5 bg-track">
+              <span
+                className="block h-full bg-brand-orange transition-[width] motion-reduce:transition-none"
+                style={{ width: `${percentage}%` }}
+              />
             </span>
           </li>
         );

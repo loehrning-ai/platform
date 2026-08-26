@@ -31,8 +31,10 @@ export function WindowBar({
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-risk-green" />
       <span
         className={cn(
-          "ml-4 font-mono text-[11px] uppercase tracking-[0.14em]",
-          variant === "dark" ? "text-[var(--color-dark-muted)]" : "text-muted-foreground",
+          "ml-4 font-mono text-[12px] uppercase tracking-[0.14em]",
+          variant === "dark"
+            ? "text-[var(--color-dark-muted)]"
+            : "text-muted-foreground",
         )}
       >
         {title}
@@ -84,18 +86,18 @@ export function SourceCitation({
 }): JSX.Element {
   return (
     <div className="flex items-center gap-3 border border-border bg-background px-3 py-2">
-      <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[var(--color-kupfer-mist)] font-mono text-[11px] font-bold text-brand-orange">
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-[var(--color-kupfer-mist)] font-mono text-[12px] font-bold text-brand-orange">
         {String(index + 1).padStart(2, "0")}
       </div>
       <div className="min-w-0 flex-1">
         <div className="truncate text-[12.5px] font-semibold text-foreground">
           {title}
         </div>
-        <div className="truncate font-mono text-[10px] text-muted-foreground">
+        <div className="truncate font-mono text-[12px] text-muted-foreground">
           {section}
         </div>
       </div>
-      <div className="font-mono text-[11px] font-bold text-muted-foreground">
+      <div className="font-mono text-[12px] font-bold text-muted-foreground">
         {Math.round(confidence * 100)}%
       </div>
     </div>
@@ -104,9 +106,13 @@ export function SourceCitation({
 
 /* ─── Overline (small mono label) ─────────────────────────── */
 
-export function DemoOverline({ children }: { readonly children: ReactNode }): JSX.Element {
+export function DemoOverline({
+  children,
+}: {
+  readonly children: ReactNode;
+}): JSX.Element {
   return (
-    <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+    <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-brand-orange">
       {children}
     </div>
   );

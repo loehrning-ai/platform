@@ -22,7 +22,7 @@ export default async function LektionNotFound() {
         </p>
         <Link
           href={localizeHref("/ai-native/kurs", locale)}
-          className="mt-6 inline-flex items-center gap-2 text-sm text-brand-orange transition-colors hover:text-foreground"
+          className="mt-6 inline-flex min-h-11 min-w-11 items-center justify-center gap-2 text-sm text-brand-orange transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <ArrowLeft className="h-4 w-4" />
           {isEnglish ? "Back to course overview" : "Zur Kursübersicht"}

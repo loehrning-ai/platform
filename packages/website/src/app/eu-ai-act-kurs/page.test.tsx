@@ -35,7 +35,7 @@ describe("EU AI Act course landing page", () => {
     const startLinks = screen.getAllByRole("link", {
       name: /Kurs mit Lernkonto starten/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/eu-ai-act-kurs/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");
@@ -49,17 +49,21 @@ describe("EU AI Act course landing page", () => {
     expect(
       screen.getByRole("heading", { name: /Map roles, risks, and duties/ }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Lessons").nextElementSibling).toHaveTextContent(
-      "24",
-    );
+    expect(screen.getByText("24 Lessons")).toBeInTheDocument();
     expect(
       screen.getByText(/Article 4 has applied since 2 February 2025/),
     ).toBeInTheDocument();
+    expect(screen.getAllByText(/not legal advice/)).toHaveLength(1);
+    expect(
+      screen.queryByText(
+        /not accredited, server-signed, or evidence of legal compliance/,
+      ),
+    ).not.toBeInTheDocument();
 
     const startLinks = screen.getAllByRole("link", {
       name: /Start with a learning account/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/en/eu-ai-act-kurs/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");

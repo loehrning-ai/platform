@@ -1,12 +1,11 @@
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  beforeEach,
-  afterEach,
-} from "vitest";
-import { render, screen, fireEvent, cleanup, within } from "@testing-library/react";
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  within,
+} from "@testing-library/react";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -106,10 +105,10 @@ describe("FailureTaggerWidget", () => {
   ];
 
   it("renders the legend, the prompts and the mode pills per case", () => {
-    render(
-      <FailureTaggerWidget lessonId="l1" cpId="ft1" cases={cases} />,
-    );
-    expect(screen.getByText("Wie hoch ist unser Kontostand?")).toBeInTheDocument();
+    render(<FailureTaggerWidget lessonId="l1" cpId="ft1" cases={cases} />);
+    expect(
+      screen.getByText("Wie hoch ist unser Kontostand?"),
+    ).toBeInTheDocument();
     // 4 modes x 2 cases = 8 radios
     expect(screen.getAllByRole("radio")).toHaveLength(8);
     expect(screen.getAllByRole("radiogroup")).toHaveLength(2);
@@ -125,8 +124,12 @@ describe("FailureTaggerWidget", () => {
       />,
     );
     const groups = screen.getAllByRole("radiogroup");
-    fireEvent.click(within(groups[0]).getByRole("radio", { name: "Halluzination" }));
-    fireEvent.click(within(groups[1]).getByRole("radio", { name: "Formatdrift" }));
+    fireEvent.click(
+      within(groups[0]).getByRole("radio", { name: "Halluzination" }),
+    );
+    fireEvent.click(
+      within(groups[1]).getByRole("radio", { name: "Formatdrift" }),
+    );
     expect(isCheckpointDone("l1", "ft1")).toBe(false); // not until submit
     fireEvent.click(screen.getByText("Auswerten"));
     expect(isCheckpointDone("l1", "ft1")).toBe(true);
@@ -138,7 +141,7 @@ describe("FailureTaggerWidget", () => {
     );
   });
 
-  it("does not award XP when the threshold is not met", () => {
+  it("does not change the progress ledger when the threshold is not met", () => {
     render(
       <FailureTaggerWidget
         lessonId="l1"
@@ -149,8 +152,12 @@ describe("FailureTaggerWidget", () => {
     );
     const groups = screen.getAllByRole("radiogroup");
     // Both wrong.
-    fireEvent.click(within(groups[0]).getByRole("radio", { name: "Formatdrift" }));
-    fireEvent.click(within(groups[1]).getByRole("radio", { name: "Halluzination" }));
+    fireEvent.click(
+      within(groups[0]).getByRole("radio", { name: "Formatdrift" }),
+    );
+    fireEvent.click(
+      within(groups[1]).getByRole("radio", { name: "Halluzination" }),
+    );
     fireEvent.click(screen.getByText("Auswerten"));
     expect(isCheckpointDone("l1", "ft1")).toBe(false);
     expect(getXp()).toBe(0);
@@ -158,15 +165,17 @@ describe("FailureTaggerWidget", () => {
   });
 
   it("keeps Auswerten disabled until every case is tagged", () => {
-    render(
-      <FailureTaggerWidget lessonId="l1" cpId="ft1" cases={cases} />,
-    );
+    render(<FailureTaggerWidget lessonId="l1" cpId="ft1" cases={cases} />);
     const submit = screen.getByText("Auswerten");
     expect(submit).toBeDisabled();
     const groups = screen.getAllByRole("radiogroup");
-    fireEvent.click(within(groups[0]).getByRole("radio", { name: "Halluzination" }));
+    fireEvent.click(
+      within(groups[0]).getByRole("radio", { name: "Halluzination" }),
+    );
     expect(submit).toBeDisabled();
-    fireEvent.click(within(groups[1]).getByRole("radio", { name: "Formatdrift" }));
+    fireEvent.click(
+      within(groups[1]).getByRole("radio", { name: "Formatdrift" }),
+    );
     expect(submit).not.toBeDisabled();
   });
 
@@ -181,8 +190,12 @@ describe("FailureTaggerWidget", () => {
       />,
     );
     const groups = screen.getAllByRole("radiogroup");
-    fireEvent.click(within(groups[0]).getByRole("radio", { name: "Halluzination" }));
-    fireEvent.click(within(groups[1]).getByRole("radio", { name: "Formatdrift" }));
+    fireEvent.click(
+      within(groups[0]).getByRole("radio", { name: "Halluzination" }),
+    );
+    fireEvent.click(
+      within(groups[1]).getByRole("radio", { name: "Formatdrift" }),
+    );
     fireEvent.click(screen.getByText("Auswerten"));
     expect(screen.getAllByText(/Kein Bankzugriff/).length).toBeGreaterThan(0);
   });
@@ -282,8 +295,12 @@ describe("RedactionDrillWidget", () => {
     fireEvent.click(
       screen.getByRole("button", { name: /private Telefonnummer/ }),
     );
-    fireEvent.click(screen.getByRole("button", { name: /Passwort im Klartext/ }));
-    fireEvent.click(screen.getByRole("button", { name: /Name einer Privatperson/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Passwort im Klartext/ }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: /Name einer Privatperson/ }),
+    );
     fireEvent.click(screen.getByText("Einfügen prüfen"));
     expect(isCheckpointDone("l1", "rd1")).toBe(true);
   });
@@ -344,7 +361,9 @@ describe("DragReorderWidget", () => {
     expect(ids).toEqual(["b", "a"]);
     // Move "Stufe A" up to position 0.
     fireEvent.click(screen.getByRole("button", { name: /Stufe A nach oben/ }));
-    ids = screen.getAllByRole("listitem").map((li) => li.getAttribute("data-id"));
+    ids = screen
+      .getAllByRole("listitem")
+      .map((li) => li.getAttribute("data-id"));
     expect(ids).toEqual(["a", "b"]);
     fireEvent.click(screen.getByText("Reihenfolge prüfen"));
     expect(isCheckpointDone("l1", "dr1")).toBe(true);

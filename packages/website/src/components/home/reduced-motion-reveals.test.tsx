@@ -3,7 +3,6 @@ import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { CredibilityStrip } from "./credibility-strip";
-import { FinalCta } from "./final-cta";
 import { Offering } from "./offering";
 
 describe("homepage static content visibility", () => {
@@ -12,7 +11,6 @@ describe("homepage static content visibility", () => {
       <>
         <Offering />
         <CredibilityStrip />
-        <FinalCta />
       </>,
     );
 
@@ -20,17 +18,14 @@ describe("homepage static content visibility", () => {
     expect(html).not.toContain("scaleX(0)");
     expect(html).toContain("Vier Kurse.");
     expect(html).toContain("Betriebsprinzipien");
-    expect(html).toContain("Den passenden Einstieg finden.");
   });
 
-  it("renders the featured course inside a visible static wrapper", () => {
+  it("renders the complete foundation route in visible static markup", () => {
     render(<Offering />);
 
-    const featuredReveal = screen.getByText("Empfohlener Einstieg").closest("a")?.parentElement;
-    expect(featuredReveal).not.toBeNull();
-    expect(featuredReveal?.tagName).toBe("DIV");
-    expect(featuredReveal).toHaveClass("mt-12");
-    expect(featuredReveal).not.toHaveStyle({ opacity: "0" });
-    expect(featuredReveal).not.toHaveStyle({ transform: "scaleX(0)" });
+    const route = screen.getByTestId("foundation-route");
+    expect(route).toBeVisible();
+    expect(route).not.toHaveStyle({ opacity: "0" });
+    expect(route).not.toHaveStyle({ transform: "scaleX(0)" });
   });
 });

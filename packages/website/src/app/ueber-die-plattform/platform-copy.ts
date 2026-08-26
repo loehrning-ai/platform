@@ -10,13 +10,6 @@ type PlatformCopy = Readonly<{
   eyebrow: string;
   title: string;
   intro: string;
-  statusEyebrow: string;
-  accountLabel: string;
-  accountReady: string;
-  accountUnavailable: string;
-  feedbackLabel: string;
-  feedbackReady: string;
-  feedbackUnavailable: string;
   sections: readonly PlatformSection[];
   accountSectionTitle: string;
   accountSectionReady: string;
@@ -42,13 +35,6 @@ export const PLATFORM_COPY: Readonly<Record<Locale, PlatformCopy>> = {
     title: "Öffentliche Inhalte. Kontogebundene Zustände. Belegte Grenzen.",
     intro:
       "loehrning.ai ist eine frei zugängliche Lernplattform. Diese Seite trennt veröffentlichte Inhalte, persönliche Lernstände und externe Betriebsabhängigkeiten.",
-    statusEyebrow: "Aktueller Betriebszustand",
-    accountLabel: "Lernkonto",
-    accountReady: "Konfiguriert",
-    accountUnavailable: "Nicht verfügbar",
-    feedbackLabel: "Feedback-Formular",
-    feedbackReady: "Konfiguriert",
-    feedbackUnavailable: "Nicht verfügbar",
     sections: [
       {
         title: "Warum der Zugang kostenlos ist",
@@ -93,13 +79,6 @@ export const PLATFORM_COPY: Readonly<Record<Locale, PlatformCopy>> = {
     title: "Public content. Account-bound state. Documented limits.",
     intro:
       "loehrning.ai is a freely accessible learning platform. This page separates published content, personal learning state, and external operating dependencies.",
-    statusEyebrow: "Current operating state",
-    accountLabel: "Learning account",
-    accountReady: "Configured",
-    accountUnavailable: "Unavailable",
-    feedbackLabel: "Feedback form",
-    feedbackReady: "Configured",
-    feedbackUnavailable: "Unavailable",
     sections: [
       {
         title: "Why access is free",

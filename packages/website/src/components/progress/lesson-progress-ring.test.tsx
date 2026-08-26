@@ -5,9 +5,12 @@ import { render, screen, act, cleanup } from "@testing-library/react";
 import { LessonProgressRing } from "./lesson-progress-ring";
 import {
   __resetCacheForTests,
+  completeCheckpoint,
   markSectionRead,
   markLessonCompleted,
+  saveLessonQuizScore,
 } from "@/lib/progress/store";
+import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
 
 /** In-memory localStorage polyfill (jsdom no-op fallback). */
 function installLocalStoragePolyfill() {
@@ -64,7 +67,7 @@ describe("LessonProgressRing (shared)", () => {
     expect(await screen.findByText("2/4")).toBeInTheDocument();
   });
 
-  it("shows the done checkmark when the lesson is completed", async () => {
+  it("does not turn a legacy completion bit into a current completion check", async () => {
     markLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2");
 
     render(
@@ -74,6 +77,24 @@ describe("LessonProgressRing (shared)", () => {
         totalSections={3}
       />,
     );
+
+    expect(await screen.findByText("0/3")).toBeInTheDocument();
+    expect(screen.queryByText("✓")).toBeNull();
+
+    act(() => {
+      for (const sectionId of [
+        "block_1_lesson_2_section_1",
+        "block_1_lesson_2_section_2",
+        "block_1_lesson_2_section_3",
+      ]) {
+        markSectionRead("eu-ai-act-kurs", "block_1_lesson_2", sectionId);
+      }
+      saveLessonQuizScore("eu-ai-act-kurs", "block_1_lesson_2", 1, 1);
+      completeCheckpoint(
+        "block_1_lesson_2",
+        lessonCompletionEvidenceCheckpointId("eu-ai-act-kurs"),
+      );
+    });
 
     expect(await screen.findByText("✓")).toBeInTheDocument();
   });

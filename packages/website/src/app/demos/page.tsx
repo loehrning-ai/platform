@@ -9,10 +9,7 @@ import {
   type DemoCategory,
   type DemoLevel,
 } from "@/lib/demos";
-import {
-  getDemoIndustries,
-  getDemosForLocale,
-} from "@/lib/demos-localization";
+import { getDemoIndustries, getDemosForLocale } from "@/lib/demos-localization";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -90,9 +87,7 @@ function sanitizeDemoFilters(
     level: isDemoLevel(level) ? level : "alle",
     category: isDemoCategory(category) ? category : "Alle",
     industry:
-      typeof industry === "string" && industries.has(industry)
-        ? industry
-        : "",
+      typeof industry === "string" && industries.has(industry) ? industry : "",
   };
 }
 
@@ -137,53 +132,51 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
     <div className="min-h-[100svh] overflow-x-clip">
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
-      <section className="relative overflow-hidden border-b border-border bg-foreground px-4 pb-12 pt-16 text-background sm:px-6 md:px-10 md:pb-16 md:pt-20">
-        <div
-          aria-hidden="true"
-          className="absolute inset-y-0 right-0 hidden w-[42%] border-l border-background/15 bg-[linear-gradient(135deg,transparent_0_42%,rgba(183,58,21,0.3)_42%_43%,transparent_43%_61%,rgba(183,58,21,0.18)_61%_62%,transparent_62%)] lg:block"
-        />
-        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
+      <header className="border-b border-border px-4 py-8 sm:px-6 sm:py-12 md:px-10">
+        <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end lg:gap-8">
           <div className="min-w-0">
-            <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-kupfer-light">
+            <div className="h-[3px] w-16 bg-brand-orange" aria-hidden="true" />
+            <div className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
               {copy.catalog.kicker}
             </div>
-            <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.35rem,7vw,5.4rem)] font-bold leading-[0.94] tracking-[-0.04em]">
+            <h1 className="mt-3 max-w-4xl text-balance text-[clamp(2.25rem,5vw,4rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
               {copy.catalog.headingLead}{" "}
-              <span className="text-kupfer-light">{copy.catalog.headingAccent}</span>
+              <span className="text-brand-orange">
+                {copy.catalog.headingAccent}
+              </span>
             </h1>
-            <p className="mt-7 max-w-3xl text-pretty text-sm leading-7 text-background/75 sm:text-base">
+            <p className="mt-4 max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
               {copy.catalog.introduction}
             </p>
           </div>
 
-          <aside className="border border-background/25 bg-background/[0.04] p-4 sm:p-5" aria-label={copy.catalog.scopeLabel}>
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-kupfer-light">
-              {copy.catalog.scopeLabel}
-            </div>
-            <ol className="mt-4 space-y-3">
-              {copy.catalog.scopeItems.map((item, index) => (
-                <li key={item} className="grid grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-2 text-sm leading-5 text-background/80">
-                  <span className="font-mono text-xs font-bold text-kupfer-light">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ol>
+          <aside
+            className="border border-border border-l-[3px] border-l-brand-orange bg-card"
+            aria-label={copy.catalog.scopeLabel}
+          >
+            <details>
+              <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
+                {copy.catalog.scopeLabel}
+              </summary>
+              <ol className="divide-y divide-border border-t border-border px-4">
+                {copy.catalog.scopeItems.map((item, index) => (
+                  <li
+                    key={item}
+                    className="grid grid-cols-[1.75rem_minmax(0,1fr)] items-start gap-2 py-2 text-sm leading-5 text-muted-foreground"
+                  >
+                    <span className="font-mono text-xs font-bold text-brand-orange">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ol>
+            </details>
           </aside>
         </div>
+      </header>
 
-        <div className="relative mx-auto mt-10 grid max-w-7xl grid-cols-1 border-y border-background/20 sm:grid-cols-3">
-          {copy.catalog.stats.map((stat) => (
-            <div key={stat.label} className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-3 border-b border-background/20 py-3 last:border-b-0 sm:block sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0">
-              <div className="font-mono text-2xl font-bold tabular-nums text-kupfer-light">{stat.value}</div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-background/60">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="px-3 pb-20 pt-8 sm:px-6 md:px-10">
+      <section className="px-3 pb-12 pt-6 sm:px-6 md:px-10">
         <div className="mx-auto max-w-7xl">
           <DemoGrid
             key={filterKey}

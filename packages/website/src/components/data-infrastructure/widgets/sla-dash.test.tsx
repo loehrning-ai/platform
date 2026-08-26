@@ -36,6 +36,22 @@ function installLocalStoragePolyfill(): void {
   });
 }
 
+function setReducedMotion(matches: boolean): void {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+}
+
 beforeAll(() => {
   if (
     typeof window.localStorage === "undefined" ||
@@ -48,11 +64,14 @@ beforeAll(() => {
 beforeEach(() => {
   window.localStorage.clear();
   __resetCacheForTests();
+  setReducedMotion(false);
 });
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("SLAdash", () => {
@@ -118,5 +137,31 @@ describe("SLAdash", () => {
     expect(screen.getAllByText(/PAGE/).length).toBeGreaterThan(0);
     expect(isCheckpointDone("di-sla-quality", "sla")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
+  });
+
+  it("resolves the incident as a static final dashboard without an interval under reduced motion", () => {
+    vi.useFakeTimers();
+    setReducedMotion(true);
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
+    render(<SLAdash lessonId="di-sla-quality" cpId="sla" />);
+
+    fireEvent.click(screen.getByRole("button", { name: /inject incident/ }));
+
+    expect(intervalSpy).not.toHaveBeenCalled();
+    expect(screen.getAllByText(/PAGE/).length).toBeGreaterThan(0);
+    expect(isCheckpointDone("di-sla-quality", "sla")).toBe(true);
+  });
+
+  it("clears an active dashboard interval when unmounted", () => {
+    vi.useFakeTimers();
+    const clearIntervalSpy = vi.spyOn(globalThis, "clearInterval");
+    const { unmount } = render(
+      <SLAdash lessonId="di-sla-quality" cpId="sla" />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /play 1 hour/ }));
+
+    unmount();
+
+    expect(clearIntervalSpy).toHaveBeenCalled();
   });
 });

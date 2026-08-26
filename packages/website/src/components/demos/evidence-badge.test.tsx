@@ -19,7 +19,12 @@ describe("<EvidenceBadge> mode badge + tooltip", () => {
   it.each([
     ["synthetic", "Synthetisch", "erfundene Beispieldaten", "#9a3412"],
     ["rule_based", "Regelbasiert", "If-Else-Regeln", "#1d4ed8"],
-    ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichnete Beispielspur", "#4b5563"],
+    [
+      "recorded_trace",
+      "Aufgezeichnete Spur",
+      "aufgezeichnete Beispielspur",
+      "#4b5563",
+    ],
     ["live_api", "Live-API", "tatsächliche Anfragen", "#166534"],
   ] as const)(
     "labels the %s badge with an AA-safe tone and reveals/hides its tooltip",
@@ -30,6 +35,7 @@ describe("<EvidenceBadge> mode badge + tooltip", () => {
         name: new RegExp(`Evidenzmodus: ${label}`),
       });
       expect(button).toHaveStyle({ color: foreground });
+      expect(button).toHaveStyle({ minHeight: "44px", fontSize: "12px" });
       // Collapsed by default.
       expect(button).toHaveAttribute("aria-expanded", "false");
       expect(screen.queryByRole("tooltip")).toBeNull();
@@ -54,7 +60,9 @@ describe("<EvidenceBadge> mode badge + tooltip", () => {
 
 describe("<EvidenceBadge> external-action label", () => {
   it("omits the action badge when the action mode is 'none'", () => {
-    render(<EvidenceBadge evidenceMode="synthetic" externalActionMode="none" />);
+    render(
+      <EvidenceBadge evidenceMode="synthetic" externalActionMode="none" />,
+    );
     expect(screen.queryByText(/Aktionen|Freigabe-Schritt/)).toBeNull();
   });
 
@@ -63,16 +71,21 @@ describe("<EvidenceBadge> external-action label", () => {
     ["review_gated", "Freigabe-Schritt simuliert"],
     ["real_disabled", "Aktionen deaktiviert"],
   ] as const)("renders the '%s' action label", (mode, label) => {
-    render(<EvidenceBadge evidenceMode="synthetic" externalActionMode={mode} />);
+    render(
+      <EvidenceBadge evidenceMode="synthetic" externalActionMode={mode} />,
+    );
     expect(screen.getByText(new RegExp(label))).toBeInTheDocument();
   });
 });
 
 describe("<SimulationDisclosure>", () => {
   it("wraps its children in an accessible simulation note", () => {
-    render(<SimulationDisclosure>Alle Zahlen sind erfunden.</SimulationDisclosure>);
+    render(
+      <SimulationDisclosure>Alle Zahlen sind erfunden.</SimulationDisclosure>,
+    );
     const note = screen.getByRole("note", { name: "Hinweis zur Simulation" });
     expect(note).toBeInTheDocument();
     expect(note).toHaveTextContent("Alle Zahlen sind erfunden.");
+    expect(note).toHaveStyle({ fontSize: "12px" });
   });
 });

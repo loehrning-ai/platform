@@ -99,9 +99,9 @@ export function Term({ id, label, short, children, testId }: TermProps) {
         <span
           id={`term-${effectiveId}-tip`}
           role="tooltip"
-          className="absolute left-0 top-full z-20 mt-1 block w-64 max-w-[calc(100vw-2rem)] border border-brand-orange/40 bg-card p-3 text-[11px] leading-relaxed text-muted-foreground shadow-lg"
+          className="absolute left-0 top-full z-20 mt-1 block w-64 max-w-[calc(100vw-2rem)] border border-brand-orange/40 bg-card p-3 text-xs leading-relaxed text-muted-foreground shadow-lg"
         >
-          <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-brand-orange">
+          <span className="block font-mono text-xs uppercase tracking-[0.12em] text-brand-orange">
             {label}
           </span>
           <span className="mt-1 block normal-case">{short}</span>

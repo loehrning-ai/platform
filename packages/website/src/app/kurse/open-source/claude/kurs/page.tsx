@@ -55,11 +55,8 @@ export default async function ClaudeKursIndexPage() {
   const copy = INDEX_COPY[locale];
 
   return (
-    <div
-      lang={locale}
-      className="mx-auto max-w-[900px] px-4 py-12 sm:px-6 sm:py-16"
-    >
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+    <div lang={locale} className="mx-auto max-w-[900px] px-4 py-12 sm:px-6">
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
         {copy.eyebrow}
       </p>
       <h1 className="mt-3 break-words text-[36px] font-bold tracking-[-0.03em] text-foreground md:text-[44px]">
@@ -76,7 +73,7 @@ export default async function ClaudeKursIndexPage() {
           );
           return (
             <section key={track.id}>
-              <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+              <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
                 {copy.track} 0{trackIndex + 1}
               </p>
               <h2 className="mt-1 text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -96,7 +93,7 @@ export default async function ClaudeKursIndexPage() {
                       className="group flex h-full min-w-0 flex-col justify-between border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
                     >
                       <div>
-                        <p className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-brand-orange">
+                        <p className="font-mono text-xs uppercase tracking-[0.08em] text-brand-orange">
                           {copy.lesson} {lesson.number}
                         </p>
                         <h3 className="mt-1 break-words text-[16px] font-semibold text-foreground">
@@ -106,7 +103,7 @@ export default async function ClaudeKursIndexPage() {
                           {lesson.hook}
                         </p>
                       </div>
-                      <div className="mt-3 flex items-center justify-between gap-3 font-mono text-[11px] text-muted-foreground">
+                      <div className="mt-3 flex items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
                         <span>{copy.duration(lesson.durationMinutes)}</span>
                         <ArrowRight
                           size={14}

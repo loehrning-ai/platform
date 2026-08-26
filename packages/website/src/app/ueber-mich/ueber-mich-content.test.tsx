@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { GITHUB_ORG, TIM_ENTITY } from "@/lib/seo/entity";
+import { TIM_ENTITY } from "@/lib/seo/entity";
 import { UeberMichContent } from "./ueber-mich-content";
 
 function escapeRegExp(value: string): string {
@@ -28,10 +28,12 @@ describe("<UeberMichContent>", () => {
       "Akademischer Hintergrund",
       "Wie ich Inhalte prüfe",
       "Direkter Kontakt",
-      "Die Inhalte beginnen mit dem Thema, nicht mit einer Verkaufsstrecke.",
     ]) {
       expect(screen.getByRole("heading", { name: heading })).toBeVisible();
     }
+    expect(
+      container.querySelector("article > section:last-of-type"),
+    ).toHaveAttribute("id", "kontakt");
     expect(container.querySelector(".js-reveal")).toBeNull();
     expect(container.querySelector('[style*="opacity: 0"]')).toBeNull();
   });
@@ -45,12 +47,22 @@ describe("<UeberMichContent>", () => {
         name: "I build loehrning.ai as a public learning archive.",
       }),
     ).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Professional timeline" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Academic background" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "How I review content" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Contact me directly" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Professional timeline" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Academic background" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "How I review content" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Contact me directly" }),
+    ).toBeVisible();
     expect(screen.queryByText("Berufliche Einordnung")).not.toBeInTheDocument();
-    expect(screen.queryByText("Akademischer Hintergrund")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Akademischer Hintergrund"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Direkter Kontakt")).not.toBeInTheDocument();
   });
 
@@ -58,9 +70,6 @@ describe("<UeberMichContent>", () => {
     render(<UeberMichContent locale="en" />);
 
     const links = [
-      ["LinkedIn profile", TIM_ENTITY.linkedInUrl],
-      ["Personal GitHub profile", TIM_ENTITY.personalGithubUrl],
-      ["loehrning.ai on GitHub", GITHUB_ORG.url],
       ["Message me on LinkedIn", TIM_ENTITY.linkedInUrl],
       ["Open GitHub profile", TIM_ENTITY.personalGithubUrl],
     ] as const;
@@ -72,6 +81,12 @@ describe("<UeberMichContent>", () => {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
+    expect(
+      screen.getAllByRole("link", { name: /Message me on LinkedIn/i }),
+    ).toHaveLength(1);
+    expect(
+      screen.getAllByRole("link", { name: /Open GitHub profile/i }),
+    ).toHaveLength(1);
     const guide = screen.getByRole("link", { name: /CONTENT_GUIDE\.md/ });
     expect(guide).toHaveAttribute(
       "href",
@@ -80,27 +95,22 @@ describe("<UeberMichContent>", () => {
     expect(guide).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it("localizes every internal link and contact navigation", () => {
+  it("localizes the internal feedback link and keeps contact terminal", () => {
     render(<UeberMichContent locale="en" />);
 
-    expect(screen.getByRole("link", { name: "the feedback form" })).toHaveAttribute(
-      "href",
-      "/en/feedback",
-    );
-    expect(screen.getByRole("link", { name: /Open course catalog/ })).toHaveAttribute(
-      "href",
-      "/en/kurse",
-    );
-    expect(screen.getByRole("link", { name: /Open open-source hub/ })).toHaveAttribute(
-      "href",
-      "/en/open-source",
-    );
+    expect(
+      screen.getByRole("link", { name: "the feedback form" }),
+    ).toHaveAttribute("href", "/en/feedback");
     expect(screen.getByRole("link", { name: /Send an email/ })).toHaveAttribute(
       "href",
       `mailto:${TIM_ENTITY.email}`,
     );
-    expect(screen.getByRole("navigation", { name: "Contact methods" })).toBeVisible();
-    expect(screen.getByRole("navigation", { name: "Related sections" })).toBeVisible();
+    expect(
+      screen.getByRole("navigation", { name: "Contact methods" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("navigation", { name: "Related sections" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the former-employer statement inside its labelled region", () => {
@@ -109,7 +119,9 @@ describe("<UeberMichContent>", () => {
     const stations = screen.getByRole("region", {
       name: "Previous professional roles",
     });
-    expect(within(stations).getByText(/biographical context only/)).toBeVisible();
+    expect(
+      within(stations).getByText(/biographical context only/),
+    ).toBeVisible();
     for (const employer of ["Apple", "Red Bull", "Meta"]) {
       expect(within(stations).getByText(employer)).toBeVisible();
     }

@@ -175,7 +175,7 @@ export function L04SpecSurgeon({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <div className="grid min-w-0 gap-4 md:grid-cols-2">
@@ -202,7 +202,7 @@ export function L04SpecSurgeon({
                 style={{ width: `${pct}%` }}
               />
             </div>
-            <span className="font-mono text-[11px] text-muted-foreground">
+            <span className="font-mono text-xs text-muted-foreground">
               {score}/{sections.length} {status}
             </span>
           </div>
@@ -215,7 +215,7 @@ export function L04SpecSurgeon({
             ))}
           </div>
           {score === sections.length && (
-            <p className="mt-2 font-mono text-[11px] font-bold text-risk-green">
+            <p className="mt-2 font-mono text-xs font-bold text-risk-green">
               {copy.complete} {done ? "✓" : ""}
             </p>
           )}
@@ -230,7 +230,7 @@ export function L04SpecSurgeon({
             disabled={on.has(s.id)}
             aria-pressed={on.has(s.id)}
             className={cn(
-              "min-w-0 break-words border-2 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] transition-colors",
+              "min-h-11 min-w-0 break-words border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.06em] transition-colors",
               on.has(s.id)
                 ? "border-brand-orange bg-brand-orange text-white"
                 : "border-border bg-background text-foreground hover:border-brand-orange",

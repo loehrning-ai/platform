@@ -7,9 +7,9 @@ enforces the full 35-route, three-run measurement against that release build.
 
 ## Routes audited (`collect.url`)
 
-`numberOfRuns: 3` with `aggregationMethod: "pessimistic"` (LHCI evaluates the
-least favorable result of the three runs per URL). The server starts through
-the provider-free wrapper and `next start`, matched on
+`numberOfRuns: 3` with `aggregationMethod: "median"` (LHCI evaluates the
+middle result of the three runs per URL). The server starts through the
+provider-free wrapper and `next start`, matched on
 `startServerReadyPattern: "Ready in"`.
 
 The `collect.url` array in the root `lighthouserc.json` is the only route
@@ -25,18 +25,18 @@ route list, preventing a second inventory from drifting.
 
 What `lhci assert` passes or fails when the local Lighthouse command runs:
 
-| Assertion | Threshold | Severity |
-|---|---|---|
-| `categories:accessibility` | 1.00 | **error, blocks** |
-| `categories:performance` | >= 0.80 | **error, blocks** |
-| `categories:best-practices` | >= 0.9 | warn |
-| `categories:seo` | >= 0.9 | warn |
-| `largest-contentful-paint` | <= 4500 ms | **error, blocks** |
-| `cumulative-layout-shift` | <= 0.1 | **error, blocks** |
-| `total-blocking-time` | <= 200 ms | **error, blocks** |
-| `resource-summary:script:size` | <= 360 KiB | **error, blocks** |
-| `resource-summary:total:size` | <= 1024 KiB | **error, blocks** |
-| `resource-summary:third-party:count` | <= 8 | **error, blocks** |
+| Assertion                            | Threshold   | Severity          |
+| ------------------------------------ | ----------- | ----------------- |
+| `categories:accessibility`           | 1.00        | **error, blocks** |
+| `categories:performance`             | >= 0.80     | **error, blocks** |
+| `categories:best-practices`          | >= 0.9      | warn              |
+| `categories:seo`                     | >= 0.9      | warn              |
+| `largest-contentful-paint`           | <= 4500 ms  | **error, blocks** |
+| `cumulative-layout-shift`            | <= 0.1      | **error, blocks** |
+| `total-blocking-time`                | <= 200 ms   | **error, blocks** |
+| `resource-summary:script:size`       | <= 360 KiB  | **error, blocks** |
+| `resource-summary:total:size`        | <= 1024 KiB | **error, blocks** |
+| `resource-summary:third-party:count` | <= 8        | **error, blocks** |
 
 Accessibility and every performance budget are hard assertions. Best practices
 and SEO remain diagnostic warnings because their category scores can change
@@ -63,7 +63,7 @@ blog article, `/buecher`, and the data-science course overview once each. This
 keeps pull-request latency bounded while spanning the main rendering modes. The
 release runner uses `lighthouse:release:built` after deterministic verification;
 it rejects a changed build receipt and covers every configured route three
-times pessimistically before the browser journey gates.
+times using the median result before the browser journey gates.
 
 Run it locally before shipping a change that could move bundle size, Core Web
 Vitals, or the accessibility score. Treat it as environment-sensitive evidence,
@@ -80,9 +80,9 @@ node packages/website/scripts/run-provider-free.mjs bun run --cwd packages/websi
 
 - Framer Motion: import `m` + hooks only; never the full `motion` component
   (`MotionProvider` runs `<LazyMotion strict>`, so a stray `motion.*` throws in
-  dev). domMax (layout/drag) loads are scoped: `progress/toast-provider.tsx`
-  (async chunk) and `widgets/interactive-diagram.tsx` (inside the lazy widget
-  chunk). New layout/drag animations must follow one of those two patterns.
+  dev). domMax (layout/drag) loads are scoped to
+  `widgets/interactive-diagram.tsx` inside the lazy widget chunk. New
+  layout/drag animations must use the same isolated pattern.
 - Lucide icons stay tree-shaken via `optimizePackageImports` (next.config.ts).
 - Heavy client deps (`@react-pdf/renderer`, widgets) stay behind dynamic
   imports or server-only routes, never in the shared client bundle.

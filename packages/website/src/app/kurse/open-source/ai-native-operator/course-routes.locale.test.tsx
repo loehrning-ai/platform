@@ -5,10 +5,11 @@ vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: vi.fn(),
 }));
 
-import { CourseProgressBar } from "@/components/ai-native-operator/course-progress-bar";
 import { AiNativeOperatorLessonPage } from "@/components/ai-native-operator/lesson-page";
 import { CourseAssessmentCta } from "@/components/course/kurs/course-assessment-cta";
 import { CertificatePage } from "@/components/course/kurs/certificate-page";
+import { TechnicalCourseHeader } from "@/components/course/technical-course-landing";
+import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { VerificationPage } from "@/components/course/kurs/verification-page";
 import { WorkshopQuizPage } from "@/components/course/kurs/workshop-quiz-page";
 import { MODULE_IDS, TOTAL_LESSON_COUNT } from "@/lib/ai-native-operator/types";
@@ -87,14 +88,14 @@ describe("AI-Native Operator locale propagation across the course lifecycle", ()
     {
       locale: "de" as const,
       prefix: "",
-      landingMarker: "Ein Kurs in neun Modulen",
+      landingMarker: "Neun Module · linear oder selbstgesteuert",
       moduleMarker: "Aufgaben anhand von Fehlerkosten",
       lessonTitle: "Erst die Aufgabe wählen, dann das Werkzeug",
     },
     {
       locale: "en" as const,
       prefix: "/en",
-      landingMarker: "A nine-module course",
+      landingMarker: "Nine modules · linear or self-directed",
       moduleMarker: "Select tasks by error cost",
       lessonTitle: "Choose tasks before choosing tools",
     },
@@ -104,16 +105,28 @@ describe("AI-Native Operator locale propagation across the course lifecycle", ()
       vi.mocked(getRequestLocale).mockResolvedValue(locale);
       const landing = await LandingPage();
       expect(textContent(landing)).toContain(landingMarker);
-      expect(findElement(landing, CourseProgressBar)?.props).toMatchObject({
-        locale,
+      const header = findElement(landing, TechnicalCourseHeader);
+      const headerProps = header?.props as
+        { progress?: ReactNode; primaryAction?: ReactNode } | undefined;
+      const progress = headerProps?.progress;
+      expect(isValidElement(progress)).toBe(true);
+      expect(isValidElement(progress) && progress.type).toBe(
+        TechnicalCourseProgressBar,
+      );
+      expect(isValidElement(progress) && progress.props).toMatchObject({
+        courseSlug: "ai-native-operator",
+        totalLessons: TOTAL_LESSON_COUNT,
+      });
+      const primaryAction = headerProps?.primaryAction;
+      expect(
+        isValidElement(primaryAction) && primaryAction.props,
+      ).toMatchObject({
+        href: `${prefix}/kurse/open-source/ai-native-operator/mindset/1`,
       });
       expect(findElement(landing, CourseAssessmentCta)?.props).toMatchObject({
         courseSlug: "ai-native-operator",
         locale,
       });
-      expect(hrefs(landing)).toContain(
-        `${prefix}/kurse/open-source/ai-native-operator/mindset/1`,
-      );
       expect(hrefs(landing)).toContain(
         `${prefix}/kurse/open-source/ai-native-operator/measurement`,
       );

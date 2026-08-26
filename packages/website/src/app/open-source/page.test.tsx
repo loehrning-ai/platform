@@ -129,9 +129,7 @@ describe("OpenSourcePage", () => {
         name: "Veröffentlichte Werkzeuge. Quellstand prüfbar.",
       }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/veröffentlichte Artefakte/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/veröffentlichte Artefakte/)).toBeInTheDocument();
     expect(
       screen.getByText(/nicht automatisch veröffentlichte Plattform-Artefakte/),
     ).toBeInTheDocument();
@@ -141,22 +139,16 @@ describe("OpenSourcePage", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Projekt")).toBeInTheDocument();
     expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/bleibt dieser Bereich leer/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/bleibt dieser Bereich leer/i),
+    ).not.toBeInTheDocument();
 
-    const organisationLinks = screen.getAllByRole("link", {
+    const organisationLink = screen.getByRole("link", {
       name: /loehrning-ai, öffnet in neuem Tab/,
     });
-    for (const link of organisationLinks) {
-      expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    }
-    expect(
-      organisationLinks.find((link) => link.classList.contains("bg-background")),
-    ).toHaveClass("whitespace-nowrap");
-    expect(container.querySelector("svg.lucide-github")).toHaveAttribute(
-      "aria-hidden",
-      "true",
-    );
+    expect(organisationLink).toHaveAttribute("target", "_blank");
+    expect(organisationLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(organisationLink).toHaveClass("whitespace-nowrap");
     expect(
       screen.getByRole("link", {
         name: /Plattform-Code auf GitHub, öffnet in neuem Tab/,
@@ -164,9 +156,8 @@ describe("OpenSourcePage", () => {
     ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
 
     const graph = JSON.parse(
-      container.querySelector<HTMLScriptElement>(
-        "script#open-source-jsonld",
-      )?.textContent ?? "{}",
+      container.querySelector<HTMLScriptElement>("script#open-source-jsonld")
+        ?.textContent ?? "{}",
     )["@graph"];
     expect(graph[1].hasPart).toEqual([
       expect.objectContaining({
@@ -186,7 +177,9 @@ describe("OpenSourcePage", () => {
         name: "Published tools. Verifiable source.",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Published" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Published" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Project")).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "license policy" }),

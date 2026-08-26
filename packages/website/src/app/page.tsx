@@ -3,7 +3,6 @@ import { HeroSection } from "@/components/home/hero";
 import { CredibilityStrip } from "@/components/home/credibility-strip";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
-import { FinalCta } from "@/components/home/final-cta";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -62,9 +61,6 @@ export default async function HomePage() {
 
       {/* 4. Platform principles / trust */}
       <CredibilityStrip locale={locale} />
-
-      {/* 5. Closing CTA */}
-      <FinalCta locale={locale} />
     </>
   );
 }

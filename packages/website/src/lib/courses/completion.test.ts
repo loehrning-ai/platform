@@ -4,11 +4,16 @@ import {
   CANONICAL_LESSON_IDS,
   CANONICAL_SECTION_IDS,
   completedCanonicalLessonCount,
+  evidenceBackedCompletedCanonicalLessonCount,
   getCanonicalSectionIds,
   isCanonicalLessonId,
   isCanonicalSectionId,
   isCourseCompletionEarned,
+  isLessonCompletionEvidenceBacked,
+  lessonCompletionEvidenceCheckpointId,
   normalizeCanonicalProgress,
+  OPERATOR_TRANSFER_CHECKPOINT_ID,
+  operatorLessonEvidenceCheckpointIds,
 } from "./completion";
 import { getAllLessons as getAllSpineLessons } from "@/lib/course/data";
 import { getAllLessons as getAllAiNativeLessons } from "@/lib/ai-native/data";
@@ -21,6 +26,10 @@ import type {
   UnifiedCourseSlice,
   UnifiedLessonProgress,
   UnifiedProgress,
+} from "@/lib/progress/types";
+import {
+  checkpointKey,
+  legacyCompletionEvidenceCheckpointKey,
 } from "@/lib/progress/types";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
@@ -53,6 +62,86 @@ function withLessons(
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-07-28T00:00:00.000Z",
+  };
+}
+
+function addCurrentLessonEvidence(
+  progress: UnifiedProgress,
+  slug: CourseSlug,
+  lessonIds: readonly string[],
+): UnifiedProgress {
+  const slice = progress.courses[slug]!;
+  const lessons = Object.fromEntries(
+    Object.entries(slice.lessons).map(([lessonId, lesson]) => [
+      lessonId,
+      lessonIds.includes(lessonId)
+        ? {
+            ...lesson,
+            sectionsRead: CANONICAL_SECTION_IDS[slug][lessonId] ?? [],
+            quizScore:
+              slug === "claude" ||
+              slug === "codex" ||
+              slug === "data-infrastructure" ||
+              slug === "data-engineering-fundamentals" ||
+              slug === "data-science" ||
+              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+                ? null
+                : 1,
+            quizTotal:
+              slug === "claude" ||
+              slug === "codex" ||
+              slug === "data-infrastructure" ||
+              slug === "data-engineering-fundamentals" ||
+              slug === "data-science" ||
+              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+                ? null
+                : 1,
+          }
+        : lesson,
+    ]),
+  );
+  return {
+    ...progress,
+    courses: { ...progress.courses, [slug]: { ...slice, lessons } },
+    checkpoints: {
+      ...progress.checkpoints,
+      ...Object.fromEntries(
+        lessonIds.map((lessonId) => [
+          checkpointKey(lessonId, lessonCompletionEvidenceCheckpointId(slug)),
+          true,
+        ]),
+      ),
+    },
+  };
+}
+
+function withCurrentLessonEvidence(
+  slug: CourseSlug,
+  lessonIds: readonly string[],
+): UnifiedProgress {
+  return addCurrentLessonEvidence(
+    withLessons(slug, lessonIds),
+    slug,
+    lessonIds,
+  );
+}
+
+function withLegacyCompletionEvidence(
+  slug: CourseSlug,
+  lessonIds: readonly string[],
+): UnifiedProgress {
+  const progress = withLessons(slug, lessonIds);
+  return {
+    ...progress,
+    checkpoints: {
+      ...progress.checkpoints,
+      ...Object.fromEntries(
+        lessonIds.map((lessonId) => [
+          legacyCompletionEvidenceCheckpointKey(slug, lessonId),
+          true,
+        ]),
+      ),
+    },
   };
 }
 
@@ -135,9 +224,10 @@ describe("canonical course completion", () => {
       );
       for (const lesson of lessons) {
         const authored = lesson.sections.map((section) => section.id);
-        expect(getCanonicalSectionIds(slug, lesson.id), `${slug}/${lesson.id}`).toEqual(
-          authored,
-        );
+        expect(
+          getCanonicalSectionIds(slug, lesson.id),
+          `${slug}/${lesson.id}`,
+        ).toEqual(authored);
         expect(isCanonicalLessonId(slug, lesson.id)).toBe(true);
         for (const sectionId of authored) {
           expect(isCanonicalSectionId(slug, lesson.id, sectionId)).toBe(true);
@@ -204,7 +294,7 @@ describe("canonical course completion", () => {
   });
 
   it("earns completion when every canonical lesson is complete", () => {
-    const progress = withLessons(
+    const progress = withCurrentLessonEvidence(
       "data-engineering-fundamentals",
       CANONICAL_LESSON_IDS["data-engineering-fundamentals"],
     );
@@ -227,7 +317,7 @@ describe("canonical course completion", () => {
   });
 
   it("requires both canonical lessons and the configured assessment", () => {
-    const progress = withLessons(
+    const progress = withCurrentLessonEvidence(
       "eu-ai-act-kurs",
       CANONICAL_LESSON_IDS["eu-ai-act-kurs"],
     );
@@ -244,7 +334,7 @@ describe("canonical course completion", () => {
   });
 
   it("preserves the historical AI-Native capstone certificate path", () => {
-    const progress = withLessons(
+    const progress = withCurrentLessonEvidence(
       "ai-native",
       CANONICAL_LESSON_IDS["ai-native"],
     );
@@ -257,7 +347,7 @@ describe("canonical course completion", () => {
   });
 
   it("records the exact AI-Native project without treating unsigned client evidence as certificate proof", () => {
-    const progress = withLessons(
+    const progress = withCurrentLessonEvidence(
       "ai-native",
       CANONICAL_LESSON_IDS["ai-native"],
     );
@@ -276,5 +366,192 @@ describe("canonical course completion", () => {
     addCompletedProject(progress, "claude");
 
     expect(isCourseCompletionEarned(progress, "claude")).toBe(false);
+  });
+
+  it("does not present an unmarked post-cutover completion bit as evidence", () => {
+    const lessonId = CANONICAL_LESSON_IDS["ki-fuehrerschein"][0];
+    const progress = withLessons("ki-fuehrerschein", [lessonId]);
+
+    expect(
+      progress.courses["ki-fuehrerschein"]!.lessons[lessonId].completed,
+    ).toBe(true);
+    expect(
+      isLessonCompletionEvidenceBacked(progress, "ki-fuehrerschein", lessonId),
+    ).toBe(false);
+    expect(
+      evidenceBackedCompletedCanonicalLessonCount(progress, "ki-fuehrerschein"),
+    ).toBe(0);
+    expect(completedCanonicalLessonCount(progress, "ki-fuehrerschein")).toBe(0);
+  });
+
+  it("rejects unmarked completion bits for every migrated technical reader", () => {
+    const cases = [
+      ["claude", CANONICAL_LESSON_IDS.claude[0]],
+      ["codex", CANONICAL_LESSON_IDS.codex[0]],
+      ["data-infrastructure", CANONICAL_LESSON_IDS["data-infrastructure"][0]],
+      ["ai-native-operator", "mindset/1"],
+    ] as const;
+
+    for (const [slug, lessonId] of cases) {
+      const legacy = withLessons(slug, [lessonId]);
+      expect(
+        isLessonCompletionEvidenceBacked(legacy, slug, lessonId),
+        `${slug}/${lessonId}`,
+      ).toBe(false);
+      expect(completedCanonicalLessonCount(legacy, slug), slug).toBe(0);
+    }
+  });
+
+  it("preserves migration-marked historical completion for every course", () => {
+    for (const slug of Object.keys(CANONICAL_LESSON_IDS) as CourseSlug[]) {
+      const lessonId = CANONICAL_LESSON_IDS[slug][0];
+      const legacy = withLegacyCompletionEvidence(slug, [lessonId]);
+
+      expect(
+        isLessonCompletionEvidenceBacked(legacy, slug, lessonId),
+        `${slug}/${lessonId}`,
+      ).toBe(true);
+      expect(completedCanonicalLessonCount(legacy, slug), slug).toBe(1);
+    }
+  });
+
+  it("preserves historical certificate eligibility without weakening new proof", () => {
+    const slug = "data-engineering-fundamentals" as const;
+    const legacy = withLegacyCompletionEvidence(
+      slug,
+      CANONICAL_LESSON_IDS[slug],
+    );
+
+    expect(isCourseCompletionEarned(legacy, slug)).toBe(true);
+  });
+
+  it("suppresses grow-only historical markers after a course reset", () => {
+    const slug = "data-science" as const;
+    const lessonId = CANONICAL_LESSON_IDS[slug][0];
+    const legacy = withLegacyCompletionEvidence(slug, [lessonId]);
+    legacy.courses[slug] = {
+      ...legacy.courses[slug]!,
+      resetAt: "2026-08-26T00:00:00.000Z",
+    };
+
+    expect(isLessonCompletionEvidenceBacked(legacy, slug, lessonId)).toBe(
+      false,
+    );
+    expect(completedCanonicalLessonCount(legacy, slug)).toBe(0);
+  });
+
+  it("accepts section plus transfer proof for Claude, Codex, and Data Infrastructure", () => {
+    for (const slug of ["claude", "codex", "data-infrastructure"] as const) {
+      const lessonId = CANONICAL_LESSON_IDS[slug][0];
+      const progress = withCurrentLessonEvidence(slug, [lessonId]);
+      expect(
+        isLessonCompletionEvidenceBacked(progress, slug, lessonId),
+        `${slug}/${lessonId}`,
+      ).toBe(true);
+    }
+  });
+
+  it("requires every Operator quiz checkpoint in addition to the transfer proof", async () => {
+    const lessonId = "mindset/5";
+    const progress = withCurrentLessonEvidence("ai-native-operator", [
+      lessonId,
+    ]);
+    const lesson = (await getAllOperatorLessons()).find(
+      (candidate) => candidate.id === lessonId,
+    );
+    expect(lesson?.quiz.length).toBeGreaterThan(0);
+    expect(
+      isLessonCompletionEvidenceBacked(
+        progress,
+        "ai-native-operator",
+        lessonId,
+      ),
+    ).toBe(false);
+
+    const withQuizEvidence: UnifiedProgress = {
+      ...progress,
+      checkpoints: {
+        ...progress.checkpoints,
+        ...Object.fromEntries(
+          (lesson?.quiz ?? []).map((question) => [
+            checkpointKey(lessonId, question.id),
+            true,
+          ]),
+        ),
+      },
+    };
+    expect(
+      isLessonCompletionEvidenceBacked(
+        withQuizEvidence,
+        "ai-native-operator",
+        lessonId,
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps every Operator evidence checkpoint aligned with authored interactions", async () => {
+    for (const lesson of await getAllOperatorLessons()) {
+      const required = operatorLessonEvidenceCheckpointIds(lesson.id);
+      if (lesson.kind === "quiz") {
+        expect(required, lesson.id).toEqual(
+          lesson.quiz.map((question) => question.id),
+        );
+      } else {
+        expect(required, lesson.id).toEqual([OPERATOR_TRANSFER_CHECKPOINT_ID]);
+        expect(
+          (lesson.widgets?.[0]?.props as { cpId?: string } | undefined)?.cpId,
+          lesson.id,
+        ).toBe(OPERATOR_TRANSFER_CHECKPOINT_ID);
+      }
+    }
+  });
+
+  it("requires the Operator reading lesson's applied transfer exercise", () => {
+    const lessonId = "mindset/1";
+    const progress = withCurrentLessonEvidence("ai-native-operator", [
+      lessonId,
+    ]);
+    expect(
+      isLessonCompletionEvidenceBacked(
+        progress,
+        "ai-native-operator",
+        lessonId,
+      ),
+    ).toBe(false);
+
+    const withTransferExercise: UnifiedProgress = {
+      ...progress,
+      checkpoints: {
+        ...progress.checkpoints,
+        [checkpointKey(lessonId, OPERATOR_TRANSFER_CHECKPOINT_ID)]: true,
+      },
+    };
+    expect(
+      isLessonCompletionEvidenceBacked(
+        withTransferExercise,
+        "ai-native-operator",
+        lessonId,
+      ),
+    ).toBe(true);
+  });
+
+  it("accepts the versioned checkpoint as transfer proof for zero-quiz evidence lessons", () => {
+    const aiNativeLessonId = "modul_3_lesson_0";
+    const dataLessonId = CANONICAL_LESSON_IDS["data-science"][0];
+    const aiNative = withCurrentLessonEvidence("ai-native", [aiNativeLessonId]);
+    const dataScience = withCurrentLessonEvidence("data-science", [
+      dataLessonId,
+    ]);
+
+    expect(
+      isLessonCompletionEvidenceBacked(aiNative, "ai-native", aiNativeLessonId),
+    ).toBe(true);
+    expect(
+      isLessonCompletionEvidenceBacked(
+        dataScience,
+        "data-science",
+        dataLessonId,
+      ),
+    ).toBe(true);
   });
 });

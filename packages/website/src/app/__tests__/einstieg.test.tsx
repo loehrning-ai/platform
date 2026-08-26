@@ -38,6 +38,13 @@ describe("/einstieg locale content", () => {
     expect(
       screen.getByText(new RegExp(`${TOTAL_QUESTIONS} Fragen`)),
     ).toBeVisible();
+    const primaryCard = screen
+      .getByRole("heading", { level: 3, name: "KI-Check" })
+      .closest("article");
+    expect(primaryCard).not.toBeNull();
+    expect(
+      primaryCard?.querySelectorAll(".text-foreground").length,
+    ).toBeGreaterThan(2);
   });
 
   it("renders reviewed English copy without German learner UI", async () => {
@@ -49,8 +56,12 @@ describe("/einstieg locale content", () => {
         name: "What is artificial intelligence?",
       }),
     ).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Face recognition" })).toBeVisible();
-    expect(document.body).not.toHaveTextContent("Wie möchtest du weitermachen?");
+    expect(
+      screen.getByRole("heading", { name: "Face recognition" }),
+    ).toBeVisible();
+    expect(document.body).not.toHaveTextContent(
+      "Wie möchtest du weitermachen?",
+    );
   });
 
   it("preserves the active locale across every internal link", async () => {

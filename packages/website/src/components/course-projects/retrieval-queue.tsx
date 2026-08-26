@@ -170,7 +170,7 @@ export function RetrievalQueue({
       >
         <span className="h-3 w-3 shrink-0 rounded-full bg-brand-orange ring-4 ring-brand-orange/20" />
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-[9px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark">
             {copy.eyebrow}
           </span>
           <span
@@ -183,7 +183,7 @@ export function RetrievalQueue({
         <span
           role="status"
           aria-live="polite"
-          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-[10px] font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] sm:shrink-0 sm:text-right"
+          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-xs font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] sm:shrink-0 sm:text-right"
         >
           {available ? copy.due(dueCount) : copy.unavailableShort}
         </span>
@@ -192,8 +192,8 @@ export function RetrievalQueue({
           aria-expanded={expanded}
           aria-controls="course-retrieval-queue-body"
           onClick={() => {
-            setManuallyExpanded((value) =>
-              !(value ?? (available && dueCount > 0)),
+            setManuallyExpanded(
+              (value) => !(value ?? (available && dueCount > 0)),
             );
           }}
           className="col-start-3 row-span-2 row-start-1 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center border-2 border-foreground bg-background font-mono text-lg font-black outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
@@ -215,7 +215,7 @@ export function RetrievalQueue({
       >
         <div className="min-w-0 p-4">
           <div className="border-l-4 border-brand-orange bg-background p-3">
-            <p className="font-mono text-[9px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+            <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
               {copy.current}
             </p>
             {!available ? (
@@ -251,7 +251,7 @@ export function RetrievalQueue({
                     </p>
                     <a
                       href="#lesson-mission-control"
-                      className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-4 font-mono text-[10px] font-black uppercase tracking-[0.1em] text-white outline-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none"
+                      className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-4 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none"
                     >
                       {legacyDue ? copy.legacyOpen : copy.open}
                     </a>
@@ -263,7 +263,7 @@ export function RetrievalQueue({
 
           {otherDueLessonIds.length > 0 ? (
             <div className="mt-3 border-t border-foreground pt-3">
-              <h3 className="font-mono text-[9px] font-black uppercase tracking-[0.14em] text-foreground">
+              <h3 className="font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground">
                 {copy.otherDue} · {otherDueLessonIds.length}
               </h3>
               <ul
@@ -280,7 +280,7 @@ export function RetrievalQueue({
                     href.split("#", 1)[0] === currentLessonPath;
                   const label = `${copy.openDueLesson}: ${lessonId}`;
                   const className =
-                    "inline-flex min-h-11 max-w-full items-center border border-foreground bg-background px-3 py-2 font-mono text-[10px] font-black underline-offset-4 [overflow-wrap:anywhere] hover:text-brand-orange hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
+                    "inline-flex min-h-11 max-w-full items-center border border-foreground bg-background px-3 py-2 font-mono text-xs font-black underline-offset-4 [overflow-wrap:anywhere] hover:text-brand-orange hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
 
                   return (
                     <li key={lessonId} className="max-w-full">
@@ -309,7 +309,7 @@ export function RetrievalQueue({
                   );
                 })}
                 {remainingDueCount > 0 ? (
-                  <li className="border border-dashed border-foreground px-3 py-2 font-mono text-[10px] font-black">
+                  <li className="border border-dashed border-foreground px-3 py-2 font-mono text-xs font-black">
                     {copy.remainingDue(remainingDueCount)}
                   </li>
                 ) : null}
@@ -317,7 +317,7 @@ export function RetrievalQueue({
             </div>
           ) : null}
 
-          <p className="mt-3 max-w-[76ch] text-[11px] leading-snug text-muted-foreground">
+          <p className="mt-3 max-w-[76ch] text-xs leading-snug text-muted-foreground">
             {copy.localBoundary}
           </p>
         </div>
@@ -326,12 +326,12 @@ export function RetrievalQueue({
           <button
             type="button"
             onClick={refresh}
-            className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-4 font-mono text-[10px] font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-4 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             {copy.refresh}
           </button>
           {snapshot ? (
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
               {copy.checked}:{" "}
               <time dateTime={snapshot.checkedAt}>
                 {formatTimestamp(snapshot.checkedAt, locale)}

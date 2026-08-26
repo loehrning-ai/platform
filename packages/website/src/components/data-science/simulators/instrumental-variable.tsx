@@ -152,7 +152,7 @@ export function InstrumentalVariable() {
                   onClick={() => setStrength(i)}
                 >
                   {locale === "de" ? STRENGTH_LABELS_DE[i] : st.label}{" "}
-                  <span style={{ opacity: 0.5, fontSize: 10 }}>
+                  <span style={{ opacity: 0.5, fontSize: 12 }}>
                     r={st.corr}
                   </span>
                 </button>
@@ -208,7 +208,7 @@ export function InstrumentalVariable() {
               borderRadius: 6,
               background: "rgba(255,255,255,0.03)",
               border: "1px solid rgba(255,255,255,0.07)",
-              fontSize: 11,
+              fontSize: 12,
             }}
           >
             <div
@@ -230,7 +230,7 @@ export function InstrumentalVariable() {
             >
               {s.fStat} {s.fStat < 10 ? text("⚠ weak", "⚠ schwach") : "✓"}
             </div>
-            <div style={{ color: "var(--ink-3)", fontSize: 10, marginTop: 4 }}>
+            <div style={{ color: "var(--ink-3)", fontSize: 12, marginTop: 4 }}>
               {text(
                 "F=10 is a conventional screen, not an instrument-validity test",
                 "F=10 ist ein konventioneller Screen, kein Gültigkeitstest für das Instrument",

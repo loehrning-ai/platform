@@ -2,39 +2,18 @@
  * Accessibility axe sweeps for the routes added by regression coverage that the
  * house a11y.spec.ts does NOT already scan (regression coverage). a11y.spec.ts
  * already covers /open-source, /feedback, /ueber-mich, /buecher, /kurse (and
- * more); this file fills the gap: /einstieg, /wie-ki-funktioniert,
- * /ki-check, /bekannte-grenzen, /neuigkeiten, /hilfe,
- * /login. Pattern is intentionally identical to a11y.spec.ts (same AxeBuilder
- * tags, unfiltered WCAG violations, reduced-motion + settle + polled scan). One
- * axe test per small route-group; failures name the offending route(s).
+ * more); this file fills the gap defined by the shared supplemental route
+ * registry. a11y-structure.spec.ts consumes that same registry, preventing the
+ * two suites from claiming different route ownership. Pattern is intentionally
+ * identical to a11y.spec.ts (same AxeBuilder tags, unfiltered WCAG violations,
+ * reduced-motion + settle + polled scan). One axe test per small route-group;
+ * failures name the offending route(s).
  */
 
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
-
-// Small route-groups over the newly-covered routes (all confirmed to exist as
-// server pages; /login renders its form for the unauthenticated e2e context and
-// only redirects an already-signed-in user, so axe sees the real page).
-const GROUPS: Record<string, readonly string[]> = {
-  "Lern-Einstieg": [
-    "/einstieg",
-    "/en/einstieg",
-    "/wie-ki-funktioniert",
-    "/en/wie-ki-funktioniert",
-    "/wie-ki-funktioniert/lektion-1-vorhersage",
-    "/en/wie-ki-funktioniert/lektion-1-vorhersage",
-    "/ki-check",
-    "/en/ki-check",
-  ],
-  "Referenz & Wissen": [
-    "/bekannte-grenzen",
-    "/en/bekannte-grenzen",
-    "/neuigkeiten",
-    "/en/neuigkeiten",
-  ],
-  "Hilfe & Konto": ["/hilfe", "/en/hilfe", "/login", "/en/login"],
-};
+import { SUPPLEMENTAL_A11Y_ROUTE_GROUPS } from "./fixtures/a11y-route-registry";
 
 type AxeViolation = Awaited<
   ReturnType<AxeBuilder["analyze"]>
@@ -101,7 +80,7 @@ async function scanRoute(page: Page, route: string): Promise<AxeViolation[]> {
   return blocking;
 }
 
-for (const [group, routes] of Object.entries(GROUPS)) {
+for (const [group, routes] of Object.entries(SUPPLEMENTAL_A11Y_ROUTE_GROUPS)) {
   test(`a11y: "${group}" routes have no WCAG axe violations`, async ({
     page,
   }) => {
@@ -127,6 +106,5 @@ for (const [group, routes] of Object.entries(GROUPS)) {
   });
 }
 
-// Note: single-h1 / landmark structure for these same routes is owned by the
-// sibling a11y-structure.spec.ts, so this file stays strictly the axe-sweep
-// half.
+// Single-h1 and landmark checks use the exact same shared route registry in
+// a11y-structure.spec.ts. This file owns only the axe half.

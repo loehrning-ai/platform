@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+  waitFor,
+} from "@testing-library/react";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -31,6 +38,8 @@ function installLocalStoragePolyfill(): void {
 }
 
 import { __resetCacheForTests, isCheckpointDone } from "@/lib/progress";
+import { continueWithAnonymousProgress } from "@/lib/progress/store";
+import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 import { ReflectBoxWidget } from "./reflect-box";
 
 beforeAll(() => {
@@ -53,8 +62,12 @@ afterEach(() => {
 
 describe("ReflectBoxWidget ", () => {
   it("renders a labeled textarea", () => {
-    render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" title="Reflect" />);
-    expect(screen.getByRole("textbox", { name: "Reflect" })).toBeInTheDocument();
+    render(
+      <ReflectBoxWidget lessonId="mindset/1" cpId="reflect" title="Reflect" />,
+    );
+    expect(
+      screen.getByRole("textbox", { name: "Reflect" }),
+    ).toBeInTheDocument();
   });
 
   it("does not award the checkpoint while empty", () => {
@@ -64,7 +77,9 @@ describe("ReflectBoxWidget ", () => {
 
   it("awards the checkpoint once the trimmed text is non-empty", () => {
     render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" />);
-    fireEvent.change(screen.getByRole("textbox"), { target: { value: "A real reflection." } });
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "A real reflection." },
+    });
     expect(isCheckpointDone("mindset/1", "reflect")).toBe(true);
   });
 
@@ -76,7 +91,9 @@ describe("ReflectBoxWidget ", () => {
 
   it("persists the draft to localStorage, keyed by lessonId/cpId", () => {
     render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" />);
-    fireEvent.change(screen.getByRole("textbox"), { target: { value: "Saved locally." } });
+    fireEvent.change(screen.getByRole("textbox"), {
+      target: { value: "Saved locally." },
+    });
     expect(window.localStorage.getItem("reflect::mindset/1::reflect")).toBe(
       JSON.stringify("Saved locally."),
     );
@@ -85,5 +102,27 @@ describe("ReflectBoxWidget ", () => {
   it("respects a custom rows count", () => {
     render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" rows={6} />);
     expect(screen.getByRole("textbox")).toHaveAttribute("rows", "6");
+  });
+
+  it("stays read-only and cannot award progress before owner resolution", async () => {
+    __resetLearningOwnerForTests("unknown");
+    render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" />);
+    const textbox = screen.getByRole("textbox");
+
+    expect(textbox).toHaveAttribute("readonly");
+    expect(textbox).toHaveAttribute("aria-disabled", "true");
+    fireEvent.change(textbox, { target: { value: "Unowned reflection." } });
+    expect(textbox).toHaveValue("");
+    expect(isCheckpointDone("mindset/1", "reflect")).toBe(false);
+
+    act(() => {
+      continueWithAnonymousProgress();
+    });
+    await waitFor(() => expect(textbox).not.toHaveAttribute("readonly"));
+
+    fireEvent.change(textbox, { target: { value: "Owned reflection." } });
+    await waitFor(() =>
+      expect(isCheckpointDone("mindset/1", "reflect")).toBe(true),
+    );
   });
 });

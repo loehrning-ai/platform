@@ -28,7 +28,7 @@ import { ScrollProgress } from "./scroll-progress";
 afterEach(cleanup);
 
 describe("<ScrollProgress>", () => {
-  it("renders one hidden top thread and one desktop side spine", () => {
+  it("renders only the hidden top progress thread", () => {
     const { container } = render(<ScrollProgress />);
 
     const thread = container.querySelector("[data-scroll-progress]");
@@ -38,9 +38,11 @@ describe("<ScrollProgress>", () => {
       container.querySelector('[data-scroll-progress-fill="top"]'),
     ).toHaveClass("motion-reduce:hidden");
     expect(
-      container.querySelector('[data-scroll-progress-fill="side"]')
-        ?.parentElement,
-    ).toHaveClass("hidden", "lg:block");
+      container.querySelector('[data-scroll-progress-fill="side"]'),
+    ).not.toBeInTheDocument();
+    expect(
+      container.querySelectorAll("[data-scroll-progress-fill]"),
+    ).toHaveLength(1);
   });
 
   it("keeps identical progress nodes across server render and hydration", async () => {
@@ -56,13 +58,13 @@ describe("<ScrollProgress>", () => {
     await act(async () => undefined);
 
     expect(recoverableError).not.toHaveBeenCalled();
-    expect(container.querySelectorAll("[data-scroll-progress-fill]")).toHaveLength(
-      2,
-    );
     expect(
-      Array.from(container.querySelectorAll("[data-scroll-progress-fill]")).every(
-        (element) => element.classList.contains("motion-reduce:hidden"),
-      ),
+      container.querySelectorAll("[data-scroll-progress-fill]"),
+    ).toHaveLength(1);
+    expect(
+      Array.from(
+        container.querySelectorAll("[data-scroll-progress-fill]"),
+      ).every((element) => element.classList.contains("motion-reduce:hidden")),
     ).toBe(true);
 
     await act(async () => root.unmount());

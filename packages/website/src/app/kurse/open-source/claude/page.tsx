@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
 import { HeroOrrery } from "@/components/imported-courses/claude/hero-orrery";
 import { HeroTransform } from "@/components/imported-courses/claude/hero-transform";
 import { getClaudeCourseBundle } from "@/lib/claude-course/localization";
@@ -124,137 +132,111 @@ export default async function ClaudeCourseLandingPage() {
   return (
     <>
       <JsonLd data={courseJsonLd} id="claude-course-jsonld" />
-      <section
-        lang={locale}
-        className="mx-auto max-w-[1100px] px-4 pb-20 pt-14 sm:px-6 sm:pt-20"
-      >
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          {copy.eyebrow}
-        </p>
-        <h1 className="mt-6 max-w-[900px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-          {copy.title}
-        </h1>
-        <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
-          {copy.intro}
-        </p>
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href={firstLessonHref}
-            prefetch={false}
-            className="inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
-          >
-            {copy.startLesson}
-            <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-          <Link
-            href="#lessons"
-            className="inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-background px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card"
-          >
-            {copy.courseMap}
-          </Link>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {copy.facts.map((fact) => (
-            <span
-              key={fact}
-              className="border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground"
+      <TechnicalCourseFrame courseId="claude" lang={locale}>
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          intro={copy.intro}
+          facts={copy.facts}
+          factsLabel={locale === "de" ? "Kursdaten" : "Course facts"}
+          primaryAction={
+            <Link
+              href={firstLessonHref}
+              prefetch={false}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
-              {fact}
-            </span>
-          ))}
-        </div>
+              {copy.startLesson}
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          }
+          secondaryAction={
+            <Link
+              href="#lessons"
+              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+            >
+              {copy.courseMap}
+            </Link>
+          }
+        />
 
-        <div className="mt-16">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <section className="mt-12 min-w-0" aria-labelledby="prompt-lab-heading">
+          <h2
+            id="prompt-lab-heading"
+            className="text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
+          >
             {copy.demoEyebrow}
-          </p>
-          <p className="mt-1 text-[14px] text-muted-foreground">
+          </h2>
+          <p className="mt-2 max-w-[640px] text-sm leading-[1.55] text-muted-foreground">
             {copy.demoIntro}
           </p>
-          <div className="mt-6">
+          <div className="mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
             <HeroOrrery locale={locale} />
           </div>
-          <div className="mt-8">
+          <div className="mt-6 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
             <HeroTransform locale={locale} />
           </div>
-        </div>
+        </section>
 
-        <section id="lessons" className="mt-20 scroll-mt-24">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.courseEyebrow}
-          </p>
-          <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            {copy.courseTitle}
-          </h2>
-          <p className="mt-3 max-w-[640px] text-[15px] leading-relaxed text-muted-foreground">
-            {copy.courseIntro}
-          </p>
+        <section id="lessons" className="mt-12 scroll-mt-24">
+          <TechnicalCourseSectionHeading
+            eyebrow={copy.courseEyebrow}
+            title={copy.courseTitle}
+          />
 
-          <div className="mt-8 flex flex-col gap-8">
+          <div className="mt-5 border-b border-border">
             {bundle.content.tracks.map((track) => {
               const trackLessons = bundle.content.lessons.filter(
                 (lesson) => lesson.trackId === track.id,
               );
               return (
-                <div key={track.id}>
-                  <h3 className="text-[18px] font-bold text-foreground">
-                    {track.label}
-                  </h3>
-                  <p className="text-[13px] text-muted-foreground">
-                    {track.hint}
-                  </p>
-                  <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                <section
+                  key={track.id}
+                  className="grid min-w-0 border-t border-border lg:grid-cols-[240px_minmax(0,1fr)]"
+                >
+                  <div className="min-w-0 py-4 pr-5 lg:border-r lg:border-border">
+                    <h3 className="break-words text-lg font-bold text-foreground">
+                      {track.label}
+                    </h3>
+                    <p className="mt-1 break-words text-[13px] leading-[1.45] text-muted-foreground">
+                      {track.hint}
+                    </p>
+                  </div>
+                  <ul className="min-w-0 lg:pl-3">
                     {trackLessons.map((lesson) => (
-                      <li key={lesson.id}>
+                      <li key={lesson.id} className="min-w-0">
                         <Link
                           href={technicalCourseHref("claude", locale, {
                             kind: "lesson",
                             lessonId: lesson.id,
                           })}
                           prefetch={false}
-                          className="block h-full min-w-0 border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
+                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[4.75rem_minmax(0,1fr)_1rem]`}
                         >
-                          <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-brand-orange">
+                          <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
                             {copy.lessonLabel} {lesson.number}
                           </p>
-                          <h4 className="mt-1 break-words text-[15px] font-semibold text-foreground">
-                            {lesson.title}
-                          </h4>
-                          <p className="mt-1 break-words text-[12.5px] leading-[1.4] text-muted-foreground">
-                            {lesson.subtitle}
-                          </p>
+                          <div className="min-w-0">
+                            <h4 className="break-words text-[15px] font-semibold text-foreground">
+                              {lesson.title}
+                            </h4>
+                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground">
+                              {lesson.subtitle}
+                            </p>
+                          </div>
+                          <ArrowRight
+                            className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-brand-orange"
+                            aria-hidden="true"
+                          />
                         </Link>
                       </li>
                     ))}
                   </ul>
-                </div>
+                </section>
               );
             })}
           </div>
         </section>
-
-        <div className="mt-16 border-2 border-foreground bg-card p-6 text-center shadow-[6px_6px_0_var(--color-foreground)] sm:p-8">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.finalEyebrow}
-          </p>
-          <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">
-            {copy.finalTitle}
-          </h2>
-          <p className="mx-auto mt-3 max-w-[480px] text-[14px] leading-relaxed text-muted-foreground">
-            {copy.finalBody}
-          </p>
-          <Link
-            href={firstLessonHref}
-            prefetch={false}
-            className="mt-6 inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
-          >
-            {copy.begin}
-            <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
+      </TechnicalCourseFrame>
     </>
   );
 }

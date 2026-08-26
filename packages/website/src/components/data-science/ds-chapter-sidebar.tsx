@@ -46,15 +46,17 @@ export function DsChapterSidebar({
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
           >
-            <span className="w-6 shrink-0 text-center font-mono text-[10px] font-bold text-brand-orange">
+            <span className="w-6 shrink-0 text-center font-mono text-xs font-bold text-brand-orange">
               {c.displayNumber}
             </span>
             <div className="min-w-0 flex-1">
-              <div className="break-words [overflow-wrap:anywhere]">{c.title}</div>
-              <div className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+              <div className="break-words [overflow-wrap:anywhere]">
+                {c.title}
+              </div>
+              <div className="mt-0.5 line-clamp-2 text-xs leading-snug text-muted-foreground">
                 {c.subtitle}
               </div>
-              <div className="mt-1 inline-flex items-center gap-1 font-mono text-[10px] text-muted-foreground">
+              <div className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
                 <Clock className="h-2.5 w-2.5" aria-hidden="true" />
                 {locale === "de"
                   ? `${c.estimatedMinutes} Min.`

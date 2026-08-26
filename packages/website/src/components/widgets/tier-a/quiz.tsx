@@ -47,6 +47,13 @@ const DEFAULT_COPY: QuizWidgetCopy = {
   incorrectLabel: "Nicht ganz.",
 };
 
+const ENGLISH_DEFAULT_COPY: QuizWidgetCopy = {
+  kindLabel: "Check",
+  optionsAriaLabel: "Answer options",
+  correctLabel: "Correct.",
+  incorrectLabel: "Not quite.",
+};
+
 export interface QuizWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -71,7 +78,10 @@ export function QuizWidget({
   copy,
   locale = "de",
 }: QuizWidgetProps): JSX.Element {
-  const c = { ...DEFAULT_COPY, ...copy };
+  const c = {
+    ...(locale === "en" ? ENGLISH_DEFAULT_COPY : DEFAULT_COPY),
+    ...copy,
+  };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [hydrated, setHydrated] = useState(false);
@@ -116,7 +126,6 @@ export function QuizWidget({
       kindLabel={c.kindLabel}
       title={title ?? (locale === "de" ? "Kurze Prüfung" : "Quick check")}
       done={done}
-      xpLabel="+10 XP"
       doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div ref={containerRef}>
@@ -152,14 +161,14 @@ export function QuizWidget({
                   })
                 }
                 className={cn(
-                  "flex items-center gap-3 border-2 border-border bg-background px-3 py-2.5 text-left text-[14px] text-foreground transition-colors",
+                  "flex min-h-11 items-center gap-3 border-2 border-border bg-background px-3 py-2.5 text-left text-[14px] text-foreground transition-colors",
                   !answered && "hover:border-brand-orange",
                   showCorrect && "border-risk-green bg-risk-green/10",
                   showWrong && "border-destructive bg-destructive/10",
                   answered && "cursor-default",
                 )}
               >
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                   {LETTERS[i]}
                 </span>
                 <span>{option}</span>
@@ -188,7 +197,7 @@ export function QuizWidget({
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >
-              <p className="mb-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]">
+              <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.14em]">
                 {isCorrect ? c.correctLabel : c.incorrectLabel}
               </p>
               {explanation}

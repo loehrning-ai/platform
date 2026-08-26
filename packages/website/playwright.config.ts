@@ -40,8 +40,7 @@ const GLOBAL_TIMEOUT = boundedInteger(
   60_000,
   2 * 60 * 60 * 1000,
 );
-const REUSE_EXISTING_SERVER =
-  process.env.E2E_REUSE_EXISTING_SERVER === "1";
+const REUSE_EXISTING_SERVER = process.env.E2E_REUSE_EXISTING_SERVER === "1";
 if (STRICT_TEST_RUN && REUSE_EXISTING_SERVER) {
   throw new Error(
     "Production and release Playwright runs may not reuse an existing server.",
@@ -56,6 +55,8 @@ const PACKAGE_ROOT = fileURLToPath(new URL(".", import.meta.url));
 // Desktop Safari is an optional local tier. Enable it with RUN_WEBKIT after
 // installing WebKit. Use element screenshots for unusually tall pages.
 const RUN_WEBKIT = process.env.RUN_WEBKIT === "1";
+const CAPTURE_VISUALS = process.env.PLAYWRIGHT_CAPTURE_VISUALS === "1";
+const MANUAL_VISUAL_SPEC = /qa-visuals\.spec\.ts$/;
 // Live auth is excluded from the default project graph. Only the explicit,
 // fail-closed `test:e2e:authenticated-live(:built)` command sets this flag.
 const RUN_LIVE_AUTH = process.env.E2E_AUTH_LIVE === "1";
@@ -64,9 +65,7 @@ const DESKTOP_CHROMIUM_ISOLATED_SPECS = [
   /route-claude-responsive\.spec\.ts$/,
 ] as const;
 const STORAGE_STATE = RUN_LIVE_AUTH
-  ? validateLiveAuthStorageStatePath(
-      process.env.E2E_AUTH_STORAGE_STATE,
-    )
+  ? validateLiveAuthStorageStatePath(process.env.E2E_AUTH_STORAGE_STATE)
   : STATIC_STORAGE_STATE;
 const LIVE_ARTIFACT_DIRECTORY = RUN_LIVE_AUTH
   ? path.dirname(STORAGE_STATE)
@@ -184,10 +183,9 @@ const TEST_SERVER_ENVIRONMENT = Object.fromEntries(
 const DOTENV_GUARD_NODE_OPTIONS = `--require=${fileURLToPath(
   new URL("../../scripts/deny-dotenv-loading.cjs", import.meta.url),
 )}`;
-const DOTENV_GUARD_BUN_OPTIONS =
-  `--no-env-file --preload=${fileURLToPath(
-    new URL("../../scripts/deny-dotenv-loading.cjs", import.meta.url),
-  )}`;
+const DOTENV_GUARD_BUN_OPTIONS = `--no-env-file --preload=${fileURLToPath(
+  new URL("../../scripts/deny-dotenv-loading.cjs", import.meta.url),
+)}`;
 const TEST_SERVER_DENIED_ENVIRONMENT = Object.fromEntries(
   TEST_SERVER_DENIED_PROVIDER_KEYS.map((key) => [key, ""]),
 );
@@ -250,8 +248,7 @@ export default defineConfig({
   // Pixel baselines are deliberately project/OS independent. The checked-in
   // desktop-Chromium references use bundled local fonts and a bounded 3%
   // tolerance, so Linux CI verifies the same reviewed pixels as local macOS.
-  snapshotPathTemplate:
-    "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
+  snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   projects: [
     // --- Provider-free auth scaffold (regression coverage) ------------------
     // This writes a deterministic mock cookie and proves storage-state wiring
@@ -275,6 +272,7 @@ export default defineConfig({
       testIgnore: [
         /\.authed\.spec\.ts$/,
         ...DESKTOP_CHROMIUM_ISOLATED_SPECS,
+        MANUAL_VISUAL_SPEC,
       ],
       use: { ...devices["Desktop Chrome"] },
     },
@@ -290,7 +288,11 @@ export default defineConfig({
     },
     {
       name: "mobile-chromium",
-      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
+      testIgnore: [
+        /\.authed\.spec\.ts$/,
+        /course-workspace\.spec\.ts$/,
+        MANUAL_VISUAL_SPEC,
+      ],
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
@@ -301,9 +303,25 @@ export default defineConfig({
       // Keep the timeout strict so an actual hang still fails.
       workers: 1,
       timeout: 60_000,
-      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
+      testIgnore: [
+        /\.authed\.spec\.ts$/,
+        /course-workspace\.spec\.ts$/,
+        MANUAL_VISUAL_SPEC,
+      ],
       use: { ...devices["iPhone 13"], video: "on-first-retry" },
     },
+
+    // Human-review screenshots are a separate opt-in project. They never
+    // change the mandatory public project's inventory or WebKit shard size.
+    ...(CAPTURE_VISUALS
+      ? [
+          {
+            name: "chromium-visual-qa",
+            testMatch: MANUAL_VISUAL_SPEC,
+            use: { ...devices["Desktop Chrome"] },
+          },
+        ]
+      : []),
 
     // Provider-free auth scaffold. Protected-route assertions that require a
     // server-validated session stay explicitly skipped in this project.

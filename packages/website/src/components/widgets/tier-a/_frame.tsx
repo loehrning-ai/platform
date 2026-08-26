@@ -1,7 +1,6 @@
 "use client";
 
 import { type JSX, type ReactNode } from "react";
-import { m, useReducedMotion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,10 +11,10 @@ import { cn } from "@/lib/utils";
  * (ModuleId / ExerciseKind) so it works for all three courses.
  *
  *  - Renders a kind label + title + scenario header in CI v3.0 styling.
- *  - Shows a "done" badge driven by the caller (the unified-store
- *    `useCheckpoint` result), so XP and badges stay in one place.
- *  - `prefers-reduced-motion` skips the badge spring; full keyboard nav is
- *    the responsibility of each widget body (see per-widget tests).
+ *  - Shows a static completion state driven by the caller (the unified-store
+ *    `useCheckpoint` result). The frame never exposes reward totals.
+ *  - Full keyboard navigation remains the responsibility of each widget body
+ *    (see per-widget tests).
  *
  * German copy throughout. No em dashes.
  */
@@ -26,11 +25,9 @@ export interface WidgetFrameProps {
   readonly title: string;
   /** One-line author-facing instruction shown above the body. */
   readonly scenario?: string;
-  /** Whether the associated checkpoint is complete (drives the done badge). */
+  /** Whether the associated checkpoint is complete. */
   readonly done?: boolean;
-  /** Optional XP amount shown in the done badge, e.g. "+15 XP". */
-  readonly xpLabel?: string;
-  /** Localized completion label. Defaults to the established German copy. */
+  /** Localized completion label. Defaults to a language-neutral checkmark. */
   readonly doneLabel?: string;
   readonly children: ReactNode;
 }
@@ -40,12 +37,9 @@ export function WidgetFrame({
   title,
   scenario,
   done = false,
-  xpLabel,
-  doneLabel = "Erledigt",
+  doneLabel = "✓",
   children,
 }: WidgetFrameProps): JSX.Element {
-  const reduced = useReducedMotion();
-
   return (
     <div
       className="border-l-[3px] border-brand-orange bg-card/40 p-5 md:p-6"
@@ -53,24 +47,18 @@ export function WidgetFrame({
       data-done={done ? "1" : "0"}
     >
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-        <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
           ◆ {kindLabel}
         </p>
-        {done && (
-          <m.span
-            initial={reduced ? false : { scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={
-              reduced
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 400, damping: 15 }
-            }
-            className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green"
+        {done ? (
+          <span
+            data-completion-state
+            className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-risk-green"
           >
-            <CheckCircle2 size={12} />
-            {xpLabel ? `${xpLabel} ✓` : doneLabel}
-          </m.span>
-        )}
+            <CheckCircle2 aria-hidden="true" size={12} />
+            {doneLabel}
+          </span>
+        ) : null}
       </div>
       <h3 className="mb-2 text-[18px] font-bold leading-[1.25] tracking-[-0.02em] text-foreground md:text-[20px]">
         {title}

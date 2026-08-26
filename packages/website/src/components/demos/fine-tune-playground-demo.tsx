@@ -19,8 +19,7 @@ interface Prompt {
 const FT_PROMPTS: readonly Prompt[] = [
   {
     q: "Wie lange ist die Standardgarantie auf Motor XR-2200?",
-    base:
-      "Die Garantie für einen Motor hängt vom Hersteller ab. In der Regel liegt sie zwischen 12 und 36 Monaten. Für spezifische Informationen kontaktieren Sie bitte den Hersteller.",
+    base: "Die Garantie für einen Motor hängt vom Hersteller ab. In der Regel liegt sie zwischen 12 und 36 Monaten. Für spezifische Informationen kontaktieren Sie bitte den Hersteller.",
     tuned:
       "Auf den Motor XR-2200 gewähren wir 36 Monate Garantie ab Inbetriebnahme, gemäß AGB §14.2. Verschleißteile (Lager, Dichtungen) sind ausgenommen. Verlängerung auf 60 Monate über Wartungsvertrag WV-Premium möglich.",
     baseSpec: 22,
@@ -30,8 +29,7 @@ const FT_PROMPTS: readonly Prompt[] = [
   },
   {
     q: "Welche Werkstoffe sind für Offshore-Anwendungen freigegeben?",
-    base:
-      "Für Offshore-Anwendungen werden üblicherweise korrosionsbeständige Materialien wie Edelstahl 316L oder Duplex-Stähle verwendet. Die genaue Wahl hängt von der Anwendung ab.",
+    base: "Für Offshore-Anwendungen werden üblicherweise korrosionsbeständige Materialien wie Edelstahl 316L oder Duplex-Stähle verwendet. Die genaue Wahl hängt von der Anwendung ab.",
     tuned:
       "Freigegeben sind 1.4462 (Duplex), 1.4529 (Super-Austenit) und Hastelloy C-276. Für Zone 3 ab Nordsee (H2S-haltig) zwingend Duplex plus Schutzanstrich System SP-3B. Dokumentiert in internem Standard WST-OFF-01.",
     baseSpec: 18,
@@ -41,8 +39,7 @@ const FT_PROMPTS: readonly Prompt[] = [
   },
   {
     q: "Wie bepreisen wir Express-Aufträge?",
-    base:
-      "Express-Aufträge haben in der Regel einen Zuschlag. Die genaue Höhe variiert je nach Unternehmen und Dringlichkeit.",
+    base: "Express-Aufträge haben in der Regel einen Zuschlag. Die genaue Höhe variiert je nach Unternehmen und Dringlichkeit.",
     tuned:
       "Express <72h: Priorität hoch. Express <24h: Priorität kritisch. Wochenend-Rush: zusätzliche Freigabe nötig. Materialkosten separat prüfen. Ausnahme Rahmenvertrag-Stufe A laut interner Freigabematrix.",
     baseSpec: 14,
@@ -55,8 +52,7 @@ const FT_PROMPTS: readonly Prompt[] = [
 const FT_PROMPTS_EN: readonly Prompt[] = [
   {
     q: "What is the standard warranty for the XR-2200 motor?",
-    base:
-      "Motor warranties depend on the manufacturer and commonly range from 12 to 36 months. Contact the manufacturer for the applicable terms.",
+    base: "Motor warranties depend on the manufacturer and commonly range from 12 to 36 months. Contact the manufacturer for the applicable terms.",
     tuned:
       "The fictional XR-2200 policy states 36 months from commissioning under sample clause 14.2. Bearings and seals are excluded. A sample maintenance plan extends coverage to 60 months.",
     baseSpec: 22,
@@ -66,8 +62,7 @@ const FT_PROMPTS_EN: readonly Prompt[] = [
   },
   {
     q: "Which materials are approved for offshore applications?",
-    base:
-      "Offshore applications commonly use corrosion-resistant materials such as 316L stainless steel or duplex steel. Selection depends on the environment.",
+    base: "Offshore applications commonly use corrosion-resistant materials such as 316L stainless steel or duplex steel. Selection depends on the environment.",
     tuned:
       "The fictional standard WST-OFF-01 lists 1.4462, 1.4529, and Hastelloy C-276. The seeded Zone 3 example requires duplex steel plus coating system SP-3B.",
     baseSpec: 18,
@@ -77,8 +72,7 @@ const FT_PROMPTS_EN: readonly Prompt[] = [
   },
   {
     q: "How do we price express orders?",
-    base:
-      "Express orders commonly carry a surcharge. The amount depends on urgency and company policy.",
+    base: "Express orders commonly carry a surcharge. The amount depends on urgency and company policy.",
     tuned:
       "The fictional policy marks delivery under 72 hours as high priority and under 24 hours as critical. Weekend work requires approval; material cost is checked separately.",
     baseSpec: 14,
@@ -114,7 +108,7 @@ function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
       )}
       style={{
         padding: "2px 7px",
-        fontSize: 10,
+        fontSize: 12,
         fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
         fontWeight: 700,
         letterSpacing: "0.08em",
@@ -180,8 +174,12 @@ export default function FineTunePlaygroundDemo() {
     return points;
   }, []);
 
-  const lossPath = curvePoints.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
-  const accPath = accPoints.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+  const lossPath = curvePoints
+    .map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`)
+    .join(" ");
+  const accPath = accPoints
+    .map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`)
+    .join(" ");
   const currentX = (epoch / EPOCH_MAX) * 280;
   const currentLossY = curvePoints[epoch]?.y ?? 30;
   const currentAccY = accPoints[epoch]?.y ?? 30;
@@ -292,7 +290,7 @@ export default function FineTunePlaygroundDemo() {
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -301,7 +299,14 @@ export default function FineTunePlaygroundDemo() {
         >
           Fine-Tuning Playground
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            marginTop: 6,
+          }}
+        >
           {text("Generische Antwort vs.", "Generic answer versus")}{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
             {text("Domänenbeispiel.", "domain example.")}
@@ -333,11 +338,12 @@ export default function FineTunePlaygroundDemo() {
               onClick={() => setSelIdx(i)}
               onKeyDown={(e) => handleTabKeyDown(e, i)}
               style={{
+                minHeight: 44,
                 padding: "8px 10px",
                 background: active ? DEMO.ink : "transparent",
                 color: active ? DEMO.kalk : DEMO.ink,
                 border: `1px solid ${active ? DEMO.ink : DEMO.leinen}`,
-                fontSize: 11,
+                fontSize: 12,
                 cursor: "pointer",
                 fontFamily: "inherit",
                 textAlign: "left",
@@ -348,7 +354,7 @@ export default function FineTunePlaygroundDemo() {
               <span
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: active ? DEMO.kupferLight : DEMO.schiefer,
                   letterSpacing: "0.12em",
                   fontWeight: 700,
@@ -401,7 +407,7 @@ export default function FineTunePlaygroundDemo() {
                 color: DEMO.ink,
                 padding: "2px 8px",
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
               }}
@@ -411,7 +417,7 @@ export default function FineTunePlaygroundDemo() {
             <span
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 10,
+                fontSize: 12,
                 color: DEMO.schiefer,
               }}
             >
@@ -429,7 +435,7 @@ export default function FineTunePlaygroundDemo() {
               display: "flex",
               gap: 12,
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
               flexWrap: "wrap",
             }}
@@ -438,8 +444,11 @@ export default function FineTunePlaygroundDemo() {
               <strong style={{ color: DEMO.ink }}>{prompt.baseSpec} %</strong>{" "}
               {text("Spezifität", "specificity")}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-              {text("Konfidenz", "Confidence")} <ConfChip pct={prompt.baseConf} />
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+            >
+              {text("Konfidenz", "Confidence")}{" "}
+              <ConfChip pct={prompt.baseConf} />
             </span>
           </div>
         </div>
@@ -464,7 +473,7 @@ export default function FineTunePlaygroundDemo() {
               color: DEMO.kalk,
               padding: "2px 8px",
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               border: `1px solid ${DEMO.ink}`,
@@ -487,21 +496,27 @@ export default function FineTunePlaygroundDemo() {
                 color: DEMO.kalk,
                 padding: "2px 8px",
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
               }}
             >
-              {text("DOMÄNENBEISPIEL · SIMULIERT", "DOMAIN EXAMPLE · SIMULATED")}
+              {text(
+                "DOMÄNENBEISPIEL · SIMULIERT",
+                "DOMAIN EXAMPLE · SIMULATED",
+              )}
             </span>
             <span
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 10,
+                fontSize: 12,
                 color: DEMO.schiefer,
               }}
             >
-              {text("+ fiktive Domänendokumente", "+ fictional domain documents")}
+              {text(
+                "+ fiktive Domänendokumente",
+                "+ fictional domain documents",
+              )}
             </span>
           </div>
           <div style={{ fontSize: 12, lineHeight: 1.55, color: DEMO.ink }}>
@@ -515,17 +530,25 @@ export default function FineTunePlaygroundDemo() {
               display: "flex",
               gap: 12,
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
               flexWrap: "wrap",
             }}
           >
             <span>
-              <strong style={{ color: "var(--color-brand-orange)" }}>{prompt.tunedSpec} %</strong>{" "}
+              <strong style={{ color: "var(--color-brand-orange)" }}>
+                {prompt.tunedSpec} %
+              </strong>{" "}
               {text("Spezifität", "specificity")}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-              {text("Konfidenz", "Confidence")} <ConfChip pct={prompt.tunedConf} accentColor="var(--color-brand-orange)" />
+            <span
+              style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+            >
+              {text("Konfidenz", "Confidence")}{" "}
+              <ConfChip
+                pct={prompt.tunedConf}
+                accentColor="var(--color-brand-orange)"
+              />
             </span>
           </div>
         </div>
@@ -545,19 +568,20 @@ export default function FineTunePlaygroundDemo() {
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: "var(--color-brand-orange)",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
               fontWeight: 700,
             }}
           >
-            {text("Trainingsmetriken · Epoche", "Training metrics · epoch")} {String(epoch).padStart(2, "0")}/{EPOCH_MAX}
+            {text("Trainingsmetriken · Epoche", "Training metrics · epoch")}{" "}
+            {String(epoch).padStart(2, "0")}/{EPOCH_MAX}
           </div>
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
             }}
           >
@@ -578,14 +602,18 @@ export default function FineTunePlaygroundDemo() {
             [
               ["Loss", metrics.loss, "↓"],
               ["Accuracy", `${metrics.acc} %`, "↑"],
-              [text("Domänenspezifität", "Domain specificity"), `${metrics.specificity} %`, "↑"],
+              [
+                text("Domänenspezifität", "Domain specificity"),
+                `${metrics.specificity} %`,
+                "↑",
+              ],
             ] as const
           ).map(([l, v, dir]) => (
             <div key={l}>
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "rgba(243,240,233,0.55)",
                   letterSpacing: "0.14em",
                 }}
@@ -626,14 +654,16 @@ export default function FineTunePlaygroundDemo() {
               alignItems: "center",
               marginBottom: 6,
               fontFamily: DEMO.font.mono,
-              fontSize: 9,
+              fontSize: 12,
               color: DEMO.schiefer,
               letterSpacing: "0.12em",
             }}
           >
             <span>LOSS ↓ · ACCURACY ↑</span>
             <span style={{ display: "flex", gap: 12 }}>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span
+                style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+              >
                 <span
                   style={{
                     display: "inline-block",
@@ -644,7 +674,9 @@ export default function FineTunePlaygroundDemo() {
                 />
                 LOSS
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+              <span
+                style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
+              >
                 <span
                   style={{
                     display: "inline-block",
@@ -734,7 +766,7 @@ export default function FineTunePlaygroundDemo() {
               justifyContent: "space-between",
               marginTop: 2,
               fontFamily: DEMO.font.mono,
-              fontSize: 9,
+              fontSize: 12,
               color: DEMO.schiefer,
               letterSpacing: "0.1em",
             }}
@@ -755,7 +787,7 @@ export default function FineTunePlaygroundDemo() {
           <span
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
               letterSpacing: "0.12em",
               fontWeight: 700,
@@ -777,6 +809,7 @@ export default function FineTunePlaygroundDemo() {
                 WebkitAppearance: "none",
                 appearance: "none",
                 background: "transparent",
+                minHeight: 44,
                 height: 20,
                 cursor: "grab",
                 "--ft-progress": `${(epoch / EPOCH_MAX) * 100}%`,
@@ -794,7 +827,7 @@ export default function FineTunePlaygroundDemo() {
           <span
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: 700,
               color: "var(--color-brand-orange)",
               minWidth: 42,

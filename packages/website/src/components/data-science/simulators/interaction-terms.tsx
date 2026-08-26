@@ -146,7 +146,7 @@ export function InteractionTerms() {
                 padding: "6px 8px",
                 background: "var(--bg-hi)",
                 borderRadius: 5,
-                fontSize: 11,
+                fontSize: 12,
                 color: delta > 0 ? "var(--lime-ink)" : "var(--bad-ink)",
               }}
             >
@@ -166,7 +166,7 @@ export function InteractionTerms() {
           <div
             style={{
               marginTop: 12,
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--ink-3)",
               lineHeight: 1.5,
             }}
@@ -198,7 +198,7 @@ export function InteractionTerms() {
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--ink-3)",
               marginBottom: 6,
               fontFamily: "'JetBrains Mono', monospace",

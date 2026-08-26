@@ -48,7 +48,7 @@ describe("data-science chapter components render with real ported content, not p
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("ChOverview renders the real hero copy, all 12 curriculum cards, and reserves the FlowingPipeline", () => {
     const { container } = render(<ChOverview />);
-    expect(screen.getByText(/turns noise into decisions/)).toBeInTheDocument();
+    expect(screen.getByText(/turning data into decisions/)).toBeInTheDocument();
     expect(screen.getByText("Capstone")).toBeInTheDocument();
     expect(screen.getByText("Fundamentals")).toBeInTheDocument();
     expect(screen.getAllByText(/Data/).length).toBeGreaterThan(0);

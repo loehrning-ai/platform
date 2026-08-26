@@ -153,7 +153,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       resendBlocked:
         "Ein Login-Link wurde gerade verschickt. Warte, bevor du einen weiteren anforderst.",
       accountReadyNote:
-        "Das Lernkonto speichert Kursfortschritt, XP und Abschlussstatus. Die meisten Inhalte und Downloads bleiben öffentlich; vier Grundlagenkurse benötigen ein Konto.",
+        "Das Lernkonto speichert Kursfortschritt und Abschlussstatus. Die meisten Inhalte und Downloads bleiben öffentlich; vier Grundlagenkurse benötigen ein Konto.",
       accountUnavailableNote:
         "Die meisten Kurse, Bücher, Demos und Downloads bleiben ohne Konto zugänglich.",
       unavailable: {
@@ -226,8 +226,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "The origin of the authentication request could not be verified. Start sign-in again on this page.",
       invalidCodeFormat:
         "The authentication response was malformed. Start sign-in again on this page.",
-      fallback:
-        "Sign-in could not be completed. Start it again on this page.",
+      fallback: "Sign-in could not be completed. Start it again on this page.",
     },
     form: {
       title: "Sign-in method",
@@ -236,24 +235,21 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "No sign-in method is approved for this environment.",
       google: "Sign in with Google",
       googlePending: "Opening Google…",
-      googleError:
-        "Google sign-in could not be started. Try again later.",
+      googleError: "Google sign-in could not be started. Try again later.",
       emailSeparator: "or use email",
       emailLabel: "Email address",
-      emailHint:
-        "You will receive a single-use link for this browser.",
+      emailHint: "You will receive a single-use link for this browser.",
       sendLink: "Send sign-in link",
       sendPending: "Sending link…",
       captchaRequired: "Complete the security check first.",
       otpProviderError:
         "The sign-in link could not be sent. Check the email address and complete the security check again.",
-      otpTransportError:
-        "The sign-in link could not be sent. Try again later.",
+      otpTransportError: "The sign-in link could not be sent. Try again later.",
       sent: "Sign-in link sent. Open the email in this browser.",
       resendBlocked:
         "A sign-in link was just sent. Wait before requesting another.",
       accountReadyNote:
-        "The account stores course progress, XP, and completion status. Most content and downloads remain public; four foundation courses require an account.",
+        "The account stores course progress and completion status. Most content and downloads remain public; four foundation courses require an account.",
       accountUnavailableNote:
         "Most courses, books, demos, and downloads remain available without an account.",
       unavailable: {

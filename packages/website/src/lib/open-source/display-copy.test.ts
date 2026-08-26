@@ -7,12 +7,12 @@ import {
 } from "./display-copy";
 
 describe("open-source display copy", () => {
-  it("provides precise collection and state labels in both languages", () => {
-    expect(OPEN_SOURCE_PAGE_COPY.de.publishedStatus(1)).toBe(
-      "1 veröffentlichter Eintrag",
+  it("keeps publication evidence and artifact states precise in both languages", () => {
+    expect(OPEN_SOURCE_PAGE_COPY.de.publicationStandardBody).toContain(
+      "unveränderlichen Commit",
     );
-    expect(OPEN_SOURCE_PAGE_COPY.en.publishedStatus(1)).toBe(
-      "1 published entry",
+    expect(OPEN_SOURCE_PAGE_COPY.en.publicationStandardBody).toContain(
+      "immutable commit",
     );
     expect(OPEN_SOURCE_SHARED_COPY.de.statuses.experimental).toBe(
       "Experimentell",
@@ -49,9 +49,9 @@ describe("open-source display copy", () => {
     expect(english.guide.integration.targets).toEqual(
       registry.guide.integration.targets,
     );
-    expect(english.guide.installation.steps.map((step) => step.command)).toEqual(
-      registry.guide.installation.steps.map((step) => step.command),
-    );
+    expect(
+      english.guide.installation.steps.map((step) => step.command),
+    ).toEqual(registry.guide.installation.steps.map((step) => step.command));
     expect(english.guide.screenshot.sha256).toBe(
       registry.guide.screenshot.sha256,
     );

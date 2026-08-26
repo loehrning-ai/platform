@@ -14,13 +14,13 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
   return (
     <section
       id="ausbildung"
-      className="border-t border-border bg-card/30 py-20 sm:py-24"
+      className="border-t border-border bg-card/30 py-12"
       aria-labelledby="credentials-heading"
     >
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
         <header className="grid gap-5 border-b border-border pb-9 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-10">
           <div className="min-w-0">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
               {copy.eyebrow}
             </p>
             <h2
@@ -41,13 +41,13 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
             return (
               <article
                 key={credential.id}
-                className="group min-w-0 border border-border bg-background p-6 shadow-card sm:p-8"
+                className="group min-w-0 border border-border bg-background p-6 sm:p-8"
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="inline-flex h-11 w-11 items-center justify-center border border-border bg-card text-brand-orange">
                     <Icon size={20} aria-hidden="true" />
                   </span>
-                  <span className="font-mono text-[11px] font-bold tabular-nums text-muted-foreground">
+                  <span className="font-mono text-xs font-bold tabular-nums text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
@@ -75,7 +75,7 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
                         />
                         <a
                           href={item.href}
-                          className="min-w-0 break-words underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-current [overflow-wrap:anywhere]"
+                          className="inline-flex min-h-11 min-w-0 items-center break-words underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-current [overflow-wrap:anywhere]"
                         >
                           {item.label}
                         </a>

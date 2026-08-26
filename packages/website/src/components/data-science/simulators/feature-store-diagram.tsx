@@ -109,7 +109,7 @@ export function FeatureStoreDiagram() {
                 color: fsOn ? "#0D0D0C" : "var(--coral-ink)",
                 borderColor: fsOn ? "#64E2B5" : "#FF6B80",
                 fontFamily: "var(--font-mono)",
-                fontSize: 10.5,
+                fontSize: 12,
                 padding: "4px 10px",
               }}
               onClick={() => setFsOn((f) => !f)}
@@ -129,7 +129,7 @@ export function FeatureStoreDiagram() {
             <div
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 9.5,
+                fontSize: 12,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 color: "var(--ink-3)",
@@ -152,9 +152,7 @@ export function FeatureStoreDiagram() {
             >
               {skewScore.toFixed(2)}
             </div>
-            <div
-              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 4 }}
-            >
+            <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 4 }}>
               {fsOn
                 ? text(
                     "Shared definition in this diagram.",
@@ -169,7 +167,7 @@ export function FeatureStoreDiagram() {
           {!fsOn && (
             <div
               style={{
-                fontSize: 11.5,
+                fontSize: 12,
                 color: "var(--ink-3)",
                 lineHeight: 1.55,
               }}
@@ -183,7 +181,7 @@ export function FeatureStoreDiagram() {
           {fsOn && (
             <div
               style={{
-                fontSize: 11.5,
+                fontSize: 12,
                 color: "var(--ink-3)",
                 lineHeight: 1.55,
               }}
@@ -444,13 +442,13 @@ export function FeatureStoreDiagram() {
                 borderRadius: 7,
                 background: "rgba(255,107,128,0.06)",
                 border: "1px solid rgba(255,107,128,0.2)",
-                fontSize: 11,
+                fontSize: 12,
               }}
             >
               <div
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: 9,
+                  fontSize: 12,
                   fontWeight: 700,
                   color: "var(--orange-ink)",
                   marginBottom: 5,

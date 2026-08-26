@@ -128,7 +128,6 @@ export function PromptTransformWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+15 XP"
     >
       <div
         className="mb-4 flex items-center gap-2"
@@ -142,7 +141,7 @@ export function PromptTransformWidget({
             aria-pressed={i === stageIdx}
             onClick={() => selectStage(i)}
             className={cn(
-              "border-2 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] transition-colors",
+              "min-h-11 border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] transition-colors",
               i === stageIdx
                 ? "border-brand-orange bg-brand-orange/10 text-foreground"
                 : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",
@@ -158,14 +157,14 @@ export function PromptTransformWidget({
       </pre>
 
       <div className="mt-3 border-l-[3px] border-brand-amber bg-brand-amber/5 px-3 py-2 text-[13px] leading-[1.5] text-foreground">
-        <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-brand-amber">
+        <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-amber">
           Diagnose
         </span>
         <p className="mt-1">{active.note}</p>
       </div>
 
       <div className="mt-3">
-        <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="mb-1 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
           Prompt-Qualität · {active.quality}
         </p>
         <div className="h-[6px] w-full overflow-hidden rounded-full bg-border">
@@ -182,7 +181,7 @@ export function PromptTransformWidget({
           onClick={run}
           disabled={api.loading}
           className={cn(
-            "border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
+            "min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
           )}
         >
           {api.loading ? "Läuft …" : `Stufe ${stageIdx + 1} live ausführen`}

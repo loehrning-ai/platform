@@ -24,7 +24,7 @@ export default function Error({
   return (
     <div className="flex min-h-[60vh] min-w-0 flex-col items-center justify-center px-4 text-center sm:px-6">
       <span className="mb-6 block h-[2px] w-10 bg-brand-orange" />
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
         {copy.eyebrow}
       </p>
       <h1 className="mt-4 max-w-2xl break-words text-4xl font-bold tracking-[-0.04em] text-foreground">

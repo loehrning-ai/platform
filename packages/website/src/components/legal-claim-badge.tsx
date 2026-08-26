@@ -81,7 +81,7 @@ export function LegalClaimBadge({
     claim.sourceKind;
 
   return (
-    <div className="mt-3 flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+    <div className="mt-3 flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
       <Calendar className="h-3 w-3 shrink-0" aria-hidden="true" />
       <span>
         <span className="font-semibold">

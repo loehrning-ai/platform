@@ -45,7 +45,9 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { kind, slug } = await params;
   const registryArtifact = getOpenSourceArtifactByRoute(kind, slug);
   if (!registryArtifact) return {};
@@ -80,7 +82,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function OpenSourceArtifactDetailPage({ params }: PageProps) {
+export default async function OpenSourceArtifactDetailPage({
+  params,
+}: PageProps) {
   const { kind, slug } = await params;
   const registryArtifact = getOpenSourceArtifactByRoute(kind, slug);
   if (!registryArtifact) notFound();
@@ -99,7 +103,12 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: copy.breadcrumbHome, item: homeUrl },
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.breadcrumbHome,
+            item: homeUrl,
+          },
           {
             "@type": "ListItem",
             position: 2,
@@ -149,27 +158,39 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
 
   return (
     <>
-      <JsonLd data={jsonLd} id={`open-source-${artifact.kind}-${artifact.slug}-jsonld`} />
-      <section className="mx-auto max-w-4xl px-6 py-20" aria-labelledby="artifact-title">
+      <JsonLd
+        data={jsonLd}
+        id={`open-source-${artifact.kind}-${artifact.slug}-jsonld`}
+      />
+      <section
+        className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8"
+        aria-labelledby="artifact-title"
+      >
         <Link
           href={localizeHref("/open-source", locale)}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
           <ArrowLeft size={15} aria-hidden="true" />
           {copy.back}
         </Link>
-        <p className="mt-10 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
           {artifact.eyebrow}
         </p>
-        <h1 id="artifact-title" className="mt-4 text-4xl font-bold tracking-[-0.04em] text-foreground sm:text-6xl">
+        <h1
+          id="artifact-title"
+          className="mt-3 text-[clamp(2.25rem,4vw,4rem)] font-bold tracking-[-0.04em] text-foreground"
+        >
           {artifact.title}
         </h1>
-        <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
           {artifact.description}
         </p>
 
         {artifact.kind === "video" ? (
-          <section className="mt-10" aria-label={`${copy.videoLabel}: ${artifact.title}`}>
+          <section
+            className="mt-6"
+            aria-label={`${copy.videoLabel}: ${artifact.title}`}
+          >
             <video
               className="aspect-video w-full bg-black"
               controls
@@ -190,47 +211,61 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
             </video>
             <Link
               href={artifact.transcriptHref}
-              className="mt-4 inline-flex border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange"
+              className="mt-3 inline-flex min-h-11 items-center border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
               {copy.transcript}
             </Link>
           </section>
         ) : null}
 
-        <dl className="mt-10 grid gap-4 border-y border-border py-6 sm:grid-cols-3">
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.language}</dt>
+        <dl className="mt-6 grid gap-px border border-border bg-border sm:grid-cols-3">
+          <div className="bg-background p-3">
+            <dt className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+              {copy.language}
+            </dt>
             <dd className="mt-2 font-semibold">{artifact.language}</dd>
           </div>
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.commit}</dt>
-            <dd className="mt-2 font-mono text-sm">{artifact.source.revision.slice(0, 12)}</dd>
+          <div className="bg-background p-3">
+            <dt className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+              {copy.commit}
+            </dt>
+            <dd className="mt-2 font-mono text-sm">
+              {artifact.source.revision.slice(0, 12)}
+            </dd>
           </div>
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.license}</dt>
+          <div className="bg-background p-3">
+            <dt className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+              {copy.license}
+            </dt>
             <dd className="mt-2">
-              <a href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
+              <a
+                href={artifact.license.href}
+                className="font-semibold underline-offset-4 hover:underline"
+              >
                 {copy.licenseText}
               </a>
             </dd>
           </div>
         </dl>
 
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-3">
           {launchHref ? (
             launchHref.startsWith("https://") ? (
               <a
                 href={launchHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 border border-foreground px-4 py-2 text-sm font-semibold"
+                className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               >
                 {copy.open}
                 <span className="sr-only">{copy.externalTab}</span>
                 <ExternalLink size={14} aria-hidden="true" />
               </a>
             ) : (
-              <Link href={localizeHref(launchHref, locale)} className="border border-foreground px-4 py-2 text-sm font-semibold">
+              <Link
+                href={localizeHref(launchHref, locale)}
+                className="inline-flex min-h-11 items-center border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
                 {copy.open}
               </Link>
             )
@@ -239,7 +274,7 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
             href={artifact.source.revisionHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange"
+            className="inline-flex min-h-11 items-center gap-2 border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             {copy.sourceRevision}
             <span className="sr-only">{copy.externalTab}</span>
@@ -248,7 +283,9 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
         </div>
 
         {artifact.kind === "tool" || artifact.kind === "project" ? (
-          <SoftwareArtifactGuide artifact={artifact} locale={locale} />
+          <div className="[&_dt]:!text-xs [&_figcaption_.font-mono]:!text-xs [&_h2.font-mono]:!text-xs">
+            <SoftwareArtifactGuide artifact={artifact} locale={locale} />
+          </div>
         ) : null}
       </section>
     </>

@@ -224,7 +224,7 @@ export function L06DoneChecklist({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <p className="mb-3 font-mono text-[12px] text-muted-foreground">
@@ -249,7 +249,7 @@ export function L06DoneChecklist({
                     value={pickedIdx ?? ""}
                     onChange={(e) => choose(i, Number(e.target.value))}
                     aria-label={copy.rewrite(item.ambiguous)}
-                    className="w-full min-w-0 flex-1 border border-border bg-background px-2 py-1.5 font-mono text-[12px] text-foreground"
+                    className="min-h-11 w-full min-w-0 flex-1 border border-border bg-background px-2 py-1.5 font-mono text-[12px] text-foreground"
                   >
                     <option value="" disabled>
                       {copy.select}
@@ -286,7 +286,7 @@ export function L06DoneChecklist({
           >
             {ready ? `${copy.ready}${done ? " ✓" : ""}` : copy.draft}
           </p>
-          <div className="flex flex-col gap-1 font-mono text-[11.5px] text-foreground">
+          <div className="flex flex-col gap-1 font-mono text-xs text-foreground">
             {items.map((item, i) => (
               <span key={item.ambiguous}>
                 {picked[i] === item.correct ? "☑" : "☐"} {copy.check} {i + 1}

@@ -16,18 +16,14 @@ const TECHNICAL_COURSE_CASES = [
   {
     label: "Data Infrastructure",
     slug: "data-infrastructure",
-    checkpoint:
-      "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
-    nonCheckpoint:
-      "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
+    checkpoint: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
+    nonCheckpoint: "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
   },
   {
     label: "Data Engineering Fundamentals",
     slug: "data-engineering-fundamentals",
-    checkpoint:
-      "/en/kurse/open-source/data-engineering-fundamentals/home",
-    nonCheckpoint:
-      "/en/kurse/open-source/data-engineering-fundamentals/fund",
+    checkpoint: "/en/kurse/open-source/data-engineering-fundamentals/home",
+    nonCheckpoint: "/en/kurse/open-source/data-engineering-fundamentals/fund",
   },
   {
     label: "Data Science",
@@ -58,6 +54,25 @@ async function openLearningRoute(page: Page, route: string): Promise<void> {
     page.locator("[data-scroll-progress]"),
     `${route} must mount the global progress thread exactly once`,
   ).toHaveCount(1);
+  await expect(
+    page.locator('[data-scroll-progress-fill="top"]'),
+    `${route} must expose only the top progress indicator`,
+  ).toHaveCount(1);
+  await expect(page.locator('[data-scroll-progress-fill="side"]')).toHaveCount(
+    0,
+  );
+}
+
+async function continueLocally(page: Page): Promise<void> {
+  const button = page.getByRole("button", {
+    name: /^(?:Lokal weiterlernen|Continue locally)$/,
+  });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) await button.click();
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden();
 }
 
 async function expectToStartInFirstViewportBand(
@@ -71,7 +86,10 @@ async function expectToStartInFirstViewportBand(
 
   expect(viewport, `${label} needs a configured viewport`).not.toBeNull();
   expect(bounds, `${label} needs measurable bounds`).not.toBeNull();
-  expect(bounds!.y, `${label} must not start above the document`).toBeGreaterThanOrEqual(0);
+  expect(
+    bounds!.y,
+    `${label} must not start above the document`,
+  ).toBeGreaterThanOrEqual(0);
   expect(
     bounds!.y,
     `${label} must begin before the first viewport ends`,
@@ -86,18 +104,48 @@ async function expectFullyInFirstViewportBand(
 ): Promise<void> {
   await expectToStartInFirstViewportBand(page, locator, label);
   await expect
-    .poll(async () => {
-      const viewport = page.viewportSize();
-      const bounds = await locator.boundingBox();
-      if (!viewport || !bounds) return Number.POSITIVE_INFINITY;
-      return bounds.y + bounds.height;
-    }, { message: `${label} must fit completely inside the first viewport` })
-    .toBeLessThanOrEqual(
-      Math.min(maximumBottom, page.viewportSize()!.height),
-    );
+    .poll(
+      async () => {
+        const viewport = page.viewportSize();
+        const bounds = await locator.boundingBox();
+        if (!viewport || !bounds) return Number.POSITIVE_INFINITY;
+        return bounds.y + bounds.height;
+      },
+      { message: `${label} must fit completely inside the first viewport` },
+    )
+    .toBeLessThanOrEqual(Math.min(maximumBottom, page.viewportSize()!.height));
 }
 
 test.describe("learning density and value contract", () => {
+  test("Codex L01 puts the first prediction choice inside the initial mobile viewport", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openLearningRoute(page, "/en/kurse/open-source/codex/kurs/L01");
+
+    const mission = page.locator('[data-lesson-mission="codex"]');
+    const firstChoice = mission
+      .locator("[data-lesson-prediction-choice]")
+      .first();
+    const firstRadio = mission.getByRole("radio").first();
+
+    await expectFullyInFirstViewportBand(
+      page,
+      firstChoice,
+      "Codex L01 first prediction choice",
+    );
+    await expect(firstRadio).toBeDisabled();
+
+    await continueLocally(page);
+    await expect(firstRadio).toBeEnabled();
+    await expectFullyInFirstViewportBand(
+      page,
+      firstChoice,
+      "Codex L01 active first prediction choice",
+    );
+  });
+
   test("the course gallery starts in the first viewport", async ({ page }) => {
     await openLearningRoute(page, "/kurse");
     await expectToStartInFirstViewportBand(
@@ -113,9 +161,7 @@ test.describe("learning density and value contract", () => {
     }) => {
       await openLearningRoute(page, course.checkpoint);
 
-      const mission = page.locator(
-        `[data-lesson-mission="${course.slug}"]`,
-      );
+      const mission = page.locator(`[data-lesson-mission="${course.slug}"]`);
       await expect(mission).toHaveCount(1);
       await expectToStartInFirstViewportBand(
         page,

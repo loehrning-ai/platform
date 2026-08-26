@@ -48,17 +48,17 @@ export function SelfRateWidget({
   locale = "de",
 }: SelfRateWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [ratings, setRatings] = useDraftValue<Ratings>(
+  const [ratings, setRatings, draftReady] = useDraftValue<Ratings>(
     `selfrate::${lessonId}::${cpId}`,
     {},
   );
 
   const allRated =
-    axes.length > 0 && axes.every((ax) => ratings[ax.id] != null);
+    draftReady && axes.length > 0 && axes.every((ax) => ratings[ax.id] != null);
 
   useEffect(() => {
-    if (allRated) complete();
-  }, [allRated, complete]);
+    if (draftReady && allRated) complete();
+  }, [draftReady, allRated, complete]);
 
   const set = (axisId: string, level: number) =>
     setRatings({ ...ratings, [axisId]: level });
@@ -76,7 +76,6 @@ export function SelfRateWidget({
           : "Rate the current state using concrete evidence.")
       }
       done={done}
-      xpLabel="+10 XP"
       doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div className="flex flex-col gap-5">
@@ -92,7 +91,7 @@ export function SelfRateWidget({
               className="flex flex-wrap gap-2"
             >
               {ax.anchors.map((anchor, i) => {
-                const storedIndex = ratings[ax.id];
+                const storedIndex = draftReady ? ratings[ax.id] : undefined;
                 const selectedIndex =
                   storedIndex != null &&
                   storedIndex >= 0 &&
@@ -107,7 +106,10 @@ export function SelfRateWidget({
                     role="radio"
                     aria-checked={active}
                     data-roving-item
-                    tabIndex={rovingTabIndex(selectedIndex, i)}
+                    tabIndex={
+                      draftReady ? rovingTabIndex(selectedIndex, i) : -1
+                    }
+                    disabled={!draftReady}
                     onClick={() => set(ax.id, i)}
                     onKeyDown={(event) =>
                       handleRovingFocusKeyDown(event, {
@@ -117,7 +119,7 @@ export function SelfRateWidget({
                       })
                     }
                     className={cn(
-                      "border-2 px-3 py-1.5 text-[13px] transition-colors",
+                      "min-h-11 border-2 px-3 py-1.5 text-[13px] transition-colors disabled:cursor-wait disabled:opacity-60",
                       active
                         ? "border-brand-orange bg-brand-orange/10 text-foreground"
                         : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",

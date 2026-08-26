@@ -6,7 +6,7 @@
 // getContext null-check. The 30-day/1-4-10-worker schedules are
 // deterministic, computed at render time from the ported `schedule()`
 // algorithm — never persisted as per-user progress (they are shared static
-// content, not per-learner state; only the "claimed" checkpoint boolean is).
+// content, not per-learner state; only the recorded checkpoint boolean is).
 
 import { useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
@@ -242,11 +242,11 @@ function Band({
 export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
   const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [claimed, setClaimed] = useState(false);
+  const [recorded, setRecorded] = useState(false);
 
-  const claim = () => {
-    if (claimed || done) return;
-    setClaimed(true);
+  const recordCheckpoint = () => {
+    if (recorded || done) return;
+    setRecorded(true);
     complete();
   };
 
@@ -367,7 +367,7 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Diagramm · Backfill über 30 Tage · Worker und Laufzeit"
           : "Diagram · 30-day backfill · workers and elapsed time"}
@@ -405,22 +405,22 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
       </div>
       <button
         type="button"
-        onClick={claim}
-        disabled={claimed || done}
+        onClick={recordCheckpoint}
+        disabled={recorded || done}
         className={cn(
-          "mt-4 inline-flex items-center gap-2 border-2 border-foreground px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-wide transition-colors",
-          claimed || done
+          "mt-4 inline-flex min-h-11 items-center gap-2 border-2 border-foreground px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-wide transition-colors",
+          recorded || done
             ? "cursor-default border-border bg-border text-muted-foreground"
             : "bg-brand-orange text-white hover:opacity-90",
         )}
       >
-        {claimed || done
+        {recorded || done
           ? locale === "de"
-            ? "Bestätigt"
-            : "✓ claimed"
+            ? "Checkpoint erfasst"
+            : "Checkpoint recorded"
           : locale === "de"
-            ? "Verstanden"
-            : "Got it · claim XP"}
+            ? "Checkpoint festhalten"
+            : "Record checkpoint"}
       </button>
     </div>
   );

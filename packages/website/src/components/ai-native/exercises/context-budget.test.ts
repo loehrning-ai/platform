@@ -4,7 +4,13 @@ import { gradeBudget } from "./context-budget";
 const blocks = [
   { id: "a", label: "Rolle", tokens: 500, mustHave: true, description: "" },
   { id: "b", label: "Kontext", tokens: 1200, mustHave: true, description: "" },
-  { id: "c", label: "Beispiele", tokens: 4000, mustHave: false, description: "" },
+  {
+    id: "c",
+    label: "Beispiele",
+    tokens: 4000,
+    mustHave: false,
+    description: "",
+  },
   { id: "d", label: "History", tokens: 6000, mustHave: false, description: "" },
 ];
 

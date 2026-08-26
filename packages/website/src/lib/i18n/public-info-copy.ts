@@ -214,14 +214,8 @@ export const HELP_COPY = {
       "Einschränkungen",
     ],
     faqHeading: "Antworten",
-    actionHeading: "Direkter Kontakt",
-    actionEyebrow: "01 / Kontakt",
     updatesHeading: "Inhaltsänderungen",
-    updatesEyebrow: "02 / Änderungen",
-    contactAvailable:
-      "Nutze das Feedback-Formular. Es fragt keine Kontaktdaten ab.",
-    contactUnavailable: "Schreib an tim@loehrning.ai.",
-    contactLink: "Feedback-Formular",
+    updatesEyebrow: "Änderungen",
     updatesBody: "Veröffentlichte Änderungen stehen unter",
     updatesLink: "/neuigkeiten",
     questions: {
@@ -322,14 +316,8 @@ export const HELP_COPY = {
       "Limitations",
     ],
     faqHeading: "Answers",
-    actionHeading: "Direct contact",
-    actionEyebrow: "01 / Contact",
     updatesHeading: "Content changes",
-    updatesEyebrow: "02 / Changes",
-    contactAvailable:
-      "Use the feedback form. It does not request contact details.",
-    contactUnavailable: "Email tim@loehrning.ai.",
-    contactLink: "Feedback form",
+    updatesEyebrow: "Changes",
     updatesBody: "Published changes are listed under",
     updatesLink: "/en/neuigkeiten",
     questions: {

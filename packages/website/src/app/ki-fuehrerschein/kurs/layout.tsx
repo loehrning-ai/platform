@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { ReadingProgressBar } from "@/components/progress/reading-progress-bar";
-import { LernbegleiterStrip } from "@/components/learning/lernbegleiter-strip";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -103,13 +101,8 @@ export default async function KursLayout({
   );
   return (
     <>
-      <JsonLd
-        data={courseGraph(locale)}
-        id="ki-fuehrerschein-course-jsonld"
-      />
-      <ReadingProgressBar />
-      <div className="pb-16">{children}</div>
-      <LernbegleiterStrip locale={locale} />
+      <JsonLd data={courseGraph(locale)} id="ki-fuehrerschein-course-jsonld" />
+      <div className="pb-12">{children}</div>
     </>
   );
 }

@@ -5,11 +5,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
  * brand-button.test.tsx (regression coverage)
  *
  * BrandButton has real branching logic worth pinning down:
- *   - href present  -> renders a next/link <a> (with external target/rel and
- *     aria-disabled forwarding); href absent -> renders a native
+ *   - href present  -> renders a next/link <a> (with external target/rel),
+ *     unless disabled, when it renders inert text; href absent -> renders a native
  *     <button type="button"> whose onClick fires unless disabled;
- *   - variant/surface/size select the brutalist class recipe (offset border +
- *     shadow), and `disabled` layers pointer-events-none + opacity.
+ *   - variant/surface/size select the flat editorial class recipe, and
+ *     `disabled` layers pointer-events-none + opacity.
  *
  * next/link is stubbed to a plain <a> that forwards href + all pass-through
  * props, so the link-branch assertions depend only on BrandButton's own logic.
@@ -103,25 +103,29 @@ describe("<BrandButton>", () => {
       expect(internal).not.toHaveAttribute("rel");
     });
 
-    it("marks the link aria-disabled when disabled", () => {
+    it("renders a disabled href as inert text instead of a link", () => {
       render(
         <BrandButton href="/x" disabled>
           Deaktiviert
         </BrandButton>,
       );
-      expect(screen.getByRole("link")).toHaveAttribute("aria-disabled", "true");
+      expect(screen.queryByRole("link")).toBeNull();
+      const inert = screen.getByText("Deaktiviert");
+      expect(inert.tagName).toBe("SPAN");
+      expect(inert).toHaveAttribute("aria-disabled", "true");
+      expect(inert).not.toHaveAttribute("href");
     });
   });
 
   describe("variant / surface / size class recipe", () => {
     it("applies size classes: default md, sm override", () => {
       const { rerender } = render(<BrandButton>md</BrandButton>);
-      expect(screen.getByRole("button").className).toContain("px-7");
+      expect(screen.getByRole("button").className).toContain("px-6");
       rerender(<BrandButton size="sm">sm</BrandButton>);
-      expect(screen.getByRole("button").className).toContain("px-5");
+      expect(screen.getByRole("button").className).toContain("px-4");
     });
 
-    it("primary+light fills brand-orange with the warm rounded style", () => {
+    it("uses a flat framed recipe with a 44px minimum target", () => {
       render(
         <BrandButton variant="primary" surface="light">
           Primaer
@@ -129,16 +133,17 @@ describe("<BrandButton>", () => {
       );
       const cls = screen.getByRole("button").className;
       expect(cls).toContain("bg-brand-orange");
-      expect(cls).toContain("rounded-lg");
-      expect(cls).toContain("shadow-card");
-      expect(cls).not.toContain("rounded-none");
-      expect(cls).not.toContain("border-2");
+      expect(cls).toContain("rounded-md");
+      expect(cls).toContain("min-h-11");
+      expect(cls).toContain("border-brand-orange");
+      expect(cls).not.toMatch(/shadow-(?:card|card-hover|tile)/);
+      expect(cls).not.toMatch(/translate-[xy]/);
     });
 
-    it("ghost drops the border and shadow", () => {
+    it("ghost keeps geometry stable with a transparent border", () => {
       render(<BrandButton variant="ghost">Ghost</BrandButton>);
       const cls = screen.getByRole("button").className;
-      expect(cls).toContain("border-0");
+      expect(cls).toContain("border-transparent");
       expect(cls).toContain("shadow-none");
     });
 

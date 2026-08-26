@@ -21,7 +21,13 @@ import {
   upsertUnifiedProgressForUser,
 } from "./server-store";
 import { META_ROW_COURSE_SLUG } from "./server-sync";
-import type { UnifiedCourseSlice, UnifiedProgress } from "./types";
+import {
+  COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY,
+  legacyCompletionEvidenceCheckpointKey,
+  type UnifiedCourseSlice,
+  type UnifiedProgress,
+} from "./types";
+import { isLessonCompletionEvidenceBacked } from "@/lib/courses/completion";
 
 // ── In-memory fake table (composite PK, optimistic concurrency) ───────────
 
@@ -97,10 +103,14 @@ function fakeSupabase(
       return {
         select: (_cols: string) => ({
           eq: (col1: string, userId: string) => {
-            if (col1 !== "user_id") throw new Error("expected user_id filter first");
+            if (col1 !== "user_id")
+              throw new Error("expected user_id filter first");
             return {
               // Ordered and awaited: "all rows for this user" (fetch path).
-              order: async (column: string, options: { ascending: boolean }) => {
+              order: async (
+                column: string,
+                options: { ascending: boolean },
+              ) => {
                 if (column !== "course_slug" || options.ascending !== true) {
                   throw new Error("expected ascending course_slug order");
                 }
@@ -115,7 +125,8 @@ function fakeSupabase(
               },
               // Chained further: "one row for this user+course" (row read).
               eq: (col2: string, courseSlug: string) => {
-                if (col2 !== "course_slug") throw new Error("expected course_slug filter");
+                if (col2 !== "course_slug")
+                  throw new Error("expected course_slug filter");
                 return {
                   maybeSingle: async () => ({
                     data: table.selectOne(userId, courseSlug),
@@ -152,17 +163,25 @@ function fakeSupabase(
         }),
         update: (patch: { progress: unknown; updated_at: string }) => ({
           eq: (col1: string, userId: string) => {
-            if (col1 !== "user_id") throw new Error("expected user_id filter first");
+            if (col1 !== "user_id")
+              throw new Error("expected user_id filter first");
             return {
               eq: (col2: string, courseSlug: string) => {
-                if (col2 !== "course_slug") throw new Error("expected course_slug filter");
+                if (col2 !== "course_slug")
+                  throw new Error("expected course_slug filter");
                 return {
                   eq: (col3: string, expectedUpdatedAt: string) => {
-                    if (col3 !== "updated_at") throw new Error("expected updated_at filter");
+                    if (col3 !== "updated_at")
+                      throw new Error("expected updated_at filter");
                     return {
                       select: (_cols: string) => ({
                         maybeSingle: async () => ({
-                          data: table.update(userId, courseSlug, expectedUpdatedAt, patch),
+                          data: table.update(
+                            userId,
+                            courseSlug,
+                            expectedUpdatedAt,
+                            patch,
+                          ),
                           error: null,
                         }),
                       }),
@@ -175,10 +194,12 @@ function fakeSupabase(
         }),
         delete: () => ({
           eq: (col1: string, userId: string) => {
-            if (col1 !== "user_id") throw new Error("expected user_id filter first");
+            if (col1 !== "user_id")
+              throw new Error("expected user_id filter first");
             return {
               eq: (col2: string, courseSlug: string) => {
-                if (col2 !== "course_slug") throw new Error("expected course_slug filter");
+                if (col2 !== "course_slug")
+                  throw new Error("expected course_slug filter");
                 table.delete(userId, courseSlug);
                 return { error: null };
               },
@@ -274,10 +295,17 @@ describe("fetchUnifiedProgressForUser", () => {
         "ai-native": slice({ capstoneSubmitted: true }),
       },
     });
-    const result = await upsertUnifiedProgressForUser(fakeSupabase(table), USER, p);
+    const result = await upsertUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+      p,
+    );
     expect(result.ok).toBe(true);
 
-    const fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
     expect(fetched.ok).toBe(true);
     if (!fetched.ok) throw new Error("unreachable");
     expect(fetched.result.progress?.xp).toBe(50);
@@ -285,8 +313,113 @@ describe("fetchUnifiedProgressForUser", () => {
       "ai-native",
       "ki-fuehrerschein",
     ]);
-    expect(fetched.result.progress?.courses["ai-native"]?.capstoneSubmitted).toBe(true);
+    expect(
+      fetched.result.progress?.courses["ai-native"]?.capstoneSubmitted,
+    ).toBe(true);
     expect(fetched.result.updatedAt).not.toBeNull();
+  });
+
+  it("upgrades pre-cutover server rows without changing schema v3 or awarding marker XP", async () => {
+    const lessonId = "modul_1_lesson_1";
+    table.rows.set(key(USER, "ai-native"), {
+      user_id: USER,
+      course_slug: "ai-native",
+      progress: {
+        schemaVersion: 3,
+        slice: slice({
+          lessons: {
+            [lessonId]: {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          },
+        }),
+      },
+      created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: "2026-01-01T00:00:00.000Z",
+    });
+
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
+    expect(fetched.ok).toBe(true);
+    if (!fetched.ok || !fetched.result.progress) throw new Error("unreachable");
+
+    const restored = fetched.result.progress;
+    expect(restored.schemaVersion).toBe(3);
+    expect(restored.checkpoints).toMatchObject({
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+      [legacyCompletionEvidenceCheckpointKey("ai-native", lessonId)]: true,
+    });
+    expect(
+      isLessonCompletionEvidenceBacked(restored, "ai-native", lessonId),
+    ).toBe(true);
+    expect(restored.xp).toBe(25);
+  });
+
+  it("does not grandfather a raw completion on a post-cutover server row", async () => {
+    const lessonId = "modul_1_lesson_1";
+    table.rows.set(key(USER, "ai-native"), {
+      user_id: USER,
+      course_slug: "ai-native",
+      progress: {
+        schemaVersion: 3,
+        slice: slice({
+          lessons: {
+            [lessonId]: {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          },
+        }),
+      },
+      created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: "2026-01-01T00:00:00.000Z",
+    });
+    table.rows.set(key(USER, META_ROW_COURSE_SLUG), {
+      user_id: USER,
+      course_slug: META_ROW_COURSE_SLUG,
+      progress: {
+        schemaVersion: 3,
+        xp: 0,
+        checkpoints: {
+          [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+        },
+        badges: {},
+        streak: { days: 0, last: null },
+        lastActivity: "2026-01-01T00:00:00.000Z",
+      },
+      created_at: "2026-01-01T00:00:00.000Z",
+      updated_at: "2026-01-01T00:00:00.000Z",
+    });
+
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
+    expect(fetched.ok).toBe(true);
+    if (!fetched.ok || !fetched.result.progress) throw new Error("unreachable");
+
+    expect(
+      fetched.result.progress.checkpoints[
+        legacyCompletionEvidenceCheckpointKey("ai-native", lessonId)
+      ],
+    ).toBeUndefined();
+    expect(
+      isLessonCompletionEvidenceBacked(
+        fetched.result.progress,
+        "ai-native",
+        lessonId,
+      ),
+    ).toBe(false);
+    expect(fetched.result.progress.xp).toBe(0);
   });
 
   it.each([
@@ -354,7 +487,10 @@ describe("fetchUnifiedProgressForUser", () => {
       created_at: "2026-01-01T00:00:00.000Z",
       updated_at: "2026-01-01T00:00:00.000Z",
     });
-    const fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
     expect(fetched.ok).toBe(true);
     if (!fetched.ok) throw new Error("unreachable");
     expect(fetched.result.progress).toMatchObject({
@@ -404,13 +540,14 @@ describe("fetchUnifiedProgressForUser", () => {
       updated_at: "2026-01-02T00:00:00.000Z",
     });
 
-    const fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
     expect(fetched.ok).toBe(true);
     if (!fetched.ok) throw new Error("unreachable");
     expect(fetched.result.progress?.courses["ai-native"]).toBeUndefined();
-    expect(
-      fetched.result.progress?.courses["ki-fuehrerschein"],
-    ).toBeDefined();
+    expect(fetched.result.progress?.courses["ki-fuehrerschein"]).toBeDefined();
   });
 
   it("returns a typed failure when the provider query rejects", async () => {
@@ -445,7 +582,9 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          "ki-fuehrerschein": slice({ lastActivity: "2026-01-01T00:00:00.000Z" }),
+          "ki-fuehrerschein": slice({
+            lastActivity: "2026-01-01T00:00:00.000Z",
+          }),
           "ai-native": slice({ lastActivity: "2026-01-01T00:00:00.000Z" }),
         },
       }),
@@ -458,7 +597,9 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          "ki-fuehrerschein": slice({ lastActivity: "2026-02-01T00:00:00.000Z" }),
+          "ki-fuehrerschein": slice({
+            lastActivity: "2026-02-01T00:00:00.000Z",
+          }),
         },
       }),
     );
@@ -473,7 +614,17 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          "ai-native": slice({ lessons: { modul_1_lesson_1: { sectionsRead: [], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} } } }),
+          "ai-native": slice({
+            lessons: {
+              modul_1_lesson_1: {
+                sectionsRead: [],
+                quizScore: null,
+                quizTotal: null,
+                completed: true,
+                exercisesCompleted: {},
+              },
+            },
+          }),
         },
       }),
     );
@@ -482,14 +633,28 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          "ai-native": slice({ lessons: { modul_1_lesson_2: { sectionsRead: [], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} } } }),
+          "ai-native": slice({
+            lessons: {
+              modul_1_lesson_2: {
+                sectionsRead: [],
+                quizScore: null,
+                quizTotal: null,
+                completed: true,
+                exercisesCompleted: {},
+              },
+            },
+          }),
         },
       }),
     );
 
-    const fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
     if (!fetched.ok) throw new Error("unreachable");
-    const lessons = fetched.result.progress?.courses["ai-native"]?.lessons ?? {};
+    const lessons =
+      fetched.result.progress?.courses["ai-native"]?.lessons ?? {};
     expect(Object.keys(lessons).sort()).toEqual([
       "modul_1_lesson_1",
       "modul_1_lesson_2",
@@ -549,7 +714,11 @@ describe("upsertUnifiedProgressForUser", () => {
       xp: 5,
       courses: { "eu-ai-act-kurs": slice() },
     });
-    const result = await upsertUnifiedProgressForUser(fakeSupabase(table), USER, p);
+    const result = await upsertUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+      p,
+    );
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("unreachable");
     expect(result.result.progress?.xp).toBe(5);
@@ -611,9 +780,7 @@ describe("upsertUnifiedProgressForUser", () => {
 
     expect(raced).toBe(true);
     expect(result.ok).toBe(true);
-    expect(
-      table.selectOne(USER, "codex")?.progress,
-    ).toMatchObject({
+    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -630,9 +797,7 @@ describe("upsertUnifiedProgressForUser", () => {
     );
 
     expect(result.ok).toBe(true);
-    expect(
-      table.selectOne(USER, "codex")?.progress,
-    ).toMatchObject({
+    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -643,7 +808,7 @@ describe("upsertUnifiedProgressForUser", () => {
     await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { "codex": slice() } }),
+      progress({ courses: { codex: slice() } }),
     );
 
     // Simulate a genuine optimistic-concurrency race: the "codex" row's
@@ -668,7 +833,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const result = await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { "codex": slice({ capstoneSubmitted: true }) } }),
+      progress({ courses: { codex: slice({ capstoneSubmitted: true }) } }),
     );
     expect(result.ok).toBe(false);
     if (result.ok || !result.conflict) {
@@ -708,10 +873,17 @@ describe("resetCourseProgressRow", () => {
       }),
     );
 
-    const del = await resetCourseProgressRow(fakeSupabase(table), USER, "ai-native");
+    const del = await resetCourseProgressRow(
+      fakeSupabase(table),
+      USER,
+      "ai-native",
+    );
     expect(del.ok).toBe(true);
 
-    const fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
     if (!fetched.ok) throw new Error("unreachable");
     expect(fetched.result.progress?.courses["ai-native"]).toMatchObject({
       lessons: {},
@@ -725,7 +897,11 @@ describe("resetCourseProgressRow", () => {
   });
 
   it("creates a tombstone when no row exists for that course", async () => {
-    const del = await resetCourseProgressRow(fakeSupabase(table), USER, "codex");
+    const del = await resetCourseProgressRow(
+      fakeSupabase(table),
+      USER,
+      "codex",
+    );
     expect(del.ok).toBe(true);
     expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
       schemaVersion: 3,
@@ -809,8 +985,7 @@ describe("resetCourseProgressRow", () => {
     fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
     if (!fetched.ok) throw new Error("unreachable");
     expect(
-      fetched.result.progress?.courses["ai-native"]?.lessons
-        .modul_1_lesson_3,
+      fetched.result.progress?.courses["ai-native"]?.lessons.modul_1_lesson_3,
     ).toBeDefined();
   });
 

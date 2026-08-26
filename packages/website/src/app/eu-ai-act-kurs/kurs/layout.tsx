@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { ReadingProgressBar } from "@/components/progress/reading-progress-bar";
-import { LernbegleiterStrip } from "@/components/learning/lernbegleiter-strip";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -29,7 +27,8 @@ const COPY: Readonly<
     graphName: "EU AI Act: Rollen, Risiken und Pflichten",
     graphDescription:
       "Onlinekurs zu Geltungsbereich, Risikoklassen, Hochrisiko-Systemen, GPAI, Transparenz und Umsetzung.",
-    audience: "Erwachsene und beruflich Verantwortliche ohne juristische Vorkenntnisse",
+    audience:
+      "Erwachsene und beruflich Verantwortliche ohne juristische Vorkenntnisse",
   },
   en: {
     title: "EU AI Act Course: roles, risks, and duties",
@@ -92,7 +91,11 @@ function courseGraph(locale: Locale) {
   };
 }
 
-export default async function KursLayout({ children }: { children: ReactNode }) {
+export default async function KursLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const locale = resolveFoundationCourseContentLocale(
     COURSE_SLUG,
     await getRequestLocale(),
@@ -100,11 +103,7 @@ export default async function KursLayout({ children }: { children: ReactNode }) 
   return (
     <>
       <JsonLd data={courseGraph(locale)} id="eu-ai-act-kurs-course-jsonld" />
-      <ReadingProgressBar />
-      <div className="pb-16">
-        {children}
-      </div>
-      <LernbegleiterStrip locale={locale} />
+      <div className="pb-12">{children}</div>
     </>
   );
 }

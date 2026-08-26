@@ -26,21 +26,27 @@ export default function OpenSourceError({ reset }: { reset: () => void }) {
   const copy = ERROR_COPY[locale];
 
   return (
-    <section className="mx-auto max-w-3xl px-6 py-20" aria-labelledby="open-source-error-title">
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+    <section
+      className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12"
+      aria-labelledby="open-source-error-title"
+    >
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
-      <h1 id="open-source-error-title" className="mt-5 text-4xl font-bold tracking-[-0.04em]">
+      <h1
+        id="open-source-error-title"
+        className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+      >
         {copy.title}
       </h1>
-      <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
+      <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
         {copy.body}
       </p>
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap gap-3">
         <button
           type="button"
           onClick={reset}
-          className="min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 text-sm font-bold text-white"
+          className="min-h-11 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
           {copy.retry}
         </button>

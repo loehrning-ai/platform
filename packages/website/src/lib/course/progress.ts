@@ -8,9 +8,15 @@
 
 import type { CourseProgress, CourseSlug } from "./types";
 import { getWorkshopPassThreshold } from "./config";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  LESSON_COMPLETION_EVIDENCE_VERSION,
+  isLessonCompletionEvidenceBacked,
+} from "@/lib/courses/completion";
 import {
   getCourseSlice,
+  getUnifiedState,
   markSectionRead as uMarkSectionRead,
   isSectionRead as uIsSectionRead,
   getReadSectionIds as uGetReadSectionIds,
@@ -25,11 +31,11 @@ import {
   isWorkshopQuizPassed as uIsWorkshopQuizPassed,
   isCapstoneSubmitted as uIsCapstoneSubmitted,
   isCertificateEligible as uIsCertificateEligible,
-  getBlockCompletedLessons as uGetBlockCompletedLessons,
-  areAllBlockLessonsCompleted as uAreAllBlockLessonsCompleted,
   getOverallProgress as uGetOverallProgress,
+  mergeCourseProgressShareDurably,
   resetCourse,
 } from "@/lib/progress/store";
+import { getEvidenceBackedBlockCompletedLessons } from "@/lib/progress/completion-evidence";
 
 // ─── Section Progress ───────────────────────────────────────────
 
@@ -142,14 +148,18 @@ export function getBlockCompletedLessons(
   courseSlug: CourseSlug,
   lessonIds: readonly string[],
 ): number {
-  return uGetBlockCompletedLessons(courseSlug, lessonIds);
+  return getEvidenceBackedBlockCompletedLessons(courseSlug, lessonIds);
 }
 
 export function areAllBlockLessonsCompleted(
   courseSlug: CourseSlug,
   lessonIds: readonly string[],
 ): boolean {
-  return uAreAllBlockLessonsCompleted(courseSlug, lessonIds);
+  return (
+    lessonIds.length > 0 &&
+    getEvidenceBackedBlockCompletedLessons(courseSlug, lessonIds) ===
+      lessonIds.length
+  );
 }
 
 export function getOverallProgress(
@@ -186,7 +196,8 @@ export function resetProgress(courseSlug: CourseSlug): void {
 
 // ─── Cross-Device Progress Sharing (URL-based) ─────────────────
 
-const SHARE_FORMAT_VERSION = 1 as const;
+const LEGACY_SHARE_FORMAT_VERSION = 1 as const;
+const SHARE_FORMAT_VERSION = 2 as const;
 const MAX_SHARE_ENCODED_CHARS = 16_384;
 const MAX_SHARE_DECODED_BYTES = 8_192;
 const MAX_LESSON_QUIZ_TOTAL = 100;
@@ -201,22 +212,33 @@ const HASH_SHARING_COURSE_SLUGS = [
 
 type HashSharingCourseSlug = (typeof HASH_SHARING_COURSE_SLUGS)[number];
 
-interface ProgressShareEnvelope {
-  readonly version: typeof SHARE_FORMAT_VERSION;
+interface LegacyProgressShareEnvelope {
+  readonly version: typeof LEGACY_SHARE_FORMAT_VERSION;
   readonly courseSlug: HashSharingCourseSlug;
   readonly progress: CourseProgress;
 }
 
+interface CompletionEvidenceShare {
+  readonly version: typeof LESSON_COMPLETION_EVIDENCE_VERSION;
+  readonly lessonIds: readonly string[];
+}
+
+interface ProgressShareEnvelope {
+  readonly version: typeof SHARE_FORMAT_VERSION;
+  readonly courseSlug: HashSharingCourseSlug;
+  readonly progress: CourseProgress;
+  readonly completionEvidence: CompletionEvidenceShare;
+}
+
+type DecodedProgressShareEnvelope =
+  LegacyProgressShareEnvelope | ProgressShareEnvelope;
+
 const CANONICAL_LESSON_ID_SETS: Readonly<
   Record<HashSharingCourseSlug, ReadonlySet<string>>
 > = {
-  "ki-fuehrerschein": new Set(
-    CANONICAL_LESSON_IDS["ki-fuehrerschein"],
-  ),
+  "ki-fuehrerschein": new Set(CANONICAL_LESSON_IDS["ki-fuehrerschein"]),
   "eu-ai-act-kurs": new Set(CANONICAL_LESSON_IDS["eu-ai-act-kurs"]),
-  "ki-und-gesellschaft": new Set(
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"],
-  ),
+  "ki-und-gesellschaft": new Set(CANONICAL_LESSON_IDS["ki-und-gesellschaft"]),
 };
 
 function isHashSharingCourseSlug(
@@ -280,33 +302,7 @@ function isCanonicalIsoTimestamp(value: unknown): value is string {
   );
 }
 
-/**
- * These IDs are a compact contract derived from the authored course content:
- * KI-Führerschein has two numbered sections per lesson, EU AI Act has three
- * except block 2 lesson 3 (four), and KI und Gesellschaft has three. Keeping
- * this derivation here avoids importing the full lesson JSON graph into every
- * client that displays or consumes a progress link.
- */
-function canonicalSectionIds(
-  courseSlug: HashSharingCourseSlug,
-  lessonId: string,
-): readonly string[] {
-  if (courseSlug === "ki-fuehrerschein") {
-    return [`${lessonId}_section_1`, `${lessonId}_section_2`];
-  }
-  if (courseSlug === "eu-ai-act-kurs") {
-    const count = lessonId === "block_2_lesson_3" ? 4 : 3;
-    return Array.from(
-      { length: count },
-      (_, index) => `${lessonId}_section_${index + 1}`,
-    );
-  }
-  return Array.from(
-    { length: 3 },
-    (_, index) => `${lessonId}-s${index + 1}`,
-  );
-}
-
+/** Validate the compact lesson payload against the canonical content IDs. */
 function validateLessonProgress(
   raw: unknown,
   courseSlug: HashSharingCourseSlug,
@@ -327,7 +323,7 @@ function validateLessonProgress(
   }
 
   const allowedSectionIds = new Set(
-    canonicalSectionIds(courseSlug, lessonId),
+    CANONICAL_SECTION_IDS[courseSlug][lessonId] ?? [],
   );
   if (raw.sectionsRead.length > allowedSectionIds.size) return null;
 
@@ -357,8 +353,7 @@ function validateLessonProgress(
     raw.quizTotal >= 1 &&
     raw.quizTotal <= MAX_LESSON_QUIZ_TOTAL &&
     Math.abs(
-      raw.quizScore * raw.quizTotal -
-        Math.round(raw.quizScore * raw.quizTotal),
+      raw.quizScore * raw.quizTotal - Math.round(raw.quizScore * raw.quizTotal),
     ) <= 1e-9;
 
   if (!bothQuizValuesAreNull && !bothQuizValuesAreValid) return null;
@@ -368,6 +363,57 @@ function validateLessonProgress(
     quizScore: raw.quizScore as number | null,
     quizTotal: raw.quizTotal as number | null,
     completed: raw.completed,
+  };
+}
+
+function validateCompletionEvidence(
+  raw: unknown,
+  courseSlug: HashSharingCourseSlug,
+  progress: CourseProgress,
+): CompletionEvidenceShare | null {
+  if (
+    !isPlainRecord(raw) ||
+    !hasExactKeys(raw, ["version", "lessonIds"]) ||
+    raw.version !== LESSON_COMPLETION_EVIDENCE_VERSION ||
+    !Array.isArray(raw.lessonIds)
+  ) {
+    return null;
+  }
+
+  const canonicalLessonIds = CANONICAL_LESSON_ID_SETS[courseSlug];
+  if (raw.lessonIds.length > canonicalLessonIds.size) return null;
+
+  const lessonIds: string[] = [];
+  const seenLessonIds = new Set<string>();
+  for (const lessonId of raw.lessonIds) {
+    if (
+      typeof lessonId !== "string" ||
+      !canonicalLessonIds.has(lessonId) ||
+      seenLessonIds.has(lessonId)
+    ) {
+      return null;
+    }
+
+    const lesson = progress.lessons[lessonId];
+    const requiredSections = CANONICAL_SECTION_IDS[courseSlug][lessonId] ?? [];
+    if (
+      !lesson?.completed ||
+      lesson.quizScore === null ||
+      lesson.quizTotal === null ||
+      !requiredSections.every((sectionId) =>
+        lesson.sectionsRead.includes(sectionId),
+      )
+    ) {
+      return null;
+    }
+
+    seenLessonIds.add(lessonId);
+    lessonIds.push(lessonId);
+  }
+
+  return {
+    version: LESSON_COMPLETION_EVIDENCE_VERSION,
+    lessonIds,
   };
 }
 
@@ -408,17 +454,13 @@ function validateCourseProgress(
     lessons[lessonId] = lesson;
     hasMeaningfulLessonProgress ||= Boolean(
       lesson.completed ||
-        lesson.sectionsRead.length > 0 ||
-        lesson.quizScore !== null,
+      lesson.sectionsRead.length > 0 ||
+      lesson.quizScore !== null,
     );
   }
 
   if (
-    !hasExactKeys(raw.workshopQuiz, [
-      "passed",
-      "score",
-      "completedAt",
-    ]) ||
+    !hasExactKeys(raw.workshopQuiz, ["passed", "score", "completedAt"]) ||
     typeof raw.workshopQuiz.passed !== "boolean" ||
     typeof raw.workshopQuiz.score !== "number" ||
     !Number.isFinite(raw.workshopQuiz.score) ||
@@ -436,8 +478,7 @@ function validateCourseProgress(
     (!workshopWasAttempted &&
       (raw.workshopQuiz.passed || raw.workshopQuiz.score !== 0)) ||
     raw.workshopQuiz.passed !==
-      (workshopWasAttempted &&
-        raw.workshopQuiz.score >= passThreshold)
+      (workshopWasAttempted && raw.workshopQuiz.score >= passThreshold)
   ) {
     return null;
   }
@@ -472,7 +513,7 @@ function encodeEnvelope(envelope: ProgressShareEnvelope): string | null {
   return encoded.length <= MAX_SHARE_ENCODED_CHARS ? encoded : null;
 }
 
-function decodeEnvelope(encoded: string): ProgressShareEnvelope | null {
+function decodeEnvelope(encoded: string): DecodedProgressShareEnvelope | null {
   try {
     if (
       typeof encoded !== "string" ||
@@ -498,24 +539,46 @@ function decodeEnvelope(encoded: string): ProgressShareEnvelope | null {
 
     const json = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
     const parsed: unknown = JSON.parse(json);
-    if (
-      !isPlainRecord(parsed) ||
-      !hasExactKeys(parsed, ["version", "courseSlug", "progress"]) ||
-      parsed.version !== SHARE_FORMAT_VERSION ||
-      !isHashSharingCourseSlug(parsed.courseSlug)
-    ) {
+    if (!isPlainRecord(parsed) || !isHashSharingCourseSlug(parsed.courseSlug)) {
       return null;
     }
 
-    const progress = validateCourseProgress(
-      parsed.progress,
-      parsed.courseSlug,
-    );
+    const progress = validateCourseProgress(parsed.progress, parsed.courseSlug);
     if (!progress) return null;
+
+    if (parsed.version === LEGACY_SHARE_FORMAT_VERSION) {
+      if (!hasExactKeys(parsed, ["version", "courseSlug", "progress"])) {
+        return null;
+      }
+      return {
+        version: LEGACY_SHARE_FORMAT_VERSION,
+        courseSlug: parsed.courseSlug,
+        progress,
+      };
+    }
+
+    if (
+      parsed.version !== SHARE_FORMAT_VERSION ||
+      !hasExactKeys(parsed, [
+        "version",
+        "courseSlug",
+        "progress",
+        "completionEvidence",
+      ])
+    ) {
+      return null;
+    }
+    const completionEvidence = validateCompletionEvidence(
+      parsed.completionEvidence,
+      parsed.courseSlug,
+      progress,
+    );
+    if (!completionEvidence) return null;
     return {
       version: SHARE_FORMAT_VERSION,
       courseSlug: parsed.courseSlug,
       progress,
+      completionEvidence,
     };
   } catch {
     return null;
@@ -535,10 +598,18 @@ export function serializeProgress(courseSlug: CourseSlug): string | null {
       courseSlug,
     );
     if (!progress) return null;
+    const state = getUnifiedState();
+    const lessonIds = CANONICAL_LESSON_IDS[courseSlug].filter((lessonId) =>
+      isLessonCompletionEvidenceBacked(state, courseSlug, lessonId),
+    );
     return encodeEnvelope({
       version: SHARE_FORMAT_VERSION,
       courseSlug,
       progress,
+      completionEvidence: {
+        version: LESSON_COMPLETION_EVIDENCE_VERSION,
+        lessonIds,
+      },
     });
   } catch {
     return null;
@@ -553,9 +624,9 @@ export function deserializeProgress(encoded: string): CourseProgress | null {
 }
 
 /**
- * Import progress from a serialized string, merging with existing progress.
- * Merges directly into the unified store (higher lesson/workshop score wins,
- * sections union, completion sticky) without ever wiping existing progress.
+ * Import progress from a serialized string in one durable owner-fenced store
+ * write. Higher lesson/workshop scores win, sections union, and completion is
+ * sticky. Legacy v1 links remain importable but carry no completion evidence.
  */
 export function importProgress(
   courseSlug: CourseSlug,
@@ -565,35 +636,19 @@ export function importProgress(
     if (!isHashSharingCourseSlug(courseSlug)) return false;
     const envelope = decodeEnvelope(encoded);
     if (!envelope || envelope.courseSlug !== courseSlug) return false;
-    const imported = envelope.progress;
+    const evidenceLessonIds =
+      envelope.version === SHARE_FORMAT_VERSION
+        ? envelope.completionEvidence.lessonIds
+        : [];
 
-    // Every attacker-controlled value has passed complete validation before
-    // the first store mutation. The public APIs retain their sticky/maximum
-    // merge semantics and award progress through the normal path.
-    if (imported.workshopQuiz.completedAt !== null) {
-      uSaveWorkshopQuizResult(
-        courseSlug,
-        imported.workshopQuiz.score,
-        imported.workshopQuiz.passed,
-      );
-    }
-    for (const [lessonId, lesson] of Object.entries(imported.lessons)) {
-      for (const sectionId of lesson.sectionsRead) {
-        uMarkSectionRead(courseSlug, lessonId, sectionId);
-      }
-      if (lesson.quizScore != null && lesson.quizTotal != null) {
-        uSaveLessonQuizScore(
-          courseSlug,
-          lessonId,
-          Math.round(lesson.quizScore * lesson.quizTotal),
-          lesson.quizTotal,
-        );
-      }
-      if (lesson.completed) {
-        uMarkLessonCompleted(courseSlug, lessonId);
-      }
-    }
-    return true;
+    // Every attacker-controlled value is validated before this single store
+    // mutation. Storage rejection or an owner-generation race returns false
+    // without updating the cache or notifying subscribers.
+    return mergeCourseProgressShareDurably(
+      courseSlug,
+      envelope.progress,
+      evidenceLessonIds,
+    );
   } catch {
     return false;
   }

@@ -15,7 +15,7 @@ export function HeroEn() {
               padding: "4px 10px",
               fontWeight: 700,
               fontFamily: "var(--font-mono)",
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: "0.16em",
             }}
           >
@@ -54,7 +54,6 @@ export function HeroEn() {
           in force, and which rights individuals receive. Current to 28 July
           2026; every legal claim cites a primary source.
         </p>
-        <div className="hero__scroll">Continue reading</div>
       </section>
 
       <section className="scene" id="einstieg">

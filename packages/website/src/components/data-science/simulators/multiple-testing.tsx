@@ -56,7 +56,7 @@ export function MultipleTesting() {
           <div
             style={{
               marginBottom: 6,
-              fontSize: 11,
+              fontSize: 12,
               color: INK3,
               textTransform: "uppercase",
               letterSpacing: "0.08em",
@@ -118,7 +118,7 @@ export function MultipleTesting() {
               >
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     color,
                     textTransform: "uppercase",
                     letterSpacing: "0.08em",
@@ -136,7 +136,7 @@ export function MultipleTesting() {
                 >
                   {value}
                 </div>
-                <div style={{ fontSize: 11, color: INK3 }}>{sub}</div>
+                <div style={{ fontSize: 12, color: INK3 }}>{sub}</div>
               </div>
             ))}
           </div>
@@ -161,7 +161,7 @@ export function MultipleTesting() {
         <div>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: INK3,
               marginBottom: 8,
               textTransform: "uppercase",

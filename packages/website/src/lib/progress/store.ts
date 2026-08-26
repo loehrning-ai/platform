@@ -8,13 +8,18 @@
 // helpers back the legacy `lib/course/progress.ts` + `lib/ai-native/progress.ts`
 // facades, so existing consumers keep their API while sharing one store.
 
-import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
+import {
+  COURSE_SLUGS,
+  type CourseProgress,
+  type CourseSlug,
+} from "@/lib/course/types";
 import {
   MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
   UNIFIED_STORAGE_KEY,
   XP,
   checkpointKey,
+  isCompletionCompatibilityCheckpointKey,
   normalizeWorkshopQuizScore,
   truncateToByteLength,
   type UnifiedCourseSlice,
@@ -28,6 +33,8 @@ import {
   isCanonicalLessonId,
   isCanonicalSectionId,
   isCourseCompletionEarned,
+  isLessonCompletionEvidenceBacked,
+  lessonCompletionEvidenceCheckpointId,
   normalizeCanonicalProgress,
 } from "@/lib/courses/completion";
 import {
@@ -43,6 +50,7 @@ import {
   migrateLegacyToUnified,
   truncateExerciseSummaries,
   normalizeWorkshopQuizScores,
+  upgradeHistoricalCompletionEvidence,
 } from "./migrate";
 import {
   __resetLearningOwnerForTests,
@@ -63,8 +71,25 @@ let cache: UnifiedProgress | null = null;
 let storageListenerInstalled = false;
 const listeners = new Set<(s: UnifiedProgress) => void>();
 
+function sameLearningOwner(
+  left: ReturnType<typeof getLearningOwnerContext>,
+  right: ReturnType<typeof getLearningOwnerContext>,
+): boolean {
+  return (
+    left.generation === right.generation &&
+    left.kind === right.kind &&
+    (left.kind !== "account" ||
+      (right.kind === "account" && left.accountId === right.accountId))
+  );
+}
+
 function emit(state: UnifiedProgress): void {
+  const ownerAtStart = getLearningOwnerContext();
   listeners.forEach((fn) => {
+    // A preceding listener may synchronously activate another owner, which
+    // performs its own nested emit. Never deliver this outer owner's snapshot
+    // to the remaining subscribers after that switch.
+    if (!sameLearningOwner(ownerAtStart, getLearningOwnerContext())) return;
     try {
       fn(state);
     } catch {
@@ -146,24 +171,25 @@ function parseUnified(raw: string): UnifiedProgress | null {
       typeof parsed.courses === "object" &&
       parsed.courses !== null
     ) {
-      // Fill in any fields a slightly-older v2 payload might miss, then run
-      // the v2->v3 migration step: any exercise summary written before
-      // MAX_EXERCISE_SUMMARY_BYTES existed gets re-normalized here so it can
-      // never violate the new per-row DB size constraint on next sync.
-      return normalizeCanonicalProgress(
-        normalizeWorkshopQuizScores(
-          truncateExerciseSummaries({
-            schemaVersion: UNIFIED_SCHEMA_VERSION,
-            courses: parsed.courses ?? {},
-            xp: typeof parsed.xp === "number" ? parsed.xp : 0,
-            checkpoints: parsed.checkpoints ?? {},
-            badges: parsed.badges ?? {},
-            streak: parsed.streak ?? { days: 0, last: null },
-            lastActivity:
-              typeof parsed.lastActivity === "string"
-                ? parsed.lastActivity
-                : nowIso(),
-          }),
+      // Fill in fields a slightly older payload might miss, normalize its
+      // v3 course data, then perform the one-way completion-evidence cutover.
+      // Exercise summaries are re-normalized before the next server sync.
+      return upgradeHistoricalCompletionEvidence(
+        normalizeCanonicalProgress(
+          normalizeWorkshopQuizScores(
+            truncateExerciseSummaries({
+              schemaVersion: UNIFIED_SCHEMA_VERSION,
+              courses: parsed.courses ?? {},
+              xp: typeof parsed.xp === "number" ? parsed.xp : 0,
+              checkpoints: parsed.checkpoints ?? {},
+              badges: parsed.badges ?? {},
+              streak: parsed.streak ?? { days: 0, last: null },
+              lastActivity:
+                typeof parsed.lastActivity === "string"
+                  ? parsed.lastActivity
+                  : nowIso(),
+            }),
+          ),
         ),
       );
     }
@@ -212,8 +238,15 @@ function persist(state: UnifiedProgress): void {
   setOwnedLocalLearningItem(UNIFIED_STORAGE_KEY, JSON.stringify(state));
 }
 
-function persistDurably(state: UnifiedProgress): boolean {
-  return setOwnedLocalLearningItem(UNIFIED_STORAGE_KEY, JSON.stringify(state));
+function persistDurably(
+  state: UnifiedProgress,
+  expectedGeneration?: number,
+): boolean {
+  return setOwnedLocalLearningItem(
+    UNIFIED_STORAGE_KEY,
+    JSON.stringify(state),
+    expectedGeneration,
+  );
 }
 
 function getState(): UnifiedProgress {
@@ -223,17 +256,21 @@ function getState(): UnifiedProgress {
 }
 
 /** Persist + cache + notify. Always stamps lastActivity. */
-function commit(next: UnifiedProgress): UnifiedProgress {
-  if (getLearningOwnerContext().kind === "unknown") {
+function commit(next: UnifiedProgress): boolean {
+  const ownerAtStart = getLearningOwnerContext();
+  if (ownerAtStart.kind === "unknown") {
     // Identity is unresolved, so this write cannot be attributed safely.
     // Never replay it into whichever account happens to verify next.
-    return getState();
+    return false;
   }
   const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
+  const persisted = persistDurably(stamped, ownerAtStart.generation);
+  const ownerAfterWrite = getLearningOwnerContext();
+  const ownerStillCurrent = sameLearningOwner(ownerAtStart, ownerAfterWrite);
+  if (!persisted || !ownerStillCurrent) return false;
   cache = stamped;
-  persist(stamped);
   emit(stamped);
-  return stamped;
+  return sameLearningOwner(ownerAtStart, getLearningOwnerContext());
 }
 
 /** Replace the local cache from a trusted sync payload without awarding XP. */
@@ -540,8 +577,8 @@ export function saveExerciseResult(
   slug: CourseSlug,
   lessonId: string,
   result: UnifiedExerciseResult,
-): void {
-  if (!isCanonicalLessonId(slug, lessonId)) return;
+): boolean {
+  if (!isCanonicalLessonId(slug, lessonId)) return false;
   const state = getState();
   const slice = sliceOf(state, slug);
   const lesson = lessonOf(slice, lessonId);
@@ -564,7 +601,7 @@ export function saveExerciseResult(
         ? truncateToByteLength(result.summary, MAX_EXERCISE_SUMMARY_BYTES)
         : result.summary,
   };
-  commit(
+  return commit(
     withSlice(state, slug, {
       ...slice,
       lessons: {
@@ -641,20 +678,16 @@ export function saveExerciseResultWithCheckpoint(
     return { checkpointWasNew: false, durable: false };
   }
   const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
-  const persisted = persistDurably(stamped);
+  const persisted = persistDurably(stamped, ownerAtStart.generation);
   const ownerAfterWrite = getLearningOwnerContext();
-  if (
-    !persisted ||
-    ownerAfterWrite.generation !== ownerAtStart.generation ||
-    ownerAfterWrite.kind !== ownerAtStart.kind ||
-    (ownerAfterWrite.kind === "account" &&
-      (ownerAtStart.kind !== "account" ||
-        ownerAfterWrite.accountId !== ownerAtStart.accountId))
-  ) {
+  if (!persisted || !sameLearningOwner(ownerAtStart, ownerAfterWrite)) {
     return { checkpointWasNew: false, durable: false };
   }
   cache = stamped;
   emit(stamped);
+  if (!sameLearningOwner(ownerAtStart, getLearningOwnerContext())) {
+    return { checkpointWasNew: false, durable: false };
+  }
   return { checkpointWasNew, durable: true };
 }
 
@@ -707,6 +740,56 @@ export function saveWorkshopQuizResult(
       ? applyXpAndBadges(withQuiz, XP.QUIZ_PASS)
       : withQuiz,
   );
+}
+
+/**
+ * Persist a workshop result before exposing pass or certificate UI. Unlike the
+ * legacy void writer, a rejected or owner-raced browser write never enters the
+ * cache and returns false so callers can render a bounded retry state.
+ */
+export function saveWorkshopQuizResultDurably(
+  slug: CourseSlug,
+  score: number,
+  passed: boolean,
+): boolean {
+  const normalizedScore = normalizeWorkshopQuizScore(score);
+  if (normalizedScore === null) return false;
+
+  const ownerAtStart = getLearningOwnerContext();
+  if (ownerAtStart.kind === "unknown") return false;
+
+  const state = getState();
+  const slice = sliceOf(state, slug);
+  const alreadyPassed = slice.workshopQuiz.passed;
+  const previousScore =
+    normalizeWorkshopQuizScore(slice.workshopQuiz.score) ?? 0;
+  const improvedScore = normalizedScore > previousScore;
+  const firstPass = passed && !alreadyPassed;
+  const withQuiz = withSlice(state, slug, {
+    ...slice,
+    workshopQuiz: {
+      passed: alreadyPassed || passed,
+      score: Math.max(previousScore, normalizedScore),
+      completedAt:
+        !slice.workshopQuiz.completedAt || improvedScore || firstPass
+          ? nowIso()
+          : slice.workshopQuiz.completedAt,
+    },
+  });
+  const next = firstPass ? applyXpAndBadges(withQuiz, XP.QUIZ_PASS) : withQuiz;
+  const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
+  const persisted = setOwnedLocalLearningItem(
+    UNIFIED_STORAGE_KEY,
+    JSON.stringify(stamped),
+    ownerAtStart.generation,
+  );
+  const ownerAfterWrite = getLearningOwnerContext();
+  const ownerStillCurrent = sameLearningOwner(ownerAtStart, ownerAfterWrite);
+  if (!persisted || !ownerStillCurrent) return false;
+
+  cache = stamped;
+  emit(stamped);
+  return sameLearningOwner(ownerAtStart, getLearningOwnerContext());
 }
 
 export function getWorkshopQuizResult(slug: CourseSlug): {
@@ -771,13 +854,228 @@ export function isCheckpointDone(lessonId: string, cpId: string): boolean {
 export function completeCheckpoint(lessonId: string, cpId: string): boolean {
   const state = getState();
   const key = checkpointKey(lessonId, cpId);
+  if (isCompletionCompatibilityCheckpointKey(key)) return false;
   if (state.checkpoints[key]) return false;
   const withCp: UnifiedProgress = {
     ...state,
     checkpoints: { ...state.checkpoints, [key]: true },
   };
-  commit(applyXpAndBadges(withCp, XP.CHECKPOINT));
-  return true;
+  return commit(applyXpAndBadges(withCp, XP.CHECKPOINT));
+}
+
+/**
+ * Persist the versioned lesson proof and legacy resume bit in one durable,
+ * owner-fenced write. The candidate is rejected unless its already-recorded
+ * section/quiz checkpoints satisfy the current canonical evidence contract.
+ * Cache and subscribers update only after storage confirms the exact bytes.
+ */
+export function recordLessonCompletionEvidenceDurably(
+  slug: CourseSlug,
+  lessonId: string,
+): boolean {
+  if (!isCanonicalLessonId(slug, lessonId)) return false;
+
+  const ownerAtStart = getLearningOwnerContext();
+  if (ownerAtStart.kind === "unknown") return false;
+
+  const state = getState();
+  const slice = sliceOf(state, slug);
+  const lesson = lessonOf(slice, lessonId);
+  const evidenceKey = checkpointKey(
+    lessonId,
+    lessonCompletionEvidenceCheckpointId(slug),
+  );
+  const checkpointWasNew = state.checkpoints[evidenceKey] !== true;
+  const lessonWasNew = !lesson.completed;
+
+  let next: UnifiedProgress = checkpointWasNew
+    ? applyXpAndBadges(
+        {
+          ...state,
+          checkpoints: { ...state.checkpoints, [evidenceKey]: true },
+        },
+        XP.CHECKPOINT,
+      )
+    : state;
+
+  if (lessonWasNew) {
+    const nextSlice = sliceOf(next, slug);
+    const nextLesson = lessonOf(nextSlice, lessonId);
+    next = applyXpAndBadges(
+      withSlice(next, slug, {
+        ...nextSlice,
+        lessons: {
+          ...nextSlice.lessons,
+          [lessonId]: { ...nextLesson, completed: true },
+        },
+      }),
+      XP.LESSON,
+    );
+  }
+
+  if (!isLessonCompletionEvidenceBacked(next, slug, lessonId)) return false;
+
+  const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
+  const persisted = setOwnedLocalLearningItem(
+    UNIFIED_STORAGE_KEY,
+    JSON.stringify(stamped),
+    ownerAtStart.generation,
+  );
+  const ownerAfterWrite = getLearningOwnerContext();
+  const ownerStillCurrent = sameLearningOwner(ownerAtStart, ownerAfterWrite);
+  if (!persisted || !ownerStillCurrent) return false;
+
+  cache = stamped;
+  emit(stamped);
+  return sameLearningOwner(ownerAtStart, getLearningOwnerContext());
+}
+
+const FOUNDATION_PROGRESS_SHARE_SLUGS = new Set<CourseSlug>([
+  "ki-fuehrerschein",
+  "eu-ai-act-kurs",
+  "ki-und-gesellschaft",
+]);
+
+/**
+ * Merge one already-validated foundation-course share in a single durable
+ * owner-fenced write. Evidence IDs are rechecked against the merged canonical
+ * lesson state before their versioned checkpoints are admitted. Legacy shares
+ * can pass an empty evidence list; their raw resume bits remain retained but
+ * cannot surface as current completion.
+ */
+export function mergeCourseProgressShareDurably(
+  slug: CourseSlug,
+  imported: CourseProgress,
+  evidenceLessonIds: readonly string[],
+): boolean {
+  if (!FOUNDATION_PROGRESS_SHARE_SLUGS.has(slug)) return false;
+  const ownerAtStart = getLearningOwnerContext();
+  if (ownerAtStart.kind === "unknown") return false;
+
+  const evidenceIds = new Set(evidenceLessonIds);
+  if (evidenceIds.size !== evidenceLessonIds.length) return false;
+  for (const lessonId of evidenceIds) {
+    if (
+      !isCanonicalLessonId(slug, lessonId) ||
+      imported.lessons[lessonId]?.completed !== true
+    ) {
+      return false;
+    }
+  }
+
+  const state = getState();
+  const hadSlice = state.courses[slug] !== undefined;
+  const slice = sliceOf(state, slug);
+  const lessons = { ...slice.lessons };
+  let xpDelta = 0;
+
+  for (const [lessonId, importedLesson] of Object.entries(imported.lessons)) {
+    if (!isCanonicalLessonId(slug, lessonId)) return false;
+    if (
+      (importedLesson.quizScore === null) !==
+        (importedLesson.quizTotal === null) ||
+      (importedLesson.quizScore !== null &&
+        (!Number.isFinite(importedLesson.quizScore) ||
+          importedLesson.quizScore < 0 ||
+          importedLesson.quizScore > 1 ||
+          !Number.isInteger(importedLesson.quizTotal) ||
+          (importedLesson.quizTotal ?? 0) <= 0))
+    ) {
+      return false;
+    }
+    if (
+      importedLesson.sectionsRead.some(
+        (sectionId) => !isCanonicalSectionId(slug, lessonId, sectionId),
+      )
+    ) {
+      return false;
+    }
+
+    const current = lessonOf(slice, lessonId);
+    const sectionsRead = Array.from(
+      new Set([...current.sectionsRead, ...importedLesson.sectionsRead]),
+    );
+    xpDelta +=
+      sectionsRead.filter(
+        (sectionId) => !current.sectionsRead.includes(sectionId),
+      ).length * XP.SECTION;
+
+    const importedQuizIsBetter =
+      importedLesson.quizScore !== null &&
+      (current.quizScore === null ||
+        importedLesson.quizScore > current.quizScore);
+    const completed = current.completed || importedLesson.completed;
+    if (!current.completed && completed) xpDelta += XP.LESSON;
+    lessons[lessonId] = {
+      ...current,
+      sectionsRead,
+      quizScore: importedQuizIsBetter
+        ? importedLesson.quizScore
+        : current.quizScore,
+      quizTotal: importedQuizIsBetter
+        ? importedLesson.quizTotal
+        : current.quizTotal,
+      completed,
+    };
+  }
+
+  const importedWorkshopScore = normalizeWorkshopQuizScore(
+    imported.workshopQuiz.score,
+  );
+  if (importedWorkshopScore === null) return false;
+  const currentWorkshopScore =
+    normalizeWorkshopQuizScore(slice.workshopQuiz.score) ?? 0;
+  const workshopImproved = importedWorkshopScore > currentWorkshopScore;
+  const firstWorkshopPass =
+    imported.workshopQuiz.passed && !slice.workshopQuiz.passed;
+  if (firstWorkshopPass) xpDelta += XP.QUIZ_PASS;
+
+  const mergedSlice: UnifiedCourseSlice = {
+    ...slice,
+    lessons,
+    workshopQuiz: {
+      passed: slice.workshopQuiz.passed || imported.workshopQuiz.passed,
+      score: Math.max(currentWorkshopScore, importedWorkshopScore),
+      completedAt:
+        (!slice.workshopQuiz.completedAt ||
+          workshopImproved ||
+          firstWorkshopPass) &&
+        imported.workshopQuiz.completedAt
+          ? imported.workshopQuiz.completedAt
+          : slice.workshopQuiz.completedAt,
+    },
+    startedAt: hadSlice
+      ? [slice.startedAt, imported.startedAt].sort()[0]
+      : imported.startedAt,
+  };
+  let next = withSlice(state, slug, mergedSlice);
+  const checkpoints = { ...next.checkpoints };
+  for (const lessonId of evidenceIds) {
+    const key = checkpointKey(
+      lessonId,
+      lessonCompletionEvidenceCheckpointId(slug),
+    );
+    if (checkpoints[key] !== true) {
+      checkpoints[key] = true;
+      xpDelta += XP.CHECKPOINT;
+    }
+  }
+  next = { ...next, checkpoints };
+
+  for (const lessonId of evidenceIds) {
+    if (!isLessonCompletionEvidenceBacked(next, slug, lessonId)) return false;
+  }
+  if (xpDelta > 0) next = applyXpAndBadges(next, xpDelta);
+
+  const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
+  const persisted = persistDurably(stamped, ownerAtStart.generation);
+  const ownerAfterWrite = getLearningOwnerContext();
+  if (!persisted || !sameLearningOwner(ownerAtStart, ownerAfterWrite)) {
+    return false;
+  }
+  cache = stamped;
+  emit(stamped);
+  return sameLearningOwner(ownerAtStart, getLearningOwnerContext());
 }
 
 // ─── XP + badges read API ──────────────────────────────────────

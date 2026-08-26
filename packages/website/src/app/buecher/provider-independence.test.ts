@@ -31,7 +31,7 @@ describe("public book route provider-independence", () => {
 
     for (const source of [overview, library]) {
       expect(source).toContain(
-        "`/login?next=${encodeURIComponent(book.pdfPath)}`",
+        '`${localizeHref("/login", locale)}?next=${encodeURIComponent(book.pdfPath)}`',
       );
       expect(source).toContain("localizeHref(");
     }

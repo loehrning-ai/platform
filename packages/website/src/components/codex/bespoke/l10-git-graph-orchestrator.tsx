@@ -196,7 +196,7 @@ export function L10GitGraphOrchestrator({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
       <div className="grid gap-3 sm:grid-cols-3">
@@ -208,14 +208,21 @@ export function L10GitGraphOrchestrator({
             <p className="break-words font-mono text-[12px] font-bold text-foreground">
               {task.label[locale]}
             </p>
-            <p className="font-mono text-[10.5px] text-muted-foreground">
+            <p className="font-mono text-xs text-muted-foreground">
               {task.note[locale]}
             </p>
             <button
               type="button"
               onClick={() => launch(task)}
               disabled={status[task.id] !== "queued"}
-              className="mt-2 border-2 border-foreground bg-brand-orange px-3 py-1 font-mono text-[11px] font-bold uppercase text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label={
+                status[task.id] === "queued"
+                  ? `${copy.launch}: ${task.label[locale]}`
+                  : status[task.id] === "inprogress"
+                    ? `${task.label[locale]}: ${copy.inProgress}, ${commitCounts[task.id]}/${task.commits} ${copy.commits}`
+                    : `${task.label[locale]}: ${copy.done}`
+              }
+              className="mt-2 min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1 font-mono text-xs font-bold uppercase text-white transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50"
             >
               {status[task.id] === "done"
                 ? copy.done
@@ -232,21 +239,21 @@ export function L10GitGraphOrchestrator({
           <h3 className="font-mono text-[13px] font-bold text-foreground">
             {copy.mergeConflict}
           </h3>
-          <pre className="mt-2 whitespace-pre-wrap font-mono text-[11.5px] text-foreground">
+          <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-foreground">
             {"<<<<<<< T2\nlog.info\n=======\nlogger.info\n>>>>>>> T3"}
           </pre>
           <div className="mt-2 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => resolveConflict(copy.conflictRebased)}
-              className="min-w-0 break-words border-2 border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase text-foreground hover:border-brand-orange"
+              className="min-h-11 min-w-0 break-words border-2 border-foreground bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase text-foreground hover:border-brand-orange"
             >
               {copy.rebase}
             </button>
             <button
               type="button"
               onClick={() => resolveConflict(copy.conflictKept)}
-              className="min-w-0 break-words border-2 border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase text-foreground hover:border-brand-orange"
+              className="min-h-11 min-w-0 break-words border-2 border-foreground bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase text-foreground hover:border-brand-orange"
             >
               {copy.keep}
             </button>

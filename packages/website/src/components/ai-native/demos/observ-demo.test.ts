@@ -1,25 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { makeSeedSeries } from "./observ-demo";
 
 /**
  * observ-demo.test.ts (regression coverage)
  *
- * observ-demo.tsx documents makeSeedSeries' use of Math.random as
- * intentional cosmetic noise for a simulated dashboard sparkline, not
- * grading logic ("Randomness is intentional cosmetic noise, NOT grading
- * logic" per the source comment). So this test asserts the function's
- * structural INVARIANTS (length, floor clamp, finiteness) rather than exact
- * values, which would be inherently flaky given the real randomness.
+ * The initial series is deterministic so server and client render the same
+ * illustrative chart. These tests retain its structural invariants.
  */
-
-function makeSeedSeries(length: number, base: number, amplitude: number): number[] {
-  const arr: number[] = [];
-  let v = base;
-  for (let i = 0; i < length; i++) {
-    v += (Math.random() - 0.5) * amplitude;
-    arr.push(Math.max(0.1, v));
-  }
-  return arr;
-}
 
 describe("observ-demo · makeSeedSeries(length, base, amplitude) invariants", () => {
   it("returns exactly `length` values", () => {
@@ -40,5 +27,9 @@ describe("observ-demo · makeSeedSeries(length, base, amplitude) invariants", ()
     for (const v of series) {
       expect(Number.isFinite(v)).toBe(true);
     }
+  });
+
+  it("returns the same initial series for the same inputs", () => {
+    expect(makeSeedSeries(60, 1.2, 0.4)).toEqual(makeSeedSeries(60, 1.2, 0.4));
   });
 });

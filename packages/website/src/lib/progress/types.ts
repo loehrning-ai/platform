@@ -15,6 +15,16 @@ import type { CourseSlug } from "@/lib/course/types";
 export const UNIFIED_STORAGE_KEY = "loehrning-progress-v2";
 
 /**
+ * Semantic cutover for evidence-backed lesson completion. The unified storage
+ * shape remains v3; these reserved checkpoint keys let the v3 migrator
+ * distinguish progress that existed before the cutover from raw completion
+ * bits written afterwards.
+ */
+export const COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY =
+  "__progress__::completion-evidence-cutover-v1";
+export const LEGACY_COMPLETION_EVIDENCE_VERSION = "legacy-completion-v1";
+
+/**
  * Schema version. Increment on any shape change + extend the migrator.
  * v3: server-side progress storage moves from one shared
  * JSONB blob per user to one row per (user_id, course_slug), and exercise
@@ -41,9 +51,7 @@ export function truncateToByteLength(value: string, maxBytes: number): string {
   const bytes = new TextEncoder().encode(value);
   if (bytes.length <= maxBytes) return value;
   const truncatedBytes = bytes.slice(0, maxBytes);
-  return new TextDecoder("utf-8")
-    .decode(truncatedBytes)
-    .replace(/�+$/, "");
+  return new TextDecoder("utf-8").decode(truncatedBytes).replace(/�+$/, "");
 }
 
 /** Per-exercise result, mirroring the widget `ExerciseResult`. */
@@ -153,4 +161,26 @@ export const XP = {
 /** Build the canonical checkpoint key. */
 export function checkpointKey(lessonId: string, cpId: string): string {
   return `${lessonId}::${cpId}`;
+}
+
+/** Reserved compatibility marker for one lesson completed before the cutover. */
+export function legacyCompletionEvidenceCheckpointKey(
+  slug: CourseSlug,
+  lessonId: string,
+  resetAt?: string,
+): string {
+  return checkpointKey(
+    lessonId,
+    `${LEGACY_COMPLETION_EVIDENCE_VERSION}:${slug}${
+      resetAt ? `:reset:${resetAt}` : ""
+    }`,
+  );
+}
+
+/** Compatibility metadata is persisted in the checkpoint ledger but earns no XP. */
+export function isCompletionCompatibilityCheckpointKey(key: string): boolean {
+  return (
+    key === COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY ||
+    key.includes(`::${LEGACY_COMPLETION_EVIDENCE_VERSION}:`)
+  );
 }

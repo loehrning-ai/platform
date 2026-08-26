@@ -39,7 +39,10 @@ describe("rctfc-checklist · gradeField", () => {
   });
 
   it("passes a long-enough value when no keyword is required", () => {
-    const r = gradeField("Eine ausreichend lange Antwort.", crit({ minChars: 10 }));
+    const r = gradeField(
+      "Eine ausreichend lange Antwort.",
+      crit({ minChars: 10 }),
+    );
     expect(r.passed).toBe(true);
   });
 

@@ -1,15 +1,13 @@
 import { test, expect } from "@playwright/test";
 
-test("homepage primary CTA uses the KI-Check to determine the learner's start", async ({
-  page,
-}) => {
+test("homepage primary CTA opens the learning atlas", async ({ page }) => {
   await page.goto("/");
   const startLink = page
-    .getByRole("link", { name: "KI-Check öffnen" })
+    .getByRole("link", { name: "Lernroute wählen" })
     .first();
-  await expect(startLink).toHaveAttribute("href", "/ki-check");
+  await expect(startLink).toHaveAttribute("href", "/kurse");
   await startLink.click();
-  await expect(page).toHaveURL(/\/ki-check$/);
+  await expect(page).toHaveURL(/\/kurse$/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
@@ -69,17 +67,15 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
     await expect(
       menu.getByRole("link", { name: /Open Source/ }).first(),
     ).toHaveAttribute("href", "/open-source");
-    await expect(
-      menu.getByRole("link", { name: "KI-Check" }),
-    ).toHaveAttribute("href", "/ki-check");
+    await expect(menu.getByRole("link", { name: "KI-Check" })).toHaveAttribute(
+      "href",
+      "/ki-check",
+    );
     await expect(
       menu.getByRole("link", { name: "Blog", exact: true }),
     ).toHaveAttribute("href", "/blog");
     await expect(
       menu.getByRole("link", { name: "Workshops", exact: true }),
-    ).toHaveAttribute(
-      "href",
-      "/workshops",
-    );
+    ).toHaveAttribute("href", "/workshops");
   }
 });

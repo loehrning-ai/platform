@@ -3,11 +3,7 @@
 import { useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -85,15 +81,19 @@ function RoleScenarioBody({
       const picked = s.options.find((o) => o.id === answers[s.id]);
       return sum + (picked?.correct ? 1 : 0);
     }, 0);
-    const score = role.scenarios.length === 0 ? 0 : correctCount / role.scenarios.length;
-    setSubmitted(true);
-    submitExercise({
-      moduleId,
-      lessonId,
-      exerciseId,
-      kind: "exercise-role-scenario",
-      score,
-    });
+    const score =
+      role.scenarios.length === 0 ? 0 : correctCount / role.scenarios.length;
+    if (
+      submitExercise({
+        moduleId,
+        lessonId,
+        exerciseId,
+        kind: "exercise-role-scenario",
+        score,
+      })
+    ) {
+      setSubmitted(true);
+    }
   };
 
   const handleReset = () => {
@@ -110,16 +110,17 @@ function RoleScenarioBody({
         return sum + (picked?.correct ? 1 : 0);
       }, 0)
     : 0;
-  const scorePct = role && role.scenarios.length > 0
-    ? Math.round((correctCount / role.scenarios.length) * 100)
-    : 0;
+  const scorePct =
+    role && role.scenarios.length > 0
+      ? Math.round((correctCount / role.scenarios.length) * 100)
+      : 0;
 
   return (
     <div>
       {/* Role picker */}
       {!role ? (
         <>
-          <p className="mb-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
             {text("Wähle deine Rolle", "Select your role")}
           </p>
           <div className="grid gap-2 md:grid-cols-2">
@@ -128,7 +129,7 @@ function RoleScenarioBody({
                 key={r.id}
                 type="button"
                 onClick={() => setSelectedRoleId(r.id)}
-                className="border border-border bg-card/40 p-4 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)]"
+                className="min-h-11 border border-border bg-card/40 p-4 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)]"
               >
                 <div className="text-[14px] font-bold tracking-[-0.02em] text-foreground">
                   {r.label}
@@ -136,7 +137,7 @@ function RoleScenarioBody({
                 <div className="mt-1 text-[12.5px] text-muted-foreground">
                   {r.description}
                 </div>
-                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-brand-orange">
+                <div className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-brand-orange">
                   {r.scenarios.length} {text("Szenarien", "scenarios")} →
                 </div>
               </button>
@@ -148,10 +149,12 @@ function RoleScenarioBody({
           {/* Back + role header */}
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2">
             <div className="flex items-baseline gap-2">
-              <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                 {text("Rolle:", "Role:")}
               </p>
-              <p className="text-[13px] font-bold text-foreground">{role.label}</p>
+              <p className="text-[13px] font-bold text-foreground">
+                {role.label}
+              </p>
             </div>
             {!submitted && (
               <button
@@ -160,7 +163,7 @@ function RoleScenarioBody({
                   setSelectedRoleId(null);
                   setAnswers({});
                 }}
-                className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+                className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
               >
                 {text("← Andere Rolle", "← Change role")}
               </button>
@@ -174,7 +177,7 @@ function RoleScenarioBody({
               return (
                 <li key={s.id}>
                   <div className="mb-2 flex gap-2">
-                    <span className="mt-0.5 shrink-0 font-mono text-[11px] font-bold text-brand-orange">
+                    <span className="mt-0.5 shrink-0 font-mono text-xs font-bold text-brand-orange">
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     <p className="text-[14px] font-medium leading-[1.45] text-foreground">
@@ -190,13 +193,22 @@ function RoleScenarioBody({
                         <label
                           key={opt.id}
                           className={cn(
-                            "flex cursor-pointer items-start gap-2.5 border px-3 py-2 text-[13px] transition-colors",
+                            "flex min-h-11 cursor-pointer items-start gap-2.5 border px-3 py-2 text-[13px] transition-colors",
                             submitted && "cursor-default",
-                            isPicked && !submitted && "border-brand-orange bg-brand-orange/5",
-                            showFeedback && opt.correct && "border-risk-green bg-risk-green/5",
-                            showFeedback && !opt.correct && "border-destructive bg-destructive/5",
-                            showCorrect && "border-risk-green/40 bg-risk-green/5",
-                            !isPicked && !submitted && "border-border hover:border-foreground",
+                            isPicked &&
+                              !submitted &&
+                              "border-brand-orange bg-brand-orange/5",
+                            showFeedback &&
+                              opt.correct &&
+                              "border-risk-green bg-risk-green/5",
+                            showFeedback &&
+                              !opt.correct &&
+                              "border-destructive bg-destructive/5",
+                            showCorrect &&
+                              "border-risk-green/40 bg-risk-green/5",
+                            !isPicked &&
+                              !submitted &&
+                              "border-border hover:border-foreground",
                           )}
                         >
                           <input
@@ -217,9 +229,15 @@ function RoleScenarioBody({
                           {submitted && isPicked && (
                             <span>
                               {opt.correct ? (
-                                <CheckCircle2 size={14} className="text-risk-green" />
+                                <CheckCircle2
+                                  size={14}
+                                  className="text-risk-green"
+                                />
                               ) : (
-                                <XCircle size={14} className="text-destructive" />
+                                <XCircle
+                                  size={14}
+                                  className="text-destructive"
+                                />
                               )}
                             </span>
                           )}
@@ -250,11 +268,14 @@ function RoleScenarioBody({
                 transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
                 className={cn(
                   "mt-4 border-l-[3px] px-4 py-3",
-                  scorePct >= 66 ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
+                  scorePct >= 66
+                    ? "border-risk-green bg-risk-green/5"
+                    : "border-brand-amber bg-brand-amber/5",
                 )}
               >
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
-                  {correctCount}/{role.scenarios.length} {text("richtig", "correct")} · Score {scorePct}%
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground">
+                  {correctCount}/{role.scenarios.length}{" "}
+                  {text("richtig", "correct")} · Score {scorePct}%
                 </p>
               </m.div>
             )}
@@ -267,9 +288,9 @@ function RoleScenarioBody({
                 onClick={handleSubmit}
                 disabled={!allAnswered}
                 className={cn(
-                  "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                  "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
                   allAnswered
-                    ? "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+                    ? "bg-brand-orange hover:bg-foreground hover:text-background"
                     : "cursor-not-allowed bg-muted-foreground opacity-60",
                 )}
               >

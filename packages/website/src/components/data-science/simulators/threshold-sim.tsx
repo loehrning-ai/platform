@@ -180,7 +180,7 @@ export function ThresholdSim() {
           <div
             className="ds-confusion-grid"
             style={{
-              fontSize: 9,
+              fontSize: 12,
               color: "var(--muted)",
               fontFamily: "'JetBrains Mono',monospace",
               display: "grid",

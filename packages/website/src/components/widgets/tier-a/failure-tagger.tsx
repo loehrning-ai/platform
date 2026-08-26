@@ -29,10 +29,7 @@ import { WidgetFrame } from "./_frame";
  */
 
 export type FailureModeId =
-  | "halluzination"
-  | "verweigerung"
-  | "formatdrift"
-  | "themaverfehlung";
+  "halluzination" | "verweigerung" | "formatdrift" | "themaverfehlung";
 
 export interface FailureMode {
   readonly id: FailureModeId;
@@ -96,7 +93,7 @@ export interface FailureTaggerWidgetProps {
   readonly cases?: readonly FailureCase[];
   /** Override the failure-mode legend. */
   readonly modes?: readonly FailureMode[];
-  /** Minimum correct answers to award XP. Default: all but one. */
+  /** Minimum correct answers required to record completion. Default: all but one. */
   readonly passThreshold?: number;
   readonly copy?: Partial<FailureTaggerWidgetCopy>;
 }
@@ -194,8 +191,7 @@ export function FailureTaggerWidget({
   );
   const [submitted, setSubmitted] = useState(false);
 
-  const threshold =
-    passThreshold ?? Math.max(1, cases.length - 1);
+  const threshold = passThreshold ?? Math.max(1, cases.length - 1);
   const allPicked = cases.length > 0 && cases.every((c) => picks[c.id]);
   const correctCount = cases.filter((c) => picks[c.id] === c.correct).length;
   const passed = correctCount >= threshold;
@@ -203,12 +199,13 @@ export function FailureTaggerWidget({
     ? [
         passed ? chrome.passedLabel : chrome.retryPromptLabel,
         `${correctCount} / ${cases.length} ${chrome.correctSuffix}.`,
-        ...cases.map((item) =>
-          `${item.prompt}: ${
-            picks[item.id] === item.correct
-              ? chrome.perCaseCorrectLabel
-              : chrome.perCaseWrongLabel
-          } ${item.why}`,
+        ...cases.map(
+          (item) =>
+            `${item.prompt}: ${
+              picks[item.id] === item.correct
+                ? chrome.perCaseCorrectLabel
+                : chrome.perCaseWrongLabel
+            } ${item.why}`,
         ),
       ].join(" ")
     : "";
@@ -235,7 +232,6 @@ export function FailureTaggerWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+25 XP"
     >
       {/* Legend */}
       <div className="mb-5 grid gap-3 border-2 border-border bg-background p-3 sm:grid-cols-2">
@@ -267,9 +263,7 @@ export function FailureTaggerWidget({
           return (
             <div
               key={c.id}
-              data-state={
-                isCorrect ? "correct" : isWrong ? "wrong" : "pending"
-              }
+              data-state={isCorrect ? "correct" : isWrong ? "wrong" : "pending"}
               className={cn(
                 "border-2 bg-background p-4 transition-colors",
                 isCorrect && "border-risk-green",
@@ -278,13 +272,13 @@ export function FailureTaggerWidget({
                 submitted && !picked && "border-border",
               )}
             >
-              <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 {chrome.promptLabel}
               </p>
               <p className="mt-1 text-[13.5px] leading-[1.55] text-foreground">
                 {c.prompt}
               </p>
-              <p className="mt-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="mt-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 {chrome.outputLabel}
               </p>
               <p className="mt-1 whitespace-pre-wrap border-l-[3px] border-brand-orange/40 pl-3 text-[13.5px] leading-[1.55] text-foreground">
@@ -325,7 +319,7 @@ export function FailureTaggerWidget({
                         })
                       }
                       className={cn(
-                        "border-2 px-3 py-1.5 text-[12.5px] font-medium transition-colors",
+                        "min-h-11 border-2 px-3 py-1.5 text-[12.5px] font-medium transition-colors",
                         markRight &&
                           "border-risk-green bg-risk-green/10 text-foreground",
                         markWrong &&
@@ -366,7 +360,9 @@ export function FailureTaggerWidget({
                         isCorrect ? "text-risk-green" : "text-destructive",
                       )}
                     >
-                      {isCorrect ? chrome.perCaseCorrectLabel : chrome.perCaseWrongLabel}
+                      {isCorrect
+                        ? chrome.perCaseCorrectLabel
+                        : chrome.perCaseWrongLabel}
                     </span>{" "}
                     {c.why}
                   </m.p>
@@ -388,7 +384,7 @@ export function FailureTaggerWidget({
 
       {/* Actions + score */}
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-        <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
+        <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
           {submitted
             ? `${correctCount} / ${cases.length} ${chrome.correctSuffix}`
             : `${Object.keys(picks).length} / ${cases.length} ${chrome.taggedSuffix}`}
@@ -399,7 +395,7 @@ export function FailureTaggerWidget({
             onClick={submit}
             disabled={!allPicked}
             className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
               allPicked
                 ? "bg-brand-orange text-white hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
                 : "cursor-not-allowed bg-muted text-muted-foreground opacity-60 shadow-none",
@@ -411,21 +407,17 @@ export function FailureTaggerWidget({
           <div className="flex items-center gap-3">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
+                "inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em]",
                 passed ? "text-risk-green" : "text-brand-amber",
               )}
             >
-              {passed ? (
-                <CheckCircle2 size={14} />
-              ) : (
-                <XCircle size={14} />
-              )}
+              {passed ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
               {passed ? chrome.passedLabel : chrome.retryPromptLabel}
             </span>
             <button
               type="button"
               onClick={reset}
-              className="border-2 border-foreground bg-background px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+              className="min-h-11 border-2 border-foreground bg-background px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
             >
               {chrome.resetLabel}
             </button>

@@ -83,16 +83,22 @@ test.describe("/hilfe Help & FAQ", () => {
     await expect(answer).toBeVisible();
   });
 
-  test("support cards expose the email fallback and /neuigkeiten", async ({
+  test("provider-free feedback exposes the email fallback and /neuigkeiten", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     // Provider-free mode must not advertise the disabled server-backed form.
-    // The support card exposes its email channel while the updates card keeps
-    // its direct in-page route.
+    // The compact page keeps that channel in the relevant FAQ answer instead
+    // of repeating it in a second support card.
+    const feedbackDisclosure = page.locator("details#rueckmeldung");
+    await feedbackDisclosure.locator("summary").click();
+    await expect(feedbackDisclosure).toHaveAttribute("open", "");
     await expect(
-      page.getByText("Schreib an tim@loehrning.ai.", { exact: true }),
+      feedbackDisclosure.getByRole("link", { name: "tim@loehrning.ai" }),
+    ).toHaveAttribute("href", "mailto:tim@loehrning.ai");
+    await expect(
+      feedbackDisclosure.getByRole("link", { name: "tim@loehrning.ai" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Feedback-Formular" }),

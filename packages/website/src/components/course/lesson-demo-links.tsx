@@ -57,7 +57,7 @@ export function LessonDemoLinks({
 
   return (
     <section className={cn("mt-10", className)}>
-      <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <h3 className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {lessonDemos.length === 1 ? copy.heading : copy.headingPlural}
       </h3>
       <ul className="mt-3 divide-y divide-border border-t border-border">
@@ -71,7 +71,7 @@ export function LessonDemoLinks({
               aria-label={openLabel(`${demo.title} ${demo.titleKicker}`)}
               className="group grid min-h-11 grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 py-3 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
-              <span className="font-mono text-[11px] text-brand-orange">
+              <span className="font-mono text-xs text-brand-orange">
                 {demo.n}
               </span>
               <span className="min-w-0">

@@ -134,12 +134,12 @@ export function L03AgentsCrystal({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <div className="grid min-w-0 gap-5 md:grid-cols-2">
         <div className="min-w-0">
-          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+          <p className="mb-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.conventions}: {absorbed.size}/{conventions.length}
           </p>
           <div className="flex flex-col gap-2">
@@ -153,7 +153,7 @@ export function L03AgentsCrystal({
                   disabled={isAbsorbed}
                   aria-pressed={isAbsorbed}
                   className={cn(
-                    "min-w-0 border-2 border-l-4 border-border bg-background px-3 py-2 text-left font-mono text-[12.5px] text-foreground transition-colors",
+                    "min-h-11 min-w-0 border-2 border-l-4 border-border bg-background px-3 py-2 text-left font-mono text-[12.5px] text-foreground transition-colors",
                     isAbsorbed
                       ? "border-l-risk-green text-muted-foreground line-through"
                       : "border-l-brand-orange hover:border-brand-orange",
@@ -170,10 +170,10 @@ export function L03AgentsCrystal({
           <div className="mb-1 break-words font-mono text-[13px] font-bold text-foreground">
             {preview.title}
           </div>
-          <div className="mb-3 inline-block max-w-full break-words border border-border bg-card px-1.5 py-0.5 font-mono text-[10.5px] text-muted-foreground">
+          <div className="mb-3 inline-block max-w-full break-words border border-border bg-card px-1.5 py-0.5 font-mono text-xs text-muted-foreground">
             {preview.branch}
           </div>
-          <div className="flex flex-col gap-1 font-mono text-[11.5px] text-foreground">
+          <div className="flex flex-col gap-1 font-mono text-xs text-foreground">
             <p className="break-words">M {preview.fileLine}</p>
             <p className="break-words">+ {preview.errorLine}</p>
             {preview.lintLine && (
@@ -181,7 +181,7 @@ export function L03AgentsCrystal({
             )}
           </div>
           {absorbed.size === conventions.length && (
-            <p className="mt-3 inline-block bg-risk-green px-2 py-1 font-mono text-[11px] font-bold text-white">
+            <p className="mt-3 inline-block bg-risk-green px-2 py-1 font-mono text-xs font-bold text-white">
               {copy.complete} {done ? "✓" : ""}
             </p>
           )}

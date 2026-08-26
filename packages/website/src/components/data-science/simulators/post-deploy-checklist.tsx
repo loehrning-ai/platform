@@ -142,7 +142,7 @@ export function PostDeployChecklist() {
           <span
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--ink-3)",
             }}
           >
@@ -151,7 +151,7 @@ export function PostDeployChecklist() {
           <span
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 11,
+              fontSize: 12,
               color: barColor,
               fontWeight: 700,
             }}

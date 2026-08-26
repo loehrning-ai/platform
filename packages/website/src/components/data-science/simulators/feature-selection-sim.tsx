@@ -166,7 +166,7 @@ export function FeatureSelectionSim() {
                 </span>
                 <span
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontFamily: "'JetBrains Mono', monospace",
                     color: isKept ? "var(--ink-2)" : "var(--bad-ink)",
                   }}
@@ -176,7 +176,7 @@ export function FeatureSelectionSim() {
               </div>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: isKept ? "var(--good-ink)" : "var(--bad-ink)",
                   marginTop: 3,
                 }}

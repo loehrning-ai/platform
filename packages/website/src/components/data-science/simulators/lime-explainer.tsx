@@ -187,7 +187,7 @@ export function LIMEExplainer() {
           </div>
           <p
             className="prose"
-            style={{ fontSize: 11, marginTop: 8, lineHeight: 1.5 }}
+            style={{ fontSize: 12, marginTop: 8, lineHeight: 1.5 }}
           >
             {Math.abs(a1) > Math.abs(a2) ? (
               <>

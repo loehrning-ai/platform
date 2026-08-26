@@ -54,8 +54,7 @@ export async function generateMetadata({
   const copy = WIE_KI_LESSON_COPY[locale];
   if (!lektion) {
     return createNoindexPageMetadata({
-      title:
-        locale === "de" ? "Lektion nicht gefunden" : "Lesson not found",
+      title: locale === "de" ? "Lektion nicht gefunden" : "Lesson not found",
       description:
         locale === "de"
           ? "Diese Lektion ist nicht veröffentlicht."
@@ -183,13 +182,16 @@ function WieKiLektionContent({
         id="wie-ki-lesson-jsonld"
       />
 
-      <div className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-10 lg:px-10">
-        <nav aria-label={copy.breadcrumbLabel} className="mb-3 min-w-0 sm:mb-5">
-          <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.1em]">
+      <div
+        className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-12 pt-2 sm:px-6 sm:pt-4 lg:px-10"
+        data-learning-lesson="action-first"
+      >
+        <nav aria-label={copy.breadcrumbLabel} className="min-w-0">
+          <ol className="flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
             <li>
               <Link
                 href={localizeHref("/", locale)}
-                className="break-words hover:text-foreground"
+                className="inline-flex min-h-11 items-center break-words hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               >
                 {copy.home}
               </Link>
@@ -198,7 +200,7 @@ function WieKiLektionContent({
             <li className="min-w-0">
               <Link
                 href={localizeHref(COURSE_PATH, locale)}
-                className="break-words hover:text-foreground [overflow-wrap:anywhere]"
+                className="inline-flex min-h-11 items-center break-words hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange [overflow-wrap:anywhere]"
               >
                 {copy.courseTitle}
               </Link>
@@ -214,24 +216,24 @@ function WieKiLektionContent({
         </nav>
 
         <article className="min-w-0">
-          <header className="min-w-0 border-b-2 border-foreground pb-3 sm:pb-5">
-            <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
+          <header className="min-w-0 border-y-2 border-foreground py-4 sm:py-5">
+            <p className="break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.lessonProgress(
                 lektion.number,
                 lektionen.length,
                 lektion.durationMinutes,
               )}
             </p>
-            <h1 className="mt-2 max-w-4xl break-words text-[clamp(1.875rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
+            <h1 className="mt-2 max-w-4xl break-words text-[clamp(2rem,6vw,3.5rem)] font-bold leading-[0.98] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
               {lektion.title}
             </h1>
-            <p className="mt-2 max-w-3xl break-words text-[15px] leading-[1.4] text-muted-foreground [overflow-wrap:anywhere] sm:text-[19px] sm:leading-[1.45]">
+            <p className="mt-2 max-w-3xl break-words text-[15px] leading-[1.45] text-muted-foreground [overflow-wrap:anywhere] sm:text-lg">
               {lektion.subtitle}
             </p>
           </header>
 
           {check ? (
-            <div className="mt-3 max-w-3xl sm:mt-4">
+            <div className="mt-3 max-w-3xl [&_.font-mono]:!text-xs [&>section]:!border-x-0 [&>section]:!shadow-none">
               <ComprehensionCheck
                 id={lektion.id}
                 question={check.question}
@@ -247,27 +249,27 @@ function WieKiLektionContent({
             </div>
           ) : null}
 
-          <div className="mt-5 min-w-0">
+          <div className="mt-4 min-w-0 [&_.font-mono]:!text-xs [&>details]:!bg-transparent">
             <LessonReference
               locale={locale}
               title={copy.referenceTitle}
               headingLevel={2}
             >
-              <div className="min-w-0 space-y-10">
+              <div className="min-w-0">
                 <div className="max-w-3xl border-b border-border pb-4">
-                  <p className="break-words font-mono text-[11px] text-muted-foreground">
+                  <p className="break-words font-mono text-xs text-muted-foreground">
                     <time dateTime={meta.lastReviewed}>
                       {copy.reviewed}: {standDate}
                     </time>
                   </p>
                   <ul
-                    className="mt-3 flex min-w-0 flex-wrap gap-2"
+                    className="mt-3 flex min-w-0 flex-wrap gap-x-4 gap-y-2"
                     aria-label={copy.conceptsLabel}
                   >
                     {lektion.keyConcepts.map((concept) => (
                       <li
                         key={concept}
-                        className="max-w-full break-words border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground [overflow-wrap:anywhere] sm:tracking-[0.08em]"
+                        className="max-w-full break-words border-b border-border py-1 font-mono text-xs uppercase tracking-[0.06em] text-muted-foreground [overflow-wrap:anywhere]"
                       >
                         {concept}
                       </li>
@@ -277,20 +279,20 @@ function WieKiLektionContent({
                 {lektion.sections.map((section, index) => (
                   <section
                     key={section.id}
-                    className="min-w-0 scroll-mt-24"
+                    className="min-w-0 scroll-mt-24 border-b border-border py-6 last:border-b-0"
                     aria-labelledby={`section-${section.id}`}
                   >
                     <div className="mb-2 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-                      <span className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange sm:tracking-[0.12em]">
+                      <span className="break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                         {copy.section(index + 1)}
                       </span>
-                      <span className="break-words font-mono text-[10px] text-muted-foreground">
+                      <span className="break-words font-mono text-xs text-muted-foreground">
                         {copy.readTime(section.readTimeMinutes)}
                       </span>
                     </div>
                     <h3
                       id={`section-${section.id}`}
-                      className="mb-4 max-w-3xl break-words text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] sm:text-[32px]"
+                      className="mb-4 max-w-3xl break-words text-2xl font-bold leading-tight tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] sm:text-[30px]"
                     >
                       {section.title}
                     </h3>
@@ -308,8 +310,8 @@ function WieKiLektionContent({
                         ))}
                     </div>
 
-                    <aside className="mt-5 max-w-3xl min-w-0 border-l-4 border-brand-orange bg-brand-orange/5 py-3 pl-4 pr-4 sm:pl-5">
-                      <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
+                    <aside className="mt-5 max-w-3xl min-w-0 border-l-4 border-brand-orange py-2 pl-4 sm:pl-5">
+                      <p className="break-words font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
                         {copy.takeaway}
                       </p>
                       <p className="mt-2 break-words text-[15px] font-bold leading-[1.5] text-foreground [overflow-wrap:anywhere] sm:text-[16px]">
@@ -325,7 +327,7 @@ function WieKiLektionContent({
 
         <nav
           aria-label={copy.lessonNavigation}
-          className="mt-8 min-w-0 border-t border-border pt-6"
+          className="mt-6 min-w-0 border-t border-border pt-4"
         >
           <div className="grid min-w-0 gap-4 sm:grid-cols-2 sm:items-center">
             <div className="min-w-0">
@@ -334,7 +336,9 @@ function WieKiLektionContent({
                   href={localizeHref(`${COURSE_PATH}/${prev.id}`, locale)}
                   className="inline-flex min-h-11 max-w-full items-center gap-2 break-words py-2 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange sm:tracking-[0.08em]"
                 >
-                  <span aria-hidden="true" className="shrink-0">←</span>
+                  <span aria-hidden="true" className="shrink-0">
+                    ←
+                  </span>
                   {copy.previousLesson}
                 </Link>
               )}
@@ -346,15 +350,17 @@ function WieKiLektionContent({
                   className="inline-flex min-h-11 max-w-full items-center gap-2 break-words py-2 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-brand-orange hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange sm:tracking-[0.08em]"
                 >
                   {copy.nextLesson}
-                  <span aria-hidden="true" className="shrink-0">→</span>
+                  <span aria-hidden="true" className="shrink-0">
+                    →
+                  </span>
                 </Link>
               )}
             </div>
           </div>
 
           {isLastLektion && (
-            <aside className="mt-10 min-w-0 border-2 border-brand-orange bg-brand-orange/5 p-5 sm:p-7">
-              <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
+            <aside className="mt-8 min-w-0 border-y-2 border-brand-orange py-5 sm:py-6">
+              <p className="break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                 {copy.completedEyebrow}
               </p>
               <p className="mt-3 max-w-3xl break-words text-[20px] font-bold leading-snug tracking-[-0.02em] text-foreground [overflow-wrap:anywhere] sm:text-[24px]">
@@ -366,13 +372,13 @@ function WieKiLektionContent({
               <div className="mt-6 flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href={localizeHref("/ki-fuehrerschein", locale)}
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-orange px-5 py-3 text-left font-mono text-[12px] font-bold text-white transition-colors hover:bg-brand-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-orange px-5 py-3 text-left font-mono text-xs font-bold text-white hover:bg-brand-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
                 >
                   {copy.driverLicense} <span aria-hidden="true">→</span>
                 </Link>
                 <Link
                   href={localizeHref("/einstieg", locale)}
-                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-border bg-background px-5 py-3 text-left font-mono text-[12px] font-bold text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-border bg-background px-5 py-3 text-left font-mono text-xs font-bold text-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
                 >
                   {copy.backToEntry}
                 </Link>

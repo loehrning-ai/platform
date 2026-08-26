@@ -24,7 +24,7 @@ export interface PlaysWidgetProps {
   readonly title?: string;
   readonly scenario?: string;
   readonly options: readonly string[];
-  /** Minimum picks needed to "lock" the commitment + award XP. Default 1. */
+  /** Minimum picks needed to lock the commitment and record completion. Default 1. */
   readonly minPick?: number;
   readonly locale?: Locale;
   readonly kindLabel?: string;
@@ -45,16 +45,17 @@ export function PlaysWidget({
   confirmedLabel,
 }: PlaysWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [picked, setPicked] = useDraftValue<readonly number[]>(
+  const [picked, setPicked, draftReady] = useDraftValue<readonly number[]>(
     `plays::${lessonId}::${cpId}`,
     [],
   );
 
-  const locked = picked.length >= minPick;
+  const visiblePicks = draftReady ? picked : [];
+  const locked = draftReady && visiblePicks.length >= minPick;
 
   useEffect(() => {
-    if (locked) complete();
-  }, [locked, complete]);
+    if (draftReady && locked) complete();
+  }, [draftReady, locked, complete]);
 
   const toggle = (i: number) =>
     setPicked(
@@ -72,20 +73,20 @@ export function PlaysWidget({
           : "Select the controls you will implement.")
       }
       done={done}
-      xpLabel="+10 XP"
       doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div className="flex flex-col gap-2">
         {options.map((option, i) => {
-          const active = picked.includes(i);
+          const active = visiblePicks.includes(i);
           return (
             <button
               key={i}
               type="button"
               aria-pressed={active}
+              disabled={!draftReady}
               onClick={() => toggle(i)}
               className={cn(
-                "flex items-center gap-3 border-2 border-border bg-background px-3 py-2.5 text-left text-[14px] text-foreground transition-colors",
+                "flex min-h-11 items-center gap-3 border-2 border-border bg-background px-3 py-2.5 text-left text-[14px] text-foreground transition-colors disabled:cursor-wait disabled:opacity-60",
                 active
                   ? "border-brand-orange bg-brand-orange/10"
                   : "hover:border-brand-orange/60",
@@ -94,7 +95,7 @@ export function PlaysWidget({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "inline-flex h-4 w-4 shrink-0 items-center justify-center border-2 text-[10px] font-bold",
+                  "inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 text-xs font-bold",
                   active
                     ? "border-brand-orange bg-brand-orange text-white"
                     : "border-border text-transparent",
@@ -109,11 +110,11 @@ export function PlaysWidget({
       </div>
       <p
         className={cn(
-          "mt-4 font-mono text-[11px] tracking-[0.08em]",
+          "mt-4 font-mono text-xs tracking-[0.08em]",
           locked ? "text-risk-green" : "text-muted-foreground",
         )}
       >
-        {picked.length} / {minPick}{" "}
+        {visiblePicks.length} / {minPick}{" "}
         {selectedLabel ?? (locale === "de" ? "gewählt" : "selected")}
         {locked
           ? locale === "de"

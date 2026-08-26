@@ -163,7 +163,7 @@ export function PeekingSimulator() {
           <div style={{ marginBottom: 14 }}>
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: INK3,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
@@ -197,7 +197,7 @@ export function PeekingSimulator() {
           <div style={{ marginBottom: 16 }}>
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: INK3,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
@@ -264,7 +264,7 @@ export function PeekingSimulator() {
                 <div>
                   <div
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       color: MINT,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -281,14 +281,14 @@ export function PeekingSimulator() {
                   >
                     {round(results.nomPct, 1)}%
                   </div>
-                  <div style={{ fontSize: 11, color: INK3 }}>
+                  <div style={{ fontSize: 12, color: INK3 }}>
                     {text("stated threshold", "festgelegter Grenzwert")}
                   </div>
                 </div>
                 <div>
                   <div
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       color: BAD,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -305,7 +305,7 @@ export function PeekingSimulator() {
                   >
                     {round(results.fpr, 1)}%
                   </div>
-                  <div style={{ fontSize: 11, color: INK3 }}>
+                  <div style={{ fontSize: 12, color: INK3 }}>
                     {text("observed in sim", "in der Simulation beobachtet")}
                   </div>
                 </div>
@@ -343,7 +343,7 @@ export function PeekingSimulator() {
                   {inflation}×
                 </div>
               )}
-              <div style={{ marginTop: 8, fontSize: 11.5, color: INK3 }}>
+              <div style={{ marginTop: 8, fontSize: 12, color: INK3 }}>
                 {results.falsePos} / {results.n}{" "}
                 {text(
                   'A/A tests showed a "significant" result despite no real effect.',

@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { FC, ReactNode, HTMLAttributes } from "react";
-import { saveExerciseResult } from "@/lib/ai-native/progress";
+import {
+  isExerciseCompleted,
+  saveExerciseResult,
+} from "@/lib/ai-native/progress";
+import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 import { RoleScenarioExercise, type RoleScenarioSpec } from "./role-scenario";
 
 /**
@@ -74,6 +78,7 @@ vi.mock("framer-motion", async () => {
 });
 
 const mockedSave = vi.mocked(saveExerciseResult);
+const mockedIsDone = vi.mocked(isExerciseCompleted);
 
 const spec: RoleScenarioSpec = {
   exerciseId: "rs1",
@@ -91,16 +96,36 @@ const spec: RoleScenarioSpec = {
           id: "s1",
           question: "Frage eins?",
           options: [
-            { id: "s1a", label: "Antwort A", correct: true, explanation: "A ist richtig." },
-            { id: "s1b", label: "Antwort B", correct: false, explanation: "B ist falsch." },
+            {
+              id: "s1a",
+              label: "Antwort A",
+              correct: true,
+              explanation: "A ist richtig.",
+            },
+            {
+              id: "s1b",
+              label: "Antwort B",
+              correct: false,
+              explanation: "B ist falsch.",
+            },
           ],
         },
         {
           id: "s2",
           question: "Frage zwei?",
           options: [
-            { id: "s2a", label: "Antwort A", correct: false, explanation: "A ist falsch." },
-            { id: "s2b", label: "Antwort B", correct: true, explanation: "B ist richtig." },
+            {
+              id: "s2a",
+              label: "Antwort A",
+              correct: false,
+              explanation: "A ist falsch.",
+            },
+            {
+              id: "s2b",
+              label: "Antwort B",
+              correct: true,
+              explanation: "B ist richtig.",
+            },
           ],
         },
       ],
@@ -114,8 +139,18 @@ const spec: RoleScenarioSpec = {
           id: "s3",
           question: "Frage drei?",
           options: [
-            { id: "s3a", label: "Antwort A", correct: true, explanation: "A ist richtig." },
-            { id: "s3b", label: "Antwort B", correct: false, explanation: "B ist falsch." },
+            {
+              id: "s3a",
+              label: "Antwort A",
+              correct: true,
+              explanation: "A ist richtig.",
+            },
+            {
+              id: "s3b",
+              label: "Antwort B",
+              correct: false,
+              explanation: "B ist falsch.",
+            },
           ],
         },
       ],
@@ -125,6 +160,12 @@ const spec: RoleScenarioSpec = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  __resetLearningOwnerForTests("anonymous");
+  mockedIsDone.mockReturnValue(false);
+  mockedSave.mockImplementation(() => {
+    mockedIsDone.mockReturnValue(true);
+    return true;
+  });
 });
 
 describe("<RoleScenarioExercise>", () => {
@@ -146,18 +187,26 @@ describe("<RoleScenarioExercise>", () => {
     const submit = screen.getByRole("button", { name: "Auswerten" });
     expect(submit).toBeDisabled();
 
-    fireEvent.click(container.querySelector('input[value="s1a"]') as HTMLInputElement);
+    fireEvent.click(
+      container.querySelector('input[value="s1a"]') as HTMLInputElement,
+    );
     expect(submit).toBeDisabled(); // only 1 of 2 answered
 
-    fireEvent.click(container.querySelector('input[value="s2b"]') as HTMLInputElement);
+    fireEvent.click(
+      container.querySelector('input[value="s2b"]') as HTMLInputElement,
+    );
     expect(submit).toBeEnabled();
   });
 
   it("scores an all-correct answer set as 100% and records the result", async () => {
     const { container } = render(<RoleScenarioExercise {...spec} />);
     fireEvent.click(screen.getByRole("button", { name: /Geschäftsführung/ }));
-    fireEvent.click(container.querySelector('input[value="s1a"]') as HTMLInputElement);
-    fireEvent.click(container.querySelector('input[value="s2b"]') as HTMLInputElement);
+    fireEvent.click(
+      container.querySelector('input[value="s1a"]') as HTMLInputElement,
+    );
+    fireEvent.click(
+      container.querySelector('input[value="s2b"]') as HTMLInputElement,
+    );
     fireEvent.click(screen.getByRole("button", { name: "Auswerten" }));
 
     expect(
@@ -173,8 +222,12 @@ describe("<RoleScenarioExercise>", () => {
   it("scores a mixed answer set proportionally (1 of 2 correct = 50%)", async () => {
     const { container } = render(<RoleScenarioExercise {...spec} />);
     fireEvent.click(screen.getByRole("button", { name: /Geschäftsführung/ }));
-    fireEvent.click(container.querySelector('input[value="s1a"]') as HTMLInputElement); // correct
-    fireEvent.click(container.querySelector('input[value="s2a"]') as HTMLInputElement); // wrong
+    fireEvent.click(
+      container.querySelector('input[value="s1a"]') as HTMLInputElement,
+    ); // correct
+    fireEvent.click(
+      container.querySelector('input[value="s2a"]') as HTMLInputElement,
+    ); // wrong
     fireEvent.click(screen.getByRole("button", { name: "Auswerten" }));
 
     expect(

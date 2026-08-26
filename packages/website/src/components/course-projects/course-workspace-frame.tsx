@@ -670,7 +670,7 @@ export function CourseWorkspaceFrame({
           type="button"
           aria-controls={briefId}
           aria-expanded={!briefCollapsed}
-          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
           onClick={() => {
             setPreferencesTouched(true);
             setBriefCollapsed((current) => !current);
@@ -681,7 +681,7 @@ export function CourseWorkspaceFrame({
         <button
           type="button"
           disabled={!splitFeasible || briefCollapsed}
-          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
             if (!splitFeasible || briefCollapsed) return;
             setPreferencesTouched(true);
@@ -693,7 +693,7 @@ export function CourseWorkspaceFrame({
         <button
           ref={fullscreenButtonRef}
           type="button"
-          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
+          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-xs font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
           onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
         >
           {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}
@@ -701,7 +701,7 @@ export function CourseWorkspaceFrame({
         {fullscreen ? (
           <span
             id={fullscreenHintId}
-            className="w-full font-mono text-[0.65rem] font-bold text-muted-foreground sm:w-auto"
+            className="w-full font-mono text-xs font-bold text-muted-foreground sm:w-auto"
           >
             {copy.fullscreenHint}
           </span>
@@ -744,7 +744,7 @@ export function CourseWorkspaceFrame({
             aria-valuemax={splitBounds.maximum}
             aria-valuenow={effectiveBriefPercent}
             aria-valuetext={`${copy.resized}: ${effectiveBriefPercent}%`}
-            className="group hidden min-h-full cursor-col-resize touch-none items-stretch justify-center bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset lg:flex"
+            className="group z-10 -mx-4 hidden min-h-full min-w-11 cursor-col-resize touch-none items-stretch justify-center bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset lg:flex"
             onKeyDown={handleSeparatorKeyDown}
             onPointerDown={handleSeparatorPointerDown}
             onPointerMove={handleSeparatorPointerMove}

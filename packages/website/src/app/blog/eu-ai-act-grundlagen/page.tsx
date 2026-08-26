@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { ReadingProgress } from "../_components/reading-progress";
-import { ScrollReveal } from "../_components/scroll-reveal";
 import { RailNav, type RailItem } from "../_components/rail-nav";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
@@ -199,11 +197,6 @@ export default async function EuAiActGrundlagenPage() {
   return (
     <>
       <JsonLd data={postGraph(locale)} id="eu-ai-act-grundlagen-jsonld" />
-      <ReadingProgress />
-      <ScrollReveal
-        selectors={[".reveal", ".heading", ".pipeline", ".ladder"]}
-        wrapHeadings
-      />
       <RailNav
         kicker={POST_COPY[locale].railKicker}
         items={railItems(locale)}

@@ -7,17 +7,17 @@ import type { ReactNode } from "react";
 /*
  * BrandButton — loehrning.ai signature button
  *
- * Brutalist offset-shadow style: hard border + offset dark shadow.
- * Hover lifts up; active presses down.
+ * Flat editorial control: a compact 1px frame, restrained radius, and no
+ * decorative lift. The color inversion is the interaction signal.
  *
  * variant:
- *   "primary"  — Kupfer (#C4431A) fill, white text
+ *   "primary"  — Kupfer (#A5370F) fill, white text
  *   "outline"  — transparent fill, brand-colored border
  *   "ghost"    — no border, flat text link style
  *
  * surface:
- *   "dark"  — border and shadow in foreground/cream tone (on dark bg)
- *   "light" — border and shadow in near-black Druckertinte (on Kalkweiß)
+ *   "dark"  — light structural boundary on a dark surface
+ *   "light" — Schiefer structural boundary on Kalkweiß
  */
 
 interface BrandButtonProps {
@@ -34,9 +34,9 @@ interface BrandButtonProps {
 }
 
 const sizeMap = {
-  sm: "px-5 py-2.5 text-xs gap-1.5",
-  md: "px-7 py-3.5 text-[0.9375rem] gap-2",
-  lg: "px-9 py-4.5 text-base gap-2.5",
+  sm: "px-4 py-2 text-xs gap-2",
+  md: "px-6 py-3 text-sm gap-2",
+  lg: "px-8 py-3 text-base gap-3",
 };
 
 export function BrandButton({
@@ -53,14 +53,14 @@ export function BrandButton({
 }: BrandButtonProps) {
   const base = cn(
     // Layout
-    "inline-flex items-center justify-center font-bold tracking-wide uppercase",
+    "inline-flex min-h-11 items-center justify-center font-bold tracking-[0.08em] uppercase",
     // Gate nowrap: long German CTAs (+ arrow + lg padding) could exceed a ~320px
     // column and leak a horizontal scrollbar. Wrap on phones, nowrap from sm up.
     "select-none max-w-full whitespace-normal text-center sm:whitespace-nowrap",
-    // Shape — warm rounded (CI v3.1)
-    "rounded-lg",
+    // Shape — bounded 6px radius, never a pill
+    "rounded-md border",
     // Transition
-    "transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 ease-out",
+    "transition-[background-color,border-color,color,opacity] duration-150 ease-out",
     sizeMap[size],
     // Disabled
     disabled && "pointer-events-none opacity-40",
@@ -71,43 +71,46 @@ export function BrandButton({
       dark: cn(
         // kupfer-dark (#A5370F) is NOT remapped on dark, so white-on-fill stays
         // 6.66:1 (WCAG AA) even inside a .dark-section.
-        "bg-[var(--color-kupfer-dark)] text-white shadow-card",
-        "hover:-translate-y-0.5 hover:shadow-card-hover",
-        "active:translate-y-0 active:shadow-tile",
+        "border-[var(--color-kupfer-dark)] bg-[var(--color-kupfer-dark)] text-white",
+        "hover:border-foreground hover:bg-foreground hover:text-background",
       ),
       light: cn(
-        "bg-brand-orange text-white shadow-card",
-        "hover:-translate-y-0.5 hover:shadow-card-hover",
-        "active:translate-y-0 active:shadow-tile",
+        "border-brand-orange bg-brand-orange text-white",
+        "hover:border-foreground hover:bg-foreground hover:text-background",
       ),
     },
     outline: {
       dark: cn(
         "bg-transparent text-foreground",
-        "border border-[rgba(243,240,233,0.3)]",
-        "hover:-translate-y-0.5 hover:border-[rgba(243,240,233,0.6)] hover:bg-[rgba(243,240,233,0.05)]",
-        "active:translate-y-0",
+        "border-[rgba(243,240,233,0.4)]",
+        "hover:border-foreground hover:bg-[rgba(243,240,233,0.08)]",
       ),
       light: cn(
-        "bg-card text-foreground",
-        "border border-border shadow-card",
-        "hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-card-hover",
-        "active:translate-y-0 active:shadow-tile",
+        "border-border bg-background text-foreground",
+        "hover:border-foreground hover:bg-card",
       ),
     },
     ghost: {
       dark: cn(
-        "bg-transparent text-muted-foreground border-0 shadow-none",
+        "border-transparent bg-transparent text-muted-foreground shadow-none",
         "hover:text-foreground hover:underline underline-offset-4",
       ),
       light: cn(
-        "bg-transparent text-muted-foreground border-0 shadow-none",
+        "border-transparent bg-transparent text-muted-foreground shadow-none",
         "hover:text-foreground hover:underline underline-offset-4",
       ),
     },
   };
 
   const classes = cn(base, variants[variant][surface], className);
+
+  if (href && disabled) {
+    return (
+      <span className={classes} aria-disabled="true">
+        {children}
+      </span>
+    );
+  }
 
   if (href) {
     return (
@@ -117,11 +120,6 @@ export function BrandButton({
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         prefetch={prefetch}
-        aria-disabled={disabled}
-        // A disabled link must leave the tab order and swallow activation:
-        // aria-disabled alone keeps it focusable and Enter still navigates.
-        tabIndex={disabled ? -1 : undefined}
-        onClick={disabled ? (e) => e.preventDefault() : undefined}
       >
         {children}
       </Link>

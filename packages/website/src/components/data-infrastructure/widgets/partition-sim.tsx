@@ -222,7 +222,7 @@ export function PartitionSim({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-4 sm:p-5 md:p-6">
-      <p className="mb-4 break-words font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
+      <p className="mb-4 break-words font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
         {locale === "de"
           ? "Modell · Partitionierung wählen"
           : "Model · Choose a partition strategy"}{" "}
@@ -254,7 +254,7 @@ export function PartitionSim({
       )}
 
       <div className="mt-4 flex min-w-0 flex-wrap items-center gap-2">
-        <code className="max-w-full min-w-0 overflow-x-auto border border-border bg-background px-2 py-1 font-mono text-[11px]">
+        <code className="max-w-full min-w-0 overflow-x-auto border border-border bg-background px-2 py-1 font-mono text-xs">
           SELECT * FROM orders WHERE order_date = &apos;2026-04-15&apos;
         </code>
         <label className="flex w-full min-w-0 max-w-full items-center gap-2 text-[12px] sm:ml-auto sm:w-auto">
@@ -271,7 +271,7 @@ export function PartitionSim({
             }
             value={strategy}
             onChange={(e) => setStrategy(e.target.value as StrategyKey)}
-            className="w-full min-w-0 max-w-full border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px] sm:w-auto"
+            className="min-h-11 w-full min-w-0 max-w-full border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px] sm:w-auto"
           >
             <option value="none">
               {locale === "de"
@@ -294,7 +294,7 @@ export function PartitionSim({
         <button
           type="button"
           onClick={scan}
-          className="max-w-full break-words border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 max-w-full break-words border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {locale === "de" ? "Scan ausführen" : "▶ scan"}
         </button>

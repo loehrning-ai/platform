@@ -10,16 +10,17 @@ import {
   MODULE_LESSON_COUNTS as OPERATOR_MODULE_LESSON_COUNTS,
   lessonProgressKey,
 } from "@/lib/ai-native-operator/types";
-import type {
-  UnifiedCourseSlice,
-  UnifiedProgress,
+import type { UnifiedCourseSlice, UnifiedProgress } from "@/lib/progress/types";
+import {
+  checkpointKey,
+  legacyCompletionEvidenceCheckpointKey,
 } from "@/lib/progress/types";
 
 const numbered = (prefix: string, count: number): readonly string[] =>
   Array.from({ length: count }, (_, index) => `${prefix}${index + 1}`);
 
-const KI_FUEHRERSCHEIN_LESSON_IDS = [3, 3, 4, 4, 4].flatMap(
-  (count, index) => numbered(`block_${index + 1}_lesson_`, count),
+const KI_FUEHRERSCHEIN_LESSON_IDS = [3, 3, 4, 4, 4].flatMap((count, index) =>
+  numbered(`block_${index + 1}_lesson_`, count),
 );
 const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
   numbered(`block_${index + 1}_lesson_`, 4),
@@ -33,9 +34,8 @@ const AI_NATIVE_LESSON_IDS = [
   ...numbered("modul_4_lesson_", 8),
 ];
 const OPERATOR_LESSON_IDS = OPERATOR_MODULE_IDS.flatMap((moduleId) =>
-  Array.from(
-    { length: OPERATOR_MODULE_LESSON_COUNTS[moduleId] },
-    (_, index) => lessonProgressKey(moduleId, index + 1),
+  Array.from({ length: OPERATOR_MODULE_LESSON_COUNTS[moduleId] }, (_, index) =>
+    lessonProgressKey(moduleId, index + 1),
   ),
 );
 
@@ -69,7 +69,10 @@ const sequentialSectionIds = (
   count: number,
   separator = "_section_",
 ): readonly string[] =>
-  Array.from({ length: count }, (_, index) => `${lessonId}${separator}${index + 1}`);
+  Array.from(
+    { length: count },
+    (_, index) => `${lessonId}${separator}${index + 1}`,
+  );
 
 function sectionsByCount(
   lessonIds: readonly string[],
@@ -113,10 +116,26 @@ const CLAUDE_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
     "tokens-briefly",
     "too-big-docs",
   ],
-  "claude-md": ["what-it-is", "hierarchy", "keep-in-leave-out", "template", "auto-memory"],
-  iteration: ["the-loop", "three-turn-loop", "show-dont-tell", "turn-2-vocabulary"],
+  "claude-md": [
+    "what-it-is",
+    "hierarchy",
+    "keep-in-leave-out",
+    "template",
+    "auto-memory",
+  ],
+  iteration: [
+    "the-loop",
+    "three-turn-loop",
+    "show-dont-tell",
+    "turn-2-vocabulary",
+  ],
   gdocs: ["why-gdocs", "move-1-skeleton", "move-2-voice", "move-3-critique"],
-  agents: ["agents-vs-chat", "the-loop-explicit", "four-guardrails", "when-to-use"],
+  agents: [
+    "agents-vs-chat",
+    "the-loop-explicit",
+    "four-guardrails",
+    "when-to-use",
+  ],
   reviews: ["why-it-works", "review-template", "when-it-earns-its-keep"],
   grounding: ["not-a-bug", "three-grounding-moves", "smell-test"],
   team: ["why-share", "three-artifacts", "sharing-well", "rituals"],
@@ -166,12 +185,13 @@ export const CANONICAL_SECTION_IDS: Readonly<
       lessonId === "block_2_lesson_3" ? 4 : 3,
     ),
   ),
-  "ai-native": sectionsByCount(AI_NATIVE_LESSON_IDS, [
-    4, 3, 3, 3, 3,
-    4, 4, 4, 4, 4, 4, 4,
-    2, 3, 4, 3, 3, 3, 4,
-    4, 4, 3, 4, 4, 4, 3, 4,
-  ]),
+  "ai-native": sectionsByCount(
+    AI_NATIVE_LESSON_IDS,
+    [
+      4, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 2, 3, 4, 3, 3, 3, 4, 4, 4, 3, 4, 4, 4,
+      3, 4,
+    ],
+  ),
   claude: CLAUDE_SECTION_IDS,
   codex: bareSequentialSectionsByCount(
     CODEX_LESSON_IDS,
@@ -187,23 +207,212 @@ export const CANONICAL_SECTION_IDS: Readonly<
   "ai-native-operator": bareSequentialSectionsByCount(
     OPERATOR_LESSON_IDS,
     [
-      3, 4, 3, 3, 0,
-      3, 3, 3, 3, 0,
-      3, 3, 3, 3, 0,
-      3, 2, 3, 0,
-      3, 3, 3, 0,
-      3, 2, 2, 0,
-      3, 3, 2, 0,
-      2, 2, 2, 0,
-      2, 2, 2, 0,
+      3, 4, 3, 3, 0, 3, 3, 3, 3, 0, 3, 3, 3, 3, 0, 3, 2, 3, 0, 3, 3, 3, 0, 3, 2,
+      2, 0, 3, 3, 2, 0, 2, 2, 2, 0, 2, 2, 2, 0,
     ],
   ),
 };
 
-const CANONICAL_LESSON_ID_SETS: Readonly<Record<CourseSlug, ReadonlySet<string>>> =
-  Object.fromEntries(
-    COURSE_SLUGS.map((slug) => [slug, new Set(CANONICAL_LESSON_IDS[slug])]),
-  ) as unknown as Record<CourseSlug, ReadonlySet<string>>;
+/**
+ * Courses migrated away from click-to-complete lesson state. Their historical
+ * `completed` booleans remain in storage for resume compatibility, but every
+ * current completion surface must also require the versioned lesson proof.
+ */
+export const EVIDENCE_GATED_COURSE_SLUGS = [
+  "ki-fuehrerschein",
+  "eu-ai-act-kurs",
+  "ki-und-gesellschaft",
+  "ai-native",
+  "claude",
+  "codex",
+  "data-infrastructure",
+  "data-engineering-fundamentals",
+  "data-science",
+  "ai-native-operator",
+] as const satisfies readonly CourseSlug[];
+
+export type EvidenceGatedCourseSlug =
+  (typeof EVIDENCE_GATED_COURSE_SLUGS)[number];
+
+export const LESSON_COMPLETION_EVIDENCE_VERSION = "lesson-proof-v1";
+
+const AI_NATIVE_TRANSFER_PROOF_LESSON_IDS = new Set(["modul_3_lesson_0"]);
+const TRANSFER_ONLY_COURSE_SLUGS = new Set<EvidenceGatedCourseSlug>([
+  "claude",
+  "codex",
+  "data-infrastructure",
+  "data-engineering-fundamentals",
+  "data-science",
+]);
+
+const OPERATOR_QUIZ_QUESTION_COUNTS: Readonly<Record<string, number>> = {
+  mindset: 3,
+  engineering: 3,
+  product: 3,
+  operations: 2,
+  talent: 2,
+  orgmodel: 2,
+  data: 2,
+  governance: 2,
+  measurement: 3,
+};
+export const OPERATOR_TRANSFER_CHECKPOINT_ID = "exercise";
+
+/**
+ * The Operator course stores each correctly answered module quiz question as
+ * a checkpoint instead of a single lesson quiz score. Keep the compact proof
+ * registry beside the canonical lesson registry so completion reads do not
+ * pull the authored content graph into every client route.
+ */
+const OPERATOR_QUIZ_CHECKPOINT_IDS: Readonly<
+  Record<string, readonly string[]>
+> = Object.fromEntries(
+  OPERATOR_MODULE_IDS.map((moduleId) => [
+    lessonProgressKey(moduleId, OPERATOR_MODULE_LESSON_COUNTS[moduleId]),
+    Array.from(
+      { length: OPERATOR_QUIZ_QUESTION_COUNTS[moduleId] ?? 0 },
+      (_, index) => `ano-${moduleId}-q${index + 1}`,
+    ),
+  ]),
+);
+
+/** Canonical applied-proof checkpoints required before Operator navigation proof counts. */
+export function operatorLessonEvidenceCheckpointIds(
+  lessonId: string,
+): readonly string[] {
+  return (
+    OPERATOR_QUIZ_CHECKPOINT_IDS[lessonId] ?? [OPERATOR_TRANSFER_CHECKPOINT_ID]
+  );
+}
+
+export function isEvidenceGatedCourseSlug(
+  slug: CourseSlug,
+): slug is EvidenceGatedCourseSlug {
+  return (EVIDENCE_GATED_COURSE_SLUGS as readonly CourseSlug[]).includes(slug);
+}
+
+export function lessonCompletionEvidenceCheckpointId(slug: CourseSlug): string {
+  return `${LESSON_COMPLETION_EVIDENCE_VERSION}:${slug}`;
+}
+
+/**
+ * True when a canonical completion bit is grandfathered by the one-time
+ * migration marker or backed by current navigation and lesson evidence. The
+ * quizless AI-Native transfer lesson uses the versioned checkpoint itself as
+ * its applied-proof marker.
+ */
+export function isLessonCompletionEvidenceBacked(
+  progress: UnifiedProgress | null | undefined,
+  slug: CourseSlug,
+  lessonId: string,
+): boolean {
+  const slice = progress?.courses[slug];
+  const lesson = slice?.lessons[lessonId];
+  if (!lesson?.completed || !isCanonicalLessonId(slug, lessonId)) return false;
+  if (!isEvidenceGatedCourseSlug(slug)) return true;
+
+  // Compatibility is explicit and one-way. A reset epoch becomes part of the
+  // marker identity, so an older grow-only marker cannot satisfy a completion
+  // restored or recorded under a later reset.
+  if (
+    progress?.checkpoints[
+      legacyCompletionEvidenceCheckpointKey(slug, lessonId, slice?.resetAt)
+    ] === true
+  ) {
+    return true;
+  }
+
+  const evidenceCheckpoint = lessonCompletionEvidenceCheckpointId(slug);
+  const checkpointComplete =
+    progress?.checkpoints[checkpointKey(lessonId, evidenceCheckpoint)] === true;
+  if (!checkpointComplete) return false;
+
+  if (slug === "ai-native-operator") {
+    const requiredCheckpointIds = operatorLessonEvidenceCheckpointIds(lessonId);
+    return (
+      requiredCheckpointIds.length > 0 &&
+      requiredCheckpointIds.every(
+        (checkpointId) =>
+          progress?.checkpoints[checkpointKey(lessonId, checkpointId)] === true,
+      )
+    );
+  }
+
+  const canonicalSectionIds = CANONICAL_SECTION_IDS[slug][lessonId] ?? [];
+  if (
+    (canonicalSectionIds.length === 0 &&
+      !TRANSFER_ONLY_COURSE_SLUGS.has(slug)) ||
+    !canonicalSectionIds.every((sectionId) =>
+      lesson.sectionsRead.includes(sectionId),
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    TRANSFER_ONLY_COURSE_SLUGS.has(slug) ||
+    (slug === "ai-native" && AI_NATIVE_TRANSFER_PROOF_LESSON_IDS.has(lessonId))
+  ) {
+    return true;
+  }
+  return lesson.quizScore !== null && lesson.quizTotal !== null;
+}
+
+/** Evidence-backed lesson IDs for UI, assessment, and record surfaces. */
+export function evidenceBackedCompletedLessonIds(
+  progress: UnifiedProgress | null | undefined,
+  slug: CourseSlug,
+): ReadonlySet<string> {
+  return new Set(
+    CANONICAL_LESSON_IDS[slug].filter((lessonId) =>
+      isLessonCompletionEvidenceBacked(progress, slug, lessonId),
+    ),
+  );
+}
+
+export function evidenceBackedCompletedCanonicalLessonCount(
+  progress: UnifiedProgress | null | undefined,
+  slug: CourseSlug,
+): number {
+  return evidenceBackedCompletedLessonIds(progress, slug).size;
+}
+
+export function isEvidenceBackedCourseFullyCompleted(
+  progress: UnifiedProgress | null | undefined,
+  slug: CourseSlug,
+): boolean {
+  const lessonIds = CANONICAL_LESSON_IDS[slug];
+  return (
+    lessonIds.length > 0 &&
+    evidenceBackedCompletedCanonicalLessonCount(progress, slug) ===
+      lessonIds.length
+  );
+}
+
+export function isEvidenceBackedCourseCompletionEarned(
+  progress: UnifiedProgress | null | undefined,
+  slug: CourseSlug,
+): boolean {
+  const slice = progress?.courses[slug];
+  if (!slice || !isEvidenceBackedCourseFullyCompleted(progress, slug)) {
+    return false;
+  }
+
+  const requiresAssessment =
+    getCourseConfig(slug).workshopQuizQuestionCount > 0;
+  if (!requiresAssessment) return true;
+
+  return (
+    slice.workshopQuiz.passed ||
+    (slug === "ai-native" && slice.capstoneSubmitted)
+  );
+}
+
+const CANONICAL_LESSON_ID_SETS: Readonly<
+  Record<CourseSlug, ReadonlySet<string>>
+> = Object.fromEntries(
+  COURSE_SLUGS.map((slug) => [slug, new Set(CANONICAL_LESSON_IDS[slug])]),
+) as unknown as Record<CourseSlug, ReadonlySet<string>>;
 
 const CANONICAL_SECTION_ID_SETS: Readonly<
   Record<CourseSlug, Readonly<Record<string, ReadonlySet<string>>>>
@@ -277,7 +486,9 @@ export function normalizeCanonicalProgress(
       );
       if (
         sectionsRead.length !== lesson.sectionsRead.length ||
-        sectionsRead.some((sectionId, index) => sectionId !== lesson.sectionsRead[index])
+        sectionsRead.some(
+          (sectionId, index) => sectionId !== lesson.sectionsRead[index],
+        )
       ) {
         changed = true;
         lessons[lessonId] = { ...lesson, sectionsRead };
@@ -307,38 +518,19 @@ export function completedCanonicalLessonCount(
   progress: UnifiedProgress | null,
   slug: CourseSlug,
 ): number {
-  const lessons = progress?.courses[slug]?.lessons;
-  if (!lessons) return 0;
-  return CANONICAL_LESSON_IDS[slug].filter(
-    (lessonId) => lessons[lessonId]?.completed,
-  ).length;
+  return evidenceBackedCompletedCanonicalLessonCount(progress, slug);
 }
 
 export function isCourseFullyCompleted(
   progress: UnifiedProgress | null,
   slug: CourseSlug,
 ): boolean {
-  const lessonIds = CANONICAL_LESSON_IDS[slug];
-  return (
-    lessonIds.length > 0 &&
-    completedCanonicalLessonCount(progress, slug) === lessonIds.length
-  );
+  return isEvidenceBackedCourseFullyCompleted(progress, slug);
 }
 
 export function isCourseCompletionEarned(
   progress: UnifiedProgress | null,
   slug: CourseSlug,
 ): boolean {
-  const slice = progress?.courses[slug];
-  if (!slice) return false;
-  if (!isCourseFullyCompleted(progress, slug)) return false;
-
-  const requiresAssessment =
-    getCourseConfig(slug).workshopQuizQuestionCount > 0;
-  if (!requiresAssessment) return true;
-
-  return (
-    slice.workshopQuiz.passed ||
-    (slug === "ai-native" && slice.capstoneSubmitted)
-  );
+  return isEvidenceBackedCourseCompletionEarned(progress, slug);
 }

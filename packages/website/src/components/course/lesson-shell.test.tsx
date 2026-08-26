@@ -183,7 +183,7 @@ describe("<LessonShell>", () => {
     expect(desktopSidebar).toHaveClass(
       "hidden",
       "lg:block",
-      "lg:w-64",
+      "lg:w-60",
       "lg:sticky",
       "lg:h-[calc(100svh-7rem)]",
     );
@@ -194,6 +194,13 @@ describe("<LessonShell>", () => {
     expect(
       screen.getByRole("button", { name: "Navigation öffnen" }),
     ).toHaveClass("lg:hidden");
+    const mobileToolbar = document.querySelector(
+      "[data-lesson-shell-mobile-toolbar]",
+    );
+    expect(mobileToolbar).toHaveClass("sticky", "top-28", "lg:hidden");
+    expect(
+      screen.getByRole("button", { name: "Navigation öffnen" }),
+    ).not.toHaveClass("fixed");
   });
 
   it("collapses and expands the desktop sidebar with accessible state", () => {
@@ -220,7 +227,7 @@ describe("<LessonShell>", () => {
       name: "Kursnavigation ausklappen",
     });
     expect(expand).toHaveAttribute("aria-expanded", "false");
-    expect(desktopSidebar).toHaveClass("lg:w-16");
+    expect(desktopSidebar).toHaveClass("lg:w-14");
     expect(desktopSidebar).toHaveAttribute("data-collapsed", "true");
     expect(within(desktopSidebar).queryByText("Item A")).toBeNull();
 
@@ -228,15 +235,12 @@ describe("<LessonShell>", () => {
     expect(
       screen.getByRole("button", { name: "Kursnavigation einklappen" }),
     ).toHaveAttribute("aria-expanded", "true");
-    expect(desktopSidebar).toHaveClass("lg:w-64");
+    expect(desktopSidebar).toHaveClass("lg:w-60");
     expect(within(desktopSidebar).getByText("Item A")).toBeInTheDocument();
   });
 
   it("restores and updates the namespaced desktop sidebar preference", async () => {
-    window.localStorage.setItem(
-      LESSON_SHELL_SIDEBAR_STORAGE_KEY,
-      "collapsed",
-    );
+    window.localStorage.setItem(LESSON_SHELL_SIDEBAR_STORAGE_KEY, "collapsed");
     render(<Harness />);
 
     const expand = await screen.findByRole("button", {
@@ -245,7 +249,7 @@ describe("<LessonShell>", () => {
     const desktopSidebar = document.querySelector<HTMLElement>(
       "[data-lesson-shell-desktop-sidebar]",
     )!;
-    expect(desktopSidebar).toHaveClass("lg:w-16");
+    expect(desktopSidebar).toHaveClass("lg:w-14");
 
     fireEvent.click(expand);
     await waitFor(() => {
@@ -253,14 +257,11 @@ describe("<LessonShell>", () => {
         window.localStorage.getItem(LESSON_SHELL_SIDEBAR_STORAGE_KEY),
       ).toBe("expanded");
     });
-    expect(desktopSidebar).toHaveClass("lg:w-64");
+    expect(desktopSidebar).toHaveClass("lg:w-60");
   });
 
   it("keeps server and first-client sidebar markup aligned", () => {
-    window.localStorage.setItem(
-      LESSON_SHELL_SIDEBAR_STORAGE_KEY,
-      "collapsed",
-    );
+    window.localStorage.setItem(LESSON_SHELL_SIDEBAR_STORAGE_KEY, "collapsed");
 
     const markup = renderToString(
       <LessonShell
@@ -347,18 +348,14 @@ describe("<LessonShell>", () => {
       addEventListener: vi.fn(
         (_type: string, listener: EventListenerOrEventListenerObject) => {
           if (typeof listener === "function") {
-            listeners.add(
-              listener as (event: MediaQueryListEvent) => void,
-            );
+            listeners.add(listener as (event: MediaQueryListEvent) => void);
           }
         },
       ),
       removeEventListener: vi.fn(
         (_type: string, listener: EventListenerOrEventListenerObject) => {
           if (typeof listener === "function") {
-            listeners.delete(
-              listener as (event: MediaQueryListEvent) => void,
-            );
+            listeners.delete(listener as (event: MediaQueryListEvent) => void);
           }
         },
       ),
@@ -366,7 +363,10 @@ describe("<LessonShell>", () => {
       removeListener: vi.fn(),
       dispatchEvent: vi.fn(),
     } as MediaQueryList;
-    vi.stubGlobal("matchMedia", vi.fn(() => mediaQuery));
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => mediaQuery),
+    );
 
     render(<Harness />);
     const mainContent = screen
@@ -394,7 +394,9 @@ describe("<LessonShell>", () => {
     render(<Harness />);
     // The desktop aside's parent-of-parent is the main content wrapper — assert
     // on the rendered content directly, mirroring the real inert-sweep target.
-    const mainContent = screen.getByTestId("main-content").closest("div")!.parentElement!;
+    const mainContent = screen
+      .getByTestId("main-content")
+      .closest("div")!.parentElement!;
     expect(mainContent).not.toHaveAttribute("inert");
 
     fireEvent.click(screen.getByRole("button", { name: "Navigation öffnen" }));
@@ -424,10 +426,7 @@ describe("<LessonShell>", () => {
     expect(footer).toHaveAttribute("inert");
     expect(footer).toHaveAttribute(LESSON_DRAWER_INERT_ATTRIBUTE, "true");
     expect(independent).toHaveAttribute("inert");
-    expect(independent).toHaveAttribute(
-      LESSON_DRAWER_INERT_ATTRIBUTE,
-      "true",
-    );
+    expect(independent).toHaveAttribute(LESSON_DRAWER_INERT_ATTRIBUTE, "true");
     expect(screen.getByRole("presentation")).not.toHaveAttribute("inert");
 
     globalControl.focus();

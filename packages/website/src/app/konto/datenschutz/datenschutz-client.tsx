@@ -236,11 +236,7 @@ export function DatenschutzClient({
       });
       if (!res.ok) {
         throw new Error(
-          localized(
-            locale,
-            `Fehler ${res.status}`,
-            `Error ${res.status}`,
-          ),
+          localized(locale, `Fehler ${res.status}`, `Error ${res.status}`),
         );
       }
       const body = (await res.json()) as {
@@ -383,11 +379,7 @@ export function DatenschutzClient({
               "Sicherheitsprüfung erforderlich: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Die Kontolöschung ist danach 15 Minuten lang freigegeben.",
               "Security check required: sign out and sign in again using an available sign-in method. Account deletion is then available for 15 minutes.",
             )
-          : localized(
-              locale,
-              `Fehler ${res.status}`,
-              `Error ${res.status}`,
-            ),
+          : localized(locale, `Fehler ${res.status}`, `Error ${res.status}`),
       );
       return;
     }
@@ -480,56 +472,65 @@ export function DatenschutzClient({
   }
 
   return (
-    <section className="py-20" aria-labelledby="account-privacy-title">
-      <div className="mx-auto max-w-3xl break-words px-6">
-        <nav className="mb-8">
+    <section className="py-8 sm:py-12" aria-labelledby="account-privacy-title">
+      <div className="mx-auto max-w-5xl break-words px-4 sm:px-6 lg:px-8">
+        <nav
+          aria-label={localized(
+            locale,
+            "Kontonavigation",
+            "Account navigation",
+          )}
+        >
           <Link
             href={localizeHref("/konto", locale)}
-            className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground underline decoration-transparent underline-offset-4 hover:text-foreground hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             {localized(locale, "← Zurück zum Konto", "← Back to account")}
           </Link>
         </nav>
 
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          {localized(
-            locale,
-            "Freie Lernplattform · Datenschutz",
-            "Open learning platform · Privacy",
-          )}
-        </p>
-        <h1
-          id="account-privacy-title"
-          className="mt-4 text-4xl font-bold leading-tight tracking-[-0.04em] text-foreground"
-        >
-          {localized(
-            locale,
-            "Datenschutz & Datenverwaltung.",
-            "Privacy and data management.",
-          )}
-        </h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          {localized(
-            locale,
-            "Hier kannst du deine gespeicherten Daten exportieren, Kursfortschritt zurücksetzen oder dein Konto vollständig löschen.",
-            "Export your stored data, reset course progress, or delete your account completely.",
-          )}
-        </p>
+        <header className="mt-3 border-b border-border pb-6">
+          <div className="h-[3px] w-16 bg-brand-orange" aria-hidden="true" />
+          <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
+            {localized(
+              locale,
+              "Freie Lernplattform · Datenschutz",
+              "Open learning platform · Privacy",
+            )}
+          </p>
+          <h1
+            id="account-privacy-title"
+            className="mt-3 text-[clamp(2.25rem,5vw,3.5rem)] font-bold leading-[0.98] tracking-[-0.04em] text-foreground"
+          >
+            {localized(
+              locale,
+              "Datenschutz & Datenverwaltung.",
+              "Privacy and data management.",
+            )}
+          </h1>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {localized(
+              locale,
+              "Hier kannst du deine gespeicherten Daten exportieren, Kursfortschritt zurücksetzen oder dein Konto vollständig löschen.",
+              "Export your stored data, reset course progress, or delete your account completely.",
+            )}
+          </p>
+        </header>
 
-        {errorMsg && (
+        {errorMsg ? (
           <p
             role="alert"
-            className="mt-4 border border-red-500 bg-red-500/10 px-4 py-2 font-mono text-[12px] text-destructive"
+            className="mt-4 border border-red-500 border-l-[3px] bg-red-500/10 px-4 py-3 font-mono text-xs leading-relaxed text-destructive"
           >
             {errorMsg}
           </p>
-        )}
+        ) : null}
 
-        {syncFailure && (
+        {syncFailure ? (
           <p
             role="status"
             aria-live="polite"
-            className="mt-4 border border-amber-700 bg-amber-500/10 px-4 py-3 text-sm text-foreground"
+            className="mt-4 border border-amber-700 border-l-[3px] bg-amber-500/10 px-4 py-3 text-sm leading-relaxed text-foreground"
           >
             {syncFailure === "permanent"
               ? localized(
@@ -549,88 +550,106 @@ export function DatenschutzClient({
                     "Server synchronisation could not start. Your progress remains stored in this browser until the connection can be checked again.",
                   )}
           </p>
-        )}
+        ) : null}
 
-        {/* 1. Export */}
-        <article className="mt-10 border border-border p-6">
-          <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
-            {localized(
-              locale,
-              "Meine Daten exportieren (Art. 20 DSGVO)",
-              "Export my data (Article 20 GDPR)",
-            )}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {localized(
-              locale,
-              "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen und dem Exportzeitpunkt. Prüfe in der Datei, dass",
-              "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, and the export time. Check that",
-            )}{" "}
-            <code className="mx-1 font-mono text-[0.9em] text-foreground">
-              export_complete
-            </code>
-            {" "}
-            {localized(locale, "auf", "is set to")}{" "}
-            <code className="font-mono text-[0.9em] text-foreground">true</code>
-            {localized(locale, " steht.", ".")}
-          </p>
-          <button
-            type="button"
-            onClick={handleExport}
-            disabled={exportState === "loading"}
-            aria-busy={exportState === "loading"}
-            className="mt-4 inline-flex items-center gap-2 border-2 border-foreground bg-background px-5 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[3px_3px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[5px_5px_0_var(--color-foreground)] disabled:opacity-50"
-          >
-            {exportState === "loading"
-              ? localized(locale, "Wird exportiert…", "Exporting…")
-              : exportState === "started"
-                ? localized(
-                    locale,
-                    "Erneut herunterladen",
-                    "Download again",
-                  )
-                : localized(
-                    locale,
-                    "Daten herunterladen",
-                    "Download data",
-                  )}
-          </button>
-          {exportState === "started" && (
-            <p
-              role="status"
-              aria-live="polite"
-              className="mt-3 text-sm leading-relaxed text-muted-foreground"
-            >
+        <article
+          data-privacy-control="export"
+          className="mt-6 border border-border border-t-[3px] border-t-brand-orange"
+        >
+          <header className="grid gap-2 border-b border-border bg-card p-4 sm:grid-cols-[2.5rem_minmax(0,1fr)]">
+            <span className="font-mono text-xs font-bold text-brand-orange">
+              01
+            </span>
+            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
               {localized(
                 locale,
-                "Der Download wurde angefordert. Sobald der Browser eine JSON-Datei gespeichert hat, öffne sie erst nach Abschluss des Downloads und prüfe den Marker",
-                "The download was requested. Once the browser has saved a JSON file, open it only after the download has finished and check the marker",
+                "Meine Daten exportieren (Art. 20 DSGVO)",
+                "Export my data (Article 20 GDPR)",
+              )}
+            </h2>
+          </header>
+          <div className="p-4">
+            <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
+              {localized(
+                locale,
+                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen und dem Exportzeitpunkt. Prüfe in der Datei, dass",
+                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, and the export time. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
+              </code>{" "}
+              {localized(locale, "auf", "is set to")}{" "}
+              <code className="font-mono text-[0.9em] text-foreground">
+                true
               </code>
-              .
+              {localized(locale, " steht.", ".")}
             </p>
-          )}
+            <button
+              type="button"
+              onClick={handleExport}
+              disabled={exportState === "loading"}
+              aria-busy={exportState === "loading"}
+              className="mt-4 inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange disabled:opacity-50"
+            >
+              {exportState === "loading"
+                ? localized(locale, "Wird exportiert…", "Exporting…")
+                : exportState === "started"
+                  ? localized(locale, "Erneut herunterladen", "Download again")
+                  : localized(locale, "Daten herunterladen", "Download data")}
+            </button>
+            {exportState === "started" ? (
+              <p
+                role="status"
+                aria-live="polite"
+                className="mt-3 max-w-4xl text-sm leading-relaxed text-muted-foreground"
+              >
+                {localized(
+                  locale,
+                  "Der Download wurde angefordert. Sobald der Browser eine JSON-Datei gespeichert hat, öffne sie erst nach Abschluss des Downloads und prüfe den Marker",
+                  "The download was requested. Once the browser has saved a JSON file, open it only after the download has finished and check the marker",
+                )}{" "}
+                <code className="mx-1 font-mono text-[0.9em] text-foreground">
+                  export_complete
+                </code>
+                .
+              </p>
+            ) : null}
+          </div>
         </article>
 
-        {/* 2. Reset per course */}
-        <article className="mt-6 border border-border p-6">
-          <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
-            {localized(
-              locale,
-              "Kursfortschritt zurücksetzen",
-              "Reset course progress",
-            )}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {localized(
-              locale,
-              "Löscht Lektionen, Quiz- und Abschlussstatus des ausgewählten Kurses auf dem Server und in diesem Browser. Andere Kurse bleiben erhalten. Kursübergreifende XP, Badges, Streaks und Checkpoints bleiben als historische Lernaktivität bestehen. Der Server behält den Zeitpunkt des Resets als Schutz gegen veraltete Geräte; dieser Marker erscheint im Datenexport und verschwindet bei der Kontolöschung.",
-              "Deletes lesson, quiz, and completion status for the selected course on the server and in this browser. Other courses remain intact. Cross-course XP, badges, streaks, and checkpoints remain as historical learning activity. The server retains the reset time to protect against stale devices; this marker appears in the data export and is removed when the account is deleted.",
-            )}
-          </p>
-          <ul className="mt-4 space-y-3">
+        <article
+          data-privacy-control="reset"
+          className="mt-6 border border-border border-t-[3px] border-t-brand-orange"
+        >
+          <header className="grid gap-2 border-b border-border bg-card p-4 sm:grid-cols-[2.5rem_minmax(0,1fr)]">
+            <span className="font-mono text-xs font-bold text-brand-orange">
+              02
+            </span>
+            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
+              {localized(
+                locale,
+                "Kursfortschritt zurücksetzen",
+                "Reset course progress",
+              )}
+            </h2>
+          </header>
+          <details className="border-b border-border">
+            <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
+              {localized(
+                locale,
+                "Umfang und Exporthistorie",
+                "Scope and export history",
+              )}
+            </summary>
+            <p className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+              {localized(
+                locale,
+                "Löscht Lektionen, Quiz- und Abschlussstatus des ausgewählten Kurses auf dem Server und in diesem Browser. Andere Kurse bleiben erhalten. Kursübergreifende XP, Badges, Streaks und Checkpoints bleiben als historische Lernaktivität bestehen. Der Server behält den Zeitpunkt des Resets als Schutz gegen veraltete Geräte; dieser Marker erscheint im Datenexport und verschwindet bei der Kontolöschung.",
+                "Deletes lesson, quiz, and completion status for the selected course on the server and in this browser. Other courses remain intact. Cross-course XP, badges, streaks, and checkpoints remain as historical learning activity. The server retains the reset time to protect against stale devices; this marker appears in the data export and is removed when the account is deleted.",
+              )}
+            </p>
+          </details>
+          <ul className="divide-y divide-border">
             {/*
               COURSE_CATALOG is the canonical list of live courses using the
               unified local and server progress engine. Raw slugs never become
@@ -640,56 +659,67 @@ export function DatenschutzClient({
               const slug = course.slug;
               const state = resetStates[slug] ?? "idle";
               const confirmationId = `reset-confirmation-${slug}`;
+              const resetAction =
+                state === "loading"
+                  ? localized(locale, "Zurücksetzen…", "Resetting…")
+                  : state === "done"
+                    ? localized(locale, "Zurückgesetzt", "Reset")
+                    : state === "confirming"
+                      ? localized(
+                          locale,
+                          "Ja, endgültig zurücksetzen",
+                          "Yes, reset permanently",
+                        )
+                      : localized(locale, "Zurücksetzen", "Reset");
+              const cancelAction = localized(locale, "Abbrechen", "Cancel");
               return (
-                <li key={slug} className="flex flex-wrap items-center gap-3">
-                  <div className="flex w-full flex-wrap items-center gap-3">
-                    <span className="w-48 min-w-0 break-words font-mono text-[12px] text-foreground">
+                <li key={slug} className="grid min-w-0 gap-3 p-4">
+                  <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+                    <span className="min-w-0 break-words text-sm font-semibold text-foreground">
                       {course.title}
                     </span>
-                    <button
-                      ref={(node) => {
-                        resetButtonRefs.current[slug] = node;
-                      }}
-                      type="button"
-                      onClick={() => handleResetCourse(slug)}
-                      disabled={state === "loading" || state === "done"}
-                      aria-busy={state === "loading"}
-                      aria-expanded={state === "confirming"}
-                      aria-controls={
-                        state === "confirming" ? confirmationId : undefined
-                      }
-                      aria-describedby={
-                        state === "confirming" ? confirmationId : undefined
-                      }
-                      className="border border-border px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground hover:border-foreground hover:text-foreground disabled:opacity-50"
-                    >
-                      {state === "loading"
-                        ? localized(locale, "Zurücksetzen…", "Resetting…")
-                        : state === "done"
-                          ? localized(locale, "Zurückgesetzt", "Reset")
-                          : state === "confirming"
-                            ? localized(
-                                locale,
-                                "Ja, endgültig zurücksetzen",
-                                "Yes, reset permanently",
-                              )
-                            : localized(locale, "Zurücksetzen", "Reset")}
-                    </button>
-                    {state === "confirming" && (
+                    <div className="flex min-w-0 flex-wrap gap-2">
                       <button
+                        ref={(node) => {
+                          resetButtonRefs.current[slug] = node;
+                        }}
                         type="button"
-                        onClick={() => cancelResetCourse(slug)}
-                        className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                        onClick={() => handleResetCourse(slug)}
+                        disabled={state === "loading" || state === "done"}
+                        aria-label={`${resetAction}: ${course.title}`}
+                        aria-busy={state === "loading"}
+                        aria-expanded={state === "confirming"}
+                        aria-controls={
+                          state === "confirming" ? confirmationId : undefined
+                        }
+                        aria-describedby={
+                          state === "confirming" ? confirmationId : undefined
+                        }
+                        className={`inline-flex min-h-11 max-w-full items-center border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange disabled:opacity-50 ${
+                          state === "confirming"
+                            ? "border-red-600 bg-red-700 text-white"
+                            : "border-border bg-background text-muted-foreground hover:border-foreground hover:text-foreground"
+                        }`}
                       >
-                        {localized(locale, "Abbrechen", "Cancel")}
+                        {resetAction}
                       </button>
-                    )}
+                      {state === "confirming" ? (
+                        <button
+                          type="button"
+                          onClick={() => cancelResetCourse(slug)}
+                          aria-label={`${cancelAction}: ${course.title}`}
+                          className="inline-flex min-h-11 items-center px-3 py-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                        >
+                          {cancelAction}
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
-                  {state === "confirming" && (
+                  {state === "confirming" ? (
                     <p
                       id={confirmationId}
                       role="alert"
-                      className="w-full border border-red-500 bg-red-500/10 px-3 py-2 text-sm text-destructive"
+                      className="w-full border border-red-500 border-l-[3px] bg-red-500/10 px-3 py-2 text-sm leading-relaxed text-destructive"
                     >
                       {localized(
                         locale,
@@ -697,84 +727,114 @@ export function DatenschutzClient({
                         `Reset progress for ${course.title}? Lesson, quiz, and completion status for this course will be deleted on the server and in this browser.`,
                       )}
                     </p>
-                  )}
+                  ) : null}
                 </li>
               );
             })}
           </ul>
         </article>
 
-        {/* 3. Delete account */}
-        <article className="mt-6 border border-red-900/50 p-6">
-          <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
-            {localized(
-              locale,
-              "Konto löschen (Art. 17 DSGVO)",
-              "Delete account (Article 17 GDPR)",
-            )}
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {localized(
-              locale,
-              "Diese Aktion löscht dein Lernkonto, deine E-Mail-Adresse, den serverseitigen Kursfortschritt und historische Bewertungsversuche dauerhaft. Pseudonyme Missbrauchsschutz-Zähler und bereits zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung; sie laufen nach den in der Datenschutzerklärung genannten Fristen aus. Nach erfolgreich koordinierter Löschung bleibt ein lokaler Löschmarker mit der technischen Kontokennung höchstens 30 Tage gespeichert, damit auch pausierte Tabs die zugehörigen Browser-Lerndaten entfernen. Danach bleiben eine zufällige technische Generation und eine mit SHA-256 aus der technischen Kontokennung abgeleitete Löschkennung ohne rohe Kontokennung als dauerhafte Sperren gegen veraltete Tabs gespeichert. Höchstens 128 solcher Löschkennungen werden vorgehalten; danach ersetzt eine globale Generation die bisherigen einzelnen Kennungen. Nur die Kennung des aktuellen Löschvorgangs bleibt für dessen wiederholbare Verarbeitung gespeichert. Die Löschung ist unwiderruflich.",
-              "This action permanently deletes your learning account, email address, server-side course progress, and historical assessment attempts. Pseudonymous abuse-prevention counters and cached AI responses contain no raw account identifier; they expire under the periods stated in the privacy policy. After a successfully coordinated deletion, a local deletion marker containing the technical account identifier remains for no more than 30 days so that suspended tabs also remove the associated browser learning data. A random technical generation and a deletion identifier derived with SHA-256 from the technical account identifier then remain, without the raw account identifier, as permanent blocks against stale tabs. No more than 128 such deletion identifiers are retained; a global generation then replaces the previous individual identifiers. Only the identifier for the current deletion remains available for idempotent processing. Deletion cannot be reversed.",
-            )}
-          </p>
-          {deleteState === "confirming" && (
-            <p
-              id="delete-account-confirmation"
-              role="alert"
-              className="mt-4 border border-red-500 bg-red-500/10 px-4 py-3 text-sm font-bold text-destructive"
-            >
+        <article
+          data-privacy-control="delete"
+          className="mt-6 border border-red-900/60 border-l-[3px] border-l-red-700"
+        >
+          <header className="grid gap-2 border-b border-red-900/40 bg-red-950/5 p-4 sm:grid-cols-[2.5rem_minmax(0,1fr)]">
+            <span className="font-mono text-xs font-bold text-destructive">
+              03
+            </span>
+            <h2 className="text-lg font-bold tracking-[-0.02em] text-foreground">
               {localized(
                 locale,
-                "Bist du sicher? Lernkonto, E-Mail-Adresse, Fortschritt und Bewertungsversuche werden dauerhaft gelöscht und können nicht wiederhergestellt werden.",
-                "Are you sure? The learning account, email address, progress, and assessment attempts will be deleted permanently and cannot be restored.",
+                "Konto löschen (Art. 17 DSGVO)",
+                "Delete account (Article 17 GDPR)",
+              )}
+            </h2>
+          </header>
+          <div className="p-4">
+            <p className="max-w-4xl text-sm font-medium leading-relaxed text-foreground">
+              {localized(
+                locale,
+                "Diese Aktion löscht dein Lernkonto, deine E-Mail-Adresse, den serverseitigen Kursfortschritt und historische Bewertungsversuche dauerhaft. Die Löschung ist unwiderruflich.",
+                "This action permanently deletes your learning account, email address, server-side course progress, and historical assessment attempts. Deletion cannot be reversed.",
               )}
             </p>
-          )}
-          <button
-            ref={deleteButtonRef}
-            type="button"
-            onClick={handleDelete}
-            disabled={deleteState === "loading" || deleteState === "unknown"}
-            aria-expanded={deleteState === "confirming"}
-            aria-controls={
-              deleteState === "confirming"
-                ? "delete-account-confirmation"
-                : undefined
-            }
-            className={`mt-4 inline-flex max-w-full items-center gap-2 whitespace-normal border-2 px-5 py-3 text-center font-mono text-[12px] font-bold uppercase tracking-[0.06em] shadow-[3px_3px_0_currentColor] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[5px_5px_0_currentColor] disabled:opacity-50 ${
-              deleteState === "confirming"
-                ? "border-red-500 text-destructive bg-red-500/10"
-                : "border-foreground text-foreground bg-background"
-            }`}
-          >
-            {deleteState === "loading"
-              ? localized(locale, "Wird gelöscht…", "Deleting…")
-              : deleteState === "unknown"
-                ? localized(
-                    locale,
-                    "Löschstatus unklar",
-                    "Deletion status unknown",
-                  )
-                : deleteState === "confirming"
-                  ? localized(
-                      locale,
-                      "Ja, Konto endgültig löschen",
-                      "Yes, delete account permanently",
-                    )
-                  : localized(locale, "Konto löschen", "Delete account")}
-          </button>
-          {deleteState === "confirming" && (
-            <button
-              type="button"
-              onClick={cancelDelete}
-              className="ml-3 mt-4 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:underline"
-            >
-              {localized(locale, "Abbrechen", "Cancel")}
-            </button>
-          )}
+            <details className="mt-3 border border-border">
+              <summary className="flex min-h-11 cursor-pointer items-center px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
+                {localized(
+                  locale,
+                  "Technische Lösch- und Sperrmarker",
+                  "Technical deletion and stale-tab markers",
+                )}
+              </summary>
+              <p className="border-t border-border px-3 py-3 text-sm leading-relaxed text-muted-foreground">
+                {localized(
+                  locale,
+                  "Pseudonyme Missbrauchsschutz-Zähler und bereits zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung; sie laufen nach den in der Datenschutzerklärung genannten Fristen aus. Nach erfolgreich koordinierter Löschung bleibt ein lokaler Löschmarker mit der technischen Kontokennung höchstens 30 Tage gespeichert, damit auch pausierte Tabs die zugehörigen Browser-Lerndaten entfernen. Danach bleiben eine zufällige technische Generation und eine mit SHA-256 aus der technischen Kontokennung abgeleitete Löschkennung ohne rohe Kontokennung als dauerhafte Sperren gegen veraltete Tabs gespeichert. Höchstens 128 solcher Löschkennungen werden vorgehalten; danach ersetzt eine globale Generation die bisherigen einzelnen Kennungen. Nur die Kennung des aktuellen Löschvorgangs bleibt für dessen wiederholbare Verarbeitung gespeichert.",
+                  "Pseudonymous abuse-prevention counters and cached AI responses contain no raw account identifier; they expire under the periods stated in the privacy policy. After a successfully coordinated deletion, a local deletion marker containing the technical account identifier remains for no more than 30 days so that suspended tabs also remove the associated browser learning data. A random technical generation and a deletion identifier derived with SHA-256 from the technical account identifier then remain, without the raw account identifier, as permanent blocks against stale tabs. No more than 128 such deletion identifiers are retained; a global generation then replaces the previous individual identifiers. Only the identifier for the current deletion remains available for idempotent processing.",
+                )}
+              </p>
+            </details>
+            {deleteState === "confirming" ? (
+              <p
+                id="delete-account-confirmation"
+                role="alert"
+                className="mt-4 border border-red-500 border-l-[3px] bg-red-500/10 px-4 py-3 text-sm font-bold leading-relaxed text-destructive"
+              >
+                {localized(
+                  locale,
+                  "Bist du sicher? Lernkonto, E-Mail-Adresse, Fortschritt und Bewertungsversuche werden dauerhaft gelöscht und können nicht wiederhergestellt werden.",
+                  "Are you sure? The learning account, email address, progress, and assessment attempts will be deleted permanently and cannot be restored.",
+                )}
+              </p>
+            ) : null}
+            <div className="mt-4 flex min-w-0 flex-wrap gap-2">
+              <button
+                ref={deleteButtonRef}
+                type="button"
+                onClick={handleDelete}
+                disabled={
+                  deleteState === "loading" || deleteState === "unknown"
+                }
+                aria-busy={deleteState === "loading"}
+                aria-expanded={deleteState === "confirming"}
+                aria-controls={
+                  deleteState === "confirming"
+                    ? "delete-account-confirmation"
+                    : undefined
+                }
+                className={`inline-flex min-h-11 max-w-full items-center whitespace-normal border px-4 py-2 text-center font-mono text-xs font-bold uppercase tracking-[0.06em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 disabled:opacity-50 ${
+                  deleteState === "confirming"
+                    ? "border-red-700 bg-red-700 text-white"
+                    : "border-red-700 bg-background text-destructive hover:bg-red-950/5"
+                }`}
+              >
+                {deleteState === "loading"
+                  ? localized(locale, "Wird gelöscht…", "Deleting…")
+                  : deleteState === "unknown"
+                    ? localized(
+                        locale,
+                        "Löschstatus unklar",
+                        "Deletion status unknown",
+                      )
+                    : deleteState === "confirming"
+                      ? localized(
+                          locale,
+                          "Ja, Konto endgültig löschen",
+                          "Yes, delete account permanently",
+                        )
+                      : localized(locale, "Konto löschen", "Delete account")}
+              </button>
+              {deleteState === "confirming" ? (
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className="inline-flex min-h-11 items-center px-3 py-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                >
+                  {localized(locale, "Abbrechen", "Cancel")}
+                </button>
+              ) : null}
+            </div>
+          </div>
         </article>
       </div>
     </section>

@@ -7,10 +7,14 @@ const VISIBLE_FLAG = 1;
 const REDUCED_MOTION_FLAG = 2;
 
 function getAnimationEnvironmentSnapshot(): number {
-  if (typeof window === "undefined" || typeof document === "undefined") return 0;
+  if (typeof window === "undefined" || typeof document === "undefined")
+    return 0;
   const visible = document.visibilityState !== "hidden";
-  const reducedMotion = window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false;
-  return (visible ? VISIBLE_FLAG : 0) | (reducedMotion ? REDUCED_MOTION_FLAG : 0);
+  const reducedMotion =
+    window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false;
+  return (
+    (visible ? VISIBLE_FLAG : 0) | (reducedMotion ? REDUCED_MOTION_FLAG : 0)
+  );
 }
 
 function getServerAnimationEnvironmentSnapshot(): number {
@@ -19,7 +23,9 @@ function getServerAnimationEnvironmentSnapshot(): number {
   return 0;
 }
 
-function subscribeToAnimationEnvironment(onStoreChange: () => void): () => void {
+function subscribeToAnimationEnvironment(
+  onStoreChange: () => void,
+): () => void {
   const media = window.matchMedia?.(REDUCED_MOTION_QUERY);
   document.addEventListener("visibilitychange", onStoreChange);
   media?.addEventListener?.("change", onStoreChange);
@@ -30,16 +36,23 @@ function subscribeToAnimationEnvironment(onStoreChange: () => void): () => void 
   };
 }
 
+/**
+ * Returns an instant scroll for people who request reduced motion while
+ * preserving smooth navigation for everyone else. Read at interaction time so
+ * a live operating-system preference change is respected without a rerender.
+ */
+export function getMotionAwareScrollBehavior(): ScrollBehavior {
+  if (typeof window === "undefined") return "auto";
+  return window.matchMedia?.(REDUCED_MOTION_QUERY).matches ? "auto" : "smooth";
+}
+
 export function useMotionAllowed(): boolean {
   const flags = useSyncExternalStore(
     subscribeToAnimationEnvironment,
     getAnimationEnvironmentSnapshot,
     getServerAnimationEnvironmentSnapshot,
   );
-  return (
-    (flags & VISIBLE_FLAG) !== 0 &&
-    (flags & REDUCED_MOTION_FLAG) === 0
-  );
+  return (flags & VISIBLE_FLAG) !== 0 && (flags & REDUCED_MOTION_FLAG) === 0;
 }
 
 /**

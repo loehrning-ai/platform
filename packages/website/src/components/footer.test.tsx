@@ -44,7 +44,9 @@ describe("Footer locale and information architecture", () => {
       screen.getByRole("navigation", { name: "Navigation in der Fußzeile" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+      screen
+        .getAllByRole("heading", { level: 2 })
+        .map((heading) => heading.textContent),
     ).toEqual(["Kurse", "Praxis", "Wissen", "Plattform"]);
     expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
       "href",
@@ -53,11 +55,14 @@ describe("Footer locale and information architecture", () => {
     expect(
       screen.getByRole("link", { name: "Grundlagenpfad" }),
     ).toHaveAttribute("href", "/kurse#lernpfad");
-    expect(
-      screen.getByRole("link", { name: "Technikkurse" }),
-    ).toHaveAttribute("href", "/kurse#tiefer-gehen");
+    expect(screen.getByRole("link", { name: "Technikkurse" })).toHaveAttribute(
+      "href",
+      "/kurse#tiefer-gehen",
+    );
 
-    for (const link of document.querySelectorAll<HTMLAnchorElement>("a[href^='/']")) {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      "a[href^='/']",
+    )) {
       expect(link.getAttribute("href")).not.toMatch(/^\/en(?:\/|$)/);
     }
   });
@@ -69,13 +74,13 @@ describe("Footer locale and information architecture", () => {
       screen.getByRole("navigation", { name: "Footer navigation" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+      screen
+        .getAllByRole("heading", { level: 2 })
+        .map((heading) => heading.textContent),
     ).toEqual(["Courses", "Practice", "Knowledge", "Platform"]);
     expect(
-      screen.getByText(
-        "Free courses, workshops, and open-source materials for AI and data work. Course pages state scope, access requirements, and sources.",
-      ),
-    ).toBeInTheDocument();
+      screen.queryByText(/Free courses, workshops, and open-source materials/),
+    ).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All courses" })).toHaveAttribute(
       "href",
       "/en/kurse",
@@ -87,24 +92,26 @@ describe("Footer locale and information architecture", () => {
       screen.getByRole("link", { name: "Technical courses" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
 
-    for (const link of document.querySelectorAll<HTMLAnchorElement>("a[href^='/']")) {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>(
+      "a[href^='/']",
+    )) {
       expect(link.getAttribute("href")).toMatch(/^\/en(?:\/|#|$)/);
     }
-    expect(screen.queryByText("Datenstand", { exact: false })).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Datenstand", { exact: false }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps legal destinations separate and localized", async () => {
     await renderFooter("en");
     const legal = screen.getByRole("navigation", { name: "Legal information" });
 
-    expect(within(legal).getByRole("link", { name: "Legal notice" })).toHaveAttribute(
-      "href",
-      "/en/impressum",
-    );
-    expect(within(legal).getByRole("link", { name: "Privacy" })).toHaveAttribute(
-      "href",
-      "/en/datenschutz",
-    );
+    expect(
+      within(legal).getByRole("link", { name: "Legal notice" }),
+    ).toHaveAttribute("href", "/en/impressum");
+    expect(
+      within(legal).getByRole("link", { name: "Privacy" }),
+    ).toHaveAttribute("href", "/en/datenschutz");
     expect(
       within(legal).getByRole("link", { name: "Licence policy" }),
     ).toHaveAttribute("href", "/en/open-source/lizenzrichtlinie");
@@ -138,14 +145,27 @@ describe("Footer semantics and stable public dates", () => {
     }
   });
 
+  it("uses compact editorial geometry without tiny labels or ambient backdrop", async () => {
+    await renderFooter("de");
+
+    const footer = document.querySelector("footer");
+    expect(footer).not.toBeNull();
+    expect(footer?.querySelector(".bg-grid-dark")).toBeNull();
+    expect(footer?.textContent).not.toMatch(
+      /Freie Kurse, Workshops und quelloffene Materialien/,
+    );
+    expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
+    expect(footer?.innerHTML).not.toMatch(/rounded-full|shadow-/);
+  });
+
   it("derives the copyright year from reviewed content instead of the wall clock", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2042-01-01T00:00:00.000Z"));
     try {
       await renderFooter("de");
-      expect(
-        screen.getByTestId("footer-copyright"),
-      ).toHaveTextContent("© 2026 loehrning.ai · Tim Löhr");
+      expect(screen.getByTestId("footer-copyright")).toHaveTextContent(
+        "© 2026 loehrning.ai · Tim Löhr",
+      );
     } finally {
       vi.useRealTimers();
     }

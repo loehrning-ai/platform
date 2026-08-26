@@ -13,6 +13,8 @@ import {
   type VideoArtifact,
 } from "../../src/lib/open-source/artifacts";
 import {
+  localizeOpenSourceArtifact,
+  OPEN_SOURCE_DETAIL_COPY,
   OPEN_SOURCE_PAGE_COPY,
   OPEN_SOURCE_SHARED_COPY,
   SOFTWARE_GUIDE_COPY,
@@ -40,16 +42,18 @@ const DETAIL_ARTIFACTS = [
   ...OPEN_SOURCE_VIDEO_ARTIFACTS,
 ] as const;
 
-// The hub's "Stand" line is derived from the same three published arrays the
-// page composes into OPEN_SOURCE_ARTIFACTS, so this expectation tracks
-// publication instead of pinning copy. Mirrors publishedArtifactsStatus() in
-// src/app/open-source/page.tsx, including the German singular adjective ending.
-const PUBLISHED_ARTIFACTS_STATUS =
-  DETAIL_ARTIFACTS.length === 0
-    ? "Noch kein Eintrag veröffentlicht"
-    : DETAIL_ARTIFACTS.length === 1
-      ? "1 veröffentlichter Eintrag"
-      : `${DETAIL_ARTIFACTS.length} veröffentlichte Einträge`;
+const ENGLISH_DETAIL_REPRESENTATIVES = DETAIL_ARTIFACTS.filter(
+  (artifact, index, artifacts) =>
+    artifacts.findIndex((candidate) => candidate.kind === artifact.kind) ===
+    index,
+);
+
+// The compact ledger derives its count from the same registry and localized
+// formatter used by the page. This keeps the browser contract coupled to
+// publication, not to removed explanatory chrome.
+const PUBLISHED_ARTIFACTS_COUNT = OPEN_SOURCE_SHARED_COPY.de.entries(
+  DETAIL_ARTIFACTS.length,
+);
 
 const STATUS_LABELS = {
   experimental: "Experimentell",
@@ -58,14 +62,29 @@ const STATUS_LABELS = {
   archived: "Archiviert",
 } as const;
 
-// Production smoke tests treat every browser error as a defect. Do not hide
-// missing assets, hydration failures, or provider requests behind allowlists.
-function collectConsoleErrors(page: Page): string[] {
+function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
+  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
+    message,
+  );
+}
+
+// Production smoke tests treat every browser error as a defect. The sole
+// exception is WebKit's exact navigation-aborted Next RSC prefetch page error,
+// which is also isolated in the blog and workshop route contracts.
+function collectConsoleErrors(page: Page, browserName: string): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
   });
-  page.on("pageerror", (err) => errors.push(err.message));
+  page.on("pageerror", (err) => {
+    if (
+      browserName === "webkit" &&
+      isExpectedWebKitRscPrefetchCancellation(err.message)
+    ) {
+      return;
+    }
+    errors.push(err.message);
+  });
   return errors;
 }
 
@@ -328,9 +347,10 @@ async function expectSoftwareGuide(
 
 test.describe("/open-source hub", () => {
   test("loads, shows the h1, renders to the bottom, and logs no console error", async ({
+    browserName,
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectConsoleErrors(page, browserName);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
@@ -340,8 +360,8 @@ test.describe("/open-source hub", () => {
     await expect(h1).toBeVisible();
     await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
 
-    // The shelf: one unified grid, the kind as a stamp on the card (never a
-    // heading), and the GitHub action naming the repo path.
+    // The ledger: one unified list, the kind as a stamp (never a heading), and
+    // immutable provenance available on demand instead of repeated card copy.
     await expect(
       page.getByRole("heading", {
         level: 2,
@@ -352,9 +372,21 @@ test.describe("/open-source hub", () => {
     await expect(
       page.getByRole("heading", { name: "Werkzeuge", exact: true }),
     ).toHaveCount(0);
+    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
+    const firstArtifactRow = page.getByRole("listitem").filter({
+      has: page.getByRole("heading", {
+        name: firstArtifact.title,
+        exact: true,
+      }),
+    });
+    await firstArtifactRow
+      .getByText("Quellstand und Lizenz", { exact: true })
+      .click();
     await expect(
-      page.getByRole("link", { name: /Quelle loehrning-ai\/cv-engine/ }),
-    ).toHaveAttribute("href", "https://github.com/loehrning-ai/cv-engine");
+      firstArtifactRow.getByRole("link", {
+        name: /Gepinnter Quellstand/,
+      }),
+    ).toHaveAttribute("href", firstArtifact.source.revisionHref);
 
     // Structural heading at the foot of the page proves it rendered fully.
     await expect(
@@ -372,14 +404,31 @@ test.describe("/open-source hub", () => {
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByText("Quellenprinzip").first()).toBeVisible();
     await expect(
-      page.getByText(PUBLISHED_ARTIFACTS_STATUS).first(),
+      page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Veröffentlichungsstandard" }),
-    ).toBeVisible();
-    await expect(page.getByText("Quellplattform")).toBeVisible();
+    const publicationHeading = page.getByRole("heading", {
+      name: "Veröffentlichungsstandard",
+    });
+    await expect(publicationHeading).toBeVisible();
+    const publicationBody = publicationHeading.locator(
+      "xpath=following-sibling::p",
+    );
+    const [headingBox, bodyBox] = await Promise.all([
+      publicationHeading.boundingBox(),
+      publicationBody.boundingBox(),
+    ]);
+    expect(headingBox).not.toBeNull();
+    expect(bodyBox).not.toBeNull();
+    const boxesOverlap =
+      headingBox!.x < bodyBox!.x + bodyBox!.width &&
+      headingBox!.x + headingBox!.width > bodyBox!.x &&
+      headingBox!.y < bodyBox!.y + bodyBox!.height &&
+      headingBox!.y + headingBox!.height > bodyBox!.y;
+    expect(
+      boxesOverlap,
+      "publication heading must not collide with its explanatory copy",
+    ).toBe(false);
     await expect(
       page.getByRole("link", { name: new RegExp(ORG_SLUG) }).first(),
     ).toHaveAttribute("href", ORG_URL);
@@ -435,7 +484,69 @@ test.describe("/open-source hub", () => {
       page.getByText(/Editorial content: source-visible/),
     ).toBeVisible();
   });
+});
 
+test("English open-source hub and one detail per published kind use localized public contracts", async ({
+  browserName,
+  page,
+}) => {
+  test.setTimeout(90_000);
+  const errors = collectConsoleErrors(page, browserName);
+  const hubResponse = await page.goto("/en/open-source", {
+    waitUntil: "domcontentloaded",
+  });
+
+  expect(hubResponse?.status()).toBe(200);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: OPEN_SOURCE_PAGE_COPY.en.title,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: OPEN_SOURCE_SHARED_COPY.en.published,
+    }),
+  ).toBeVisible();
+
+  for (const registryArtifact of ENGLISH_DETAIL_REPRESENTATIVES) {
+    const artifact = localizeOpenSourceArtifact(registryArtifact, "en");
+    const response = await page.goto(`/en${artifact.href}`, {
+      waitUntil: "domcontentloaded",
+    });
+
+    expect(response?.status(), artifact.id).toBe(200);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: artifact.title,
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(artifact.description, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("main").getByRole("link", {
+        name: OPEN_SOURCE_DETAIL_COPY.en.back,
+        exact: true,
+      }),
+    ).toHaveAttribute("href", "/en/open-source");
+    await expect(
+      page.getByRole("link", {
+        name: new RegExp(`^${OPEN_SOURCE_DETAIL_COPY.en.sourceRevision}`),
+      }),
+    ).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      `${SITE_ORIGIN}/en${artifact.href}`,
+    );
+  }
+
+  expect(meaningfulErrors(errors)).toEqual([]);
 });
 
 test.describe("/open-source mobile", () => {
@@ -450,7 +561,7 @@ test.describe("/open-source mobile", () => {
       page.getByRole("heading", { name: "Veröffentlichungsstandard" }),
     ).toBeVisible();
     await expect(
-      page.getByText(PUBLISHED_ARTIFACTS_STATUS).first(),
+      page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

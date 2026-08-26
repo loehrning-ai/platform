@@ -1,12 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * /login smoke + interaction (regression coverage, wave 2). Magic-link login:
- * the page renders the value proposition h1 plus a single-field form (email
- * input + "Login-Link" submit CTA). Submission is guarded by native HTML5
- * constraint validation (required + type=email), so an empty or malformed
- * address is blocked in the browser before the submit handler ever calls
- * Supabase - which is exactly why these tests never trigger a real send.
+ * /login smoke + interaction (regression coverage, wave 2). A configured
+ * magic-link runtime renders a single-field form; a provider-free runtime
+ * renders a compact non-interactive status region instead of a fake form.
+ * Form submission is guarded by native HTML5 constraint validation (required
+ * + type=email), so these tests never trigger a real send.
  *
  * Assertions target ROLES, label association, and validity state rather than
  * exact copy, so a wording refresh stays green while a real regression
@@ -44,16 +43,22 @@ test.describe("/login magic-link", () => {
     await expect(h1).toBeVisible();
     const configured =
       (await page.getByLabel(/E-Mail-Adresse/i).count()) > 0 ||
-      (await page.getByRole("button", { name: /Mit Google anmelden/i }).count()) > 0;
+      (await page
+        .getByRole("button", { name: /Mit Google anmelden/i })
+        .count()) > 0;
     await expect(h1).toContainText(
       configured ? /Lernstand synchronisieren/i : /Weiter ohne Konto/i,
     );
 
     const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
+    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
+      [],
+    );
   });
 
-  test("renders only sign-in methods approved for the runtime", async ({ page }) => {
+  test("renders only sign-in methods approved for the runtime", async ({
+    page,
+  }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
@@ -100,10 +105,15 @@ test.describe("/login magic-link", () => {
 
     const validity = await email.evaluate((el) => {
       const input = el as HTMLInputElement;
-      return { valid: input.validity.valid, valueMissing: input.validity.valueMissing };
+      return {
+        valid: input.validity.valid,
+        valueMissing: input.validity.valueMissing,
+      };
     });
     expect(validity.valid, "empty required email must be invalid").toBe(false);
-    expect(validity.valueMissing, "empty email must report valueMissing").toBe(true);
+    expect(validity.valueMissing, "empty email must report valueMissing").toBe(
+      true,
+    );
 
     // No magic-link outcome message => the submit handler never ran, so nothing
     // was dispatched to Supabase.
@@ -133,17 +143,23 @@ test.describe("/login magic-link", () => {
 
     const validity = await email.evaluate((el) => {
       const input = el as HTMLInputElement;
-      return { valid: input.validity.valid, typeMismatch: input.validity.typeMismatch };
+      return {
+        valid: input.validity.valid,
+        typeMismatch: input.validity.typeMismatch,
+      };
     });
     expect(validity.valid, "malformed email must be invalid").toBe(false);
-    expect(validity.typeMismatch, "malformed email must report typeMismatch").toBe(true);
+    expect(
+      validity.typeMismatch,
+      "malformed email must report typeMismatch",
+    ).toBe(true);
 
     await expect(page.getByText(/verschickt/i)).toHaveCount(0);
   });
 });
 
 test.describe("/login mobile", () => {
-  test("has no horizontal overflow at 390px and keeps the form visible", async ({
+  test("has no horizontal overflow at 390px and keeps the sign-in boundary visible", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -151,7 +167,7 @@ test.describe("/login mobile", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.locator('form[aria-labelledby="login-form-title"]'),
+      page.locator('[aria-labelledby="login-form-title"]'),
     ).toBeVisible();
     const email = page.getByLabel(/E-Mail-Adresse/i);
     if ((await email.count()) > 0) {

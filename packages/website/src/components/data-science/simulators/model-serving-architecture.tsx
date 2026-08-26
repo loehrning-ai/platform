@@ -334,7 +334,7 @@ export function ModelServingArchitecture() {
               <div
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
@@ -357,7 +357,7 @@ export function ModelServingArchitecture() {
               <div
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: 9.5,
+                  fontSize: 12,
                   fontWeight: 700,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",

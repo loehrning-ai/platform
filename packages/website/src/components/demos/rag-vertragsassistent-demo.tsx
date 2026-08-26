@@ -38,6 +38,7 @@ interface Message {
   readonly follow?: readonly string[];
   readonly matchedTerms?: readonly string[];
   readonly isEmpty?: boolean;
+  readonly queryContext?: string;
 }
 
 const CHAT_Q: Readonly<Record<string, AnswerData>> = {
@@ -49,7 +50,10 @@ const CHAT_Q: Readonly<Record<string, AnswerData>> = {
       { t: "RV-2026-003", s: "Anlage B, Abs. 4", konfidenz: "mittel" },
     ],
     matchedTerms: ["Kündigung", "Kündigungsfrist", "Quartalsende"],
-    follow: ["Gibt es Sonderkündigungsrechte?", "Welche Pflichten gelten während der Frist?"],
+    follow: [
+      "Gibt es Sonderkündigungsrechte?",
+      "Welche Pflichten gelten während der Frist?",
+    ],
   },
   "sonderkuendigung|ausserordentlich|sonderkündigung|außerordentlich": {
     answer:
@@ -108,7 +112,10 @@ function findAnswer(q: string): AnswerResult {
   return CHAT_DEFAULT;
 }
 
-const KONFIDENZ_CONFIG: Record<KonfidenzLevel, { label: string; color: string; bg: string }> = {
+const KONFIDENZ_CONFIG: Record<
+  KonfidenzLevel,
+  { label: string; color: string; bg: string }
+> = {
   hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
   mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
   niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
@@ -128,17 +135,20 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       }}
     >
       <span
-        style={{
-          padding: "2px 6px",
-          fontSize: 9,
-          fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: cfg.color,
-          background: cfg.bg,
-          title: "Konfidenz = Übereinstimmung mit Schlüsselbegriffen im Dokument",
-        } as React.CSSProperties}
+        style={
+          {
+            padding: "2px 6px",
+            fontSize: 12,
+            fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
+            fontWeight: 700,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            color: cfg.color,
+            background: cfg.bg,
+            title:
+              "Konfidenz = Übereinstimmung mit Schlüsselbegriffen im Dokument",
+          } as React.CSSProperties
+        }
         title="Konfidenz = Übereinstimmung mit Schlüsselbegriffen im Dokument"
       >
         {cfg.label}
@@ -146,7 +156,7 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       <span
         style={{
           fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-          fontSize: 8,
+          fontSize: 12,
           color: "#6b7280",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -169,15 +179,24 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
         background: "rgba(37,99,235,0.05)",
         border: "1px solid rgba(37,99,235,0.2)",
         fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-        fontSize: 9,
+        fontSize: 12,
         letterSpacing: "0.08em",
       }}
     >
-      <span style={{ color: "#6b7280", textTransform: "uppercase", fontWeight: 700 }}>
+      <span
+        style={{
+          color: "#6b7280",
+          textTransform: "uppercase",
+          fontWeight: 700,
+        }}
+      >
         Gefundene Schlüsselwörter:{" "}
       </span>
       {terms.map((term, i) => (
-        <span key={i} style={{ color: "#2563eb", fontWeight: 700, marginRight: 6 }}>
+        <span
+          key={i}
+          style={{ color: "#2563eb", fontWeight: 700, marginRight: 6 }}
+        >
           {term}
         </span>
       ))}
@@ -199,14 +218,20 @@ function renderBold(text: string) {
 
 export default function RagVertragsassistentDemo() {
   const { locale } = useDemoLocale();
-  return locale === "en" ? <RagContractAssistantEnglish /> : <RagVertragsassistentGerman />;
+  return locale === "en" ? (
+    <RagContractAssistantEnglish />
+  ) : (
+    <RagVertragsassistentGerman />
+  );
 }
 
 function RagVertragsassistentGerman() {
   const [msgs, setMsgs] = useState<readonly Message[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [expanded, setExpanded] = useState<Readonly<Record<number, boolean>>>({});
+  const [expanded, setExpanded] = useState<Readonly<Record<number, boolean>>>(
+    {},
+  );
   const [searchStage, setSearchStage] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const reduced = usePrefersReducedMotion();
@@ -214,7 +239,10 @@ function RagVertragsassistentGerman() {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: reduced ? "auto" : "smooth" });
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: reduced ? "auto" : "smooth",
+    });
   }, [msgs, typing, searchStage, reduced]);
 
   function submit(text?: string) {
@@ -243,6 +271,7 @@ function RagVertragsassistentGerman() {
           follow: a.follow,
           matchedTerms: "matchedTerms" in a ? a.matchedTerms : [],
           isEmpty: a.answer === null,
+          queryContext: q,
           id: Date.now() + 1,
         },
       ]);
@@ -270,7 +299,14 @@ function RagVertragsassistentGerman() {
           borderBottom: `1px solid ${DEMO.leinen}`,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            minWidth: 0,
+          }}
+        >
           <div
             style={{
               width: 32,
@@ -303,7 +339,7 @@ function RagVertragsassistentGerman() {
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 10,
+                fontSize: 12,
                 color: DEMO.schiefer,
                 letterSpacing: "0.08em",
                 whiteSpace: "nowrap",
@@ -321,7 +357,7 @@ function RagVertragsassistentGerman() {
             color: DEMO.statusGreen,
             padding: "3px 8px",
             fontFamily: DEMO.font.mono,
-            fontSize: 9,
+            fontSize: 12,
             letterSpacing: "0.12em",
             fontWeight: 700,
             flexShrink: 0,
@@ -333,7 +369,10 @@ function RagVertragsassistentGerman() {
       </div>
 
       <SimulationDisclosure>
-        Diese Simulation zeigt keine Vektordatenbank und keine KI-Inferenz, sie demonstriert, wie eine Keyword-Suche Dokumente filtert. Die angezeigte &quot;Konfidenz&quot; misst, wie viele Schlüsselbegriffe der Anfrage in einem Dokument gefunden wurden.
+        Diese Simulation zeigt keine Vektordatenbank und keine KI-Inferenz, sie
+        demonstriert, wie eine Keyword-Suche Dokumente filtert. Die angezeigte
+        &quot;Konfidenz&quot; misst, wie viele Schlüsselbegriffe der Anfrage in
+        einem Dokument gefunden wurden.
       </SimulationDisclosure>
 
       <div
@@ -361,11 +400,18 @@ function RagVertragsassistentGerman() {
               padding: 16,
             }}
           >
-            <div style={{ width: 140, height: 3, background: "var(--color-brand-orange)", marginBottom: 16 }} />
+            <div
+              style={{
+                width: 140,
+                height: 3,
+                background: "var(--color-brand-orange)",
+                marginBottom: 16,
+              }}
+            />
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 10,
+                fontSize: 12,
                 color: "#2563eb",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
@@ -385,7 +431,9 @@ function RagVertragsassistentGerman() {
               }}
             >
               Fragen Sie das Beispielarchiv.{" "}
-              <span style={{ color: "var(--color-brand-orange)" }}>Antworten mit Quelle.</span>
+              <span style={{ color: "var(--color-brand-orange)" }}>
+                Antworten mit Quelle.
+              </span>
             </h2>
             <p
               style={{
@@ -396,7 +444,8 @@ function RagVertragsassistentGerman() {
                 lineHeight: 1.5,
               }}
             >
-              Antworten zeigen passende Fundstellen; Fehler und fehlende Treffer bleiben möglich.
+              Antworten zeigen passende Fundstellen; Fehler und fehlende Treffer
+              bleiben möglich.
             </p>
             <div
               style={{
@@ -415,29 +464,39 @@ function RagVertragsassistentGerman() {
                   type="button"
                   onClick={() => submit(s)}
                   style={{
+                    minHeight: 44,
                     textAlign: "left",
                     padding: "7px 10px",
                     border: `1px solid ${DEMO.leinen}`,
                     background: DEMO.birke,
-                    fontSize: 11,
+                    fontSize: 12,
                     lineHeight: 1.3,
                     cursor: "pointer",
                     fontFamily: "inherit",
                     color: DEMO.ink,
                     flex: "1 1 auto",
                     minWidth: 0,
-                    transition: reduced ? "none" : "background 150ms, border-color 150ms",
+                    transition: reduced
+                      ? "none"
+                      : "background 150ms, border-color 150ms",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = DEMO.kupferMist;
-                    e.currentTarget.style.borderColor = "var(--color-brand-orange)";
+                    e.currentTarget.style.borderColor =
+                      "var(--color-brand-orange)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = DEMO.birke;
                     e.currentTarget.style.borderColor = DEMO.leinen;
                   }}
                 >
-                  <span style={{ color: "var(--color-brand-orange)", fontWeight: 700, marginRight: 6 }}>
+                  <span
+                    style={{
+                      color: "var(--color-brand-orange)",
+                      fontWeight: 700,
+                      marginRight: 6,
+                    }}
+                  >
                     →
                   </span>
                   {s}
@@ -448,7 +507,10 @@ function RagVertragsassistentGerman() {
         )}
         {msgs.map((m, idx) =>
           m.role === "user" ? (
-            <div key={m.id} style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div
+              key={m.id}
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
               <div
                 style={{
                   maxWidth: "85%",
@@ -468,7 +530,7 @@ function RagVertragsassistentGerman() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: m.isEmpty ? "#6b7280" : "var(--color-brand-orange)",
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
@@ -476,7 +538,10 @@ function RagVertragsassistentGerman() {
                   marginBottom: 4,
                 }}
               >
-                ⎯ {m.isEmpty ? "Kein Treffer" : `Keyword-Suche · ${m.sources?.length ?? 0} Quellen`}
+                ⎯{" "}
+                {m.isEmpty
+                  ? "Kein Treffer"
+                  : `Keyword-Suche · ${m.sources?.length ?? 0} Quellen`}
               </div>
               <div
                 style={{
@@ -491,8 +556,7 @@ function RagVertragsassistentGerman() {
               >
                 {m.isEmpty
                   ? "Keine Übereinstimmung gefunden, das System kann hier keine Antwort verankern. Kein Dokument im Beispielarchiv enthält ausreichend passende Schlüsselbegriffe für diese Anfrage."
-                  : renderBold(m.text ?? "")
-                }
+                  : renderBold(m.text ?? "")}
               </div>
               {!m.isEmpty && m.matchedTerms && m.matchedTerms.length > 0 && (
                 <MatchedTermsPanel terms={m.matchedTerms} />
@@ -505,12 +569,14 @@ function RagVertragsassistentGerman() {
                       setExpanded((e) => ({ ...e, [m.id]: !e[m.id] }))
                     }
                     aria-expanded={!!expanded[m.id]}
+                    aria-label={`${expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}: ${m.sources.length} Quellen zur Antwort auf „${m.queryContext}“`}
                     style={{
+                      minHeight: 44,
                       background: "transparent",
                       border: `1px solid ${DEMO.leinen}`,
                       padding: "4px 8px",
                       fontFamily: DEMO.font.mono,
-                      fontSize: 9,
+                      fontSize: 12,
                       letterSpacing: "0.12em",
                       textTransform: "uppercase",
                       cursor: "pointer",
@@ -518,10 +584,18 @@ function RagVertragsassistentGerman() {
                       fontWeight: 700,
                     }}
                   >
-                    {expanded[m.id] ? "▼" : "▶"} {m.sources.length} Quellen anzeigen
+                    {expanded[m.id] ? "▼" : "▶"} {m.sources.length}{" "}
+                    {expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}
                   </button>
                   {expanded[m.id] && (
-                    <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 5 }}>
+                    <div
+                      style={{
+                        marginTop: 6,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 5,
+                      }}
+                    >
                       {m.sources.map((s, i) => {
                         const parText = s.s.split("·")[0]?.trim() ?? s.s;
                         return (
@@ -546,7 +620,7 @@ function RagVertragsassistentGerman() {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontFamily: DEMO.font.mono,
-                                fontSize: 10,
+                                fontSize: 12,
                                 fontWeight: 700,
                                 color: "var(--color-brand-orange)",
                               }}
@@ -556,7 +630,7 @@ function RagVertragsassistentGerman() {
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div
                                 style={{
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   fontWeight: 600,
                                   color: DEMO.ink,
                                   lineHeight: 1.35,
@@ -577,7 +651,7 @@ function RagVertragsassistentGerman() {
                                   border: `1px solid ${DEMO.leinen}`,
                                   background: DEMO.birke,
                                   fontFamily: DEMO.font.mono,
-                                  fontSize: 9,
+                                  fontSize: 12,
                                   color: DEMO.ink,
                                   letterSpacing: "0.02em",
                                   maxWidth: "100%",
@@ -599,18 +673,26 @@ function RagVertragsassistentGerman() {
                 </div>
               )}
               {m.follow && idx === msgs.length - 1 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 6,
+                    marginTop: 8,
+                  }}
+                >
                   {m.follow.map((f) => (
                     <button
                       key={f}
                       type="button"
                       onClick={() => submit(f)}
                       style={{
+                        minHeight: 44,
                         background: "transparent",
                         border: `1px solid var(--color-brand-orange)`,
                         color: "var(--color-brand-orange)",
                         padding: "5px 9px",
-                        fontSize: 11,
+                        fontSize: 12,
                         lineHeight: 1.3,
                         cursor: "pointer",
                         fontFamily: "inherit",
@@ -642,7 +724,7 @@ function RagVertragsassistentGerman() {
                 gap: 6,
                 marginBottom: 6,
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 fontWeight: 700,
@@ -656,7 +738,9 @@ function RagVertragsassistentGerman() {
                   height: 6,
                   borderRadius: 999,
                   background: "var(--color-brand-orange)",
-                  animation: reduced ? "none" : "ragPulse 1.1s ease-in-out infinite",
+                  animation: reduced
+                    ? "none"
+                    : "ragPulse 1.1s ease-in-out infinite",
                   boxShadow: "0 0 0 3px rgba(249,115,22,0.15)",
                 }}
               />
@@ -672,9 +756,21 @@ function RagVertragsassistentGerman() {
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {(
                   [
-                    { stage: 1, label: "Anfrage auflösen", detail: "Suchbegriffe extrahieren" },
-                    { stage: 2, label: "8 Dokumente durchsuchen", detail: "Schlüsselbegriff-Abgleich" },
-                    { stage: 3, label: "Treffer ranken", detail: "Anzahl passender Begriffe" },
+                    {
+                      stage: 1,
+                      label: "Anfrage auflösen",
+                      detail: "Suchbegriffe extrahieren",
+                    },
+                    {
+                      stage: 2,
+                      label: "8 Dokumente durchsuchen",
+                      detail: "Schlüsselbegriff-Abgleich",
+                    },
+                    {
+                      stage: 3,
+                      label: "Treffer ranken",
+                      detail: "Anzahl passender Begriffe",
+                    },
                   ] as const
                 ).map((s) => (
                   <div
@@ -702,7 +798,7 @@ function RagVertragsassistentGerman() {
                     />
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: DEMO.ink,
                         fontWeight: 600,
                         minWidth: 0,
@@ -716,7 +812,7 @@ function RagVertragsassistentGerman() {
                     <span
                       style={{
                         fontFamily: DEMO.font.mono,
-                        fontSize: 9,
+                        fontSize: 12,
                         color: DEMO.schiefer,
                         marginLeft: "auto",
                         flexShrink: 0,
@@ -748,7 +844,7 @@ function RagVertragsassistentGerman() {
           padding: "8px 12px",
           background: "rgba(107,114,128,0.06)",
           border: "1px solid rgba(107,114,128,0.2)",
-          fontSize: 11,
+          fontSize: 12,
           lineHeight: 1.5,
           fontFamily: DEMO.font.mono,
         }}
@@ -759,7 +855,7 @@ function RagVertragsassistentGerman() {
             textTransform: "uppercase",
             letterSpacing: "0.1em",
             color: "#6b7280",
-            fontSize: 9,
+            fontSize: 12,
           }}
         >
           Grenzfall:{" "}
@@ -768,10 +864,11 @@ function RagVertragsassistentGerman() {
           type="button"
           onClick={() => submit(FAILURE_QUERY)}
           style={{
+            minHeight: 44,
             background: "transparent",
             border: "1px solid rgba(107,114,128,0.3)",
             padding: "2px 8px",
-            fontSize: 10,
+            fontSize: 12,
             color: DEMO.ink,
             cursor: "pointer",
             fontFamily: DEMO.font.mono,
@@ -783,7 +880,15 @@ function RagVertragsassistentGerman() {
         </button>
       </div>
 
-      <div style={{ borderTop: `1px solid ${DEMO.leinen}`, paddingTop: 10, display: "flex", gap: 6, minWidth: 0 }}>
+      <div
+        style={{
+          borderTop: `1px solid ${DEMO.leinen}`,
+          paddingTop: 10,
+          display: "flex",
+          gap: 6,
+          minWidth: 0,
+        }}
+      >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -798,6 +903,7 @@ function RagVertragsassistentGerman() {
           style={{
             flex: "1 1 0",
             minWidth: 0,
+            minHeight: 44,
             background: DEMO.birke,
             border: `1px solid ${DEMO.leinen}`,
             padding: "9px 12px",
@@ -814,12 +920,13 @@ function RagVertragsassistentGerman() {
           onClick={() => submit()}
           disabled={typing || !input.trim()}
           style={{
+            minHeight: 44,
             background: "var(--color-brand-orange)",
             color: DEMO.kalk,
             border: "none",
             padding: "9px 12px",
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: 700,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -840,32 +947,63 @@ function RagVertragsassistentGerman() {
 interface EnglishContractAnswer {
   readonly answer: string;
   readonly terms: readonly string[];
-  readonly sources: readonly { readonly document: string; readonly section: string; readonly confidence: "high" | "medium" | "low" }[];
+  readonly sources: readonly {
+    readonly document: string;
+    readonly section: string;
+    readonly confidence: "high" | "medium" | "low";
+  }[];
 }
 
 const CONTRACT_ANSWERS_EN: Readonly<Record<string, EnglishContractAnswer>> = {
   termination: {
-    answer: "The fictional framework agreement sets three months' notice to the end of a quarter. A material breach can trigger extraordinary termination after the stated cure process.",
+    answer:
+      "The fictional framework agreement sets three months' notice to the end of a quarter. A material breach can trigger extraordinary termination after the stated cure process.",
     terms: ["termination", "notice", "quarter end"],
     sources: [
-      { document: "Sample framework agreement v3.2", section: "§12.3 Termination", confidence: "high" },
-      { document: "Sample schedule B", section: "Clause 4", confidence: "medium" },
+      {
+        document: "Sample framework agreement v3.2",
+        section: "§12.3 Termination",
+        confidence: "high",
+      },
+      {
+        document: "Sample schedule B",
+        section: "Clause 4",
+        confidence: "medium",
+      },
     ],
   },
   liability: {
-    answer: "The fictional liability cap is three times the annual fee, subject to a maximum of EUR 500,000. The sample excludes indirect loss and does not apply the cap to intent or gross negligence.",
+    answer:
+      "The fictional liability cap is three times the annual fee, subject to a maximum of EUR 500,000. The sample excludes indirect loss and does not apply the cap to intent or gross negligence.",
     terms: ["liability", "annual fee", "cap"],
     sources: [
-      { document: "Sample framework agreement v3.2", section: "§14 Liability", confidence: "high" },
-      { document: "Sample insurance note", section: "Policy 2026/04", confidence: "low" },
+      {
+        document: "Sample framework agreement v3.2",
+        section: "§14 Liability",
+        confidence: "high",
+      },
+      {
+        document: "Sample insurance note",
+        section: "Policy 2026/04",
+        confidence: "low",
+      },
     ],
   },
   signature: {
-    answer: "In the fictional signature policy, Role Alpha and Role Beta may sign individually. The sample power-of-attorney rule requires two signatories; agreements above EUR 250,000 require management approval.",
+    answer:
+      "In the fictional signature policy, Role Alpha and Role Beta may sign individually. The sample power-of-attorney rule requires two signatories; agreements above EUR 250,000 require management approval.",
     terms: ["signature", "authority", "approval"],
     sources: [
-      { document: "Sample signature policy v2", section: "Clause 3", confidence: "high" },
-      { document: "Fictional register extract", section: "Entry 82104", confidence: "high" },
+      {
+        document: "Sample signature policy v2",
+        section: "Clause 3",
+        confidence: "high",
+      },
+      {
+        document: "Fictional register extract",
+        section: "Entry 82104",
+        confidence: "high",
+      },
     ],
   },
 };
@@ -878,16 +1016,21 @@ const CONTRACT_QUESTIONS_EN = [
 
 function answerForEnglishContract(query: string): EnglishContractAnswer | null {
   const value = query.toLowerCase();
-  if (value.includes("terminat") || value.includes("notice")) return CONTRACT_ANSWERS_EN.termination;
-  if (value.includes("liab") || value.includes("cap")) return CONTRACT_ANSWERS_EN.liability;
-  if (value.includes("sign") || value.includes("author")) return CONTRACT_ANSWERS_EN.signature;
+  if (value.includes("terminat") || value.includes("notice"))
+    return CONTRACT_ANSWERS_EN.termination;
+  if (value.includes("liab") || value.includes("cap"))
+    return CONTRACT_ANSWERS_EN.liability;
+  if (value.includes("sign") || value.includes("author"))
+    return CONTRACT_ANSWERS_EN.signature;
   return null;
 }
 
 function RagContractAssistantEnglish() {
   const [query, setQuery] = useState("");
   const [submitted, setSubmitted] = useState("");
-  const [answer, setAnswer] = useState<EnglishContractAnswer | null | undefined>(undefined);
+  const [answer, setAnswer] = useState<
+    EnglishContractAnswer | null | undefined
+  >(undefined);
 
   const runQuery = (value?: string) => {
     const next = (value ?? query).trim();
@@ -902,85 +1045,350 @@ function RagContractAssistantEnglish() {
       data-demo-id="rag-vertragsassistent"
       role="region"
       aria-label="Contract retrieval example"
-      style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: DEMO_HEIGHT, minWidth: 0, fontFamily: DEMO.font.sans, color: DEMO.ink }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 14,
+        minHeight: DEMO_HEIGHT,
+        minWidth: 0,
+        fontFamily: DEMO.font.sans,
+        color: DEMO.ink,
+      }}
     >
       <div>
-        <div style={{ fontFamily: DEMO.font.mono, fontSize: 10, color: "var(--color-brand-orange)", letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700 }}>Contract archive · deterministic retrieval</div>
-        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
-          Answer from the archive. <span style={{ color: "var(--color-brand-orange)" }}>Show the source and the gap.</span>
+        <div
+          style={{
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            color: "var(--color-brand-orange)",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+          }}
+        >
+          Contract archive · deterministic retrieval
+        </div>
+        <h2
+          style={{
+            margin: "6px 0 0",
+            fontSize: "clamp(20px, 4vw, 28px)",
+            lineHeight: 1.08,
+          }}
+        >
+          Answer from the archive.{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            Show the source and the gap.
+          </span>
         </h2>
-        <p style={{ margin: "8px 0 0", maxWidth: 760, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
-          Three fictional contract records are searched with fixed keyword rules in the browser. This is not legal advice and no model or document service is called.
+        <p
+          style={{
+            margin: "8px 0 0",
+            maxWidth: 760,
+            color: DEMO.schiefer,
+            fontSize: 12,
+            lineHeight: 1.55,
+          }}
+        >
+          Three fictional contract records are searched with fixed keyword rules
+          in the browser. This is not legal advice and no model or document
+          service is called.
         </p>
       </div>
 
       <SimulationDisclosure>
-        Documents, clauses, answers, confidence labels, and register entries are fictional samples. Verify every answer against the governing agreement and qualified legal review.
+        Documents, clauses, answers, confidence labels, and register entries are
+        fictional samples. Verify every answer against the governing agreement
+        and qualified legal review.
       </SimulationDisclosure>
 
-      <div aria-label="Suggested contract questions" style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+      <div
+        aria-label="Suggested contract questions"
+        style={{ display: "flex", flexWrap: "wrap", gap: 7 }}
+      >
         {CONTRACT_QUESTIONS_EN.map(([key, label]) => (
-          <button key={key} type="button" onClick={() => runQuery(label)} style={{ minHeight: 40, border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, color: DEMO.ink, padding: "7px 10px", fontFamily: DEMO.font.mono, fontSize: 10, cursor: "pointer" }}>{label}</button>
+          <button
+            key={key}
+            type="button"
+            onClick={() => runQuery(label)}
+            style={{
+              minHeight: 44,
+              border: `1px solid ${DEMO.ink}`,
+              background: DEMO.kalk,
+              color: DEMO.ink,
+              padding: "7px 10px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            {label}
+          </button>
         ))}
       </div>
 
-      <div style={{ border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, boxShadow: `3px 3px 0 ${DEMO.ink}`, minWidth: 0 }}>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, padding: "8px 12px", background: DEMO.ink, color: DEMO.kalk, fontFamily: DEMO.font.mono, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-          <span style={{ color: "var(--color-brand-orange)" }}>Local sample index</span>
+      <div
+        style={{
+          border: `1px solid ${DEMO.ink}`,
+          background: DEMO.kalk,
+          boxShadow: `3px 3px 0 ${DEMO.ink}`,
+          minWidth: 0,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+            padding: "8px 12px",
+            background: DEMO.ink,
+            color: DEMO.kalk,
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+          }}
+        >
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            Local sample index
+          </span>
           <span>3 records · 14 sample clauses</span>
           <span style={{ marginLeft: "auto" }}>no external connection</span>
         </div>
 
-        <div aria-live="polite" style={{ minHeight: 310, padding: "clamp(14px, 4vw, 24px)", minWidth: 0 }}>
+        <div
+          aria-live="polite"
+          style={{
+            minHeight: 310,
+            padding: "clamp(14px, 4vw, 24px)",
+            minWidth: 0,
+          }}
+        >
           {answer === undefined ? (
-            <div style={{ minHeight: 250, display: "grid", placeItems: "center", textAlign: "center", color: DEMO.schiefer, fontSize: 12 }}>
+            <div
+              style={{
+                minHeight: 250,
+                display: "grid",
+                placeItems: "center",
+                textAlign: "center",
+                color: DEMO.schiefer,
+                fontSize: 12,
+              }}
+            >
               Select a sample question or enter a contract term below.
             </div>
           ) : (
             <div style={{ display: "grid", gap: 14 }}>
-              <div style={{ borderLeft: "3px solid var(--color-brand-orange)", paddingLeft: 12 }}>
-                <div style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer, textTransform: "uppercase", letterSpacing: "0.12em" }}>Query</div>
-                <strong style={{ display: "block", marginTop: 4, overflowWrap: "anywhere" }}>{submitted}</strong>
+              <div
+                style={{
+                  borderLeft: "3px solid var(--color-brand-orange)",
+                  paddingLeft: 12,
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: DEMO.font.mono,
+                    fontSize: 12,
+                    color: DEMO.schiefer,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em",
+                  }}
+                >
+                  Query
+                </div>
+                <strong
+                  style={{
+                    display: "block",
+                    marginTop: 4,
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {submitted}
+                </strong>
               </div>
               {answer ? (
                 <>
-                  <p style={{ margin: 0, maxWidth: 800, fontSize: 14, lineHeight: 1.65 }}>{answer.answer}</p>
+                  <p
+                    style={{
+                      margin: 0,
+                      maxWidth: 800,
+                      fontSize: 14,
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    {answer.answer}
+                  </p>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                    {answer.terms.map((term) => <span key={term} style={{ border: "1px solid rgba(37,99,235,0.3)", background: "rgba(37,99,235,0.07)", color: "#1d4ed8", padding: "3px 7px", fontFamily: DEMO.font.mono, fontSize: 9 }}>{term}</span>)}
+                    {answer.terms.map((term) => (
+                      <span
+                        key={term}
+                        style={{
+                          border: "1px solid rgba(37,99,235,0.3)",
+                          background: "rgba(37,99,235,0.07)",
+                          color: "#1d4ed8",
+                          padding: "3px 7px",
+                          fontFamily: DEMO.font.mono,
+                          fontSize: 12,
+                        }}
+                      >
+                        {term}
+                      </span>
+                    ))}
                   </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 230px), 1fr))", gap: 8 }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(min(100%, 230px), 1fr))",
+                      gap: 8,
+                    }}
+                  >
                     {answer.sources.map((source) => (
-                      <div key={`${source.document}-${source.section}`} style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 10 }}>
-                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
-                          <strong style={{ fontSize: 11, overflowWrap: "anywhere" }}>{source.document}</strong>
-                          <span style={{ flexShrink: 0, color: source.confidence === "high" ? "#166534" : source.confidence === "medium" ? "#b45309" : "#b91c1c", fontFamily: DEMO.font.mono, fontSize: 9, textTransform: "uppercase" }}>{source.confidence}</span>
+                      <div
+                        key={`${source.document}-${source.section}`}
+                        style={{
+                          minWidth: 0,
+                          border: `1px solid ${DEMO.leinen}`,
+                          background: DEMO.birke,
+                          padding: 10,
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            justifyContent: "space-between",
+                            gap: 8,
+                          }}
+                        >
+                          <strong
+                            style={{ fontSize: 12, overflowWrap: "anywhere" }}
+                          >
+                            {source.document}
+                          </strong>
+                          <span
+                            style={{
+                              flexShrink: 0,
+                              color:
+                                source.confidence === "high"
+                                  ? "#166534"
+                                  : source.confidence === "medium"
+                                    ? "#b45309"
+                                    : "#b91c1c",
+                              fontFamily: DEMO.font.mono,
+                              fontSize: 12,
+                              textTransform: "uppercase",
+                            }}
+                          >
+                            {source.confidence}
+                          </span>
                         </div>
-                        <div style={{ marginTop: 4, color: DEMO.schiefer, fontFamily: DEMO.font.mono, fontSize: 9 }}>{source.section}</div>
+                        <div
+                          style={{
+                            marginTop: 4,
+                            color: DEMO.schiefer,
+                            fontFamily: DEMO.font.mono,
+                            fontSize: 12,
+                          }}
+                        >
+                          {source.section}
+                        </div>
                       </div>
                     ))}
                   </div>
                 </>
               ) : (
-                <div role="alert" style={{ border: "1px solid rgba(220,38,38,0.35)", background: "rgba(220,38,38,0.05)", padding: 14 }}>
+                <div
+                  role="alert"
+                  style={{
+                    border: "1px solid rgba(220,38,38,0.35)",
+                    background: "rgba(220,38,38,0.05)",
+                    padding: 14,
+                  }}
+                >
                   <strong>No supporting clause found.</strong>
-                  <p style={{ margin: "6px 0 0", fontSize: 12, lineHeight: 1.55 }}>The sample archive cannot answer this query. Do not infer authority or legal effect; inspect the governing documents and route the question to legal review.</p>
+                  <p
+                    style={{
+                      margin: "6px 0 0",
+                      fontSize: 12,
+                      lineHeight: 1.55,
+                    }}
+                  >
+                    The sample archive cannot answer this query. Do not infer
+                    authority or legal effect; inspect the governing documents
+                    and route the question to legal review.
+                  </p>
                 </div>
               )}
             </div>
           )}
         </div>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 7, borderTop: `1px solid ${DEMO.leinen}`, padding: 10 }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 7,
+            borderTop: `1px solid ${DEMO.leinen}`,
+            padding: 10,
+          }}
+        >
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            onKeyDown={(event) => { if (event.key === "Enter") runQuery(); }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") runQuery();
+            }}
             aria-label="Question for the contract archive"
             placeholder="Enter a contract term…"
-            style={{ flex: "1 1 220px", minWidth: 0, minHeight: 42, boxSizing: "border-box", border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, color: DEMO.ink, padding: "9px 11px", font: "inherit", fontSize: 12 }}
+            style={{
+              flex: "1 1 220px",
+              minWidth: 0,
+              minHeight: 44,
+              boxSizing: "border-box",
+              border: `1px solid ${DEMO.leinen}`,
+              background: DEMO.birke,
+              color: DEMO.ink,
+              padding: "9px 11px",
+              font: "inherit",
+              fontSize: 12,
+            }}
           />
-          <button type="button" disabled={!query.trim()} onClick={() => runQuery()} style={{ minHeight: 42, border: `1px solid ${DEMO.ink}`, background: "var(--color-brand-orange)", color: "white", padding: "9px 14px", fontFamily: DEMO.font.mono, fontSize: 10, fontWeight: 700, cursor: query.trim() ? "pointer" : "not-allowed", opacity: query.trim() ? 1 : 0.5 }}>Search sample archive</button>
-          <button type="button" onClick={() => runQuery("Which rules govern foreign contracts?")} style={{ minHeight: 42, border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, color: DEMO.ink, padding: "9px 12px", fontFamily: DEMO.font.mono, fontSize: 10, cursor: "pointer" }}>Run no-match case</button>
+          <button
+            type="button"
+            disabled={!query.trim()}
+            onClick={() => runQuery()}
+            style={{
+              minHeight: 44,
+              border: `1px solid ${DEMO.ink}`,
+              background: "var(--color-brand-orange)",
+              color: "white",
+              padding: "9px 14px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: query.trim() ? "pointer" : "not-allowed",
+              opacity: query.trim() ? 1 : 0.5,
+            }}
+          >
+            Search sample archive
+          </button>
+          <button
+            type="button"
+            onClick={() => runQuery("Which rules govern foreign contracts?")}
+            style={{
+              minHeight: 44,
+              border: `1px solid ${DEMO.ink}`,
+              background: DEMO.kalk,
+              color: DEMO.ink,
+              padding: "9px 12px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            Run no-match case
+          </button>
         </div>
       </div>
     </div>

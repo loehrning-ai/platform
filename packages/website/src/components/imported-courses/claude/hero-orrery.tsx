@@ -223,7 +223,7 @@ export function HeroOrrery({
     <div className="border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] md:p-8">
       <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
         <div>
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {copy.kind}
           </p>
           <h2 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -234,7 +234,7 @@ export function HeroOrrery({
           </p>
         </div>
         <div className="min-w-[120px] border border-border bg-background p-4 text-right">
-          <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+          <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.score}
           </p>
           <p
@@ -245,7 +245,7 @@ export function HeroOrrery({
           >
             {quality}
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground">
+          <p className="mt-1 font-mono text-xs uppercase tracking-[0.06em] text-muted-foreground">
             {structureLabel(quality, copy.labels)}
           </p>
           <div className="mt-3 h-[3px] w-full overflow-hidden rounded-full bg-border">
@@ -271,13 +271,13 @@ export function HeroOrrery({
               aria-pressed={on}
               onClick={() => toggle(part.id)}
               className={cn(
-                "flex flex-col gap-0.5 border-2 px-4 py-2.5 text-left transition-colors",
+                "flex min-h-11 flex-col gap-0.5 border-2 px-4 py-2.5 text-left transition-colors",
                 on
                   ? "border-brand-orange bg-brand-orange/10"
                   : "border-border bg-background hover:border-brand-orange/60",
               )}
             >
-              <span className="flex items-center justify-between font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+              <span className="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                 {part.label}
                 <span className="text-muted-foreground">
                   {on ? copy.on : copy.off} · +{part.weight}
@@ -296,12 +296,12 @@ export function HeroOrrery({
           type="button"
           onClick={run}
           disabled={loading || !assembled.trim()}
-          className="border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? copy.running : output ? copy.rerun : copy.run}
         </button>
         {!loading && output && (
-          <span className="font-mono text-[11px] text-muted-foreground">
+          <span className="font-mono text-xs text-muted-foreground">
             {output.split(/\s+/).filter(Boolean).length} {copy.words} ·{" "}
             {copy.from} {activeParts.length} {copy.parts}
           </span>
@@ -310,7 +310,7 @@ export function HeroOrrery({
 
       {output && (
         <div className="mt-3">
-          <p className="mb-1 font-mono text-[10.5px] text-muted-foreground">
+          <p className="mb-1 font-mono text-xs text-muted-foreground">
             {copy.disclosure}
           </p>
           <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-words border border-border bg-background p-4 text-[13px] leading-[1.55] text-foreground">

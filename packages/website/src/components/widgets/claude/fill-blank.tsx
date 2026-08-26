@@ -67,7 +67,7 @@ export function FillBlankWidget({
       kindLabel={german ? "Übung" : "Drill"}
       title={german ? "Prompt-Vorlage ausfüllen" : "Fill in the prompt"}
       done={done}
-      xpLabel="+10 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <p className="mb-3 text-[13.5px] leading-[1.5] text-muted-foreground">
         <strong className="text-foreground">
@@ -86,7 +86,7 @@ export function FillBlankWidget({
           >
             <label
               htmlFor={`fill-blank-${lessonId}-${cpId}-${i}`}
-              className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground"
+              className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
             >
               {blank.label}
             </label>
@@ -105,7 +105,7 @@ export function FillBlankWidget({
               // blanks overhang the lesson's clip wrapper by 33.5px and their
               // right-hand side is silently cut off. Every sibling widget input
               // already carries one of these; this one was the exception.
-              className="w-full min-w-0 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              className="min-h-11 w-full min-w-0 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             />
           </div>
         ))}
@@ -115,7 +115,7 @@ export function FillBlankWidget({
         onClick={check}
         disabled={loading || !allFilled}
         className={cn(
-          "mt-4 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+          "mt-4 inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
         )}
       >
         {loading

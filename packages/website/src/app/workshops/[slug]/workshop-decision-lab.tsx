@@ -19,14 +19,29 @@ interface WorkshopDecisionLabProps {
   readonly config: WorkshopDecisionLabConfig;
 }
 
+type ValidationError = "decision" | "evidence" | null;
+
+function getValidationMessage(
+  config: WorkshopDecisionLabConfig,
+  error: Exclude<ValidationError, null>,
+): string {
+  const english = config.resultLabel === "Decision feedback";
+  if (error === "decision") {
+    return english
+      ? "Select one decision before checking the result."
+      : "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.";
+  }
+  return english
+    ? "Select the strongest evidence before checking the result."
+    : "Wähle den stärksten Beleg aus, bevor du das Ergebnis prüfst.";
+}
+
 function optionClass(selected: boolean): string {
   return [
-    "group flex min-h-12 cursor-pointer items-start gap-3 border-2 p-3 text-left",
-    "motion-safe:transition-[opacity,transform] motion-safe:duration-150 motion-reduce:transition-none",
-    "hover:-translate-y-0.5 motion-reduce:hover:translate-y-0",
+    "flex min-h-12 cursor-pointer items-start gap-3 border p-3 text-left transition-colors",
     selected
       ? "border-brand-orange bg-brand-orange/10"
-      : "border-border bg-background",
+      : "border-border bg-background hover:border-foreground/50",
   ].join(" ");
 }
 
@@ -54,8 +69,9 @@ function DecisionOption({
         name={name}
         value={option.id}
         checked={selected}
+        required
         onChange={() => onSelect(option.id)}
-        className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)]"
+        className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
       />
       <span className="text-sm font-medium leading-snug text-foreground">
         {option.label}
@@ -81,15 +97,17 @@ function selectFeedback(
 export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
   const evidenceName = `workshop-evidence-${useId().replaceAll(":", "")}`;
+  const validationId = `${decisionName}-validation`;
   const firstChoiceRef = useRef<HTMLInputElement>(null);
+  const firstEvidenceRef = useRef<HTMLInputElement>(null);
   const resetFocusPending = useRef(false);
   const [choiceId, setChoiceId] = useState("");
   const [evidenceId, setEvidenceId] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [validationError, setValidationError] = useState<ValidationError>(null);
   const feedback = submitted
     ? selectFeedback(config, choiceId, evidenceId)
     : null;
-  const canSubmit = choiceId.length > 0 && evidenceId.length > 0;
 
   useLayoutEffect(() => {
     if (!resetFocusPending.current) return;
@@ -102,19 +120,38 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
     return () => window.cancelAnimationFrame(frame);
   }, [choiceId, evidenceId, submitted]);
 
+  useLayoutEffect(() => {
+    if (!validationError) return;
+    const target =
+      validationError === "decision"
+        ? firstChoiceRef.current
+        : firstEvidenceRef.current;
+    target?.focus({ preventScroll: true });
+  }, [validationError]);
+
   function reviseChoice(id: string) {
     setChoiceId(id);
     setSubmitted(false);
+    setValidationError((current) => (current === "decision" ? null : current));
   }
 
   function reviseEvidence(id: string) {
     setEvidenceId(id);
     setSubmitted(false);
+    setValidationError((current) => (current === "evidence" ? null : current));
   }
 
   function submitDecision(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canSubmit) return;
+    if (!choiceId) {
+      setValidationError("decision");
+      return;
+    }
+    if (!evidenceId) {
+      setValidationError("evidence");
+      return;
+    }
+    setValidationError(null);
     setSubmitted(true);
   }
 
@@ -123,62 +160,63 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
     setChoiceId("");
     setEvidenceId("");
     setSubmitted(false);
+    setValidationError(null);
   }
 
   return (
     <section
       aria-labelledby={`${decisionName}-title`}
       data-workshop-decision-lab
-      className="relative overflow-hidden border-2 border-foreground bg-foreground text-background shadow-[7px_7px_0_0_var(--color-brand-orange)]"
+      className="border border-foreground border-t-[3px] border-t-brand-orange bg-background"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-2 -top-8 font-mono text-[9rem] font-black leading-none text-background/[0.04] sm:text-[13rem]"
-      >
-        01
-      </div>
-
-      <div className="relative grid gap-0 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-        <header className="border-b border-background/20 p-5 sm:p-7 lg:border-b-0 lg:border-r">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-kupfer-light">
+      <div className="grid lg:grid-cols-[minmax(16rem,0.72fr)_minmax(0,1.28fr)]">
+        <header className="border-b border-border p-4 sm:p-5 lg:border-b-0 lg:border-r">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {config.kicker}
           </p>
           <h2
             id={`${decisionName}-title`}
-            className="mt-3 max-w-xl text-3xl font-black leading-[0.96] tracking-[-0.045em] sm:text-4xl"
+            className="mt-2 max-w-xl text-2xl font-black leading-tight tracking-[-0.035em] sm:text-3xl"
           >
             {config.title}
           </h2>
-          <p className="mt-4 max-w-[52ch] text-sm leading-relaxed text-background/75">
+          <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted-foreground">
             {config.prompt}
           </p>
-          <ul className="mt-6 grid grid-cols-1 gap-px border border-background/20 bg-background/20 min-[420px]:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-1 border-y border-border sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
             {config.facts.map((fact) => (
               <li
                 key={fact}
-                className="bg-foreground px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-background"
+                className="break-words border-t border-border px-2 py-2 font-mono text-xs font-semibold leading-snug text-foreground first:border-t-0 sm:border-l sm:border-t-0 sm:first:border-l-0 lg:border-l-0 lg:border-t lg:first:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
               >
                 {fact}
               </li>
             ))}
           </ul>
-          <p className="mt-4 flex items-start gap-2 text-[11px] leading-snug text-background/60">
+          <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
             <ShieldCheck
               aria-hidden="true"
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-orange"
+              className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
             />
             {config.privacyNote}
           </p>
         </header>
 
         <form
-          className="relative bg-card p-5 text-foreground sm:p-7"
+          className="bg-card/25 p-4 sm:p-5"
           onSubmit={submitDecision}
           onReset={resetDecision}
+          noValidate
         >
-          <div className="grid gap-6 xl:grid-cols-2">
-            <fieldset className="min-w-0">
-              <legend className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <div className="grid gap-5 xl:grid-cols-2">
+            <fieldset
+              className="min-w-0"
+              aria-invalid={validationError === "decision" || undefined}
+              aria-describedby={
+                validationError === "decision" ? validationId : undefined
+              }
+            >
+              <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                 {config.decisionLegend}
               </legend>
               <div className="grid gap-2">
@@ -195,43 +233,41 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
               </div>
             </fieldset>
 
-            <fieldset className="min-w-0">
-              <legend className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+            <fieldset
+              className="min-w-0"
+              aria-invalid={validationError === "evidence" || undefined}
+              aria-describedby={
+                validationError === "evidence" ? validationId : undefined
+              }
+            >
+              <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                 {config.evidenceLegend}
               </legend>
               <div className="grid gap-2">
-                {config.evidence.map((option) => (
+                {config.evidence.map((option, index) => (
                   <DecisionOption
                     key={option.id}
                     option={option}
                     name={evidenceName}
                     selected={evidenceId === option.id}
                     onSelect={reviseEvidence}
+                    inputRef={index === 0 ? firstEvidenceRef : undefined}
                   />
                 ))}
               </div>
             </fieldset>
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center">
-            <button
-              type="submit"
-              disabled={!canSubmit}
-              className="inline-flex min-h-12 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-white motion-safe:transition-[opacity,transform] motion-safe:duration-150 enabled:hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none motion-reduce:enabled:hover:translate-y-0"
+          {validationError ? (
+            <p
+              id={validationId}
+              role="alert"
+              aria-atomic="true"
+              className="mt-4 border-l-[3px] border-destructive bg-background px-4 py-3 text-sm font-semibold text-destructive"
             >
-              {config.submitLabel}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </button>
-            {submitted ? (
-              <button
-                type="reset"
-                className="inline-flex min-h-11 items-center justify-center gap-2 px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground underline decoration-border underline-offset-4 motion-safe:transition-[opacity,transform] motion-safe:duration-150 hover:-translate-y-0.5 hover:text-foreground motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-              >
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                {config.resetLabel}
-              </button>
-            ) : null}
-          </div>
+              {getValidationMessage(config, validationError)}
+            </p>
+          ) : null}
 
           <div
             role="status"
@@ -241,8 +277,8 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
             className="mt-4 min-h-0"
           >
             {feedback ? (
-              <div className="border-l-4 border-brand-orange bg-background p-4 motion-safe:transition-[opacity,transform] motion-safe:duration-200 motion-reduce:transition-none">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+              <div className="border-l-[3px] border-brand-orange bg-background p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                   {feedback.title}
                 </p>
                 <p className="mt-2 max-w-[70ch] text-sm leading-relaxed text-foreground/80">
@@ -250,6 +286,26 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
                 </p>
               </div>
             ) : null}
+          </div>
+
+          <div className="mt-4 flex border-t border-border pt-4">
+            {submitted ? (
+              <button
+                type="reset"
+                className="inline-flex min-h-11 items-center justify-center gap-2 border border-foreground bg-background px-4 py-2 text-sm font-bold text-foreground transition-colors hover:bg-foreground hover:text-background"
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                {config.resetLabel}
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground"
+              >
+                {config.submitLabel}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            )}
           </div>
         </form>
       </div>

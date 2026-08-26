@@ -11,8 +11,6 @@ const LOCALES = [
     timeline: "Berufliche Stationen",
     academic: "Akademischer Hintergrund",
     feedback: "/feedback",
-    courses: "/kurse",
-    openSource: "/open-source",
     otherLocale: "/en/ueber-mich",
   },
   {
@@ -24,8 +22,6 @@ const LOCALES = [
     timeline: "Professional timeline",
     academic: "Academic background",
     feedback: "/en/feedback",
-    courses: "/en/kurse",
-    openSource: "/en/open-source",
     otherLocale: "/ueber-mich",
   },
 ] as const;
@@ -47,7 +43,9 @@ function visibleLanguageSwitchLink(page: Page, href: string) {
 }
 
 async function settle(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
   await page.evaluate(async () => {
     // Bounded: document.fonts.ready stays pending on a font that never
     // resolves, and requestAnimationFrame does not fire on a backgrounded or
@@ -93,7 +91,9 @@ async function settle(page: Page) {
             ? Promise.resolve()
             : new Promise<void>((resolve) => {
                 image.addEventListener("load", () => resolve(), { once: true });
-                image.addEventListener("error", () => resolve(), { once: true });
+                image.addEventListener("error", () => resolve(), {
+                  once: true,
+                });
               }),
         ),
       ),
@@ -151,7 +151,10 @@ async function expectContainedLayout(page: Page, label: string) {
     geometry.documentScrollWidth,
     `${label}: document width ${geometry.documentScrollWidth}px exceeds ${geometry.innerWidth}px`,
   ).toBeLessThanOrEqual(geometry.innerWidth + 1);
-  expect(geometry.escaped, `${label}: visible elements escape the viewport`).toEqual([]);
+  expect(
+    geometry.escaped,
+    `${label}: visible elements escape the viewport`,
+  ).toEqual([]);
 }
 
 for (const localeCase of LOCALES) {
@@ -165,21 +168,24 @@ for (const localeCase of LOCALES) {
     expect(response?.status()).toBe(200);
     await settle(page);
 
-    await expect(page.locator("html")).toHaveAttribute("lang", localeCase.htmlLang);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
+    await expect(page.locator("html")).toHaveAttribute(
+      "lang",
+      localeCase.htmlLang,
+    );
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      localeCase.h1,
+    );
     await expect(page).toHaveTitle(new RegExp(localeCase.title));
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       "href",
       `https://loehrning.ai${localeCase.route}`,
     );
-    await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
-      "href",
-      "https://loehrning.ai/ueber-mich",
-    );
-    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
-      "href",
-      "https://loehrning.ai/en/ueber-mich",
-    );
+    await expect(
+      page.locator('link[rel="alternate"][hreflang="de"]'),
+    ).toHaveAttribute("href", "https://loehrning.ai/ueber-mich");
+    await expect(
+      page.locator('link[rel="alternate"][hreflang="en"]'),
+    ).toHaveAttribute("href", "https://loehrning.ai/en/ueber-mich");
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
       "content",
       "profile",
@@ -200,14 +206,13 @@ for (const localeCase of LOCALES) {
     });
 
     await expect(
-      page.getByRole("link", { name: localeCase.locale === "de" ? "das Feedback-Formular" : "the feedback form" }),
+      page.getByRole("link", {
+        name:
+          localeCase.locale === "de"
+            ? "das Feedback-Formular"
+            : "the feedback form",
+      }),
     ).toHaveAttribute("href", localeCase.feedback);
-    await expect(
-      page.getByRole("link", { name: localeCase.locale === "de" ? /Kurse öffnen/ : /Open course catalog/ }),
-    ).toHaveAttribute("href", localeCase.courses);
-    await expect(
-      page.getByRole("link", { name: localeCase.locale === "de" ? /Open-Source-Hub öffnen/ : /Open open-source hub/ }),
-    ).toHaveAttribute("href", localeCase.openSource);
     await expect(
       visibleLanguageSwitchLink(page, localeCase.otherLocale),
     ).toBeVisible();
@@ -232,14 +237,22 @@ test.describe("profile content without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
   for (const localeCase of LOCALES) {
-    test(`${localeCase.locale} keeps its complete profile visible`, async ({ page }) => {
+    test(`${localeCase.locale} keeps its complete profile visible`, async ({
+      page,
+    }) => {
       const response = await page.goto(localeCase.route, {
         waitUntil: "domcontentloaded",
       });
       expect(response?.status()).toBe(200);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
-      await expect(page.getByRole("heading", { name: localeCase.timeline })).toBeVisible();
-      await expect(page.getByRole("heading", { name: localeCase.academic })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        localeCase.h1,
+      );
+      await expect(
+        page.getByRole("heading", { name: localeCase.timeline }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: localeCase.academic }),
+      ).toBeVisible();
       await expect(page.locator("#ueber-mich-jsonld")).toBeAttached();
       await expectContainedLayout(page, `${localeCase.locale}/no-js`);
     });
@@ -266,9 +279,15 @@ test("both locales reflow without escaped elements at five widths", async ({
       });
       expect(response?.status(), `${localeCase.locale}/${width}`).toBe(200);
       await settle(page);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
-      await expect(page.getByRole("heading", { name: localeCase.timeline })).toBeVisible();
-      await expect(page.getByRole("heading", { name: localeCase.academic })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        localeCase.h1,
+      );
+      await expect(
+        page.getByRole("heading", { name: localeCase.timeline }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: localeCase.academic }),
+      ).toBeVisible();
       await expectContainedLayout(page, `${localeCase.locale}/${width}`);
       expect(browserErrors, `${localeCase.locale}/${width}`).toEqual([]);
     }
@@ -286,16 +305,20 @@ test("locale switch and internal links support keyboard activation", async ({
   await expect(switchToEnglish).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/en\/ueber-mich$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(LOCALES[1].h1);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    LOCALES[1].h1,
+  );
 
-  const courses = page.getByRole("link", { name: /Open course catalog/ });
-  await courses.focus();
-  await expect(courses).toBeFocused();
+  const feedback = page.getByRole("link", { name: "the feedback form" });
+  await feedback.focus();
+  await expect(feedback).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/en\/kurse$/);
+  await expect(page).toHaveURL(/\/en\/feedback$/);
 });
 
-test("both locales remain contained at 200 percent zoom", async ({ page }, testInfo) => {
+test("both locales remain contained at 200 percent zoom", async ({
+  page,
+}, testInfo) => {
   test.skip(
     testInfo.project.name !== "chromium",
     "The explicit zoom audit runs once in Chromium.",
@@ -322,7 +345,9 @@ test("reduced-motion preference leaves every profile section visible", async ({
   await settle(page);
 
   expect(
-    await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
+    await page.evaluate(
+      () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+    ),
   ).toBe(true);
   for (const heading of [
     LOCALES[1].h1,

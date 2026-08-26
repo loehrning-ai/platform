@@ -3,14 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  ClipHeading,
-  Eyebrow,
-  FadeBlock,
-} from "@/components/ai-native/primitives";
-import {
-  type GlossaryCategory,
-  type GlossaryEntry,
-} from "@/lib/ai-native/glossary";
+  TechnicalCourseFrame,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
+import type { GlossaryCategory, GlossaryEntry } from "@/lib/ai-native/glossary";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
@@ -50,11 +46,13 @@ export function GlossaryView({
           clear: "Clear",
           updated: `Version ${version} · last updated ${lastUpdated}`,
           categories: "Categories",
-          results: (count: number) => `${count} ${count === 1 ? "result" : "results"}`,
+          results: (count: number) =>
+            `${count} ${count === 1 ? "result" : "results"}`,
           noResults: "No results. Try another term.",
           terms: "terms",
           footer:
             "Definitions are reviewed with the course content. This reference remains publicly accessible.",
+          status: "Reference status",
         }
       : {
           course: "Kurs",
@@ -72,19 +70,21 @@ export function GlossaryView({
           terms: "Begriffe",
           footer:
             "Definitionen werden zusammen mit dem Kursinhalt geprüft. Diese Referenz bleibt frei zugänglich.",
+          status: "Referenzstatus",
         };
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>(groups[0]?.key ?? "");
 
-  /* Scroll-spy to sync sidebar */
   useEffect(() => {
     setHydrated(true);
     const onScroll = () => {
       let current = groups[0]?.key ?? "";
-      for (const g of groups) {
-        const el = document.getElementById(`cat-${g.key}`);
-        if (el && el.getBoundingClientRect().top < 200) current = g.key;
+      for (const group of groups) {
+        const element = document.getElementById(`cat-${group.key}`);
+        if (element && element.getBoundingClientRect().top < 200) {
+          current = group.key;
+        }
       }
       setActiveCat(current);
     };
@@ -94,267 +94,245 @@ export function GlossaryView({
   }, [groups]);
 
   const allTerms = useMemo(
-    () => groups.flatMap((g) => g.entries.map((e) => ({ group: g, entry: e }))),
+    () =>
+      groups.flatMap((group) =>
+        group.entries.map((entry) => ({ group, entry })),
+      ),
     [groups],
   );
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return null;
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) return null;
     return allTerms.filter(
       ({ entry }) =>
-        entry.term.toLowerCase().includes(q) ||
-        entry.definition.toLowerCase().includes(q),
+        entry.term.toLowerCase().includes(normalizedQuery) ||
+        entry.definition.toLowerCase().includes(normalizedQuery),
     );
   }, [query, allTerms]);
 
-  return (
-    <>
-      {/* Hero */}
-      <section className="border-b-[1px] border-foreground py-16 md:py-20">
-        <div className="mx-auto max-w-[960px] px-6 lg:px-12">
-          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4">
-            <nav
-              aria-label="Breadcrumb"
-              className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+  const renderRelatedTerms = (entry: GlossaryEntry) =>
+    entry.related.length > 0 ? (
+      <dd className="mt-2 font-mono text-xs leading-relaxed text-muted-foreground">
+        →{" "}
+        {entry.related.map((related, index) => (
+          <span key={related}>
+            <a
+              href={`#term-${encodeURIComponent(related.toLowerCase())}`}
+              className="border-b border-dotted border-brand-amber text-brand-amber transition-colors hover:text-brand-orange"
             >
-              <Link
-                href={localizeHref("/ai-native", locale)}
-                className="hover:text-brand-orange"
-              >
-                {copy.course}
-              </Link>
-              <span className="mx-2 opacity-40">/</span>
-              <span className="text-brand-orange">{copy.glossary}</span>
-            </nav>
-            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              {copy.counts}
-            </span>
-          </div>
-          <ClipHeading
-            as="h1"
-            className="font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+              {related}
+            </a>
+            {index < entry.related.length - 1 ? ", " : ""}
+          </span>
+        ))}
+      </dd>
+    ) : null;
+
+  return (
+    <TechnicalCourseFrame courseId="ai-native-glossary" lang={locale}>
+      <header className="border-y border-foreground py-6 sm:py-8">
+        <nav
+          aria-label={locale === "en" ? "Breadcrumb" : "Brotkrümelnavigation"}
+          className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
+        >
+          <Link
+            href={localizeHref("/ai-native", locale)}
+            className="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            {copy.glossary}
-          </ClipHeading>
-          <FadeBlock delay={1}>
-            <p className="mt-5 max-w-[640px] text-[18px] leading-[1.6] text-muted-foreground">
+            {copy.course}
+          </Link>
+          <span className="mx-2" aria-hidden="true">
+            /
+          </span>
+          <span className="text-brand-orange">{copy.glossary}</span>
+        </nav>
+
+        <div className="mt-5 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
+          <div className="min-w-0">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+              {copy.counts}
+            </p>
+            <h1 className="mt-3 text-[38px] font-bold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[48px]">
+              {copy.glossary}
+            </h1>
+            <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
               {copy.intro}
             </p>
-          </FadeBlock>
-          <FadeBlock delay={2}>
-            <div className="mt-10 flex max-w-[480px] items-center gap-2 border-b border-foreground">
-              <span className="pr-1 font-mono text-[12px] font-bold tracking-[0.12em] text-brand-orange">
-                ⌕
-              </span>
+          </div>
+
+          <aside className="min-w-0 border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+            <label
+              htmlFor="ai-native-glossary-search"
+              className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground"
+            >
+              {copy.searchLabel}
+            </label>
+            <div
+              role="search"
+              className="mt-2 flex min-w-0 items-center border-y border-foreground"
+            >
               <input
-                type="text"
+                id="ai-native-glossary-search"
+                type="search"
                 value={query}
                 readOnly={!hydrated}
                 aria-disabled={!hydrated}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder={copy.placeholder}
-                className="flex-1 bg-transparent py-3 text-[16px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="min-h-12 min-w-0 flex-1 bg-transparent px-1 text-base text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
                 aria-label={copy.searchLabel}
               />
-              {query && (
+              {query ? (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
                 >
                   {copy.clear}
                 </button>
-              )}
+              ) : null}
             </div>
-          </FadeBlock>
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-            {copy.updated}
+          </aside>
+        </div>
+      </header>
+
+      <div className="mt-10 grid min-w-0 gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            {copy.categories}
           </p>
-        </div>
-      </section>
+          <ul className="mt-2 grid border-t border-border sm:grid-cols-2 lg:grid-cols-1">
+            {groups.map((group) => {
+              const isActive = activeCat === group.key;
+              return (
+                <li key={group.key} className="border-b border-border">
+                  <a
+                    href={`#cat-${group.key}`}
+                    aria-current={isActive ? "location" : undefined}
+                    className={cn(
+                      "grid min-h-11 grid-cols-[2.5rem_minmax(0,1fr)_2rem] items-center gap-2 border-l-2 px-2 font-mono text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                      isActive
+                        ? "border-brand-orange text-brand-orange"
+                        : "border-transparent text-foreground hover:border-brand-orange hover:text-brand-orange",
+                    )}
+                  >
+                    <span className="text-muted-foreground">§ {group.num}</span>
+                    <span className="break-words font-sans text-sm font-semibold">
+                      {group.label}
+                    </span>
+                    <span className="text-right text-muted-foreground">
+                      {group.entries.length}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
 
-      {/* Content */}
-      <section className="py-16 md:py-20">
-        <div className="mx-auto max-w-[1100px] px-6 lg:px-12">
-          <div className="grid gap-12 lg:grid-cols-[220px_1fr] lg:gap-18">
-            {/* Sidebar — sticky on lg+ */}
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                {copy.categories}
+        <div className="min-w-0 max-w-[780px]">
+          {filtered ? (
+            <section aria-label={copy.searchLabel}>
+              <p
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange"
+              >
+                {copy.results(filtered.length)}
               </p>
-              <ul className="grid gap-1.5">
-                {groups.map((g) => {
-                  const isActive = activeCat === g.key;
-                  return (
-                    <li key={g.key}>
-                      <a
-                        href={`#cat-${g.key}`}
-                        aria-current={isActive ? "location" : undefined}
-                        className={cn(
-                          "grid grid-cols-[28px_1fr_auto] items-baseline gap-2.5 border-l-2 py-2 pl-3 transition-colors",
-                          isActive
-                            ? "border-brand-orange text-brand-orange"
-                            : "border-transparent text-foreground hover:text-brand-orange",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "font-mono text-[10px] font-bold tracking-[0.12em]",
-                            isActive
-                              ? "text-brand-orange"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          § {g.num}
-                        </span>
-                        <span className="text-[14px] font-semibold">
-                          {g.label}
-                        </span>
-                        <span className="font-mono text-[11px] text-muted-foreground">
-                          {g.entries.length}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </aside>
-
-            {/* Terms */}
-            <div className="max-w-[760px]">
-              {filtered ? (
-                <div>
-                  <p
-                    role="status"
-                    aria-live="polite"
-                    aria-atomic="true"
-                    className="mb-5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange"
-                  >
-                    {copy.results(filtered.length)}
-                  </p>
-                  {filtered.length === 0 ? (
-                    <p className="text-[15px] text-muted-foreground">
-                      {copy.noResults}
-                    </p>
-                  ) : (
-                    <dl className="grid gap-6">
-                      {filtered.map(({ group, entry }) => (
-                        <div
-                          key={`${group.key}-${entry.term}`}
-                          id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
-                          className="border-t border-dashed border-border pt-4 scroll-mt-24"
-                        >
-                          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                            § {group.num} · {group.label}
-                          </p>
-                          <dt className="mt-1.5 font-mono text-[17px] font-bold text-brand-orange">
-                            {entry.term}
-                          </dt>
-                          <dd className="mt-2 max-w-[64ch] text-[15.5px] leading-[1.65] text-foreground">
-                            {entry.definition}
-                          </dd>
-                          {entry.related.length > 0 && (
-                            <dd className="mt-2 font-mono text-[12px] text-muted-foreground">
-                              →{" "}
-                              {entry.related.map((rel, i) => (
-                                <span key={rel}>
-                                  <a
-                                    href={`#term-${encodeURIComponent(rel.toLowerCase())}`}
-                                    className="border-b border-dotted border-brand-amber text-brand-amber transition-colors hover:text-brand-orange"
-                                  >
-                                    {rel}
-                                  </a>
-                                  {i < entry.related.length - 1 ? ", " : ""}
-                                </span>
-                              ))}
-                            </dd>
-                          )}
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                </div>
+              {filtered.length === 0 ? (
+                <p className="mt-5 border-y border-border py-5 text-sm text-muted-foreground">
+                  {copy.noResults}
+                </p>
               ) : (
-                groups.map((g) => (
-                  <section
-                    key={g.key}
-                    id={`cat-${g.key}`}
-                    className="mb-20 scroll-mt-24"
-                  >
-                    <div className="mb-6 flex flex-wrap items-baseline gap-5 border-t-[3px] border-brand-orange pt-4">
-                      <span className="font-mono text-[12px] font-bold tracking-[0.14em] text-brand-orange">
-                        § {g.num}
-                      </span>
-                      <h2
-                        className="font-bold leading-none tracking-[-0.035em] text-foreground"
-                        style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)" }}
-                      >
-                        {g.label}.
-                      </h2>
-                      <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                        {g.entries.length} {copy.terms}
-                      </span>
+                <dl className="mt-4 border-t border-foreground">
+                  {filtered.map(({ group, entry }) => (
+                    <div
+                      key={`${group.key}-${entry.term}`}
+                      id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
+                      className="scroll-mt-24 border-b border-border py-4"
+                    >
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                        § {group.num} · {group.label}
+                      </p>
+                      <dt className="mt-1 font-mono text-base font-bold text-brand-orange">
+                        {entry.term}
+                      </dt>
+                      <dd className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground">
+                        {entry.definition}
+                      </dd>
+                      {renderRelatedTerms(entry)}
                     </div>
-                    <dl className="grid gap-0">
-                      {g.entries.map((entry, i) => (
-                        <div
-                          key={entry.term}
-                          id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
-                          className={cn(
-                            "grid grid-cols-[auto_1fr] gap-7 pb-5 scroll-mt-24",
-                            i < g.entries.length - 1 &&
-                              "mb-5 border-b border-border",
-                          )}
-                        >
-                          <span className="pt-1 font-mono text-[10px] tracking-[0.12em] text-muted-foreground">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <div>
-                            <dt className="font-mono text-[17px] font-bold text-brand-orange">
-                              {entry.term}
-                            </dt>
-                            <dd className="mt-2 max-w-[64ch] text-[15.5px] leading-[1.65] text-foreground">
-                              {entry.definition}
-                            </dd>
-                            {entry.related.length > 0 && (
-                              <dd className="mt-2 font-mono text-[12px] text-muted-foreground">
-                                →{" "}
-                                {entry.related.map((rel, j) => (
-                                  <span key={rel}>
-                                    <a
-                                      href={`#term-${encodeURIComponent(rel.toLowerCase())}`}
-                                      className="border-b border-dotted border-brand-amber text-brand-amber transition-colors hover:text-brand-orange"
-                                    >
-                                      {rel}
-                                    </a>
-                                    {j < entry.related.length - 1 ? ", " : ""}
-                                  </span>
-                                ))}
-                              </dd>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </dl>
-                  </section>
-                ))
+                  ))}
+                </dl>
               )}
-            </div>
-          </div>
+            </section>
+          ) : (
+            groups.map((group) => (
+              <section
+                key={group.key}
+                id={`cat-${group.key}`}
+                className="mb-10 scroll-mt-24 last:mb-0"
+              >
+                <div className="flex min-w-0 flex-wrap items-end justify-between gap-3 border-t-2 border-brand-orange pt-4">
+                  <TechnicalCourseSectionHeading
+                    eyebrow={`§ ${group.num}`}
+                    title={`${group.label}.`}
+                  />
+                  <span className="pb-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                    {group.entries.length} {copy.terms}
+                  </span>
+                </div>
+                <dl className="mt-4 border-t border-border">
+                  {group.entries.map((entry, index) => (
+                    <div
+                      key={entry.term}
+                      id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
+                      className="grid scroll-mt-24 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 border-b border-border py-4"
+                    >
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <dt className="break-words font-mono text-base font-bold text-brand-orange">
+                          {entry.term}
+                        </dt>
+                        <dd className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground">
+                          {entry.definition}
+                        </dd>
+                        {renderRelatedTerms(entry)}
+                      </div>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            ))
+          )}
         </div>
-      </section>
+      </div>
 
-      <footer className="border-t border-border py-8">
-        <div className="mx-auto max-w-[960px] px-6 text-[13px] text-muted-foreground lg:px-12">
-          {copy.footer}
+      <details className="mt-10 border-y border-border">
+        <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+          {copy.status}
+          <span className="text-brand-orange" aria-hidden="true">
+            +
+          </span>
+        </summary>
+        <div className="border-t border-border py-4 text-[13px] leading-relaxed text-muted-foreground">
+          <p>{copy.updated}</p>
+          <p className="mt-2">{copy.footer}</p>
         </div>
-      </footer>
-    </>
+      </details>
+    </TechnicalCourseFrame>
   );
 }
 
 export function useGlossaryEyebrow(locale: Locale = "de") {
-  return <Eyebrow>{locale === "en" ? "Reference · Glossary" : "Referenz · Glossar"}</Eyebrow>;
+  return (
+    <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+      {locale === "en" ? "Reference · Glossary" : "Referenz · Glossar"}
+    </p>
+  );
 }

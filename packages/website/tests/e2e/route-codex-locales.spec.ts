@@ -1,4 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import {
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 const LESSON_IDS = [
@@ -25,14 +30,14 @@ const LOCALES = [
     prefix: "",
     landingTitle: "Codex kontrolliert im Repository einsetzen.",
     firstLessonTitle: "Was Codex tatsächlich ist",
-    completed: "Lektion abgeschlossen",
+    completed: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
     landingTitle: "Use Codex under explicit repository controls.",
     firstLessonTitle: "What Codex Actually Is",
-    completed: "Lesson complete",
+    completed: "Navigation checkpoint saved",
   },
 ] as const;
 
@@ -60,7 +65,7 @@ function completedCodexState(
           completedLessonIds.map((id) => [
             id,
             {
-              sectionsRead: [],
+              sectionsRead: [...CANONICAL_SECTION_IDS.codex[id]],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -75,7 +80,12 @@ function completedCodexState(
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      completedLessonIds.map((id) => [
+        checkpointKey(id, lessonCompletionEvidenceCheckpointId("codex")),
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -112,7 +122,9 @@ function encodeCertificateHash(): string {
 }
 
 async function settle(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
   await settleFontsAndFrame(page);
 }
 
@@ -181,9 +193,7 @@ async function expectContainedLayout(page: Page, label: string) {
   const geometry = await page.evaluate(() => {
     const tolerance = 1;
     const viewportRight = window.innerWidth + tolerance;
-    const escaped = Array.from(
-      document.body.querySelectorAll<HTMLElement>("*"),
-    )
+    const escaped = Array.from(document.body.querySelectorAll<HTMLElement>("*"))
       .filter((element) => {
         const rect = element.getBoundingClientRect();
         const style = getComputedStyle(element);
@@ -244,9 +254,10 @@ async function expectContainedLayout(page: Page, label: string) {
     geometry.documentScrollWidth,
     `${label}: document width ${geometry.documentScrollWidth}px exceeds ${geometry.innerWidth}px`,
   ).toBeLessThanOrEqual(geometry.innerWidth + 1);
-  expect(geometry.escaped, `${label}: visible elements escape the viewport`).toEqual(
-    [],
-  );
+  expect(
+    geometry.escaped,
+    `${label}: visible elements escape the viewport`,
+  ).toEqual([]);
 }
 
 async function expectLocaleOwnedCodexLinks(
@@ -316,7 +327,10 @@ for (const width of VIEWPORTS) {
             "lang",
             localeCase.locale,
           );
-          await expectContainedLayout(page, `${localeCase.locale}/${width}/${route}`);
+          await expectContainedLayout(
+            page,
+            `${localeCase.locale}/${width}/${route}`,
+          );
           await expectLocaleOwnedCodexLinks(page, localeCase.locale, route);
           expect(browserErrors, `${route}: browser errors`).toEqual([]);
         });
@@ -351,18 +365,23 @@ test.describe("Codex locale continuity and record surfaces", () => {
     await settle(page);
     await continueLocally(page, "de");
     await openLessonReference(page);
-    const unreadSections = page.getByRole("button", {
-      name: "Als gelesen markieren",
+    const uncheckedSections = page.getByRole("button", {
+      name: "Abschnitt als geprüft bestätigen",
     });
-    while ((await unreadSections.count()) > 0) {
-      await unreadSections.first().click();
+    while ((await uncheckedSections.count()) > 0) {
+      await uncheckedSections.first().click();
     }
-    const completeLesson = page.getByRole("button", {
-      name: "Lektion abschließen",
+    await page
+      .getByRole("textbox", { name: "Entscheidung oder Änderung" })
+      .fill("Ich prüfe diese Änderung in der Praxis.");
+    const saveCheckpoint = page.getByRole("button", {
+      name: "Checkpoint speichern",
     });
-    await expect(completeLesson).toBeEnabled();
-    await completeLesson.click();
-    await expect(page.getByText("Lektion abgeschlossen", { exact: true })).toBeVisible();
+    await expect(saveCheckpoint).toBeEnabled();
+    await saveCheckpoint.click();
+    await expect(
+      page.getByText("Navigations-Checkpoint gespeichert", { exact: true }),
+    ).toBeVisible();
 
     const switchToEnglish = visibleLanguageSwitchLink(
       page,
@@ -373,7 +392,9 @@ test.describe("Codex locale continuity and record surfaces", () => {
     await settle(page);
     await continueLocally(page, "en");
     await openLessonReference(page);
-    await expect(page.getByText("Lesson complete", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("Navigation checkpoint saved", { exact: true }),
+    ).toBeVisible();
   });
 
   test("certificate eligibility and localized record pages use the same progress", async ({
@@ -412,9 +433,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
       await expect(page.getByText("Ada Lovelace")).toBeVisible();
       await expect(
         page.getByText(
-          localeCase.locale === "de"
-            ? "QR-Daten gelesen"
-            : "QR data read",
+          localeCase.locale === "de" ? "QR-Daten gelesen" : "QR data read",
           { exact: true },
         ),
       ).toBeVisible();
@@ -444,10 +463,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settle(page);
-    const englishLink = visibleLanguageSwitchLink(
-      page,
-      /Englische Oberfläche/,
-    );
+    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/codex/verifizierung#${hash}`,

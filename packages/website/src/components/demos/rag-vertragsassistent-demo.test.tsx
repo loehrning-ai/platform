@@ -51,7 +51,9 @@ describe("<RagVertragsassistentDemo>", () => {
     render(<RagVertragsassistentDemo />);
 
     expect(screen.getByText("Vertrags-Assistent")).toBeInTheDocument();
-    expect(screen.getByText("Keyword-Suche · 8 Beispieldokumente")).toBeInTheDocument();
+    expect(
+      screen.getByText("Keyword-Suche · 8 Beispieldokumente"),
+    ).toBeInTheDocument();
     expect(screen.getByText("● DEMO-MODUS")).toBeInTheDocument();
 
     expect(
@@ -89,7 +91,9 @@ describe("<RagVertragsassistentDemo>", () => {
 
     expect(screen.getByRole("button", { name: "Frage senden" })).toBeDisabled();
     fireEvent.change(
-      screen.getByRole("textbox", { name: "Frage an den Vertrags-Assistenten" }),
+      screen.getByRole("textbox", {
+        name: "Frage an den Vertrags-Assistenten",
+      }),
       { target: { value: "Frage?" } },
     );
     expect(screen.getByRole("button", { name: "Frage senden" })).toBeEnabled();
@@ -103,16 +107,57 @@ describe("<RagVertragsassistentDemo>", () => {
     );
 
     // The keyword router resolves to the Kündigung answer with its bold key figure.
-    expect(await screen.findByText("3 Monate zum Quartalsende")).toBeInTheDocument();
+    expect(
+      await screen.findByText("3 Monate zum Quartalsende"),
+    ).toBeInTheDocument();
     // Two grounded sources are reported.
     expect(screen.getByText(/Keyword-Suche · 2 Quellen/)).toBeInTheDocument();
     // Matched keyword chip (distinct from the bold answer figure).
     expect(screen.getByText("Quartalsende")).toBeInTheDocument();
 
     // Sources are collapsed behind a toggle; expanding reveals the document + chip.
-    fireEvent.click(screen.getByRole("button", { name: /2 Quellen anzeigen/ }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: /Quellen anzeigen: 2 Quellen.*Kündigungsfrist/,
+      }),
+    );
     expect(screen.getByText("Rahmenvereinbarung v3.2")).toBeInTheDocument();
     expect(screen.getByText("Hoch")).toBeInTheDocument();
+  });
+
+  it("keeps accumulated source disclosures tied to their query context", async () => {
+    render(<RagVertragsassistentDemo />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /Wie ist die Kündigungsfrist/ }),
+    );
+    expect(
+      await screen.findByText("3 Monate zum Quartalsende"),
+    ).toBeInTheDocument();
+
+    fireEvent.change(
+      screen.getByRole("textbox", {
+        name: "Frage an den Vertrags-Assistenten",
+      }),
+      { target: { value: "Welche Haftungsgrenzen gelten?" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Frage senden" }));
+    expect(
+      await screen.findByText("3-fache des Jahreshonorars"),
+    ).toBeInTheDocument();
+
+    const terminationSources = screen.getByRole("button", {
+      name: /Quellen anzeigen: 2 Quellen.*Wie ist die Kündigungsfrist/,
+    });
+    const liabilitySources = screen.getByRole("button", {
+      name: /Quellen anzeigen: 2 Quellen.*Welche Haftungsgrenzen gelten/,
+    });
+    expect(terminationSources).toBeInTheDocument();
+    expect(liabilitySources).toBeInTheDocument();
+
+    fireEvent.click(terminationSources);
+    fireEvent.click(liabilitySources);
+    expect(screen.getAllByText("Rahmenvereinbarung v3.2")).toHaveLength(2);
   });
 
   it("returns an honest no-hit state for the built-in Grenzfall query", async () => {

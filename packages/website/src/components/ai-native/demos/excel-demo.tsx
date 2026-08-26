@@ -192,18 +192,18 @@ export function ExcelDemo(): JSX.Element {
         {/* Spreadsheet */}
         <div className="w-full min-w-0 max-w-full border border-foreground bg-background">
           <div
-            className="flex items-center gap-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white"
+            className="flex items-center gap-2 px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-white"
             style={{ backgroundColor: "#107C41" }}
           >
             <div
-              className="flex h-4 w-4 items-center justify-center text-[11px] font-bold"
+              className="flex h-5 w-5 items-center justify-center text-[12px] font-bold"
               style={{ backgroundColor: "white", color: "#107C41" }}
             >
               X
             </div>
             Absatz-KW14-16.xlsx · Mappe1
           </div>
-          <div className="border-b border-border bg-card/60 px-3 py-1 font-mono text-[10px] text-muted-foreground">
+          <div className="border-b border-border bg-card/60 px-3 py-1 font-mono text-[12px] text-muted-foreground">
             A1:E10 · 9 Zeilen · 5 Spalten
           </div>
           <div
@@ -213,7 +213,7 @@ export function ExcelDemo(): JSX.Element {
             tabIndex={0}
             className="w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
           >
-            <table className="w-full min-w-[520px] border-collapse font-mono text-[11px]">
+            <table className="w-full min-w-[520px] border-collapse font-mono text-[12px]">
               <thead>
                 <tr className="bg-card/60">
                   {["", "Woche", "Region", "SKU", "Stück", "Umsatz"].map(
@@ -221,7 +221,7 @@ export function ExcelDemo(): JSX.Element {
                       <th
                         key={i}
                         className={cn(
-                          "border-b border-foreground border-r border-r-border px-2 py-1.5 text-[9px] tracking-[0.06em]",
+                          "border-b border-foreground border-r border-r-border px-2 py-1.5 text-[12px] tracking-[0.06em]",
                           i === 0
                             ? "text-muted-foreground font-normal"
                             : "font-bold text-foreground",
@@ -237,7 +237,7 @@ export function ExcelDemo(): JSX.Element {
               <tbody>
                 {EXCEL_ROWS.map((r, i) => (
                   <tr key={i} className="border-b border-border">
-                    <td className="w-6 bg-card/60 px-2 py-1 text-center text-[9px] text-muted-foreground">
+                    <td className="w-7 bg-card/60 px-2 py-1 text-center text-[12px] text-muted-foreground">
                       {i + 2}
                     </td>
                     <td className="border-r border-border px-2 py-1">
@@ -260,7 +260,7 @@ export function ExcelDemo(): JSX.Element {
               </tbody>
             </table>
           </div>
-          <div className="flex items-center justify-between border-t border-border bg-card/60 px-3 py-2 font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-card/60 px-3 py-2 font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
             <span>Blatt1 · 9 Zeilen</span>
             <span className="font-bold text-brand-orange">
               ◆ Claude-Add-In aktiv
@@ -281,7 +281,7 @@ export function ExcelDemo(): JSX.Element {
                 disabled={loading}
                 aria-pressed={active}
                 className={cn(
-                  "border p-3.5 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                  "min-h-11 border p-3.5 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                   active
                     ? "border-brand-orange bg-foreground text-background shadow-[3px_3px_0_0_var(--color-foreground)]"
                     : "border-border bg-card/60 text-foreground hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)]",
@@ -299,7 +299,7 @@ export function ExcelDemo(): JSX.Element {
                 >
                   {t.description}
                 </div>
-                <div className="mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+                <div className="mt-2 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {t.actionLabel} →
                 </div>
               </button>
@@ -330,7 +330,7 @@ export function ExcelDemo(): JSX.Element {
           >
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <DemoOverline>◆ Formel · Zelle {output.cell}</DemoOverline>
-              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]">
+              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]">
                 Formel kopieren
               </span>
             </div>
@@ -340,7 +340,7 @@ export function ExcelDemo(): JSX.Element {
             <p className="mt-3 text-[12px] leading-[1.55] text-[var(--color-dark-fg)]/75">
               {output.explain}
             </p>
-            <div className="mt-3 grid grid-cols-3 border-t border-[var(--color-dark-border)] pt-3 font-mono text-[11px] md:grid-cols-6">
+            <div className="mt-3 grid grid-cols-2 border-t border-[var(--color-dark-border)] pt-3 font-mono text-[12px] sm:grid-cols-3 md:grid-cols-6">
               {output.preview.map((r, i) => {
                 const negative = r.wachstum.startsWith("−");
                 return (
@@ -352,7 +352,7 @@ export function ExcelDemo(): JSX.Element {
                         "border-r border-[var(--color-dark-border)]",
                     )}
                   >
-                    <div className="font-mono text-[9px] tracking-[0.08em] text-[var(--color-dark-muted)]">
+                    <div className="font-mono text-[12px] tracking-[0.08em] text-[var(--color-dark-muted)]">
                       {r.w} · {r.region}
                     </div>
                     <div
@@ -381,7 +381,7 @@ export function ExcelDemo(): JSX.Element {
           >
             <div className="mb-3 flex items-center justify-between">
               <DemoOverline>◆ Pivot · nach Region sortiert</DemoOverline>
-              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-white">
+              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-white">
                 Als Blatt einfügen →
               </span>
             </div>
@@ -393,7 +393,7 @@ export function ExcelDemo(): JSX.Element {
                       <th
                         key={h}
                         className={cn(
-                          "px-1.5 py-2 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground",
+                          "px-1.5 py-2 font-mono text-[12px] uppercase tracking-[0.1em] text-muted-foreground",
                           i === 0 ? "text-left" : "text-right",
                         )}
                       >
@@ -455,7 +455,7 @@ export function ExcelDemo(): JSX.Element {
           >
             <div className="mb-3 flex items-center justify-between">
               <DemoOverline>◆ Forecast · KW 17–20</DemoOverline>
-              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-white">
+              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-white">
                 Als Diagramm einfügen →
               </span>
             </div>
@@ -474,13 +474,13 @@ export function ExcelDemo(): JSX.Element {
                     className="relative flex h-full flex-1 flex-col items-center"
                   >
                     <div
-                      className="absolute font-mono text-[10px] font-bold tracking-[-0.02em] text-foreground"
+                      className="absolute font-mono text-[12px] font-bold tracking-[-0.02em] text-foreground"
                       style={{ bottom: `${predH}%`, marginBottom: 4 }}
                     >
                       {r.pred}
                     </div>
                     <div
-                      className="absolute font-mono text-[8px] tracking-[0.05em] text-muted-foreground"
+                      className="absolute font-mono text-[12px] tracking-[0.05em] text-muted-foreground"
                       style={{ bottom: `${hiH}%`, marginBottom: 2 }}
                     >
                       {r.lo}-{r.hi}
@@ -495,7 +495,7 @@ export function ExcelDemo(): JSX.Element {
                       style={{ height: `${predH}%` }}
                       aria-hidden="true"
                     />
-                    <div className="absolute -bottom-5 font-mono text-[11px] font-bold tracking-[0.06em] text-foreground">
+                    <div className="absolute -bottom-5 font-mono text-[12px] font-bold tracking-[0.06em] text-foreground">
                       {r.w}
                     </div>
                   </div>

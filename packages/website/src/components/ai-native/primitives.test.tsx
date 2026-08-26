@@ -27,7 +27,7 @@ import {
 const sectionOf = (c: HTMLElement) => c.querySelector("section") as HTMLElement;
 
 describe("<SectionShell>", () => {
-  it("renders a plain light section with no marginalia when num/label are absent", () => {
+  it("renders a compact plain light section with no marginalia when num/label are absent", () => {
     const { container } = render(
       <SectionShell>
         <p>inhalt</p>
@@ -35,7 +35,8 @@ describe("<SectionShell>", () => {
     );
     const section = sectionOf(container);
     expect(section).not.toBeNull();
-    expect(section.className).toContain("py-24");
+    expect(section.className).toContain("py-12");
+    expect(section.className).not.toContain("py-24");
     expect(section.className).not.toContain("dark-section");
     expect(screen.getByText("inhalt")).toBeInTheDocument();
     // No marginalia marker.
@@ -124,7 +125,9 @@ describe("<ModNumber>", () => {
 
 describe("<Eyebrow>", () => {
   it("merges an extra className onto the base eyebrow styles", () => {
-    render(<Eyebrow className="text-brand-sand">Wie alles zusammenhängt</Eyebrow>);
+    render(
+      <Eyebrow className="text-brand-sand">Wie alles zusammenhängt</Eyebrow>,
+    );
     const el = screen.getByText("Wie alles zusammenhängt");
     expect(el.className).toContain("text-brand-sand");
     expect(el.className).toContain("font-mono");

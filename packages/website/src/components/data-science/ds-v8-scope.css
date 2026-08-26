@@ -97,15 +97,6 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Constrained mobile viewports use the deterministic system stack. This
-   avoids downloading four Loehrning Sans weights while the above-fold hero
-   is being painted; the editorial serif headline remains unchanged. */
-@media (max-width: 900px) {
-  .ds-v8-scope {
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-}
-
 .ds-v8-scope * {
   box-sizing: border-box;
 }
@@ -761,7 +752,6 @@
   border-radius: 50%;
   background: var(--lime);
   box-shadow: 0 0 10px rgba(107, 207, 63, 0.6);
-  animation: pulse 2s ease-in-out infinite;
 }
 .ds-v8-scope .panel-title .lab {
   font-family: var(--font-mono);
@@ -995,30 +985,14 @@
   .ds-v8-scope *::after {
     animation-duration: 0.001s !important;
     animation-delay: 0s !important;
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.85);
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
   }
 }
 @keyframes drawPath {
   to {
     stroke-dashoffset: 0;
-  }
-}
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
   }
 }
 @keyframes floatY {
@@ -1247,13 +1221,6 @@
   background-clip: text;
   color: transparent;
   background-size: 200% 100%;
-  animation: shimmer 10s linear infinite;
-}
-@media (max-width: 900px) {
-  .ds-v8-scope .ov-hero-title .accent {
-    animation: none;
-    background-position: 50% 0;
-  }
 }
 .ds-v8-scope .ov-hero-hook {
   font-size: 17.5px;
@@ -2855,5 +2822,281 @@
     flex: 0 0 auto;
     white-space: nowrap;
     overflow-wrap: normal;
+  }
+}
+
+/* ========================================================================
+   Berliner Learning Instrument alignment
+   ------------------------------------------------------------------------
+   The original simulator port remains intact above. This final scoped layer
+   aligns its reading shell and controls with the platform CI without
+   recoloring the semantic data series. Bright plot tokens such as --good,
+   --warn, --bad, --violet, --magenta, --lime, and --cyan intentionally remain
+   unchanged. The sole sub-12px CSS text exception is the axis/tick annotation
+   inside .plot-wrap SVG graphics; every interface, status, control, and
+   provenance label is raised to the 12px floor below.
+   ======================================================================== */
+
+.ds-v8-scope {
+  /* Platform paper, ink, boundary, and type tokens. */
+  --bg: var(--color-background);
+  --bg-elev: var(--color-background);
+  --bg-hi: var(--color-card);
+  --bg-hov: var(--color-card-hover);
+  --panel: var(--color-card);
+  --panel-hi: var(--color-background);
+  --ink-1: var(--color-foreground);
+  --ink-2: var(--color-muted-foreground);
+  --ink-3: var(--color-muted);
+  --ink-4: var(--color-muted);
+  --hair: color-mix(in srgb, var(--color-border) 48%, transparent);
+  --hair-2: var(--color-border);
+  --hair-3: var(--color-foreground);
+  --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono: var(--font-geist-mono), monospace;
+
+  /* Interface copper stays separate from the preserved plot palette. */
+  --instrument-accent: var(--color-brand-orange);
+  --instrument-accent-dark: var(--color-kupfer-dark);
+  --instrument-accent-soft: var(--color-kupfer-mist);
+}
+
+/* No ambient fixed layer and no translucent glass shell. */
+.ds-v8-scope::before,
+.ds-v8-scope::after {
+  content: none;
+  position: static;
+  inset: auto;
+  background: none;
+  opacity: 1;
+}
+.ds-v8-scope .tb,
+.ds-v8-scope .sb {
+  background: var(--bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Platform copper marks navigation and actions; chart colors remain semantic. */
+.ds-v8-scope .sb-item.active::before,
+.ds-v8-scope .hero::after,
+.ds-v8-scope .hero-eyebrow::before,
+.ds-v8-scope .section-label::before,
+.ds-v8-scope .ov-hero::after,
+.ds-v8-scope .ov-hero-eyebrow::before,
+.ds-v8-scope .ov-kicker::before,
+.ds-v8-scope .takeaway::before,
+.ds-v8-scope .ov-cta-band::before {
+  background: var(--instrument-accent);
+}
+.ds-v8-scope .hero-eyebrow,
+.ds-v8-scope .section-label .n,
+.ds-v8-scope .ov-hero-eyebrow,
+.ds-v8-scope .ov-kicker,
+.ds-v8-scope .ov-cta-eyebrow,
+.ds-v8-scope .loop-mini-n,
+.ds-v8-scope .tb-back .tb-back-arrow {
+  color: var(--instrument-accent);
+}
+.ds-v8-scope .hero-title .accent,
+.ds-v8-scope .h2 em,
+.ds-v8-scope .ov-hero-title .accent,
+.ds-v8-scope .ov-h2 em {
+  background: none;
+  color: var(--instrument-accent);
+}
+.ds-v8-scope .section-label::after {
+  background: var(--hair-2);
+}
+.ds-v8-scope .panel-head {
+  background: var(--panel-hi);
+}
+.ds-v8-scope .takeaway,
+.ds-v8-scope .ov-cta-band {
+  background: var(--instrument-accent-soft);
+}
+.ds-v8-scope .ov-cta-band::after {
+  content: none;
+}
+
+/* Flat, compact chrome. Circular data marks and range thumbs stay circular. */
+.ds-v8-scope .sb-mark,
+.ds-v8-scope .sb-item,
+.ds-v8-scope .sb-num,
+.ds-v8-scope .tb-back,
+.ds-v8-scope .btn,
+.ds-v8-scope .panel,
+.ds-v8-scope .callout,
+.ds-v8-scope .takeaway,
+.ds-v8-scope .ov-loop-wrap,
+.ds-v8-scope .ov-course,
+.ds-v8-scope .ov-cta-band,
+.ds-v8-scope .sim-controls,
+.ds-v8-scope .seg,
+.ds-v8-scope .seg button,
+.ds-v8-scope .loop-mini-stage,
+.ds-v8-scope .plot-wrap,
+.ds-v8-scope .cm-cell,
+.ds-v8-scope .galton-stage,
+.ds-v8-scope .roc-canvas,
+.ds-v8-scope .ab-stage,
+.ds-v8-scope .ab-verdict,
+.ds-v8-scope .ab-power,
+.ds-v8-scope .sim-stats,
+.ds-v8-scope .ds-architecture-scroll {
+  border-radius: 8px;
+}
+.ds-v8-scope .sb-mark,
+.ds-v8-scope .btn,
+.ds-v8-scope .btn.btn-primary,
+.ds-v8-scope .btn.btn-primary:hover:not(:disabled),
+.ds-v8-scope .panel,
+.ds-v8-scope .section-label::before,
+.ds-v8-scope .panel-title .dot,
+.ds-v8-scope .ov-course:hover,
+.ds-v8-scope .ov-course-dot {
+  box-shadow: none;
+}
+.ds-v8-scope .ov-course:hover {
+  transform: none;
+}
+
+/* Shared controls and chapter navigation meet the 44px interaction floor. */
+.ds-v8-scope .btn,
+.ds-v8-scope .tb-back,
+.ds-v8-scope .sb-item,
+.ds-v8-scope .seg button,
+.ds-v8-scope .ov-cta-ghost {
+  min-height: 44px;
+}
+.ds-v8-scope .btn.btn-primary,
+.ds-v8-scope .btn.btn-accent,
+.ds-v8-scope .seg button.on {
+  background: var(--instrument-accent);
+  border-color: var(--instrument-accent);
+  color: var(--color-background);
+  box-shadow: none;
+}
+.ds-v8-scope .btn.btn-primary:hover:not(:disabled),
+.ds-v8-scope .btn.btn-accent:hover:not(:disabled) {
+  background: var(--instrument-accent-dark);
+  border-color: var(--instrument-accent-dark);
+  color: var(--color-background);
+  box-shadow: none;
+  transform: none;
+}
+.ds-v8-scope input[type="range"] {
+  accent-color: var(--instrument-accent);
+}
+.ds-v8-scope input[type="range"]::-webkit-slider-thumb,
+.ds-v8-scope input[type="range"]::-moz-range-thumb {
+  background: var(--instrument-accent);
+  box-shadow: none;
+}
+.ds-v8-scope .btn:focus-visible,
+.ds-v8-scope .sim-ctrl input:focus-visible,
+.ds-v8-scope .sb-item:focus-visible,
+.ds-v8-scope .seg button:focus-visible,
+.ds-v8-scope .content button:focus-visible,
+.ds-v8-scope .content a:focus-visible,
+.ds-v8-scope .content input:focus-visible,
+.ds-v8-scope .content input[type="range"]:focus-visible {
+  outline: 3px solid var(--instrument-accent);
+  outline-offset: 2px;
+}
+.ds-v8-scope .content input[type="range"]:focus-visible::-webkit-slider-thumb,
+.ds-v8-scope .content input[type="range"]:focus-visible::-moz-range-thumb {
+  box-shadow: none;
+}
+
+/* Essential UI, status, control, and provenance labels. */
+.ds-v8-scope .sb-brand-sub,
+.ds-v8-scope .sb-eyebrow,
+.ds-v8-scope .sb-num,
+.ds-v8-scope .sb-sub,
+.ds-v8-scope .sb-time,
+.ds-v8-scope .sb-foot-lab,
+.ds-v8-scope .tb-back,
+.ds-v8-scope .crumb,
+.ds-v8-scope .btn,
+.ds-v8-scope .btn.btn-sm,
+.ds-v8-scope .kbd,
+.ds-v8-scope .hero-eyebrow,
+.ds-v8-scope .hero-meta .m .k,
+.ds-v8-scope .chip,
+.ds-v8-scope .section-label,
+.ds-v8-scope .section-label .n,
+.ds-v8-scope .panel-title .lab,
+.ds-v8-scope .panel-meta,
+.ds-v8-scope .simulation-disclosure,
+.ds-v8-scope .callout-head,
+.ds-v8-scope .callout-item .n,
+.ds-v8-scope .takeaway-head,
+.ds-v8-scope .chap-placeholder-eyebrow,
+.ds-v8-scope .ov-hero-eyebrow,
+.ds-v8-scope .ov-stat .v,
+.ds-v8-scope .ov-kicker,
+.ds-v8-scope .ov-course-n,
+.ds-v8-scope .ov-course-cta,
+.ds-v8-scope .ov-tool-r,
+.ds-v8-scope .ov-cta-eyebrow,
+.ds-v8-scope .sim-ctrl label,
+.ds-v8-scope .sim-ctrl label .mono,
+.ds-v8-scope .seg button,
+.ds-v8-scope .sim-stats .k,
+.ds-v8-scope .sim-stats .sub,
+.ds-v8-scope .sim-plot-head,
+.ds-v8-scope .sim-plot-head .hint,
+.ds-v8-scope .loop-mini-n,
+.ds-v8-scope .tag-pill,
+.ds-v8-scope .cm-lab,
+.ds-v8-scope .ab-verdict-k,
+.ds-v8-scope .ab-verdict-note,
+.ds-v8-scope .ab-power-head,
+.ds-v8-scope .ab-power-note,
+.ds-v8-scope .ds-architecture-scroll-hint,
+.ds-v8-scope .ds-pr-metrics > * > div:first-child {
+  font-size: 12px !important;
+}
+
+/* Bounded graphic exception: plot axis/tick annotations, never UI controls. */
+.ds-v8-scope .plot-wrap svg text {
+  font-size: 10px;
+}
+
+/* Course sections and canvases use the platform's compact 48px ceiling. */
+.ds-v8-scope .content {
+  padding: 32px clamp(16px, 4vw, 32px) 48px;
+}
+.ds-v8-scope .section {
+  margin-bottom: 48px;
+}
+.ds-v8-scope .chap-placeholder {
+  padding: 48px 20px;
+}
+.ds-v8-scope .ov-hero {
+  gap: 48px;
+  padding: 48px 0;
+  margin-bottom: 48px;
+}
+.ds-v8-scope .ov-cta-band {
+  margin: 48px 0 20px;
+  padding: 48px;
+}
+
+@media (max-width: 900px) {
+  .ds-v8-scope .ov-hero-title .accent {
+    animation: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .ds-v8-scope .ov-hero {
+    gap: 32px;
+    padding: 32px 0;
+  }
+  .ds-v8-scope .ov-cta-band {
+    padding: 32px 20px;
   }
 }

@@ -179,10 +179,10 @@ export function L11PatternCardsLab({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
-      <p className="mb-3 font-mono text-[11px] text-muted-foreground">
+      <p className="mb-3 font-mono text-xs text-muted-foreground">
         {copy.sorted}: {sorted.size}/{CARDS.length} · {copy.mistakes}:{" "}
         {mistakes}
       </p>
@@ -198,24 +198,26 @@ export function L11PatternCardsLab({
             >
               {isFlipped ? (
                 <>
-                  <p className="break-words font-mono text-[11px] font-bold text-brand-orange">
+                  <p className="break-words font-mono text-xs font-bold text-brand-orange">
                     {card.title[locale]}
                   </p>
-                  <p className="mt-1 break-words font-mono text-[10px] text-muted-foreground">
+                  <p className="mt-1 break-words font-mono text-xs text-muted-foreground">
                     {card.desc[locale]}
                   </p>
                   <div className="mt-2 flex flex-col gap-1 sm:flex-row">
                     <button
                       type="button"
                       onClick={() => sortInto(card, "proven")}
-                      className="flex-1 border border-risk-green bg-risk-green/10 px-1.5 py-1 font-mono text-[9.5px] font-bold uppercase text-risk-green"
+                      aria-label={`${copy.proven}: ${card.title[locale]}`}
+                      className="min-h-11 flex-1 border border-risk-green bg-risk-green/10 px-1.5 py-1 font-mono text-xs font-bold uppercase text-risk-green"
                     >
                       {copy.proven}
                     </button>
                     <button
                       type="button"
                       onClick={() => sortInto(card, "anti")}
-                      className="flex-1 border border-destructive bg-destructive/10 px-1.5 py-1 font-mono text-[9.5px] font-bold uppercase text-destructive"
+                      aria-label={`${copy.avoid}: ${card.title[locale]}`}
+                      className="min-h-11 flex-1 border border-destructive bg-destructive/10 px-1.5 py-1 font-mono text-xs font-bold uppercase text-destructive"
                     >
                       {copy.avoid}
                     </button>

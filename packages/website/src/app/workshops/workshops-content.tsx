@@ -1,8 +1,5 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight, Presentation } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Workshop } from "@/lib/workshops";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
@@ -12,205 +9,149 @@ interface Props {
   readonly locale: Locale;
 }
 
+const pad = (value: number) => String(value).padStart(2, "0");
+
 export function WorkshopsContent({ workshops, locale }: Props) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
 
   return (
     <>
-      {/* Hero */}
-      <section className="border-b border-border/60 bg-card/20 py-20 sm:py-28">
-        <div className="mx-auto max-w-5xl px-6">
-          <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {copy.kicker}
           </p>
-          <h1 className="mb-6 text-4xl font-bold tracking-[-0.04em] sm:text-5xl lg:text-6xl">
-            {copy.headingLead}<br />
-            {copy.headingSecond}
-          </h1>
-          <p className="mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            {copy.introduction(workshops.length)}
-          </p>
-
-          {/* Manifest */}
-          <div className="grid gap-4 sm:grid-cols-3">
-            {copy.principles.map((item, i) => (
-              <div
-                key={item.label}
-                className="rounded-none border border-border bg-card/40 p-5"
-              >
-                <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                  {String(i + 1).padStart(2, "0")} · {item.label}
-                </p>
-                <p className="text-sm leading-relaxed text-foreground/90">
-                  {item.body}
-                </p>
-              </div>
-            ))}
+          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] lg:items-end lg:gap-10">
+            <h1 className="text-3xl font-bold leading-[1.02] tracking-[-0.04em] sm:text-4xl lg:text-5xl">
+              {copy.headingLead}{" "}
+              <span className="text-brand-orange">{copy.headingSecond}</span>
+            </h1>
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {copy.introduction(workshops.length)}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Workshop list */}
-      <section className="py-16 sm:py-24">
-        <div className="mx-auto max-w-5xl px-6">
-          <div className="mb-8 border-b border-border pb-4">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <section
+        className="py-8 sm:py-10"
+        aria-labelledby="workshop-list-heading"
+      >
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <header className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+            <h2
+              id="workshop-list-heading"
+              className="text-xl font-bold tracking-[-0.025em] sm:text-2xl"
+            >
               {copy.available}
-            </p>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            </h2>
+            <p className="text-sm text-muted-foreground">
               {copy.availableDescription}
             </p>
-          </div>
-          <div
-            className={
-              workshops.length === 1
-                ? "grid max-w-md gap-4"
-                : workshops.length === 2
-                  ? "grid gap-4 sm:grid-cols-2"
-                  : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            }
-          >
-            {workshops.length === 0 ? (
-              <p role="status" className="border border-border bg-card/30 p-5 text-sm text-muted-foreground">
-                {copy.empty}
-              </p>
-            ) : null}
-            {workshops.map((workshop) => (
-              <div key={workshop.slug} className="h-full">
-                <WorkshopCard workshop={workshop} locale={locale} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          </header>
 
-      {/* CTA strip */}
-      <section className="border-t border-border bg-card/30">
-        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-          <div className="rounded-none border border-border border-t-[3px] border-t-brand-orange bg-background p-8 sm:p-12">
-            <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-              {copy.learningPathKicker}
+          {workshops.length === 0 ? (
+            <p
+              role="status"
+              className="border-y border-border py-5 text-sm text-muted-foreground"
+            >
+              {copy.empty}
             </p>
-            <h2 className="mb-4 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">
-              {copy.learningPathHeading}
-            </h2>
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {copy.learningPathBody}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={localizeHref("/kurse", locale)}
-                className="inline-flex items-center justify-center gap-2 rounded-none border-2 border-foreground bg-brand-orange px-6 py-3 font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_0_var(--color-foreground)]"
-              >
-                {copy.viewCourses}
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
+          ) : (
+            <ol className="border-t border-border">
+              {workshops.map((workshop, index) => (
+                <li key={workshop.slug} className="border-b border-border">
+                  <WorkshopRow
+                    workshop={workshop}
+                    locale={locale}
+                    position={index + 1}
+                  />
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       </section>
     </>
   );
 }
 
-const pad = (value: number) => String(value).padStart(2, "0");
-
-function WorkshopCard({
+function WorkshopRow({
   workshop,
   locale,
+  position,
 }: {
   readonly workshop: Workshop;
   readonly locale: Locale;
+  readonly position: number;
 }) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
-  const rows = [
-    { label: copy.duration, value: workshop.duration },
-    { label: copy.steps, value: pad(workshop.steps.length) },
-    { label: copy.audiences, value: pad(workshop.audience.length) },
-    { label: copy.materials, value: `${pad(workshop.materials.length)} ${copy.downloads}` },
-  ] as const;
 
   return (
-    <div className="group relative flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 transition-colors hover:bg-card/60">
-      {/* A real frame of the workshop's own material, so the two cards are
-          told apart by what you actually get rather than by a step count.
-          Decorative: the heading below is the accessible name, and the
-          sr-only paragraph carries the facts. Lazy by default; both files
-          are ~25 KB and sit below the fold. */}
-      <div className="relative aspect-[16/9] overflow-hidden border-b border-border bg-background/60">
-        <Image
-          src={`/workshops/${workshop.slug}/card-preview.webp`}
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="(min-width: 640px) 50vw, 100vw"
-          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-foreground/15 bg-background/85 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-foreground backdrop-blur-sm"
-        >
-          <Presentation className="h-3 w-3" aria-hidden="true" />
-          {workshop.format}
-        </span>
-        {/* Schrittleiste: one tick per step, filling on hover. Shows the
-            shape of the workshop without making the raw count the headline. */}
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 flex gap-px">
-          {workshop.steps.map((step, i) => (
-            <span
-              key={step.title}
-              className="h-1 flex-1 bg-foreground/20 transition-colors duration-200 group-hover:bg-brand-orange"
-              style={{ transitionDelay: `${i * 35}ms` }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <dl
+    <article
+      data-testid="workshop-row"
+      className="grid gap-5 py-6 md:grid-cols-[3rem_minmax(0,1.35fr)_minmax(15rem,0.65fr)] md:gap-6 lg:items-start"
+    >
+      <p
         aria-hidden="true"
-        className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-border px-6 py-3 font-mono text-[10.5px] uppercase tracking-[0.08em]"
+        className="font-mono text-xs font-bold tabular-nums text-brand-orange"
       >
-        {rows.map((row) => (
-          <div key={row.label} className="flex items-baseline gap-1.5">
-            <dt className="text-muted-foreground">{row.label}</dt>
-            <dd className="font-bold text-foreground">{row.value}</dd>
-          </div>
-        ))}
-      </dl>
+        {pad(position)}
+      </p>
 
-      <div className="flex flex-1 flex-col p-6">
-        <h2 className="mb-2 text-xl font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
-          {/* Stretched link: names the card by its title alone and keeps the
-              whole card clickable without pouring the plate into the link's
-              accessible name. */}
-          <Link
-            href={localizeHref(`/workshops/${workshop.slug}`, locale)}
-            className="after:absolute after:inset-0"
-          >
-            {workshop.title}
-          </Link>
-        </h2>
-        <p className="sr-only">
-          {copy.cardFacts({
-            format: workshop.format,
-            duration: workshop.duration,
-            steps: workshop.steps.length,
-            audiences: workshop.audience.length,
-            materials: workshop.materials.length,
-          })}
+      <div className="min-w-0">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+          {workshop.title}
         </p>
-        <p className="mb-5 line-clamp-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-          {workshop.summary}
+        <p className="mt-3 text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+          {copy.decision}
         </p>
-        {/* The format already reads on the plate chip over the preview, so
-            this row carries only the call to action. */}
-        <div className="flex items-center justify-end border-t border-border pt-3">
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange">
-            {copy.openWorkshop}
-            <ChevronRight aria-hidden="true" className="h-3 w-3 arrow-nudge" />
-          </span>
-        </div>
+        <h3
+          data-workshop-decision
+          className="mt-1 max-w-2xl text-2xl font-bold leading-tight tracking-[-0.03em] sm:text-3xl"
+        >
+          {workshop.decisionLab.title}
+        </h3>
       </div>
-    </div>
+
+      <div className="min-w-0 border-t border-border pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+        <p className="text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+          {copy.proofTarget}
+        </p>
+        <p
+          data-workshop-output
+          className="mt-1 text-base font-semibold leading-snug text-foreground"
+        >
+          {copy.proofOutput}
+        </p>
+
+        <dl className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+          <div>
+            <dt className="sr-only">{copy.duration}</dt>
+            <dd>{workshop.duration}</dd>
+          </div>
+          <div>
+            <dt className="sr-only">{copy.steps}</dt>
+            <dd>{copy.stepCount(workshop.steps.length)}</dd>
+          </div>
+          <div>
+            <dt className="sr-only">{copy.materials}</dt>
+            <dd>{copy.materialCount(workshop.materials.length)}</dd>
+          </div>
+        </dl>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {workshop.accessNote}
+        </p>
+
+        <Link
+          href={localizeHref(`/workshops/${workshop.slug}`, locale)}
+          className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+        >
+          {copy.openWorkshop}
+          <span className="sr-only">: {workshop.title}</span>
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </div>
+    </article>
   );
 }

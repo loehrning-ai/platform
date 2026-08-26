@@ -23,10 +23,9 @@ export const DATA_SCIENCE_CONFIG = {
   // certificate-page.tsx's "back to course" link/redirect resolves.
   coursePath: "/kurse/open-source/data-science",
   blockIds: [],
-  // No quiz/scoring mechanism exists in source at all (grep across all 15
-  // source files for a "Quiz" component returns nothing). Certificate
-  // eligibility resolves via generic all-lessons-completed
-  // "completion" path (src/lib/progress/store.ts's isCertificateEligible).
+  // No quiz/scoring mechanism exists in source. Completion-record eligibility
+  // requires one current, versioned transfer checkpoint per chapter;
+  // historical click-only completion flags do not count.
   // No `/kurs/quiz` route is built for this course; these three fields are
   // kept only for CourseConfig-shape compatibility and are never read by
   // any real UI.

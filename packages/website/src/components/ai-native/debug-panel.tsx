@@ -23,7 +23,6 @@ interface AiNativeWidgetHandle {
 }
 
 declare global {
-   
   var __aiNativeWidgets: AiNativeWidgetHandle[] | undefined;
 }
 
@@ -76,7 +75,7 @@ export function AiNativeDebugPanel() {
     <div
       role="dialog"
       aria-label="AI-Native debug panel"
-      className="dark-section fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-[var(--color-dark-bg)] p-3 font-mono text-[11px] text-[var(--color-dark-fg)] shadow-[6px_6px_0_0_#000]"
+      className="dark-section fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-[var(--color-dark-bg)] p-3 font-mono text-xs text-[var(--color-dark-fg)] shadow-[6px_6px_0_0_#000]"
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="font-bold uppercase tracking-[0.14em] text-brand-orange">
@@ -122,19 +121,24 @@ export function AiNativeDebugPanel() {
         {events.length === 0 ? (
           <p className="text-[var(--color-dark-muted)]">(no events)</p>
         ) : (
-          <ul className="space-y-0.5 text-[10.5px]">
-            {events.slice(-10).reverse().map((e, i) => (
-              <li key={i} className="break-all">
-                <span className="text-brand-orange">{e.event.name}</span>
-              </li>
-            ))}
+          <ul className="space-y-0.5 text-xs">
+            {events
+              .slice(-10)
+              .reverse()
+              .map((e, i) => (
+                <li key={i} className="break-all">
+                  <span className="text-brand-orange">{e.event.name}</span>
+                </li>
+              ))}
           </ul>
         )}
       </section>
 
       <section className="border-t border-[var(--color-dark-border)] pt-2">
-        <p className="mb-1 font-bold text-brand-amber">Progress (localStorage)</p>
-        <pre className="max-h-[200px] overflow-auto whitespace-pre-wrap break-all text-[10.5px] text-[var(--color-dark-muted)]">
+        <p className="mb-1 font-bold text-brand-amber">
+          Progress (localStorage)
+        </p>
+        <pre className="max-h-[200px] overflow-auto whitespace-pre-wrap break-all text-xs text-[var(--color-dark-muted)]">
           {progressRaw ?? "(empty)"}
         </pre>
       </section>

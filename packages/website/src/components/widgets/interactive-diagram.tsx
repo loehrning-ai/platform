@@ -46,7 +46,7 @@ import { WidgetFrame } from "./tier-a/_frame";
  *  - "Trace" steps through the nodes with a Framer pulse; under
  *    `prefers-reduced-motion` it resolves instantly to the final frame.
  *  - Awards the checkpoint once the learner traces the diagram (or inspects
- *    every node), so XP/badges stay in the one unified store.
+ *    every node), so completion stays in the unified progress store.
  *
  * German copy throughout. No em dashes.
  */
@@ -80,12 +80,12 @@ export interface InteractiveDiagramProps {
   readonly title?: string;
   /** One-line instruction above the diagram. */
   readonly caption?: string;
-  /** Checkpoint wiring — when both are present the diagram awards XP once. */
+  /** Checkpoint wiring. When both are present, completion is recorded once. */
   readonly lessonId?: string;
   readonly cpId?: string;
   /** Force reduced motion (overrides the media query — used in tests). */
   readonly reducedMotion?: boolean;
-  /** XP awarded on completion. Cosmetic label only; store value is fixed. */
+  /** @deprecated Retained for caller compatibility. Reward totals are not shown. */
   readonly xpOnComplete?: number;
   readonly copy?: Partial<InteractiveDiagramCopy>;
 }
@@ -114,9 +114,11 @@ const DEFAULT_TITLE: Record<DiagramVariant, string> = {
 };
 
 const DEFAULT_CAPTION: Record<DiagramVariant, string> = {
-  stack: "Klick auf Verlauf: ein Impuls läuft von oben nach unten durch jede Stufe.",
+  stack:
+    "Klick auf Verlauf: ein Impuls läuft von oben nach unten durch jede Stufe.",
   flow: "Klick auf Verlauf: der Impuls folgt den Pfeilen Schritt für Schritt.",
-  compare: "Tippe eine Schicht an: was sie tut und was passiert, wenn sie fehlt.",
+  compare:
+    "Tippe eine Schicht an: was sie tut und was passiert, wenn sie fehlt.",
 };
 
 const DEFAULT_COPY: Omit<InteractiveDiagramCopy, "kindLabel"> = {
@@ -142,7 +144,6 @@ export function InteractiveDiagram({
   lessonId,
   cpId,
   reducedMotion,
-  xpOnComplete = 10,
   copy,
 }: InteractiveDiagramProps): JSX.Element {
   const chrome: InteractiveDiagramCopy = {
@@ -175,7 +176,7 @@ export function InteractiveDiagram({
 
   useEffect(() => () => clearTimers(), [clearTimers]);
 
-  const award = useCallback(() => {
+  const recordCheckpoint = useCallback(() => {
     if (hasCheckpoint && !done) complete();
   }, [hasCheckpoint, done, complete]);
 
@@ -187,7 +188,7 @@ export function InteractiveDiagram({
       // Reduced motion: resolve to the final frame immediately.
       setTraceIdx(nodes.length - 1);
       setTracing(false);
-      award();
+      recordCheckpoint();
       return;
     }
     nodes.forEach((_, i) => {
@@ -195,28 +196,28 @@ export function InteractiveDiagram({
         setTraceIdx(i);
         if (i === nodes.length - 1) {
           setTracing(false);
-          award();
+          recordCheckpoint();
         }
       }, i * STEP_MS);
       timers.current.push(t);
     });
-  }, [tracing, nodes, reduced, clearTimers, award]);
+  }, [tracing, nodes, reduced, clearTimers, recordCheckpoint]);
 
   const inspect = useCallback(
     (id: string) => {
       setActiveId((prev) => (prev === id ? null : id));
       inspected.current.add(id);
-      // In compare mode, inspecting every node also earns the checkpoint
+      // In compare mode, inspecting every node also records the checkpoint
       // (some learners explore rather than trace).
       if (
         variant === "compare" &&
         nodes.length > 0 &&
         inspected.current.size === nodes.length
       ) {
-        award();
+        recordCheckpoint();
       }
     },
-    [variant, nodes.length, award],
+    [variant, nodes.length, recordCheckpoint],
   );
 
   const onNodeKey = useCallback(
@@ -237,165 +238,169 @@ export function InteractiveDiagram({
     // `layoutId` pulse below needs it); `strict` keeps the dev-time guard
     // against accidental full `motion` components active here too.
     <LazyMotion features={domMax} strict>
-    <WidgetFrame
-      kindLabel={chrome.kindLabel}
-      title={title ?? DEFAULT_TITLE[variant]}
-      scenario={caption ?? DEFAULT_CAPTION[variant]}
-      done={hasCheckpoint ? done : false}
-      xpLabel={`+${xpOnComplete} XP`}
-    >
-      <div
-        className={cn(
-          "grid gap-4",
-          variant === "compare" && "md:grid-cols-[1.4fr_1fr]",
-        )}
+      <WidgetFrame
+        kindLabel={chrome.kindLabel}
+        title={title ?? DEFAULT_TITLE[variant]}
+        scenario={caption ?? DEFAULT_CAPTION[variant]}
+        done={hasCheckpoint ? done : false}
       >
-        <ol
-          className="flex list-none flex-col gap-2"
-          aria-label={title ?? DEFAULT_TITLE[variant]}
+        <div
+          className={cn(
+            "grid gap-4",
+            variant === "compare" && "md:grid-cols-[1.4fr_1fr]",
+          )}
         >
-          {nodes.map((node, i) => {
-            const isActive = activeId === node.id;
-            const isPulsing =
-              traceIdx !== null && (reduced ? i <= traceIdx : i === traceIdx);
-            const wasTraced = traceIdx !== null && i <= traceIdx;
-            const edge = hasEdges
-              ? edges?.find((ed) => ed.from === node.id)
-              : undefined;
-            return (
-              <li key={node.id} className="flex flex-col gap-2">
-                <button
-                  type="button"
-                  data-pos={i}
-                  data-id={node.id}
-                  data-active={isActive ? "1" : "0"}
-                  data-traced={wasTraced ? "1" : "0"}
-                  aria-pressed={isActive}
-                  onClick={() => inspect(node.id)}
-                  onKeyDown={(e) => onNodeKey(e, node.id)}
-                  className={cn(
-                    "group grid w-full grid-cols-[34px_1fr] items-center gap-3 border-2 bg-background p-3 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                    isActive
-                      ? "border-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)]"
-                      : "border-border hover:border-brand-orange/60",
-                    wasTraced && !isActive && "border-brand-orange/50",
-                  )}
-                >
-                  <span className="flex items-center gap-2">
+          <ol
+            className="flex list-none flex-col gap-2"
+            aria-label={title ?? DEFAULT_TITLE[variant]}
+          >
+            {nodes.map((node, i) => {
+              const isActive = activeId === node.id;
+              const isPulsing =
+                traceIdx !== null && (reduced ? i <= traceIdx : i === traceIdx);
+              const wasTraced = traceIdx !== null && i <= traceIdx;
+              const edge = hasEdges
+                ? edges?.find((ed) => ed.from === node.id)
+                : undefined;
+              return (
+                <li key={node.id} className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    data-pos={i}
+                    data-id={node.id}
+                    data-active={isActive ? "1" : "0"}
+                    data-traced={wasTraced ? "1" : "0"}
+                    aria-pressed={isActive}
+                    onClick={() => inspect(node.id)}
+                    onKeyDown={(e) => onNodeKey(e, node.id)}
+                    className={cn(
+                      "group grid min-h-11 w-full grid-cols-[34px_1fr] items-center gap-3 border-2 bg-background p-3 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                      isActive
+                        ? "border-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)]"
+                        : "border-border hover:border-brand-orange/60",
+                      wasTraced && !isActive && "border-brand-orange/50",
+                    )}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "h-full min-h-[34px] w-[5px] shrink-0",
+                          isPulsing ? "bg-brand-orange" : "bg-brand-orange/30",
+                        )}
+                        style={{
+                          opacity:
+                            node.weight != null
+                              ? Math.max(0.3, Math.min(1, node.weight))
+                              : undefined,
+                        }}
+                      />
+                      <span className="inline-flex h-7 w-7 items-center justify-center border-2 border-border font-mono text-[12px] font-bold text-muted-foreground">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block break-words text-[14.5px] font-bold leading-[1.25] text-foreground [overflow-wrap:anywhere]">
+                        {node.label}
+                      </span>
+                      {node.sub && (
+                        <span className="mt-0.5 block text-[12.5px] leading-[1.45] text-muted-foreground">
+                          {node.sub}
+                        </span>
+                      )}
+                    </span>
+                    {isPulsing && !reduced && (
+                      <m.span
+                        aria-hidden="true"
+                        layoutId="diagram-pulse"
+                        className="pointer-events-none col-span-2 mt-1 block h-[2px] w-full bg-brand-orange"
+                        transition={{
+                          type: "spring",
+                          stiffness: 320,
+                          damping: 28,
+                        }}
+                      />
+                    )}
+                  </button>
+                  {edge?.label && i < nodes.length - 1 && (
                     <span
                       aria-hidden="true"
-                      className={cn(
-                        "h-full min-h-[34px] w-[5px] shrink-0",
-                        isPulsing ? "bg-brand-orange" : "bg-brand-orange/30",
-                      )}
-                      style={{
-                        opacity:
-                          node.weight != null
-                            ? Math.max(0.3, Math.min(1, node.weight))
-                            : undefined,
-                      }}
-                    />
-                    <span className="inline-flex h-7 w-7 items-center justify-center border-2 border-border font-mono text-[12px] font-bold text-muted-foreground">
-                      {String(i + 1).padStart(2, "0")}
+                      className="ml-[17px] flex items-center gap-2 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground"
+                    >
+                      <span className="text-brand-orange">↓</span>
+                      {edge.label}
                     </span>
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block break-words text-[14.5px] font-bold leading-[1.25] text-foreground [overflow-wrap:anywhere]">
-                      {node.label}
-                    </span>
-                    {node.sub && (
-                      <span className="mt-0.5 block text-[12.5px] leading-[1.45] text-muted-foreground">
-                        {node.sub}
-                      </span>
-                    )}
-                  </span>
-                  {isPulsing && !reduced && (
-                    <m.span
-                      aria-hidden="true"
-                      layoutId="diagram-pulse"
-                      className="pointer-events-none col-span-2 mt-1 block h-[2px] w-full bg-brand-orange"
-                      transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                    />
                   )}
-                </button>
-                {edge?.label && i < nodes.length - 1 && (
-                  <span
-                    aria-hidden="true"
-                    className="ml-[17px] flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground"
-                  >
-                    <span className="text-brand-orange">↓</span>
-                    {edge.label}
-                  </span>
-                )}
-              </li>
-            );
-          })}
-        </ol>
+                </li>
+              );
+            })}
+          </ol>
 
-        {variant === "compare" && (
-          <aside
-            aria-live="polite"
-            className="border-2 border-border bg-card/40 p-4"
-          >
-            {activeNode ? (
-              <div>
-                <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  {activeNode.label}
-                </p>
-                {activeNode.detail && (
-                  <p className="mt-2 text-[13.5px] leading-[1.6] text-foreground">
-                    {activeNode.detail}
+          {variant === "compare" && (
+            <aside
+              aria-live="polite"
+              className="border-2 border-border bg-card/40 p-4"
+            >
+              {activeNode ? (
+                <div>
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+                    {activeNode.label}
                   </p>
-                )}
-                {activeNode.consequence && (
-                  <p className="mt-3 border-l-[3px] border-destructive bg-destructive/5 p-2.5 text-[12.5px] leading-[1.5] text-foreground">
-                    <span className="font-bold text-destructive">
-                      {chrome.consequencePrefix}{" "}
-                    </span>
-                    {activeNode.consequence}
+                  {activeNode.detail && (
+                    <p className="mt-2 text-[13.5px] leading-[1.6] text-foreground">
+                      {activeNode.detail}
+                    </p>
+                  )}
+                  {activeNode.consequence && (
+                    <p className="mt-3 border-l-[3px] border-destructive bg-destructive/5 p-2.5 text-[12.5px] leading-[1.5] text-foreground">
+                      <span className="font-bold text-destructive">
+                        {chrome.consequencePrefix}{" "}
+                      </span>
+                      {activeNode.consequence}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-[13px] leading-[1.55] text-muted-foreground">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                    {chrome.inspectHeading}
                   </p>
-                )}
-              </div>
-            ) : (
-              <div className="text-[13px] leading-[1.55] text-muted-foreground">
-                <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                  {chrome.inspectHeading}
-                </p>
-                <p className="mt-2">
-                  {chrome.inspectBody}
-                </p>
-              </div>
-            )}
-          </aside>
-        )}
-      </div>
-
-      {variant !== "compare" && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <span className="text-[12.5px] text-muted-foreground" aria-live="polite">
-            {traceIdx === nodes.length - 1
-              ? chrome.traceComplete
-              : tracing
-                ? chrome.tracing
-                : chrome.traceIdle}
-          </span>
-          <button
-            type="button"
-            onClick={trace}
-            disabled={tracing}
-            className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-              tracing
-                ? "cursor-not-allowed opacity-60"
-                : "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
-            )}
-          >
-            <Play size={12} aria-hidden="true" />
-            {chrome.traceButton}
-          </button>
+                  <p className="mt-2">{chrome.inspectBody}</p>
+                </div>
+              )}
+            </aside>
+          )}
         </div>
-      )}
-    </WidgetFrame>
+
+        {variant !== "compare" && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <span
+              className="text-[12.5px] text-muted-foreground"
+              aria-live="polite"
+            >
+              {traceIdx === nodes.length - 1
+                ? chrome.traceComplete
+                : tracing
+                  ? chrome.tracing
+                  : chrome.traceIdle}
+            </span>
+            <button
+              type="button"
+              onClick={trace}
+              disabled={tracing}
+              className={cn(
+                "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                tracing
+                  ? "cursor-not-allowed opacity-60"
+                  : "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
+              )}
+            >
+              <Play size={12} aria-hidden="true" />
+              {chrome.traceButton}
+            </button>
+          </div>
+        )}
+      </WidgetFrame>
     </LazyMotion>
   );
 }

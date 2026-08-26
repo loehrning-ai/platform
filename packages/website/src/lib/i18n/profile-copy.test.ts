@@ -38,6 +38,10 @@ describe("profile locale copy", () => {
     expect(PROFILE_COPY.en.stations.notice).toMatch(
       /do not endorse or support/,
     );
+    expect(PROFILE_COPY.de.timeline.intro).not.toMatch(
+      /Partnerschaft|bestätig/u,
+    );
+    expect(PROFILE_COPY.en.timeline.intro).not.toMatch(/partner|endorse/iu);
   });
 
   it("uses direct editorial language without promotional stock phrases", () => {

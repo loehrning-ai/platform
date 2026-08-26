@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { MotionProvider } from "@/components/motion-provider";
 import { HydrationMarker } from "@/components/hydration-marker";
-import { ProgressToastProvider } from "@/components/progress/toast-provider";
 import { LearningOwnerBoundary } from "@/components/progress/learning-owner-boundary";
 import { UserProgressSync } from "@/components/auth/user-progress-sync";
 import { Nav } from "@/components/nav";
@@ -152,10 +151,6 @@ export default async function RootLayout({
         <HydrationMarker />
         <Footer />
         <UserProgressSync />
-        {/* Cross-course gamification toasts (shared course architecture). Mounted
-            once; any course touching the unified progress store gets XP +
-            badge toasts without per-page wiring. */}
-        <ProgressToastProvider />
         {vercelTelemetryEnabled ? (
           <>
             <Analytics />

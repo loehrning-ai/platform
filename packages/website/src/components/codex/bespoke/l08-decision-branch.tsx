@@ -166,7 +166,7 @@ export function L08DecisionBranch({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
       {allCleared ? (
@@ -189,7 +189,7 @@ export function L08DecisionBranch({
                 key={choice}
                 type="button"
                 onClick={() => choose(choice)}
-                className="min-w-0 break-words border-2 border-border bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange"
+                className="min-h-11 min-w-0 break-words border-2 border-border bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange"
               >
                 {copy.decisions[choice]}
               </button>
@@ -205,7 +205,7 @@ export function L08DecisionBranch({
               {feedback.text}
             </p>
           )}
-          <p className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground">
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.solved}: {cleared.size} / {SCENARIOS.length}
           </p>
         </>

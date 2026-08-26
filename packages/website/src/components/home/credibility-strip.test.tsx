@@ -24,9 +24,7 @@ describe("CredibilityStrip", () => {
     expect(screen.getByText("Operating principles")).toBeInTheDocument();
     expect(screen.getByText("No paywall")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /Only the four foundation-path readers require a free learning account/,
-      ),
+      screen.getByText(/Four readers require a free learning account/),
     ).toBeInTheDocument();
     expect(container.textContent).not.toMatch(
       /\b(?:Betriebsprinzipien|Zugang|Sprachen|Quellen|Redaktion|Deutsch|öffentlich|Konto)\b/,
@@ -42,34 +40,29 @@ describe("CredibilityStrip", () => {
       ["Redaktion", "Von Tim Löhr redigiert"],
     ];
     for (const [label, title] of expected) {
-      expect(screen.getByText(label)).toBeInTheDocument();
+      expect(screen.getAllByText(new RegExp(label)).length).toBeGreaterThan(0);
       expect(screen.getByText(title)).toBeInTheDocument();
     }
   });
 
   it("states the commercial and account boundary directly", () => {
     render(<CredibilityStrip />);
+    expect(screen.getByText(/Kein Abo/)).toBeInTheDocument();
     expect(
-      screen.getByText(/kein Abo und keine Premiumstufe/),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /vier Reader des Grundlagenpfads benötigen ein kostenloses Lernkonto/,
-      ),
+      screen.getByText(/Vier Reader benötigen ein kostenloses Lernkonto/),
     ).toBeInTheDocument();
   });
 
-  it("distinguishes public resources from the account-gated foundation path", () => {
+  it("keeps authorship, evidence, access, and locale as the four operating facts", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(
-        /Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich/,
-      ),
+      screen.getByText(/vollständig auf Deutsch und Englisch/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /vier Reader des Grundlagenpfads brauchst du ein kostenloses Konto/,
-      ),
+      screen.getByText(/Fakten verweisen auf Quellen/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Autorschaft, Überarbeitungsstand/),
     ).toBeInTheDocument();
   });
 });

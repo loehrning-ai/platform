@@ -17,7 +17,6 @@ import {
   getBlockCompletedLessons,
   getCompletedLessonsCount,
   getOverallProgress,
-  isWorkshopQuizPassed,
   importProgress,
   buildProgressUrl,
 } from "@/lib/course/progress";
@@ -28,7 +27,7 @@ import {
   getWorkshopTimeLimitMinutes,
 } from "@/lib/course/config";
 import type { BlockSummary } from "@/lib/course/types";
-import { subscribe } from "@/lib/progress/store";
+import { isEvidenceBackedCertificateEligible, subscribe } from "@/lib/progress";
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
@@ -36,6 +35,7 @@ import {
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { MotionProvider } from "@/components/motion-provider";
+import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 
 // Client half of the course hub (performance hardening): receives slim
 // `BlockSummary` props from the server page instead of importing
@@ -107,10 +107,8 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     quizDetails: (questions, threshold, minutes) =>
       `${questions} Praxisfragen · ${threshold}% zum Bestehen · ${minutes} Minuten`,
     startQuiz: "Quiz starten",
-    passedRecord: (recordLabel) =>
-      `Bestanden: ${recordLabel} herunterladen`,
-    locked: (lessons) =>
-      `Verfügbar nach Abschluss aller ${lessons} Lektionen.`,
+    passedRecord: (recordLabel) => `Bestanden: ${recordLabel} herunterladen`,
+    locked: (lessons) => `Verfügbar nach Abschluss aller ${lessons} Lektionen.`,
   },
   en: {
     backHome: "Back to home",
@@ -141,8 +139,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     startQuiz: "Start quiz",
     passedRecord: (recordLabel) =>
       `Passed: download ${recordLabel.toLowerCase()}`,
-    locked: (lessons) =>
-      `Available after all ${lessons} lessons are complete.`,
+    locked: (lessons) => `Available after all ${lessons} lessons are complete.`,
   },
 };
 
@@ -160,7 +157,7 @@ function refreshProgress(
   return {
     overall: getOverallProgress(COURSE_SLUG, totalLessons),
     completedLessons: getCompletedLessonsCount(COURSE_SLUG),
-    quizPassed: isWorkshopQuizPassed(COURSE_SLUG),
+    completionEarned: isEvidenceBackedCertificateEligible(COURSE_SLUG),
     blockProgress,
   };
 }
@@ -181,7 +178,7 @@ export function KursContent({
   const [progress, setProgress] = useState({
     overall: 0,
     completedLessons: 0,
-    quizPassed: false,
+    completionEarned: false,
     blockProgress: {} as Record<string, number>,
   });
   const [shareState, setShareState] = useState<"idle" | "copied" | "error">(
@@ -199,7 +196,7 @@ export function KursContent({
       setProgress({
         overall: 0,
         completedLessons: 0,
-        quizPassed: false,
+        completionEarned: false,
         blockProgress: {},
       });
       if (importResetTimer.current !== null) {
@@ -229,6 +226,7 @@ export function KursContent({
             "",
             `${window.location.pathname}${window.location.search}`,
           );
+          notifyUrlStateChanged();
           if (success) {
             setImportState("success");
             importResetTimer.current = window.setTimeout(() => {
@@ -304,301 +302,303 @@ export function KursContent({
 
   return (
     <div className="min-h-[100svh] bg-background">
-      <div className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 sm:pt-12">
+      <div className="mx-auto max-w-5xl px-4 pb-12 pt-10 sm:px-6 sm:pt-12">
         <MotionProvider>
           <m.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-8"
-        >
-          {/* Back link */}
-          <Link
-            href={localizeHref("/", locale)}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-8"
           >
-            <ArrowLeft className="h-4 w-4" />
-            {copy.backHome}
-          </Link>
-
-          {/* Header */}
-          <div>
-            <p className="mb-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
-              {copy.eyebrow}
-            </p>
-            <h1 className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
-              {config.title}
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              {copy.summary(
-                blocks.length,
-                totalLessons,
-                config.recordNoun.label,
-              )}
-            </p>
-            <div className="mt-3 h-px w-10 bg-brand-orange" />
-          </div>
-
-          {/* Legal disclaimer */}
-          <div className="border border-border/50 bg-card/30 px-5 py-4 text-xs leading-relaxed text-muted-foreground">
-            <span className="font-bold uppercase tracking-wider text-muted">
-              {copy.noticeLabel}
-            </span>
-            <span className="mx-2 text-border">|</span>
-            {copy.notice}
-          </div>
-
-          {/* Import success notification */}
-          {importState === "success" && (
-            <m.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              role="status"
-              className="flex items-center gap-2 border border-brand-sand/30 bg-brand-sand/10 px-4 py-3 text-sm text-foreground"
+            {/* Back link */}
+            <Link
+              href={localizeHref("/", locale)}
+              className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              <CheckCircle2 className="h-4 w-4 shrink-0" />
-              {copy.importSuccess}
-            </m.div>
-          )}
-          {importState === "error" && (
-            <p
-              role="alert"
-              className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-            >
-              {copy.importError}
-            </p>
-          )}
+              <ArrowLeft className="h-4 w-4" />
+              {copy.backHome}
+            </Link>
 
-          {/* Progress Card */}
-          <div className="min-w-0 border border-border bg-card p-4 sm:p-6">
-            <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <span className="text-sm font-medium">{copy.overall}</span>
-                <p className="font-mono text-3xl font-bold text-brand-orange">
-                  {clampedOverall}%
-                </p>
-              </div>
-              <div className="grid w-full grid-cols-3 gap-3 text-sm text-muted-foreground sm:w-auto sm:gap-6">
-                <div className="text-center">
-                  <div className="font-mono font-semibold text-foreground">
-                    {progress.completedLessons}/{totalLessons}
-                  </div>
-                  <div className="break-words">{copy.lessons}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-mono font-semibold text-foreground">
-                    {completedBlocks}/{blocks.length}
-                  </div>
-                  <div className="break-words">{copy.blocks}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-mono font-semibold text-foreground">
-                    {progress.quizPassed ? "1" : "0"}/1
-                  </div>
-                  <div>{copy.quiz}</div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="mt-4 h-1.5 bg-border"
-              role="progressbar"
-              aria-valuenow={clampedOverall}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label={copy.progressAria}
-            >
-              <div
-                className="h-full bg-brand-orange transition-[width,background-color] duration-500"
-                style={{ width: `${clampedOverall}%` }}
-              />
-            </div>
-
-            {/* Share progress button */}
-            {progress.completedLessons > 0 && (
-              <>
-                <button
-                  type="button"
-                  onClick={shareProgress}
-                  aria-describedby={
-                    shareState === "error"
-                      ? "eu-progress-share-error"
-                      : undefined
-                  }
-                  className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {shareState === "copied" ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-brand-sand" />
-                      {copy.shareCopied}
-                    </>
-                  ) : (
-                    <>
-                      <Share2 className="h-3.5 w-3.5" />
-                      {copy.share}
-                    </>
-                  )}
-                </button>
-                {shareState === "error" && (
-                  <p
-                    id="eu-progress-share-error"
-                    role="alert"
-                    className="mt-2 text-xs text-destructive"
-                  >
-                    {copy.shareError}
-                  </p>
+            {/* Header */}
+            <div>
+              <p className="mb-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
+                {copy.eyebrow}
+              </p>
+              <h1 className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
+                {config.title}
+              </h1>
+              <p className="mt-2 text-muted-foreground">
+                {copy.summary(
+                  blocks.length,
+                  totalLessons,
+                  config.recordNoun.label,
                 )}
-              </>
+              </p>
+              <div className="mt-3 h-px w-10 bg-brand-orange" />
+            </div>
+
+            {/* Legal disclaimer */}
+            <div className="border border-border/50 bg-card/30 px-5 py-4 text-xs leading-relaxed text-muted-foreground">
+              <span className="font-bold uppercase tracking-wider text-muted">
+                {copy.noticeLabel}
+              </span>
+              <span className="mx-2 text-border">|</span>
+              {copy.notice}
+            </div>
+
+            {/* Import success notification */}
+            {importState === "success" && (
+              <m.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                role="status"
+                className="flex items-center gap-2 border border-brand-sand/30 bg-brand-sand/10 px-4 py-3 text-sm text-foreground"
+              >
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                {copy.importSuccess}
+              </m.div>
             )}
-          </div>
+            {importState === "error" && (
+              <p
+                role="alert"
+                className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+              >
+                {copy.importError}
+              </p>
+            )}
 
-          {/* Block Cards */}
-          <div className="space-y-4">
-            {blocks.map((block) => {
-              const lessonCount = block.lessonIds.length;
-              const completedInBlock = progress.blockProgress[block.id] ?? 0;
-              const blockDone = completedInBlock >= lessonCount;
-
-              return (
-                <div
-                  key={block.id}
-                  className="group border border-border bg-card transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 hover:border-brand-orange/40"
-                >
-                  <div className="min-w-0 p-4 sm:p-6">
-                    <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-                        <div
-                          className={`flex h-12 w-12 shrink-0 items-center justify-center text-lg font-bold ${
-                            blockDone
-                              ? "bg-brand-sand/20 text-brand-sand"
-                              : "bg-brand-orange text-white"
-                          }`}
-                        >
-                          {blockDone ? (
-                            <CheckCircle2 className="h-5 w-5" />
-                          ) : (
-                            block.orderIndex + 1
-                          )}
-                        </div>
-                        <div className="min-w-0">
-                          <h2 className="break-words text-lg font-semibold [overflow-wrap:anywhere]">
-                            {copy.blockLabel(block.orderIndex + 1)}: {block.title}
-                          </h2>
-                          <p className="mt-0.5 break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">
-                            {block.description}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="shrink-0 font-mono text-xs text-muted-foreground">
-                        <Clock className="mr-1 inline h-3 w-3" />
-                        {copy.minutes(block.durationMinutes)}
-                      </span>
-                    </div>
-
-                    <div className="mt-4 flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-1.5 border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground">
-                        <BookOpen className="h-3.5 w-3.5" />
-                        <span className="font-mono">
-                          {completedInBlock}/{lessonCount}
-                        </span>
-                        {copy.lessons}
-                      </div>
-
-                      <Link
-                        href={localizeHref(
-                          `/eu-ai-act-kurs/kurs/${block.id}`,
-                          locale,
-                        )}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-orange transition-colors hover:text-kupfer-dark"
-                      >
-                        {completedInBlock > 0
-                          ? copy.continue
-                          : copy.startBlock}
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </div>
-
-                    {lessonCount > 0 && (
-                      <div className="mt-3 h-1 bg-border">
-                        <div
-                          className="h-full bg-brand-sand transition-[width,background-color] duration-500"
-                          style={{
-                            width: `${(completedInBlock / lessonCount) * 100}%`,
-                          }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Workshop Quiz Card */}
-            <div
-              className={`border border-border ${allLessonsDone ? "bg-card" : "bg-card/50 opacity-60"}`}
-            >
-              <div className="min-w-0 p-4 sm:p-6">
-                <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center ${
-                      progress.quizPassed
-                        ? "bg-brand-sand/20"
-                        : allLessonsDone
-                          ? "bg-brand-orange"
-                          : "bg-border"
-                    }`}
-                  >
-                    <Trophy
-                      className={`h-6 w-6 ${
-                        progress.quizPassed
-                          ? "text-brand-sand"
-                          : allLessonsDone
-                            ? "text-white"
-                            : "text-muted-foreground"
-                      }`}
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="break-words text-lg font-semibold">
-                      {copy.workshopQuiz}
-                    </h2>
-                    <p className="break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">
-                      {copy.quizDetails(
-                        getWorkshopQuestionCount(COURSE_SLUG, locale),
-                        Math.round(
-                          getWorkshopPassThreshold(COURSE_SLUG, locale) * 100,
-                        ),
-                        getWorkshopTimeLimitMinutes(COURSE_SLUG, locale),
-                      )}
-                    </p>
-                  </div>
-                </div>
-                {allLessonsDone && !progress.quizPassed ? (
-                  <Link
-                    href={localizeHref("/eu-ai-act-kurs/kurs/quiz", locale)}
-                    className="mt-4 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                  >
-                    {copy.startQuiz}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                ) : progress.quizPassed ? (
-                  <Link
-                    href={localizeHref(
-                      "/eu-ai-act-kurs/kurs/zertifikat",
-                      locale,
-                    )}
-                    className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-brand-orange"
-                  >
-                    <CheckCircle2 className="h-4 w-4" />
-                    {copy.passedRecord(config.recordNoun.label)}
-                  </Link>
-                ) : (
-                  <p className="mt-3 text-xs text-muted">
-                    {copy.locked(totalLessons)}
+            {/* Progress Card */}
+            <div className="min-w-0 border border-border bg-card p-4 sm:p-6">
+              <div className="flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <span className="text-sm font-medium">{copy.overall}</span>
+                  <p className="font-mono text-3xl font-bold text-brand-orange">
+                    {clampedOverall}%
                   </p>
-                )}
+                </div>
+                <div className="grid w-full grid-cols-3 gap-3 text-sm text-muted-foreground sm:w-auto sm:gap-6">
+                  <div className="text-center">
+                    <div className="font-mono font-semibold text-foreground">
+                      {progress.completedLessons}/{totalLessons}
+                    </div>
+                    <div className="break-words">{copy.lessons}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-mono font-semibold text-foreground">
+                      {completedBlocks}/{blocks.length}
+                    </div>
+                    <div className="break-words">{copy.blocks}</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-mono font-semibold text-foreground">
+                      {progress.completionEarned ? "1" : "0"}/1
+                    </div>
+                    <div>{copy.quiz}</div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-4 h-1.5 bg-border"
+                role="progressbar"
+                aria-valuenow={clampedOverall}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={copy.progressAria}
+              >
+                <div
+                  className="h-full bg-brand-orange transition-[width,background-color] duration-500"
+                  style={{ width: `${clampedOverall}%` }}
+                />
+              </div>
+
+              {/* Share progress button */}
+              {progress.completedLessons > 0 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={shareProgress}
+                    aria-describedby={
+                      shareState === "error"
+                        ? "eu-progress-share-error"
+                        : undefined
+                    }
+                    className="mt-4 inline-flex min-h-11 items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {shareState === "copied" ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-brand-sand" />
+                        {copy.shareCopied}
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="h-3.5 w-3.5" />
+                        {copy.share}
+                      </>
+                    )}
+                  </button>
+                  {shareState === "error" && (
+                    <p
+                      id="eu-progress-share-error"
+                      role="alert"
+                      className="mt-2 text-xs text-destructive"
+                    >
+                      {copy.shareError}
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Block Cards */}
+            <div className="space-y-4">
+              {blocks.map((block) => {
+                const lessonCount = block.lessonIds.length;
+                const completedInBlock = progress.blockProgress[block.id] ?? 0;
+                const blockDone = completedInBlock >= lessonCount;
+                const blockAction =
+                  completedInBlock > 0 ? copy.continue : copy.startBlock;
+
+                return (
+                  <div
+                    key={block.id}
+                    className="group border border-border bg-card transition-colors duration-200 hover:border-brand-orange/40"
+                  >
+                    <div className="min-w-0 p-4 sm:p-6">
+                      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex min-w-0 items-start gap-3 sm:gap-4">
+                          <div
+                            className={`flex h-12 w-12 shrink-0 items-center justify-center text-lg font-bold ${
+                              blockDone
+                                ? "bg-brand-sand/20 text-brand-sand"
+                                : "bg-brand-orange text-white"
+                            }`}
+                          >
+                            {blockDone ? (
+                              <CheckCircle2 className="h-5 w-5" />
+                            ) : (
+                              block.orderIndex + 1
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h2 className="break-words text-lg font-semibold [overflow-wrap:anywhere]">
+                              {copy.blockLabel(block.orderIndex + 1)}:{" "}
+                              {block.title}
+                            </h2>
+                            <p className="mt-0.5 break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                              {block.description}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                          <Clock className="mr-1 inline h-3 w-3" />
+                          {copy.minutes(block.durationMinutes)}
+                        </span>
+                      </div>
+
+                      <div className="mt-4 flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-1.5 border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground">
+                          <BookOpen className="h-3.5 w-3.5" />
+                          <span className="font-mono">
+                            {completedInBlock}/{lessonCount}
+                          </span>
+                          {copy.lessons}
+                        </div>
+
+                        <Link
+                          href={localizeHref(
+                            `/eu-ai-act-kurs/kurs/${block.id}`,
+                            locale,
+                          )}
+                          aria-label={`${blockAction}: ${block.title}`}
+                          className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-brand-orange transition-colors hover:text-kupfer-dark"
+                        >
+                          {blockAction}
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      </div>
+
+                      {lessonCount > 0 && (
+                        <div className="mt-3 h-1 bg-border">
+                          <div
+                            className="h-full bg-brand-sand transition-[width,background-color] duration-500"
+                            style={{
+                              width: `${(completedInBlock / lessonCount) * 100}%`,
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Workshop Quiz Card */}
+              <div
+                className={`border border-border ${allLessonsDone ? "bg-card" : "bg-card/50 opacity-60"}`}
+              >
+                <div className="min-w-0 p-4 sm:p-6">
+                  <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center ${
+                        progress.completionEarned
+                          ? "bg-brand-sand/20"
+                          : allLessonsDone
+                            ? "bg-brand-orange"
+                            : "bg-border"
+                      }`}
+                    >
+                      <Trophy
+                        className={`h-6 w-6 ${
+                          progress.completionEarned
+                            ? "text-brand-sand"
+                            : allLessonsDone
+                              ? "text-white"
+                              : "text-muted-foreground"
+                        }`}
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="break-words text-lg font-semibold">
+                        {copy.workshopQuiz}
+                      </h2>
+                      <p className="break-words text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                        {copy.quizDetails(
+                          getWorkshopQuestionCount(COURSE_SLUG, locale),
+                          Math.round(
+                            getWorkshopPassThreshold(COURSE_SLUG, locale) * 100,
+                          ),
+                          getWorkshopTimeLimitMinutes(COURSE_SLUG, locale),
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  {allLessonsDone && !progress.completionEarned ? (
+                    <Link
+                      href={localizeHref("/eu-ai-act-kurs/kurs/quiz", locale)}
+                      className="mt-4 inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-kupfer-dark"
+                    >
+                      {copy.startQuiz}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  ) : progress.completionEarned ? (
+                    <Link
+                      href={localizeHref(
+                        "/eu-ai-act-kurs/kurs/zertifikat",
+                        locale,
+                      )}
+                      className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-brand-orange transition-colors hover:text-kupfer-dark"
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {copy.passedRecord(config.recordNoun.label)}
+                    </Link>
+                  ) : (
+                    <p className="mt-3 text-xs text-muted">
+                      {copy.locked(totalLessons)}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
           </m.div>
         </MotionProvider>
       </div>

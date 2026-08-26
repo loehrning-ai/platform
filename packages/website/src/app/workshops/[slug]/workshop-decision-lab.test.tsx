@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   fireEvent,
   render,
@@ -15,7 +17,7 @@ afterEach(() => {
 });
 
 describe("<WorkshopDecisionLab>", () => {
-  it("requires one decision and one evidence choice before evaluating", () => {
+  it("announces submit-time validation and focuses the first missing choice", async () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
     expect(workshop).toBeDefined();
     render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
@@ -23,21 +25,41 @@ describe("<WorkshopDecisionLab>", () => {
     const submit = screen.getByRole("button", {
       name: "Entscheidung prüfen",
     });
-    expect(submit).toBeDisabled();
-
-    fireEvent.click(
-      screen.getByRole("radio", {
-        name: /Proportional nach geschätzter Nachfrage/,
-      }),
-    );
-    expect(submit).toBeDisabled();
-
-    fireEvent.click(
-      screen.getByRole("radio", {
-        name: /Liefergrenze liegt 130 Stück unter/,
-      }),
-    );
+    const firstChoice = screen.getByRole("radio", {
+      name: /Proportional nach geschätzter Nachfrage/,
+    });
+    const firstEvidence = screen.getByRole("radio", {
+      name: /Liefergrenze liegt 130 Stück unter/,
+    });
     expect(submit).toBeEnabled();
+    expect(firstChoice).toBeRequired();
+
+    fireEvent.click(submit);
+    const decisionAlert = screen.getByRole("alert");
+    expect(decisionAlert).toHaveTextContent(
+      "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.",
+    );
+    await waitFor(() => expect(firstChoice).toHaveFocus());
+    expect(firstChoice.closest("fieldset")).toHaveAttribute(
+      "aria-describedby",
+      decisionAlert.id,
+    );
+
+    fireEvent.click(firstChoice);
+    expect(screen.queryByRole("alert")).toBeNull();
+    fireEvent.click(submit);
+    const evidenceAlert = screen.getByRole("alert");
+    expect(evidenceAlert).toHaveTextContent(
+      "Wähle den stärksten Beleg aus, bevor du das Ergebnis prüfst.",
+    );
+    await waitFor(() => expect(firstEvidence).toHaveFocus());
+    expect(firstEvidence.closest("fieldset")).toHaveAttribute(
+      "aria-describedby",
+      evidenceAlert.id,
+    );
+
+    fireEvent.click(firstEvidence);
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
   it("returns evidence-based feedback through a polite live region and resets cleanly", async () => {
@@ -69,6 +91,12 @@ describe("<WorkshopDecisionLab>", () => {
     expect(status).toHaveAttribute("aria-live", "polite");
     expect(within(status).getByText("Freigabe mit Tor")).toBeInTheDocument();
     expect(status).toHaveTextContent(/Knappheit.*Zuteilungsregel/);
+    expect(
+      screen.queryByRole("button", { name: "Entscheidung prüfen" }),
+    ).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Neu entscheiden" }),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Neu entscheiden" }));
     expect(firstChoice).not.toBeChecked();
@@ -81,15 +109,12 @@ describe("<WorkshopDecisionLab>", () => {
     });
     expect(
       screen.getByRole("button", { name: "Entscheidung prüfen" }),
-    ).toBeDisabled();
+    ).toBeEnabled();
     expect(status).toBeEmptyDOMElement();
   });
 
   it("uses the selected evidence to challenge an unsupported English decision", () => {
-    const workshop = getWorkshopBySlug(
-      "geschaeftsberichte-mit-ki-lesen",
-      "en",
-    );
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en");
     expect(workshop).toBeDefined();
     render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
 
@@ -113,10 +138,7 @@ describe("<WorkshopDecisionLab>", () => {
   });
 
   it("does not persist or transmit the learner's selections", () => {
-    const workshop = getWorkshopBySlug(
-      "geschaeftsberichte-mit-ki-lesen",
-      "en",
-    );
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en");
     expect(workshop).toBeDefined();
     const localStorageWrite = vi.spyOn(window.localStorage, "setItem");
     const sessionStorageWrite = vi.spyOn(window.sessionStorage, "setItem");
@@ -142,19 +164,37 @@ describe("<WorkshopDecisionLab>", () => {
     ).toBeInTheDocument();
   });
 
-  it("limits authored transitions to transform and opacity and disables them for reduced motion", () => {
+  it("uses flat state changes without authored motion or undersized labels", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "en");
     expect(workshop).toBeDefined();
     render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
 
-    const choice = screen.getByRole("radio", {
-      name: /Allocate proportionally/,
-    }).closest("label");
+    const choice = screen
+      .getByRole("radio", {
+        name: /Allocate proportionally/,
+      })
+      .closest("label");
     expect(choice).not.toBeNull();
-    expect(choice).toHaveClass("motion-safe:transition-[opacity,transform]");
-    expect(choice).toHaveClass("motion-reduce:transition-none");
-    expect(
-      screen.getByText(workshop!.decisionLab.kicker),
-    ).toHaveClass("text-kupfer-light");
+    expect(choice).toHaveClass("transition-colors");
+    expect(choice?.className).not.toMatch(
+      /translate|motion-safe|motion-reduce/,
+    );
+    expect(screen.getByText(workshop!.decisionLab.kicker)).toHaveClass(
+      "text-xs",
+      "text-brand-orange",
+    );
+
+    const source = readFileSync(
+      resolve(
+        process.cwd(),
+        "src/app/workshops/[slug]/workshop-decision-lab.tsx",
+      ),
+      "utf8",
+    );
+    expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
+    expect(source).not.toMatch(/motion-safe|motion-reduce|animate-|shadow-/);
+    expect(source).toContain(
+      "grid grid-cols-1 border-y border-border sm:grid-cols-3",
+    );
   });
 });

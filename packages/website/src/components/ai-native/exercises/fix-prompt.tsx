@@ -3,11 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, Sparkles, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
@@ -118,10 +114,10 @@ function FixPromptBody({
       setAiResult(null);
       try {
         const raw = getOwnedSessionLearningItem(storageKey);
-      if (raw !== null) {
-        setDraft(raw);
-        savedDraftRef.current = raw;
-      }
+        if (raw !== null) {
+          setDraft(raw);
+          savedDraftRef.current = raw;
+        }
       } catch {
         /* ignore */
       }
@@ -133,29 +129,26 @@ function FixPromptBody({
   // Save on blur + beforeunload.
   useEffect(() => {
     const onBeforeUnload = () => {
-      setOwnedSessionLearningItem(
-        storageKey,
-        draft,
-        ownerGeneration,
-      );
+      setOwnedSessionLearningItem(storageKey, draft, ownerGeneration);
     };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [draft, ownerGeneration, storageKey]);
 
-  const grading = useMemo(() => gradeFixPrompt(draft, criteria), [draft, criteria]);
+  const grading = useMemo(
+    () => gradeFixPrompt(draft, criteria),
+    [draft, criteria],
+  );
   const passed = grading.score >= passThreshold;
 
   const saveDraft = () => {
-    setOwnedSessionLearningItem(
-      storageKey,
-      draft,
-      ownerGeneration,
-    );
+    setOwnedSessionLearningItem(storageKey, draft, ownerGeneration);
   };
 
   const handleSubmit = async () => {
-    const ownerGeneration = getLearningOwnerContext().generation;
+    const owner = getLearningOwnerContext();
+    if (owner.kind === "unknown") return;
+    const ownerGeneration = owner.generation;
     saveDraft();
     setIsGrading(true);
 
@@ -184,10 +177,7 @@ function FixPromptBody({
     });
 
     if (getLearningOwnerContext().generation !== ownerGeneration) return;
-    setAiResult(result);
-    setSubmitted(true);
-    setIsGrading(false);
-    submitExercise({
+    const persisted = submitExercise({
       moduleId,
       lessonId,
       exerciseId,
@@ -196,7 +186,12 @@ function FixPromptBody({
       aiFeedback: result.rubric,
       summary: result.summary,
       gradingSource: result.source === "ai" ? "ai" : "fallback",
+      expectedOwnerGeneration: ownerGeneration,
     });
+    setIsGrading(false);
+    if (!persisted) return;
+    setAiResult(result);
+    setSubmitted(true);
   };
 
   const handleReset = () => {
@@ -210,7 +205,7 @@ function FixPromptBody({
     <div>
       <label
         htmlFor={`${exerciseId}-textarea`}
-        className="mb-2 block font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
+        className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground"
       >
         {text("Dein Prompt", "Your prompt")}
       </label>
@@ -223,13 +218,13 @@ function FixPromptBody({
         rows={7}
         disabled={submitted || isGrading}
         className={cn(
-          "w-full resize-y border border-border bg-background p-3.5 font-mono text-[13px] leading-[1.6] text-foreground outline-none",
+          "min-h-11 w-full resize-y border border-border bg-background p-3.5 font-mono text-[13px] leading-[1.6] text-foreground outline-none",
           submitted || isGrading
             ? "cursor-not-allowed opacity-80"
             : "focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange",
         )}
       />
-      <div className="mt-1 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+      <div className="mt-1 flex items-center justify-between font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
         <span>{draft.length} / 5000</span>
         {submitted && aiResult != null && (
           <span className="flex items-center gap-2">
@@ -250,7 +245,9 @@ function FixPromptBody({
             ) : (
               <span className="text-muted-foreground">Rule-based</span>
             )}
-            {aiResult.cached && <span className="text-muted-foreground">· cached</span>}
+            {aiResult.cached && (
+              <span className="text-muted-foreground">· cached</span>
+            )}
           </span>
         )}
       </div>
@@ -272,7 +269,7 @@ function FixPromptBody({
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >
-              <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-foreground">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground">
                 {aiResult.source === "ai"
                   ? text("AI-Zusammenfassung", "AI summary")
                   : text("Zusammenfassung", "Summary")}
@@ -331,10 +328,10 @@ function FixPromptBody({
             onClick={handleSubmit}
             disabled={draft.trim().length < 10 || isGrading}
             className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
               draft.trim().length < 10 || isGrading
                 ? "cursor-not-allowed bg-muted-foreground opacity-60"
-                : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
+                : "bg-brand-orange hover:bg-foreground hover:text-background",
             )}
           >
             {isGrading ? (

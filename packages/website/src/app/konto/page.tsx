@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  ArrowRight,
-  Award,
-  BookOpen,
-  GraduationCap,
-  LayoutDashboard,
-  LogOut,
-} from "lucide-react";
+import { ArrowRight, LogOut } from "lucide-react";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import {
-  competencyProgress,
-  earnedCompetencies,
+  courseOutcomeCoverage,
+  coveredCourseOutcomes,
   isCourseRecordEarned,
 } from "@/lib/courses/competencies";
 import {
@@ -29,7 +22,7 @@ import {
   resolveCourseResumeHref,
 } from "@/lib/courses/resume";
 import type { CourseSlug } from "@/lib/course/types";
-import { Card, IconTile } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
 import { localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -47,11 +40,6 @@ function completedLessons(
 ): number {
   return completedCanonicalLessonCount(progress, slug);
 }
-
-const SUPPORT_TILE_DECORATION = {
-  books: { icon: BookOpen, accent: "amber" as const },
-  demos: { icon: LayoutDashboard, accent: "sand" as const },
-} as const;
 
 export default async function KontoPage() {
   const [locale, auth] = await Promise.all([
@@ -111,8 +99,8 @@ export default async function KontoPage() {
   });
 
   const coursesDone = courseState.filter((c) => c.recordEarned).length;
-  // "Next" and the "all done" banner use the SAME definition as the count
-  // (record earned), so the celebration can never contradict the "X/4" tally.
+  // "Next" and the "all done" state use the same record-earned definition as
+  // the count, so the available action cannot contradict the tally.
   const nextCourse =
     courseState
       .filter((c) => !c.recordEarned)
@@ -121,38 +109,38 @@ export default async function KontoPage() {
         const rightAt = right.lastActivity ? Date.parse(right.lastActivity) : 0;
         return rightAt - leftAt;
       })[0] ?? null;
-  const { earned: earnedCount, total: totalCompetencies } =
-    competencyProgress(progress);
-  const earned = earnedCompetencies(progress, locale);
+  const { covered: coveredCount, total: totalOutcomes } =
+    courseOutcomeCoverage(progress);
+  const covered = coveredCourseOutcomes(progress, locale);
 
-  // Group earned competencies under the course that granted them.
-  const earnedByCourse = courses
+  // Group curriculum outcomes under the completed course that covered them.
+  const coveredByCourse = courses
     .map((course) => ({
       course,
-      items: earned.filter((c) => c.courseSlug === course.slug),
+      items: covered.filter((outcome) => outcome.courseSlug === course.slug),
     }))
     .filter((g) => g.items.length > 0);
 
   return (
-    <section className="py-16 sm:py-20">
+    <section className="py-8 sm:py-12">
       <div className="mx-auto w-full max-w-5xl min-w-0 px-4 sm:px-6">
         {/* Header */}
-        <div className="flex flex-wrap items-start justify-between gap-5 border-b border-border pb-8">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-6">
           <div>
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
               {copy.eyebrow}
             </p>
-            <h1 className="mt-4 text-4xl font-bold leading-tight tracking-[-0.04em] text-foreground sm:text-5xl">
+            <h1 className="mt-3 text-3xl font-bold leading-tight tracking-[-0.04em] text-foreground sm:text-4xl">
               {copy.title}
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               {copy.signedIn(user?.email ?? copy.localIdentity)}
             </p>
           </div>
           <form action="/auth/logout" method="post">
             <button
               type="submit"
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-tile transition-colors hover:border-foreground hover:text-foreground"
+              className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {copy.logout}
               <LogOut size={14} aria-hidden="true" />
@@ -163,7 +151,7 @@ export default async function KontoPage() {
         {progressUnavailable ? (
           <div
             role="alert"
-            className="mt-8 border border-brand-orange bg-kupfer-mist p-5"
+            className="mt-6 border border-border border-l-[3px] border-l-brand-orange bg-kupfer-mist p-4"
           >
             <p className="font-semibold text-foreground">
               {copy.unavailableTitle}
@@ -175,12 +163,12 @@ export default async function KontoPage() {
         ) : (
           <>
             {/* Overview: three honest rollups */}
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <Card className="gap-1">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
                   {copy.coursesCompleted}
                 </span>
-                <span className="text-3xl font-bold tracking-[-0.03em] text-foreground">
+                <span className="text-2xl font-bold tracking-[-0.03em] text-foreground">
                   {coursesDone}
                   <span className="text-muted-foreground">
                     /{COURSE_CATALOG.length}
@@ -188,18 +176,18 @@ export default async function KontoPage() {
                 </span>
               </Card>
               <Card className="gap-1">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  {copy.competenciesEarned}
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  {copy.outcomesCovered}
                 </span>
-                <span className="text-3xl font-bold tracking-[-0.03em] text-foreground">
-                  {earnedCount}
+                <span className="text-2xl font-bold tracking-[-0.03em] text-foreground">
+                  {coveredCount}
                   <span className="text-muted-foreground">
-                    /{totalCompetencies}
+                    /{totalOutcomes}
                   </span>
                 </span>
               </Card>
               <Card className="gap-1">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
                   {copy.lastSynchronized}
                 </span>
                 <span className="text-sm font-semibold text-foreground">
@@ -214,8 +202,8 @@ export default async function KontoPage() {
 
             {/* Continue where you left off */}
             {nextCourse ? (
-              <Card accent="kupfer" className="mt-6 bg-kupfer-mist">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+              <Card accent="kupfer" className="mt-4 bg-kupfer-mist">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {copy.continueLabel}
                 </p>
                 <p className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground">
@@ -224,7 +212,7 @@ export default async function KontoPage() {
                 <p className="mt-1 text-sm text-muted-foreground">
                   {nextCourse.course.tagline}
                 </p>
-                <div className="mt-5">
+                <div className="mt-4">
                   <BrandButton
                     href={
                       nextCourse.started
@@ -240,14 +228,14 @@ export default async function KontoPage() {
                 </div>
               </Card>
             ) : (
-              <Card accent="kupfer" className="mt-6 bg-kupfer-mist">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+              <Card accent="kupfer" className="mt-4 bg-kupfer-mist">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {copy.statusLabel}
                 </p>
                 <p className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground">
                   {copy.allComplete}
                 </p>
-                <div className="mt-5">
+                <div className="mt-4">
                   <BrandButton
                     href={localizeHref("/buecher", locale)}
                     variant="outline"
@@ -260,31 +248,29 @@ export default async function KontoPage() {
             )}
 
             {/* Per-course progress */}
-            <h2 className="mt-14 text-2xl font-bold tracking-[-0.03em] text-foreground">
+            <h2 className="mt-12 text-2xl font-bold tracking-[-0.03em] text-foreground">
               {copy.coursesHeading}
             </h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {courseState.map(
                 ({ course, done, pct, recordEarned, started, resumeHref }) => (
-                  <Card key={course.slug} accent="kupfer" className="h-full">
+                  <Card key={course.slug} className="h-full gap-0">
                     <div className="flex items-start justify-between gap-3">
-                      <IconTile icon={GraduationCap} accent="kupfer" />
-                      {recordEarned && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-kupfer-mist px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                          <Award size={13} aria-hidden="true" />
+                      <h3 className="text-lg font-bold tracking-[-0.02em] text-foreground">
+                        {course.title}
+                      </h3>
+                      {recordEarned ? (
+                        <span className="border-l-[3px] border-brand-orange pl-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
                           {copy.recordEarned}
                         </span>
-                      )}
+                      ) : null}
                     </div>
-                    <h3 className="mt-4 text-lg font-bold tracking-[-0.02em] text-foreground">
-                      {course.title}
-                    </h3>
-                    <p className="mt-3 font-mono text-[12px] uppercase tracking-[0.1em] text-muted-foreground">
+                    <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
                       {copy.lessonProgress(done, course.totalLessons, pct)}
                     </p>
                     {/* Progress bar */}
                     <div
-                      className="mt-2 h-2 w-full overflow-hidden rounded-full bg-border"
+                      className="mt-2 h-1.5 w-full overflow-hidden bg-track"
                       role="progressbar"
                       aria-valuemin={0}
                       aria-valuemax={100}
@@ -292,66 +278,57 @@ export default async function KontoPage() {
                       aria-label={copy.progressAria(course.title)}
                     >
                       <div
-                        className="h-full rounded-full bg-brand-orange"
+                        className="h-full bg-brand-orange"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
-                    <div className="mt-5">
-                      <Link
-                        href={localizeHref(
-                          started ? resumeHref : course.startHref,
-                          locale,
-                        )}
-                        className="inline-flex font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline-offset-4 hover:underline"
-                      >
-                        {recordEarned
-                          ? copy.viewRecord
-                          : started
-                            ? copy.resume
-                            : copy.start}{" "}
-                        →
-                      </Link>
-                    </div>
+                    <Link
+                      href={localizeHref(
+                        started ? resumeHref : course.startHref,
+                        locale,
+                      )}
+                      className="mt-3 inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                    >
+                      {recordEarned
+                        ? copy.viewRecord
+                        : started
+                          ? copy.resume
+                          : copy.start}{" "}
+                      →
+                    </Link>
                   </Card>
                 ),
               )}
             </div>
 
-            {/* Kompetenzen — the honest "what you've learned" record */}
-            <section className="mt-16" aria-labelledby="kompetenzen-heading">
+            {/* Course outcomes covered by completed curriculum. */}
+            <section className="mt-12" aria-labelledby="outcomes-heading">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <h2
-                  id="kompetenzen-heading"
+                  id="outcomes-heading"
                   className="text-2xl font-bold tracking-[-0.03em] text-foreground"
                 >
-                  {copy.competenciesHeading}
+                  {copy.outcomesHeading}
                 </h2>
                 <span className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                  {copy.competencyCount(earnedCount, totalCompetencies)}
+                  {copy.outcomeCount(coveredCount, totalOutcomes)}
                 </span>
               </div>
 
-              {earnedByCourse.length > 0 ? (
-                <div className="mt-6 space-y-6">
-                  {earnedByCourse.map(({ course, items }) => (
+              {coveredByCourse.length > 0 ? (
+                <div className="mt-4 space-y-4">
+                  {coveredByCourse.map(({ course, items }) => (
                     <div key={course.slug}>
-                      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                        {copy.competencySource(course.title)}
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                        {copy.outcomeSource(course.title)}
                       </p>
-                      <ul className="mt-3 flex flex-wrap gap-2.5">
-                        {items.map((competency) => (
+                      <ul className="mt-2 grid gap-px border border-border bg-border sm:grid-cols-2">
+                        {items.map((outcome) => (
                           <li
-                            key={competency.id}
-                            className="flex items-center gap-2 rounded-full bg-kupfer-mist px-3.5 py-1.5"
+                            key={outcome.id}
+                            className="border-l-[3px] border-l-brand-orange bg-background px-3 py-2.5 text-sm font-semibold text-foreground"
                           >
-                            <Award
-                              size={13}
-                              className="text-brand-orange"
-                              aria-hidden="true"
-                            />
-                            <span className="text-[13px] font-semibold text-foreground">
-                              {competency.label}
-                            </span>
+                            {outcome.label}
                           </li>
                         ))}
                       </ul>
@@ -359,51 +336,44 @@ export default async function KontoPage() {
                   ))}
                 </div>
               ) : (
-                <Card className="mt-6">
+                <Card className="mt-4">
                   <p className="text-sm leading-relaxed text-muted-foreground">
-                    {copy.noCompetencies}
+                    {copy.noOutcomes}
                   </p>
                 </Card>
               )}
 
-              <p className="mt-5 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">
-                {copy.competencyBoundary}
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                {copy.outcomeBoundary}
               </p>
             </section>
           </>
         )}
 
         {/* Supporting resources */}
-        <h2 className="mt-16 text-2xl font-bold tracking-[-0.03em] text-foreground">
+        <h2 className="mt-12 text-2xl font-bold tracking-[-0.03em] text-foreground">
           {copy.deepenHeading}
         </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          {copy.resources.map((tile) => {
-            const decoration = SUPPORT_TILE_DECORATION[tile.key];
-            return (
-              <Card
-                key={tile.href}
-                href={localizeHref(tile.href, locale)}
-                accent={decoration.accent}
-                className="h-full gap-3"
-              >
-                <IconTile icon={decoration.icon} accent={decoration.accent} />
-                <div>
-                  <span className="font-bold text-foreground group-hover:text-brand-orange">
-                    {tile.title}
-                  </span>
-                  <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
-                    {tile.body}
-                  </span>
-                </div>
-              </Card>
-            );
-          })}
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {copy.resources.map((tile) => (
+            <Card
+              key={tile.href}
+              href={localizeHref(tile.href, locale)}
+              className="h-full gap-2"
+            >
+              <span className="font-bold text-foreground group-hover:text-brand-orange">
+                {tile.title}
+              </span>
+              <span className="text-sm leading-relaxed text-muted-foreground">
+                {tile.body}
+              </span>
+            </Card>
+          ))}
         </div>
 
-        {/* Gamification honesty note */}
-        <aside className="mt-10 rounded-lg border border-border p-4">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+        {/* Storage and legacy-export disclosure */}
+        <aside className="mt-8 border border-border border-l-[3px] border-l-brand-orange p-4">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
             {copy.localDataHeading}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -411,11 +381,14 @@ export default async function KontoPage() {
           </p>
         </aside>
 
-        <nav className="mt-6 border-t border-border pt-4">
+        <nav
+          aria-label={copy.privacyNavigationLabel}
+          className="mt-4 border-t border-border pt-4"
+        >
           <p className="text-sm text-muted-foreground">
             <Link
               href={localizeHref("/konto/datenschutz", locale)}
-              className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline underline-offset-4"
+              className="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
               {copy.privacyLink}
             </Link>

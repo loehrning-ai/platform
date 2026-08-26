@@ -40,11 +40,11 @@ export default async function AiNativeCourseIndexPage() {
   const isEnglish = locale === "en";
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12 md:py-20">
+    <div className="mx-auto max-w-4xl px-6 py-12">
       <header className="mb-12">
         <Link
           href={localizeHref("/ai-native", locale)}
-          className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           ← loehrning.ai/ai-native
         </Link>

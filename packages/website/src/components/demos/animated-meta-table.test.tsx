@@ -1,22 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { AnimatedMetaTable } from "./animated-meta-table";
 
 /**
  * animated-meta-table.test.tsx (regression coverage)
  *
- * Drives the real <AnimatedMetaTable>. Two paths are exercised:
- *
- *  - Off-screen: the polyfilled IntersectionObserver never intersects, so the
- *    count-up stays inactive and every value renders verbatim (including
- *    non-numeric ones and the empty-meta edge case).
- *  - In-view: we remove IntersectionObserver to hit the immediate-active
- *    fallback and drive requestAnimationFrame straight to the final frame, so
- *    the private formatLike must reconstruct the exact de-DE formatted target.
+ * The evidence ledger renders reviewed values verbatim. It never count-ups an
+ * illustrative metric or changes it based on viewport state or motion policy.
  */
 
 describe("<AnimatedMetaTable>", () => {
-  it("renders every label and value verbatim while off-screen", () => {
+  it("renders every label and reviewed value verbatim", () => {
     const meta = [
       { label: "Zeitersparnis", value: "3,5 Std." },
       { label: "Genauigkeit", value: "98,2 %" },
@@ -40,78 +34,16 @@ describe("<AnimatedMetaTable>", () => {
     expect(container.textContent).toBe("");
   });
 
-  it("counts a numeric value up to its exact de-DE formatted target when in view", async () => {
-    // Removing IntersectionObserver forces setActive(true) immediately; the
-    // rAF stub jumps past the 800ms duration so the counter lands on its final
-    // frame in one call. The final value must equal the original input, which
-    // only holds if the number parse + formatLike round-trip correctly.
-    const savedIO = globalThis.IntersectionObserver;
-    const raf = vi
-      .spyOn(window, "requestAnimationFrame")
-      .mockImplementation((cb: FrameRequestCallback) => {
-        cb(performance.now() + 1000);
-        return 1;
-      });
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (globalThis as any).IntersectionObserver;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (window as any).IntersectionObserver;
-
-      render(<AnimatedMetaTable meta={[{ label: "Umsatz", value: "1.234,5" }]} />);
-
-      expect(await screen.findByText("1.234,5")).toBeInTheDocument();
-    } finally {
-      raf.mockRestore();
-      globalThis.IntersectionObserver = savedIO;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).IntersectionObserver = savedIO;
-    }
-  });
-
-  it("keeps the truthful final value static under prefers-reduced-motion", async () => {
-    const savedIO = globalThis.IntersectionObserver;
-    const savedMatchMedia = window.matchMedia;
+  it("does not schedule animation frames for numeric values", () => {
     const raf = vi.spyOn(window, "requestAnimationFrame");
-    Object.defineProperty(window, "matchMedia", {
-      configurable: true,
-      value: vi.fn((query: string) => ({
-        matches: query.includes("prefers-reduced-motion"),
-        media: query,
-        onchange: null,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })),
-    });
-
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (globalThis as any).IntersectionObserver;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (window as any).IntersectionObserver;
-
       render(
-        <AnimatedMetaTable
-          meta={[{ label: "Umsatz", value: "1.234,5" }]}
-        />,
+        <AnimatedMetaTable meta={[{ label: "Umsatz", value: "1.234,5" }]} />,
       );
-
-      await waitFor(() =>
-        expect(screen.getByText("1.234,5")).toBeInTheDocument(),
-      );
+      expect(screen.getByText("1.234,5")).toBeInTheDocument();
       expect(raf).not.toHaveBeenCalled();
     } finally {
       raf.mockRestore();
-      globalThis.IntersectionObserver = savedIO;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).IntersectionObserver = savedIO;
-      Object.defineProperty(window, "matchMedia", {
-        configurable: true,
-        value: savedMatchMedia,
-      });
     }
   });
 });

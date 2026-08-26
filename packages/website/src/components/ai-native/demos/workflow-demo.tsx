@@ -402,7 +402,7 @@ export function WorkflowDemo(): JSX.Element {
                 <text
                   x="52"
                   y="42"
-                  fontSize="8.5"
+                  fontSize="12"
                   fontWeight="700"
                   fill="var(--color-muted-foreground)"
                   fontFamily="var(--font-mono)"
@@ -413,7 +413,7 @@ export function WorkflowDemo(): JSX.Element {
                 <text
                   x="16"
                   y="66"
-                  fontSize="8.5"
+                  fontSize="12"
                   fill="var(--color-muted-foreground)"
                   fontFamily="var(--font-mono)"
                   style={{ letterSpacing: "0.04em" }}
@@ -433,7 +433,7 @@ export function WorkflowDemo(): JSX.Element {
           onClick={run}
           disabled={running}
           className={cn(
-            "border-2 border-foreground bg-brand-orange px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+            "min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
             running
               ? "cursor-wait opacity-75"
               : "shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
@@ -445,7 +445,7 @@ export function WorkflowDemo(): JSX.Element {
               ? "↻ Nächsten Entwurf prüfen"
               : "▶ Beispielkontakt prüfen"}
         </button>
-        <div className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
+        <div className="font-mono text-[12px] tracking-[0.08em] text-muted-foreground">
           {running
             ? `Stufe ${stage}/4 · ${pulseEdges.size}/9 Kanten aktiv`
             : picked
@@ -467,10 +467,10 @@ export function WorkflowDemo(): JSX.Element {
             {/* Lead card */}
             <div className="flex flex-col gap-2.5 border border-foreground border-l-[3px] border-l-brand-orange bg-background p-4 shadow-[3px_3px_0_0_var(--color-foreground)]">
               <div className="flex items-center justify-between">
-                <div className="font-mono text-[9px] font-bold tracking-[0.18em] text-brand-orange">
+                <div className="font-mono text-[12px] font-bold tracking-[0.18em] text-brand-orange">
                   ◆ LEAD · AUSGEWÄHLT
                 </div>
-                <div className="font-mono text-[9px] tracking-[0.12em] text-muted-foreground">
+                <div className="font-mono text-[12px] tracking-[0.12em] text-muted-foreground">
                   #{String(pickedIdx + 412).padStart(4, "0")}
                 </div>
               </div>
@@ -482,9 +482,9 @@ export function WorkflowDemo(): JSX.Element {
                   {picked.role} · {picked.company}
                 </div>
               </div>
-              <div className="mt-0.5 grid grid-cols-2 gap-2 font-mono text-[10px]">
+              <div className="mt-0.5 grid grid-cols-2 gap-2 font-mono text-[12px]">
                 <div>
-                  <div className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Letzter Kontakt
                   </div>
                   <div className="mt-0.5 font-bold text-foreground">
@@ -492,26 +492,26 @@ export function WorkflowDemo(): JSX.Element {
                   </div>
                 </div>
                 <div>
-                  <div className="font-mono text-[8px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Intent-Score
                   </div>
                   <div className="mt-0.5 font-bold text-brand-orange text-[14px]">
                     {picked.score}
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[12px] text-muted-foreground">
                       /100
                     </span>
                   </div>
                 </div>
               </div>
               <div className="border border-dashed border-brand-orange bg-card/60 px-2.5 py-2">
-                <div className="font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+                <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-brand-orange">
                   Signal erkannt
                 </div>
                 <div className="mt-0.5 text-[12px] font-semibold text-foreground">
                   {picked.signal}
                 </div>
               </div>
-              <div className="flex gap-2 font-mono text-[9px] leading-[1.7] tracking-[0.08em]">
+              <div className="flex flex-wrap gap-2 font-mono text-[12px] leading-[1.7] tracking-[0.08em]">
                 {(
                   [
                     ["Signal", 2],
@@ -535,7 +535,7 @@ export function WorkflowDemo(): JSX.Element {
 
             {/* Generated email */}
             <div className="relative flex min-h-[280px] flex-col border border-foreground bg-white">
-              <div className="flex items-center gap-2.5 bg-foreground px-3.5 py-2 font-mono text-[10px] font-bold tracking-[0.12em] text-background">
+              <div className="flex flex-wrap items-center gap-2.5 bg-foreground px-3.5 py-2 font-mono text-[12px] font-bold tracking-[0.12em] text-background">
                 <span className="text-brand-orange">✉ Entwurf</span>
                 <span className="opacity-50">›</span>
                 <span>an: {pickEmailAddress(picked)}</span>
@@ -556,7 +556,7 @@ export function WorkflowDemo(): JSX.Element {
                 className="relative flex-1 px-5 py-4 text-[12px] leading-[1.55] text-[#000]"
                 style={{ fontFamily: "Georgia, serif" }}
               >
-                <div className="mb-2.5 font-mono text-[11px] tracking-[0.08em] text-muted-foreground">
+                <div className="mb-2.5 font-mono text-[12px] tracking-[0.08em] text-muted-foreground">
                   Betreff:{" "}
                   <span
                     className="font-bold text-[#000]"
@@ -569,7 +569,7 @@ export function WorkflowDemo(): JSX.Element {
                   </span>
                 </div>
                 {stage < 3 ? (
-                  <div className="flex items-center gap-2 py-10 font-mono text-[11px] text-muted-foreground">
+                  <div className="flex items-center gap-2 py-10 font-mono text-[12px] text-muted-foreground">
                     <span
                       className="inline-block h-2 w-2 animate-pulse bg-brand-orange"
                       aria-hidden="true"
@@ -586,14 +586,14 @@ export function WorkflowDemo(): JSX.Element {
                     className="whitespace-pre-wrap"
                   >
                     {picked.email}
-                    <div className="mt-3.5 text-[11px] text-muted-foreground">
+                    <div className="mt-3.5 text-[12px] text-muted-foreground">
                       Tim Löhr · loehrning.ai
                     </div>
                   </m.div>
                 )}
               </div>
               {stage >= 3 && (
-                <div className="flex flex-wrap gap-3.5 border-t border-dashed border-border px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="flex flex-wrap gap-3.5 border-t border-dashed border-border px-3.5 py-2 font-mono text-[12px] uppercase tracking-[0.1em] text-muted-foreground">
                   <span>◆ Tokenzahl · Beispiel</span>
                   <span>◆ Modellroute · simuliert</span>
                   <span>◆ Dauer · Simulation</span>
@@ -620,7 +620,7 @@ export function WorkflowDemo(): JSX.Element {
             key={label}
             className="border border-l-[3px] border-border border-l-brand-orange bg-background p-3"
           >
-            <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </div>
             <div className="mt-1 font-mono text-[18px] font-bold tracking-[-0.02em] text-foreground md:text-[20px]">

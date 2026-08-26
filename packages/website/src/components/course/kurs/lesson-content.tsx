@@ -4,21 +4,28 @@ import {
   useMemo,
   useState,
   useCallback,
+  useEffect,
   useRef,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { BookOpen, HelpCircle, ArrowRight, CheckCircle2, Tag } from "lucide-react";
+import { BookOpen, HelpCircle, ArrowRight, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SectionReader } from "./section-reader";
 import { LessonQuiz } from "./lesson-quiz";
-import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
+import { LessonProofCheckpoint } from "@/components/course/lesson-proof-checkpoint";
+import {
+  RenderWidget,
+  resolveWidgetsForSlot,
+} from "@/components/widgets/registry";
 import { LessonProgressRing } from "@/components/progress/lesson-progress-ring";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import type { Widget } from "@/lib/widgets/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeCourseWidgetProps } from "@/lib/course/widget-localization";
 import { getCourseReaderCopy } from "./course-ui-copy";
+import { getOwnerRequiredHint } from "@/components/course/owner-aware-progress";
+import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 type Tab = "lernen" | "quiz";
@@ -28,6 +35,9 @@ interface LessonContentProps {
   readonly lesson: Lesson;
   readonly totalLessons: number;
   readonly progressReady: boolean;
+  readonly progressHydrated: boolean;
+  readonly ownerReady: boolean;
+  readonly checkpointKey: string;
   readonly readSectionIds: ReadonlySet<string>;
   readonly isCompleted: boolean;
   readonly quizBestScore: { score: number; total: number } | null;
@@ -44,6 +54,9 @@ export function LessonContent({
   lesson,
   totalLessons,
   progressReady,
+  progressHydrated,
+  ownerReady,
+  checkpointKey,
   readSectionIds,
   isCompleted,
   quizBestScore,
@@ -57,9 +70,19 @@ export function LessonContent({
   const copy = getCourseReaderCopy(locale).lesson;
   const [activeTab, setActiveTab] = useState<Tab>("lernen");
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
-  const allSectionsRead = lesson.sections.every((s) => readSectionIds.has(s.id));
-  const canCompleteLesson = progressReady && allSectionsRead;
+  const allSectionsRead = lesson.sections.every((s) =>
+    readSectionIds.has(s.id),
+  );
   const hasQuiz = lesson.quiz.length > 0;
+  const knowledgeCheckComplete = !hasQuiz || quizBestScore !== null;
+  const completionPrerequisitesMet = allSectionsRead && knowledgeCheckComplete;
+  const completionPrerequisiteHint = !allSectionsRead
+    ? locale === "de"
+      ? "Bestätige zuerst jeden Abschnitt als geprüft."
+      : "Confirm every section as reviewed first."
+    : locale === "de"
+      ? "Schließe zuerst den Verständnis-Check ab."
+      : "Complete the knowledge check first.";
 
   // Interactive widgets (shared course architecture). The widget registry is shared
   // across all three courses; KI-Führerschein lessons declare them in their
@@ -85,8 +108,31 @@ export function LessonContent({
     [onQuizComplete],
   );
 
+  useEffect(() => {
+    const syncFromLocation = () => {
+      const requested = new URLSearchParams(window.location.search).get("tab");
+      setActiveTab(requested === "quiz" && hasQuiz ? "quiz" : "lernen");
+    };
+
+    syncFromLocation();
+    window.addEventListener("popstate", syncFromLocation);
+    return () => window.removeEventListener("popstate", syncFromLocation);
+  }, [hasQuiz]);
+
   const selectTab = (tab: Tab) => {
     setActiveTab(tab);
+    const url = new URL(window.location.href);
+    if (tab === "quiz") {
+      url.searchParams.set("tab", "quiz");
+    } else {
+      url.searchParams.delete("tab");
+    }
+    const nextHref = `${url.pathname}${url.search}${url.hash}`;
+    const currentHref = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (nextHref !== currentHref) {
+      window.history.pushState(window.history.state, "", nextHref);
+      notifyUrlStateChanged();
+    }
     tabRefs.current[tab]?.focus();
   };
 
@@ -123,7 +169,7 @@ export function LessonContent({
             {lesson.title}
           </h2>
           {lesson.subtitle && (
-            <p className="break-words mt-1 text-muted-foreground">
+            <p className="mt-1 break-words text-muted-foreground">
               {lesson.subtitle}
             </p>
           )}
@@ -132,7 +178,10 @@ export function LessonContent({
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
               <Tag className="h-3 w-3 text-muted-foreground" />
               {lesson.keyConcepts.map((concept) => (
-                <span key={concept} className="border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                <span
+                  key={concept}
+                  className="border border-border bg-card px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                >
                   {concept}
                 </span>
               ))}
@@ -151,7 +200,11 @@ export function LessonContent({
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 border-b border-border" role="tablist" aria-label={copy.tablist}>
+      <div
+        className="mb-6 flex gap-1 border-b border-border"
+        role="tablist"
+        aria-label={copy.tablist}
+      >
         <button
           ref={(element) => {
             tabRefs.current.lernen = element;
@@ -162,14 +215,16 @@ export function LessonContent({
           aria-controls="tabpanel-lernen"
           id="tab-lernen"
           tabIndex={activeTab === "lernen" ? 0 : -1}
-          onClick={() => setActiveTab("lernen")}
+          onClick={() => selectTab("lernen")}
           onKeyDown={(event) => handleTabKeyDown(event, "lernen")}
           className={cn(
-            "inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
-            activeTab === "lernen" ? "border-brand-orange text-brand-orange" : "border-transparent text-muted-foreground hover:text-foreground",
+            "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+            activeTab === "lernen"
+              ? "border-brand-orange text-brand-orange"
+              : "border-transparent text-muted-foreground hover:text-foreground",
           )}
         >
-          <BookOpen className="h-4 w-4" />
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
           {copy.learn}
         </button>
         {hasQuiz && (
@@ -183,14 +238,16 @@ export function LessonContent({
             aria-controls="tabpanel-quiz"
             id="tab-quiz"
             tabIndex={activeTab === "quiz" ? 0 : -1}
-            onClick={() => setActiveTab("quiz")}
+            onClick={() => selectTab("quiz")}
             onKeyDown={(event) => handleTabKeyDown(event, "quiz")}
             className={cn(
-              "inline-flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
-              activeTab === "quiz" ? "border-brand-orange text-brand-orange" : "border-transparent text-muted-foreground hover:text-foreground",
+              "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
+              activeTab === "quiz"
+                ? "border-brand-orange text-brand-orange"
+                : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
-            <HelpCircle className="h-4 w-4" />
+            <HelpCircle className="h-4 w-4" aria-hidden="true" />
             {copy.quiz} ({lesson.quiz.length})
           </button>
         )}
@@ -245,39 +302,31 @@ export function LessonContent({
             ))}
 
             <div className="border-t border-border pt-6">
-              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-                {isCompleted ? (
-                  <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sand">
-                    <CheckCircle2 className="h-4 w-4" />
-                    {copy.completed}
-                  </span>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={onMarkLessonComplete}
-                    disabled={!canCompleteLesson}
-                    className={cn(
-                      "inline-flex max-w-full items-center gap-2 break-words border-2 border-foreground px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                      canCompleteLesson
-                        ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                        : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
-                    )}
-                  >
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    {copy.complete}
-                  </button>
-                )}
-                {hasNextLesson && (
+              <LessonProofCheckpoint
+                key={checkpointKey}
+                locale={locale}
+                completed={progressReady && isCompleted}
+                progressReady={progressHydrated}
+                prerequisitesMet={ownerReady && completionPrerequisitesMet}
+                prerequisiteHint={
+                  ownerReady
+                    ? completionPrerequisiteHint
+                    : getOwnerRequiredHint(locale)
+                }
+                onCommit={onMarkLessonComplete}
+              />
+              {hasNextLesson && (
+                <div className="mt-4 flex justify-end">
                   <button
                     type="button"
                     onClick={onNextLesson}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-orange transition-colors hover:text-kupfer-dark"
+                    className="inline-flex min-h-11 items-center gap-1.5 border-b border-border text-sm font-medium text-brand-orange transition-colors hover:border-brand-orange hover:text-kupfer-dark"
                   >
                     {copy.next}
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </m.div>
         ) : (
@@ -302,7 +351,7 @@ export function LessonContent({
       </AnimatePresence>
 
       {/* Legal footer */}
-      <p className="mt-8 border-t border-border/50 pt-4 text-[10px] leading-relaxed text-muted">
+      <p className="mt-8 border-t border-border/50 pt-4 text-xs leading-relaxed text-muted">
         {copy.legalNote}
       </p>
     </div>
@@ -321,7 +370,11 @@ function WidgetSlot({
 }) {
   const props = localizeCourseWidgetProps(widget, locale);
   return (
-    <div data-widget-slot={label} data-widget-kind={widget.kind} className="mt-6">
+    <div
+      data-widget-slot={label}
+      data-widget-kind={widget.kind}
+      className="mt-6"
+    >
       <RenderWidget kind={widget.kind} props={props} locale={locale} />
     </div>
   );

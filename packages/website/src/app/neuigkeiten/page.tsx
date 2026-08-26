@@ -56,32 +56,32 @@ function NeuigkeitenContent({ locale }: { readonly locale: Locale }) {
   const entryCount = countChangelogEntries(changelog);
 
   return (
-    <article className="mx-auto w-full max-w-5xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
-      <header className="grid gap-10 border-b border-border pb-12 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-end">
+    <article className="mx-auto w-full max-w-5xl px-4 pb-12 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+      <header className="grid gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-end">
         <div className="min-w-0">
-          <div className="h-[3px] w-24 bg-brand-orange" />
-          <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+          <div className="h-[3px] w-16 bg-brand-orange" />
+          <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-5 text-pretty text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.94] tracking-[-0.04em] text-foreground">
+          <h1 className="mt-3 text-pretty text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
             {copy.title}
           </h1>
-          <p className="mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          <p className="mt-4 max-w-[68ch] text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
             {copy.intro}
           </p>
         </div>
 
         <dl className="border-y border-border">
-          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 py-4 lg:grid-cols-1 lg:px-5">
-            <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 py-3 lg:grid-cols-1 lg:px-4">
+            <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {copy.statusLabel}
             </dt>
             <dd className="min-w-0 break-words text-sm font-semibold text-foreground">
               {copy.statusValue.replace("{count}", String(entryCount))}
             </dd>
           </div>
-          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 border-t border-border py-4 lg:grid-cols-1 lg:px-5">
-            <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3 border-t border-border py-3 lg:grid-cols-1 lg:px-4">
+            <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {copy.sourceLabel}
             </dt>
             <dd className="min-w-0 break-words text-sm font-semibold text-foreground">
@@ -91,8 +91,8 @@ function NeuigkeitenContent({ locale }: { readonly locale: Locale }) {
         </dl>
       </header>
 
-      <section aria-label={copy.eyebrow} className="py-12">
-        <div className="min-w-0 border-l border-border pl-5 sm:pl-8 [&_.prose-kupfer>h2]:scroll-mt-24 [&_.prose-kupfer>h2]:border-t [&_.prose-kupfer>h2]:border-border [&_.prose-kupfer>h2]:pt-10 [&_.prose-kupfer>h2]:text-pretty [&_.prose-kupfer>h3]:font-mono [&_.prose-kupfer>h3]:text-xs [&_.prose-kupfer>h3]:font-bold [&_.prose-kupfer>h3]:uppercase [&_.prose-kupfer>h3]:tracking-[0.14em] [&_.prose-kupfer>h3]:text-brand-orange [&_.prose-kupfer_ul]:ml-5 [&_.prose-kupfer_li]:break-words">
+      <section aria-label={copy.eyebrow} className="py-8">
+        <div className="min-w-0 border-l border-border pl-4 sm:pl-6 [&_.prose-kupfer>h2]:scroll-mt-24 [&_.prose-kupfer>h2]:border-t [&_.prose-kupfer>h2]:border-border [&_.prose-kupfer>h2]:pt-6 [&_.prose-kupfer>h2]:text-pretty [&_.prose-kupfer>h3]:font-mono [&_.prose-kupfer>h3]:text-xs [&_.prose-kupfer>h3]:font-bold [&_.prose-kupfer>h3]:uppercase [&_.prose-kupfer>h3]:tracking-[0.12em] [&_.prose-kupfer>h3]:text-brand-orange [&_.prose-kupfer_ul]:ml-5 [&_.prose-kupfer_li]:break-words">
           <MarkdownRenderer content={changelog} />
         </div>
       </section>

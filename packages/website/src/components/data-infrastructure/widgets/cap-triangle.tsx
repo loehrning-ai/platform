@@ -289,7 +289,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Modell · CAP-Entscheidung"
           : "Model · CAP partition response"}{" "}
@@ -328,7 +328,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
             onClick={() => setPickAndText(p)}
             aria-pressed={pick === p}
             className={cn(
-              "border-2 px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide transition-colors",
+              "min-h-11 border-2 px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide transition-colors",
               pick === p
                 ? "border-foreground bg-brand-orange text-white"
                 : "border-border bg-background text-foreground hover:border-brand-orange/60",
@@ -350,7 +350,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
         <button
           type="button"
           onClick={toggleSplit}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {split
             ? locale === "de"

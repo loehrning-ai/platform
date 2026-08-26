@@ -63,10 +63,12 @@ describe("HilfePage locale and provider boundaries", () => {
   it("states the fail-closed course and sign-in boundary", async () => {
     await renderPage("de");
 
-    expect(screen.getByText(/Bücher, Demos, KI-Check und 6 technische/)).toHaveTextContent(
-      /4 Reader vorübergehend nicht erreichbar/,
-    );
-    expect(screen.getByText(/Aktuell ist keine Anmeldemethode/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Bücher, Demos, KI-Check und 6 technische/),
+    ).toHaveTextContent(/4 Reader vorübergehend nicht erreichbar/);
+    expect(
+      screen.getByText(/Aktuell ist keine Anmeldemethode/),
+    ).toBeInTheDocument();
   });
 
   it("describes only the sign-in methods that are ready", async () => {
@@ -74,10 +76,12 @@ describe("HilfePage locale and provider boundaries", () => {
     runtime.google = true;
     await renderPage("de");
 
-    expect(screen.getByText(/bietet aktuell Google-Anmeldung/)).toHaveTextContent(
-      /Einmal-Link per E-Mail ist .* nicht freigeschaltet/,
-    );
-    expect(screen.getByText(/Das Konto synchronisiert Fortschritt/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/bietet aktuell Google-Anmeldung/),
+    ).toHaveTextContent(/Einmal-Link per E-Mail ist .* nicht freigeschaltet/);
+    expect(
+      screen.getByText(/Das Konto synchronisiert Fortschritt/),
+    ).toBeInTheDocument();
   });
 
   it("renders English UI and locale-preserving internal links", async () => {
@@ -96,6 +100,19 @@ describe("HilfePage locale and provider boundaries", () => {
       .filter((href): href is string => Boolean(href?.startsWith("/")));
     expect(internalHrefs.length).toBeGreaterThan(5);
     expect(internalHrefs.every((href) => href.startsWith("/en/"))).toBe(true);
+  });
+
+  it("renders one feedback route instead of repeating it below the FAQ", async () => {
+    runtime.feedback = true;
+    await renderPage("en");
+
+    expect(screen.getAllByRole("link", { name: "feedback form" })).toHaveLength(
+      1,
+    );
+    expect(screen.getByRole("link", { name: "feedback form" })).toHaveAttribute(
+      "href",
+      "/en/feedback",
+    );
   });
 
   it.each([

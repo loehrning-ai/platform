@@ -505,7 +505,9 @@ describe("CourseProjectStudio", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
-    expect(await screen.findByTestId("mock-project-engine")).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("mock-project-engine"),
+    ).toBeInTheDocument();
 
     view.rerender(
       <CourseProjectStudio courseSlug="codex" lessonId="L12" locale="en" />,
@@ -554,19 +556,25 @@ describe("CourseProjectStudio", () => {
     fireEvent.click(screen.getByRole("button", { name: /Open instrument/ }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Inspect/ })).toHaveAttribute(
-        "aria-disabled",
-        "true",
-      );
+      expect(
+        screen.getByRole("button", { name: /^Test: incomplete, current/ }),
+      ).toBeEnabled();
     });
+    expect(
+      screen.queryByRole("button", { name: /Next signal/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /^Revise: locked/ }),
+    ).toBeDisabled();
 
     fireEvent.click(screen.getByRole("button", { name: "Update artifact" }));
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: /^Run: incomplete$/ }),
-      ).toHaveAttribute("aria-disabled", "false");
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
     });
-    expect(screen.getByRole("button", { name: /^Inspect:/ })).toBeDisabled();
+    expect(screen.getByText(/Current step: 02\/07 · Manipulate/)).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: /^Revise: locked/ }),
+    ).toBeDisabled();
   });
 
   it("persists the verified artifact exercise only after all five stages", async () => {
@@ -818,7 +826,7 @@ describe("CourseProjectStudio", () => {
       "pipeline-quality",
     );
     expect(
-      screen.getByRole("button", { name: /Predict: complete/i }),
+      screen.getByRole("button", { name: /^Commit: complete/i }),
     ).toBeEnabled();
 
     act(() => {
@@ -893,7 +901,11 @@ describe("CourseProjectStudio", () => {
     });
 
     render(
-      <CourseProjectStudio courseSlug="data-science" lessonId="fund" locale="en" />,
+      <CourseProjectStudio
+        courseSlug="data-science"
+        lessonId="fund"
+        locale="en"
+      />,
     );
 
     expect(
@@ -979,19 +991,17 @@ describe("CourseProjectStudio", () => {
       }),
     );
     fireEvent.click(screen.getByRole("button", { name: /Commit prediction/ }));
-    fireEvent.click(screen.getByRole("button", { name: /Manipulate/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     fireEvent.click(screen.getByRole("button", { name: "Update artifact" }));
     await waitFor(() =>
-      expect(
-        screen.getByRole("button", { name: /^Run: incomplete$/ }),
-      ).toBeEnabled(),
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled(),
     );
-    fireEvent.click(screen.getByRole("button", { name: /^Run: incomplete$/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     fireEvent.click(screen.getByRole("button", { name: "Run artifact" }));
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Inspect/ })).toBeEnabled(),
+      expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled(),
     );
-    fireEvent.click(screen.getByRole("button", { name: /Inspect/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     fireEvent.click(
       screen.getByRole("button", {
         name: new RegExp(

@@ -26,9 +26,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   // No quiz/scoring mechanism exists in source at all (grep across all 14
   // source chapter files for a "Quiz" component returns nothing —
   // `DiscoverySpeedrun` is a timed practice game, not a pass/fail gate).
-  // Certificate eligibility resolves via generic
-  // all-lessons-completed "completion" path (src/lib/progress/store.ts's
-  // isCertificateEligible). No `/kurs/quiz` route is built for this course;
+  // Completion-record eligibility requires one current, versioned transfer
+  // checkpoint per chapter. Historical click-only completion flags do not
+  // count. No `/kurs/quiz` route is built for this course;
   // these three fields are kept only for CourseConfig-shape compatibility
   // and are never read by any real UI.
   workshopQuizQuestionCount: 0,

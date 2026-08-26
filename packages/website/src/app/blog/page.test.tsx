@@ -80,6 +80,13 @@ describe("BlogIndexPage", () => {
     expect(renderedHrefs).toEqual(expectedHrefs);
   });
 
+  it("does not repeat article metadata in an ambient ticker", async () => {
+    await renderPage("de");
+
+    expect(document.querySelector(".runline")).toBeNull();
+    expect(document.querySelector(".runline__track")).toBeNull();
+  });
+
   it.each([
     ["de", "/blog", "de_DE"],
     ["en", "/en/blog", "en_GB"],

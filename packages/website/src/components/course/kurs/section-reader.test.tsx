@@ -6,14 +6,14 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
  *
  * Drives the real <SectionReader>. It renders a lesson section's title +
  * read-time badge, the markdown body, an optional "Kernaussage" callout, an
- * always-present aria-live status region, and a mark-as-read toggle button. The
+ * navigation-only section checkpoint. The
  * behaviour under test:
  *   - the read-time badge and title come straight from the section;
  *   - keyTakeaway renders the "Kernaussage" block only when present;
- *   - when not read, the button reads "Als gelesen markieren", is enabled, and
- *     clicking it fires onMarkRead(section.id); the status region stays empty;
- *   - when read, the button reads "Gelesen", is disabled, and the status region
- *     announces "Abschnitt als gelesen markiert" (accessibility and quality hardening 7f).
+ *   - when open, the button says the section can be confirmed as reviewed and
+ *     clicking it fires onMarkRead(section.id);
+ *   - when checked, the disabled control states that the section was reviewed,
+ *     without presenting the marker as mastery evidence.
  *
  * framer-motion is stubbed to plain elements (the "Gelesen" label is an m.span);
  * the MarkdownRenderer child is stubbed to a passthrough so this unit stays
@@ -82,7 +82,11 @@ afterEach(cleanup);
 describe("<SectionReader>", () => {
   it("renders the section title, read-time badge and markdown body", () => {
     render(
-      <SectionReader section={baseSection} isRead={false} onMarkRead={() => {}} />,
+      <SectionReader
+        section={baseSection}
+        isRead={false}
+        onMarkRead={() => {}}
+      />,
     );
     expect(
       screen.getByRole("heading", { level: 3, name: "Was ist KI?" }),
@@ -95,7 +99,11 @@ describe("<SectionReader>", () => {
 
   it("renders the 'Kernaussage' callout when keyTakeaway is present", () => {
     render(
-      <SectionReader section={baseSection} isRead={false} onMarkRead={() => {}} />,
+      <SectionReader
+        section={baseSection}
+        isRead={false}
+        onMarkRead={() => {}}
+      />,
     );
     expect(screen.getByText("Kernaussage")).toBeInTheDocument();
     expect(screen.getByText("Die zentrale Aussage.")).toBeInTheDocument();
@@ -118,7 +126,7 @@ describe("<SectionReader>", () => {
     expect(screen.queryByText("Kernaussage")).toBeNull();
   });
 
-  it("shows an enabled 'Als gelesen markieren' button and fires onMarkRead on click", () => {
+  it("shows an enabled review checkpoint and fires onMarkRead on click", () => {
     const onMarkRead = vi.fn();
     render(
       <SectionReader
@@ -128,28 +136,26 @@ describe("<SectionReader>", () => {
       />,
     );
 
-    const button = screen.getByRole("button", { name: "Als gelesen markieren" });
+    const button = screen.getByRole("button", {
+      name: "Abschnitt als geprüft bestätigen",
+    });
     expect(button).toBeEnabled();
+    expect(button).toHaveClass("min-h-11");
+    expect(button).toHaveAttribute("aria-pressed", "false");
     fireEvent.click(button);
     expect(onMarkRead).toHaveBeenCalledTimes(1);
     expect(onMarkRead).toHaveBeenCalledWith("s1");
-
-    // While unread the live region carries no announcement.
-    expect(screen.getByRole("status")).not.toHaveTextContent(
-      "Abschnitt als gelesen markiert",
-    );
   });
 
-  it("shows a disabled 'Gelesen' button and announces the read state when isRead", () => {
+  it("shows a disabled reviewed checkpoint without a mastery claim", () => {
     render(
       <SectionReader section={baseSection} isRead onMarkRead={() => {}} />,
     );
 
-    const button = screen.getByRole("button", { name: "Gelesen" });
+    const button = screen.getByRole("button", { name: "Abschnitt geprüft" });
     expect(button).toBeDisabled();
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Abschnitt als gelesen markiert",
-    );
+    expect(button).toHaveAttribute("aria-pressed", "true");
+    expect(screen.queryByText(/beherrscht|mastered/i)).toBeNull();
   });
 
   it("does not call onMarkRead when the read button is already disabled", () => {
@@ -157,7 +163,7 @@ describe("<SectionReader>", () => {
     render(
       <SectionReader section={baseSection} isRead onMarkRead={onMarkRead} />,
     );
-    fireEvent.click(screen.getByRole("button", { name: "Gelesen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Abschnitt geprüft" }));
     // The button is disabled, so the click handler is a no-op.
     expect(onMarkRead).not.toHaveBeenCalled();
   });
@@ -179,7 +185,9 @@ describe("<SectionReader>", () => {
 
     expect(screen.getByText("~4 min")).toBeInTheDocument();
     expect(screen.getByText("Key point")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Mark as read" })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: "Confirm section reviewed" }),
+    ).toBeEnabled();
     expect(screen.queryByText("Kernaussage")).toBeNull();
   });
 });

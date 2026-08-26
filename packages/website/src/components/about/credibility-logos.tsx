@@ -14,9 +14,27 @@ export const RED_BULL_MARK = {
 // Sizes are optical, not literal. Red Bull's wider two-bulls silhouette uses
 // the same height as the Apple and Meta glyphs.
 const STATIONS = [
-  { name: "Apple", src: "/ueber-mich/logos/apple.svg", size: "h-8 w-8", width: 32, height: 32 },
-  { name: "Red Bull", mark: RED_BULL_MARK, size: "h-8 w-auto", width: 97, height: 32 },
-  { name: "Meta", src: "/ueber-mich/logos/meta.svg", size: "h-8 w-8", width: 32, height: 32 },
+  {
+    name: "Apple",
+    src: "/ueber-mich/logos/apple.svg",
+    size: "h-8 w-8",
+    width: 32,
+    height: 32,
+  },
+  {
+    name: "Red Bull",
+    mark: RED_BULL_MARK,
+    size: "h-8 w-auto",
+    width: 97,
+    height: 32,
+  },
+  {
+    name: "Meta",
+    src: "/ueber-mich/logos/meta.svg",
+    size: "h-8 w-8",
+    width: 32,
+    height: 32,
+  },
 ] as const;
 
 export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
@@ -24,12 +42,12 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
 
   return (
     <section
-      className="border-t border-border py-14 sm:py-16"
+      className="border-t border-border py-12"
       aria-label={copy.ariaLabel}
     >
-      <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(13rem,0.34fr)_minmax(0,1fr)] lg:items-start lg:gap-14 lg:px-10">
+      <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(13rem,0.34fr)_minmax(0,1fr)] lg:items-start lg:gap-12 lg:px-10">
         <div className="min-w-0">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
           </p>
           <h2 className="mt-3 text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground">
@@ -41,45 +59,45 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
         </div>
 
         <ul className="grid min-w-0 gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
-            {STATIONS.map((s) => (
-              <li
-                key={s.name}
-                className="flex min-h-32 min-w-0 flex-col items-center justify-center gap-4 bg-background px-5 py-6"
-              >
-                {"mark" in s ? (
-                  <svg
-                    viewBox={s.mark.viewBox}
-                    fill="currentColor"
-                    aria-hidden="true"
-                    focusable="false"
-                    width={s.width}
-                    height={s.height}
-                    className={`${s.size} max-w-full text-foreground opacity-90`}
-                  >
-                    <path d={s.mark.path} />
-                  </svg>
-                ) : (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={s.src}
-                    alt=""
-                    aria-hidden="true"
-                    width={s.width}
-                    height={s.height}
-                    loading="lazy"
-                    decoding="async"
-                    className={`${s.size} max-w-full object-contain opacity-90 grayscale`}
-                  />
-                )}
-                <span
-                  translate="no"
-                  className="break-words text-center font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-foreground [overflow-wrap:anywhere]"
+          {STATIONS.map((s) => (
+            <li
+              key={s.name}
+              className="flex min-h-32 min-w-0 flex-col items-center justify-center gap-4 bg-background px-5 py-6"
+            >
+              {"mark" in s ? (
+                <svg
+                  viewBox={s.mark.viewBox}
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                  width={s.width}
+                  height={s.height}
+                  className={`${s.size} max-w-full text-foreground opacity-90`}
                 >
-                  {s.name}
-                </span>
-              </li>
-            ))}
-          </ul>
+                  <path d={s.mark.path} />
+                </svg>
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={s.src}
+                  alt=""
+                  aria-hidden="true"
+                  width={s.width}
+                  height={s.height}
+                  loading="lazy"
+                  decoding="async"
+                  className={`${s.size} max-w-full object-contain opacity-90 grayscale`}
+                />
+              )}
+              <span
+                translate="no"
+                className="break-words text-center font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground [overflow-wrap:anywhere]"
+              >
+                {s.name}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

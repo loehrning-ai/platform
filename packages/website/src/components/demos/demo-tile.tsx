@@ -12,20 +12,6 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { getGalleryPreview } from "./demo-gallery-registry";
 import { DemoLocaleProvider } from "./demo-locale";
 
-const SIZE_CLASS: Record<Demo["size"], string> = {
-  "s-hero": "md:[grid-column:span_8] md:[grid-row:span_4]",
-  "s-wide": "md:[grid-column:span_8] md:[grid-row:span_3]",
-  "s-tall": "md:[grid-column:span_4] md:[grid-row:span_4]",
-  "s-med": "md:[grid-column:span_4] md:[grid-row:span_3]",
-};
-
-const TITLE_SIZE: Record<Demo["size"], string> = {
-  "s-hero": "text-[clamp(1.75rem,8vw,2.45rem)]",
-  "s-wide": "text-[clamp(1.55rem,7vw,2.05rem)]",
-  "s-tall": "text-[clamp(1.4rem,6vw,1.75rem)]",
-  "s-med": "text-[clamp(1.3rem,6vw,1.6rem)]",
-};
-
 // Level badges sit on a translucent tint of their own hue, so the readable
 // text colour differs by tile theme: on a light tile the tint is pale and needs
 // a dark ink; on a dark tile the tint is deep and needs a light ink. The static
@@ -65,12 +51,10 @@ export function DemoTile({
   const categoryLabel = DEMO_CATEGORY_LABELS[locale][demo.category];
   const evidenceLabel = DEMO_EVIDENCE_COPY[locale][demo.evidenceMode].label;
   const containerClass = [
-    "demo-gallery-tile group relative flex flex-col overflow-hidden border transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-    "hover:-translate-x-[3px] hover:-translate-y-[3px]",
+    "demo-gallery-tile group relative flex min-w-0 flex-col overflow-hidden border-t-[3px] border-t-brand-orange focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
     dark
-      ? "bg-foreground text-background border-foreground hover:shadow-[8px_8px_0_0_var(--color-brand-orange)]"
-      : "bg-background text-foreground border-foreground/20 hover:shadow-[8px_8px_0_0_var(--color-foreground)]",
-    SIZE_CLASS[demo.size],
+      ? "bg-foreground text-background hover:bg-foreground/95"
+      : "bg-background text-foreground hover:bg-card",
   ].join(" ");
 
   // On dark tiles (#0B0908 body) kupfer #A5370F is only 2.98:1; the lighter
@@ -85,16 +69,9 @@ export function DemoTile({
       className={containerClass}
       aria-label={copy.openAria(`${demo.title} ${demo.titleKicker}`)}
     >
-      {/* Corner registration marks */}
-      <span className="demo-corner demo-corner-tl" aria-hidden="true" />
-      <span className="demo-corner demo-corner-tr" aria-hidden="true" />
-      <span className="demo-corner demo-corner-bl" aria-hidden="true" />
-      <span className="demo-corner demo-corner-br" aria-hidden="true" />
-
-      {/* Header: number + level badge */}
-      <div className="flex items-center justify-between border-b border-current/15 px-4 py-2">
+      <div className="flex min-h-11 items-center justify-between border-b border-current/20 px-4 py-2">
         <span
-          className={`font-mono text-[10px] font-bold tracking-[0.14em] uppercase ${accent}`}
+          className={`font-mono text-xs font-bold tracking-[0.14em] uppercase ${accent}`}
         >
           {copy.kind} <strong>{demo.n}</strong>{" "}
           {/* No opacity de-emphasis: the kupfer accent at <100% opacity drops
@@ -103,40 +80,34 @@ export function DemoTile({
           <span>{String(total).padStart(2, "0")}</span>
         </span>
         <span
-          className={`font-mono text-[9px] font-bold uppercase tracking-[0.1em] border px-2 py-0.5 ${levelColorClass(demo.level, dark)}`}
+          className={`border px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.1em] ${levelColorClass(demo.level, dark)}`}
         >
           {levelLabel}
         </span>
       </div>
 
-      {/* Title + description */}
-      <div className="min-w-0 px-4 pb-2 pt-4 sm:px-5">
+      <div className="min-w-0 px-4 py-4">
         <div
-          className={`mb-3 flex flex-wrap items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}
+          className={`mb-3 flex flex-wrap items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}
         >
           <span className={`border border-current/25 px-2 py-1 ${accent}`}>
             {evidenceLabel}
           </span>
-          <span>{categoryLabel}</span>
         </div>
-        <h2
-          className={`break-words font-bold leading-[1.02] tracking-[-0.03em] ${TITLE_SIZE[demo.size]}`}
-        >
+        <h2 className="break-words text-[clamp(1.5rem,5vw,2rem)] font-bold leading-[1.02] tracking-[-0.03em]">
           {demo.title} <span className={accent}>{demo.titleKicker}</span>
         </h2>
         <p
-          className={`mt-3 break-words text-[13px] leading-[1.55] ${dark ? "text-background/75" : "text-muted-foreground"}`}
+          className={`mt-3 break-words text-sm leading-relaxed ${dark ? "text-background/75" : "text-muted-foreground"}`}
         >
           {demo.description}
         </p>
-      </div>
-
-      {/* Tech-stack subtitle */}
-      <div
-        className={`min-w-0 px-4 pb-3 font-mono text-[9px] tracking-[0.08em] leading-relaxed flex gap-1.5 items-start sm:px-5 ${dark ? "text-background/55" : "text-muted-foreground"}`}
-      >
-        <span className={`${accent} shrink-0`}>◆</span>
-        <span className="min-w-0 break-words">{demo.background}</span>
+        <div
+          className={`mt-3 flex min-w-0 items-start gap-2 font-mono text-xs leading-relaxed tracking-[0.06em] ${dark ? "text-background/60" : "text-muted-foreground"}`}
+        >
+          <span className={`${accent} shrink-0`}>◆</span>
+          <span className="min-w-0 break-words">{demo.background}</span>
+        </div>
       </div>
 
       {/* Thumbnail preview — purely decorative faux-UI mockup. aria-hidden so
@@ -145,10 +116,10 @@ export function DemoTile({
           keeps axe's color-contrast rule off the intentionally tiny mockup text. */}
       <div
         aria-hidden="true"
-        className={`mt-auto overflow-hidden border-t border-current/10 ${dark ? "bg-foreground" : "bg-background"}`}
+        className={`mt-auto overflow-hidden border-t border-current/20 ${dark ? "bg-foreground" : "bg-background"}`}
       >
         {locale === "en" ? (
-          <div className="grid min-h-28 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-4">
+          <div className="grid min-h-24 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-4">
             <div className="grid content-end gap-2">
               <span
                 className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`}
@@ -176,9 +147,8 @@ export function DemoTile({
         ) : null}
       </div>
 
-      {/* Footer: category + CTA */}
       <div
-        className={`flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-current/15 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.1em] sm:px-5 ${dark ? "text-background/70" : "text-muted-foreground"}`}
+        className={`flex min-h-11 min-w-0 flex-wrap items-center justify-between gap-2 border-t border-current/20 px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}
       >
         <span className="min-w-0 break-words">
           ◆ {categoryLabel}

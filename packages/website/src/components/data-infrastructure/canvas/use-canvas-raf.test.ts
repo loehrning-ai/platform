@@ -111,23 +111,22 @@ describe("useCanvasRAF ", () => {
     expect(rafSpy).toHaveBeenCalledTimes(1);
   });
 
-  it("throttles to a ~250ms setTimeout cadence under prefers-reduced-motion instead of 60fps", () => {
+  it("stays static under reduced motion and draws only one frame per explicit wake", () => {
     setReducedMotion(true);
-    let pending = true;
-    const draw = vi.fn(() => pending);
-    renderHook(() => useCanvasRAF(draw));
+    const draw = vi.fn().mockReturnValue(true);
+    const { result } = renderHook(() => useCanvasRAF(draw));
+    expect(draw).toHaveBeenCalledTimes(1);
     expect(rafSpy).not.toHaveBeenCalled();
 
-    act(() => vi.advanceTimersByTime(250));
+    act(() => vi.advanceTimersByTime(1000));
+    expect(draw).toHaveBeenCalledTimes(1);
+    expect(rafSpy).not.toHaveBeenCalled();
+
+    act(() => result.current.wake());
     expect(rafSpy).toHaveBeenCalledTimes(1);
     flushRaf();
     expect(draw).toHaveBeenCalledTimes(2);
-
-    pending = false;
-    act(() => vi.advanceTimersByTime(250));
-    flushRaf();
-    // Settled: no further timers scheduled after the last frame.
-    expect(rafSpy).toHaveBeenCalledTimes(2);
+    expect(rafSpy).toHaveBeenCalledTimes(1);
   });
 
   it("cancels any pending frame and the visibility listener on unmount", () => {

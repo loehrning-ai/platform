@@ -69,33 +69,33 @@ export default async function LicensePolicyPage() {
   const policy = readRootLicensePolicy();
 
   return (
-    <section className="py-20" aria-labelledby="license-policy-title">
-      <div className="mx-auto max-w-4xl px-6">
+    <section className="py-8 sm:py-12" aria-labelledby="license-policy-title">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <Link
           href={localizeHref("/open-source", locale)}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
           <ArrowLeft size={15} aria-hidden="true" />
           {copy.back}
         </Link>
-        <div className="mt-10 h-[3px] w-28 bg-brand-orange" />
-        <p className="mt-8 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+        <div className="mt-4 h-[3px] w-16 bg-brand-orange" />
+        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
           {copy.eyebrow}
         </p>
         <h1
           id="license-policy-title"
-          className="mt-5 text-4xl font-bold leading-[0.95] tracking-[-0.04em] sm:text-6xl"
+          className="mt-3 text-[clamp(2.25rem,4vw,4rem)] font-bold leading-[0.96] tracking-[-0.04em]"
         >
           {copy.title}
         </h1>
-        <p className="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
           {copy.introduction}{" "}
           <code className="text-foreground">LICENSE_POLICY.md</code>{" "}
           {copy.introductionAfter}
         </p>
-        <dl className="mt-6 border border-border bg-card/35 p-4 text-sm">
+        <dl className="mt-4 border border-border border-l-[3px] border-l-brand-orange bg-card p-4 text-sm">
           <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <dt className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
               {copy.digest}
             </dt>
             <dd className="mt-2 break-all font-mono text-xs text-foreground">
@@ -103,7 +103,7 @@ export default async function LicensePolicyPage() {
             </dd>
           </div>
         </dl>
-        <pre className="mt-8 overflow-x-auto whitespace-pre-wrap border border-border bg-card p-5 font-mono text-sm leading-relaxed text-foreground">
+        <pre className="mt-6 overflow-x-auto whitespace-pre-wrap border border-border bg-card p-4 font-mono text-sm leading-relaxed text-foreground sm:p-5">
           <code>{policy.markdown}</code>
         </pre>
       </div>

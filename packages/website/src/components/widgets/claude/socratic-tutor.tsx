@@ -72,7 +72,7 @@ export function SocraticTutorWidget({
           : "Fixed local responses with no model or API call. The input deterministically selects a follow-up question."
       }
       done={done}
-      xpLabel="+15 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <div
         role="log"
@@ -98,7 +98,7 @@ export function SocraticTutorWidget({
               message.role === "user" ? "self-end text-right" : "self-start",
             )}
           >
-            <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+            <p className="mb-1 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
               {message.role === "user" ? (german ? "du" : "you") : "tutor"}
             </p>
             <p
@@ -132,14 +132,14 @@ export function SocraticTutorWidget({
           }}
           placeholder={german ? "Gedanken eingeben…" : "Type a note…"}
           aria-label={german ? "Dein Gedanke" : "Your note"}
-          className="w-full min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-h-11 w-full min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         />
         <button
           type="button"
           onClick={send}
           disabled={loading || !input.trim()}
           className={cn(
-            "w-full max-w-full break-words border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform [overflow-wrap:anywhere] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:shrink-0",
+            "min-h-11 w-full max-w-full break-words border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform [overflow-wrap:anywhere] hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:shrink-0",
           )}
         >
           {german ? "Hinzufügen" : "Add note"}

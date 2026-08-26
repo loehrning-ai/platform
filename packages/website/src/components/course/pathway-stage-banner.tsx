@@ -69,7 +69,7 @@ export function PathwayStageBanner({
       )}
     >
       <div className="min-w-0">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
           {copy.pathwayLabel} ·{" "}
           {copy.position(stageIndex + 1, PATHWAY_STAGES.length)}
         </p>

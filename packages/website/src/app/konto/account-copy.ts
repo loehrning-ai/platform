@@ -10,7 +10,7 @@ export interface AccountPageCopy {
   readonly unavailableTitle: string;
   readonly unavailableBody: string;
   readonly coursesCompleted: string;
-  readonly competenciesEarned: string;
+  readonly outcomesCovered: string;
   readonly lastSynchronized: string;
   readonly noSavedProgress: string;
   readonly continueLabel: string;
@@ -28,11 +28,11 @@ export interface AccountPageCopy {
   ) => string;
   readonly progressAria: (title: string) => string;
   readonly viewRecord: string;
-  readonly competenciesHeading: string;
-  readonly competencyCount: (earned: number, total: number) => string;
-  readonly competencySource: (course: string) => string;
-  readonly noCompetencies: string;
-  readonly competencyBoundary: string;
+  readonly outcomesHeading: string;
+  readonly outcomeCount: (covered: number, total: number) => string;
+  readonly outcomeSource: (course: string) => string;
+  readonly noOutcomes: string;
+  readonly outcomeBoundary: string;
   readonly deepenHeading: string;
   readonly resources: readonly {
     readonly key: "books" | "demos";
@@ -42,6 +42,7 @@ export interface AccountPageCopy {
   }[];
   readonly localDataHeading: string;
   readonly localDataBody: string;
+  readonly privacyNavigationLabel: string;
   readonly privacyLink: string;
   readonly privacySummary: string;
 }
@@ -51,7 +52,7 @@ export const ACCOUNT_COPY = {
     metadata: {
       title: "Konto | Freie Lernplattform",
       description:
-        "Konto, Kursfortschritt und Kompetenzen der freien KI-Lernplattform.",
+        "Konto, Kursfortschritt und behandelte Lernergebnisse der freien KI-Lernplattform.",
     },
     eyebrow: "Freie Lernplattform · Konto",
     title: "Dein Lernstand.",
@@ -63,7 +64,7 @@ export const ACCOUNT_COPY = {
     unavailableBody:
       "Die Seite zeigt deshalb keinen vermeintlich leeren Fortschritt. Dein lokaler Lernstand bleibt im Browser erhalten.",
     coursesCompleted: "Kurse abgeschlossen",
-    competenciesEarned: "Kompetenzen erreicht",
+    outcomesCovered: "Lernergebnisse behandelt",
     lastSynchronized: "Zuletzt synchronisiert",
     noSavedProgress: "noch kein gespeicherter Lernstand",
     continueLabel: "Weiter lernen",
@@ -79,13 +80,13 @@ export const ACCOUNT_COPY = {
       `${done}/${total} Lektionen · ${percent}%`,
     progressAria: (title) => `Fortschritt ${title}`,
     viewRecord: "Nachweis ansehen",
-    competenciesHeading: "Deine Kompetenzen",
-    competencyCount: (earned, total) => `${earned} von ${total} erreicht`,
-    competencySource: (course) => `aus ${course}`,
-    noCompetencies:
-      "Noch keine Kompetenzen erreicht. Sie erscheinen hier, sobald der zugehörige Kursnachweis erreicht ist.",
-    competencyBoundary:
-      "Diese Einträge beruhen auf abgeschlossenen Kursen. Sie dokumentieren den Lernweg und sind keine akkreditierten Qualifikationen.",
+    outcomesHeading: "Behandelte Lernergebnisse",
+    outcomeCount: (covered, total) => `${covered} von ${total} behandelt`,
+    outcomeSource: (course) => `behandelt in ${course}`,
+    noOutcomes:
+      "Noch keine Lernergebnisse aus abgeschlossenen Kursen. Sie erscheinen nach dem zugehörigen Kursnachweis.",
+    outcomeBoundary:
+      "Diese Einträge beschreiben Inhalte abgeschlossener Kurse. Sie belegen weder individuelle Beherrschung noch eine akkreditierte Qualifikation.",
     deepenHeading: "Weiter vertiefen",
     resources: [
       {
@@ -101,9 +102,10 @@ export const ACCOUNT_COPY = {
         href: "/demos",
       },
     ],
-    localDataHeading: "XP, Abzeichen und Lernserien",
+    localDataHeading: "Gespeicherter Lernstand",
     localDataBody:
-      "Ohne Anmeldung bleiben Kursfortschritt, XP, Abzeichen, Lernserien und Checkpoints in diesem Browser. Mit Lernkonto werden sie dem verifizierten Konto zugeordnet und geräteübergreifend synchronisiert. Diese Werte haben keinen offiziellen Nachweiswert.",
+      "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser. Ein Lernkonto synchronisiert sie geräteübergreifend. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export erhalten und haben keinen offiziellen Nachweiswert.",
+    privacyNavigationLabel: "Kontodatenschutz",
     privacyLink: "Datenschutz und Datenverwaltung",
     privacySummary: "Export, Kursfortschritt zurücksetzen und Konto löschen.",
   },
@@ -111,7 +113,7 @@ export const ACCOUNT_COPY = {
     metadata: {
       title: "Account | Free learning platform",
       description:
-        "Account, course progress, and earned competencies on the open AI learning platform.",
+        "Account, course progress, and covered course outcomes on the open AI learning platform.",
     },
     eyebrow: "Free learning platform · Account",
     title: "Your learning record.",
@@ -123,7 +125,7 @@ export const ACCOUNT_COPY = {
     unavailableBody:
       "The page does not substitute an empty record. Progress stored in this browser remains unchanged.",
     coursesCompleted: "Courses completed",
-    competenciesEarned: "Competencies earned",
+    outcomesCovered: "Course outcomes covered",
     lastSynchronized: "Last synchronised",
     noSavedProgress: "no saved learning record",
     continueLabel: "Continue learning",
@@ -139,13 +141,13 @@ export const ACCOUNT_COPY = {
       `${done}/${total} lessons · ${percent}%`,
     progressAria: (title) => `Progress in ${title}`,
     viewRecord: "View record",
-    competenciesHeading: "Your competencies",
-    competencyCount: (earned, total) => `${earned} of ${total} earned`,
-    competencySource: (course) => `from ${course}`,
-    noCompetencies:
-      "No competencies earned yet. An entry appears after the corresponding course record has been earned.",
-    competencyBoundary:
-      "These entries are based on completed courses. They document a learning path and are not accredited qualifications.",
+    outcomesHeading: "Covered course outcomes",
+    outcomeCount: (covered, total) => `${covered} of ${total} covered`,
+    outcomeSource: (course) => `covered in ${course}`,
+    noOutcomes:
+      "No outcomes from completed courses yet. They appear after the corresponding course record is earned.",
+    outcomeBoundary:
+      "These entries describe content covered by completed courses. They prove neither individual mastery nor an accredited qualification.",
     deepenHeading: "Reference material",
     resources: [
       {
@@ -161,9 +163,10 @@ export const ACCOUNT_COPY = {
         href: "/demos",
       },
     ],
-    localDataHeading: "XP, badges, and learning streaks",
+    localDataHeading: "Saved learning state",
     localDataBody:
-      "Without sign-in, course progress, XP, badges, learning streaks, and checkpoints remain in this browser. With a learning account, they are assigned to the verified account and synchronised across devices. These values are not an official qualification.",
+      "Without sign-in, course progress, checkpoints, and work artifacts remain in this browser. A learning account synchronises them across devices. Historical activity data remains in exports for compatibility and has no official qualification value.",
+    privacyNavigationLabel: "Account privacy",
     privacyLink: "Privacy and data controls",
     privacySummary:
       "Export data, reset course progress, and delete the account.",

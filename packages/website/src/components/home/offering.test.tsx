@@ -8,10 +8,6 @@ import { LocaleProvider } from "@/components/i18n/locale-context";
 const SPINE = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) !== "deeper",
 );
-const DEEPER = COURSE_CATALOG.filter(
-  (course) => courseGroupFor(course.slug) === "deeper",
-);
-
 describe("Offering section", () => {
   it("renders the course-led headline", () => {
     render(<Offering />);
@@ -19,9 +15,10 @@ describe("Offering section", () => {
     expect(screen.getByText(/Eine klare Reihenfolge/)).toBeInTheDocument();
   });
 
-  it("renders exactly the four spine courses as linked cards", () => {
+  it("renders exactly the four spine courses as a compact ordered route", () => {
     render(<Offering />);
     expect(SPINE).toHaveLength(4);
+    expect(screen.getByTestId("foundation-route").children).toHaveLength(4);
     for (const course of SPINE) {
       const link = screen.getByText(course.title).closest("a");
       expect(link).toHaveAttribute("href", course.href);
@@ -33,22 +30,20 @@ describe("Offering section", () => {
     expect(screen.getByTestId("kurse-section")).toBeInTheDocument();
   });
 
-  it("renders the direct persona course links", () => {
+  it("removes duplicated persona shortcuts and cover imagery", () => {
     render(<Offering />);
-    expect(screen.getByTestId("persona-filter")).toBeInTheDocument();
+    expect(screen.queryByTestId("persona-filter")).not.toBeInTheDocument();
+    expect(screen.queryAllByRole("img")).toHaveLength(0);
   });
 
-  it("renders the Technikkurse imagery band with real screenshots", () => {
+  it("routes technical depth through the single full-atlas action", () => {
     render(<Offering />);
-    expect(screen.getByText("Technikkurse")).toHaveClass("text-brand-orange");
-    expect(
-      screen.getByText(/Aus offenen GitHub-Repositories übernommen/),
-    ).toBeInTheDocument();
-    const previews = DEEPER.slice(0, 3);
-    expect(previews).toHaveLength(3);
-    for (const course of previews) {
-      expect(screen.getByAltText(course.imageAlt ?? "")).toBeInTheDocument();
-    }
+    expect(screen.getByText(/6 technische Kurse/)).toBeInTheDocument();
+    const atlasLinks = screen.getAllByRole("link", {
+      name: /Alle Kurse ansehen/,
+    });
+    expect(atlasLinks).toHaveLength(1);
+    expect(atlasLinks[0]).toHaveAttribute("href", "/kurse");
   });
 
   it("renders reviewed English copy and locale-preserving links", () => {
@@ -70,20 +65,5 @@ describe("Offering section", () => {
     expect(container.textContent).not.toMatch(
       /\b(?:Kurse|Kurs|Bücher|Deutsch|Englisch|Lektionen|Dauer|Grundlagenpfad|Konto|Quellen|ansehen)\b/,
     );
-  });
-
-  it("gives each Technikkurse preview an external source-code link", () => {
-    render(<Offering />);
-    for (const course of DEEPER.slice(0, 3)) {
-      const sourceLink = screen.getByRole("link", {
-        name: `Quellcode auf GitHub: ${course.title}`,
-      });
-      expect(sourceLink).toHaveAttribute("href", course.sourceHref);
-      expect(sourceLink).toHaveAttribute("target", "_blank");
-      expect(sourceLink).toHaveAttribute(
-        "rel",
-        expect.stringContaining("noopener"),
-      );
-    }
   });
 });

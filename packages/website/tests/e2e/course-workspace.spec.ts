@@ -400,6 +400,26 @@ test.describe("canonical course workspace", () => {
       if (course.surface === "workspace") {
         await expect(studio).toHaveCount(1);
         await expect(studio).toHaveAttribute("data-engine-kind", course.engine);
+        const mobileToolbar = page.locator(
+          "[data-lesson-shell-mobile-toolbar]",
+        );
+        await expect(mobileToolbar).toBeVisible();
+        await expect
+          .poll(() =>
+            mobileToolbar.evaluate(
+              (element) => getComputedStyle(element).position,
+            ),
+          )
+          .toBe("sticky");
+        const [toolbarBox, contentBox] = await Promise.all([
+          mobileToolbar.boundingBox(),
+          page.locator("[data-lesson-shell-content]").boundingBox(),
+        ]);
+        expect(toolbarBox).not.toBeNull();
+        expect(contentBox).not.toBeNull();
+        expect(toolbarBox!.y + toolbarBox!.height).toBeLessThanOrEqual(
+          contentBox!.y + 1,
+        );
       } else {
         // Protected core-course engines require the authenticated-live project.
         // Anonymous Chromium must prove the login boundary, not claim an engine
@@ -447,8 +467,11 @@ test.describe("canonical course workspace", () => {
 
       const expandedSidebarWidth = await numericWidth(sidebar);
       const expandedContentWidth = await numericWidth(content);
-      expect(expandedSidebarWidth).toBeGreaterThanOrEqual(254);
-      expect(expandedSidebarWidth).toBeLessThanOrEqual(258);
+      expect(
+        expandedSidebarWidth,
+        `${reader.name}: expanded course navigation should settle at the compact 240px width`,
+      ).toBeGreaterThanOrEqual(238);
+      expect(expandedSidebarWidth).toBeLessThanOrEqual(242);
       expect(
         expandedContentWidth,
         `${reader.name}: the workspace must use materially more than a narrow article column`,
@@ -540,10 +563,15 @@ test.describe("canonical course workspace", () => {
     await mission.getByRole("button", { name: "Nächstes Signal" }).click();
     await mission.getByRole("button", { name: /Instrument öffnen/ }).click();
 
-    const runStep = mission.getByRole("button", { name: /Ausführen:/ });
-    const inspectStep = mission.getByRole("button", { name: /Evidenz:/ });
-    await expect(runStep).toHaveAttribute("aria-disabled", "true");
-    await expect(inspectStep).toHaveAttribute("aria-disabled", "true");
+    const nextSignal = mission.getByRole("button", {
+      name: "Nächstes Signal",
+    });
+    await expect(
+      mission.getByText("Aktueller Schritt: 02/07 · Manipulieren", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(nextSignal).toHaveCount(0);
     await expect
       .poll(() => lessonMissionState(page, "codex", "L01"))
       .toMatchObject({ workspaceOpened: true, manipulated: false });
@@ -561,8 +589,7 @@ test.describe("canonical course workspace", () => {
       "Scope: src/retry.ts. Nicht-Ziel: API ändern. Akzeptanz: Retry-Test grün.";
     await spec.fill(contract);
 
-    await expect(runStep).toHaveAttribute("aria-disabled", "false");
-    await expect(inspectStep).toHaveAttribute("aria-disabled", "true");
+    await expect(nextSignal).toBeVisible();
     await expect
       .poll(() => lessonMissionState(page, "codex", "L01"))
       .toMatchObject({ workspaceOpened: true, manipulated: true });

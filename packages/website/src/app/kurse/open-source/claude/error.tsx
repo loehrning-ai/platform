@@ -24,7 +24,7 @@ export default function ClaudeCourseError({
       className="mx-auto max-w-2xl px-4 py-16 sm:px-6"
       lang={english ? "en" : "de"}
     >
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
         {english ? "Course unavailable" : "Kurs nicht verfügbar"}
       </p>
       <h1 className="mt-3 text-3xl font-bold tracking-[-0.03em] text-foreground">
@@ -41,7 +41,7 @@ export default function ClaudeCourseError({
         <button
           type="button"
           onClick={reset}
-          className="min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-wide text-white shadow-[3px_3px_0_var(--color-foreground)]"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-brand-orange/90"
         >
           {english ? "Retry" : "Erneut laden"}
         </button>

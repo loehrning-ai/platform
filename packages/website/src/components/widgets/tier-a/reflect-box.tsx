@@ -46,21 +46,22 @@ export function ReflectBoxWidget({
   locale = "en",
 }: ReflectBoxWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [value, setValue] = useDraftValue<string>(
+  const [value, setValue, draftReady] = useDraftValue<string>(
     `reflect::${lessonId}::${cpId}`,
     "",
   );
   const [hydrated, setHydrated] = useState(false);
 
   const hasContent = value.trim().length > 0;
+  const editable = hydrated && draftReady;
 
   useEffect(() => {
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (hasContent) complete();
-  }, [hasContent, complete]);
+    if (draftReady && hasContent) complete();
+  }, [draftReady, hasContent, complete]);
 
   const localizedTitle = title ?? (locale === "de" ? "Reflexion" : "Reflect");
   const localizedPlaceholder =
@@ -75,16 +76,15 @@ export function ReflectBoxWidget({
       title={localizedTitle}
       scenario={scenario}
       done={done}
-      xpLabel="+10 XP"
       doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <textarea
         rows={rows}
         placeholder={localizedPlaceholder}
-        value={value}
+        value={draftReady ? value : ""}
         onChange={(e) => setValue(e.target.value)}
-        readOnly={!hydrated}
-        aria-disabled={!hydrated}
+        readOnly={!editable}
+        aria-disabled={!editable}
         aria-label={localizedTitle}
         className="w-full resize-y border-2 border-border bg-background p-3 text-[14px] leading-[1.5] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none"
       />

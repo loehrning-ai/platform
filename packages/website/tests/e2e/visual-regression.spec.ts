@@ -105,6 +105,40 @@ async function prepareReviewedFont(page: Page) {
   );
 }
 
+async function expectCompleteReviewedDesktopHeader(page: Page) {
+  const header = page.locator("[data-nav-header-row]");
+  const desktopNavigation = header.locator(".js-desktop-nav");
+
+  await expect(header).toBeVisible();
+  await expect(
+    header.getByRole("link", { name: /loehrning\.ai/i }),
+  ).toBeVisible();
+  await expect(desktopNavigation).toBeVisible();
+  for (const id of ["lernen", "praxis", "wissen"] as const) {
+    await expect(
+      desktopNavigation.locator(`[data-nav-dropdown="${id}"] > button`),
+    ).toBeVisible();
+  }
+  await expect(
+    desktopNavigation.getByRole("link", {
+      name: "Open Source",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    desktopNavigation.locator("[data-language-switch]"),
+  ).toBeVisible();
+  await expect(
+    desktopNavigation.getByRole("link", {
+      name: "loehrning-ai auf GitHub",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    desktopNavigation.locator('a[href="/login"]'),
+  ).toBeVisible();
+}
+
 async function screenshotStats(
   screenshot: Buffer,
 ): Promise<ScreenshotStats> {
@@ -313,6 +347,10 @@ test.describe("reviewed desktop pixel baselines", () => {
       await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
       await expect(page.locator("h1").first()).toBeVisible();
       await prepareReviewedFont(page);
+      await expectCompleteReviewedDesktopHeader(page);
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+      await settleFontsAndFrame(page);
 
       await expect(page).toHaveScreenshot(`${name}-desktop.png`, {
         animations: "disabled",

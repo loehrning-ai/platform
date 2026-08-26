@@ -54,7 +54,11 @@ export function DatasetExplorer() {
     >
       <div className="sim-row">
         <div className="sim-controls">
-          <div className="sim-ctrl">
+          <div
+            className="sim-ctrl"
+            role="group"
+            aria-label={text("Sampling strategy", "Sampling-Strategie")}
+          >
             <label>{text("Sampling strategy", "Sampling-Strategie")}</label>
             {(Object.entries(strategies) as [StrategyKey, Strategy][]).map(
               ([k, v]) => (
@@ -62,11 +66,13 @@ export function DatasetExplorer() {
                   key={k}
                   type="button"
                   onClick={() => setStrategy(k)}
+                  aria-pressed={strategy === k}
                   style={{
                     display: "block",
                     width: "100%",
                     textAlign: "left",
                     padding: "8px 12px",
+                    minHeight: 44,
                     marginBottom: 6,
                     borderRadius: 6,
                     background: strategy === k ? "var(--bg-hi)" : "transparent",
@@ -97,7 +103,7 @@ export function DatasetExplorer() {
             <div
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 10.5,
+                fontSize: 12,
                 color: "var(--lime-ink)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",

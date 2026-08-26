@@ -107,13 +107,15 @@ describe("CdcFlow", () => {
     ).toBeInTheDocument();
   });
 
-  it("awards the checkpoint once on claiming XP, idempotently", () => {
+  it("records the checkpoint once, idempotently", () => {
     render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
-    const btn = screen.getByRole("button", { name: /Got it/ });
+    const btn = screen.getByRole("button", { name: "Record checkpoint" });
     fireEvent.click(btn);
     expect(isCheckpointDone("di-cdc-lambda-kappa", "cdc")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    fireEvent.click(screen.getByRole("button", { name: /claimed/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Checkpoint recorded" }),
+    );
     expect(getXp()).toBe(XP.CHECKPOINT);
   });
 });

@@ -1,8 +1,4 @@
-"use client";
-
-import { m } from "framer-motion";
-import { fadeUp } from "@/lib/animations";
-import { withMotionProvider } from "@/components/motion/with-motion-provider";
+import { cn } from "@/lib/utils";
 
 interface SectionHeaderProps {
   readonly eyebrow?: string;
@@ -12,7 +8,7 @@ interface SectionHeaderProps {
   readonly centered?: boolean;
 }
 
-function SectionHeaderContent({
+export function SectionHeader({
   eyebrow,
   eyebrowColor = "text-brand-orange",
   heading,
@@ -20,39 +16,30 @@ function SectionHeaderContent({
   centered = true,
 }: SectionHeaderProps) {
   return (
-    <m.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      className={`js-reveal mb-16 ${centered ? "text-center" : ""}`}
-    >
+    <div className={cn("mb-8 sm:mb-12", centered && "text-center")}>
       {eyebrow && (
-        <m.p
-          custom={0}
-          variants={fadeUp}
-          className={`js-reveal text-sm font-semibold uppercase tracking-wider ${eyebrowColor}`}
+        <p
+          className={cn(
+            "font-mono text-xs font-semibold uppercase tracking-[0.12em]",
+            eyebrowColor,
+          )}
         >
           {eyebrow}
-        </m.p>
+        </p>
       )}
-      <m.h2
-        custom={eyebrow ? 1 : 0}
-        variants={fadeUp}
-        className="js-reveal mt-3 text-[clamp(1.75rem,1.2rem+2.4vw,2.5rem)] font-bold tracking-[-0.04em] text-balance"
-      >
+      <h2 className="mt-2 text-balance text-[clamp(1.75rem,1.2rem+2.4vw,2.5rem)] font-bold tracking-[-0.04em]">
         {heading}
-      </m.h2>
+      </h2>
       {description && (
-        <m.p
-          custom={eyebrow ? 2 : 1}
-          variants={fadeUp}
-          className="js-reveal mx-auto mt-4 max-w-2xl text-lg text-muted-foreground"
+        <p
+          className={cn(
+            "mt-3 max-w-[68ch] text-base leading-7 text-muted-foreground",
+            centered && "mx-auto",
+          )}
         >
           {description}
-        </m.p>
+        </p>
       )}
-    </m.div>
+    </div>
   );
 }
-
-export const SectionHeader = withMotionProvider(SectionHeaderContent);

@@ -97,7 +97,7 @@ export function BookTeaser({
         </div>
 
         <div className="flex flex-col items-stretch gap-3 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span className="break-words font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+          <span className="break-words font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.materialNote}
           </span>
           <BrandButton href={localizeHref(book.readerHref, locale)} size="sm">

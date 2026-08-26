@@ -112,6 +112,40 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
+    expect(menu.className).toContain("border-t-[3px]");
+    expect(menu.className).not.toMatch(/rounded-xl|shadow-/);
+    expect(menu.querySelectorAll("svg")).toHaveLength(0);
+  });
+
+  it("marks only the canonical course link current on the course hub", () => {
+    navigationMock.pathname = "/kurse";
+    renderGerman();
+    const menu = openDropdown(/Lernen/);
+    const currentLinks = within(menu)
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("aria-current") === "page");
+
+    expect(currentLinks).toHaveLength(1);
+    expect(currentLinks[0]).toHaveAttribute("href", "/kurse");
+    expect(
+      within(menu).getByRole("link", { name: /Grundlagen/ }),
+    ).not.toHaveAttribute("aria-current");
+    expect(
+      within(menu).getByRole("link", { name: /Technik/ }),
+    ).not.toHaveAttribute("aria-current");
+  });
+
+  it("uses a copper rule for the current group and 44px flat controls", () => {
+    navigationMock.pathname = "/kurse";
+    renderGerman();
+
+    const trigger = screen.getByRole("button", { name: /Lernen/ });
+    expect(trigger.className).toContain("min-h-11");
+    expect(trigger.className).toContain("border-brand-orange");
+    expect(document.querySelector("nav")?.className).toContain("bg-background");
+    expect(document.querySelector("nav")?.className).not.toMatch(
+      /backdrop-blur|bg-background\//,
+    );
   });
 
   it("Praxis contains only workshops and interactive examples", () => {

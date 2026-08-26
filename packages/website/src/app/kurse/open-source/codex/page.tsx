@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import { getCodexLocaleRegistry } from "@/lib/codex/data";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -64,7 +72,8 @@ export default async function CodexCourseLandingPage() {
             "@type": "ListItem",
             position: 2,
             name: copy.breadcrumbs[1],
-            item: locale === "en" ? `${SITE_URL}/en/kurse` : `${SITE_URL}/kurse`,
+            item:
+              locale === "en" ? `${SITE_URL}/en/kurse` : `${SITE_URL}/kurse`,
           },
           {
             "@type": "ListItem",
@@ -88,70 +97,61 @@ export default async function CodexCourseLandingPage() {
   return (
     <>
       <JsonLd data={courseJsonLd} id="codex-course-jsonld" />
-      <section className="mx-auto w-full max-w-[1180px] px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
-        <div className="border-y-2 border-foreground py-10 sm:py-14">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
-          <h1 className="mt-6 max-w-[960px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-            {copy.title}
-          </h1>
-          <p className="mt-7 max-w-[720px] text-[17px] leading-[1.65] text-muted-foreground sm:text-[18px]">
-            {copy.intro}
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
+      <TechnicalCourseFrame courseId="codex" lang={locale}>
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          intro={copy.intro}
+          facts={copy.facts}
+          factsLabel={locale === "de" ? "Kursdaten" : "Course facts"}
+          primaryAction={
             <Link
               href={firstLessonHref}
-              className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
+              prefetch={false}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
               {copy.start}
-              <ArrowRight size={15} aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
             </Link>
+          }
+          secondaryAction={
             <Link
               href="#lessons"
-              className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-background px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card sm:px-6 sm:text-[13px]"
+              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
             >
               {copy.map}
             </Link>
-          </div>
+          }
+        />
 
-          <ul className="mt-7 grid gap-px border border-foreground bg-foreground sm:grid-cols-2 lg:grid-cols-4">
-            {copy.facts.map((fact) => (
-              <li
-                key={fact}
-                className="min-w-0 break-words bg-background px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-foreground"
-              >
-                {fact}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <section id="lessons" className="mt-12 scroll-mt-24">
+          <TechnicalCourseSectionHeading
+            eyebrow={copy.courseEyebrow}
+            title={copy.courseTitle}
+          />
 
-        <section id="lessons" className="mt-16 scroll-mt-24 sm:mt-20">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.courseEyebrow}
-          </p>
-          <h2 className="mt-2 max-w-[800px] text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[36px]">
-            {copy.courseTitle}
-          </h2>
-          <p className="mt-3 max-w-[660px] text-[15px] leading-relaxed text-muted-foreground">
-            {copy.courseIntro}
-          </p>
-
-          <div className="mt-9 flex flex-col gap-10">
+          <div className="mt-5 border-b border-border">
             {tracks.map((track) => {
-              const trackLessons = lessons.filter((lesson) => lesson.trackId === track.id);
+              const trackLessons = lessons.filter(
+                (lesson) => lesson.trackId === track.id,
+              );
               return (
-                <section key={track.id} className="grid min-w-0 gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
-                  <div className="border-l-2 border-brand-orange pl-4">
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+                <section
+                  key={track.id}
+                  className="grid min-w-0 border-t border-border lg:grid-cols-[240px_minmax(0,1fr)]"
+                >
+                  <div className="min-w-0 py-4 pr-5 lg:border-r lg:border-border">
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                       {track.label}
                     </p>
-                    <h3 className="mt-2 text-[20px] font-bold text-foreground">{track.title}</h3>
-                    <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{track.hint}</p>
+                    <h3 className="mt-1 break-words text-lg font-bold text-foreground">
+                      {track.title}
+                    </h3>
+                    <p className="mt-1 break-words text-[13px] leading-[1.45] text-muted-foreground">
+                      {track.hint}
+                    </p>
                   </div>
-                  <ul className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <ul className="min-w-0 lg:pl-3">
                     {trackLessons.map((lesson) => (
                       <li key={lesson.id} className="min-w-0">
                         <Link
@@ -159,20 +159,22 @@ export default async function CodexCourseLandingPage() {
                             kind: "lesson",
                             lessonId: lesson.id,
                           })}
-                          className="group flex h-full min-w-0 flex-col border-2 border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-brand-orange"
+                          prefetch={false}
+                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[4.75rem_minmax(0,1fr)_1rem]`}
                         >
-                          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange">
+                          <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
                             {copy.lessonLabel(lesson.number)}
                           </p>
-                          <h4 className="mt-1.5 break-words text-[15px] font-semibold text-foreground">
-                            {lesson.title}
-                          </h4>
-                          <p className="mt-2 break-words text-[12.5px] leading-[1.5] text-muted-foreground">
-                            {lesson.hook}
-                          </p>
+                          <div className="min-w-0">
+                            <h4 className="break-words text-[15px] font-semibold text-foreground">
+                              {lesson.title}
+                            </h4>
+                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground">
+                              {lesson.hook}
+                            </p>
+                          </div>
                           <ArrowRight
-                            size={15}
-                            className="mt-auto self-end pt-3 text-brand-orange transition-transform group-hover:translate-x-0.5"
+                            className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-brand-orange"
                             aria-hidden="true"
                           />
                         </Link>
@@ -184,26 +186,7 @@ export default async function CodexCourseLandingPage() {
             })}
           </div>
         </section>
-
-        <div className="mt-16 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:p-8">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.finalEyebrow}
-          </p>
-          <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">
-            {copy.finalTitle}
-          </h2>
-          <p className="mt-3 max-w-[620px] text-[14px] leading-relaxed text-muted-foreground">
-            {copy.finalBody}
-          </p>
-          <Link
-            href={firstLessonHref}
-            className="mt-6 inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
-          >
-            {copy.finalCta}
-            <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
+      </TechnicalCourseFrame>
     </>
   );
 }

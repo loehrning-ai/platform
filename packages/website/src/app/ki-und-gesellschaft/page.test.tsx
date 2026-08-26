@@ -40,7 +40,7 @@ describe("KI und Gesellschaft course landing page", () => {
     const startLinks = screen.getAllByRole("link", {
       name: /Mit Lernkonto starten/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/ki-und-gesellschaft/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");
@@ -65,15 +65,11 @@ describe("KI und Gesellschaft course landing page", () => {
     const startLinks = screen.getAllByRole("link", {
       name: /Start with a learning account/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/en/ki-und-gesellschaft/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");
     }
-    expect(screen.getByRole("link", { name: /All courses/ })).toHaveAttribute(
-      "href",
-      "/en/kurse",
-    );
     expect(
       screen.getByRole("link", { name: /Continue to the EU AI Act/ }),
     ).toHaveAttribute("href", "/en/eu-ai-act-kurs");

@@ -2,7 +2,8 @@ import type { CourseSlug } from "@/lib/course/types";
 import { getCourseConfig } from "@/lib/course/config";
 import {
   CANONICAL_LESSON_IDS,
-  isCourseCompletionEarned,
+  isEvidenceBackedCourseCompletionEarned,
+  isLessonCompletionEvidenceBacked,
 } from "@/lib/courses/completion";
 import type { UnifiedProgress } from "@/lib/progress/types";
 
@@ -40,10 +41,7 @@ function blockForGermanLesson(
  * other course has one lesson/chapter per route, except the German AI-Native
  * course whose lesson IDs already encode the containing module.
  */
-export function courseLessonHref(
-  slug: CourseSlug,
-  lessonId: string,
-): string {
+export function courseLessonHref(slug: CourseSlug, lessonId: string): string {
   const config = getCourseConfig(slug);
   const blockId = blockForGermanLesson(slug, lessonId);
   if (blockId) {
@@ -91,11 +89,13 @@ export function resolveCourseResumeHref(
   const config = getCourseConfig(slug);
   const lessons = progress?.courses[slug]?.lessons;
   const firstIncomplete = CANONICAL_LESSON_IDS[slug].find(
-    (lessonId) => !lessons?.[lessonId]?.completed,
+    (lessonId) =>
+      !lessons?.[lessonId]?.completed ||
+      !isLessonCompletionEvidenceBacked(progress, slug, lessonId),
   );
 
   if (firstIncomplete) return courseLessonHref(slug, firstIncomplete);
-  if (isCourseCompletionEarned(progress ?? null, slug)) {
+  if (isEvidenceBackedCourseCompletionEarned(progress ?? null, slug)) {
     return `${config.coursePath}/zertifikat`;
   }
   if (config.workshopQuizQuestionCount > 0) {

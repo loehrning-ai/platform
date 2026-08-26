@@ -190,7 +190,6 @@ export function DragReorderWidget({
       title={title}
       scenario={hint}
       done={done}
-      xpLabel="+15 XP"
     >
       <div className="mb-3 flex items-start justify-between gap-3">
         <p className="text-[14px] font-semibold leading-[1.4] text-foreground">
@@ -199,7 +198,7 @@ export function DragReorderWidget({
         <button
           type="button"
           onClick={reshuffle}
-          className="inline-flex shrink-0 items-center gap-1.5 border-2 border-border bg-background px-3 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-brand-orange/60"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 border-2 border-border bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-brand-orange/60"
         >
           <RotateCcw size={12} aria-hidden="true" />
           {c.shuffleLabel}
@@ -280,7 +279,7 @@ export function DragReorderWidget({
                   disabled={i === 0}
                   aria-label={`${b.label} ${c.moveUpSuffix}`}
                   className={cn(
-                    "inline-flex h-6 w-7 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
+                    "inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
                     i === 0
                       ? "cursor-not-allowed opacity-35"
                       : "hover:border-brand-orange/60 hover:text-foreground",
@@ -294,7 +293,7 @@ export function DragReorderWidget({
                   disabled={i === order.length - 1}
                   aria-label={`${b.label} ${c.moveDownSuffix}`}
                   className={cn(
-                    "inline-flex h-6 w-7 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
+                    "inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
                     i === order.length - 1
                       ? "cursor-not-allowed opacity-35"
                       : "hover:border-brand-orange/60 hover:text-foreground",
@@ -328,7 +327,7 @@ export function DragReorderWidget({
         <button
           type="button"
           onClick={check}
-          className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+          className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
         >
           {c.checkLabel}
         </button>

@@ -1,9 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
-import { CANONICAL_LESSON_IDS } from "../../src/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  lessonCompletionEvidenceCheckpointId,
+  operatorLessonEvidenceCheckpointIds,
+} from "../../src/lib/courses/completion";
 import {
   MODULE_IDS,
   MODULE_LESSON_COUNTS,
 } from "../../src/lib/ai-native-operator/types";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { settleWholePage } from "./fixtures/settle";
 
 /**
@@ -58,23 +63,25 @@ function completedAiNativeOperatorState(
   completedLessons = CANONICAL_LESSON_IDS["ai-native-operator"].length,
 ) {
   const now = new Date().toISOString();
+  const completedLessonIds = CANONICAL_LESSON_IDS["ai-native-operator"].slice(
+    0,
+    completedLessons,
+  );
   return {
     schemaVersion: 3,
     courses: {
       "ai-native-operator": {
         lessons: Object.fromEntries(
-          CANONICAL_LESSON_IDS["ai-native-operator"]
-            .slice(0, completedLessons)
-            .map((lessonId) => [
-              lessonId,
-              {
-                sectionsRead: [],
-                quizScore: null,
-                quizTotal: null,
-                completed: true,
-                exercisesCompleted: {},
-              },
-            ]),
+          completedLessonIds.map((lessonId) => [
+            lessonId,
+            {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          ]),
         ),
         workshopQuiz: {
           passed: quizPassed,
@@ -87,7 +94,21 @@ function completedAiNativeOperatorState(
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      completedLessonIds.flatMap((lessonId) => [
+        [
+          checkpointKey(
+            lessonId,
+            lessonCompletionEvidenceCheckpointId("ai-native-operator"),
+          ),
+          true,
+        ],
+        ...operatorLessonEvidenceCheckpointIds(lessonId).map((checkpointId) => [
+          checkpointKey(lessonId, checkpointId),
+          true,
+        ]),
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -157,6 +178,22 @@ async function openLessonReference(page: Page) {
   await expect(reference).toHaveCount(1);
   await reference.locator("summary").click();
   await expect(reference).toHaveAttribute("open", "");
+}
+
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", { name: "Continue locally" });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+  }
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
 }
 
 async function expectOperatorGeometryContained(page: Page, context: string) {
@@ -337,8 +374,8 @@ async function expectLocalizedOperatorChrome(
   ).replace(/\s+/g, " ");
   const forbidden =
     locale === "de"
-      ? /(?:Loading progress|Complete lesson|Lesson completed|Next lesson|Open module navigation|Close module navigation|Answer options|Quick check|Reflection|Assessment|Fill in the slots|selected)/i
-      : /(?:Fortschritt wird geladen|Lektion abschließen|Lektion abgeschlossen|Nächste Lektion|Modulnavigation öffnen|Modulnavigation schließen|Antwortmöglichkeiten|Kurze Prüfung|Reflexion|Einschätzung|Felder ausfüllen|gewählt)/i;
+      ? /(?:Loading progress|Complete lesson|Lesson completed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Open module navigation|Close module navigation|Answer options|Quick check|Reflection|Assessment|Fill in the slots|selected)/i
+      : /(?:Fortschritt wird geladen|Lektion abschließen|Lektion abgeschlossen|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Modulnavigation öffnen|Modulnavigation schließen|Antwortmöglichkeiten|Kurze Prüfung|Reflexion|Einschätzung|Felder ausfüllen|gewählt)/i;
   expect(chrome, `${context}: foreign-language interface chrome`).not.toMatch(
     forbidden,
   );
@@ -640,33 +677,28 @@ test.describe("AI-Native Operator Course golden path", () => {
     await page
       .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
       .waitFor({ state: "attached" });
+    await continueLocally(page);
     await openLessonReference(page);
 
     // mindset/1's exercise (modules/m01-mindset.ts): a reflect-box widget
     // with the source's own prompt text.
+    const reflectBox = page.getByRole("textbox", { name: "Reflect" });
+    const widgetFrame = reflectBox.locator(
+      "xpath=ancestor::*[@data-widget-frame][1]",
+    );
     await expect(
-      page.getByText(
+      widgetFrame.getByText(
         "List three tasks from this week that took more than 30 minutes",
         { exact: false },
       ),
     ).toBeVisible();
-
-    // The draft only persists once Auth identity resolves: until then the
-    // owner namespace is "unknown" and writes are discarded by design, which
-    // also resets the textarea. Retry the entry until it sticks so the
-    // checkpoint assertion below measures the widget, not that race.
-    const reflectBox = page.getByRole("textbox", { name: "Reflect" });
-    await expect(async () => {
-      await reflectBox.fill("Drafted the weekly status update by hand.");
-      await expect(reflectBox).toHaveValue(
-        "Drafted the weekly status update by hand.",
-        { timeout: 2_000 },
-      );
-    }).toPass({ timeout: 15_000 });
-
-    const widgetFrame = page.locator(
-      '[data-widget-kind="reflect-box"] [data-widget-frame]',
+    await expect(reflectBox).not.toHaveAttribute("readonly");
+    await expect(reflectBox).toHaveAttribute("aria-disabled", "false");
+    await reflectBox.fill("Drafted the weekly status update by hand.");
+    await expect(reflectBox).toHaveValue(
+      "Drafted the weekly status update by hand.",
     );
+
     await expect(widgetFrame).toHaveAttribute("data-done", "1", {
       timeout: 10_000,
     });

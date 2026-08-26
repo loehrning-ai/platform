@@ -162,7 +162,7 @@ export function HeroTransform({
       <div className="border-b border-border bg-card p-6 md:border-b-0 md:border-r">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {copy.prompt}
             </p>
             <p className="mt-1 text-[16px] font-semibold text-foreground">
@@ -177,7 +177,7 @@ export function HeroTransform({
                 aria-pressed={i === stageIdx}
                 onClick={() => setStageIdx(i)}
                 className={cn(
-                  "flex h-7 w-7 items-center justify-center rounded-full border font-mono text-[12px]",
+                  "flex min-h-11 min-w-11 items-center justify-center rounded-full border font-mono text-[12px]",
                   i === stageIdx
                     ? "border-foreground bg-foreground text-background"
                     : "border-border bg-background text-muted-foreground",
@@ -192,7 +192,7 @@ export function HeroTransform({
           {active.prompt}
         </pre>
         <div className="mt-3 border border-border bg-background p-3">
-          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-brand-amber">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
             {copy.diagnosis}
           </p>
           <p className="mt-1 text-[13px] leading-[1.5] text-muted-foreground">
@@ -201,7 +201,7 @@ export function HeroTransform({
         </div>
         <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+            <p className="mb-1 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
               {copy.structure}
             </p>
             <div className="h-[6px] w-full overflow-hidden rounded-full bg-border">
@@ -222,17 +222,17 @@ export function HeroTransform({
             type="button"
             onClick={run}
             disabled={loading}
-            className="w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:shrink-0"
+            className="min-h-11 w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:shrink-0"
           >
             {loading ? copy.running : copy.run(stageIdx + 1)}
           </button>
         </div>
       </div>
       <div className="bg-background p-6">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
           {copy.output}
         </p>
-        <p className="mt-1 font-mono text-[10.5px] text-muted-foreground">
+        <p className="mt-1 font-mono text-xs text-muted-foreground">
           {copy.disclosure}
         </p>
         <p className="mt-1 text-[16px] font-semibold text-foreground">

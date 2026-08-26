@@ -356,7 +356,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Modell · Kafka-Topic · 4 Partitionen · 3 Consumer"
           : "Model · Kafka topic · 4 partitions · 3 consumers"}{" "}
@@ -388,7 +388,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
             <div className="flex justify-center">
               <div
                 ref={prodRef}
-                className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-[11px] font-semibold"
+                className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-xs font-semibold"
               >
                 {locale === "de" ? "Producer · aktiv" : "producer · ● live"}
               </div>
@@ -400,7 +400,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
                   ref={(el) => {
                     partRefs.current[i] = el;
                   }}
-                  className="border-2 border-border bg-background px-2.5 py-1.5 text-center font-mono text-[10.5px]"
+                  className="border-2 border-border bg-background px-2.5 py-1.5 text-center font-mono text-xs"
                 >
                   <div className="font-semibold text-foreground">p{i}</div>
                   <div className="text-muted-foreground">{offsets[i]}</div>
@@ -428,7 +428,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
                       consRefs.current[c] = el;
                     }}
                     className={cn(
-                      "border-2 px-2.5 py-1.5 text-center font-mono text-[10.5px]",
+                      "border-2 px-2.5 py-1.5 text-center font-mono text-xs",
                       isDead
                         ? "border-destructive/50 bg-destructive/10 opacity-60"
                         : "border-border bg-background",
@@ -459,21 +459,21 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
         <button
           type="button"
           onClick={() => send(1)}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {locale === "de" ? "1 senden" : "▶ send 1"}
         </button>
         <button
           type="button"
           onClick={burst}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "15 senden" : "▶▶ burst"}
         </button>
         <button
           type="button"
           onClick={storm}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "40 senden" : "⚡ storm"}
         </button>
@@ -481,13 +481,13 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           type="button"
           onClick={kill}
           disabled={dead.has(1)}
-          className="border-2 border-destructive bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-destructive hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-11 border-2 border-destructive bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-destructive hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {locale === "de"
             ? "c1 ausfallen lassen (Rebalancing)"
             : "⚠ kill c1 (rebalance)"}
         </button>
-        <span className="font-mono text-[11px] text-muted-foreground">
+        <span className="font-mono text-xs text-muted-foreground">
           {locale === "de" ? "produziert" : "produced"}{" "}
           <b className="text-foreground">{prodCount}</b> ·{" "}
           {locale === "de" ? "konsumiert" : "consumed"}{" "}

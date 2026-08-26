@@ -1,13 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import {
-  DEMO_HEIGHT,
-  usePhasedLoop,
-  usePrefersReducedMotion,
-  useVisibleAutoplay,
-} from "./demo-utils";
+import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
 const ROWS = [
@@ -75,22 +70,10 @@ export default function ExcelDemo() {
 }
 
 function ExcelDemoGerman() {
-  const reduced = usePrefersReducedMotion();
-  const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-
-  const phases = useMemo(
-    () => [{ duration: 3200 }, { duration: 3200 }, { duration: 3200 }],
-    [],
-  );
-  const autoIdx = usePhasedLoop(phases, visible, reduced);
-  const [manual, setManual] = useState<TaskId | null>(null);
-
-  const task: TaskId = manual ?? TASKS[autoIdx].id;
-  const isAuto = manual === null;
+  const [task, setTask] = useState<TaskId>(TASKS[0].id);
 
   return (
     <div
-      ref={ref}
       data-demo-id="excel"
       style={{
         display: "flex",
@@ -126,7 +109,7 @@ function ExcelDemoGerman() {
               alignItems: "center",
               gap: 6,
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
               letterSpacing: "0.08em",
             }}
@@ -136,13 +119,10 @@ function ExcelDemoGerman() {
                 width: 6,
                 height: 6,
                 borderRadius: 999,
-                background: isAuto ? DEMO.statusGreen : DEMO.schiefer,
-                boxShadow: isAuto
-                  ? `0 0 0 3px rgba(34,197,94,0.18)`
-                  : "none",
+                background: DEMO.schiefer,
               }}
             />
-            {isAuto ? "Auto-Play" : "Manuell"}
+            Manuell
           </div>
         </div>
         <h2
@@ -166,16 +146,12 @@ function ExcelDemoGerman() {
         style={{
           display: "grid",
           gap: 14,
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
         }}
       >
         <Spreadsheet />
-        <TaskPicker
-          activeId={task}
-          isAuto={isAuto}
-          autoIdx={autoIdx}
-          onSelect={setManual}
-        />
+        <TaskPicker activeId={task} onSelect={setTask} />
       </div>
 
       {/* Output */}
@@ -208,7 +184,8 @@ const TASKS_EN = [
     title: "Forecast weeks 17–20",
     detail: "Extend the sample series with a linear projection.",
     output: "Week 17: 492 units · 90% interval: 458–526",
-    result: "Illustrative projection only; validate against held-out data before use.",
+    result:
+      "Illustrative projection only; validate against held-out data before use.",
   },
 ] as const;
 
@@ -234,20 +211,75 @@ function ExcelDemoEnglish() {
     >
       <div>
         <Overline>Spreadsheet lab · fixed sample data</Overline>
-        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
-          Inspect the calculation. <span style={{ color: "var(--color-brand-orange)" }}>Then challenge it.</span>
+        <h2
+          style={{
+            margin: "6px 0 0",
+            fontSize: "clamp(20px, 4vw, 28px)",
+            lineHeight: 1.08,
+          }}
+        >
+          Inspect the calculation.{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            Then challenge it.
+          </span>
         </h2>
-        <p style={{ margin: "8px 0 0", maxWidth: 720, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
-          This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.
+        <p
+          style={{
+            margin: "8px 0 0",
+            maxWidth: 720,
+            color: DEMO.schiefer,
+            fontSize: 12,
+            lineHeight: 1.55,
+          }}
+        >
+          This browser-only example uses nine fictional sales rows. It does not
+          connect to Excel, Microsoft 365, or an AI provider.
         </p>
       </div>
 
-      <div style={{ display: "grid", width: "100%", minWidth: 0, maxWidth: "100%", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 14 }}>
-        <section style={{ width: "100%", minWidth: 0, maxWidth: "100%", border: `1px solid ${DEMO.ink}`, background: DEMO.kalk }} aria-label="Sample worksheet">
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, padding: "8px 10px", background: "#107C41", color: "white", fontFamily: DEMO.font.mono, fontSize: 10 }}>
-            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>X</strong>
-            <span style={{ overflowWrap: "anywhere" }}>sales-weeks-14-16.xlsx</span>
-            <span style={{ marginLeft: "auto", opacity: 0.8 }}>local sample</span>
+      <div
+        style={{
+          display: "grid",
+          width: "100%",
+          minWidth: 0,
+          maxWidth: "100%",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+          gap: 14,
+        }}
+      >
+        <section
+          style={{
+            width: "100%",
+            minWidth: 0,
+            maxWidth: "100%",
+            border: `1px solid ${DEMO.ink}`,
+            background: DEMO.kalk,
+          }}
+          aria-label="Sample worksheet"
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 8,
+              padding: "8px 10px",
+              background: "#107C41",
+              color: "white",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+            }}
+          >
+            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>
+              X
+            </strong>
+            <span style={{ overflowWrap: "anywhere" }}>
+              sales-weeks-14-16.xlsx
+            </span>
+            <span style={{ marginLeft: "auto", opacity: 0.8 }}>
+              local sample
+            </span>
           </div>
           <div
             data-course-horizontal-scroll
@@ -263,24 +295,97 @@ function ExcelDemoEnglish() {
               overscrollBehaviorX: "contain",
             }}
           >
-            <div style={{ minWidth: 430, display: "grid", gridTemplateColumns: "42px 1fr 1fr 0.75fr 1.15fr", fontFamily: DEMO.font.mono, fontSize: 10 }}>
-              {(["", "Week", "Region", "Units", "Revenue"] as const).map((label) => (
-                <div key={label || "row"} style={{ padding: "7px 8px", borderBottom: `1px solid ${DEMO.leinen}`, background: DEMO.birke, fontWeight: 700 }}>{label}</div>
-              ))}
+            <div
+              style={{
+                minWidth: 430,
+                display: "grid",
+                gridTemplateColumns: "42px 1fr 1fr 0.75fr 1.15fr",
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+              }}
+            >
+              {(["", "Week", "Region", "Units", "Revenue"] as const).map(
+                (label) => (
+                  <div
+                    key={label || "row"}
+                    style={{
+                      padding: "7px 8px",
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                      background: DEMO.birke,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {label}
+                  </div>
+                ),
+              )}
               {ROWS.map((row, index) => (
-                <div key={`${row.w}-${row.region}`} style={{ display: "contents" }}>
-                  <div style={{ padding: "6px 8px", color: DEMO.schiefer, borderBottom: `1px solid ${DEMO.leinen}` }}>{index + 2}</div>
-                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${DEMO.leinen}` }}>{row.w.replace("KW", "Wk")}</div>
-                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${DEMO.leinen}` }}>{({ Nord: "North", Süd: "South", West: "West" } as const)[row.region]}</div>
-                  <div style={{ padding: "6px 8px", textAlign: "right", borderBottom: `1px solid ${DEMO.leinen}` }}>{row.stk}</div>
-                  <div style={{ padding: "6px 8px", textAlign: "right", borderBottom: `1px solid ${DEMO.leinen}` }}>€{row.umsatz.toLocaleString("en-GB")}</div>
+                <div
+                  key={`${row.w}-${row.region}`}
+                  style={{ display: "contents" }}
+                >
+                  <div
+                    style={{
+                      padding: "6px 8px",
+                      color: DEMO.schiefer,
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                    }}
+                  >
+                    {index + 2}
+                  </div>
+                  <div
+                    style={{
+                      padding: "6px 8px",
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                    }}
+                  >
+                    {row.w.replace("KW", "Wk")}
+                  </div>
+                  <div
+                    style={{
+                      padding: "6px 8px",
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                    }}
+                  >
+                    {
+                      ({ Nord: "North", Süd: "South", West: "West" } as const)[
+                        row.region
+                      ]
+                    }
+                  </div>
+                  <div
+                    style={{
+                      padding: "6px 8px",
+                      textAlign: "right",
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                    }}
+                  >
+                    {row.stk}
+                  </div>
+                  <div
+                    style={{
+                      padding: "6px 8px",
+                      textAlign: "right",
+                      borderBottom: `1px solid ${DEMO.leinen}`,
+                    }}
+                  >
+                    €{row.umsatz.toLocaleString("en-GB")}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 12 }} aria-label="Analysis tasks">
+        <section
+          style={{
+            minWidth: 0,
+            border: `1px solid ${DEMO.leinen}`,
+            background: DEMO.birke,
+            padding: 12,
+          }}
+          aria-label="Analysis tasks"
+        >
           <Overline>Choose an analysis</Overline>
           <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
             {TASKS_EN.map((item, index) => {
@@ -300,13 +405,43 @@ function ExcelDemoEnglish() {
                     background: selected ? DEMO.ink : DEMO.kalk,
                     color: selected ? DEMO.kalk : DEMO.ink,
                     border: `1px solid ${DEMO.ink}`,
-                    boxShadow: selected ? `3px 3px 0 var(--color-brand-orange)` : "none",
+                    boxShadow: selected
+                      ? `3px 3px 0 var(--color-brand-orange)`
+                      : "none",
                     cursor: "pointer",
                   }}
                 >
-                  <span style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: selected ? "var(--color-brand-orange)" : DEMO.schiefer }}>0{index + 1}</span>
-                  <strong style={{ display: "block", marginTop: 3, overflowWrap: "anywhere" }}>{item.title}</strong>
-                  <span style={{ display: "block", marginTop: 3, fontSize: 11, lineHeight: 1.4, opacity: 0.75 }}>{item.detail}</span>
+                  <span
+                    style={{
+                      fontFamily: DEMO.font.mono,
+                      fontSize: 12,
+                      color: selected
+                        ? "var(--color-brand-orange)"
+                        : DEMO.schiefer,
+                    }}
+                  >
+                    0{index + 1}
+                  </span>
+                  <strong
+                    style={{
+                      display: "block",
+                      marginTop: 3,
+                      overflowWrap: "anywhere",
+                    }}
+                  >
+                    {item.title}
+                  </strong>
+                  <span
+                    style={{
+                      display: "block",
+                      marginTop: 3,
+                      fontSize: 12,
+                      lineHeight: 1.4,
+                      opacity: 0.75,
+                    }}
+                  >
+                    {item.detail}
+                  </span>
                 </button>
               );
             })}
@@ -314,10 +449,48 @@ function ExcelDemoEnglish() {
         </section>
       </div>
 
-      <section aria-live="polite" style={{ minWidth: 0, borderLeft: "4px solid var(--color-brand-orange)", background: DEMO.ink, color: DEMO.kalk, padding: "14px 16px" }}>
-        <div style={{ fontFamily: DEMO.font.mono, fontSize: 9, letterSpacing: "0.13em", color: "var(--color-brand-orange)", textTransform: "uppercase" }}>Deterministic sample output</div>
-        <code style={{ display: "block", marginTop: 9, overflowWrap: "anywhere", whiteSpace: "pre-wrap", fontSize: 13 }}>{active.output}</code>
-        <p style={{ margin: "9px 0 0", color: "rgba(243,240,233,0.76)", fontSize: 12, lineHeight: 1.55 }}>{active.result}</p>
+      <section
+        aria-live="polite"
+        style={{
+          minWidth: 0,
+          borderLeft: "4px solid var(--color-brand-orange)",
+          background: DEMO.ink,
+          color: DEMO.kalk,
+          padding: "14px 16px",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            letterSpacing: "0.13em",
+            color: "var(--color-brand-orange)",
+            textTransform: "uppercase",
+          }}
+        >
+          Deterministic sample output
+        </div>
+        <code
+          style={{
+            display: "block",
+            marginTop: 9,
+            overflowWrap: "anywhere",
+            whiteSpace: "pre-wrap",
+            fontSize: 13,
+          }}
+        >
+          {active.output}
+        </code>
+        <p
+          style={{
+            margin: "9px 0 0",
+            color: "rgba(243,240,233,0.76)",
+            fontSize: 12,
+            lineHeight: 1.55,
+          }}
+        >
+          {active.result}
+        </p>
       </section>
     </div>
   );
@@ -347,7 +520,7 @@ function Spreadsheet() {
           background: "#107C41",
           color: "white",
           fontFamily: DEMO.font.mono,
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: "0.1em",
           fontWeight: 700,
           minWidth: 0,
@@ -362,7 +535,7 @@ function Spreadsheet() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 900,
             flexShrink: 0,
           }}
@@ -378,7 +551,7 @@ function Spreadsheet() {
         >
           Absatz-KW14-16.xlsx
         </span>
-        <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 9 }}>
+        <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 12 }}>
           · gespeichert
         </span>
       </div>
@@ -393,7 +566,7 @@ function Spreadsheet() {
           borderBottom: `1px solid ${DEMO.leinen}`,
           background: DEMO.birke,
           fontFamily: DEMO.font.mono,
-          fontSize: 10,
+          fontSize: 12,
           color: DEMO.schiefer,
         }}
       >
@@ -422,7 +595,7 @@ function Spreadsheet() {
             width: "100%",
             borderCollapse: "collapse",
             fontFamily: DEMO.font.mono,
-            fontSize: 11,
+            fontSize: 12,
             tableLayout: "fixed",
           }}
         >
@@ -441,7 +614,7 @@ function Spreadsheet() {
                   style={{
                     padding: "5px 8px",
                     borderBottom: `1px solid ${DEMO.ink}`,
-                    fontSize: 9,
+                    fontSize: 12,
                     textAlign: i > 2 ? "right" : "left",
                     fontWeight: i === 0 ? 400 : 700,
                     letterSpacing: "0.06em",
@@ -459,7 +632,8 @@ function Spreadsheet() {
                 key={i}
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background: i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
+                  background:
+                    i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
                 }}
               >
                 <td
@@ -467,7 +641,7 @@ function Spreadsheet() {
                     padding: "4px 8px",
                     background: DEMO.birke,
                     color: DEMO.schiefer,
-                    fontSize: 9,
+                    fontSize: 12,
                     textAlign: "center",
                     borderRight: `1px solid ${DEMO.leinen}`,
                   }}
@@ -502,7 +676,7 @@ function Spreadsheet() {
           background: DEMO.birke,
           borderTop: `1px solid ${DEMO.leinen}`,
           fontFamily: DEMO.font.mono,
-          fontSize: 9,
+          fontSize: 12,
           color: DEMO.schiefer,
           letterSpacing: "0.08em",
           display: "flex",
@@ -542,13 +716,9 @@ function Spreadsheet() {
 
 function TaskPicker({
   activeId,
-  isAuto,
-  autoIdx,
   onSelect,
 }: {
   activeId: TaskId;
-  isAuto: boolean;
-  autoIdx: number;
   onSelect: (id: TaskId) => void;
 }) {
   return (
@@ -572,7 +742,7 @@ function TaskPicker({
         <span
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 9,
+            fontSize: 12,
             color: DEMO.schiefer,
             letterSpacing: "0.1em",
             textTransform: "uppercase",
@@ -584,7 +754,6 @@ function TaskPicker({
 
       {TASKS.map((t, i) => {
         const active = activeId === t.id;
-        const showProgress = isAuto && active;
         return (
           <button
             key={t.id}
@@ -593,6 +762,7 @@ function TaskPicker({
             aria-pressed={active}
             style={{
               position: "relative",
+              minHeight: 44,
               textAlign: "left",
               padding: "11px 13px",
               background: active ? DEMO.ink : DEMO.birke,
@@ -600,11 +770,14 @@ function TaskPicker({
               border: `1px solid ${
                 active ? "var(--color-brand-orange)" : DEMO.leinen
               }`,
-              boxShadow: active ? `3px 3px 0 0 var(--color-brand-orange)` : "none",
+              boxShadow: active
+                ? `3px 3px 0 0 var(--color-brand-orange)`
+                : "none",
               transform: active ? "translate(-2px,-2px)" : "translate(0,0)",
               cursor: "pointer",
               fontFamily: "inherit",
-              transition: "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
+              transition:
+                "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
               overflow: "hidden",
               minWidth: 0,
             }}
@@ -640,7 +813,7 @@ function TaskPicker({
                 <span
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     letterSpacing: "0.1em",
                     color: active ? "var(--color-brand-orange)" : DEMO.schiefer,
                     fontWeight: 700,
@@ -664,7 +837,7 @@ function TaskPicker({
               <span
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: active ? "rgba(243,240,233,0.7)" : DEMO.schiefer,
                   letterSpacing: "0.06em",
                   flexShrink: 0,
@@ -675,7 +848,7 @@ function TaskPicker({
             </div>
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 marginTop: 4,
                 lineHeight: 1.45,
                 color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
@@ -687,7 +860,7 @@ function TaskPicker({
               style={{
                 marginTop: 7,
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: "var(--color-brand-orange)",
                 letterSpacing: "0.12em",
                 fontWeight: 700,
@@ -695,23 +868,6 @@ function TaskPicker({
             >
               {t.action} →
             </div>
-
-            {/* Auto-play progress bar */}
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                bottom: 0,
-                height: 2,
-                width: showProgress ? "100%" : "0%",
-                background: "var(--color-brand-orange)",
-                transition: showProgress
-                  ? "width 3200ms linear"
-                  : "width 200ms ease",
-                opacity: showProgress ? 1 : 0,
-              }}
-              key={`${autoIdx}-${t.id}`}
-            />
           </button>
         );
       })}
@@ -726,7 +882,7 @@ function Overline({ children }: { children: React.ReactNode }) {
     <div
       style={{
         fontFamily: DEMO.font.mono,
-        fontSize: 10,
+        fontSize: 12,
         color: "var(--color-brand-orange)",
         letterSpacing: "0.14em",
         textTransform: "uppercase",
@@ -775,7 +931,7 @@ function OutputShell({
         <span
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 9,
+            fontSize: 12,
             color: DEMO.schiefer,
             letterSpacing: "0.08em",
           }}
@@ -797,13 +953,16 @@ function FormulaOutput() {
           border: `1px solid ${DEMO.leinen}`,
           padding: "12px 14px",
           fontFamily: DEMO.font.mono,
-          fontSize: "clamp(10px, 1.6vw, 12px)",
+          fontSize: "clamp(12px, 1.6vw, 12px)",
           color: "var(--color-brand-orange)",
           lineHeight: 1.65,
           overflowWrap: "anywhere",
         }}
       >
-        ={"WENN(INDIREKT(\"E\"&ZEILE()-3)=0;\"\";(E2-INDIREKT(\"E\"&ZEILE()-3))/INDIREKT(\"E\"&ZEILE()-3))"}
+        =
+        {
+          'WENN(INDIREKT("E"&ZEILE()-3)=0;"";(E2-INDIREKT("E"&ZEILE()-3))/INDIREKT("E"&ZEILE()-3))'
+        }
       </div>
       <div
         style={{
@@ -819,7 +978,7 @@ function FormulaOutput() {
       </div>
       <p
         style={{
-          fontSize: 11,
+          fontSize: 12,
           color: DEMO.schiefer,
           marginTop: 12,
           lineHeight: 1.55,
@@ -830,8 +989,7 @@ function FormulaOutput() {
         }}
       >
         Greift auf die Vorwoche derselben Region zu und berechnet die relative
-        Veränderung. Zieh die Formel herunter, sie läuft für alle
-        Regionen.
+        Veränderung. Zieh die Formel herunter, sie läuft für alle Regionen.
       </p>
     </OutputShell>
   );
@@ -850,7 +1008,7 @@ function FormulaNote({ k, v }: { k: string; v: string }) {
       <div
         style={{
           fontFamily: DEMO.font.mono,
-          fontSize: 9,
+          fontSize: 12,
           color: DEMO.schiefer,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
@@ -860,7 +1018,7 @@ function FormulaNote({ k, v }: { k: string; v: string }) {
       </div>
       <div
         style={{
-          fontSize: 11,
+          fontSize: 12,
           color: DEMO.ink,
           fontWeight: 700,
           marginTop: 2,
@@ -874,7 +1032,10 @@ function FormulaNote({ k, v }: { k: string; v: string }) {
 
 function PivotOutput() {
   return (
-    <OutputShell label="Pivot · nach Region sortiert" caption="absteigend nach Umsatz">
+    <OutputShell
+      label="Pivot · nach Region sortiert"
+      caption="absteigend nach Umsatz"
+    >
       <div style={{ overflowX: "auto" }}>
         <table
           style={{
@@ -893,7 +1054,7 @@ function PivotOutput() {
                     textAlign: i > 0 ? "right" : "left",
                     padding: "8px 8px",
                     fontFamily: DEMO.font.mono,
-                    fontSize: 10,
+                    fontSize: 12,
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
                     color: DEMO.schiefer,
@@ -928,7 +1089,7 @@ function PivotOutput() {
                     <span
                       style={{
                         fontFamily: DEMO.font.mono,
-                        fontSize: 9,
+                        fontSize: 12,
                         background: "var(--color-brand-orange)",
                         color: DEMO.kalk,
                         padding: "1px 5px",
@@ -966,7 +1127,8 @@ function PivotOutput() {
                     padding: "10px 8px",
                     textAlign: "right",
                     fontFamily: DEMO.font.mono,
-                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color:
+                      i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
                     fontWeight: 700,
                   }}
                 >
@@ -1077,7 +1239,7 @@ function ForecastOutput() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
+                  fontSize: 12,
                   color: DEMO.ink,
                   fontWeight: 700,
                   position: "absolute",
@@ -1092,7 +1254,7 @@ function ForecastOutput() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 700,
                   color: DEMO.ink,
                   position: "absolute",
@@ -1122,16 +1284,12 @@ function ForecastOutput() {
       >
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           <LegendDot color="var(--color-brand-orange)" label="Prognose" />
-          <LegendDot
-            color={DEMO.kupferMist}
-            label="Konfidenz-Band"
-            border
-          />
+          <LegendDot color={DEMO.kupferMist} label="Konfidenz-Band" border />
         </div>
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: DEMO.ink,
             fontWeight: 700,
             letterSpacing: "0.08em",
@@ -1178,7 +1336,7 @@ function LegendDot({
         alignItems: "center",
         gap: 6,
         fontFamily: DEMO.font.mono,
-        fontSize: 10,
+        fontSize: 12,
         color: DEMO.schiefer,
         letterSpacing: "0.06em",
       }}

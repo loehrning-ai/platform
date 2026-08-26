@@ -10,30 +10,8 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import {
-  m,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useMotionValueEvent,
-  type MotionValue,
-} from "framer-motion";
-import {
-  Menu,
-  X,
-  ChevronDown,
-  GraduationCap,
-  MapPin,
-  ShieldCheck,
-  Sparkles,
-  Users,
-  Zap,
-  BookOpen,
-  LayoutDashboard,
-  Pencil,
-  Presentation,
-  type LucideIcon,
-} from "lucide-react";
+import { m, AnimatePresence } from "framer-motion";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
@@ -61,36 +39,30 @@ type NavigationLabel = keyof GlobalNavigationCopy;
 interface NavItem {
   readonly href: string;
   readonly label: NavigationLabel;
-  readonly icon: LucideIcon;
-}
-
-interface AkademieItem extends NavItem {
-  readonly badge?: string;
-  readonly disabled?: boolean;
 }
 
 // Navigation follows the learner's task, not the site's content types.
 // Individual course cards remain on the hub, where their sequence and access
 // facts can be explained without turning the header into a catalog.
-const lernenNavItems: readonly AkademieItem[] = [
-  { href: "/kurse", label: "allCourses", icon: Sparkles },
-  { href: "/kurse#lernpfad", label: "foundations", icon: GraduationCap },
-  { href: "/kurse#tiefer-gehen", label: "technicalCourses", icon: Zap },
-  { href: "/ki-check", label: "aiCheck", icon: MapPin },
-  { href: "/buecher", label: "learningBooks", icon: BookOpen },
+const lernenNavItems: readonly NavItem[] = [
+  { href: "/kurse", label: "allCourses" },
+  { href: "/kurse#lernpfad", label: "foundations" },
+  { href: "/kurse#tiefer-gehen", label: "technicalCourses" },
+  { href: "/ki-check", label: "aiCheck" },
+  { href: "/buecher", label: "learningBooks" },
 ];
 
-const praxisNavItems: readonly AkademieItem[] = [
-  { href: "/workshops", label: "workshops", icon: Presentation },
-  { href: "/demos", label: "appliedExamples", icon: LayoutDashboard },
+const praxisNavItems: readonly NavItem[] = [
+  { href: "/workshops", label: "workshops" },
+  { href: "/demos", label: "appliedExamples" },
 ];
 
-const wissenNavItems: readonly AkademieItem[] = [
-  { href: "/wie-ki-funktioniert", label: "howAiWorks", icon: Sparkles },
-  { href: "/blog", label: "blog", icon: Pencil },
-  { href: "/bekannte-grenzen", label: "knownLimits", icon: ShieldCheck },
-  { href: "/ueber-die-plattform", label: "aboutPlatform", icon: Users },
-  { href: "/ueber-mich", label: "aboutTim", icon: GraduationCap },
+const wissenNavItems: readonly NavItem[] = [
+  { href: "/wie-ki-funktioniert", label: "howAiWorks" },
+  { href: "/blog", label: "blog" },
+  { href: "/bekannte-grenzen", label: "knownLimits" },
+  { href: "/ueber-die-plattform", label: "aboutPlatform" },
+  { href: "/ueber-mich", label: "aboutTim" },
 ];
 
 const lernenPaths = [
@@ -123,170 +95,75 @@ function NoScriptMobileGroup({
   copy,
 }: {
   readonly label: string;
-  readonly items: readonly AkademieItem[];
+  readonly items: readonly NavItem[];
   readonly locale: Locale;
   readonly copy: GlobalNavigationCopy;
 }) {
   return (
-    <div className="space-y-2">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+    <div className="border-t border-border pt-3">
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
         {label}
       </p>
-      <div className="flex flex-col">
-        {items
-          .filter((item) => !item.disabled)
-          .map((item) => (
-            <Link
-              key={item.href}
-              href={localizeHref(item.href, locale)}
-              prefetch={false}
-              className="inline-flex min-h-11 items-center text-sm text-foreground"
-            >
-              {copy[item.label]}
-            </Link>
-          ))}
+      <div className="mt-1 flex flex-col">
+        {items.map((item) => (
+          <Link
+            key={item.href}
+            href={localizeHref(item.href, locale)}
+            prefetch={false}
+            className="inline-flex min-h-11 items-center text-sm text-foreground"
+          >
+            {copy[item.label]}
+          </Link>
+        ))}
       </div>
     </div>
   );
 }
 
-/* ─── Scroll-driven logo with icon mark ──────────────────────────────────── */
+/* ─── Stable brand mark ──────────────────────────────────────────────────── */
 
-// Original hardcoded values from the pre-rebrand mark — --color-brand-orange
-// has since been redarkened for WCAG AA (#C4431A -> #a5370f), so this keeps the
-// original hex rather than the token, which now points at a different color.
-const LOGO_ORIGINAL_ORANGE = "#C4431A";
-const LOGO_ORIGINAL_INK = "#0B0908";
-
-// The lockup deliberately does NOT go through `--font-sans`. That token leads
-// with the brand face, which ships weights 400-700 and loads
-// `font-display: optional` with no preload, so on a cold visit it is skipped and
-// the chain lands on the generated `loehrningSans Fallback` face —
-// `local("Arial")` declared at weight 400. A 900-weight lockup therefore
-// rendered as thin Arial in production.
-//
-// These are all locally installed families, so the lockup costs no bytes and no
-// request. That is the constraint, not a preference: the business site reaches
-// its black cut through a Geist Sans webfont, and importing that here added 68KB
-// on the critical path of every route, which pushed `largest-contentful-paint`
-// past its 4500ms Lighthouse budget on /ai-native (4729ms),
-// /blog/eu-ai-act-grundlagen (4707ms) and /kurse/open-source/data-science
-// (4861ms). Lighthouse simulates ~1.6Mbps, where 68KB is ~340ms of link time.
-// Arial Black is a real 900-weight face on macOS and Windows rather than a
-// synthesized one; elsewhere the chain degrades to a bolded grotesque.
-// Subsetting Geist to the lockup's ten glyphs would be ~3KB and match the
-// business site exactly, but THIRD_PARTY_NOTICES.md states Geist "is installed
-// from the package lock and is not checked into this repository", and the SIL
-// OFL reserved-font-name clause covers a subset. That is a licensing decision,
-// not a styling one.
 const LOCKUP_FONT_STACK =
   '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 function LogoWordmark({
-  scrollY,
   locale,
   homeLabel,
 }: {
-  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
 }) {
-  /* Icon: shrinks + rotates on scroll */
-  const iconSize = useTransform(scrollY, [0, 160], [40, 26]);
-  const iconGap = useTransform(scrollY, [0, 160], [16, 5]);
-  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
-  const iconBorder = useTransform(
-    scrollY,
-    [0, 100, 160],
-    [
-      `2px solid ${LOGO_ORIGINAL_INK}`,
-      `2px solid ${LOGO_ORIGINAL_INK}`,
-      `2px solid ${LOGO_ORIGINAL_ORANGE}`,
-    ],
-  );
-  const iconShadow = useTransform(
-    scrollY,
-    [0, 160],
-    [`3px 3px 0px ${LOGO_ORIGINAL_INK}`, `1px 1px 0px ${LOGO_ORIGINAL_ORANGE}`],
-  );
-  const iconFontSize = useTransform(scrollY, [0, 160], [20, 13]);
-
-  /* Wordmark: size + tracking tighten */
-  const wordmarkSize = useTransform(scrollY, [0, 160], [24, 17]);
-  const wordmarkTracking = useTransform(scrollY, [0, 160], [-0.05, -0.02]);
-  const wordmarkLetterSpacing = useTransform(
-    wordmarkTracking,
-    (value) => `${value}em`,
-  );
-
-  /* The "L" in LOEHRNING collapses — icon takes over */
-  const lOpacity = useTransform(scrollY, [40, 120], [1, 0]);
-  const lWidth = useTransform(scrollY, [40, 120], [14, 0]);
-
   return (
-    /* No clip on this box. The square's rotated bounding box and its hard
-       offset shadow both grow past the flex item's edges, so an `overflow-hidden`
-       here sliced the corner off the mark as it turned. Containment now sits on
-       the wordmark, which is the part that can actually outgrow the row. */
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
       className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <m.div
-        className="flex flex-shrink-0 items-center justify-center"
+      <div
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center border border-[#0B0908] bg-[#C4431A]"
         aria-hidden="true"
-        style={{
-          width: iconSize,
-          height: iconSize,
-          marginRight: iconGap,
-          rotate: iconRotate,
-          border: iconBorder,
-          boxShadow: iconShadow,
-          backgroundColor: LOGO_ORIGINAL_ORANGE,
-        }}
       >
-        <m.span
-          className="leading-none text-background"
+        <span
+          className="text-lg leading-none text-background"
           style={{
-            fontSize: iconFontSize,
             fontFamily: LOCKUP_FONT_STACK,
             fontWeight: 900,
           }}
         >
           L
-        </m.span>
-      </m.div>
+        </span>
+      </div>
 
-      {/* Hidden below sm. The restored lockup is ~225px of fixed-size type, and
-          this nav also carries the DE/EN control that the pre-rebrand one did
-          not, so together they overflowed a 320px viewport by 59px. That is
-          what the responsive containment suites caught. The mark alone carries
-          the brand at that width; the full lockup returns at sm. */}
-      <m.span
+      <span
         aria-hidden="true"
-        className="hidden overflow-hidden whitespace-nowrap uppercase text-foreground sm:flex"
+        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:block"
         style={{
-          transformOrigin: "left center",
-          fontSize: wordmarkSize,
-          letterSpacing: wordmarkLetterSpacing,
+          letterSpacing: "-0.035em",
           fontFamily: LOCKUP_FONT_STACK,
           fontWeight: 900,
         }}
       >
-        <m.span
-          className="inline-block overflow-hidden"
-          style={{ width: lWidth, opacity: lOpacity }}
-        >
-          L
-        </m.span>
-        <span>
-          OEHRNING
-          <span style={{ marginLeft: "0.06em", letterSpacing: "0.05em" }}>
-            .AI
-          </span>
-        </span>
-      </m.span>
+        LOEHRNING<span className="text-brand-orange">.AI</span>
+      </span>
       <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
   );
@@ -319,19 +196,14 @@ export function Nav() {
     closeMobileMenu,
     { restoreFocus: false },
   );
-  const { scrollY } = useScroll();
-  const [scrolled, setScrolled] = useState(false);
-  const navHeight = useTransform(scrollY, [0, 160], [64, 52]);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setScrolled(latest > 80);
-  });
-
   const hrefPathname = (href: string) => href.split(/[?#]/, 1)[0] || "/";
   const isActivePath = (href: string) => {
+    if (href.includes("#")) return false;
     const target = hrefPathname(href);
     return routePathname === target || routePathname.startsWith(target + "/");
   };
+  const isCurrentPage = (href: string) =>
+    !href.includes("#") && routePathname === hrefPathname(href);
   const isLernenActive = lernenPaths.some(
     (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
@@ -522,7 +394,7 @@ export function Nav() {
   function renderDropdown(
     id: Exclude<DropdownId, null>,
     label: string,
-    items: readonly AkademieItem[],
+    items: readonly NavItem[],
     menuId: string,
     active: boolean,
   ) {
@@ -544,15 +416,18 @@ export function Nav() {
           onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
           onKeyDown={handleTriggerKeyDown(id)}
           className={cn(
-            "inline-flex min-h-11 cursor-pointer items-center gap-1 px-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-            active ? "text-foreground" : "text-muted-foreground",
+            "relative inline-flex min-h-11 cursor-pointer items-center gap-1 border-b-[3px] px-1 text-sm outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+            active
+              ? "border-brand-orange text-foreground"
+              : "border-transparent text-muted-foreground",
           )}
         >
           {label}
           <ChevronDown
             size={13}
+            aria-hidden="true"
             className={cn(
-              "transition-transform duration-200",
+              "transition-transform duration-150 motion-reduce:transition-none",
               openDropdown === id && "rotate-180",
             )}
           />
@@ -563,36 +438,15 @@ export function Nav() {
             <m.div
               ref={menuRef}
               id={menuId}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 2 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
+              exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-card p-2 shadow-card-hover"
-              aria-label={label}
+              className="absolute left-0 top-full mt-1 w-64 border border-border border-t-[3px] border-t-brand-orange bg-background p-1"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
-                const Icon = item.icon;
                 const itemLabel = copy[item.label];
-                const targetPathname = hrefPathname(item.href);
-                if (item.disabled) {
-                  return (
-                    <span
-                      key={item.href}
-                      data-nav-menu-item
-                      aria-disabled="true"
-                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted cursor-default"
-                    >
-                      <Icon size={15} />
-                      <span>{itemLabel}</span>
-                      {item.badge && (
-                        <span className="ml-auto rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
-                          {item.badge}
-                        </span>
-                      )}
-                    </span>
-                  );
-                }
                 return (
                   <Link
                     key={item.href}
@@ -600,18 +454,14 @@ export function Nav() {
                     prefetch={false}
                     data-nav-menu-item
                     onClick={() => setOpenDropdown(null)}
-                    aria-current={
-                      routePathname === targetPathname ? "page" : undefined
-                    }
+                    aria-current={isCurrentPage(item.href) ? "page" : undefined}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
-                      routePathname === targetPathname ||
-                        routePathname.startsWith(targetPathname + "/")
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
+                      "flex min-h-11 items-center border-l-[3px] px-3 py-2 text-sm outline-none transition-[background-color,border-color,color] duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
+                      isActivePath(item.href)
+                        ? "border-brand-orange text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground",
                     )}
                   >
-                    <Icon size={15} />
                     <span>{itemLabel}</span>
                   </Link>
                 );
@@ -624,74 +474,49 @@ export function Nav() {
   }
 
   // The mobile dialog uses the same task groups as desktop.
-  function renderMobileGroup(label: string, items: readonly AkademieItem[]) {
+  function renderMobileGroup(label: string, items: readonly NavItem[]) {
     return (
-      <div className="space-y-2">
-        <span className="text-sm font-medium text-muted-foreground">
+      <section className="border-t border-border pt-3">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
           {label}
-        </span>
-        <div className="ml-3 flex flex-col gap-1 border-l border-border pl-3">
+        </p>
+        <div className="mt-1 flex flex-col">
           {items.map((item) => {
-            const Icon = item.icon;
             const itemLabel = copy[item.label];
-            const targetPathname = hrefPathname(item.href);
-            if (item.disabled) {
-              return (
-                <span
-                  key={item.href}
-                  className="inline-flex items-center gap-2 text-sm text-muted"
-                >
-                  <Icon size={14} />
-                  {itemLabel}
-                  {item.badge && (
-                    <span className="rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
-                      {item.badge}
-                    </span>
-                  )}
-                </span>
-              );
-            }
             return (
               <Link
                 key={item.href}
                 href={localizeHref(item.href, locale)}
                 prefetch={false}
                 onClick={() => setMobileOpen(false)}
-                aria-current={isActivePath(item.href) ? "page" : undefined}
+                aria-current={isCurrentPage(item.href) ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-[44px] items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
-                  (routePathname === targetPathname ||
-                    routePathname.startsWith(targetPathname + "/")) &&
-                    "text-foreground",
+                  "inline-flex min-h-11 items-center border-l-[3px] px-3 text-sm text-muted-foreground transition-[background-color,border-color,color] duration-150 hover:bg-card-hover hover:text-foreground motion-reduce:transition-none",
+                  isActivePath(item.href) &&
+                    "border-brand-orange text-foreground",
+                  !isActivePath(item.href) && "border-transparent",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 )}
               >
-                <Icon size={14} />
                 {itemLabel}
               </Link>
             );
           })}
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
     <nav
       aria-label={copy.mainNavigation}
-      className={cn(
-        "no-js-primary-nav fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
-        scrolled
-          ? "border-b border-border bg-background/98 text-foreground backdrop-blur-sm"
-          : "border-b border-transparent bg-background/80 text-foreground backdrop-blur-sm",
-      )}
+      className="no-js-primary-nav fixed top-0 z-50 w-full border-b border-border bg-background text-foreground"
     >
-      <m.div
+      <div
         data-nav-header-row
-        className="mx-auto flex max-w-6xl items-center justify-between px-6"
-        style={{ height: navHeight }}
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
+        <LogoWordmark locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
@@ -728,10 +553,10 @@ export function Nav() {
                 routePathname === hrefPathname(link.href) ? "page" : undefined
               }
               className={cn(
-                "inline-flex min-h-11 items-center px-1 text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "inline-flex min-h-11 items-center border-b-[3px] px-1 text-sm transition-colors duration-150 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                 isActivePath(link.href)
-                  ? "text-foreground"
-                  : "text-muted-foreground",
+                  ? "border-brand-orange text-foreground"
+                  : "border-transparent text-muted-foreground",
               )}
             >
               {copy[link.label]}
@@ -748,7 +573,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.githubOrganisation}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             <Github size={17} aria-hidden="true" />
           </a>
@@ -767,7 +592,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -777,14 +602,14 @@ export function Nav() {
             <Menu size={19} aria-hidden="true" />
           </button>
         </div>
-      </m.div>
+      </div>
 
       {/* Complete server-rendered navigation for browsers without scripting.
           It remains hidden during normal operation and replaces the
           interactive desktop/mobile controls through the layout's
           <noscript> stylesheet. */}
-      <div className="no-js-mobile-nav hidden border-b border-border bg-background px-6 py-6 lg:hidden">
-        <div className="grid gap-5 sm:grid-cols-2">
+      <div className="no-js-mobile-nav hidden border-b border-border border-t-[3px] border-t-brand-orange bg-background px-4 py-4 sm:px-6 lg:hidden">
+        <div className="grid gap-4 sm:grid-cols-2">
           <NoScriptMobileGroup
             label={copy.learning}
             items={lernenNavItems}
@@ -804,7 +629,7 @@ export function Nav() {
             copy={copy}
           />
         </div>
-        <div className="mt-4 flex flex-col border-t border-border pt-3">
+        <div className="mt-3 flex flex-col border-t border-border pt-2">
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
@@ -847,37 +672,41 @@ export function Nav() {
             role="dialog"
             aria-modal="true"
             aria-label={copy.mainNavigation}
-            initial={{ opacity: 0, y: -8 }}
+            initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="overscroll-contain border-b border-border bg-background lg:hidden"
+            className="overscroll-contain border-b border-border border-t-[3px] border-t-brand-orange bg-background lg:hidden"
           >
-            <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-4 overflow-y-auto overscroll-contain px-6 py-6">
-              <button
-                type="button"
-                onClick={closeMobileMenu}
-                className="ml-auto inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label={copy.closeMenu}
-              >
-                <X size={19} aria-hidden="true" />
-              </button>
-              <LanguageSwitch className="self-start" />
+            <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={closeMobileMenu}
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  aria-label={copy.closeMenu}
+                >
+                  <X size={19} aria-hidden="true" />
+                </button>
+                <LanguageSwitch />
+              </div>
               {renderMobileGroup(copy.learning, lernenNavItems)}
               {renderMobileGroup(copy.practice, praxisNavItems)}
               {renderMobileGroup(copy.knowledge, wissenNavItems)}
 
-              <div className="mt-1 flex flex-col gap-1 border-t border-border pt-3">
+              <div className="flex flex-col border-t border-border pt-2">
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={localizeHref(link.href, locale)}
                     prefetch={false}
                     onClick={() => setMobileOpen(false)}
-                    aria-current={isActivePath(link.href) ? "page" : undefined}
+                    aria-current={isCurrentPage(link.href) ? "page" : undefined}
                     className={cn(
-                      "flex min-h-[44px] items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                      isActivePath(link.href) && "text-foreground",
+                      "flex min-h-11 items-center border-l-[3px] px-3 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-150 hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                      isActivePath(link.href)
+                        ? "border-brand-orange text-foreground"
+                        : "border-transparent",
                     )}
                   >
                     {copy[link.label]}
@@ -888,7 +717,7 @@ export function Nav() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex min-h-11 items-center gap-2 border-l-[3px] border-transparent px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                 >
                   <Github size={16} aria-hidden="true" />
                   GitHub

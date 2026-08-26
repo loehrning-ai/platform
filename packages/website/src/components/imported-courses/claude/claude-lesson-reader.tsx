@@ -2,31 +2,38 @@
 
 import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
-import { CheckCircle2, Circle, Lightbulb, Tag } from "lucide-react";
+import { Lightbulb, Tag } from "lucide-react";
 import { MarkdownRenderer } from "@/components/course/kurs/markdown-renderer";
+import {
+  LessonProofCheckpoint,
+  LessonSectionCheckpoint,
+} from "@/components/course/lesson-proof-checkpoint";
 import {
   RenderWidget,
   resolveWidgetsForSlot,
 } from "@/components/widgets/registry";
-import {
-  markSectionRead,
-  markLessonCompleted,
-  getReadSectionIds,
-  isLessonCompleted,
-} from "@/lib/course/progress";
+import { markSectionRead, getReadSectionIds } from "@/lib/course/progress";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
 import type { Locale } from "@/lib/i18n/locale";
-import { cn } from "@/lib/utils";
-import { subscribe } from "@/lib/progress";
+import {
+  isEvidenceBackedLessonCompleted,
+  recordLessonCompletionEvidenceDurably,
+  subscribe,
+} from "@/lib/progress";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  getOwnerRequiredHint,
+  persistForActiveLearningOwner,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
 import { ClaudeWidgetLocaleProvider } from "@/components/widgets/claude/locale-context";
 
 /**
  * ClaudeLessonReader, bespoke content renderer for the Claude Course
  *, mirroring AI-Native's own precedent of a course-owned
- * reader component rather than reusing `LessonContent` (which hardcodes
- * German chrome, "Lernen", "Quiz", "Lektion abschließen", with no override
- * mechanism, the same problem Tier-A widgets had before stage 3's
- * copy-override). Widgets render through the shared, kind-agnostic registry.
+ * reader component rather than reusing `LessonContent`, whose course-specific
+ * chrome has no copy override. Widgets render through the shared,
+ * kind-agnostic registry.
  */
 interface ClaudeLessonReaderProps {
   readonly lesson: ClaudeLesson;
@@ -42,10 +49,8 @@ const READER_COPY = {
       `Lektion ${current} von ${total}`,
     minute: "Min.",
     takeaway: "Kernaussage",
-    read: "Gelesen",
-    markRead: "Als gelesen markieren",
-    completed: "Lektion abgeschlossen",
-    complete: "Lektion abschließen",
+    prerequisite: "Bestätige zuerst jeden Abschnitt als geprüft.",
+    route: "Lektionsroute",
     next: "Nächste Lektion →",
     previous: "← Vorherige Lektion",
   },
@@ -54,10 +59,8 @@ const READER_COPY = {
       `Lesson ${current} of ${total}`,
     minute: "min",
     takeaway: "Key takeaway",
-    read: "Read",
-    markRead: "Mark as read",
-    completed: "Lesson complete",
-    complete: "Complete lesson",
+    prerequisite: "Confirm every section as reviewed first.",
+    route: "Lesson route",
     next: "Next lesson →",
     previous: "← Previous lesson",
   },
@@ -74,16 +77,29 @@ export function ClaudeLessonReader({
   const [readIds, setReadIds] = useState<ReadonlySet<string>>(new Set());
   const [completed, setCompleted] = useState(false);
   const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
+  const identity = `claude:${lesson.id}`;
 
   useEffect(() => {
     return subscribe(() => {
-      setReadIds(getReadSectionIds("claude", lesson.id));
-      setCompleted(isLessonCompleted("claude", lesson.id));
+      const owner = getLearningOwnerContext();
+      const resolved = owner.kind !== "unknown";
+      setReadIds(resolved ? getReadSectionIds("claude", lesson.id) : new Set());
+      setCompleted(
+        resolved && isEvidenceBackedLessonCompleted("claude", lesson.id),
+      );
+      setLoadedOwnerGeneration(owner.generation);
       setReadyLessonId(lesson.id);
     });
   }, [lesson.id]);
 
-  const progressReady = readyLessonId === lesson.id;
+  const readiness = useOwnerAwareProgressReadiness(
+    identity,
+    readyLessonId === lesson.id ? identity : null,
+    loadedOwnerGeneration,
+  );
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const afterIntroWidgets = useMemo(
@@ -100,24 +116,30 @@ export function ClaudeLessonReader({
   );
 
   const markRead = (sectionId: string) => {
-    markSectionRead("claude", lesson.id, sectionId);
-    setReadIds(getReadSectionIds("claude", lesson.id));
+    if (
+      persistForActiveLearningOwner(
+        () => markSectionRead("claude", lesson.id, sectionId),
+        () => getReadSectionIds("claude", lesson.id).has(sectionId),
+      )
+    ) {
+      setReadIds(getReadSectionIds("claude", lesson.id));
+    }
   };
 
   const allSectionsRead = lesson.sections.every((s) => readIds.has(s.id));
-  const canCompleteLesson = progressReady && allSectionsRead;
-  const lessonCompleted = progressReady && completed;
+  const lessonCompleted = readiness.interactionReady && completed;
 
   const completeLesson = () => {
-    markLessonCompleted("claude", lesson.id);
-    setCompleted(true);
+    if (recordLessonCompletionEvidenceDurably("claude", lesson.id)) {
+      setCompleted(true);
+    }
   };
 
   return (
     <ClaudeWidgetLocaleProvider locale={locale}>
-      <div lang={locale}>
-        <header className="mb-8">
-          <p className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+      <div key={readiness.checkpointKey} lang={locale} className="min-w-0">
+        <header className="mb-6 border-b border-border pb-5">
+          <p className="mb-1 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
             {copy.lessonProgress(lesson.number, totalLessons)}
           </p>
           <h1 className="text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
@@ -127,15 +149,15 @@ export function ClaudeLessonReader({
             {lesson.subtitle}
           </p>
           {lesson.keyConcepts.length > 0 && (
-            <div className="mt-4 flex flex-wrap items-center gap-1.5">
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
               <Tag
-                className="h-3 w-3 text-muted-foreground"
+                className="h-4 w-4 text-muted-foreground"
                 aria-hidden="true"
               />
               {lesson.keyConcepts.map((concept) => (
                 <span
                   key={concept}
-                  className="border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground"
+                  className="border border-border bg-card px-2 py-1 text-[12px] font-medium text-muted-foreground"
                 >
                   {concept}
                 </span>
@@ -144,29 +166,29 @@ export function ClaudeLessonReader({
           )}
         </header>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {lesson.sections.map((section, i) => (
             <div key={section.id}>
-              {i > 0 && <div className="mb-8 h-px bg-border" />}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between gap-4">
-                  <h2 className="text-[19px] font-semibold text-foreground">
+              {i > 0 && <div className="mb-6 h-px bg-border" />}
+              <div className="space-y-3">
+                <div className="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <h2 className="break-words text-[19px] font-semibold text-foreground">
                     {section.title}
                   </h2>
-                  <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+                  <span className="shrink-0 font-mono text-[12px] text-muted-foreground">
                     ~{section.readTimeMinutes} {copy.minute}
                   </span>
                 </div>
                 <MarkdownRenderer content={section.content} />
                 {section.keyTakeaway && (
-                  <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-5 py-4">
+                  <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-4 py-3">
                     <div className="flex items-start gap-2.5">
                       <Lightbulb
                         className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
                         aria-hidden="true"
                       />
                       <div>
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
+                        <p className="text-[12px] font-bold uppercase tracking-wider text-brand-orange">
                           {copy.takeaway}
                         </p>
                         <p className="mt-1.5 text-[14px] leading-relaxed text-foreground">
@@ -176,76 +198,65 @@ export function ClaudeLessonReader({
                     </div>
                   </div>
                 )}
-                <button
-                  type="button"
-                  onClick={() => markRead(section.id)}
-                  disabled={!progressReady || readIds.has(section.id)}
-                  className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
-                >
-                  {readIds.has(section.id) ? (
-                    <span className="inline-flex items-center gap-2 text-risk-green">
-                      <CheckCircle2 className="h-4 w-4" />
-                      {copy.read}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-orange">
-                      <Circle className="h-4 w-4" />
-                      {copy.markRead}
-                    </span>
-                  )}
-                </button>
+                <LessonSectionCheckpoint
+                  locale={locale}
+                  checked={
+                    readiness.interactionReady && readIds.has(section.id)
+                  }
+                  progressReady={readiness.interactionReady}
+                  onCheck={() => markRead(section.id)}
+                />
               </div>
               {i === 0 &&
                 afterIntroWidgets.map((widget, w) => (
-                  <WidgetSlot key={`after-intro-${w}`} widget={widget} />
+                  <WidgetSlot
+                    key={`after-intro-${w}`}
+                    locale={locale}
+                    widget={widget}
+                  />
                 ))}
             </div>
           ))}
 
           {[...beforeQuizWidgets, ...endWidgets].map((widget, w) => (
-            <WidgetSlot key={`end-${w}`} widget={widget} />
+            <WidgetSlot key={`end-${w}`} locale={locale} widget={widget} />
           ))}
 
-          <div className="border-t border-border pt-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              {lessonCompleted ? (
-                <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
-                  <CheckCircle2 className="h-4 w-4" />
-                  {copy.completed}
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={completeLesson}
-                  disabled={!canCompleteLesson}
-                  className={cn(
-                    "inline-flex items-center gap-2 border-2 border-foreground px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                    canCompleteLesson
-                      ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                      : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
-                  )}
+          <div className="border-t border-border pt-5">
+            <LessonProofCheckpoint
+              key={readiness.checkpointKey}
+              locale={locale}
+              completed={lessonCompleted}
+              progressReady={readiness.hydrated}
+              prerequisitesMet={readiness.ownerReady && allSectionsRead}
+              prerequisiteHint={
+                readiness.ownerReady
+                  ? copy.prerequisite
+                  : getOwnerRequiredHint(locale)
+              }
+              onCommit={completeLesson}
+            />
+            <nav
+              aria-label={copy.route}
+              className="mt-4 flex flex-wrap items-center justify-between gap-3"
+            >
+              {prevHref && (
+                <Link
+                  href={prevHref}
+                  className="inline-flex min-h-11 items-center border-b border-border text-[13px] text-muted-foreground transition-colors hover:border-brand-orange hover:text-foreground"
                 >
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  {copy.complete}
-                </button>
+                  {copy.previous}
+                </Link>
               )}
               {nextHref && (
                 <Link
                   href={nextHref}
-                  className="inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-orange transition-colors hover:opacity-80"
+                  className="ml-auto inline-flex min-h-11 items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white transition-colors hover:bg-foreground"
                 >
                   {copy.next}
                 </Link>
               )}
-            </div>
-            {prevHref && (
-              <Link
-                href={prevHref}
-                className="mt-4 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {copy.previous}
-              </Link>
-            )}
+            </nav>
           </div>
         </div>
       </div>
@@ -254,13 +265,19 @@ export function ClaudeLessonReader({
 }
 
 function WidgetSlot({
+  locale,
   widget,
 }: {
+  readonly locale: Locale;
   readonly widget: { kind: string; props?: Readonly<Record<string, unknown>> };
 }) {
   return (
     <div data-widget-kind={widget.kind} className="mt-6">
-      <RenderWidget kind={widget.kind} props={widget.props ?? {}} />
+      <RenderWidget
+        kind={widget.kind}
+        locale={locale}
+        props={widget.props ?? {}}
+      />
     </div>
   );
 }

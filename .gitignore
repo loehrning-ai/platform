@@ -5,6 +5,7 @@ packages/website/next-env.d.ts
 .cache/
 .bun-cache/
 .lighthouseci/
+.firecrawl/
 .swc/
 .output/
 coverage/

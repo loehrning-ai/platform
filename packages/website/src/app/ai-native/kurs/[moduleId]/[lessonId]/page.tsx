@@ -111,23 +111,23 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
 
   return (
     <AiNativeLessonPageShell lessons={navigationItems} locale={locale}>
-      <div className="min-w-0 py-10 md:py-14">
+      <div className="min-w-0 py-10 md:py-12">
         <div className="mx-auto max-w-[880px]">
           {/* Breadcrumb */}
           <nav
-            aria-label="Breadcrumb"
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+            aria-label={isEnglish ? "Breadcrumb" : "Brotkrümelnavigation"}
+            className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground"
           >
             <Link
               href={localizeHref("/ai-native", locale)}
-              className="hover:text-brand-orange"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {isEnglish ? "Course" : "Kurs"}
             </Link>
             <span className="mx-2 opacity-40">/</span>
             <Link
               href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
-              className="hover:text-brand-orange"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {isEnglish ? "Module" : "Modul"} {mod.number}
             </Link>
@@ -149,7 +149,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
                 </span>
                 <div className="flex flex-wrap items-center gap-3">
                   <TierChip tier="FREE" locale={locale} />
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                     <Clock size={11} className="mr-1 inline" />
                     {lesson.durationMinutes} {isEnglish ? "min" : "Min."}
                   </span>
@@ -171,7 +171,6 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
               {lesson.subtitle}
             </p>
           </header>
-
         </div>
 
         {isProjectCheckpoint ? (

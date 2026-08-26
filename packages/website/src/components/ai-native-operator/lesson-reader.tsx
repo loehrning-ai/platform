@@ -7,14 +7,22 @@ import {
   RenderWidget,
   resolveWidgetsForSlot,
 } from "@/components/widgets/registry";
+import { LessonProofCheckpoint } from "@/components/course/lesson-proof-checkpoint";
 import { PathwayStageBanner } from "@/components/course/pathway-stage-banner";
 import {
+  isEvidenceBackedLessonCompleted,
   isCheckpointDone,
-  isLessonCompleted,
-  markLessonCompleted,
+  recordLessonCompletionEvidenceDurably,
   subscribe,
 } from "@/lib/progress";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  getOwnerRequiredHint,
+  useLearningOwnerStateKey,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
+import { OPERATOR_TRANSFER_CHECKPOINT_ID } from "@/lib/courses/completion";
 import { getModuleMeta } from "@/lib/ai-native-operator/types";
 import { courseHref } from "@/lib/ai-native-operator/routes";
 import { Callout } from "./callout";
@@ -40,7 +48,7 @@ interface AiNativeOperatorLessonReaderProps {
 const COURSE_STAGE: LearningStage = "anwenden";
 
 /**
- * LessonCompletionButton — owns the reader's progress-readiness state.
+ * LessonCompletionCheckpoint — owns the reader's progress-readiness state.
  *
  * This is deliberately a separate component. The store subscription flips
  * `readyLessonId` from null to the current lesson right after hydration, and
@@ -55,7 +63,7 @@ const COURSE_STAGE: LearningStage = "anwenden";
  * control is disabled and `aria-busy` in the server markup and hydrates
  * without a mismatch.
  */
-function LessonCompletionButton({
+function LessonCompletionCheckpoint({
   locale,
   lesson,
 }: {
@@ -63,46 +71,70 @@ function LessonCompletionButton({
   readonly lesson: AiNativeOperatorLesson;
 }): JSX.Element {
   const [completed, setCompleted] = useState(false);
-  const [quizReady, setQuizReady] = useState(lesson.kind !== "quiz");
+  const [evidenceReady, setEvidenceReady] = useState(false);
   const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
+  const identity = `ai-native-operator:${lesson.id}`;
 
-  useEffect(
-    () =>
-      subscribe(() => {
-        setCompleted(isLessonCompleted("ai-native-operator", lesson.id));
-        setQuizReady(
-          lesson.kind !== "quiz" ||
-            lesson.quiz.every((question) =>
+  useEffect(() => {
+    setCompleted(false);
+    setEvidenceReady(false);
+    setReadyLessonId(null);
+    setLoadedOwnerGeneration(null);
+
+    return subscribe(() => {
+      const owner = getLearningOwnerContext();
+      const resolved = owner.kind !== "unknown";
+      setCompleted(
+        resolved &&
+          isEvidenceBackedLessonCompleted("ai-native-operator", lesson.id),
+      );
+      setEvidenceReady(
+        lesson.kind === "quiz"
+          ? lesson.quiz.every((question) =>
               isCheckpointDone(lesson.id, question.id),
-            ),
-        );
-        setReadyLessonId(lesson.id);
-      }),
-    [lesson],
+            )
+          : isCheckpointDone(lesson.id, OPERATOR_TRANSFER_CHECKPOINT_ID),
+      );
+      setLoadedOwnerGeneration(owner.generation);
+      setReadyLessonId(lesson.id);
+    });
+  }, [lesson]);
+
+  const readiness = useOwnerAwareProgressReadiness(
+    identity,
+    readyLessonId === lesson.id ? identity : null,
+    loadedOwnerGeneration,
   );
-
-  const progressReady = readyLessonId === lesson.id;
-  const lessonCompleted = progressReady && completed;
-  const canCompleteLesson = progressReady && quizReady;
-  const copy = getAiNativeOperatorCourseCopy(locale).lesson;
-
+  const lessonCompleted = readiness.interactionReady && completed;
   return (
-    <button
-      type="button"
-      onClick={() => markLessonCompleted("ai-native-operator", lesson.id)}
-      disabled={lessonCompleted || !canCompleteLesson}
-      aria-busy={!progressReady || undefined}
-      aria-pressed={lessonCompleted}
-      className="inline-flex min-h-11 max-w-full items-center whitespace-normal break-words border-2 border-foreground px-5 text-left text-[12px] font-bold uppercase tracking-wide text-foreground [overflow-wrap:anywhere] disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {!progressReady
-        ? copy.loadingProgress
-        : lessonCompleted
-          ? copy.completed
-          : canCompleteLesson
-            ? copy.complete
-            : copy.answerFirst}
-    </button>
+    <LessonProofCheckpoint
+      key={readiness.checkpointKey}
+      locale={locale}
+      completed={lessonCompleted}
+      progressReady={readiness.hydrated}
+      prerequisitesMet={readiness.ownerReady && evidenceReady}
+      prerequisiteHint={
+        !readiness.ownerReady
+          ? getOwnerRequiredHint(locale)
+          : lesson.kind === "quiz"
+            ? locale === "de"
+              ? "Beantworte zuerst jede Frage richtig."
+              : "Answer every question correctly first."
+            : locale === "de"
+              ? "Schließe zuerst die Transferübung ab."
+              : "Complete the transfer exercise first."
+      }
+      onCommit={() => {
+        if (
+          recordLessonCompletionEvidenceDurably("ai-native-operator", lesson.id)
+        ) {
+          setCompleted(true);
+        }
+      }}
+    />
   );
 }
 
@@ -133,6 +165,9 @@ export function AiNativeOperatorLessonReader({
     () => resolveWidgetsForSlot(widgets, "end"),
     [widgets],
   );
+  const ownerStateKey = useLearningOwnerStateKey(
+    `ai-native-operator:${lesson.id}`,
+  );
 
   const nextIcon =
     next.kind === "final-assessment" ? (
@@ -142,10 +177,13 @@ export function AiNativeOperatorLessonReader({
     );
 
   return (
-    <div className="min-w-0 overflow-x-clip">
-      <header className="mb-8">
-        <div className="font-mono text-[11px] text-muted-foreground">
-          <Link href={courseHref(locale)} className="hover:text-foreground">
+    <div key={ownerStateKey} className="min-w-0 overflow-x-clip">
+      <header className="mb-6 border-b border-border pb-5">
+        <div className="font-mono text-[12px] text-muted-foreground">
+          <Link
+            href={courseHref(locale)}
+            className="inline-flex min-h-11 min-w-11 items-center hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
             {courseCopy.course}
           </Link>
           <span className="mx-1.5" aria-hidden="true">
@@ -153,7 +191,7 @@ export function AiNativeOperatorLessonReader({
           </span>
           {meta.name}
         </div>
-        <p className="mt-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <p className="mt-2 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
           {courseCopy.lessonLabel(
             meta.code.replace("M0", ""),
             lesson.lessonNumber,
@@ -165,7 +203,7 @@ export function AiNativeOperatorLessonReader({
         <p className="mt-2 max-w-[68ch] break-words text-[16px] leading-[1.55] text-muted-foreground">
           {lesson.objective}
         </p>
-        <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
+        <div className="mt-3 flex flex-wrap items-center gap-2 font-mono text-[12px] uppercase tracking-[0.06em] text-muted-foreground">
           <span>
             {lesson.kind === "quiz"
               ? courseCopy.knowledgeCheck
@@ -179,11 +217,11 @@ export function AiNativeOperatorLessonReader({
       <PathwayStageBanner
         stage={COURSE_STAGE}
         locale={locale}
-        className="mb-8"
+        className="mb-6"
       />
 
       {lesson.kind === "quiz" ? (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           <p className="max-w-[68ch] break-words text-[14px] leading-relaxed text-muted-foreground">
             {courseCopy.quizIntro}
           </p>
@@ -216,7 +254,7 @@ export function AiNativeOperatorLessonReader({
           })}
         </div>
       ) : (
-        <article className="space-y-8">
+        <article className="space-y-6">
           {/*
             The measure cap belongs on each prose section, not on the
             <article>: the callout's spec listing and the end widgets below
@@ -245,15 +283,18 @@ export function AiNativeOperatorLessonReader({
         </article>
       )}
 
-      <div className="mt-10 border-t border-border pt-6">
-        <LessonCompletionButton locale={locale} lesson={lesson} />
+      <div className="mt-6 border-t border-border pt-5">
+        <LessonCompletionCheckpoint locale={locale} lesson={lesson} />
       </div>
 
-      <nav className="mt-6 flex min-w-0 flex-wrap items-center justify-between gap-4">
+      <nav
+        aria-label={locale === "de" ? "Lektionsroute" : "Lesson route"}
+        className="mt-4 flex min-w-0 flex-wrap items-center justify-between gap-3"
+      >
         {prevHref ? (
           <Link
             href={prevHref}
-            className="inline-flex min-w-0 max-w-full items-center gap-1.5 break-words text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex min-h-11 min-w-0 max-w-full items-center gap-1.5 break-words border-b border-border text-[13px] text-muted-foreground transition-colors hover:border-brand-orange hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {prevTitle ?? courseCopy.previous}
@@ -263,7 +304,7 @@ export function AiNativeOperatorLessonReader({
         )}
         <Link
           href={next.href}
-          className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+          className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-foreground bg-brand-orange px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-foreground"
         >
           {next.label}
           {nextIcon}

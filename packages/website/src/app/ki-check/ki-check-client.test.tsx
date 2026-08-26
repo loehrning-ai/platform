@@ -56,6 +56,7 @@ vi.mock("framer-motion", async () => {
     LazyMotion: Pass,
     MotionConfig: Pass,
     domAnimation: {},
+    useReducedMotion: () => false,
   };
 });
 
@@ -88,6 +89,11 @@ describe("KiCheckClient", () => {
 
     // "Weiter" is disabled until an option is picked.
     expect(screen.getByRole("button", { name: "Weiter" })).toBeDisabled();
+    expect(
+      document.querySelectorAll(
+        '[data-diagnostic-state="question"] [data-primary-action]',
+      ),
+    ).toHaveLength(1);
     fireEvent.click(
       screen.getByRole("button", { name: QUESTIONS[0].options[0].text }),
     );
@@ -134,6 +140,11 @@ describe("KiCheckClient", () => {
 
     const start = screen.getByRole("link", { name: /Kurs starten/ });
     expect(start).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
+    expect(
+      document.querySelectorAll(
+        '[data-diagnostic-state="result"] [data-primary-action]',
+      ),
+    ).toHaveLength(1);
   });
 
   it("returns focus to the first question after a restart", () => {

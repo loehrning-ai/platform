@@ -60,9 +60,9 @@ export const TurnstileWidget = forwardRef<
 >(function TurnstileWidget({ siteKey, onToken, locale = "de" }, forwardedRef) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
-  const [state, setState] = useState<
-    "loading" | "ready" | "error" | "expired"
-  >("loading");
+  const [state, setState] = useState<"loading" | "ready" | "error" | "expired">(
+    "loading",
+  );
   const copy = LOGIN_COPY[locale].turnstile;
 
   const invalidate = useCallback(
@@ -197,7 +197,7 @@ export const TurnstileWidget = forwardRef<
     <div className="mt-4">
       <p
         id="login-security-check-label"
-        className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange"
+        className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange"
       >
         {copy.label}
       </p>

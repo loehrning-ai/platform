@@ -19,12 +19,13 @@
      #4f4640 to reach ~7.0:1 against Kalkweiß #F3F0E9 — meets WCAG AAA per
      Brand CI v3.0 contrast targets. */
   --color-muted-foreground: #4f4640;
-  /* Leinen. NOTE: at 1.37:1 on Kalkweiss this is under the 3:1 WCAG 1.4.11
-     floor for a boundary, but it is also the FILL of ~14 progress tracks and
-     inactive-state chips via bg-border, where a dark value drops the track to
-     1.73:1 against the Kupfer bar. One token cannot hold both roles; fixing it
-     needs a separate --color-track and a triage of all 70 bg-border sites. */
-  --color-border: #d4cec5; /* Leinen — linen white */
+  /* Structural boundaries and passive tracks have different contrast jobs.
+     Schiefer reaches 3.45:1 on Kalkweiss and 3.07:1 on Birke, so a 1px frame
+     stays visible. Leinen remains the quiet fill behind progress and inactive
+     states; the compatibility utilities below route legacy bg-border tracks to
+     this dedicated token without weakening border-border. */
+  --color-border: #887f77; /* Schiefer — structural boundary */
+  --color-track: #d4cec5; /* Leinen — passive track/inactive fill */
   --color-card: #e8e3d9; /* Birke — birch-pale surface */
   --color-card-hover: #e0d9ce; /* Birke darkened */
 
@@ -38,7 +39,8 @@
   --color-dark-bg: #0d0b09;
   --color-dark-fg: #f3f0e9;
   --color-dark-muted: #9c8f85;
-  --color-dark-border: rgba(243, 240, 233, 0.12);
+  --color-dark-border: rgba(243, 240, 233, 0.4);
+  --color-dark-track: rgba(243, 240, 233, 0.12);
 
   /* Functional */
   --color-risk-green: #14532d;
@@ -76,8 +78,7 @@
   --text-fluid-h3: clamp(1.5rem, 1.15rem + 1.6vw, 2rem);
   --text-fluid-h3--line-height: 1.15;
 
-  /* Nav height token (responsive-layout hardening) — single source for sticky offsets / hero pull-up.
-     The nav animates 64->52px on scroll; offsets reference the unscrolled 64px. */
+  /* Nav height token — fixed so every sticky offset shares one geometry. */
   --nav-h: 4rem;
 }
 
@@ -186,11 +187,29 @@
   /* Editorial overline — used across all sections */
   .overline {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
     font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-muted-foreground);
+  }
+
+  /* `bg-border` historically served both 1px dividers and passive progress
+     tracks. Keep structural borders on --color-border while routing filled
+     tracks/inactive states to the quiet Leinen token. Exact 1px separators and
+     gap-px grids remain structural. New code can use bg-track directly. */
+  .bg-border {
+    background-color: var(--color-track);
+  }
+  .bg-border\/30 {
+    background-color: color-mix(in srgb, var(--color-track) 30%, transparent);
+  }
+  .bg-border\/60 {
+    background-color: color-mix(in srgb, var(--color-track) 60%, transparent);
+  }
+  :where(.grid.gap-px, .h-px, .w-px).bg-border {
+    background-color: var(--color-border);
   }
 
   /* Editorial link — underline reveals on hover (Berlin press style) */
@@ -226,7 +245,8 @@
     /* On dark, the darker red-700 (#b91c1c → 3.04:1) would be sub-AA, so revert
        risk-red to red-500 (#ef4444 → 5.22:1) for AA on the near-black ground. */
     --color-risk-red: #ef4444;
-    --color-border: rgba(243, 240, 233, 0.12);
+    --color-border: rgba(243, 240, 233, 0.4);
+    --color-track: rgba(243, 240, 233, 0.12);
     --color-card: rgba(243, 240, 233, 0.06);
     --color-card-hover: rgba(243, 240, 233, 0.1);
     background-color: var(--color-background);
@@ -235,13 +255,13 @@
 
   .card-hover {
     transition:
-      transform 150ms ease,
+      background-color 150ms ease,
       border-color 150ms ease,
-      box-shadow 150ms ease;
+      color 150ms ease;
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(11, 9, 8, 0.06);
+    border-color: var(--color-brand-orange);
+    background-color: var(--color-card-hover);
   }
   .arrow-nudge {
     transition: transform 150ms ease;
@@ -275,7 +295,7 @@
       left: 48px;
       width: 104px;
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-muted-foreground);
@@ -322,16 +342,7 @@
     vertical-align: 0.12em;
   }
 
-  /* Blinking cursor for hero command palette */
-  @keyframes ai-cursor-blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
+  /* Static cursor: state remains legible without an ambient attention loop. */
   .ai-cursor {
     display: inline-block;
     width: 0.5ch;
@@ -339,32 +350,7 @@
     background: var(--color-brand-orange);
     margin-left: 0.1em;
     vertical-align: -0.08em;
-    animation: ai-cursor-blink 1s infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ai-cursor {
-      animation: none;
-      opacity: 1;
-    }
-  }
-
-  /* Ticker — horizontal infinite scroll, pause on hover */
-  @keyframes ai-ticker-scroll {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-33.333%);
-    }
-  }
-  .ai-ticker-track {
-    display: inline-flex;
-    gap: 3rem;
-    white-space: nowrap;
-    animation: ai-ticker-scroll 48s linear infinite;
-  }
-  .ai-ticker:hover .ai-ticker-track {
-    animation-play-state: paused;
+    opacity: 1;
   }
 }
 
@@ -408,7 +394,7 @@
 }
 
 [data-assembled] .plate-rule {
-  animation: plate-rule-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: plate-rule-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 [data-assembled] .plate-row {
@@ -417,7 +403,7 @@
 }
 
 [data-assembled] .plate-numeral {
-  animation: plate-numeral-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards;
+  animation: plate-numeral-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards;
 }
 
 /* One-shot stamp landing for status chips ("erreicht", "Link kopiert"):

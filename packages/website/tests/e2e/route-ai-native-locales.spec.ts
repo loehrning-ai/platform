@@ -11,7 +11,6 @@ interface HorizontalEscape {
   readonly text: string;
 }
 
-
 async function horizontalEscapes(
   page: Page,
 ): Promise<readonly HorizontalEscape[]> {
@@ -143,15 +142,15 @@ test.describe("AI-Native course DE/EN integration", () => {
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
-          locale === "en" ? "Define the task" : "Kontext geben",
+          locale === "en" ? "Define the task" : "Aufgabe definieren",
         );
         await expect(
           page
             .getByRole("link", {
               name:
                 locale === "en"
-                  ? /Start with a free learning account/
-                  : /Kostenlos mit Lernkonto starten/,
+                  ? /Start with module 1/
+                  : /Mit Modul 1 beginnen/,
             })
             .first(),
         ).toHaveAttribute("href", `${prefix}/ai-native/kurs/modul_1`);
@@ -200,10 +199,9 @@ test.describe("AI-Native course DE/EN integration", () => {
         const verificationResponse = await page.goto(verification, {
           waitUntil: "domcontentloaded",
         });
-        expect(
-          verificationResponse?.status(),
-          `${verification} status`,
-        ).toBe(200);
+        expect(verificationResponse?.status(), `${verification} status`).toBe(
+          200,
+        );
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByText("W".repeat(120))).toBeVisible();
         await expect(
@@ -321,7 +319,11 @@ test.describe("AI-Native course DE/EN integration", () => {
               composerGeometry.composerRight + 0.5,
             );
           }
-          if (width === 320 && locale === "en" && view.path === "/ai-native/demos") {
+          if (
+            width === 320 &&
+            locale === "en" &&
+            view.path === "/ai-native/demos"
+          ) {
             const worksheetScroll = page.locator(
               '[data-demo-id="excel"] [data-course-horizontal-scroll]',
             );
@@ -344,9 +346,7 @@ test.describe("AI-Native course DE/EN integration", () => {
             expect(geometry.right).toBeLessThanOrEqual(
               geometry.viewportWidth + 0.5,
             );
-            expect(geometry.scrollWidth).toBeGreaterThan(
-              geometry.clientWidth,
-            );
+            expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth);
             expect(geometry.overflowX).toBe("auto");
           }
           expect(

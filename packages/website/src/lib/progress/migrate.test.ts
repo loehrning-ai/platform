@@ -14,13 +14,20 @@ import {
   freshUnified,
   migrateLegacyToUnified,
   truncateExerciseSummaries,
+  upgradeHistoricalCompletionEvidence,
 } from "./migrate";
 import {
+  COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY,
   MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
   UNIFIED_STORAGE_KEY,
+  legacyCompletionEvidenceCheckpointKey,
   type UnifiedProgress,
 } from "./types";
+import {
+  CANONICAL_LESSON_IDS,
+  isLessonCompletionEvidenceBacked,
+} from "@/lib/courses/completion";
 import {
   __resetCacheForTests,
   isLessonCompleted,
@@ -71,7 +78,11 @@ function validLegacySlice() {
         completed: true,
       },
     },
-    workshopQuiz: { passed: true, score: 90, completedAt: "2026-03-15T09:30:00.000Z" },
+    workshopQuiz: {
+      passed: true,
+      score: 90,
+      completedAt: "2026-03-15T09:30:00.000Z",
+    },
     startedAt: "2026-03-10T08:00:00.000Z",
     lastActivity: "2026-03-15T09:30:00.000Z",
   };
@@ -92,15 +103,109 @@ beforeEach(() => {
 });
 
 describe("freshUnified", () => {
-  it("returns an empty v2 store with zeroed gamification", () => {
+  it("returns an empty post-cutover v3 store with zeroed gamification", () => {
     const s = freshUnified();
     expect(s.schemaVersion).toBe(UNIFIED_SCHEMA_VERSION);
     expect(s.courses).toEqual({});
     expect(s.xp).toBe(0);
-    expect(s.checkpoints).toEqual({});
+    expect(s.checkpoints).toEqual({
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+    });
     expect(s.badges).toEqual({});
     expect(s.streak).toEqual({ days: 0, last: null });
     expect(typeof s.lastActivity).toBe("string");
+  });
+});
+
+describe("historical completion evidence cutover", () => {
+  const slug = "ki-fuehrerschein" as const;
+  const lessonId = CANONICAL_LESSON_IDS[slug][0];
+  const timestamp = "2026-03-15T09:30:00.000Z";
+
+  function persistedBeforeCutover(resetAt?: string): UnifiedProgress {
+    return {
+      ...freshUnified(),
+      checkpoints: {},
+      courses: {
+        [slug]: {
+          lessons: {
+            [lessonId]: {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          },
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
+          startedAt: timestamp,
+          lastActivity: timestamp,
+          ...(resetAt ? { resetAt } : {}),
+        },
+      },
+    };
+  }
+
+  it("marks existing canonical completions once and is reference-idempotent", () => {
+    const upgraded = upgradeHistoricalCompletionEvidence(
+      persistedBeforeCutover(),
+    );
+
+    expect(upgraded.checkpoints).toMatchObject({
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+      [legacyCompletionEvidenceCheckpointKey(slug, lessonId)]: true,
+    });
+    expect(upgradeHistoricalCompletionEvidence(upgraded)).toBe(upgraded);
+  });
+
+  it("never grandfathers a raw completion written into a post-cutover store", () => {
+    const postCutover: UnifiedProgress = {
+      ...persistedBeforeCutover(),
+      checkpoints: {
+        [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+      },
+    };
+
+    expect(upgradeHistoricalCompletionEvidence(postCutover)).toBe(postCutover);
+    expect(
+      postCutover.checkpoints[
+        legacyCompletionEvidenceCheckpointKey(slug, lessonId)
+      ],
+    ).toBeUndefined();
+  });
+
+  it("grandfathers a genuine reset-then-recomplete slice with an epoch-scoped marker", () => {
+    const resetAt = timestamp;
+    const recompleted = persistedBeforeCutover(resetAt);
+    recompleted.courses[slug] = {
+      ...recompleted.courses[slug]!,
+      lastActivity: "2026-03-15T09:31:00.000Z",
+    };
+    const upgraded = upgradeHistoricalCompletionEvidence(recompleted);
+    const marker = legacyCompletionEvidenceCheckpointKey(
+      slug,
+      lessonId,
+      resetAt,
+    );
+
+    expect(upgraded.checkpoints).toMatchObject({
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+      [marker]: true,
+    });
+    expect(isLessonCompletionEvidenceBacked(upgraded, slug, lessonId)).toBe(
+      true,
+    );
+    expect(upgradeHistoricalCompletionEvidence(upgraded)).toBe(upgraded);
+  });
+
+  it("does not grandfather stale completion that predates the reset epoch", () => {
+    const stale = persistedBeforeCutover("2026-03-16T09:30:00.000Z");
+    const upgraded = upgradeHistoricalCompletionEvidence(stale);
+
+    expect(upgraded.checkpoints).toEqual({
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+    });
   });
 });
 
@@ -249,7 +354,10 @@ describe("migrateLegacyToUnified — partial / wrong-typed shapes", () => {
 
   it("skips a slice whose lessons field is missing or null", () => {
     localStorage.setItem(KI_F_KEY, JSON.stringify({ lessons: null }));
-    localStorage.setItem(EU_KEY, JSON.stringify({ workshopQuiz: { passed: true } }));
+    localStorage.setItem(
+      EU_KEY,
+      JSON.stringify({ workshopQuiz: { passed: true } }),
+    );
     const s = migrateLegacyToUnified();
     expect(s.courses).toEqual({});
   });
@@ -263,7 +371,9 @@ describe("migrateLegacyToUnified — R1 never-wipe contract", () => {
     const s = migrateLegacyToUnified();
     expect(s.courses["ki-fuehrerschein"]?.lessons.l1.completed).toBe(true);
     // Migration only READS — both keys are still there afterwards.
-    expect(localStorage.getItem(UNIFIED_STORAGE_KEY)).toBe("{corrupt unified blob");
+    expect(localStorage.getItem(UNIFIED_STORAGE_KEY)).toBe(
+      "{corrupt unified blob",
+    );
     expect(localStorage.getItem(KI_F_KEY)).not.toBeNull();
   });
 
@@ -317,7 +427,10 @@ describe("migrateLegacyToUnified — idempotency + key precedence", () => {
   });
 
   it("the flat ki-fuehrerschein key never feeds other course slugs", () => {
-    localStorage.setItem(LEGACY_KI_F_FLAT_KEY, JSON.stringify(validLegacySlice()));
+    localStorage.setItem(
+      LEGACY_KI_F_FLAT_KEY,
+      JSON.stringify(validLegacySlice()),
+    );
     const s = migrateLegacyToUnified();
     expect(Object.keys(s.courses)).toEqual(["ki-fuehrerschein"]);
     expect(s.courses["eu-ai-act-kurs"]).toBeUndefined();
@@ -325,13 +438,16 @@ describe("migrateLegacyToUnified — idempotency + key precedence", () => {
 });
 
 describe("store persist — quota exceeded", () => {
-  it("a QuotaExceededError on setItem neither throws nor loses the in-memory write", () => {
+  it("a QuotaExceededError on setItem fails closed without caching the rejected write", () => {
     // vi.spyOn against jsdom's Storage instance proved realm-fragile on the
     // CI runner (spy attached, store wrote through an un-spied resolution).
     // Use the same mechanism as this file's polyfill instead: define an OWN
     // localStorage property on globalThis with a throwing setItem - bare
     // `localStorage` in the store resolves to it in every environment.
-    const original = Object.getOwnPropertyDescriptor(globalThis, "localStorage");
+    const original = Object.getOwnPropertyDescriptor(
+      globalThis,
+      "localStorage",
+    );
     let throwCount = 0;
     const backing = new Map<string, string>();
     Object.defineProperty(globalThis, "localStorage", {
@@ -356,12 +472,13 @@ describe("store persist — quota exceeded", () => {
       expect(() =>
         markLessonCompleted("ki-fuehrerschein", "block_1_lesson_1"),
       ).not.toThrow();
-      // State survives in the in-memory cache for this session.
-      expect(
-        isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1"),
-      ).toBe(true);
+      // A rejected browser write must not create transient completion that
+      // disappears on reload or unlocks evidence-dependent UI.
+      expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
+        false,
+      );
       expect(throwCount).toBeGreaterThan(0);
-      // Nothing was persisted — storage stays empty, but nothing crashed.
+      // Nothing was persisted or cached, but the failure stayed bounded.
       expect(localStorage.getItem(UNIFIED_STORAGE_KEY)).toBeNull();
     } finally {
       if (original) {
@@ -448,7 +565,11 @@ describe("truncateExerciseSummaries (v2->v3 migration step)", () => {
               },
             },
           },
-          workshopQuiz: { passed: true, score: 1, completedAt: "2026-01-01T00:00:00.000Z" },
+          workshopQuiz: {
+            passed: true,
+            score: 1,
+            completedAt: "2026-01-01T00:00:00.000Z",
+          },
           capstoneSubmitted: false,
           startedAt: "2026-01-01T00:00:00.000Z",
           lastActivity: "2026-01-01T00:00:00.000Z",

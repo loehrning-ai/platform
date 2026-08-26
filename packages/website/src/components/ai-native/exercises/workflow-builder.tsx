@@ -3,11 +3,7 @@
 import { useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { ArrowDown, CheckCircle2, Trash2, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -66,7 +62,12 @@ function gradeWorkflow(
   const required = solution.requiredKinds;
   const presentCount = required.filter((k) => kinds.includes(k)).length;
   if (presentCount === 0) {
-    return { presentCount: 0, totalRequired: required.length, orderCorrect: false, score: 0 };
+    return {
+      presentCount: 0,
+      totalRequired: required.length,
+      orderCorrect: false,
+      score: 0,
+    };
   }
   // Is the relative order of present kinds monotonic in `required`?
   const filteredUser = kinds.filter((k) => required.includes(k));
@@ -88,7 +89,9 @@ function gradeWorkflow(
   };
 }
 
-export function WorkflowBuilderExercise(props: WorkflowBuilderSpec): JSX.Element {
+export function WorkflowBuilderExercise(
+  props: WorkflowBuilderSpec,
+): JSX.Element {
   return (
     <ExerciseShell
       moduleId={props.moduleId}
@@ -117,7 +120,10 @@ function WorkflowBuilderBody({
   const addNode = (node: WorkflowNode) => {
     if (submitted) return;
     // Generate a per-use id so duplicate-kind additions work
-    const instance = { ...node, id: `${node.id}-${chain.length}-${Date.now()}` };
+    const instance = {
+      ...node,
+      id: `${node.id}-${chain.length}-${Date.now()}`,
+    };
     setChain([...chain, instance]);
   };
 
@@ -140,15 +146,18 @@ function WorkflowBuilderBody({
   };
 
   const handleSubmit = () => {
-    setSubmitted(true);
     const grading = gradeWorkflow(chain, solution);
-    submitExercise({
-      moduleId,
-      lessonId,
-      exerciseId,
-      kind: "exercise-workflow-builder",
-      score: grading.score,
-    });
+    if (
+      submitExercise({
+        moduleId,
+        lessonId,
+        exerciseId,
+        kind: "exercise-workflow-builder",
+        score: grading.score,
+      })
+    ) {
+      setSubmitted(true);
+    }
   };
 
   const handleReset = () => {
@@ -162,14 +171,17 @@ function WorkflowBuilderBody({
 
   return (
     <div>
-      <p className="mb-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        {text("Baue einen Workflow · Reihenfolge zählt", "Build a workflow · order matters")}
+      <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+        {text(
+          "Baue einen Workflow · Reihenfolge zählt",
+          "Build a workflow · order matters",
+        )}
       </p>
 
       <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
         {/* Palette */}
         <div>
-          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Palette
           </p>
           <div className="grid gap-1.5">
@@ -179,7 +191,7 @@ function WorkflowBuilderBody({
                 type="button"
                 onClick={() => addNode(node)}
                 disabled={submitted}
-                className="flex items-start gap-2 border border-border bg-card/40 px-3 py-2 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)] disabled:opacity-60"
+                className="flex min-h-11 items-start gap-2 border border-border bg-card/40 px-3 py-2 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)] disabled:opacity-60"
               >
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-foreground text-brand-orange">
                   {node.icon}
@@ -188,7 +200,7 @@ function WorkflowBuilderBody({
                   <div className="text-[13px] font-bold tracking-[-0.02em] text-foreground">
                     {node.label}
                   </div>
-                  <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                     {node.category} · {node.kind}
                   </div>
                 </div>
@@ -199,7 +211,7 @@ function WorkflowBuilderBody({
 
         {/* Chain */}
         <div>
-          <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {text(
               `Dein Workflow (${chain.length} Knoten)`,
               `Your workflow (${chain.length} nodes)`,
@@ -229,14 +241,14 @@ function WorkflowBuilderBody({
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center bg-foreground text-brand-orange text-[13px]">
                         {node.icon}
                       </span>
-                      <span className="font-mono text-[10px] tracking-[0.08em] text-muted-foreground">
+                      <span className="font-mono text-xs tracking-[0.08em] text-muted-foreground">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="text-[12.5px] font-bold tracking-[-0.02em] text-foreground">
                           {node.label}
                         </div>
-                        <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                        <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                           {node.kind}
                         </div>
                       </div>
@@ -246,8 +258,11 @@ function WorkflowBuilderBody({
                             type="button"
                             onClick={() => moveUp(idx)}
                             disabled={idx === 0}
-                            aria-label={text("Hoch", "Move up")}
-                            className="border border-border px-1 text-[11px] text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
+                            aria-label={text(
+                              `Nach oben: ${node.label}`,
+                              `Move up: ${node.label}`,
+                            )}
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-border px-1 text-xs text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
                           >
                             ↑
                           </button>
@@ -255,16 +270,22 @@ function WorkflowBuilderBody({
                             type="button"
                             onClick={() => moveDown(idx)}
                             disabled={idx === chain.length - 1}
-                            aria-label={text("Runter", "Move down")}
-                            className="border border-border px-1 text-[11px] text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
+                            aria-label={text(
+                              `Nach unten: ${node.label}`,
+                              `Move down: ${node.label}`,
+                            )}
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-border px-1 text-xs text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
                           >
                             ↓
                           </button>
                           <button
                             type="button"
                             onClick={() => removeAt(idx)}
-                            aria-label={text("Entfernen", "Remove")}
-                            className="border border-border px-1 text-muted-foreground hover:border-destructive hover:text-destructive"
+                            aria-label={text(
+                              `Entfernen: ${node.label}`,
+                              `Remove: ${node.label}`,
+                            )}
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-border px-1 text-muted-foreground hover:border-destructive hover:text-destructive"
                           >
                             <Trash2 size={10} />
                           </button>
@@ -292,7 +313,9 @@ function WorkflowBuilderBody({
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
             className={cn(
               "mt-4 border-l-[3px] px-4 py-3",
-              passed ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
+              passed
+                ? "border-risk-green bg-risk-green/5"
+                : "border-brand-amber bg-brand-amber/5",
             )}
           >
             <div className="flex items-center gap-2">
@@ -301,12 +324,13 @@ function WorkflowBuilderBody({
               ) : (
                 <XCircle size={16} className="text-brand-amber" />
               )}
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
-                {grading.presentCount}/{grading.totalRequired} {text("Must-Have-Knoten", "required nodes")} ·{" "}
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground">
+                {grading.presentCount}/{grading.totalRequired}{" "}
+                {text("Must-Have-Knoten", "required nodes")} ·{" "}
                 {grading.orderCorrect
                   ? text("Reihenfolge korrekt", "order correct")
-                  : text("Reihenfolge falsch", "order incorrect")} ·{" "}
-                Score {Math.round(grading.score * 100)}%
+                  : text("Reihenfolge falsch", "order incorrect")}{" "}
+                · Score {Math.round(grading.score * 100)}%
               </p>
             </div>
           </m.div>
@@ -320,10 +344,10 @@ function WorkflowBuilderBody({
             onClick={handleSubmit}
             disabled={chain.length === 0}
             className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
               chain.length === 0
                 ? "cursor-not-allowed bg-muted-foreground opacity-60"
-                : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
+                : "bg-brand-orange hover:bg-foreground hover:text-background",
             )}
           >
             {text("Workflow prüfen", "Evaluate workflow")}
