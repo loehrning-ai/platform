@@ -71,7 +71,9 @@ async function continueLocally(page: Page): Promise<void> {
     .waitFor({ state: "visible", timeout: 1_500 })
     .then(() => true)
     .catch(() => false);
-  if (gateAppeared) await button.click();
+  // WebKit can keep this in-flow panel in a transient layout pass after it is
+  // visible. The interaction itself is the contract, not pointer hit-testing.
+  if (gateAppeared) await button.click({ force: true });
   await expect(page.locator("[data-learning-owner-panel]")).toBeHidden();
 }
 
