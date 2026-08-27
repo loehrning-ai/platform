@@ -73,7 +73,13 @@ async function continueLocally(page: Page): Promise<void> {
     .catch(() => false);
   // WebKit can keep this in-flow panel in a transient layout pass after it is
   // visible. The interaction itself is the contract, not pointer hit-testing.
-  if (gateAppeared) await button.click({ force: true });
+  if (gateAppeared) {
+    await button.click({ force: true }).catch(async (error: unknown) => {
+      // Ownership resolution can remove the optional gate between the
+      // visibility probe and the click. Only that resolved state is success.
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+  }
   await expect(page.locator("[data-learning-owner-panel]")).toBeHidden();
 }
 
