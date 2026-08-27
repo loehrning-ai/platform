@@ -42,19 +42,39 @@ export function BuecherContent({
 
   return (
     <>
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.kicker}
-          </p>
-          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.75fr)] lg:items-end lg:gap-10">
-            <h1 className="max-w-4xl text-3xl font-bold leading-[1.02] tracking-[-0.04em] sm:text-4xl lg:text-5xl">
+      <section className="border-b border-border py-8 sm:py-10">
+        <div
+          className="mx-auto grid max-w-6xl gap-3 px-4 sm:px-6 lg:grid-cols-12"
+          data-book-bento
+        >
+          <div className="dark-section relative min-w-0 overflow-hidden border border-foreground bg-background p-5 text-foreground sm:p-7 lg:col-span-8">
+            <span
+              className="absolute right-[-2.5rem] top-[-2.5rem] h-28 w-28 rotate-45 border border-border"
+              aria-hidden="true"
+            />
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+              {copy.kicker}
+            </p>
+            <h1 className="relative mt-5 max-w-[14ch] text-[clamp(2.45rem,5vw,4.75rem)] font-bold leading-[0.94] tracking-[-0.05em]">
               {copy.heading}{" "}
               <span className="text-brand-orange">{copy.headingAccent}</span>
             </h1>
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          </div>
+
+          <div className="relative flex min-w-0 flex-col justify-between overflow-hidden border border-foreground bg-card p-5 sm:p-6 lg:col-span-4">
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+              {copy.collectionHeading}
+            </span>
+            <strong className="mt-10 block text-[clamp(4.5rem,9vw,7.5rem)] font-bold leading-[0.72] tracking-[-0.08em] text-foreground">
+              {String(catalogBooks.length).padStart(2, "0")}
+            </strong>
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base">
               {copy.introduction(catalogBooks.length)}
             </p>
+            <span
+              className="absolute bottom-[-2rem] right-[-2rem] h-20 w-20 rotate-12 border border-brand-orange/40"
+              aria-hidden="true"
+            />
           </div>
         </div>
       </section>
@@ -64,7 +84,7 @@ export function BuecherContent({
         aria-labelledby="book-collection-heading"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <header className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <header className="mb-5 flex flex-col gap-1 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <h2
               id="book-collection-heading"
               className="text-xl font-bold tracking-[-0.025em] sm:text-2xl"
@@ -76,7 +96,7 @@ export function BuecherContent({
             </p>
           </header>
 
-          <div className="border-t border-border">
+          <div className="grid gap-5">
             {localizedBooks.map(({ book, display }, index) => {
               const detailHref = localizeHref(book.readerHref, locale);
               const relatedHref = localizeHref(
@@ -92,10 +112,11 @@ export function BuecherContent({
                   key={book.id}
                   id={book.id}
                   data-testid="book-card"
-                  className="grid min-w-0 gap-5 border-b border-border py-6 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7 lg:grid-cols-[11rem_minmax(0,1fr)] lg:gap-9"
+                  className="group relative grid min-w-0 overflow-hidden border border-foreground bg-background md:grid-cols-[minmax(15rem,0.42fr)_minmax(0,1fr)]"
+                  data-preview-shelf
                 >
-                  <div className="flex min-w-0 flex-col items-start">
-                    <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                  <div className="relative flex min-w-0 items-center justify-center overflow-hidden border-b border-border bg-card p-5 md:border-b-0 md:border-r sm:p-7">
+                    <span className="absolute left-4 top-4 z-20 border border-foreground bg-background px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                       {copy.publicationNumber(index + 1)}
                     </span>
                     <button
@@ -103,9 +124,18 @@ export function BuecherContent({
                       data-book-preview-id={book.id}
                       aria-haspopup="dialog"
                       aria-controls={`book-teaser-${book.id}`}
-                      className="mt-3 flex min-h-11 max-w-full flex-col items-start gap-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+                      className="relative flex min-h-11 w-full max-w-[17rem] flex-col items-center gap-3 py-8 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-orange"
                       aria-label={copy.coverPreviewAria(display.title)}
+                      data-image-showcase
                     >
+                      <span
+                        className="absolute inset-x-6 bottom-7 top-9 translate-x-4 translate-y-4 border border-border bg-background"
+                        aria-hidden="true"
+                      />
+                      <span
+                        className="absolute inset-x-6 bottom-7 top-9 translate-x-2 translate-y-2 border border-foreground bg-background"
+                        aria-hidden="true"
+                      />
                       <Image
                         src={getBookCover(book)}
                         alt={copy.coverAlt(display.title)}
@@ -117,12 +147,12 @@ export function BuecherContent({
                               fetchPriority: "high" as const,
                             }
                           : { loading: "lazy" as const })}
-                        sizes="(max-width: 767px) 128px, 176px"
-                        className="h-auto w-32 max-w-full border border-border bg-card md:w-40 lg:w-44"
+                        sizes="(max-width: 767px) 224px, 256px"
+                        className="relative h-auto w-48 max-w-full border border-foreground bg-background transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:-rotate-1 motion-reduce:transition-none sm:w-56 md:w-full"
                       />
                       <span
                         aria-hidden="true"
-                        className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground"
+                        className="relative inline-flex min-h-11 items-center gap-2 border-b border-foreground px-2 text-xs font-bold text-foreground"
                       >
                         <Eye className="h-4 w-4" aria-hidden="true" />
                         {copy.previewLabel}
@@ -130,7 +160,7 @@ export function BuecherContent({
                     </button>
                   </div>
 
-                  <div className="min-w-0">
+                  <div className="min-w-0 p-5 sm:p-7">
                     <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                       <div className="min-w-0">
                         <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
@@ -143,21 +173,24 @@ export function BuecherContent({
                           {display.subtitle}
                         </p>
                       </div>
-                      <span className="w-fit border-l-[3px] border-brand-orange pl-3 text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+                      <span className="w-fit border border-brand-orange px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
                         {display.statusLabel}
                       </span>
                     </div>
 
-                    <div className="mt-5 border-l-[3px] border-brand-orange pl-4">
+                    <div className="mt-5">
                       <p className="text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                         {copy.contents}
                       </p>
-                      <ul className="mt-2 grid gap-x-6 gap-y-1 sm:grid-cols-3">
-                        {display.highlights.map((highlight) => (
+                      <ul className="mt-2 grid gap-px border border-border bg-border sm:grid-cols-3">
+                        {display.highlights.map((highlight, highlightIndex) => (
                           <li
                             key={highlight}
-                            className="text-sm leading-relaxed text-foreground"
+                            className="min-w-0 bg-background p-3 text-sm leading-relaxed text-foreground"
                           >
+                            <span className="mb-2 block font-mono text-xs font-bold text-brand-orange">
+                              {String(highlightIndex + 1).padStart(2, "0")}
+                            </span>
                             {highlight}
                           </li>
                         ))}
@@ -245,7 +278,7 @@ export function BuecherContent({
                       · {copy.editorialOwner(book.sourceOwner)}
                     </p>
 
-                    <details className="group mt-3 border-t border-border">
+                    <details className="group/details mt-3 border-t border-border">
                       <summary
                         aria-label={`${copy.detailsLabel}: ${display.title}`}
                         className="flex min-h-11 cursor-pointer items-center gap-3 py-2 text-sm font-semibold text-foreground marker:content-none"
@@ -253,13 +286,13 @@ export function BuecherContent({
                         <span>{copy.detailsLabel}</span>
                         <span
                           aria-hidden="true"
-                          className="ml-auto font-mono text-base text-brand-orange group-open:hidden"
+                          className="ml-auto font-mono text-base text-brand-orange group-open/details:hidden"
                         >
                           +
                         </span>
                         <span
                           aria-hidden="true"
-                          className="ml-auto hidden font-mono text-base text-brand-orange group-open:inline"
+                          className="ml-auto hidden font-mono text-base text-brand-orange group-open/details:inline"
                         >
                           −
                         </span>
@@ -301,7 +334,7 @@ export function BuecherContent({
             })}
           </div>
 
-          <p className="mt-4 max-w-4xl text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-5 border-l-[3px] border-brand-orange bg-card px-4 py-3 text-xs leading-relaxed text-muted-foreground">
             {copy.sourceNote}
           </p>
         </div>

@@ -71,7 +71,6 @@ const REVIEW_ROUTES = [
   ["atlas-de", "/kurse"],
   ["atlas-en", "/en/kurse"],
   ["entry", "/einstieg"],
-  ["explain", "/wie-ki-funktioniert"],
   ["self-check", "/ki-check"],
   ["foundation-ai-native", "/ai-native"],
   ["foundation-eu-ai-act", "/eu-ai-act-kurs"],
@@ -94,7 +93,7 @@ const REVIEW_ROUTES = [
   ["books", "/buecher"],
   ["blog", "/blog"],
   ["open-source", "/open-source"],
-  ["platform", "/ueber-die-plattform"],
+  ["about", "/ueber-mich"],
   ["account", "/konto"],
 ] as const;
 

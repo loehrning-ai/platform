@@ -40,8 +40,6 @@ export const NOINDEX_HEADER = "noindex, nofollow, noarchive";
 const PUBLIC_INDEXABLE_PATHS = [
   "/",
   "/einstieg",
-  "/wie-ki-funktioniert",
-  "/wie-ki-funktioniert/:lektionId",
   "/ki-check",
   "/kurse",
   // The 6 formerly imported courses now own real static routes. The dormant
@@ -69,10 +67,8 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/open-source/lizenzrichtlinie",
   "/open-source/:kind/:slug",
   "/ueber-mich",
-  "/ueber-die-plattform",
   "/neuigkeiten",
   "/hilfe",
-  "/bekannte-grenzen",
   "/impressum",
   "/datenschutz",
 ] as const;
@@ -287,6 +283,50 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  route(
+    "/wie-ki-funktioniert",
+    "retired",
+    "The retired AI explainer now resolves to the maintained introduction.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/einstieg",
+      status: 301,
+    },
+  ),
+  route(
+    "/wie-ki-funktioniert/:path*",
+    "retired",
+    "Retired AI explainer lessons now resolve to the maintained introduction.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/einstieg",
+      status: 301,
+    },
+  ),
+  route(
+    "/bekannte-grenzen",
+    "retired",
+    "Known platform limitations are maintained in the help reference.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/hilfe#grenzen",
+      status: 301,
+    },
+  ),
+  route(
+    "/ueber-die-plattform",
+    "retired",
+    "Platform stewardship now lives on the maintainer profile.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/ueber-mich#redaktion",
+      status: 301,
+    },
+  ),
   route("/api/scan", "retired", "Deleted commercial scan API returns 410.", {
     auth: "gone",
     robots: "disallow",
@@ -327,18 +367,18 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     cache: "public-short",
     status: 410,
   }),
-  route("/leistungen", "retired", "Commercial service page redirects to platform trust.", {
+  route("/leistungen", "retired", "Commercial service page redirects to platform stewardship.", {
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-die-plattform",
+    redirectTo: "/ueber-mich#redaktion",
     status: 301,
   }),
-  route("/leistungen/:path*", "retired", "Commercial service pages redirect to platform trust.", {
+  route("/leistungen/:path*", "retired", "Commercial service pages redirect to platform stewardship.", {
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-die-plattform",
+    redirectTo: "/ueber-mich#redaktion",
     status: 301,
   }),
   route("/kontakt", "retired", "Contact funnel retired; feedback is the public input path.", {
@@ -359,7 +399,7 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-die-plattform",
+    redirectTo: "/ueber-mich#redaktion",
     status: 301,
   }),
   route("/standortbestimmung", "retired", "Route renamed to /ki-check.", {
@@ -373,7 +413,7 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-die-plattform",
+    redirectTo: "/ueber-mich#redaktion",
     status: 301,
   }),
   route("/digifyde", "retired", "Legacy diagnostic brand route retired.", {

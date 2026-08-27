@@ -48,7 +48,7 @@ test("manual visual capture is isolated from every mandatory public project", ()
   assert.equal(optedInVisualProject.status, 0, optedInVisualProject.stderr);
   assert.equal(
     optedInVisualProject.stdout.match(/qa-visuals\.spec\.ts/g)?.length,
-    25,
+    24,
   );
 
   for (const project of [

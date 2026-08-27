@@ -13,7 +13,10 @@ describe("<CredibilityLogos>", () => {
     expect(mark).toHaveAttribute("fill", "currentColor");
     expect(mark).toHaveAttribute("width", "97");
     expect(mark).toHaveAttribute("height", "32");
-    expect(mark?.querySelector("path")).toHaveAttribute("d", RED_BULL_MARK.path);
+    expect(mark?.querySelector("path")).toHaveAttribute(
+      "d",
+      RED_BULL_MARK.path,
+    );
     expect(
       redBullCard?.querySelector('img[src="/ueber-mich/logos/red-bull.svg"]'),
     ).toBeNull();
@@ -26,13 +29,19 @@ describe("<CredibilityLogos>", () => {
       name: "Frühere berufliche Stationen",
     });
     for (const employer of ["Apple", "Red Bull", "Meta"]) {
-      expect(within(section).getByText(employer)).toHaveAttribute("translate", "no");
+      expect(within(section).getByText(employer)).toHaveAttribute(
+        "translate",
+        "no",
+      );
     }
     for (const mark of section.querySelectorAll("img, svg")) {
       expect(mark).toHaveAttribute("aria-hidden", "true");
     }
-    expect(within(section).getByText(/ausschließlich der biografischen Einordnung/)).toBeVisible();
+    expect(
+      within(section).getByText(/ausschließlich der biografischen Einordnung/),
+    ).toBeVisible();
     expect(within(section).getByText(/nicht/)).toBeVisible();
+    expect(section).toHaveAttribute("data-employer-proof");
   });
 
   it("uses English labels and explicit no-endorsement wording on English pages", () => {
@@ -41,8 +50,14 @@ describe("<CredibilityLogos>", () => {
     const section = screen.getByRole("region", {
       name: "Previous professional roles",
     });
-    expect(within(section).getByRole("heading", { name: "Previous employers" })).toBeVisible();
-    expect(within(section).getByText(/do not endorse or support/)).toBeVisible();
-    expect(within(section).queryByText("Frühere Arbeitgeber")).not.toBeInTheDocument();
+    expect(
+      within(section).getByRole("heading", { name: "Previous employers" }),
+    ).toBeVisible();
+    expect(
+      within(section).getByText(/do not endorse or support/),
+    ).toBeVisible();
+    expect(
+      within(section).queryByText("Frühere Arbeitgeber"),
+    ).not.toBeInTheDocument();
   });
 });

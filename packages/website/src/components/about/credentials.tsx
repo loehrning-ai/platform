@@ -14,18 +14,19 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
   return (
     <section
       id="ausbildung"
-      className="border-t border-border bg-card/30 py-12"
+      className="border-t border-border bg-card/30 py-10"
       aria-labelledby="credentials-heading"
+      data-proof-bento
     >
-      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
-        <header className="grid gap-5 border-b border-border pb-9 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-10">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <header className="grid gap-4 border-b border-border pb-6 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-8">
           <div className="min-w-0">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
               {copy.eyebrow}
             </p>
             <h2
               id="credentials-heading"
-              className="mt-4 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl"
+              className="mt-3 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground"
             >
               {copy.title}
             </h2>
@@ -35,13 +36,15 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
           </p>
         </header>
 
-        <div className="mt-8 grid min-w-0 gap-4 lg:grid-cols-3">
+        <div className="mt-5 grid min-w-0 gap-px border border-border bg-border md:grid-cols-2">
           {copy.cards.map((credential, index) => {
             const Icon = ICONS[credential.id];
             return (
               <article
                 key={credential.id}
-                className="group min-w-0 border border-border bg-background p-6 sm:p-8"
+                className={`group relative min-w-0 bg-background p-5 sm:p-6 ${
+                  credential.id === "research" ? "md:col-span-2" : ""
+                }`}
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="inline-flex h-11 w-11 items-center justify-center border border-border bg-card text-brand-orange">
@@ -51,7 +54,7 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="mt-8 break-words text-pretty text-xl font-bold tracking-[-0.025em] text-foreground [overflow-wrap:anywhere]">
+                <h3 className="mt-5 break-words text-pretty text-xl font-bold tracking-[-0.025em] text-foreground [overflow-wrap:anywhere]">
                   {credential.title}
                 </h3>
                 {credential.subtitle ? (
@@ -59,15 +62,15 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
                     {credential.subtitle}
                   </p>
                 ) : null}
-                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+                <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
                   {credential.detail}
                 </p>
                 {credential.evidence ? (
-                  <ul className="mt-6 space-y-3 border-t border-border pt-5">
+                  <ul className="mt-4 grid gap-px border-t border-border bg-border pt-px md:grid-cols-2">
                     {credential.evidence.map((item) => (
                       <li
                         key={item.href}
-                        className="grid min-w-0 grid-cols-[0.5rem_minmax(0,1fr)] gap-3 text-xs leading-relaxed text-muted-foreground"
+                        className="grid min-w-0 grid-cols-[0.5rem_minmax(0,1fr)] gap-3 bg-background px-3 py-2 text-xs leading-relaxed text-muted-foreground"
                       >
                         <span
                           className="mt-[0.42rem] h-1.5 w-1.5 bg-brand-orange"

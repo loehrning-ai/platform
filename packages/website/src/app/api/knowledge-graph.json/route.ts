@@ -22,7 +22,6 @@ import { KNOWLEDGE_GRAPH_SCHEMA_ID } from "@/lib/seo/knowledge-graph-schema";
 import { getWorkshopBySlug, WORKSHOPS } from "@/lib/workshops";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { getWieKiContent } from "@/lib/wie-ki-funktioniert";
 
 export const runtime = "nodejs";
 export const dynamic = "force-static";
@@ -107,11 +106,6 @@ function localizedNodeCopy(
   if (node.id === "on-ramp:einstieg") {
     const copy = ENTRY_COPY[locale].metadata;
     return { title: copy.title, summary: copy.description };
-  }
-
-  if (node.id === "conceptual-block:wie-ki-funktioniert") {
-    const { meta } = getWieKiContent(locale);
-    return { title: meta.title, summary: meta.subtitle };
   }
 
   if (locale === node.language) {

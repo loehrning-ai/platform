@@ -3,10 +3,8 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const ROUTES = [
-  "ueber-die-plattform",
   "hilfe",
   "neuigkeiten",
-  "bekannte-grenzen",
   "einstieg",
 ] as const;
 
@@ -18,8 +16,8 @@ describe("public information route density", () => {
   it.each(ROUTES)("keeps /%s inside the compact editorial frame", (route) => {
     const source = routeSource(route);
 
-    expect(source).toContain("pb-12 pt-8");
-    expect(source).toContain("sm:pt-12");
+    expect(source).toMatch(/pb-12 pt-(?:6|8)/);
+    expect(source).toMatch(/sm:pt-(?:8|12)/);
     expect(source).not.toMatch(/\b(?:pb-28|pt-16|sm:pt-20)\b/);
   });
 

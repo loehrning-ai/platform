@@ -2,8 +2,8 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /hilfe smoke + interaction (regression coverage, wave 2). Public, login-free
- * Help/FAQ page: static native <details> disclosures plus two support cards
- * funnelling to /feedback and /neuigkeiten. Assertions target ROLES, the
+ * Help/FAQ page: a topic index, static native <details> disclosures, and the
+ * retained /neuigkeiten handoff. Assertions target ROLES, the
  * native disclosure toggle, and stable link targets - not exact prose - so a
  * copy refresh stays green while a real regression (missing FAQ list, dead
  * accordion, broken funnel, mobile overflow) fails.
@@ -83,6 +83,38 @@ test.describe("/hilfe Help & FAQ", () => {
     await expect(answer).toBeVisible();
   });
 
+  test("topic index resolves the retired limitations route destination", async ({
+    page,
+  }) => {
+    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+
+    const index = page.locator("[data-help-topic-index]");
+    await expect(index).toBeVisible();
+    await expect(index.getByRole("link")).toHaveCount(12);
+
+    const limitsLink = index.getByRole("link", {
+      name: "Welche Einschränkungen sind bekannt?",
+    });
+    await expect(limitsLink).toHaveAttribute("href", "/hilfe#grenzen");
+    await limitsLink.click();
+    await expect(page).toHaveURL(/\/hilfe#grenzen$/);
+    await expect(page.locator("details#grenzen")).toBeVisible();
+    await expect(page.locator("details#grenzen")).toHaveAttribute("open", "");
+    await expect(page.locator("details#grenzen")).toHaveAttribute(
+      "data-limit-anchor",
+      "true",
+    );
+    const limitations = page.locator("[data-limitations-ledger]");
+    await expect(limitations.locator("ol > li")).toHaveCount(5);
+    await expect(limitations.getByText("8. August 2026")).toBeVisible();
+    await expect(
+      limitations.getByRole("link", { name: "EUR-Lex" }),
+    ).toHaveAttribute(
+      "href",
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1744",
+    );
+  });
+
   test("provider-free feedback exposes the email fallback and /neuigkeiten", async ({
     page,
   }) => {
@@ -104,7 +136,9 @@ test.describe("/hilfe Help & FAQ", () => {
       page.getByRole("link", { name: "Feedback-Formular" }),
     ).toHaveCount(0);
     await expect(
-      page.getByRole("link", { name: "/neuigkeiten", exact: true }),
+      page
+        .getByRole("complementary")
+        .getByRole("link", { name: "/neuigkeiten", exact: true }),
     ).toHaveAttribute("href", "/neuigkeiten");
   });
 });

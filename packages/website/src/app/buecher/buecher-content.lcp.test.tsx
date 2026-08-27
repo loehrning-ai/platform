@@ -54,6 +54,9 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(screen.getAllByText("Nach der Lektüre")).toHaveLength(2);
     expect(screen.getAllByText(/Redaktion: editorial:books/)).toHaveLength(2);
     expect(screen.getAllByText("Ausgabe, Quellen und Zugang")).toHaveLength(2);
+    expect(container.querySelector("[data-book-bento]")).not.toBeNull();
+    expect(container.querySelectorAll("[data-preview-shelf]")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-image-showcase]")).toHaveLength(2);
     expect(
       container.querySelectorAll('[data-motion-initial*="opacity"]').length,
     ).toBe(0);
@@ -124,6 +127,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(
       within(dialog).getByRole("link", { name: "Open book and chapters" }),
     ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(within(dialog).getByTestId("book-preview-showcase")).toBeVisible();
   });
 
   it("states the PDF boundary and exposes the login route only when accounts are enabled", () => {
@@ -190,7 +194,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     },
   );
 
-  it("uses flat editorial rows without undersized labels or decorative motion", () => {
+  it("uses editorial shelves without undersized labels or generic card chrome", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/app/buecher/buecher-content.tsx"),
       "utf8",

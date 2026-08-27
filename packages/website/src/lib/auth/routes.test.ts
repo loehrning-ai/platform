@@ -99,11 +99,6 @@ describe("platform route access model", () => {
     expect(isProtectedPlatformPath("/ueber-mich")).toBe(false);
   });
 
-  it("treats ueber-die-plattform as public reputation surface", () => {
-    expect(isPublicPlatformPath("/ueber-die-plattform")).toBe(true);
-    expect(isProtectedPlatformPath("/ueber-die-plattform")).toBe(false);
-  });
-
   it("keeps konto and API sync routes gated (require login)", () => {
     for (const path of [
       "/konto",
@@ -146,6 +141,10 @@ describe("platform route access model", () => {
     // These routes are handled by redirect stubs or middleware 410, not auth
     for (const path of [
       "/ki-transformation-check",
+      "/wie-ki-funktioniert",
+      "/wie-ki-funktioniert/lektion-1-vorhersage",
+      "/bekannte-grenzen",
+      "/ueber-die-plattform",
       "/arbeitsweise",
       "/leistungen",
       "/foerdermittel",

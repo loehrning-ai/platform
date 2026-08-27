@@ -18,7 +18,7 @@ export const COURSE_HUB_COPY = {
       "Zugang, Fortschritt und Nachweise sind getrennt ausgewiesen.",
     accessBody:
       "Die Kursseiten sind öffentlich. Die vier Reader des Grundlagenpfads benötigen ein Lernkonto, weil Fortschritt und Abschlussstatus synchronisiert werden. Technikkurse, Workshops und Buch-Reader bleiben ohne Konto erreichbar. Der Zugang zu Downloads steht an der jeweiligen Ressource; das PDF des veröffentlichten Lernbuchs benötigt ein Konto. Die Abschlussdokumente sind selbst ausgestellt und keine akkreditierten Zertifikate.",
-    aboutPlatform: "Über die Plattform",
+    aboutMe: "Über mich",
     aiCheck: "KI-Check",
   },
   en: {
@@ -38,7 +38,7 @@ export const COURSE_HUB_COPY = {
       "Access, progress, and completion records are stated separately.",
     accessBody:
       "Course landing pages are public. The four foundation-path readers require a learning account because progress and completion status are synchronized. Technical courses, workshops, and book readers remain available without an account. Download access is stated on each resource; the published learning book's PDF requires an account. Completion documents are issued by loehrning.ai and are not accredited certificates.",
-    aboutPlatform: "About the platform",
+    aboutMe: "About me",
     aiCheck: "AI check",
   },
 } as const satisfies Readonly<Record<Locale, Record<string, string>>>;

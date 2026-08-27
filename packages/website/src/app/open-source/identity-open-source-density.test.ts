@@ -6,6 +6,7 @@ const SURFACES = [
   "../ueber-mich/ueber-mich-content.tsx",
   "page.tsx",
   "artifact-ledger.tsx",
+  "../../components/open-source/artifact-preview-stack.tsx",
   "lizenzrichtlinie/page.tsx",
   "[kind]/[slug]/page.tsx",
   "[kind]/[slug]/not-found.tsx",
@@ -21,9 +22,9 @@ describe("identity and open-source editorial density", () => {
     expect(source(path)).not.toMatch(/\btext-\[(?:9|10|10\.5|11)px\]\b/);
   });
 
-  it.each(SURFACES)("keeps %s flat and free of decorative motion", (path) => {
+  it.each(SURFACES)("keeps %s geometry disciplined", (path) => {
     expect(source(path)).not.toMatch(
-      /(?:shadow-(?:card|card-hover|tile)|shadow-\[|hover:-translate|transition-all|rounded-(?:xl|2xl|3xl|full))/,
+      /(?:hover:-translate|transition-all|rounded-(?:xl|2xl|3xl|full))/,
     );
   });
 
@@ -33,10 +34,20 @@ describe("identity and open-source editorial density", () => {
     );
   });
 
-  it("uses a static evidence ledger instead of reveal cards", () => {
+  it("uses one bounded, accessible image stack while evidence stays compact", () => {
     const hub = source("page.tsx");
+    const ledger = source("artifact-ledger.tsx");
+    const preview = source(
+      "../../components/open-source/artifact-preview-stack.tsx",
+    );
+
     expect(hub).toContain("<ArtifactLedger");
-    expect(hub).not.toMatch(/DrawRule|ShelfReveal|OpenSourceArtifactShelf/);
-    expect(source("artifact-ledger.tsx")).toContain("<details");
+    expect(ledger).toContain("<ArtifactPreviewStack");
+    expect(ledger).toContain("<details");
+    expect(preview).toContain("transition-[transform,opacity]");
+    expect(preview).toContain("motion-reduce:transition-none");
+    expect(preview).toContain("aria-pressed");
+    expect(preview).toContain("onKeyDown");
+    expect(preview).not.toMatch(/transition-all|animate-|repeat|autoplay/);
   });
 });

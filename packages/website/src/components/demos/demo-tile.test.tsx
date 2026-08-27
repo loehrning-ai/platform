@@ -98,8 +98,30 @@ describe("<DemoTile>", () => {
       "Praxisbeispiel öffnen: Claude in Word. Verträge.",
     );
     expect(link).toHaveAttribute("data-demo-tile", "word");
+    expect(link).toHaveAttribute("data-demo-size", "s-med");
     expect(link).toHaveAttribute("data-prefetch", "false");
     expect(link).toHaveClass("demo-gallery-tile");
+  });
+
+  it("uses registry size to create a preview-led bento hierarchy", () => {
+    const { container } = render(
+      <DemoTile demo={makeDemo({ size: "s-hero" })} total={12} />,
+    );
+    const link = screen.getByRole("link");
+    const preview = container.querySelector("[data-demo-preview]");
+    const heading = screen.getByRole("heading", { level: 2 });
+
+    expect(link).toHaveClass("sm:col-span-2", "lg:row-span-2");
+    expect(preview).toBeTruthy();
+    expect(
+      (preview as HTMLElement).compareDocumentPosition(heading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(link).toHaveClass("motion-reduce:transition-none");
+    expect(container.querySelector("[data-demo-preview-content]")).toHaveClass(
+      "motion-reduce:transform-none",
+      "motion-reduce:transition-none",
+    );
   });
 
   it("shows the raw demo number and the zero-padded total", () => {

@@ -131,7 +131,7 @@ Abfrage oder die richtige Interpretation gewählt wurde.
 ## Vertiefung
 
 - [Einstieg auf loehrning.ai](https://loehrning.ai/einstieg)
-- [Wie KI wirklich funktioniert](https://loehrning.ai/wie-ki-funktioniert)
+- [KI-Grundlagen](https://loehrning.ai/einstieg)
 - [KI-Führerschein](https://loehrning.ai/ki-fuehrerschein)
 
 Vor Veröffentlichung werden die Erklärungen gegen die Dokumentation der im

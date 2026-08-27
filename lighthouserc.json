@@ -7,8 +7,6 @@
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/einstieg",
-        "http://localhost:3000/wie-ki-funktioniert",
-        "http://localhost:3000/wie-ki-funktioniert/lektion-1-vorhersage",
         "http://localhost:3000/ki-check",
         "http://localhost:3000/kurse",
         "http://localhost:3000/kurse/open-source/claude",
@@ -34,10 +32,8 @@
         "http://localhost:3000/open-source/lizenzrichtlinie",
         "http://localhost:3000/open-source/tools/cv-engine",
         "http://localhost:3000/ueber-mich",
-        "http://localhost:3000/ueber-die-plattform",
         "http://localhost:3000/neuigkeiten",
         "http://localhost:3000/hilfe",
-        "http://localhost:3000/bekannte-grenzen",
         "http://localhost:3000/impressum",
         "http://localhost:3000/datenschutz"
       ],

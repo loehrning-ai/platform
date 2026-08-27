@@ -26,14 +26,68 @@ function collectErrors(page: Page): string[] {
 }
 
 async function expectContained(page: Page, label: string) {
-  const geometry = await page.evaluate(() => ({
-    innerWidth: window.innerWidth,
-    scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
-  }));
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+  });
+  const geometry = await page.evaluate(() => {
+    const selectors = [
+      "[data-diagnostic-state]",
+      "[data-diagnostic-frame]",
+      "[data-dimension-rail]",
+      "[data-question-instrument]",
+      "[data-answer-group]",
+      "[data-answer-option]",
+      "[data-answer-feedback]",
+      "[data-score-plate]",
+      "[data-competency-shape]",
+      "[data-competency-legend-item]",
+      "[data-capability-ledger]",
+      "[data-capability-row]",
+      "[data-next-proof-panel]",
+      "[data-method-limits]",
+    ];
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>(selectors.join(",")),
+    );
+    const violations = elements.flatMap((element) => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      if (
+        style.display === "none" ||
+        style.visibility === "hidden" ||
+        rect.width <= 0 ||
+        rect.height <= 0
+      ) {
+        return [];
+      }
+      const name =
+        selectors.find((selector) => element.matches(selector)) ??
+        element.tagName.toLowerCase();
+      const issues: string[] = [];
+      if (rect.left < -1) issues.push(`${name} left=${rect.left.toFixed(1)}`);
+      if (rect.right > window.innerWidth + 1) {
+        issues.push(
+          `${name} right=${rect.right.toFixed(1)} viewport=${window.innerWidth}`,
+        );
+      }
+      return issues;
+    });
+    return {
+      innerWidth: window.innerWidth,
+      scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
+      violations,
+    };
+  });
   expect(
     geometry.scrollWidth,
     `${label}: ${geometry.scrollWidth}px document at ${geometry.innerWidth}px viewport`,
   ).toBeLessThanOrEqual(geometry.innerWidth + 1);
+  expect(geometry.violations, `${label}: clipped instrument elements`).toEqual(
+    [],
+  );
 }
 
 async function waitForDocumentScrollToSettle(page: Page) {
@@ -127,7 +181,7 @@ for (const width of WIDTHS) {
         ).toBeVisible();
         await scrollIntoViewAndClick(
           page,
-          page.getByRole("button", { name: option.text }),
+          page.getByRole("radio", { name: option.text }),
         );
         await expect(
           page.getByText(option.meaning, { exact: true }),
@@ -154,6 +208,10 @@ for (const width of WIDTHS) {
           : "/en/ki-fuehrerschein/kurs",
       );
       await expectContained(page, `${route.path} result`);
+      const method = page.locator("details[data-method-limits]");
+      await method.locator("summary").click();
+      await expect(method).toHaveAttribute("open", "");
+      await expectContained(page, `${route.path} result method expanded`);
       expect(errors, `${route.path} console errors`).toEqual([]);
     }
   });

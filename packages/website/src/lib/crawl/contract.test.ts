@@ -152,6 +152,10 @@ describe("crawl contract", () => {
   // Routes dropped in the open-source split (2026-07-16). All four were
   // previously indexable, so a bare 404 would strand real inbound links.
   it.each([
+    ["/wie-ki-funktioniert", "/einstieg"],
+    ["/wie-ki-funktioniert/lektion-1-vorhersage", "/einstieg"],
+    ["/bekannte-grenzen", "/hilfe#grenzen"],
+    ["/ueber-die-plattform", "/ueber-mich#redaktion"],
     ["/glossar", "/ai-native/glossar"],
     ["/blog/deepfake-erkennen", "/blog"],
     ["/blog/eu-ai-act-update-2026-06", "/blog/eu-ai-act-grundlagen"],
@@ -180,6 +184,12 @@ describe("crawl contract", () => {
     for (const path of [
       "/leistungen",
       "/en/leistungen",
+      "/wie-ki-funktioniert",
+      "/en/wie-ki-funktioniert",
+      "/bekannte-grenzen",
+      "/en/bekannte-grenzen",
+      "/ueber-die-plattform",
+      "/en/ueber-die-plattform",
       "/kontakt",
       "/en/kontakt",
       "/glossar",

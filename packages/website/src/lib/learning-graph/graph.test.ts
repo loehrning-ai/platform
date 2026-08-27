@@ -180,18 +180,6 @@ describe("learning graph", () => {
     expect(pruefen.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("wie-ki-funktioniert conceptual block node exists with public access (learning-path rollout)", () => {
-    const node = LEARNING_NODES.find((n) => n.id === "conceptual-block:wie-ki-funktioniert");
-    expect(node).toBeDefined();
-    expect(node?.route).toBe("/wie-ki-funktioniert");
-    expect(node?.access).toBe("public");
-    expect(node?.type).toBe("conceptual_block");
-    const edge = LEARNING_EDGES.find(
-      (e) => e.from === "conceptual-block:wie-ki-funktioniert" && e.to === "course:ki-fuehrerschein",
-    );
-    expect(edge).toBeDefined();
-  });
-
   it("PATHWAY_STAGES[0] has plain German title and description without commercial language", () => {
     const pruefen = PATHWAY_STAGES[0];
     expect(pruefen.title).toBe("Prüfen");

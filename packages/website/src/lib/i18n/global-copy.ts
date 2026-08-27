@@ -13,7 +13,6 @@ export interface GlobalNavigationCopy {
   readonly switchToEnglish: string;
   readonly learning: string;
   readonly practice: string;
-  readonly knowledge: string;
   readonly allCourses: string;
   readonly foundations: string;
   readonly technicalCourses: string;
@@ -21,10 +20,7 @@ export interface GlobalNavigationCopy {
   readonly learningBooks: string;
   readonly workshops: string;
   readonly appliedExamples: string;
-  readonly howAiWorks: string;
   readonly blog: string;
-  readonly knownLimits: string;
-  readonly aboutPlatform: string;
   readonly aboutTim: string;
   readonly openSource: string;
   readonly account: string;
@@ -48,7 +44,6 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     switchToEnglish: "Englische Oberfläche öffnen",
     learning: "Lernen",
     practice: "Praxis",
-    knowledge: "Wissen",
     allCourses: "Alle Kurse",
     foundations: "Grundlagenpfad",
     technicalCourses: "Technikkurse",
@@ -56,11 +51,8 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     learningBooks: "Lernbücher",
     workshops: "Workshops",
     appliedExamples: "Praxisbeispiele",
-    howAiWorks: "Wie KI funktioniert",
     blog: "Blog",
-    knownLimits: "Bekannte Grenzen",
-    aboutPlatform: "Über die Plattform",
-    aboutTim: "Über Tim Löhr",
+    aboutTim: "Über mich",
     openSource: "Open Source",
     account: "Konto",
     login: "Login",
@@ -79,7 +71,6 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     switchToEnglish: "Open the English interface",
     learning: "Learning",
     practice: "Practice",
-    knowledge: "Knowledge",
     allCourses: "All courses",
     foundations: "Foundations",
     technicalCourses: "Technical courses",
@@ -87,11 +78,8 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     learningBooks: "Learning books",
     workshops: "Workshops",
     appliedExamples: "Applied examples",
-    howAiWorks: "How AI works",
     blog: "Blog",
-    knownLimits: "Known limits",
-    aboutPlatform: "About the platform",
-    aboutTim: "About Tim Löhr",
+    aboutTim: "About me",
     openSource: "Open Source",
     account: "Account",
     login: "Login",

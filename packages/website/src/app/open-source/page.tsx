@@ -124,82 +124,58 @@ export default async function OpenSourcePage() {
   return (
     <>
       <JsonLd data={graph} id="open-source-jsonld" />
-      <section className="py-8 sm:py-12">
+      <section className="py-6 sm:py-8">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="h-[3px] w-16 bg-brand-orange" />
-          <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
-          <div className="mt-3">
-            <h1 className="max-w-4xl text-[clamp(2.25rem,4vw,4rem)] font-bold leading-[0.96] tracking-[-0.04em]">
-              {/* The trailing space is load-bearing: without it the line
-                  break joins the sentences in the accessible name. */}
-              {copy.title.split(". ")[0]}. <br />
-              {copy.title.split(". ").slice(1).join(". ")}
+          <header className="max-w-5xl">
+            <div className="h-[3px] w-16 bg-brand-orange" />
+            <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+              {copy.eyebrow}
+            </p>
+            <h1 className="mt-3 max-w-4xl text-balance text-[clamp(2.4rem,5vw,4.75rem)] font-bold leading-[0.94] tracking-[-0.045em] text-foreground">
+              {copy.title}
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {copy.introductionPrefix}{" "}
-              <a
-                href={GITHUB_ORG.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whitespace-nowrap border-b border-brand-orange bg-background font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                {GITHUB_ORG.slug}
-                <span className="sr-only">{copy.externalTab}</span>
-              </a>
-              {copy.introductionSuffix}
+            <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {copy.introduction}
             </p>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {copy.coursesPrefix}{" "}
-              <Link
-                href={localizeHref("/kurse", locale)}
-                className="font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                /kurse
-              </Link>
-              .
-            </p>
-          </div>
+          </header>
 
           <ArtifactLedger locale={locale} />
 
-          <section className="mt-12 grid gap-3 border-t border-border pt-6 md:grid-cols-[18rem_minmax(0,1fr)]">
-            <h2 className="min-w-0 break-words text-2xl font-bold tracking-[-0.03em] text-foreground">
-              {copy.publicationStandard}
-            </h2>
-            <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              {copy.publicationStandardBody}
-            </p>
-          </section>
-
           <section
             id="lizenzmodell"
-            className="mt-8 grid gap-3 border-t border-border pt-6 md:grid-cols-[18rem_minmax(0,1fr)]"
+            className="grid gap-4 border-t border-border py-6 md:grid-cols-[minmax(14rem,0.5fr)_minmax(0,1.5fr)] md:items-start"
           >
-            <h2 className="min-w-0 break-words text-2xl font-bold tracking-[-0.03em] text-foreground">
-              {copy.codeAndEditorial}
+            <h2 className="text-balance text-2xl font-bold tracking-[-0.03em] text-foreground">
+              {copy.footnoteTitle}
             </h2>
-            <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              {copy.codeAndEditorialBefore}{" "}
-              <a
-                href={PLATFORM_REPOSITORY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                {copy.platformCode}
-                <span className="sr-only">{copy.externalTab}</span>
-              </a>{" "}
-              {copy.codeAndEditorialMiddle}{" "}
-              <Link
-                href={localizeHref("/open-source/lizenzrichtlinie", locale)}
-                className="font-semibold text-foreground underline-offset-4 hover:underline"
-              >
-                {copy.licensePolicy}
-              </Link>{" "}
-              {copy.codeAndEditorialAfter}
-            </p>
+            <div className="max-w-3xl">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {copy.footnote}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                <a
+                  href={PLATFORM_REPOSITORY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
+                >
+                  {copy.platformCode}
+                  <span className="sr-only">{copy.externalTab}</span>
+                </a>
+                <Link
+                  href={localizeHref("/open-source/lizenzrichtlinie", locale)}
+                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
+                >
+                  {copy.licensePolicy}
+                </Link>
+                <Link
+                  href={localizeHref("/kurse", locale)}
+                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
+                >
+                  {copy.courses}
+                </Link>
+              </div>
+            </div>
           </section>
         </div>
       </section>

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
-import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
 import { getBookChapterList } from "@/lib/book-reader-content";
@@ -110,10 +109,6 @@ function discoverBlogPosts(): { slug: string; date: string }[] {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const wieKiLektionEntries: Entry[] = contractIncludesPattern("/wie-ki-funktioniert/:lektionId")
-    ? WIE_KI_LEKTIONEN.map((l) => makeEntry(`/wie-ki-funktioniert/${l.id}`, 0.7, "yearly"))
-    : [];
-
   const publicPages: Entry[] = CRAWL_CONTRACT
     .filter((entry) => entry.includeInSitemap && !entry.pattern.includes(":"))
     .map((entry) =>
@@ -173,7 +168,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return expandLocalizedEntries([
     ...publicPages,
-    ...wieKiLektionEntries,
     ...bookEntries,
     ...bookChapterEntries,
     ...demoEntries,

@@ -36,6 +36,9 @@ export const HOME_COPY = {
       headline: ["Vier Kurse.", "Eine klare Reihenfolge."],
       introduction:
         "Beginne mit sicherer Anwendung. Prüfe danach gesellschaftliche Folgen, rechtliche Pflichten und belastbare Arbeitsabläufe.",
+      routeSignal: "Ein Pfad. Vier überprüfbare Ergebnisse.",
+      routeLabel: "Empfohlener Grundlagenpfad",
+      lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
         `Dazu ${count} technische Kurse von Data Engineering bis System Design.`,
       viewAllCourses: "Alle Kurse ansehen",
@@ -45,6 +48,8 @@ export const HOME_COPY = {
       headline: "Nachlesen, prüfen, übertragen.",
       introduction:
         "Wähle nach Aufgabe: nachlesen, ausprobieren, gemeinsam entscheiden oder selbst weiterbauen.",
+      boardLabel: "Kein Content-Labyrinth. Ein Werkzeug pro Absicht.",
+      boardAriaLabel: "Werkzeuge und Lernressourcen",
       resources: [
         {
           label: "Blog",
@@ -78,6 +83,9 @@ export const HOME_COPY = {
     },
     credibility: {
       overline: "Betriebsprinzipien",
+      headline: "Was hier nicht verhandelbar ist.",
+      introduction:
+        "Jede Oberfläche folgt denselben Regeln: offen zugänglich, zweisprachig, mit sichtbarer Herkunft und verantworteter Redaktion.",
       principles: [
         {
           label: "Zugang",
@@ -137,6 +145,9 @@ export const HOME_COPY = {
       headline: ["Four courses.", "One defined order."],
       introduction:
         "Start with safe use. Then test social effects, legal duties and reviewable working methods.",
+      routeSignal: "One path. Four reviewable outcomes.",
+      routeLabel: "Recommended foundation path",
+      lessonLabel: "lessons",
       deeperSummary: (count: number) =>
         `Plus ${count} technical courses, from data engineering to system design.`,
       viewAllCourses: "View all courses",
@@ -146,6 +157,8 @@ export const HOME_COPY = {
       headline: "Read, test, transfer.",
       introduction:
         "Choose by task: read, experiment, decide together or build on the source.",
+      boardLabel: "No content maze. One instrument for each intent.",
+      boardAriaLabel: "Tools and learning resources",
       resources: [
         {
           label: "Blog",
@@ -179,6 +192,9 @@ export const HOME_COPY = {
     },
     credibility: {
       overline: "Operating principles",
+      headline: "What is not negotiable here.",
+      introduction:
+        "Every surface follows the same rules: open access, complete bilingual editions, visible provenance and accountable editing.",
       principles: [
         {
           label: "Access",

@@ -14,7 +14,6 @@ describe("translated-content parity registry", () => {
       "/ai-native/fluency-test",
       "/ai-native/glossar",
       "/ai-native/verifizierung",
-      "/bekannte-grenzen",
       "/blog",
       "/blog/eu-ai-act-grundlagen",
       "/buecher",
@@ -61,16 +60,10 @@ describe("translated-content parity registry", () => {
       "/open-source",
       "/open-source/lizenzrichtlinie",
       "/open-source/tools/cv-engine",
-      "/ueber-die-plattform",
       "/ueber-mich",
       "/workshops",
       "/workshops/geschaeftsberichte-mit-ki-lesen",
       "/workshops/ki-prognosen-einschaetzen",
-      "/wie-ki-funktioniert",
-      "/wie-ki-funktioniert/lektion-1-vorhersage",
-      "/wie-ki-funktioniert/lektion-2-trainingsdaten",
-      "/wie-ki-funktioniert/lektion-3-halluzinationen",
-      "/wie-ki-funktioniert/lektion-4-grenzen",
     ]) {
       expect(contentLocalesForPath(path), path).toEqual(["de", "en"]);
       expect(hasEnglishContentParity(path), path).toBe(true);

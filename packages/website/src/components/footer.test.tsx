@@ -47,7 +47,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Kurse", "Praxis", "Wissen", "Plattform"]);
+    ).toEqual(["Kurse", "Praxis", "Blog", "Über mich"]);
     expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
       "href",
       "/kurse",
@@ -58,6 +58,14 @@ describe("Footer locale and information architecture", () => {
     expect(screen.getByRole("link", { name: "Technikkurse" })).toHaveAttribute(
       "href",
       "/kurse#tiefer-gehen",
+    );
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
+    expect(screen.getByRole("link", { name: "Über mich" })).toHaveAttribute(
+      "href",
+      "/ueber-mich",
     );
 
     for (const link of document.querySelectorAll<HTMLAnchorElement>(
@@ -77,7 +85,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Courses", "Practice", "Knowledge", "Platform"]);
+    ).toEqual(["Courses", "Practice", "Blog", "About me"]);
     expect(
       screen.queryByText(/Free courses, workshops, and open-source materials/),
     ).not.toBeInTheDocument();

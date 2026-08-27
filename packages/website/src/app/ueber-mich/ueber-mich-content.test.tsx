@@ -34,6 +34,11 @@ describe("<UeberMichContent>", () => {
     expect(
       container.querySelector("article > section:last-of-type"),
     ).toHaveAttribute("id", "kontakt");
+    expect(container.querySelector("[data-profile-bento]")).not.toBeNull();
+    expect(container.querySelector("[data-proof-ledger]")).not.toBeNull();
+    expect(container.querySelector("[data-proof-bento]")).not.toBeNull();
+    expect(container.querySelector("[data-editorial-bento]")).not.toBeNull();
+    expect(container.querySelectorAll("[data-link-preview]")).toHaveLength(4);
     expect(container.querySelector(".js-reveal")).toBeNull();
     expect(container.querySelector('[style*="opacity: 0"]')).toBeNull();
   });
@@ -70,8 +75,8 @@ describe("<UeberMichContent>", () => {
     render(<UeberMichContent locale="en" />);
 
     const links = [
-      ["Message me on LinkedIn", TIM_ENTITY.linkedInUrl],
-      ["Open GitHub profile", TIM_ENTITY.personalGithubUrl],
+      ["Message me on LinkedIn, opens in a new tab", TIM_ENTITY.linkedInUrl],
+      ["Open GitHub profile, opens in a new tab", TIM_ENTITY.personalGithubUrl],
     ] as const;
     for (const [name, href] of links) {
       const link = screen.getByRole("link", {
@@ -87,7 +92,9 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getAllByRole("link", { name: /Open GitHub profile/i }),
     ).toHaveLength(1);
-    const guide = screen.getByRole("link", { name: /CONTENT_GUIDE\.md/ });
+    const guide = screen.getByRole("link", {
+      name: "CONTENT_GUIDE.md, opens in a new tab",
+    });
     expect(guide).toHaveAttribute(
       "href",
       "https://github.com/loehrning-ai/platform/blob/main/CONTENT_GUIDE.md",
@@ -125,5 +132,24 @@ describe("<UeberMichContent>", () => {
     for (const employer of ["Apple", "Red Bull", "Meta"]) {
       expect(within(stations).getByText(employer)).toBeVisible();
     }
+  });
+
+  it("keeps profile facts concise without dropping the factual record", () => {
+    render(<UeberMichContent locale="en" />);
+
+    for (const fact of [
+      "Curator and developer",
+      "AI literacy · data work · technical practice",
+      "Free access · public sources",
+    ]) {
+      expect(screen.getByText(fact)).toBeVisible();
+    }
+    expect(
+      screen.getByText("Data quality, pipelines, and analytics systems."),
+    ).toBeVisible();
+    expect(screen.getByText(/Graduated with distinction/)).toBeVisible();
+    expect(
+      screen.getAllByRole("link", { name: /Journal article|Conference paper/ }),
+    ).toHaveLength(2);
   });
 });

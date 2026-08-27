@@ -5,7 +5,6 @@ const ROUTES = [
   "/blog",
   "/open-source",
   "/ueber-mich",
-  "/ueber-die-plattform",
   "/impressum",
   "/datenschutz",
 ] as const;
@@ -15,12 +14,9 @@ const SOCIAL_METADATA_ROUTES = [
   "/blog",
   "/buecher/ki-landschaft",
   "/buecher/ki-landschaft/02_methodik",
-  "/wie-ki-funktioniert/lektion-1-vorhersage",
   "/open-source/lizenzrichtlinie",
-  "/ueber-die-plattform",
   "/neuigkeiten",
   "/hilfe",
-  "/bekannte-grenzen",
   "/impressum",
   "/datenschutz",
 ] as const;
@@ -129,7 +125,6 @@ test("seo: sitemap.xml lists key public routes and omits retired/private routes"
     "/demos",
     "/open-source",
     "/ueber-mich",
-    "/ueber-die-plattform",
   ] as const) {
     expect(body).toMatch(new RegExp(`https://loehrning\\.ai${path}`));
   }
@@ -139,4 +134,7 @@ test("seo: sitemap.xml lists key public routes and omits retired/private routes"
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/ai-native\/kurs/);
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/blog\/digify/);
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/blog\/ki-beratungsluecke/);
+  expect(body).not.toMatch(/https:\/\/loehrning\.ai\/wie-ki-funktioniert/);
+  expect(body).not.toMatch(/https:\/\/loehrning\.ai\/bekannte-grenzen/);
+  expect(body).not.toMatch(/https:\/\/loehrning\.ai\/ueber-die-plattform/);
 });

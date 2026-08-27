@@ -753,8 +753,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 158225,
-      "sha256": "9eea0b0d66961a16effd77505e7a2cf8317717138d9ec721780fe54fca0ac7d4",
+      "sizeBytes": 168960,
+      "sha256": "e5d52b149131dcf794a1c060652b09c5a6e32b5db3632ea9c40b4a80cfa6ff0b",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -762,8 +762,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 109172,
-      "sha256": "5edae5e1156b20e9d677f6e80b3071d8fcdf9906aaf900351cb3fdd7a9d0c7e5",
+      "sizeBytes": 110589,
+      "sha256": "bee0fb4ad3b044780d3076b55bd69db5c8c0aa8035362ea89d3eaeca643e769f",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -780,8 +780,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 132024,
-      "sha256": "fb5c532b217bdae0b0cdd473dea5c44f88edefc5ce167e5680c0b04802acfd22",
+      "sizeBytes": 240549,
+      "sha256": "bb77ef3fb189a0005f93bf8c2c0d432a3df9572b62d6d674a4f8b505f9324dfe",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

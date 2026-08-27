@@ -2,8 +2,8 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /einstieg smoke + interaction (regression coverage). The zero-prerequisite,
- * login-free front-door: three daily-life KI examples, a primary CTA into
- * the KI check, and a quieter link into the "Wie KI funktioniert" lessons.
+ * login-free front-door: an immediate three-way orientation instrument,
+ * three daily-life KI examples, and a primary CTA into the KI check.
  * Assertions target roles and stable test IDs so a wording refresh stays
  * green while a real regression (missing examples, dead CTA, mobile
  * overflow) fails.
@@ -57,19 +57,30 @@ test.describe("/einstieg front-door", () => {
     ).toBeVisible();
   });
 
-  test("primary CTA leads into the KI check and the technical primer remains reachable", async ({
+  test("primary CTA leads into the KI check and the blog remains reachable", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+
+    const actions = page.locator("[data-orientation-actions]");
+    const definition = page.getByRole("heading", {
+      name: "Eine brauchbare Arbeitsdefinition",
+    });
+    await expect(actions).toBeVisible();
+    const actionBox = await actions.boundingBox();
+    const definitionBox = await definition.boundingBox();
+    expect(actionBox).not.toBeNull();
+    expect(definitionBox).not.toBeNull();
+    expect(actionBox!.y).toBeLessThan(definitionBox!.y);
 
     const primaryCta = page.getByRole("link", { name: "KI-Check starten" });
     await expect(primaryCta).toBeVisible();
     await expect(primaryCta).toHaveAttribute("href", "/ki-check");
 
-    const primerLink = page.getByRole("link", {
-      name: /40-minütige Einführung/,
+    const blogLink = page.getByRole("link", {
+      name: "Blog öffnen",
     });
-    await expect(primerLink).toHaveAttribute("href", "/wie-ki-funktioniert");
+    await expect(blogLink).toHaveAttribute("href", "/blog");
 
     await primaryCta.click();
     await expect(page).toHaveURL(/\/ki-check$/);

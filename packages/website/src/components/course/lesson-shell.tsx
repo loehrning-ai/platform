@@ -265,23 +265,39 @@ export function LessonShell({
   }, [navOpen]);
 
   return (
-    <div className="flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip">
+    <div
+      className="flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip bg-background"
+      data-lesson-shell
+      data-content-mode={contentMode}
+    >
       {/* Desktop sidebar */}
       <aside
+        aria-label={navLabel}
         data-lesson-shell-desktop-sidebar
+        data-lesson-shell-navigation
         data-collapsed={desktopSidebarCollapsed ? "true" : "false"}
         className={cn(
-          "hidden shrink-0 self-start overflow-hidden border-r border-border bg-background lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
+          "hidden shrink-0 self-start overflow-hidden border-r border-foreground bg-card lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
           desktopSidebarCollapsed ? "lg:w-14" : "lg:w-60",
         )}
       >
         <div className="flex h-full min-h-0 flex-col">
           <div
             className={cn(
-              "flex shrink-0 border-b border-border p-2",
-              desktopSidebarCollapsed ? "justify-center" : "justify-end",
+              "relative flex min-h-14 shrink-0 items-center gap-2 border-b border-foreground p-2",
+              desktopSidebarCollapsed ? "justify-center" : "justify-between",
             )}
           >
+            {desktopSidebarCollapsed ? (
+              <span
+                aria-hidden="true"
+                className="absolute left-0 h-8 w-0.5 bg-brand-orange"
+              />
+            ) : (
+              <span className="min-w-0 break-words pl-1 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
+                {navLabel}
+              </span>
+            )}
             <button
               type="button"
               onClick={toggleDesktopSidebar}
@@ -290,7 +306,7 @@ export function LessonShell({
               aria-label={
                 desktopSidebarCollapsed ? expandNavLabel : collapseNavLabel
               }
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors duration-150 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
             >
               {desktopSidebarCollapsed ? (
                 <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
@@ -334,16 +350,19 @@ export function LessonShell({
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-border bg-background pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-3 pt-[max(1rem,env(safe-area-inset-top))] lg:hidden"
+              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-foreground bg-background pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-3 pt-[max(0.75rem,env(safe-area-inset-top))] lg:hidden"
             >
-              <div className="mb-2 flex justify-end">
+              <div className="mb-3 flex min-h-14 items-center justify-between gap-3 border-b border-foreground pb-2">
+                <span className="min-w-0 break-words border-l-2 border-brand-orange pl-3 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
+                  {navLabel}
+                </span>
                 <button
                   type="button"
                   onClick={closeNav}
                   aria-expanded="true"
                   aria-controls={navId}
                   aria-label={closeNavLabel}
-                  className="inline-flex h-11 w-11 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-background text-foreground outline-none transition-colors duration-150 hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -358,8 +377,11 @@ export function LessonShell({
       <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 py-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
         <div
           data-lesson-shell-mobile-toolbar
-          className="sticky top-28 z-40 -mx-4 mb-4 flex h-12 items-center border-y border-border bg-background px-4 sm:-mx-5 sm:px-5 lg:hidden"
+          className="sticky top-28 z-40 -mx-4 mb-4 flex min-h-14 min-w-0 items-center justify-between gap-3 overflow-hidden border-y border-foreground bg-card px-4 sm:-mx-5 sm:px-5 lg:hidden"
         >
+          <span className="min-w-0 break-words border-l-2 border-brand-orange pl-3 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
+            {navLabel}
+          </span>
           <button
             ref={toggleButtonRef}
             type="button"
@@ -369,7 +391,7 @@ export function LessonShell({
             aria-expanded={navOpen}
             aria-controls={navId}
             aria-label={openNavLabel}
-            className={`flex h-11 w-11 items-center justify-center border border-foreground bg-brand-orange text-white outline-none transition-colors hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden ${
+            className={`flex h-11 w-11 shrink-0 items-center justify-center border border-foreground bg-brand-orange text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none lg:hidden ${
               navOpen ? "pointer-events-none invisible" : ""
             }`}
           >
@@ -379,8 +401,9 @@ export function LessonShell({
         <div
           data-lesson-shell-content
           data-content-mode={contentMode}
+          data-lesson-stage
           className={cn(
-            "mx-auto w-full min-w-0 overflow-x-clip",
+            "mx-auto w-full min-w-0 overflow-x-clip border-t-[3px] border-brand-orange pt-4 [&>*]:min-w-0",
             CONTENT_WIDTH_CLASS[contentMode],
           )}
         >

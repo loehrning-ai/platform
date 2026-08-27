@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
 import sitemap from "../sitemap";
-import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
 import { getBookChapterList } from "@/lib/book-reader-content";
@@ -35,12 +34,10 @@ describe("sitemap()", () => {
   it("returns only public indexable routes", () => {
     // Sitemap composition (public-content contract):
     //   every non-dynamic public-indexable contract entry
-    //   + WIE_KI_LEKTIONEN.length individual lektion routes
     //   + catalog detail pages (books, published book chapters, demos, workshops)
     //   + every published open-source artifact (tools, projects, and videos)
     //     from the canonical registry
     //   + BLOG_POSTS.length (manifest-driven)
-    const wieKiLektionCount = WIE_KI_LEKTIONEN.length; // individual lektion routes
     const detailPageCount =
       books.length +
       publishedBookChapters.length +
@@ -54,14 +51,13 @@ describe("sitemap()", () => {
     );
     expect(germanCanonicalEntries.length).toBe(
       expectedStatic +
-        wieKiLektionCount +
         detailPageCount +
         BLOG_POSTS.length +
         OPEN_SOURCE_ARTIFACTS.length,
     );
-    expect(result.some((e) => e.url.endsWith("/ueber-die-plattform"))).toBe(true);
+    expect(result.some((e) => e.url.endsWith("/ueber-die-plattform"))).toBe(false);
     expect(result.some((e) => e.url.endsWith("/einstieg"))).toBe(true);
-    expect(result.some((e) => e.url.endsWith("/wie-ki-funktioniert"))).toBe(true);
+    expect(result.some((e) => e.url.endsWith("/wie-ki-funktioniert"))).toBe(false);
   });
 
   it("emits reciprocal locale sitemap records only for reviewed English routes", () => {
@@ -91,14 +87,18 @@ describe("sitemap()", () => {
     }
   });
 
-  it("includes /ki-check, /einstieg, and /wie-ki-funktioniert as indexable public routes", () => {
+  it("includes maintained entry routes and excludes retired explainers", () => {
     const urls = result.map((e) => e.url);
     expect(urls).toContain("https://loehrning.ai/ki-check");
     expect(urls).not.toContain("https://loehrning.ai/glossar");
     expect(urls).toContain("https://loehrning.ai/einstieg");
-    expect(urls).toContain("https://loehrning.ai/wie-ki-funktioniert");
-    for (const l of WIE_KI_LEKTIONEN) {
-      expect(urls).toContain(`https://loehrning.ai/wie-ki-funktioniert/${l.id}`);
+    for (const retired of [
+      "/wie-ki-funktioniert",
+      "/wie-ki-funktioniert/lektion-1-vorhersage",
+      "/bekannte-grenzen",
+      "/ueber-die-plattform",
+    ]) {
+      expect(urls).not.toContain(`https://loehrning.ai${retired}`);
     }
   });
 

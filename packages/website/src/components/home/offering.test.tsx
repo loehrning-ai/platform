@@ -15,7 +15,7 @@ describe("Offering section", () => {
     expect(screen.getByText(/Eine klare Reihenfolge/)).toBeInTheDocument();
   });
 
-  it("renders exactly the four spine courses as a compact ordered route", () => {
+  it("renders exactly the four spine courses as a visual ordered route", () => {
     render(<Offering />);
     expect(SPINE).toHaveLength(4);
     expect(screen.getByTestId("foundation-route").children).toHaveLength(4);
@@ -30,10 +30,13 @@ describe("Offering section", () => {
     expect(screen.getByTestId("kurse-section")).toBeInTheDocument();
   });
 
-  it("removes duplicated persona shortcuts and cover imagery", () => {
+  it("removes duplicated persona shortcuts and gives every route step owned artwork", () => {
     render(<Offering />);
     expect(screen.queryByTestId("persona-filter")).not.toBeInTheDocument();
-    expect(screen.queryAllByRole("img")).toHaveLength(0);
+    expect(document.querySelectorAll("img")).toHaveLength(4);
+    expect(
+      screen.getByRole("list", { name: "Empfohlener Grundlagenpfad" }),
+    ).toBeInTheDocument();
   });
 
   it("routes technical depth through the single full-atlas action", () => {

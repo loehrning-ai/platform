@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Locale } from "@/lib/i18n/locale";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 
@@ -42,27 +43,28 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
 
   return (
     <section
-      className="border-t border-border py-12"
+      className="border-t border-border py-8"
       aria-label={copy.ariaLabel}
+      data-employer-proof
     >
-      <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(13rem,0.34fr)_minmax(0,1fr)] lg:items-start lg:gap-12 lg:px-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-5 px-4 sm:px-6 lg:grid-cols-[minmax(14rem,0.46fr)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-8">
         <div className="min-w-0">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
           </p>
-          <h2 className="mt-3 text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground">
+          <h2 className="mt-2 text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground">
             {copy.title}
           </h2>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
             {copy.notice}
           </p>
         </div>
 
-        <ul className="grid min-w-0 gap-px overflow-hidden border border-border bg-border sm:grid-cols-3">
+        <ul className="grid min-w-0 gap-px border border-border bg-border sm:grid-cols-3">
           {STATIONS.map((s) => (
             <li
               key={s.name}
-              className="flex min-h-32 min-w-0 flex-col items-center justify-center gap-4 bg-background px-5 py-6"
+              className="group flex min-h-24 min-w-0 items-center justify-center gap-4 bg-background px-4 py-4 transition-colors hover:bg-card"
             >
               {"mark" in s ? (
                 <svg
@@ -77,15 +79,12 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
                   <path d={s.mark.path} />
                 </svg>
               ) : (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
+                <Image
                   src={s.src}
                   alt=""
                   aria-hidden="true"
                   width={s.width}
                   height={s.height}
-                  loading="lazy"
-                  decoding="async"
                   className={`${s.size} max-w-full object-contain opacity-90 grayscale`}
                 />
               )}

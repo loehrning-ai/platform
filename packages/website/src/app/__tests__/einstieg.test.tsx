@@ -42,9 +42,31 @@ describe("/einstieg locale content", () => {
       .getByRole("heading", { level: 3, name: "KI-Check" })
       .closest("article");
     expect(primaryCard).not.toBeNull();
+    expect(primaryCard).toHaveClass("dark-section", "bg-background");
+    expect(primaryCard?.querySelector('a[href="/ki-check"]')).not.toBeNull();
+  });
+
+  it("puts the choose-and-act instrument before the retained orientation evidence", async () => {
+    await renderPage("de");
+
+    const actions = document.querySelector<HTMLElement>(
+      "[data-orientation-actions]",
+    );
+    const definition = screen
+      .getByRole("heading", { name: "Eine brauchbare Arbeitsdefinition" })
+      .closest("section");
+    expect(actions).not.toBeNull();
+    expect(definition).not.toBeNull();
     expect(
-      primaryCard?.querySelectorAll(".text-foreground").length,
-    ).toBeGreaterThan(2);
+      actions!.compareDocumentPosition(definition!) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      document.querySelectorAll("[data-orientation-checklist] dd"),
+    ).toHaveLength(3);
+    expect(
+      document.querySelector("[data-orientation-bento]"),
+    ).toHaveTextContent("Ein plausibles Ergebnis kann falsch sein.");
   });
 
   it("renders reviewed English copy without German learner UI", async () => {
@@ -77,7 +99,7 @@ describe("/einstieg locale content", () => {
         "/en/ueber-mich",
         "/en/ki-check",
         "/en/ki-fuehrerschein",
-        "/en/wie-ki-funktioniert",
+        "/en/blog",
       ]),
     );
     expect(internalHrefs.every((href) => href.startsWith("/en/"))).toBe(true);

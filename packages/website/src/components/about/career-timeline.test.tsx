@@ -14,7 +14,13 @@ describe("<CareerTimeline>", () => {
     });
     expect(within(timeline).getAllByRole("listitem")).toHaveLength(5);
 
-    for (const company of ["Amazon", "Apple", "Red Bull", "Meta", "loehrning.ai"]) {
+    for (const company of [
+      "Amazon",
+      "Apple",
+      "Red Bull",
+      "Meta",
+      "loehrning.ai",
+    ]) {
       expect(within(timeline).getAllByText(company)).toHaveLength(1);
     }
     for (const period of [
@@ -27,7 +33,8 @@ describe("<CareerTimeline>", () => {
       expect(within(timeline).getByText(period)).toBeVisible();
     }
     expect(within(timeline).getByText("Aktuell")).toBeVisible();
-    expect(timeline).toHaveClass("sm:grid-cols-2", "xl:grid-cols-5");
+    expect(timeline).toHaveClass("divide-y", "border-y");
+    expect(timeline.closest("section")).toHaveAttribute("data-proof-ledger");
   });
 
   it("renders complete English copy while preserving employers and chronology", () => {
@@ -40,7 +47,11 @@ describe("<CareerTimeline>", () => {
       name: "Chronology of professional roles",
     });
     expect(within(timeline).getByText("Working student")).toBeVisible();
-    expect(within(timeline).getByText("Data quality, pipelines, and analytics systems.")).toBeVisible();
+    expect(
+      within(timeline).getByText(
+        "Data quality, pipelines, and analytics systems.",
+      ),
+    ).toBeVisible();
     expect(within(timeline).getByText("Current")).toBeVisible();
     expect(within(timeline).queryByText("Werkstudent")).not.toBeInTheDocument();
     expect(within(timeline).queryByText("Aktuell")).not.toBeInTheDocument();
@@ -49,7 +60,13 @@ describe("<CareerTimeline>", () => {
   it("marks employer names as non-translatable and keeps all content static", () => {
     const { container } = render(<CareerTimeline locale="en" />);
 
-    for (const company of ["Amazon", "Apple", "Red Bull", "Meta", "loehrning.ai"]) {
+    for (const company of [
+      "Amazon",
+      "Apple",
+      "Red Bull",
+      "Meta",
+      "loehrning.ai",
+    ]) {
       expect(screen.getByText(company)).toHaveAttribute("translate", "no");
     }
     expect(container.querySelector(".js-reveal")).toBeNull();

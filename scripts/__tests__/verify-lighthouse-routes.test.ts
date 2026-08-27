@@ -122,10 +122,10 @@ describe("Lighthouse route contract", () => {
     });
     expect(summary.configuredRoutes).toBeGreaterThan(25);
     expect(summary.staticRoutes).toBeGreaterThan(20);
-    // 7 dynamic public-indexable patterns: /wie-ki-funktioniert/:lektionId,
-    // /blog/:slug, /buecher/:slug, /demos/:slug, /workshops/:slug,
+    // 6 dynamic public-indexable patterns: /blog/:slug, /buecher/:slug,
+    // /demos/:slug, /workshops/:slug,
     // /open-source/:kind/:slug, /buecher/:slug/:chapter.
-    expect(summary.dynamicPatterns).toBe(7);
+    expect(summary.dynamicPatterns).toBe(6);
   });
 
   it("fails when a static public page is omitted", async () => {
@@ -215,7 +215,6 @@ describe("Lighthouse route contract", () => {
     ]);
     const axeSources = `${mainA11y}\n${readerA11y}`;
     for (const route of [
-      "/wie-ki-funktioniert/lektion-1-vorhersage",
       "/kurse/open-source/data-engineering-fundamentals",
       "/blog/eu-ai-act-grundlagen",
       "/buecher/ki-landschaft",

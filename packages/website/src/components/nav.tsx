@@ -10,7 +10,14 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import {
+  m,
+  AnimatePresence,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
@@ -57,14 +64,6 @@ const praxisNavItems: readonly NavItem[] = [
   { href: "/demos", label: "appliedExamples" },
 ];
 
-const wissenNavItems: readonly NavItem[] = [
-  { href: "/wie-ki-funktioniert", label: "howAiWorks" },
-  { href: "/blog", label: "blog" },
-  { href: "/bekannte-grenzen", label: "knownLimits" },
-  { href: "/ueber-die-plattform", label: "aboutPlatform" },
-  { href: "/ueber-mich", label: "aboutTim" },
-];
-
 const lernenPaths = [
   "/kurse",
   "/ki-fuehrerschein",
@@ -76,17 +75,13 @@ const lernenPaths = [
 ];
 
 const praxisPaths = ["/demos", "/workshops"];
-const wissenPaths = [
-  "/wie-ki-funktioniert",
-  "/blog",
-  "/bekannte-grenzen",
-  "/ueber-die-plattform",
-  "/ueber-mich",
-];
+const primaryLinks = [
+  { href: "/blog", label: "blog" },
+  { href: "/open-source", label: "openSource" },
+  { href: "/ueber-mich", label: "aboutTim" },
+] as const;
 
-const primaryLinks = [{ href: "/open-source", label: "openSource" }] as const;
-
-type DropdownId = "lernen" | "praxis" | "wissen" | null;
+type DropdownId = "lernen" | "praxis" | null;
 
 function NoScriptMobileGroup({
   label,
@@ -120,27 +115,39 @@ function NoScriptMobileGroup({
   );
 }
 
-/* ─── Stable brand mark ──────────────────────────────────────────────────── */
+/* ─── Scroll-driven brand mark ───────────────────────────────────────────── */
 
 const LOCKUP_FONT_STACK =
   '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 function LogoWordmark({
+  scrollY,
   locale,
   homeLabel,
 }: {
+  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
 }) {
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
+  const leadingLOpacity = useTransform(scrollY, [40, 120], [1, 0]);
+  const leadingLScale = useTransform(scrollY, [40, 120], [1, 0]);
+  const remainderOffset = useTransform(scrollY, [40, 120], [0, -22]);
+
   return (
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
       className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <div
+      <m.div
+        data-logo-mark
         className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center border border-[#0B0908] bg-[#C4431A]"
         aria-hidden="true"
+        style={{
+          rotate: prefersReducedMotion ? 0 : iconRotate,
+        }}
       >
         <span
           className="text-lg leading-none text-background"
@@ -151,18 +158,35 @@ function LogoWordmark({
         >
           L
         </span>
-      </div>
+      </m.div>
 
       <span
+        data-logo-wordmark
         aria-hidden="true"
-        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:block"
+        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:flex"
         style={{
           letterSpacing: "-0.035em",
           fontFamily: LOCKUP_FONT_STACK,
           fontWeight: 900,
         }}
       >
-        LOEHRNING<span className="text-brand-orange">.AI</span>
+        <m.span
+          data-logo-wordmark-leading-l
+          className="inline-block w-[14px] origin-right overflow-hidden"
+          style={{
+            opacity: prefersReducedMotion ? 1 : leadingLOpacity,
+            scaleX: prefersReducedMotion ? 1 : leadingLScale,
+          }}
+        >
+          L
+        </m.span>
+        <m.span
+          data-logo-wordmark-remainder
+          className="inline-block"
+          style={{ x: prefersReducedMotion ? 0 : remainderOffset }}
+        >
+          OEHRNING<span className="text-brand-orange">.AI</span>
+        </m.span>
       </span>
       <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
@@ -180,6 +204,7 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
+  const { scrollY } = useScroll();
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const restoreMobileToggleAfterExit = useRef(false);
@@ -208,9 +233,6 @@ export function Nav() {
     (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
   const isPraxisActive = praxisPaths.some(
-    (p) => routePathname === p || routePathname.startsWith(p + "/"),
-  );
-  const isWissenActive = wissenPaths.some(
     (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
 
@@ -303,19 +325,15 @@ export function Nav() {
   const lernenMenuRef = useRef<HTMLDivElement>(null);
   const praxisTriggerRef = useRef<HTMLButtonElement>(null);
   const praxisMenuRef = useRef<HTMLDivElement>(null);
-  const wissenTriggerRef = useRef<HTMLButtonElement>(null);
-  const wissenMenuRef = useRef<HTMLDivElement>(null);
   const pendingMenuFocus = useRef<"first" | "last" | null>(null);
 
   function menuRefFor(id: Exclude<DropdownId, null>) {
     if (id === "praxis") return praxisMenuRef;
-    if (id === "wissen") return wissenMenuRef;
     return lernenMenuRef;
   }
 
   function triggerRefFor(id: Exclude<DropdownId, null>) {
     if (id === "praxis") return praxisTriggerRef;
-    if (id === "wissen") return wissenTriggerRef;
     return lernenTriggerRef;
   }
 
@@ -516,7 +534,7 @@ export function Nav() {
         data-nav-header-row
         className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <LogoWordmark locale={locale} homeLabel={copy.home} />
+        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
@@ -536,14 +554,6 @@ export function Nav() {
             "praxis-nav-menu",
             isPraxisActive,
           )}
-          {renderDropdown(
-            "wissen",
-            copy.knowledge,
-            wissenNavItems,
-            "wissen-nav-menu",
-            isWissenActive,
-          )}
-
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
@@ -622,12 +632,6 @@ export function Nav() {
             locale={locale}
             copy={copy}
           />
-          <NoScriptMobileGroup
-            label={copy.knowledge}
-            items={wissenNavItems}
-            locale={locale}
-            copy={copy}
-          />
         </div>
         <div className="mt-3 flex flex-col border-t border-border pt-2">
           {primaryLinks.map((link) => (
@@ -692,8 +696,6 @@ export function Nav() {
               </div>
               {renderMobileGroup(copy.learning, lernenNavItems)}
               {renderMobileGroup(copy.practice, praxisNavItems)}
-              {renderMobileGroup(copy.knowledge, wissenNavItems)}
-
               <div className="flex flex-col border-t border-border pt-2">
                 {primaryLinks.map((link) => (
                   <Link

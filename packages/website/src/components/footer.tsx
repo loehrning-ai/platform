@@ -13,10 +13,7 @@ type FooterLinkKey =
   | "workshops"
   | "appliedExamples"
   | "openSource"
-  | "howAiWorks"
   | "blog"
-  | "knownLimits"
-  | "aboutPlatform"
   | "aboutTim"
   | "help"
   | "feedback"
@@ -24,7 +21,7 @@ type FooterLinkKey =
   | "privacy"
   | "licensePolicy";
 
-type FooterGroupKey = "courses" | "practice" | "knowledge" | "platform";
+type FooterGroupKey = "courses" | "practice" | "blog" | "about";
 
 interface FooterCopy {
   readonly sectionLabel: string;
@@ -47,8 +44,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     groups: {
       courses: "Kurse",
       practice: "Praxis",
-      knowledge: "Wissen",
-      platform: "Plattform",
+      blog: "Blog",
+      about: "Über mich",
     },
     links: {
       allCourses: "Alle Kurse",
@@ -58,11 +55,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
       workshops: "Workshops",
       appliedExamples: "Praxisbeispiele",
       openSource: "Open Source",
-      howAiWorks: "Wie KI funktioniert",
       blog: "Blog",
-      knownLimits: "Bekannte Grenzen",
-      aboutPlatform: "Über die Plattform",
-      aboutTim: "Über Tim Löhr",
+      aboutTim: "Über mich",
       help: "Hilfe",
       feedback: "Rückmeldung",
       imprint: "Impressum",
@@ -83,8 +77,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     groups: {
       courses: "Courses",
       practice: "Practice",
-      knowledge: "Knowledge",
-      platform: "Platform",
+      blog: "Blog",
+      about: "About me",
     },
     links: {
       allCourses: "All courses",
@@ -94,11 +88,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
       workshops: "Workshops",
       appliedExamples: "Applied examples",
       openSource: "Open Source",
-      howAiWorks: "How AI works",
       blog: "Blog",
-      knownLimits: "Known limits",
-      aboutPlatform: "About the platform",
-      aboutTim: "About Tim Löhr",
+      aboutTim: "About me",
       help: "Help",
       feedback: "Feedback",
       imprint: "Legal notice",
@@ -140,17 +131,12 @@ const FOOTER_GROUPS: readonly {
     ],
   },
   {
-    id: "knowledge",
-    links: [
-      { href: "/wie-ki-funktioniert", key: "howAiWorks" },
-      { href: "/blog", key: "blog" },
-      { href: "/bekannte-grenzen", key: "knownLimits" },
-    ],
+    id: "blog",
+    links: [{ href: "/blog", key: "blog" }],
   },
   {
-    id: "platform",
+    id: "about",
     links: [
-      { href: "/ueber-die-plattform", key: "aboutPlatform" },
       { href: "/ueber-mich", key: "aboutTim" },
       { href: "/hilfe", key: "help" },
       { href: "/feedback", key: "feedback" },

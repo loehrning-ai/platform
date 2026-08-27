@@ -24,6 +24,7 @@ describe("<Credentials>", () => {
     expect(screen.getByText(/Abschluss mit Auszeichnung/)).toBeVisible();
     expect(screen.getByText(/Oxford und Innovation Management/)).toBeVisible();
     expect(container.querySelectorAll("article")).toHaveLength(3);
+    expect(container.querySelector("[data-proof-bento]")).not.toBeNull();
   });
 
   it("renders research evidence only on the research card", () => {

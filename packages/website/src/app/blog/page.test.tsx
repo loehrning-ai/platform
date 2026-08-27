@@ -87,6 +87,32 @@ describe("BlogIndexPage", () => {
     expect(document.querySelector(".runline__track")).toBeNull();
   });
 
+  it("uses one useful editorial bento and a persistent article preview", async () => {
+    await renderPage("de");
+
+    expect(document.querySelector("[data-editorial-bento]")).not.toBeNull();
+    expect(document.querySelectorAll("[data-link-preview]")).toHaveLength(
+      BLOG_POSTS.length,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Behauptungen mit Belegspur." }),
+    ).toBeVisible();
+    expect(screen.getByText("Primärquellen")).toBeVisible();
+    expect(screen.getByText("Prüfdatum")).toBeVisible();
+    expect(screen.getByText("Kein Redaktionsplan.")).toBeVisible();
+  });
+
+  it("localizes editorial support panels without German leakage", async () => {
+    await renderPage("en");
+
+    expect(
+      screen.getByRole("heading", { name: "Claims with an evidence trail." }),
+    ).toBeVisible();
+    expect(screen.getByText("Primary sources")).toBeVisible();
+    expect(screen.getByText("No publishing quota.")).toBeVisible();
+    expect(screen.queryByText("Prüfdatum")).not.toBeInTheDocument();
+  });
+
   it.each([
     ["de", "/blog", "de_DE"],
     ["en", "/en/blog", "en_GB"],

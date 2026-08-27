@@ -88,6 +88,8 @@ export const DEMOS_PAGE_COPY = {
       next: "Weiter",
     },
     shell: {
+      instrument: "Interaktives Labor",
+      sandbox: "Übungsmodus · kein Produktivsystem",
       loading: "Praxisbeispiel wird geladen…",
     },
     share: {
@@ -111,7 +113,8 @@ export const DEMOS_PAGE_COPY = {
     og: {
       alt: "loehrning.ai KI-Praxisbeispiel",
       fallbackTitle: "KI-Praxisbeispiele · loehrning.ai",
-      fallbackSubtitle: "Zwölf interaktive Beispiele mit offengelegten Annahmen.",
+      fallbackSubtitle:
+        "Zwölf interaktive Beispiele mit offengelegten Annahmen.",
       gallery: "Praxislabor",
       open: "Praxisbeispiel öffnen →",
     },
@@ -198,6 +201,8 @@ export const DEMOS_PAGE_COPY = {
       next: "Next",
     },
     shell: {
+      instrument: "Interactive lab",
+      sandbox: "Practice mode · no production system",
       loading: "Loading practice example…",
     },
     share: {
@@ -220,7 +225,8 @@ export const DEMOS_PAGE_COPY = {
     og: {
       alt: "loehrning.ai interactive AI example",
       fallbackTitle: "Interactive AI examples · loehrning.ai",
-      fallbackSubtitle: "Twelve interactive examples with explicit assumptions.",
+      fallbackSubtitle:
+        "Twelve interactive examples with explicit assumptions.",
       gallery: "Practice lab",
       open: "Open practice example →",
     },

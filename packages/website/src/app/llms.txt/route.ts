@@ -23,11 +23,6 @@ const PUBLIC_PAGES: readonly PublicPage[] = [
   { path: "/", de: "Startseite", en: "Home" },
   { path: "/kurse", de: "Kursübersicht", en: "Course catalog" },
   { path: "/einstieg", de: "Einstieg", en: "Introduction" },
-  {
-    path: "/wie-ki-funktioniert",
-    de: "Wie KI funktioniert",
-    en: "How AI works",
-  },
   { path: "/ki-check", de: "KI-Check", en: "AI self-check" },
   { path: "/buecher", de: "Bücher", en: "Books" },
   { path: "/demos", de: "Demos", en: "Demos" },
@@ -43,16 +38,6 @@ const PUBLIC_PAGES: readonly PublicPage[] = [
     path: "/ueber-mich",
     de: `Profil: ${TIM_ENTITY.displayName}`,
     en: `Profile: ${TIM_ENTITY.displayName}`,
-  },
-  {
-    path: "/ueber-die-plattform",
-    de: "Über die Plattform",
-    en: "About the platform",
-  },
-  {
-    path: "/bekannte-grenzen",
-    de: "Bekannte Grenzen",
-    en: "Known limitations",
   },
   { path: "/hilfe", de: "Hilfe", en: "Help" },
   { path: "/impressum", de: "Impressum", en: "Legal notice" },

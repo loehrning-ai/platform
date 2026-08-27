@@ -6,57 +6,97 @@ export const OPEN_SOURCE_PAGE_COPY = {
     metadata: {
       title: "Open Source",
       description:
-        "Veröffentlichte Werkzeuge von loehrning.ai mit öffentlichem Repository, festem Quellstand, Lizenz und Betriebsanleitung.",
+        "Offene Werkzeuge von loehrning.ai mit echten Produktansichten, öffentlichem Quellstand, Lizenz und Betriebsanleitung.",
       socialDescription:
-        "Veröffentlichte Werkzeuge mit öffentlichem Repository, festem Commit, Lizenz und Anleitung.",
+        "Offene Werkzeuge mit echten Ansichten, öffentlichem Quellstand und klaren Betriebsgrenzen.",
     },
-    eyebrow: "Open Source",
-    title: "Veröffentlichte Werkzeuge. Quellstand prüfbar.",
-    introductionPrefix:
-      "Hier stehen veröffentlichte Artefakte der GitHub-Organisation",
-    introductionSuffix:
-      ". Jeder Eintrag nennt Repository, unveränderlichen Commit, Lizenz, Installationsweg, Datenfluss und bekannte Grenzen. Andere Repositories der Organisation sind nicht automatisch veröffentlichte Plattform-Artefakte.",
-    coursesPrefix: "Die technischen Lernkurse findest du unter",
+    eyebrow: "Open Source · selbst betreibbar",
+    title: "Offene Werkzeuge. Ohne Blackbox.",
+    introduction:
+      "Echte Ansichten zuerst, Quellstand und Grenzen direkt daneben. Prüfe, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
     externalTab: ", öffnet in neuem Tab",
-    publicationStandard: "Veröffentlichungsstandard",
-    publicationStandardBody:
-      "Ein Eintrag erscheint hier erst mit vier Nachweisen: einem öffentlichen GitHub-Repository, einem unveränderlichen Commit als geprüftem Quellstand, einer eindeutigen Lizenz mit lokal gespeicherter Kopie und einer Anleitung für Installation, Verwendung und Integration. Unvollständige Einträge werden nicht gelistet.",
-    codeAndEditorial: "Code und redaktionelle Inhalte",
-    platformCode: "Plattform-Code auf GitHub",
-    codeAndEditorialBefore: "Der",
-    codeAndEditorialMiddle:
-      "steht unter MIT. Sichtbarer Quelltext bedeutet nicht automatisch freie Wiederverwendung aller Lerntexte, Marken- oder Medieninhalte. Die verbindliche Zuordnung steht in der",
+    showcase: {
+      heading: "Jetzt veröffentlicht",
+      entryCount: (count: number) =>
+        count === 1 ? "1 offenes Werkzeug" : `${count} offene Werkzeuge`,
+      detail: "Detail ansehen",
+      source: "Quellcode",
+      previewGroup: "Produktansichten auswählen",
+      previewCounter: (current: number, total: number) =>
+        `Ansicht ${current}/${total}`,
+      previewSelect: (label: string) => `${label} anzeigen`,
+      previewLabels: ["Editor", "Formular", "YAML", "Darstellung", "PDF"],
+      facts: {
+        kind: "Typ",
+        delivery: "Betrieb",
+        license: "Lizenz",
+        status: "Status",
+      },
+      delivery: {
+        "source-only": "Lokal",
+        "internal-route": "Im Browser",
+        "external-service": "Externer Dienst",
+      },
+      evidenceSummary: "Quellstand und Veröffentlichung",
+      pinnedSource: "Gepinnter Quellstand",
+      publicationStandard:
+        "Gelistet erst mit öffentlichem Repository, unveränderlichem Commit, eindeutiger Lizenz und vollständiger Betriebsanleitung.",
+      licensePolicy: "Lizenzrichtlinie",
+    },
+    footnoteTitle: "Offen heißt nachvollziehbar.",
+    footnote:
+      "Code, Lerntexte und Medien haben getrennte Rechte. Die Zuordnung bleibt am Artefakt sichtbar; technische Lernkurse stehen im Kursatlas.",
+    platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
-    codeAndEditorialAfter:
-      "und in den Lizenzangaben jedes veröffentlichten Eintrags.",
+    courses: "Zu den technischen Kursen",
   },
   en: {
     metadata: {
       title: "Open source",
       description:
-        "Published loehrning.ai tools with a public repository, pinned source revision, license, and operating guide.",
+        "Open loehrning.ai tools with real product views, a public source revision, license, and operating guide.",
       socialDescription:
-        "Published tools with a public repository, pinned commit, license, and operating guide.",
+        "Open tools with real product views, public source revisions, and clear operating boundaries.",
     },
-    eyebrow: "Open source",
-    title: "Published tools. Verifiable source.",
-    introductionPrefix:
-      "This directory lists published artifacts from the GitHub organisation",
-    introductionSuffix:
-      ". Every entry identifies its repository, immutable commit, license, installation path, data flow, and known limits. Other repositories in the organisation are not automatically published platform artifacts.",
-    coursesPrefix: "Technical learning courses are listed under",
+    eyebrow: "Open source · self-hosted",
+    title: "Open tools. No black box.",
+    introduction:
+      "Real product views first, with source and limits beside them. Inspect what a tool does before running it on your machine.",
     externalTab: ", opens in a new tab",
-    publicationStandard: "Publication standard",
-    publicationStandardBody:
-      "An entry appears here only after four checks: a public GitHub repository, an immutable commit as the reviewed source revision, an unambiguous license with a locally stored copy, and a guide covering installation, use, and integration. Incomplete entries are not listed.",
-    codeAndEditorial: "Code and editorial content",
-    platformCode: "Platform code on GitHub",
-    codeAndEditorialBefore: "The",
-    codeAndEditorialMiddle:
-      "is licensed under MIT. Visible source code does not automatically permit reuse of all course text, trademarks, or media. The binding allocation is defined in the",
-    licensePolicy: "license policy",
-    codeAndEditorialAfter:
-      "and in the license information for each published entry.",
+    showcase: {
+      heading: "Published now",
+      entryCount: (count: number) =>
+        count === 1 ? "1 open tool" : `${count} open tools`,
+      detail: "View details",
+      source: "Source",
+      previewGroup: "Choose a product view",
+      previewCounter: (current: number, total: number) =>
+        `View ${current}/${total}`,
+      previewSelect: (label: string) => `Show ${label}`,
+      previewLabels: ["Editor", "Form", "YAML", "Display", "PDF"],
+      facts: {
+        kind: "Type",
+        delivery: "Run",
+        license: "License",
+        status: "Status",
+      },
+      delivery: {
+        "source-only": "Local",
+        "internal-route": "In browser",
+        "external-service": "External service",
+      },
+      evidenceSummary: "Source and publication",
+      pinnedSource: "Pinned source revision",
+      publicationStandard:
+        "Listed only with a public repository, immutable commit, unambiguous license, and complete operating guide.",
+      licensePolicy: "License policy",
+    },
+    footnoteTitle: "Open means inspectable.",
+    footnote:
+      "Code, learning text, and media carry separate rights. The allocation stays visible on each artifact; technical courses remain in the course atlas.",
+    platformCode: "Platform source",
+    licensePolicy: "License policy",
+    courses: "Browse technical courses",
   },
 } as const;
 

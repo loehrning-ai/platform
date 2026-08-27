@@ -24,6 +24,25 @@ vi.mock("@/components/demos/demo-grid", () => ({
 import DemosPage from "./page";
 
 describe("DemosPage URL filter boundary", () => {
+  it("renders the lab atlas cover, inspection rail, and reviewed facts", async () => {
+    const { container } = render(
+      await DemosPage({ searchParams: Promise.resolve({}) }),
+    );
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("complementary", { name: "Was hier geprüft wird" }),
+    ).toBeVisible();
+    expect(screen.getByText("Eingaben und Annahmen")).toBeVisible();
+    expect(screen.getByText("12", { exact: true })).toBeVisible();
+    expect(container.querySelector("[data-demo-atlas-hero]")).toBeTruthy();
+  });
+
   it("passes allowlisted URL filters to the server-rendered grid", async () => {
     render(
       await DemosPage({

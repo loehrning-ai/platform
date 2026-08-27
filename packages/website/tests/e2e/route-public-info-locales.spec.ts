@@ -14,12 +14,6 @@ const ROUTES = [
     enHeading: "Help and frequently asked questions",
   },
   {
-    de: "/bekannte-grenzen",
-    en: "/en/bekannte-grenzen",
-    deHeading: "Bekannte Grenzen",
-    enHeading: "Known limitations",
-  },
-  {
     de: "/neuigkeiten",
     en: "/en/neuigkeiten",
     deHeading: "Was ist neu",
@@ -30,13 +24,6 @@ const ROUTES = [
     en: "/en/feedback",
     deHeading: "Rückmeldung zu Fehlern oder Unklarheiten",
     enHeading: "Report an error or unclear passage",
-  },
-  {
-    de: "/ueber-die-plattform",
-    en: "/en/ueber-die-plattform",
-    deHeading:
-      "Öffentliche Inhalte. Kontogebundene Zustände. Belegte Grenzen.",
-    enHeading: "Public content. Account-bound state. Documented limits.",
   },
 ] as const;
 

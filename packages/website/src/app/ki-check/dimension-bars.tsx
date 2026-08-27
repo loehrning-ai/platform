@@ -13,24 +13,25 @@ export function DimensionBars({
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <ul className="border-y border-border">
+    <ul className="border border-border" data-capability-ledger>
       {dimensions.map((dim) => {
         const Icon = dimensionIcon(dim.iconName);
         const tone = `var(${dim.ratingToneVar})`;
         return (
           <li
             key={dim.id}
-            className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
+            className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border p-3 last:border-b-0 sm:p-4"
+            data-capability-row
           >
             <span className="flex h-10 w-10 items-center justify-center border border-border text-foreground">
               <Icon className="h-5 w-5" aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="truncate text-sm font-semibold text-foreground">
+              <div className="grid min-w-0 gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-3">
+                <span className="min-w-0 break-words text-sm font-semibold text-foreground">
                   {dim.name}
                 </span>
-                <span className="shrink-0 text-xs text-muted-foreground">
+                <span className="break-words text-xs text-muted-foreground sm:shrink-0 sm:text-right">
                   <span className="font-semibold text-foreground">
                     {Math.round(dim.normalizedScore)}
                   </span>
@@ -47,10 +48,10 @@ export function DimensionBars({
                 aria-valuemax={100}
               >
                 <m.div
-                  className="h-full"
+                  className="h-full w-full origin-left"
                   style={{ backgroundColor: tone }}
-                  initial={prefersReducedMotion ? false : { width: 0 }}
-                  animate={{ width: `${dim.normalizedScore}%` }}
+                  initial={prefersReducedMotion ? false : { scaleX: 0 }}
+                  animate={{ scaleX: dim.normalizedScore / 100 }}
                   transition={{ duration: prefersReducedMotion ? 0 : 0.45 }}
                 />
               </div>
