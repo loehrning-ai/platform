@@ -3081,6 +3081,9 @@
   padding: 36px 0;
   margin-bottom: 48px;
 }
+.ds-v8-scope .ov-hero-title {
+  margin-bottom: 32px;
+}
 .ds-v8-scope .ov-cta-band {
   margin: 48px 0 20px;
   padding: 48px;
@@ -3096,6 +3099,15 @@
   .ds-v8-scope .ov-hero {
     gap: 32px;
     padding: 20px 0;
+  }
+  .ds-v8-scope .ov-hero-eyebrow {
+    margin-bottom: 12px;
+  }
+  .ds-v8-scope .ov-hero-title {
+    margin-bottom: 24px;
+  }
+  .ds-v8-scope .ov-hero-hook {
+    margin-bottom: 22px;
   }
   .ds-v8-scope .ov-cta-band {
     padding: 32px 20px;

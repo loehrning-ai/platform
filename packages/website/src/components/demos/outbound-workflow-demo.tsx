@@ -636,10 +636,10 @@ function OutboundWorkflowDemoGerman() {
             </div>
             <div
               style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
                 marginTop: 2,
+                minWidth: 0,
+                overflowWrap: "anywhere",
+                whiteSpace: "normal",
               }}
             >
               Betreff:{" "}
@@ -650,6 +650,7 @@ function OutboundWorkflowDemoGerman() {
                   fontFamily: "Georgia, serif",
                   letterSpacing: 0,
                   fontSize: 12,
+                  overflowWrap: "anywhere",
                 }}
               >
                 {lead.subject}

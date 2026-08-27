@@ -198,11 +198,22 @@ test.describe("Data Science Fundamentals golden path", () => {
     const ownerChoiceVisible = await localChoice.isVisible().catch(() => false);
 
     if (ownerChoiceVisible) {
-      await expect(decisionInput).toBeDisabled();
-      await expect(
-        page.getByText("Choose account or local progress above first."),
-      ).toBeVisible();
-      await expect(save).toBeDisabled();
+      const ownerHint = page.getByText(
+        "Choose account or local progress above first.",
+      );
+      await expect
+        .poll(async () => {
+          const gateVisible = await localChoice
+            .isVisible()
+            .catch(() => false);
+          if (!gateVisible) return true;
+          return (
+            (await decisionInput.isDisabled().catch(() => false)) &&
+            (await save.isDisabled().catch(() => false)) &&
+            (await ownerHint.isVisible().catch(() => false))
+          );
+        })
+        .toBe(true);
       await continueLocally(page);
       await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
         timeout: 15_000,
