@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -34,5 +34,24 @@ describe("global font loading contract", () => {
       /--font-mono:\s*var\(--font-geist-mono\),\s*monospace;/,
     );
     expect(globalStyles).not.toMatch(/--font-geist-mono:\s*ui-monospace/);
+  });
+
+  it("uses a bounded route subset instead of duplicating the full Bold face", () => {
+    const catalogSource = readFileSync(
+      resolve(process.cwd(), "src/app/buecher/page.tsx"),
+      "utf8",
+    );
+    const subsetPath = resolve(
+      process.cwd(),
+      "src/fonts/LoehrningSans-Bold-BookDisplay.woff2",
+    );
+
+    expect(catalogSource).toContain(
+      "LoehrningSans-Bold-BookDisplay.woff2",
+    );
+    expect(catalogSource).not.toContain(
+      'src: "../../fonts/LoehrningSans-Bold.woff2"',
+    );
+    expect(statSync(subsetPath).size).toBeLessThan(8 * 1024);
   });
 });

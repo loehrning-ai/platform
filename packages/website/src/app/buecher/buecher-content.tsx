@@ -41,10 +41,12 @@ export function BuecherContent({
   accountEnabled,
   locale,
   catalogBooks = books,
+  headingFontClassName = "",
 }: {
   readonly accountEnabled: boolean;
   readonly locale: Locale;
   readonly catalogBooks?: readonly Book[];
+  readonly headingFontClassName?: string;
 }) {
   const copy = BOOK_PAGE_COPY[locale].catalog;
   const localizedBooks = catalogBooks.map((book) => ({
@@ -76,7 +78,7 @@ export function BuecherContent({
               {copy.kicker}
             </p>
             <h1
-              className="relative mt-5 max-w-[14ch] font-serif text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.055em] text-foreground"
+              className={`${headingFontClassName} relative mt-5 max-w-[14ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground`}
             >
               {copy.heading}{" "}
               <span className="box-decoration-clone bg-brand-acid/80 px-1 text-foreground">

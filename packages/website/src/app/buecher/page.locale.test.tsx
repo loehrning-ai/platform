@@ -9,9 +9,23 @@ vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,
 }));
 
+vi.mock("next/font/local", () => ({
+  default: () => ({ className: "book-display-font" }),
+}));
+
 vi.mock("./buecher-content", () => ({
-  BuecherContent: ({ locale }: { locale: string }) => (
-    <div data-testid="book-content" data-locale={locale} />
+  BuecherContent: ({
+    locale,
+    headingFontClassName,
+  }: {
+    locale: string;
+    headingFontClassName: string;
+  }) => (
+    <div
+      data-testid="book-content"
+      data-locale={locale}
+      data-heading-font={headingFontClassName}
+    />
   ),
 }));
 
@@ -54,6 +68,10 @@ describe("book catalog locale metadata and structured data", () => {
     const book = graph["@graph"].find((node) => node["@type"] === "Book");
 
     expect(getByTestId("book-content")).toHaveAttribute("data-locale", "en");
+    expect(getByTestId("book-content")).toHaveAttribute(
+      "data-heading-font",
+      "book-display-font",
+    );
     expect(collection).toMatchObject({
       name: "Books on AI and data readiness",
       inLanguage: "en-GB",

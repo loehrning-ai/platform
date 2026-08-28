@@ -608,6 +608,15 @@
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
+      "path": "packages/website/src/fonts/LoehrningSans-Bold-BookDisplay.woff2",
+      "sizeBytes": 5392,
+      "sha256": "a7fd119918ea5832671d10a5c14106f7f457e9125d47dbe03c00c87bef9d7e8f",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Subset of packages/website/src/fonts/LoehrningSans-Bold.woff2 for the fixed German and English book-catalog headings plus the zero-width metric glyph",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/LoehrningSans-Bold.ttf",
       "sizeBytes": 417076,
       "sha256": "96d7568b98e9dbc086e8bfc28e965f667c226721076f019cf12f8f6f10efbff0",
@@ -753,8 +762,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 152978,
-      "sha256": "9aad6bcf6f1006017259c5ae550545b797cc875046fdd56f147a96e66ebccfa4",
+      "sizeBytes": 162627,
+      "sha256": "df3cc2ca819487e71775f4de8fd9407fc693648573dba6ccf4e0c79cda43c948",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
