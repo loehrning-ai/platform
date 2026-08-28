@@ -80,7 +80,11 @@ async function continueLocally(page: Page): Promise<void> {
       if (await button.isVisible().catch(() => false)) throw error;
     });
   }
-  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden();
+  // The anonymous choice removes the boundary. Count the DOM contract instead
+  // of asking WebKit to resolve visibility for a node that has been detached.
+  await expect(page.locator("[data-learning-owner-panel]")).toHaveCount(0, {
+    timeout: 5_000,
+  });
 }
 
 async function expectToStartInFirstViewportBand(
