@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { CourseArtwork } from "@/components/home/course-artwork";
 import { HOME_COPY, homeCourseCopy } from "@/components/home/home-copy";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
@@ -19,6 +19,13 @@ const COURSE_TONES = [
   "bg-brand-lilac/38",
   "bg-brand-sky/42",
   "bg-brand-pink/34",
+] as const;
+
+const COURSE_PLATES = [
+  "bg-brand-acid/55",
+  "bg-brand-pink/45",
+  "bg-brand-sky/55",
+  "bg-brand-lilac/50",
 ] as const;
 
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
@@ -45,7 +52,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
             </p>
           </header>
           <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-brand-sky/45 px-5 py-4 shadow-card lg:justify-end">
-            <span className="font-mono text-3xl font-bold tabular-nums text-brand-orange">
+            <span className="font-ui-mono text-3xl font-bold tabular-nums text-brand-orange">
               01–04
             </span>
             <span className="max-w-48 text-sm leading-snug text-muted-foreground">
@@ -72,32 +79,27 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                   href={localizeHref(course.href, locale)}
                   className={`group relative grid h-full min-w-0 overflow-hidden rounded-[1.75rem] border border-foreground/10 ${tone} shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none`}
                 >
-                  <span className="relative block aspect-[16/7] overflow-hidden border-b border-foreground/10 bg-paper">
+                  <span className="relative block">
                     {course.coverImage ? (
-                      <Image
+                      <CourseArtwork
                         src={course.coverImage}
-                        alt=""
-                        width={610}
-                        height={610}
-                        sizes={
-                          wideCard
-                            ? "(min-width: 1024px) 56vw, 100vw"
-                            : "(min-width: 1024px) 40vw, 100vw"
+                        wide={wideCard}
+                        plateClassName={
+                          COURSE_PLATES[index] ?? COURSE_PLATES[0]
                         }
-                        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.025] group-focus-visible:scale-[1.025] motion-reduce:transform-none motion-reduce:transition-none"
                       />
                     ) : null}
-                    <span className="absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 bg-brand-acid font-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)]">
+                    <span className="absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 bg-brand-acid font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)]">
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span className="absolute bottom-3 right-3 rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm">
+                    <span className="absolute bottom-3 right-3 rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm">
                       {courseCopy.duration}
                     </span>
                   </span>
 
                   <span className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-5 p-5 md:p-6">
                     <span className="min-w-0">
-                      <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                      <span className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                         {course.unitCount} {course.unitLabel} ·{" "}
                         {course.totalLessons} {copy.lessonLabel}
                       </span>
@@ -124,7 +126,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           </p>
           <Link
             href={localizeHref("/kurse", locale)}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 justify-self-start border-b border-brand-orange font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange outline-none transition-[border-color,color] duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-self-end"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 justify-self-start border-b border-brand-orange font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange outline-none transition-[border-color,color] duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-self-end"
           >
             {copy.viewAllCourses}
             <ArrowRight aria-hidden="true" size={16} />

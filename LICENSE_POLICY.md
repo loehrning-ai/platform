@@ -15,6 +15,9 @@ The following original project material is licensed under [LICENSES/MIT.txt](LIC
 - `packages/website/supabase/migrations/**`;
 - package, TypeScript, ESLint, Tailwind, PostCSS, Playwright, Vitest, Next.js, and Sentry configuration files.
 
+The versioned runtime faces under `packages/website/public/fonts/**` are not
+part of the MIT grant. They retain the SIL Open Font License described below.
+
 Dependencies retain their own licenses.
 
 The AI-native demo implementations under
@@ -57,7 +60,7 @@ items retain their original rights.
 
 ## SIL Open Font License 1.1
 
-Fonts under `packages/website/src/fonts/**` are modified and renamed derivatives of Inter. They remain licensed under [LICENSES/OFL-1.1.txt](LICENSES/OFL-1.1.txt). The original Inter copyright belongs to The Inter Project Authors. The modified family names are `Loehrning Sans` and `Typing`; the modifications are not endorsed by the Inter authors.
+Fonts under `packages/website/src/fonts/**` and the versioned runtime faces under `packages/website/public/fonts/**` are modified and renamed derivatives of Inter. They remain licensed under [LICENSES/OFL-1.1.txt](LICENSES/OFL-1.1.txt). The original Inter copyright belongs to The Inter Project Authors. The modified family names are `Loehrning Sans` and `Typing`; the modifications are not endorsed by the Inter authors.
 
 ## Imported course material
 

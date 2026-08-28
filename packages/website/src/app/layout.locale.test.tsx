@@ -8,12 +8,7 @@ const { getRequestLocaleMock } = vi.hoisted(() => ({
 }));
 
 vi.mock("next/font/local", () => ({
-  default: () => ({ variable: "font-loehrning-test" }),
-}));
-// geist/font/mono reaches next/font/local through a directory import that
-// Vitest's ESM resolver rejects, so the layout cannot be imported without this.
-vi.mock("geist/font/mono", () => ({
-  GeistMono: { variable: "font-geist-test" },
+  default: () => ({ variable: "font-geist-test" }),
 }));
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,

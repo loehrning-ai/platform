@@ -182,17 +182,19 @@ describe("<AuthStatus>", () => {
     );
   });
 
-  it("keeps a 44px target at every breakpoint and softens the mobile border", () => {
+  it("keeps a stable 44px editorial ticket at every breakpoint", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
 
     const { rerender } = renderGerman(<AuthStatus mobile />);
     const mobileLink = screen.getByRole("link");
     expect(mobileLink.className).toContain("min-h-11");
-    expect(mobileLink.className).toContain("border-border");
+    expect(mobileLink.className).toContain("min-w-[6.75rem]");
+    expect(mobileLink.className).toContain("bg-brand-cobalt");
+    expect(mobileLink.className).toContain("w-full");
 
     rerender(<AuthStatus />);
     expect(screen.getByRole("link").className).toContain("min-h-11");
-    expect(screen.getByRole("link").className).not.toContain("border-border");
+    expect(screen.getByRole("link").className).not.toContain("w-full");
   });
 
   it("notifies the mobile navigation shell before following its link", () => {

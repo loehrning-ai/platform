@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("<LanguageSwitch />", () => {
-  it("uses flat 44px language targets without pill geometry", () => {
+  it("uses editorial 44px language targets without pill geometry", () => {
     navigationMock.pathname = "/kurse";
     render(
       <LocaleProvider locale="de">
@@ -22,7 +22,10 @@ describe("<LanguageSwitch />", () => {
     );
 
     const group = screen.getByRole("group", { name: "Sprache" });
-    expect(group.className).toContain("rounded-md");
+    expect(group.className).toContain("rounded-xl");
+    expect(group.className).toContain(
+      "shadow-[3px_3px_0_var(--color-brand-lilac)]",
+    );
     expect(group.className).not.toContain("rounded-full");
     for (const link of within(group).getAllByRole("link")) {
       expect(link.className).toContain("min-h-11");
@@ -43,10 +46,19 @@ describe("<LanguageSwitch />", () => {
     const group = screen.getByRole("group", { name: "Sprache" });
     expect(
       within(group).getByRole("link", { name: /Deutsch/ }),
-    ).toHaveAttribute("aria-current", "true");
+    ).toHaveAttribute("aria-current", "page");
+    expect(
+      within(group).getByRole("link", { name: /Deutsch/ }),
+    ).toHaveAttribute("hreflang", "de");
     expect(
       within(group).getByRole("link", { name: /Englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en/kurse");
+    expect(
+      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+    ).toHaveAttribute("hreflang", "en");
+    expect(
+      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+    ).not.toHaveAttribute("lang");
   });
 
   it("marks English active and returns German to its unprefixed canonical URL", () => {
@@ -60,10 +72,19 @@ describe("<LanguageSwitch />", () => {
     const group = screen.getByRole("group", { name: "Language" });
     expect(
       within(group).getByRole("link", { name: /English/ }),
-    ).toHaveAttribute("aria-current", "true");
+    ).toHaveAttribute("aria-current", "page");
+    expect(
+      within(group).getByRole("link", { name: /English/ }),
+    ).toHaveAttribute("hreflang", "en");
     expect(
       within(group).getByRole("link", { name: /German interface/ }),
     ).toHaveAttribute("href", "/workshops");
+    expect(
+      within(group).getByRole("link", { name: /German interface/ }),
+    ).toHaveAttribute("hreflang", "de");
+    expect(
+      within(group).getByRole("link", { name: /German interface/ }),
+    ).not.toHaveAttribute("lang");
   });
 
   it("falls back to locale roots for an unsafe pathname", () => {

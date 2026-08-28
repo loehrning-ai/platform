@@ -2,25 +2,13 @@
 
 import { m, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Pause, Play } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HeroNetwork } from "@/components/home/hero-network";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-
-const NETWORK_MOUNT_DELAY_MS = 1200;
-
-// Code-split: hero-network.tsx is a ~35 kB SVG/rAF globe animation that also
-// pulls in the ~26 kB COUNTRY_POLYLINES_3D dataset. It's purely decorative
-// (aria-hidden, pointer-events-none) and renders inside an already-sized
-// wrapper (fixed vw/height on desktop, fixed px on mobile), so deferring it
-// out of the initial bundle cannot cause layout shift.
-const HeroNetwork = dynamic(
-  () => import("@/components/home/hero-network").then((mod) => mod.HeroNetwork),
-  { ssr: false },
-);
 
 function usePrefersReducedMotion(): boolean {
   const [prefersReduced, setPrefersReduced] = useState(false);
@@ -118,10 +106,9 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     const media = window.matchMedia("(min-width: 1024px)");
     const updateMode = () =>
       setNetworkMode(media.matches ? "desktop" : "mobile");
-    const mountTimer = window.setTimeout(updateMode, NETWORK_MOUNT_DELAY_MS);
+    updateMode();
     media.addEventListener("change", updateMode);
     return () => {
-      window.clearTimeout(mountTimer);
       media.removeEventListener("change", updateMode);
     };
   }, []);
@@ -161,33 +148,30 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]">
           <div className="relative z-10">
-            <p className="mb-5 inline-flex rounded-full border border-foreground/15 bg-brand-acid px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_rgba(25,35,45,0.16)]">
-              {copy.platformLabel}
-            </p>
-
             <h1
               aria-label={copy.headline.join(" ")}
-              className="font-bold leading-[0.88] text-foreground"
+              className="font-bold leading-[0.94] text-foreground"
               style={{
                 fontSize: "clamp(3rem, min(8.4vw, 12.5svh), 8rem)",
                 letterSpacing: "0",
               }}
             >
               {copy.headline.map((line, index) => (
-                <span key={line} className="block pb-2">
+                <span key={line}>
                   <span
                     className={
-                      "block drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
+                      "drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
                       headlineColors[index]
                     }
                   >
                     {line}
                   </span>
+                  {index < copy.headline.length - 1 ? <br /> : null}
                 </span>
               ))}
             </h1>
 
-            <p className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper/85 px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card backdrop-blur-sm">
+            <p className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card">
               {copy.introduction}
             </p>
 
@@ -196,6 +180,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
                 href={localizeHref("/kurse", locale)}
                 variant="primary"
                 surface="light"
+                prefetch={false}
                 className="border-brand-cobalt bg-brand-cobalt text-white hover:border-brand-teal hover:bg-brand-teal hover:text-white"
               >
                 {copy.primaryCta} <ArrowRight size={15} aria-hidden="true" />
@@ -207,54 +192,39 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
           <div className="hidden lg:block" />
         </div>
 
-        {/* Only one expensive projection tree mounts at a time. CSS-hidden
-            responsive duplicates still execute React and SVG work. */}
-        {networkMode === "desktop" ? (
+        {/* One real projection tree is present in the server response. A
+            lightweight first-frame shell makes the same globe visible before
+            hydration; viewport mode only decides whether it animates. */}
+        <m.div
+          id="home-hero-network"
+          data-hero-globe-motion={
+            prefersReduced || networkMode !== "desktop"
+              ? "static"
+              : networkPaused
+                ? "paused"
+                : "running"
+          }
+          className="home-hero-network-mask pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20 lg:inset-auto lg:bottom-0 lg:right-0 lg:block lg:h-[110%] lg:w-[70vw] lg:overflow-visible lg:rounded-none lg:bg-transparent"
+        >
           <m.div
-            id="home-hero-network"
-            data-hero-globe-motion={
-              prefersReduced ? "static" : networkPaused ? "paused" : "running"
+            className="flex h-full w-full items-center justify-center lg:block"
+            style={
+              networkMode === "desktop" && !prefersReduced
+                ? { y: globeY, opacity: globeOpacity }
+                : undefined
             }
-            className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 drop-shadow-[0_24px_44px_rgba(39,71,181,0.16)]"
-            initial={prefersReduced ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              width: "70vw",
-              height: "110%",
-              overflow: "visible",
-            }}
-          >
-            <m.div
-              className="h-full w-full"
-              style={prefersReduced ? undefined : { y: globeY, opacity: globeOpacity }}
-            >
-              <HeroNetwork
-                locale={locale}
-                scrollProgress={scrollYProgress}
-                className="h-full w-full"
-                frozen={frozen}
-                paused={networkPaused}
-                reducedMotion={prefersReduced}
-              />
-            </m.div>
-          </m.div>
-        ) : networkMode === "mobile" ? (
-          <m.div
-            className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20"
-            initial={prefersReduced ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <HeroNetwork
               locale={locale}
               scrollProgress={scrollYProgress}
-              mobile
+              mobile={networkMode === "mobile"}
+              frozen={frozen}
+              paused={networkPaused || networkMode !== "desktop"}
               reducedMotion={prefersReduced}
-              className="h-[300px] w-[280px] opacity-40"
+              className="h-[300px] w-[280px] opacity-40 lg:h-full lg:w-full lg:opacity-100"
             />
           </m.div>
-        ) : null}
+        </m.div>
 
         {networkMode === "desktop" && !prefersReduced ? (
           <button
@@ -271,7 +241,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             }
             aria-pressed={networkPaused}
             onClick={() => setNetworkPaused((current) => !current)}
-            className="absolute bottom-0 right-0 z-20 hidden min-h-11 items-center gap-2 rounded-xl border border-border/70 bg-paper/85 px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-card backdrop-blur-sm outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden lg:inline-flex"
+            className="absolute bottom-0 right-0 z-20 hidden min-h-11 items-center gap-2 rounded-xl border border-border/70 bg-paper/85 px-3 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-card backdrop-blur-sm outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden lg:inline-flex"
           >
             {networkPaused ? (
               <Play size={14} aria-hidden="true" />
@@ -298,7 +268,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               <span className="flex items-baseline gap-3">
                 <span
                   aria-hidden="true"
-                  className="font-mono text-xs font-bold leading-none tracking-[0.14em] text-brand-orange"
+                  className="font-ui-mono text-xs font-bold leading-none tracking-[0.14em] text-brand-orange"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
@@ -322,6 +292,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               {href ? (
                 <Link
                   href={localizeHref(href, locale)}
+                  prefetch={false}
                   className="group block h-full rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                 >
                   {entry}

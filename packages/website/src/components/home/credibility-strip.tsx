@@ -50,7 +50,7 @@ export function CredibilityStrip({
               className={`group relative min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${PRINCIPLE_TONES[index] ?? PRINCIPLE_TONES[0]} p-5 shadow-card transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none md:min-h-64 md:p-6`}
             >
               <dt>
-                <span className="relative font-mono text-xs font-bold tabular-nums text-brand-orange">
+                <span className="relative font-ui-mono text-xs font-bold tabular-nums text-brand-orange">
                   {String(index + 1).padStart(2, "0")} · {item.label}
                 </span>
                 <span className="relative mt-12 block text-xl font-bold tracking-[-0.025em] text-foreground">

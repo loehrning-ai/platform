@@ -8,7 +8,6 @@ export const HOME_COPY = {
         "Kostenfreie KI-Kurse auf Deutsch und Englisch, Workshops, Bücher, Demos und Open-Source-Werkzeuge. Mit Quellenstand, bekannten Grenzen und klaren Zugangsregeln.",
     },
     hero: {
-      platformLabel: "Offene Lerninstrumente",
       headline: ["KI", "verstehen.", "Sicher anwenden."],
       introduction:
         "Wähle ein Ziel. Triff eine Entscheidung. Teste sie an einem Modell und nimm einen überprüfbaren Arbeitsbeleg mit. Frei, zweisprachig und quelloffen.",
@@ -117,7 +116,6 @@ export const HOME_COPY = {
         "Free AI courses in German and English, workshops, books, demos and open-source tools. Each resource states its sources, known limits and access requirements.",
     },
     hero: {
-      platformLabel: "Open learning instruments",
       headline: ["Understand", "AI.", "Apply it safely."],
       introduction:
         "Choose a goal. Commit to a decision. Test it against a model and leave with a reviewable work artifact. Free, bilingual and open source.",

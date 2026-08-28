@@ -142,9 +142,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 5,
     audience: "Beschäftigte, die KI im Arbeitsalltag einsetzen",
-    coverImage: "/course-covers/ki-fuehrerschein-cover-v2.webp",
+    coverImage: "/course-covers/ki-fuehrerschein-cover-v3.webp",
     coverImageAlt:
-      "Abstrakte Illustration eines Kompasses und modularer Lernbausteine",
+      "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
     nativeStatus: "live",
   },
   {
@@ -164,9 +164,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 3,
     audience: "Ohne technische Vorkenntnisse",
-    coverImage: "/course-covers/ki-und-gesellschaft-cover-v2.webp",
+    coverImage: "/course-covers/ki-und-gesellschaft-cover-v3.webp",
     coverImageAlt:
-      "Abstrakte Illustration von Menschen in einem vernetzten öffentlichen Raum",
+      "Editoriale Collage eines Berliner öffentlichen Raums mit Menschen, Medienbildern und Prüfzeichen",
     nativeStatus: "live",
   },
   {
@@ -186,9 +186,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 6,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
-    coverImage: "/course-covers/eu-ai-act-kurs-cover-v2.webp",
+    coverImage: "/course-covers/eu-ai-act-kurs-cover-v3.webp",
     coverImageAlt:
-      "Abstrakte Illustration einer Waage, eines Regelrasters und transparenter Ebenen",
+      "Editoriale Illustration eines EU-AI-Act-Dossiers mit Risikokarten, Rollen und Prüfpfad",
     nativeStatus: "live",
   },
   {
@@ -208,9 +208,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Module",
     unitCount: 4,
     audience: "Beschäftigte, Selbstständige und Studierende",
-    coverImage: "/course-covers/ai-native-cover-v2.webp",
+    coverImage: "/course-covers/ai-native-cover-v3.webp",
     coverImageAlt:
-      "Abstrakte Illustration eines prüfbaren Arbeitsablaufs aus Werkzeugen und Entscheidungen",
+      "Editoriale Illustration eines modularen AI-Native-Arbeitsstudios mit Kontext, Werkzeugen und Prüfschleife",
     nativeStatus: "live",
   },
   // Claude Course: first imported course flipped from

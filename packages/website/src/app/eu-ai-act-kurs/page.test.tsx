@@ -81,7 +81,7 @@ describe("EU AI Act course landing page", () => {
     });
   });
 
-  it("emits localized canonical, hreflang, and Open Graph metadata", async () => {
+  it("emits localized canonical, hreflang, Open Graph, and cover metadata", async () => {
     vi.mocked(getRequestLocale).mockResolvedValue("en");
     const metadata = await generateMetadata();
 
@@ -98,6 +98,14 @@ describe("EU AI Act course landing page", () => {
       url: "https://loehrning.ai/en/eu-ai-act-kurs",
       locale: "en_GB",
       alternateLocale: ["de_DE"],
+      images: [
+        {
+          url: "https://loehrning.ai/course-covers/eu-ai-act-kurs-cover-v3.webp",
+          width: 1440,
+          height: 630,
+          alt: "Editorial process graphic showing image cards passing through review stages, colour-coded risk classes, and a final check",
+        },
+      ],
     });
   });
 });

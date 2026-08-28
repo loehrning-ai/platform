@@ -81,7 +81,7 @@ describe("KI-Führerschein landing page", () => {
     ).toHaveAttribute("href", "/en/eu-ai-act-kurs");
   });
 
-  it("emits locale-specific canonical, hreflang, and Open Graph metadata", async () => {
+  it("emits locale-specific canonical, hreflang, Open Graph, and cover metadata", async () => {
     localeState.value = "en";
     const metadata = await generateMetadata();
 
@@ -97,6 +97,15 @@ describe("KI-Führerschein landing page", () => {
     expect(metadata.openGraph).toMatchObject({
       url: "https://loehrning.ai/en/ki-fuehrerschein",
       locale: "en_GB",
+      alternateLocale: ["de_DE"],
+      images: [
+        {
+          url: "https://loehrning.ai/course-covers/ki-fuehrerschein-cover-v3.webp",
+          width: 1440,
+          height: 630,
+          alt: "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
+        },
+      ],
     });
   });
 });

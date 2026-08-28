@@ -2,17 +2,20 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("next/dynamic", () => ({
-  default: () =>
-    function HeroNetworkMock(props: { mobile?: boolean; paused?: boolean }) {
-      return (
-        <div
-          data-testid="hero-network"
-          data-mode={props.mobile ? "mobile" : "desktop"}
-          data-paused={props.paused ? "true" : "false"}
-        />
-      );
-    },
+vi.mock("@/components/home/hero-network", () => ({
+  HeroNetwork: function HeroNetworkMock(props: {
+    mobile?: boolean;
+    paused?: boolean;
+  }) {
+    return (
+      <div
+        data-testid="hero-network"
+        data-hero-network-shell
+        data-mode={props.mobile ? "mobile" : "desktop"}
+        data-paused={props.paused ? "true" : "false"}
+      />
+    );
+  },
 }));
 
 import { HeroSection } from "./hero";
@@ -37,12 +40,13 @@ afterEach(() => {
 });
 
 describe("HeroSection responsive globe", () => {
-  it("does not server-render an alternate globe before viewport hydration", () => {
+  it("server-renders the real globe shell without an alternate poster", () => {
     setDesktopMatch(true);
     const html = renderToString(<HeroSection locale="en" />);
 
     expect(html).not.toContain("data-hero-globe-poster");
-    expect(html).not.toContain("data-testid=\"hero-network\"");
+    expect(html).toContain('data-testid="hero-network"');
+    expect(html).toContain("data-hero-network-shell");
   });
 
   it.each([
@@ -58,7 +62,7 @@ describe("HeroSection responsive globe", () => {
         expect(networks).toHaveLength(1);
         expect(networks[0]).toHaveAttribute("data-mode", mode);
       },
-      { timeout: 2000 },
+      { timeout: 500 },
     );
   });
 
@@ -69,7 +73,7 @@ describe("HeroSection responsive globe", () => {
     const pause = await screen.findByRole(
       "button",
       { name: "Pause globe motion" },
-      { timeout: 2000 },
+      { timeout: 500 },
     );
     expect(pause).toHaveClass("min-h-11", "motion-reduce:hidden");
     expect(pause).toHaveAttribute("aria-pressed", "false");
@@ -99,7 +103,7 @@ describe("HeroSection responsive globe", () => {
           "data-mode",
           "mobile",
         ),
-      { timeout: 2000 },
+      { timeout: 500 },
     );
     expect(
       screen.queryByRole("button", { name: /globe motion/i }),

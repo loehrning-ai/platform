@@ -71,6 +71,17 @@ const nextConfig: NextConfig = {
       headers: SECURITY_HEADERS,
     },
     {
+      // Font filenames are explicitly versioned, so they can use immutable
+      // caching without trapping a future face revision behind the same URL.
+      source: "/fonts/:path*.woff2",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
+    {
       // Simplified build disables original book PDFs; middleware returns 410.
       source: "/downloads/:path*.pdf",
       headers: [

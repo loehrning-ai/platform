@@ -1,6 +1,51 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Versioned, self-hosted brand faces. Regular and Bold cover the first-view
+   copy; Medium and SemiBold remain demand-loaded. `optional` keeps a slow font
+   response from replacing already-painted text, while the metric-adjusted
+   fallback prevents layout drift when the browser stays on Arial. */
+@font-face {
+  font-family: "Loehrning Sans";
+  src: url("/fonts/loehrning-sans-regular-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Loehrning Sans";
+  src: url("/fonts/loehrning-sans-medium-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Loehrning Sans";
+  src: url("/fonts/loehrning-sans-semibold-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Loehrning Sans";
+  src: url("/fonts/loehrning-sans-bold-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Loehrning Sans Fallback";
+  src: local("Arial");
+  ascent-override: 96.56%;
+  descent-override: 24.04%;
+  line-gap-override: 0%;
+  size-adjust: 100.33%;
+}
+
 @theme {
   /* Berlin risograph palette. Copper remains the brand anchor; the broader
      system now behaves like an independent learning journal instead of a
@@ -78,6 +123,7 @@
      resolves to a wider face on Linux than on macOS, so prompt and code blocks
      overflow their columns on some machines and not others. Deterministic
      monospace metrics are worth the bundle cost here. */
+  --font-loehrning-sans: "Loehrning Sans", "Loehrning Sans Fallback";
   --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
@@ -157,6 +203,15 @@
 }
 
 @layer utilities {
+  /* Editorial labels and navigation need a mono rhythm, not the 71 kB course
+     typeface. System mono keeps the public shell fast; `font-mono` remains
+     Geist-backed for code, prompts, and learning workspaces. */
+  .font-ui-mono {
+    font-family:
+      ui-monospace, SFMono-Regular, "Roboto Mono", Menlo, Monaco,
+      "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+  }
+
   /* CI v3.0: flat Kupfer — no gradients on text */
   .text-gradient {
     color: var(--color-brand-orange);

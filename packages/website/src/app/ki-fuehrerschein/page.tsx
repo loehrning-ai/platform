@@ -84,7 +84,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     introduction:
       "Der Kurs erklärt, wo dir KI im Alltag und bei der Arbeit begegnet, welche Daten nicht in ein Tool gehören und wie du Ergebnisse prüfst. Fünf Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Lernzeit. Keine technischen Vorkenntnisse.",
     imageAlt:
-      "Abstrakte Kursgrafik mit einem technischen Raster und fünf Lernblöcken",
+      "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
     imageLabel: "5 Blöcke · 18 Lektionen",
     start: "Kostenlos mit Lernkonto starten",
     allCourses: "Alle Kurse",
@@ -141,7 +141,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     introduction:
       "Learn where AI appears in daily work, which data must stay out of an AI tool, and how to check a generated answer. Five blocks, 18 lessons, about 1 hour 40 minutes. No technical background required.",
     imageAlt:
-      "Abstract course cover with a technical grid and five learning blocks",
+      "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
     imageLabel: "5 blocks · 18 lessons",
     start: "Start with a free learning account",
     allCourses: "All courses",
@@ -199,6 +199,14 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: locale === "en" ? "en_GB" : "de_DE",
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
+      images: [
+        {
+          url: `${SITE_URL}/course-covers/ki-fuehrerschein-cover-v3.webp`,
+          width: 1440,
+          height: 630,
+          alt: copy.imageAlt,
+        },
+      ],
     },
   };
 }

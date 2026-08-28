@@ -98,6 +98,10 @@ describe("<Nav />", () => {
     );
     expect(fallback).toHaveClass("hidden");
     expect(container.querySelector(".js-desktop-nav")).not.toBeNull();
+    expect(fallback!.querySelector("[data-language-switch]")).toBeNull();
+    expect(
+      container.querySelector(".js-compact-nav [data-language-switch]"),
+    ).not.toBeNull();
     expect(container.querySelector(".no-js-primary-nav")).not.toBeNull();
   });
 
@@ -194,8 +198,12 @@ describe("<Nav />", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Lernen/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Praxis/ })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "Blog" }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: "Über mich" }).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Blog" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Über mich" }).length,
+    ).toBeGreaterThan(0);
   });
 
   it("contains scroll chaining inside the mobile navigation dialog", () => {
@@ -380,10 +388,9 @@ describe("<Nav />", () => {
       "href",
       "/en/blog",
     );
-    expect(screen.getAllByRole("link", { name: "About me" })[0]).toHaveAttribute(
-      "href",
-      "/en/ueber-mich",
-    );
+    expect(
+      screen.getAllByRole("link", { name: "About me" })[0],
+    ).toHaveAttribute("href", "/en/ueber-mich");
   });
 
   it("keeps breakpoint-specific language controls in the header and one inside the mobile dialog", () => {

@@ -62,7 +62,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
             </p>
           </header>
 
-          <p className="rounded-2xl border border-foreground/10 bg-brand-acid/65 px-5 py-4 font-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground shadow-card lg:text-right">
+          <p className="rounded-2xl border border-foreground/10 bg-brand-acid/65 px-5 py-4 font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground shadow-card lg:text-right">
             {copy.boardLabel}
           </p>
         </div>
@@ -89,7 +89,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                     >
                       <Icon size={22} strokeWidth={1.6} />
                     </span>
-                    <span className="font-mono text-xs font-bold tabular-nums text-brand-orange">
+                    <span className="font-ui-mono text-xs font-bold tabular-nums text-brand-orange">
                       R{String(index + 1).padStart(2, "0")}
                     </span>
                   </span>

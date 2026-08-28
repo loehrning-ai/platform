@@ -8,6 +8,7 @@ export const NO_SCRIPT_FALLBACK_CSS =
   ".js-reveal{opacity:1!important;transform:none!important;clip-path:none!important;visibility:visible!important}" +
   ".js-mobile-nav-toggle{display:none!important}" +
   ".js-desktop-nav{display:none!important}" +
+  ".js-compact-nav{display:flex!important}" +
   ".no-js-primary-nav{position:static!important}" +
   ".no-js-mobile-nav{display:block!important}" +
   "[data-learning-owner-panel]{display:none!important}" +

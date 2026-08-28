@@ -179,7 +179,7 @@ export async function Footer() {
       <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="grid min-w-0 gap-6 border-b border-border pb-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
           <div className="min-w-0">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+            <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.sectionLabel}
             </p>
             <Link
@@ -227,7 +227,7 @@ export async function Footer() {
                   key={group.id}
                   className="min-w-0 border-t border-border pt-3"
                 >
-                  <h2 className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                  <h2 className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                     {copy.groups[group.id]}
                   </h2>
                   <ul className="mt-1">
@@ -272,7 +272,7 @@ export async function Footer() {
             </span>
             <span
               data-testid="footer-data-pill"
-              className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.08em]"
+              className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 font-ui-mono text-xs uppercase tracking-[0.08em]"
             >
               <span className="whitespace-nowrap">
                 {copy.contentDate}: {STAND_DATE}

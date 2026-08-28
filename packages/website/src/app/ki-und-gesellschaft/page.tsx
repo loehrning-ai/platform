@@ -98,7 +98,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     start: "Mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
-      "Abstrakte Kursgrafik zu Arbeit, synthetischen Medien und algorithmischen Entscheidungen",
+      "Editoriale Berlin-Collage mit Menschen, synthetischen Porträts, Datenrastern und einem Prüfentscheid",
     imageLabel: "3 Blöcke · 9 Lektionen",
     facts: [
       { value: "3", label: "Blöcke" },
@@ -176,7 +176,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
-      "Abstract course illustration about work, synthetic media, and algorithmic decisions",
+      "Editorial Berlin collage with people, synthetic portraits, data grids, and a review decision",
     imageLabel: "3 blocks · 9 lessons",
     facts: [
       { value: "3", label: "Blocks" },
@@ -250,9 +250,9 @@ export async function generateMetadata(): Promise<Metadata> {
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
       images: [
         {
-          url: `${SITE_URL}/course-covers/ki-und-gesellschaft-cover-v2.webp`,
-          width: 610,
-          height: 610,
+          url: `${SITE_URL}/course-covers/ki-und-gesellschaft-cover-v3.webp`,
+          width: 1440,
+          height: 630,
           alt: copy.imageAlt,
         },
       ],

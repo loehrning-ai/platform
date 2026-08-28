@@ -96,7 +96,7 @@ function NoScriptMobileGroup({
 }) {
   return (
     <div className="border-t border-border pt-3">
-      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+      <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
         {label}
       </p>
       <div className="mt-1 flex flex-col">
@@ -495,7 +495,7 @@ export function Nav() {
   function renderMobileGroup(label: string, items: readonly NavItem[]) {
     return (
       <section className="border-t border-border pt-3">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+        <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
           {label}
         </p>
         <div className="mt-1 flex flex-col">
@@ -592,8 +592,9 @@ export function Nav() {
         </div>
 
         {/* Keep the locale control visible in the top bar on small screens.
-            It remains reachable without opening the navigation dialog. */}
-        <div className="flex items-center gap-1 lg:hidden">
+            The no-script stylesheet also exposes this compact group on wide
+            screens while hiding its inert menu button. */}
+        <div className="js-compact-nav flex items-center gap-1 lg:hidden">
           <LanguageSwitch />
           <button
             type="button"

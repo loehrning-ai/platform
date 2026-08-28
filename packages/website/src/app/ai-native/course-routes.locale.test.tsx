@@ -152,7 +152,19 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
         canonical: "/en/ai-native",
         languages: { de: "/ai-native", en: "/en/ai-native" },
       },
-      openGraph: { url: "https://loehrning.ai/en/ai-native", locale: "en_GB" },
+      openGraph: {
+        url: "https://loehrning.ai/en/ai-native",
+        locale: "en_GB",
+        alternateLocale: ["de_DE"],
+        images: [
+          {
+            url: "https://loehrning.ai/course-covers/ai-native-cover-v3.webp",
+            width: 1440,
+            height: 630,
+            alt: "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
+          },
+        ],
+      },
     });
 
     expect(await generateCourseMetadata()).toMatchObject({

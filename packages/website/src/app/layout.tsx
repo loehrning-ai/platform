@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { GeistMono } from "geist/font/mono";
+import { preload } from "react-dom";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ScrollToTop } from "@/components/scroll-to-top";
@@ -20,37 +20,28 @@ import { SITE_ENTITY } from "@/lib/seo/entity";
 import { SITE_GRAPH } from "@/lib/seo/site-graph";
 import "./globals.css";
 
-const loehrningSans = localFont({
-  src: [
-    {
-      path: "../fonts/LoehrningSans-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../fonts/LoehrningSans-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../fonts/LoehrningSans-SemiBold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../fonts/LoehrningSans-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-loehrning-sans",
-  // Four weight-specific files must not compete with content on every route.
-  // They load on demand; `optional` prevents a late swap from resetting text
-  // LCP after content is ready. Geist Mono remains the single global preload:
-  // course and demo layouts depend on its advance widths, so its metrics must
-  // not vary with whichever monospace face the visitor's OS happens to have.
+// Keep code and prompt metrics deterministic without spending the first
+// document's critical bandwidth on a 71 kB monospace preload. The exact Geist
+// variable face remains bundled and is fetched on demand where mono copy is
+// actually rendered.
+const geistMono = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  weight: "100 900",
   display: "optional",
   preload: false,
+  adjustFontFallback: false,
+  fallback: [
+    "ui-monospace",
+    "SFMono-Regular",
+    "Roboto Mono",
+    "Menlo",
+    "Monaco",
+    "Liberation Mono",
+    "DejaVu Sans Mono",
+    "Courier New",
+    "monospace",
+  ],
 });
 
 const SITE_DESCRIPTION = {
@@ -107,12 +98,22 @@ export default async function RootLayout({
 }>) {
   const locale = await getRequestLocale();
   const globalCopy = GLOBAL_NAVIGATION_COPY[locale];
+  preload("/fonts/loehrning-sans-regular-v1.woff2", {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  });
+  preload("/fonts/loehrning-sans-bold-v1.woff2", {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  });
 
   return (
     <html
       lang={locale}
       data-scroll-behavior="smooth"
-      className={`${loehrningSans.variable} ${GeistMono.variable}`}
+      className={geistMono.variable}
     >
       <body className="min-h-[100svh] bg-background text-foreground antialiased font-sans">
         <JsonLd data={SITE_GRAPH} id="site-jsonld" />
