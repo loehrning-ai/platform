@@ -96,14 +96,14 @@ describe("website motion policy", () => {
     );
   });
 
-  it("exposes a 44px keyboard-operable globe control and static reduced state", () => {
+  it("keeps globe motion finite without an overlay control and static when reduced", () => {
     const hero = read("components/home/hero.tsx");
     const network = read("components/home/hero-network.tsx");
 
-    expect(hero).toContain('type="button"');
-    expect(hero).toContain("aria-pressed={networkPaused}");
-    expect(hero).toContain("min-h-11");
-    expect(hero).toContain("motion-reduce:hidden");
+    expect(hero).not.toMatch(/Pause globe motion|Globus anhalten/);
+    expect(hero).toContain("setGlobeSettled(true)");
+    const duration = network.match(/HERO_GLOBE_INTRO_MS\s*=\s*([\d_]+)/)?.[1];
+    expect(Number(duration?.replaceAll("_", ""))).toBeLessThan(5_000);
     expect(hero).toContain("data-hero-globe-motion");
     expect(network).toContain("prefersReduced || mobile || paused");
     expect(network).toContain("data-hero-network-motion");

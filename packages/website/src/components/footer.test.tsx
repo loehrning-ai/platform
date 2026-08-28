@@ -143,7 +143,7 @@ describe("Footer semantics and stable public dates", () => {
     expect(github).toHaveAttribute("href", "https://github.com/loehrning-ai");
     expect(linkedIn).toHaveAttribute(
       "href",
-      "https://www.linkedin.com/in/timloehr/",
+      "https://www.linkedin.com/in/tim-loehr-821ba8188/",
     );
     for (const link of [github, linkedIn]) {
       expect(link).toHaveAttribute("target", "_blank");

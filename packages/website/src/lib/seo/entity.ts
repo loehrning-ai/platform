@@ -15,7 +15,7 @@ export const TIM_ENTITY = {
   portraitUrl: `${SITE_ORIGIN}/ueber-mich/tim-loehr.jpg`,
   email: "tim@loehrning.ai",
   role: "Kurator von loehrning.ai",
-  linkedInUrl: "https://www.linkedin.com/in/timloehr/",
+  linkedInUrl: "https://www.linkedin.com/in/tim-loehr-821ba8188/",
   personalGithubUrl: "https://github.com/Mavengence",
   knowsAbout: [
     "KI-Kompetenz",

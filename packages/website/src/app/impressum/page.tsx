@@ -147,7 +147,7 @@ function ImpressumContent({ locale }: { readonly locale: Locale }) {
                 rel="noopener noreferrer"
                 className="text-brand-orange hover:underline"
               >
-                linkedin.com/in/timloehr
+                linkedin.com/in/tim-loehr-821ba8188
               </a>
             </p>
           </div>

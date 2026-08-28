@@ -41,8 +41,9 @@ const WARM = "rgb(40,30,22)";
 // Step/journey data (Step type + STEPS constant) now lives in
 // ./hero-network-steps — imported above and re-exported for compatibility.
 
-const STEP_DUR = 7;
-const DWELL = 0.78;
+export const HERO_GLOBE_INTRO_MS = 4_400;
+const STEP_DUR = 4.6;
+const DWELL = 0.28;
 
 // ─── Math ───────────────────────────────────────────────────────────────────
 
@@ -470,7 +471,7 @@ export function HeroNetwork({
     const isFrozen = (frozen?.get() ?? 0) > 0.5;
 
     // Step panning
-    const activeT = Math.max(0, t - 2);
+    const activeT = Math.max(0, t - 0.1);
     const totalCycle = localizedSteps.length * STEP_DUR;
     const cycleT = activeT % totalCycle;
     const stepIdx = Math.floor(cycleT / STEP_DUR) % localizedSteps.length;
@@ -968,7 +969,9 @@ export function HeroNetwork({
                   key={`ib${i}`}
                   d={s.d}
                   stroke={LC}
-                  strokeOpacity={0.025 + s.dp * 0.035}
+                  strokeOpacity={
+                    Math.round((0.025 + s.dp * 0.035) * 1000) / 1000
+                  }
                   strokeWidth={0.4}
                   fill="none"
                 />
@@ -978,8 +981,10 @@ export function HeroNetwork({
                   key={`if${i}`}
                   d={s.d}
                   stroke={LC}
-                  strokeOpacity={0.06 + s.dp * 0.16}
-                  strokeWidth={0.45 + s.dp * 0.4}
+                  strokeOpacity={
+                    Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
+                  }
+                  strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
                   fill="none"
                 />
               ))}
@@ -988,7 +993,9 @@ export function HeroNetwork({
                   key={`ic${i}`}
                   d={s.d}
                   stroke={KUPFER}
-                  strokeOpacity={0.13 + s.dp * 0.05}
+                  strokeOpacity={
+                    Math.round((0.13 + s.dp * 0.05) * 1000) / 1000
+                  }
                   strokeWidth={2}
                   fill="none"
                 />

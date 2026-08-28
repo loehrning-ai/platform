@@ -214,6 +214,11 @@ for (const localeCase of LOCALES) {
       }),
     ).toHaveAttribute("href", localeCase.feedback);
     await expect(
+      page.locator(
+        'main a[href="https://www.linkedin.com/in/tim-loehr-821ba8188/"]',
+      ),
+    ).toBeVisible();
+    await expect(
       visibleLanguageSwitchLink(page, localeCase.otherLocale),
     ).toBeVisible();
 
