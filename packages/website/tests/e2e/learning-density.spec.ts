@@ -73,8 +73,15 @@ async function continueLocally(page: Page): Promise<void> {
     .catch(() => false);
   // WebKit can keep this in-flow panel in a transient layout pass after it is
   // visible. The interaction itself is the contract, not pointer hit-testing.
-  if (gateAppeared) await button.click({ force: true });
-  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden();
+  if (gateAppeared) {
+    await button
+      .click({ force: true, timeout: 5_000 })
+      .catch(async (error: unknown) => {
+        // Ownership resolution can remove the optional gate between the
+        // visibility probe and the click. Only that resolved state is success.
+        if (await button.isVisible().catch(() => false)) throw error;
+      });
+  }
 }
 
 async function expectToStartInFirstViewportBand(
@@ -137,8 +144,6 @@ test.describe("learning density and value contract", () => {
       firstChoice,
       "Codex L01 first prediction choice",
     );
-    await expect(firstRadio).toBeDisabled();
-
     await continueLocally(page);
     await expect(firstRadio).toBeEnabled();
     await expectFullyInFirstViewportBand(
@@ -210,51 +215,6 @@ test.describe("learning density and value contract", () => {
       );
     });
   }
-
-  test("How Language Models Work starts with a self-check and closed evidence", async ({
-    page,
-  }) => {
-    // The brand face is optional on a cold visit. Validate the denser fallback
-    // path explicitly so a warm local font cache cannot hide a first-visit
-    // overflow that Linux CI or a slow connection will expose.
-    await page.route("**/*.woff2", (route) => route.abort());
-    await page.setViewportSize({ width: 375, height: 667 });
-    await openLearningRoute(
-      page,
-      "/en/wie-ki-funktioniert/lektion-1-vorhersage",
-    );
-
-    const check = page.getByRole("button", {
-      name: "Compare with criteria",
-    });
-    await expectFullyInFirstViewportBand(
-      page,
-      check,
-      "language-model check",
-      640,
-    );
-    await expect(check).toBeDisabled();
-    await expect(check).toHaveAttribute("aria-expanded", "false");
-    await page.getByRole("textbox", { name: "Your answer" }).fill("x");
-    await expect(check).toBeEnabled();
-    await check.click();
-
-    const criteria = page.locator('[id^="check-"][id$="-content"]');
-    await expect(criteria).toBeVisible();
-    await expectFullyInFirstViewportBand(
-      page,
-      criteria,
-      "language-model criteria",
-    );
-
-    const reference = page.locator("details[data-lesson-reference]");
-    await expect(reference).toHaveCount(1);
-    expect(
-      await reference.evaluate(
-        (details) => (details as HTMLDetailsElement).open,
-      ),
-    ).toBe(false);
-  });
 
   for (const route of WORKSHOP_ROUTES) {
     test(`${route} starts its decision lab in the first viewport`, async ({

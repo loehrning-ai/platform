@@ -79,10 +79,12 @@ describe("protected proxy terminal responses", () => {
     expect(response.headers.get("x-arbitrary-internal")).toBeNull();
     expect(response.headers.get("pragma")).toBe("no-cache");
     expect(await response.json()).toEqual({ error: "auth_unavailable" });
-    expect(response.cookies.getAll().map(({ name }) => name).sort()).toEqual([
-      "sb-access",
-      "sb-refresh",
-    ]);
+    expect(
+      response.cookies
+        .getAll()
+        .map(({ name }) => name)
+        .sort(),
+    ).toEqual(["sb-access", "sb-refresh"]);
     const setCookie = response.headers.get("set-cookie") ?? "";
     expect(setCookie).toContain("sb-access=access-token");
     expect(setCookie).toContain("HttpOnly");
@@ -125,9 +127,7 @@ describe("protected proxy terminal responses", () => {
     const target = new URL(response.headers.get("location") ?? "");
     expect(target.origin).toBe("https://loehrning.ai");
     expect(target.pathname).toBe("/login");
-    expect(target.searchParams.get("next")).toBe(
-      "/konto?private=value",
-    );
+    expect(target.searchParams.get("next")).toBe("/konto?private=value");
   });
 
   it("converts a rejected auth refresh into one reported protected-API 503", async () => {
@@ -168,11 +168,7 @@ describe("protected proxy terminal responses", () => {
       .split(",")
       .map((value) => value.trim().toLowerCase());
     expect(response.status).toBe(200);
-    expect(vary).toEqual([
-      "rsc",
-      "next-router-state-tree",
-      "cookie",
-    ]);
+    expect(vary).toEqual(["rsc", "next-router-state-tree", "cookie"]);
   });
 });
 
@@ -210,9 +206,7 @@ describe("route-level authentication boundaries", () => {
       error: null,
     });
 
-    const response = await proxy(
-      new NextRequest(`http://localhost${path}`),
-    );
+    const response = await proxy(new NextRequest(`http://localhost${path}`));
 
     expect(response.status).toBe(401);
     expect(response.headers.get("x-middleware-next")).toBeNull();
@@ -221,26 +215,62 @@ describe("route-level authentication boundaries", () => {
   });
 });
 
-describe("retired API boundaries", () => {
-  it.each([
-    "/api/scan",
-    "/api/journey/scan-insight",
-    "/api/journey/leads",
-  ])("returns an exact terminal 410 for %s without consulting auth", async (path) => {
-    const response = await proxy(
-      new NextRequest(`http://localhost${path}`, { method: "POST" }),
-    );
+describe("public cache contract", () => {
+  it.each(["/", "/en", "/robots.txt", "/sitemap.xml"])(
+    "applies the declared public cache policy to %s",
+    async (path) => {
+      const response = await proxy(new NextRequest(`http://localhost${path}`));
 
-    expect(response.status).toBe(410);
-    expect(response.headers.get("x-middleware-next")).toBeNull();
-    expect(response.headers.get("x-robots-tag")).toBe(
-      "noindex, nofollow, noarchive",
-    );
-    expect(response.headers.get("cache-control")).toBe(
-      "public, max-age=3600, s-maxage=3600",
-    );
-    expect(mockRefreshAuthSession).not.toHaveBeenCalled();
-  });
+      expect(response.status).toBe(200);
+      expect(response.headers.get("cache-control")).toBe(
+        "public, max-age=3600, s-maxage=3600",
+      );
+      expect(
+        (response.headers.get("vary") ?? "")
+          .split(",")
+          .map((value) => value.trim().toLowerCase()),
+      ).not.toContain("cookie");
+      expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each([
+    ["POST", "/api/feedback"],
+    ["POST", "/api/ai-native/grade-exercise"],
+    ["GET", "/api/health"],
+  ])(
+    "leaves final cache authority to the %s %s route handler",
+    async (method, path) => {
+      const response = await proxy(
+        new NextRequest(`http://localhost${path}`, { method }),
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get("cache-control")).toBeNull();
+      expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+    },
+  );
+});
+
+describe("retired API boundaries", () => {
+  it.each(["/api/scan", "/api/journey/scan-insight", "/api/journey/leads"])(
+    "returns an exact terminal 410 for %s without consulting auth",
+    async (path) => {
+      const response = await proxy(
+        new NextRequest(`http://localhost${path}`, { method: "POST" }),
+      );
+
+      expect(response.status).toBe(410);
+      expect(response.headers.get("x-middleware-next")).toBeNull();
+      expect(response.headers.get("x-robots-tag")).toBe(
+        "noindex, nofollow, noarchive",
+      );
+      expect(response.headers.get("cache-control")).toBe(
+        "public, max-age=3600, s-maxage=3600",
+      );
+      expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+    },
+  );
 
   it.each([
     "/api/scan/extra",
@@ -271,9 +301,7 @@ describe("retired redirect authority", () => {
     );
 
     expect(response.status).toBe(301);
-    expect(response.headers.get("location")).toBe(
-      "https://loehrning.ai/blog",
-    );
+    expect(response.headers.get("location")).toBe("https://loehrning.ai/blog");
     expect(response.headers.get("x-robots-tag")).toBeNull();
     expect(response.headers.get("cache-control")).toBe(
       "public, max-age=3600, s-maxage=3600",
@@ -329,14 +357,9 @@ describe("locale routing and authentication boundaries", () => {
     ["/en/auth/callback?code=opaque", "/auth/callback?code=opaque"],
     ["/en/api/progress", "/api/progress"],
     ["/en/robots.txt", "/robots.txt"],
-    [
-      "/en/schema/knowledge-graph/v1",
-      "/schema/knowledge-graph/v1",
-    ],
+    ["/en/schema/knowledge-graph/v1", "/schema/knowledge-graph/v1"],
   ])("keeps the infrastructure path %s unprefixed", async (source, target) => {
-    const response = await proxy(
-      new NextRequest(`http://localhost${source}`),
-    );
+    const response = await proxy(new NextRequest(`http://localhost${source}`));
 
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(`http://localhost${target}`);
@@ -373,7 +396,8 @@ describe("locale routing and authentication boundaries", () => {
         `/en/${courseSlug}/kurs/block-1?step=2`,
       );
       expect(target.searchParams.get("reason")).toBe("kurs-login");
-      const forwardedHeaders = mockRefreshAuthSession.mock.calls[0]?.[1] as Headers;
+      const forwardedHeaders = mockRefreshAuthSession.mock
+        .calls[0]?.[1] as Headers;
       expect(forwardedHeaders.get("x-loehrning-locale")).toBe("en");
     },
   );
@@ -424,8 +448,23 @@ describe("locale routing and authentication boundaries", () => {
 
     expect(response.status).toBe(301);
     expect(response.headers.get("location")).toBe(
-      "https://loehrning.ai/en/ueber-die-plattform",
+      "https://loehrning.ai/en/ueber-mich#redaktion",
     );
+    expect(response.headers.get("x-robots-tag")).toBeNull();
+  });
+
+  it.each([
+    ["/en/wie-ki-funktioniert", "/en/einstieg"],
+    ["/en/wie-ki-funktioniert/lektion-1-vorhersage", "/en/einstieg"],
+    ["/en/bekannte-grenzen", "/en/hilfe#grenzen"],
+    ["/en/ueber-die-plattform", "/en/ueber-mich#redaktion"],
+  ])("permanently redirects retired route %s to %s", async (from, to) => {
+    const response = await proxy(
+      new NextRequest(`https://loehrning.ai${from}`),
+    );
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get("location")).toBe(`https://loehrning.ai${to}`);
     expect(response.headers.get("x-robots-tag")).toBeNull();
   });
 

@@ -384,6 +384,8 @@ export const KI_CHECK_UI_COPY = {
     resultIntroduction:
       "Dein Profil über fünf Kompetenzfelder und ein passender nächster Kurs. Die Auswertung findet nur in diesem Browser statt.",
     overall: "Gesamtstand",
+    scorePlateLabel: "Auswertung des KI-Checks",
+    competencyLegendLabel: "Kompetenzwerte im Profil",
     level: "Stufe",
     strength: "Deine Stärke",
     gap: "Größter Lernbedarf",
@@ -401,11 +403,18 @@ export const KI_CHECK_UI_COPY = {
     question: "Frage",
     of: "von",
     progressLabel: "Fortschritt im KI-Check",
+    dimensionRailLabel: "Kompetenzfelder im KI-Check",
     back: "Zurück",
     result: "Zum Ergebnis",
     next: "Weiter",
     reassurance:
       "Antworte nach deiner tatsächlichen Praxis. Es gibt kein bestanden oder nicht bestanden.",
+    methodSummary: "Methode und Grenzen der Auswertung",
+    methodTitle: "So wird das Profil berechnet",
+    methodBody:
+      "Zwei Selbstauskünfte pro Feld werden auf 0 bis 100 normiert. Der Gesamtstand ist der Mittelwert der fünf Felder. Liegen die Grundlagen unter 50, führt die Empfehlung zuerst zum Grundlagenkurs; sonst zum schwächsten Feld. Das Ergebnis ist eine Orientierung, keine Prüfung oder Zertifizierung.",
+    privacyBody:
+      "Die Berechnung läuft nur in diesem Browser. Antworten werden nicht gespeichert und verlassen diese Seite nicht.",
     pathwayLabels: {
       pruefen: "Prüfen",
       grundlagen: "Verstehen",
@@ -421,6 +430,8 @@ export const KI_CHECK_UI_COPY = {
     resultIntroduction:
       "Your scores across five fields and one relevant next course. The calculation stays in this browser.",
     overall: "Overall score",
+    scorePlateLabel: "AI check result",
+    competencyLegendLabel: "Competency values in the profile",
     level: "Level",
     strength: "Strongest field",
     gap: "Main learning gap",
@@ -438,11 +449,18 @@ export const KI_CHECK_UI_COPY = {
     question: "Question",
     of: "of",
     progressLabel: "Progress through the AI check",
+    dimensionRailLabel: "Competency fields in the AI check",
     back: "Back",
     result: "View result",
     next: "Next",
     reassurance:
       "Answer for your actual working practice. This is not a pass or fail test.",
+    methodSummary: "Method and limits of this result",
+    methodTitle: "How the profile is calculated",
+    methodBody:
+      "Two self-reported answers per field are normalised to a score from 0 to 100. The overall score is the mean of the five fields. If the fundamentals score is below 50, the recommendation starts with the foundation course; otherwise it targets the weakest field. This result is orientation, not an exam or certification.",
+    privacyBody:
+      "The calculation runs only in this browser. Answers are not stored and do not leave this page.",
     pathwayLabels: {
       pruefen: "Assess",
       grundlagen: "Understand",

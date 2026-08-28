@@ -74,7 +74,7 @@ test.describe("/ki-check", () => {
         page.getByText(`Frage ${i + 1} von ${QUESTIONS.length}`),
       ).toBeVisible();
 
-      const option = page.getByRole("button", {
+      const option = page.getByRole("radio", {
         name: q.options[0].text,
         exact: true,
       });
@@ -84,7 +84,7 @@ test.describe("/ki-check", () => {
         exact: true,
       });
       await option.click();
-      await expect(option).toHaveAttribute("aria-pressed", "true");
+      await expect(option).toHaveAttribute("aria-checked", "true");
       await expect(advance).toBeEnabled();
       await advance.evaluate((node) =>
         node.scrollIntoView({
@@ -135,7 +135,7 @@ test.describe("/ki-check", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole("button", {
+      page.getByRole("radio", {
         name: QUESTIONS[0].options[0].text,
         exact: true,
       }),

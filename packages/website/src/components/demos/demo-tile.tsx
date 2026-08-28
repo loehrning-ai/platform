@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import type { Demo, DemoLevel } from "@/lib/demos";
+import type { Demo, DemoLevel, DemoSize } from "@/lib/demos";
 import {
   DEMO_CATEGORY_LABELS,
   DEMO_LEVEL_LABELS_BY_LOCALE,
@@ -35,6 +35,32 @@ function levelColorClass(level: DemoLevel, dark: boolean): string {
   }
 }
 
+function tileSizeClass(size: DemoSize): string {
+  switch (size) {
+    case "s-hero":
+      return "sm:col-span-2 lg:col-span-2 lg:row-span-2";
+    case "s-tall":
+      return "lg:row-span-2";
+    case "s-wide":
+      return "sm:col-span-2 lg:col-span-2";
+    case "s-med":
+      return "";
+  }
+}
+
+function previewSizeClass(size: DemoSize): string {
+  switch (size) {
+    case "s-hero":
+      return "min-h-56 lg:min-h-72";
+    case "s-tall":
+      return "min-h-52 lg:min-h-64";
+    case "s-wide":
+      return "min-h-44";
+    case "s-med":
+      return "min-h-40";
+  }
+}
+
 export function DemoTile({
   demo,
   total,
@@ -51,7 +77,8 @@ export function DemoTile({
   const categoryLabel = DEMO_CATEGORY_LABELS[locale][demo.category];
   const evidenceLabel = DEMO_EVIDENCE_COPY[locale][demo.evidenceMode].label;
   const containerClass = [
-    "demo-gallery-tile group relative flex min-w-0 flex-col overflow-hidden border-t-[3px] border-t-brand-orange focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
+    "demo-gallery-tile group relative flex min-w-0 flex-col overflow-hidden border border-foreground/50 border-t-[3px] border-t-brand-orange transition-[border-color,box-shadow] duration-200 hover:border-brand-orange hover:shadow-[6px_6px_0_0_var(--color-brand-orange)] focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+    tileSizeClass(demo.size),
     dark
       ? "bg-foreground text-background hover:bg-foreground/95"
       : "bg-background text-foreground hover:bg-card",
@@ -66,10 +93,11 @@ export function DemoTile({
       href={localizeHref(`/demos/${demo.slug}?source=gallery`, locale)}
       prefetch={false}
       data-demo-tile={demo.slug}
+      data-demo-size={demo.size}
       className={containerClass}
       aria-label={copy.openAria(`${demo.title} ${demo.titleKicker}`)}
     >
-      <div className="flex min-h-11 items-center justify-between border-b border-current/20 px-4 py-2">
+      <div className="flex min-h-11 items-center justify-between gap-3 border-b border-current/20 px-4 py-2">
         <span
           className={`font-mono text-xs font-bold tracking-[0.14em] uppercase ${accent}`}
         >
@@ -79,34 +107,17 @@ export function DemoTile({
           <span aria-hidden="true">/</span>{" "}
           <span>{String(total).padStart(2, "0")}</span>
         </span>
-        <span
-          className={`border px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.1em] ${levelColorClass(demo.level, dark)}`}
-        >
-          {levelLabel}
-        </span>
-      </div>
-
-      <div className="min-w-0 px-4 py-4">
-        <div
-          className={`mb-3 flex flex-wrap items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}
-        >
-          <span className={`border border-current/25 px-2 py-1 ${accent}`}>
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
+          <span
+            className={`border border-current/25 px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${accent}`}
+          >
             {evidenceLabel}
           </span>
-        </div>
-        <h2 className="break-words text-[clamp(1.5rem,5vw,2rem)] font-bold leading-[1.02] tracking-[-0.03em]">
-          {demo.title} <span className={accent}>{demo.titleKicker}</span>
-        </h2>
-        <p
-          className={`mt-3 break-words text-sm leading-relaxed ${dark ? "text-background/75" : "text-muted-foreground"}`}
-        >
-          {demo.description}
-        </p>
-        <div
-          className={`mt-3 flex min-w-0 items-start gap-2 font-mono text-xs leading-relaxed tracking-[0.06em] ${dark ? "text-background/60" : "text-muted-foreground"}`}
-        >
-          <span className={`${accent} shrink-0`}>◆</span>
-          <span className="min-w-0 break-words">{demo.background}</span>
+          <span
+            className={`border px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${levelColorClass(demo.level, dark)}`}
+          >
+            {levelLabel}
+          </span>
         </div>
       </div>
 
@@ -116,35 +127,63 @@ export function DemoTile({
           keeps axe's color-contrast rule off the intentionally tiny mockup text. */}
       <div
         aria-hidden="true"
-        className={`mt-auto overflow-hidden border-t border-current/20 ${dark ? "bg-foreground" : "bg-background"}`}
+        data-demo-preview
+        className={`relative grid overflow-hidden border-b border-current/20 ${previewSizeClass(demo.size)} ${dark ? "bg-foreground" : "bg-card"}`}
       >
-        {locale === "en" ? (
-          <div className="grid min-h-24 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-4">
-            <div className="grid content-end gap-2">
-              <span
-                className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`}
-              />
-              <span
-                className={`h-2 w-full ${dark ? "bg-background/15" : "bg-foreground/10"}`}
-              />
-              <span
-                className={`h-2 w-5/6 ${dark ? "bg-background/15" : "bg-foreground/10"}`}
-              />
-              <span className="mt-2 h-1.5 w-2/3 bg-brand-orange" />
+        <div
+          className={`pointer-events-none absolute inset-3 border ${dark ? "border-background/15" : "border-foreground/10"}`}
+        />
+        <div className="absolute left-3 top-3 h-6 w-[3px] bg-brand-orange" />
+        <div className="absolute left-3 top-3 h-[3px] w-6 bg-brand-orange" />
+        <div
+          className="relative flex h-full min-h-full w-full items-end overflow-hidden pt-6 transition-transform duration-300 ease-out group-hover:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none [&>div]:w-full"
+          data-demo-preview-content
+        >
+          {locale === "en" ? (
+            <div className="grid min-h-32 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-5">
+              <div className="grid content-end gap-2">
+                <span
+                  className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`}
+                />
+                <span
+                  className={`h-2 w-full ${dark ? "bg-background/15" : "bg-foreground/10"}`}
+                />
+                <span
+                  className={`h-2 w-5/6 ${dark ? "bg-background/15" : "bg-foreground/10"}`}
+                />
+                <span className="mt-2 h-1.5 w-2/3 bg-brand-orange" />
+              </div>
+              <div
+                className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}
+              >
+                <span className={`font-mono text-2xl font-bold ${accent}`}>
+                  {demo.n}
+                </span>
+              </div>
             </div>
-            <div
-              className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}
-            >
-              <span className={`font-mono text-xl font-bold ${accent}`}>
-                {demo.n}
-              </span>
-            </div>
-          </div>
-        ) : Preview ? (
-          <DemoLocaleProvider locale={locale}>
-            <Preview />
-          </DemoLocaleProvider>
-        ) : null}
+          ) : Preview ? (
+            <DemoLocaleProvider locale={locale}>
+              <Preview />
+            </DemoLocaleProvider>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="min-w-0 flex-1 px-4 py-4">
+        <h2 className="break-words text-[clamp(1.4rem,4vw,2rem)] font-bold leading-[1.02] tracking-[-0.035em]">
+          {demo.title} <span className={accent}>{demo.titleKicker}</span>
+        </h2>
+        <p
+          className={`mt-3 break-words text-sm leading-relaxed ${dark ? "text-background/75" : "text-muted-foreground"}`}
+        >
+          {demo.description}
+        </p>
+        <div
+          className={`mt-3 flex min-w-0 items-start gap-2 font-mono text-xs leading-relaxed tracking-[0.05em] ${dark ? "text-background/60" : "text-muted-foreground"}`}
+        >
+          <span className={`${accent} shrink-0`}>◆</span>
+          <span className="min-w-0 break-words">{demo.background}</span>
+        </div>
       </div>
 
       <div
@@ -156,7 +195,7 @@ export function DemoTile({
         </span>
         <span className={`inline-flex items-center gap-1 font-bold ${accent}`}>
           {copy.open}
-          <ArrowUpRight size={12} strokeWidth={2.5} />
+          <ArrowUpRight size={12} strokeWidth={2.5} aria-hidden="true" />
         </span>
       </div>
     </Link>

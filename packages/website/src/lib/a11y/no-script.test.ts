@@ -3,9 +3,7 @@ import { NO_SCRIPT_FALLBACK_CSS } from "./no-script";
 
 describe("no-script accessibility fallback", () => {
   it("reveals opted-in motion content and the static mobile navigation", () => {
-    expect(NO_SCRIPT_FALLBACK_CSS).toContain(
-      ".js-reveal{opacity:1!important",
-    );
+    expect(NO_SCRIPT_FALLBACK_CSS).toContain(".js-reveal{opacity:1!important");
     expect(NO_SCRIPT_FALLBACK_CSS).toContain("transform:none!important");
     expect(NO_SCRIPT_FALLBACK_CSS).toContain("clip-path:none!important");
     expect(NO_SCRIPT_FALLBACK_CSS).toContain("visibility:visible!important");
@@ -19,6 +17,9 @@ describe("no-script accessibility fallback", () => {
       ".js-desktop-nav{display:none!important}",
     );
     expect(NO_SCRIPT_FALLBACK_CSS).toContain(
+      ".js-compact-nav{display:flex!important}",
+    );
+    expect(NO_SCRIPT_FALLBACK_CSS).toContain(
       ".no-js-primary-nav{position:static!important}",
     );
     expect(NO_SCRIPT_FALLBACK_CSS).toContain(
@@ -27,8 +28,6 @@ describe("no-script accessibility fallback", () => {
     expect(NO_SCRIPT_FALLBACK_CSS).toContain(
       "#main-content{padding-top:0!important}",
     );
-    expect(NO_SCRIPT_FALLBACK_CSS).not.toContain(
-      "@media(max-width:63.999rem)",
-    );
+    expect(NO_SCRIPT_FALLBACK_CSS).not.toContain("@media(max-width:63.999rem)");
   });
 });

@@ -114,14 +114,26 @@ async function expectCompleteReviewedDesktopHeader(page: Page) {
     header.getByRole("link", { name: /loehrning\.ai/i }),
   ).toBeVisible();
   await expect(desktopNavigation).toBeVisible();
-  for (const id of ["lernen", "praxis", "wissen"] as const) {
+  for (const id of ["lernen", "praxis"] as const) {
     await expect(
       desktopNavigation.locator(`[data-nav-dropdown="${id}"] > button`),
     ).toBeVisible();
   }
   await expect(
     desktopNavigation.getByRole("link", {
+      name: "Blog",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    desktopNavigation.getByRole("link", {
       name: "Open Source",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    desktopNavigation.getByRole("link", {
+      name: "Über mich",
       exact: true,
     }),
   ).toBeVisible();

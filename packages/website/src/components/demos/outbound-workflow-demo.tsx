@@ -106,6 +106,8 @@ function OutboundWorkflowDemoGerman() {
         display: "flex",
         flexDirection: "column",
         gap: 16,
+        width: "100%",
+        minWidth: 0,
         minHeight: DEMO_HEIGHT,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
@@ -123,6 +125,18 @@ function OutboundWorkflowDemoGerman() {
         @keyframes outbound-caret {
           0%, 49% { opacity: 1; }
           50%, 100% { opacity: 0; }
+        }
+        [data-demo-id="outbound-workflow"] [data-outbound-pipeline],
+        [data-demo-id="outbound-workflow"] [data-outbound-body],
+        [data-demo-id="outbound-workflow"] [data-outbound-body] > *,
+        [data-demo-id="outbound-workflow"] [data-outbound-smtp],
+        [data-demo-id="outbound-workflow"] [data-outbound-footer] {
+          min-width: 0;
+        }
+        [data-demo-id="outbound-workflow"] [data-outbound-pipeline] > *,
+        [data-demo-id="outbound-workflow"] [data-outbound-metrics] > * {
+          min-width: 0;
+          overflow-wrap: anywhere;
         }
         @media (max-width: 640px) {
           [data-demo-id="outbound-workflow"] [data-outbound-pipeline] {
@@ -252,6 +266,7 @@ function OutboundWorkflowDemoGerman() {
           display: "grid",
           gridTemplateColumns: "minmax(240px, 300px) 1fr",
           gap: 14,
+          minWidth: 0,
         }}
       >
         <div
@@ -265,6 +280,7 @@ function OutboundWorkflowDemoGerman() {
             display: "flex",
             flexDirection: "column",
             gap: 10,
+            minWidth: 0,
             boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
@@ -537,6 +553,7 @@ function OutboundWorkflowDemoGerman() {
             display: "flex",
             flexDirection: "column",
             minHeight: 260,
+            minWidth: 0,
             boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
@@ -619,10 +636,10 @@ function OutboundWorkflowDemoGerman() {
             </div>
             <div
               style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
                 marginTop: 2,
+                minWidth: 0,
+                overflowWrap: "anywhere",
+                whiteSpace: "normal",
               }}
             >
               Betreff:{" "}
@@ -633,6 +650,7 @@ function OutboundWorkflowDemoGerman() {
                   fontFamily: "Georgia, serif",
                   letterSpacing: 0,
                   fontSize: 12,
+                  overflowWrap: "anywhere",
                 }}
               >
                 {lead.subject}

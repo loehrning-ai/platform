@@ -11,16 +11,10 @@ export const SUPPLEMENTAL_A11Y_ROUTE_GROUPS: Readonly<
   "Lern-Einstieg": [
     "/einstieg",
     "/en/einstieg",
-    "/wie-ki-funktioniert",
-    "/en/wie-ki-funktioniert",
-    "/wie-ki-funktioniert/lektion-1-vorhersage",
-    "/en/wie-ki-funktioniert/lektion-1-vorhersage",
     "/ki-check",
     "/en/ki-check",
   ],
   "Referenz & Wissen": [
-    "/bekannte-grenzen",
-    "/en/bekannte-grenzen",
     "/neuigkeiten",
     "/en/neuigkeiten",
   ],

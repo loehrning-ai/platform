@@ -24,9 +24,9 @@ describe("demo atlas visual contract", () => {
     );
   });
 
-  it.each(SURFACES)("keeps %s flat and free of decorative motion", (path) => {
+  it.each(SURFACES)("keeps %s geometry and motion bounded", (path) => {
     expect(source(path)).not.toMatch(
-      /(?:shadow-(?:card|card-hover|tile)|shadow-\[|hover:-translate|active:translate|transition-all|rounded-full|linear-gradient|demo-corner)/,
+      /(?:hover:-translate|active:translate|transition-all|rounded-full|linear-gradient|demo-corner)/,
     );
   });
 
@@ -36,12 +36,27 @@ describe("demo atlas visual contract", () => {
     );
   });
 
-  it("uses a uniform preview atlas without the bento or repeated stats layout", () => {
-    expect(source("demo-grid.tsx")).toContain("md:grid-cols-2");
-    expect(source("demo-tile.tsx")).not.toMatch(/SIZE_CLASS|grid-column:span/);
-    expect(source("../../app/demos/page.tsx")).not.toContain(
-      "copy.catalog.stats.map",
-    );
+  it("uses the registry hierarchy for a preview-led bento atlas", () => {
+    const grid = source("demo-grid.tsx");
+    const tile = source("demo-tile.tsx");
+    const hub = source("../../app/demos/page.tsx");
+
+    expect(grid).toContain("lg:grid-cols-4");
+    expect(grid).toContain("data-demo-filter-console");
+    expect(tile).toContain("tileSizeClass(demo.size)");
+    expect(tile).toContain('case "s-hero"');
+    expect(tile).toContain("data-demo-preview");
+    expect(hub).toContain("copy.catalog.stats.map");
+  });
+
+  it("limits tile motion and supplies a static reduced-motion state", () => {
+    const tile = source("demo-tile.tsx");
+
+    expect(tile).toContain("transition-[border-color,box-shadow]");
+    expect(tile).toContain("transition-transform");
+    expect(tile).toContain("motion-reduce:transition-none");
+    expect(tile).toContain("motion-reduce:transform-none");
+    expect(tile).not.toMatch(/animate-|repeat|autoplay/);
   });
 
   it("renders reviewed metrics statically rather than counting them up", () => {

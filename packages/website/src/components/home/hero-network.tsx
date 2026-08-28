@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useCallback } from "react";
-import { useReducedMotion, type MotionValue } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   COUNTRY_POLYLINES_3D,
@@ -370,6 +370,27 @@ function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
   return { front, back };
 }
 
+// The complete animated projection is intentionally not serialized into the
+// document. This sparse frame uses the exact same Berlin projection and ink
+// values, so the real globe is visible in the first HTML paint without a
+// visually unrelated poster or a large SVG payload.
+const initialGrid = buildGrid(BERLIN_LON, BERLIN_LAT);
+const INITIAL_SHELL_GRID = {
+  back: initialGrid.back.filter((_, index) => index % 8 === 0),
+  front: initialGrid.front.filter((_, index) => index % 8 === 0),
+};
+const INITIAL_SHELL_COUNTRY = STEP_COUNTRY.flatMap((key) =>
+  projectRings(
+    COUNTRY_POLYLINES_3D[key].map((ring) =>
+      ring.filter(
+        (_, index) => index % 3 === 0 || index === ring.length - 1,
+      ),
+    ),
+    BERLIN_LON,
+    BERLIN_LAT,
+  ),
+);
+
 // ─── Component ──────────────────────────────────────────────────────────────
 
 interface HeroNetworkProps {
@@ -399,10 +420,14 @@ export function HeroNetwork({
   stepIdxOut,
 }: HeroNetworkProps) {
   const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
-  const prefersReduced = Boolean(useReducedMotion() || reducedMotion);
+  // The parent reads matchMedia after hydration and passes a stable boolean.
+  // Reading it again here during the first client render makes this SVG tree
+  // disagree with the server response for reduced-motion users.
+  const prefersReduced = reducedMotion;
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const startRef = useRef(0);
+  const lastFrameRef = useRef(0);
   // Visibility gating: only spin the globe while the hero is on-screen and the
   // tab is visible. runningRef guards the self-scheduling rAF; pausedAtRef keeps
   // the animation clock continuous across pauses (no rotation "snap" on resume).
@@ -418,6 +443,7 @@ export function HeroNetwork({
   const countryGlowRef = useRef<SVGGElement>(null);
   const countryFillRef = useRef<SVGGElement>(null);
   const countryRef = useRef<SVGGElement>(null);
+  const initialShellRef = useRef<SVGGElement>(null);
   const textRef = useRef<SVGTextElement>(null);
   const cursorRef = useRef<SVGTextElement>(null);
   const stepDotsRef = useRef<SVGGElement>(null);
@@ -427,11 +453,20 @@ export function HeroNetwork({
     // !prefersReduced && !mobile. The static fallback is rendered via JSX
     // (staticGrid / staticCountry / staticCountryFill) without RAF.
     const now = performance.now();
+    // The projection rebuilds thousands of points. Thirty visual updates per
+    // second preserve the slow editorial rotation while halving main-thread
+    // and large-SVG paint work on high-refresh displays.
+    if (now - lastFrameRef.current < 1000 / 30) {
+      if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
+      return;
+    }
+    lastFrameRef.current = now;
     if (startRef.current === 0) startRef.current = now;
     const t = (now - startRef.current) / 1000;
 
-    const rawE = Math.min(1, t / 2.5);
-    const entrance = 1 - Math.pow(1 - rawE, 3);
+    // The server frame already establishes the sphere. The live projection
+    // starts settled instead of blanking that frame and fading it back in.
+    const entrance = 1;
     const isFrozen = (frozen?.get() ?? 0) > 0.5;
 
     // Step panning
@@ -650,6 +685,10 @@ export function HeroNetwork({
       });
     }
 
+    // Every live layer is populated at this point. The sparse server frame
+    // shares the same geometry, so removing it is a seamless detail upgrade.
+    initialShellRef.current?.setAttribute("opacity", "0");
+
     // ── Text with typing cursor ─────────────────────────────────────────
     const textEl = textRef.current;
     const cursorEl = cursorRef.current;
@@ -781,6 +820,25 @@ export function HeroNetwork({
     };
   }, [animate, paused, prefersReduced, mobile]);
 
+  useEffect(() => {
+    if (!prefersReduced && !mobile) return;
+
+    // Animated paths are inserted imperatively. React does not own those
+    // children, so clear them when a breakpoint or motion preference switches
+    // to the declarative static composition. The live groups are also hidden
+    // in that render, preventing a one-frame doubled globe before this effect.
+    for (const layer of [
+      gridBackRef,
+      gridFrontShadowRef,
+      gridFrontRef,
+      countryGlowRef,
+      countryFillRef,
+      countryRef,
+    ]) {
+      layer.current?.replaceChildren();
+    }
+  }, [mobile, prefersReduced]);
+
   // Static fallback (prefers-reduced-motion / mobile): a single canonical
   // composition centered on Berlin, with ALL 6 countries on the globe so the
   // viewer sees the full set rather than just the home country. Memoized: the
@@ -793,7 +851,7 @@ export function HeroNetwork({
   // Outlines: open per-arc paths.
   const staticCountry = useMemo(
     () =>
-      prefersReduced && !mobile
+      prefersReduced || mobile
         ? STEP_COUNTRY.flatMap((key) =>
             projectRings(COUNTRY_POLYLINES_3D[key], BERLIN_LON, BERLIN_LAT),
           )
@@ -803,7 +861,7 @@ export function HeroNetwork({
   // Fills: closed paths with limb-arc closures (no chord across the disc).
   const staticCountryFill = useMemo(
     () =>
-      prefersReduced && !mobile
+      prefersReduced || mobile
         ? STEP_COUNTRY.flatMap((key) =>
             projectRingsClosed(
               COUNTRY_POLYLINES_3D[key],
@@ -899,16 +957,61 @@ export function HeroNetwork({
         />
 
         <g clipPath="url(#gc)" strokeLinecap="round" strokeLinejoin="round">
-          <g ref={gridBackRef} />
-          <g ref={gridFrontShadowRef} />
-          <g ref={gridFrontRef} />
+          {!staticGrid ? (
+            <g
+              ref={initialShellRef}
+              data-hero-network-shell
+              className="transition-opacity duration-100 motion-reduce:transition-none"
+            >
+              {INITIAL_SHELL_GRID.back.map((s, i) => (
+                <path
+                  key={`ib${i}`}
+                  d={s.d}
+                  stroke={LC}
+                  strokeOpacity={0.025 + s.dp * 0.035}
+                  strokeWidth={0.4}
+                  fill="none"
+                />
+              ))}
+              {INITIAL_SHELL_GRID.front.map((s, i) => (
+                <path
+                  key={`if${i}`}
+                  d={s.d}
+                  stroke={LC}
+                  strokeOpacity={0.06 + s.dp * 0.16}
+                  strokeWidth={0.45 + s.dp * 0.4}
+                  fill="none"
+                />
+              ))}
+              {INITIAL_SHELL_COUNTRY.map((s, i) => (
+                <path
+                  key={`ic${i}`}
+                  d={s.d}
+                  stroke={KUPFER}
+                  strokeOpacity={0.13 + s.dp * 0.05}
+                  strokeWidth={2}
+                  fill="none"
+                />
+              ))}
+            </g>
+          ) : null}
+          <g
+            ref={gridBackRef}
+            data-hero-network-live="grid-back"
+            display={staticGrid ? "none" : undefined}
+          />
+          <g
+            ref={gridFrontShadowRef}
+            display={staticGrid ? "none" : undefined}
+          />
+          <g ref={gridFrontRef} display={staticGrid ? "none" : undefined} />
           {/* Country: 3 layered passes (paint order = z-stack)
                1. radial glow (light-emitting wash)
                2. hatch texture overlay (subtle)
                3. outline (uniform Kupfer stroke). */}
-          <g ref={countryGlowRef} />
-          <g ref={countryFillRef} />
-          <g ref={countryRef} />
+          <g ref={countryGlowRef} display={staticGrid ? "none" : undefined} />
+          <g ref={countryFillRef} display={staticGrid ? "none" : undefined} />
+          <g ref={countryRef} display={staticGrid ? "none" : undefined} />
 
           {/* Static fallback for prefers-reduced-motion */}
           {staticGrid &&
@@ -997,7 +1100,7 @@ export function HeroNetwork({
               ref={cursorRef}
               x={CX + 110}
               y={CY - R * 0.45}
-              fontFamily="var(--font-geist-mono), monospace"
+              fontFamily="ui-monospace, SFMono-Regular, monospace"
               fontSize="30"
               fontWeight="300"
               fill={KUPFER}

@@ -27,7 +27,9 @@ describe("<CostDriftObservabilityDemo>", () => {
 
     // The inline simulation disclosure (distinct from the SEED-SZENARIO note,
     // which has a different accessible name).
-    const disclosure = screen.getByRole("note", { name: "Hinweis zur Simulation" });
+    const disclosure = screen.getByRole("note", {
+      name: "Hinweis zur Simulation",
+    });
     expect(disclosure).toHaveTextContent(/keine Live-Messwerte/);
 
     // Spend MTD = sum of the four app costs
@@ -42,7 +44,9 @@ describe("<CostDriftObservabilityDemo>", () => {
     expect(
       screen.getByRole("button", { name: /Rechnungs-Extraktion/ }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Memo-Pipeline/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Memo-Pipeline/ }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Anfrage-Klassifikation/ }),
     ).toBeInTheDocument();
@@ -59,7 +63,9 @@ describe("<CostDriftObservabilityDemo>", () => {
     // Precondition: the first app's detail figures are on screen.
     expect(screen.getByText("€186.42")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Rechnungs-Extraktion/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Rechnungs-Extraktion/ }),
+    );
 
     // The detail panel now reflects the selected app. The 2-decimal cost, the
     // latency, and the error rate are all unique to the detail panel (the app
@@ -71,5 +77,30 @@ describe("<CostDriftObservabilityDemo>", () => {
     // The previous app's detail figures are gone.
     expect(screen.queryByText("€186.42")).not.toBeInTheDocument();
     expect(screen.queryByText("1.2 s")).not.toBeInTheDocument();
+  });
+
+  it("uses bounded responsive grids for KPIs, applications, and chart metrics", () => {
+    const { container } = render(<CostDriftObservabilityDemo />);
+    const root = container.querySelector<HTMLElement>(
+      '[data-demo-id="cost-drift-observability"]',
+    );
+    const kpis = container.querySelector(".demo-cdo-kpis");
+    const applications = container.querySelector(".demo-cdo-apps");
+    const chartMetrics = container.querySelector(".demo-cdo-chart-metrics");
+    const responsiveRules = container.querySelector("style")?.textContent ?? "";
+
+    expect(root).toHaveStyle({ width: "100%", minWidth: "0" });
+    expect(kpis).toBeInTheDocument();
+    expect(applications).toBeInTheDocument();
+    expect(chartMetrics).toBeInTheDocument();
+    expect(responsiveRules).toContain(
+      ".demo-cdo-kpis {\n          grid-template-columns: repeat(2, minmax(0, 1fr));",
+    );
+    expect(responsiveRules).toContain(
+      ".demo-cdo-apps {\n          display: grid;\n          grid-template-columns: repeat(2, minmax(0, 1fr));",
+    );
+    expect(responsiveRules).toContain(
+      ".demo-cdo-chart-metrics {\n          grid-template-columns: repeat(2, minmax(0, 1fr));",
+    );
   });
 });

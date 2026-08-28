@@ -221,28 +221,6 @@ const ON_RAMP_NODE: LearningNode = {
     "Kurze Orientierungsseite für alle, die noch nie bewusst KI genutzt haben.",
 };
 
-const CONCEPTUAL_BLOCK_NODE: LearningNode = {
-  id: "conceptual-block:wie-ki-funktioniert",
-  type: "conceptual_block",
-  title: "Wie Sprachmodelle arbeiten",
-  route: "/wie-ki-funktioniert",
-  access: "public",
-  language: "de",
-  sourceMaterialLanguages: ["de"],
-  audience: [
-    "mitarbeitende",
-    "verantwortliche",
-    "praktiker",
-    "technische-vertiefung",
-  ],
-  level: "entry",
-  stage: "pruefen",
-  evidenceMode: "source_backed",
-  sourceOwner: "editorial:conceptual-blocks",
-  summary:
-    "Vier Lektionen: Tokenvorhersage, Trainingsdaten und Bias, Halluzinationen, Grenzen.",
-};
-
 export const LEARNING_NODES: readonly LearningNode[] = [
   {
     id: "self-test:ki-check",
@@ -261,7 +239,6 @@ export const LEARNING_NODES: readonly LearningNode[] = [
       "Zehn Fragen, kein Login, kein Backend. Zeigt dir, wo du auf dem KI-Kompetenzweg stehst.",
   },
   ON_RAMP_NODE,
-  CONCEPTUAL_BLOCK_NODE,
   ...courseNodes,
   ...bookNodes,
   ...demoNodes,
@@ -283,11 +260,6 @@ const allEdges: readonly LearningEdge[] = [
     from: "on-ramp:einstieg",
     to: "course:ki-fuehrerschein",
     type: "next_step",
-  },
-  {
-    from: "conceptual-block:wie-ki-funktioniert",
-    to: "course:ki-fuehrerschein",
-    type: "recommended_before",
   },
   {
     from: "course:ki-fuehrerschein",

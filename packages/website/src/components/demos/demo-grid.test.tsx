@@ -58,14 +58,17 @@ describe("<DemoGrid>", () => {
   });
 
   it("renders every demo when no filter is seeded and reports the total count", () => {
-    render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
+    const { container } = render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(12);
-    expect(screen.getByText(/12 Praxisbeispiele/)).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("12 Praxisbeispiele");
     // The mount effect reports the complete unfiltered state explicitly.
     expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", "alle");
     const levelFilters = screen.getByRole("group", { name: "Reifegrad" });
     expect(levelFilters.lastElementChild).toHaveClass("flex", "flex-wrap");
     expect(levelFilters.lastElementChild).not.toHaveClass("overflow-x-auto");
+    expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
+    expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
+    expect(container.querySelector(".lg\\:grid-cols-4")).toBeTruthy();
   });
 
   it("seeds filter state from the server-provided filters", () => {

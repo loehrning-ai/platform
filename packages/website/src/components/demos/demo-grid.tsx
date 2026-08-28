@@ -60,6 +60,7 @@ export function DemoGrid({
       }),
     [catalog, level, cat, industry],
   );
+  const isFiltered = level !== "alle" || cat !== "Alle" || Boolean(industry);
 
   useEffect(() => {
     trackDemoFilter(cat, level, industry || "alle");
@@ -149,114 +150,130 @@ export function DemoGrid({
   }, [clearAll]);
 
   return (
-    <div ref={atlasRef}>
-      <div className="space-y-3 border border-border border-t-[3px] border-t-brand-orange bg-card px-3 py-3 sm:px-4">
-        <FilterRow
-          label={copy.level}
-          mobileControl={
-            <select
-              data-filter-select="level"
-              aria-label={copy.level}
-              value={level}
-              onChange={(event) =>
-                setParam("level", event.currentTarget.value, "alle")
-              }
-              className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              <option value="alle">
-                {copy.all} ({catalog.length})
-              </option>
-              {DEMO_LEVELS.map((item) => {
-                const count = catalog.filter(
-                  (demo) => demo.level === item,
-                ).length;
-                return (
-                  <option key={item} value={item}>
-                    {levelLabels[item]} ({count})
-                  </option>
-                );
-              })}
-            </select>
-          }
-        >
-          <Chip
-            active={level === "alle"}
-            onClick={() => setParam("level", "alle", "alle")}
+    <div ref={atlasRef} data-demo-atlas>
+      <div
+        className="border border-foreground/60 bg-card"
+        data-demo-filter-console
+      >
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2 sm:px-4">
+          <p
+            role="status"
+            aria-live="polite"
+            className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground"
           >
-            {copy.all} ({catalog.length})
-          </Chip>
-          {DEMO_LEVELS.map((l) => {
-            const n = catalog.filter((d) => d.level === l).length;
-            return (
-              <Chip
-                key={l}
-                active={level === l}
-                onClick={() => setParam("level", l, "alle")}
-              >
-                {levelLabels[l]} ({n})
-              </Chip>
-            );
-          })}
-        </FilterRow>
-
-        <FilterRow
-          label={copy.category}
-          mobileControl={
-            <select
-              data-filter-select="category"
-              aria-label={copy.category}
-              value={cat}
-              onChange={(event) =>
-                setParam("cat", event.currentTarget.value, "Alle")
-              }
-              className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              <option value="Alle">{copy.all}</option>
-              {DEMO_CATEGORIES.map((item) => {
-                const count = catalog.filter(
-                  (demo) => demo.category === item,
-                ).length;
-                if (count === 0) return null;
-                return (
-                  <option key={item} value={item}>
-                    {categoryLabels[item]} ({count})
-                  </option>
-                );
-              })}
-            </select>
-          }
-        >
-          <Chip
-            active={cat === "Alle"}
-            onClick={() => setParam("cat", "Alle", "Alle")}
-          >
-            {copy.all}
-          </Chip>
-          {DEMO_CATEGORIES.map((c) => {
-            const n = catalog.filter((d) => d.category === c).length;
-            if (n === 0) return null;
-            return (
-              <Chip
-                key={c}
-                active={cat === c}
-                onClick={() => setParam("cat", c, "Alle")}
-              >
-                {categoryLabels[c]} ({n})
-              </Chip>
-            );
-          })}
-        </FilterRow>
-
-        <div
-          role="status"
-          aria-live="polite"
-          className="border-t border-border pt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground"
-        >
-          <span>
-            {filtered.length}{" "}
+            <span className="text-brand-orange tabular-nums">
+              {String(filtered.length).padStart(2, "0")}
+            </span>{" "}
             {filtered.length === 1 ? copy.resultSingular : copy.resultPlural}
             {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
-          </span>
+          </p>
+          {isFiltered && filtered.length > 0 ? (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="inline-flex min-h-11 items-center border border-border bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none"
+            >
+              {copy.reset}
+            </button>
+          ) : null}
+        </div>
+
+        <div className="grid divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+          <FilterRow
+            label={copy.level}
+            mobileControl={
+              <select
+                data-filter-select="level"
+                aria-label={copy.level}
+                value={level}
+                onChange={(event) =>
+                  setParam("level", event.currentTarget.value, "alle")
+                }
+                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                <option value="alle">
+                  {copy.all} ({catalog.length})
+                </option>
+                {DEMO_LEVELS.map((item) => {
+                  const count = catalog.filter(
+                    (demo) => demo.level === item,
+                  ).length;
+                  return (
+                    <option key={item} value={item}>
+                      {levelLabels[item]} ({count})
+                    </option>
+                  );
+                })}
+              </select>
+            }
+          >
+            <Chip
+              active={level === "alle"}
+              onClick={() => setParam("level", "alle", "alle")}
+            >
+              {copy.all} ({catalog.length})
+            </Chip>
+            {DEMO_LEVELS.map((l) => {
+              const n = catalog.filter((d) => d.level === l).length;
+              return (
+                <Chip
+                  key={l}
+                  active={level === l}
+                  onClick={() => setParam("level", l, "alle")}
+                >
+                  {levelLabels[l]} ({n})
+                </Chip>
+              );
+            })}
+          </FilterRow>
+
+          <FilterRow
+            label={copy.category}
+            mobileControl={
+              <select
+                data-filter-select="category"
+                aria-label={copy.category}
+                value={cat}
+                onChange={(event) =>
+                  setParam("cat", event.currentTarget.value, "Alle")
+                }
+                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                <option value="Alle">{copy.all}</option>
+                {DEMO_CATEGORIES.map((item) => {
+                  const count = catalog.filter(
+                    (demo) => demo.category === item,
+                  ).length;
+                  if (count === 0) return null;
+                  return (
+                    <option key={item} value={item}>
+                      {categoryLabels[item]} ({count})
+                    </option>
+                  );
+                })}
+              </select>
+            }
+          >
+            <Chip
+              active={cat === "Alle"}
+              onClick={() => setParam("cat", "Alle", "Alle")}
+            >
+              {copy.all}
+            </Chip>
+            {DEMO_CATEGORIES.map((c) => {
+              const n = catalog.filter((d) => d.category === c).length;
+              if (n === 0) return null;
+              return (
+                <Chip
+                  key={c}
+                  active={cat === c}
+                  onClick={() => setParam("cat", c, "Alle")}
+                >
+                  {categoryLabels[c]} ({n})
+                </Chip>
+              );
+            })}
+          </FilterRow>
         </div>
       </div>
 
@@ -281,7 +298,7 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-6 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
           {filtered.map((d) => (
             <DemoTile
               key={d.slug}
@@ -306,13 +323,13 @@ function FilterRow({
   mobileControl?: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0" role="group" aria-label={label}>
+    <div className="min-w-0 px-3 py-3 sm:px-4" role="group" aria-label={label}>
       <span className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
         {label}:
       </span>
       {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
       <div
-        className={`flex flex-wrap gap-2 ${mobileControl ? "hidden sm:flex" : ""}`}
+        className={`flex flex-wrap gap-1.5 ${mobileControl ? "hidden sm:flex" : ""}`}
       >
         {children}
       </div>
@@ -335,7 +352,7 @@ function Chip({
       data-filter-chip
       onClick={onClick}
       aria-pressed={active}
-      className={`min-h-11 border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${
+      className={`min-h-11 border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none ${
         active
           ? "border-brand-orange bg-brand-orange text-white"
           : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"

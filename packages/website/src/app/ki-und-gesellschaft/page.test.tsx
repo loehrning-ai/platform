@@ -108,9 +108,10 @@ describe("KI und Gesellschaft course landing page", () => {
       alternateLocale: ["de_DE"],
       images: [
         {
-          url: "https://loehrning.ai/course-covers/ki-und-gesellschaft-cover-v2.webp",
-          width: 610,
-          height: 610,
+          url: "https://loehrning.ai/course-covers/ki-und-gesellschaft-cover-v3.webp",
+          width: 1440,
+          height: 630,
+          alt: "Editorial Berlin collage with people, synthetic portraits, data grids, and a review decision",
         },
       ],
     });

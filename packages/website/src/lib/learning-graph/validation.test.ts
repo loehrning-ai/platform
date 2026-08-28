@@ -68,7 +68,6 @@ describe("getNodesByStage", () => {
     const ids = new Set(getNodesByStage("pruefen").map((n) => n.id));
     expect(ids.has("self-test:ki-check")).toBe(true);
     expect(ids.has("on-ramp:einstieg")).toBe(true);
-    expect(ids.has("conceptual-block:wie-ki-funktioniert")).toBe(true);
     // course:ki-fuehrerschein is stage "grundlagen", never "pruefen".
     expect(ids.has("course:ki-fuehrerschein")).toBe(false);
   });

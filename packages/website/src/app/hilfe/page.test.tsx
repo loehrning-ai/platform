@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { books } from "@/lib/books";
 
@@ -69,6 +69,42 @@ describe("HilfePage locale and provider boundaries", () => {
     expect(
       screen.getByText(/Aktuell ist keine Anmeldemethode/),
     ).toBeInTheDocument();
+  });
+
+  it("renders a compact topic index, native disclosure board, and retained limits anchor", async () => {
+    await renderPage("de");
+
+    const topicIndex = document.querySelector<HTMLElement>(
+      "[data-help-topic-index]",
+    );
+    const accordionBoard = document.querySelector<HTMLElement>(
+      "[data-help-accordion-board]",
+    );
+    expect(topicIndex).not.toBeNull();
+    expect(topicIndex?.querySelectorAll('a[href^="/hilfe#"]')).toHaveLength(12);
+    expect(accordionBoard?.querySelectorAll("details")).toHaveLength(12);
+    expect(document.getElementById("grenzen")).toHaveAttribute("open");
+    expect(document.getElementById("grenzen")).toHaveAttribute(
+      "data-limit-anchor",
+      "true",
+    );
+    expect(
+      topicIndex?.querySelector('a[href="/hilfe#grenzen"]'),
+    ).toHaveAccessibleName("Welche Einschränkungen sind bekannt?");
+    const limitations = document.querySelector<HTMLElement>(
+      "[data-limitations-ledger]",
+    );
+    expect(limitations).not.toBeNull();
+    expect(limitations?.querySelectorAll("ol > li")).toHaveLength(5);
+    expect(
+      within(limitations as HTMLElement).getByText("8. August 2026"),
+    ).toBeVisible();
+    expect(
+      within(limitations as HTMLElement).getByRole("link", { name: "EUR-Lex" }),
+    ).toHaveAttribute(
+      "href",
+      "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1744",
+    );
   });
 
   it("describes only the sign-in methods that are ready", async () => {

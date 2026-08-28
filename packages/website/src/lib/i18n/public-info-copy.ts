@@ -88,11 +88,11 @@ export const ENTRY_COPY = {
     courseBody:
       "Die Kursübersicht erklärt Inhalte, Umfang und Zugangsbedingungen vor dem Start.",
     courseCta: "Kursübersicht öffnen",
-    primerLabel: "Technik verstehen",
-    primerTitle: "Wie KI funktioniert",
+    primerLabel: "Weiterlesen",
+    primerTitle: "Blog",
     primerBody:
-      "Die 40-minütige Einführung erklärt Vorhersagen, Sprachmodelle und typische Fehler.",
-    primerCta: "40-minütige Einführung öffnen",
+      "Quellenbasierte Artikel erklären KI im Alltag, Regulierung und gesellschaftliche Folgen.",
+    primerCta: "Blog öffnen",
   },
   en: {
     metadata: {
@@ -179,11 +179,11 @@ export const ENTRY_COPY = {
     courseBody:
       "The course overview states its content, scope, and access conditions before you begin.",
     courseCta: "Open the course overview",
-    primerLabel: "Understand the technology",
-    primerTitle: "How AI works",
+    primerLabel: "Continue reading",
+    primerTitle: "Blog",
     primerBody:
-      "The 40-minute introduction explains prediction, language models, and common failure modes.",
-    primerCta: "Open the 40-minute introduction",
+      "Source-backed articles examine everyday AI, regulation, and social consequences.",
+    primerCta: "Open the blog",
   },
 } as const satisfies Localized<Record<string, unknown>>;
 
@@ -261,9 +261,10 @@ export const HELP_COPY = {
         "Ja, aber jedes Gerät verwaltet einen eigenen lokalen Stand. Eine geräteübergreifende Synchronisierung ist aktuell nicht verfügbar.",
       quiz: "Quizze lassen sich wiederholen; es gibt keinen Zeitdruck. Nach dem Absenden siehst du Ergebnis und Erklärung. Je nach Kurs gilt ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen als Kursabschluss.",
       recordsBeforeLimits:
-        "Diese selbst ausgestellten Dokumente halten einen Abschluss innerhalb der Plattform fest. Je nach Kurs beruhen sie auf einem Quiz, einer eingereichten Aufgabe oder abgeschlossenen Lektionen. Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung. Details stehen unter ",
-      recordsLimitsLink: "Bekannte Grenzen",
-      recordsAfterLimits: ".",
+        "Diese selbst ausgestellten Dokumente halten einen Abschluss innerhalb der Plattform fest. Je nach Kurs beruhen sie auf einem Quiz, einer eingereichten Aufgabe oder abgeschlossenen Lektionen. ",
+      recordsLimitsLink:
+        "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
+      recordsAfterLimits: "",
       simulations:
         "Interaktive Praxisbeispiele verwenden synthetische Daten und simulierte Abläufe. Sie versenden keine echten E-Mails, rufen keine produktiven Drittanbieter-APIs auf und verarbeiten keine echten Kundendaten. Sie erklären ein Konzept; sie sind kein produktives System.",
       oneBookAvailable:
@@ -284,10 +285,11 @@ export const HELP_COPY = {
         ". Es ist ohne Konto nutzbar und fragt keine E-Mail-Adresse ab.",
       feedbackUnavailable:
         "Das serverseitige Feedback-Formular ist deaktiviert. Fehler und Rückmeldungen gehen per E-Mail an tim@loehrning.ai.",
-      limitsBeforeLink: "Die Seite ",
-      limitsLink: "Bekannte Grenzen",
+      limitsBeforeLink: "Bekannte Einschränkungen: ",
+      limitsLink:
+        "Abschlussdokumente sind selbst ausgestellt, Praxisbeispiele simuliert, Inhalte an einen ausgewiesenen Prüfstand gebunden und Fortschritt kann nur lokal gespeichert sein",
       limitsAfterLink:
-        " dokumentiert selbst ausgestellte Abschlussdokumente, Simulationen, Inhaltsaktualität und lokale Fortschrittsspeicherung.",
+        ". Die jeweilige Kurs- oder Ressourcenseite weist die konkrete Grenze aus.",
     },
   },
   en: {
@@ -363,9 +365,10 @@ export const HELP_COPY = {
         "Yes, but each device keeps its own local state. Cross-device synchronization is not currently available.",
       quiz: "Quizzes can be repeated and have no time limit. After submission, the page shows the result and an explanation. Depending on the course, completion means passing a final quiz, submitting a final task, or completing every lesson.",
       recordsBeforeLimits:
-        "These self-issued documents record completion within the platform. Depending on the course, they are based on a quiz, a submitted task, or completed lessons. They are not server-verified and do not by themselves establish compliance with Article 4 of the EU AI Act. Details are documented under ",
-      recordsLimitsLink: "Known limitations",
-      recordsAfterLimits: ".",
+        "These self-issued documents record completion within the platform. Depending on the course, they are based on a quiz, a submitted task, or completed lessons. ",
+      recordsLimitsLink:
+        "They are not server-verified and do not by themselves establish compliance with Article 4 of the EU AI Act.",
+      recordsAfterLimits: "",
       simulations:
         "Interactive examples use synthetic data and simulated processes. They do not send real email, call production third-party APIs, or process real customer data. They explain a concept; they are not production systems.",
       oneBookAvailable:
@@ -387,39 +390,29 @@ export const HELP_COPY = {
         ". It works without an account and does not request an email address.",
       feedbackUnavailable:
         "The server-side feedback form is disabled. Send error reports and feedback to tim@loehrning.ai.",
-      limitsBeforeLink: "The ",
-      limitsLink: "Known limitations",
+      limitsBeforeLink: "Known limitations: ",
+      limitsLink:
+        "completion records are self-issued, interactive examples are simulated, content is tied to a stated review date, and progress may be stored only locally",
       limitsAfterLink:
-        " page documents self-issued completion records, simulations, content freshness, and local progress storage.",
+        ". Each course or resource page states its specific limitation.",
     },
   },
 } as const satisfies Localized<Record<string, unknown>>;
 
-export const LIMITS_COPY = {
+/**
+ * The retired `/bekannte-grenzen` route now lands on Hilfe. Keep its complete
+ * safety record here so that route retirement does not compress five distinct
+ * limitations into a generic disclaimer.
+ */
+export const HELP_LIMITATIONS_COPY = {
   de: {
-    metadata: {
-      title: "Bekannte Grenzen",
-      description:
-        "Dokumentierte Grenzen von loehrning.ai: Abschlussdokumente, Simulationen, Inhaltsaktualität, lokaler Lernfortschritt und Lernbücher.",
-    },
-    eyebrow: "Transparenz / Stand 08.08.2026",
-    title: "Bekannte Grenzen",
     intro:
-      "Diese Seite trennt Lernhilfe, technische Funktion und belastbaren Nachweis. Jede Grenze nennt die praktische Folge und den nächsten Prüfschritt.",
+      "Lernhilfe, technische Funktion und belastbarer Nachweis sind verschiedene Dinge. Jede Grenze nennt deshalb die praktische Folge und den nächsten Prüfschritt.",
     scopeLabel: "Grenze",
     consequenceLabel: "Was du tun kannst:",
     sourceLabel: "Amtliche Quelle zum Rechtsstand",
     reviewedLabel: "Rechtsstand geprüft",
     reviewedDate: "8. August 2026",
-    reportHeading: "Weitere Einschränkung melden",
-    reportEyebrow: "06 / Rückmeldung",
-    reportAvailableBeforeLink: "Melde sie über das ",
-    reportLink: "Feedback-Formular",
-    reportAvailableAfterLink:
-      ". Das Formular fragt keine Kontaktdaten ab; eine Antwort ist deshalb nicht möglich.",
-    reportUnavailableBeforeEmail: "Bitte melde sie per E-Mail an ",
-    reportUnavailableAfterEmail:
-      ". Geprüfte Punkte werden mit nachvollziehbarer Formulierung hier ergänzt.",
     limitations: {
       record: {
         title: "Selbst ausgestellte Abschlussdokumente",
@@ -463,29 +456,13 @@ export const LIMITS_COPY = {
     },
   },
   en: {
-    metadata: {
-      title: "Known limitations",
-      description:
-        "Documented limits of loehrning.ai: completion records, simulations, content freshness, local learning progress, and learning books.",
-    },
-    eyebrow: "Transparency / status 8 August 2026",
-    title: "Known limitations",
     intro:
-      "This page separates learning support, technical function, and reliable evidence. Each limitation states its practical consequence and the next verification step.",
+      "Learning support, technical function, and reliable evidence are different things. Each limitation therefore states its practical consequence and the next verification step.",
     scopeLabel: "Limitation",
     consequenceLabel: "What you can do:",
     sourceLabel: "Official source for the legal position",
     reviewedLabel: "Legal position reviewed",
     reviewedDate: "8 August 2026",
-    reportHeading: "Report another limitation",
-    reportEyebrow: "06 / Feedback",
-    reportAvailableBeforeLink: "Report it through the ",
-    reportLink: "feedback form",
-    reportAvailableAfterLink:
-      ". The form does not request contact details, so a reply is not possible.",
-    reportUnavailableBeforeEmail: "Report it by email to ",
-    reportUnavailableAfterEmail:
-      ". Verified points are added here with wording that can be checked.",
     limitations: {
       record: {
         title: "Self-issued completion documents",

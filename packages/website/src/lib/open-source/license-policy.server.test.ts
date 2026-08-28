@@ -16,6 +16,12 @@ describe("public license policy source", () => {
     expect(policy.sha256).toBe(
       createHash("sha256").update(expected).digest("hex"),
     );
+    expect(policy.markdown).toContain(
+      "`packages/website/public/fonts/**` are not",
+    );
+    expect(policy.markdown).toContain(
+      "versioned runtime faces under `packages/website/public/fonts/**` are modified and renamed derivatives of Inter",
+    );
   });
 
   it("retains the exact ISC notices and truthful geo-data provenance", () => {

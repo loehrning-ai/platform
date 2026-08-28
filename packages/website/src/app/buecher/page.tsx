@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { cache } from "react";
 import { BuecherContent } from "./buecher-content";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
@@ -15,6 +16,17 @@ import {
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 
 const CATALOG_PATH = "/buecher";
+
+// Generated from both fixed catalog headings plus `0`, whose advance controls
+// the hero's `ch` width. The subset keeps the exact brand metrics while avoiding
+// a second transfer of the complete Bold face on this performance-critical route.
+const catalogDisplayFont = localFont({
+  src: "../../fonts/LoehrningSans-Bold-BookDisplay.woff2",
+  weight: "700",
+  style: "normal",
+  display: "swap",
+  preload: true,
+});
 
 interface LocalizedCatalogEntry {
   readonly book: Book;
@@ -145,6 +157,7 @@ export default async function BuecherPage() {
         accountEnabled={accountEnabled}
         locale={locale}
         catalogBooks={localizedCatalog.map(({ book }) => book)}
+        headingFontClassName={catalogDisplayFont.className}
       />
     </>
   );

@@ -11,6 +11,21 @@ test.describe("Homepage learning-platform transparency", () => {
     await kurse.scrollIntoViewIfNeeded();
     await expect(kurse).toContainText("Vier Kurse");
     await expect(kurse).toContainText("KI-Führerschein");
+    const courseImages = kurse.locator("[data-course-artwork] img");
+    await expect(courseImages).toHaveCount(4);
+    for (const image of await courseImages.all()) {
+      await expect(image).toHaveAttribute("src", /cover-v3\.webp/);
+      await expect
+        .poll(() =>
+          image.evaluate(
+            (node) =>
+              node instanceof HTMLImageElement &&
+              node.complete &&
+              node.naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
+    }
     // ...and the supporting resources in their own Ressourcen section.
     const ressourcen = page.getByTestId("ressourcen-section");
     await ressourcen.scrollIntoViewIfNeeded();

@@ -10,7 +10,7 @@ purchase intent.
 **Needs:** plain language, everyday examples, limits, vocabulary, one safe
 first exercise.
 
-**Best entry:** `/einstieg`, then `/wie-ki-funktioniert`.
+**Best entry:** `/einstieg`, then `/blog`.
 
 ## 2. Employee using AI at work
 

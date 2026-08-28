@@ -32,7 +32,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     unitLabel: "units",
     audience: "People who use AI in their day-to-day work",
     coverImageAlt:
-      "Abstract illustration of a compass and modular learning units",
+      "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
   },
   "ki-und-gesellschaft": {
     title: "AI and Society",
@@ -44,7 +44,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     unitLabel: "units",
     audience: "No technical background required",
     coverImageAlt:
-      "Abstract illustration of people in a connected public space",
+      "Editorial collage of a Berlin public space with people, media images, and verification marks",
   },
   "eu-ai-act-kurs": {
     title: "EU AI Act Course",
@@ -56,7 +56,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     unitLabel: "units",
     audience: "Compliance, IT leadership, and management",
     coverImageAlt:
-      "Abstract illustration of scales, a regulatory grid, and transparent layers",
+      "Editorial illustration of an EU AI Act dossier with risk cards, roles, and a review path",
   },
   "ai-native": {
     title: "AI-Native Work Course",
@@ -68,7 +68,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     unitLabel: "modules",
     audience: "Employees, independent professionals, and students",
     coverImageAlt:
-      "Abstract illustration of a reviewable workflow made of tools and decisions",
+      "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
   },
   claude: {
     title: "Claude Course",

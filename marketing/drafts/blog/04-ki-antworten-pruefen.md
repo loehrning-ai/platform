@@ -130,7 +130,7 @@ Text.
 ## Vertiefung
 
 - [KI-Führerschein](https://loehrning.ai/ki-fuehrerschein)
-- [Bekannte Grenzen](https://loehrning.ai/bekannte-grenzen)
+- [Hilfe und bekannte Einschränkungen](https://loehrning.ai/hilfe#grenzen)
 - [Google: people-first content](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
 
 Offenlegung: Für Strukturprüfung und Entwurfsarbeit wurde KI eingesetzt.

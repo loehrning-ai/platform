@@ -13,10 +13,7 @@ type FooterLinkKey =
   | "workshops"
   | "appliedExamples"
   | "openSource"
-  | "howAiWorks"
   | "blog"
-  | "knownLimits"
-  | "aboutPlatform"
   | "aboutTim"
   | "help"
   | "feedback"
@@ -24,7 +21,7 @@ type FooterLinkKey =
   | "privacy"
   | "licensePolicy";
 
-type FooterGroupKey = "courses" | "practice" | "knowledge" | "platform";
+type FooterGroupKey = "courses" | "practice" | "blog" | "about";
 
 interface FooterCopy {
   readonly sectionLabel: string;
@@ -47,8 +44,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     groups: {
       courses: "Kurse",
       practice: "Praxis",
-      knowledge: "Wissen",
-      platform: "Plattform",
+      blog: "Blog",
+      about: "Über mich",
     },
     links: {
       allCourses: "Alle Kurse",
@@ -58,11 +55,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
       workshops: "Workshops",
       appliedExamples: "Praxisbeispiele",
       openSource: "Open Source",
-      howAiWorks: "Wie KI funktioniert",
       blog: "Blog",
-      knownLimits: "Bekannte Grenzen",
-      aboutPlatform: "Über die Plattform",
-      aboutTim: "Über Tim Löhr",
+      aboutTim: "Über mich",
       help: "Hilfe",
       feedback: "Rückmeldung",
       imprint: "Impressum",
@@ -83,8 +77,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     groups: {
       courses: "Courses",
       practice: "Practice",
-      knowledge: "Knowledge",
-      platform: "Platform",
+      blog: "Blog",
+      about: "About me",
     },
     links: {
       allCourses: "All courses",
@@ -94,11 +88,8 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
       workshops: "Workshops",
       appliedExamples: "Applied examples",
       openSource: "Open Source",
-      howAiWorks: "How AI works",
       blog: "Blog",
-      knownLimits: "Known limits",
-      aboutPlatform: "About the platform",
-      aboutTim: "About Tim Löhr",
+      aboutTim: "About me",
       help: "Help",
       feedback: "Feedback",
       imprint: "Legal notice",
@@ -140,17 +131,12 @@ const FOOTER_GROUPS: readonly {
     ],
   },
   {
-    id: "knowledge",
-    links: [
-      { href: "/wie-ki-funktioniert", key: "howAiWorks" },
-      { href: "/blog", key: "blog" },
-      { href: "/bekannte-grenzen", key: "knownLimits" },
-    ],
+    id: "blog",
+    links: [{ href: "/blog", key: "blog" }],
   },
   {
-    id: "platform",
+    id: "about",
     links: [
-      { href: "/ueber-die-plattform", key: "aboutPlatform" },
       { href: "/ueber-mich", key: "aboutTim" },
       { href: "/hilfe", key: "help" },
       { href: "/feedback", key: "feedback" },
@@ -171,7 +157,7 @@ const INTERNAL_LINK_CLASS =
   "inline-flex min-h-11 min-w-11 max-w-full items-center break-words py-2 text-sm leading-snug text-muted-foreground outline-none transition-colors duration-150 hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 const EXTERNAL_LINK_CLASS =
-  "inline-flex min-h-11 items-center gap-2 border border-border px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-[border-color,color] duration-150 hover:border-brand-orange hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-card hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none";
 
 export async function Footer() {
   const locale = await getRequestLocale();
@@ -181,11 +167,19 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    <footer className="dark-section border-t border-border">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    <footer className="berlin-footer dark-section relative overflow-hidden border-t border-border">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-10 size-44 rounded-[2.5rem] border border-brand-orange/40 bg-brand-acid/10"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30 bg-brand-lilac/10"
+      />
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="grid min-w-0 gap-6 border-b border-border pb-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
           <div className="min-w-0">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+            <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.sectionLabel}
             </p>
             <Link
@@ -233,7 +227,7 @@ export async function Footer() {
                   key={group.id}
                   className="min-w-0 border-t border-border pt-3"
                 >
-                  <h2 className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                  <h2 className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                     {copy.groups[group.id]}
                   </h2>
                   <ul className="mt-1">
@@ -278,7 +272,7 @@ export async function Footer() {
             </span>
             <span
               data-testid="footer-data-pill"
-              className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.08em]"
+              className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 font-ui-mono text-xs uppercase tracking-[0.08em]"
             >
               <span className="whitespace-nowrap">
                 {copy.contentDate}: {STAND_DATE}

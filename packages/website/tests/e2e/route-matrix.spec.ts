@@ -11,8 +11,8 @@
  * require the authenticated fixture. They run in both chromium and mobile
  * projects.
  *
- * Route contract: /ueber-mich, /ueber-die-plattform, and public resources are public.
- * Route contract: /arbeitsweise is retired and redirects to /ueber-die-plattform.
+ * Route contract: /ueber-mich and public resources are public.
+ * Retired information routes permanently redirect to maintained destinations.
  * Route contract: /foerdermittel is 410 Gone (deleted by public-content transition).
  */
 
@@ -25,7 +25,6 @@ import { test, expect } from "@playwright/test";
 const PUBLIC_ROUTES = [
   "/",
   "/einstieg",
-  "/wie-ki-funktioniert",
   "/ki-check",
   "/kurse",
   "/ki-fuehrerschein",
@@ -61,13 +60,11 @@ const PUBLIC_ROUTES = [
   "/demos",
   "/neuigkeiten",
   "/hilfe",
-  "/bekannte-grenzen",
   "/feedback",
   "/login",
   "/impressum",
   "/datenschutz",
   "/ueber-mich",
-  "/ueber-die-plattform",
   // Note: /foerdermittel is 410 Gone (deleted by public-content transition) — not tested as 200
 ] as const;
 

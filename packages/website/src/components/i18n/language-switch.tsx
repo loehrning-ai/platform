@@ -32,7 +32,7 @@ function SwitchLinks({
       aria-label={copy.language}
       data-language-switch
       className={cn(
-        "inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-md border border-border bg-background",
+        "relative isolate inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-xl border border-foreground/15 bg-paper p-0.5 shadow-[3px_3px_0_var(--color-brand-lilac)]",
         className,
       )}
     >
@@ -48,17 +48,23 @@ function SwitchLinks({
           <a
             key={targetLocale}
             href={`${localizeHref(pathname, targetLocale)}${suffix}`}
-            aria-current={active ? "true" : undefined}
+            aria-current={active ? "page" : undefined}
             aria-label={active ? `${label}, ${copy.language}` : actionLabel}
+            hrefLang={targetLocale}
             className={cn(
-              "inline-flex min-h-11 min-w-11 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-colors duration-150 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
-              targetLocale === "en" && "border-l border-border",
+              "relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-[0.55rem] px-2 pb-1 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,color,transform] duration-150 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-cobalt motion-reduce:transition-none",
               active
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:bg-card-hover hover:text-foreground",
+                ? "bg-brand-acid/85 text-foreground"
+                : "text-muted-foreground hover:bg-brand-pink/45 hover:text-foreground",
             )}
           >
             {targetLocale.toUpperCase()}
+            {active ? (
+              <span
+                aria-hidden="true"
+                className="absolute bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 bg-brand-cobalt"
+              />
+            ) : null}
           </a>
         );
       })}

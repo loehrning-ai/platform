@@ -5,15 +5,10 @@ function source(relativePath: string): string {
   return readFileSync(new URL(relativePath, import.meta.url), "utf8");
 }
 
-const explainerIndex = source("../wie-ki-funktioniert/page.tsx");
-const explainerLesson = source("../wie-ki-funktioniert/[lektionId]/page.tsx");
 const diagnostic = source("./ki-check-client.tsx");
+const diagnosticFrame = source("./diagnostic-frame.tsx");
 
 const ownedSurfaces = [
-  explainerIndex,
-  explainerLesson,
-  source("../wie-ki-funktioniert/error.tsx"),
-  source("../wie-ki-funktioniert/not-found.tsx"),
   diagnostic,
   source("./dimension-bars.tsx"),
   source("./radar-chart.tsx"),
@@ -34,28 +29,10 @@ describe("standalone learning surface design contract", () => {
     }
   });
 
-  it("puts a single first-lesson action before the explainer ledger", () => {
-    expect(explainerIndex).toContain('data-learning-explainer="ledger"');
-    expect(explainerIndex).toContain("data-primary-action");
-    expect(explainerIndex.indexOf("data-primary-action")).toBeLessThan(
-      explainerIndex.indexOf('data-testid="lektion-cards"'),
-    );
-    expect(explainerIndex).toContain("courseGraph(locale)");
-    expect(explainerIndex).toContain("hasPart: lektionen.map");
-  });
-
-  it("keeps the lesson decision first and evidence secondary", () => {
-    expect(explainerLesson).toContain('data-learning-lesson="action-first"');
-    expect(explainerLesson.indexOf("<ComprehensionCheck")).toBeLessThan(
-      explainerLesson.indexOf("<LessonReference"),
-    );
-    expect(explainerLesson).toContain("dynamicParams = false");
-    expect(explainerLesson).toContain("lessonGraph({ locale, lektion })");
-  });
-
   it("keeps one primary action in each diagnostic state", () => {
-    expect(diagnostic).toContain('data-diagnostic-state="question"');
-    expect(diagnostic).toContain('data-diagnostic-state="result"');
+    expect(diagnosticFrame).toContain("data-diagnostic-state={state}");
+    expect(diagnostic).toContain('<DiagnosticFrame state="question">');
+    expect(diagnostic).toContain('<DiagnosticFrame state="result" wide>');
     expect(diagnostic.match(/data-primary-action/g)).toHaveLength(2);
     expect(diagnostic).toContain("pendingFocus");
     expect(diagnostic).toContain("setChoices({})");

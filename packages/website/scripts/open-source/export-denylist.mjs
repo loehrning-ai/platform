@@ -34,6 +34,17 @@ const JAVASCRIPT_PACKAGE_MANAGER_LOCKFILES = new Set([
   "yarn.lock",
 ]);
 
+// These four versioned files are the active, manifest-verified runtime faces.
+// Keep the allowlist exact so the obsolete public/fonts working directory does
+// not become a general publication channel again.
+const APPROVED_PUBLIC_RUNTIME_FONT_PATHS = new Set([
+  "packages/website/public/fonts",
+  "packages/website/public/fonts/loehrning-sans-bold-v1.woff2",
+  "packages/website/public/fonts/loehrning-sans-medium-v1.woff2",
+  "packages/website/public/fonts/loehrning-sans-regular-v1.woff2",
+  "packages/website/public/fonts/loehrning-sans-semibold-v1.woff2",
+]);
+
 function hasSegmentPair(segments, first, second) {
   return segments.some(
     (segment, index) => segment === first && segments[index + 1] === second,
@@ -195,13 +206,20 @@ export const PRIVATE_PATH_RULES = [
     id: "platform-duplicate-public-fonts",
     label: "unused duplicate public font files",
     profiles: ["platform"],
-    match: (_relPath, segments) =>
-      hasSegmentSequence(segments, [
-        "packages",
-        "website",
-        "public",
-        "fonts",
-      ]),
+    match: (_relPath, segments) => {
+      if (
+        !hasSegmentSequence(segments, [
+          "packages",
+          "website",
+          "public",
+          "fonts",
+        ])
+      ) {
+        return false;
+      }
+
+      return !APPROVED_PUBLIC_RUNTIME_FONT_PATHS.has(segments.join("/"));
+    },
   },
 ];
 

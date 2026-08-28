@@ -60,7 +60,7 @@ describe("LearningAtlas", () => {
     const buttons = within(goals).getAllByRole("button");
     expect(buttons).toHaveLength(4);
     expect(
-      buttons.every((button) => button.className.includes("min-h-11")),
+      buttons.every((button) => button.className.includes("min-h-14")),
     ).toBe(true);
     expect(
       within(goals).getByRole("button", { name: "Sicher starten" }),
@@ -76,6 +76,19 @@ describe("LearningAtlas", () => {
         "Prüfe eine reale Aufgabe auf Eingabe, Datenrisiko und Ergebnisqualität.",
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("next-proof").querySelector("[data-next-proof-stack]"),
+    ).not.toBeNull();
+    expect(
+      screen
+        .getByTestId("selected-path-sequence")
+        .querySelector("[data-learning-path-stepper]"),
+    ).not.toBeNull();
+    expect(
+      within(screen.getByTestId("selected-path-sequence")).getByRole("link", {
+        name: /KI-Führerschein.*offen/,
+      }),
+    ).toHaveAttribute("aria-current", "step");
     expect(screen.queryByText(/XP|Serie/)).not.toBeInTheDocument();
   });
 
@@ -91,6 +104,9 @@ describe("LearningAtlas", () => {
       expect(
         row?.querySelector(`a[href="${course.startHref}"]`),
       ).not.toBeNull();
+      const action = row?.querySelector<HTMLElement>("[data-course-action]");
+      expect(action).not.toBeNull();
+      expect(action?.closest("details")).toBeNull();
       expect(
         screen.getByTestId(`progress-dots-${course.slug}`),
       ).toBeInTheDocument();
@@ -105,6 +121,7 @@ describe("LearningAtlas", () => {
       expect(
         row?.querySelector(`a[href="${course.launchHref}"]`),
       ).not.toBeNull();
+      expect(row?.querySelector("[data-course-action]")).not.toBeNull();
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
@@ -228,6 +245,16 @@ describe("LearningAtlas", () => {
     expect(
       screen.getByTestId("progress-pct-ki-fuehrerschein"),
     ).toHaveTextContent("100%");
+    expect(
+      screen
+        .getByTestId("course-progress-ki-fuehrerschein")
+        .querySelector("[data-progress-fill]"),
+    ).toHaveStyle({ transform: "scaleX(1)" });
+    expect(
+      screen
+        .getByTestId("course-progress-ki-und-gesellschaft")
+        .querySelector<HTMLElement>("[data-progress-fill]")?.style.width,
+    ).toBe("");
 
     const codex = container.querySelector<HTMLElement>(
       '[data-course-slug="codex"]',

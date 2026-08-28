@@ -23,12 +23,7 @@ vi.mock("./demo-component-registry", () => ({
 }));
 
 vi.mock("@/lib/analytics", () => ({
-  DEMO_OPEN_SOURCES: [
-    "gallery",
-    "deeplink",
-    "share",
-    "next-demo",
-  ],
+  DEMO_OPEN_SOURCES: ["gallery", "deeplink", "share", "next-demo"],
   trackDemoOpen: vi.fn(),
 }));
 
@@ -89,10 +84,15 @@ describe("<DemoShell>", () => {
   });
 
   it("renders the component resolved from the registry", () => {
-    render(<DemoShell demo={excel} />);
+    const { container } = render(<DemoShell demo={excel} />);
     expect(mockedGetComponent).toHaveBeenCalledWith("excel");
     expect(screen.getByText("DEMO BODY")).toBeInTheDocument();
     expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByText("Interaktives Labor")).toBeVisible();
+    expect(
+      screen.getByText("Übungsmodus · kein Produktivsystem"),
+    ).toBeVisible();
+    expect(container.firstElementChild).toHaveAttribute("data-demo-shell");
   });
 
   it("shows the loading fallback when the slug has no registered component", () => {

@@ -15,7 +15,7 @@ describe("Offering section", () => {
     expect(screen.getByText(/Eine klare Reihenfolge/)).toBeInTheDocument();
   });
 
-  it("renders exactly the four spine courses as a compact ordered route", () => {
+  it("renders exactly the four spine courses as a visual ordered route", () => {
     render(<Offering />);
     expect(SPINE).toHaveLength(4);
     expect(screen.getByTestId("foundation-route").children).toHaveLength(4);
@@ -30,10 +30,35 @@ describe("Offering section", () => {
     expect(screen.getByTestId("kurse-section")).toBeInTheDocument();
   });
 
-  it("removes duplicated persona shortcuts and cover imagery", () => {
+  it("removes duplicated persona shortcuts and gives every route step owned artwork", () => {
     render(<Offering />);
     expect(screen.queryByTestId("persona-filter")).not.toBeInTheDocument();
-    expect(screen.queryAllByRole("img")).toHaveLength(0);
+    const images = Array.from(document.querySelectorAll("img"));
+    expect(images).toHaveLength(4);
+    const decodedSources = images.map((image) =>
+      decodeURIComponent(image.getAttribute("src") ?? ""),
+    );
+    for (const source of [
+      "/course-covers/ki-fuehrerschein-cover-v3.webp",
+      "/course-covers/ki-und-gesellschaft-cover-v3.webp",
+      "/course-covers/eu-ai-act-kurs-cover-v3.webp",
+      "/course-covers/ai-native-cover-v3.webp",
+    ]) {
+      expect(
+        decodedSources.some((candidate) => candidate.includes(source)),
+      ).toBe(true);
+    }
+    for (const image of images) {
+      expect(image).toHaveAttribute("alt", "");
+      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).toHaveAttribute("decoding", "async");
+      expect(image).toHaveAttribute("fetchpriority", "low");
+      expect(image).toHaveAttribute("width", "1440");
+      expect(image).toHaveAttribute("height", "630");
+    }
+    expect(
+      screen.getByRole("list", { name: "Empfohlener Grundlagenpfad" }),
+    ).toBeInTheDocument();
   });
 
   it("routes technical depth through the single full-atlas action", () => {

@@ -93,9 +93,9 @@ export function DemoDetailLayout({
   );
 
   return (
-    <article className="min-h-[100svh] overflow-x-clip">
+    <article className="min-h-[100svh] overflow-x-clip" data-demo-detail-layout>
       <header className="border-b border-border bg-background px-4 sm:px-6 md:px-10">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 font-mono text-xs uppercase tracking-[0.11em] text-muted-foreground sm:tracking-[0.14em]">
             <Link
               href={catalogHref}
@@ -142,59 +142,94 @@ export function DemoDetailLayout({
         </div>
       </header>
 
-      <section className="px-4 py-6 sm:px-6 sm:py-8 md:px-10">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-              {categoryLabel}
-            </span>
-            <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-              {levelLabel}
-            </span>
-            {demo.illustrative ? (
-              <span
-                className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
-                title={pageCopy.illustrativeTitle}
-              >
-                ◆ {pageCopy.illustrative}
+      <section
+        className="px-4 py-5 sm:px-6 sm:py-7 md:px-10"
+        data-demo-detail-hero
+      >
+        <div className="mx-auto grid max-w-7xl border border-foreground/60 bg-background lg:grid-cols-[minmax(0,1.55fr)_minmax(18rem,0.45fr)]">
+          <div className="min-w-0 p-5 sm:p-7 lg:border-r lg:border-border lg:p-9">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                {categoryLabel}
               </span>
-            ) : null}
+              <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
+                {levelLabel}
+              </span>
+              {demo.illustrative ? (
+                <span
+                  className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
+                  title={pageCopy.illustrativeTitle}
+                >
+                  ◆ {pageCopy.illustrative}
+                </span>
+              ) : null}
+            </div>
+            <h1 className="mt-4 max-w-5xl break-words text-[clamp(2.5rem,6vw,5.25rem)] font-bold leading-[0.91] tracking-[-0.055em]">
+              {demo.title}{" "}
+              <span className="text-brand-orange">{demo.titleKicker}</span>
+            </h1>
+            <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              {demo.description}
+            </p>
           </div>
-          <h1 className="mt-3 max-w-5xl break-words text-[clamp(2.25rem,6vw,3.75rem)] font-bold leading-[0.98] tracking-[-0.04em]">
-            {demo.title}{" "}
-            <span className="text-brand-orange">{demo.titleKicker}</span>
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            {demo.description}
-          </p>
-          <div className="mt-3 max-w-4xl break-words font-mono text-xs uppercase leading-5 tracking-[0.1em] text-muted-foreground">
-            ◆ {demo.background}
-          </div>
+          <aside
+            className="flex min-w-0 flex-col justify-between bg-card p-5 sm:p-6"
+            aria-label={`${pageCopy.example} ${demo.n}`}
+          >
+            <div>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+                {pageCopy.example} {demo.n}
+              </p>
+              <p className="mt-3 break-words font-mono text-xs uppercase leading-5 tracking-[0.08em] text-muted-foreground">
+                {demo.background}
+              </p>
+            </div>
+            <dl className="mt-6 border-t border-border">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-border py-3 text-sm">
+                <dt className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  {pageCopy.practiceData}
+                </dt>
+                <dd className="text-right font-semibold text-foreground">
+                  {categoryLabel}
+                </dd>
+              </div>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-border py-3 text-sm">
+                <dt className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  {pageCopy.learningContext}
+                </dt>
+                <dd className="text-right font-semibold text-foreground">
+                  {levelLabel}
+                </dd>
+              </div>
+            </dl>
+          </aside>
         </div>
       </section>
 
       <section
         data-demo-instrument
-        className="border-y border-border bg-card px-2 py-6 sm:px-4 md:px-10"
+        className="border-y border-border bg-foreground/[0.035] px-2 py-5 sm:px-4 sm:py-6 md:px-10"
         aria-label={`${demo.title} ${demo.titleKicker}`}
       >
-        <div className="mx-auto max-w-6xl">
-          <EvidenceBadge
-            evidenceMode={demo.evidenceMode}
-            externalActionMode={demo.externalActionMode}
-            locale={locale}
-          />
-          <DemoShell demo={demo} locale={locale} />
+        <div className="mx-auto max-w-7xl">
+          <div className="border-l-[3px] border-l-brand-orange pl-3 sm:pl-4">
+            <EvidenceBadge
+              evidenceMode={demo.evidenceMode}
+              externalActionMode={demo.externalActionMode}
+              locale={locale}
+            />
+            <DemoShell demo={demo} locale={locale} />
+          </div>
         </div>
       </section>
 
       <section
         id="demo-notes"
         data-demo-notes
-        className="scroll-mt-24 px-4 py-8 sm:px-6 md:px-10"
+        className="scroll-mt-24 px-4 py-7 sm:px-6 md:px-10"
       >
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2 lg:gap-8">
-          <div className="min-w-0">
+        <div className="mx-auto grid max-w-7xl gap-3 lg:grid-cols-12">
+          <div className="min-w-0 border border-foreground/50 bg-background p-4 sm:p-6 lg:col-span-7">
             <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {pageCopy.practiceData}
             </div>
@@ -216,7 +251,7 @@ export function DemoDetailLayout({
             </div>
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 border border-border bg-card p-4 sm:p-6 lg:col-span-5">
             <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {pageCopy.learningContext}
             </div>
@@ -311,9 +346,9 @@ export function DemoDetailLayout({
 
       <section
         data-demo-continuation
-        className="border-y border-border bg-card px-4 py-6 sm:px-6 md:px-10"
+        className="border-y border-border bg-card px-4 py-5 sm:px-6 md:px-10"
       >
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 border-l-[3px] border-l-brand-orange pl-4 sm:flex-row sm:items-center sm:justify-between sm:pl-5">
           <div className="min-w-0">
             <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {pageCopy.continueLearning}
@@ -335,8 +370,8 @@ export function DemoDetailLayout({
         </div>
       </section>
 
-      <section className="px-4 py-6 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <section className="px-4 py-5 sm:px-6 md:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 border border-foreground/50 bg-background p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div>
             <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {pageCopy.nextExample} · {next.n}

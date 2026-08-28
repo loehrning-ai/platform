@@ -2,17 +2,20 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("next/dynamic", () => ({
-  default: () =>
-    function HeroNetworkMock(props: { mobile?: boolean; paused?: boolean }) {
-      return (
-        <div
-          data-testid="hero-network"
-          data-mode={props.mobile ? "mobile" : "desktop"}
-          data-paused={props.paused ? "true" : "false"}
-        />
-      );
-    },
+vi.mock("@/components/home/hero-network", () => ({
+  HeroNetwork: function HeroNetworkMock(props: {
+    mobile?: boolean;
+    paused?: boolean;
+  }) {
+    return (
+      <div
+        data-testid="hero-network"
+        data-hero-network-shell
+        data-mode={props.mobile ? "mobile" : "desktop"}
+        data-paused={props.paused ? "true" : "false"}
+      />
+    );
+  },
 }));
 
 import { HeroSection } from "./hero";
@@ -37,11 +40,13 @@ afterEach(() => {
 });
 
 describe("HeroSection responsive globe", () => {
-  it("server-renders a static globe landmark before viewport hydration", () => {
+  it("server-renders the real globe shell without an alternate poster", () => {
     setDesktopMatch(true);
     const html = renderToString(<HeroSection locale="en" />);
 
-    expect(html).toContain("data-hero-globe-poster");
+    expect(html).not.toContain("data-hero-globe-poster");
+    expect(html).toContain('data-testid="hero-network"');
+    expect(html).toContain("data-hero-network-shell");
   });
 
   it.each([
@@ -51,20 +56,25 @@ describe("HeroSection responsive globe", () => {
     setDesktopMatch(matches);
     const { getAllByTestId } = render(<HeroSection />);
 
-    await waitFor(() => {
-      const networks = getAllByTestId("hero-network");
-      expect(networks).toHaveLength(1);
-      expect(networks[0]).toHaveAttribute("data-mode", mode);
-    });
+    await waitFor(
+      () => {
+        const networks = getAllByTestId("hero-network");
+        expect(networks).toHaveLength(1);
+        expect(networks[0]).toHaveAttribute("data-mode", mode);
+      },
+      { timeout: 500 },
+    );
   });
 
   it("gives desktop users a 44px native pause control and resumes the same globe", async () => {
     setDesktopMatch(true);
     render(<HeroSection locale="en" />);
 
-    const pause = await screen.findByRole("button", {
-      name: "Pause globe motion",
-    });
+    const pause = await screen.findByRole(
+      "button",
+      { name: "Pause globe motion" },
+      { timeout: 500 },
+    );
     expect(pause).toHaveClass("min-h-11", "motion-reduce:hidden");
     expect(pause).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByTestId("hero-network")).toHaveAttribute(
@@ -87,11 +97,13 @@ describe("HeroSection responsive globe", () => {
     setDesktopMatch(false);
     render(<HeroSection locale="en" />);
 
-    await waitFor(() =>
-      expect(screen.getByTestId("hero-network")).toHaveAttribute(
-        "data-mode",
-        "mobile",
-      ),
+    await waitFor(
+      () =>
+        expect(screen.getByTestId("hero-network")).toHaveAttribute(
+          "data-mode",
+          "mobile",
+        ),
+      { timeout: 500 },
     );
     expect(
       screen.queryByRole("button", { name: /globe motion/i }),

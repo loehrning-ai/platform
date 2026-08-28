@@ -162,11 +162,29 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
+      "path": "packages/website/public/course-covers/ai-native-cover-v3.webp",
+      "sizeBytes": 70250,
+      "sha256": "1aaee90eefed3c00feda568b4973434f74870cc9684dc35ecbf812a89d7ec2ac",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
       "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v2.webp",
       "sizeBytes": 57516,
       "sha256": "fdd8c36ea22b6ec80a44ae66e1e2d130566a742f1367c9591857413bc0521352",
       "owner": "Tim Löhr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v3.webp",
+      "sizeBytes": 63068,
+      "sha256": "0fe285d79b73d9aa20e1a164c08126c84507c3397955708278f4f4d43ee08c5f",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
@@ -180,11 +198,29 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
+      "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v3.webp",
+      "sizeBytes": 77396,
+      "sha256": "5b0b946261b63d424bd7c7511abade48d685f6db914ed28c2d6a25252a8fa376",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
       "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v2.webp",
       "sizeBytes": 78916,
       "sha256": "619d83f8877f8bd1f5d4b70e0e8c7cdb12740ef12ed81a3457ba9ced2deeff40",
       "owner": "Tim Löhr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v3.webp",
+      "sizeBytes": 108434,
+      "sha256": "7b304dc46d11a998201f731ed29ac90710cda823124452eba8b436757d820840",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
@@ -608,6 +644,15 @@
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
+      "path": "packages/website/src/fonts/LoehrningSans-Bold-BookDisplay.woff2",
+      "sizeBytes": 5392,
+      "sha256": "a7fd119918ea5832671d10a5c14106f7f457e9125d47dbe03c00c87bef9d7e8f",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Subset of packages/website/public/fonts/loehrning-sans-bold-v1.woff2 for the fixed German and English book-catalog headings plus the zero-width metric glyph",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/LoehrningSans-Bold.ttf",
       "sizeBytes": 417076,
       "sha256": "96d7568b98e9dbc086e8bfc28e965f667c226721076f019cf12f8f6f10efbff0",
@@ -617,7 +662,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/src/fonts/LoehrningSans-Bold.woff2",
+      "path": "packages/website/public/fonts/loehrning-sans-bold-v1.woff2",
       "sizeBytes": 23948,
       "sha256": "31bea60fecac37cd0c39679e26b9d981f08a6f148085bbcb103f8768713007b1",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -635,7 +680,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/src/fonts/LoehrningSans-Medium.woff2",
+      "path": "packages/website/public/fonts/loehrning-sans-medium-v1.woff2",
       "sizeBytes": 23924,
       "sha256": "a38caa38466b1a94ffc8d80ea4b389965d7d951d98cb97811bd6a2acca9c71ba",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -653,7 +698,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/src/fonts/LoehrningSans-Regular.woff2",
+      "path": "packages/website/public/fonts/loehrning-sans-regular-v1.woff2",
       "sizeBytes": 23780,
       "sha256": "d8810e14e49e36a635a66723b00e1db7afd7ad6342ab164b1c7428e9c796e4c0",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -671,7 +716,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/src/fonts/LoehrningSans-SemiBold.woff2",
+      "path": "packages/website/public/fonts/loehrning-sans-semibold-v1.woff2",
       "sizeBytes": 24096,
       "sha256": "0e878e65a550506ae4295fd9adbd1779fd7bb2abae423d81258344aec2edde01",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -753,8 +798,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 158225,
-      "sha256": "9eea0b0d66961a16effd77505e7a2cf8317717138d9ec721780fe54fca0ac7d4",
+      "sizeBytes": 162627,
+      "sha256": "df3cc2ca819487e71775f4de8fd9407fc693648573dba6ccf4e0c79cda43c948",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -762,8 +807,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 109172,
-      "sha256": "5edae5e1156b20e9d677f6e80b3071d8fcdf9906aaf900351cb3fdd7a9d0c7e5",
+      "sizeBytes": 110589,
+      "sha256": "bee0fb4ad3b044780d3076b55bd69db5c8c0aa8035362ea89d3eaeca643e769f",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -780,8 +825,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 132024,
-      "sha256": "fb5c532b217bdae0b0cdd473dea5c44f88edefc5ce167e5680c0b04802acfd22",
+      "sizeBytes": 686491,
+      "sha256": "6a4377b268810b27f13e049b5ddd6338cb5e61d1c8f426f0300bd15b32b51aa5",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

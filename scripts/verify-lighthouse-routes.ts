@@ -12,7 +12,6 @@ import {
 } from "../packages/website/src/lib/crawl/contract";
 import { demos } from "../packages/website/src/lib/demos";
 import { OPEN_SOURCE_ARTIFACTS } from "../packages/website/src/lib/open-source/artifacts";
-import { WIE_KI_LEKTIONEN } from "../packages/website/src/lib/wie-ki-funktioniert";
 import { getWorkshopSlugs } from "../packages/website/src/lib/workshops";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -202,10 +201,6 @@ export async function buildPublishedDynamicCandidates(): Promise<
     (href) => matchesPattern(href, "/open-source/:kind/:slug"),
   );
   return new Map([
-    [
-      "/wie-ki-funktioniert/:lektionId",
-      WIE_KI_LEKTIONEN.map((lektion) => `/wie-ki-funktioniert/${lektion.id}`),
-    ],
     ["/blog/:slug", BLOG_POSTS.map((post) => `/blog/${post.slug}`)],
     [
       "/workshops/:slug",

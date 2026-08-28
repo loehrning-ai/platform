@@ -21,6 +21,7 @@ describe("TechnicalCourseLanding", () => {
           secondaryAction={<a href="#map">View course map</a>}
           facts={["8 lessons", "45 minutes"]}
           factsLabel="Course facts"
+          progress={<div role="progressbar" aria-label="Course progress" />}
         />
         <TechnicalCourseSectionHeading
           id="map-heading"
@@ -35,6 +36,9 @@ describe("TechnicalCourseLanding", () => {
     );
     expect(frame).toHaveAttribute("lang", "en");
     expect(
+      frame?.querySelector("[data-technical-course-header]"),
+    ).toHaveClass("border", "border-foreground", "overflow-hidden");
+    expect(
       screen.getByRole("heading", {
         level: 1,
         name: "Make one bounded decision.",
@@ -47,10 +51,22 @@ describe("TechnicalCourseLanding", () => {
       screen.getByRole("link", { name: "View course map" }),
     ).toHaveAttribute("href", "#map");
     const facts = screen.getByRole("complementary", { name: "Course facts" });
+    expect(within(facts).getByText("Course facts")).toBeVisible();
     expect(within(facts).getAllByRole("listitem")).toHaveLength(2);
+    expect(
+      facts.querySelector("[data-course-onboarding-checklist]"),
+    ).not.toBeNull();
+    expect(
+      facts.querySelector("[data-course-progress-card]"),
+    ).toContainElement(
+      screen.getByRole("progressbar", { name: "Course progress" }),
+    );
     expect(
       screen.getByRole("heading", { level: 2, name: "Eight decisions" }),
     ).toBeInTheDocument();
+    expect(
+      document.querySelector("[data-technical-section-heading]"),
+    ).toHaveClass("grid-cols-[0.25rem_minmax(0,1fr)]");
   });
 
   it("locks the shared action and ledger classes to the target-size and flat-motion contract", () => {
@@ -66,6 +82,7 @@ describe("TechnicalCourseLanding", () => {
     ]) {
       expect(className).not.toMatch(/shadow|translate|transition-all/);
       expect(className).not.toMatch(/\brounded(?:-|\b)/);
+      expect(className).toContain("motion-reduce:transition-none");
     }
   });
 });

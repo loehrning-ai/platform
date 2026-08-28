@@ -97,9 +97,11 @@ test.describe("/kurse hub", () => {
     await page.goto(ROUTE, { waitUntil: "load" });
 
     // Fresh visitor → one explicit next proof, href = startHref of the track.
-    const startCta = page.getByRole("link", {
-      name: /Nachweis beginnen.*KI-Führerschein/i,
-    });
+    const startCta = page
+      .getByTestId("next-proof")
+      .getByRole("link", {
+        name: /Nachweis beginnen.*KI-Führerschein/i,
+      });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
 

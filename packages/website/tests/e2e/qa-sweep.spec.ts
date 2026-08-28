@@ -22,7 +22,6 @@ test.describe("QA sweep - public reputation routes", () => {
   for (const route of [
     "/",
     "/ueber-mich",
-    "/ueber-die-plattform",
     "/open-source",
     "/kurse",
     "/buecher",
@@ -49,9 +48,13 @@ test.describe("QA sweep - public reputation routes", () => {
 
 test.describe("QA sweep - retired commercial routes", () => {
   for (const [route, target] of [
-    ["/leistungen", "/ueber-die-plattform"],
-    ["/leistungen/diagnose", "/ueber-die-plattform"],
-    ["/daten-audit", "/ueber-die-plattform"],
+    ["/leistungen", "/ueber-mich#redaktion"],
+    ["/leistungen/diagnose", "/ueber-mich#redaktion"],
+    ["/daten-audit", "/ueber-mich#redaktion"],
+    ["/wie-ki-funktioniert", "/einstieg"],
+    ["/wie-ki-funktioniert/lektion-1-vorhersage", "/einstieg"],
+    ["/bekannte-grenzen", "/hilfe#grenzen"],
+    ["/ueber-die-plattform", "/ueber-mich#redaktion"],
     ["/kontakt", "/feedback"],
     ["/ki-transformation-check", "/ki-check"],
     ["/foerdermittel", ""],

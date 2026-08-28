@@ -12,7 +12,12 @@ test.describe("/demos gallery", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
     );
-    await expect(page.locator("[data-demo-tile]").first()).toBeVisible();
+    await expect(page.locator("[data-demo-atlas-hero]")).toBeVisible();
+    await expect(page.locator("[data-demo-filter-console]")).toBeVisible();
+    const leadTile = page.locator("[data-demo-tile]").first();
+    await expect(leadTile).toBeVisible();
+    await expect(leadTile).toHaveAttribute("data-demo-size", demos[0].size);
+    await expect(leadTile.locator("[data-demo-preview]")).toBeVisible();
   });
 
   test("query-state URL remains public", async ({ page }) => {
@@ -22,6 +27,27 @@ test.describe("/demos gallery", () => {
       "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
     );
     await expect(page).not.toHaveURL(/\/login/);
+  });
+
+  test("keeps compact filters and the preview atlas usable at 390px", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/demos", { waitUntil: "domcontentloaded" });
+
+    await expect(
+      page.getByRole("combobox", { name: "Reifegrad" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("combobox", { name: "Kategorie" }),
+    ).toBeVisible();
+    await expect(page.locator("[data-demo-preview]").first()).toBeVisible();
+
+    const { scrollWidth, innerWidth } = await page.evaluate(() => ({
+      scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
+      innerWidth: window.innerWidth,
+    }));
+    expect(scrollWidth).toBeLessThanOrEqual(innerWidth + 1);
   });
 });
 
@@ -34,6 +60,102 @@ test.describe("/demos/[slug] detail routes", () => {
       expect(res?.status()).toBe(200);
       await expect(page).not.toHaveURL(/\/login/);
       await expect(page.locator("h1").first()).toBeVisible();
+      await expect(page.locator("[data-demo-detail-layout]")).toBeVisible();
+      await expect(page.locator("[data-demo-detail-hero]")).toBeVisible();
+      await expect(page.locator("[data-demo-shell]")).toBeVisible();
+    });
+  }
+
+  for (const engineCase of [
+    {
+      slug: "outbound-workflow",
+      action: /Was fehlt vor einem echten Versand/,
+      result: "Verbergen",
+    },
+    {
+      slug: "cost-drift-observability",
+      action: /Rechnungs-Extraktion/,
+      result: "€412.08",
+    },
+  ] as const) {
+    test(`${engineCase.slug} stays contained and keyboard-operable at 390px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.goto(`/demos/${engineCase.slug}`, {
+        waitUntil: "domcontentloaded",
+      });
+
+      const engine = page.locator(`[data-demo-id="${engineCase.slug}"]`);
+      const shell = page.locator("[data-demo-shell]");
+      await expect(engine).toBeVisible();
+      const action = page.getByRole("button", { name: engineCase.action });
+      await action.focus();
+      await expect
+        .poll(() =>
+          action.evaluate((element) => element.matches(":focus-visible")),
+        )
+        .toBe(true);
+      await action.press("Enter");
+      await expect(
+        page.getByText(engineCase.result, { exact: true }),
+      ).toBeVisible();
+
+      const containment = await shell.evaluate((root, engineSlug) => {
+        const engineElement = root.querySelector(
+          `[data-demo-id="${engineSlug}"]`,
+        );
+        if (!(engineElement instanceof HTMLElement)) {
+          throw new Error(`Missing demo engine: ${engineSlug}`);
+        }
+        const rootRect = root.getBoundingClientRect();
+        const visibleEscapes = Array.from(root.querySelectorAll("*")).flatMap(
+          (element) => {
+            const rect = element.getBoundingClientRect();
+            const style = getComputedStyle(element);
+            const escapes =
+              style.display !== "none" &&
+              style.visibility !== "hidden" &&
+              rect.width > 0 &&
+              rect.height > 0 &&
+              (rect.left < rootRect.left - 1 ||
+                rect.right > rootRect.right + 1);
+            return escapes
+              ? [
+                  {
+                    tag: element.tagName.toLowerCase(),
+                    text: element.textContent?.trim().slice(0, 80) ?? "",
+                    left: rect.left,
+                    right: rect.right,
+                    rootLeft: rootRect.left,
+                    rootRight: rootRect.right,
+                  },
+                ]
+              : [];
+          },
+        );
+        return {
+          engineClientWidth: engineElement.clientWidth,
+          engineScrollWidth: engineElement.scrollWidth,
+          shellClientWidth: root.clientWidth,
+          shellScrollWidth: root.scrollWidth,
+          documentClientWidth: document.documentElement.clientWidth,
+          documentScrollWidth: document.documentElement.scrollWidth,
+          visibleEscapes,
+        };
+      }, engineCase.slug);
+
+      expect(containment.engineScrollWidth).toBeLessThanOrEqual(
+        containment.engineClientWidth + 1,
+      );
+      expect(containment.shellScrollWidth).toBeLessThanOrEqual(
+        containment.shellClientWidth + 1,
+      );
+      expect(containment.documentScrollWidth).toBeLessThanOrEqual(
+        containment.documentClientWidth + 1,
+      );
+      expect(containment.visibleEscapes).toEqual([]);
     });
   }
 
@@ -136,14 +258,12 @@ test.describe("legacy /leistungen/bauen/[slug] product routes", () => {
     "ki-assistent",
     "compliance-guard",
   ] as const) {
-    test(`${slug} redirects to the platform trust page`, async ({
-      request,
-    }) => {
+    test(`${slug} redirects to platform stewardship`, async ({ request }) => {
       const res = await request.get(`/leistungen/bauen/${slug}`, {
         maxRedirects: 0,
       });
       expect([301, 308]).toContain(res.status());
-      expect(res.headers()["location"]).toContain("/ueber-die-plattform");
+      expect(res.headers()["location"]).toContain("/ueber-mich#redaktion");
     });
   }
 });

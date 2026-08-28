@@ -68,7 +68,7 @@ function answerFirstAndAdvance(
   isLast: boolean,
 ) {
   fireEvent.click(
-    screen.getByRole("button", { name: question.options[0].text }),
+    screen.getByRole("radio", { name: question.options[0].text }),
   );
   fireEvent.click(
     screen.getByRole("button", { name: isLast ? "Zum Ergebnis" : "Weiter" }),
@@ -78,6 +78,17 @@ function answerFirstAndAdvance(
 describe("KiCheckClient", () => {
   it("shows one question at a time and requires a choice before advancing", () => {
     render(<KiCheckClient />);
+
+    expect(
+      screen.getByRole("group", {
+        name: "Kompetenzfelder im KI-Check",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("navigation", {
+        name: "Kompetenzfelder im KI-Check",
+      }),
+    ).not.toBeInTheDocument();
 
     // First question visible; the next question is not.
     expect(
@@ -95,7 +106,7 @@ describe("KiCheckClient", () => {
       ),
     ).toHaveLength(1);
     fireEvent.click(
-      screen.getByRole("button", { name: QUESTIONS[0].options[0].text }),
+      screen.getByRole("radio", { name: QUESTIONS[0].options[0].text }),
     );
     expect(screen.getByRole("button", { name: "Weiter" })).toBeEnabled();
   });
@@ -105,9 +116,29 @@ describe("KiCheckClient", () => {
     const meaning = QUESTIONS[0].options[0].meaning;
     expect(screen.queryByText(meaning)).not.toBeInTheDocument();
     fireEvent.click(
-      screen.getByRole("button", { name: QUESTIONS[0].options[0].text }),
+      screen.getByRole("radio", { name: QUESTIONS[0].options[0].text }),
     );
-    expect(screen.getByText(meaning)).toBeInTheDocument();
+    const feedback = document.querySelector("[data-answer-feedback]");
+    expect(feedback).toHaveAttribute("aria-live", "polite");
+    expect(feedback).toHaveTextContent(meaning);
+  });
+
+  it("uses radio semantics and arrow keys to move and select", () => {
+    render(<KiCheckClient />);
+    const radios = screen.getAllByRole("radio");
+
+    expect(screen.getByRole("radiogroup")).toHaveAccessibleName(
+      QUESTIONS[0].text,
+    );
+    expect(radios[0]).toHaveAttribute("tabindex", "0");
+    expect(radios[1]).toHaveAttribute("tabindex", "-1");
+
+    radios[0].focus();
+    fireEvent.keyDown(radios[0], { key: "ArrowDown" });
+
+    expect(radios[1]).toHaveFocus();
+    expect(radios[1]).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByRole("button", { name: "Weiter" })).toBeEnabled();
   });
 
   it("moves focus to each new question and then to the result heading", () => {
@@ -137,6 +168,12 @@ describe("KiCheckClient", () => {
     expect(screen.getByText("Gesamtstand")).toBeInTheDocument();
     expect(screen.getByText(/Stufe 1: Neugierig/)).toBeInTheDocument();
     expect(screen.getByText("Dein nächster Schritt")).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "Kompetenzwerte im Profil" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Methode und Grenzen der Auswertung"),
+    ).toBeInTheDocument();
 
     const start = screen.getByRole("link", { name: /Kurs starten/ });
     expect(start).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
@@ -195,7 +232,7 @@ describe("KiCheckClient", () => {
 
     for (let index = 0; index < questions.length; index += 1) {
       fireEvent.click(
-        screen.getByRole("button", { name: questions[index].options[0].text }),
+        screen.getByRole("radio", { name: questions[index].options[0].text }),
       );
       fireEvent.click(
         screen.getByRole("button", {
@@ -209,6 +246,9 @@ describe("KiCheckClient", () => {
     ).toHaveFocus();
     expect(screen.getByText("Level 1: Starting")).toBeInTheDocument();
     expect(screen.getByText("AI Fundamentals")).toBeInTheDocument();
+    expect(
+      screen.getByText("Method and limits of this result"),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start course/ })).toHaveAttribute(
       "href",
       "/en/ki-fuehrerschein/kurs",

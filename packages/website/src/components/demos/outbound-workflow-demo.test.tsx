@@ -48,7 +48,9 @@ describe("<OutboundWorkflowDemo>", () => {
     render(<OutboundWorkflowDemo />);
 
     // Header + section heading.
-    expect(screen.getByText("Signalbasierte Nachricht · Pipeline")).toBeInTheDocument();
+    expect(
+      screen.getByText("Signalbasierte Nachricht · Pipeline"),
+    ).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Öffentliche Signale.",
     );
@@ -61,13 +63,19 @@ describe("<OutboundWorkflowDemo>", () => {
     // First lead card (LEAD #0412, row 1/3 - leadIdx=0 padded to 4 digits).
     expect(screen.getByText("LEAD #0412")).toBeInTheDocument();
     expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
-    expect(screen.getByText("Head of Ops · Fiktivwerk Alpha (rein fiktiv)")).toBeInTheDocument();
+    expect(
+      screen.getByText("Head of Ops · Fiktivwerk Alpha (rein fiktiv)"),
+    ).toBeInTheDocument();
     expect(screen.getByText("412 Tage")).toBeInTheDocument();
     expect(screen.getByText("87")).toBeInTheDocument();
-    expect(screen.getByText("Wachstumsphase · 42 Mitarbeitende")).toBeInTheDocument();
+    expect(
+      screen.getByText("Wachstumsphase · 42 Mitarbeitende"),
+    ).toBeInTheDocument();
 
     // All demo addresses use IANA-reserved example domains.
-    expect(screen.getByText("kontakt-alpha@fiktivwerk.example")).toBeInTheDocument();
+    expect(
+      screen.getByText("kontakt-alpha@fiktivwerk.example"),
+    ).toBeInTheDocument();
     expect(screen.getByText("vertrieb@fiktivwerk.example")).toBeInTheDocument();
 
     // The four metric tiles.
@@ -82,7 +90,9 @@ describe("<OutboundWorkflowDemo>", () => {
 
     // The failure-mode checklist only exists at stage>=4, so it is absent while idle.
     expect(
-      screen.queryByRole("button", { name: /Was fehlt vor einem echten Versand/ }),
+      screen.queryByRole("button", {
+        name: /Was fehlt vor einem echten Versand/,
+      }),
     ).not.toBeInTheDocument();
   });
 
@@ -91,14 +101,18 @@ describe("<OutboundWorkflowDemo>", () => {
     render(<OutboundWorkflowDemo />);
 
     // the full generated email body for the first lead is shown.
-    expect(screen.getByText(/20-minütiges Gespräch, kein Angebot/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/20-minütiges Gespräch, kein Angebot/),
+    ).toBeInTheDocument();
     // Signature block.
     expect(screen.getByText("T. Muster")).toBeInTheDocument();
 
     // Send-simulated status header + token/trace footer (stage>=3 / stage>=4).
     expect(screen.getByText("● Versand simuliert 09:14")).toBeInTheDocument();
     expect(screen.getByText("◆ 247 Tokens")).toBeInTheDocument();
-    expect(screen.getByText("touched_at = 2026-04-21 09:14:03")).toBeInTheDocument();
+    expect(
+      screen.getByText("touched_at = 2026-04-21 09:14:03"),
+    ).toBeInTheDocument();
 
     // The failure-mode block is now present; the checklist is collapsed by default.
     const toggle = screen.getByRole("button", {
@@ -115,6 +129,23 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(screen.getByText(/Menschliche Freigabe/)).toBeInTheDocument();
 
     // The toggle label flips to the collapse affordance.
-    expect(screen.getByRole("button", { name: "Verbergen" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Verbergen" }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps both mobile grid panels inside the demo shell", () => {
+    const { container } = render(<OutboundWorkflowDemo />);
+    const root = container.querySelector<HTMLElement>(
+      '[data-demo-id="outbound-workflow"]',
+    );
+    const body = container.querySelector<HTMLElement>("[data-outbound-body]");
+
+    expect(root).toHaveStyle({ width: "100%", minWidth: "0" });
+    expect(body).toHaveStyle({ minWidth: "0" });
+    expect(body?.children).toHaveLength(2);
+    for (const panel of Array.from(body?.children ?? [])) {
+      expect(panel).toHaveStyle({ minWidth: "0" });
+    }
   });
 });

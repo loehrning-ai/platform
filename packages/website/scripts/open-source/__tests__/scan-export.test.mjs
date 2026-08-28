@@ -12,6 +12,7 @@ import { createHash } from "node:crypto";
 import {
   mkdir,
   mkdtemp,
+  readFile,
   rename,
   rm,
   symlink,
@@ -245,6 +246,19 @@ async function main() {
       0x00,
     ]);
     const fontPath = "packages/website/src/assets/example.ttf";
+    const runtimeFont = await readFile(
+      join(
+        here,
+        "..",
+        "..",
+        "..",
+        "public",
+        "fonts",
+        "loehrning-sans-regular-v1.woff2",
+      ),
+    );
+    const runtimeFontPath =
+      "packages/website/public/fonts/loehrning-sans-regular-v1.woff2";
     const logoSvg = Buffer.from(
       '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1v1z"/></svg>\n',
     );
@@ -269,9 +283,11 @@ async function main() {
         `${ENV_NAMES.serviceRole}=\${SUPABASE_SERVICE_ROLE_KEY}\n` +
         `${ENV_NAMES.database}=postgresql://test:test@localhost:5432/test\n`,
       [fontPath]: font,
+      [runtimeFontPath]: runtimeFont,
       [logoPath]: logoSvg,
       "ASSET_MANIFEST.json": manifestJson([
         manifestAsset(fontPath, font),
+        manifestAsset(runtimeFontPath, runtimeFont),
         manifestAsset(logoPath, logoSvg),
       ]),
     });

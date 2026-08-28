@@ -340,16 +340,22 @@ function CourseProgress({
 }) {
   const galleryCopy = COURSE_GALLERY_COPY[locale];
   const pct = progressPercent(course, stat);
+  const progressText = hydrated
+    ? galleryCopy.progressLoaded(stat.completed, course.totalLessons)
+    : galleryCopy.progressLoading(course.title);
 
   return (
     <div
-      className="min-w-0"
+      className="min-w-0 border border-border bg-background px-3 py-2.5"
+      data-course-progress-card
       data-testid={identified ? `course-progress-${course.slug}` : undefined}
     >
-      <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-        <span>{ATLAS_COPY[locale].progress}</span>
+      <div className="flex items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
+        <span className="font-bold uppercase tracking-[0.08em]">
+          {ATLAS_COPY[locale].progress}
+        </span>
         <span
-          className="font-mono font-bold text-foreground"
+          className="font-bold tabular-nums text-foreground"
           data-testid={identified ? `progress-pct-${course.slug}` : undefined}
         >
           {hydrated ? `${pct}%` : "—"}
@@ -361,20 +367,20 @@ function CourseProgress({
         aria-valuemin={0}
         aria-valuemax={course.totalLessons}
         aria-valuenow={hydrated ? stat.completed : 0}
-        aria-valuetext={
-          hydrated
-            ? galleryCopy.progressLoaded(stat.completed, course.totalLessons)
-            : galleryCopy.progressLoading(course.title)
-        }
+        aria-valuetext={progressText}
         aria-label={`${galleryCopy.progress} ${course.title}`}
         data-testid={identified ? `progress-dots-${course.slug}` : undefined}
       >
         <span
           aria-hidden="true"
-          className="block h-full bg-brand-orange"
-          style={{ width: hydrated ? `${pct}%` : "0%" }}
+          className="block h-full origin-left bg-brand-orange transition-transform duration-300 motion-reduce:transition-none"
+          data-progress-fill
+          style={{ transform: `scaleX(${hydrated ? pct / 100 : 0})` }}
         />
       </div>
+      <p className="mt-2 font-mono text-xs tabular-nums text-muted-foreground">
+        {progressText}
+      </p>
     </div>
   );
 }
@@ -423,9 +429,16 @@ function CourseLedgerRow({
               : "open"
       }
     >
-      <div className="grid min-w-0 gap-3 p-4 sm:grid-cols-[48px_minmax(0,1fr)_minmax(150px,220px)] sm:items-center">
+      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[2.5rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
         <span
-          className="font-mono text-xs font-bold text-muted-foreground"
+          className={cn(
+            "flex h-10 w-10 items-center justify-center border font-mono text-xs font-bold tabular-nums",
+            liveStat?.certified
+              ? "border-foreground bg-foreground text-background"
+              : inPath
+                ? "border-brand-orange bg-kupfer-mist text-brand-orange"
+                : "border-border bg-background text-muted-foreground",
+          )}
           aria-hidden="true"
         >
           {String(index + 1).padStart(2, "0")}
@@ -450,19 +463,50 @@ function CourseLedgerRow({
             {course.tagline}
           </p>
         </div>
-        {live && liveStat ? (
-          <CourseProgress
-            course={course}
-            stat={liveStat}
-            hydrated={hydrated}
-            locale={locale}
-            identified
-          />
-        ) : (
-          <span className="text-xs text-muted-foreground">
-            {course.duration}
-          </span>
-        )}
+        <div className="col-span-2 min-w-0 lg:col-span-1">
+          {live && liveStat ? (
+            <CourseProgress
+              course={course}
+              stat={liveStat}
+              hydrated={hydrated}
+              locale={locale}
+              identified
+            />
+          ) : (
+            <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
+              {course.duration}
+            </span>
+          )}
+        </div>
+        <div
+          className="col-span-2 flex min-w-0 lg:col-span-1 lg:justify-self-end"
+          data-course-action
+        >
+          {live && action ? (
+            <Link
+              href={action.href}
+              prefetch={false}
+              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-[background-color,border-color] duration-150 hover:border-brand-orange hover:bg-brand-orange focus-visible:border-brand-orange focus-visible:bg-brand-orange motion-reduce:transition-none lg:w-auto"
+            >
+              <span className="break-words">{action.label}</span>
+              <span className="sr-only">: {course.title}</span>
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          ) : course.launchHref ? (
+            <a
+              href={course.launchHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-colors duration-150 hover:border-brand-orange hover:bg-brand-orange focus-visible:border-brand-orange focus-visible:bg-brand-orange motion-reduce:transition-none lg:w-auto"
+            >
+              <span className="break-words">{galleryCopy.openCourse}</span>
+              <span className="sr-only">
+                : {course.title}, {galleryCopy.externalNewTab}
+              </span>
+              <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </a>
+          ) : null}
+        </div>
       </div>
 
       <details className="group border-t border-border">
@@ -535,31 +579,6 @@ function CourseLedgerRow({
           </div>
 
           <div className="flex flex-col items-start gap-3 border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
-            {live && action ? (
-              <Link
-                href={action.href}
-                prefetch={false}
-                className="inline-flex min-h-11 items-center gap-2 border border-foreground px-4 py-2 text-sm font-bold text-foreground transition-colors duration-150 hover:border-brand-orange hover:text-brand-orange focus-visible:border-brand-orange motion-reduce:transition-none"
-              >
-                {action.label}
-                <span className="sr-only">: {course.title}</span>
-                <ArrowRight size={16} aria-hidden="true" />
-              </Link>
-            ) : course.launchHref ? (
-              <a
-                href={course.launchHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 border border-foreground px-4 py-2 text-sm font-bold text-foreground"
-              >
-                {galleryCopy.openCourse}
-                <span className="sr-only">
-                  : {course.title}, {galleryCopy.externalNewTab}
-                </span>
-                <ExternalLink size={16} aria-hidden="true" />
-              </a>
-            ) : null}
-
             {sourceHref ? (
               <div className="text-xs leading-relaxed text-muted-foreground">
                 <p className="font-semibold text-foreground">{copy.source}</p>
@@ -689,7 +708,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
             role="group"
             aria-label={copy.goalLabel}
           >
-            {copy.goals.map((candidate) => {
+            {copy.goals.map((candidate, goalIndex) => {
               const selected = candidate.id === goal.id;
               return (
                 <button
@@ -698,14 +717,31 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                   aria-pressed={selected}
                   aria-controls="selected-learning-path"
                   onClick={() => selectGoal(candidate.id)}
+                  data-learning-goal={candidate.id}
                   className={cn(
-                    "min-h-11 border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none",
+                    "relative grid min-h-14 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-2 overflow-hidden border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none",
                     selected
                       ? "border-foreground bg-foreground text-background"
                       : "border-border bg-background text-foreground hover:border-brand-orange focus-visible:border-brand-orange",
                   )}
                 >
-                  {candidate.label}
+                  <span
+                    className={cn(
+                      "font-mono text-xs tabular-nums",
+                      selected ? "text-kupfer-light" : "text-muted-foreground",
+                    )}
+                    aria-hidden="true"
+                  >
+                    {String(goalIndex + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 break-words">{candidate.label}</span>
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-brand-orange transition-transform duration-200 motion-reduce:transition-none",
+                      selected ? "scale-x-100" : "scale-x-0",
+                    )}
+                  />
                 </button>
               );
             })}
@@ -714,7 +750,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
 
         <div
           id="selected-learning-path"
-          className="grid lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.72fr)]"
+          className="grid min-w-0 overflow-hidden lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]"
         >
           <div className="p-4 sm:p-5" data-testid="selected-path-sequence">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
@@ -725,7 +761,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">{goal.summary}</p>
 
-            <ol className="mt-4 border-y border-border">
+            <ol className="mt-4" data-learning-path-stepper>
               {pathCourses.map((course, index) => {
                 const stat = stats[course.slug] ?? defaultStat(course);
                 const isNext = nextCourse?.slug === course.slug;
@@ -737,27 +773,45 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                 return (
                   <li
                     key={course.slug}
-                    className="border-b border-border last:border-b-0"
+                    className="relative min-w-0 pb-2 last:pb-0"
                   >
+                    {index < pathCourses.length - 1 ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute bottom-0 left-[0.875rem] top-7 w-px bg-border"
+                      />
+                    ) : null}
                     <Link
                       href={localizeHref(course.href, locale)}
                       aria-current={isNext ? "step" : undefined}
                       className={cn(
-                        "grid min-h-11 grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2 px-2 py-2 text-sm transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover motion-reduce:transition-none",
-                        isNext && "bg-kupfer-mist",
+                        "relative grid min-h-14 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-3 border border-transparent px-2 py-2 text-sm transition-[background-color,border-color] duration-150 hover:border-border hover:bg-card-hover focus-visible:border-brand-orange focus-visible:bg-card-hover motion-reduce:transition-none",
+                        isNext && "border-brand-orange bg-kupfer-mist",
                       )}
                     >
-                      <span className="font-mono text-xs text-muted-foreground">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="font-semibold text-foreground">
-                        {course.title}
-                      </span>
-                      <span className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
+                      <span
+                        className={cn(
+                          "relative z-[1] flex h-7 w-7 items-center justify-center border bg-background font-mono text-xs tabular-nums",
+                          stat.certified
+                            ? "border-foreground bg-foreground text-background"
+                            : isNext
+                              ? "border-brand-orange text-brand-orange"
+                              : "border-border text-muted-foreground",
+                        )}
+                      >
                         {stat.certified ? (
                           <Check size={14} aria-hidden="true" />
-                        ) : null}
-                        {status}
+                        ) : (
+                          String(index + 1).padStart(2, "0")
+                        )}
+                      </span>
+                      <span className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                        <span className="min-w-0 break-words font-semibold text-foreground">
+                          {course.title}
+                        </span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {status}
+                        </span>
                       </span>
                     </Link>
                   </li>
@@ -767,48 +821,61 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
           </div>
 
           <aside
-            className="order-first border-b border-border bg-kupfer-mist p-4 sm:p-5 lg:order-none lg:border-b-0 lg:border-l"
+            className="order-first min-w-0 border-b border-border bg-kupfer-mist p-4 sm:p-5 lg:order-none lg:border-b-0 lg:border-l"
             aria-live="polite"
             aria-atomic="true"
             data-testid="next-proof"
           >
-            {nextCourse && nextStat && nextAction ? (
-              <>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-                  {copy.nextProof}{" "}
-                  <span className="text-muted-foreground">
-                    · {goal.courseSlugs.indexOf(nextCourse.slug) + 1}/
-                    {goal.courseSlugs.length}
-                    <span className="sr-only"> {copy.pathPosition}</span>
-                  </span>
-                </p>
-                <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
-                  {nextCourse.title}
-                </h3>
-                <p className="mt-2 max-w-[48ch] text-sm leading-snug text-foreground">
-                  {(copy.proofs as Readonly<Record<string, string>>)[
-                    nextCourse.slug
-                  ] ?? nextCourse.tagline}
-                </p>
-                <div className="mt-3">
-                  <CourseProgress
-                    course={nextCourse}
-                    stat={nextStat}
-                    hydrated={hydrated}
-                    locale={locale}
-                  />
-                </div>
-                <Link
-                  href={nextAction.href}
-                  prefetch={false}
-                  className="mt-4 inline-flex min-h-11 items-center gap-2 border border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-[background-color,border-color] duration-150 hover:border-brand-orange hover:bg-brand-orange focus-visible:border-brand-orange focus-visible:bg-brand-orange motion-reduce:transition-none"
-                >
-                  {nextAction.label}
-                  <span className="sr-only">: {nextCourse.title}</span>
-                  <ArrowRight size={16} aria-hidden="true" />
-                </Link>
-              </>
-            ) : null}
+            <div className="relative min-w-0 pb-2 pr-2" data-next-proof-stack>
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-x-2 translate-y-2 border border-border bg-card"
+              />
+              <div className="dark-section relative min-w-0 border border-foreground bg-foreground p-4 sm:p-5">
+                {nextCourse && nextStat && nextAction ? (
+                  <>
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                      {copy.nextProof}{" "}
+                      <span className="text-muted-foreground">
+                        · {goal.courseSlugs.indexOf(nextCourse.slug) + 1}/
+                        {goal.courseSlugs.length}
+                        <span className="sr-only"> {copy.pathPosition}</span>
+                      </span>
+                    </p>
+                    <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
+                      {nextCourse.title}
+                    </h3>
+                    <p className="mt-2 max-w-[48ch] text-sm leading-snug text-foreground">
+                      {(copy.proofs as Readonly<Record<string, string>>)[
+                        nextCourse.slug
+                      ] ?? nextCourse.tagline}
+                    </p>
+                    <div className="mt-3">
+                      <CourseProgress
+                        course={nextCourse}
+                        stat={nextStat}
+                        hydrated={hydrated}
+                        locale={locale}
+                      />
+                    </div>
+                    <Link
+                      href={nextAction.href}
+                      prefetch={false}
+                      className="mt-4 inline-flex min-h-11 max-w-full items-center justify-between gap-3 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-[var(--color-dark-bg)] transition-[background-color,border-color,color] duration-150 hover:border-foreground hover:bg-foreground hover:text-background focus-visible:border-foreground focus-visible:bg-foreground focus-visible:text-background motion-reduce:transition-none"
+                    >
+                      <span className="min-w-0 break-words">
+                        {nextAction.label}
+                      </span>
+                      <span className="sr-only">: {nextCourse.title}</span>
+                      <ArrowRight
+                        className="h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </>
+                ) : null}
+              </div>
+            </div>
           </aside>
         </div>
       </section>

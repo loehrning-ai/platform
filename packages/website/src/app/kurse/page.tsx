@@ -101,10 +101,10 @@ export default async function KursePage() {
               </p>
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
                 <Link
-                  href={localizeHref("/ueber-die-plattform", locale)}
+                  href={localizeHref("/ueber-mich", locale)}
                   className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
                 >
-                  {copy.aboutPlatform}
+                  {copy.aboutMe}
                   <span aria-hidden="true">→</span>
                 </Link>
                 <Link

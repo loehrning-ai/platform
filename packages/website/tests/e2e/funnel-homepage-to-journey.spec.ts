@@ -47,14 +47,12 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
       }),
     ).toHaveAttribute("href", "/workshops");
 
-    const knowledge = nav.getByRole("button", { name: "Wissen" });
-    await knowledge.click();
     await expect(
-      page.locator("#wissen-nav-menu").getByRole("link", {
-        name: "Blog",
-        exact: true,
-      }),
+      nav.getByRole("link", { name: "Blog", exact: true }),
     ).toHaveAttribute("href", "/blog");
+    await expect(
+      nav.getByRole("link", { name: "Über mich", exact: true }),
+    ).toHaveAttribute("href", "/ueber-mich");
   } else {
     await expect(async () => {
       await page.getByRole("button", { name: "Menü öffnen" }).click();
@@ -74,6 +72,9 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
     await expect(
       menu.getByRole("link", { name: "Blog", exact: true }),
     ).toHaveAttribute("href", "/blog");
+    await expect(
+      menu.getByRole("link", { name: "Über mich", exact: true }),
+    ).toHaveAttribute("href", "/ueber-mich");
     await expect(
       menu.getByRole("link", { name: "Workshops", exact: true }),
     ).toHaveAttribute("href", "/workshops");

@@ -27,13 +27,6 @@ import {
 
 const ROUTE = "/open-source";
 
-// Hub constants discovered from src/lib/seo/entity.ts (GITHUB_ORG) remain
-// explicit independent assertions. Future tool/project/video cases
-// deliberately import the canonical registry so publication cannot omit its
-// own browser case. Imported courses are /kurse catalog content and are
-// covered by the route matrix, not by this spec.
-const ORG_SLUG = "loehrning-ai";
-const ORG_URL = `https://github.com/${ORG_SLUG}`;
 const SITE_ORIGIN = "https://loehrning.ai";
 
 const DETAIL_ARTIFACTS = [
@@ -51,7 +44,7 @@ const ENGLISH_DETAIL_REPRESENTATIVES = DETAIL_ARTIFACTS.filter(
 // The compact ledger derives its count from the same registry and localized
 // formatter used by the page. This keeps the browser contract coupled to
 // publication, not to removed explanatory chrome.
-const PUBLISHED_ARTIFACTS_COUNT = OPEN_SOURCE_SHARED_COPY.de.entries(
+const PUBLISHED_ARTIFACTS_COUNT = OPEN_SOURCE_PAGE_COPY.de.showcase.entryCount(
   DETAIL_ARTIFACTS.length,
 );
 
@@ -360,12 +353,11 @@ test.describe("/open-source hub", () => {
     await expect(h1).toBeVisible();
     await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
 
-    // The ledger: one unified list, the kind as a stamp (never a heading), and
-    // immutable provenance available on demand instead of repeated card copy.
+    // The hub leads with product proof and keeps provenance available on demand.
     await expect(
       page.getByRole("heading", {
         level: 2,
-        name: OPEN_SOURCE_SHARED_COPY.de.published,
+        name: OPEN_SOURCE_PAGE_COPY.de.showcase.heading,
       }),
     ).toBeVisible();
     await expect(page.getByText("Werkzeug", { exact: true })).toBeVisible();
@@ -379,8 +371,27 @@ test.describe("/open-source hub", () => {
         exact: true,
       }),
     });
+    await expect(
+      firstArtifactRow.getByRole("region", {
+        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.previewGroup}: ${firstArtifact.title}`,
+      }),
+    ).toBeVisible();
+    await expect(
+      firstArtifactRow.getByRole("link", {
+        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.detail}: ${firstArtifact.title}`,
+      }),
+    ).toHaveAttribute("href", firstArtifact.href);
+    await expect(
+      firstArtifactRow.getByRole("link", {
+        name: new RegExp(
+          `^${OPEN_SOURCE_PAGE_COPY.de.showcase.source}: ${firstArtifact.title}`,
+        ),
+      }),
+    ).toHaveAttribute("href", firstArtifact.source.revisionHref);
     await firstArtifactRow
-      .getByText("Quellstand und Lizenz", { exact: true })
+      .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
+        exact: true,
+      })
       .click();
     await expect(
       firstArtifactRow.getByRole("link", {
@@ -390,7 +401,9 @@ test.describe("/open-source hub", () => {
 
     // Structural heading at the foot of the page proves it rendered fully.
     await expect(
-      page.getByRole("heading", { name: "Code und redaktionelle Inhalte" }),
+      page.getByRole("heading", {
+        name: OPEN_SOURCE_PAGE_COPY.de.footnoteTitle,
+      }),
     ).toBeVisible();
 
     const noise = meaningfulErrors(errors);
@@ -399,39 +412,41 @@ test.describe("/open-source hub", () => {
     );
   });
 
-  test("names the GitHub organization as the publication target and reports the registry-derived published count", async ({
+  test("keeps the lead preview and primary actions inside the reviewed desktop viewport", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(
       page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
     ).toBeVisible();
-    const publicationHeading = page.getByRole("heading", {
-      name: "Veröffentlichungsstandard",
+    const artifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
+    const artifactRow = page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: artifact.title, exact: true }),
     });
-    await expect(publicationHeading).toBeVisible();
-    const publicationBody = publicationHeading.locator(
-      "xpath=following-sibling::p",
-    );
-    const [headingBox, bodyBox] = await Promise.all([
-      publicationHeading.boundingBox(),
-      publicationBody.boundingBox(),
-    ]);
-    expect(headingBox).not.toBeNull();
-    expect(bodyBox).not.toBeNull();
-    const boxesOverlap =
-      headingBox!.x < bodyBox!.x + bodyBox!.width &&
-      headingBox!.x + headingBox!.width > bodyBox!.x &&
-      headingBox!.y < bodyBox!.y + bodyBox!.height &&
-      headingBox!.y + headingBox!.height > bodyBox!.y;
-    expect(
-      boxesOverlap,
-      "publication heading must not collide with its explanatory copy",
-    ).toBe(false);
-    await expect(
-      page.getByRole("link", { name: new RegExp(ORG_SLUG) }).first(),
-    ).toHaveAttribute("href", ORG_URL);
+    const firstViewportTargets = [
+      artifactRow.getByRole("region", {
+        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.previewGroup}: ${artifact.title}`,
+      }),
+      artifactRow.getByRole("link", {
+        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.detail}: ${artifact.title}`,
+      }),
+      artifactRow.getByRole("link", {
+        name: new RegExp(
+          `^${OPEN_SOURCE_PAGE_COPY.de.showcase.source}: ${artifact.title}`,
+        ),
+      }),
+    ];
+    for (const target of firstViewportTargets) {
+      await expect(target).toBeVisible();
+      const box = await target.boundingBox();
+      expect(box, "first-viewport target has layout").not.toBeNull();
+      expect(
+        box!.y,
+        "first-viewport target begins above the fold",
+      ).toBeLessThan(900);
+    }
   });
 
   test("does not list imported courses and cross-links the technical courses to /kurse", async ({
@@ -446,27 +461,32 @@ test.describe("/open-source hub", () => {
     await expect(page.locator('a[href^="/kurse/open-source/"]')).toHaveCount(0);
 
     await expect(
-      page.getByText(/Die technischen Lernkurse findest du unter/i),
-    ).toBeVisible();
-    await expect(page.getByRole("link", { name: "/kurse" })).toHaveAttribute(
-      "href",
-      "/kurse",
-    );
+      page.getByRole("link", { name: OPEN_SOURCE_PAGE_COPY.de.courses }),
+    ).toHaveAttribute("href", "/kurse");
   });
 
   test("distinguishes the code license from editorial-content rights", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
+    const firstArtifactRow = page.getByRole("listitem").filter({
+      has: page.getByRole("heading", {
+        name: firstArtifact.title,
+        exact: true,
+      }),
+    });
+    await firstArtifactRow
+      .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
+        exact: true,
+      })
+      .click();
     await expect(
-      page.getByRole("heading", { name: "Code und redaktionelle Inhalte" }),
+      firstArtifactRow.getByText(
+        OPEN_SOURCE_PAGE_COPY.de.showcase.publicationStandard,
+        { exact: true },
+      ),
     ).toBeVisible();
-    await expect(
-      page.getByText(/Plattform-Code auf GitHub.*steht unter MIT/i),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("link", { name: /Plattform-Code auf GitHub/i }),
-    ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
     const policyLink = page
       .locator("#lizenzmodell")
       .getByRole("link", { name: "Lizenzrichtlinie" });
@@ -507,7 +527,7 @@ test("English open-source hub and one detail per published kind use localized pu
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: OPEN_SOURCE_SHARED_COPY.en.published,
+      name: OPEN_SOURCE_PAGE_COPY.en.showcase.heading,
     }),
   ).toBeVisible();
 
@@ -558,10 +578,24 @@ test.describe("/open-source mobile", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Veröffentlichungsstandard" }),
+      page.getByRole("heading", {
+        name: OPEN_SOURCE_PAGE_COPY.de.showcase.heading,
+      }),
     ).toBeVisible();
     await expect(
       page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
+    ).toBeVisible();
+    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
+    const firstArtifactRow = page.getByRole("listitem").filter({
+      has: page.getByRole("heading", {
+        name: firstArtifact.title,
+        exact: true,
+      }),
+    });
+    await expect(
+      firstArtifactRow.getByRole("button", {
+        name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect("Editor"),
+      }),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

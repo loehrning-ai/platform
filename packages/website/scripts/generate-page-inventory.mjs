@@ -3,7 +3,7 @@
  *
  * Generates docs/seo/page-inventory.md from the crawl contract
  * (src/lib/crawl/contract.ts) plus the content catalogs (books, demos,
- * blog manifest, wie-ki lektionen).
+ * blog manifest, and other typed publication catalogs).
  *
  * Run with bun (it imports the TypeScript modules directly):
  *
@@ -30,7 +30,6 @@ const { books } = await import(join(ROOT, "src/lib/books.ts"));
 const { getBookChapterList } = await import(join(ROOT, "src/lib/book-reader-content.ts"));
 const { demos } = await import(join(ROOT, "src/lib/demos.ts"));
 const { BLOG_POSTS } = await import(join(ROOT, "src/lib/blog-metadata.ts"));
-const { WIE_KI_LEKTIONEN } = await import(join(ROOT, "src/lib/wie-ki-funktioniert.ts"));
 const { IMPORTED_COURSE_CATALOG } = await import(join(ROOT, "src/lib/courses/catalog.ts"));
 const { OPEN_SOURCE_ARTIFACTS } = await import(join(ROOT, "src/lib/open-source/artifacts.ts"));
 
@@ -105,17 +104,6 @@ const CONTENT_HEADERS = [
   "Freshness evidence",
   "Owner",
 ];
-
-const wieKiRows = WIE_KI_LEKTIONEN.map((lektion) =>
-  row([
-    `${SITE_ORIGIN}/wie-ki-funktioniert/${lektion.id}`,
-    lektion.title,
-    lektion.subtitle,
-    "src/lib/wie-ki-funktioniert.ts",
-    `canonical content date ${GENERATED_DATE}`,
-    OWNER,
-  ]),
-);
 
 const blogRows = BLOG_POSTS.map((post) =>
   row([
@@ -222,8 +210,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 - Source of truth: \`src/lib/crawl/contract.ts\` (crawl contract) plus the
   content catalogs (\`src/lib/books.ts\`, book chapter manifests,
   \`src/lib/demos.ts\`,
-  \`src/lib/blog-metadata.ts\`,
-  \`src/lib/wie-ki-funktioniert.ts\`, \`src/lib/courses/catalog.ts\`,
+  \`src/lib/blog-metadata.ts\`, \`src/lib/courses/catalog.ts\`,
   \`src/lib/open-source/artifacts.ts\`).
 - Generated from the canonical content date: ${GENERATED_DATE}. Owner of every page: ${OWNER}.
 - This is a mechanically generated publication inventory, not a fabricated
@@ -236,10 +223,6 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 ### Static pages (${staticRows.length})
 
 ${table(STATIC_HEADERS, staticRows)}
-
-### Wie-KI-funktioniert Lektionen (${wieKiRows.length})
-
-${table(CONTENT_HEADERS, wieKiRows)}
 
 ### Blog posts (${blogRows.length})
 

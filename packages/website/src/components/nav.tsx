@@ -10,7 +10,14 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import {
+  m,
+  AnimatePresence,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
@@ -57,14 +64,6 @@ const praxisNavItems: readonly NavItem[] = [
   { href: "/demos", label: "appliedExamples" },
 ];
 
-const wissenNavItems: readonly NavItem[] = [
-  { href: "/wie-ki-funktioniert", label: "howAiWorks" },
-  { href: "/blog", label: "blog" },
-  { href: "/bekannte-grenzen", label: "knownLimits" },
-  { href: "/ueber-die-plattform", label: "aboutPlatform" },
-  { href: "/ueber-mich", label: "aboutTim" },
-];
-
 const lernenPaths = [
   "/kurse",
   "/ki-fuehrerschein",
@@ -76,17 +75,13 @@ const lernenPaths = [
 ];
 
 const praxisPaths = ["/demos", "/workshops"];
-const wissenPaths = [
-  "/wie-ki-funktioniert",
-  "/blog",
-  "/bekannte-grenzen",
-  "/ueber-die-plattform",
-  "/ueber-mich",
-];
+const primaryLinks = [
+  { href: "/blog", label: "blog" },
+  { href: "/open-source", label: "openSource" },
+  { href: "/ueber-mich", label: "aboutTim" },
+] as const;
 
-const primaryLinks = [{ href: "/open-source", label: "openSource" }] as const;
-
-type DropdownId = "lernen" | "praxis" | "wissen" | null;
+type DropdownId = "lernen" | "praxis" | null;
 
 function NoScriptMobileGroup({
   label,
@@ -101,7 +96,7 @@ function NoScriptMobileGroup({
 }) {
   return (
     <div className="border-t border-border pt-3">
-      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+      <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
         {label}
       </p>
       <div className="mt-1 flex flex-col">
@@ -120,27 +115,39 @@ function NoScriptMobileGroup({
   );
 }
 
-/* ─── Stable brand mark ──────────────────────────────────────────────────── */
+/* ─── Scroll-driven brand mark ───────────────────────────────────────────── */
 
 const LOCKUP_FONT_STACK =
   '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 function LogoWordmark({
+  scrollY,
   locale,
   homeLabel,
 }: {
+  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
 }) {
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
+  const leadingLOpacity = useTransform(scrollY, [40, 120], [1, 0]);
+  const leadingLScale = useTransform(scrollY, [40, 120], [1, 0]);
+  const remainderOffset = useTransform(scrollY, [40, 120], [0, -22]);
+
   return (
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
       className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <div
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center border border-[#0B0908] bg-[#C4431A]"
+      <m.div
+        data-logo-mark
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange shadow-[3px_3px_0_var(--color-brand-acid)]"
         aria-hidden="true"
+        style={{
+          rotate: prefersReducedMotion ? 0 : iconRotate,
+        }}
       >
         <span
           className="text-lg leading-none text-background"
@@ -151,18 +158,35 @@ function LogoWordmark({
         >
           L
         </span>
-      </div>
+      </m.div>
 
       <span
+        data-logo-wordmark
         aria-hidden="true"
-        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:block"
+        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:flex"
         style={{
           letterSpacing: "-0.035em",
           fontFamily: LOCKUP_FONT_STACK,
           fontWeight: 900,
         }}
       >
-        LOEHRNING<span className="text-brand-orange">.AI</span>
+        <m.span
+          data-logo-wordmark-leading-l
+          className="inline-block w-[14px] origin-right overflow-hidden"
+          style={{
+            opacity: prefersReducedMotion ? 1 : leadingLOpacity,
+            scaleX: prefersReducedMotion ? 1 : leadingLScale,
+          }}
+        >
+          L
+        </m.span>
+        <m.span
+          data-logo-wordmark-remainder
+          className="inline-block"
+          style={{ x: prefersReducedMotion ? 0 : remainderOffset }}
+        >
+          OEHRNING<span className="text-brand-orange">.AI</span>
+        </m.span>
       </span>
       <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
@@ -180,6 +204,7 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
+  const { scrollY } = useScroll();
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const restoreMobileToggleAfterExit = useRef(false);
@@ -208,9 +233,6 @@ export function Nav() {
     (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
   const isPraxisActive = praxisPaths.some(
-    (p) => routePathname === p || routePathname.startsWith(p + "/"),
-  );
-  const isWissenActive = wissenPaths.some(
     (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
 
@@ -303,19 +325,15 @@ export function Nav() {
   const lernenMenuRef = useRef<HTMLDivElement>(null);
   const praxisTriggerRef = useRef<HTMLButtonElement>(null);
   const praxisMenuRef = useRef<HTMLDivElement>(null);
-  const wissenTriggerRef = useRef<HTMLButtonElement>(null);
-  const wissenMenuRef = useRef<HTMLDivElement>(null);
   const pendingMenuFocus = useRef<"first" | "last" | null>(null);
 
   function menuRefFor(id: Exclude<DropdownId, null>) {
     if (id === "praxis") return praxisMenuRef;
-    if (id === "wissen") return wissenMenuRef;
     return lernenMenuRef;
   }
 
   function triggerRefFor(id: Exclude<DropdownId, null>) {
     if (id === "praxis") return praxisTriggerRef;
-    if (id === "wissen") return wissenTriggerRef;
     return lernenTriggerRef;
   }
 
@@ -442,7 +460,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-1 w-64 border border-border border-t-[3px] border-t-brand-orange bg-background p-1"
+              className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-border/70 bg-paper p-2 shadow-card-hover"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -477,7 +495,7 @@ export function Nav() {
   function renderMobileGroup(label: string, items: readonly NavItem[]) {
     return (
       <section className="border-t border-border pt-3">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+        <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
           {label}
         </p>
         <div className="mt-1 flex flex-col">
@@ -510,18 +528,18 @@ export function Nav() {
   return (
     <nav
       aria-label={copy.mainNavigation}
-      className="no-js-primary-nav fixed top-0 z-50 w-full border-b border-border bg-background text-foreground"
+      className="no-js-primary-nav fixed top-0 z-50 w-full px-2 pt-2 text-foreground sm:px-3"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
+        className="mx-auto flex h-12 max-w-6xl items-center justify-between rounded-2xl border border-border/60 bg-background/85 px-3 shadow-card backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5"
       >
-        <LogoWordmark locale={locale} homeLabel={copy.home} />
+        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
             below instead. */}
-        <div className="js-desktop-nav hidden items-center gap-4 lg:flex xl:gap-6">
+        <div className="js-desktop-nav hidden items-center gap-3 lg:flex xl:gap-4">
           {renderDropdown(
             "lernen",
             copy.learning,
@@ -536,14 +554,6 @@ export function Nav() {
             "praxis-nav-menu",
             isPraxisActive,
           )}
-          {renderDropdown(
-            "wissen",
-            copy.knowledge,
-            wissenNavItems,
-            "wissen-nav-menu",
-            isWissenActive,
-          )}
-
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
@@ -573,7 +583,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.githubOrganisation}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             <Github size={17} aria-hidden="true" />
           </a>
@@ -582,8 +592,9 @@ export function Nav() {
         </div>
 
         {/* Keep the locale control visible in the top bar on small screens.
-            It remains reachable without opening the navigation dialog. */}
-        <div className="flex items-center gap-1 lg:hidden">
+            The no-script stylesheet also exposes this compact group on wide
+            screens while hiding its inert menu button. */}
+        <div className="js-compact-nav flex items-center gap-1 lg:hidden">
           <LanguageSwitch />
           <button
             type="button"
@@ -592,7 +603,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -608,7 +619,7 @@ export function Nav() {
           It remains hidden during normal operation and replaces the
           interactive desktop/mobile controls through the layout's
           <noscript> stylesheet. */}
-      <div className="no-js-mobile-nav hidden border-b border-border border-t-[3px] border-t-brand-orange bg-background px-4 py-4 sm:px-6 lg:hidden">
+      <div className="no-js-mobile-nav mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 py-4 shadow-card sm:px-6 lg:hidden">
         <div className="grid gap-4 sm:grid-cols-2">
           <NoScriptMobileGroup
             label={copy.learning}
@@ -619,12 +630,6 @@ export function Nav() {
           <NoScriptMobileGroup
             label={copy.practice}
             items={praxisNavItems}
-            locale={locale}
-            copy={copy}
-          />
-          <NoScriptMobileGroup
-            label={copy.knowledge}
-            items={wissenNavItems}
             locale={locale}
             copy={copy}
           />
@@ -676,14 +681,14 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="overscroll-contain border-b border-border border-t-[3px] border-t-brand-orange bg-background lg:hidden"
+            className="mt-2 overscroll-contain rounded-2xl border border-border/70 bg-paper shadow-card-hover lg:hidden"
           >
             <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-pink/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />
@@ -692,8 +697,6 @@ export function Nav() {
               </div>
               {renderMobileGroup(copy.learning, lernenNavItems)}
               {renderMobileGroup(copy.practice, praxisNavItems)}
-              {renderMobileGroup(copy.knowledge, wissenNavItems)}
-
               <div className="flex flex-col border-t border-border pt-2">
                 {primaryLinks.map((link) => (
                   <Link

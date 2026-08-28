@@ -44,6 +44,7 @@ export const DEMO = {
   statusAmber: "#eab308",
   statusGray: "#9c8f85",
   statusRed: "#ef4444",
+  statusRedOnDark: "#ff8a8a",
 
   // Auxiliary tones (map prototype's kupferLight/kupferMist/birke/leinen/schiefer/ink
   // onto the existing warm-stone palette, keeping the Berliner Werkzeug vocabulary)

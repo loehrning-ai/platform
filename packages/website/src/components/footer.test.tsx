@@ -47,7 +47,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Kurse", "Praxis", "Wissen", "Plattform"]);
+    ).toEqual(["Kurse", "Praxis", "Blog", "Über mich"]);
     expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
       "href",
       "/kurse",
@@ -58,6 +58,14 @@ describe("Footer locale and information architecture", () => {
     expect(screen.getByRole("link", { name: "Technikkurse" })).toHaveAttribute(
       "href",
       "/kurse#tiefer-gehen",
+    );
+    expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
+      "href",
+      "/blog",
+    );
+    expect(screen.getByRole("link", { name: "Über mich" })).toHaveAttribute(
+      "href",
+      "/ueber-mich",
     );
 
     for (const link of document.querySelectorAll<HTMLAnchorElement>(
@@ -77,7 +85,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Courses", "Practice", "Knowledge", "Platform"]);
+    ).toEqual(["Courses", "Practice", "Blog", "About me"]);
     expect(
       screen.queryByText(/Free courses, workshops, and open-source materials/),
     ).not.toBeInTheDocument();
@@ -145,7 +153,7 @@ describe("Footer semantics and stable public dates", () => {
     }
   });
 
-  it("uses compact editorial geometry without tiny labels or ambient backdrop", async () => {
+  it("uses compact editorial geometry with a restrained Berlin backdrop", async () => {
     await renderFooter("de");
 
     const footer = document.querySelector("footer");
@@ -155,7 +163,8 @@ describe("Footer semantics and stable public dates", () => {
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer?.innerHTML).not.toMatch(/rounded-full|shadow-/);
+    expect(footer).toHaveClass("berlin-footer", "dark-section");
+    expect(footer?.innerHTML).toMatch(/rounded-(?:full|xl)|shadow-/);
   });
 
   it("derives the copyright year from reviewed content instead of the wall clock", async () => {

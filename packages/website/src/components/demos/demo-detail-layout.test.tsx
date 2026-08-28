@@ -153,6 +153,8 @@ describe("<DemoDetailLayout>", () => {
     const continuation = container.querySelector("[data-demo-continuation]");
     expect(continuation?.querySelectorAll("a")).toHaveLength(1);
     expect(continuation?.querySelector("a")).toHaveClass("bg-brand-orange");
+    expect(container.querySelector("[data-demo-detail-hero]")).toBeTruthy();
+    expect(container.querySelector("[data-demo-detail-layout]")).toBeTruthy();
   });
 
   it("wires each industry to a filtered gallery link", () => {

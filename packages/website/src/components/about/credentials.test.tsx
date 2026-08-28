@@ -23,7 +23,11 @@ describe("<Credentials>", () => {
     }
     expect(screen.getByText(/Abschluss mit Auszeichnung/)).toBeVisible();
     expect(screen.getByText(/Oxford und Innovation Management/)).toBeVisible();
-    expect(container.querySelectorAll("article")).toHaveLength(3);
+    const cards = container.querySelectorAll("article");
+    expect(cards).toHaveLength(3);
+    expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
+    expect(cards[0]).toHaveClass("bg-brand-lilac/45", "md:col-span-7");
+    expect(cards[1]).toHaveClass("bg-brand-sky/45", "md:col-span-5");
   });
 
   it("renders research evidence only on the research card", () => {

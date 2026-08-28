@@ -8,6 +8,9 @@ describe("HeroSection learning-platform positioning", () => {
     expect(screen.getByText("KI")).toBeInTheDocument();
     expect(screen.getByText("verstehen.")).toBeInTheDocument();
     expect(screen.getByText("Sicher anwenden.")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Offene Lerninstrumente"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Deutsch.")).not.toBeInTheDocument();
     ["Amazon", "Apple", "Red Bull", "Meta"].forEach((name) => {
       expect(screen.queryByText(name)).not.toBeInTheDocument();
@@ -20,6 +23,9 @@ describe("HeroSection learning-platform positioning", () => {
     expect(
       screen.getByRole("heading", { name: "Understand AI. Apply it safely." }),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Open learning instruments"),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByText(/Commit to a decision\. Test it against a model/),
     ).toBeInTheDocument();

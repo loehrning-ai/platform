@@ -129,39 +129,54 @@ export default function CostDriftObservabilityDemo() {
         display: "flex",
         flexDirection: "column",
         gap: 14,
+        width: "100%",
+        minWidth: 0,
         minHeight: DEMO_HEIGHT,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
       }}
     >
       <style>{`
-        .demo-cdo-grid {
+        [data-demo-id="cost-drift-observability"] .demo-cdo-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        [data-demo-id="cost-drift-observability"] .demo-cdo-kpis > *,
+        [data-demo-id="cost-drift-observability"] .demo-cdo-grid,
+        [data-demo-id="cost-drift-observability"] .demo-cdo-grid > * {
+          min-width: 0;
+        }
+        [data-demo-id="cost-drift-observability"] .demo-cdo-grid {
           grid-template-columns: 1fr;
         }
-        .demo-cdo-apps {
-          display: flex;
-          flex-direction: row;
+        [data-demo-id="cost-drift-observability"] .demo-cdo-apps {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 6px;
-          overflow-x: auto;
-          scroll-snap-type: x mandatory;
-          -webkit-overflow-scrolling: touch;
-          padding-bottom: 2px;
         }
-        .demo-cdo-apps > button {
-          flex: 0 0 200px;
-          scroll-snap-align: start;
+        [data-demo-id="cost-drift-observability"] .demo-cdo-apps > button {
+          min-width: 0;
+          width: 100%;
+          overflow-wrap: anywhere;
+        }
+        [data-demo-id="cost-drift-observability"] .demo-cdo-chart-header {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        [data-demo-id="cost-drift-observability"] .demo-cdo-chart-metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         @media (min-width: 768px) {
-          .demo-cdo-grid {
+          [data-demo-id="cost-drift-observability"] .demo-cdo-kpis {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+          [data-demo-id="cost-drift-observability"] .demo-cdo-grid {
             grid-template-columns: 240px 1fr;
           }
-          .demo-cdo-apps {
-            flex-direction: column;
-            overflow-x: visible;
-            padding-bottom: 0;
+          [data-demo-id="cost-drift-observability"] .demo-cdo-apps {
+            grid-template-columns: 1fr;
           }
-          .demo-cdo-apps > button {
-            flex: 0 0 auto;
+          [data-demo-id="cost-drift-observability"] .demo-cdo-chart-metrics {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
           }
         }
       `}</style>
@@ -200,13 +215,10 @@ export default function CostDriftObservabilityDemo() {
       </SimulationDisclosure>
 
       <div
+        className="demo-cdo-kpis"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(140px, 1fr))",
           gap: 8,
-          overflowX: "auto",
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
         }}
       >
         {(
@@ -269,7 +281,7 @@ export default function CostDriftObservabilityDemo() {
                   : `1px solid ${DEMO.leinen}`,
                 borderLeft: `3px solid ${c}`,
                 padding: 12,
-                scrollSnapAlign: "start",
+                minWidth: 0,
                 boxShadow: alerting
                   ? "0 0 0 2px rgba(249,115,22,0.08)"
                   : "none",
@@ -423,6 +435,7 @@ export default function CostDriftObservabilityDemo() {
           }}
         >
           <div
+            className="demo-cdo-chart-header"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -530,9 +543,9 @@ export default function CostDriftObservabilityDemo() {
             />
           </svg>
           <div
+            className="demo-cdo-chart-metrics"
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(4,1fr)",
               gap: 10,
               marginTop: 12,
               paddingTop: 10,

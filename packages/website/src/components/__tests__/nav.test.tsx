@@ -33,9 +33,16 @@ describe("<Nav />", () => {
   });
 
   it("renders the brand link", () => {
-    renderGerman();
+    const { container } = renderGerman();
     const brand = screen.getByRole("link", { name: /Startseite/ });
     expect(brand).toHaveAttribute("href", "/");
+    expect(container.querySelector("[data-logo-mark]")).not.toBeNull();
+    expect(
+      container.querySelector("[data-logo-wordmark-leading-l]"),
+    ).toHaveTextContent("L");
+    expect(
+      container.querySelector("[data-logo-wordmark-remainder]"),
+    ).toHaveTextContent("OEHRNING.AI");
     expect(
       [...brand.querySelectorAll<HTMLElement>("[style]")].some(
         (element) => element.style.opacity === "0",
@@ -43,21 +50,28 @@ describe("<Nav />", () => {
     ).toBe(false);
   });
 
-  it("exposes task-based Lernen, Praxis, and Wissen groups plus Open Source", () => {
+  it("exposes task-based disclosures plus direct Blog, Open Source, and Über mich links", () => {
     renderGerman();
     const text = document.body.textContent ?? "";
     expect(text).toMatch(/Lernen/);
     expect(text).toMatch(/Praxis/);
-    expect(text).toMatch(/Wissen/);
+    expect(text).toMatch(/Blog/);
+    expect(text).toMatch(/Über mich/);
     expect(text).toMatch(/Open Source/);
-    // Open Source is the only editorial top-level link.
-    const openSource = screen
-      .getAllByRole("link", { name: /Open Source/ })
-      .find((l) => l.getAttribute("href") === "/open-source");
-    expect(openSource).toBeDefined();
+    for (const [name, href] of [
+      ["Blog", "/blog"],
+      ["Open Source", "/open-source"],
+      ["Über mich", "/ueber-mich"],
+    ] as const) {
+      expect(
+        screen
+          .getAllByRole("link", { name })
+          .some((link) => link.getAttribute("href") === href),
+      ).toBe(true);
+    }
     expect(
-      screen.getAllByRole("button", { name: /Lernen|Praxis|Wissen/ }),
-    ).toHaveLength(3);
+      screen.getAllByRole("button", { name: /Lernen|Praxis/ }),
+    ).toHaveLength(2);
   });
 
   it("server-renders a complete small-screen fallback for no-JavaScript users", () => {
@@ -75,9 +89,6 @@ describe("<Nav />", () => {
         "/ki-check",
         "/blog",
         "/buecher",
-        "/wie-ki-funktioniert",
-        "/bekannte-grenzen",
-        "/ueber-die-plattform",
         "/demos",
         "/workshops",
         "/open-source",
@@ -87,6 +98,10 @@ describe("<Nav />", () => {
     );
     expect(fallback).toHaveClass("hidden");
     expect(container.querySelector(".js-desktop-nav")).not.toBeNull();
+    expect(fallback!.querySelector("[data-language-switch]")).toBeNull();
+    expect(
+      container.querySelector(".js-compact-nav [data-language-switch]"),
+    ).not.toBeNull();
     expect(container.querySelector(".no-js-primary-nav")).not.toBeNull();
   });
 
@@ -112,8 +127,7 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
-    expect(menu.className).toContain("border-t-[3px]");
-    expect(menu.className).not.toMatch(/rounded-xl|shadow-/);
+    expect(menu).toHaveClass("rounded-2xl", "shadow-card-hover");
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
   });
 
@@ -135,16 +149,19 @@ describe("<Nav />", () => {
     ).not.toHaveAttribute("aria-current");
   });
 
-  it("uses a copper rule for the current group and 44px flat controls", () => {
+  it("uses a copper rule for the current group and a translucent studio bar", () => {
     navigationMock.pathname = "/kurse";
     renderGerman();
 
     const trigger = screen.getByRole("button", { name: /Lernen/ });
     expect(trigger.className).toContain("min-h-11");
     expect(trigger.className).toContain("border-brand-orange");
-    expect(document.querySelector("nav")?.className).toContain("bg-background");
-    expect(document.querySelector("nav")?.className).not.toMatch(
-      /backdrop-blur|bg-background\//,
+    const row = document.querySelector("[data-nav-header-row]");
+    expect(row).toHaveClass(
+      "rounded-2xl",
+      "bg-background/85",
+      "shadow-card",
+      "backdrop-blur-xl",
     );
   });
 
@@ -160,19 +177,10 @@ describe("<Nav />", () => {
       .forEach((i) => expect(i).toHaveAttribute("data-nav-menu-item", "true"));
   });
 
-  it("Wissen contains explanations, editorial context, and platform limits", () => {
+  it("does not hide Blog or Über mich inside a disclosure", () => {
     renderGerman();
-    const menu = openDropdown(/Wissen/);
-    const hrefs = within(menu)
-      .getAllByRole("link")
-      .map((item) => item.getAttribute("href"));
-    expect(hrefs).toEqual([
-      "/wie-ki-funktioniert",
-      "/blog",
-      "/bekannte-grenzen",
-      "/ueber-die-plattform",
-      "/ueber-mich",
-    ]);
+    expect(screen.queryByRole("button", { name: /Wissen/ })).toBeNull();
+    expect(document.getElementById("wissen-nav-menu")).toBeNull();
   });
 
   it("does not render retired project/contact labels in the nav", () => {
@@ -190,7 +198,12 @@ describe("<Nav />", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Lernen/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Praxis/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Wissen/ })).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("link", { name: "Blog" }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Über mich" }).length,
+    ).toBeGreaterThan(0);
   });
 
   it("contains scroll chaining inside the mobile navigation dialog", () => {
@@ -270,13 +283,13 @@ describe("<Nav />", () => {
     );
   });
 
-  it("marks the current task group for assistive navigation", () => {
+  it("marks the current direct navigation page", () => {
     navigationMock.pathname = "/ueber-mich";
     renderGerman();
-    expect(screen.getByRole("button", { name: /Wissen/ })).toHaveAttribute(
-      "aria-current",
-      "true",
-    );
+    const current = screen
+      .getAllByRole("link", { name: "Über mich" })
+      .find((link) => link.getAttribute("aria-current") === "page");
+    expect(current).toHaveAttribute("href", "/ueber-mich");
   });
 
   it("dismisses a desktop disclosure when pointer interaction leaves it", () => {
@@ -371,6 +384,13 @@ describe("<Nav />", () => {
     expect(
       within(menu).getByRole("link", { name: "Technical courses" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
+    expect(screen.getAllByRole("link", { name: "Blog" })[0]).toHaveAttribute(
+      "href",
+      "/en/blog",
+    );
+    expect(
+      screen.getAllByRole("link", { name: "About me" })[0],
+    ).toHaveAttribute("href", "/en/ueber-mich");
   });
 
   it("keeps breakpoint-specific language controls in the header and one inside the mobile dialog", () => {

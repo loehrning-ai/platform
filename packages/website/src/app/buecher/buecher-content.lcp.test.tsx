@@ -55,22 +55,27 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(screen.getAllByText(/Redaktion: editorial:books/)).toHaveLength(2);
     expect(screen.getAllByText("Ausgabe, Quellen und Zugang")).toHaveLength(2);
     expect(
+      container.querySelector("[data-book-editorial-spread]"),
+    ).not.toBeNull();
+    expect(container.querySelectorAll("[data-preview-shelf]")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-image-showcase]")).toHaveLength(2);
+    expect(
       container.querySelectorAll('[data-motion-initial*="opacity"]').length,
     ).toBe(0);
     expect(container.querySelectorAll('[style*="opacity: 0"]').length).toBe(0);
   });
 
-  it("requests only the first cover eagerly and at high priority", () => {
+  it("keeps every below-fold cover out of the heading LCP path", () => {
     render(<BuecherContent accountEnabled={false} locale="de" />);
 
     const covers = screen.getAllByRole("img", {
       name: /^Deutsche Titelseite:/,
     });
     expect(covers).toHaveLength(2);
-    expect(covers[0]).toHaveAttribute("loading", "eager");
-    expect(covers[0]).toHaveAttribute("fetchpriority", "high");
-    expect(covers[1]).toHaveAttribute("loading", "lazy");
-    expect(covers[1]).not.toHaveAttribute("fetchpriority");
+    covers.forEach((cover) => {
+      expect(cover).toHaveAttribute("loading", "lazy");
+      expect(cover).not.toHaveAttribute("fetchpriority");
+    });
   });
 
   it("renders reviewed English interface copy and locale-preserving page links", () => {
@@ -124,6 +129,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(
       within(dialog).getByRole("link", { name: "Open book and chapters" }),
     ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(within(dialog).getByTestId("book-preview-showcase")).toBeVisible();
   });
 
   it("states the PDF boundary and exposes the login route only when accounts are enabled", () => {
@@ -190,7 +196,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     },
   );
 
-  it("uses flat editorial rows without undersized labels or decorative motion", () => {
+  it("uses editorial shelves without undersized labels or generic card chrome", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/app/buecher/buecher-content.tsx"),
       "utf8",
@@ -200,5 +206,9 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
     expect(source).not.toContain("copy.bridgeHeading");
+    expect(source).not.toContain("dark-section");
+    expect(source).not.toContain("data-book-bento");
+    expect(source).toContain("bg-paper");
+    expect(source).toContain("bg-brand-acid");
   });
 });

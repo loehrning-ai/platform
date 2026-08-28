@@ -7,31 +7,17 @@
  * exercised end-to-end by the component's STATIC fallback render (mobile +
  * prefers-reduced-motion), which projects the real world-atlas country
  * polylines at Berlin and emits distinguishable SVG paths. The animated path
- * defers all geometry to a rAF loop that never fires under the jsdom
- * IntersectionObserver mock, so at rest it emits zero static paths -- which is
- * itself an assertable contract.
+ * begins with a sparse server-rendered frame generated from the same geometry;
+ * its rAF loop replaces that shell after hydration.
  *
  * We also assert the exported STEPS journey data (order, coordinate ranges,
  * the San-Francisco rotation override, and real diacritic spellings).
  */
 
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import { motionValue, useReducedMotion } from "framer-motion";
+import { motionValue } from "framer-motion";
 import { HeroNetwork, STEPS } from "./hero-network";
-
-// Only useReducedMotion is overridden; every other framer-motion export
-// (motionValue, the m.* proxies, types) stays real.
-vi.mock("framer-motion", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("framer-motion")>();
-  return { ...actual, useReducedMotion: vi.fn(() => false) };
-});
-
-const mockedReducedMotion = vi.mocked(useReducedMotion);
-
-afterEach(() => {
-  mockedReducedMotion.mockReturnValue(false);
-});
 
 describe("STEPS journey data", () => {
   it("labels the six public-resource beats in canonical order", () => {
@@ -74,7 +60,7 @@ describe("STEPS journey data", () => {
 });
 
 describe("HeroNetwork render branches", () => {
-  it("desktop animated mode emits no static geometry but still lays out label + cursor", () => {
+  it("desktop animated mode emits the real first-paint shell and lays out label + cursor", () => {
     const { container } = render(
       <HeroNetwork scrollProgress={motionValue(0)} />,
     );
@@ -85,24 +71,25 @@ describe("HeroNetwork render branches", () => {
     );
     expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
     expect(container.querySelector("svg")).not.toBeNull();
-    // Grid + country <g> groups are filled by the rAF loop, which the jsdom
-    // IntersectionObserver mock never triggers -> zero static <path> at rest.
-    expect(container.querySelectorAll("path")).toHaveLength(0);
+    const shell = container.querySelector("[data-hero-network-shell]");
+    expect(shell).not.toBeNull();
+    expect(shell?.querySelectorAll("path").length).toBeGreaterThan(0);
     // The typing word + blinking cursor <text> nodes are present.
     expect(container.querySelectorAll("text")).toHaveLength(2);
   });
 
-  it("mobile mode renders the static Berlin graticule and hides label + countries", () => {
+  it("mobile mode renders the static Berlin graticule and countries without a label", () => {
     const { container } = render(
       <HeroNetwork scrollProgress={motionValue(0)} mobile />,
     );
 
     // buildGrid produced real front-facing graticule segments.
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
-    // Country outlines are desktop-reduced-motion only -> no Kupfer strokes here.
-    expect(container.querySelectorAll('path[stroke="#C4431A"]')).toHaveLength(
-      0,
-    );
+    // The mobile static composition now matches the desktop first frame.
+    expect(
+      container.querySelectorAll('path[stroke="#C4431A"]').length,
+    ).toBeGreaterThan(0);
+    expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
     // Label + cursor are gated behind !mobile.
     expect(container.querySelectorAll("text")).toHaveLength(0);
     expect(container.firstElementChild).toHaveAttribute(
@@ -111,7 +98,34 @@ describe("HeroNetwork render branches", () => {
     );
   });
 
-  it("marks an explicit user pause without switching to reduced-motion geometry", () => {
+  it("clears imperative live layers when the viewport switches to mobile", () => {
+    const { container, rerender } = render(
+      <HeroNetwork scrollProgress={motionValue(0)} />,
+    );
+    const liveLayer = container.querySelector(
+      '[data-hero-network-live="grid-back"]',
+    );
+
+    // Model the real rAF-owned DOM: these children are not part of React's
+    // virtual tree and must be removed explicitly when static mode takes over.
+    const injectedPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path",
+    );
+    liveLayer?.appendChild(injectedPath);
+    expect(injectedPath.isConnected).toBe(true);
+
+    rerender(<HeroNetwork scrollProgress={motionValue(0)} mobile />);
+
+    expect(injectedPath.isConnected).toBe(false);
+    expect(liveLayer).toHaveAttribute("display", "none");
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "static",
+    );
+  });
+
+  it("marks an explicit user pause while preserving the first-paint shell", () => {
     const { container } = render(
       <HeroNetwork scrollProgress={motionValue(0)} paused />,
     );
@@ -120,13 +134,13 @@ describe("HeroNetwork render branches", () => {
       "data-hero-network-motion",
       "paused",
     );
-    expect(container.querySelectorAll("path")).toHaveLength(0);
+    expect(container.querySelector("[data-hero-network-shell]")).not.toBeNull();
+    expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
   });
 
   it("reduced-motion mode renders the full static composition: grid + Kupfer countries + hatch fills + label", () => {
-    mockedReducedMotion.mockReturnValue(true);
     const { container } = render(
-      <HeroNetwork scrollProgress={motionValue(0)} />,
+      <HeroNetwork scrollProgress={motionValue(0)} reducedMotion />,
     );
 
     // Graticule.
@@ -147,5 +161,6 @@ describe("HeroNetwork render branches", () => {
       "data-hero-network-motion",
       "static",
     );
+    expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
   });
 });

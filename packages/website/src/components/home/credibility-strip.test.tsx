@@ -16,6 +16,9 @@ describe("CredibilityStrip", () => {
     render(<CredibilityStrip />);
     expect(screen.getByTestId("platform-principles")).toBeInTheDocument();
     expect(screen.getByText("Betriebsprinzipien")).toBeInTheDocument();
+    expect(
+      screen.getByText("Was hier nicht verhandelbar ist."),
+    ).toBeInTheDocument();
   });
 
   it("renders the same operating facts in English without German labels", () => {

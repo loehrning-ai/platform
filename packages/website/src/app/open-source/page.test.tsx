@@ -120,38 +120,59 @@ describe("OpenSourcePage", () => {
     expect(() => assertOpenSourceArtifacts([PROJECT])).not.toThrow();
   });
 
-  it("describes every artifact lane without encoding an empty launch state", async () => {
+  it("leads with a product teaser while retaining registry metadata", async () => {
     const { container } = render(await OpenSourcePage());
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Veröffentlichte Werkzeuge. Quellstand prüfbar.",
+        name: "Offene Werkzeuge. Ohne Blackbox.",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/veröffentlichte Artefakte/)).toBeInTheDocument();
+    expect(screen.getByText(/Echte Ansichten zuerst/)).toBeInTheDocument();
     expect(
-      screen.getByText(/nicht automatisch veröffentlichte Plattform-Artefakte/),
+      screen.getByRole("heading", { level: 2, name: "Jetzt veröffentlicht" }),
     ).toBeInTheDocument();
-    // The mocked published project renders on the shelf with its kind stamp.
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Veröffentlicht" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Projekt")).toBeInTheDocument();
+    expect(screen.getAllByText("Projekt").length).toBeGreaterThan(0);
     expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
     expect(
       screen.queryByText(/bleibt dieser Bereich leer/i),
     ).not.toBeInTheDocument();
 
-    const organisationLink = screen.getByRole("link", {
-      name: /loehrning-ai, öffnet in neuem Tab/,
+    expect(
+      document.querySelector("[data-open-source-risograph-hero]"),
+    ).not.toBeNull();
+    expect(
+      document.querySelector("[data-open-source-image-fan]"),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("img", {
+        name: "Produktansichten auswählen: Metadata Project",
+      }),
+    ).toBeVisible();
+    expect(screen.getByAltText(PROJECT.guide.screenshot.alt)).toHaveAttribute(
+      "width",
+      "1600",
+    );
+
+    expect(
+      screen.getByRole("region", {
+        name: "Produktansichten auswählen: Metadata Project",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Editor anzeigen" }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    const sourceLink = screen.getByRole("link", {
+      name: /Quellcode: Metadata Project/,
     });
-    expect(organisationLink).toHaveAttribute("target", "_blank");
-    expect(organisationLink).toHaveAttribute("rel", "noopener noreferrer");
-    expect(organisationLink).toHaveClass("whitespace-nowrap");
+    expect(sourceLink).toHaveAttribute("target", "_blank");
+    expect(sourceLink).toHaveAttribute("rel", "noopener noreferrer");
+    expect(sourceLink).toHaveAttribute("href", PROJECT.source.revisionHref);
     expect(
       screen.getByRole("link", {
-        name: /Plattform-Code auf GitHub, öffnet in neuem Tab/,
+        name: /Plattform-Code, öffnet in neuem Tab/,
       }),
     ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
 
@@ -174,20 +195,29 @@ describe("OpenSourcePage", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Published tools. Verifiable source.",
+        name: "Open tools. No black box.",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Published" }),
+      screen.getByRole("heading", { name: "Published now" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Project")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "license policy" }),
-    ).toHaveAttribute("href", "/en/open-source/lizenzrichtlinie");
-    expect(screen.getByRole("link", { name: "/kurse" })).toHaveAttribute(
-      "href",
-      "/en/kurse",
-    );
+      screen.getByRole("img", {
+        name: "Choose a product view: Metadata Project",
+      }),
+    ).toBeVisible();
+    expect(screen.getAllByText("Project").length).toBeGreaterThan(0);
+    for (const licensePolicy of screen.getAllByRole("link", {
+      name: "License policy",
+    })) {
+      expect(licensePolicy).toHaveAttribute(
+        "href",
+        "/en/open-source/lizenzrichtlinie",
+      );
+    }
+    expect(
+      screen.getByRole("link", { name: "Browse technical courses" }),
+    ).toHaveAttribute("href", "/en/kurse");
 
     const graph = JSON.parse(
       container.querySelector<HTMLScriptElement>("script#open-source-jsonld")

@@ -61,6 +61,9 @@ describe("Ressourcen section (Workflow)", () => {
       const link = screen.getByText(label).closest("a");
       expect(link).toHaveAttribute("href", href);
     }
+    expect(
+      screen.getByRole("list", { name: "Werkzeuge und Lernressourcen" }),
+    ).toBeInTheDocument();
   });
 
   it("showcases the account feature without prefetching the protected route", () => {

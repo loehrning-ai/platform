@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { cacheHeaderFor, getCrawlRoute, NOINDEX_HEADER } from "@/lib/crawl/contract";
+import {
+  cacheHeaderFor,
+  getCrawlRoute,
+  NOINDEX_HEADER,
+} from "@/lib/crawl/contract";
 import { redirectOriginForRequest } from "@/lib/auth/origin";
 import { isGatedCoursePath, isProtectedPlatformPath } from "@/lib/auth/routes";
 import { reportApiError } from "@/lib/observability/api-error";
@@ -13,7 +17,10 @@ import {
   type Locale,
 } from "@/lib/i18n/locale";
 
-function preserveAuthHeaders(source: NextResponse, target: NextResponse): NextResponse {
+function preserveAuthHeaders(
+  source: NextResponse,
+  target: NextResponse,
+): NextResponse {
   // Supabase may refresh more than one cookie while the proxy decides to
   // replace NextResponse.next() with a redirect or terminal error. Copy only
   // that auth state and explicit cache-safety headers. Internal Next router
@@ -42,9 +49,7 @@ function mergeVaryHeader(headers: Headers, value: string): void {
   headers.set("Vary", [...existing, value].join(", "));
 }
 
-function localeContinuation(
-  requestHeaders: Headers,
-): NextResponse {
+function localeContinuation(requestHeaders: Headers): NextResponse {
   // Locale-prefixed public URLs have concrete modules under app/en. Middleware
   // only forwards the trusted locale header; it never changes route identity.
   // This keeps the browser router and streamed server tree on the same path.
@@ -132,25 +137,32 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   const protectedPath = isProtectedPlatformPath(pathname);
   const routeLevelAuth = route.auth === "route-level";
-  const authAwarePublicPath = pathname === "/login" || pathname.startsWith("/auth/");
+  const authAwarePublicPath =
+    pathname === "/login" || pathname.startsWith("/auth/");
   if (!protectedPath && !authAwarePublicPath) {
     const response = continuation;
-    if (route.xRobotsTag) response.headers.set("X-Robots-Tag", route.xRobotsTag);
+    if (route.xRobotsTag)
+      response.headers.set("X-Robots-Tag", route.xRobotsTag);
     applyLocaleIndexing(response, locale, pathname);
     if (routeLevelAuth) {
       response.headers.set("Cache-Control", cacheHeaderFor(route));
       mergeVaryHeader(response.headers, "Cookie");
+    } else if (
+      (request.method === "GET" || request.method === "HEAD") &&
+      !pathname.startsWith("/api/")
+    ) {
+      // Middleware owns cache policy for public documents and machine files.
+      // Public APIs own their final response policy in the route handler; a
+      // continuation header here could otherwise mark personalized POST data
+      // or a live health response as publicly cacheable before it is handled.
+      response.headers.set("Cache-Control", cacheHeaderFor(route));
     }
     return response;
   }
 
   let authState;
   try {
-    authState = await refreshAuthSession(
-      request,
-      requestHeaders,
-      continuation,
-    );
+    authState = await refreshAuthSession(request, requestHeaders, continuation);
   } catch (error) {
     authState = {
       configured: true,
@@ -186,25 +198,28 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
           { error: "auth_unavailable" },
           { status: 503, headers },
         )
-      : new NextResponse(
-          "Authentifizierung vorübergehend nicht verfügbar.",
-          { status: 503, headers },
-        );
+      : new NextResponse("Authentifizierung vorübergehend nicht verfügbar.", {
+          status: 503,
+          headers,
+        });
     return preserveAuthHeaders(response, unavailable);
   }
 
   if (!user) {
     if (pathname.startsWith("/api/")) {
-      return preserveAuthHeaders(response, NextResponse.json(
-        { error: configured ? "unauthorized" : "auth_not_configured" },
-        {
-          status: configured ? 401 : 503,
-          headers: {
-            "Cache-Control": "private, no-store",
-            "X-Robots-Tag": NOINDEX_HEADER,
+      return preserveAuthHeaders(
+        response,
+        NextResponse.json(
+          { error: configured ? "unauthorized" : "auth_not_configured" },
+          {
+            status: configured ? 401 : 503,
+            headers: {
+              "Cache-Control": "private, no-store",
+              "X-Robots-Tag": NOINDEX_HEADER,
+            },
           },
-        },
-      ));
+        ),
+      );
     }
     const loginUrl = new URL(
       localizeHref("/login", locale),

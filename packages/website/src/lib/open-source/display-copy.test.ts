@@ -8,10 +8,10 @@ import {
 
 describe("open-source display copy", () => {
   it("keeps publication evidence and artifact states precise in both languages", () => {
-    expect(OPEN_SOURCE_PAGE_COPY.de.publicationStandardBody).toContain(
-      "unveränderlichen Commit",
+    expect(OPEN_SOURCE_PAGE_COPY.de.showcase.publicationStandard).toContain(
+      "unveränderlichem Commit",
     );
-    expect(OPEN_SOURCE_PAGE_COPY.en.publicationStandardBody).toContain(
+    expect(OPEN_SOURCE_PAGE_COPY.en.showcase.publicationStandard).toContain(
       "immutable commit",
     );
     expect(OPEN_SOURCE_SHARED_COPY.de.statuses.experimental).toBe(

@@ -20,7 +20,6 @@ export const CLIENT_BOUNDARY_IDS = [
   "ki-fuehrerschein-block",
   "ki-und-gesellschaft-course",
   "ki-und-gesellschaft-block",
-  "wie-ki-funktioniert",
   "data-engineering-chapter",
   "ai-native-exercise",
   "workshop-quiz",

@@ -5,32 +5,65 @@ import { localizeOpenSourceArtifact } from "@/lib/open-source/display-copy";
 import { ArtifactLedger } from "./artifact-ledger";
 
 describe("<ArtifactLedger>", () => {
-  it("keeps detail primary and provenance available without motion", () => {
+  it("keeps the real preview dominant while actions and evidence remain available", () => {
     const artifact = localizeOpenSourceArtifact(OPEN_SOURCE_ARTIFACTS[0], "de");
     render(<ArtifactLedger locale="de" />);
 
     const detail = screen.getByRole("link", {
-      name: new RegExp(`Detail: ${artifact.title}`),
+      name: `Detail ansehen: ${artifact.title}`,
     });
     expect(detail).toHaveAttribute("href", artifact.href);
     expect(detail).toHaveClass("min-h-11", "bg-brand-orange");
 
-    const disclosure = screen.getByText("Quellstand und Lizenz");
+    const source = screen.getByRole("link", {
+      name: `Quellcode: ${artifact.title}. Wird in einem neuen Tab geöffnet.`,
+    });
+    expect(source).toHaveAttribute("href", artifact.source.revisionHref);
+    expect(source).toHaveAttribute("target", "_blank");
+    expect(source).toHaveAttribute("rel", "noopener noreferrer");
+
+    expect(screen.getByText("Lokal", { exact: true })).toBeVisible();
+    expect(screen.getByText("MIT", { exact: true })).toBeVisible();
+    expect(screen.getByText("Experimentell", { exact: true })).toBeVisible();
+    expect(
+      screen.getByRole("region", {
+        name: `Produktansichten auswählen: ${artifact.title}`,
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Editor anzeigen" }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    const previewSheet = document.querySelector(
+      "[data-open-source-preview-sheet]",
+    );
+    const factRail = document.querySelector("[data-open-source-fact-rail]");
+    expect(previewSheet).toHaveClass("order-1");
+    expect(factRail?.children).toHaveLength(4);
+    expect(
+      Array.from(factRail?.children ?? []).every((fact) =>
+        fact.getAttribute("style")?.includes("--color-brand-"),
+      ),
+    ).toBe(true);
+
+    const disclosure = screen.getByText("Quellstand und Veröffentlichung");
     expect(disclosure).toHaveAttribute(
       "aria-label",
-      `Quellstand und Lizenz: ${artifact.title}`,
+      `Quellstand und Veröffentlichung: ${artifact.title}`,
     );
     fireEvent.click(disclosure);
     const details = disclosure.closest("details");
     expect(details).toHaveAttribute("open");
     expect(
       within(details as HTMLElement).getByRole("link", {
-        name: `Gepinnter Quellstand: ${artifact.title}. Wird in einem neuen Tab geöffnet.`,
+        name: new RegExp(
+          `^Gepinnter Quellstand ${artifact.source.revision.slice(0, 12)}.*Wird in einem neuen Tab geöffnet\\.$`,
+        ),
       }),
     ).toHaveAttribute("href", artifact.source.revisionHref);
     expect(
       within(details as HTMLElement).getByRole("link", {
-        name: `Lizenz: ${artifact.title}`,
+        name: `Lizenz: ${artifact.license.licenseId}`,
       }),
     ).toHaveAttribute("href", artifact.license.href);
 
@@ -45,11 +78,17 @@ describe("<ArtifactLedger>", () => {
     const artifact = localizeOpenSourceArtifact(OPEN_SOURCE_ARTIFACTS[0], "en");
     render(<ArtifactLedger locale="en" />);
 
-    expect(screen.getByRole("heading", { name: "Published" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Published now" }),
+    ).toBeVisible();
     expect(
       screen.getByRole("link", {
-        name: new RegExp(`Details: ${artifact.title}`),
+        name: `View details: ${artifact.title}`,
       }),
     ).toHaveAttribute("href", `/en${artifact.href}`);
+    expect(screen.getByRole("button", { name: "Show Editor" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 });

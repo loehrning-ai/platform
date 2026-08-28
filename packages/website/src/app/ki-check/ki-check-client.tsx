@@ -1,7 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
@@ -13,6 +19,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
+import { BrandButton } from "@/components/ui/brand-button";
 import type { Locale } from "@/lib/i18n/locale";
 import { DIMENSION_ORDER } from "@/lib/ki-check/questions";
 import {
@@ -30,10 +37,11 @@ import type {
   DimensionResult,
 } from "@/lib/ki-check/types";
 import { iconByName } from "@/lib/courses/track-icon";
-import { StepIndicator } from "./step-indicator";
-import { RadarChart } from "./radar-chart";
+import { DimensionRail } from "./step-indicator";
+import { CompetencyLegend, RadarChart } from "./radar-chart";
 import { DimensionBars } from "./dimension-bars";
 import { dimensionIcon } from "./dimension-icons";
+import { DiagnosticFrame } from "./diagnostic-frame";
 
 /** The six rungs of the KI-Kompetenzweg, in order, for the pathway strip. */
 const STAGE_ORDER = [
@@ -75,6 +83,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
   // AnimatePresence exit->enter swap: the new heading focuses the moment it
   // actually mounts, whether that is instant (tests) or after the exit (app).
   const pendingFocus = useRef(false);
+  const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
     setHydrated(true);
@@ -154,6 +163,27 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
     setChoices((prev) => ({ ...prev, [question.id]: optionIndex }));
   }
 
+  function handleOptionKeyDown(
+    optionIndex: number,
+    event: ReactKeyboardEvent<HTMLButtonElement>,
+  ) {
+    const lastIndex = question.options.length - 1;
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      nextIndex = optionIndex === lastIndex ? 0 : optionIndex + 1;
+    } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      nextIndex = optionIndex === 0 ? lastIndex : optionIndex - 1;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = lastIndex;
+    }
+    if (nextIndex === null) return;
+    event.preventDefault();
+    pick(nextIndex);
+    optionRefs.current[nextIndex]?.focus();
+  }
+
   function goNext() {
     if (selected === null) return;
     pendingFocus.current = true;
@@ -187,77 +217,84 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
     const WeakIcon = weakest ? dimensionIcon(weakest.iconName) : Target;
 
     return (
-      <div
-        className="mx-auto w-full max-w-[960px] px-4 pb-12 pt-6 sm:px-6 sm:pt-8"
-        data-diagnostic-state="result"
-      >
-        <header className="border-y-2 border-foreground py-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-orange">
+      <DiagnosticFrame state="result" wide>
+        <header className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {ui.resultEyebrow}
           </p>
           <h1
             ref={focusHeading}
             tabIndex={-1}
-            className="mt-2 text-[34px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:text-[44px]"
+            className="mt-2 max-w-[18ch] text-[clamp(2.125rem,1.7rem+2vw,3.25rem)] font-bold leading-[1.02] tracking-[-0.04em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
             {ui.resultTitle}
           </h1>
-          <p className="mt-3 max-w-[60ch] text-base leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
             {ui.resultIntroduction}
           </p>
         </header>
 
-        <section className="mt-8 grid border-y border-border sm:grid-cols-[minmax(0,1fr)_minmax(18rem,0.8fr)] sm:items-center">
-          <div className="py-5 sm:border-r sm:border-border sm:pr-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-orange">
+        <section
+          className="dark-section grid min-w-0 border-b border-border md:grid-cols-[minmax(0,0.9fr)_minmax(20rem,1.1fr)]"
+          aria-label={ui.scorePlateLabel}
+          data-score-plate
+        >
+          <div className="min-w-0 p-4 sm:p-6 md:border-r md:border-border">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
               {ui.overall}
             </p>
-            <div className="mt-2 flex items-end gap-2">
-              <span className="text-[64px] font-bold leading-none tracking-[-0.04em] text-foreground">
+            <div className="mt-3 flex min-w-0 items-end gap-2">
+              <span className="break-words text-[clamp(4.5rem,16vw,7.5rem)] font-bold leading-[0.78] tracking-[-0.07em] text-foreground">
                 {Math.round(result.compositeScore)}
               </span>
-              <span className="pb-2 text-lg font-medium text-muted-foreground">
+              <span className="pb-1 font-mono text-sm font-semibold text-muted-foreground sm:pb-2 sm:text-base">
                 / 100
               </span>
             </div>
-            <p className="mt-3 text-xl font-semibold text-foreground">
+            <p className="mt-5 break-words text-xl font-semibold text-foreground sm:text-2xl">
               {ui.level} {result.stageLevel}: {result.stageLabel}
             </p>
-            <p className="mt-2 max-w-[48ch] text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-muted-foreground">
               {result.stageBlurb}
             </p>
           </div>
-          <div className="flex justify-center border-t border-border py-3 sm:border-t-0 sm:pl-4">
-            <RadarChart dimensions={result.dimensions} />
+          <div className="grid min-w-0 items-center gap-4 border-t border-border p-4 sm:grid-cols-[minmax(12rem,0.9fr)_minmax(0,1fr)] sm:p-6 md:border-t-0">
+            <div className="flex min-w-0 justify-center">
+              <RadarChart dimensions={result.dimensions} />
+            </div>
+            <CompetencyLegend
+              dimensions={result.dimensions}
+              label={ui.competencyLegendLabel}
+            />
           </div>
         </section>
 
-        <div className="mt-6 grid border-y border-border sm:grid-cols-2 sm:divide-x sm:divide-border">
+        <div className="grid min-w-0 border-b border-foreground sm:grid-cols-2 sm:divide-x sm:divide-border">
           {strongest ? (
-            <div className="flex items-center gap-3 py-4 sm:pr-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border">
+            <div className="flex min-w-0 items-center gap-3 p-4 sm:p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
                 <StrongIcon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              <div className="min-w-0">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
                   {ui.strength}
                 </p>
-                <p className="text-base font-semibold text-foreground">
+                <p className="mt-1 break-words text-base font-semibold text-foreground">
                   {strongest.name}
                 </p>
               </div>
             </div>
           ) : null}
           {weakest ? (
-            <div className="flex items-center gap-3 border-t border-border py-4 sm:border-t-0 sm:pl-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border">
+            <div className="flex min-w-0 items-center gap-3 border-t border-border p-4 sm:border-t-0 sm:p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
                 <WeakIcon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              <div className="min-w-0">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
                   {ui.gap}
                 </p>
-                <p className="text-base font-semibold text-foreground">
+                <p className="mt-1 break-words text-base font-semibold text-foreground">
                   {weakest.name}
                 </p>
               </div>
@@ -265,92 +302,129 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
           ) : null}
         </div>
 
-        <section className="mt-10">
-          <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground">
+        <section className="min-w-0 border-b border-foreground p-4 sm:p-6">
+          <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground sm:text-2xl">
             {ui.fieldsTitle}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">{ui.fieldsBody}</p>
-          <div className="mt-4">
+          <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-muted-foreground">
+            {ui.fieldsBody}
+          </p>
+          <div className="mt-4 min-w-0">
             <DimensionBars dimensions={result.dimensions} />
           </div>
         </section>
 
-        <section className="mt-10 border-y-2 border-foreground py-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-orange">
+        <section
+          className="min-w-0 border-b border-foreground bg-card p-4 sm:p-6"
+          data-next-proof-panel
+        >
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {ui.nextStep}
           </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-[3rem_minmax(0,1fr)]">
-            <span className="flex h-12 w-12 items-center justify-center border border-border">
+          <div className="mt-4 grid min-w-0 gap-4 sm:grid-cols-[3rem_minmax(0,1fr)]">
+            <span className="flex h-12 w-12 items-center justify-center border border-border bg-background">
               <RecIcon className="h-6 w-6" aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
+              <p className="break-words font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
                 {recommendation.badge}
               </p>
-              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-foreground">
+              <h3 className="mt-2 break-words text-2xl font-bold tracking-[-0.02em] text-foreground sm:text-3xl">
                 {recommendation.courseTitle}
               </h3>
-              <p className="mt-3 max-w-[65ch] text-base leading-relaxed text-muted-foreground">
+              <p className="mt-3 max-w-[65ch] break-words text-base leading-relaxed text-muted-foreground">
                 {recommendation.reasoning}
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
-                <Link
-                  href={recommendation.startHref}
-                  prefetch={false}
-                  className="inline-flex min-h-11 items-center gap-2 bg-brand-orange px-5 py-3 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
-                  data-primary-action
-                >
-                  {ui.startCourse}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <Link
+              <div className="mt-5 flex min-w-0 flex-wrap items-center gap-2">
+                <span data-primary-action>
+                  <BrandButton
+                    href={recommendation.startHref}
+                    prefetch={false}
+                    className="max-w-full"
+                  >
+                    {ui.startCourse}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </BrandButton>
+                </span>
+                <BrandButton
                   href={recommendation.courseHref}
-                  className="inline-flex min-h-11 items-center py-2 text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                  variant="ghost"
+                  size="sm"
                 >
                   {ui.courseOverview}
-                </Link>
+                </BrandButton>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="mt-10">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+        <section className="min-w-0 border-b border-foreground p-4 sm:p-6">
+          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
             {ui.pathway}
           </p>
-          <ol className="grid border-y border-border sm:grid-cols-3 lg:grid-cols-6">
+          <ol className="grid min-w-0 border border-border sm:grid-cols-3 lg:grid-cols-6">
             {STAGE_ORDER.map((stageId, i) => {
               const isActive = stageId === activeStage;
               return (
                 <li
                   key={stageId}
-                  className={`min-w-0 border-b-2 px-3 py-3 sm:border-r sm:border-border ${
-                    isActive
-                      ? "border-b-brand-orange text-brand-orange"
-                      : "border-b-transparent text-muted-foreground"
+                  aria-current={isActive ? "step" : undefined}
+                  className={`relative min-w-0 border-b border-border px-3 py-3 last:border-b-0 sm:border-b sm:border-r lg:border-b-0 ${
+                    isActive ? "bg-kupfer-mist" : ""
                   }`}
                 >
-                  <span className="block font-mono text-xs font-bold tabular-nums">
+                  <span className="block font-mono text-xs font-bold tabular-nums text-brand-orange">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="mt-1 block break-words text-sm font-semibold text-foreground">
                     {ui.pathwayLabels[stageId]}
                   </span>
+                  {isActive ? (
+                    <span
+                      className="absolute inset-y-0 left-0 w-1 bg-brand-orange"
+                      aria-hidden="true"
+                    />
+                  ) : null}
                 </li>
               );
             })}
           </ol>
         </section>
 
-        <button
-          type="button"
-          onClick={restart}
-          className="mt-6 inline-flex min-h-11 items-center gap-2 py-2 text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-        >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          {ui.restart}
-        </button>
-      </div>
+        <details className="group min-w-0 border-b border-foreground" data-method-limits>
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-foreground marker:content-none sm:px-6">
+            <span className="min-w-0 break-words">{ui.methodSummary}</span>
+            <span
+              className="shrink-0 font-mono text-brand-orange transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
+              aria-hidden="true"
+            >
+              +
+            </span>
+          </summary>
+          <div className="border-t border-border px-4 py-4 sm:px-6">
+            <h2 className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              {ui.methodTitle}
+            </h2>
+            <p className="mt-2 max-w-[72ch] break-words text-sm leading-relaxed text-muted-foreground">
+              {ui.methodBody}
+            </p>
+            <p className="mt-2 max-w-[72ch] break-words text-sm leading-relaxed text-muted-foreground">
+              {ui.privacyBody}
+            </p>
+          </div>
+        </details>
+
+        <div className="p-4 sm:px-6">
+          <button
+            type="button"
+            onClick={restart}
+            className="inline-flex min-h-11 max-w-full items-center gap-2 break-words py-2 text-left text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          >
+            <RotateCcw className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {ui.restart}
+          </button>
+        </div>
+      </DiagnosticFrame>
     );
   }
 
@@ -359,180 +433,199 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
   const DimIcon = dimensionIcon(meta.iconName);
   const progress = Math.round((answeredCount / questions.length) * 100);
   const chosenOption = selected !== null ? question.options[selected] : null;
+  const questionHeadingId = `ki-check-question-${question.id}`;
 
   return (
-    <div
-      className="mx-auto w-full max-w-[820px] px-4 pb-12 pt-6 sm:px-6 sm:pt-8"
-      data-diagnostic-state="question"
-    >
-      <header className="border-y-2 border-foreground py-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-orange">
+    <DiagnosticFrame state="question">
+      <header className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
           {ui.quizEyebrow}
         </p>
-        <h1 className="mt-2 text-[34px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-[44px]">
+        <h1 className="mt-2 max-w-[18ch] text-[clamp(2.125rem,1.7rem+2vw,3.25rem)] font-bold leading-[1.02] tracking-[-0.04em] text-foreground">
           {ui.quizTitle}
         </h1>
-        <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
           {ui.quizIntroduction}
         </p>
       </header>
 
-      <div className="mt-5">
-        <StepIndicator
-          currentDimensionId={question.dimensionId}
-          answeredByDimension={answeredByDimension}
-          totalByDimension={totalByDimension}
-          dimensions={content.dimensions}
-        />
-      </div>
-
-      <div className="mt-4">
-        <div
-          role="status"
-          aria-live="polite"
-          className="mb-2 flex items-center justify-between font-mono text-xs font-medium text-muted-foreground"
-        >
-          <span>
-            {ui.question} {index + 1} {ui.of} {questions.length}
-          </span>
-          <span className="tabular-nums">{progress}%</span>
-        </div>
-        <div
-          className="h-1.5 w-full overflow-hidden bg-track"
-          role="progressbar"
-          aria-valuenow={progress}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={ui.progressLabel}
-        >
-          <m.div
-            className="h-full bg-brand-orange"
-            initial={false}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.3 }}
+      <div className="grid min-w-0 lg:grid-cols-[13rem_minmax(0,1fr)]">
+        <aside className="min-w-0 lg:border-r lg:border-foreground">
+          <DimensionRail
+            label={ui.dimensionRailLabel}
+            currentDimensionId={question.dimensionId}
+            answeredByDimension={answeredByDimension}
+            totalByDimension={totalByDimension}
+            dimensions={content.dimensions}
           />
+        </aside>
+
+        <div className="min-w-0 p-4 sm:p-6" data-question-instrument>
+          <div>
+            <div
+              role="status"
+              aria-live="polite"
+              className="mb-2 flex min-w-0 items-center justify-between gap-3 font-mono text-xs font-medium text-muted-foreground"
+            >
+              <span className="min-w-0 break-words">
+                {ui.question} {index + 1} {ui.of} {questions.length}
+              </span>
+              <span className="shrink-0 tabular-nums">{progress}%</span>
+            </div>
+            <div
+              className="h-1.5 w-full overflow-hidden bg-track"
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={ui.progressLabel}
+            >
+              <m.div
+                className="h-full origin-left bg-brand-orange"
+                initial={false}
+                animate={{ scaleX: progress / 100 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.3 }}
+                style={{ transformOrigin: "left center" }}
+              />
+            </div>
+          </div>
+
+          <section className="mt-5 min-w-0">
+            <AnimatePresence mode="wait" initial={false}>
+              <m.div
+                key={question.id}
+                variants={stateVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
+                    <DimIcon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                    {meta.name}
+                  </span>
+                </div>
+
+                <h2
+                  id={questionHeadingId}
+                  ref={focusHeading}
+                  tabIndex={-1}
+                  className="mt-4 max-w-[34ch] break-words text-[clamp(1.375rem,1.15rem+1vw,1.75rem)] font-bold leading-snug tracking-[-0.02em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                >
+                  {question.text}
+                </h2>
+
+                <div
+                  className="mt-5 min-w-0 border border-border"
+                  role="radiogroup"
+                  aria-labelledby={questionHeadingId}
+                  data-answer-group
+                >
+                  {question.options.map((option, i) => {
+                    const isPicked = selected === i;
+                    return (
+                      <button
+                        key={option.text}
+                        ref={(node) => {
+                          optionRefs.current[i] = node;
+                        }}
+                        type="button"
+                        role="radio"
+                        aria-checked={isPicked}
+                        tabIndex={isPicked || (selected === null && i === 0) ? 0 : -1}
+                        disabled={!hydrated}
+                        onClick={() => pick(i)}
+                        onKeyDown={(event) => handleOptionKeyDown(i, event)}
+                        className={`group flex min-h-11 w-full min-w-0 items-start gap-3 border-b border-border px-3 py-3 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 ${
+                          isPicked
+                            ? "bg-kupfer-mist"
+                            : "hover:bg-card-hover"
+                        }`}
+                        data-answer-option
+                      >
+                        <span
+                          className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center border ${
+                            isPicked
+                              ? "border-brand-orange bg-brand-orange"
+                              : "border-muted-foreground group-hover:border-brand-orange"
+                          }`}
+                          aria-hidden="true"
+                        >
+                          {isPicked ? (
+                            <span className="h-1.5 w-1.5 bg-white" />
+                          ) : null}
+                        </span>
+                        <span className="min-w-0 break-words text-[15px] leading-relaxed text-foreground">
+                          {option.text}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div
+                  className="min-h-14"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  data-answer-feedback
+                >
+                  <AnimatePresence initial={false}>
+                    {chosenOption ? (
+                      <m.div
+                        key={`reveal-${selected}`}
+                        initial={prefersReducedMotion ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
+                        className="mt-4 grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-3 border border-brand-sand bg-card p-3"
+                      >
+                        <Compass
+                          className="mt-0.5 h-4 w-4 shrink-0 text-brand-sand"
+                          aria-hidden="true"
+                        />
+                        <p className="min-w-0 break-words text-sm leading-relaxed text-foreground">
+                          {chosenOption.meaning}
+                        </p>
+                      </m.div>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
+              </m.div>
+            </AnimatePresence>
+          </section>
+
+          <div className="mt-4 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+            {hydrated && index > 0 ? (
+              <BrandButton onClick={goBack} variant="ghost" size="sm">
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                {ui.back}
+              </BrandButton>
+            ) : (
+              <span aria-hidden="true" className="min-h-11" />
+            )}
+            <span data-primary-action>
+              <BrandButton
+                onClick={goNext}
+                disabled={!hydrated || selected === null}
+                size="sm"
+              >
+                {isLast ? ui.result : ui.next}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </BrandButton>
+            </span>
+          </div>
+
+          <p className="mt-4 flex min-w-0 items-start gap-2 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+            <TrendingUp className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className="min-w-0 break-words">{ui.reassurance}</span>
+          </p>
         </div>
       </div>
-
-      <section className="mt-5 border-y border-border py-5">
-        <AnimatePresence mode="wait" initial={false}>
-          <m.div
-            key={question.id}
-            variants={stateVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center border border-border">
-                <DimIcon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              <span className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                {meta.name}
-              </span>
-            </div>
-
-            <h2
-              ref={focusHeading}
-              tabIndex={-1}
-              className="mt-4 text-[22px] font-bold leading-snug tracking-[-0.01em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:text-[26px]"
-            >
-              {question.text}
-            </h2>
-
-            <div className="mt-5 border-y border-border">
-              {question.options.map((option, i) => {
-                const isPicked = selected === i;
-                return (
-                  <button
-                    key={option.text}
-                    type="button"
-                    aria-pressed={isPicked}
-                    disabled={!hydrated}
-                    onClick={() => pick(i)}
-                    className={`flex min-h-11 w-full items-start gap-3 border-b border-border px-3 py-3 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60 ${
-                      isPicked
-                        ? "border-l-4 border-l-brand-orange bg-kupfer-mist"
-                        : "border-l-4 border-l-transparent hover:border-l-brand-orange hover:bg-card-hover"
-                    }`}
-                  >
-                    <span
-                      className={`mt-1 h-3 w-3 shrink-0 border ${
-                        isPicked
-                          ? "border-brand-orange bg-brand-orange"
-                          : "border-muted-foreground"
-                      }`}
-                      aria-hidden="true"
-                    />
-                    <span className="text-[15px] leading-relaxed text-foreground">
-                      {option.text}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <AnimatePresence initial={false}>
-              {chosenOption ? (
-                <m.div
-                  key={`reveal-${selected}`}
-                  initial={prefersReducedMotion ? false : { opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
-                  className="mt-4 flex items-start gap-3 border-l-4 border-brand-sand py-2 pl-3"
-                >
-                  <Compass
-                    className="mt-0.5 h-4 w-4 shrink-0 text-brand-sand"
-                    aria-hidden="true"
-                  />
-                  <p className="text-sm leading-relaxed text-foreground">
-                    {chosenOption.meaning}
-                  </p>
-                </m.div>
-              ) : null}
-            </AnimatePresence>
-          </m.div>
-        </AnimatePresence>
-      </section>
-
-      <div className="mt-4 flex items-center justify-between gap-4">
-        {hydrated && index > 0 ? (
-          <button
-            type="button"
-            onClick={goBack}
-            className="inline-flex min-h-11 items-center gap-1.5 py-2 text-sm font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {ui.back}
-          </button>
-        ) : (
-          <span
-            aria-hidden="true"
-            className="invisible inline-flex min-h-11 items-center gap-1.5 py-2 text-sm font-semibold"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {ui.back}
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={goNext}
-          disabled={!hydrated || selected === null}
-          className="inline-flex min-h-11 items-center gap-2 bg-brand-orange px-5 py-3 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground disabled:cursor-not-allowed disabled:bg-track disabled:text-muted-foreground"
-          data-primary-action
-        >
-          {isLast ? ui.result : ui.next}
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </div>
-
-      <p className="mt-6 flex items-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
-        <TrendingUp className="h-4 w-4" aria-hidden="true" />
-        {ui.reassurance}
-      </p>
-    </div>
+    </DiagnosticFrame>
   );
 }
 

@@ -49,7 +49,7 @@ const LANDING_COPY = {
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
-      "Abstrakte Kursillustration mit Regelwerk, Prüfschritten und europäischen Sternen",
+      "Editoriale Prozessgrafik: Bildkarten durchlaufen Prüfstufen, farbige Risikoklassen und einen Abschlusscheck",
     imageLabel: "EU AI Act · 6 Blöcke · 24 Lektionen",
     facts: [
       { value: "6", label: "Blöcke" },
@@ -129,7 +129,7 @@ const LANDING_COPY = {
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
-      "Abstract course illustration combining a rulebook, review steps, and European stars",
+      "Editorial process graphic showing image cards passing through review stages, colour-coded risk classes, and a final check",
     imageLabel: "EU AI Act · 6 blocks · 24 lessons",
     facts: [
       { value: "6", label: "Blocks" },
@@ -207,9 +207,9 @@ export async function generateMetadata(): Promise<Metadata> {
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
       images: [
         {
-          url: `${SITE_URL}/course-covers/eu-ai-act-kurs-cover-v2.webp`,
-          width: 610,
-          height: 610,
+          url: `${SITE_URL}/course-covers/eu-ai-act-kurs-cover-v3.webp`,
+          width: 1440,
+          height: 630,
           alt: copy.imageAlt,
         },
       ],

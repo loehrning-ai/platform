@@ -44,4 +44,14 @@ describe("blog editorial design contract", () => {
       /\.sim__slider\s*\{[^}]*background:\s*linear-gradient\([^}]*100% 2px\s+no-repeat/s,
     );
   });
+
+  it("uses light risograph surfaces without hiding the real article preview", () => {
+    expect(styles.index).toContain("--blog-acid");
+    expect(styles.index).toContain("--blog-lilac");
+    expect(styles.index).toContain("--blog-sky");
+    expect(styles.index).not.toMatch(
+      /(?:mast__meta|row__art|feed__note)[^{]*\{[^}]*background:\s*var\(--druckertinte\)/s,
+    );
+    expect(styles.index).not.toMatch(/\.row__art\s*\{[^}]*display:\s*none/s);
+  });
 });
