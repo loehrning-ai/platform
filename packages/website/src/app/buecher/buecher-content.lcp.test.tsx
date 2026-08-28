@@ -54,7 +54,9 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(screen.getAllByText("Nach der Lektüre")).toHaveLength(2);
     expect(screen.getAllByText(/Redaktion: editorial:books/)).toHaveLength(2);
     expect(screen.getAllByText("Ausgabe, Quellen und Zugang")).toHaveLength(2);
-    expect(container.querySelector("[data-book-bento]")).not.toBeNull();
+    expect(
+      container.querySelector("[data-book-editorial-spread]"),
+    ).not.toBeNull();
     expect(container.querySelectorAll("[data-preview-shelf]")).toHaveLength(2);
     expect(container.querySelectorAll("[data-image-showcase]")).toHaveLength(2);
     expect(
@@ -204,5 +206,9 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
     expect(source).not.toContain("copy.bridgeHeading");
+    expect(source).not.toContain("dark-section");
+    expect(source).not.toContain("data-book-bento");
+    expect(source).toContain("bg-paper");
+    expect(source).toContain("bg-brand-acid");
   });
 });

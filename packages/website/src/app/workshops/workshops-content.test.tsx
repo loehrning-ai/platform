@@ -1,9 +1,14 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { createElement } from "react";
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getWorkshops } from "@/lib/workshops";
 import { WorkshopsContent } from "./workshops-content";
+
+vi.mock("next/image", () => ({
+  default: (props: Record<string, unknown>) => createElement("img", props),
+}));
 
 describe("<WorkshopsContent>", () => {
   it("renders German first-viewport copy without motion-hidden styles", () => {
@@ -66,7 +71,7 @@ describe("<WorkshopsContent>", () => {
     expect(screen.queryByRole("link", { name: /View courses/ })).toBeNull();
   });
 
-  it("uses decision cards without image payloads or generic card chrome", () => {
+  it("uses preview-first decision folios without black hub panels", () => {
     const { container } = render(
       <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
     );
@@ -75,12 +80,22 @@ describe("<WorkshopsContent>", () => {
       "utf8",
     );
 
-    expect(source).not.toContain("next/image");
+    expect(source).toContain('from "next/image"');
+    expect(source).toContain("card-preview.webp");
     expect(source).not.toContain("transition-all");
     expect(source).not.toContain("feedback.aligned.title");
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
-    expect(container.querySelector("[data-workshop-bento]")).not.toBeNull();
+    expect(source).not.toContain("dark-section");
+    expect(source).not.toContain("data-workshop-bento");
+    expect(
+      container.querySelector("[data-workshop-editorial-spread]"),
+    ).not.toBeNull();
     expect(container.querySelectorAll("[data-decision-card]")).toHaveLength(2);
+    const previews = container.querySelectorAll("img");
+    expect(previews).toHaveLength(2);
+    expect(previews[0]).toHaveAttribute("loading", "eager");
+    expect(previews[0]).toHaveAttribute("fetchpriority", "high");
+    expect(previews[1]).toHaveAttribute("loading", "lazy");
   });
 });

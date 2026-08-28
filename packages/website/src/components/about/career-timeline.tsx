@@ -7,7 +7,7 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
   return (
     <section
       id="laufbahn"
-      className="border-t border-border py-10"
+      className="border-t border-border bg-paper py-10"
       aria-labelledby="career-heading"
       data-proof-ledger
     >
@@ -27,21 +27,23 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
           </p>
         </header>
 
-        <ol
-          aria-label={copy.ariaLabel}
-          className="min-w-0 divide-y divide-border border-y border-border"
-        >
+        <ol aria-label={copy.ariaLabel} className="relative min-w-0">
           {copy.milestones.map((milestone, index) => {
             const current = index === copy.milestones.length - 1;
             return (
               <li
                 key={`${milestone.period}-${milestone.company}`}
-                className={`group relative grid min-w-0 gap-2 py-4 sm:grid-cols-[2.5rem_7rem_minmax(8rem,0.62fr)_minmax(0,1fr)] sm:items-start sm:gap-4 ${
-                  current ? "bg-card px-3" : ""
+                className={`group relative grid min-w-0 gap-2 border-t border-border py-5 pl-8 last:border-b sm:grid-cols-[7rem_minmax(8rem,0.62fr)_minmax(0,1fr)] sm:items-start sm:gap-5 sm:pl-10 ${
+                  current ? "bg-brand-acid/35 pr-4" : ""
                 }`}
               >
-                <span className="font-mono text-xs font-bold tabular-nums text-brand-orange">
-                  {String(index + 1).padStart(2, "0")}
+                <span
+                  className={`absolute left-0 top-5 flex h-5 w-5 items-center justify-center font-mono text-xs font-bold text-foreground ${
+                    current ? "bg-brand-acid" : "bg-brand-lilac/80"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {index + 1}
                 </span>
                 <p className="break-words font-mono text-xs font-bold tabular-nums text-muted-foreground [overflow-wrap:anywhere]">
                   {milestone.period}
@@ -68,12 +70,6 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
                   <p className="min-w-0 flex-1 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
                     {milestone.description}
                   </p>
-                  <span
-                    className={`mt-1.5 h-2.5 w-2.5 shrink-0 ${
-                      current ? "bg-brand-orange" : "bg-border"
-                    }`}
-                    aria-hidden="true"
-                  />
                 </div>
               </li>
             );

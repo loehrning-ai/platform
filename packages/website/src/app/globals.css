@@ -2,7 +2,9 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Brand CI — Berliner Werkzeug v3.0 (April 2026) */
+  /* Berlin risograph palette. Copper remains the brand anchor; the broader
+     system now behaves like an independent learning journal instead of a
+     monochrome corporate dashboard. */
   --color-brand-orange: #a5370f; /* Kupfer — oxidized copper, Berlin Altbau. Darkened from #C4431A (4.43:1, sub-AA) to #A5370F (5.85:1) so accent TEXT on Kalkweiß meets WCAG AA; dark sections override to the lighter #E07050 below. */
   /* Foreground-safe status/accent tones for light surfaces. These values also
      remain AA when the same tone is used over its own 20% tint on Birke cards.
@@ -11,23 +13,34 @@
   --color-brand-amber: #78350f;
   --color-destructive: #991b1b;
 
-  /* Light background system — Kalkweiß */
-  --color-background: #f3f0e9; /* Kalkweiß — chalk-lime white */
-  --color-foreground: #0b0908; /* Druckertinte — printer's ink near-black */
+  /* Light background system — warmer paper, blue-black ink. */
+  --color-background: #f7f1e7;
+  --color-foreground: #19232d;
   --color-muted: #655c54; /* Darkened from #9c8f85 (2.76:1, fails AA as text) to #655c54 for legible secondary text on Kalkweiß (5.74:1) AND on the Birke card #E8E3D9 (5.11:1) — #6f665e was 4.39:1 on the card, sub-AA; dark sections override to #c5b9af below. */
   /* Schiefer ratchet 2026-05-04: was #68605A (~4.8:1, AA only). Moved to
      #4f4640 to reach ~7.0:1 against Kalkweiß #F3F0E9 — meets WCAG AAA per
      Brand CI v3.0 contrast targets. */
-  --color-muted-foreground: #4f4640;
+  --color-muted-foreground: #4f5356;
   /* Structural boundaries and passive tracks have different contrast jobs.
      Schiefer reaches 3.45:1 on Kalkweiss and 3.07:1 on Birke, so a 1px frame
      stays visible. Leinen remains the quiet fill behind progress and inactive
      states; the compatibility utilities below route legacy bg-border tracks to
      this dedicated token without weakening border-border. */
-  --color-border: #887f77; /* Schiefer — structural boundary */
-  --color-track: #d4cec5; /* Leinen — passive track/inactive fill */
-  --color-card: #e8e3d9; /* Birke — birch-pale surface */
-  --color-card-hover: #e0d9ce; /* Birke darkened */
+  --color-border: #827970;
+  --color-track: #d9d0c4;
+  --color-card: #fff9ed;
+  --color-card-hover: #f0e7d7;
+
+  /* Expressive discovery surfaces. Bright values are backgrounds and
+     ornament; their darker twins carry normal-sized text. */
+  --color-paper: #fffcf5;
+  --color-brand-acid: #ddf45a;
+  --color-brand-lilac: #cbbcff;
+  --color-brand-sky: #a9ddfc;
+  --color-brand-pink: #ffb8c8;
+  --color-brand-peach: #ffb38a;
+  --color-brand-cobalt: #2747b5;
+  --color-brand-teal: #006c67;
 
   /* Kupfer scale — full CI palette */
   --color-kupfer: #a5370f;
@@ -36,11 +49,11 @@
   --color-kupfer-mist: #f5e8e2;
 
   /* Dark section overrides (scoped via .dark-section) */
-  --color-dark-bg: #0d0b09;
-  --color-dark-fg: #f3f0e9;
+  --color-dark-bg: #242342;
+  --color-dark-fg: #f7f1e7;
   --color-dark-muted: #9c8f85;
-  --color-dark-border: rgba(243, 240, 233, 0.4);
-  --color-dark-track: rgba(243, 240, 233, 0.12);
+  --color-dark-border: rgba(247, 241, 231, 0.4);
+  --color-dark-track: rgba(247, 241, 231, 0.14);
 
   /* Functional */
   --color-risk-green: #14532d;
@@ -51,13 +64,13 @@
      utilities; no solid bg-risk-red+text pairing exists in the codebase. */
   --color-risk-red: #991b1b;
 
-  /* Elevation — warm, soft card shadows (v3.1: replaces the brutalist offset
-     shadow). Tinted with Druckertinte so they read warm on Kalkweiß, not grey. */
+  /* Soft editorial elevation with one optional ink-stamp shadow for the few
+     remaining brutalist signals. */
   --shadow-card:
-    0 1px 2px rgba(11, 9, 8, 0.04), 0 3px 10px rgba(11, 9, 8, 0.05);
+    0 2px 8px rgba(36, 35, 66, 0.05), 0 16px 44px rgba(36, 35, 66, 0.07);
   --shadow-card-hover:
-    0 2px 4px rgba(11, 9, 8, 0.05), 0 10px 24px rgba(11, 9, 8, 0.09);
-  --shadow-tile: 0 1px 3px rgba(11, 9, 8, 0.06);
+    0 4px 12px rgba(36, 35, 66, 0.07), 0 24px 56px rgba(36, 35, 66, 0.12);
+  --shadow-tile: 4px 4px 0 rgba(25, 35, 45, 0.92);
 
   /* Typography — Loehrning Sans primary, Inter/system fallback.
      Geist Mono is bundled rather than resolved from an OS stack. Course and
@@ -156,7 +169,7 @@
   /* Dark dots on light background — warm, paper-like texture */
   .bg-dot-pattern {
     background-image: radial-gradient(
-      rgba(16, 14, 12, 0.06) 1px,
+      rgba(39, 71, 181, 0.09) 1px,
       transparent 1px
     );
     background-size: 24px 24px;
@@ -164,9 +177,44 @@
 
   .bg-grid {
     background-image:
-      linear-gradient(rgba(16, 14, 12, 0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(16, 14, 12, 0.07) 1px, transparent 1px);
+      linear-gradient(rgba(39, 71, 181, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(165, 55, 15, 0.045) 1px, transparent 1px);
     background-size: 64px 64px;
+  }
+
+  /* Shared atmospheric canvas inspired by 21st's grain/mesh backgrounds,
+     rebuilt as CSS so it is fast, deterministic, and motion-free. */
+  .site-atmosphere {
+    background:
+      radial-gradient(circle at 8% 8%, rgba(221, 244, 90, 0.44), transparent 23rem),
+      radial-gradient(circle at 92% 13%, rgba(203, 188, 255, 0.42), transparent 28rem),
+      radial-gradient(circle at 74% 86%, rgba(169, 221, 252, 0.32), transparent 32rem),
+      radial-gradient(circle at 14% 78%, rgba(255, 184, 200, 0.22), transparent 26rem);
+  }
+
+  .site-atmosphere::after,
+  .berlin-grain::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    opacity: 0.22;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .berlin-hero {
+    background:
+      radial-gradient(circle at 74% 36%, rgba(203, 188, 255, 0.62), transparent 24rem),
+      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.48), transparent 22rem),
+      linear-gradient(128deg, var(--color-paper) 0 58%, rgba(221, 244, 90, 0.2) 100%);
+  }
+
+  .berlin-footer {
+    background:
+      radial-gradient(circle at 12% 15%, rgba(221, 244, 90, 0.16), transparent 18rem),
+      radial-gradient(circle at 88% 82%, rgba(203, 188, 255, 0.2), transparent 24rem),
+      var(--color-dark-bg);
   }
 
   .bg-grid-dark {
@@ -186,12 +234,11 @@
 
   /* Editorial overline — used across all sections */
   .overline {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    line-height: 1.5;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--color-muted-foreground);
   }
 
@@ -227,28 +274,27 @@
 
   /* Dark section — CSS custom property scoping for inverted sections */
   .dark-section {
-    --color-background: #0d0b09;
-    --color-foreground: #f3f0e9;
+    --color-background: #242342;
+    --color-foreground: #f7f1e7;
     /* Was #9c8f85 (~3.2:1 against #0d0b09 — sub-AA). Lifted to #c5b9af to
        reach ~7.5:1 — meets WCAG AAA on the warm-stone dark background. */
-    --color-muted-foreground: #c5b9af;
-    --color-muted: #c5b9af; /* lighter muted on dark (~7.5:1) — the global #6f665e would be sub-AA here */
+    --color-muted-foreground: #d7d0e4;
+    --color-muted: #d7d0e4;
     /* Kupfer accent flips to the lighter copper on dark so accent text stays AA
        (#A5370F would be ~2.4:1 on near-black; #E07050 is ~5.5:1). */
     --color-brand-orange: #e07050;
-    --color-brand-sand: #a89070;
-    --color-brand-amber: #f59e0b;
+    --color-brand-sand: #d8c29e;
+    --color-brand-amber: #ffc857;
     --color-kupfer: #e07050;
-    --color-destructive: #ef4444;
+    --color-destructive: #ff7a59;
     --color-risk-green: #4ade80;
     --color-risk-yellow: #facc15;
-    /* On dark, the darker red-700 (#b91c1c → 3.04:1) would be sub-AA, so revert
-       risk-red to red-500 (#ef4444 → 5.22:1) for AA on the near-black ground. */
-    --color-risk-red: #ef4444;
-    --color-border: rgba(243, 240, 233, 0.4);
-    --color-track: rgba(243, 240, 233, 0.12);
-    --color-card: rgba(243, 240, 233, 0.06);
-    --color-card-hover: rgba(243, 240, 233, 0.1);
+    /* Coral remains visibly critical while clearing AA on the indigo ground. */
+    --color-risk-red: #ff7a59;
+    --color-border: rgba(247, 241, 231, 0.4);
+    --color-track: rgba(247, 241, 231, 0.14);
+    --color-card: rgba(247, 241, 231, 0.08);
+    --color-card-hover: rgba(247, 241, 231, 0.14);
     background-color: var(--color-background);
     color: var(--color-foreground);
   }

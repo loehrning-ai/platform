@@ -16,6 +16,18 @@ const PRIMARY_READER_CLASS =
 const SECONDARY_LINK_CLASS =
   "inline-flex min-h-11 max-w-full items-center gap-2 py-2 text-sm font-semibold text-brand-orange underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
 
+const BOOK_WASHES = [
+  "bg-brand-lilac/55",
+  "bg-brand-sky/55",
+  "bg-brand-pink/50",
+] as const;
+
+const BOOK_BACKING_SHEETS = [
+  "bg-brand-acid/70",
+  "bg-brand-pink/65",
+  "bg-brand-teal/45",
+] as const;
+
 function formatReviewDate(value: string, locale: Locale): string {
   return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
     day: "numeric",
@@ -42,61 +54,82 @@ export function BuecherContent({
 
   return (
     <>
-      <section className="border-b border-border py-8 sm:py-10">
+      <section className="relative isolate overflow-hidden border-b border-border bg-paper py-10 sm:py-14">
+        <span
+          className="pointer-events-none absolute -left-12 top-16 h-24 w-72 -rotate-3 bg-brand-acid/70"
+          aria-hidden="true"
+        />
+        <span
+          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-lilac/55"
+          aria-hidden="true"
+        />
         <div
-          className="mx-auto grid max-w-6xl gap-3 px-4 sm:px-6 lg:grid-cols-12"
-          data-book-bento
+          className="relative mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:items-start lg:gap-10"
+          data-book-editorial-spread
         >
-          <div className="dark-section relative min-w-0 overflow-hidden border border-foreground bg-background p-5 text-foreground sm:p-7 lg:col-span-8">
-            <span
-              className="absolute right-[-2.5rem] top-[-2.5rem] h-28 w-28 rotate-45 border border-border"
-              aria-hidden="true"
-            />
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <header className="relative min-w-0 py-3 lg:col-span-8 lg:py-8">
+            <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+              <span
+                className="h-3 w-3 bg-brand-cobalt"
+                aria-hidden="true"
+              />
               {copy.kicker}
             </p>
-            <h1 className="relative mt-5 max-w-[14ch] text-[clamp(2.45rem,5vw,4.75rem)] font-bold leading-[0.94] tracking-[-0.05em]">
+            <h1 className="relative mt-5 max-w-[14ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground">
               {copy.heading}{" "}
-              <span className="text-brand-orange">{copy.headingAccent}</span>
+              <span className="box-decoration-clone bg-brand-acid/80 px-1 text-foreground">
+                {copy.headingAccent}
+              </span>
             </h1>
-          </div>
-
-          <div className="relative flex min-w-0 flex-col justify-between overflow-hidden border border-foreground bg-card p-5 sm:p-6 lg:col-span-4">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              {copy.collectionHeading}
-            </span>
-            <strong className="mt-10 block text-[clamp(4.5rem,9vw,7.5rem)] font-bold leading-[0.72] tracking-[-0.08em] text-foreground">
-              {String(catalogBooks.length).padStart(2, "0")}
-            </strong>
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {copy.introduction(catalogBooks.length)}
             </p>
+          </header>
+
+          <aside className="relative min-w-0 pb-3 pr-3 lg:col-span-4 lg:mt-16 lg:rotate-1">
             <span
-              className="absolute bottom-[-2rem] right-[-2rem] h-20 w-20 rotate-12 border border-brand-orange/40"
+              className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-pink/70"
               aria-hidden="true"
             />
-          </div>
+            <div className="relative border border-foreground/30 bg-paper p-5 shadow-card sm:p-6">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+                {copy.collectionHeading}
+              </span>
+              <div className="mt-7 flex items-end justify-between gap-6 border-b border-foreground pb-4">
+                <strong className="text-[clamp(3.5rem,7vw,5.5rem)] font-bold leading-[0.76] tracking-[-0.08em] text-foreground">
+                  {String(catalogBooks.length).padStart(2, "0")}
+                </strong>
+                <span
+                  className="mb-1 h-7 w-7 bg-brand-acid"
+                  aria-hidden="true"
+                />
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                {copy.collectionDescription}
+              </p>
+            </div>
+          </aside>
         </div>
       </section>
 
       <section
-        className="py-8 sm:py-10"
+        className="bg-background py-10 sm:py-12"
         aria-labelledby="book-collection-heading"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <header className="mb-5 flex flex-col gap-1 border-b border-border pb-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <header className="mb-8 grid gap-3 border-b border-border pb-4 sm:grid-cols-[minmax(12rem,0.48fr)_minmax(0,1fr)] sm:items-end sm:gap-8">
             <h2
               id="book-collection-heading"
-              className="text-xl font-bold tracking-[-0.025em] sm:text-2xl"
+              className="text-2xl font-bold tracking-[-0.035em] sm:text-3xl"
             >
               {copy.collectionHeading}
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:justify-self-end sm:text-right">
               {copy.collectionDescription}
             </p>
           </header>
 
-          <div className="grid gap-5">
+          <div className="grid gap-10 sm:gap-12">
             {localizedBooks.map(({ book, display }, index) => {
               const detailHref = localizeHref(book.readerHref, locale);
               const relatedHref = localizeHref(
@@ -112,11 +145,17 @@ export function BuecherContent({
                   key={book.id}
                   id={book.id}
                   data-testid="book-card"
-                  className="group relative grid min-w-0 overflow-hidden border border-foreground bg-background md:grid-cols-[minmax(15rem,0.42fr)_minmax(0,1fr)]"
+                  className="group relative isolate grid min-w-0 bg-paper shadow-card ring-1 ring-foreground/20 md:grid-cols-[minmax(16rem,0.44fr)_minmax(0,1fr)]"
                   data-preview-shelf
                 >
-                  <div className="relative flex min-w-0 items-center justify-center overflow-hidden border-b border-border bg-card p-5 md:border-b-0 md:border-r sm:p-7">
-                    <span className="absolute left-4 top-4 z-20 border border-foreground bg-background px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                  <span
+                    className={`absolute inset-0 -z-10 translate-x-2 translate-y-2 ${BOOK_BACKING_SHEETS[index % BOOK_BACKING_SHEETS.length]}`}
+                    aria-hidden="true"
+                  />
+                  <div
+                    className={`relative flex min-w-0 items-center justify-center overflow-hidden border-b border-foreground/20 p-5 md:border-b-0 md:border-r sm:p-7 ${BOOK_WASHES[index % BOOK_WASHES.length]}`}
+                  >
+                    <span className="absolute left-4 top-4 z-20 bg-paper px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground ring-1 ring-foreground/30">
                       {copy.publicationNumber(index + 1)}
                     </span>
                     <button
@@ -129,11 +168,11 @@ export function BuecherContent({
                       data-image-showcase
                     >
                       <span
-                        className="absolute inset-x-6 bottom-7 top-9 translate-x-4 translate-y-4 border border-border bg-background"
+                        className="absolute inset-x-6 bottom-7 top-9 translate-x-4 translate-y-4 bg-brand-acid/70 ring-1 ring-foreground/20"
                         aria-hidden="true"
                       />
                       <span
-                        className="absolute inset-x-6 bottom-7 top-9 translate-x-2 translate-y-2 border border-foreground bg-background"
+                        className="absolute inset-x-6 bottom-7 top-9 translate-x-2 translate-y-2 bg-paper ring-1 ring-foreground/40"
                         aria-hidden="true"
                       />
                       <Image
@@ -148,7 +187,7 @@ export function BuecherContent({
                             }
                           : { loading: "lazy" as const })}
                         sizes="(max-width: 767px) 224px, 256px"
-                        className="relative h-auto w-48 max-w-full border border-foreground bg-background transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:-rotate-1 motion-reduce:transition-none sm:w-56 md:w-full"
+                        className="relative h-auto w-48 max-w-full bg-paper shadow-card ring-1 ring-foreground/40 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:-rotate-1 motion-reduce:transition-none sm:w-56 md:w-full"
                       />
                       <span
                         aria-hidden="true"
@@ -160,7 +199,7 @@ export function BuecherContent({
                     </button>
                   </div>
 
-                  <div className="min-w-0 p-5 sm:p-7">
+                  <div className="min-w-0 bg-paper p-5 sm:p-7">
                     <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                       <div className="min-w-0">
                         <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
@@ -173,31 +212,31 @@ export function BuecherContent({
                           {display.subtitle}
                         </p>
                       </div>
-                      <span className="w-fit border border-brand-orange px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
+                      <span className="w-fit bg-brand-acid/75 px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
                         {display.statusLabel}
                       </span>
                     </div>
 
                     <div className="mt-5">
-                      <p className="text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                         {copy.contents}
                       </p>
-                      <ul className="mt-2 grid gap-px border border-border bg-border sm:grid-cols-3">
+                      <ol className="mt-3 divide-y divide-border border-y border-border">
                         {display.highlights.map((highlight, highlightIndex) => (
                           <li
                             key={highlight}
-                            className="min-w-0 bg-background p-3 text-sm leading-relaxed text-foreground"
+                            className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 text-sm leading-relaxed text-foreground"
                           >
-                            <span className="mb-2 block font-mono text-xs font-bold text-brand-orange">
+                            <span className="font-mono text-xs font-bold text-brand-orange">
                               {String(highlightIndex + 1).padStart(2, "0")}
                             </span>
                             {highlight}
                           </li>
                         ))}
-                      </ul>
+                      </ol>
                     </div>
 
-                    <dl className="mt-5 grid min-w-0 grid-cols-2 border-y border-border sm:grid-cols-4">
+                    <dl className="mt-5 flex min-w-0 flex-wrap gap-x-6 gap-y-4 border-y border-border py-4">
                       {[
                         [copy.facts.audience, display.audience],
                         [
@@ -209,19 +248,8 @@ export function BuecherContent({
                           copy.facts.materialLanguage,
                           copy.materialLanguageValue,
                         ],
-                      ].map(([label, value], factIndex) => (
-                        <div
-                          key={label}
-                          className={`min-w-0 py-3 ${
-                            factIndex % 2 === 0
-                              ? "pr-3"
-                              : "border-l border-border pl-3"
-                          } ${
-                            factIndex > 1
-                              ? "border-t border-border sm:border-t-0"
-                              : ""
-                          } sm:border-l sm:border-border sm:px-3 sm:first:border-l-0 sm:first:pl-0`}
-                        >
+                      ].map(([label, value]) => (
+                        <div key={label} className="min-w-[8rem] flex-1">
                           <dt className="text-xs font-semibold text-muted-foreground">
                             {label}
                           </dt>
@@ -334,7 +362,7 @@ export function BuecherContent({
             })}
           </div>
 
-          <p className="mt-5 border-l-[3px] border-brand-orange bg-card px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-10 max-w-4xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-xs leading-relaxed text-muted-foreground sm:ml-auto">
             {copy.sourceNote}
           </p>
         </div>

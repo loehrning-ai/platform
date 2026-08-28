@@ -34,13 +34,18 @@ describe("<UeberMichContent>", () => {
     expect(
       container.querySelector("article > section:last-of-type"),
     ).toHaveAttribute("id", "kontakt");
-    expect(container.querySelector("[data-profile-bento]")).not.toBeNull();
+    expect(
+      container.querySelector("[data-profile-editorial-spread]"),
+    ).not.toBeNull();
     expect(container.querySelector("[data-proof-ledger]")).not.toBeNull();
-    expect(container.querySelector("[data-proof-bento]")).not.toBeNull();
-    expect(container.querySelector("[data-editorial-bento]")).not.toBeNull();
+    expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
+    expect(
+      container.querySelector("[data-editorial-manifesto]"),
+    ).not.toBeNull();
     expect(container.querySelectorAll("[data-link-preview]")).toHaveLength(4);
     expect(container.querySelector(".js-reveal")).toBeNull();
     expect(container.querySelector('[style*="opacity: 0"]')).toBeNull();
+    expect(container.querySelector(".dark-section")).toBeNull();
   });
 
   it("renders full English copy without German UI leakage", () => {

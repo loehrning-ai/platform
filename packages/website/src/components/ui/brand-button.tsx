@@ -7,8 +7,8 @@ import type { ReactNode } from "react";
 /*
  * BrandButton — loehrning.ai signature button
  *
- * Flat editorial control: a compact 1px frame, restrained radius, and no
- * decorative lift. The color inversion is the interaction signal.
+ * Warm editorial control: compact, tactile, and intentionally softer than the
+ * remaining brutalist frames. Color inversion and a small lift signal action.
  *
  * variant:
  *   "primary"  — Kupfer (#A5370F) fill, white text
@@ -53,14 +53,14 @@ export function BrandButton({
 }: BrandButtonProps) {
   const base = cn(
     // Layout
-    "inline-flex min-h-11 items-center justify-center font-bold tracking-[0.08em] uppercase",
+    "inline-flex min-h-11 items-center justify-center font-semibold tracking-[-0.01em]",
     // Gate nowrap: long German CTAs (+ arrow + lg padding) could exceed a ~320px
     // column and leak a horizontal scrollbar. Wrap on phones, nowrap from sm up.
     "select-none max-w-full whitespace-normal text-center sm:whitespace-nowrap",
-    // Shape — bounded 6px radius, never a pill
-    "rounded-md border",
+    // Shape — soft studio label, still clearly bounded and never a pill
+    "rounded-xl border shadow-card",
     // Transition
-    "transition-[background-color,border-color,color,opacity] duration-150 ease-out",
+    "transition-[background-color,border-color,box-shadow,color,opacity,transform] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none",
     sizeMap[size],
     // Disabled
     disabled && "pointer-events-none opacity-40",

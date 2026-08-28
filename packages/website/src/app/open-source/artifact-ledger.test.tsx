@@ -5,7 +5,7 @@ import { localizeOpenSourceArtifact } from "@/lib/open-source/display-copy";
 import { ArtifactLedger } from "./artifact-ledger";
 
 describe("<ArtifactLedger>", () => {
-  it("keeps detail and source actions visible while evidence stays on demand", () => {
+  it("keeps the real preview dominant while actions and evidence remain available", () => {
     const artifact = localizeOpenSourceArtifact(OPEN_SOURCE_ARTIFACTS[0], "de");
     render(<ArtifactLedger locale="de" />);
 
@@ -33,6 +33,18 @@ describe("<ArtifactLedger>", () => {
     expect(
       screen.getByRole("button", { name: "Editor anzeigen" }),
     ).toHaveAttribute("aria-pressed", "true");
+
+    const previewSheet = document.querySelector(
+      "[data-open-source-preview-sheet]",
+    );
+    const factRail = document.querySelector("[data-open-source-fact-rail]");
+    expect(previewSheet).toHaveClass("order-1");
+    expect(factRail?.children).toHaveLength(4);
+    expect(
+      Array.from(factRail?.children ?? []).every((fact) =>
+        fact.getAttribute("style")?.includes("--color-brand-"),
+      ),
+    ).toBe(true);
 
     const disclosure = screen.getByText("Quellstand und Veröffentlichung");
     expect(disclosure).toHaveAttribute(

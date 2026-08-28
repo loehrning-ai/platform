@@ -153,7 +153,7 @@ describe("Footer semantics and stable public dates", () => {
     }
   });
 
-  it("uses compact editorial geometry without tiny labels or ambient backdrop", async () => {
+  it("uses compact editorial geometry with a restrained Berlin backdrop", async () => {
     await renderFooter("de");
 
     const footer = document.querySelector("footer");
@@ -163,7 +163,8 @@ describe("Footer semantics and stable public dates", () => {
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer?.innerHTML).not.toMatch(/rounded-full|shadow-/);
+    expect(footer).toHaveClass("berlin-footer", "dark-section");
+    expect(footer?.innerHTML).toMatch(/rounded-(?:full|xl)|shadow-/);
   });
 
   it("derives the copyright year from reviewed content instead of the wall clock", async () => {

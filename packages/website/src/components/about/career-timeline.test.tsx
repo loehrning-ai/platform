@@ -33,7 +33,8 @@ describe("<CareerTimeline>", () => {
       expect(within(timeline).getByText(period)).toBeVisible();
     }
     expect(within(timeline).getByText("Aktuell")).toBeVisible();
-    expect(timeline).toHaveClass("divide-y", "border-y");
+    expect(timeline).toHaveClass("relative");
+    expect(timeline).not.toHaveClass("divide-y", "border-y");
     expect(timeline.closest("section")).toHaveAttribute("data-proof-ledger");
   });
 

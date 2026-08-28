@@ -91,7 +91,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#f3f0e9",
+  themeColor: "#f7f1e7",
 };
 
 // Hosting on Vercel does not silently opt the site into measurement. The
@@ -131,7 +131,7 @@ export default async function RootLayout({
             __html: `<style>${NO_SCRIPT_FALLBACK_CSS}</style>`,
           }}
         />
-        <div className="pointer-events-none fixed inset-0 z-0 bg-grid opacity-[0.3]" />
+        <div className="site-atmosphere pointer-events-none fixed inset-0 z-0" />
         <ScrollProgress />
         <LocaleProvider locale={locale}>
           <MotionProvider>

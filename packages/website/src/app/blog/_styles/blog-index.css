@@ -1,8 +1,18 @@
 /* ================================================================
-   BLOG INDEX — editorial evidence desk.
-   Paper layers borrow the display-card rhythm; every article remains a
-   first-class link with its decision information present before hover.
+   BLOG INDEX — Berlin risograph reading room.
+   Paper layers borrow the display-card rhythm; article previews remain
+   visible on every viewport and every decision stays present before hover.
    ================================================================ */
+
+.blog-root {
+  --blog-paper: var(--color-paper, #f8f3e8);
+  --blog-acid: var(--color-brand-acid, #dfff69);
+  --blog-lilac: var(--color-brand-lilac, #e2d2ff);
+  --blog-sky: var(--color-brand-sky, #bfe3ff);
+  --blog-pink: var(--color-brand-pink, #ffbfd6);
+  --blog-cobalt: var(--color-brand-cobalt, #2444c7);
+  --blog-teal: var(--color-brand-teal, #168c83);
+}
 
 .blog-root .blog-dateline {
   max-width: 1440px;
@@ -28,24 +38,26 @@
   position: relative;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 48px 40px 40px;
+  padding: 42px 40px 46px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.34fr);
-  gap: clamp(32px, 7vw, 112px);
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+  gap: clamp(28px, 5vw, 80px);
   align-items: end;
-  border-bottom: 3px solid var(--druckertinte);
+  background: var(--blog-paper);
+  border-bottom: 2px solid var(--druckertinte);
   overflow: hidden;
 }
 
 .blog-root .mast--hero::after {
   content: "";
   position: absolute;
-  right: -54px;
-  bottom: -84px;
-  width: 220px;
-  height: 220px;
-  border: 1px solid var(--leinen);
-  transform: rotate(18deg);
+  right: 25%;
+  bottom: -118px;
+  width: 270px;
+  height: 210px;
+  background: var(--blog-acid);
+  border: 1px solid var(--druckertinte);
+  transform: rotate(-7deg);
   pointer-events: none;
 }
 
@@ -80,7 +92,7 @@
   margin: 0;
   color: var(--druckertinte);
   font-family: var(--font-sans);
-  font-size: clamp(80px, 13vw, 188px);
+  font-size: clamp(78px, 12vw, 172px);
   font-weight: 700;
   letter-spacing: -0.065em;
   line-height: 0.82;
@@ -103,18 +115,18 @@
 .blog-root .mast__meta {
   position: relative;
   z-index: 1;
-  min-height: 180px;
+  min-height: 210px;
   padding: 22px;
   display: grid;
   grid-template-rows: 1fr auto;
-  color: var(--kalkweiss);
-  background: var(--druckertinte);
+  color: var(--druckertinte);
+  background: var(--blog-lilac);
   border: 1px solid var(--druckertinte);
   box-shadow:
-    10px 10px 0 -1px var(--kalkweiss),
+    10px 10px 0 -1px var(--blog-paper),
     10px 10px 0 0 var(--druckertinte),
-    20px 20px 0 -1px var(--kalkweiss),
-    20px 20px 0 0 var(--leinen);
+    20px 20px 0 -1px var(--blog-paper),
+    20px 20px 0 0 var(--blog-acid);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -124,7 +136,7 @@
 }
 
 .blog-root .mast__meta-index {
-  color: var(--kupfer-light);
+  color: var(--blog-cobalt);
   font-family: var(--font-sans);
   font-size: 54px;
   font-weight: 700;
@@ -136,7 +148,7 @@
   display: grid;
   gap: 3px;
   padding-top: 16px;
-  border-top: 1px solid var(--border-dark);
+  border-top: 1px solid var(--druckertinte);
 }
 
 .blog-root .mast__meta b,
@@ -145,19 +157,20 @@
 }
 
 .blog-root .mast__meta b {
-  color: var(--fg-cream);
+  color: var(--druckertinte);
   font-size: 13px;
 }
 
 .blog-root .mast__meta .live {
-  color: var(--kupfer-light);
+  color: var(--kupfer);
 }
 
 .blog-root .feed {
   position: relative;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 44px 40px 72px;
+  padding: 38px 40px 72px;
+  background: var(--blog-paper);
 }
 
 .blog-root .feed__head {
@@ -219,13 +232,13 @@
 
 .blog-root .row {
   position: relative;
-  min-height: 500px;
+  min-height: 520px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.54fr);
-  gap: clamp(24px, 4vw, 56px);
-  padding: clamp(24px, 4vw, 52px);
+  grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+  gap: 0;
+  padding: 0;
   color: inherit;
-  background: var(--kalkweiss);
+  background: var(--blog-paper);
   border: 1px solid var(--druckertinte);
   text-decoration: none;
   isolation: isolate;
@@ -243,7 +256,7 @@
   z-index: -1;
   pointer-events: none;
   border: 1px solid var(--druckertinte);
-  background: var(--birke);
+  background: var(--blog-acid);
   transition: transform 180ms var(--ease-brand);
 }
 
@@ -253,14 +266,14 @@
 
 .blog-root .row::after {
   z-index: -2;
-  border-color: var(--leinen);
-  background: transparent;
+  border-color: var(--druckertinte);
+  background: var(--blog-pink);
   transform: translate(16px, 16px);
 }
 
 .blog-root .row:hover,
 .blog-root .row:focus-visible {
-  background: #ffffff;
+  background: var(--blog-paper);
   outline: none;
   transform: translate(-3px, -3px);
 }
@@ -285,6 +298,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  grid-column: 2;
+  grid-row: 1;
+  padding: clamp(28px, 4vw, 52px);
 }
 
 .blog-root .row__topline,
@@ -302,8 +318,8 @@
 
 .blog-root .row__tag {
   padding: 4px 8px;
-  color: var(--kalkweiss);
-  background: var(--druckertinte);
+  color: #ffffff;
+  background: var(--blog-cobalt);
   font-weight: 700;
 }
 
@@ -402,27 +418,37 @@
   position: relative;
   align-self: stretch;
   min-width: 0;
-  min-height: 360px;
-  padding: 18px;
+  min-height: 100%;
+  padding: clamp(18px, 2.4vw, 30px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  color: var(--fg-cream);
-  background: var(--druckertinte);
-  border: 1px solid var(--druckertinte);
+  grid-column: 1;
+  grid-row: 1;
+  color: var(--druckertinte);
+  background-color: var(--blog-sky);
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--blog-cobalt) 32%, transparent) 1px,
+    transparent 1.5px
+  );
+  background-position: 10px 10px;
+  background-size: 9px 9px;
+  border-right: 1px solid var(--druckertinte);
   transition: transform 180ms var(--ease-brand);
 }
 
 .blog-root .row__art::before {
   content: "";
   position: absolute;
-  right: -68px;
-  top: 76px;
-  width: 190px;
-  height: 190px;
-  border: 1px solid var(--border-dark);
-  transform: rotate(34deg);
+  right: -50px;
+  top: 82px;
+  width: 180px;
+  height: 180px;
+  background: var(--blog-acid);
+  border: 1px solid var(--druckertinte);
+  transform: rotate(24deg);
 }
 
 .blog-root .row:hover .row__art,
@@ -437,7 +463,7 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  color: #c9beb4;
+  color: var(--blog-cobalt);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.14em;
@@ -450,7 +476,7 @@
 }
 
 .blog-root .row__art-big {
-  color: var(--kupfer-light);
+  color: var(--blog-cobalt);
   font-family: var(--font-sans);
   font-size: clamp(62px, 8vw, 104px);
   font-weight: 700;
@@ -461,7 +487,7 @@
 .blog-root .row__art-cap {
   max-width: 24ch;
   margin-top: 14px;
-  color: #c9beb4;
+  color: var(--druckertinte);
   font-family: var(--font-sans);
   font-size: 13px;
   line-height: 1.45;
@@ -470,7 +496,7 @@
 .blog-root .row__art-cap b {
   display: block;
   margin-top: 4px;
-  color: var(--fg-cream);
+  color: var(--kupfer);
 }
 
 .blog-root .row__art-articles {
@@ -483,8 +509,9 @@
 
 .blog-root .row__art-articles span {
   padding: 9px 4px;
-  color: var(--fg-cream);
-  border: 1px solid var(--border-dark);
+  color: var(--druckertinte);
+  background: color-mix(in srgb, var(--blog-paper) 82%, transparent);
+  border: 1px solid var(--druckertinte);
   font-family: var(--font-mono);
   font-size: 12px;
   text-align: center;
@@ -492,8 +519,8 @@
 
 .blog-root .row__art-foot {
   padding-top: 12px;
-  border-top: 1px solid var(--border-dark);
-  color: var(--kupfer-light);
+  border-top: 1px solid var(--druckertinte);
+  color: var(--blog-cobalt);
 }
 
 .blog-root .evidence-card {
@@ -501,17 +528,17 @@
   position: relative;
   min-width: 0;
   padding: 26px;
-  background: var(--birke);
+  background: var(--blog-acid);
   border: 1px solid var(--druckertinte);
   overflow: hidden;
 }
 
 .blog-root .evidence-card__register {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 42px;
-  height: 42px;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
   border: 1px solid var(--kupfer);
   transform: rotate(45deg);
 }
@@ -578,25 +605,26 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 18px;
-  color: var(--kalkweiss);
-  background: var(--druckertinte);
-  border-left: 3px solid var(--kupfer-light);
+  color: var(--druckertinte);
+  background: var(--blog-pink);
+  border: 1px solid var(--druckertinte);
+  border-left: 6px solid var(--blog-cobalt);
 }
 
 .blog-root .feed__note h2 {
   margin-top: 8px;
-  color: var(--fg-cream);
+  color: var(--druckertinte);
   font-size: 27px;
 }
 
 .blog-root .feed__note-label,
 .blog-root .feed__note-cta {
-  color: var(--kupfer-light);
+  color: var(--blog-cobalt);
 }
 
 .blog-root .feed__note-body {
   grid-column: 1 / -1;
-  color: #c9beb4;
+  color: var(--schiefer);
   font-family: var(--font-serif);
   font-size: 15px;
   font-style: italic;
@@ -638,9 +666,18 @@
     grid-template-columns: 1fr;
   }
 
-  /* This rule must follow the base .row__art display declaration. */
+  .blog-root .row__body {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 28px;
+  }
+
   .blog-root .row__art {
-    display: none;
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 280px;
+    border-right: 0;
+    border-bottom: 1px solid var(--druckertinte);
   }
 
   .blog-root .row__no {
@@ -677,10 +714,10 @@
     min-height: 132px;
     padding: 18px;
     box-shadow:
-      7px 7px 0 -1px var(--kalkweiss),
+      7px 7px 0 -1px var(--blog-paper),
       7px 7px 0 0 var(--druckertinte),
-      14px 14px 0 -1px var(--kalkweiss),
-      14px 14px 0 0 var(--leinen);
+      14px 14px 0 -1px var(--blog-paper),
+      14px 14px 0 0 var(--blog-acid);
   }
 
   .blog-root .mast__meta-index {
@@ -715,7 +752,16 @@
   }
 
   .blog-root .row {
+    padding: 0;
+  }
+
+  .blog-root .row__body {
     padding: 22px;
+  }
+
+  .blog-root .row__art {
+    min-height: 250px;
+    padding: 18px;
   }
 
   .blog-root .row::before {

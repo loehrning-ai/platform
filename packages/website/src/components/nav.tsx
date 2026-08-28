@@ -143,7 +143,7 @@ function LogoWordmark({
     >
       <m.div
         data-logo-mark
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center border border-[#0B0908] bg-[#C4431A]"
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange shadow-[3px_3px_0_var(--color-brand-acid)]"
         aria-hidden="true"
         style={{
           rotate: prefersReducedMotion ? 0 : iconRotate,
@@ -460,7 +460,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-1 w-64 border border-border border-t-[3px] border-t-brand-orange bg-background p-1"
+              className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-border/70 bg-paper p-2 shadow-card-hover"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -528,11 +528,11 @@ export function Nav() {
   return (
     <nav
       aria-label={copy.mainNavigation}
-      className="no-js-primary-nav fixed top-0 z-50 w-full border-b border-border bg-background text-foreground"
+      className="no-js-primary-nav fixed top-0 z-50 w-full px-2 pt-2 text-foreground sm:px-3"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
+        className="mx-auto flex h-12 max-w-6xl items-center justify-between rounded-2xl border border-border/60 bg-background/85 px-3 shadow-card backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5"
       >
         <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
@@ -583,7 +583,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.githubOrganisation}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             <Github size={17} aria-hidden="true" />
           </a>
@@ -602,7 +602,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -618,7 +618,7 @@ export function Nav() {
           It remains hidden during normal operation and replaces the
           interactive desktop/mobile controls through the layout's
           <noscript> stylesheet. */}
-      <div className="no-js-mobile-nav hidden border-b border-border border-t-[3px] border-t-brand-orange bg-background px-4 py-4 sm:px-6 lg:hidden">
+      <div className="no-js-mobile-nav mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 py-4 shadow-card sm:px-6 lg:hidden">
         <div className="grid gap-4 sm:grid-cols-2">
           <NoScriptMobileGroup
             label={copy.learning}
@@ -680,14 +680,14 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="overscroll-contain border-b border-border border-t-[3px] border-t-brand-orange bg-background lg:hidden"
+            className="mt-2 overscroll-contain rounded-2xl border border-border/70 bg-paper shadow-card-hover lg:hidden"
           >
             <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-md text-muted-foreground outline-none transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-pink/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />

@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 import type { ComponentType, ReactNode } from "react";
 
 /*
- * Card — flat editorial frame for the Berliner Learning Instrument.
+ * Card — raised paper sheet for the Berlin learning studio.
  *
- * A structural 1px boundary carries the surface. The optional 3px top signal
- * preserves the course-track accents without adding ornamental elevation.
+ * Soft geometry and warm elevation make discovery surfaces inviting. The
+ * optional 3px signal still preserves course-track meaning.
  */
 
 export type CardAccent = "kupfer" | "sand" | "amber" | "none";
@@ -46,10 +46,10 @@ export function Card({
 }: CardProps) {
   const isInteractive = interactive ?? Boolean(href);
   const classes = cn(
-    "group relative flex flex-col rounded-md border border-border bg-card p-4 sm:p-6",
+    "group relative flex flex-col rounded-[1.25rem] border border-border/70 bg-card p-4 shadow-card sm:p-6",
     ACCENT_BORDER[accent],
     isInteractive &&
-      "transition-[background-color,border-color] duration-150 ease-out hover:border-brand-orange hover:bg-card-hover",
+      "transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-1 hover:border-brand-orange hover:bg-card-hover hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none",
     className,
   );
 
@@ -90,7 +90,7 @@ export function IconTile({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-sm border border-border",
+        "inline-flex shrink-0 items-center justify-center rounded-xl border border-border/70 shadow-card",
         size === "lg" ? "h-12 w-12" : "h-11 w-11",
         ACCENT_TILE[accent],
         className,

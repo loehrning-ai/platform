@@ -154,7 +154,7 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
         <div className="right">2026</div>
       </div>
 
-      <section className="mast--hero">
+      <section className="mast--hero" data-risograph-hero>
         <div className="mast__statement">
           <div className="mast__label">{copy.datelineTitle}</div>
           <h1 className="mast__title">
@@ -162,7 +162,7 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
           </h1>
           <div className="mast__sub">{copy.intro}</div>
         </div>
-        <div className="mast__meta">
+        <div className="mast__meta" data-risograph-sheet="issue">
           <span className="mast__meta-index">Nº 01</span>
           <div className="mast__meta-copy">
             <b>{copy.article(BLOG_POSTS.length)}</b>
@@ -196,6 +196,7 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
                   className="row"
                   aria-label={copy.readLabel(localized.title)}
                   data-link-preview
+                  data-editorial-article
                 >
                   <div className="row__body">
                     <div className="row__topline">
@@ -227,7 +228,13 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
                       </span>
                     </div>
                   </div>
-                  <div className="row__art" aria-hidden="true">
+                  <div
+                    className="row__art"
+                    role="img"
+                    aria-label={`${copy.visual.caption} ${copy.visual.emphasis}`}
+                    data-article-preview
+                    data-risograph-sheet="article"
+                  >
                     <div className="row__art-label">
                       <span>{copy.visual.status}</span>
                       <span>01 / 07</span>
@@ -253,7 +260,11 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
             })}
           </div>
 
-          <aside className="evidence-card" aria-labelledby="source-standard">
+          <aside
+            className="evidence-card"
+            aria-labelledby="source-standard"
+            data-risograph-sheet="sources"
+          >
             <span className="evidence-card__register" aria-hidden="true" />
             <p className="evidence-card__label">{copy.sourceLabel}</p>
             <h2 id="source-standard">{copy.sourceTitle}</h2>
@@ -268,7 +279,11 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
             </ul>
           </aside>
 
-          <aside className="feed__note" aria-labelledby="publishing-note">
+          <aside
+            className="feed__note"
+            aria-labelledby="publishing-note"
+            data-risograph-sheet="note"
+          >
             <div>
               <p className="feed__note-label">{copy.noteLabel}</p>
               <h2 id="publishing-note">{copy.ongoing}</h2>

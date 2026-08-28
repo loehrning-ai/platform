@@ -123,8 +123,7 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
-    expect(menu.className).toContain("border-t-[3px]");
-    expect(menu.className).not.toMatch(/rounded-xl|shadow-/);
+    expect(menu).toHaveClass("rounded-2xl", "shadow-card-hover");
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
   });
 
@@ -146,16 +145,19 @@ describe("<Nav />", () => {
     ).not.toHaveAttribute("aria-current");
   });
 
-  it("uses a copper rule for the current group and 44px flat controls", () => {
+  it("uses a copper rule for the current group and a translucent studio bar", () => {
     navigationMock.pathname = "/kurse";
     renderGerman();
 
     const trigger = screen.getByRole("button", { name: /Lernen/ });
     expect(trigger.className).toContain("min-h-11");
     expect(trigger.className).toContain("border-brand-orange");
-    expect(document.querySelector("nav")?.className).toContain("bg-background");
-    expect(document.querySelector("nav")?.className).not.toMatch(
-      /backdrop-blur|bg-background\//,
+    const row = document.querySelector("[data-nav-header-row]");
+    expect(row).toHaveClass(
+      "rounded-2xl",
+      "bg-background/85",
+      "shadow-card",
+      "backdrop-blur-xl",
     );
   });
 

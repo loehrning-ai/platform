@@ -38,16 +38,22 @@ const STATIONS = [
   },
 ] as const;
 
+const STATION_STYLES = [
+  "bg-brand-lilac/60 sm:-rotate-1",
+  "bg-brand-acid/65 sm:rotate-1",
+  "bg-brand-sky/55 sm:-rotate-1",
+] as const;
+
 export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
   const copy = PROFILE_COPY[locale].stations;
 
   return (
     <section
-      className="border-t border-border py-8"
+      className="border-t border-border bg-background py-9"
       aria-label={copy.ariaLabel}
       data-employer-proof
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-5 px-4 sm:px-6 lg:grid-cols-[minmax(14rem,0.46fr)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-8">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(14rem,0.42fr)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:px-8">
         <div className="min-w-0">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
@@ -60,11 +66,11 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
           </p>
         </div>
 
-        <ul className="grid min-w-0 gap-px border border-border bg-border sm:grid-cols-3">
-          {STATIONS.map((s) => (
+        <ul className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-4">
+          {STATIONS.map((s, index) => (
             <li
               key={s.name}
-              className="group flex min-h-24 min-w-0 items-center justify-center gap-4 bg-background px-4 py-4 transition-colors hover:bg-card"
+              className={`group flex min-h-24 min-w-[9rem] flex-1 items-center justify-center gap-4 px-4 py-4 shadow-card ring-1 ring-foreground/20 transition-transform hover:rotate-0 motion-reduce:transform-none motion-reduce:transition-none ${STATION_STYLES[index]}`}
             >
               {"mark" in s ? (
                 <svg

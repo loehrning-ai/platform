@@ -8,7 +8,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
  *   - href present  -> renders a next/link <a> (with external target/rel),
  *     unless disabled, when it renders inert text; href absent -> renders a native
  *     <button type="button"> whose onClick fires unless disabled;
- *   - variant/surface/size select the flat editorial class recipe, and
+ *   - variant/surface/size select the tactile studio class recipe, and
  *     `disabled` layers pointer-events-none + opacity.
  *
  * next/link is stubbed to a plain <a> that forwards href + all pass-through
@@ -125,7 +125,7 @@ describe("<BrandButton>", () => {
       expect(screen.getByRole("button").className).toContain("px-4");
     });
 
-    it("uses a flat framed recipe with a 44px minimum target", () => {
+    it("uses a tactile framed recipe with a 44px minimum target", () => {
       render(
         <BrandButton variant="primary" surface="light">
           Primaer
@@ -133,11 +133,12 @@ describe("<BrandButton>", () => {
       );
       const cls = screen.getByRole("button").className;
       expect(cls).toContain("bg-brand-orange");
-      expect(cls).toContain("rounded-md");
+      expect(cls).toContain("rounded-xl");
       expect(cls).toContain("min-h-11");
       expect(cls).toContain("border-brand-orange");
-      expect(cls).not.toMatch(/shadow-(?:card|card-hover|tile)/);
-      expect(cls).not.toMatch(/translate-[xy]/);
+      expect(cls).toContain("shadow-card");
+      expect(cls).toContain("hover:-translate-y-0.5");
+      expect(cls).toContain("hover:shadow-card-hover");
     });
 
     it("ghost keeps geometry stable with a transparent border", () => {

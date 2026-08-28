@@ -140,6 +140,22 @@ describe("OpenSourcePage", () => {
     ).not.toBeInTheDocument();
 
     expect(
+      document.querySelector("[data-open-source-risograph-hero]"),
+    ).not.toBeNull();
+    expect(
+      document.querySelector("[data-open-source-image-fan]"),
+    ).not.toBeNull();
+    expect(
+      screen.getByRole("img", {
+        name: "Produktansichten auswählen: Metadata Project",
+      }),
+    ).toBeVisible();
+    expect(screen.getByAltText(PROJECT.guide.screenshot.alt)).toHaveAttribute(
+      "width",
+      "1600",
+    );
+
+    expect(
       screen.getByRole("region", {
         name: "Produktansichten auswählen: Metadata Project",
       }),
@@ -185,6 +201,11 @@ describe("OpenSourcePage", () => {
     expect(
       screen.getByRole("heading", { name: "Published now" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: "Choose a product view: Metadata Project",
+      }),
+    ).toBeVisible();
     expect(screen.getAllByText("Project").length).toBeGreaterThan(0);
     for (const licensePolicy of screen.getAllByRole("link", {
       name: "License policy",

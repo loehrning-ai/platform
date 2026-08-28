@@ -50,16 +50,16 @@ describe("Berliner Learning Instrument CSS contract", () => {
 
   it("keeps dark structural boundaries distinct from dark passive tracks", () => {
     expect(globalCss).toContain(
-      "--color-dark-border: rgba(243, 240, 233, 0.4)",
+      "--color-dark-border: rgba(247, 241, 231, 0.4)",
     );
     expect(globalCss).toContain(
-      "--color-dark-track: rgba(243, 240, 233, 0.12)",
+      "--color-dark-track: rgba(247, 241, 231, 0.14)",
     );
-    expect(globalCss).toContain("--color-track: rgba(243, 240, 233, 0.12)");
+    expect(globalCss).toContain("--color-track: rgba(247, 241, 231, 0.14)");
   });
 
-  it("sets shared overlines and marginal labels at a 12px minimum", () => {
-    expect(globalCss).toMatch(/\.overline\s*\{[^}]*font-size:\s*0\.75rem;/s);
+  it("sets shared overlines at 14px and marginal labels at a 12px minimum", () => {
+    expect(globalCss).toMatch(/\.overline\s*\{[^}]*font-size:\s*0\.875rem;/s);
     expect(globalCss).toMatch(/\.ai-marginalia\s*\{[^}]*font-size:\s*12px;/s);
   });
 

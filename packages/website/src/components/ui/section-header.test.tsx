@@ -12,7 +12,7 @@ describe("<SectionHeader>", () => {
       />,
     );
 
-    expect(screen.getByText("Curriculum")).toHaveClass("text-xs");
+    expect(screen.getByText("Curriculum")).toHaveClass("text-sm");
     expect(screen.getByRole("heading", { name: "Vier Module" })).toBeVisible();
     expect(screen.getByText("Ein öffentlicher Lernweg.")).toHaveClass(
       "text-base",

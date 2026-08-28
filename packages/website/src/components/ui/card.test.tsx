@@ -30,20 +30,20 @@ function TestIcon({
 }
 
 describe("<Card>", () => {
-  it("uses a flat editorial frame without default elevation", () => {
+  it("uses a raised paper frame with warm elevation", () => {
     render(<Card aria-label="Rahmen">Inhalt</Card>);
     const card = screen.getByLabelText("Rahmen");
 
     expect(card.tagName).toBe("DIV");
     expect(card).toHaveClass(
-      "rounded-md",
+      "rounded-[1.25rem]",
       "border",
-      "border-border",
+      "border-border/70",
       "bg-card",
       "p-4",
+      "shadow-card",
       "sm:p-6",
     );
-    expect(card.className).not.toMatch(/shadow-(?:card|card-hover|tile)/);
   });
 
   it("renders an accessible link with a 3px accent signal", () => {
@@ -57,10 +57,11 @@ describe("<Card>", () => {
     expect(card).toHaveAttribute("href", "/kurs");
     expect(card).toHaveClass("border-t-[3px]", "border-t-brand-orange");
     expect(card).toHaveClass(
-      "transition-[background-color,border-color]",
+      "transition-[background-color,border-color,box-shadow,transform]",
+      "hover:-translate-y-1",
       "hover:border-brand-orange",
+      "hover:shadow-card-hover",
     );
-    expect(card.className).not.toMatch(/translate-|shadow-/);
   });
 
   it("preserves external-link safety and the interactive override", () => {
@@ -83,7 +84,7 @@ describe("<Card>", () => {
 });
 
 describe("<IconTile>", () => {
-  it("uses a bounded, flat 44px marker", () => {
+  it("uses a bounded, raised 44px marker", () => {
     render(<IconTile icon={TestIcon} />);
     const tile = screen.getByTestId("icon").parentElement;
 
@@ -91,11 +92,11 @@ describe("<IconTile>", () => {
     expect(tile).toHaveClass(
       "h-11",
       "w-11",
-      "rounded-sm",
+      "rounded-xl",
       "border",
-      "border-border",
+      "border-border/70",
+      "shadow-card",
     );
-    expect(tile?.className).not.toMatch(/shadow-/);
     expect(screen.getByTestId("icon")).toHaveAttribute(
       "data-stroke-width",
       "1.75",

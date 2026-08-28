@@ -20,7 +20,7 @@ export function SectionHeader({
       {eyebrow && (
         <p
           className={cn(
-            "font-mono text-xs font-semibold uppercase tracking-[0.12em]",
+            "text-sm font-bold tracking-[-0.01em]",
             eyebrowColor,
           )}
         >

@@ -76,68 +76,6 @@ function RegisterMark({ className }: { className: string }) {
   );
 }
 
-/**
- * Lightweight server-rendered brand landmark. The detailed projection replaces
- * it after viewport detection; without JavaScript the globe still exists.
- */
-function StaticHeroGlobePoster() {
-  return (
-    <svg
-      data-hero-globe-poster
-      viewBox="0 0 480 480"
-      fill="none"
-      aria-hidden="true"
-      focusable="false"
-      className="h-[300px] w-[280px] text-foreground opacity-40 lg:h-full lg:w-full lg:opacity-70"
-    >
-      <circle
-        cx="240"
-        cy="240"
-        r="188"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      {[64, 112, 156].map((radius) => (
-        <ellipse
-          key={`longitude-${radius}`}
-          cx="240"
-          cy="240"
-          rx={radius}
-          ry="188"
-          stroke="currentColor"
-          strokeOpacity="0.32"
-        />
-      ))}
-      {[58, 112, 160].map((radius) => (
-        <ellipse
-          key={`latitude-${radius}`}
-          cx="240"
-          cy="240"
-          rx="188"
-          ry={radius}
-          stroke="currentColor"
-          strokeOpacity="0.25"
-        />
-      ))}
-      <path
-        d="M114 286C151 220 200 180 265 166C314 155 354 167 382 201"
-        stroke="currentColor"
-        strokeOpacity="0.5"
-        strokeWidth="2"
-        strokeDasharray="5 8"
-      />
-      <path
-        d="M129 191C165 206 191 209 217 198C247 185 278 190 300 212C320 232 346 239 371 228"
-        stroke="currentColor"
-        strokeOpacity="0.46"
-        strokeWidth="2"
-      />
-      <circle cx="269" cy="177" r="5" fill="#C4431A" />
-      <circle cx="269" cy="177" r="11" stroke="#C4431A" strokeOpacity="0.45" />
-    </svg>
-  );
-}
-
 /* ──────────────────────────────────────────────────────────────────────────
    Section
    ────────────────────────────────────────────────────────────────────────── */
@@ -145,9 +83,14 @@ function StaticHeroGlobePoster() {
 function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].hero;
   const headlineColors = [
-    "text-muted-foreground",
     "text-foreground",
+    "text-brand-cobalt",
     "text-brand-orange",
+  ] as const;
+  const pillarTones = [
+    "bg-brand-acid/65",
+    "bg-brand-lilac/55",
+    "bg-brand-sky/60",
   ] as const;
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReduced = usePrefersReducedMotion();
@@ -182,10 +125,20 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       ref={sectionRef}
       data-section="hero"
-      className="relative -mt-16 flex min-h-[34rem] flex-col overflow-hidden bg-background px-6 pb-8 pt-24 md:px-12 md:pb-10 md:pt-24"
+      className="berlin-grain berlin-hero relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
     >
-      {/* Mask out the global grid overlay behind the hero (desktop only — mobile keeps grid) */}
-      <div className="pointer-events-none absolute inset-0 z-[1] hidden bg-background lg:block" />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-10 top-32 size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 top-20 size-[28rem] rounded-full border border-brand-cobalt/10 bg-brand-lilac/25"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-12 right-[22%] h-20 w-56 rotate-6 rounded-full bg-brand-acid/35"
+      />
 
       {/* ── Print-shop registration marks at the four corners ─────────── */}
       <RegisterMark className="left-3 top-20 hidden md:block" />
@@ -203,7 +156,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]">
           <div className="relative z-10">
-            <p className="mb-4 border-l-[3px] border-brand-orange pl-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="mb-5 inline-flex rounded-full border border-foreground/15 bg-brand-acid px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_rgba(25,35,45,0.16)]">
               {copy.platformLabel}
             </p>
 
@@ -217,14 +170,19 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             >
               {copy.headline.map((line, index) => (
                 <span key={line} className="block pb-2">
-                  <span className={"block " + headlineColors[index]}>
+                  <span
+                    className={
+                      "block drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
+                      headlineColors[index]
+                    }
+                  >
                     {line}
                   </span>
                 </span>
               ))}
             </h1>
 
-            <p className="mt-6 max-w-xl text-[1.125rem] leading-relaxed text-muted-foreground">
+            <p className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper/85 px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card backdrop-blur-sm">
               {copy.introduction}
             </p>
 
@@ -233,6 +191,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
                 href={localizeHref("/kurse", locale)}
                 variant="primary"
                 surface="light"
+                className="border-brand-cobalt bg-brand-cobalt text-white hover:border-brand-teal hover:bg-brand-teal hover:text-white"
               >
                 {copy.primaryCta} <ArrowRight size={15} aria-hidden="true" />
               </BrandButton>
@@ -245,17 +204,13 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
 
         {/* Only one expensive projection tree mounts at a time. CSS-hidden
             responsive duplicates still execute React and SVG work. */}
-        {networkMode === null ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center lg:inset-auto lg:bottom-0 lg:right-0 lg:h-[110%] lg:w-[70vw]">
-            <StaticHeroGlobePoster />
-          </div>
-        ) : networkMode === "desktop" ? (
+        {networkMode === "desktop" ? (
           <m.div
             id="home-hero-network"
             data-hero-globe-motion={
               prefersReduced ? "static" : networkPaused ? "paused" : "running"
             }
-            className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0"
+            className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 drop-shadow-[0_24px_44px_rgba(39,71,181,0.16)]"
             style={{
               width: "70vw",
               height: "110%",
@@ -273,7 +228,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             />
           </m.div>
         ) : networkMode === "mobile" ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20">
             <HeroNetwork
               locale={locale}
               scrollProgress={scrollYProgress}
@@ -299,7 +254,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             }
             aria-pressed={networkPaused}
             onClick={() => setNetworkPaused((current) => !current)}
-            className="absolute bottom-0 right-0 z-20 hidden min-h-11 items-center gap-2 border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground outline-none transition-[border-color,color] duration-150 hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden lg:inline-flex"
+            className="absolute bottom-0 right-0 z-20 hidden min-h-11 items-center gap-2 rounded-xl border border-border/70 bg-paper/85 px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-card backdrop-blur-sm outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden lg:inline-flex"
           >
             {networkPaused ? (
               <Play size={14} aria-hidden="true" />
@@ -318,7 +273,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       </div>
 
       {/* Three direct uses of the platform in one compact register. */}
-      <ol className="relative z-10 mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-10">
+      <ol className="relative z-10 mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3 md:mt-10">
         {copy.pillars.map((pillar, index) => {
           const href = pillar.href;
           const entry = (
@@ -342,12 +297,15 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
           return (
             <li
               key={pillar.title}
-              className="py-4 transition-colors hover:bg-card/60 sm:px-5 sm:py-5 sm:first:pl-0 sm:last:pr-0"
+              className={
+                "min-w-0 rounded-2xl border border-foreground/10 p-5 shadow-card transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none " +
+                (pillarTones[index] ?? pillarTones[0])
+              }
             >
               {href ? (
                 <Link
                   href={localizeHref(href, locale)}
-                  className="group block outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="group block h-full rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background"
                 >
                   {entry}
                 </Link>

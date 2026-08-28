@@ -157,7 +157,7 @@ const INTERNAL_LINK_CLASS =
   "inline-flex min-h-11 min-w-11 max-w-full items-center break-words py-2 text-sm leading-snug text-muted-foreground outline-none transition-colors duration-150 hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 const EXTERNAL_LINK_CLASS =
-  "inline-flex min-h-11 items-center gap-2 border border-border px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-[border-color,color] duration-150 hover:border-brand-orange hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-card hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none";
 
 export async function Footer() {
   const locale = await getRequestLocale();
@@ -167,8 +167,16 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    <footer className="dark-section border-t border-border">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    <footer className="berlin-footer dark-section relative overflow-hidden border-t border-border">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-10 size-44 rounded-[2.5rem] border border-brand-orange/40 bg-brand-acid/10"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30 bg-brand-lilac/10"
+      />
+      <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="grid min-w-0 gap-6 border-b border-border pb-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
           <div className="min-w-0">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">

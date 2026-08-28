@@ -90,10 +90,22 @@ describe("BlogIndexPage", () => {
   it("uses one useful editorial bento and a persistent article preview", async () => {
     await renderPage("de");
 
+    expect(document.querySelector("[data-risograph-hero]")).not.toBeNull();
+    expect(
+      document.querySelector('[data-risograph-sheet="issue"]'),
+    ).not.toBeNull();
     expect(document.querySelector("[data-editorial-bento]")).not.toBeNull();
     expect(document.querySelectorAll("[data-link-preview]")).toHaveLength(
       BLOG_POSTS.length,
     );
+    expect(document.querySelectorAll("[data-article-preview]")).toHaveLength(
+      BLOG_POSTS.length,
+    );
+    expect(
+      screen.getByRole("img", {
+        name: /EU AI Act ab August 2026.*Art\. 50 Transparenz/,
+      }),
+    ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Behauptungen mit Belegspur." }),
     ).toBeVisible();

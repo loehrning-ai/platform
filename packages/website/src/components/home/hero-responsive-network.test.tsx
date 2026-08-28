@@ -37,11 +37,12 @@ afterEach(() => {
 });
 
 describe("HeroSection responsive globe", () => {
-  it("server-renders a static globe landmark before viewport hydration", () => {
+  it("does not server-render an alternate globe before viewport hydration", () => {
     setDesktopMatch(true);
     const html = renderToString(<HeroSection locale="en" />);
 
-    expect(html).toContain("data-hero-globe-poster");
+    expect(html).not.toContain("data-hero-globe-poster");
+    expect(html).not.toContain("data-testid=\"hero-network\"");
   });
 
   it.each([
