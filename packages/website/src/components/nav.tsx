@@ -539,7 +539,7 @@ export function Nav() {
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
             below instead. */}
-        <div className="js-desktop-nav hidden items-center gap-4 lg:flex xl:gap-6">
+        <div className="js-desktop-nav hidden items-center gap-3 lg:flex xl:gap-4">
           {renderDropdown(
             "lernen",
             copy.learning,
