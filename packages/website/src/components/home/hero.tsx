@@ -125,10 +125,6 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 top-20 size-[28rem] rounded-full border border-brand-cobalt/10 bg-brand-lilac/25"
-      />
-      <span
-        aria-hidden="true"
         className="pointer-events-none absolute bottom-12 right-[22%] h-20 w-56 rotate-6 rounded-full bg-brand-acid/35"
       />
 
