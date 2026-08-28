@@ -82,6 +82,18 @@ const nextConfig: NextConfig = {
       ],
     },
     {
+      // Course covers carry a vN filename contract and are also used directly
+      // as social previews. Cache the source files as aggressively as their
+      // optimized Next Image variants without making unversioned art stale.
+      source: "/course-covers/:path*.webp",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
+    {
       // Simplified build disables original book PDFs; middleware returns 410.
       source: "/downloads/:path*.pdf",
       headers: [
