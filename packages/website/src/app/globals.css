@@ -199,7 +199,8 @@
     content: "";
     pointer-events: none;
     opacity: 0.22;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='2' r='.45' fill='%2319232d' fill-opacity='.2'/%3E%3Ccircle cx='7' cy='5' r='.35' fill='%2319232d' fill-opacity='.13'/%3E%3Ccircle cx='4' cy='9' r='.3' fill='%2319232d' fill-opacity='.1'/%3E%3C/svg%3E");
+    background-repeat: repeat;
     mix-blend-mode: multiply;
   }
 

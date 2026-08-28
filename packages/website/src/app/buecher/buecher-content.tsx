@@ -75,7 +75,9 @@ export function BuecherContent({
               />
               {copy.kicker}
             </p>
-            <h1 className="relative mt-5 max-w-[14ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground">
+            <h1
+              className="relative mt-5 max-w-[14ch] font-serif text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.055em] text-foreground"
+            >
               {copy.heading}{" "}
               <span className="box-decoration-clone bg-brand-acid/80 px-1 text-foreground">
                 {copy.headingAccent}
@@ -180,13 +182,9 @@ export function BuecherContent({
                         alt={copy.coverAlt(display.title)}
                         width={778}
                         height={1100}
-                        {...(index === 0
-                          ? {
-                              loading: "eager" as const,
-                              fetchPriority: "high" as const,
-                            }
-                          : { loading: "lazy" as const })}
-                        sizes="(max-width: 767px) 224px, 256px"
+                        loading="lazy"
+                        quality={70}
+                        sizes="(max-width: 639px) 192px, (max-width: 767px) 224px, 256px"
                         className="relative h-auto w-48 max-w-full bg-paper shadow-card ring-1 ring-foreground/40 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:-rotate-1 motion-reduce:transition-none sm:w-56 md:w-full"
                       />
                       <span

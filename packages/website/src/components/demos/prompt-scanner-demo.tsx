@@ -106,7 +106,7 @@ export default function PromptScannerDemo() {
 
   const verdicts = {
     block: {
-      c: DEMO.statusRed,
+      c: DEMO.statusRedOnDark,
       t: copy("MARKIERT", "FLAGGED"),
       s: copy(
         "PII-Treffer im Beispieltext: nicht ungeprüft weitergeben",
@@ -199,7 +199,7 @@ export default function PromptScannerDemo() {
         els.push(<span key={`t${i}`}>{text.slice(last, d.start)}</span>);
       const c =
         d.level === "block"
-          ? DEMO.statusRed
+          ? DEMO.statusRedOnDark
           : d.level === "review"
             ? DEMO.statusAmber
             : "var(--color-brand-orange)";
@@ -562,7 +562,7 @@ export default function PromptScannerDemo() {
               [
                 "PII",
                 detections.filter((d) => d.level === "block").length,
-                DEMO.statusRed,
+                DEMO.statusRedOnDark,
               ],
               [
                 "REVIEW",

@@ -7,9 +7,9 @@ const MONO = DEMO.font.mono;
 const SANS = DEMO.font.sans;
 const ACCENT = "var(--color-brand-orange)"; // #A5370F, AA on the light preview surfaces
 // Kupfer #A5370F is only ~2.98:1 on the near-black (#0B0908) blocks/dark tiles;
-// the lighter copper #E07050 reaches >=6:1 there. Use ACCENT_DARK for kupfer
-// text/marks that sit on a dark background.
-const ACCENT_DARK = "var(--color-kupfer-light)"; // #E07050
+// Peach keeps small copper-adjacent labels above AA on the atmospheric indigo
+// and ink preview surfaces.
+const ACCENT_DARK = "var(--color-brand-peach)";
 const STATUS_GREEN = DEMO.statusGreen; // #22c55e, bright green for dots/fills + text on dark
 // #22c55e is only ~2:1 as TEXT on the light preview surface; green-800 #166534
 // reaches >=5.6:1 there. Use for green status TEXT on light backgrounds.
@@ -284,14 +284,14 @@ export function PromptScannerPreview() {
   return (
     <div style={PV}>
       <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.04em", color: DK.text, padding: "4px 6px", background: "rgba(255,255,255,0.03)", border: `1px solid ${DK.border}`, lineHeight: 1.6 }}>
-        <span style={{ background: `${DEMO.statusRed}40`, borderBottom: `1px solid ${DEMO.statusRed}`, padding: "0 3px", color: DEMO.kalk }}>Fiktivperson Alpha</span>
+        <span style={{ background: `${DEMO.statusRedOnDark}40`, borderBottom: `1px solid ${DEMO.statusRedOnDark}`, padding: "0 3px", color: DEMO.kalk }}>Fiktivperson Alpha</span>
         {", IBAN "}
         <span style={{ background: DEMO.kalk, color: DEMO.ink, padding: "1px 5px", fontWeight: 800 }}>▓▓▓▓▓▓</span>
         {" fragt zu "}
         <span style={{ background: `${DEMO.statusAmber}40`, borderBottom: `1px solid ${DEMO.statusAmber}`, padding: "0 3px", color: DEMO.kalk }}>Vertragsdetail</span>.
       </div>
       <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: MONO, fontSize: 8, fontWeight: 800, letterSpacing: "0.14em" }}>
-        <span style={{ color: DEMO.statusRed }}>■ BLOCKIERT</span>
+        <span style={{ color: DEMO.statusRedOnDark }}>■ BLOCKIERT</span>
         <span style={{ color: DK.muted }}>1 PII</span>
         <span style={{ color: ACCENT_DARK }}>42 MS</span>
       </div>

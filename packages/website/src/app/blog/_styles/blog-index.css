@@ -624,7 +624,7 @@
 
 .blog-root .feed__note-body {
   grid-column: 1 / -1;
-  color: var(--schiefer);
+  color: var(--druckertinte);
   font-family: var(--font-serif);
   font-size: 15px;
   font-style: italic;

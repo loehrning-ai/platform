@@ -65,17 +65,17 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(container.querySelectorAll('[style*="opacity: 0"]').length).toBe(0);
   });
 
-  it("requests only the first cover eagerly and at high priority", () => {
+  it("keeps every below-fold cover out of the heading LCP path", () => {
     render(<BuecherContent accountEnabled={false} locale="de" />);
 
     const covers = screen.getAllByRole("img", {
       name: /^Deutsche Titelseite:/,
     });
     expect(covers).toHaveLength(2);
-    expect(covers[0]).toHaveAttribute("loading", "eager");
-    expect(covers[0]).toHaveAttribute("fetchpriority", "high");
-    expect(covers[1]).toHaveAttribute("loading", "lazy");
-    expect(covers[1]).not.toHaveAttribute("fetchpriority");
+    covers.forEach((cover) => {
+      expect(cover).toHaveAttribute("loading", "lazy");
+      expect(cover).not.toHaveAttribute("fetchpriority");
+    });
   });
 
   it("renders reviewed English interface copy and locale-preserving page links", () => {

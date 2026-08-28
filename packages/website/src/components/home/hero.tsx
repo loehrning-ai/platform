@@ -10,6 +10,8 @@ import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
+const NETWORK_MOUNT_DELAY_MS = 1200;
+
 // Code-split: hero-network.tsx is a ~35 kB SVG/rAF globe animation that also
 // pulls in the ~26 kB COUNTRY_POLYLINES_3D dataset. It's purely decorative
 // (aria-hidden, pointer-events-none) and renders inside an already-sized
@@ -116,9 +118,12 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     const media = window.matchMedia("(min-width: 1024px)");
     const updateMode = () =>
       setNetworkMode(media.matches ? "desktop" : "mobile");
-    updateMode();
+    const mountTimer = window.setTimeout(updateMode, NETWORK_MOUNT_DELAY_MS);
     media.addEventListener("change", updateMode);
-    return () => media.removeEventListener("change", updateMode);
+    return () => {
+      window.clearTimeout(mountTimer);
+      media.removeEventListener("change", updateMode);
+    };
   }, []);
 
   return (
@@ -211,24 +216,36 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               prefersReduced ? "static" : networkPaused ? "paused" : "running"
             }
             className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 drop-shadow-[0_24px_44px_rgba(39,71,181,0.16)]"
+            initial={prefersReduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             style={{
               width: "70vw",
               height: "110%",
-              ...(prefersReduced ? {} : { y: globeY, opacity: globeOpacity }),
               overflow: "visible",
             }}
           >
-            <HeroNetwork
-              locale={locale}
-              scrollProgress={scrollYProgress}
+            <m.div
               className="h-full w-full"
-              frozen={frozen}
-              paused={networkPaused}
-              reducedMotion={prefersReduced}
-            />
+              style={prefersReduced ? undefined : { y: globeY, opacity: globeOpacity }}
+            >
+              <HeroNetwork
+                locale={locale}
+                scrollProgress={scrollYProgress}
+                className="h-full w-full"
+                frozen={frozen}
+                paused={networkPaused}
+                reducedMotion={prefersReduced}
+              />
+            </m.div>
           </m.div>
         ) : networkMode === "mobile" ? (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20">
+          <m.div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20"
+            initial={prefersReduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             <HeroNetwork
               locale={locale}
               scrollProgress={scrollYProgress}
@@ -236,7 +253,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               reducedMotion={prefersReduced}
               className="h-[300px] w-[280px] opacity-40"
             />
-          </div>
+          </m.div>
         ) : null}
 
         {networkMode === "desktop" && !prefersReduced ? (

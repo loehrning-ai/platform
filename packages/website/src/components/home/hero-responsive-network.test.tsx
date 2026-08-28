@@ -52,20 +52,25 @@ describe("HeroSection responsive globe", () => {
     setDesktopMatch(matches);
     const { getAllByTestId } = render(<HeroSection />);
 
-    await waitFor(() => {
-      const networks = getAllByTestId("hero-network");
-      expect(networks).toHaveLength(1);
-      expect(networks[0]).toHaveAttribute("data-mode", mode);
-    });
+    await waitFor(
+      () => {
+        const networks = getAllByTestId("hero-network");
+        expect(networks).toHaveLength(1);
+        expect(networks[0]).toHaveAttribute("data-mode", mode);
+      },
+      { timeout: 2000 },
+    );
   });
 
   it("gives desktop users a 44px native pause control and resumes the same globe", async () => {
     setDesktopMatch(true);
     render(<HeroSection locale="en" />);
 
-    const pause = await screen.findByRole("button", {
-      name: "Pause globe motion",
-    });
+    const pause = await screen.findByRole(
+      "button",
+      { name: "Pause globe motion" },
+      { timeout: 2000 },
+    );
     expect(pause).toHaveClass("min-h-11", "motion-reduce:hidden");
     expect(pause).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByTestId("hero-network")).toHaveAttribute(
@@ -88,11 +93,13 @@ describe("HeroSection responsive globe", () => {
     setDesktopMatch(false);
     render(<HeroSection locale="en" />);
 
-    await waitFor(() =>
-      expect(screen.getByTestId("hero-network")).toHaveAttribute(
-        "data-mode",
-        "mobile",
-      ),
+    await waitFor(
+      () =>
+        expect(screen.getByTestId("hero-network")).toHaveAttribute(
+          "data-mode",
+          "mobile",
+        ),
+      { timeout: 2000 },
     );
     expect(
       screen.queryByRole("button", { name: /globe motion/i }),
