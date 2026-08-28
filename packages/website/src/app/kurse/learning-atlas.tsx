@@ -434,7 +434,7 @@ function CourseLedgerRow({
           className={cn(
             "flex h-10 w-10 items-center justify-center border font-mono text-xs font-bold tabular-nums",
             liveStat?.certified
-              ? "border-foreground bg-foreground text-background"
+              ? "border-brand-orange bg-kupfer-mist text-brand-orange"
               : inPath
                 ? "border-brand-orange bg-kupfer-mist text-brand-orange"
                 : "border-border bg-background text-muted-foreground",
@@ -486,7 +486,7 @@ function CourseLedgerRow({
             <Link
               href={action.href}
               prefetch={false}
-              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-[background-color,border-color] duration-150 hover:border-brand-orange hover:bg-brand-orange focus-visible:border-brand-orange focus-visible:bg-brand-orange motion-reduce:transition-none lg:w-auto"
+              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-brand-orange bg-paper px-4 py-2 text-sm font-bold text-foreground transition-[background-color,border-color] duration-150 hover:bg-kupfer-mist focus-visible:bg-kupfer-mist motion-reduce:transition-none lg:w-auto"
             >
               <span className="break-words">{action.label}</span>
               <span className="sr-only">: {course.title}</span>
@@ -497,7 +497,7 @@ function CourseLedgerRow({
               href={course.launchHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-colors duration-150 hover:border-brand-orange hover:bg-brand-orange focus-visible:border-brand-orange focus-visible:bg-brand-orange motion-reduce:transition-none lg:w-auto"
+              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-brand-orange bg-paper px-4 py-2 text-sm font-bold text-foreground transition-colors duration-150 hover:bg-kupfer-mist focus-visible:bg-kupfer-mist motion-reduce:transition-none lg:w-auto"
             >
               <span className="break-words">{galleryCopy.openCourse}</span>
               <span className="sr-only">
@@ -721,14 +721,14 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                   className={cn(
                     "relative grid min-h-14 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-2 overflow-hidden border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none",
                     selected
-                      ? "border-foreground bg-foreground text-background"
+                      ? "border-brand-orange bg-kupfer-mist text-foreground"
                       : "border-border bg-background text-foreground hover:border-brand-orange focus-visible:border-brand-orange",
                   )}
                 >
                   <span
                     className={cn(
                       "font-mono text-xs tabular-nums",
-                      selected ? "text-kupfer-light" : "text-muted-foreground",
+                      selected ? "text-brand-orange" : "text-muted-foreground",
                     )}
                     aria-hidden="true"
                   >
@@ -793,7 +793,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                         className={cn(
                           "relative z-[1] flex h-7 w-7 items-center justify-center border bg-background font-mono text-xs tabular-nums",
                           stat.certified
-                            ? "border-foreground bg-foreground text-background"
+                            ? "border-brand-orange bg-kupfer-mist text-brand-orange"
                             : isNext
                               ? "border-brand-orange text-brand-orange"
                               : "border-border text-muted-foreground",
@@ -831,7 +831,10 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                 aria-hidden="true"
                 className="absolute inset-0 translate-x-2 translate-y-2 border border-border bg-card"
               />
-              <div className="dark-section relative min-w-0 border border-foreground bg-foreground p-4 sm:p-5">
+              <div
+                data-next-proof-card
+                className="relative min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-paper p-4 sm:p-5"
+              >
                 {nextCourse && nextStat && nextAction ? (
                   <>
                     <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
@@ -861,7 +864,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                     <Link
                       href={nextAction.href}
                       prefetch={false}
-                      className="mt-4 inline-flex min-h-11 max-w-full items-center justify-between gap-3 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-[var(--color-dark-bg)] transition-[background-color,border-color,color] duration-150 hover:border-foreground hover:bg-foreground hover:text-background focus-visible:border-foreground focus-visible:bg-foreground focus-visible:text-background motion-reduce:transition-none"
+                      className="mt-4 inline-flex min-h-11 max-w-full items-center justify-between gap-3 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-background transition-[background-color,border-color,color] duration-150 hover:border-brand-cobalt hover:bg-brand-cobalt hover:text-white focus-visible:border-brand-cobalt focus-visible:bg-brand-cobalt focus-visible:text-white motion-reduce:transition-none"
                     >
                       <span className="min-w-0 break-words">
                         {nextAction.label}

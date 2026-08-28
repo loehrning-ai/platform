@@ -66,7 +66,7 @@ Listed contracts identify the intended evidence surface. A file's presence does 
 
 - Preserve the globe as the only spatial identity anchor.
 - Remove live clocks, geographic side instruments, trust chips, duplicated actions, and content parallax.
-- Give the globe pause/resume control and a static reduced-motion state.
+- Run one finite desktop globe transition without an overlay control; keep mobile and reduced-motion states static.
 - Route directly into the course atlas, then show Learn / Check / Apply as a compact register.
 
 ### Course atlas and entry pages

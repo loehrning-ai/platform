@@ -80,6 +80,12 @@ describe("LearningAtlas", () => {
       screen.getByTestId("next-proof").querySelector("[data-next-proof-stack]"),
     ).not.toBeNull();
     expect(
+      screen.getByTestId("next-proof").querySelector("[data-next-proof-card]"),
+    ).toHaveClass("bg-paper", "border-t-brand-orange");
+    expect(
+      screen.getByTestId("next-proof").querySelector(".dark-section"),
+    ).toBeNull();
+    expect(
       screen
         .getByTestId("selected-path-sequence")
         .querySelector("[data-learning-path-stepper]"),
@@ -107,6 +113,11 @@ describe("LearningAtlas", () => {
       const action = row?.querySelector<HTMLElement>("[data-course-action]");
       expect(action).not.toBeNull();
       expect(action?.closest("details")).toBeNull();
+      expect(action?.querySelector("a")).toHaveClass(
+        "border-brand-orange",
+        "bg-paper",
+        "text-foreground",
+      );
       expect(
         screen.getByTestId(`progress-dots-${course.slug}`),
       ).toBeInTheDocument();
@@ -239,6 +250,15 @@ describe("LearningAtlas", () => {
     expect(
       container.querySelector('[data-course-slug="ki-fuehrerschein"]'),
     ).toHaveAttribute("data-course-status", "complete");
+    expect(
+      container
+        .querySelector('[data-course-slug="ki-fuehrerschein"]')
+        ?.querySelector("[aria-hidden='true']"),
+    ).toHaveClass(
+      "border-brand-orange",
+      "bg-kupfer-mist",
+      "text-brand-orange",
+    );
     expect(
       container.querySelector('[data-course-slug="ki-und-gesellschaft"]'),
     ).toHaveAttribute("data-course-status", "started");

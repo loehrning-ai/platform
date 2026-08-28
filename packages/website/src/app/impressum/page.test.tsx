@@ -25,6 +25,19 @@ describe("Impressum", () => {
     ).toBeGreaterThanOrEqual(2);
   });
 
+  it("links the published LinkedIn profile from the visible legal contact", async () => {
+    render(await ImpressumPage());
+
+    expect(
+      screen.getByRole("link", {
+        name: "linkedin.com/in/tim-loehr-821ba8188",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/tim-loehr-821ba8188/",
+    );
+  });
+
   it("does not repeat obsolete DDG liability boilerplate", async () => {
     const { container } = render(await ImpressumPage());
     expect(container.textContent).not.toMatch(/§§?\s*7|§§?\s*8\s*bis\s*10/);

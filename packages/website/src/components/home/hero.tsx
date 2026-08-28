@@ -1,11 +1,14 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
-import { HeroNetwork } from "@/components/home/hero-network";
+import {
+  HERO_GLOBE_INTRO_MS,
+  HeroNetwork,
+} from "@/components/home/hero-network";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -83,8 +86,9 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     "bg-brand-sky/60",
   ] as const;
   const sectionRef = useRef<HTMLElement>(null);
+  const globeIntroDeadlineRef = useRef<number | null>(null);
   const prefersReduced = usePrefersReducedMotion();
-  const [networkPaused, setNetworkPaused] = useState(false);
+  const [globeSettled, setGlobeSettled] = useState(false);
   const [networkMode, setNetworkMode] = useState<"desktop" | "mobile" | null>(
     null,
   );
@@ -112,6 +116,21 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       media.removeEventListener("change", updateMode);
     };
   }, []);
+
+  useEffect(() => {
+    if (networkMode !== "desktop" || prefersReduced || globeSettled) return;
+    const now = window.performance.now();
+    const deadline =
+      globeIntroDeadlineRef.current ?? now + HERO_GLOBE_INTRO_MS;
+    globeIntroDeadlineRef.current = deadline;
+    const remaining = Math.max(0, deadline - now);
+    if (remaining === 0) {
+      setGlobeSettled(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setGlobeSettled(true), remaining);
+    return () => window.clearTimeout(timer);
+  }, [globeSettled, networkMode, prefersReduced]);
 
   return (
     <section
@@ -192,12 +211,11 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             lightweight first-frame shell makes the same globe visible before
             hydration; viewport mode only decides whether it animates. */}
         <m.div
-          id="home-hero-network"
           data-hero-globe-motion={
             prefersReduced || networkMode !== "desktop"
               ? "static"
-              : networkPaused
-                ? "paused"
+              : globeSettled
+                ? "settled"
                 : "running"
           }
           className="home-hero-network-mask pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20 lg:inset-auto lg:bottom-0 lg:right-0 lg:block lg:h-[110%] lg:w-[70vw] lg:overflow-visible lg:rounded-none lg:bg-transparent"
@@ -215,44 +233,13 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               scrollProgress={scrollYProgress}
               mobile={networkMode === "mobile"}
               frozen={frozen}
-              paused={networkPaused || networkMode !== "desktop"}
+              paused={globeSettled || networkMode !== "desktop"}
               reducedMotion={prefersReduced}
               className="h-[300px] w-[280px] opacity-40 lg:h-full lg:w-full lg:opacity-100"
             />
           </m.div>
         </m.div>
 
-        {networkMode === "desktop" && !prefersReduced ? (
-          <button
-            type="button"
-            aria-controls="home-hero-network"
-            aria-label={
-              networkPaused
-                ? locale === "de"
-                  ? "Globus fortsetzen"
-                  : "Resume globe motion"
-                : locale === "de"
-                  ? "Globus anhalten"
-                  : "Pause globe motion"
-            }
-            aria-pressed={networkPaused}
-            onClick={() => setNetworkPaused((current) => !current)}
-            className="absolute bottom-0 right-0 z-20 hidden min-h-11 items-center gap-2 rounded-xl border border-border/70 bg-paper/85 px-3 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-card backdrop-blur-sm outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden lg:inline-flex"
-          >
-            {networkPaused ? (
-              <Play size={14} aria-hidden="true" />
-            ) : (
-              <Pause size={14} aria-hidden="true" />
-            )}
-            {networkPaused
-              ? locale === "de"
-                ? "Fortsetzen"
-                : "Resume"
-              : locale === "de"
-                ? "Anhalten"
-                : "Pause"}
-          </button>
-        ) : null}
       </div>
 
       {/* Three direct uses of the platform in one compact register. */}

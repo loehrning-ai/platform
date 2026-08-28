@@ -28,7 +28,7 @@ export const LEGAL_IDENTITY: LegalIdentity = {
   providerName: "Tim Löhr",
   projectName: "loehrning.ai",
   email: "tim@loehrning.ai",
-  linkedInUrl: "https://www.linkedin.com/in/timloehr/",
+  linkedInUrl: "https://www.linkedin.com/in/tim-loehr-821ba8188/",
   serviceAddress: null,
 };
 

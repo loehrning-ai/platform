@@ -15,27 +15,29 @@ test.describe("landing globe motion", () => {
     expect(html).not.toContain("data-hero-globe-poster");
   });
 
-  test("offers a 44px pause/resume control that changes the running state", async ({
+  test("runs one finite desktop intro without a globe control", async ({
     page,
   }) => {
-    await page.goto("/en");
+    const runtimeErrors: string[] = [];
+    page.on("pageerror", (error) => runtimeErrors.push(error.message));
+    page.on("console", (message) => {
+      if (message.type() === "error") runtimeErrors.push(message.text());
+    });
 
-    const control = page.getByRole("button", { name: "Pause globe motion" });
-    await expect(control).toBeVisible();
-    await expect(control).toHaveAttribute("aria-pressed", "false");
-    const box = await control.boundingBox();
-    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    await page.goto("/en");
 
     const network = page.locator('[data-hero-globe-motion="running"]');
     await expect(network).toBeVisible();
-
-    await control.click();
     await expect(
-      page.getByRole("button", { name: "Resume globe motion" }),
-    ).toHaveAttribute("aria-pressed", "true");
+      page.getByRole("button", { name: /globe motion/i }),
+    ).toHaveCount(0);
     await expect(
-      page.locator('[data-hero-globe-motion="paused"]'),
+      page.locator('[data-hero-globe-motion="settled"]'),
+    ).toBeVisible({ timeout: 6_000 });
+    await expect(
+      page.locator('[data-hero-network-motion="paused"]'),
     ).toBeVisible();
+    expect(runtimeErrors).toEqual([]);
   });
 
   test("renders a static globe when reduced motion is requested", async ({
