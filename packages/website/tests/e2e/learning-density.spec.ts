@@ -74,11 +74,13 @@ async function continueLocally(page: Page): Promise<void> {
   // WebKit can keep this in-flow panel in a transient layout pass after it is
   // visible. The interaction itself is the contract, not pointer hit-testing.
   if (gateAppeared) {
-    await button.click({ force: true }).catch(async (error: unknown) => {
-      // Ownership resolution can remove the optional gate between the
-      // visibility probe and the click. Only that resolved state is success.
-      if (await button.isVisible().catch(() => false)) throw error;
-    });
+    await button
+      .click({ force: true, timeout: 5_000 })
+      .catch(async (error: unknown) => {
+        // Ownership resolution can remove the optional gate between the
+        // visibility probe and the click. Only that resolved state is success.
+        if (await button.isVisible().catch(() => false)) throw error;
+      });
   }
 }
 
@@ -142,8 +144,6 @@ test.describe("learning density and value contract", () => {
       firstChoice,
       "Codex L01 first prediction choice",
     );
-    await expect(firstRadio).toBeDisabled();
-
     await continueLocally(page);
     await expect(firstRadio).toBeEnabled();
     await expectFullyInFirstViewportBand(

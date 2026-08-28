@@ -172,7 +172,7 @@ test.describe("Data Engineering Fundamentals learning instrument", () => {
     });
 
     expect(instrument.background).toBe("rgb(247, 241, 231)");
-    expect(instrument.fontFamily).toMatch(/loehrningSans/i);
+    expect(instrument.fontFamily).toMatch(/Loehrning Sans/i);
     expect(
       Number.parseFloat(instrument.panelRadius ?? "99"),
     ).toBeLessThanOrEqual(8);
