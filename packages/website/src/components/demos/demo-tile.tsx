@@ -139,29 +139,7 @@ export function DemoTile({
           className="relative flex h-full min-h-full w-full items-end overflow-hidden pt-6 transition-transform duration-300 ease-out group-hover:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none [&>div]:w-full"
           data-demo-preview-content
         >
-          {locale === "en" ? (
-            <div className="grid min-h-32 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-5">
-              <div className="grid content-end gap-2">
-                <span
-                  className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`}
-                />
-                <span
-                  className={`h-2 w-full ${dark ? "bg-background/15" : "bg-foreground/10"}`}
-                />
-                <span
-                  className={`h-2 w-5/6 ${dark ? "bg-background/15" : "bg-foreground/10"}`}
-                />
-                <span className="mt-2 h-1.5 w-2/3 bg-brand-orange" />
-              </div>
-              <div
-                className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}
-              >
-                <span className={`font-mono text-2xl font-bold ${accent}`}>
-                  {demo.n}
-                </span>
-              </div>
-            </div>
-          ) : Preview ? (
+          {Preview ? (
             <DemoLocaleProvider locale={locale}>
               <Preview />
             </DemoLocaleProvider>

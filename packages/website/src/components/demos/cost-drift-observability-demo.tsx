@@ -85,9 +85,11 @@ export default function CostDriftObservabilityDemo() {
   const [series, setSeries] = useState<readonly number[]>(() =>
     makeSeries(60, 1.2, 0.4),
   );
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
     if (!visible || reduced) return;
+    setLive(true);
     let updates = 0;
     let timer: ReturnType<typeof setTimeout>;
     const advance = () => {
@@ -97,7 +99,11 @@ export default function CostDriftObservabilityDemo() {
         Math.max(0.2, s[s.length - 1] + (Math.random() - 0.5) * 0.5),
       ]);
       updates += 1;
-      if (updates < 5) timer = setTimeout(advance, 1200);
+      if (updates < 5) {
+        timer = setTimeout(advance, 1200);
+      } else {
+        setLive(false);
+      }
     };
     timer = setTimeout(advance, 1200);
     return () => clearTimeout(timer);
@@ -597,16 +603,51 @@ export default function CostDriftObservabilityDemo() {
       <div>
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
             marginBottom: 6,
           }}
         >
-          {text("Log-Stream", "Event log")}
+          <div
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: "var(--color-brand-orange)",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            {text("Log-Stream", "Event log")}
+          </div>
+          {!reduced ? (
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                letterSpacing: "0.1em",
+                fontWeight: 700,
+                color: live ? DEMO.statusGreen : DEMO.schiefer,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: live ? DEMO.statusGreen : DEMO.schiefer,
+                }}
+              />
+              {live ? text("LIVE", "LIVE") : text("Angehalten", "Paused")}
+            </span>
+          ) : null}
         </div>
         <div
           style={{

@@ -155,14 +155,6 @@ export function DemoDetailLayout({
               <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
                 {levelLabel}
               </span>
-              {demo.illustrative ? (
-                <span
-                  className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
-                  title={pageCopy.illustrativeTitle}
-                >
-                  ◆ {pageCopy.illustrative}
-                </span>
-              ) : null}
             </div>
             <h1 className="mt-4 max-w-5xl break-words text-[clamp(2.5rem,6vw,5.25rem)] font-bold leading-[0.91] tracking-[-0.055em]">
               {demo.title}{" "}
@@ -259,24 +251,19 @@ export function DemoDetailLayout({
               {pageCopy.sandboxScenario}
             </h2>
             {copy ? (
-              <>
-                <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
-                  {copy.why}
-                </p>
-                <div className="mt-4 border border-border border-l-[3px] border-l-brand-orange bg-card p-4">
-                  <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                    ◆ {pageCopy.illustrative}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground">
-                    {copy.proof}
-                  </p>
-                </div>
-              </>
+              <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
+                {copy.why}
+              </p>
             ) : null}
             <div className="mt-4 border border-border bg-background p-4">
               <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                 {pageCopy.sandboxBoundary}
               </div>
+              {copy ? (
+                <p className="mt-2 text-sm leading-relaxed text-foreground">
+                  {copy.proof}
+                </p>
+              ) : null}
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {demo.syntheticDataLabel}
               </p>

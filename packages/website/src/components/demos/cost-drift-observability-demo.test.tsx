@@ -57,6 +57,16 @@ describe("<CostDriftObservabilityDemo>", () => {
     expect(screen.getByText("1.2 s")).toBeInTheDocument();
   });
 
+  it("shows the log stream as paused, not live, while the update interval never starts", () => {
+    render(<CostDriftObservabilityDemo />);
+
+    // useVisibleAutoplay never reports in-view in jsdom, so the interval that
+    // would flip this to "LIVE" never runs — the stream must not claim to be
+    // live while frozen.
+    expect(screen.getByText("Angehalten")).toBeInTheDocument();
+    expect(screen.queryByText("LIVE")).not.toBeInTheDocument();
+  });
+
   it("swaps the detail panel metrics when a different app is selected", () => {
     render(<CostDriftObservabilityDemo />);
 
