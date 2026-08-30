@@ -51,7 +51,7 @@ describe("<N8nSupplyChainDemo>", () => {
     // useVisibleAutoplay never reports in-view in jsdom, so nothing has
     // advanced yet: the step indicator shows the unstarted placeholder and
     // the log shows its waiting message.
-    expect(screen.getByText("Schritt – / 4")).toBeInTheDocument();
+    expect(screen.getByText("Schritt - / 4")).toBeInTheDocument();
     expect(screen.getByText(/warte auf Webhook-Ereignis/)).toBeInTheDocument();
   });
 
@@ -89,14 +89,14 @@ describe("<N8nSupplyChainDemo>", () => {
     expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt – / 4")).toBeInTheDocument();
+    expect(screen.getByText("Schritt - / 4")).toBeInTheDocument();
   });
 
   it("switches to the low-confidence scenario, which stops one step earlier with an escalation line instead of the three automated actions", () => {
     render(<N8nSupplyChainDemo />);
 
     fireEvent.click(screen.getByRole("button", { name: "Konfidenz niedrig" }));
-    expect(screen.getByText("Schritt – / 3")).toBeInTheDocument();
+    expect(screen.getByText("Schritt - / 3")).toBeInTheDocument();
 
     const weiter = screen.getByRole("button", { name: "Weiter ▶" });
     fireEvent.click(weiter);

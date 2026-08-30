@@ -1078,7 +1078,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
       >
         {text(
           "Lineare Projektion mit leichter Quartals-Saisonalität. Die Konfidenz weitet sich mit jeder Woche, realistisch, nicht geschönt.",
-          "A linear projection with light quarterly seasonality. The confidence band widens each week — realistic, not flattering.",
+          "A linear projection with light quarterly seasonality. The confidence band widens each week: realistic, not flattering.",
         )}
       </p>
     </OutputShell>

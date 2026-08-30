@@ -406,7 +406,7 @@ export default function N8nSupplyChainDemo() {
 
   const stepLabel =
     activeStep < 0
-      ? text(`Schritt – / ${maxStep + 1}`, `Step – / ${maxStep + 1}`)
+      ? text(`Schritt - / ${maxStep + 1}`, `Step - / ${maxStep + 1}`)
       : text(
           `Schritt ${activeStep + 1} / ${maxStep + 1}`,
           `Step ${activeStep + 1} / ${maxStep + 1}`,

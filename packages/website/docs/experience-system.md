@@ -92,6 +92,21 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - **Books and editorial:** optimize reading while inheriting platform spacing, focus, provenance, and the single progress thread.
 - **Information, legal, and account routes:** remain conventional, compact, and explicit. Experimental interaction is not added where it has no task.
 
+### Access surfaces: flat by policy, and why the loophole stays shut
+
+`access-surfaces-density.test.ts` bans `shadow-card`, `shadow-card-hover`, `shadow-tile`, `shadow-[`, `hover:-translate`, `active:translate`, `transition-all` and `rounded-full` on `/konto`, `/login`, `login-form`, `/feedback` and `feedback-form`, and pins their page padding.
+
+Two properties of that ban are easy to misread:
+
+- **It scans source text, not rendered output.** The shared `Card` primitive already carries `rounded-[1.25rem]`, `shadow-card`, and — for its interactive variant — `hover:-translate-y-1 hover:shadow-card-hover`. `/konto` composes eight of them, two with `href`. So these routes already render rounded, shadowed, lifting surfaces. What the ban actually forbids is **hand-rolling elevation into the page file**.
+- **It is therefore routable-around.** A flat access surface can adopt elevation simply by switching hand-written markup to `<Card>` — `/login`'s card is hand-rolled flat markup today and could do exactly that without failing the gate.
+
+That route stays deliberately unused. These surfaces are the platform's dense, conventional idiom; elevating them because a primitive makes it available would reintroduce the per-surface divergence the design-system reunification removed. Change the contract first, in the open, if the policy should change.
+
+### Account progress presents evidence, not rewards
+
+`konto/page.test.tsx` asserts no `XP`, `streak` or `badge` appears in rendered English text, even though `UnifiedProgress` carries all three fields. The ban stands: an account page states lessons completed, percentage, record earned, and outcomes covered — every number traceable to evidence-gated progress. This is the audit's "compact evidence rows and project ledgers instead of reward cards" made executable, and it is why the stored gamification fields remain export-only.
+
 ## Enforcement
 
 The numeric, visual, and implementation constraints in this section enforce the platform contract. They remain distinct from the WCAG conformance checks named beside them.
