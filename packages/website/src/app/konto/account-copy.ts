@@ -9,6 +9,9 @@ export interface AccountPageCopy {
   readonly logout: string;
   readonly unavailableTitle: string;
   readonly unavailableBody: string;
+  readonly authUnavailableIdentity: string;
+  readonly authUnavailableTitle: string;
+  readonly authUnavailableBody: string;
   readonly coursesCompleted: string;
   readonly outcomesCovered: string;
   readonly lastSynchronized: string;
@@ -63,6 +66,11 @@ export const ACCOUNT_COPY = {
     unavailableTitle: "Dein Lernstand ist gerade nicht erreichbar.",
     unavailableBody:
       "Die Seite zeigt deshalb keinen vermeintlich leeren Fortschritt. Dein lokaler Lernstand bleibt im Browser erhalten.",
+    authUnavailableIdentity:
+      "Der Anmeldedienst antwortet gerade nicht, daher lässt sich dein Anmeldestatus nicht prüfen.",
+    authUnavailableTitle: "Anmeldestatus ist gerade nicht abrufbar.",
+    authUnavailableBody:
+      "Du wurdest nicht abgemeldet. Die Seite meldet dich deshalb bewusst nicht ab und zeigt keinen leeren Lernstand. Lade die Seite in einigen Minuten neu.",
     coursesCompleted: "Kurse abgeschlossen",
     outcomesCovered: "Lernergebnisse behandelt",
     lastSynchronized: "Zuletzt synchronisiert",
@@ -124,6 +132,11 @@ export const ACCOUNT_COPY = {
     unavailableTitle: "Your learning record is temporarily unavailable.",
     unavailableBody:
       "The page does not substitute an empty record. Progress stored in this browser remains unchanged.",
+    authUnavailableIdentity:
+      "The sign-in service is not responding, so your sign-in status cannot be checked.",
+    authUnavailableTitle: "Sign-in status is temporarily unavailable.",
+    authUnavailableBody:
+      "You have not been signed out. The page deliberately does not sign you out or substitute an empty record. Reload in a few minutes.",
     coursesCompleted: "Courses completed",
     outcomesCovered: "Course outcomes covered",
     lastSynchronized: "Last synchronised",

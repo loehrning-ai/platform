@@ -24,6 +24,7 @@ import {
 import type { CourseSlug } from "@/lib/course/types";
 import { Card } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
+import { ProgressSyncNotice } from "@/components/auth/progress-sync-notice";
 import { localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
@@ -46,17 +47,25 @@ export default async function KontoPage() {
     getRequestLocale(),
     getAuthenticatedUser(),
   ]);
-  const { configured, user } = auth;
+  const { configured, user, error: authError } = auth;
   const copy = ACCOUNT_COPY[locale];
   const courses = localizeCatalog(COURSE_CATALOG, locale);
-  if (configured && !user) {
+  // An auth-backend outage returns {configured:true, user:null, error} — the
+  // same shape as "logged out" minus the error. Redirecting on it signs a
+  // signed-in learner out of a page they are still entitled to see, so the
+  // outage is rendered instead.
+  if (authError) {
+    reportApiError({ route: "/konto", step: "auth-get-user", error: authError });
+  }
+  if (configured && !user && !authError) {
     const accountHref = localizeHref("/konto", locale);
     redirect(localizeHref(`/login?next=${accountHref}`, locale));
   }
 
+  const authUnavailable = Boolean(authError);
   let progress: UnifiedProgress | null = null;
   let updatedAt: string | null = null;
-  let progressUnavailable = false;
+  let progressUnavailable = authUnavailable;
   let supabase;
   try {
     supabase = await createAuthServerClient();
@@ -134,19 +143,29 @@ export default async function KontoPage() {
               {copy.title}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              {copy.signedIn(user?.email ?? copy.localIdentity)}
+              {authUnavailable
+                ? copy.authUnavailableIdentity
+                : copy.signedIn(user?.email ?? copy.localIdentity)}
             </p>
           </div>
-          <form action="/auth/logout" method="post">
-            <button
-              type="submit"
-              className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              {copy.logout}
-              <LogOut size={14} aria-hidden="true" />
-            </button>
-          </form>
+          {authUnavailable ? null : (
+            <form action="/auth/logout" method="post">
+              <button
+                type="submit"
+                className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-card px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground hover:border-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                {copy.logout}
+                <LogOut size={14} aria-hidden="true" />
+              </button>
+            </form>
+          )}
         </div>
+
+        {/* A stopped or exhausted background sync leaves the record below
+            stale on other devices. It was previously announced only on
+            /konto/datenschutz, which a learner reading their record never
+            passes through. */}
+        <ProgressSyncNotice locale={locale} />
 
         {progressUnavailable ? (
           <div
@@ -154,10 +173,12 @@ export default async function KontoPage() {
             className="mt-6 border border-border border-l-[3px] border-l-brand-orange bg-kupfer-mist p-4"
           >
             <p className="font-semibold text-foreground">
-              {copy.unavailableTitle}
+              {authUnavailable
+                ? copy.authUnavailableTitle
+                : copy.unavailableTitle}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {copy.unavailableBody}
+              {authUnavailable ? copy.authUnavailableBody : copy.unavailableBody}
             </p>
           </div>
         ) : (

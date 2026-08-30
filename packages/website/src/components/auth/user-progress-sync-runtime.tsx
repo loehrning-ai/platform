@@ -723,8 +723,14 @@ export function UserProgressSyncRuntime() {
             revalidateCutoverAfterResume();
             return;
           }
-          // Keep and upload the current local state; a later queued save
-          // retries the server path without discarding learning progress.
+          // A failed GET means the server's rows were never read. Completing
+          // the boot here would mark the client bootstrapped, clear the sync
+          // failure, and PUT a state derived from server data it never saw.
+          // Fail the boot instead: the outer catch schedules a bounded retry
+          // and the next successful boot merges, then uploads, everything
+          // accumulated since. Local progress stays in browser storage
+          // throughout, so nothing is discarded.
+          throw new Error("Progress boot GET failed", { cause: error });
         }
         handleDeletionControl(getAccountDeletionControlState());
         if (

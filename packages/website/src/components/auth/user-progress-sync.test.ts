@@ -333,7 +333,11 @@ describe("<UserProgressSync>", () => {
     expect(getLearningOwnerContext().kind).toBe("anonymous");
   });
 
-  it("preserves and uploads local progress when the initial remote read fails", async () => {
+  it("preserves local progress but refuses to upload it when the initial remote read fails", async () => {
+    // A failed GET leaves the server's rows unread. Uploading local state
+    // then would push a record derived from data this client never saw, and
+    // would mark the boot complete. The boot must fail into its bounded
+    // retry instead — local progress stays intact throughout.
     createBrowserClientMock.mockReturnValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({
@@ -348,7 +352,7 @@ describe("<UserProgressSync>", () => {
       .mockRejectedValueOnce(
         new Error("private-learning-checkpoint provider-secret"),
       )
-      .mockResolvedValueOnce(
+      .mockResolvedValue(
         Response.json({ progress: learnerProgress }, { status: 200 }),
       );
     const consoleError = vi
@@ -357,10 +361,44 @@ describe("<UserProgressSync>", () => {
 
     render(createElement(UserProgressSync));
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
-    const putCall = fetchMock.mock.calls.find(
-      ([, init]) => init?.method === "PUT",
-    );
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const methods = fetchMock.mock.calls.map(([, init]) => init?.method);
+    expect(methods).not.toContain("PUT");
+    expectPrivateProgress(getUnifiedState());
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it("uploads local progress once a retried boot read actually succeeds", async () => {
+    vi.useFakeTimers();
+    createBrowserClientMock.mockReturnValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: { id: ACCOUNT_A } },
+          error: null,
+        }),
+      },
+    });
+    seedAccountProgress(ACCOUNT_A, learnerProgress);
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockRejectedValueOnce(new Error("boot read unavailable"))
+      .mockResolvedValue(
+        Response.json(
+          { ownerId: ACCOUNT_A, progress: learnerProgress },
+          { status: 200 },
+        ),
+      );
+
+    render(createElement(UserProgressSync));
+
+    let putCall;
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      await vi.advanceTimersByTimeAsync(30_000);
+      await Promise.resolve();
+      putCall = fetchMock.mock.calls.find(([, init]) => init?.method === "PUT");
+      if (putCall) break;
+    }
+
     expect(putCall).toBeDefined();
     const putBody = JSON.parse(String(putCall?.[1]?.body)) as {
       expectedOwnerId: string;
@@ -369,7 +407,6 @@ describe("<UserProgressSync>", () => {
     expect(putBody.expectedOwnerId).toBe(ACCOUNT_A);
     expectPrivateProgress(putBody.progress);
     expectPrivateProgress(getUnifiedState());
-    expect(consoleError).not.toHaveBeenCalled();
   });
 
   it("never merges a remote read labeled for another authenticated owner", async () => {

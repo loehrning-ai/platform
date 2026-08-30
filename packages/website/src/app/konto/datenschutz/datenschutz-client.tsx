@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalog } from "@/lib/courses/catalog-copy";
@@ -21,11 +21,7 @@ import {
   type AccountDeletionLockLease,
   withAccountDeletionOriginLock,
 } from "@/lib/progress/account-deletion-lock";
-import {
-  getProgressSyncFailure,
-  getServerProgressSyncFailure,
-  subscribeProgressSyncFailure,
-} from "@/lib/progress/sync-status";
+import { ProgressSyncNotice } from "@/components/auth/progress-sync-notice";
 import { isDefiniteDeleteFailure } from "./deletion-response-policy";
 
 function localized(locale: Locale, de: string, en: string): string {
@@ -105,11 +101,6 @@ export function DatenschutzClient({
     Partial<Record<CourseSlug, HTMLButtonElement | null>>
   >({});
   const deleteButtonRef = useRef<HTMLButtonElement | null>(null);
-  const syncFailure = useSyncExternalStore(
-    subscribeProgressSyncFailure,
-    getProgressSyncFailure,
-    getServerProgressSyncFailure,
-  );
 
   async function handleExport() {
     setExportState("loading");
@@ -526,31 +517,7 @@ export function DatenschutzClient({
           </p>
         ) : null}
 
-        {syncFailure ? (
-          <p
-            role="status"
-            aria-live="polite"
-            className="mt-4 border border-amber-700 border-l-[3px] bg-amber-500/10 px-4 py-3 text-sm leading-relaxed text-foreground"
-          >
-            {syncFailure === "permanent"
-              ? localized(
-                  locale,
-                  "Die Server-Synchronisierung wurde wegen einer nicht wiederholbaren Antwort angehalten. Dein Fortschritt bleibt in diesem Browser gespeichert, ist auf anderen Geräten aber möglicherweise nicht aktuell.",
-                  "Server synchronisation stopped after a non-retryable response. Your progress remains stored in this browser, but it may not be current on other devices.",
-                )
-              : syncFailure === "retry_exhausted"
-                ? localized(
-                    locale,
-                    "Die Server-Synchronisierung ist nach mehreren Versuchen weiterhin fehlgeschlagen. Dein Fortschritt bleibt in diesem Browser gespeichert und wird bei einer neuen Änderung oder wiederhergestellter Verbindung erneut übertragen.",
-                    "Server synchronisation still failed after several attempts. Your progress remains stored in this browser and will be sent again after a new change or when the connection is restored.",
-                  )
-                : localized(
-                    locale,
-                    "Die Server-Synchronisierung konnte nicht gestartet werden. Dein Fortschritt bleibt in diesem Browser gespeichert, bis die Verbindung erneut geprüft werden kann.",
-                    "Server synchronisation could not start. Your progress remains stored in this browser until the connection can be checked again.",
-                  )}
-          </p>
-        ) : null}
+        <ProgressSyncNotice locale={locale} />
 
         <article
           data-privacy-control="export"

@@ -267,6 +267,36 @@ describe("KontoPage course resume integration", () => {
     expect(mocks.fetchUnifiedProgressForUser).not.toHaveBeenCalled();
   });
 
+  it("renders an outage instead of signing the learner out when auth itself fails", async () => {
+    // {configured:true, user:null, error} is an auth-backend outage, not a
+    // logged-out visitor: it differs from the anonymous case only by `error`.
+    // Redirecting on it would bounce a signed-in learner to /login.
+    const authError = new Error("supabase auth 503");
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: null,
+      error: authError,
+    });
+
+    render(await KontoPage());
+
+    expect(mocks.redirect).not.toHaveBeenCalled();
+    expect(mocks.reportApiError).toHaveBeenCalledWith({
+      route: "/konto",
+      step: "auth-get-user",
+      error: authError,
+    });
+    expect(
+      screen.getByText("Anmeldestatus ist gerade nicht abrufbar."),
+    ).toBeInTheDocument();
+    // The page must not claim the visitor is browsing without an account, and
+    // must not offer a sign-out it cannot honour.
+    expect(document.body).not.toHaveTextContent("lokaler Zugriff ohne Konto");
+    expect(
+      screen.queryByRole("button", { name: /Abmelden/ }),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders reviewed English account copy, course data, links, and metadata", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
 

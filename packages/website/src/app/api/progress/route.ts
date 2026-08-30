@@ -15,6 +15,7 @@ import {
 import { isUnifiedProgress } from "@/lib/progress/server-sync";
 import {
   fetchUnifiedProgressForUser,
+  isRowSizeViolation,
   upsertUnifiedProgressForUser,
 } from "@/lib/progress/server-store";
 import type { UnifiedProgress } from "@/lib/progress/types";
@@ -238,6 +239,13 @@ export async function PUT(request: Request) {
 
   if (!result.ok && !result.conflict) {
     reportApiError({ route: "/api/progress", step: "supabase-write", error: result.error });
+    // A single course row can exceed the 64 KiB DB CHECK while the whole
+    // payload stays inside the request cap — the two bound different things.
+    // Naming it keeps an oversize row from reading as a transient 500 the
+    // client would retry forever.
+    if (isRowSizeViolation(result.error)) {
+      return privateJson({ error: "progress_too_large" }, { status: 413 });
+    }
     return privateJson({ error: "progress_write_failed" }, { status: 500 });
   }
 
