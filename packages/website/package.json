@@ -74,7 +74,7 @@
     "@vercel/sandbox": "3.0.0",
     "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.4.0",
+    "framer-motion": "^13.1.1",
     "geist": "^1.7.0",
     "gray-matter": "^4.0.3",
     "import-in-the-middle": "^3.3.3",
