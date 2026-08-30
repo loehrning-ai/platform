@@ -18,9 +18,9 @@ import OutboundWorkflowDemo from "./outbound-workflow-demo";
  *    failure-mode checklist toggle all render immediately.
  *
  * matchMedia + IntersectionObserver are polyfilled in src/test/setup.ts; we
- * override matchMedia locally to force the reduced-motion branch. The 6.5s lead
- * rotation timer only runs in the non-reduced branch, so leadIdx stays 0 in both
- * states and the first explicitly fictional lead is deterministic.
+ * override matchMedia locally to force the reduced-motion branch. leadIndex is
+ * manual (a picker row, `aria-pressed`, no timer) and starts at 0 in both
+ * states, so the first explicitly fictional lead is deterministic.
  */
 
 const originalMatchMedia = window.matchMedia;
@@ -132,6 +132,38 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(
       screen.getByRole("button", { name: "Verbergen" }),
     ).toBeInTheDocument();
+  });
+
+  it("switches the lead card, address and email body when a different picker button is clicked", () => {
+    setReducedMotion(true);
+    render(<OutboundWorkflowDemo />);
+
+    expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
+    expect(screen.getByText("CRM · ROW 1/3")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Alpha" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Beta" }));
+
+    expect(screen.getByText("Fiktivkontakt Beta")).toBeInTheDocument();
+    expect(screen.queryByText("Fiktivkontakt Alpha")).not.toBeInTheDocument();
+    expect(
+      screen.getByText("kontakt-beta@fiktivwerk.example"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Kundendienst-Entlastung: Kurze Rückfrage"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("CRM · ROW 2/3")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Beta" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Alpha" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
   });
 
   it("keeps both mobile grid panels inside the demo shell", () => {

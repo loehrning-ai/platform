@@ -75,6 +75,7 @@ function OutboundWorkflowDemoGerman() {
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [showChecklist, setShowChecklist] = useState(false);
+  const [leadIndex, setLeadIndex] = useState(0);
 
   useEffect(() => {
     if (reduced) {
@@ -95,7 +96,7 @@ function OutboundWorkflowDemoGerman() {
     return () => timers.forEach(clearTimeout);
   }, [visible, reduced]);
 
-  const lead = LEADS[0];
+  const lead = LEADS[leadIndex];
   const email = lead.address;
 
   return (
@@ -284,6 +285,40 @@ function OutboundWorkflowDemoGerman() {
             boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
+          {/* Lead picker — switches which of the 3 fictional contacts is shown */}
+          <div
+            role="group"
+            aria-label="Kontakt wählen"
+            style={{ display: "flex", gap: 6 }}
+          >
+            {LEADS.map((l, i) => {
+              const selected = i === leadIndex;
+              return (
+                <button
+                  key={l.address}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setLeadIndex(i)}
+                  style={{
+                    flex: 1,
+                    minHeight: 44,
+                    padding: "5px 8px",
+                    border: `1px solid ${DEMO.ink}`,
+                    background: selected ? DEMO.ink : DEMO.kalk,
+                    color: selected ? DEMO.kalk : DEMO.ink,
+                    fontFamily: DEMO.font.mono,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    cursor: "pointer",
+                  }}
+                >
+                  {l.name.split(" ").pop()}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Fictional scenario banner */}
           <div
             style={{
@@ -338,7 +373,7 @@ function OutboundWorkflowDemoGerman() {
                 letterSpacing: "0.12em",
               }}
             >
-              CRM · ROW 1/{LEADS.length}
+              CRM · ROW {leadIndex + 1}/{LEADS.length}
             </div>
           </div>
           <div

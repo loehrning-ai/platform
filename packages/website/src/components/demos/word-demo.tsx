@@ -21,24 +21,21 @@ const INITIAL: FormState = {
 
 type StepState = "idle" | "running" | "done";
 
-export default function WordDemo() {
-  const { locale } = useDemoLocale();
-  return locale === "en" ? <WordDemoEnglish /> : <WordDemoGerman />;
-}
-
-function WordDemoGerman() {
-  const [form, setForm] = useState<FormState>(INITIAL);
+/**
+ * Drives the shared "Werkbank" step ladder (style-match → draft → export)
+ * behind Word's generate button. Both locales show the same three staged
+ * steps before the result appears — English previously skipped straight to
+ * the result with no staging at all.
+ */
+function useStagedGeneration() {
   const [genStep, setGenStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [focusedField, setFocusedField] = useState<keyof FormState | null>(
-    null,
-  );
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
 
-  const handleGenerate = useCallback(() => {
+  const generate = useCallback(() => {
     if (isGenerating) return;
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
@@ -62,18 +59,47 @@ function WordDemoGerman() {
     );
   }, [isGenerating, reducedMotion]);
 
+  const stepState = useCallback(
+    (threshold: number): StepState => {
+      if (genStep >= threshold) return "done";
+      if (isGenerating && genStep === threshold - 1) return "running";
+      return "idle";
+    },
+    [genStep, isGenerating],
+  );
+
+  return {
+    isGenerating,
+    reducedMotion,
+    generate,
+    generated: genStep === 4,
+    stepState,
+  };
+}
+
+export default function WordDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <WordDemoEnglish /> : <WordDemoGerman />;
+}
+
+function WordDemoGerman() {
+  const [form, setForm] = useState<FormState>(INITIAL);
+  const [focusedField, setFocusedField] = useState<keyof FormState | null>(
+    null,
+  );
+  const {
+    isGenerating,
+    reducedMotion,
+    generate: handleGenerate,
+    generated,
+    stepState,
+  } = useStagedGeneration();
+
   const fileName = useMemo(
     () =>
       `Projektbrief_${form.kunde.split(" ")[0]}_${new Date().toISOString().slice(0, 10)}.docx`,
     [form.kunde],
   );
-  const generated = genStep === 4;
-
-  const stepState = (threshold: number): StepState => {
-    if (genStep >= threshold) return "done";
-    if (isGenerating && genStep === threshold - 1) return "running";
-    return "idle";
-  };
 
   return (
     <div
@@ -598,7 +624,13 @@ const INITIAL_EN: FormState = {
 
 function WordDemoEnglish() {
   const [form, setForm] = useState<FormState>(INITIAL_EN);
-  const [generated, setGenerated] = useState(false);
+  const {
+    isGenerating,
+    reducedMotion,
+    generate: handleGenerate,
+    generated,
+    stepState,
+  } = useStagedGeneration();
   const fileName = useMemo(
     () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
     [form.kunde],
@@ -689,7 +721,6 @@ function WordDemoEnglish() {
                 value={form[key]}
                 inputMode={key === "budget" ? "numeric" : undefined}
                 onChange={(event) => {
-                  setGenerated(false);
                   setForm((current) => ({
                     ...current,
                     [key]: event.target.value,
@@ -710,40 +741,73 @@ function WordDemoEnglish() {
               />
             </label>
           ))}
-          <div
-            style={{
-              display: "grid",
-              gap: 6,
-              padding: 10,
-              border: `1px solid ${DEMO.leinen}`,
-              background: DEMO.kalk,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-            }}
-          >
-            <span>01 · compare the sample style references</span>
-            <span>02 · assemble a browser-only draft</span>
-            <span>03 · mark the approval as pending</span>
+          <div style={{ paddingTop: 2, paddingBottom: 2 }}>
+            <div
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: DEMO.schiefer,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                marginBottom: 8,
+              }}
+            >
+              Workbench
+            </div>
+            <ol
+              style={{
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+                position: "relative",
+              }}
+            >
+              <Step
+                state={stepState(1)}
+                label="Compare style against 40 sample documents"
+                reducedMotion={reducedMotion}
+              />
+              <Step
+                state={stepState(2)}
+                label="Claude Sonnet 4.6 · draft"
+                reducedMotion={reducedMotion}
+              />
+              <Step
+                state={stepState(3)}
+                label="Word export with template"
+                reducedMotion={reducedMotion}
+                isLast
+              />
+            </ol>
           </div>
           <button
             type="button"
-            onClick={() => setGenerated(true)}
+            onClick={handleGenerate}
+            disabled={isGenerating}
             style={{
               minHeight: 44,
               border: `2px solid ${DEMO.ink}`,
-              background: "var(--color-brand-orange)",
-              color: "white",
-              boxShadow: `3px 3px 0 ${DEMO.ink}`,
+              background: isGenerating ? DEMO.leinen : "var(--color-brand-orange)",
+              color: isGenerating ? DEMO.schiefer : "white",
+              boxShadow: isGenerating ? "none" : `3px 3px 0 ${DEMO.ink}`,
               padding: "10px 14px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              cursor: "pointer",
+              cursor: isGenerating ? "not-allowed" : "pointer",
             }}
           >
-            {generated ? "Rebuild sample brief" : "Build sample brief"}
+            {isGenerating
+              ? "Generating…"
+              : generated
+                ? "Rebuild sample brief"
+                : "Build sample brief"}
           </button>
         </section>
 
