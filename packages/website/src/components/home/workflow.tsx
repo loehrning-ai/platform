@@ -31,7 +31,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
     "bg-brand-sky/55",
     "bg-brand-pink/45",
     "bg-brand-acid/50",
-    "bg-brand-teal/40",
+    "bg-brand-teal/15",
     "bg-brand-peach/45",
   ] as const;
   const iconTones = [

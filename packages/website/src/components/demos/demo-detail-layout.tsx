@@ -166,10 +166,12 @@ export function DemoDetailLayout({
         data-demo-detail-hero
         data-demo-instrument
         aria-labelledby="demo-title"
-        className={cn(
-          "border-y border-border px-4 py-5 sm:px-6 sm:py-8 md:px-10",
-          demo.dark ? "dark-section" : "bg-foreground/[0.035]",
-        )}
+        // Deliberately NOT dark-section for a dark demo. EvidenceBadge paints
+        // hardcoded light-theme inks (#1d4ed8, #92400e) that drop to ~2:1 on a
+        // dark ground, and DemoShell already carries the dark treatment for
+        // the widget itself. The band stays light; demo.size still adapts the
+        // title below.
+        className="border-y border-border bg-foreground/[0.035] px-4 py-5 sm:px-6 sm:py-8 md:px-10"
       >
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-wrap items-center gap-2">

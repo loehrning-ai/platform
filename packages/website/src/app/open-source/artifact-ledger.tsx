@@ -179,7 +179,13 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                               background: FACT_BACKGROUNDS[factIndex],
                             }}
                           >
-                            <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                            {/* Full-strength brand surface: muted-foreground
+                                reaches only 4.46:1 on brand-peach, the darkest
+                                of the four FACT_BACKGROUNDS. The label's
+                                hierarchy is already carried by the mono/xs/
+                                uppercase treatment against the value's
+                                semibold, so it takes the full ink. */}
+                            <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
                               {label}
                             </dt>
                             <dd className="mt-1 break-words font-semibold text-foreground">

@@ -195,7 +195,12 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
               </Link>
             </article>
 
-            <article className="flex min-w-0 flex-col bg-brand-sky/20 p-5 sm:p-6 lg:col-span-3">
+            {/* Opaque mix, not bg-brand-sky/20: the parent grid is
+                `gap-px bg-border`, so a translucent tint composites over the
+                border grey instead of the page and lands at #8a8d8c, where
+                muted-foreground is 2.31:1. Mixing against --color-background
+                paints the same intended colour opaquely. */}
+            <article className="flex min-w-0 flex-col bg-[color-mix(in_oklab,var(--color-brand-sky)_20%,var(--color-background))] p-5 sm:p-6 lg:col-span-3">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {copy.courseLabel}
               </p>
