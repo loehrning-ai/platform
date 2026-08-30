@@ -834,8 +834,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 686491,
-      "sha256": "6a4377b268810b27f13e049b5ddd6338cb5e61d1c8f426f0300bd15b32b51aa5",
+      "sizeBytes": 251861,
+      "sha256": "8845b6d2d22144564f11c237c64df0c782371e87569db444a4343c159c0c02de",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
