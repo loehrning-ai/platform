@@ -69,6 +69,12 @@ function isDemoCategory(value: unknown): value is DemoCategory {
   );
 }
 
+const STAT_TONES = [
+  "border-t-brand-acid",
+  "border-t-brand-sky",
+  "border-t-brand-pink",
+] as const;
+
 function singleValue(
   value: string | readonly string[] | undefined,
 ): string | undefined {
@@ -186,10 +192,10 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
             className="grid divide-y divide-foreground/20 border-t border-foreground/70 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
             aria-label={copy.catalog.kicker}
           >
-            {copy.catalog.stats.map((stat) => (
+            {copy.catalog.stats.map((stat, index) => (
               <div
                 key={stat.label}
-                className="flex min-w-0 items-center justify-between gap-4 px-3 py-3 sm:block sm:px-5"
+                className={`flex min-w-0 items-center justify-between gap-4 border-t-2 px-3 py-3 sm:block sm:px-5 ${STAT_TONES[index % STAT_TONES.length]}`}
               >
                 <dt className="text-pretty font-mono text-xs uppercase leading-4 tracking-[0.08em] text-muted-foreground">
                   {stat.label}
