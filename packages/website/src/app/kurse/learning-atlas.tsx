@@ -12,6 +12,7 @@ import {
 } from "@/lib/courses/catalog";
 import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
+import { demosForCourse } from "@/lib/demos";
 import {
   courseBadges,
   courseGroupFor,
@@ -77,6 +78,8 @@ const ATLAS_COPY = {
     allCoursesIntro:
       "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
     viewProgress: "Fortschritt in deinem Konto ansehen",
+    tryDemo: (count: number) =>
+      count > 1 ? `${count} Praxisbeispiele testen` : "Praxisbeispiel testen",
     courseDetails: "Fakten und Zugang",
     audience: "Für wen",
     source: "Quellstand",
@@ -126,6 +129,8 @@ const ATLAS_COPY = {
     allCoursesIntro:
       "The path is a recommendation. Every course remains directly accessible.",
     viewProgress: "View your progress in your account",
+    tryDemo: (count: number) =>
+      count > 1 ? `Try ${count} applied examples` : "Try the applied example",
     courseDetails: "Facts and access",
     audience: "Who it is for",
     source: "Source revision",
@@ -174,6 +179,7 @@ const ATLAS_COPY = {
       readonly allCourses: string;
       readonly allCoursesIntro: string;
       readonly viewProgress: string;
+      readonly tryDemo: (count: number) => string;
       readonly courseDetails: string;
       readonly audience: string;
       readonly source: string;
@@ -351,6 +357,11 @@ function CourseLedgerRow({
   const sourceCommit = course.sourceCommit;
   const cover = isLiveCourse(course) ? course.coverImage : undefined;
   const tone = ROW_TONES[index % ROW_TONES.length];
+  // Seven of the ten courses have no demo. Rather than substituting one from
+  // another course, those rows simply omit the teaser.
+  const courseDemos = live ? demosForCourse(course.slug) : [];
+  const courseDemo = courseDemos[0];
+  const demoCount = courseDemos.length;
 
   return (
     <li
@@ -416,6 +427,19 @@ function CourseLedgerRow({
           <p className="mt-1 max-w-[68ch] text-sm leading-snug text-muted-foreground">
             {course.tagline}
           </p>
+          {courseDemo ? (
+            <Link
+              href={localizeHref(
+                `/demos/${courseDemo.slug}?source=gallery`,
+                locale,
+              )}
+              prefetch={false}
+              className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              {copy.tryDemo(demoCount)}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            </Link>
+          ) : null}
         </div>
         <div className="col-span-2 min-w-0 lg:col-span-1">
           {live && liveStat ? (

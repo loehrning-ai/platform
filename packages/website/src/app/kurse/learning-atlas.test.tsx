@@ -285,4 +285,30 @@ describe("LearningAtlas", () => {
     ).not.toBeNull();
     expect(codex).toHaveTextContent("#0e5dfd3");
   });
+
+  it("links a course to its demo only where a demo actually exists", () => {
+    const { container } = render(<LearningAtlas locale="de" />);
+
+    // Twelve demos cover three of the ten courses. The other seven rows must
+    // omit the teaser rather than borrow a demo from an unrelated course.
+    const withTeaser = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-course-slug]"),
+    ).filter((row) => row.querySelector('a[href^="/demos/"]') !== null);
+
+    expect(withTeaser.map((row) => row.dataset.courseSlug).sort()).toEqual([
+      "ai-native",
+      "eu-ai-act-kurs",
+      "ki-fuehrerschein",
+    ]);
+
+    const aiNative = container.querySelector<HTMLElement>(
+      '[data-course-slug="ai-native"]',
+    );
+    // Nine demos on this course, so the label carries the real count.
+    expect(aiNative).toHaveTextContent("9 Praxisbeispiele testen");
+    const single = container.querySelector<HTMLElement>(
+      '[data-course-slug="ki-fuehrerschein"]',
+    );
+    expect(single).toHaveTextContent("Praxisbeispiel testen");
+  });
 });

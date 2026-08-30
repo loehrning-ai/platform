@@ -542,6 +542,16 @@ export function demosForLesson(
   );
 }
 
+/**
+ * Demos bound to a course, in catalog order. Empty for seven of the ten
+ * courses: the twelve demos cover ai-native (9), eu-ai-act-kurs (2) and
+ * ki-fuehrerschein (1) only. Callers must render nothing for an empty
+ * result rather than substituting a demo from another course.
+ */
+export function demosForCourse(courseSlug: CourseSlug): readonly Demo[] {
+  return demos.filter((d) => d.courseSlug === courseSlug);
+}
+
 export function filterDemos(opts: {
   readonly category?: string;
   readonly level?: string;
