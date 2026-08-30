@@ -16,6 +16,8 @@ const { FLIPPED_COURSE } = vi.hoisted(() => ({
     startHref: "/flip-fixture-course/kurs",
     continueHref: "/flip-fixture-course/kurs",
     duration: "1 hr",
+    durationMinutes: 60,
+    level: "einstieg" as const,
     totalLessons: 10,
     unitLabel: "lessons",
     unitCount: 10,
