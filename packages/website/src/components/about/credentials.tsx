@@ -9,8 +9,7 @@ const ICONS = {
   research: BookOpen,
 } as const;
 
-// Institution marks, keyed by credential id. Only degree carries one today --
-// see plan 022 stage 5 for why Oxford/EELISA are deliberately out of scope.
+// Institution marks, keyed by credential id. Only degree carries one today.
 const INSTITUTION_MARKS: Partial<
   Record<"degree" | "international" | "research", { src: string; width: number; height: number }>
 > = {
