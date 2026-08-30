@@ -143,7 +143,7 @@ function LogoWordmark({
     >
       <m.div
         data-logo-mark
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange shadow-[3px_3px_0_var(--color-brand-acid)]"
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
         aria-hidden="true"
         style={{
           rotate: prefersReducedMotion ? 0 : iconRotate,
