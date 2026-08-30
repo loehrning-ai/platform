@@ -15,6 +15,12 @@ import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 const PATH = "/einstieg";
 const AI_ACT_SOURCE = "https://eur-lex.europa.eu/eli/reg/2024/1689/oj";
 
+const EXAMPLE_TONES = [
+  "bg-brand-acid/18",
+  "bg-brand-sky/18",
+  "bg-brand-pink/18",
+] as const;
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const copy = ENTRY_COPY[locale].metadata;
@@ -189,7 +195,7 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
               </Link>
             </article>
 
-            <article className="flex min-w-0 flex-col bg-background p-5 sm:p-6 lg:col-span-3">
+            <article className="flex min-w-0 flex-col bg-brand-sky/20 p-5 sm:p-6 lg:col-span-3">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {copy.courseLabel}
               </p>
@@ -292,10 +298,10 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
             data-testid="beispiel-cards"
             data-orientation-bento
           >
-            {copy.examples.map((example) => (
+            {copy.examples.map((example, index) => (
               <article
                 key={example.id}
-                className={`min-w-0 border border-border bg-background p-4 sm:p-5 ${
+                className={`min-w-0 border border-border p-4 sm:p-5 ${EXAMPLE_TONES[index % EXAMPLE_TONES.length]} ${
                   example.id === "route" ? "md:col-span-2" : "md:col-span-4"
                 }`}
                 data-testid={`beispiel-${example.id}`}
