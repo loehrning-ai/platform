@@ -25,19 +25,16 @@ import {
   hasCourseStarted,
   resolveCourseResumeHref,
 } from "@/lib/courses/resume";
+import {
+  GOAL_IDS,
+  LEARNING_GOALS,
+  type GoalId,
+  type LearningGoal,
+} from "@/lib/courses/goals";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
-
-type GoalId = "start" | "judge" | "build" | "data";
-
-interface LearningGoal {
-  readonly id: GoalId;
-  readonly label: string;
-  readonly summary: string;
-  readonly courseSlugs: readonly string[];
-}
 
 interface CourseStat {
   readonly completed: number;
@@ -48,7 +45,6 @@ interface CourseStat {
 
 type Course = CatalogCourse | ImportedCourse;
 
-const GOAL_IDS: readonly GoalId[] = ["start", "judge", "build", "data"];
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
 
 const ATLAS_COPY = {
@@ -77,44 +73,7 @@ const ATLAS_COPY = {
     viewRecord: "Nachweis ansehen",
     pathCourse: "Teil des gewählten Pfads",
     progress: "Fortschritt",
-    goals: [
-      {
-        id: "start",
-        label: "Sicher starten",
-        summary: "Alltagseinsatz, Prüfung und Verantwortung in fester Folge.",
-        courseSlugs: [
-          "ki-fuehrerschein",
-          "ki-und-gesellschaft",
-          "eu-ai-act-kurs",
-          "ai-native",
-        ],
-      },
-      {
-        id: "judge",
-        label: "Folgen beurteilen",
-        summary:
-          "Beispiele prüfen, Risiken klassifizieren, Entscheidungen begründen.",
-        courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
-      },
-      {
-        id: "build",
-        label: "Mit KI bauen",
-        summary:
-          "Arbeitsablauf, Prompt, Spezifikation und Kontrolle verbinden.",
-        courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
-      },
-      {
-        id: "data",
-        label: "Daten entscheiden",
-        summary: "Pipeline, Infrastruktur und Modellwirkung als System prüfen.",
-        courseSlugs: [
-          "data-engineering-fundamentals",
-          "data-infrastructure",
-          "data-science",
-          "ai-native-operator",
-        ],
-      },
-    ],
+    goals: LEARNING_GOALS.de,
     proofs: {
       "ki-fuehrerschein":
         "Prüfe eine reale Aufgabe auf Eingabe, Datenrisiko und Ergebnisqualität.",
@@ -162,43 +121,7 @@ const ATLAS_COPY = {
     viewRecord: "View record",
     pathCourse: "Part of the selected path",
     progress: "Progress",
-    goals: [
-      {
-        id: "start",
-        label: "Start safely",
-        summary: "Everyday use, verification, and responsibility in sequence.",
-        courseSlugs: [
-          "ki-fuehrerschein",
-          "ki-und-gesellschaft",
-          "eu-ai-act-kurs",
-          "ai-native",
-        ],
-      },
-      {
-        id: "judge",
-        label: "Judge impact",
-        summary: "Examine examples, classify risk, and justify decisions.",
-        courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
-      },
-      {
-        id: "build",
-        label: "Build with AI",
-        summary: "Connect workflow, prompting, specification, and control.",
-        courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
-      },
-      {
-        id: "data",
-        label: "Decide with data",
-        summary:
-          "Test pipeline, infrastructure, and model behavior as a system.",
-        courseSlugs: [
-          "data-engineering-fundamentals",
-          "data-infrastructure",
-          "data-science",
-          "ai-native-operator",
-        ],
-      },
-    ],
+    goals: LEARNING_GOALS.en,
     proofs: {
       "ki-fuehrerschein":
         "Check one real task for input quality, data risk, and output quality.",
