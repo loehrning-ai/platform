@@ -147,6 +147,15 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
 // Authenticated /konto: progress cards, resources, logout wiring. The live
 // project must execute these assertions. The provider-free scaffold skips them
 // because its cookie cannot pass server-side provider validation.
+//
+// CI DOES NOT RUN THIS BLOCK. ci.yml runs test:e2e:auth-scaffold, which builds
+// provider-free: getSupabasePublicConfig() is null, every session is
+// server-side signed-out, and /konto fails closed to /login. That is
+// structural, not a gap in these assertions — the scaffold can never reach
+// authenticated DOM. The authenticated-live project that does run them needs
+// E2E_AUTH_LIVE=1 plus the nine variables in scripts/validate-e2e-auth-env.mjs,
+// i.e. a separate seeded Supabase test project. Until that exists, treat these
+// assertions as verified against source, not as continuously green.
 // ---------------------------------------------------------------------------
 
 test.describe("authenticated /konto (requires a live session)", () => {
@@ -180,9 +189,14 @@ test.describe("authenticated /konto (requires a live session)", () => {
 
   test("renders every catalog course progress card", async ({ page }) => {
     for (const { title } of COURSE_CATALOG) {
-      const card = page.locator("article").filter({
-        has: page.getByRole("heading", { level: 3, name: title }),
-      });
+      // <Card> (src/components/ui/card.tsx) renders a plain <div> here (no
+      // href passed for a course tile), not an <article> - it never has and
+      // never will render <article> for any variant. The <h3> course title
+      // sits two levels below the Card root (h3 -> the "flex items-start"
+      // header row -> the Card div itself; src/app/konto/page.tsx:257-267),
+      // so walk up from the heading rather than assume a semantic container.
+      const heading = page.getByRole("heading", { level: 3, name: title });
+      const card = heading.locator("xpath=../..");
       await expect(card, `course card "${title}" is present`).toBeVisible();
       await expect(
         card.getByText(/\d+\/\d+ Lektionen · \d+%/),
@@ -192,7 +206,11 @@ test.describe("authenticated /konto (requires a live session)", () => {
     await expect(page.getByRole("progressbar")).toHaveCount(
       COURSE_CATALOG.length,
     );
-    await expect(page.getByText(/Weiter lernen|Gut gemacht/)).toBeVisible();
+    // Two mutually exclusive "next step" Cards (page.tsx:204-248): one kicker
+    // reads copy.continueLabel ("Weiter lernen") when a next course exists,
+    // the other copy.statusLabel ("Kursstatus") when every course is
+    // complete. "Gut gemacht" is not present in account-copy.ts today.
+    await expect(page.getByText(/Weiter lernen|Kursstatus/)).toBeVisible();
   });
 
   test("has no WCAG-tagged accessibility violations", async ({ page }) => {
@@ -214,7 +232,7 @@ test.describe("authenticated /konto (requires a live session)", () => {
       "/demos",
     );
     await expect(
-      page.getByRole("link", { name: /Datenschutz & Datenverwaltung/i }),
+      page.getByRole("link", { name: /Datenschutz und Datenverwaltung/i }),
     ).toHaveAttribute("href", "/konto/datenschutz");
   });
 
@@ -225,7 +243,9 @@ test.describe("authenticated /konto (requires a live session)", () => {
     // API-level concern (src/app/auth/logout/route.ts; regression coverage).
     const logoutForm = page.locator('form[action="/auth/logout"]');
     await expect(logoutForm).toHaveAttribute("method", "post");
-    await expect(logoutForm.getByRole("button", { name: /Logout/i })).toBeVisible();
+    await expect(
+      logoutForm.getByRole("button", { name: /Abmelden/i }),
+    ).toBeVisible();
   });
 
   test("a live session redirects /login back to /konto", async ({ page }) => {
