@@ -142,6 +142,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
         ...dimension,
         name: meta.name,
         short: meta.short,
+        description: meta.description,
         ratingLabel: rating.label,
         ratingToneVar: rating.toneVar,
       };
@@ -212,13 +213,29 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
     const RecIcon = iconByName(recommendation.iconName);
     const activeStage = FOCUS_TO_STAGE[recommendation.focusDimensionId];
     const strongest = result.strengths[0];
+    const alsoStrong = result.strengths[1];
     const weakest = result.gaps[0];
+    const alsoGap = result.gaps[1];
     const StrongIcon = strongest ? dimensionIcon(strongest.iconName) : Sparkles;
     const WeakIcon = weakest ? dimensionIcon(weakest.iconName) : Target;
 
+    // A one-time staggered settle across the result's six primary blocks, not
+    // a loop: each block finishes at opacity 1 / y 0 and stays there.
+    const reveal = (step: number) => ({
+      initial: prefersReducedMotion ? false : { opacity: 0, y: 12 },
+      animate: { opacity: 1, y: 0 },
+      transition: {
+        duration: prefersReducedMotion ? 0 : 0.3,
+        delay: prefersReducedMotion ? 0 : step * 0.06,
+      },
+    });
+
     return (
       <DiagnosticFrame state="result" wide>
-        <header className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7">
+        <m.header
+          className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7"
+          {...reveal(0)}
+        >
           <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {ui.resultEyebrow}
           </p>
@@ -232,12 +249,13 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
           <p className="mt-3 max-w-[60ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
             {ui.resultIntroduction}
           </p>
-        </header>
+        </m.header>
 
-        <section
+        <m.section
           className="dark-section grid min-w-0 border-b border-border md:grid-cols-[minmax(0,0.9fr)_minmax(20rem,1.1fr)]"
           aria-label={ui.scorePlateLabel}
           data-score-plate
+          {...reveal(1)}
         >
           <div className="min-w-0 p-4 sm:p-6 md:border-r md:border-border">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
@@ -251,6 +269,9 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 / 100
               </span>
             </div>
+            <p className="mt-1 font-mono text-xs text-muted-foreground">
+              {ui.answered}: {result.answeredCount}/{result.totalQuestions}
+            </p>
             <p className="mt-5 break-words text-xl font-semibold text-foreground sm:text-2xl">
               {ui.level} {result.stageLevel}: {result.stageLabel}
             </p>
@@ -267,9 +288,12 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
               label={ui.competencyLegendLabel}
             />
           </div>
-        </section>
+        </m.section>
 
-        <div className="grid min-w-0 border-b border-foreground sm:grid-cols-2 sm:divide-x sm:divide-border">
+        <m.div
+          className="grid min-w-0 border-b border-foreground sm:grid-cols-2 sm:divide-x sm:divide-border"
+          {...reveal(2)}
+        >
           {strongest ? (
             <div className="flex min-w-0 items-center gap-3 p-4 sm:p-5">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
@@ -282,6 +306,11 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 <p className="mt-1 break-words text-base font-semibold text-foreground">
                   {strongest.name}
                 </p>
+                {alsoStrong ? (
+                  <p className="mt-1 break-words text-xs text-muted-foreground">
+                    {ui.alsoStrength}: {alsoStrong.name}
+                  </p>
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -297,12 +326,20 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 <p className="mt-1 break-words text-base font-semibold text-foreground">
                   {weakest.name}
                 </p>
+                {alsoGap ? (
+                  <p className="mt-1 break-words text-xs text-muted-foreground">
+                    {ui.alsoGap}: {alsoGap.name}
+                  </p>
+                ) : null}
               </div>
             </div>
           ) : null}
-        </div>
+        </m.div>
 
-        <section className="min-w-0 border-b border-foreground p-4 sm:p-6">
+        <m.section
+          className="min-w-0 border-b border-foreground p-4 sm:p-6"
+          {...reveal(3)}
+        >
           <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground sm:text-2xl">
             {ui.fieldsTitle}
           </h2>
@@ -312,11 +349,12 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
           <div className="mt-4 min-w-0">
             <DimensionBars dimensions={result.dimensions} />
           </div>
-        </section>
+        </m.section>
 
-        <section
+        <m.section
           className="min-w-0 border-b border-foreground bg-card p-4 sm:p-6"
           data-next-proof-panel
+          {...reveal(4)}
         >
           <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {ui.nextStep}
@@ -356,9 +394,12 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
               </div>
             </div>
           </div>
-        </section>
+        </m.section>
 
-        <section className="min-w-0 border-b border-foreground p-4 sm:p-6">
+        <m.section
+          className="min-w-0 border-b border-foreground p-4 sm:p-6"
+          {...reveal(5)}
+        >
           <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
             {ui.pathway}
           </p>
@@ -389,7 +430,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
               );
             })}
           </ol>
-        </section>
+        </m.section>
 
         <details className="group min-w-0 border-b border-foreground" data-method-limits>
           <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-foreground marker:content-none sm:px-6">

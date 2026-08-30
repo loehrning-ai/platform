@@ -30,6 +30,11 @@ export function DimensionBars({
               <div className="grid min-w-0 gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-3">
                 <span className="min-w-0 break-words text-sm font-semibold text-foreground">
                   {dim.name}
+                  {dim.description ? (
+                    <span className="mt-0.5 block break-words text-xs font-normal text-muted-foreground">
+                      {dim.description}
+                    </span>
+                  ) : null}
                 </span>
                 <span className="break-words text-xs text-muted-foreground sm:shrink-0 sm:text-right">
                   <span className="font-semibold text-foreground">
