@@ -210,7 +210,13 @@ describe("progress sync response policy", () => {
     },
   );
 
-  it("respects Retry-After for rate limiting", async () => {
+  it("treats a rate-limited write as retryable and leaves timing to the backoff", async () => {
+    // /api/progress answers both of its 429s without a Retry-After header,
+    // and consumeRateLimit() returns only a boolean, so it cannot emit an
+    // accurate one. The client therefore does not parse the header at all;
+    // scheduleRetry()'s exponential backoff owns retry timing. A header is
+    // sent here to prove it is deliberately ignored rather than accidentally
+    // unhandled.
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response("{}", {
         status: 429,
@@ -222,7 +228,6 @@ describe("progress sync response policy", () => {
     );
     await expect(saveRemoteProgress(ACCOUNT_A, progress)).resolves.toEqual({
       kind: "retry",
-      retryAfterMs: 7_000,
     });
   });
 
