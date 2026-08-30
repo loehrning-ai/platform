@@ -77,7 +77,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     metadata: {
       title: "Über Tim Löhr",
       description:
-        "Profil von Tim Löhr, Kurator von loehrning.ai: berufliche Stationen, Ausbildung, redaktionelle Arbeitsweise und Kontakt.",
+        "Profil von Tim Löhr, Kurator von loehrning.ai: berufliche Stationen, Ausbildung und Kontakt.",
       socialTitle: "Tim Löhr · Kurator von loehrning.ai",
       portraitAlt: "Tim Löhr vor der Golden Gate Bridge",
     },
@@ -213,7 +213,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     metadata: {
       title: "About Tim Löhr",
       description:
-        "Profile of Tim Löhr, curator of loehrning.ai: previous roles, education, editorial practice, and contact details.",
+        "Profile of Tim Löhr, curator of loehrning.ai: previous roles, education, and contact details.",
       socialTitle: "Tim Löhr · Curator of loehrning.ai",
       portraitAlt: "Tim Löhr in front of the Golden Gate Bridge",
     },

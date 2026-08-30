@@ -68,7 +68,7 @@ export const ENTRY_COPY = {
       {
         question: "Wer verantwortet die Inhalte?",
         answerBeforeLink:
-          "Tim Löhr entwickelt und prüft die Plattform. Beruflicher Hintergrund, redaktioneller Ansatz und Kontakt stehen auf der ",
+          "Tim Löhr entwickelt und prüft die Plattform. Beruflicher Hintergrund und Kontakt stehen auf der ",
         linkLabel: "Seite über Tim Löhr",
         answerAfterLink: ".",
       },
@@ -159,7 +159,7 @@ export const ENTRY_COPY = {
       {
         question: "Who is responsible for the content?",
         answerBeforeLink:
-          "Tim Löhr develops and reviews the platform. His professional background, editorial approach, and contact details are on the ",
+          "Tim Löhr develops and reviews the platform. His professional background and contact details are on the ",
         linkLabel: "About Tim Löhr page",
         answerAfterLink: ".",
       },
