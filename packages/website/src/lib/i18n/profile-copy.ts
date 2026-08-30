@@ -66,6 +66,7 @@ type ProfileCopy = Readonly<{
     linksLabel: string;
     email: string;
     linkedIn: string;
+    linkedInCompany: string;
     github: string;
     feedbackPrefix: string;
     feedbackLabel: string;
@@ -204,6 +205,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linksLabel: "Kontaktwege",
       email: "E-Mail schreiben",
       linkedIn: "Auf LinkedIn schreiben",
+      linkedInCompany: "loehrning.ai auf LinkedIn",
       github: "GitHub-Profil öffnen",
       feedbackPrefix: "Inhaltliche Fehler lassen sich auch über",
       feedbackLabel: "das Feedback-Formular",
@@ -339,6 +341,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linksLabel: "Contact methods",
       email: "Send an email",
       linkedIn: "Message me on LinkedIn",
+      linkedInCompany: "loehrning.ai on LinkedIn",
       github: "Open GitHub profile",
       feedbackPrefix: "Content errors can also be reported through",
       feedbackLabel: "the feedback form",

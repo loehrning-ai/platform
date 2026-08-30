@@ -8,6 +8,7 @@ import {
   absoluteUrl,
   ENTITY_IDS,
   GITHUB_ORG,
+  LOEHRNING_LINKEDIN_URL,
   ORGANIZATION_SAME_AS_URLS,
   PERSON_SAME_AS_URLS,
   SITE_ENTITY,
@@ -126,8 +127,11 @@ describe("entity-specific sameAs URLs", () => {
     expect(PERSON_SAME_AS_URLS).not.toContain(GITHUB_ORG.url);
   });
 
-  it("keeps only the live GitHub organization on the Organization entity", () => {
-    expect([...ORGANIZATION_SAME_AS_URLS]).toEqual([GITHUB_ORG.url]);
+  it("keeps only the live GitHub organization and company LinkedIn on the Organization entity", () => {
+    expect([...ORGANIZATION_SAME_AS_URLS]).toEqual([
+      GITHUB_ORG.url,
+      LOEHRNING_LINKEDIN_URL,
+    ]);
     expect(ORGANIZATION_SAME_AS_URLS).not.toContain(
       TIM_ENTITY.personalGithubUrl,
     );

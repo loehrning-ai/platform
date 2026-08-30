@@ -7,7 +7,7 @@ import { CredibilityLogos } from "@/components/about/credibility-logos";
 import { Credentials } from "@/components/about/credentials";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { TIM_ENTITY } from "@/lib/seo/entity";
+import { LOEHRNING_LINKEDIN_URL, TIM_ENTITY } from "@/lib/seo/entity";
 
 const FACT_WIDTHS = ["sm:flex-[0.8]", "sm:flex-[1.4]", "sm:flex-1"] as const;
 
@@ -15,6 +15,7 @@ const CONTACT_STYLES = [
   "bg-brand-acid/45",
   "bg-brand-lilac/55",
   "bg-brand-sky/50",
+  "bg-brand-pink/50",
 ] as const;
 
 export function UeberMichContent({ locale }: { readonly locale: Locale }) {
@@ -37,6 +38,13 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
     {
       href: TIM_ENTITY.linkedInUrl,
       label: copy.contact.linkedIn,
+      detail: "linkedin.com",
+      Icon: Linkedin,
+      external: true,
+    },
+    {
+      href: LOEHRNING_LINKEDIN_URL,
+      label: copy.contact.linkedInCompany,
       detail: "linkedin.com",
       Icon: Linkedin,
       external: true,
