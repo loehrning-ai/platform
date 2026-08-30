@@ -103,6 +103,14 @@ Two properties of that ban are easy to misread:
 
 That route stays deliberately unused. These surfaces are the platform's dense, conventional idiom; elevating them because a primitive makes it available would reintroduce the per-surface divergence the design-system reunification removed. Change the contract first, in the open, if the policy should change.
 
+### The account catalog is one page, not a route tree
+
+`/konto` stays a single route with labelled in-page sections. It is not split into `/konto/kurse`, `/konto/weiterlernen` and `/konto/nachweise`.
+
+Not for safety: `PROTECTED_PATHS` matches `/konto/:path*`, so sub-routes would inherit the auth gate, `noindex, nofollow, noarchive` and `private, no-store` automatically. The reason is that the split is not warranted. The catalog holds ten courses; filter and sort carry that on one page, while three routes would each need an English mirror, a page-inventory row, metadata and tests, and would strand a learner with no records on an empty `/konto/nachweise`.
+
+"Account settings reachable from persistent navigation" is therefore satisfied in-page. A second `<nav>` must carry its own distinct accessible name: `getByRole("navigation", { name: "Account privacy" })` is a single-match query and an unnamed or similarly-named sibling makes it ambiguous and trips the axe landmark rule. Section labels must also avoid colliding with `continueLabel` ("Weiter lernen") and `resume` ("Weiterlernen"), which differ only by a space and are both asserted by exact-text queries.
+
 ### Account progress presents evidence, not rewards
 
 `konto/page.test.tsx` asserts no `XP`, `streak` or `badge` appears in rendered English text, even though `UnifiedProgress` carries all three fields. The ban stands: an account page states lessons completed, percentage, record earned, and outcomes covered — every number traceable to evidence-gated progress. This is the audit's "compact evidence rows and project ledgers instead of reward cards" made executable, and it is why the stored gamification fields remain export-only.
