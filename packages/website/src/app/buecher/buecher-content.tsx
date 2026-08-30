@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, Eye, Lock } from "lucide-react";
 import { books, getBookCover, type Book } from "@/lib/books";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import {
   BOOK_PAGE_COPY,
@@ -81,9 +82,9 @@ export function BuecherContent({
               className={`${headingFontClassName} relative mt-5 max-w-[14ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground`}
             >
               {copy.heading}{" "}
-              <span className="box-decoration-clone bg-brand-acid/80 px-1 text-foreground">
+              <HighlightedText colorVar="--color-brand-acid">
                 {copy.headingAccent}
-              </span>
+              </HighlightedText>
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {copy.introduction(catalogBooks.length)}

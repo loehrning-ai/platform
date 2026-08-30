@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Workshop } from "@/lib/workshops";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
 
@@ -49,9 +50,9 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             </p>
             <h1 className="relative mt-5 max-w-[15ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground">
               {copy.headingLead}{" "}
-              <span className="box-decoration-clone bg-brand-sky/80 px-1 text-foreground">
+              <HighlightedText colorVar="--color-brand-sky">
                 {copy.headingSecond}
-              </span>
+              </HighlightedText>
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {copy.introduction(workshops.length)}
