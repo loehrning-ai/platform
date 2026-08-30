@@ -160,7 +160,7 @@ export function LessonProofCheckpoint({
     return (
       <section
         data-lesson-proof-checkpoint="complete"
-        className="border border-border bg-background p-4"
+        className="border border-border bg-brand-teal/10 p-4"
         aria-live="polite"
       >
         <p className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-risk-green">

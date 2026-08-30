@@ -64,7 +64,7 @@ export function PathwayStageBanner({
       role="note"
       aria-label={copy.regionLabel}
       className={cn(
-        "flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-y border-border py-4",
+        "flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-y border-border bg-brand-sky/10 py-4",
         className,
       )}
     >

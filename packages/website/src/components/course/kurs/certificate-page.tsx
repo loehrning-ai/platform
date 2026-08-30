@@ -287,7 +287,7 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             </Link>
 
             {/* Certificate Preview */}
-            <div className="border-2 border-brand-orange bg-card p-5 text-center sm:p-8">
+            <div className="border-2 border-brand-orange bg-brand-acid/15 p-5 text-center sm:p-8">
               <GraduationCap className="mx-auto h-12 w-12 text-brand-orange" />
               <h1 className="mt-4 max-w-full break-words text-3xl font-bold tracking-[-0.03em] [overflow-wrap:anywhere]">
                 {config.certificateTitle}
