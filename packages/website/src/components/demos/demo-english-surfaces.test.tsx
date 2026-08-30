@@ -80,7 +80,8 @@ describe("English demo surfaces", () => {
       screen.getByRole("button", { name: "Show pre-send controls" }),
     );
     expect(screen.getByText(/Document the lawful basis/)).toBeInTheDocument();
-    expect(screen.getByText("NOT SENT")).toBeInTheDocument();
+    // Default score threshold (70) qualifies Beta's 74/100 sample score.
+    expect(screen.getByText(/QUALIFIED . NOT SENT/)).toBeInTheDocument();
   });
 
   it("returns sourced contract copy and an explicit no-match state", () => {

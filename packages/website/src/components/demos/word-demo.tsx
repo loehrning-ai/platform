@@ -19,6 +19,16 @@ const INITIAL: FormState = {
   zeitraum: "Juli-September 2026",
 };
 
+/**
+ * The budget field feeds straight into the generated letter's currency line
+ * (Number(form.budget) formatted). An empty or non-numeric value would
+ * otherwise generate a letter reading "NaN €" with no indication why.
+ */
+function isValidBudget(value: string): boolean {
+  const n = Number(value);
+  return value.trim() !== "" && Number.isFinite(n) && n > 0;
+}
+
 type StepState = "idle" | "running" | "done";
 
 /**
@@ -90,10 +100,15 @@ function WordDemoGerman() {
   const {
     isGenerating,
     reducedMotion,
-    generate: handleGenerate,
+    generate,
     generated,
     stepState,
   } = useStagedGeneration();
+  const budgetValid = isValidBudget(form.budget);
+  const handleGenerate = () => {
+    if (!budgetValid) return;
+    generate();
+  };
 
   const fileName = useMemo(
     () =>
@@ -199,10 +214,30 @@ function WordDemoGerman() {
                     width: "100%",
                     minWidth: 0,
                   }}
+                  aria-invalid={k === "budget" && !budgetValid}
+                  aria-describedby={
+                    k === "budget" && !budgetValid
+                      ? "word-budget-error"
+                      : undefined
+                  }
                 />
               </label>
             );
           })}
+          {!budgetValid ? (
+            <span
+              id="word-budget-error"
+              role="alert"
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: "var(--color-destructive)",
+                marginTop: -6,
+              }}
+            >
+              Rahmenwert muss eine Zahl größer 0 sein.
+            </span>
+          ) : null}
 
           {/* Template card */}
           <div
@@ -307,35 +342,39 @@ function WordDemoGerman() {
           <button
             type="button"
             onClick={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || !budgetValid}
             style={{
               marginTop: 4,
               minHeight: 44,
               padding: "10px 14px",
-              background: isGenerating
-                ? DEMO.leinen
-                : "var(--color-brand-orange)",
-              color: isGenerating ? DEMO.schiefer : "#fff",
+              background:
+                isGenerating || !budgetValid
+                  ? DEMO.leinen
+                  : "var(--color-brand-orange)",
+              color: isGenerating || !budgetValid ? DEMO.schiefer : "#fff",
               border: `2px solid ${DEMO.ink}`,
-              boxShadow: isGenerating ? "none" : `3px 3px 0 0 ${DEMO.ink}`,
+              boxShadow:
+                isGenerating || !budgetValid
+                  ? "none"
+                  : `3px 3px 0 0 ${DEMO.ink}`,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              cursor: isGenerating ? "not-allowed" : "pointer",
+              cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
               transition: reducedMotion
                 ? "none"
                 : "transform 0.12s, box-shadow 0.12s",
               width: "100%",
             }}
             onMouseDown={(e) => {
-              if (reducedMotion || isGenerating) return;
+              if (reducedMotion || isGenerating || !budgetValid) return;
               e.currentTarget.style.transform = "translate(2px, 2px)";
               e.currentTarget.style.boxShadow = `1px 1px 0 0 ${DEMO.ink}`;
             }}
             onMouseUp={(e) => {
-              if (reducedMotion || isGenerating) return;
+              if (reducedMotion || isGenerating || !budgetValid) return;
               e.currentTarget.style.transform = "";
               e.currentTarget.style.boxShadow = `3px 3px 0 0 ${DEMO.ink}`;
             }}
@@ -627,10 +666,15 @@ function WordDemoEnglish() {
   const {
     isGenerating,
     reducedMotion,
-    generate: handleGenerate,
+    generate,
     generated,
     stepState,
   } = useStagedGeneration();
+  const budgetValid = isValidBudget(form.budget);
+  const handleGenerate = () => {
+    if (!budgetValid) return;
+    generate();
+  };
   const fileName = useMemo(
     () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
     [form.kunde],
@@ -738,9 +782,29 @@ function WordDemoEnglish() {
                   font: "inherit",
                   fontSize: 12,
                 }}
+                aria-invalid={key === "budget" && !budgetValid}
+                aria-describedby={
+                  key === "budget" && !budgetValid
+                    ? "word-budget-error-en"
+                    : undefined
+                }
               />
             </label>
           ))}
+          {!budgetValid ? (
+            <span
+              id="word-budget-error-en"
+              role="alert"
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: "var(--color-destructive)",
+                marginTop: -6,
+              }}
+            >
+              Planning amount must be a number greater than 0.
+            </span>
+          ) : null}
           <div style={{ paddingTop: 2, paddingBottom: 2 }}>
             <div
               style={{
@@ -787,20 +851,26 @@ function WordDemoEnglish() {
           <button
             type="button"
             onClick={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || !budgetValid}
             style={{
               minHeight: 44,
               border: `2px solid ${DEMO.ink}`,
-              background: isGenerating ? DEMO.leinen : "var(--color-brand-orange)",
-              color: isGenerating ? DEMO.schiefer : "white",
-              boxShadow: isGenerating ? "none" : `3px 3px 0 ${DEMO.ink}`,
+              background:
+                isGenerating || !budgetValid
+                  ? DEMO.leinen
+                  : "var(--color-brand-orange)",
+              color: isGenerating || !budgetValid ? DEMO.schiefer : "white",
+              boxShadow:
+                isGenerating || !budgetValid
+                  ? "none"
+                  : `3px 3px 0 ${DEMO.ink}`,
               padding: "10px 14px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              cursor: isGenerating ? "not-allowed" : "pointer",
+              cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
             }}
           >
             {isGenerating

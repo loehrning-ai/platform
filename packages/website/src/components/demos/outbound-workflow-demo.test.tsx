@@ -134,6 +134,31 @@ describe("<OutboundWorkflowDemo>", () => {
     ).toBeInTheDocument();
   });
 
+  it("blocks the simulated send once the score threshold exceeds every lead's score", () => {
+    // The intent score was previously display-only. Raising the threshold
+    // above 91 (the highest sample score) demonstrates the failure beat: a
+    // pipeline that reaches its final stage and sends nothing.
+    setReducedMotion(true);
+    render(<OutboundWorkflowDemo />);
+
+    expect(screen.getByText("● Versand simuliert 09:14")).toBeInTheDocument();
+
+    const slider = screen.getByRole("slider", {
+      name: "Minimale Score-Schwelle für den Versand",
+    });
+    fireEvent.change(slider, { target: { value: "95" } });
+
+    expect(
+      screen.getByText("⛔ Nicht gesendet: unter Score-Schwelle"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("● Versand simuliert 09:14"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("touched_at = 2026-04-21 09:14:03"),
+    ).not.toBeInTheDocument();
+  });
+
   it("switches the lead card, address and email body when a different picker button is clicked", () => {
     setReducedMotion(true);
     render(<OutboundWorkflowDemo />);

@@ -130,4 +130,32 @@ describe("<WordDemo>", () => {
       vi.useRealTimers();
     }
   });
+
+  it("blocks generation and names the problem when the budget is not a valid number", () => {
+    // The budget flows straight into the generated letter's currency line
+    // (Number(form.budget) formatted) — an invalid value must be caught
+    // before generation, not silently rendered as "NaN €".
+    render(<WordDemo />);
+
+    fireEvent.change(screen.getByLabelText("Rahmenwert"), {
+      target: { value: "abc" },
+    });
+
+    const button = screen.getByRole("button", {
+      name: /Projektbrief erstellen/,
+    });
+    expect(button).toBeDisabled();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Rahmenwert muss eine Zahl größer 0 sein.",
+    );
+
+    fireEvent.click(button);
+    expect(screen.queryByText(/SIMULIERT/)).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Rahmenwert"), {
+      target: { value: "50000" },
+    });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(button).not.toBeDisabled();
+  });
 });

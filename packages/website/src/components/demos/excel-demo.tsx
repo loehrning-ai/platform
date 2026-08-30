@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/locale";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
@@ -88,12 +88,35 @@ const PIVOT_ROWS: readonly {
   { region: "Süd", stk: 274, umsatz: 1_328_900, anteil: 20 },
 ];
 
-const FORECAST_ROWS = [
-  { w: "KW 17", pred: 492, lo: 458, hi: 526 },
-  { w: "KW 18", pred: 548, lo: 498, hi: 598 },
-  { w: "KW 19", pred: 612, lo: 544, hi: 680 },
-  { w: "KW 20", pred: 684, lo: 590, hi: 778 },
-] as const;
+const FORECAST_WEEKS = ["KW 17", "KW 18", "KW 19", "KW 20"] as const;
+const FORECAST_BASE = 492;
+const FORECAST_DEFAULT_RATE = 8;
+const FORECAST_CHART_MAX = 820;
+
+interface ForecastRow {
+  readonly w: (typeof FORECAST_WEEKS)[number];
+  readonly pred: number;
+  readonly lo: number;
+  readonly hi: number;
+}
+
+function computeForecast(growthRatePercent: number): readonly ForecastRow[] {
+  const rate = growthRatePercent / 100;
+  let pred = FORECAST_BASE;
+  return FORECAST_WEEKS.map((w, i) => {
+    if (i > 0) pred *= 1 + rate;
+    // Uncertainty compounds with both elapsed weeks and the assumed rate
+    // itself — a higher growth assumption is not just a higher forecast, it
+    // is a less certain one.
+    const uncertainty = pred * (0.05 + i * 0.02 + rate * 0.35);
+    return {
+      w,
+      pred: Math.round(pred),
+      lo: Math.round(Math.max(0, pred - uncertainty)),
+      hi: Math.round(pred + uncertainty),
+    };
+  });
+}
 
 function formatCurrency(value: number, locale: Locale): string {
   const formatted = value.toLocaleString(locale === "de" ? "de-DE" : "en-GB");
@@ -910,12 +933,103 @@ function PivotOutput({ locale, text }: OutputProps) {
 }
 
 function ForecastOutput({ locale, text }: OutputProps) {
-  const max = 820;
+  const [growthRate, setGrowthRate] = useState(FORECAST_DEFAULT_RATE);
+  const max = FORECAST_CHART_MAX;
+  const rows = useMemo(() => computeForecast(growthRate), [growthRate]);
+  const exceedsRange = rows.some((r) => r.hi > max);
+
   return (
     <OutputShell
       label={text("Forecast · KW 17–20", "Forecast · weeks 17–20")}
       caption={text("Konfidenz 90 %", "90% confidence")}
     >
+      <label
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+          marginBottom: 14,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            gap: 8,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: DEMO.schiefer,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            {text("Angenommenes Wachstum / Woche", "Assumed growth / week")}
+          </span>
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 13,
+              fontWeight: 800,
+              color: exceedsRange
+                ? "var(--color-destructive)"
+                : "var(--color-brand-orange)",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {locale === "de"
+              ? `+${growthRate} %`
+              : `+${growthRate}%`}
+          </span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={25}
+          step={1}
+          value={growthRate}
+          onChange={(e) => setGrowthRate(Number(e.target.value))}
+          aria-label={text(
+            "Angenommenes wöchentliches Wachstum in Prozent",
+            "Assumed weekly growth in percent",
+          )}
+          aria-valuemin={0}
+          aria-valuemax={25}
+          aria-valuenow={growthRate}
+          style={{
+            minHeight: 44,
+            width: "100%",
+            accentColor: "var(--color-brand-orange)",
+          }}
+        />
+      </label>
+
+      {exceedsRange ? (
+        <p
+          role="alert"
+          style={{
+            margin: "0 0 14px",
+            padding: "8px 10px",
+            fontSize: 12,
+            lineHeight: 1.5,
+            fontWeight: 700,
+            color: "var(--color-destructive)",
+            background: "rgba(153,27,27,0.08)",
+            border: "1px solid var(--color-destructive)",
+          }}
+        >
+          {text(
+            `Bei +${growthRate} % pro Woche übersteigt die obere Schätzung für KW 20 den sinnvollen Darstellungsbereich. Eine lineare Fortschreibung wird bei diesem Wachstum unzuverlässig.`,
+            `At +${growthRate}% per week the upper estimate for week 20 exceeds a sensible display range. A linear extrapolation stops being trustworthy at this rate.`,
+          )}
+        </p>
+      ) : null}
+
       <div
         style={{
           position: "relative",
@@ -948,10 +1062,10 @@ function ForecastOutput({ locale, text }: OutputProps) {
           />
         ))}
 
-        {FORECAST_ROWS.map((r) => {
-          const predH = (r.pred / max) * 100;
-          const loH = (r.lo / max) * 100;
-          const hiH = (r.hi / max) * 100;
+        {rows.map((r) => {
+          const predH = Math.min(100, (r.pred / max) * 100);
+          const loH = Math.min(100, (r.lo / max) * 100);
+          const hiH = Math.min(100, (r.hi / max) * 100);
           return (
             <div
               key={r.w}
@@ -1057,8 +1171,14 @@ function ForecastOutput({ locale, text }: OutputProps) {
           }}
         >
           {text("Trend", "Trend")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {locale === "de" ? "+7,9 %" : "+7.9%"}
+          <span
+            style={{
+              color: exceedsRange
+                ? "var(--color-destructive)"
+                : "var(--color-brand-orange)",
+            }}
+          >
+            {locale === "de" ? `+${growthRate} %` : `+${growthRate}%`}
           </span>
           /{text("Woche", "week")}
         </div>

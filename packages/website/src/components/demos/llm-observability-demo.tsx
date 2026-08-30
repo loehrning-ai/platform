@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type JSX } from "react";
-import { cn } from "@/lib/utils";
+import { useState, type CSSProperties, type JSX } from "react";
+import { DEMO } from "@/lib/demo-tokens";
+import { DEMO_HEIGHT } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
@@ -117,10 +118,15 @@ const ENGLISH_EVAL_ROWS: readonly EvalRow[] = [
   },
 ];
 
-const SCORE_COLORS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
-  hoch: "text-[#166534] border-[#166534] bg-[#dcfce7]",
-  mittel: "text-brand-amber border-brand-amber bg-brand-amber/10",
-  niedrig: "text-destructive border-destructive bg-destructive/10",
+// Fixed, non-theme-reactive pairings — this engine renders a constant light
+// workbench surface regardless of site theme (matching every sibling DEMO.*
+// engine), so status colors are literal hex, not CSS custom properties.
+const SCORE_COLORS: Readonly<
+  Record<"hoch" | "mittel" | "niedrig", { fg: string; bg: string }>
+> = {
+  hoch: { fg: "#166534", bg: "#dcfce7" },
+  mittel: { fg: "#78350f", bg: "rgba(120,53,15,0.12)" },
+  niedrig: { fg: "#991b1b", bg: "rgba(153,27,27,0.1)" },
 };
 
 const SCORE_LABELS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
@@ -138,12 +144,23 @@ function ScoreChip({
   readonly label: string;
   readonly locale: Locale;
 }): JSX.Element {
+  const c = SCORE_COLORS[score];
   return (
     <span
-      className={cn(
-        "inline-flex items-center gap-1 border px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em]",
-        SCORE_COLORS[score],
-      )}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        border: `1px solid ${c.fg}`,
+        background: c.bg,
+        color: c.fg,
+        padding: "2px 8px",
+        fontFamily: DEMO.font.mono,
+        fontSize: 12,
+        fontWeight: 700,
+        textTransform: "uppercase",
+        letterSpacing: "0.1em",
+      }}
     >
       {label}:{" "}
       {locale === "de"
@@ -169,13 +186,41 @@ export function LlmObservabilityDemo(): JSX.Element {
 
   return (
     <div
-      className="flex flex-col gap-5"
+      data-demo-id="llm-observability"
       role="region"
       aria-label={text(
         "LLM-Qualitätsmessung Praxisbeispiel",
         "LLM quality measurement practice example",
       )}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+        fontFamily: DEMO.font.sans,
+        color: DEMO.ink,
+        minHeight: DEMO_HEIGHT,
+        width: "100%",
+        minWidth: 0,
+      }}
     >
+      <style>{`
+        [data-demo-id="llm-observability"] .demo-llmobs-kpis {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        @media (min-width: 640px) {
+          [data-demo-id="llm-observability"] .demo-llmobs-kpis {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        @media (min-width: 768px) {
+          [data-demo-id="llm-observability"] .demo-llmobs-kpis {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+        }
+      `}</style>
+
       <SimulationDisclosure>
         {text(
           "Dieses Praxisbeispiel zeigt keine Live-Telemetrie. Alle Eval-Scores und Drift-Indikatoren sind feste Beispieldaten.",
@@ -184,47 +229,81 @@ export function LlmObservabilityDemo(): JSX.Element {
       </SimulationDisclosure>
 
       {/* Summary KPIs */}
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
-        {[
-          {
-            label: text("Eval-Läufe (Beispiel)", "Evaluation runs (sample)"),
-            value: "4",
-            sub: text("Seed-Szenarien", "Seeded scenarios"),
-            accent: false,
-          },
-          {
-            label: text("Drift-Ereignisse", "Drift flags"),
-            value: "1",
-            sub: text("Flagge gesetzt", "One flag set"),
-            accent: true,
-          },
-          {
-            label: text("Auto/Mensch Abweichung", "Automated/human mismatch"),
-            value: "2",
-            sub: text("von 3 bewertet", "of 3 reviewed"),
-            accent: true,
-          },
-          {
-            label: text("Ø Auto-Score", "Average automated rating"),
-            value: text("hoch", "high"),
-            sub: text("3× hoch, 1× mittel", "3 high, 1 medium"),
-            accent: false,
-          },
-        ].map(({ label, value, sub, accent }) => (
+      <div className="demo-llmobs-kpis">
+        {(
+          [
+            {
+              label: text("Eval-Läufe (Beispiel)", "Evaluation runs (sample)"),
+              value: "4",
+              sub: text("Seed-Szenarien", "Seeded scenarios"),
+              accent: false,
+            },
+            {
+              label: text("Drift-Ereignisse", "Drift flags"),
+              value: "1",
+              sub: text("Flagge gesetzt", "One flag set"),
+              accent: true,
+            },
+            {
+              label: text(
+                "Auto/Mensch Abweichung",
+                "Automated/human mismatch",
+              ),
+              value: "2",
+              sub: text("von 3 bewertet", "of 3 reviewed"),
+              accent: true,
+            },
+            {
+              label: text("Ø Auto-Score", "Average automated rating"),
+              value: text("hoch", "high"),
+              sub: text("3× hoch, 1× mittel", "3 high, 1 medium"),
+              accent: false,
+            },
+          ] as const
+        ).map(({ label, value, sub, accent }) => (
           <div
             key={label}
-            className={cn(
-              "border border-l-[3px] bg-background p-3.5",
-              accent ? "border-l-brand-amber" : "border-l-foreground/30",
-            )}
+            style={{
+              minWidth: 0,
+              border: `1px solid ${DEMO.leinen}`,
+              borderLeft: `3px solid ${accent ? DEMO.statusAmber : DEMO.schiefer}`,
+              background: DEMO.birke,
+              padding: 14,
+            }}
           >
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.14em",
+                color: DEMO.schiefer,
+              }}
+            >
               {label}
             </div>
-            <div className="mt-1 font-mono text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
+            <div
+              style={{
+                marginTop: 4,
+                fontFamily: DEMO.font.mono,
+                fontSize: 20,
+                fontWeight: 700,
+                lineHeight: 1.1,
+                letterSpacing: "-0.02em",
+                color: DEMO.ink,
+              }}
+            >
               {value}
             </div>
-            <div className="mt-1 font-mono text-xs text-muted-foreground">
+            <div
+              style={{
+                marginTop: 4,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: DEMO.schiefer,
+              }}
+            >
               {sub}
             </div>
           </div>
@@ -233,10 +312,20 @@ export function LlmObservabilityDemo(): JSX.Element {
 
       {/* Eval row picker */}
       <div>
-        <div className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <div
+          style={{
+            marginBottom: 8,
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: "var(--color-brand-orange)",
+          }}
+        >
           {text("Eval-Szenarien (Beispiele)", "Evaluation scenarios (samples)")}
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {rows.map((row) => {
             const active = selectedId === row.id;
             return (
@@ -245,27 +334,75 @@ export function LlmObservabilityDemo(): JSX.Element {
                 type="button"
                 onClick={() => setSelectedId(row.id)}
                 aria-pressed={active}
-                className={cn(
-                  "flex min-h-11 items-start justify-between gap-3 border p-3 text-left transition-colors",
-                  active
-                    ? "border-brand-orange bg-foreground text-background"
-                    : "border-border bg-card/60 text-foreground hover:border-foreground",
-                )}
+                style={{
+                  display: "flex",
+                  minHeight: 44,
+                  alignItems: "flex-start",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
+                  background: active ? DEMO.ink : DEMO.birke,
+                  color: active ? DEMO.kalk : DEMO.ink,
+                  padding: 12,
+                  textAlign: "left",
+                  cursor: "pointer",
+                  transition: "background-color 120ms, border-color 120ms",
+                }}
               >
-                <div className="min-w-0 flex-1">
-                  <div className="break-words text-[12px] font-bold leading-[1.35] tracking-[-0.01em]">
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div
+                    style={{
+                      overflowWrap: "anywhere",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      lineHeight: 1.35,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
                     {row.prompt}
                   </div>
                 </div>
-                <div className="flex shrink-0 flex-col items-end gap-1">
+                <div
+                  style={{
+                    display: "flex",
+                    flexShrink: 0,
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: 4,
+                  }}
+                >
                   {row.driftFlag && (
-                    <span className="border border-brand-amber bg-brand-amber/10 px-1.5 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
+                    <span
+                      style={{
+                        border: `1px solid ${DEMO.statusAmber}`,
+                        background: "rgba(234,179,8,0.12)",
+                        color: DEMO.statusAmber,
+                        padding: "1px 6px",
+                        fontFamily: DEMO.font.mono,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.1em",
+                      }}
+                    >
                       DRIFT
                     </span>
                   )}
                   {row.humanScore !== null &&
                     row.humanScore !== row.autoScore && (
-                      <span className="border border-destructive bg-destructive/10 px-1.5 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-destructive">
+                      <span
+                        style={{
+                          border: `1px solid ${DEMO.statusRed}`,
+                          background: "rgba(239,68,68,0.12)",
+                          color: DEMO.statusRed,
+                          padding: "1px 6px",
+                          fontFamily: DEMO.font.mono,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                        }}
+                      >
                         {text("DIVERGENZ", "MISMATCH")}
                       </span>
                     )}
@@ -277,14 +414,43 @@ export function LlmObservabilityDemo(): JSX.Element {
       </div>
 
       {/* Selected row detail */}
-      <div className="border border-border bg-background p-4">
-        <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+      <div
+        style={{
+          border: `1px solid ${DEMO.leinen}`,
+          background: DEMO.birke,
+          padding: 16,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: DEMO.schiefer,
+          }}
+        >
           {text("Beispiel-Output", "Sample output")}
         </div>
-        <p className="mt-2 text-[13px] leading-[1.7] text-foreground">
+        <p
+          style={{
+            marginTop: 8,
+            fontSize: 13,
+            lineHeight: 1.7,
+            color: DEMO.ink,
+          }}
+        >
           {selected.output}
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div
+          style={{
+            marginTop: 16,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+          }}
+        >
           <ScoreChip
             score={selected.autoScore}
             label={text("Auto-Eval", "Automated evaluation")}
@@ -297,49 +463,121 @@ export function LlmObservabilityDemo(): JSX.Element {
               locale={locale}
             />
           ) : (
-            <span className="border border-border px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+            <span
+              style={{
+                border: `1px solid ${DEMO.leinen}`,
+                padding: "2px 8px",
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: DEMO.schiefer,
+              }}
+            >
               {text("Mensch: ausstehend", "Human review: pending")}
             </span>
           )}
           {selected.driftFlag && (
-            <span className="border border-brand-amber bg-brand-amber/10 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
+            <span
+              style={{
+                border: `1px solid ${DEMO.statusAmber}`,
+                background: "rgba(234,179,8,0.12)",
+                color: DEMO.statusAmber,
+                padding: "2px 8px",
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+              }}
+            >
               {text("DRIFT-INDIKATOR AKTIV", "DRIFT FLAG ACTIVE")}
             </span>
           )}
         </div>
-        <div className="mt-3 border-l-2 border-border bg-card/30 p-3">
-          <p className="text-[12px] leading-[1.6] text-muted-foreground">
+        <div
+          style={{
+            marginTop: 12,
+            borderLeft: `2px solid ${DEMO.leinen}`,
+            background: "rgba(11,9,8,0.03)",
+            padding: 12,
+          }}
+        >
+          <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.schiefer }}>
             {selected.note}
           </p>
         </div>
       </div>
 
       {/* Failure-mode beat */}
-      <div className="border border-border bg-card/10 p-4">
+      <div
+        style={{
+          border: `1px solid ${DEMO.leinen}`,
+          background: "rgba(11,9,8,0.02)",
+          padding: 16,
+        }}
+      >
         <button
           type="button"
           onClick={() => setShowFailureBeat((v) => !v)}
-          className="min-h-11 w-full text-left"
           aria-expanded={showFailureBeat}
+          style={
+            {
+              all: "unset",
+              display: "block",
+              minHeight: 44,
+              width: "100%",
+              cursor: "pointer",
+              boxSizing: "border-box",
+            } as CSSProperties
+          }
         >
-          <div className="flex items-center justify-between gap-2">
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <div
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.14em",
+                color: "var(--color-brand-orange)",
+              }}
+            >
               {text(
                 "Grenzfall: Was passiert, wenn Auto-Eval und Mensch sich widersprechen?",
                 "Boundary case: what happens when automated and human ratings disagree?",
               )}
             </div>
             <span
-              className="shrink-0 font-mono text-xs text-muted-foreground"
               aria-hidden="true"
+              style={{
+                flexShrink: 0,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: DEMO.schiefer,
+              }}
             >
               {showFailureBeat ? "▲" : "▼"}
             </span>
           </div>
         </button>
         {showFailureBeat && (
-          <div className="mt-4 flex flex-col gap-3">
-            <p className="text-[13px] leading-[1.6] text-foreground">
+          <div
+            style={{
+              marginTop: 16,
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: DEMO.ink }}>
               {locale === "de"
                 ? `In ${divergenceRows.length} von ${rows.filter((r) => r.humanScore !== null).length} bewerteten Beispielen widerspricht die menschliche Einschätzung dem automatischen Score:`
                 : `Human review disagrees with the automated score in ${divergenceRows.length} of ${rows.filter((r) => r.humanScore !== null).length} reviewed examples:`}
@@ -347,12 +585,23 @@ export function LlmObservabilityDemo(): JSX.Element {
             {divergenceRows.map((row) => (
               <div
                 key={row.id}
-                className="border border-destructive/30 bg-destructive/5 p-3"
+                style={{
+                  border: "1px solid rgba(153,27,27,0.3)",
+                  background: "rgba(153,27,27,0.05)",
+                  padding: 12,
+                }}
               >
-                <div className="text-[12px] font-bold text-foreground">
+                <div style={{ fontSize: 12, fontWeight: 700, color: DEMO.ink }}>
                   {row.prompt}
                 </div>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div
+                  style={{
+                    marginTop: 8,
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
                   <ScoreChip
                     score={row.autoScore}
                     label={text("Auto-Eval", "Automated evaluation")}
@@ -366,13 +615,26 @@ export function LlmObservabilityDemo(): JSX.Element {
                     />
                   )}
                 </div>
-                <p className="mt-2 text-[12px] leading-[1.5] text-muted-foreground">
+                <p
+                  style={{
+                    marginTop: 8,
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    color: DEMO.schiefer,
+                  }}
+                >
                   {row.note}
                 </p>
               </div>
             ))}
-            <div className="border-l-2 border-brand-orange bg-brand-orange/5 p-3">
-              <p className="text-[12px] leading-[1.6] text-foreground">
+            <div
+              style={{
+                borderLeft: "2px solid var(--color-brand-orange)",
+                background: "rgba(249,115,22,0.05)",
+                padding: 12,
+              }}
+            >
+              <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.ink }}>
                 <strong>{text("Lernpunkt:", "Learning point:")}</strong>{" "}
                 {text(
                   "Automatische Eval-Scores messen Fluenz, Länge und Muster. Sie erfassen keine Rechtsgenauigkeit, Sicherheitsrisiken oder fachliche Tiefe. Produktionssysteme brauchen einen menschlichen Review-Zyklus.",
