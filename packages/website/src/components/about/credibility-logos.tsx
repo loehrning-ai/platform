@@ -39,7 +39,7 @@ const STATIONS = [
 ] as const;
 
 const STATION_STYLES = [
-  "bg-brand-lilac/60 sm:-rotate-1",
+  "bg-brand-pink/60 sm:-rotate-1",
   "bg-brand-acid/65 sm:rotate-1",
   "bg-brand-sky/55 sm:-rotate-1",
 ] as const;

@@ -15,7 +15,7 @@ const pad = (value: number) => String(value).padStart(2, "0");
 const WORKSHOP_WASHES = [
   "bg-brand-sky/50",
   "bg-brand-pink/50",
-  "bg-brand-lilac/55",
+  "bg-brand-peach/55",
 ] as const;
 
 const WORKSHOP_SHEETS = [
@@ -84,7 +84,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
                         ? "w-full bg-brand-pink/70"
                         : index === 1
                           ? "w-[86%] bg-brand-sky/70"
-                          : "w-[68%] bg-brand-lilac/75"
+                          : "w-[68%] bg-brand-peach/75"
                     }`}
                   >
                     {step}

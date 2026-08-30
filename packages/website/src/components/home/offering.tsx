@@ -16,7 +16,7 @@ const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
 
 const COURSE_TONES = [
   "bg-brand-acid/42",
-  "bg-brand-lilac/38",
+  "bg-brand-peach/38",
   "bg-brand-sky/42",
   "bg-brand-pink/34",
 ] as const;
@@ -25,7 +25,7 @@ const COURSE_PLATES = [
   "bg-brand-acid/55",
   "bg-brand-pink/45",
   "bg-brand-sky/55",
-  "bg-brand-lilac/50",
+  "bg-brand-peach/50",
 ] as const;
 
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {

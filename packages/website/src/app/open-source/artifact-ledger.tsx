@@ -20,7 +20,7 @@ const FACT_BACKGROUNDS = [
   "var(--color-brand-acid, #dfff69)",
   "var(--color-brand-sky, #bfe3ff)",
   "var(--color-brand-pink, #ffbfd6)",
-  "var(--color-brand-lilac, #e2d2ff)",
+  "var(--color-brand-peach, #ffc19e)",
 ] as const;
 
 function softwarePreviewFrames(
@@ -239,7 +239,7 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                     <div
                       className="order-1 min-w-0 p-3 sm:p-5"
                       style={{
-                        background: "var(--color-brand-lilac, #e2d2ff)",
+                        background: "var(--color-brand-peach, #ffc19e)",
                       }}
                       data-open-source-preview-sheet
                     >

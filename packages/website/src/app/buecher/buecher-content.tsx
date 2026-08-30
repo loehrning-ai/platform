@@ -17,7 +17,7 @@ const SECONDARY_LINK_CLASS =
   "inline-flex min-h-11 max-w-full items-center gap-2 py-2 text-sm font-semibold text-brand-orange underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
 
 const BOOK_WASHES = [
-  "bg-brand-lilac/55",
+  "bg-brand-peach/55",
   "bg-brand-sky/55",
   "bg-brand-pink/50",
 ] as const;
@@ -62,7 +62,7 @@ export function BuecherContent({
           aria-hidden="true"
         />
         <span
-          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-lilac/55"
+          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-peach/55"
           aria-hidden="true"
         />
         <div

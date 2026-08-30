@@ -24,7 +24,7 @@ describe("<LanguageSwitch />", () => {
     const group = screen.getByRole("group", { name: "Sprache" });
     expect(group.className).toContain("rounded-xl");
     expect(group.className).toContain(
-      "shadow-[3px_3px_0_var(--color-brand-lilac)]",
+      "shadow-[3px_3px_0_var(--color-brand-acid)]",
     );
     expect(group.className).not.toContain("rounded-full");
     for (const link of within(group).getAllByRole("link")) {

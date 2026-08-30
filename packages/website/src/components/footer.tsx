@@ -174,7 +174,7 @@ export async function Footer() {
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30 bg-brand-lilac/10"
+        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30 bg-brand-pink/10"
       />
       <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="grid min-w-0 gap-6 border-b border-border pb-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">

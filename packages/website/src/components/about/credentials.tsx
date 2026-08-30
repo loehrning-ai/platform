@@ -17,7 +17,7 @@ const INSTITUTION_MARKS: Partial<
 };
 
 const CREDENTIAL_STYLES = {
-  degree: "bg-brand-lilac/45 md:col-span-7",
+  degree: "bg-brand-peach/45 md:col-span-7",
   international: "bg-brand-sky/45 md:col-span-5 md:mt-8",
   research: "bg-paper md:col-span-10 md:col-start-2",
 } as const;

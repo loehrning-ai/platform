@@ -13,7 +13,7 @@ const FACT_WIDTHS = ["sm:flex-[0.8]", "sm:flex-[1.4]", "sm:flex-1"] as const;
 
 const CONTACT_STYLES = [
   "bg-brand-acid/45",
-  "bg-brand-lilac/55",
+  "bg-brand-peach/55",
   "bg-brand-sky/50",
   "bg-brand-pink/50",
 ] as const;

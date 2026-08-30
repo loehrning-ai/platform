@@ -26,7 +26,7 @@ describe("<Credentials>", () => {
     const cards = container.querySelectorAll("article");
     expect(cards).toHaveLength(3);
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    expect(cards[0]).toHaveClass("bg-brand-lilac/45", "md:col-span-7");
+    expect(cards[0]).toHaveClass("bg-brand-peach/45", "md:col-span-7");
     expect(cards[1]).toHaveClass("bg-brand-sky/45", "md:col-span-5");
   });
 
