@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import AgentPipelineDemo from "./agent-pipeline-demo";
 
 /**
@@ -96,6 +96,68 @@ describe("<AgentPipelineDemo>", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.queryByText(/MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("steps through the log manually via Zurück/Weiter (autoplay never starts in jsdom)", () => {
+    render(<AgentPipelineDemo />);
+
+    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
+    const back = screen.getByRole("button", { name: "◀ Zurück" });
+    const next = screen.getByRole("button", { name: "Weiter ▶" });
+    expect(back).toBeDisabled();
+    expect(next).not.toBeDisabled();
+
+    fireEvent.click(next);
+    expect(screen.getByText("Schritt 1 / 14")).toBeInTheDocument();
+    expect(screen.getByText("Starte Archiv-Suche…")).toBeInTheDocument();
+    expect(back).not.toBeDisabled();
+
+    fireEvent.click(back);
+    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Starte Archiv-Suche…"),
+    ).not.toBeInTheDocument();
+    expect(back).toBeDisabled();
+  });
+
+  it("resets to step 0 when Replay is clicked after stepping forward", () => {
+    render(<AgentPipelineDemo />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
+    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
+    expect(screen.getByText("Schritt 2 / 14")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
+    expect(screen.getByText(/warten auf pipeline start/)).toBeInTheDocument();
+  });
+
+  it("switches to the pricing scenario and plays a different outcome", () => {
+    render(<AgentPipelineDemo />);
+
+    const contractsToggle = screen.getByRole("button", {
+      name: "Vertragsanalyse",
+    });
+    const pricingToggle = screen.getByRole("button", { name: "Preisanalyse" });
+    expect(contractsToggle).toHaveAttribute("aria-pressed", "true");
+    expect(pricingToggle).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(pricingToggle);
+    expect(pricingToggle).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Schritt 0 / 7")).toBeInTheDocument();
+
+    const next = screen.getByRole("button", { name: "Weiter ▶" });
+    for (let i = 0; i < 7; i++) fireEvent.click(next);
+
+    expect(
+      screen.getByText(
+        "Preiserhöhung von 4 % in 5 von 6 Segmenten; Segment 3 zurückstellen.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("1,1k TOKENS · 6 QUELLEN")).toBeInTheDocument();
+    expect(
+      screen.queryByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
     ).not.toBeInTheDocument();
   });
 });

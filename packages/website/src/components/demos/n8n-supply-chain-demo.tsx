@@ -98,6 +98,25 @@ const EVENTS_EN: readonly Omit<LogEvent, "id">[] = [
   },
 ];
 
+type Scenario = "delay" | "lowConfidence";
+
+// The "low confidence" branch stops after step 2 (the LLM brief) instead of
+// reaching the three automated actions in step 3 — it replaces those three
+// events with this single escalation line.
+const LOW_CONFIDENCE_EVENT: Omit<LogEvent, "id"> = {
+  t: "+2.6 s",
+  src: "IF-Node",
+  msg: "Konfidenz < Schwellenwert · manuelle Prüfung erforderlich",
+  lvl: "warn",
+};
+
+const LOW_CONFIDENCE_EVENT_EN: Omit<LogEvent, "id"> = {
+  t: "+2.6 s",
+  src: "IF node",
+  msg: "Confidence below threshold · manual review required",
+  lvl: "warn",
+};
+
 interface NodeSpec {
   readonly id: string;
   readonly t: string;
@@ -269,6 +288,27 @@ function statusFor(step: number, activeStep: number): NodeStatus {
   return "pending";
 }
 
+// Both autoplay and manual step-through derive the visible log from
+// (activeStep, scenario) alone, so scrubbing backward/forward always shows
+// exactly what that step should reveal — no separate timer-driven event list
+// to fall out of sync with the node grid above it.
+function eventsForStep(
+  step: number,
+  scenario: Scenario,
+  source: readonly Omit<LogEvent, "id">[],
+  lowConfidenceEvent: Omit<LogEvent, "id">,
+): readonly LogEvent[] {
+  if (step < 0) return [];
+  if (step === 0) return source.slice(0, 1).map((e, i) => ({ ...e, id: i }));
+  if (step === 1) return source.slice(0, 2).map((e, i) => ({ ...e, id: i }));
+  const first3 = source.slice(0, 3).map((e, i) => ({ ...e, id: i }));
+  if (scenario === "lowConfidence") {
+    return [...first3, { ...lowConfidenceEvent, id: 3 }];
+  }
+  if (step >= 3) return source.slice(0, 6).map((e, i) => ({ ...e, id: i }));
+  return first3;
+}
+
 function StatusPill({ status }: { status: NodeStatus }) {
   const map: Record<NodeStatus, { label: string; color: string; bg: string }> =
     {
@@ -311,44 +351,66 @@ export default function N8nSupplyChainDemo() {
   const { locale, text } = useDemoLocale();
   const sourceEvents = locale === "de" ? EVENTS : EVENTS_EN;
   const columns = locale === "de" ? COLS : COLS_EN;
+  const lowConfidenceEvent =
+    locale === "de" ? LOW_CONFIDENCE_EVENT : LOW_CONFIDENCE_EVENT_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
+  const [scenario, setScenario] = useState<Scenario>("delay");
   const [activeStep, setActiveStep] = useState(-1);
-  const [events, setEvents] = useState<LogEvent[]>([]);
+  const [autoPlaying, setAutoPlaying] = useState(true);
 
+  // The low-confidence branch never reaches step 3 (the automated actions) —
+  // it stops at step 2 and the log shows an escalation line instead.
+  const maxStep = scenario === "lowConfidence" ? 2 : 3;
+  const events = eventsForStep(activeStep, scenario, sourceEvents, lowConfidenceEvent);
+  const totalEvents = scenario === "lowConfidence" ? 4 : sourceEvents.length;
+  const allDone = activeStep >= maxStep;
+
+  // Reduced motion: jump straight to the scenario's final state. Deliberately
+  // NOT keyed on activeStep, so a manual Zurück/Weiter click after this fires
+  // isn't immediately clobbered back to maxStep on the next render.
   useEffect(() => {
-    if (reduced) {
-      setActiveStep(3);
-      setEvents(sourceEvents.map((e, i) => ({ ...e, id: i })));
-      return;
-    }
-    if (!visible) return;
+    if (!reduced) return;
+    setActiveStep(maxStep);
+    setAutoPlaying(false);
+  }, [reduced, maxStep]);
 
-    let mounted = true;
-    const run = () => {
-      if (!mounted) return;
-      setActiveStep(-1);
-      setEvents([]);
-      [0, 1, 2, 3].forEach((step) => {
-        setTimeout(() => mounted && setActiveStep(step), step * 650);
-      });
-      sourceEvents.forEach((e, i) => {
-        setTimeout(
-          () => {
-            if (!mounted) return;
-            setEvents((arr) => [...arr, { ...e, id: Date.now() + i }]);
-          },
-          400 + i * 500,
+  // Autoplay: advance one step at a time while visible, not reduced, and not
+  // paused by a manual step-through click.
+  useEffect(() => {
+    if (reduced || !visible || !autoPlaying || activeStep >= maxStep) return;
+    const timer = setTimeout(
+      () => setActiveStep((s) => Math.min(s + 1, maxStep)),
+      650,
+    );
+    return () => clearTimeout(timer);
+  }, [reduced, visible, autoPlaying, activeStep, maxStep]);
+
+  const handleBack = () => {
+    setAutoPlaying(false);
+    setActiveStep((s) => Math.max(s - 1, 0));
+  };
+  const handleNext = () => {
+    setAutoPlaying(false);
+    setActiveStep((s) => Math.min(s + 1, maxStep));
+  };
+  const handleReplay = () => {
+    setAutoPlaying(true);
+    setActiveStep(-1);
+  };
+  const handleScenario = (next: Scenario) => {
+    setScenario(next);
+    setAutoPlaying(true);
+    setActiveStep(-1);
+  };
+
+  const stepLabel =
+    activeStep < 0
+      ? text(`Schritt – / ${maxStep + 1}`, `Step – / ${maxStep + 1}`)
+      : text(
+          `Schritt ${activeStep + 1} / ${maxStep + 1}`,
+          `Step ${activeStep + 1} / ${maxStep + 1}`,
         );
-      });
-    };
-    run();
-    return () => {
-      mounted = false;
-    };
-  }, [visible, reduced, sourceEvents]);
-
-  const allDone = activeStep >= 3;
 
   return (
     <div
@@ -409,6 +471,124 @@ export default function N8nSupplyChainDemo() {
           "All timestamps and token counts are sample data. The simulation shows sequence only; no real workflow or external action runs.",
         )}
       </SimulationDisclosure>
+
+      <div
+        className="demo-n8n-controls"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            letterSpacing: "0.08em",
+            color: "rgba(243,240,233,0.6)",
+            fontWeight: 700,
+          }}
+        >
+          <span>{stepLabel}</span>
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={activeStep <= 0}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              padding: "0 12px",
+              background: "transparent",
+              color: activeStep <= 0 ? "rgba(243,240,233,0.3)" : DEMO.kalk,
+              border: `1px solid ${activeStep <= 0 ? "rgba(243,240,233,0.15)" : "rgba(243,240,233,0.3)"}`,
+              cursor: activeStep <= 0 ? "not-allowed" : "pointer",
+              fontFamily: "inherit",
+              fontSize: 12,
+              fontWeight: 700,
+            }}
+          >
+            {text("◀ Zurück", "◀ Back")}
+          </button>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={activeStep >= maxStep}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              padding: "0 12px",
+              background: "transparent",
+              color: activeStep >= maxStep ? "rgba(243,240,233,0.3)" : DEMO.kalk,
+              border: `1px solid ${activeStep >= maxStep ? "rgba(243,240,233,0.15)" : "rgba(243,240,233,0.3)"}`,
+              cursor: activeStep >= maxStep ? "not-allowed" : "pointer",
+              fontFamily: "inherit",
+              fontSize: 12,
+              fontWeight: 700,
+            }}
+          >
+            {text("Weiter ▶", "Next ▶")}
+          </button>
+          <button
+            type="button"
+            onClick={handleReplay}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              padding: "0 12px",
+              background: "transparent",
+              color: "var(--color-brand-orange)",
+              border: "1px solid var(--color-brand-orange)",
+              cursor: "pointer",
+              fontFamily: "inherit",
+              fontSize: 12,
+              fontWeight: 700,
+            }}
+          >
+            {text("↻ Neu abspielen", "↻ Replay")}
+          </button>
+        </div>
+
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
+          role="group"
+          aria-label={text("Szenario wählen", "Choose scenario")}
+        >
+          {(
+            [
+              ["delay", text("Verzug erkannt", "Delay detected")],
+              ["lowConfidence", text("Konfidenz niedrig", "Low confidence")],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => handleScenario(key)}
+              aria-pressed={scenario === key}
+              style={{
+                minHeight: 44,
+                padding: "0 12px",
+                background:
+                  scenario === key ? "var(--color-brand-orange)" : "transparent",
+                color: scenario === key ? DEMO.ink : "rgba(243,240,233,0.7)",
+                border: `1px solid ${scenario === key ? "var(--color-brand-orange)" : "rgba(243,240,233,0.25)"}`,
+                cursor: "pointer",
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Workflow canvas: horizontal on >=640px, stacked on mobile */}
       <div
@@ -633,7 +813,7 @@ export default function N8nSupplyChainDemo() {
             <span>› DEMO-LOG · WORKFLOW SC-042</span>
           </span>
           <span>
-            {events.length}/{sourceEvents.length} {text("EREIGNISSE", "EVENTS")}
+            {events.length}/{totalEvents} {text("EREIGNISSE", "EVENTS")}
           </span>
         </div>
         {events.length === 0 && (
@@ -686,7 +866,7 @@ export default function N8nSupplyChainDemo() {
             </div>
           );
         })}
-        {allDone && events.length === sourceEvents.length && (
+        {allDone && scenario === "delay" && (
           <div
             style={{
               marginTop: 6,
@@ -697,6 +877,20 @@ export default function N8nSupplyChainDemo() {
             {text(
               "✓ Workflow-Simulation abgeschlossen · Beispiel-Laufzeit 4,02 s",
               "✓ Workflow simulation complete · sample runtime 4.02 s",
+            )}
+          </div>
+        )}
+        {allDone && scenario === "lowConfidence" && (
+          <div
+            style={{
+              marginTop: 6,
+              color: "#d97706",
+              letterSpacing: "0.08em",
+            }}
+          >
+            {text(
+              "⚠ Automatisierter Pfad gestoppt · manuelle Prüfung erforderlich",
+              "⚠ Automated path stopped · manual review required",
             )}
           </div>
         )}

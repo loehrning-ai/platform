@@ -129,6 +129,103 @@ const SCRIPT_EN: readonly [number, string, string, number][] = [
   [3, "Editor", "Memo complete (2.4k tokens, 18 sources)", 4800],
 ];
 
+// Second briefing — same four roles, a different question and a different
+// memo outcome, so the "task" selector genuinely changes what the pipeline
+// produces rather than just relabelling the same run.
+type Scenario = "contracts" | "pricing";
+
+const SCRIPT_PRICING: readonly [number, string, string, number][] = [
+  [0, "Scout", "Sammelt Wettbewerbspreise in 6 Marktsegmenten", 200],
+  [0, "Scout → Analyst", "Übergabe: Preisdaten + Marktkontext", 700],
+  [1, "Analyst", "Berechnet Preiselastizität je Segment", 1300],
+  [1, "Analyst → Kritiker", "Übergabe: Elastizitäts-Modell", 1900],
+  [2, "Kritiker", "Modell weicht in Segment 3 von Ist-Umsätzen ab", 2500],
+  [2, "Kritiker → Redakteur", "Freigabe mit Vorbehalt zu Segment 3", 3100],
+  [3, "Redakteur", "✓ Memo fertig (1,1k Tokens, 6 Quellen)", 3700],
+];
+
+const SCRIPT_PRICING_EN: readonly [number, string, string, number][] = [
+  [0, "Scout", "Gathering competitor prices across 6 market segments", 200],
+  [0, "Scout → Analyst", "Handoff: pricing data and market context", 700],
+  [1, "Analyst", "Calculating price elasticity per segment", 1300],
+  [1, "Analyst → Critic", "Handoff: elasticity model", 1900],
+  [2, "Critic", "Model diverges from actuals in segment 3", 2500],
+  [2, "Critic → Editor", "Approved with a caveat on segment 3", 3100],
+  [3, "Editor", "Memo complete (1.1k tokens, 6 sources)", 3700],
+];
+
+interface MemoContent {
+  readonly meta: readonly [string, string];
+  readonly recommendation: readonly [string, string];
+  readonly sections: readonly {
+    readonly title: readonly [string, string];
+    readonly body: readonly [string, string];
+  }[];
+}
+
+const MEMO_CONTENT: Readonly<Record<Scenario, MemoContent>> = {
+  contracts: {
+    meta: ["2,4k TOKENS · 18 QUELLEN", "2.4k TOKENS · 18 SOURCES"],
+    recommendation: [
+      "KI-Einführung in 2 Phasen, Start Q3/2026.",
+      "Two-phase AI rollout, starting Q3 2026.",
+    ],
+    sections: [
+      {
+        title: ["§1 · KERNTHESE", "§1 · CORE CLAIM"],
+        body: [
+          "Drei von vier Thesen werden durch die Beispielquellen gestützt. Eine These bleibt offen.",
+          "The sample sources support three of four claims. One claim remains unresolved.",
+        ],
+      },
+      {
+        title: ["§2 · RISIKEN", "§2 · RISKS"],
+        body: [
+          "These 3 benötigt einen Branchenvergleich. Der Kritiker markiert die Lücke, der Scout ergänzt Quellen.",
+          "Claim 3 requires an industry comparison. The critic marks the gap and the scout adds sources.",
+        ],
+      },
+      {
+        title: ["§3 · NÄCHSTE SCHRITTE", "§3 · NEXT STEPS"],
+        body: [
+          "Phase 1: begrenzter Tabellenpilot in zwei Teams. Phase 2 nur nach Ergebnis- und Risikoprüfung.",
+          "Phase 1: a bounded spreadsheet pilot in two teams. Phase 2 only after outcome and risk review.",
+        ],
+      },
+    ],
+  },
+  pricing: {
+    meta: ["1,1k TOKENS · 6 QUELLEN", "1.1k TOKENS · 6 SOURCES"],
+    recommendation: [
+      "Preiserhöhung von 4 % in 5 von 6 Segmenten; Segment 3 zurückstellen.",
+      "4% price increase in 5 of 6 segments; hold segment 3 pending review.",
+    ],
+    sections: [
+      {
+        title: ["§1 · KERNTHESE", "§1 · CORE CLAIM"],
+        body: [
+          "Die Preiselastizität erlaubt in 5 Segmenten eine moderate Erhöhung ohne Nachfrageeinbruch.",
+          "Price elasticity supports a moderate increase in 5 segments without a demand drop.",
+        ],
+      },
+      {
+        title: ["§2 · RISIKEN", "§2 · RISKS"],
+        body: [
+          "Segment 3 weicht vom Modell ab; ein regionaler Sondereffekt ist wahrscheinlich, aber unbestätigt.",
+          "Segment 3 diverges from the model; a regional one-off effect is likely but unconfirmed.",
+        ],
+      },
+      {
+        title: ["§3 · NÄCHSTE SCHRITTE", "§3 · NEXT STEPS"],
+        body: [
+          "Erhöhung in 5 Segmenten zum Quartalswechsel. Segment 3 erst nach Regionalanalyse.",
+          "Roll out the increase in 5 segments at quarter-end. Hold segment 3 for a regional review.",
+        ],
+      },
+    ],
+  },
+};
+
 // Deterministic timestamp base so SSR/CSR match: 10:42:15.000
 const TS_BASE_MS = 10 * 3600_000 + 42 * 60_000 + 15_000;
 
@@ -141,58 +238,129 @@ function fmtTs(offsetMs: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
 }
 
+// minHeight/minWidth are set inline at each JSX call site (not spread from
+// here) because public-demo-interface-floor.test.ts's target-size scanner
+// reads the literal JSX attribute text, not values reachable through a
+// helper-function call.
+function controlButtonStyle(disabled: boolean) {
+  return {
+    padding: "8px 14px",
+    fontFamily: DEMO.font.mono,
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: "0.08em",
+    background: "rgba(243,240,233,0.04)",
+    color: disabled ? "rgba(243,240,233,0.3)" : DEMO.kalk,
+    border: `1px solid ${disabled ? "rgba(243,240,233,0.12)" : "rgba(243,240,233,0.3)"}`,
+    cursor: disabled ? "not-allowed" : "pointer",
+  } as const;
+}
+
+const replayButtonStyle = {
+  padding: "8px 14px",
+  fontFamily: DEMO.font.mono,
+  fontSize: 12,
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  background: "rgba(249,115,22,0.1)",
+  color: "var(--color-brand-orange)",
+  border: "1px solid var(--color-brand-orange)",
+  cursor: "pointer",
+} as const;
+
+function scenarioButtonStyle(active: boolean) {
+  return {
+    padding: "8px 12px",
+    textAlign: "left",
+    fontFamily: DEMO.font.mono,
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: "0.06em",
+    background: active ? "rgba(249,115,22,0.12)" : "rgba(243,240,233,0.04)",
+    color: active ? "var(--color-brand-orange)" : "rgba(243,240,233,0.7)",
+    border: `1px solid ${active ? "var(--color-brand-orange)" : "rgba(243,240,233,0.16)"}`,
+    cursor: "pointer",
+  } as const;
+}
+
 export default function AgentPipelineDemo() {
   const { locale, text } = useDemoLocale();
   const agents = locale === "de" ? AGENTS : AGENTS_EN;
-  const script = locale === "de" ? SCRIPT : SCRIPT_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-  const [active, setActive] = useState(-1);
-  const [logs, setLogs] = useState<readonly LogEntry[]>([]);
-  const [done, setDone] = useState(false);
+  const [scenario, setScenario] = useState<Scenario>("contracts");
+  const [stepIndex, setStepIndex] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const [runId, setRunId] = useState(0);
   const logRef = useRef<HTMLDivElement | null>(null);
+
+  const script =
+    scenario === "contracts"
+      ? locale === "de"
+        ? SCRIPT
+        : SCRIPT_EN
+      : locale === "de"
+        ? SCRIPT_PRICING
+        : SCRIPT_PRICING_EN;
+
+  const logs: readonly LogEntry[] = script
+    .slice(0, stepIndex)
+    .map(([ag, src, t, delay], id) => ({ id, ag, src, t, ts: fmtTs(delay) }));
+  // Anticipatory highlight: as soon as an autoplay run starts, agent 0 lights
+  // up immediately (matches the pre-refactor behaviour this file's own
+  // autoplay-visibility.test.tsx pins), even before its first timer fires.
+  const active =
+    stepIndex > 0
+      ? script[stepIndex - 1][0]
+      : visible && autoplay && !reduced
+        ? script[0][0]
+        : -1;
+  const done = stepIndex >= script.length;
 
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
-  }, [logs]);
+  }, [stepIndex]);
 
   useEffect(() => {
     if (reduced) {
-      setActive(-1);
-      setLogs(
-        script.map(([ag, src, t, delay], id) => ({
-          id,
-          ag,
-          src,
-          t,
-          ts: fmtTs(delay),
-        })),
-      );
-      setDone(true);
+      setStepIndex(script.length);
+      setAutoplay(false);
       return;
     }
-    if (!visible) {
-      setActive(-1);
-      return;
-    }
-    setActive(0);
-    setLogs([]);
-    setDone(false);
-    const timers = script.map(([ag, src, t, delay], i) =>
+    if (!visible || !autoplay) return;
+    setStepIndex(0);
+    const timers = script.map((entry, i) =>
       setTimeout(() => {
-        setActive(ag);
-        setLogs((l) => [...l, { id: i, ag, src, t, ts: fmtTs(delay) }]);
-      }, delay),
+        setStepIndex(i + 1);
+      }, entry[3]),
     );
-    const endT = setTimeout(() => {
-      setActive(-1);
-      setDone(true);
-    }, 5100);
+    const endT = setTimeout(() => setAutoplay(false), 5100);
     return () => {
       timers.forEach(clearTimeout);
       clearTimeout(endT);
     };
-  }, [visible, reduced, script]);
+  }, [visible, reduced, autoplay, script, runId]);
+
+  const stepBack = () => {
+    setAutoplay(false);
+    setStepIndex((i) => Math.max(0, i - 1));
+  };
+  const stepForward = () => {
+    setAutoplay(false);
+    setStepIndex((i) => Math.min(script.length, i + 1));
+  };
+  const replay = () => {
+    setStepIndex(0);
+    setAutoplay(true);
+    setRunId((n) => n + 1);
+  };
+  const selectScenario = (next: Scenario) => {
+    if (next === scenario) return;
+    setScenario(next);
+    setStepIndex(0);
+    setAutoplay(true);
+    setRunId((n) => n + 1);
+  };
 
   return (
     <div
@@ -260,6 +428,29 @@ export default function AgentPipelineDemo() {
         </h2>
       </div>
 
+      <div
+        role="group"
+        aria-label={text("Aufgabe wählen", "Choose a task")}
+        style={{ display: "flex", flexWrap: "wrap", gap: 8 }}
+      >
+        <button
+          type="button"
+          aria-pressed={scenario === "contracts"}
+          onClick={() => selectScenario("contracts")}
+          style={{ minHeight: 44, ...scenarioButtonStyle(scenario === "contracts") }}
+        >
+          {text("Vertragsanalyse", "Contract analysis")}
+        </button>
+        <button
+          type="button"
+          aria-pressed={scenario === "pricing"}
+          onClick={() => selectScenario("pricing")}
+          style={{ minHeight: 44, ...scenarioButtonStyle(scenario === "pricing") }}
+        >
+          {text("Preisanalyse", "Pricing analysis")}
+        </button>
+      </div>
+
       {/* Agent card grid — 2 cols on mobile, 4 cols >=640px */}
       <div
         style={{
@@ -290,7 +481,7 @@ export default function AgentPipelineDemo() {
                 position: "relative",
                 minWidth: 0,
                 animation:
-                  activeCard && visible && !reduced
+                  activeCard && visible && !reduced && autoplay
                     ? "agent-pipeline-pulse 1.4s ease-in-out infinite"
                     : undefined,
               }}
@@ -309,7 +500,7 @@ export default function AgentPipelineDemo() {
                     ? "var(--color-brand-orange)"
                     : "rgba(243,240,233,0.22)",
                   animation:
-                    activeCard && visible && !reduced
+                    activeCard && visible && !reduced && autoplay
                       ? "agent-pipeline-dot 1.2s ease-in-out infinite"
                       : undefined,
                 }}
@@ -369,6 +560,67 @@ export default function AgentPipelineDemo() {
         })}
       </div>
 
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+          }}
+        >
+          <button
+            type="button"
+            onClick={stepBack}
+            disabled={stepIndex === 0}
+            style={{ minHeight: 44, minWidth: 44, ...controlButtonStyle(stepIndex === 0) }}
+          >
+            {text("◀ Zurück", "◀ Back")}
+          </button>
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              letterSpacing: "0.1em",
+              color: "rgba(243,240,233,0.55)",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {text(
+              `Schritt ${stepIndex} / ${script.length}`,
+              `Step ${stepIndex} / ${script.length}`,
+            )}
+          </span>
+          <button
+            type="button"
+            onClick={stepForward}
+            disabled={stepIndex === script.length}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              ...controlButtonStyle(stepIndex === script.length),
+            }}
+          >
+            {text("Weiter ▶", "Next ▶")}
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={replay}
+          style={{ minHeight: 44, ...replayButtonStyle }}
+        >
+          {text("↻ Neu abspielen", "↻ Replay")}
+        </button>
+      </div>
+
       {/* Log + memo — stack on narrow, side-by-side on wider */}
       <div
         style={{
@@ -421,7 +673,7 @@ export default function AgentPipelineDemo() {
                       ? "var(--color-brand-orange)"
                       : "rgba(243,240,233,0.3)",
                   animation:
-                    active >= 0 && visible && !reduced
+                    active >= 0 && visible && !reduced && autoplay
                       ? "agent-pipeline-dot 1.2s ease-in-out infinite"
                       : undefined,
                 }}
@@ -573,7 +825,7 @@ export default function AgentPipelineDemo() {
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  {text("2,4k TOKENS · 18 QUELLEN", "2.4k TOKENS · 18 SOURCES")}
+                  {text(...MEMO_CONTENT[scenario].meta)}
                 </span>
               </div>
               <h3
@@ -588,10 +840,7 @@ export default function AgentPipelineDemo() {
               >
                 {text("Empfehlung:", "Recommendation:")}{" "}
                 <span style={{ color: "var(--color-brand-orange)" }}>
-                  {text(
-                    "KI-Einführung in 2 Phasen, Start Q3/2026.",
-                    "Two-phase AI rollout, starting Q3 2026.",
-                  )}
+                  {text(...MEMO_CONTENT[scenario].recommendation)}
                 </span>
               </h3>
               <div
@@ -605,27 +854,13 @@ export default function AgentPipelineDemo() {
                   gap: 8,
                 }}
               >
-                <MemoSection
-                  title={text("§1 · KERNTHESE", "§1 · CORE CLAIM")}
-                  body={text(
-                    "Drei von vier Thesen werden durch die Beispielquellen gestützt. Eine These bleibt offen.",
-                    "The sample sources support three of four claims. One claim remains unresolved.",
-                  )}
-                />
-                <MemoSection
-                  title={text("§2 · RISIKEN", "§2 · RISKS")}
-                  body={text(
-                    "These 3 benötigt einen Branchenvergleich. Der Kritiker markiert die Lücke, der Scout ergänzt Quellen.",
-                    "Claim 3 requires an industry comparison. The critic marks the gap and the scout adds sources.",
-                  )}
-                />
-                <MemoSection
-                  title={text("§3 · NÄCHSTE SCHRITTE", "§3 · NEXT STEPS")}
-                  body={text(
-                    "Phase 1: begrenzter Tabellenpilot in zwei Teams. Phase 2 nur nach Ergebnis- und Risikoprüfung.",
-                    "Phase 1: a bounded spreadsheet pilot in two teams. Phase 2 only after outcome and risk review.",
-                  )}
-                />
+                {MEMO_CONTENT[scenario].sections.map((section) => (
+                  <MemoSection
+                    key={section.title[0]}
+                    title={text(...section.title)}
+                    body={text(...section.body)}
+                  />
+                ))}
               </div>
             </div>
           )}
