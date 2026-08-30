@@ -48,13 +48,13 @@ test.describe("QA sweep - public reputation routes", () => {
 
 test.describe("QA sweep - retired commercial routes", () => {
   for (const [route, target] of [
-    ["/leistungen", "/ueber-mich#redaktion"],
-    ["/leistungen/diagnose", "/ueber-mich#redaktion"],
-    ["/daten-audit", "/ueber-mich#redaktion"],
+    ["/leistungen", "/ueber-mich"],
+    ["/leistungen/diagnose", "/ueber-mich"],
+    ["/daten-audit", "/ueber-mich"],
     ["/wie-ki-funktioniert", "/einstieg"],
     ["/wie-ki-funktioniert/lektion-1-vorhersage", "/einstieg"],
     ["/bekannte-grenzen", "/hilfe#grenzen"],
-    ["/ueber-die-plattform", "/ueber-mich#redaktion"],
+    ["/ueber-die-plattform", "/ueber-mich"],
     ["/kontakt", "/feedback"],
     ["/ki-transformation-check", "/ki-check"],
     ["/foerdermittel", ""],

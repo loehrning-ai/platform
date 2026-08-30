@@ -155,7 +155,7 @@ describe("crawl contract", () => {
     ["/wie-ki-funktioniert", "/einstieg"],
     ["/wie-ki-funktioniert/lektion-1-vorhersage", "/einstieg"],
     ["/bekannte-grenzen", "/hilfe#grenzen"],
-    ["/ueber-die-plattform", "/ueber-mich#redaktion"],
+    ["/ueber-die-plattform", "/ueber-mich"],
     ["/glossar", "/ai-native/glossar"],
     ["/blog/deepfake-erkennen", "/blog"],
     ["/blog/eu-ai-act-update-2026-06", "/blog/eu-ai-act-grundlagen"],

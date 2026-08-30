@@ -263,7 +263,7 @@ test.describe("legacy /leistungen/bauen/[slug] product routes", () => {
         maxRedirects: 0,
       });
       expect([301, 308]).toContain(res.status());
-      expect(res.headers()["location"]).toContain("/ueber-mich#redaktion");
+      expect(res.headers()["location"]).toContain("/ueber-mich");
     });
   }
 });
