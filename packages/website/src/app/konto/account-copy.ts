@@ -23,6 +23,15 @@ export interface AccountPageCopy {
   readonly allComplete: string;
   readonly booksLink: string;
   readonly coursesHeading: string;
+  readonly availableCoursesHeading: string;
+  readonly accountRequiredNote: string;
+  readonly levelFilterLabel: string;
+  readonly allLevels: string;
+  readonly sortLabel: string;
+  readonly sortByStep: string;
+  readonly sortByDuration: string;
+  readonly sortByProgress: string;
+  readonly noCoursesMatchFilter: string;
   readonly recordEarned: string;
   readonly lessonProgress: (
     done: number,
@@ -82,7 +91,17 @@ export const ACCOUNT_COPY = {
     allComplete:
       "Alle verfügbaren Kursnachweise sind erreicht. Die Lernbücher dienen zur Vertiefung und zum Nachschlagen.",
     booksLink: "Zu den Büchern",
-    coursesHeading: "Deine Kurse",
+    coursesHeading: "Meine Kurse",
+    availableCoursesHeading: "Weitere Kurse",
+    accountRequiredNote:
+      "Bei den vier grundlegenden Kursen synchronisiert ein Konto Fortschritt und Abschlussstatus geräteübergreifend. Die sechs technischen Kurse funktionieren auch ohne Konto.",
+    levelFilterLabel: "Niveau",
+    allLevels: "Alle",
+    sortLabel: "Sortierung",
+    sortByStep: "Empfohlene Reihenfolge",
+    sortByDuration: "Dauer",
+    sortByProgress: "Fortschritt",
+    noCoursesMatchFilter: "Kein Kurs entspricht diesem Filter.",
     recordEarned: "Nachweis erreicht",
     lessonProgress: (done, total, percent) =>
       `${done}/${total} Lektionen · ${percent}%`,
@@ -148,7 +167,17 @@ export const ACCOUNT_COPY = {
     allComplete:
       "Every available course record has been earned. The learning books provide reference material for further study.",
     booksLink: "Open books",
-    coursesHeading: "Your courses",
+    coursesHeading: "My courses",
+    availableCoursesHeading: "Available courses",
+    accountRequiredNote:
+      "For the four foundation courses, an account synchronises progress and completion status across devices. The six technical courses also work without an account.",
+    levelFilterLabel: "Level",
+    allLevels: "All",
+    sortLabel: "Sort",
+    sortByStep: "Recommended order",
+    sortByDuration: "Duration",
+    sortByProgress: "Progress",
+    noCoursesMatchFilter: "No course matches this filter.",
     recordEarned: "Record earned",
     lessonProgress: (done, total, percent) =>
       `${done}/${total} lessons · ${percent}%`,

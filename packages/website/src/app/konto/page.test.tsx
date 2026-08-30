@@ -42,6 +42,10 @@ vi.mock("@/lib/i18n/request-locale", () => ({
 
 import KontoPage, { generateMetadata } from "./page";
 
+function kontoPage(params: { level?: string; sort?: string } = {}) {
+  return KontoPage({ searchParams: Promise.resolve(params) });
+}
+
 const USER = {
   id: "learner-1",
   email: "learner@example.com",
@@ -167,7 +171,7 @@ describe("KontoPage course resume integration", () => {
     });
     mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     expect(
       within(courseCard("EU AI Act Kurs")).getByRole("link", {
@@ -189,7 +193,7 @@ describe("KontoPage course resume integration", () => {
     });
     mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     expect(
       within(courseCard("Codex-Kurs")).getByRole("link", {
@@ -213,7 +217,7 @@ describe("KontoPage course resume integration", () => {
     });
     mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     const continuation = screen.getByText("Weiter lernen").closest("div.group");
     expect(continuation).not.toBeNull();
@@ -236,7 +240,7 @@ describe("KontoPage course resume integration", () => {
       error: new Error("database unavailable"),
     });
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Dein Lernstand ist gerade nicht erreichbar.",
@@ -260,7 +264,7 @@ describe("KontoPage course resume integration", () => {
       user: null,
     });
 
-    await expect(KontoPage()).rejects.toBe(REDIRECT);
+    await expect(kontoPage()).rejects.toBe(REDIRECT);
 
     expect(mocks.redirect).toHaveBeenCalledWith("/login?next=/konto");
     expect(mocks.createAuthServerClient).not.toHaveBeenCalled();
@@ -278,7 +282,7 @@ describe("KontoPage course resume integration", () => {
       error: authError,
     });
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     expect(mocks.redirect).not.toHaveBeenCalled();
     expect(mocks.reportApiError).toHaveBeenCalledWith({
@@ -300,7 +304,7 @@ describe("KontoPage course resume integration", () => {
   it("renders reviewed English account copy, course data, links, and metadata", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
 
-    render(await KontoPage());
+    render(await kontoPage());
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Your learning record." }),
@@ -332,5 +336,124 @@ describe("KontoPage course resume integration", () => {
     expect(metadata.title).toBe("Account | Free learning platform");
     expect(metadata.robots).toMatchObject({ index: false, follow: false });
     expect(metadata.alternates).toEqual({ canonical: null });
+  });
+});
+
+describe("KontoPage catalog", () => {
+  it("renders cover art for every course and splits my courses from available", async () => {
+    const state = progress({
+      codex: courseSlice(
+        "codex",
+        CANONICAL_LESSON_IDS.codex.length,
+        "2026-07-29T11:00:00.000Z",
+      ),
+    });
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    const { container } = render(await kontoPage());
+
+    // All ten courses have cover art (verified against catalog.ts); every
+    // course renders somewhere on the page (my courses + available).
+    expect(container.querySelectorAll("img").length).toBe(10);
+
+    expect(
+      screen.getByRole("heading", { name: "Meine Kurse" }),
+    ).toBeInTheDocument();
+    expect(
+      within(courseCard("Codex-Kurs")).getByText("Nachweis erreicht"),
+    ).toBeInTheDocument();
+
+    // A completed course appears once, under "my courses", not a second
+    // time under "available".
+    expect(screen.getAllByRole("heading", { name: "Codex-Kurs" })).toHaveLength(
+      1,
+    );
+    expect(
+      screen.getByRole("heading", { name: "KI-Führerschein" }),
+    ).toBeInTheDocument();
+  });
+
+  it("omits the my-courses section entirely when nothing has started", async () => {
+    render(await kontoPage());
+
+    expect(
+      screen.queryByRole("heading", { name: "Meine Kurse" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Weitere Kurse" }),
+    ).toBeInTheDocument();
+    // All ten courses fall through to "available" with nothing started.
+    expect(courseCard("Codex-Kurs")).toBeInTheDocument();
+  });
+
+  it("filters the catalog to one level via a real link, not client state", async () => {
+    const { container } = render(await kontoPage({ level: "einstieg" }));
+
+    // Only the two einstieg courses remain (ki-fuehrerschein,
+    // ki-und-gesellschaft); codex (fortg) drops out.
+    expect(screen.queryByText("Codex-Kurs")).not.toBeInTheDocument();
+    expect(courseCard("KI-Führerschein")).toBeInTheDocument();
+    expect(courseCard("KI und Gesellschaft")).toBeInTheDocument();
+
+    const activeLevelLink = screen.getByRole("link", { name: "Einstieg" });
+    expect(activeLevelLink).toHaveAttribute("href", "/konto?level=einstieg");
+
+    const allLink = container.querySelector('a[href="/konto"]');
+    expect(allLink).not.toBeNull();
+    expect(allLink).toHaveTextContent("Alle");
+  });
+
+  it("sorts the catalog by duration via a real link", async () => {
+    render(await kontoPage({ sort: "duration" }));
+
+    const cards = screen
+      .getAllByRole("heading", { level: 3 })
+      .map((h) => h.textContent);
+    // ki-und-gesellschaft (46 min) sorts before ki-fuehrerschein (100 min)
+    // under duration order, the reverse of the step-order default.
+    const gesellschaft = cards.indexOf("KI und Gesellschaft");
+    const fuehrerschein = cards.indexOf("KI-Führerschein");
+    expect(gesellschaft).toBeGreaterThanOrEqual(0);
+    expect(gesellschaft).toBeLessThan(fuehrerschein);
+
+    const durationSort = screen.getByRole("link", { name: "Dauer" });
+    expect(durationSort).toHaveAttribute("href", "/konto?sort=duration");
+  });
+
+  it("combines level and sort in one link, and keeps the account-required note truthful", async () => {
+    render(await kontoPage());
+
+    expect(
+      screen.getByText(
+        "Bei den vier grundlegenden Kursen synchronisiert ein Konto Fortschritt und Abschlussstatus geräteübergreifend. Die sechs technischen Kurse funktionieren auch ohne Konto.",
+      ),
+    ).toBeInTheDocument();
+
+    const combined = screen.getByRole("link", { name: "Fortgeschritten" });
+    expect(combined).toHaveAttribute("href", "/konto?level=fortg");
+  });
+
+  it("shows the no-match state when a filter empties the available list", async () => {
+    const state = progress(
+      Object.fromEntries(
+        (["ki-fuehrerschein", "ki-und-gesellschaft"] as const).map((slug) => [
+          slug,
+          courseSlice(
+            slug,
+            CANONICAL_LESSON_IDS[slug].length,
+            "2026-07-29T11:00:00.000Z",
+          ),
+        ]),
+      ),
+    );
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    // Both einstieg courses are now in "my courses" (recordEarned), so no
+    // einstieg course remains for the "available" list to show.
+    render(await kontoPage({ level: "einstieg" }));
+
+    expect(
+      screen.getByText("Kein Kurs entspricht diesem Filter."),
+    ).toBeInTheDocument();
   });
 });
