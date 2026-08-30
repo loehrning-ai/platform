@@ -1,5 +1,25 @@
 import type { Locale } from "@/lib/i18n/locale";
-import type { CatalogCourse, ImportedCourse } from "./catalog";
+import type { CatalogCourse, CourseLevel, ImportedCourse } from "./catalog";
+
+/**
+ * Level labels by locale, mirroring demos-localization.ts's
+ * DEMO_LEVEL_LABELS_BY_LOCALE shape: the level VALUE on a course is
+ * locale-independent, only its display label varies per locale.
+ */
+export const COURSE_LEVEL_LABELS_BY_LOCALE: Readonly<
+  Record<Locale, Readonly<Record<CourseLevel, string>>>
+> = {
+  de: {
+    einstieg: "Einstieg",
+    mittel: "Mittel",
+    fortg: "Fortgeschritten",
+  },
+  en: {
+    einstieg: "Entry",
+    mittel: "Intermediate",
+    fortg: "Advanced",
+  },
+};
 
 type CourseCopy = Pick<
   CatalogCourse,
