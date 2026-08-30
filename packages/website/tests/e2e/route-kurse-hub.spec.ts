@@ -184,9 +184,9 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
     await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
-    // Cover art is a deliberate reversal of the ledger brief's "zero images"
-    // rule -- a later commit adds a real per-course image-count assertion
-    // once the teaser rebuild lands.
+    // One cover-art image per course, deliberately reversing the ledger
+    // brief's "zero images" rule.
+    await expect(atlas.locator("img")).toHaveCount(10);
     await expect(
       page.getByRole("group", {
         name: route.startsWith("/en/")

@@ -136,9 +136,12 @@ describe("LearningAtlas", () => {
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
-    // Cover art is a deliberate reversal of the ledger brief's "zero images"
-    // rule -- a later commit adds a real image-count assertion back once the
-    // teaser rebuild's actual per-course image count is known.
+    // One cover-art image per course now that the ledger brief's "zero
+    // images" rule is deliberately reversed -- every COURSE_CATALOG entry
+    // has a coverImage, and IMPORTED_COURSE_CATALOG is empty today.
+    expect(container.querySelectorAll("img")).toHaveLength(
+      COURSE_CATALOG.length,
+    );
     expect(screen.getAllByText("Fakten und Zugang")).toHaveLength(
       COURSE_CATALOG.length + IMPORTED_COURSE_CATALOG.length,
     );

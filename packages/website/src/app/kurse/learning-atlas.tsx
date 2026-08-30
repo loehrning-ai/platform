@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, ExternalLink } from "lucide-react";
 import { Github } from "@/components/icons/brand";
@@ -47,6 +48,18 @@ type Course = CatalogCourse | ImportedCourse;
 
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
 
+// Cover-art wash per row, cycling across all ten courses -- kept light (10%)
+// since ten consecutive tinted rows read as noisy at higher opacity, unlike
+// the four-card home-page spine.
+const ROW_TONES = [
+  "bg-brand-acid/10",
+  "bg-brand-sky/10",
+  "bg-brand-pink/10",
+  "bg-brand-peach/10",
+  "bg-brand-teal/10",
+  "bg-brand-cobalt/10",
+] as const;
+
 const ATLAS_COPY = {
   de: {
     eyebrow: "Lernatlas · ein nächster Schritt",
@@ -63,6 +76,7 @@ const ATLAS_COPY = {
     allCourses: "Alle Kurse",
     allCoursesIntro:
       "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
+    viewProgress: "Fortschritt in deinem Konto ansehen",
     courseDetails: "Fakten und Zugang",
     audience: "Für wen",
     source: "Quellstand",
@@ -111,6 +125,7 @@ const ATLAS_COPY = {
     allCourses: "All courses",
     allCoursesIntro:
       "The path is a recommendation. Every course remains directly accessible.",
+    viewProgress: "View your progress in your account",
     courseDetails: "Facts and access",
     audience: "Who it is for",
     source: "Source revision",
@@ -158,6 +173,7 @@ const ATLAS_COPY = {
       readonly queued: string;
       readonly allCourses: string;
       readonly allCoursesIntro: string;
+      readonly viewProgress: string;
       readonly courseDetails: string;
       readonly audience: string;
       readonly source: string;
@@ -333,11 +349,14 @@ function CourseLedgerRow({
   const sourceHref = course.sourceHref;
   const sourceCommitHref = course.sourceCommitHref;
   const sourceCommit = course.sourceCommit;
+  const cover = isLiveCourse(course) ? course.coverImage : undefined;
+  const tone = ROW_TONES[index % ROW_TONES.length];
 
   return (
     <li
       className={cn(
-        "border border-border bg-card",
+        "border border-border",
+        tone,
         inPath && "border-l-[3px] border-l-brand-orange",
       )}
       data-course-slug={course.slug}
@@ -352,19 +371,31 @@ function CourseLedgerRow({
               : "open"
       }
     >
-      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[2.5rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
-        <span
-          className={cn(
-            "flex h-10 w-10 items-center justify-center border font-mono text-xs font-bold tabular-nums",
-            liveStat?.certified
-              ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-              : inPath
+      <div className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[5.5rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
+        <span className="relative block aspect-square w-full self-start overflow-hidden border border-foreground/10 bg-paper sm:aspect-[4/3]">
+          {cover ? (
+            <Image
+              src={cover}
+              alt=""
+              fill
+              loading="lazy"
+              sizes="(min-width: 1024px) 88px, 56px"
+              className="object-cover"
+            />
+          ) : null}
+          <span
+            className={cn(
+              "absolute left-1 top-1 flex h-6 w-6 items-center justify-center border font-mono text-xs font-bold tabular-nums",
+              liveStat?.certified
                 ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-                : "border-border bg-background text-muted-foreground",
-          )}
-          aria-hidden="true"
-        >
-          {String(index + 1).padStart(2, "0")}
+                : inPath
+                  ? "border-brand-orange bg-kupfer-mist text-brand-orange"
+                  : "border-border bg-background text-muted-foreground",
+            )}
+            aria-hidden="true"
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
         </span>
         <div className="min-w-0">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
@@ -816,9 +847,19 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
         >
           {copy.allCourses}
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {copy.allCoursesIntro}
-        </p>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <p className="text-sm text-muted-foreground">
+            {copy.allCoursesIntro}
+          </p>
+          <Link
+            href={localizeHref("/konto", locale)}
+            prefetch={false}
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand-orange underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-brand-orange focus-visible:decoration-brand-orange motion-reduce:transition-none"
+          >
+            {copy.viewProgress}
+            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+          </Link>
+        </div>
 
         <div className="mt-5 space-y-8">
           {groups.map((group) => (
