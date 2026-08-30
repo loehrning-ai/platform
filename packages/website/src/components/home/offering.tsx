@@ -28,6 +28,15 @@ const COURSE_PLATES = [
   "bg-brand-peach/50",
 ] as const;
 
+// Solid tones for the per-card hover bar and number badge, positionally
+// keyed to the same index COURSE_TONES uses.
+const COURSE_ACCENTS = [
+  "bg-brand-acid",
+  "bg-brand-peach",
+  "bg-brand-sky",
+  "bg-brand-pink",
+] as const;
+
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].offering;
 
@@ -70,6 +79,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
             const courseCopy = homeCourseCopy(locale, course.slug);
             const wideCard = index === 0 || index === 3;
             const tone = COURSE_TONES[index] ?? COURSE_TONES[0];
+            const accent = COURSE_ACCENTS[index] ?? COURSE_ACCENTS[0];
             return (
               <li
                 key={course.slug}
@@ -87,9 +97,12 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                         plateClassName={
                           COURSE_PLATES[index] ?? COURSE_PLATES[0]
                         }
+                        accentClassName={accent}
                       />
                     ) : null}
-                    <span className="absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 bg-brand-acid font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)]">
+                    <span
+                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] ${accent}`}
+                    >
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="absolute bottom-3 right-3 rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm">
