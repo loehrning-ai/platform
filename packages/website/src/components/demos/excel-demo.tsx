@@ -335,8 +335,12 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         </span>
       </div>
 
-      {/* Data table — horizontally scrollable, keyboard-reachable */}
+      {/* Data table — horizontally scrollable, keyboard-reachable. The
+          data-course-horizontal-scroll marker is asserted by
+          route-ai-native-locales.spec.ts, which checks that every horizontally
+          scrolling region stays contained inside the lesson column. */}
       <div
+        data-course-horizontal-scroll
         role="region"
         aria-label={isDe ? "Beispiel-Arbeitsblatt" : "Sample worksheet data"}
         tabIndex={0}
