@@ -167,7 +167,7 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    <footer className="berlin-footer dark-section relative overflow-hidden border-t border-border">
+    <footer className="dark-section relative overflow-hidden border-t border-border">
       <span
         aria-hidden="true"
         className="pointer-events-none absolute left-0 top-10 size-44 rounded-[2.5rem] border border-brand-orange/40 bg-brand-acid/10"

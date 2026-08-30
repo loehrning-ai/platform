@@ -136,7 +136,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       ref={sectionRef}
       data-section="hero"
-      className="berlin-grain berlin-hero relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
+      className="berlin-grain relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden bg-paper px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
     >
       <span
         aria-hidden="true"
