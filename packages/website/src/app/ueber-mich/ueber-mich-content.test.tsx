@@ -26,7 +26,6 @@ describe("<UeberMichContent>", () => {
       "Frühere Arbeitgeber",
       "Berufliche Stationen",
       "Akademischer Hintergrund",
-      "Wie ich Inhalte prüfe",
       "Direkter Kontakt",
     ]) {
       expect(screen.getByRole("heading", { name: heading })).toBeVisible();
@@ -39,10 +38,7 @@ describe("<UeberMichContent>", () => {
     ).not.toBeNull();
     expect(container.querySelector("[data-proof-ledger]")).not.toBeNull();
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    expect(
-      container.querySelector("[data-editorial-manifesto]"),
-    ).not.toBeNull();
-    expect(container.querySelectorAll("[data-link-preview]")).toHaveLength(4);
+    expect(container.querySelectorAll("[data-link-preview]")).toHaveLength(3);
     expect(container.querySelector(".js-reveal")).toBeNull();
     expect(container.querySelector('[style*="opacity: 0"]')).toBeNull();
     expect(container.querySelector(".dark-section")).toBeNull();
@@ -62,9 +58,6 @@ describe("<UeberMichContent>", () => {
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Academic background" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "How I review content" }),
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Contact me directly" }),
@@ -97,14 +90,6 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getAllByRole("link", { name: /Open GitHub profile/i }),
     ).toHaveLength(1);
-    const guide = screen.getByRole("link", {
-      name: "CONTENT_GUIDE.md, opens in a new tab",
-    });
-    expect(guide).toHaveAttribute(
-      "href",
-      "https://github.com/loehrning-ai/platform/blob/main/CONTENT_GUIDE.md",
-    );
-    expect(guide).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("localizes the internal feedback link and keeps contact terminal", () => {

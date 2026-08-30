@@ -59,14 +59,6 @@ type ProfileCopy = Readonly<{
     intro: string;
     cards: readonly ProfileCredential[];
   }>;
-  editorial: Readonly<{
-    eyebrow: string;
-    title: string;
-    intro: string;
-    policies: readonly Readonly<{ title: string; body: string }>[];
-    guidePrefix: string;
-    guideLabel: string;
-  }>;
   contact: Readonly<{
     eyebrow: string;
     title: string;
@@ -204,28 +196,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
         },
       ],
     },
-    editorial: {
-      eyebrow: "Arbeitsweise",
-      title: "Wie ich Inhalte prüfe",
-      intro:
-        "Die öffentlichen Inhaltsregeln trennen Quellen, Einordnung und Grenzen. Drei Grundsätze gelten für jede veröffentlichte Seite.",
-      policies: [
-        {
-          title: "Primärquellen vor Behauptungen",
-          body: "Rechtliche, regulatorische, wissenschaftliche und produktbezogene Aussagen stützen sich auf Primärquellen. Zeitabhängige Inhalte tragen ein Prüfdatum.",
-        },
-        {
-          title: "Beobachtung und Einordnung trennen",
-          body: "Beobachtete Fakten, Interpretation, Beispiele und Empfehlungen werden als unterschiedliche Aussagearten behandelt. Annahmen in Rechnern und Simulationen bleiben sichtbar.",
-        },
-        {
-          title: "Grenzen ausdrücklich nennen",
-          body: "Die Plattform verspricht weder Akkreditierung noch Rechtssicherheit, Compliance oder garantierte Ergebnisse. Überfällige Prüfungen und bekannte Einschränkungen werden nicht verdeckt.",
-        },
-      ],
-      guidePrefix: "Die vollständigen öffentlichen Regeln stehen in",
-      guideLabel: "CONTENT_GUIDE.md",
-    },
     contact: {
       eyebrow: "Kontakt",
       title: "Direkter Kontakt",
@@ -360,28 +330,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
           ],
         },
       ],
-    },
-    editorial: {
-      eyebrow: "Editorial practice",
-      title: "How I review content",
-      intro:
-        "The public content rules separate sources, interpretation, and limitations. Three principles apply to every published page.",
-      policies: [
-        {
-          title: "Primary sources before claims",
-          body: "Legal, regulatory, scientific, and product claims rely on primary sources. Time-dependent material carries a review date.",
-        },
-        {
-          title: "Separate observation from interpretation",
-          body: "Observed facts, interpretation, examples, and recommendations are treated as different kinds of statement. Assumptions in calculators and simulations remain visible.",
-        },
-        {
-          title: "State limitations explicitly",
-          body: "The platform does not promise accreditation, legal certainty, compliance, or guaranteed outcomes. Overdue reviews and known limitations are not concealed.",
-        },
-      ],
-      guidePrefix: "The complete public rules are documented in",
-      guideLabel: "CONTENT_GUIDE.md",
     },
     contact: {
       eyebrow: "Contact",

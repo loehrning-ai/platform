@@ -9,16 +9,7 @@ import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { TIM_ENTITY } from "@/lib/seo/entity";
 
-const CONTENT_GUIDE_URL =
-  "https://github.com/loehrning-ai/platform/blob/main/CONTENT_GUIDE.md";
-
 const FACT_WIDTHS = ["sm:flex-[0.8]", "sm:flex-[1.4]", "sm:flex-1"] as const;
-
-const POLICY_STYLES = [
-  "bg-brand-acid/35 md:mr-20",
-  "bg-brand-sky/35 md:ml-12 md:mr-8",
-  "bg-brand-pink/35 md:ml-24",
-] as const;
 
 const CONTACT_STYLES = [
   "bg-brand-acid/45",
@@ -144,66 +135,6 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
       <CredibilityLogos locale={locale} />
       <CareerTimeline locale={locale} />
       <Credentials locale={locale} />
-
-      <section
-        id="redaktion"
-        className="border-t border-border bg-paper py-10"
-        aria-labelledby="editorial-heading"
-        data-editorial-manifesto
-      >
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <header className="grid gap-4 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-8">
-            <div className="min-w-0">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-                {copy.editorial.eyebrow}
-              </p>
-              <h2
-                id="editorial-heading"
-                className="mt-3 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground"
-              >
-                {copy.editorial.title}
-              </h2>
-            </div>
-            <p className="min-w-0 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-              {copy.editorial.intro}
-            </p>
-          </header>
-
-          <ol className="mt-8 grid gap-3">
-            {copy.editorial.policies.map((policy, index) => (
-              <li
-                key={policy.title}
-                className={`group relative grid min-w-0 gap-4 border-t border-foreground p-5 sm:grid-cols-[3rem_minmax(12rem,0.52fr)_minmax(0,1fr)] sm:items-start sm:p-6 ${POLICY_STYLES[index]}`}
-              >
-                <span className="font-mono text-xs font-bold tabular-nums text-foreground">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="max-w-[18ch] break-words text-xl font-bold tracking-[-0.025em] text-foreground [overflow-wrap:anywhere]">
-                  {policy.title}
-                </h3>
-                <p className="break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-                  {policy.body}
-                </p>
-              </li>
-            ))}
-          </ol>
-
-          <p className="mt-6 flex min-w-0 flex-wrap items-center justify-between gap-3 border-l-[3px] border-foreground bg-brand-lilac/45 px-4 py-3 text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-            <span>{copy.editorial.guidePrefix}</span>
-            <a
-              href={CONTENT_GUIDE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 bg-paper px-3 font-mono text-xs font-bold text-foreground ring-1 ring-foreground/30 transition-colors hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-              data-link-preview
-            >
-              <span translate="no">{copy.editorial.guideLabel}</span>
-              <span className="sr-only">{newTabNotice}</span>
-              <ArrowUpRight size={15} aria-hidden="true" />
-            </a>
-          </p>
-        </div>
-      </section>
 
       <section
         id="kontakt"

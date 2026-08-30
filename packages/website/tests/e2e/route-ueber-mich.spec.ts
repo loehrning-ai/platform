@@ -358,7 +358,6 @@ test("reduced-motion preference leaves every profile section visible", async ({
     LOCALES[1].h1,
     LOCALES[1].timeline,
     LOCALES[1].academic,
-    "How I review content",
     "Contact me directly",
   ]) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
