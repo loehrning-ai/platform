@@ -40,6 +40,16 @@ These are code-reviewed implementation claims. Their focused or aggregate verifi
 - Passive cards, error states, completion notices, and calls to action are flat. Shadows remain for overlays, draggable objects, and the active instrument plane.
 - The superseded AI-Native Operator progress component and its stale route assertion are removed; technical course landings share one progress implementation.
 
+### 2026-08-30 addendum — design system reunification
+
+This audit's "Route families used incompatible card, type, shadow, and spacing systems" finding was itself only partly remediated as of 26 August: `--color-brand-lilac` and three purple-tinted `globals.css` gradient washes (`.site-atmosphere`, `.berlin-hero`, `.berlin-footer`) shipped through PR #59 unremoved, reintroducing exactly the "purple glow" and "gradient ambience" anti-patterns [design-research-2026.md](./design-research-2026.md#ai-slop-signals-rejected) already named as rejected. A follow-up pass:
+
+- retired `brand-lilac` from every call site and from `@theme`, replacing it with `brand-peach` (and `brand-pink`/`brand-teal` where an array already used peach) so no two tones in the same array collide;
+- removed the three gradient-wash classes entirely rather than re-tinting them — a prior attempt (`0de0b40`) removed only a decorative blob and left `.berlin-hero`'s radial in place, which this pass does not repeat;
+- extended the expressive palette to `/einstieg`, `/hilfe`, `src/components/course`, and the `/demos` index, which previously carried zero expressive tokens.
+
+This does not re-run or re-date the rest of this audit; the release gate table below is unchanged except where it names shadow or palette contracts this pass touched directly.
+
 ## Route-Family And Test Evidence Ledger
 
 Listed contracts identify the intended evidence surface. A file's presence does not mean its current full suite passed; only results explicitly marked `PASS` below are verified for this review state.

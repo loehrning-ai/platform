@@ -21,6 +21,7 @@ Content that does none of these jobs is removed or placed in an on-demand refere
 Keep the current loehrning.ai system:
 
 - Kalkweiß background, Druckertinte foreground, and Kupfer signal color;
+- a secondary expressive palette (acid, sky, pink, peach, cobalt, teal) as light accent washes on marketing, profile, and orientation surfaces — never a route's structural identity, and absent from the flat/dense surfaces named below;
 - Loehrning Sans for reading and Geist Mono for code, state, measurement, and provenance;
 - the fixed 64px global navigation, restrained editorial grid, and print-registration details;
 - the landing-page globe as the single spatial identity anchor;
@@ -32,7 +33,7 @@ Course distinction comes from the task, instrument, diagram motif, and dataset. 
 
 - Flat editorial frames use 1px structural boundaries and 3px Kupfer signals.
 - Radius stays between 0 and 8px. Rounded pills are reserved for a genuine compact status or binary control.
-- Shadows are reserved for overlays, draggable objects, and the active instrument plane.
+- `shadow-card` / `shadow-card-hover` / `shadow-tile` are the standard soft elevation for editorial and marketing surfaces — portraits, book and workshop tiles, the nav surface, contact links — not only overlays, draggable objects, and the active instrument plane. A named set of dense/functional surfaces (account, login, feedback, the course atlas, ki-check, demos, technical course landings, and the public information routes) stay flat by contract; see `access-surfaces-density.test.ts` and its per-route siblings.
 - Reading measure is at most 68ch. Mixed editorial content is at most 1120px. Widths above 1440px are reserved for workspaces that use the space.
 - UI labels are at least 12px. Mono uppercase is reserved for state, evidence, measurements, code, and provenance.
 - Section spacing uses 8, 12, 16, 24, 32, or 48px. Larger gaps require a deliberate scene change.
