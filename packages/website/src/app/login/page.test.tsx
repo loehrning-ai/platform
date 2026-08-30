@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -124,6 +124,28 @@ describe("login locale surface", () => {
     const form = screen.getByTestId("login-form-props");
     expect(form).toHaveAttribute("data-next", "/en/konto");
     expect(form).toHaveAttribute("data-locale", "en");
+  });
+
+  it("states what an account does, and that local progress is not carried over", async () => {
+    mocks.getRequestLocale.mockResolvedValue("en");
+
+    render(await LoginPage({ searchParams: Promise.resolve({}) }));
+
+    const section = screen.getByRole("region", {
+      name: "What a learning account does",
+    });
+    expect(
+      within(section).getByText(/synchronises across your devices/),
+    ).toBeVisible();
+    expect(
+      within(section).getByText(/exported, reset, or deleted at any time/),
+    ).toBeVisible();
+    // Anonymous progress is never merged into an account by design
+    // (lib/progress/store.ts), so the page has to say so BEFORE sign-in
+    // rather than leave a learner to discover an empty dashboard after.
+    expect(
+      within(section).getByText(/is not carried over when you sign in/),
+    ).toBeVisible();
   });
 
   it("shows a specific English callback failure even when providers are unavailable", async () => {
