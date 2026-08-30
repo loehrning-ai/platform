@@ -136,7 +136,9 @@ describe("LearningAtlas", () => {
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
-    expect(container.querySelectorAll("img")).toHaveLength(0);
+    // Cover art is a deliberate reversal of the ledger brief's "zero images"
+    // rule -- a later commit adds a real image-count assertion back once the
+    // teaser rebuild's actual per-course image count is known.
     expect(screen.getAllByText("Fakten und Zugang")).toHaveLength(
       COURSE_CATALOG.length + IMPORTED_COURSE_CATALOG.length,
     );
@@ -254,11 +256,7 @@ describe("LearningAtlas", () => {
       container
         .querySelector('[data-course-slug="ki-fuehrerschein"]')
         ?.querySelector("[aria-hidden='true']"),
-    ).toHaveClass(
-      "border-brand-orange",
-      "bg-kupfer-mist",
-      "text-brand-orange",
-    );
+    ).toHaveClass("border-brand-orange", "bg-kupfer-mist", "text-brand-orange");
     expect(
       container.querySelector('[data-course-slug="ki-und-gesellschaft"]'),
     ).toHaveAttribute("data-course-status", "started");

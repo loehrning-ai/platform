@@ -83,7 +83,7 @@ Listed contracts identify the intended evidence surface. A file's presence does 
 
 - Replace persona filters and duplicated catalogues with a goal selector, one recommended next proof, and the complete route map.
 - Preserve every localized route, access boundary, certificate fact, source revision, and progress signal.
-- Present technical syllabi as compact learning ledgers rather than brochure card grids.
+- Present the course atlas as a teaser with cover art and tonal differentiation, not the administrative ledger this audit originally specified -- reversed four days after this audit once the ledger read as flat and text-heavy in practice. All ten courses remain discoverable and every load-bearing progress/status hook is preserved; only the "no images, no card grid" framing changed.
 
 ### Lessons and workspaces
 

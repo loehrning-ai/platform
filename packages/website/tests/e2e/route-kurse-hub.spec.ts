@@ -97,11 +97,9 @@ test.describe("/kurse hub", () => {
     await page.goto(ROUTE, { waitUntil: "load" });
 
     // Fresh visitor → one explicit next proof, href = startHref of the track.
-    const startCta = page
-      .getByTestId("next-proof")
-      .getByRole("link", {
-        name: /Nachweis beginnen.*KI-Führerschein/i,
-      });
+    const startCta = page.getByTestId("next-proof").getByRole("link", {
+      name: /Nachweis beginnen.*KI-Führerschein/i,
+    });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
 
@@ -178,9 +176,7 @@ test.describe("/kurse mobile", () => {
 });
 
 for (const route of ["/kurse", "/en/kurse"] as const) {
-  test(`${route} renders the complete image-free course ledger`, async ({
-    page,
-  }) => {
+  test(`${route} renders the complete ten-course atlas`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
@@ -188,7 +184,9 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
     await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
-    await expect(atlas.locator("img")).toHaveCount(0);
+    // Cover art is a deliberate reversal of the ledger brief's "zero images"
+    // rule -- a later commit adds a real per-course image-count assertion
+    // once the teaser rebuild lands.
     await expect(
       page.getByRole("group", {
         name: route.startsWith("/en/")
