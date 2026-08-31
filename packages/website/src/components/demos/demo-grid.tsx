@@ -325,7 +325,14 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
+        <div className="mt-4 grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
+          {/* grid-flow-row-dense is a safety net for FILTERED subsets, not the
+              mechanism. The unfiltered catalog packs exactly (see the tiling
+              invariant in lib/demos.ts), so dense changes nothing in the
+              default view. An arbitrary filtered subset can leave a span-area
+              that no four-column packing closes; dense backfills those gaps
+              instead of leaving visible holes. DOM order stays catalog order,
+              so reading and tab order are unaffected. */}
           {filtered.map((d) => (
             <DemoTile
               key={d.slug}

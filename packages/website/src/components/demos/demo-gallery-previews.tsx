@@ -286,7 +286,7 @@ export function PromptScannerPreview() {
       <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.04em", color: DK.text, padding: "4px 6px", background: "rgba(255,255,255,0.03)", border: `1px solid ${DK.border}`, lineHeight: 1.6 }}>
         <span style={{ background: `${DEMO.statusRedOnDark}40`, borderBottom: `1px solid ${DEMO.statusRedOnDark}`, padding: "0 3px", color: DEMO.kalk }}>Fiktivperson Alpha</span>
         {", IBAN "}
-        <span style={{ background: DEMO.kalk, color: DEMO.ink, padding: "1px 5px", fontWeight: 800 }}>▓▓▓▓▓▓</span>
+        <span className="demo-pv-snap" style={{ display: "inline-block", background: DEMO.kalk, color: DEMO.ink, padding: "1px 5px", fontWeight: 800 }}>▓▓▓▓▓▓</span>
         {" fragt zu "}
         <span style={{ background: `${DEMO.statusAmber}40`, borderBottom: `1px solid ${DEMO.statusAmber}`, padding: "0 3px", color: DEMO.kalk }}>Vertragsdetail</span>.
       </div>
@@ -315,6 +315,9 @@ export function CostDriftObservabilityPreview() {
           </linearGradient>
         </defs>
         <polyline
+          className="demo-pv-draw"
+          pathLength={1}
+          strokeDasharray={1}
           points="0,30 20,25 40,28 60,17 80,22 100,11 120,18 140,6 160,14 180,3 200,11 220,8"
           fill="none"
           stroke={ACCENT}
@@ -324,6 +327,7 @@ export function CostDriftObservabilityPreview() {
           vectorEffect="non-scaling-stroke"
         />
         <polyline
+          className="demo-pv-fade"
           points="0,38 0,30 20,25 40,28 60,17 80,22 100,11 120,18 140,6 160,14 180,3 200,11 220,8 220,38"
           fill="url(#gcd)"
         />
@@ -343,12 +347,12 @@ export function FineTunePlaygroundPreview() {
   // s-med (1x1) — side-by-side BASIS vs FINE-TUNED comparison.
   return (
     <div style={{ ...PV, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, position: "relative" }}>
-      <div style={{ background: DEMO.birke, border: `1px solid ${DEMO.leinen}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3 }}>
+      <div className="demo-pv-rise" style={{ background: DEMO.birke, border: `1px solid ${DEMO.leinen}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3 }}>
         <div style={{ fontSize: 8, fontWeight: 800, letterSpacing: "0.12em", color: DEMO.schiefer, borderBottom: `1px solid ${DEMO.leinen}`, paddingBottom: 3 }}>BASIS</div>
         <div style={{ fontSize: 9, lineHeight: 1.4, color: DEMO.ink, fontFamily: SANS }}>„Leider keine Auskunft…&ldquo;</div>
         <div style={{ fontSize: 7, color: DEMO.schiefer, letterSpacing: "0.1em", marginTop: "auto", fontWeight: 700 }}>KONF · 41%</div>
       </div>
-      <div style={{ background: DEMO.kalk, border: `2px solid ${ACCENT}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3, boxShadow: `2px 2px 0 0 ${ACCENT}` }}>
+      <div className="demo-pv-rise" style={{ background: DEMO.kalk, border: `2px solid ${ACCENT}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3, boxShadow: `2px 2px 0 0 ${ACCENT}` }}>
         <div style={{ fontSize: 8, fontWeight: 800, letterSpacing: "0.12em", color: ACCENT, borderBottom: `1px solid ${DEMO.leinen}`, paddingBottom: 3, display: "flex", justifyContent: "space-between" }}>
           <span>SIMULIERT</span>
           <span>+38%</span>
@@ -386,7 +390,7 @@ export function LlmObservabilityPreview() {
       <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.14em", fontWeight: 700 }}>EVAL · DRIFT · FEEDBACK</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
         {[["HOCH", "#166534", "#dcfce7"], ["MITTEL", "#a16207", "#fef9c3"], ["HOCH", "#166534", "#dcfce7"], ["DRIFT", "#b45309", "#fef3c7"]].map(([label, fg, bg], i) => (
-          <div key={i} style={{ border: `1px solid ${fg}`, background: bg, padding: "2px 5px", fontFamily: MONO, fontSize: 8, fontWeight: 700, color: fg, letterSpacing: "0.08em" }}>
+          <div key={i} className="demo-pv-rise" style={{ border: `1px solid ${fg}`, background: bg, padding: "2px 5px", fontFamily: MONO, fontSize: 8, fontWeight: 700, color: fg, letterSpacing: "0.08em" }}>
             {label}
           </div>
         ))}

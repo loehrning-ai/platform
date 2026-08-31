@@ -72,6 +72,16 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
 
+### Gallery previews: why there are no live miniatures
+
+An earlier brief asked for twelve "live index miniatures" on `/demos`, gated behind an IntersectionObserver with a reserved height. That was not built, for two reasons that outrank it.
+
+It would break the rule directly above. Twelve thumbnails looping at once is the definition of a decorative loop, and it contradicts one region carrying meaningful motion at a time. Shipping it would have meant deleting a policy and the tests that enforce it to satisfy an older plan line.
+
+Its stated mechanism also already exists, in less code. `.demo-gallery-tile` carries `content-visibility: auto` with `contain-intrinsic-size: auto 420px`, so off-screen tiles already skip style, layout, and paint behind a reserved box. Rebuilding that in JavaScript would be strictly worse on the page whose blocking-time budget is tightest.
+
+What ships instead is micro-motion that runs only while a tile is hovered or holds focus: the cost sparkline draws itself, evaluation chips arrive in sequence, the redaction snaps shut over the value it hides, and the fine-tune comparison resolves before-then-after. Each plays once, finishes inside the finite-reveal window, and says something a still frame cannot. It is pure CSS, so it adds no JavaScript, and the whole block sits inside `prefers-reduced-motion: no-preference`, so under `reduce` the previews are entirely static rather than merely faster.
+
 ## Authorship And Evidence
 
 - Course authorship, source revisions, limitations, and access boundaries remain visible.

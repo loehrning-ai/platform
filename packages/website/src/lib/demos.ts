@@ -11,11 +11,23 @@
  *   s-tall  : secondary narrative — 1x2 tile, vertical rhythm break
  *   s-med   : default — 1x1 tile
  *
+ * TILING INVARIANT (enforced by demo-bento-tiling.test.ts):
+ * The four-column gallery packs exactly when the sizes sum to a whole number
+ * of rows. With one s-hero the algebra is forced: for 12 tiles across 5 rows,
+ * `4(1) + 2b + c = 20` with `1 + b + c = 12` yields b = 5 doubles (s-tall or
+ * s-wide) and c = 6 singles. Today that is 1 hero + 3 tall + 2 wide + 6 med.
+ * Position matters as much as the count, because sparse row-flow never
+ * backfills: a double must sit at DOM index 3 to close the cells beside the
+ * hero, and the fifth double at index 6 to anchor the lower block.
+ * A 13th demo therefore requires re-balancing the whole set, not appending to
+ * it. The test simulates placement and names the index that opens a hole.
+ *
  * When adding a demo:
  *   1. Append an entry below (keep `n` sequential, zero-padded).
  *   2. Create `src/components/demos/<slug>-demo.tsx` (client component).
  *   3. Add matching copy to `src/lib/demos-copy.ts`.
- *   4. Update tests.
+ *   4. Re-balance the size mix so the tiling invariant above still holds.
+ *   5. Update tests.
  */
 
 import type { CourseSlug } from "@/lib/course/types";
@@ -142,7 +154,7 @@ export const demos: readonly Demo[] = [
     n: "03",
     category: "Outbound",
     level: "mittel",
-    size: "s-med",
+    size: "s-tall",
     dark: false,
     accent: false,
     title: "Signale im CRM.",
@@ -244,7 +256,7 @@ export const demos: readonly Demo[] = [
     n: "06",
     category: "RAG",
     level: "mittel",
-    size: "s-med",
+    size: "s-tall",
     dark: false,
     accent: true,
     title: "Vertrags-Assistent.",
