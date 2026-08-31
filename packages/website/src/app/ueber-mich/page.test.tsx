@@ -82,7 +82,7 @@ describe("/ueber-mich locale metadata and structured data", () => {
       sameAs: [TIM_ENTITY.linkedInUrl, TIM_ENTITY.personalGithubUrl],
     });
     expect(person?.sameAs).not.toContain(GITHUB_ORG.url);
-    expect(screen.getByRole("heading", { name: /öffentliches Lernarchiv/ })).toBeVisible();
+    expect(screen.getByRole("heading", { name: /prüfbar bleibt/ })).toBeVisible();
   });
 
   it("localizes the English ProfilePage, breadcrumb, Person copy, and visible page", async () => {
@@ -108,7 +108,7 @@ describe("/ueber-mich locale metadata and structured data", () => {
       url: "https://loehrning.ai/en/ueber-mich",
     });
     expect(person?.knowsAbout).toContain("AI literacy");
-    expect(screen.getByRole("heading", { name: /public learning archive/ })).toBeVisible();
+    expect(screen.getByRole("heading", { name: /keep knowledge about AI verifiable/ })).toBeVisible();
     expect(document.body).not.toHaveTextContent("Akademischer Hintergrund");
   });
 });

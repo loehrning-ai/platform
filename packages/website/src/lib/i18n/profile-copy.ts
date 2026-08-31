@@ -85,7 +85,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     breadcrumbHome: "Start",
     personJobTitle: "Kurator von loehrning.ai",
     personDescription:
-      "Tim Löhr entwickelt loehrning.ai als weitgehend öffentliches Lernarchiv für KI, Datenarbeit und technische Praxis.",
+      "Tim Löhr entwickelt loehrning.ai: frei zugängliche Kurse, Praxisbeispiele und Notizen zu KI, Datenarbeit und technischer Praxis.",
     knowsAbout: [
       "KI-Kompetenz",
       "Data Engineering",
@@ -95,7 +95,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     ],
     hero: {
       eyebrow: "Person und Arbeit",
-      title: "Ich baue loehrning.ai als öffentliches Lernarchiv.",
+      title: "Ich baue loehrning.ai, damit KI-Wissen prüfbar bleibt.",
       intro:
         "Ich bin Tim Löhr. Beruflich habe ich als Data Scientist bei Apple und Red Bull sowie als Data Engineer bei Meta gearbeitet.",
       detail:
@@ -222,7 +222,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     breadcrumbHome: "Home",
     personJobTitle: "Curator of loehrning.ai",
     personDescription:
-      "Tim Löhr develops loehrning.ai as a largely public learning archive for AI, data work, and technical practice.",
+      "Tim Löhr develops loehrning.ai: freely available courses, applied examples, and notes on AI, data work, and technical practice.",
     knowsAbout: [
       "AI literacy",
       "Data engineering",
@@ -232,7 +232,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     ],
     hero: {
       eyebrow: "Person and work",
-      title: "I build loehrning.ai as a public learning archive.",
+      title: "I build loehrning.ai to keep knowledge about AI verifiable.",
       intro:
         "I am Tim Löhr. I previously worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
       detail:
