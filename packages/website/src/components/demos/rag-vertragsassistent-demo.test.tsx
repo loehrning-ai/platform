@@ -57,7 +57,7 @@ describe("<RagVertragsassistentDemo>", () => {
     expect(screen.getByText("● DEMO-MODUS")).toBeInTheDocument();
 
     // The engine no longer restates the simulation mode: the detail shell says
-    // it once via EvidenceBadge (plan 024's "stated once per detail page"), and
+    // it once via EvidenceBadge, and the mode belongs stated once, and
     // riskNotes already carries the legal-interpretation caveat. What the badge
     // could NOT say -- that this engine's "Konfidenz" is a keyword-hit count
     // rather than a model score -- moved next to the chip, and is pinned here

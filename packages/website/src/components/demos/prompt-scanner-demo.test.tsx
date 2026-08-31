@@ -36,7 +36,7 @@ describe("<PromptScannerDemo>", () => {
     );
     // The engine no longer restates its execution mode: the detail shell says
     // it once via EvidenceBadge, so the inline SimulationDisclosure made it
-    // twice (plan 024, "stated once per detail page").
+    // twice, and the mode belongs stated once per detail page.
     expect(
       screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
     ).not.toBeInTheDocument();

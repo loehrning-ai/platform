@@ -14,7 +14,8 @@ import CostDriftObservabilityDemo from "./cost-drift-observability-demo";
  *
  * The engine no longer renders its own SimulationDisclosure. The detail shell
  * states the mode once via EvidenceBadge, so an inline restatement here made it
- * twice (plan 024's "stated once per detail page"). What the badge could NOT
+ * twice, and the mode belongs stated once per detail page. What the badge
+ * could NOT
  * say -- that the latency curve moves at runtime and the motion is generated
  * locally rather than streamed -- moved into the chart caption, which is
  * asserted below so the fact stays guarded.
