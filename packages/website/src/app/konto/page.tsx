@@ -274,6 +274,26 @@ export default async function KontoPage({
     }))
     .filter((g) => g.items.length > 0);
 
+  // Only offer anchors to sections that actually render. When the progress
+  // region is replaced by the outage alert, the catalog headings do not exist,
+  // so linking to them would strand the learner mid-page.
+  const sectionLinks: readonly { href: string; label: string }[] = [
+    ...(progressUnavailable
+      ? []
+      : [
+          ...(myCourses.length > 0
+            ? [{ href: "#konto-meine-kurse", label: copy.coursesHeading }]
+            : []),
+          { href: "#konto-katalog", label: copy.availableCoursesHeading },
+          { href: "#outcomes-heading", label: copy.outcomesHeading },
+        ]),
+    { href: "#konto-material", label: copy.deepenHeading },
+    {
+      href: localizeHref("/konto/datenschutz", locale),
+      label: copy.sectionSettings,
+    },
+  ];
+
   return (
     <section className="py-8 sm:py-12">
       <div className="mx-auto w-full max-w-5xl min-w-0 px-4 sm:px-6">
@@ -309,6 +329,29 @@ export default async function KontoPage({
             stale on other devices. It was previously announced only on
             /konto/datenschutz, which a learner reading their record never
             passes through. */}
+        {/* Persistent account navigation. 025's Done Criteria require account
+            settings to be reachable from navigation, and the catalog pushed
+            the privacy link far below the fold. Deliberately not sticky: the
+            site nav is already `fixed top-0 z-50`, so a second sticky bar
+            would stack on it. Its accessible name is distinct from
+            privacyNavigationLabel so getByRole("navigation", { name:
+            "Account privacy" }) stays a single match. */}
+        <nav
+          aria-label={copy.sectionNavigationLabel}
+          data-konto-section-nav
+          className="mt-6 flex flex-wrap items-center gap-x-1 gap-y-1 border-y border-border py-1"
+        >
+          {sectionLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="inline-flex min-h-11 items-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
         <ProgressSyncNotice locale={locale} />
 
         {progressUnavailable ? (
@@ -415,7 +458,10 @@ export default async function KontoPage({
             {/* My courses */}
             {myCourses.length > 0 ? (
               <>
-                <h2 className="mt-12 text-2xl font-bold tracking-[-0.03em] text-foreground">
+                <h2
+                  id="konto-meine-kurse"
+                  className="mt-12 scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
+                >
                   {copy.coursesHeading}
                 </h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -433,7 +479,10 @@ export default async function KontoPage({
 
             {/* Available courses: filter/sort, cover art, honest gating note */}
             <div className="mt-12 flex flex-wrap items-baseline justify-between gap-3">
-              <h2 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
+              <h2
+                id="konto-katalog"
+                className="scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
+              >
                 {copy.availableCoursesHeading}
               </h2>
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
@@ -527,7 +576,7 @@ export default async function KontoPage({
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <h2
                   id="outcomes-heading"
-                  className="text-2xl font-bold tracking-[-0.03em] text-foreground"
+                  className="scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
                 >
                   {copy.outcomesHeading}
                 </h2>
@@ -572,7 +621,10 @@ export default async function KontoPage({
         )}
 
         {/* Supporting resources */}
-        <h2 className="mt-12 text-2xl font-bold tracking-[-0.03em] text-foreground">
+        <h2
+          id="konto-material"
+          className="mt-12 scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
+        >
           {copy.deepenHeading}
         </h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

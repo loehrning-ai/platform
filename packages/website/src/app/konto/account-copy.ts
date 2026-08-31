@@ -54,6 +54,8 @@ export interface AccountPageCopy {
   }[];
   readonly localDataHeading: string;
   readonly localDataBody: string;
+  readonly sectionNavigationLabel: string;
+  readonly sectionSettings: string;
   readonly privacyNavigationLabel: string;
   readonly privacyLink: string;
   readonly privacySummary: string;
@@ -132,6 +134,8 @@ export const ACCOUNT_COPY = {
     localDataHeading: "Gespeicherter Lernstand",
     localDataBody:
       "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser. Ein Lernkonto synchronisiert sie geräteübergreifend. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export erhalten und haben keinen offiziellen Nachweiswert.",
+    sectionNavigationLabel: "Kontobereiche",
+    sectionSettings: "Konto verwalten",
     privacyNavigationLabel: "Kontodatenschutz",
     privacyLink: "Datenschutz und Datenverwaltung",
     privacySummary: "Export, Kursfortschritt zurücksetzen und Konto löschen.",
@@ -208,6 +212,8 @@ export const ACCOUNT_COPY = {
     localDataHeading: "Saved learning state",
     localDataBody:
       "Without sign-in, course progress, checkpoints, and work artifacts remain in this browser. A learning account synchronises them across devices. Historical activity data remains in exports for compatibility and has no official qualification value.",
+    sectionNavigationLabel: "Account sections",
+    sectionSettings: "Manage account",
     privacyNavigationLabel: "Account privacy",
     privacyLink: "Privacy and data controls",
     privacySummary:

@@ -271,6 +271,62 @@ describe("KontoPage course resume integration", () => {
     expect(mocks.fetchUnifiedProgressForUser).not.toHaveBeenCalled();
   });
 
+  it("offers persistent navigation to account settings without a landmark collision", async () => {
+    // 025 requires account settings to be reachable from navigation. The
+    // catalog pushed the privacy link far below the fold, so the section nav
+    // carries it at the top of the page. Its accessible name must stay
+    // distinct from the privacy landmark, because that one is queried by name
+    // as a single match (below, and in the authed e2e suite).
+    const state = progress({
+      "eu-ai-act-kurs": courseSlice(
+        "eu-ai-act-kurs",
+        5,
+        "2026-07-29T11:00:00.000Z",
+      ),
+    });
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    const { container } = render(await kontoPage());
+
+    const sectionNav = screen.getByRole("navigation", {
+      name: "Kontobereiche",
+    });
+    expect(
+      within(sectionNav).getByRole("link", { name: "Konto verwalten" }),
+    ).toHaveAttribute("href", "/konto/datenschutz");
+    // Anchors only point at headings that actually rendered.
+    for (const link of within(sectionNav).getAllByRole("link")) {
+      const href = link.getAttribute("href") ?? "";
+      if (!href.startsWith("#")) continue;
+      expect(
+        container.querySelector(href),
+        `${href} must resolve to a rendered section`,
+      ).not.toBeNull();
+    }
+    // Still exactly one privacy landmark, so the single-match query holds.
+    expect(screen.getAllByRole("navigation", { name: "Kontodatenschutz" })).toHaveLength(1);
+  });
+
+  it("drops catalog anchors when the progress region is replaced by the outage alert", async () => {
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue({
+      ok: false,
+      error: new Error("database unavailable"),
+    });
+
+    render(await kontoPage());
+
+    const sectionNav = screen.getByRole("navigation", {
+      name: "Kontobereiche",
+    });
+    // Linking to headings that never rendered would strand the learner.
+    expect(
+      within(sectionNav).queryByRole("link", { name: "Weitere Kurse" }),
+    ).toBeNull();
+    expect(
+      within(sectionNav).getByRole("link", { name: "Konto verwalten" }),
+    ).toBeInTheDocument();
+  });
+
   it("renders an outage instead of signing the learner out when auth itself fails", async () => {
     // {configured:true, user:null, error} is an auth-backend outage, not a
     // logged-out visitor: it differs from the anonymous case only by `error`.
