@@ -28,13 +28,20 @@ const COURSE_PLATES = [
   "bg-brand-peach/50",
 ] as const;
 
-// Solid tones for the per-card hover bar and number badge, positionally
-// keyed to the same index COURSE_TONES uses.
+// Solid tones for the per-card hover bar and number badge, positionally keyed
+// to the same index COURSE_TONES uses. This list was previously identical to
+// COURSE_TONES, so every badge and hover bar printed the card's own hue on
+// itself and vanished into it. Each accent is now its card tone's complement:
+// acid takes pink, peach takes sky, sky takes peach, pink takes acid. Warm
+// tones get a cool accent and vice versa, so the accent reads as a distinct
+// mark while staying inside the same family. All four stay in the light half
+// of the palette because the badge prints foreground ink on them; cobalt and
+// teal are too dark to carry it.
 const COURSE_ACCENTS = [
-  "bg-brand-acid",
-  "bg-brand-peach",
-  "bg-brand-sky",
   "bg-brand-pink",
+  "bg-brand-sky",
+  "bg-brand-peach",
+  "bg-brand-acid",
 ] as const;
 
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {

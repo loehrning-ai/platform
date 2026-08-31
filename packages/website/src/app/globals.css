@@ -244,14 +244,16 @@
      resurrect the retired brand-lilac token. Scoped to the hero only, never a
      site-wide backdrop. */
   .berlin-hero {
-    /* Two radials, not the original three layers. The third was a full-hero
-       linear tint at the foot, the least visible layer and the most expensive
-       to paint on the largest above-the-fold element, on a page whose
-       blocking-time budget it shares. The globe's glow is what this is for,
-       and that is entirely the first radial. */
+    /* Gives the globe volume so it does not read as a bare wireframe on flat
+       paper. No purple: the original wash glowed lilac, which is the exact
+       "purple glow" the design research rejects, so both radials are
+       brand-sky. Two layers, not the original three - the dropped third was a
+       full-hero linear tint at the foot, the least visible layer and the most
+       expensive to paint on the largest above-the-fold element of a page that
+       runs at its blocking-time budget. */
     background:
-      radial-gradient(circle at 74% 36%, rgba(203, 188, 255, 0.62), transparent 24rem),
-      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.48), transparent 22rem),
+      radial-gradient(circle at 74% 36%, rgba(169, 221, 252, 0.5), transparent 24rem),
+      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.34), transparent 22rem),
       var(--color-paper);
   }
 
