@@ -19,9 +19,13 @@ const WORKSHOP_WASHES = [
   "bg-brand-peach/55",
 ] as const;
 
+// Offset sheets behind each card. All three stay in the light half of the
+// palette: brand-teal is the one dark, saturated hue here, and behind the
+// pink wash of card two it read as a muddy grey-green next to card one's
+// clean acid. Sky carries the same cool contrast without the mud.
 const WORKSHOP_SHEETS = [
   "bg-brand-acid/75",
-  "bg-brand-teal/45",
+  "bg-brand-sky/60",
   "bg-brand-pink/65",
 ] as const;
 

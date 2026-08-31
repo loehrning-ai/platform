@@ -126,7 +126,7 @@ describe("OpenSourcePage", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Offene Werkzeuge. Ohne Blackbox.",
+        name: "Freie Open-Source-Projekte.",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText(/Echte Ansichten zuerst/)).toBeInTheDocument();
@@ -195,7 +195,7 @@ describe("OpenSourcePage", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Open tools. No black box.",
+        name: "Free open source projects.",
       }),
     ).toBeInTheDocument();
     expect(
