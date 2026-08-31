@@ -80,13 +80,9 @@ test.describe("/kurse hub", () => {
       }),
     ).toBeVisible();
 
-    for (const title of NATIVE_TRACKS) {
-      await expect(
-        allCourses.getByRole("progressbar", {
-          name: `Fortschritt ${title}`,
-        }),
-      ).toBeVisible();
-    }
+    // The teaser carries no progress meter: progress affordances live on the
+    // account catalog. What each row states instead is the course duration.
+    await expect(allCourses.getByRole("progressbar")).toHaveCount(0);
   });
 
   test("primary CTA links to the course track, which login-gates an anonymous visitor", async ({
@@ -121,6 +117,14 @@ test.describe("/kurse hub", () => {
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+
+    // The goal buttons are server-rendered but inert until React attaches
+    // their handlers, and a click that lands first is swallowed with no error,
+    // leaving the URL without its goal param. Wait for the hydration marker
+    // before clicking rather than racing it.
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
     const goals = page.getByRole("group", { name: "Lernziel auswählen" });
     await expect(goals).toBeVisible();

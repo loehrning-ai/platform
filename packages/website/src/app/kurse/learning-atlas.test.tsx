@@ -98,7 +98,7 @@ describe("LearningAtlas", () => {
     expect(screen.queryByText(/XP|Serie/)).not.toBeInTheDocument();
   });
 
-  it("preserves every catalog course, overview route, start route, and native progress surface", () => {
+  it("preserves every catalog course, overview route, start route, and MIT source attribution", () => {
     const { container } = render(<LearningAtlas />);
 
     for (const course of COURSE_CATALOG) {
@@ -118,9 +118,27 @@ describe("LearningAtlas", () => {
         "bg-paper",
         "text-foreground",
       );
+      // No per-row progress meter: the teaser states duration only and the
+      // progress affordances live on the account catalog.
       expect(
-        screen.getByTestId(`progress-dots-${course.slug}`),
-      ).toBeInTheDocument();
+        screen.queryByTestId(`progress-dots-${course.slug}`),
+      ).toBeNull();
+      expect(row?.querySelector('[role="progressbar"]')).toBeNull();
+      // The imported courses are MIT-licensed. This row is the only place the
+      // repository and pinned commit render as page content anywhere on the
+      // site, so attribution must be present and visible, not disclosed.
+      if (course.sourceHref) {
+        const source = row?.querySelector<HTMLElement>("[data-course-source]");
+        expect(source, `${course.slug} source attribution`).not.toBeNull();
+        expect(
+          source?.querySelector(`a[href="${course.sourceHref}"]`),
+        ).not.toBeNull();
+        if (course.sourceCommitHref) {
+          expect(
+            source?.querySelector(`a[href="${course.sourceCommitHref}"]`),
+          ).not.toBeNull();
+        }
+      }
     }
 
     for (const course of IMPORTED_COURSE_CATALOG) {
@@ -136,26 +154,22 @@ describe("LearningAtlas", () => {
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
+    // Exactly the six imported courses carry visible source attribution.
+    expect(container.querySelectorAll("[data-course-source]")).toHaveLength(
+      COURSE_CATALOG.filter((course) => course.sourceHref).length,
+    );
+
     // One cover-art image per course now that the ledger brief's "zero
     // images" rule is deliberately reversed -- every COURSE_CATALOG entry
     // has a coverImage, and IMPORTED_COURSE_CATALOG is empty today.
     expect(container.querySelectorAll("img")).toHaveLength(
       COURSE_CATALOG.length,
     );
-    expect(screen.getAllByText("Fakten und Zugang")).toHaveLength(
-      COURSE_CATALOG.length + IMPORTED_COURSE_CATALOG.length,
-    );
-
-    const courses = [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG];
-    const disclosureNames = courses.map(
-      (course) => `Fakten und Zugang: ${course.title}`,
-    );
-    expect(
-      Array.from(container.querySelectorAll("summary[aria-label]"), (summary) =>
-        summary.getAttribute("aria-label"),
-      ),
-    ).toEqual(disclosureNames);
-    expect(new Set(disclosureNames).size).toBe(courses.length);
+    // No per-row disclosure at all. The facts it held are either on the row
+    // (duration, source) or on the course's own landing page (description,
+    // scope, structure, audience, badges).
+    expect(container.querySelectorAll("details")).toHaveLength(0);
+    expect(screen.queryByText("Fakten und Zugang")).toBeNull();
   });
 
   it("shows the declared relationship between foundation and technical courses", () => {
@@ -237,7 +251,7 @@ describe("LearningAtlas", () => {
     }
   });
 
-  it("uses progress to advance the default path and keeps source provenance on demand", () => {
+  it("uses progress to advance the default path and keeps source provenance visible", () => {
     storeMock.getCompletedLessonsCount.mockImplementation((slug) =>
       slug === "ki-fuehrerschein" ? 18 : slug === "ki-und-gesellschaft" ? 3 : 0,
     );
@@ -263,19 +277,15 @@ describe("LearningAtlas", () => {
     expect(
       container.querySelector('[data-course-slug="ki-und-gesellschaft"]'),
     ).toHaveAttribute("data-course-status", "started");
+    // Progress still DRIVES the atlas (status attribute above, next-proof pick
+    // above) but is no longer DISPLAYED here: the numeric readouts moved to the
+    // account catalog, so the teaser states a course's duration instead.
+    expect(screen.queryByTestId("progress-pct-ki-fuehrerschein")).toBeNull();
     expect(
-      screen.getByTestId("progress-pct-ki-fuehrerschein"),
-    ).toHaveTextContent("100%");
-    expect(
-      screen
-        .getByTestId("course-progress-ki-fuehrerschein")
-        .querySelector("[data-progress-fill]"),
-    ).toHaveStyle({ transform: "scaleX(1)" });
-    expect(
-      screen
-        .getByTestId("course-progress-ki-und-gesellschaft")
-        .querySelector<HTMLElement>("[data-progress-fill]")?.style.width,
-    ).toBe("");
+      screen.queryByTestId("course-progress-ki-fuehrerschein"),
+    ).toBeNull();
+    expect(container.querySelectorAll("[data-progress-fill]")).toHaveLength(0);
+    expect(container.querySelectorAll('[role="progressbar"]')).toHaveLength(0);
 
     const codex = container.querySelector<HTMLElement>(
       '[data-course-slug="codex"]',

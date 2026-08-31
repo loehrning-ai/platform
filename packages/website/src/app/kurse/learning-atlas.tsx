@@ -13,11 +13,7 @@ import {
 import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
 import { demosForCourse } from "@/lib/demos";
-import {
-  courseBadges,
-  courseGroupFor,
-  courseSections,
-} from "@/lib/courses/tracks";
+import { courseGroupFor, courseSections } from "@/lib/courses/tracks";
 import {
   getCompletedLessonsCount,
   isCertificateEligible,
@@ -80,16 +76,12 @@ const ATLAS_COPY = {
     viewProgress: "Fortschritt in deinem Konto ansehen",
     tryDemo: (count: number) =>
       count > 1 ? `${count} Praxisbeispiele testen` : "Praxisbeispiel testen",
-    courseDetails: "Fakten und Zugang",
-    audience: "Für wen",
-    source: "Quellstand",
     sourceCode: "Quellcode",
     sourceCommit: "Commit",
     start: "Nachweis beginnen",
     continue: "Nachweis fortsetzen",
     viewRecord: "Nachweis ansehen",
     pathCourse: "Teil des gewählten Pfads",
-    progress: "Fortschritt",
     goals: LEARNING_GOALS.de,
     proofs: {
       "ki-fuehrerschein":
@@ -131,16 +123,12 @@ const ATLAS_COPY = {
     viewProgress: "View your progress in your account",
     tryDemo: (count: number) =>
       count > 1 ? `Try ${count} applied examples` : "Try the applied example",
-    courseDetails: "Facts and access",
-    audience: "Who it is for",
-    source: "Source revision",
     sourceCode: "Source code",
     sourceCommit: "Commit",
     start: "Start this proof",
     continue: "Continue this proof",
     viewRecord: "View record",
     pathCourse: "Part of the selected path",
-    progress: "Progress",
     goals: LEARNING_GOALS.en,
     proofs: {
       "ki-fuehrerschein":
@@ -180,16 +168,12 @@ const ATLAS_COPY = {
       readonly allCoursesIntro: string;
       readonly viewProgress: string;
       readonly tryDemo: (count: number) => string;
-      readonly courseDetails: string;
-      readonly audience: string;
-      readonly source: string;
       readonly sourceCode: string;
       readonly sourceCommit: string;
       readonly start: string;
       readonly continue: string;
       readonly viewRecord: string;
       readonly pathCourse: string;
-      readonly progress: string;
       readonly goals: readonly LearningGoal[];
       readonly proofs: Readonly<Record<string, string>>;
     }
@@ -250,14 +234,6 @@ function courseAction(
   };
 }
 
-function progressPercent(course: CatalogCourse, stat: CourseStat): number {
-  if (course.totalLessons === 0) return 0;
-  return Math.min(
-    100,
-    Math.round((stat.completed / course.totalLessons) * 100),
-  );
-}
-
 function sourceRepository(sourceHref: string): string {
   try {
     return new URL(sourceHref).pathname
@@ -270,79 +246,17 @@ function sourceRepository(sourceHref: string): string {
   }
 }
 
-function CourseProgress({
-  course,
-  stat,
-  hydrated,
-  locale,
-  identified = false,
-}: {
-  readonly course: CatalogCourse;
-  readonly stat: CourseStat;
-  readonly hydrated: boolean;
-  readonly locale: Locale;
-  readonly identified?: boolean;
-}) {
-  const galleryCopy = COURSE_GALLERY_COPY[locale];
-  const pct = progressPercent(course, stat);
-  const progressText = hydrated
-    ? galleryCopy.progressLoaded(stat.completed, course.totalLessons)
-    : galleryCopy.progressLoading(course.title);
-
-  return (
-    <div
-      className="min-w-0 border border-border bg-background px-3 py-2.5"
-      data-course-progress-card
-      data-testid={identified ? `course-progress-${course.slug}` : undefined}
-    >
-      <div className="flex items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
-        <span className="font-bold uppercase tracking-[0.08em]">
-          {ATLAS_COPY[locale].progress}
-        </span>
-        <span
-          className="font-bold tabular-nums text-foreground"
-          data-testid={identified ? `progress-pct-${course.slug}` : undefined}
-        >
-          {hydrated ? `${pct}%` : "—"}
-        </span>
-      </div>
-      <div
-        className="mt-2 h-1.5 overflow-hidden bg-track"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={course.totalLessons}
-        aria-valuenow={hydrated ? stat.completed : 0}
-        aria-valuetext={progressText}
-        aria-label={`${galleryCopy.progress} ${course.title}`}
-        data-testid={identified ? `progress-dots-${course.slug}` : undefined}
-      >
-        <span
-          aria-hidden="true"
-          className="block h-full origin-left bg-brand-orange transition-transform duration-300 motion-reduce:transition-none"
-          data-progress-fill
-          style={{ transform: `scaleX(${hydrated ? pct / 100 : 0})` }}
-        />
-      </div>
-      <p className="mt-2 font-mono text-xs tabular-nums text-muted-foreground">
-        {progressText}
-      </p>
-    </div>
-  );
-}
-
 function CourseLedgerRow({
   course,
   index,
   inPath,
   stat,
-  hydrated,
   locale,
 }: {
   readonly course: Course;
   readonly index: number;
   readonly inPath: boolean;
   readonly stat?: CourseStat;
-  readonly hydrated: boolean;
   readonly locale: Locale;
 }) {
   const copy = ATLAS_COPY[locale];
@@ -351,7 +265,6 @@ function CourseLedgerRow({
   const liveStat = live ? (stat ?? defaultStat(course)) : null;
   const action =
     live && liveStat ? courseAction(course, liveStat, locale, copy) : null;
-  const badges = courseBadges(course.slug, locale);
   const sourceHref = course.sourceHref;
   const sourceCommitHref = course.sourceCommitHref;
   const sourceCommit = course.sourceCommit;
@@ -440,21 +353,46 @@ function CourseLedgerRow({
               <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             </Link>
           ) : null}
+          {/* Attribution for the imported MIT courses. This is the only place
+              the repository and pinned commit are rendered as page content
+              anywhere on the site: every other reference is machine-readable
+              (the knowledge-graph endpoint and the course-discovery metadata),
+              and the technical landing pages render none. It therefore stays
+              visible on the row itself rather than behind a disclosure. */}
+          {sourceHref ? (
+            <p
+              data-course-source
+              className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-muted-foreground"
+            >
+              <a
+                href={sourceHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-1.5 underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                <Github className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                {sourceRepository(sourceHref)}
+                <span className="sr-only">
+                  : {copy.sourceCode}, {course.title}
+                </span>
+              </a>
+              {sourceCommitHref && sourceCommit ? (
+                <a
+                  href={sourceCommitHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                >
+                  {copy.sourceCommit} #{sourceCommit.slice(0, 7)}
+                </a>
+              ) : null}
+            </p>
+          ) : null}
         </div>
         <div className="col-span-2 min-w-0 lg:col-span-1">
-          {live && liveStat ? (
-            <CourseProgress
-              course={course}
-              stat={liveStat}
-              hydrated={hydrated}
-              locale={locale}
-              identified
-            />
-          ) : (
-            <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
-              {course.duration}
-            </span>
-          )}
+          <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
+            {course.duration}
+          </span>
         </div>
         <div
           className="col-span-2 flex min-w-0 lg:col-span-1 lg:justify-self-end"
@@ -487,103 +425,6 @@ function CourseLedgerRow({
         </div>
       </div>
 
-      <details className="group border-t border-border">
-        <summary
-          aria-label={`${copy.courseDetails}: ${course.title}`}
-          className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2 text-sm font-semibold text-foreground marker:content-none hover:bg-card-hover focus-visible:bg-card-hover [&::-webkit-details-marker]:hidden"
-        >
-          {copy.courseDetails}
-          <span
-            aria-hidden="true"
-            className="font-mono text-base transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
-          >
-            +
-          </span>
-        </summary>
-        <div className="grid gap-5 border-t border-border px-4 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.55fr)]">
-          <div>
-            <p className="max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-              {course.description}
-            </p>
-            <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.duration}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.duration}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.scope}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.totalLessons} {galleryCopy.lessons}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.structure}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.unitCount} {course.unitLabel}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {copy.audience}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.audience}
-                </dd>
-              </div>
-            </dl>
-            {badges.length > 0 ? (
-              <ul
-                className="mt-4 flex flex-wrap gap-2"
-                aria-label={galleryCopy.features}
-              >
-                {badges.map((badge) => (
-                  <li
-                    key={badge.label}
-                    className="border border-border px-2 py-1 font-mono text-xs text-muted-foreground"
-                  >
-                    {badge.label}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-
-          <div className="flex flex-col items-start gap-3 border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
-            {sourceHref ? (
-              <div className="text-xs leading-relaxed text-muted-foreground">
-                <p className="font-semibold text-foreground">{copy.source}</p>
-                <a
-                  href={sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-flex min-h-11 items-center gap-2 underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  <Github className="h-4 w-4" aria-hidden="true" />
-                  {copy.sourceCode}: {sourceRepository(sourceHref)}
-                </a>
-                {sourceCommitHref && sourceCommit ? (
-                  <a
-                    href={sourceCommitHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block min-h-11 py-3 underline decoration-border underline-offset-4 hover:decoration-foreground"
-                  >
-                    {copy.sourceCommit} #{sourceCommit.slice(0, 7)}
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </details>
     </li>
   );
 }
@@ -594,7 +435,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
   const courses = localizeCatalog(ALL_COURSE_CATALOG, locale);
   const [goalId, setGoalId] = useState<GoalId>("start");
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
-  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const requestedGoal = new URL(window.location.href).searchParams.get(
@@ -608,7 +448,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
         next[course.slug] = readStat(course, progress);
       }
       setStats(next);
-      setHydrated(true);
     });
   }, []); // The catalog is static for the lifetime of this route.
 
@@ -831,14 +670,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                         nextCourse.slug
                       ] ?? nextCourse.tagline}
                     </p>
-                    <div className="mt-3">
-                      <CourseProgress
-                        course={nextCourse}
-                        stat={nextStat}
-                        hydrated={hydrated}
-                        locale={locale}
-                      />
-                    </div>
                     <Link
                       href={nextAction.href}
                       prefetch={false}
@@ -912,7 +743,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                     index={index}
                     inPath={selectedSlugs.has(course.slug)}
                     stat={stats[course.slug]}
-                    hydrated={hydrated}
                     locale={locale}
                   />
                 ))}

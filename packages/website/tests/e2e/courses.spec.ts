@@ -152,30 +152,24 @@ test.describe("/kurse unified hub", () => {
   test("ported-course progress feeds the native progress UI", async ({
     page,
   }) => {
-    const claudeLessonId = CANONICAL_LESSON_IDS.claude[0];
-    const dataScienceLessonId = CANONICAL_LESSON_IDS["data-science"][0];
+    // This asserts the progress PIPELINE, not a particular page: evidence in
+    // the unified store must reach a rendered progress UI. It used to read the
+    // per-row meters on /kurse, which the teaser brief removed in favour of the
+    // account catalog. It now reads the ported ai-native-operator landing,
+    // which still renders TechnicalCourseProgressBar off the same
+    // getCompletedLessonsCount helper, so the behaviour stays covered.
+    const operatorLessonId = CANONICAL_LESSON_IDS["ai-native-operator"][0];
     await seedProgress(page, {
       schemaVersion: 3,
       courses: {
-        claude: {
+        "ai-native-operator": {
           lessons: {
-            [claudeLessonId]: {
-              sectionsRead: [...CANONICAL_SECTION_IDS.claude[claudeLessonId]],
-              quizScore: null,
-              quizTotal: null,
-              completed: true,
-              exercisesCompleted: {},
-            },
-          },
-          workshopQuiz: { passed: false, score: 0, completedAt: null },
-          capstoneSubmitted: false,
-          startedAt: "2026-06-18T00:00:00.000Z",
-          lastActivity: "2026-06-18T00:00:00.000Z",
-        },
-        "data-science": {
-          lessons: {
-            [dataScienceLessonId]: {
-              sectionsRead: [],
+            [operatorLessonId]: {
+              sectionsRead: [
+                ...CANONICAL_SECTION_IDS["ai-native-operator"][
+                  operatorLessonId
+                ],
+              ],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -191,12 +185,8 @@ test.describe("/kurse unified hub", () => {
       xp: 999,
       checkpoints: {
         [checkpointKey(
-          claudeLessonId,
-          lessonCompletionEvidenceCheckpointId("claude"),
-        )]: true,
-        [checkpointKey(
-          dataScienceLessonId,
-          lessonCompletionEvidenceCheckpointId("data-science"),
+          operatorLessonId,
+          lessonCompletionEvidenceCheckpointId("ai-native-operator"),
         )]: true,
       },
       badges: {},
@@ -204,20 +194,16 @@ test.describe("/kurse unified hub", () => {
       lastActivity: "2026-06-18T00:00:00.000Z",
     });
 
-    await page.goto("/kurse", { waitUntil: "domcontentloaded" });
-    // Current-format evidence hydrates the shared progress bars. Historical
-    // raw completion bits deliberately remain excluded from these claims.
-    await expect(page.getByTestId("progress-dots-claude")).toHaveAttribute(
-      "aria-valuenow",
-      "1",
-    );
-    await expect(
-      page.getByTestId("progress-dots-data-science"),
-    ).toHaveAttribute("aria-valuenow", "1");
-    await expect(page.getByTestId("progress-pct-claude")).not.toHaveText("0%");
-    await expect(page.getByTestId("progress-pct-data-science")).not.toHaveText(
-      "0%",
-    );
+    await page.goto("/kurse/open-source/ai-native-operator", {
+      waitUntil: "domcontentloaded",
+    });
+
+    // Current-format evidence hydrates the shared progress bar. Historical raw
+    // completion bits deliberately remain excluded from these claims.
+    const bar = page.getByRole("progressbar", { name: "Lektionsfortschritt" });
+    await expect(bar).toBeVisible();
+    await expect(bar).not.toHaveAttribute("aria-valuenow", "0");
+    await expect(page.getByText(/^1 \/ \d+ Lektionen$/)).toBeVisible();
   });
 
   test("is axe-clean", async ({ page }) => {
