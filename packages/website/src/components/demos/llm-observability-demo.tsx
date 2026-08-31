@@ -3,7 +3,6 @@
 import { useState, type CSSProperties, type JSX } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -220,13 +219,6 @@ export function LlmObservabilityDemo(): JSX.Element {
           }
         }
       `}</style>
-
-      <SimulationDisclosure>
-        {text(
-          "Dieses Praxisbeispiel zeigt keine Live-Telemetrie. Alle Eval-Scores und Drift-Indikatoren sind feste Beispieldaten.",
-          "This example shows no live telemetry. All evaluation scores and drift indicators are fixed sample data.",
-        )}
-      </SimulationDisclosure>
 
       {/* Summary KPIs */}
       <div className="demo-llmobs-kpis">

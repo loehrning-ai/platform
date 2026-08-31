@@ -3,7 +3,6 @@
 import { useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 interface Prompt {
@@ -371,13 +370,6 @@ export default function FineTunePlaygroundDemo() {
         })}
       </div>
 
-      <SimulationDisclosure>
-        {text(
-          "Alle Konfidenz- und Spezifitätswerte sind fiktiv. Konfidenz bezeichnet hier nur die Wiedererkennung von Vokabular im Beispiel-Trainingssatz.",
-          "All confidence and specificity values are fictional. Confidence only represents recognition of vocabulary from the sample training set.",
-        )}
-      </SimulationDisclosure>
-
       <div
         id="ft-compare-panel"
         role="tabpanel"
@@ -447,7 +439,7 @@ export default function FineTunePlaygroundDemo() {
             <span
               style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
             >
-              {text("Konfidenz", "Confidence")}{" "}
+              {text("Konfidenz (Vokabelabgleich)", "Confidence (vocabulary match)")}{" "}
               <ConfChip pct={prompt.baseConf} />
             </span>
           </div>
@@ -544,7 +536,7 @@ export default function FineTunePlaygroundDemo() {
             <span
               style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
             >
-              {text("Konfidenz", "Confidence")}{" "}
+              {text("Konfidenz (Vokabelabgleich)", "Confidence (vocabulary match)")}{" "}
               <ConfChip
                 pct={prompt.tunedConf}
                 accentColor="var(--color-brand-orange)"

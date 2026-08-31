@@ -7,7 +7,6 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 interface App {
@@ -213,12 +212,6 @@ export default function CostDriftObservabilityDemo() {
           </span>
         </h2>
       </div>
-      <SimulationDisclosure>
-        {text(
-          "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte. Das Diagramm schreibt eine Beispielkurve fort, um einen Drift-Indikator zu erklären.",
-          "All values are fixed sample scenarios, not live measurements. The chart extends a sample series to explain a drift indicator.",
-        )}
-      </SimulationDisclosure>
 
       <div
         className="demo-cdo-kpis"
@@ -468,18 +461,24 @@ export default function CostDriftObservabilityDemo() {
                   marginTop: 2,
                 }}
               >
+                {/* Names the extrapolation, not just the mode: the shell's
+                    EvidenceBadge already states that the data is simulated,
+                    but nothing else tells the reader that this curve MOVES at
+                    runtime and that the motion is generated locally rather
+                    than streamed. That fact belongs next to the moving line
+                    and the LIVE/Angehalten indicator. */}
                 {text(
-                  "Latenz · Seed-Szenario (simuliert)",
-                  "Latency · seeded scenario (simulated)",
+                  "Latenz · Seed-Kurve, fortgeschrieben zur Drift-Erklärung",
+                  "Latency · seeded series, extrapolated to explain drift",
                 )}
               </div>
             </div>
+            {/* A two-word status chip, so neither role="note" nor a title
+                belongs here. The title restated the mode a third time (badge,
+                SIMULIERT pill, here); role="note" marks parenthetic sections,
+                not labels, and its visible text is already in reading order.
+                Both removed; the chip stays as a visual marker. */}
             <span
-              role="note"
-              title={text(
-                "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte.",
-                "All values are fixed sample scenarios, not live measurements.",
-              )}
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,

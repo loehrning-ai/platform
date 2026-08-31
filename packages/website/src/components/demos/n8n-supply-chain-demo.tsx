@@ -7,7 +7,6 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 type Severity = "warn" | "ok" | "info" | "err";
@@ -456,21 +455,19 @@ export default function N8nSupplyChainDemo() {
           }}
         >
           {text("Lieferverzug erkannt.", "Delivery delay detected.")}{" "}
+          {/* The accent carries the scope of the claim: this timeline shows
+              the ORDER of the six steps, not how long they take. The stamped
+              seconds and the "Beispiel-Laufzeit" total would otherwise read as
+              a performance figure. The shell's EvidenceBadge already states
+              that the run is simulated, so that half is not repeated here. */}
           <span style={{ color: "var(--color-brand-orange)" }}>
             {text(
-              "Entwurf vorbereitet. Laufzeit simuliert.",
-              "Draft prepared. Runtime simulated.",
+              "Entwurf vorbereitet. Die Reihenfolge zählt, nicht die Laufzeit.",
+              "Draft prepared. Sequence is the point, not the timings.",
             )}
           </span>
         </h2>
       </div>
-
-      <SimulationDisclosure>
-        {text(
-          "Alle Zeitstempel und Tokenwerte sind Beispieldaten. Die Simulation zeigt die Reihenfolge; kein echter Workflow und keine Außenaktion werden ausgeführt.",
-          "All timestamps and token counts are sample data. The simulation shows sequence only; no real workflow or external action runs.",
-        )}
-      </SimulationDisclosure>
 
       <div
         className="demo-n8n-controls"

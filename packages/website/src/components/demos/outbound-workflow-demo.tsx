@@ -7,7 +7,6 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 interface Lead {
@@ -929,12 +928,6 @@ function OutboundWorkflowDemoGerman() {
         ))}
       </div>
 
-      <SimulationDisclosure>
-        Kein Versand findet statt. Dieses Praxisbeispiel zeigt den
-        Entwurfsprozess, nicht die tatsächliche Zustellung. Alle Kontaktdaten
-        sind fiktive Beispieldaten.
-      </SimulationDisclosure>
-
       {/* Failure mode beat: was fehlt vor echtem Versand? */}
       {stage >= 4 && (
         <div
@@ -1443,11 +1436,6 @@ function OutboundWorkflowDemoEnglish() {
           </div>
         </section>
       </div>
-
-      <SimulationDisclosure>
-        No delivery takes place. The interface demonstrates draft review with
-        fictional data; it has no SMTP, CRM, or provider connection.
-      </SimulationDisclosure>
 
       <section
         style={{

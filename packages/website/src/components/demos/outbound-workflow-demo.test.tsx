@@ -83,10 +83,13 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(screen.getByText("PII-Check")).toBeInTheDocument();
     expect(screen.getByText("Review-Status")).toBeInTheDocument();
 
-    // Co-located simulation disclosure.
+    // No inline simulation disclosure: the detail shell's EvidenceBadge states
+    // the mode once (its review_gated pill already says the send step is only
+    // simulated), so restating it here made it twice. Nothing was relocated
+    // because the note carried no claim the badge does not already make.
     expect(
-      screen.getByRole("note", { name: "Hinweis zur Simulation" }),
-    ).toHaveTextContent(/Kein Versand findet statt/);
+      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
+    ).not.toBeInTheDocument();
 
     // The failure-mode checklist only exists at stage>=4, so it is absent while idle.
     expect(

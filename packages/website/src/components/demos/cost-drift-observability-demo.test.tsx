@@ -9,15 +9,22 @@ import CostDriftObservabilityDemo from "./cost-drift-observability-demo";
  * IntersectionObserver never reports the demo in-view, so useVisibleAutoplay
  * keeps the live drift interval paused and the render stays deterministic. We
  * exercise the component's own logic: the aggregate spend KPI derived from the
- * four app costs, the co-located simulation disclosure, and the click-driven app
- * selector that swaps the detail panel metrics.
+ * four app costs, the chart caption that discloses the extrapolation, and the
+ * click-driven app selector that swaps the detail panel metrics.
+ *
+ * The engine no longer renders its own SimulationDisclosure. The detail shell
+ * states the mode once via EvidenceBadge, so an inline restatement here made it
+ * twice (plan 024's "stated once per detail page"). What the badge could NOT
+ * say -- that the latency curve moves at runtime and the motion is generated
+ * locally rather than streamed -- moved into the chart caption, which is
+ * asserted below so the fact stays guarded.
  *
  * The randomized latency series only feeds an aria-hidden SVG, so it is not
  * asserted here.
  */
 
 describe("<CostDriftObservabilityDemo>", () => {
-  it("renders the header, simulation disclosure, aggregate spend KPI, and the default app detail", () => {
+  it("renders the header, chart-caption disclosure, aggregate spend KPI, and the default app detail", () => {
     render(<CostDriftObservabilityDemo />);
 
     expect(screen.getByText("Observability & Kosten")).toBeInTheDocument();
@@ -25,12 +32,17 @@ describe("<CostDriftObservabilityDemo>", () => {
       "LLM-Kosten und Drift",
     );
 
-    // The inline simulation disclosure (distinct from the SEED-SZENARIO note,
-    // which has a different accessible name).
-    const disclosure = screen.getByRole("note", {
-      name: "Hinweis zur Simulation",
-    });
-    expect(disclosure).toHaveTextContent(/keine Live-Messwerte/);
+    // The engine states the mode exactly zero times now (the detail shell's
+    // EvidenceBadge owns that). What has to survive is the extrapolation
+    // disclosure, which lives in the chart caption next to the moving line.
+    expect(
+      screen.getByText("Latenz · Seed-Kurve, fortgeschrieben zur Drift-Erklärung"),
+    ).toBeInTheDocument();
+    // And no inline simulation note is left to duplicate the badge.
+    expect(
+      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
 
     // Spend MTD = sum of the four app costs
     // (186.42 + 412.08 + 298.15 + 96.33 = 992.98) rounded to "993".
