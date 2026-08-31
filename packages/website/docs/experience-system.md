@@ -111,6 +111,18 @@ Not for safety: `PROTECTED_PATHS` matches `/konto/:path*`, so sub-routes would i
 
 "Account settings reachable from persistent navigation" is therefore satisfied in-page. A second `<nav>` must carry its own distinct accessible name: `getByRole("navigation", { name: "Account privacy" })` is a single-match query and an unnamed or similarly-named sibling makes it ambiguous and trips the axe landmark rule. Section labels must also avoid colliding with `continueLabel` ("Weiter lernen") and `resume` ("Weiterlernen"), which differ only by a space and are both asserted by exact-text queries.
 
+### `/kurse` keeps its progress display: a recorded deviation, not a met criterion
+
+The `/kurse` teaser brief asked for "no progress meters, no per-row accordions", with every progress affordance moving to `/konto`. Both are still on the page, deliberately. This is written down because it is a **deviation from a stated criterion**, and a deviation that is not recorded is indistinguishable from an oversight.
+
+Three things drove it:
+
+- The same brief also required carrying all fourteen load-bearing hooks across. The per-row progress display is one of them, and the two instructions contradict each other.
+- The suite pins that display by contract: `course-progress-*`, `progress-pct-*` and `progress-dots-*` testids, plus the `<details>` "Fakten und Zugang" block. Removing the affordances means rewriting assertions that exist to guard them, on a surface that is currently green.
+- The split it was meant to serve is satisfied anyway. `/konto` is now the catalog, and `/kurse` carries a "Fortschritt in deinem Konto ansehen" link into it, so the two surfaces no longer compete to be the progress home.
+
+What `/kurse` gained instead is what the brief was actually after: cover art, tonal rows, goal filters, and a demo teaser. If the progress display is later moved, move it wholesale and delete this note rather than letting the two surfaces drift.
+
 ### Account progress presents evidence, not rewards
 
 `konto/page.test.tsx` asserts no `XP`, `streak` or `badge` appears in rendered English text, even though `UnifiedProgress` carries all three fields. The ban stands: an account page states lessons completed, percentage, record earned, and outcomes covered — every number traceable to evidence-gated progress. This is the audit's "compact evidence rows and project ledgers instead of reward cards" made executable, and it is why the stored gamification fields remain export-only.
