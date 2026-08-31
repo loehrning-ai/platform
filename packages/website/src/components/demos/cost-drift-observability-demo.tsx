@@ -619,7 +619,7 @@ export default function CostDriftObservabilityDemo() {
               fontWeight: 700,
             }}
           >
-            {text("Log-Stream", "Event log")}
+            {text("Log-Stream · Alter", "Event log · age")}
           </div>
           {!reduced ? (
             <span
@@ -660,10 +660,15 @@ export default function CostDriftObservabilityDemo() {
             overflowY: "auto",
           }}
         >
+          {/* First column is the entry's AGE in seconds, not a clock time:
+              newest entry at the top with the smallest age, older entries
+              below. Ages are an offset plus `tick`, so every line grows older
+              as the walk advances and none can go negative before the first
+              tick or under reduced motion, where `tick` stays at 0. */}
           {(
             [
               [
-                `${tick}s`,
+                0,
                 "info",
                 "haiku·42ms",
                 text(
@@ -673,21 +678,21 @@ export default function CostDriftObservabilityDemo() {
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 2}s`,
+                2,
                 "info",
                 "haiku·38ms",
                 text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"),
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 4}s`,
+                4,
                 "warn",
                 "opus·3.2s",
                 text("Wiederholung nach Timeout", "Retry after timeout"),
                 DEMO.statusAmber,
               ],
               [
-                `${tick - 7}s`,
+                7,
                 "info",
                 "sonnet·1.8s",
                 text(
@@ -697,24 +702,24 @@ export default function CostDriftObservabilityDemo() {
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 9}s`,
+                9,
                 "error",
                 "opus·0ms",
                 text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"),
                 DEMO.statusRed,
               ],
               [
-                `${tick - 12}s`,
+                12,
                 "info",
                 "haiku·29ms",
                 text("Cache-Treffer", "Cache hit"),
                 DEMO.statusGreen,
               ],
             ] as const
-          ).map(([t, lvl, tag, msg, c], i) => (
+          ).map(([ageOffset, lvl, tag, msg, c], i) => (
             <div key={i}>
               <span style={{ color: "rgba(243,240,233,0.4)" }}>
-                {String(t).padStart(4)}{" "}
+                {`${ageOffset + tick}s`.padStart(4)}{" "}
               </span>
               <span style={{ color: c, letterSpacing: "0.1em" }}>
                 [{lvl.toUpperCase().padEnd(5)}]

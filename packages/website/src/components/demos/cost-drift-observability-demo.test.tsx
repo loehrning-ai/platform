@@ -80,6 +80,33 @@ describe("<CostDriftObservabilityDemo>", () => {
     expect(screen.queryByText("LIVE")).not.toBeInTheDocument();
   });
 
+  it("never renders a negative log age, including before the first tick", () => {
+    // The log column is an AGE in seconds, not a clock time. It used to be
+    // built as `tick - N` with tick starting at 0, so the never-started render
+    // showed -2s, -4s, -7s, -9s, -12s. Under reduced motion the interval never
+    // runs at all, which made those negatives permanent rather than transient.
+    // jsdom never reports the demo in-view, so this render IS the
+    // never-started state.
+    const { container } = render(<CostDriftObservabilityDemo />);
+
+    const ages = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-demo-id] span'),
+    )
+      .map((el) => el.textContent?.trim() ?? "")
+      .filter((t) => /^-?\d+s$/.test(t));
+
+    expect(ages.length).toBeGreaterThanOrEqual(6);
+    for (const age of ages) {
+      expect(
+        Number.parseInt(age, 10),
+        `log age "${age}" must not be negative`,
+      ).toBeGreaterThanOrEqual(0);
+    }
+    // Newest entry first: the six log ages ascend down the stream.
+    const logAges = ages.slice(0, 6).map((a) => Number.parseInt(a, 10));
+    expect(logAges).toEqual([...logAges].sort((x, y) => x - y));
+  });
+
   it("swaps the detail panel metrics when a different app is selected", () => {
     render(<CostDriftObservabilityDemo />);
 
