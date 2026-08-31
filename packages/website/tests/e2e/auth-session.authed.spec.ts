@@ -29,10 +29,25 @@ import {
   routeSupabaseAuthBoundary,
 } from "./fixtures/session-mock";
 
+/**
+ * Projects where the SERVER resolves a real session, so the signed-in DOM is
+ * expected to render: the credentialed live tier, and the mocked-session tier
+ * whose Supabase endpoints are served in-process. The provider-free
+ * `auth-scaffold` project is deliberately absent - it is always signed out.
+ */
+const SERVER_SESSION_PROJECTS = new Set([
+  "authenticated-live",
+  "konto-dom-mocked",
+]);
+
+
 test.describe("auth storageState contract", () => {
   test.beforeEach(({ page: _page }, testInfo) => {
     test.skip(
-      !["auth-scaffold", "authenticated-live"].includes(testInfo.project.name),
+      !(
+        testInfo.project.name === "auth-scaffold" ||
+        SERVER_SESSION_PROJECTS.has(testInfo.project.name)
+      ),
       "runs only under an auth project with setup storageState",
     );
   });

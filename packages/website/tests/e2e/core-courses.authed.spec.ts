@@ -1,5 +1,17 @@
 import { expect, test, type Page } from "@playwright/test";
 
+/**
+ * Projects where the SERVER resolves a real session, so the signed-in DOM is
+ * expected to render: the credentialed live tier, and the mocked-session tier
+ * whose Supabase endpoints are served in-process. The provider-free
+ * `auth-scaffold` project is deliberately absent - it is always signed out.
+ */
+const SERVER_SESSION_PROJECTS = new Set([
+  "authenticated-live",
+  "konto-dom-mocked",
+]);
+
+
 const CORE_ROUTES = [
   {
     hub: "/ki-fuehrerschein/kurs",
@@ -39,7 +51,7 @@ function collectBrowserErrors(page: Page): string[] {
 test.describe("authenticated German core-course journey", () => {
   test.beforeEach(({}, testInfo) => {
     test.skip(
-      testInfo.project.name !== "authenticated-live",
+      !SERVER_SESSION_PROJECTS.has(testInfo.project.name),
       "Protected course content requires the explicit live-auth project.",
     );
   });

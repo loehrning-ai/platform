@@ -60,6 +60,14 @@ const MANUAL_VISUAL_SPEC = /qa-visuals\.spec\.ts$/;
 // Live auth is excluded from the default project graph. Only the explicit,
 // fail-closed `test:e2e:authenticated-live(:built)` command sets this flag.
 const RUN_LIVE_AUTH = process.env.E2E_AUTH_LIVE === "1";
+// Mocked-session tier. Serves the Supabase endpoints the SERVER calls during
+// SSR from an in-process preload, so the signed-in /konto DOM renders in CI
+// without any credential. It is NOT authentication proof: see
+// tests/e2e/fixtures/mock-auth-backend.cjs and tests/README.md.
+const RUN_MOCK_AUTH = process.env.E2E_AUTH_MOCK === "1";
+const MOCK_AUTH_PRELOAD = fileURLToPath(
+  new URL("./tests/e2e/fixtures/mock-auth-backend.cjs", import.meta.url),
+);
 const DESKTOP_CHROMIUM_ISOLATED_SPECS = [
   /route-ai-native-operator\.spec\.ts$/,
   /route-claude-responsive\.spec\.ts$/,
@@ -182,10 +190,10 @@ const TEST_SERVER_ENVIRONMENT = Object.fromEntries(
 );
 const DOTENV_GUARD_NODE_OPTIONS = `--require=${fileURLToPath(
   new URL("../../scripts/deny-dotenv-loading.cjs", import.meta.url),
-)}`;
+)}${RUN_MOCK_AUTH ? ` --require=${MOCK_AUTH_PRELOAD}` : ""}`;
 const DOTENV_GUARD_BUN_OPTIONS = `--no-env-file --preload=${fileURLToPath(
   new URL("../../scripts/deny-dotenv-loading.cjs", import.meta.url),
-)}`;
+)}${RUN_MOCK_AUTH ? ` --preload=${MOCK_AUTH_PRELOAD}` : ""}`;
 const TEST_SERVER_DENIED_ENVIRONMENT = Object.fromEntries(
   TEST_SERVER_DENIED_PROVIDER_KEYS.map((key) => [key, ""]),
 );
@@ -348,6 +356,37 @@ export default defineConfig({
             testMatch: /\.authed\.spec\.ts$/,
             use: { ...devices["Desktop Chrome"], storageState: STORAGE_STATE },
             dependencies: ["auth-live-setup"],
+          },
+        ]
+      : []),
+
+    // Mocked-session tier. Same specs as the live tier, but the Supabase
+    // endpoints the server calls during SSR are served by an in-process
+    // preload, so this runs in ordinary CI with no credential. It proves the
+    // signed-in DOM renders and that the session cookie reaches the server;
+    // it proves nothing about real authentication.
+    ...(RUN_MOCK_AUTH
+      ? [
+          {
+            name: "auth-mock-setup",
+            testMatch: /auth\.setup\.ts$/,
+            use: { ...devices["Desktop Chrome"] },
+          },
+          {
+            // Scoped to the /konto spec on purpose. account-datenschutz and
+            // core-courses assert export/reset/delete round-trips and gated
+            // lesson routes, which need a FULLY configured runtime (service
+            // role, region, DPA) that no auth-tier build carries - both tiers
+            // build with the three public variables only. Widening this match
+            // would add red that no mock can honestly turn green; those specs
+            // stay with the credentialed live tier.
+            name: "konto-dom-mocked",
+            testMatch: /authenticated-routes\.authed\.spec\.ts$/,
+            use: {
+              ...devices["Desktop Chrome"],
+              storageState: STATIC_STORAGE_STATE,
+            },
+            dependencies: ["auth-mock-setup"],
           },
         ]
       : []),

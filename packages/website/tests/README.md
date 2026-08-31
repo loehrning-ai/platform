@@ -23,6 +23,21 @@ build output changed while the gate was running.
   deterministic mock cookie and proves storage-state wiring plus fail-closed
   signed-out behavior for `*.authed.spec.ts` files. It is not live login
   proof. Run with `bun run test:e2e:auth-scaffold`.
+- **Konto DOM, mocked session (runs in CI):** the `konto-dom-mocked` project
+  builds with three fictional-but-well-formed public Supabase variables and
+  serves the endpoints the server calls during SSR from an in-process preload
+  (`tests/e2e/fixtures/mock-auth-backend.cjs`), so the signed-in `/konto` DOM
+  renders without any credential. Because the mock derives its user from the
+  presented token's own claims, this does prove that the session cookie reaches
+  the server, that the bearer token and apikey survive `@supabase/ssr` into the
+  outbound call, and that the account page renders from the result. **It is not
+  authentication proof:** no JWT signature is ever verified, so token refresh,
+  expiry, RLS on `user_course_progress`, logout revocation, magic-link/OTP and
+  Turnstile remain covered only by the live tier. It is scoped to
+  `authenticated-routes.authed.spec.ts`; the datenschutz round-trips and gated
+  lesson routes need a fully configured runtime (service role, region, DPA)
+  that no auth-tier build carries. Run with
+  `bun run test:e2e:konto-dom-mocked`.
 - **Authenticated live (opt-in, fail-closed):** the `authenticated-live`
   project runs only when `E2E_AUTH_LIVE=1` and a dedicated Supabase test
   project supplies the exact nine-variable contract documented in

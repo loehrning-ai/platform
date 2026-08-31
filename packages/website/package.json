@@ -31,6 +31,8 @@
     "test:e2e:public:built": "E2E_GLOBAL_TIMEOUT=${E2E_GLOBAL_TIMEOUT:-4200000} E2E_SERVER_MODE=production node scripts/run-provider-free.mjs node scripts/run-built-gate.mjs node scripts/run-e2e-suite.mjs public",
     "test:e2e:auth-scaffold": "node scripts/run-provider-free.mjs bun run build && bun run test:e2e:auth-scaffold:built",
     "test:e2e:auth-scaffold:built": "E2E_GLOBAL_TIMEOUT=${E2E_GLOBAL_TIMEOUT:-600000} E2E_SERVER_MODE=production node scripts/run-provider-free.mjs node scripts/run-built-gate.mjs node scripts/run-e2e-suite.mjs auth-scaffold",
+    "test:e2e:konto-dom-mocked": "node scripts/run-mock-auth-e2e.mjs",
+    "test:e2e:konto-dom-mocked:built": "node scripts/run-mock-auth-e2e.mjs --built",
     "test:e2e:authenticated-live": "node scripts/run-live-auth-e2e.mjs",
     "test:e2e:authenticated-live:built": "node scripts/run-live-auth-e2e.mjs --built",
     "test:e2e:release": "RELEASE_VALIDATION=1 bun run validate-env && node scripts/run-provider-free.mjs bun run build && bun run test:e2e:release:built",
