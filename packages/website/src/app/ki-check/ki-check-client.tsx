@@ -38,6 +38,7 @@ import type {
 } from "@/lib/ki-check/types";
 import { iconByName } from "@/lib/courses/track-icon";
 import { DimensionRail } from "./step-indicator";
+import { RUNG_INK, dimensionTone } from "./dimension-tones";
 import { CompetencyLegend, RadarChart } from "./radar-chart";
 import { DimensionBars } from "./dimension-bars";
 import { dimensionIcon } from "./dimension-icons";
@@ -233,7 +234,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
     return (
       <DiagnosticFrame state="result" wide>
         <m.header
-          className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7"
+          className="border-b border-foreground bg-brand-sky/12 p-4 pt-6 sm:p-6 sm:pt-7"
           {...reveal(0)}
         >
           <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
@@ -295,8 +296,8 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
           {...reveal(2)}
         >
           {strongest ? (
-            <div className="flex min-w-0 items-center gap-3 p-4 sm:p-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
+            <div className="flex min-w-0 items-center gap-3 border-l-[3px] border-l-brand-teal bg-brand-teal/10 p-4 sm:p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-background">
                 <StrongIcon className="h-5 w-5" aria-hidden="true" />
               </span>
               <div className="min-w-0">
@@ -315,8 +316,8 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
             </div>
           ) : null}
           {weakest ? (
-            <div className="flex min-w-0 items-center gap-3 border-t border-border p-4 sm:border-t-0 sm:p-5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
+            <div className="flex min-w-0 items-center gap-3 border-t border-l-[3px] border-border border-l-brand-peach bg-brand-peach/14 p-4 sm:border-t-0 sm:p-5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-background">
                 <WeakIcon className="h-5 w-5" aria-hidden="true" />
               </span>
               <div className="min-w-0">
@@ -352,7 +353,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
         </m.section>
 
         <m.section
-          className="min-w-0 border-b border-foreground bg-card p-4 sm:p-6"
+          className="min-w-0 border-b border-l-[3px] border-foreground border-l-brand-orange bg-kupfer-mist p-4 sm:p-6"
           data-next-proof-panel
           {...reveal(4)}
         >
@@ -478,7 +479,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
 
   return (
     <DiagnosticFrame state="question">
-      <header className="border-b border-foreground p-4 pt-6 sm:p-6 sm:pt-7">
+      <header className="border-b border-foreground bg-brand-sky/12 p-4 pt-6 sm:p-6 sm:pt-7">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
           {ui.quizEyebrow}
         </p>
@@ -488,6 +489,23 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
         <p className="mt-3 max-w-[62ch] text-sm leading-relaxed text-muted-foreground sm:text-base">
           {ui.quizIntroduction}
         </p>
+        {/* The five fields, as a key. It tells the learner up front what the
+            run measures, and it is the legend for the colours the rail and the
+            field chip use from here on. */}
+        <ul className="mt-4 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
+          {content.dimensions.map((dim) => (
+            <li
+              key={dim.id}
+              className="flex min-w-0 items-center gap-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
+            >
+              <span
+                aria-hidden="true"
+                className={`block h-2.5 w-2.5 border border-foreground/30 ${dimensionTone(dim.id).solid}`}
+              />
+              <span className="min-w-0 break-words">{dim.short}</span>
+            </li>
+          ))}
+        </ul>
       </header>
 
       <div className="grid min-w-0 lg:grid-cols-[13rem_minmax(0,1fr)]">
@@ -498,6 +516,8 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
             answeredByDimension={answeredByDimension}
             totalByDimension={totalByDimension}
             dimensions={content.dimensions}
+            factsLabel={ui.railFactsLabel}
+            facts={ui.railFacts}
           />
         </aside>
 
@@ -542,7 +562,9 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-card">
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center border border-border ${dimensionTone(question.dimensionId).wash}`}
+                  >
                     <DimIcon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <span className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
@@ -567,6 +589,12 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 >
                   {question.options.map((option, i) => {
                     const isPicked = selected === i;
+                    // The options ARE a Likert ladder, so the rung meter is
+                    // drawn from the option's own score rather than its
+                    // position. It is visible before anything is picked, which
+                    // is what makes the four rows read as one ordered scale
+                    // instead of four unrelated boxes.
+                    const rung = option.score;
                     return (
                       <button
                         key={option.text}
@@ -580,10 +608,10 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                         disabled={!hydrated}
                         onClick={() => pick(i)}
                         onKeyDown={(event) => handleOptionKeyDown(i, event)}
-                        className={`group flex min-h-11 w-full min-w-0 items-start gap-3 border-b border-border px-3 py-3 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 ${
+                        className={`group flex min-h-11 w-full min-w-0 items-start gap-3 border-b border-l-[3px] border-border px-3 py-3 text-left last:border-b-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 ${
                           isPicked
-                            ? "bg-kupfer-mist"
-                            : "hover:bg-card-hover"
+                            ? "border-l-brand-orange bg-kupfer-mist"
+                            : "border-l-transparent hover:border-l-brand-orange/40 hover:bg-card-hover"
                         }`}
                         data-answer-option
                       >
@@ -599,6 +627,22 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                             <span className="h-1.5 w-1.5 bg-white" />
                           ) : null}
                         </span>
+                        <span
+                          className="mt-1.5 flex shrink-0 items-end gap-[2px]"
+                          aria-hidden="true"
+                        >
+                          {[1, 2, 3, 4].map((step) => (
+                            <span
+                              key={step}
+                              className={`block w-1 ${
+                                step <= rung
+                                  ? RUNG_INK[rung - 1]
+                                  : "bg-muted-foreground/20"
+                              }`}
+                              style={{ height: `${2 + step * 2}px` }}
+                            />
+                          ))}
+                        </span>
                         <span className="min-w-0 break-words text-[15px] leading-relaxed text-foreground">
                           {option.text}
                         </span>
@@ -608,12 +652,23 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 </div>
 
                 <div
-                  className="min-h-14"
+                  className="mt-4 min-h-12"
                   role="status"
                   aria-live="polite"
                   aria-atomic="true"
                   data-answer-feedback
                 >
+                  {chosenOption ? null : (
+                    <p className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-3 border-l-[3px] border-l-border pl-3 text-sm leading-relaxed text-muted-foreground">
+                      <ArrowRight
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0 break-words">
+                        {ui.chooseHint}
+                      </span>
+                    </p>
+                  )}
                   <AnimatePresence initial={false}>
                     {chosenOption ? (
                       <m.div
@@ -622,7 +677,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
-                        className="mt-4 grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-3 border border-brand-sand bg-card p-3"
+                        className="grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-3 border-l-[3px] border-l-brand-orange bg-card p-3"
                       >
                         <Compass
                           className="mt-0.5 h-4 w-4 shrink-0 text-brand-sand"
@@ -639,7 +694,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
             </AnimatePresence>
           </section>
 
-          <div className="mt-4 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+          <div className="mt-3 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
             {hydrated && index > 0 ? (
               <BrandButton onClick={goBack} variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -660,7 +715,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
             </span>
           </div>
 
-          <p className="mt-4 flex min-w-0 items-start gap-2 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-3 flex min-w-0 items-start gap-2 border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
             <TrendingUp className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0 break-words">{ui.reassurance}</span>
           </p>

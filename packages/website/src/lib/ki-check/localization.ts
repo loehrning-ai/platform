@@ -412,6 +412,15 @@ export const KI_CHECK_UI_COPY = {
     next: "Weiter",
     reassurance:
       "Antworte nach deiner tatsächlichen Praxis. Es gibt kein bestanden oder nicht bestanden.",
+    chooseHint: "Wähle eine Antwort. Danach siehst du, was sie bedeutet.",
+    scaleLabel: "Selbsteinschätzung",
+    railFactsLabel: "Rahmen",
+    railFacts: [
+      "Kein Login",
+      "Keine Speicherung",
+      "Auswertung im Browser",
+    ],
+    fieldKeyLabel: "Kompetenzfelder",
     methodSummary: "Methode und Grenzen der Auswertung",
     methodTitle: "So wird das Profil berechnet",
     methodBody:
@@ -461,6 +470,11 @@ export const KI_CHECK_UI_COPY = {
     next: "Next",
     reassurance:
       "Answer for your actual working practice. This is not a pass or fail test.",
+    chooseHint: "Choose an answer. You then see what it means.",
+    scaleLabel: "Self-assessment",
+    railFactsLabel: "Scope",
+    railFacts: ["No login", "Nothing stored", "Scored in your browser"],
+    fieldKeyLabel: "Competency fields",
     methodSummary: "Method and limits of this result",
     methodTitle: "How the profile is calculated",
     methodBody:
