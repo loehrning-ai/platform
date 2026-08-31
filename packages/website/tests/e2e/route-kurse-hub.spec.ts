@@ -188,9 +188,10 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
     await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
-    // One cover-art image per course, deliberately reversing the ledger
-    // brief's "zero images" rule.
-    await expect(atlas.locator("img")).toHaveCount(10);
+    // The ledger brief's zero-image rule, restored. Cover thumbnails were
+    // tried and removed: the artwork crops to mush at the size a dense row
+    // allows, and the imported courses carry only site screenshots.
+    await expect(atlas.locator("img")).toHaveCount(0);
     await expect(
       page.getByRole("group", {
         name: route.startsWith("/en/")

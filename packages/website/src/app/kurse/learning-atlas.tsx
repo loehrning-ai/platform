@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, ExternalLink } from "lucide-react";
 import { Github } from "@/components/icons/brand";
@@ -268,7 +267,6 @@ function CourseLedgerRow({
   const sourceHref = course.sourceHref;
   const sourceCommitHref = course.sourceCommitHref;
   const sourceCommit = course.sourceCommit;
-  const cover = isLiveCourse(course) ? course.coverImage : undefined;
   const tone = ROW_TONES[index % ROW_TONES.length];
   // Seven of the ten courses have no demo. Rather than substituting one from
   // another course, those rows simply omit the teaser.
@@ -295,31 +293,22 @@ function CourseLedgerRow({
               : "open"
       }
     >
-      <div className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[5.5rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
-        <span className="relative block aspect-square w-full self-start overflow-hidden border border-foreground/10 bg-paper sm:aspect-[4/3]">
-          {cover ? (
-            <Image
-              src={cover}
-              alt=""
-              fill
-              loading="lazy"
-              sizes="(min-width: 1024px) 88px, 56px"
-              className="object-cover"
-            />
-          ) : null}
-          <span
-            className={cn(
-              "absolute left-1 top-1 flex h-6 w-6 items-center justify-center border font-mono text-xs font-bold tabular-nums",
-              liveStat?.certified
-                ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-                : inPath
-                  ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-                  : "border-border bg-background text-muted-foreground",
-            )}
-            aria-hidden="true"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
+      {/* No cover thumbnail. The course artwork is a wide illustration; at the
+          ~56px this dense ledger row allows it crops to unreadable mush, and
+          the six imported courses have only site screenshots, which read as
+          grey noise at that size. The art earns its space where it renders
+          large, on the home cards and the account catalog. */}
+      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[3rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
+        <span
+          className={cn(
+            "flex h-8 w-8 items-center justify-center self-start border font-mono text-xs font-bold tabular-nums",
+            liveStat?.certified || inPath
+              ? "border-brand-orange bg-kupfer-mist text-brand-orange"
+              : "border-border bg-background text-muted-foreground",
+          )}
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, "0")}
         </span>
         <div className="min-w-0">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">

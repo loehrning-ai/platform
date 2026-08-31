@@ -159,12 +159,12 @@ describe("LearningAtlas", () => {
       COURSE_CATALOG.filter((course) => course.sourceHref).length,
     );
 
-    // One cover-art image per course now that the ledger brief's "zero
-    // images" rule is deliberately reversed -- every COURSE_CATALOG entry
-    // has a coverImage, and IMPORTED_COURSE_CATALOG is empty today.
-    expect(container.querySelectorAll("img")).toHaveLength(
-      COURSE_CATALOG.length,
-    );
+    // Back to the ledger brief's zero-image rule. A cover thumbnail was tried
+    // here and removed: the artwork is a wide illustration that crops to mush
+    // at the ~56px a dense row allows, and the six imported courses carry only
+    // site screenshots, which read as grey noise at that size. The art renders
+    // large on the home cards and the account catalog instead.
+    expect(container.querySelectorAll("img")).toHaveLength(0);
     // No per-row disclosure at all. The facts it held are either on the row
     // (duration, source) or on the course's own landing page (description,
     // scope, structure, audience, badges).

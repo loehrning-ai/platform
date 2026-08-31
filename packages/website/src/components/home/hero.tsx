@@ -136,15 +136,11 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       ref={sectionRef}
       data-section="hero"
-      className="berlin-grain relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden bg-paper px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
+      className="berlin-grain berlin-hero relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
     >
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -left-10 top-32 size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50"
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-12 right-[22%] h-20 w-56 rotate-6 rounded-full bg-brand-acid/35"
       />
 
       {/* ── Print-shop registration marks at the four corners ─────────── */}
