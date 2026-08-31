@@ -244,10 +244,15 @@
      resurrect the retired brand-lilac token. Scoped to the hero only, never a
      site-wide backdrop. */
   .berlin-hero {
+    /* Two radials, not the original three layers. The third was a full-hero
+       linear tint at the foot, the least visible layer and the most expensive
+       to paint on the largest above-the-fold element, on a page whose
+       blocking-time budget it shares. The globe's glow is what this is for,
+       and that is entirely the first radial. */
     background:
       radial-gradient(circle at 74% 36%, rgba(203, 188, 255, 0.62), transparent 24rem),
       radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.48), transparent 22rem),
-      linear-gradient(128deg, var(--color-paper) 0 58%, rgba(221, 244, 90, 0.2) 100%);
+      var(--color-paper);
   }
 
   /* Paper-grain overlay, used by the hero. Was formerly shared with the
