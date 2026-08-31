@@ -121,7 +121,9 @@ export function WordPreview() {
 }
 
 export function OutboundWorkflowPreview() {
-  // s-med (1x1) — compact public-signal review card.
+  // s-tall (1x2) — public-signal review card. Carries a second signal and the
+  // gated draft because this demo was promoted from a 1x1 tile: the original
+  // 1x1 mockup left ~165px of empty paper above it in the taller band.
   return (
     <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 5, fontFamily: MONO, fontSize: 10 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -138,6 +140,17 @@ export function OutboundWorkflowPreview() {
         <span style={{ color: ACCENT, fontWeight: 800, letterSpacing: "0.1em" }}>SIGNAL</span>
         <span style={{ color: DEMO.schiefer }}>{" · "}</span>
         Fiktives Fördersignal · ungeprüft
+      </div>
+      <div style={{ background: DEMO.birke, border: `1px dashed ${DEMO.leinen}`, padding: "4px 7px", fontSize: 9, color: DEMO.ink, lineHeight: 1.3 }}>
+        <span style={{ color: DEMO.schiefer, fontWeight: 800, letterSpacing: "0.1em" }}>SIGNAL</span>
+        <span style={{ color: DEMO.schiefer }}>{" · "}</span>
+        Fiktive Stellenausschreibung · ungeprüft
+      </div>
+      <div style={{ border: `1px solid ${DEMO.leinen}`, padding: "5px 7px", fontFamily: SANS, fontSize: 10, lineHeight: 1.35, color: DEMO.ink }}>
+        <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.12em", fontWeight: 700, marginBottom: 3 }}>
+          ENTWURF · VOR VERSAND IM REVIEW
+        </div>
+        Guten Tag, mit Blick auf das oben belegte Signal…
       </div>
       <div style={{ fontSize: 8, color: GREEN_TEXT_LIGHT, letterSpacing: "0.1em", fontWeight: 700, display: "flex", justifyContent: "space-between" }}>
         <span>✓ NOTIZ · 08:42</span>
@@ -238,7 +251,9 @@ export function N8nSupplyChainPreview() {
 }
 
 export function RagVertragsassistentPreview() {
-  // s-med (1x1) — compact chat snippet with citation.
+  // s-tall (1x2) — chat snippet with citations. Carries a second exchange
+  // because this demo was promoted from a 1x1 tile: the original one-question
+  // mockup left ~180px of empty paper above it in the taller band.
   return (
     <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 5 }}>
       <div style={{ alignSelf: "flex-end", background: DEMO.ink, color: DEMO.kalk, padding: "4px 9px", fontSize: 11, maxWidth: "82%", fontFamily: SANS, lineHeight: 1.25 }}>
@@ -250,6 +265,20 @@ export function RagVertragsassistentPreview() {
           <span>94%</span>
         </div>
         3 Monate zum Quartalsende…
+      </div>
+      <div style={{ alignSelf: "flex-end", background: DEMO.ink, color: DEMO.kalk, padding: "4px 9px", fontSize: 11, maxWidth: "82%", fontFamily: SANS, lineHeight: 1.25 }}>
+        Und die Haftungsgrenze?
+      </div>
+      <div style={{ background: DEMO.birke, borderLeft: `3px solid ${ACCENT}`, padding: "5px 9px", fontSize: 11, lineHeight: 1.35, fontFamily: SANS, color: DEMO.ink }}>
+        <div style={{ fontFamily: MONO, fontSize: 8, color: ACCENT, letterSpacing: "0.12em", fontWeight: 800, marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
+          <span>§ 9 · 1 QUELLE</span>
+          <span>88%</span>
+        </div>
+        Begrenzt auf das Jahreshonorar…
+      </div>
+      <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.1em", fontWeight: 700, display: "flex", justifyContent: "space-between" }}>
+        <span>RAHMENVEREINBARUNG V3.2</span>
+        <span>ANLAGE 2</span>
       </div>
     </div>
   );

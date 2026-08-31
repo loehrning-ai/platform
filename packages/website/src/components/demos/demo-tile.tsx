@@ -48,16 +48,22 @@ function tileSizeClass(size: DemoSize): string {
   }
 }
 
+// Reserved height per tile size, kept close to what the mockups actually
+// measure so the band hugs its content. The previous values reserved far more
+// than the faux-UI drew, and because the content is bottom-anchored the excess
+// showed as a band of empty paper above the mockup: 86px on the hero and 165
+// to 180px on the two tiles recently promoted to s-tall. Measured mockup
+// heights are ~200px for the hero and word, and ~75 to 95px for the rest.
 function previewSizeClass(size: DemoSize): string {
   switch (size) {
     case "s-hero":
-      return "min-h-56 lg:min-h-72";
+      return "min-h-52 lg:min-h-56";
     case "s-tall":
-      return "min-h-52 lg:min-h-64";
+      return "min-h-48 lg:min-h-52";
     case "s-wide":
-      return "min-h-44";
+      return "min-h-36";
     case "s-med":
-      return "min-h-40";
+      return "min-h-32";
   }
 }
 
@@ -97,9 +103,18 @@ export function DemoTile({
       className={containerClass}
       aria-label={copy.openAria(`${demo.title} ${demo.titleKicker}`)}
     >
-      <div className="flex min-h-11 items-center justify-between gap-3 border-b border-current/20 px-4 py-2">
+      {/* Index only, at a fixed height. The badges used to share this row, but
+          a 1-column tile at the lg breakpoint offers ~193px of content width
+          while the index alone measures ~185px and the widest badge pair
+          ~263px. Both sides therefore wrapped, and they wrapped by tile width
+          AND by label length, so neighbouring tiles ended up with 44px and
+          75px headers and the grid read as misaligned. A fixed height plus a
+          truncation guard makes this band identical on every tile at every
+          width; the badges moved into the body, where wrapping is expected
+          and costs no alignment. */}
+      <div className="flex h-11 shrink-0 items-center border-b border-current/20 px-4">
         <span
-          className={`font-mono text-xs font-bold tracking-[0.14em] uppercase ${accent}`}
+          className={`min-w-0 truncate font-mono text-xs font-bold tracking-[0.1em] uppercase ${accent}`}
         >
           {copy.kind} <strong>{demo.n}</strong>{" "}
           {/* No opacity de-emphasis: the kupfer accent at <100% opacity drops
@@ -107,18 +122,6 @@ export function DemoTile({
           <span aria-hidden="true">/</span>{" "}
           <span>{String(total).padStart(2, "0")}</span>
         </span>
-        <div className="flex flex-wrap items-center justify-end gap-1.5">
-          <span
-            className={`border border-current/25 px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${accent}`}
-          >
-            {evidenceLabel}
-          </span>
-          <span
-            className={`border px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${levelColorClass(demo.level, dark)}`}
-          >
-            {levelLabel}
-          </span>
-        </div>
       </div>
 
       {/* Thumbnail preview — purely decorative faux-UI mockup. aria-hidden so
@@ -148,7 +151,19 @@ export function DemoTile({
       </div>
 
       <div className="min-w-0 flex-1 px-4 py-4">
-        <h2 className="break-words text-[clamp(1.4rem,4vw,2rem)] font-bold leading-[1.02] tracking-[-0.035em]">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span
+            className={`border border-current/25 px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${accent}`}
+          >
+            {evidenceLabel}
+          </span>
+          <span
+            className={`border px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] ${levelColorClass(demo.level, dark)}`}
+          >
+            {levelLabel}
+          </span>
+        </div>
+        <h2 className="mt-3 break-words text-[clamp(1.4rem,4vw,2rem)] font-bold leading-[1.02] tracking-[-0.035em]">
           {demo.title} <span className={accent}>{demo.titleKicker}</span>
         </h2>
         <p
