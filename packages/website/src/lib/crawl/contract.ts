@@ -323,7 +323,7 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     {
       auth: "redirect",
       cache: "public-short",
-      redirectTo: "/ueber-mich#redaktion",
+      redirectTo: "/ueber-mich",
       status: 301,
     },
   ),
@@ -371,14 +371,14 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-mich#redaktion",
+    redirectTo: "/ueber-mich",
     status: 301,
   }),
   route("/leistungen/:path*", "retired", "Commercial service pages redirect to platform stewardship.", {
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-mich#redaktion",
+    redirectTo: "/ueber-mich",
     status: 301,
   }),
   route("/kontakt", "retired", "Contact funnel retired; feedback is the public input path.", {
@@ -399,7 +399,7 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-mich#redaktion",
+    redirectTo: "/ueber-mich",
     status: 301,
   }),
   route("/standortbestimmung", "retired", "Route renamed to /ki-check.", {
@@ -413,7 +413,7 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     auth: "redirect",
     robots: "disallow",
     cache: "public-short",
-    redirectTo: "/ueber-mich#redaktion",
+    redirectTo: "/ueber-mich",
     status: 301,
   }),
   route("/digifyde", "retired", "Legacy diagnostic brand route retired.", {

@@ -441,6 +441,15 @@
       "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
     },
     {
+      "path": "packages/website/public/ueber-mich/logos/fau.svg",
+      "sizeBytes": 27204,
+      "sha256": "2e534069d3cc643db75c4ff469c1921dd7ff7d78efa13895f7d3adbcc5aabfa6",
+      "owner": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "source": "https://commons.wikimedia.org/wiki/File:Friedrich-Alexander-Universit%C3%A4t_Erlangen-N%C3%BCrnberg_Logo_07.2022.svg -- sourced from FAU's own official corporate-design style guide, published 2022-07-14",
+      "license": "LicenseRef-Third-Party-Trademark",
+      "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
+    },
+    {
       "path": "packages/website/public/ueber-mich/logos/meta.svg",
       "sizeBytes": 1339,
       "sha256": "abc6a9f1c8f23f78f9c3941fdf4d8ee600ffbfb0f453c9054768c442daaae6fa",
@@ -825,8 +834,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 686491,
-      "sha256": "6a4377b268810b27f13e049b5ddd6338cb5e61d1c8f426f0300bd15b32b51aa5",
+      "sizeBytes": 277050,
+      "sha256": "9f65ebecd06a7f6c53d9e20ac703c6139784d12f0554e973c3a0516d66248a91",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

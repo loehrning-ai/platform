@@ -132,7 +132,6 @@ export default async function RootLayout({
             __html: `<style>${NO_SCRIPT_FALLBACK_CSS}</style>`,
           }}
         />
-        <div className="site-atmosphere pointer-events-none fixed inset-0 z-0" />
         <ScrollProgress />
         <LocaleProvider locale={locale}>
           <MotionProvider>

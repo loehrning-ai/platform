@@ -11,7 +11,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Offene Werkzeuge mit echten Ansichten, öffentlichem Quellstand und klaren Betriebsgrenzen.",
     },
     eyebrow: "Open Source · selbst betreibbar",
-    title: "Offene Werkzeuge. Ohne Blackbox.",
+    title: "Freie Open-Source-Projekte.",
     introduction:
       "Echte Ansichten zuerst, Quellstand und Grenzen direkt daneben. Prüfe, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
     externalTab: ", öffnet in neuem Tab",
@@ -59,7 +59,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Open tools with real product views, public source revisions, and clear operating boundaries.",
     },
     eyebrow: "Open source · self-hosted",
-    title: "Open tools. No black box.",
+    title: "Free open source projects.",
     introduction:
       "Real product views first, with source and limits beside them. Inspect what a tool does before running it on your machine.",
     externalTab: ", opens in a new tab",

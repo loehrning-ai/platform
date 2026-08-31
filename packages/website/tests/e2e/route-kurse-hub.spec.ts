@@ -80,13 +80,9 @@ test.describe("/kurse hub", () => {
       }),
     ).toBeVisible();
 
-    for (const title of NATIVE_TRACKS) {
-      await expect(
-        allCourses.getByRole("progressbar", {
-          name: `Fortschritt ${title}`,
-        }),
-      ).toBeVisible();
-    }
+    // The teaser carries no progress meter: progress affordances live on the
+    // account catalog. What each row states instead is the course duration.
+    await expect(allCourses.getByRole("progressbar")).toHaveCount(0);
   });
 
   test("primary CTA links to the course track, which login-gates an anonymous visitor", async ({
@@ -97,11 +93,9 @@ test.describe("/kurse hub", () => {
     await page.goto(ROUTE, { waitUntil: "load" });
 
     // Fresh visitor → one explicit next proof, href = startHref of the track.
-    const startCta = page
-      .getByTestId("next-proof")
-      .getByRole("link", {
-        name: /Nachweis beginnen.*KI-Führerschein/i,
-      });
+    const startCta = page.getByTestId("next-proof").getByRole("link", {
+      name: /Nachweis beginnen.*KI-Führerschein/i,
+    });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
 
@@ -123,6 +117,14 @@ test.describe("/kurse hub", () => {
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+
+    // The goal buttons are server-rendered but inert until React attaches
+    // their handlers, and a click that lands first is swallowed with no error,
+    // leaving the URL without its goal param. Wait for the hydration marker
+    // before clicking rather than racing it.
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
     const goals = page.getByRole("group", { name: "Lernziel auswählen" });
     await expect(goals).toBeVisible();
@@ -178,9 +180,7 @@ test.describe("/kurse mobile", () => {
 });
 
 for (const route of ["/kurse", "/en/kurse"] as const) {
-  test(`${route} renders the complete image-free course ledger`, async ({
-    page,
-  }) => {
+  test(`${route} renders the complete ten-course atlas`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
@@ -188,6 +188,9 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
     await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
+    // The ledger brief's zero-image rule, restored. Cover thumbnails were
+    // tried and removed: the artwork crops to mush at the size a dense row
+    // allows, and the imported courses carry only site screenshots.
     await expect(atlas.locator("img")).toHaveCount(0);
     await expect(
       page.getByRole("group", {

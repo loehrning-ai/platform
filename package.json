@@ -63,7 +63,7 @@
     "verify:release": "node scripts/verify-release.mjs"
   },
   "overrides": {
-    "postcss": "^8.5.23",
+    "postcss": "^8.5.26",
     "uuid": "^14.0.0",
     "fast-uri": ">=4.1.2",
     "esbuild": "^0.28.1",

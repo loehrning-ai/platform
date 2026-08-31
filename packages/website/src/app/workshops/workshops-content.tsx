@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Workshop } from "@/lib/workshops";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
 
@@ -15,12 +16,16 @@ const pad = (value: number) => String(value).padStart(2, "0");
 const WORKSHOP_WASHES = [
   "bg-brand-sky/50",
   "bg-brand-pink/50",
-  "bg-brand-lilac/55",
+  "bg-brand-peach/55",
 ] as const;
 
+// Offset sheets behind each card. All three stay in the light half of the
+// palette: brand-teal is the one dark, saturated hue here, and behind the
+// pink wash of card two it read as a muddy grey-green next to card one's
+// clean acid. Sky carries the same cool contrast without the mud.
 const WORKSHOP_SHEETS = [
   "bg-brand-acid/75",
-  "bg-brand-teal/45",
+  "bg-brand-sky/60",
   "bg-brand-pink/65",
 ] as const;
 
@@ -49,9 +54,9 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             </p>
             <h1 className="relative mt-5 max-w-[15ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground">
               {copy.headingLead}{" "}
-              <span className="box-decoration-clone bg-brand-sky/80 px-1 text-foreground">
+              <HighlightedText colorVar="--color-brand-sky">
                 {copy.headingSecond}
-              </span>
+              </HighlightedText>
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {copy.introduction(workshops.length)}
@@ -84,7 +89,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
                         ? "w-full bg-brand-pink/70"
                         : index === 1
                           ? "w-[86%] bg-brand-sky/70"
-                          : "w-[68%] bg-brand-lilac/75"
+                          : "w-[68%] bg-brand-peach/75"
                     }`}
                   >
                     {step}

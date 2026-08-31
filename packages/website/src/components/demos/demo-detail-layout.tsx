@@ -12,6 +12,7 @@ import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { cn } from "@/lib/utils";
 import { DemoShell } from "./demo-shell";
 import { AnimatedMetaTable } from "./animated-meta-table";
 import { EvidenceBadge } from "./evidence-badge";
@@ -91,6 +92,10 @@ export function DemoDetailLayout({
     course?.startHref ?? "/kurse",
     locale,
   );
+  // The bento-grid signature sizes (demo-tile.tsx: s-hero/s-wide are the
+  // horizontally prominent tiles) get the taller title on the detail page
+  // too, so the "this one's the flagship" signal survives the click-through.
+  const isSignature = demo.size === "s-hero" || demo.size === "s-wide";
 
   return (
     <article className="min-h-[100svh] overflow-x-clip" data-demo-detail-layout>
@@ -142,77 +147,64 @@ export function DemoDetailLayout({
         </div>
       </header>
 
-      <section
-        className="px-4 py-5 sm:px-6 sm:py-7 md:px-10"
-        data-demo-detail-hero
-      >
-        <div className="mx-auto grid max-w-7xl border border-foreground/60 bg-background lg:grid-cols-[minmax(0,1.55fr)_minmax(18rem,0.45fr)]">
-          <div className="min-w-0 p-5 sm:p-7 lg:border-r lg:border-border lg:p-9">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-                {categoryLabel}
-              </span>
-              <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-                {levelLabel}
-              </span>
-              {demo.illustrative ? (
-                <span
-                  className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
-                  title={pageCopy.illustrativeTitle}
-                >
-                  ◆ {pageCopy.illustrative}
-                </span>
-              ) : null}
-            </div>
-            <h1 className="mt-4 max-w-5xl break-words text-[clamp(2.5rem,6vw,5.25rem)] font-bold leading-[0.91] tracking-[-0.055em]">
-              {demo.title}{" "}
-              <span className="text-brand-orange">{demo.titleKicker}</span>
-            </h1>
-            <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              {demo.description}
-            </p>
-          </div>
-          <aside
-            className="flex min-w-0 flex-col justify-between bg-card p-5 sm:p-6"
-            aria-label={`${pageCopy.example} ${demo.n}`}
-          >
-            <div>
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                {pageCopy.example} {demo.n}
-              </p>
-              <p className="mt-3 break-words font-mono text-xs uppercase leading-5 tracking-[0.08em] text-muted-foreground">
-                {demo.background}
-              </p>
-            </div>
-            <dl className="mt-6 border-t border-border">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-border py-3 text-sm">
-                <dt className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {pageCopy.practiceData}
-                </dt>
-                <dd className="text-right font-semibold text-foreground">
-                  {categoryLabel}
-                </dd>
-              </div>
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-border py-3 text-sm">
-                <dt className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {pageCopy.learningContext}
-                </dt>
-                <dd className="text-right font-semibold text-foreground">
-                  {levelLabel}
-                </dd>
-              </div>
-            </dl>
-          </aside>
-        </div>
-      </section>
+      {/*
+        The instrument is the hero: title, one-line background, and
+        description lead straight into EvidenceBadge + DemoShell inside the
+        same band, so a learner reaches the working instrument without a
+        separate text-only hero gating it first. The engine itself never
+        server-renders (dynamic(..., {ssr:false})), so this band, not the
+        engine, has to carry first-paint weight.
 
+        Two real per-demo adaptations, both existing catalog data, neither
+        duplicating what EvidenceBadge already states: demo.dark flips the
+        whole band into the same dark-section scope DemoShell itself uses
+        (so a dark demo commits to its identity above the fold, not just
+        inside the widget), and demo.size gives the bento grid's "signature"
+        tiles (s-hero/s-wide) a taller title here too.
+      */}
       <section
+        data-demo-detail-hero
         data-demo-instrument
-        className="border-y border-border bg-foreground/[0.035] px-2 py-5 sm:px-4 sm:py-6 md:px-10"
-        aria-label={`${demo.title} ${demo.titleKicker}`}
+        aria-labelledby="demo-title"
+        // Deliberately NOT dark-section for a dark demo. EvidenceBadge paints
+        // hardcoded light-theme inks (#1d4ed8, #92400e) that drop to ~2:1 on a
+        // dark ground, and DemoShell already carries the dark treatment for
+        // the widget itself. The band stays light; demo.size still adapts the
+        // title below.
+        className="border-y border-border bg-foreground/[0.035] px-4 py-5 sm:px-6 sm:py-8 md:px-10"
       >
         <div className="mx-auto max-w-7xl">
-          <div className="border-l-[3px] border-l-brand-orange pl-3 sm:pl-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              {categoryLabel}
+            </span>
+            <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
+              {levelLabel}
+            </span>
+          </div>
+          <h1
+            id="demo-title"
+            className={cn(
+              "mt-4 max-w-5xl break-words font-bold leading-[0.91] tracking-[-0.055em]",
+              isSignature
+                ? "text-[clamp(2.75rem,7vw,6rem)]"
+                : "text-[clamp(2.25rem,5.5vw,4.5rem)]",
+            )}
+          >
+            {demo.title}{" "}
+            <span className="text-brand-orange">{demo.titleKicker}</span>
+          </h1>
+          <div className="mt-4 flex min-w-0 max-w-3xl items-start gap-2 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground">
+            <span className="shrink-0 text-brand-orange" aria-hidden="true">
+              ◆
+            </span>
+            <span className="min-w-0 break-words">{demo.background}</span>
+          </div>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {demo.description}
+          </p>
+
+          <div className="mt-6 border-l-[3px] border-l-brand-orange pl-3 sm:pl-4">
             <EvidenceBadge
               evidenceMode={demo.evidenceMode}
               externalActionMode={demo.externalActionMode}
@@ -259,24 +251,19 @@ export function DemoDetailLayout({
               {pageCopy.sandboxScenario}
             </h2>
             {copy ? (
-              <>
-                <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
-                  {copy.why}
-                </p>
-                <div className="mt-4 border border-border border-l-[3px] border-l-brand-orange bg-card p-4">
-                  <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                    ◆ {pageCopy.illustrative}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground">
-                    {copy.proof}
-                  </p>
-                </div>
-              </>
+              <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
+                {copy.why}
+              </p>
             ) : null}
             <div className="mt-4 border border-border bg-background p-4">
               <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                 {pageCopy.sandboxBoundary}
               </div>
+              {copy ? (
+                <p className="mt-2 text-sm leading-relaxed text-foreground">
+                  {copy.proof}
+                </p>
+              ) : null}
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {demo.syntheticDataLabel}
               </p>

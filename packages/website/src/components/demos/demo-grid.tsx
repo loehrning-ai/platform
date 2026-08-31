@@ -12,6 +12,7 @@ import {
 import {
   DEMO_CATEGORY_LABELS,
   DEMO_LEVEL_LABELS_BY_LOCALE,
+  getDemoIndustries,
 } from "@/lib/demos-localization";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -40,6 +41,7 @@ export function DemoGrid({
   const copy = DEMOS_PAGE_COPY[locale].catalog;
   const levelLabels = DEMO_LEVEL_LABELS_BY_LOCALE[locale];
   const categoryLabels = DEMO_CATEGORY_LABELS[locale];
+  const industries = useMemo(() => getDemoIndustries(locale), [locale]);
 
   // The server resolves and validates URL filters before rendering so the
   // complete filtered gallery exists without JavaScript. Chip clicks remain
@@ -88,14 +90,17 @@ export function DemoGrid({
   );
 
   const setParam = useCallback(
-    (key: "level" | "cat", value: string, fallback: string) => {
+    (key: "level" | "cat" | "industry", value: string, fallback: string) => {
       const resolved = value || fallback;
       if (key === "level") {
         setLevel(resolved);
         syncUrl(resolved, cat, industry);
-      } else {
+      } else if (key === "cat") {
         setCat(resolved);
         syncUrl(level, resolved, industry);
+      } else {
+        setIndustry(resolved);
+        syncUrl(level, cat, resolved);
       }
     },
     [level, cat, industry, syncUrl],
@@ -178,7 +183,7 @@ export function DemoGrid({
           ) : null}
         </div>
 
-        <div className="grid divide-y divide-border lg:grid-cols-2 lg:divide-x lg:divide-y-0">
+        <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           <FilterRow
             label={copy.level}
             mobileControl={
@@ -274,6 +279,28 @@ export function DemoGrid({
               );
             })}
           </FilterRow>
+
+          <FilterRow
+            label={copy.industryPrefix}
+            mobileControl={
+              <select
+                data-filter-select="industry"
+                aria-label={copy.industryPrefix}
+                value={industry}
+                onChange={(event) =>
+                  setParam("industry", event.currentTarget.value, "")
+                }
+                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                <option value="">{copy.all}</option>
+                {industries.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            }
+          />
         </div>
       </div>
 
@@ -298,7 +325,14 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
+        <div className="mt-4 grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
+          {/* grid-flow-row-dense is a safety net for FILTERED subsets, not the
+              mechanism. The unfiltered catalog packs exactly (see the tiling
+              invariant in lib/demos.ts), so dense changes nothing in the
+              default view. An arbitrary filtered subset can leave a span-area
+              that no four-column packing closes; dense backfills those gaps
+              instead of leaving visible holes. DOM order stays catalog order,
+              so reading and tab order are unaffected. */}
           {filtered.map((d) => (
             <DemoTile
               key={d.slug}
@@ -319,7 +353,10 @@ function FilterRow({
   mobileControl,
 }: {
   label: string;
-  children: React.ReactNode;
+  // Omitted for a select-only row (e.g. industry, with too many distinct
+  // values for a readable chip row): the control then shows at every width
+  // instead of only below sm.
+  children?: React.ReactNode;
   mobileControl?: React.ReactNode;
 }) {
   return (
@@ -327,12 +364,18 @@ function FilterRow({
       <span className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
         {label}:
       </span>
-      {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
-      <div
-        className={`flex flex-wrap gap-1.5 ${mobileControl ? "hidden sm:flex" : ""}`}
-      >
-        {children}
-      </div>
+      {children ? (
+        <>
+          {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
+          <div
+            className={`flex flex-wrap gap-1.5 ${mobileControl ? "hidden sm:flex" : ""}`}
+          >
+            {children}
+          </div>
+        </>
+      ) : (
+        mobileControl
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DemoLocaleProvider } from "./demo-locale";
 import ExcelDemo from "./excel-demo";
 import WordDemo from "./word-demo";
@@ -10,6 +10,10 @@ import MaturityDemo from "@/components/ai-native/demos/maturity-demo";
 function renderEnglish(node: React.ReactNode) {
   return render(<DemoLocaleProvider locale="en">{node}</DemoLocaleProvider>);
 }
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe("English demo surfaces", () => {
   it("renders the maturity assessment in English without unsupported benchmark claims", () => {
@@ -40,9 +44,20 @@ describe("English demo surfaces", () => {
   });
 
   it("builds an English document sample while keeping approval pending", () => {
+    vi.useFakeTimers();
     renderEnglish(<WordDemo />);
 
     fireEvent.click(screen.getByRole("button", { name: "Build sample brief" }));
+
+    // The generate button now runs the same staged ladder as German
+    // (style-match → draft → export) instead of resolving instantly.
+    const busy = screen.getByRole("button", { name: "Generating…" });
+    expect(busy).toBeDisabled();
+
+    act(() => {
+      vi.advanceTimersByTime(2400);
+    });
+
     expect(screen.getByText("APPROVAL PENDING")).toBeInTheDocument();
     expect(
       screen.getByText(/It is an assumption, not an approval/),
@@ -65,7 +80,8 @@ describe("English demo surfaces", () => {
       screen.getByRole("button", { name: "Show pre-send controls" }),
     );
     expect(screen.getByText(/Document the lawful basis/)).toBeInTheDocument();
-    expect(screen.getByText("NOT SENT")).toBeInTheDocument();
+    // Default score threshold (70) qualifies Beta's 74/100 sample score.
+    expect(screen.getByText(/QUALIFIED . NOT SENT/)).toBeInTheDocument();
   });
 
   it("returns sourced contract copy and an explicit no-match state", () => {

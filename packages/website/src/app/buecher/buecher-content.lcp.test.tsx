@@ -209,6 +209,11 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(source).not.toContain("dark-section");
     expect(source).not.toContain("data-book-bento");
     expect(source).toContain("bg-paper");
-    expect(source).toContain("bg-brand-acid");
+    // Direct band assertion, not file-scoped: the heading accent went through
+    // HighlightedText (an inline color-mix, not a bg-brand-acid utility
+    // class) since the pixel-overlap fix, so a bare `toContain("bg-brand-
+    // acid")` here would pass vacuously off an unrelated decorative accent
+    // elsewhere in the file rather than proving anything about the band.
+    expect(source).toMatch(/<HighlightedText colorVar="--color-brand-acid">/);
   });
 });

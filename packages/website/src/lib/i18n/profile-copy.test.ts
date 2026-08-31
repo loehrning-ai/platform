@@ -57,10 +57,6 @@ describe("profile locale copy", () => {
     ]) {
       expect(allCopy).not.toMatch(phrase);
     }
-    expect(PROFILE_COPY.de.editorial.policies).toHaveLength(3);
-    expect(PROFILE_COPY.en.editorial.policies).toHaveLength(3);
-    expect(PROFILE_COPY.de.editorial.guideLabel).toBe("CONTENT_GUIDE.md");
-    expect(PROFILE_COPY.en.editorial.guideLabel).toBe("CONTENT_GUIDE.md");
   });
 
   it("states the account boundary instead of claiming universal public access", () => {

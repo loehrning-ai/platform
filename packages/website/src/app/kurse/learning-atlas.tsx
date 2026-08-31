@@ -11,11 +11,8 @@ import {
 } from "@/lib/courses/catalog";
 import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
-import {
-  courseBadges,
-  courseGroupFor,
-  courseSections,
-} from "@/lib/courses/tracks";
+import { demosForCourse } from "@/lib/demos";
+import { courseGroupFor, courseSections } from "@/lib/courses/tracks";
 import {
   getCompletedLessonsCount,
   isCertificateEligible,
@@ -25,19 +22,16 @@ import {
   hasCourseStarted,
   resolveCourseResumeHref,
 } from "@/lib/courses/resume";
+import {
+  GOAL_IDS,
+  LEARNING_GOALS,
+  type GoalId,
+  type LearningGoal,
+} from "@/lib/courses/goals";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
-
-type GoalId = "start" | "judge" | "build" | "data";
-
-interface LearningGoal {
-  readonly id: GoalId;
-  readonly label: string;
-  readonly summary: string;
-  readonly courseSlugs: readonly string[];
-}
 
 interface CourseStat {
   readonly completed: number;
@@ -48,8 +42,19 @@ interface CourseStat {
 
 type Course = CatalogCourse | ImportedCourse;
 
-const GOAL_IDS: readonly GoalId[] = ["start", "judge", "build", "data"];
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
+
+// Cover-art wash per row, cycling across all ten courses -- kept light (10%)
+// since ten consecutive tinted rows read as noisy at higher opacity, unlike
+// the four-card home-page spine.
+const ROW_TONES = [
+  "bg-brand-acid/10",
+  "bg-brand-sky/10",
+  "bg-brand-pink/10",
+  "bg-brand-peach/10",
+  "bg-brand-teal/10",
+  "bg-brand-cobalt/10",
+] as const;
 
 const ATLAS_COPY = {
   de: {
@@ -67,54 +72,16 @@ const ATLAS_COPY = {
     allCourses: "Alle Kurse",
     allCoursesIntro:
       "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
-    courseDetails: "Fakten und Zugang",
-    audience: "Für wen",
-    source: "Quellstand",
+    viewProgress: "Fortschritt in deinem Konto ansehen",
+    tryDemo: (count: number) =>
+      count > 1 ? `${count} Praxisbeispiele testen` : "Praxisbeispiel testen",
     sourceCode: "Quellcode",
     sourceCommit: "Commit",
     start: "Nachweis beginnen",
     continue: "Nachweis fortsetzen",
     viewRecord: "Nachweis ansehen",
     pathCourse: "Teil des gewählten Pfads",
-    progress: "Fortschritt",
-    goals: [
-      {
-        id: "start",
-        label: "Sicher starten",
-        summary: "Alltagseinsatz, Prüfung und Verantwortung in fester Folge.",
-        courseSlugs: [
-          "ki-fuehrerschein",
-          "ki-und-gesellschaft",
-          "eu-ai-act-kurs",
-          "ai-native",
-        ],
-      },
-      {
-        id: "judge",
-        label: "Folgen beurteilen",
-        summary:
-          "Beispiele prüfen, Risiken klassifizieren, Entscheidungen begründen.",
-        courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
-      },
-      {
-        id: "build",
-        label: "Mit KI bauen",
-        summary:
-          "Arbeitsablauf, Prompt, Spezifikation und Kontrolle verbinden.",
-        courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
-      },
-      {
-        id: "data",
-        label: "Daten entscheiden",
-        summary: "Pipeline, Infrastruktur und Modellwirkung als System prüfen.",
-        courseSlugs: [
-          "data-engineering-fundamentals",
-          "data-infrastructure",
-          "data-science",
-          "ai-native-operator",
-        ],
-      },
-    ],
+    goals: LEARNING_GOALS.de,
     proofs: {
       "ki-fuehrerschein":
         "Prüfe eine reale Aufgabe auf Eingabe, Datenrisiko und Ergebnisqualität.",
@@ -152,53 +119,16 @@ const ATLAS_COPY = {
     allCourses: "All courses",
     allCoursesIntro:
       "The path is a recommendation. Every course remains directly accessible.",
-    courseDetails: "Facts and access",
-    audience: "Who it is for",
-    source: "Source revision",
+    viewProgress: "View your progress in your account",
+    tryDemo: (count: number) =>
+      count > 1 ? `Try ${count} applied examples` : "Try the applied example",
     sourceCode: "Source code",
     sourceCommit: "Commit",
     start: "Start this proof",
     continue: "Continue this proof",
     viewRecord: "View record",
     pathCourse: "Part of the selected path",
-    progress: "Progress",
-    goals: [
-      {
-        id: "start",
-        label: "Start safely",
-        summary: "Everyday use, verification, and responsibility in sequence.",
-        courseSlugs: [
-          "ki-fuehrerschein",
-          "ki-und-gesellschaft",
-          "eu-ai-act-kurs",
-          "ai-native",
-        ],
-      },
-      {
-        id: "judge",
-        label: "Judge impact",
-        summary: "Examine examples, classify risk, and justify decisions.",
-        courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
-      },
-      {
-        id: "build",
-        label: "Build with AI",
-        summary: "Connect workflow, prompting, specification, and control.",
-        courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
-      },
-      {
-        id: "data",
-        label: "Decide with data",
-        summary:
-          "Test pipeline, infrastructure, and model behavior as a system.",
-        courseSlugs: [
-          "data-engineering-fundamentals",
-          "data-infrastructure",
-          "data-science",
-          "ai-native-operator",
-        ],
-      },
-    ],
+    goals: LEARNING_GOALS.en,
     proofs: {
       "ki-fuehrerschein":
         "Check one real task for input quality, data risk, and output quality.",
@@ -235,16 +165,14 @@ const ATLAS_COPY = {
       readonly queued: string;
       readonly allCourses: string;
       readonly allCoursesIntro: string;
-      readonly courseDetails: string;
-      readonly audience: string;
-      readonly source: string;
+      readonly viewProgress: string;
+      readonly tryDemo: (count: number) => string;
       readonly sourceCode: string;
       readonly sourceCommit: string;
       readonly start: string;
       readonly continue: string;
       readonly viewRecord: string;
       readonly pathCourse: string;
-      readonly progress: string;
       readonly goals: readonly LearningGoal[];
       readonly proofs: Readonly<Record<string, string>>;
     }
@@ -305,14 +233,6 @@ function courseAction(
   };
 }
 
-function progressPercent(course: CatalogCourse, stat: CourseStat): number {
-  if (course.totalLessons === 0) return 0;
-  return Math.min(
-    100,
-    Math.round((stat.completed / course.totalLessons) * 100),
-  );
-}
-
 function sourceRepository(sourceHref: string): string {
   try {
     return new URL(sourceHref).pathname
@@ -325,79 +245,17 @@ function sourceRepository(sourceHref: string): string {
   }
 }
 
-function CourseProgress({
-  course,
-  stat,
-  hydrated,
-  locale,
-  identified = false,
-}: {
-  readonly course: CatalogCourse;
-  readonly stat: CourseStat;
-  readonly hydrated: boolean;
-  readonly locale: Locale;
-  readonly identified?: boolean;
-}) {
-  const galleryCopy = COURSE_GALLERY_COPY[locale];
-  const pct = progressPercent(course, stat);
-  const progressText = hydrated
-    ? galleryCopy.progressLoaded(stat.completed, course.totalLessons)
-    : galleryCopy.progressLoading(course.title);
-
-  return (
-    <div
-      className="min-w-0 border border-border bg-background px-3 py-2.5"
-      data-course-progress-card
-      data-testid={identified ? `course-progress-${course.slug}` : undefined}
-    >
-      <div className="flex items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
-        <span className="font-bold uppercase tracking-[0.08em]">
-          {ATLAS_COPY[locale].progress}
-        </span>
-        <span
-          className="font-bold tabular-nums text-foreground"
-          data-testid={identified ? `progress-pct-${course.slug}` : undefined}
-        >
-          {hydrated ? `${pct}%` : "—"}
-        </span>
-      </div>
-      <div
-        className="mt-2 h-1.5 overflow-hidden bg-track"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={course.totalLessons}
-        aria-valuenow={hydrated ? stat.completed : 0}
-        aria-valuetext={progressText}
-        aria-label={`${galleryCopy.progress} ${course.title}`}
-        data-testid={identified ? `progress-dots-${course.slug}` : undefined}
-      >
-        <span
-          aria-hidden="true"
-          className="block h-full origin-left bg-brand-orange transition-transform duration-300 motion-reduce:transition-none"
-          data-progress-fill
-          style={{ transform: `scaleX(${hydrated ? pct / 100 : 0})` }}
-        />
-      </div>
-      <p className="mt-2 font-mono text-xs tabular-nums text-muted-foreground">
-        {progressText}
-      </p>
-    </div>
-  );
-}
-
 function CourseLedgerRow({
   course,
   index,
   inPath,
   stat,
-  hydrated,
   locale,
 }: {
   readonly course: Course;
   readonly index: number;
   readonly inPath: boolean;
   readonly stat?: CourseStat;
-  readonly hydrated: boolean;
   readonly locale: Locale;
 }) {
   const copy = ATLAS_COPY[locale];
@@ -406,15 +264,21 @@ function CourseLedgerRow({
   const liveStat = live ? (stat ?? defaultStat(course)) : null;
   const action =
     live && liveStat ? courseAction(course, liveStat, locale, copy) : null;
-  const badges = courseBadges(course.slug, locale);
   const sourceHref = course.sourceHref;
   const sourceCommitHref = course.sourceCommitHref;
   const sourceCommit = course.sourceCommit;
+  const tone = ROW_TONES[index % ROW_TONES.length];
+  // Seven of the ten courses have no demo. Rather than substituting one from
+  // another course, those rows simply omit the teaser.
+  const courseDemos = live ? demosForCourse(course.slug) : [];
+  const courseDemo = courseDemos[0];
+  const demoCount = courseDemos.length;
 
   return (
     <li
       className={cn(
-        "border border-border bg-card",
+        "border border-border",
+        tone,
         inPath && "border-l-[3px] border-l-brand-orange",
       )}
       data-course-slug={course.slug}
@@ -429,15 +293,18 @@ function CourseLedgerRow({
               : "open"
       }
     >
-      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[2.5rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
+      {/* No cover thumbnail. The course artwork is a wide illustration; at the
+          ~56px this dense ledger row allows it crops to unreadable mush, and
+          the six imported courses have only site screenshots, which read as
+          grey noise at that size. The art earns its space where it renders
+          large, on the home cards and the account catalog. */}
+      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[3rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
         <span
           className={cn(
-            "flex h-10 w-10 items-center justify-center border font-mono text-xs font-bold tabular-nums",
-            liveStat?.certified
+            "flex h-8 w-8 items-center justify-center self-start border font-mono text-xs font-bold tabular-nums",
+            liveStat?.certified || inPath
               ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-              : inPath
-                ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-                : "border-border bg-background text-muted-foreground",
+              : "border-border bg-background text-muted-foreground",
           )}
           aria-hidden="true"
         >
@@ -462,21 +329,59 @@ function CourseLedgerRow({
           <p className="mt-1 max-w-[68ch] text-sm leading-snug text-muted-foreground">
             {course.tagline}
           </p>
+          {courseDemo ? (
+            <Link
+              href={localizeHref(
+                `/demos/${courseDemo.slug}?source=gallery`,
+                locale,
+              )}
+              prefetch={false}
+              className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              {copy.tryDemo(demoCount)}
+              <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            </Link>
+          ) : null}
+          {/* Attribution for the imported MIT courses. This is the only place
+              the repository and pinned commit are rendered as page content
+              anywhere on the site: every other reference is machine-readable
+              (the knowledge-graph endpoint and the course-discovery metadata),
+              and the technical landing pages render none. It therefore stays
+              visible on the row itself rather than behind a disclosure. */}
+          {sourceHref ? (
+            <p
+              data-course-source
+              className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-muted-foreground"
+            >
+              <a
+                href={sourceHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-1.5 underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                <Github className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                {sourceRepository(sourceHref)}
+                <span className="sr-only">
+                  : {copy.sourceCode}, {course.title}
+                </span>
+              </a>
+              {sourceCommitHref && sourceCommit ? (
+                <a
+                  href={sourceCommitHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                >
+                  {copy.sourceCommit} #{sourceCommit.slice(0, 7)}
+                </a>
+              ) : null}
+            </p>
+          ) : null}
         </div>
         <div className="col-span-2 min-w-0 lg:col-span-1">
-          {live && liveStat ? (
-            <CourseProgress
-              course={course}
-              stat={liveStat}
-              hydrated={hydrated}
-              locale={locale}
-              identified
-            />
-          ) : (
-            <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
-              {course.duration}
-            </span>
-          )}
+          <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
+            {course.duration}
+          </span>
         </div>
         <div
           className="col-span-2 flex min-w-0 lg:col-span-1 lg:justify-self-end"
@@ -509,103 +414,6 @@ function CourseLedgerRow({
         </div>
       </div>
 
-      <details className="group border-t border-border">
-        <summary
-          aria-label={`${copy.courseDetails}: ${course.title}`}
-          className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-4 py-2 text-sm font-semibold text-foreground marker:content-none hover:bg-card-hover focus-visible:bg-card-hover [&::-webkit-details-marker]:hidden"
-        >
-          {copy.courseDetails}
-          <span
-            aria-hidden="true"
-            className="font-mono text-base transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
-          >
-            +
-          </span>
-        </summary>
-        <div className="grid gap-5 border-t border-border px-4 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.55fr)]">
-          <div>
-            <p className="max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
-              {course.description}
-            </p>
-            <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.duration}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.duration}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.scope}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.totalLessons} {galleryCopy.lessons}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {galleryCopy.structure}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.unitCount} {course.unitLabel}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">
-                  {copy.audience}
-                </dt>
-                <dd className="mt-1 font-semibold text-foreground">
-                  {course.audience}
-                </dd>
-              </div>
-            </dl>
-            {badges.length > 0 ? (
-              <ul
-                className="mt-4 flex flex-wrap gap-2"
-                aria-label={galleryCopy.features}
-              >
-                {badges.map((badge) => (
-                  <li
-                    key={badge.label}
-                    className="border border-border px-2 py-1 font-mono text-xs text-muted-foreground"
-                  >
-                    {badge.label}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-
-          <div className="flex flex-col items-start gap-3 border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
-            {sourceHref ? (
-              <div className="text-xs leading-relaxed text-muted-foreground">
-                <p className="font-semibold text-foreground">{copy.source}</p>
-                <a
-                  href={sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-flex min-h-11 items-center gap-2 underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  <Github className="h-4 w-4" aria-hidden="true" />
-                  {copy.sourceCode}: {sourceRepository(sourceHref)}
-                </a>
-                {sourceCommitHref && sourceCommit ? (
-                  <a
-                    href={sourceCommitHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block min-h-11 py-3 underline decoration-border underline-offset-4 hover:decoration-foreground"
-                  >
-                    {copy.sourceCommit} #{sourceCommit.slice(0, 7)}
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </details>
     </li>
   );
 }
@@ -616,7 +424,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
   const courses = localizeCatalog(ALL_COURSE_CATALOG, locale);
   const [goalId, setGoalId] = useState<GoalId>("start");
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
-  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const requestedGoal = new URL(window.location.href).searchParams.get(
@@ -630,7 +437,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
         next[course.slug] = readStat(course, progress);
       }
       setStats(next);
-      setHydrated(true);
     });
   }, []); // The catalog is static for the lifetime of this route.
 
@@ -853,14 +659,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                         nextCourse.slug
                       ] ?? nextCourse.tagline}
                     </p>
-                    <div className="mt-3">
-                      <CourseProgress
-                        course={nextCourse}
-                        stat={nextStat}
-                        hydrated={hydrated}
-                        locale={locale}
-                      />
-                    </div>
                     <Link
                       href={nextAction.href}
                       prefetch={false}
@@ -893,9 +691,19 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
         >
           {copy.allCourses}
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {copy.allCoursesIntro}
-        </p>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <p className="text-sm text-muted-foreground">
+            {copy.allCoursesIntro}
+          </p>
+          <Link
+            href={localizeHref("/konto", locale)}
+            prefetch={false}
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand-orange underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-brand-orange focus-visible:decoration-brand-orange motion-reduce:transition-none"
+          >
+            {copy.viewProgress}
+            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+          </Link>
+        </div>
 
         <div className="mt-5 space-y-8">
           {groups.map((group) => (
@@ -924,7 +732,6 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                     index={index}
                     inPath={selectedSlugs.has(course.slug)}
                     stat={stats[course.slug]}
-                    hydrated={hydrated}
                     locale={locale}
                   />
                 ))}

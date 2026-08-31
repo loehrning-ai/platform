@@ -79,6 +79,8 @@ export interface DimensionResult {
   readonly id: DimensionId;
   readonly name: string;
   readonly short: string;
+  /** One-line promise of what the dimension covers. Set once localized. */
+  readonly description?: string;
   readonly accent: Accent;
   readonly iconName: string;
   /** Sum of the Likert scores answered in this dimension. */

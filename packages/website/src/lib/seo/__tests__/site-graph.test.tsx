@@ -5,6 +5,7 @@ import { render } from "@testing-library/react";
 import { GET as getKnowledgeGraph } from "@/app/api/knowledge-graph.json/route";
 import {
   GITHUB_ORG,
+  LOEHRNING_LINKEDIN_URL,
   ORGANIZATION_SAME_AS_URLS,
   PERSON_SAME_AS_URLS,
   TIM_ENTITY,
@@ -62,9 +63,15 @@ describe("GitHub organization links", () => {
     expect(orgLinks.filter(isExactGitHubOrgUrl)).toEqual([GITHUB_ORG.url]);
   });
 
-  it("Organization sameAs lists only the verified GitHub organization", () => {
-    expect(ORGANIZATION_SAME_AS_URLS).toEqual([GITHUB_ORG.url]);
-    expect(organizationSameAs(renderedSiteJsonLd())).toEqual([GITHUB_ORG.url]);
+  it("Organization sameAs lists the verified GitHub organization and company LinkedIn", () => {
+    expect(ORGANIZATION_SAME_AS_URLS).toEqual([
+      GITHUB_ORG.url,
+      LOEHRNING_LINKEDIN_URL,
+    ]);
+    expect(organizationSameAs(renderedSiteJsonLd())).toEqual([
+      GITHUB_ORG.url,
+      LOEHRNING_LINKEDIN_URL,
+    ]);
   });
 
   it("Person sameAs lists personal profiles and excludes the organization", () => {

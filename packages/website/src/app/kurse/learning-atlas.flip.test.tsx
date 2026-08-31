@@ -16,6 +16,8 @@ const { FLIPPED_COURSE } = vi.hoisted(() => ({
     startHref: "/flip-fixture-course/kurs",
     continueHref: "/flip-fixture-course/kurs",
     duration: "1 hr",
+    durationMinutes: 60,
+    level: "einstieg" as const,
     totalLessons: 10,
     unitLabel: "lessons",
     unitCount: 10,
@@ -74,9 +76,11 @@ describe("LearningAtlas native-status contract", () => {
     expect(screen.getByText("Flipped Fixture Course")).toBeInTheDocument();
     expect(row).toHaveAttribute("data-course-status", "complete");
     expect(row).toHaveAttribute("data-in-path", "false");
-    expect(screen.getByTestId(`progress-dots-${FLIPPED_SLUG}`)).toHaveAttribute(
-      "aria-valuenow",
-      "10",
-    );
+    // Real progress still reaches the ledger: it resolves the status attribute
+    // above. It is no longer rendered as a meter here, so the row states the
+    // course's duration and the numeric readout lives on the account catalog.
+    expect(screen.queryByTestId(`progress-dots-${FLIPPED_SLUG}`)).toBeNull();
+    expect(row?.querySelector('[role="progressbar"]')).toBeNull();
+    expect(row).toHaveTextContent("1 hr");
   });
 });

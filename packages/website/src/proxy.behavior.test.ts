@@ -448,7 +448,7 @@ describe("locale routing and authentication boundaries", () => {
 
     expect(response.status).toBe(301);
     expect(response.headers.get("location")).toBe(
-      "https://loehrning.ai/en/ueber-mich#redaktion",
+      "https://loehrning.ai/en/ueber-mich",
     );
     expect(response.headers.get("x-robots-tag")).toBeNull();
   });
@@ -457,7 +457,7 @@ describe("locale routing and authentication boundaries", () => {
     ["/en/wie-ki-funktioniert", "/en/einstieg"],
     ["/en/wie-ki-funktioniert/lektion-1-vorhersage", "/en/einstieg"],
     ["/en/bekannte-grenzen", "/en/hilfe#grenzen"],
-    ["/en/ueber-die-plattform", "/en/ueber-mich#redaktion"],
+    ["/en/ueber-die-plattform", "/en/ueber-mich"],
   ])("permanently redirects retired route %s to %s", async (from, to) => {
     const response = await proxy(
       new NextRequest(`https://loehrning.ai${from}`),

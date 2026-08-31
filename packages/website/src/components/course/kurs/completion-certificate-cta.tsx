@@ -65,7 +65,10 @@ export function CompletionCertificateCta({
 
   return (
     <section
-      className={cn("border-2 border-foreground bg-card p-5", className)}
+      className={cn(
+        "border-2 border-foreground bg-brand-acid/15 p-5",
+        className,
+      )}
       aria-labelledby={headingId}
       data-certificate-cta={courseSlug}
     >

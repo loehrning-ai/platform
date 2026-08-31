@@ -7,7 +7,7 @@
 .blog-root {
   --blog-paper: var(--color-paper, #f8f3e8);
   --blog-acid: var(--color-brand-acid, #dfff69);
-  --blog-lilac: var(--color-brand-lilac, #e2d2ff);
+  --blog-lilac: var(--color-brand-peach, #ffc19e);
   --blog-sky: var(--color-brand-sky, #bfe3ff);
   --blog-pink: var(--color-brand-pink, #ffbfd6);
   --blog-cobalt: var(--color-brand-cobalt, #2444c7);

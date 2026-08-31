@@ -19,26 +19,33 @@ const INITIAL: FormState = {
   zeitraum: "Juli-September 2026",
 };
 
-type StepState = "idle" | "running" | "done";
-
-export default function WordDemo() {
-  const { locale } = useDemoLocale();
-  return locale === "en" ? <WordDemoEnglish /> : <WordDemoGerman />;
+/**
+ * The budget field feeds straight into the generated letter's currency line
+ * (Number(form.budget) formatted). An empty or non-numeric value would
+ * otherwise generate a letter reading "NaN €" with no indication why.
+ */
+function isValidBudget(value: string): boolean {
+  const n = Number(value);
+  return value.trim() !== "" && Number.isFinite(n) && n > 0;
 }
 
-function WordDemoGerman() {
-  const [form, setForm] = useState<FormState>(INITIAL);
+type StepState = "idle" | "running" | "done";
+
+/**
+ * Drives the shared "Werkbank" step ladder (style-match → draft → export)
+ * behind Word's generate button. Both locales show the same three staged
+ * steps before the result appears — English previously skipped straight to
+ * the result with no staging at all.
+ */
+function useStagedGeneration() {
   const [genStep, setGenStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [focusedField, setFocusedField] = useState<keyof FormState | null>(
-    null,
-  );
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
 
-  const handleGenerate = useCallback(() => {
+  const generate = useCallback(() => {
     if (isGenerating) return;
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
@@ -62,18 +69,52 @@ function WordDemoGerman() {
     );
   }, [isGenerating, reducedMotion]);
 
+  const stepState = useCallback(
+    (threshold: number): StepState => {
+      if (genStep >= threshold) return "done";
+      if (isGenerating && genStep === threshold - 1) return "running";
+      return "idle";
+    },
+    [genStep, isGenerating],
+  );
+
+  return {
+    isGenerating,
+    reducedMotion,
+    generate,
+    generated: genStep === 4,
+    stepState,
+  };
+}
+
+export default function WordDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <WordDemoEnglish /> : <WordDemoGerman />;
+}
+
+function WordDemoGerman() {
+  const [form, setForm] = useState<FormState>(INITIAL);
+  const [focusedField, setFocusedField] = useState<keyof FormState | null>(
+    null,
+  );
+  const {
+    isGenerating,
+    reducedMotion,
+    generate,
+    generated,
+    stepState,
+  } = useStagedGeneration();
+  const budgetValid = isValidBudget(form.budget);
+  const handleGenerate = () => {
+    if (!budgetValid) return;
+    generate();
+  };
+
   const fileName = useMemo(
     () =>
       `Projektbrief_${form.kunde.split(" ")[0]}_${new Date().toISOString().slice(0, 10)}.docx`,
     [form.kunde],
   );
-  const generated = genStep === 4;
-
-  const stepState = (threshold: number): StepState => {
-    if (genStep >= threshold) return "done";
-    if (isGenerating && genStep === threshold - 1) return "running";
-    return "idle";
-  };
 
   return (
     <div
@@ -173,10 +214,30 @@ function WordDemoGerman() {
                     width: "100%",
                     minWidth: 0,
                   }}
+                  aria-invalid={k === "budget" && !budgetValid}
+                  aria-describedby={
+                    k === "budget" && !budgetValid
+                      ? "word-budget-error"
+                      : undefined
+                  }
                 />
               </label>
             );
           })}
+          {!budgetValid ? (
+            <span
+              id="word-budget-error"
+              role="alert"
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: "var(--color-destructive)",
+                marginTop: -6,
+              }}
+            >
+              Rahmenwert muss eine Zahl größer 0 sein.
+            </span>
+          ) : null}
 
           {/* Template card */}
           <div
@@ -281,35 +342,39 @@ function WordDemoGerman() {
           <button
             type="button"
             onClick={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || !budgetValid}
             style={{
               marginTop: 4,
               minHeight: 44,
               padding: "10px 14px",
-              background: isGenerating
-                ? DEMO.leinen
-                : "var(--color-brand-orange)",
-              color: isGenerating ? DEMO.schiefer : "#fff",
+              background:
+                isGenerating || !budgetValid
+                  ? DEMO.leinen
+                  : "var(--color-brand-orange)",
+              color: isGenerating || !budgetValid ? DEMO.schiefer : "#fff",
               border: `2px solid ${DEMO.ink}`,
-              boxShadow: isGenerating ? "none" : `3px 3px 0 0 ${DEMO.ink}`,
+              boxShadow:
+                isGenerating || !budgetValid
+                  ? "none"
+                  : `3px 3px 0 0 ${DEMO.ink}`,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              cursor: isGenerating ? "not-allowed" : "pointer",
+              cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
               transition: reducedMotion
                 ? "none"
                 : "transform 0.12s, box-shadow 0.12s",
               width: "100%",
             }}
             onMouseDown={(e) => {
-              if (reducedMotion || isGenerating) return;
+              if (reducedMotion || isGenerating || !budgetValid) return;
               e.currentTarget.style.transform = "translate(2px, 2px)";
               e.currentTarget.style.boxShadow = `1px 1px 0 0 ${DEMO.ink}`;
             }}
             onMouseUp={(e) => {
-              if (reducedMotion || isGenerating) return;
+              if (reducedMotion || isGenerating || !budgetValid) return;
               e.currentTarget.style.transform = "";
               e.currentTarget.style.boxShadow = `3px 3px 0 0 ${DEMO.ink}`;
             }}
@@ -598,7 +663,18 @@ const INITIAL_EN: FormState = {
 
 function WordDemoEnglish() {
   const [form, setForm] = useState<FormState>(INITIAL_EN);
-  const [generated, setGenerated] = useState(false);
+  const {
+    isGenerating,
+    reducedMotion,
+    generate,
+    generated,
+    stepState,
+  } = useStagedGeneration();
+  const budgetValid = isValidBudget(form.budget);
+  const handleGenerate = () => {
+    if (!budgetValid) return;
+    generate();
+  };
   const fileName = useMemo(
     () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
     [form.kunde],
@@ -689,7 +765,6 @@ function WordDemoEnglish() {
                 value={form[key]}
                 inputMode={key === "budget" ? "numeric" : undefined}
                 onChange={(event) => {
-                  setGenerated(false);
                   setForm((current) => ({
                     ...current,
                     [key]: event.target.value,
@@ -707,43 +782,102 @@ function WordDemoEnglish() {
                   font: "inherit",
                   fontSize: 12,
                 }}
+                aria-invalid={key === "budget" && !budgetValid}
+                aria-describedby={
+                  key === "budget" && !budgetValid
+                    ? "word-budget-error-en"
+                    : undefined
+                }
               />
             </label>
           ))}
-          <div
-            style={{
-              display: "grid",
-              gap: 6,
-              padding: 10,
-              border: `1px solid ${DEMO.leinen}`,
-              background: DEMO.kalk,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-            }}
-          >
-            <span>01 · compare the sample style references</span>
-            <span>02 · assemble a browser-only draft</span>
-            <span>03 · mark the approval as pending</span>
+          {!budgetValid ? (
+            <span
+              id="word-budget-error-en"
+              role="alert"
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: "var(--color-destructive)",
+                marginTop: -6,
+              }}
+            >
+              Planning amount must be a number greater than 0.
+            </span>
+          ) : null}
+          <div style={{ paddingTop: 2, paddingBottom: 2 }}>
+            <div
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: DEMO.schiefer,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+                marginBottom: 8,
+              }}
+            >
+              Workbench
+            </div>
+            <ol
+              style={{
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+                position: "relative",
+              }}
+            >
+              <Step
+                state={stepState(1)}
+                label="Compare style against 40 sample documents"
+                reducedMotion={reducedMotion}
+              />
+              <Step
+                state={stepState(2)}
+                label="Claude Sonnet 4.6 · draft"
+                reducedMotion={reducedMotion}
+              />
+              <Step
+                state={stepState(3)}
+                label="Word export with template"
+                reducedMotion={reducedMotion}
+                isLast
+              />
+            </ol>
           </div>
           <button
             type="button"
-            onClick={() => setGenerated(true)}
+            onClick={handleGenerate}
+            disabled={isGenerating || !budgetValid}
             style={{
               minHeight: 44,
               border: `2px solid ${DEMO.ink}`,
-              background: "var(--color-brand-orange)",
-              color: "white",
-              boxShadow: `3px 3px 0 ${DEMO.ink}`,
+              background:
+                isGenerating || !budgetValid
+                  ? DEMO.leinen
+                  : "var(--color-brand-orange)",
+              color: isGenerating || !budgetValid ? DEMO.schiefer : "white",
+              boxShadow:
+                isGenerating || !budgetValid
+                  ? "none"
+                  : `3px 3px 0 ${DEMO.ink}`,
               padding: "10px 14px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              cursor: "pointer",
+              cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
             }}
           >
-            {generated ? "Rebuild sample brief" : "Build sample brief"}
+            {isGenerating
+              ? "Generating…"
+              : generated
+                ? "Rebuild sample brief"
+                : "Build sample brief"}
           </button>
         </section>
 

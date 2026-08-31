@@ -82,7 +82,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
   ] as const;
   const pillarTones = [
     "bg-brand-acid/65",
-    "bg-brand-lilac/55",
+    "bg-brand-peach/55",
     "bg-brand-sky/60",
   ] as const;
   const sectionRef = useRef<HTMLElement>(null);
@@ -141,10 +141,6 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       <span
         aria-hidden="true"
         className="pointer-events-none absolute -left-10 top-32 size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50"
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-12 right-[22%] h-20 w-56 rotate-6 rounded-full bg-brand-acid/35"
       />
 
       {/* ── Print-shop registration marks at the four corners ─────────── */}
@@ -218,7 +214,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
                 ? "settled"
                 : "running"
           }
-          className="home-hero-network-mask pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-lilac/20 lg:inset-auto lg:bottom-0 lg:right-0 lg:block lg:h-[110%] lg:w-[70vw] lg:overflow-visible lg:rounded-none lg:bg-transparent"
+          className="home-hero-network-mask pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-peach/20 lg:inset-auto lg:bottom-0 lg:right-0 lg:block lg:h-[110%] lg:w-[70vw] lg:overflow-visible lg:rounded-none lg:bg-transparent"
         >
           <m.div
             className="flex h-full w-full items-center justify-center lg:block"

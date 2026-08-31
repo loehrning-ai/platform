@@ -35,6 +35,9 @@ export const GITHUB_ORG = {
   url: "https://github.com/loehrning-ai",
 } as const;
 
+export const LOEHRNING_LINKEDIN_URL =
+  "https://www.linkedin.com/company/loehrning/" as const;
+
 export const SITE_ENTITY = {
   name: SITE_NAME,
   origin: SITE_ORIGIN,
@@ -58,6 +61,7 @@ export const PERSON_SAME_AS_URLS = [
 /** Profiles that unambiguously identify the loehrning.ai organization. */
 export const ORGANIZATION_SAME_AS_URLS = [
   GITHUB_ORG.url,
+  LOEHRNING_LINKEDIN_URL,
 ] as const;
 
 export const ENTITY_IDS = {

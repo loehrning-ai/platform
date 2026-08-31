@@ -33,18 +33,10 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
             return (
               <li
                 key={`${milestone.period}-${milestone.company}`}
-                className={`group relative grid min-w-0 gap-2 border-t border-border py-5 pl-8 last:border-b sm:grid-cols-[7rem_minmax(8rem,0.62fr)_minmax(0,1fr)] sm:items-start sm:gap-5 sm:pl-10 ${
+                className={`group relative grid min-w-0 gap-2 border-t border-border py-5 last:border-b sm:grid-cols-[7rem_minmax(8rem,0.62fr)_minmax(0,1fr)] sm:items-start sm:gap-5 ${
                   current ? "bg-brand-acid/35 pr-4" : ""
                 }`}
               >
-                <span
-                  className={`absolute left-0 top-5 flex h-5 w-5 items-center justify-center font-mono text-xs font-bold text-foreground ${
-                    current ? "bg-brand-acid" : "bg-brand-lilac/80"
-                  }`}
-                  aria-hidden="true"
-                >
-                  {index + 1}
-                </span>
                 <p className="break-words font-mono text-xs font-bold tabular-nums text-muted-foreground [overflow-wrap:anywhere]">
                   {milestone.period}
                 </p>

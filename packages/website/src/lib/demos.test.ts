@@ -15,7 +15,47 @@ import {
   getDemosByIndustry,
   getDemosByLevel,
   getNextDemo,
+  demosForCourse,
 } from "./demos";
+import { COURSE_CATALOG } from "./courses/catalog";
+
+describe("demosForCourse", () => {
+  it("binds the twelve demos to exactly the three courses that have them", () => {
+    const bound = Object.fromEntries(
+      COURSE_CATALOG.map((course) => [
+        course.slug,
+        demosForCourse(course.slug).length,
+      ]),
+    );
+    expect(bound).toMatchObject({
+      "ai-native": 9,
+      "eu-ai-act-kurs": 2,
+      "ki-fuehrerschein": 1,
+    });
+    const total = Object.values(bound).reduce((sum, n) => sum + n, 0);
+    expect(total).toBe(demos.length);
+  });
+
+  it("returns empty for the seven courses with no demo, never a substitute", () => {
+    // The /kurse teaser renders nothing for these rather than showing a demo
+    // from an unrelated course, so an empty result must stay empty.
+    const withoutDemos = COURSE_CATALOG.filter(
+      (course) => demosForCourse(course.slug).length === 0,
+    );
+    expect(withoutDemos).toHaveLength(7);
+    for (const course of withoutDemos) {
+      expect(demosForCourse(course.slug)).toEqual([]);
+    }
+  });
+
+  it("returns only demos whose courseSlug matches, in catalog order", () => {
+    const aiNative = demosForCourse("ai-native");
+    expect(aiNative.every((d) => d.courseSlug === "ai-native")).toBe(true);
+    expect(aiNative.map((d) => d.slug)).toEqual(
+      demos.filter((d) => d.courseSlug === "ai-native").map((d) => d.slug),
+    );
+  });
+});
 
 describe("demos catalog", () => {
   it("contains exactly 12 demos", () => {

@@ -109,7 +109,6 @@ export type SaveRemoteResult =
   | {
       readonly kind: "retry";
       readonly progress?: UnifiedProgress;
-      readonly retryAfterMs?: number;
     }
   | { readonly kind: "permanent" };
 
@@ -177,23 +176,15 @@ export async function saveRemoteProgress(
     return { kind: "permanent" };
   }
 
-  let retryAfterMs: number | undefined;
-  if (response.status === 429) {
-    const retryAfter = response.headers.get("retry-after");
-    if (retryAfter) {
-      const seconds = Number(retryAfter);
-      const parsed = Number.isFinite(seconds)
-        ? seconds * 1_000
-        : Date.parse(retryAfter) - Date.now();
-      if (Number.isFinite(parsed) && parsed > 0) {
-        retryAfterMs = Math.min(60_000, Math.max(1_000, parsed));
-      }
-    }
-  }
+  // No Retry-After parsing here: /api/progress answers both of its 429s
+  // without the header (route.ts), and consumeRateLimit() returns only a
+  // boolean, so the route cannot emit an accurate one without changing that
+  // API for every caller. A conservative header built from the one-hour
+  // window would be worse than scheduleRetry()'s own backoff, which caps at
+  // 60s. Retry timing is therefore left entirely to that backoff.
   return {
     kind: "retry",
     ...(serverProgress ? { progress: serverProgress } : {}),
-    ...(retryAfterMs ? { retryAfterMs } : {}),
   };
 }
 
@@ -319,10 +310,7 @@ export function UserProgressSyncRuntime() {
       }, delay);
     }
 
-    function scheduleRetry(
-      state: UnifiedProgress,
-      retryAfterMs?: number,
-    ): void {
+    function scheduleRetry(state: UnifiedProgress): void {
       mergePending(state);
       if (paused || !active) return;
       if (typeof navigator !== "undefined" && !navigator.onLine) return;
@@ -332,7 +320,7 @@ export function UserProgressSyncRuntime() {
       }
       const exponentialDelay = Math.min(60_000, 2_000 * 2 ** retryAttempts);
       retryAttempts += 1;
-      armFlush(Math.max(exponentialDelay, retryAfterMs ?? 0));
+      armFlush(exponentialDelay);
     }
 
     function queueSave(state: UnifiedProgress, delay = 900): void {
@@ -386,7 +374,6 @@ export function UserProgressSyncRuntime() {
       const controller = new AbortController();
       currentWriteId = writeId;
       writeController = controller;
-      let retryAfterMs: number | undefined;
       let retryState: UnifiedProgress | null = null;
 
       try {
@@ -426,7 +413,6 @@ export function UserProgressSyncRuntime() {
           retryState = result.progress
             ? mergeUnifiedProgress(next, result.progress)
             : next;
-          retryAfterMs = result.retryAfterMs;
         }
       } catch (error) {
         if (
@@ -450,7 +436,7 @@ export function UserProgressSyncRuntime() {
           writeController = null;
           if (active && !paused && !syncDisabled) {
             if (retryState) {
-              scheduleRetry(retryState, retryAfterMs);
+              scheduleRetry(retryState);
             } else if (pendingState) {
               void flush();
             }
@@ -723,8 +709,14 @@ export function UserProgressSyncRuntime() {
             revalidateCutoverAfterResume();
             return;
           }
-          // Keep and upload the current local state; a later queued save
-          // retries the server path without discarding learning progress.
+          // A failed GET means the server's rows were never read. Completing
+          // the boot here would mark the client bootstrapped, clear the sync
+          // failure, and PUT a state derived from server data it never saw.
+          // Fail the boot instead: the outer catch schedules a bounded retry
+          // and the next successful boot merges, then uploads, everything
+          // accumulated since. Local progress stays in browser storage
+          // throughout, so nothing is discarded.
+          throw new Error("Progress boot GET failed", { cause: error });
         }
         handleDeletionControl(getAccountDeletionControlState());
         if (

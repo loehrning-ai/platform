@@ -171,7 +171,7 @@ export default async function OpenSourcePage() {
                 className="relative min-h-[22rem] overflow-hidden border-t border-foreground md:min-h-[25rem] md:border-l md:border-t-0"
                 data-open-source-image-fan
                 style={{
-                  background: "var(--color-brand-lilac, #e2d2ff)",
+                  background: "var(--color-brand-peach, #ffc19e)",
                 }}
               >
                 <span

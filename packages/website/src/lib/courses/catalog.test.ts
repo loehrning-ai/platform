@@ -26,6 +26,7 @@ import { COURSE_SLUGS } from "@/lib/course/types";
 import { getRegisteredCourseSlugs } from "@/lib/course/config";
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
+import { CANONICAL_LESSON_IDS } from "./completion";
 import { courseGroupFor } from "./tracks";
 
 function sha256(path: string): string {
@@ -219,6 +220,25 @@ describe("course catalog (shared course architecture)", () => {
     expect(codex?.totalLessons).toBe(getCodexTotalLessons());
     expect(codex?.unitCount).toBe(getCodexTotalLessons());
     expect(getCodexTracks("en").length).toBe(4);
+  });
+
+  it("keeps totalLessons in sync with CANONICAL_LESSON_IDS for every course", () => {
+    // Two separately hand-maintained sources feed the same displayed
+    // percentage: this catalog's totalLessons (above) versus the progress
+    // pipeline's CANONICAL_LESSON_IDS (lib/courses/completion.ts), which
+    // gates lesson-proof completion. The test above already guards
+    // totalLessons against course CONTENT for 6 of the 10 courses; this one
+    // guards it against the PROGRESS source for all 10 — a course.slug is
+    // always a CourseSlug (COURSE_SLUGS enumerates exactly these ten), and
+    // CANONICAL_LESSON_IDS is total over CourseSlug, so every course has an
+    // entry to check. A silent drift here produces a wrong percentage on
+    // every /konto card without either total individually looking wrong.
+    for (const course of COURSE_CATALOG) {
+      expect(
+        CANONICAL_LESSON_IDS[course.slug].length,
+        `${course.slug}: totalLessons (${course.totalLessons}) must match CANONICAL_LESSON_IDS.length (${CANONICAL_LESSON_IDS[course.slug].length})`,
+      ).toBe(course.totalLessons);
+    }
   });
 
   it("retains claude's open-source provenance fields after the flip to native", () => {

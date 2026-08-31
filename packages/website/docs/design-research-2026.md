@@ -104,6 +104,8 @@ This is a product-level anti-pattern blacklist derived from the quality risks ab
 - source or limitation notes detached from the claim they qualify;
 - novelty that disappears under reduced motion or cannot be operated by keyboard.
 
+The "purple glows" and "gradient ambience" exclusions above were stated policy before they were fully shipped: `globals.css`'s `.site-atmosphere`, `.berlin-hero`, and `.berlin-footer` washes and the `brand-lilac` token they used were still present as of 26 August 2026. See [design-audit-2026.md's 2026-08-30 addendum](./design-audit-2026.md#2026-08-30-addendum--design-system-reunification) for when the code was brought into line with this list.
+
 ## Canonical Research Decisions
 
 This memo is the canonical evidence source for the interface contract. Other design documents reference these decision IDs instead of restating study claims.

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import RechnungZuSapDemo from "./rechnung-zu-sap-demo";
 
 /**
@@ -92,6 +92,72 @@ describe("<RechnungZuSapDemo>", () => {
     // The pending placeholder is gone once the extract is shown.
     expect(
       screen.queryByText(/Extrahierte Felder erscheinen nach UStG-Validierung/),
+    ).not.toBeInTheDocument();
+  });
+
+  it("lets the user step through the pipeline manually, independent of autoplay", () => {
+    render(<RechnungZuSapDemo />);
+
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+    const back = screen.getByRole("button", { name: "◀ Zurück" });
+    const next = screen.getByRole("button", { name: "Weiter ▶" });
+    expect(back).toBeDisabled();
+    expect(next).not.toBeDisabled();
+
+    fireEvent.click(next);
+    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
+    expect(back).not.toBeDisabled();
+
+    fireEvent.click(back);
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+  });
+
+  it("disables Weiter at the final step and offers a replay control", () => {
+    render(<RechnungZuSapDemo />);
+    const next = screen.getByRole("button", { name: "Weiter ▶" });
+
+    fireEvent.click(next);
+    fireEvent.click(next);
+    fireEvent.click(next);
+    fireEvent.click(next);
+
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    expect(next).toBeDisabled();
+    expect(
+      screen.getByText("Industrie-Sensoren Typ S-2200"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "↻ Neu abspielen" }),
+    ).toBeInTheDocument();
+  });
+
+  it("switches to the flagged document and shows a manual-review outcome instead of a clean export", () => {
+    render(<RechnungZuSapDemo />);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Beleg B · Abweichung" }),
+    );
+    // Picking a scenario resets to stage 0 and swaps the data source; jsdom
+    // never reports the demo in view, so autoplay does not race the assertion.
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+
+    const next = screen.getByRole("button", { name: "Weiter ▶" });
+    fireEvent.click(next);
+    fireEvent.click(next);
+    fireEvent.click(next);
+    fireEvent.click(next);
+
+    expect(
+      screen.getByText("Manuelle Prüfung erforderlich"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("IDoc INVOIC02 · Entwurf"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Sonderrabatt (handschriftlich)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Industrie-Sensoren Typ S-2200"),
     ).not.toBeInTheDocument();
   });
 });

@@ -215,6 +215,31 @@ jobs:
           PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/auth-scaffold
           PLAYWRIGHT_OUTPUT_DIR: test-results/auth-scaffold
 
+  konto-dom-mocked:
+    name: konto DOM (mocked session)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      E2E_SERVER_MODE: production
+      E2E_PORT: "3000"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          playwright-browsers: chromium
+      # Builds its own public-config-only bundle with fictional Supabase values
+      # and serves the endpoints the server calls during SSR from an in-process
+      # preload, so the signed-in /konto DOM renders with no credential. This
+      # is DOM and token-plumbing coverage, not authentication proof.
+      - name: Mocked-session konto DOM gate
+        run: bun run --cwd packages/website test:e2e:konto-dom-mocked
+        env:
+          E2E_GLOBAL_TIMEOUT: 600000
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/konto-dom-mocked
+          PLAYWRIGHT_OUTPUT_DIR: test-results/konto-dom-mocked
+
   server-log-privacy:
     name: server log privacy
     runs-on: ubuntu-latest
@@ -280,6 +305,7 @@ jobs:
       - lighthouse
       - e2e
       - auth-scaffold
+      - konto-dom-mocked
       - server-log-privacy
     steps:
       - name: Report gate results
@@ -290,6 +316,7 @@ jobs:
             "lighthouse........... ${{ needs.lighthouse.result }}" \
             "e2e.................. ${{ needs.e2e.result }}" \
             "auth-scaffold........ ${{ needs.auth-scaffold.result }}" \
+            "konto-dom-mocked..... ${{ needs.konto-dom-mocked.result }}" \
             "server-log-privacy... ${{ needs.server-log-privacy.result }}"
       - name: Fail if any gate did not succeed
         if: >-

@@ -8,6 +8,14 @@
 
 import type { CourseSlug } from "@/lib/course/types";
 
+/**
+ * Learner level. Independent declaration mirroring demos.ts's DemoLevel
+ * vocabulary (same three values, same meaning) rather than importing across
+ * the courses/demos domain boundary — courses do not depend on the demos
+ * module elsewhere, and Demo.courseSlug already points the other way.
+ */
+export type CourseLevel = "einstieg" | "mittel" | "fortg";
+
 export interface CatalogCourse {
   /** Slug shared with the unified progress store + course engine. */
   readonly slug: CourseSlug;
@@ -33,8 +41,22 @@ export interface CatalogCourse {
   readonly continueHref: string;
   /** Human duration label (e.g. "ca. 2 Std."). */
   readonly duration: string;
+  /**
+   * Numeric duration in minutes. Locale-independent, so it lives on the base
+   * record rather than the locale copy layer — sorting/filtering companion
+   * to the human `duration` string, which is locale-specific display copy
+   * and parses ambiguously (English "hr"/"min" abbreviations differ from
+   * German "Std."/"Min.").
+   */
+  readonly durationMinutes: number;
   /** Total lessons used for the progress dots + percentage. */
   readonly totalLessons: number;
+  /**
+   * Learner level. Locale-independent value; its display label is looked up
+   * per locale via `COURSE_LEVEL_LABELS_BY_LOCALE` in `catalog-copy.ts`,
+   * mirroring how demos.ts separates DemoLevel from its locale labels.
+   */
+  readonly level: CourseLevel;
   /** Structural unit label ("Blöcke" / "Module"). */
   readonly unitLabel: string;
   /** Count of structural units shown on the card. */
@@ -103,7 +125,9 @@ export interface ImportedCourse {
   readonly licenseSizeBytes: number;
   readonly sourceCommit: string;
   readonly duration: string;
+  readonly durationMinutes: number;
   readonly totalLessons: number;
+  readonly level: CourseLevel;
   readonly unitLabel: string;
   readonly unitCount: number;
   readonly lessonCountLabel: string;
@@ -138,7 +162,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/ki-fuehrerschein/kurs",
     continueHref: "/ki-fuehrerschein/kurs",
     duration: "ca. 1 Std. 40 Min.",
+    durationMinutes: 100,
     totalLessons: 18,
+    level: "einstieg",
     unitLabel: "Blöcke",
     unitCount: 5,
     audience: "Beschäftigte, die KI im Arbeitsalltag einsetzen",
@@ -160,7 +186,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/ki-und-gesellschaft/kurs",
     continueHref: "/ki-und-gesellschaft/kurs",
     duration: "ca. 46 Min.",
+    durationMinutes: 46,
     totalLessons: 9,
+    level: "einstieg",
     unitLabel: "Blöcke",
     unitCount: 3,
     audience: "Ohne technische Vorkenntnisse",
@@ -182,7 +210,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/eu-ai-act-kurs/kurs",
     continueHref: "/eu-ai-act-kurs/kurs",
     duration: "ca. 1 Std. 50 Min.",
+    durationMinutes: 110,
     totalLessons: 24,
+    level: "mittel",
     unitLabel: "Blöcke",
     unitCount: 6,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
@@ -204,7 +234,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/ai-native/kurs/modul_1",
     continueHref: "/ai-native/kurs/modul_1/modul_1_lesson_1",
     duration: "ca. 12 Std.",
+    durationMinutes: 720,
     totalLessons: 27,
+    level: "mittel",
     unitLabel: "Module",
     unitCount: 4,
     audience: "Beschäftigte, Selbstständige und Studierende",
@@ -235,7 +267,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/claude/kurs/mental-model",
     continueHref: "/kurse/open-source/claude/kurs",
     duration: "ca. 2 Std.",
+    durationMinutes: 120,
     totalLessons: 12,
+    level: "mittel",
     unitLabel: "Tracks",
     unitCount: 4,
     audience: "Wissensarbeiter, Entwickler, Teams mit Claude Code",
@@ -296,7 +330,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/codex/kurs/L01",
     continueHref: "/kurse/open-source/codex/kurs",
     duration: "ca. 2 Std.",
+    durationMinutes: 120,
     totalLessons: 12,
+    level: "fortg",
     unitLabel: "Lektionen",
     unitCount: 12,
     audience: "Entwickler, die mit AI-Coding-Tools arbeiten",
@@ -356,7 +392,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/data-infrastructure/kurs/mental-model",
     continueHref: "/kurse/open-source/data-infrastructure/kurs",
     duration: "ca. 3 Std.",
+    durationMinutes: 180,
     totalLessons: 12,
+    level: "fortg",
     unitLabel: "Tracks",
     unitCount: 4,
     audience:
@@ -417,7 +455,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/data-engineering-fundamentals/home",
     continueHref: "/kurse/open-source/data-engineering-fundamentals",
     duration: "ca. 90 Min.",
+    durationMinutes: 90,
     totalLessons: 12,
+    level: "mittel",
     unitLabel: "Kapitel",
     unitCount: 12,
     audience: "Data Engineers, Analytics Engineers, Plattform-Teams",
@@ -474,7 +514,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/data-science",
     continueHref: "/kurse/open-source/data-science",
     duration: "ca. 2 Std.",
+    durationMinutes: 120,
     totalLessons: 12,
+    level: "mittel",
     unitLabel: "Kapitel",
     unitCount: 12,
     audience: "Data Scientists, ML Engineers, Analysten",
@@ -534,7 +576,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     startHref: "/kurse/open-source/ai-native-operator/mindset/1",
     continueHref: "/kurse/open-source/ai-native-operator",
     duration: "ca. 14 Std.",
+    durationMinutes: 840,
     totalLessons: 39,
+    level: "fortg",
     unitLabel: "Module",
     unitCount: 9,
     audience: "Fach- und Führungskräfte",

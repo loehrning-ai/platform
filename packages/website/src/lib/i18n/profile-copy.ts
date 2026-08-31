@@ -59,14 +59,6 @@ type ProfileCopy = Readonly<{
     intro: string;
     cards: readonly ProfileCredential[];
   }>;
-  editorial: Readonly<{
-    eyebrow: string;
-    title: string;
-    intro: string;
-    policies: readonly Readonly<{ title: string; body: string }>[];
-    guidePrefix: string;
-    guideLabel: string;
-  }>;
   contact: Readonly<{
     eyebrow: string;
     title: string;
@@ -74,6 +66,7 @@ type ProfileCopy = Readonly<{
     linksLabel: string;
     email: string;
     linkedIn: string;
+    linkedInCompany: string;
     github: string;
     feedbackPrefix: string;
     feedbackLabel: string;
@@ -85,14 +78,14 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     metadata: {
       title: "Über Tim Löhr",
       description:
-        "Profil von Tim Löhr, Kurator von loehrning.ai: berufliche Stationen, Ausbildung, redaktionelle Arbeitsweise und Kontakt.",
+        "Profil von Tim Löhr, Kurator von loehrning.ai: berufliche Stationen, Ausbildung und Kontakt.",
       socialTitle: "Tim Löhr · Kurator von loehrning.ai",
       portraitAlt: "Tim Löhr vor der Golden Gate Bridge",
     },
     breadcrumbHome: "Start",
     personJobTitle: "Kurator von loehrning.ai",
     personDescription:
-      "Tim Löhr entwickelt loehrning.ai als weitgehend öffentliches Lernarchiv für KI, Datenarbeit und technische Praxis.",
+      "Tim Löhr entwickelt loehrning.ai: frei zugängliche Kurse, Praxisbeispiele und Notizen zu KI, Datenarbeit und technischer Praxis.",
     knowsAbout: [
       "KI-Kompetenz",
       "Data Engineering",
@@ -102,7 +95,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     ],
     hero: {
       eyebrow: "Person und Arbeit",
-      title: "Ich baue loehrning.ai als öffentliches Lernarchiv.",
+      title: "Ich baue loehrning.ai, damit KI-Wissen prüfbar bleibt.",
       intro:
         "Ich bin Tim Löhr. Beruflich habe ich als Data Scientist bei Apple und Red Bull sowie als Data Engineer bei Meta gearbeitet.",
       detail:
@@ -204,28 +197,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
         },
       ],
     },
-    editorial: {
-      eyebrow: "Arbeitsweise",
-      title: "Wie ich Inhalte prüfe",
-      intro:
-        "Die öffentlichen Inhaltsregeln trennen Quellen, Einordnung und Grenzen. Drei Grundsätze gelten für jede veröffentlichte Seite.",
-      policies: [
-        {
-          title: "Primärquellen vor Behauptungen",
-          body: "Rechtliche, regulatorische, wissenschaftliche und produktbezogene Aussagen stützen sich auf Primärquellen. Zeitabhängige Inhalte tragen ein Prüfdatum.",
-        },
-        {
-          title: "Beobachtung und Einordnung trennen",
-          body: "Beobachtete Fakten, Interpretation, Beispiele und Empfehlungen werden als unterschiedliche Aussagearten behandelt. Annahmen in Rechnern und Simulationen bleiben sichtbar.",
-        },
-        {
-          title: "Grenzen ausdrücklich nennen",
-          body: "Die Plattform verspricht weder Akkreditierung noch Rechtssicherheit, Compliance oder garantierte Ergebnisse. Überfällige Prüfungen und bekannte Einschränkungen werden nicht verdeckt.",
-        },
-      ],
-      guidePrefix: "Die vollständigen öffentlichen Regeln stehen in",
-      guideLabel: "CONTENT_GUIDE.md",
-    },
     contact: {
       eyebrow: "Kontakt",
       title: "Direkter Kontakt",
@@ -234,6 +205,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linksLabel: "Kontaktwege",
       email: "E-Mail schreiben",
       linkedIn: "Auf LinkedIn schreiben",
+      linkedInCompany: "loehrning.ai auf LinkedIn",
       github: "GitHub-Profil öffnen",
       feedbackPrefix: "Inhaltliche Fehler lassen sich auch über",
       feedbackLabel: "das Feedback-Formular",
@@ -243,14 +215,14 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     metadata: {
       title: "About Tim Löhr",
       description:
-        "Profile of Tim Löhr, curator of loehrning.ai: previous roles, education, editorial practice, and contact details.",
+        "Profile of Tim Löhr, curator of loehrning.ai: previous roles, education, and contact details.",
       socialTitle: "Tim Löhr · Curator of loehrning.ai",
       portraitAlt: "Tim Löhr in front of the Golden Gate Bridge",
     },
     breadcrumbHome: "Home",
     personJobTitle: "Curator of loehrning.ai",
     personDescription:
-      "Tim Löhr develops loehrning.ai as a largely public learning archive for AI, data work, and technical practice.",
+      "Tim Löhr develops loehrning.ai: freely available courses, applied examples, and notes on AI, data work, and technical practice.",
     knowsAbout: [
       "AI literacy",
       "Data engineering",
@@ -260,7 +232,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     ],
     hero: {
       eyebrow: "Person and work",
-      title: "I build loehrning.ai as a public learning archive.",
+      title: "I build loehrning.ai to keep knowledge about AI verifiable.",
       intro:
         "I am Tim Löhr. I previously worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
       detail:
@@ -361,28 +333,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
         },
       ],
     },
-    editorial: {
-      eyebrow: "Editorial practice",
-      title: "How I review content",
-      intro:
-        "The public content rules separate sources, interpretation, and limitations. Three principles apply to every published page.",
-      policies: [
-        {
-          title: "Primary sources before claims",
-          body: "Legal, regulatory, scientific, and product claims rely on primary sources. Time-dependent material carries a review date.",
-        },
-        {
-          title: "Separate observation from interpretation",
-          body: "Observed facts, interpretation, examples, and recommendations are treated as different kinds of statement. Assumptions in calculators and simulations remain visible.",
-        },
-        {
-          title: "State limitations explicitly",
-          body: "The platform does not promise accreditation, legal certainty, compliance, or guaranteed outcomes. Overdue reviews and known limitations are not concealed.",
-        },
-      ],
-      guidePrefix: "The complete public rules are documented in",
-      guideLabel: "CONTENT_GUIDE.md",
-    },
     contact: {
       eyebrow: "Contact",
       title: "Contact me directly",
@@ -391,6 +341,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linksLabel: "Contact methods",
       email: "Send an email",
       linkedIn: "Message me on LinkedIn",
+      linkedInCompany: "loehrning.ai on LinkedIn",
       github: "Open GitHub profile",
       feedbackPrefix: "Content errors can also be reported through",
       feedbackLabel: "the feedback form",

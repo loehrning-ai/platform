@@ -1,6 +1,18 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
+ * Projects where the SERVER resolves a real session, so the signed-in DOM is
+ * expected to render: the credentialed live tier, and the mocked-session tier
+ * whose Supabase endpoints are served in-process. The provider-free
+ * `auth-scaffold` project is deliberately absent - it is always signed out.
+ */
+const SERVER_SESSION_PROJECTS = new Set([
+  "authenticated-live",
+  "konto-dom-mocked",
+]);
+
+
+/**
  * Konto / DSGVO data-management E2E (regression coverage, spec 2).
  *
  * Runs under either the provider-free `auth-scaffold` project or the explicit,
@@ -77,7 +89,7 @@ function sectionByHeading(page: Page, heading: string) {
 test.describe("signed-out surface: the /konto/datenschutz gate", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
-      testInfo.project.name === "authenticated-live",
+      SERVER_SESSION_PROJECTS.has(testInfo.project.name),
       "signed-out assertions belong to the provider-free auth scaffold",
     );
     await page.goto("/login", { waitUntil: "domcontentloaded" });
@@ -115,7 +127,7 @@ test.describe("signed-out surface: the /konto/datenschutz gate", () => {
 test.describe("authenticated /konto/datenschutz round-trips (requires a live session)", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-    if (testInfo.project.name === "authenticated-live") {
+    if (SERVER_SESSION_PROJECTS.has(testInfo.project.name)) {
       expect(
         page.url().includes("/login"),
         "live authenticated project must reach the DSGVO page with a server-validated session",

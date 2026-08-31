@@ -63,6 +63,11 @@ export interface LoginCopy {
       readonly disabled: string;
     };
   };
+  readonly accountValue: {
+    readonly heading: string;
+    readonly items: readonly string[];
+    readonly localNote: string;
+  };
   readonly turnstile: {
     readonly label: string;
     readonly ready: string;
@@ -165,6 +170,16 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         disabled: "Die Anmeldung ist in dieser Umgebung nicht konfiguriert.",
       },
     },
+    accountValue: {
+      heading: "Was ein Lernkonto tut",
+      items: [
+        "Kursfortschritt wird geräteübergreifend synchronisiert.",
+        "Erreichte Kursnachweise und behandelte Lernergebnisse bleiben abrufbar.",
+        "Daten lassen sich jederzeit exportieren, zurücksetzen oder löschen.",
+      ],
+      localNote:
+        "Ohne Konto bleibt dein Fortschritt in diesem Browser und wird beim Anmelden nicht übernommen. Ein Konto ist für keinen Kurs Voraussetzung.",
+    },
     turnstile: {
       label: "Sicherheitsprüfung",
       ready: "Sicherheitsprüfung abgeschlossen.",
@@ -260,6 +275,16 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
           "No sign-in method is fully configured and verified for this environment.",
         disabled: "Sign-in is not configured in this environment.",
       },
+    },
+    accountValue: {
+      heading: "What a learning account does",
+      items: [
+        "Course progress synchronises across your devices.",
+        "Earned course records and covered outcomes stay retrievable.",
+        "Data can be exported, reset, or deleted at any time.",
+      ],
+      localNote:
+        "Without an account your progress stays in this browser and is not carried over when you sign in. No course requires an account.",
     },
     turnstile: {
       label: "Security check",

@@ -7,7 +7,6 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 interface App {
@@ -85,9 +84,11 @@ export default function CostDriftObservabilityDemo() {
   const [series, setSeries] = useState<readonly number[]>(() =>
     makeSeries(60, 1.2, 0.4),
   );
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
     if (!visible || reduced) return;
+    setLive(true);
     let updates = 0;
     let timer: ReturnType<typeof setTimeout>;
     const advance = () => {
@@ -97,7 +98,11 @@ export default function CostDriftObservabilityDemo() {
         Math.max(0.2, s[s.length - 1] + (Math.random() - 0.5) * 0.5),
       ]);
       updates += 1;
-      if (updates < 5) timer = setTimeout(advance, 1200);
+      if (updates < 5) {
+        timer = setTimeout(advance, 1200);
+      } else {
+        setLive(false);
+      }
     };
     timer = setTimeout(advance, 1200);
     return () => clearTimeout(timer);
@@ -207,12 +212,6 @@ export default function CostDriftObservabilityDemo() {
           </span>
         </h2>
       </div>
-      <SimulationDisclosure>
-        {text(
-          "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte. Das Diagramm schreibt eine Beispielkurve fort, um einen Drift-Indikator zu erklären.",
-          "All values are fixed sample scenarios, not live measurements. The chart extends a sample series to explain a drift indicator.",
-        )}
-      </SimulationDisclosure>
 
       <div
         className="demo-cdo-kpis"
@@ -462,18 +461,24 @@ export default function CostDriftObservabilityDemo() {
                   marginTop: 2,
                 }}
               >
+                {/* Names the extrapolation, not just the mode: the shell's
+                    EvidenceBadge already states that the data is simulated,
+                    but nothing else tells the reader that this curve MOVES at
+                    runtime and that the motion is generated locally rather
+                    than streamed. That fact belongs next to the moving line
+                    and the LIVE/Angehalten indicator. */}
                 {text(
-                  "Latenz · Seed-Szenario (simuliert)",
-                  "Latency · seeded scenario (simulated)",
+                  "Latenz · Seed-Kurve, fortgeschrieben zur Drift-Erklärung",
+                  "Latency · seeded series, extrapolated to explain drift",
                 )}
               </div>
             </div>
+            {/* A two-word status chip, so neither role="note" nor a title
+                belongs here. The title restated the mode a third time (badge,
+                SIMULIERT pill, here); role="note" marks parenthetic sections,
+                not labels, and its visible text is already in reading order.
+                Both removed; the chip stays as a visual marker. */}
             <span
-              role="note"
-              title={text(
-                "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte.",
-                "All values are fixed sample scenarios, not live measurements.",
-              )}
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
@@ -597,16 +602,51 @@ export default function CostDriftObservabilityDemo() {
       <div>
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
             marginBottom: 6,
           }}
         >
-          {text("Log-Stream", "Event log")}
+          <div
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: "var(--color-brand-orange)",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            {text("Log-Stream · Alter", "Event log · age")}
+          </div>
+          {!reduced ? (
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                letterSpacing: "0.1em",
+                fontWeight: 700,
+                color: live ? DEMO.statusGreen : DEMO.schiefer,
+              }}
+            >
+              <span
+                aria-hidden="true"
+                style={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: live ? DEMO.statusGreen : DEMO.schiefer,
+                }}
+              />
+              {live ? text("LIVE", "LIVE") : text("Angehalten", "Paused")}
+            </span>
+          ) : null}
         </div>
         <div
           style={{
@@ -620,10 +660,15 @@ export default function CostDriftObservabilityDemo() {
             overflowY: "auto",
           }}
         >
+          {/* First column is the entry's AGE in seconds, not a clock time:
+              newest entry at the top with the smallest age, older entries
+              below. Ages are an offset plus `tick`, so every line grows older
+              as the walk advances and none can go negative before the first
+              tick or under reduced motion, where `tick` stays at 0. */}
           {(
             [
               [
-                `${tick}s`,
+                0,
                 "info",
                 "haiku·42ms",
                 text(
@@ -633,21 +678,21 @@ export default function CostDriftObservabilityDemo() {
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 2}s`,
+                2,
                 "info",
                 "haiku·38ms",
                 text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"),
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 4}s`,
+                4,
                 "warn",
                 "opus·3.2s",
                 text("Wiederholung nach Timeout", "Retry after timeout"),
                 DEMO.statusAmber,
               ],
               [
-                `${tick - 7}s`,
+                7,
                 "info",
                 "sonnet·1.8s",
                 text(
@@ -657,24 +702,24 @@ export default function CostDriftObservabilityDemo() {
                 DEMO.statusGreen,
               ],
               [
-                `${tick - 9}s`,
+                9,
                 "error",
                 "opus·0ms",
                 text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"),
                 DEMO.statusRed,
               ],
               [
-                `${tick - 12}s`,
+                12,
                 "info",
                 "haiku·29ms",
                 text("Cache-Treffer", "Cache hit"),
                 DEMO.statusGreen,
               ],
             ] as const
-          ).map(([t, lvl, tag, msg, c], i) => (
+          ).map(([ageOffset, lvl, tag, msg, c], i) => (
             <div key={i}>
               <span style={{ color: "rgba(243,240,233,0.4)" }}>
-                {String(t).padStart(4)}{" "}
+                {`${ageOffset + tick}s`.padStart(4)}{" "}
               </span>
               <span style={{ color: c, letterSpacing: "0.1em" }}>
                 [{lvl.toUpperCase().padEnd(5)}]

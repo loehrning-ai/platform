@@ -9,6 +9,9 @@ export interface AccountPageCopy {
   readonly logout: string;
   readonly unavailableTitle: string;
   readonly unavailableBody: string;
+  readonly authUnavailableIdentity: string;
+  readonly authUnavailableTitle: string;
+  readonly authUnavailableBody: string;
   readonly coursesCompleted: string;
   readonly outcomesCovered: string;
   readonly lastSynchronized: string;
@@ -20,6 +23,15 @@ export interface AccountPageCopy {
   readonly allComplete: string;
   readonly booksLink: string;
   readonly coursesHeading: string;
+  readonly availableCoursesHeading: string;
+  readonly accountRequiredNote: string;
+  readonly levelFilterLabel: string;
+  readonly allLevels: string;
+  readonly sortLabel: string;
+  readonly sortByStep: string;
+  readonly sortByDuration: string;
+  readonly sortByProgress: string;
+  readonly noCoursesMatchFilter: string;
   readonly recordEarned: string;
   readonly lessonProgress: (
     done: number,
@@ -42,6 +54,8 @@ export interface AccountPageCopy {
   }[];
   readonly localDataHeading: string;
   readonly localDataBody: string;
+  readonly sectionNavigationLabel: string;
+  readonly sectionSettings: string;
   readonly privacyNavigationLabel: string;
   readonly privacyLink: string;
   readonly privacySummary: string;
@@ -63,6 +77,11 @@ export const ACCOUNT_COPY = {
     unavailableTitle: "Dein Lernstand ist gerade nicht erreichbar.",
     unavailableBody:
       "Die Seite zeigt deshalb keinen vermeintlich leeren Fortschritt. Dein lokaler Lernstand bleibt im Browser erhalten.",
+    authUnavailableIdentity:
+      "Der Anmeldedienst antwortet gerade nicht, daher lässt sich dein Anmeldestatus nicht prüfen.",
+    authUnavailableTitle: "Anmeldestatus ist gerade nicht abrufbar.",
+    authUnavailableBody:
+      "Du wurdest nicht abgemeldet. Die Seite meldet dich deshalb bewusst nicht ab und zeigt keinen leeren Lernstand. Lade die Seite in einigen Minuten neu.",
     coursesCompleted: "Kurse abgeschlossen",
     outcomesCovered: "Lernergebnisse behandelt",
     lastSynchronized: "Zuletzt synchronisiert",
@@ -74,7 +93,17 @@ export const ACCOUNT_COPY = {
     allComplete:
       "Alle verfügbaren Kursnachweise sind erreicht. Die Lernbücher dienen zur Vertiefung und zum Nachschlagen.",
     booksLink: "Zu den Büchern",
-    coursesHeading: "Deine Kurse",
+    coursesHeading: "Meine Kurse",
+    availableCoursesHeading: "Weitere Kurse",
+    accountRequiredNote:
+      "Bei den vier grundlegenden Kursen synchronisiert ein Konto Fortschritt und Abschlussstatus geräteübergreifend. Die sechs technischen Kurse funktionieren auch ohne Konto.",
+    levelFilterLabel: "Niveau",
+    allLevels: "Alle",
+    sortLabel: "Sortierung",
+    sortByStep: "Empfohlene Reihenfolge",
+    sortByDuration: "Dauer",
+    sortByProgress: "Fortschritt",
+    noCoursesMatchFilter: "Kein Kurs entspricht diesem Filter.",
     recordEarned: "Nachweis erreicht",
     lessonProgress: (done, total, percent) =>
       `${done}/${total} Lektionen · ${percent}%`,
@@ -105,6 +134,8 @@ export const ACCOUNT_COPY = {
     localDataHeading: "Gespeicherter Lernstand",
     localDataBody:
       "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser. Ein Lernkonto synchronisiert sie geräteübergreifend. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export erhalten und haben keinen offiziellen Nachweiswert.",
+    sectionNavigationLabel: "Kontobereiche",
+    sectionSettings: "Konto verwalten",
     privacyNavigationLabel: "Kontodatenschutz",
     privacyLink: "Datenschutz und Datenverwaltung",
     privacySummary: "Export, Kursfortschritt zurücksetzen und Konto löschen.",
@@ -124,6 +155,11 @@ export const ACCOUNT_COPY = {
     unavailableTitle: "Your learning record is temporarily unavailable.",
     unavailableBody:
       "The page does not substitute an empty record. Progress stored in this browser remains unchanged.",
+    authUnavailableIdentity:
+      "The sign-in service is not responding, so your sign-in status cannot be checked.",
+    authUnavailableTitle: "Sign-in status is temporarily unavailable.",
+    authUnavailableBody:
+      "You have not been signed out. The page deliberately does not sign you out or substitute an empty record. Reload in a few minutes.",
     coursesCompleted: "Courses completed",
     outcomesCovered: "Course outcomes covered",
     lastSynchronized: "Last synchronised",
@@ -135,7 +171,17 @@ export const ACCOUNT_COPY = {
     allComplete:
       "Every available course record has been earned. The learning books provide reference material for further study.",
     booksLink: "Open books",
-    coursesHeading: "Your courses",
+    coursesHeading: "My courses",
+    availableCoursesHeading: "Available courses",
+    accountRequiredNote:
+      "For the four foundation courses, an account synchronises progress and completion status across devices. The six technical courses also work without an account.",
+    levelFilterLabel: "Level",
+    allLevels: "All",
+    sortLabel: "Sort",
+    sortByStep: "Recommended order",
+    sortByDuration: "Duration",
+    sortByProgress: "Progress",
+    noCoursesMatchFilter: "No course matches this filter.",
     recordEarned: "Record earned",
     lessonProgress: (done, total, percent) =>
       `${done}/${total} lessons · ${percent}%`,
@@ -166,6 +212,8 @@ export const ACCOUNT_COPY = {
     localDataHeading: "Saved learning state",
     localDataBody:
       "Without sign-in, course progress, checkpoints, and work artifacts remain in this browser. A learning account synchronises them across devices. Historical activity data remains in exports for compatibility and has no official qualification value.",
+    sectionNavigationLabel: "Account sections",
+    sectionSettings: "Manage account",
     privacyNavigationLabel: "Account privacy",
     privacyLink: "Privacy and data controls",
     privacySummary:

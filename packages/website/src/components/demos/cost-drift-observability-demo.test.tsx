@@ -9,15 +9,23 @@ import CostDriftObservabilityDemo from "./cost-drift-observability-demo";
  * IntersectionObserver never reports the demo in-view, so useVisibleAutoplay
  * keeps the live drift interval paused and the render stays deterministic. We
  * exercise the component's own logic: the aggregate spend KPI derived from the
- * four app costs, the co-located simulation disclosure, and the click-driven app
- * selector that swaps the detail panel metrics.
+ * four app costs, the chart caption that discloses the extrapolation, and the
+ * click-driven app selector that swaps the detail panel metrics.
+ *
+ * The engine no longer renders its own SimulationDisclosure. The detail shell
+ * states the mode once via EvidenceBadge, so an inline restatement here made it
+ * twice, and the mode belongs stated once per detail page. What the badge
+ * could NOT
+ * say -- that the latency curve moves at runtime and the motion is generated
+ * locally rather than streamed -- moved into the chart caption, which is
+ * asserted below so the fact stays guarded.
  *
  * The randomized latency series only feeds an aria-hidden SVG, so it is not
  * asserted here.
  */
 
 describe("<CostDriftObservabilityDemo>", () => {
-  it("renders the header, simulation disclosure, aggregate spend KPI, and the default app detail", () => {
+  it("renders the header, chart-caption disclosure, aggregate spend KPI, and the default app detail", () => {
     render(<CostDriftObservabilityDemo />);
 
     expect(screen.getByText("Observability & Kosten")).toBeInTheDocument();
@@ -25,12 +33,17 @@ describe("<CostDriftObservabilityDemo>", () => {
       "LLM-Kosten und Drift",
     );
 
-    // The inline simulation disclosure (distinct from the SEED-SZENARIO note,
-    // which has a different accessible name).
-    const disclosure = screen.getByRole("note", {
-      name: "Hinweis zur Simulation",
-    });
-    expect(disclosure).toHaveTextContent(/keine Live-Messwerte/);
+    // The engine states the mode exactly zero times now (the detail shell's
+    // EvidenceBadge owns that). What has to survive is the extrapolation
+    // disclosure, which lives in the chart caption next to the moving line.
+    expect(
+      screen.getByText("Latenz · Seed-Kurve, fortgeschrieben zur Drift-Erklärung"),
+    ).toBeInTheDocument();
+    // And no inline simulation note is left to duplicate the badge.
+    expect(
+      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("note")).not.toBeInTheDocument();
 
     // Spend MTD = sum of the four app costs
     // (186.42 + 412.08 + 298.15 + 96.33 = 992.98) rounded to "993".
@@ -55,6 +68,43 @@ describe("<CostDriftObservabilityDemo>", () => {
     // cost and its latency (both unique to the detail panel).
     expect(screen.getByText("€186.42")).toBeInTheDocument();
     expect(screen.getByText("1.2 s")).toBeInTheDocument();
+  });
+
+  it("shows the log stream as paused, not live, while the update interval never starts", () => {
+    render(<CostDriftObservabilityDemo />);
+
+    // useVisibleAutoplay never reports in-view in jsdom, so the interval that
+    // would flip this to "LIVE" never runs — the stream must not claim to be
+    // live while frozen.
+    expect(screen.getByText("Angehalten")).toBeInTheDocument();
+    expect(screen.queryByText("LIVE")).not.toBeInTheDocument();
+  });
+
+  it("never renders a negative log age, including before the first tick", () => {
+    // The log column is an AGE in seconds, not a clock time. It used to be
+    // built as `tick - N` with tick starting at 0, so the never-started render
+    // showed -2s, -4s, -7s, -9s, -12s. Under reduced motion the interval never
+    // runs at all, which made those negatives permanent rather than transient.
+    // jsdom never reports the demo in-view, so this render IS the
+    // never-started state.
+    const { container } = render(<CostDriftObservabilityDemo />);
+
+    const ages = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-demo-id] span'),
+    )
+      .map((el) => el.textContent?.trim() ?? "")
+      .filter((t) => /^-?\d+s$/.test(t));
+
+    expect(ages.length).toBeGreaterThanOrEqual(6);
+    for (const age of ages) {
+      expect(
+        Number.parseInt(age, 10),
+        `log age "${age}" must not be negative`,
+      ).toBeGreaterThanOrEqual(0);
+    }
+    // Newest entry first: the six log ages ascend down the stream.
+    const logAges = ages.slice(0, 6).map((a) => Number.parseInt(a, 10));
+    expect(logAges).toEqual([...logAges].sort((x, y) => x - y));
   });
 
   it("swaps the detail panel metrics when a different app is selected", () => {

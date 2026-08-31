@@ -1,6 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { TIM_ENTITY } from "@/lib/seo/entity";
+import { LOEHRNING_LINKEDIN_URL, TIM_ENTITY } from "@/lib/seo/entity";
 import { UeberMichContent } from "./ueber-mich-content";
 
 function escapeRegExp(value: string): string {
@@ -14,7 +14,7 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Ich baue loehrning.ai als öffentliches Lernarchiv.",
+        name: "Ich baue loehrning.ai, damit KI-Wissen prüfbar bleibt.",
       }),
     ).toBeVisible();
     expect(
@@ -26,7 +26,6 @@ describe("<UeberMichContent>", () => {
       "Frühere Arbeitgeber",
       "Berufliche Stationen",
       "Akademischer Hintergrund",
-      "Wie ich Inhalte prüfe",
       "Direkter Kontakt",
     ]) {
       expect(screen.getByRole("heading", { name: heading })).toBeVisible();
@@ -39,9 +38,6 @@ describe("<UeberMichContent>", () => {
     ).not.toBeNull();
     expect(container.querySelector("[data-proof-ledger]")).not.toBeNull();
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    expect(
-      container.querySelector("[data-editorial-manifesto]"),
-    ).not.toBeNull();
     expect(container.querySelectorAll("[data-link-preview]")).toHaveLength(4);
     expect(container.querySelector(".js-reveal")).toBeNull();
     expect(container.querySelector('[style*="opacity: 0"]')).toBeNull();
@@ -54,7 +50,7 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "I build loehrning.ai as a public learning archive.",
+        name: "I build loehrning.ai to keep knowledge about AI verifiable.",
       }),
     ).toBeVisible();
     expect(
@@ -62,9 +58,6 @@ describe("<UeberMichContent>", () => {
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Academic background" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "How I review content" }),
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: "Contact me directly" }),
@@ -81,6 +74,10 @@ describe("<UeberMichContent>", () => {
 
     const links = [
       ["Message me on LinkedIn, opens in a new tab", TIM_ENTITY.linkedInUrl],
+      [
+        "loehrning.ai on LinkedIn, opens in a new tab",
+        LOEHRNING_LINKEDIN_URL,
+      ],
       ["Open GitHub profile, opens in a new tab", TIM_ENTITY.personalGithubUrl],
     ] as const;
     for (const [name, href] of links) {
@@ -92,19 +89,14 @@ describe("<UeberMichContent>", () => {
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
     expect(
-      screen.getAllByRole("link", { name: /Message me on LinkedIn/i }),
+      screen.getAllByRole("link", { name: /^Message me on LinkedIn/i }),
+    ).toHaveLength(1);
+    expect(
+      screen.getAllByRole("link", { name: /loehrning\.ai on LinkedIn/i }),
     ).toHaveLength(1);
     expect(
       screen.getAllByRole("link", { name: /Open GitHub profile/i }),
     ).toHaveLength(1);
-    const guide = screen.getByRole("link", {
-      name: "CONTENT_GUIDE.md, opens in a new tab",
-    });
-    expect(guide).toHaveAttribute(
-      "href",
-      "https://github.com/loehrning-ai/platform/blob/main/CONTENT_GUIDE.md",
-    );
-    expect(guide).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("localizes the internal feedback link and keeps contact terminal", () => {

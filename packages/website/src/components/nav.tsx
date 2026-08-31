@@ -143,7 +143,7 @@ function LogoWordmark({
     >
       <m.div
         data-logo-mark
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange shadow-[3px_3px_0_var(--color-brand-acid)]"
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
         aria-hidden="true"
         style={{
           rotate: prefersReducedMotion ? 0 : iconRotate,
@@ -583,7 +583,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.githubOrganisation}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             <Github size={17} aria-hidden="true" />
           </a>
@@ -603,7 +603,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-lilac/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}

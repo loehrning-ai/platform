@@ -26,7 +26,7 @@ describe("<Credentials>", () => {
     const cards = container.querySelectorAll("article");
     expect(cards).toHaveLength(3);
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    expect(cards[0]).toHaveClass("bg-brand-lilac/45", "md:col-span-7");
+    expect(cards[0]).toHaveClass("bg-brand-peach/45", "md:col-span-7");
     expect(cards[1]).toHaveClass("bg-brand-sky/45", "md:col-span-5");
   });
 
@@ -62,6 +62,16 @@ describe("<Credentials>", () => {
     expect(
       within(degreeCard as HTMLElement).queryByRole("list"),
     ).not.toBeInTheDocument();
+
+    const fauMark = (degreeCard as HTMLElement).querySelector(
+      'img[src="/ueber-mich/logos/fau.svg"]',
+    );
+    expect(fauMark).not.toBeNull();
+    expect(fauMark).toHaveAttribute("aria-hidden", "true");
+    expect(fauMark).toHaveAttribute("alt", "");
+    expect(fauMark).toHaveAttribute("width", "196");
+    expect(fauMark).toHaveAttribute("height", "28");
+    expect(fauMark).not.toHaveAttribute("loading", "lazy");
   });
 
   it("renders English credential copy with no German section labels", () => {

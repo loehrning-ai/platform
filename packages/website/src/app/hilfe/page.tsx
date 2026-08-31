@@ -21,6 +21,14 @@ const PATH = "/hilfe";
 const ARTICLE_4_SOURCE =
   "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32026R1744";
 
+const LIMITATION_TONES = [
+  "bg-brand-acid/15",
+  "bg-brand-sky/15",
+  "bg-brand-pink/15",
+  "bg-brand-peach/15",
+  "bg-brand-teal/15",
+] as const;
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const copy = HELP_COPY[locale].metadata;
@@ -183,7 +191,7 @@ function limitationsAnswer(
         {limitations.map((item, index) => (
           <li
             key={item.id}
-            className="min-w-0 border border-border bg-background p-4"
+            className={`min-w-0 border border-border p-4 ${LIMITATION_TONES[index % LIMITATION_TONES.length]}`}
           >
             <div className="flex min-w-0 items-baseline justify-between gap-4">
               <h3 className="min-w-0 break-words text-base font-bold text-foreground">

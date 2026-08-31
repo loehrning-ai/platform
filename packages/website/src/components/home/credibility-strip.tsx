@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/locale";
 
 const PRINCIPLE_TONES = [
   "bg-brand-acid/58",
-  "bg-brand-lilac/50",
+  "bg-brand-peach/50",
   "bg-brand-sky/58",
   "bg-brand-pink/46",
 ] as const;

@@ -89,9 +89,6 @@ describe("<DemoShell>", () => {
     expect(screen.getByText("DEMO BODY")).toBeInTheDocument();
     expect(screen.queryByRole("status")).toBeNull();
     expect(screen.getByText("Interaktives Labor")).toBeVisible();
-    expect(
-      screen.getByText("Übungsmodus · kein Produktivsystem"),
-    ).toBeVisible();
     expect(container.firstElementChild).toHaveAttribute("data-demo-shell");
   });
 

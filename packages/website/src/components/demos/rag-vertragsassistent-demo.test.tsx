@@ -56,9 +56,15 @@ describe("<RagVertragsassistentDemo>", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("● DEMO-MODUS")).toBeInTheDocument();
 
+    // The engine no longer restates the simulation mode: the detail shell says
+    // it once via EvidenceBadge, and the mode belongs stated once, and
+    // riskNotes already carries the legal-interpretation caveat. What the badge
+    // could NOT say -- that this engine's "Konfidenz" is a keyword-hit count
+    // rather than a model score -- moved next to the chip, and is pinned here
+    // so the metric semantics stay guarded.
     expect(
-      screen.getByRole("note", { name: "Hinweis zur Simulation" }),
-    ).toHaveTextContent(/keine Vektordatenbank/);
+      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
+    ).not.toBeInTheDocument();
 
     // Empty-state prompt heading.
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
@@ -123,6 +129,12 @@ describe("<RagVertragsassistentDemo>", () => {
     );
     expect(screen.getByText("Rahmenvereinbarung v3.2")).toBeInTheDocument();
     expect(screen.getByText("Hoch")).toBeInTheDocument();
+    // The metric definition relocated out of the removed SimulationDisclosure.
+    // It must stay VISIBLE rather than hover-only: the chip reads as a model
+    // score otherwise, and it is really a keyword-hit count.
+    expect(
+      screen.getByText(/Konfidenz = Anzahl Treffer/),
+    ).toBeVisible();
   });
 
   it("keeps accumulated source disclosures tied to their query context", async () => {

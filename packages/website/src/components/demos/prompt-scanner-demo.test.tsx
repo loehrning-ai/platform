@@ -27,16 +27,28 @@ function typePrompt(value: string): void {
 }
 
 describe("<PromptScannerDemo>", () => {
-  it("renders the header, disclosure, mode toggle and sample buttons, scanning the default sample", () => {
+  it("renders the header, blind-spot note, mode toggle and sample buttons, scanning the default sample", () => {
     render(<PromptScannerDemo />);
 
     expect(screen.getByText("Compliance-Sandbox")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Prompt-Scanner",
     );
+    // The engine no longer restates its execution mode: the detail shell says
+    // it once via EvidenceBadge, so the inline SimulationDisclosure made it
+    // twice, and the mode belongs stated once per detail page.
     expect(
-      screen.getByRole("note", { name: "Hinweis zur Simulation" }),
-    ).toHaveTextContent(/Regex-Regeln/);
+      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
+    ).not.toBeInTheDocument();
+
+    // What the badge does NOT claim is this scanner's concrete blind spots.
+    // That clause survived the removal and must stay visible without expanding
+    // the failure-mode toggle, since it is the engine's safety content.
+    const blindSpots = document.querySelector("[data-scanner-blind-spots]");
+    expect(blindSpots).toBeVisible();
+    expect(blindSpots).toHaveTextContent(
+      "Prompt-Injections, semantische Verschleierungen oder unbekannte Angriffsmuster werden nicht erkannt.",
+    );
 
     // Both scanner modes are offered; "Erkannt" (detect) is the default.
     expect(screen.getByRole("button", { name: "› Erkannt" })).toBeInTheDocument();

@@ -68,9 +68,6 @@ export const DEMOS_PAGE_COPY = {
       block: "Block",
       toLesson: "Zur Lektion",
       toGallery: "Zur Galerie",
-      illustrative: "Illustratives Beispiel",
-      illustrativeTitle:
-        "Zahlen sind illustrativ. Ergebnisse hängen vom Einsatzkontext ab.",
       continueLearning: "Weiterlernen",
       openCourse: (title: string) => `${title} öffnen`,
       openSuitableCourse: "Passenden Kurs öffnen",
@@ -89,7 +86,6 @@ export const DEMOS_PAGE_COPY = {
     },
     shell: {
       instrument: "Interaktives Labor",
-      sandbox: "Übungsmodus · kein Produktivsystem",
       loading: "Praxisbeispiel wird geladen…",
     },
     share: {
@@ -181,9 +177,6 @@ export const DEMOS_PAGE_COPY = {
       block: "Block",
       toLesson: "Open lesson",
       toGallery: "Open gallery",
-      illustrative: "Illustrative example",
-      illustrativeTitle:
-        "Figures are illustrative. Results depend on the deployment context.",
       continueLearning: "Continue learning",
       openCourse: (title: string) => `Open ${title}`,
       openSuitableCourse: "Open related course",
@@ -202,7 +195,6 @@ export const DEMOS_PAGE_COPY = {
     },
     shell: {
       instrument: "Interactive lab",
-      sandbox: "Practice mode · no production system",
       loading: "Loading practice example…",
     },
     share: {

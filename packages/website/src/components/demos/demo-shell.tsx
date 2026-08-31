@@ -65,11 +65,6 @@ export function DemoShell({
           />
           {shellCopy.instrument}
         </span>
-        <span
-          className={demo.dark ? "text-background/65" : "text-muted-foreground"}
-        >
-          {shellCopy.sandbox}
-        </span>
       </div>
       <div className="relative p-2 sm:p-3 lg:p-4">
         <div

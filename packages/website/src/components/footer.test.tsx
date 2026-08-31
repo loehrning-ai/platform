@@ -163,7 +163,7 @@ describe("Footer semantics and stable public dates", () => {
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer).toHaveClass("berlin-footer", "dark-section");
+    expect(footer).toHaveClass("dark-section");
     expect(footer?.innerHTML).toMatch(/rounded-(?:full|xl)|shadow-/);
   });
 

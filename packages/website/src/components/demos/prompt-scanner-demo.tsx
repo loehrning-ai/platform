@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 const SAMPLES = [
@@ -604,13 +603,6 @@ export default function PromptScannerDemo() {
         </div>
       </div>
 
-      <SimulationDisclosure>
-        {copy(
-          "Dieser Scanner prüft nur gegen fest definierte Regex-Regeln. Prompt-Injections, semantische Verschleierungen oder unbekannte Angriffsmuster werden nicht erkannt.",
-          "This scanner checks only fixed regular expressions. Prompt injection, semantic obfuscation, and unknown patterns can remain undetected.",
-        )}
-      </SimulationDisclosure>
-
       {/* Failure-mode beat: missed injection */}
       <div
         style={{
@@ -635,6 +627,27 @@ export default function PromptScannerDemo() {
             "Boundary case: what happens when the scanner misses an attack?",
           )}
         </div>
+        {/* Relocated from the engine's own SimulationDisclosure. The detail
+            shell already states the execution mode once via EvidenceBadge, so
+            the note's first clause ("only fixed regex rules") was a duplicate
+            of the REGELBASIERT pill. This second clause is not: it names the
+            concrete false negatives this rule set misses, which the badge
+            never claims. It stays visible without expanding the toggle, in the
+            panel that is already this engine's limits surface. */}
+        <p
+          data-scanner-blind-spots
+          style={{
+            margin: "0 0 10px",
+            fontSize: 12,
+            lineHeight: 1.55,
+            color: "rgba(243,240,233,0.75)",
+          }}
+        >
+          {copy(
+            "Prompt-Injections, semantische Verschleierungen oder unbekannte Angriffsmuster werden nicht erkannt.",
+            "Prompt injection, semantic obfuscation, and unknown patterns can remain undetected.",
+          )}
+        </p>
         <button
           type="button"
           onClick={() => setShowMissedInjection((v) => !v)}

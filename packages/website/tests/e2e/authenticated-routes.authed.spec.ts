@@ -3,6 +3,18 @@ import AxeBuilder from "@axe-core/playwright";
 import { COURSE_CATALOG } from "../../src/lib/courses/catalog";
 
 /**
+ * Projects where the SERVER resolves a real session, so the signed-in DOM is
+ * expected to render: the credentialed live tier, and the mocked-session tier
+ * whose Supabase endpoints are served in-process. The provider-free
+ * `auth-scaffold` project is deliberately absent - it is always signed out.
+ */
+const SERVER_SESSION_PROJECTS = new Set([
+  "authenticated-live",
+  "konto-dom-mocked",
+]);
+
+
+/**
  * Auth + Konto flow E2E (regression coverage, spec 1).
  *
  * Runs under either the provider-free `auth-scaffold` project or the explicit,
@@ -65,7 +77,7 @@ const REASON_COPY: ReadonlyArray<readonly [string, RegExp]> = [
 test.describe("signed-out surface (login gate + reason copy)", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
-      testInfo.project.name === "authenticated-live",
+      SERVER_SESSION_PROJECTS.has(testInfo.project.name),
       "signed-out assertions belong to the provider-free auth scaffold",
     );
     await page.goto("/login", { waitUntil: "domcontentloaded" });
@@ -147,12 +159,35 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
 // Authenticated /konto: progress cards, resources, logout wiring. The live
 // project must execute these assertions. The provider-free scaffold skips them
 // because its cookie cannot pass server-side provider validation.
+//
+// THREE TIERS RUN THIS FILE, AND THEY PROVE DIFFERENT THINGS.
+//
+//   auth-scaffold      provider-free build, always signed out. Skips this
+//                      block; runs the signed-out block above.
+//   konto-dom-mocked   runs in ordinary CI. The build carries only public
+//                      Supabase config, and the endpoints the server calls
+//                      during SSR are served by an in-process preload
+//                      (tests/e2e/fixtures/mock-auth-backend.cjs). The mock
+//                      derives its user from the presented token's own claims,
+//                      so these assertions do prove that the session cookie
+//                      reaches the server and that the bearer token and apikey
+//                      survive @supabase/ssr into the outbound call, and that
+//                      the signed-in DOM renders from it.
+//   authenticated-live opt-in, credentialed, needs a separate seeded Supabase
+//                      project via the nine variables in
+//                      scripts/validate-e2e-auth-env.mjs.
+//
+// WHAT THE MOCKED TIER DOES NOT PROVE: it never verifies a JWT signature, so it
+// says nothing about real authentication, token refresh, expiry, RLS on
+// user_course_progress, logout revocation, magic-link/OTP, or Turnstile. Green
+// here means the DOM and the token plumbing are intact, not that auth works.
+// Only authenticated-live can make the stronger claim.
 // ---------------------------------------------------------------------------
 
 test.describe("authenticated /konto (requires a live session)", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     await page.goto("/konto", { waitUntil: "domcontentloaded" });
-    if (testInfo.project.name === "authenticated-live") {
+    if (SERVER_SESSION_PROJECTS.has(testInfo.project.name)) {
       expect(
         page.url().includes("/login"),
         "live authenticated project must reach /konto with a server-validated session",
@@ -180,9 +215,14 @@ test.describe("authenticated /konto (requires a live session)", () => {
 
   test("renders every catalog course progress card", async ({ page }) => {
     for (const { title } of COURSE_CATALOG) {
-      const card = page.locator("article").filter({
-        has: page.getByRole("heading", { level: 3, name: title }),
-      });
+      // <Card> (src/components/ui/card.tsx) renders a plain <div> here (no
+      // href passed for a course tile), not an <article> - it never has and
+      // never will render <article> for any variant. The <h3> course title
+      // sits two levels below the Card root (h3 -> the "flex items-start"
+      // header row -> the Card div itself; src/app/konto/page.tsx:257-267),
+      // so walk up from the heading rather than assume a semantic container.
+      const heading = page.getByRole("heading", { level: 3, name: title });
+      const card = heading.locator("xpath=../..");
       await expect(card, `course card "${title}" is present`).toBeVisible();
       await expect(
         card.getByText(/\d+\/\d+ Lektionen · \d+%/),
@@ -192,7 +232,11 @@ test.describe("authenticated /konto (requires a live session)", () => {
     await expect(page.getByRole("progressbar")).toHaveCount(
       COURSE_CATALOG.length,
     );
-    await expect(page.getByText(/Weiter lernen|Gut gemacht/)).toBeVisible();
+    // Two mutually exclusive "next step" Cards (page.tsx:204-248): one kicker
+    // reads copy.continueLabel ("Weiter lernen") when a next course exists,
+    // the other copy.statusLabel ("Kursstatus") when every course is
+    // complete. "Gut gemacht" is not present in account-copy.ts today.
+    await expect(page.getByText(/Weiter lernen|Kursstatus/)).toBeVisible();
   });
 
   test("has no WCAG-tagged accessibility violations", async ({ page }) => {
@@ -205,16 +249,19 @@ test.describe("authenticated /konto (requires a live session)", () => {
   test("exposes the resources grid and the Datenschutz management link", async ({
     page,
   }) => {
-    await expect(page.getByRole("link", { name: /Lernbücher/i })).toHaveAttribute(
-      "href",
-      "/buecher",
-    );
-    await expect(page.getByRole("link", { name: /Praxisbeispiele/i })).toHaveAttribute(
-      "href",
-      "/demos",
-    );
+    // Scoped to main: the global footer links to /buecher and /demos with the
+    // same labels, so an unscoped role query matches two elements and fails
+    // strict mode. This assertion is about the account page's own resources
+    // grid, not the site chrome.
+    const main = page.getByRole("main");
     await expect(
-      page.getByRole("link", { name: /Datenschutz & Datenverwaltung/i }),
+      main.getByRole("link", { name: /Lernbücher/i }),
+    ).toHaveAttribute("href", "/buecher");
+    await expect(
+      main.getByRole("link", { name: /Praxisbeispiele/i }),
+    ).toHaveAttribute("href", "/demos");
+    await expect(
+      main.getByRole("link", { name: /Datenschutz und Datenverwaltung/i }),
     ).toHaveAttribute("href", "/konto/datenschutz");
   });
 
@@ -225,14 +272,25 @@ test.describe("authenticated /konto (requires a live session)", () => {
     // API-level concern (src/app/auth/logout/route.ts; regression coverage).
     const logoutForm = page.locator('form[action="/auth/logout"]');
     await expect(logoutForm).toHaveAttribute("method", "post");
-    await expect(logoutForm.getByRole("button", { name: /Logout/i })).toBeVisible();
+    await expect(
+      logoutForm.getByRole("button", { name: /Abmelden/i }),
+    ).toBeVisible();
   });
 
-  test("a live session redirects /login back to /konto", async ({ page }) => {
-    // getAuthenticatedUser() -> configured && user -> redirect(next="/konto").
-    await page.goto("/login", { waitUntil: "domcontentloaded" });
-    await expect(page).toHaveURL(/\/konto(\?|$)/);
-  });
+  // Needs a FULLY configured account runtime, which neither auth tier builds.
+  // /login only redirects when accountReady is true, and isAccountRuntimeReady()
+  // additionally requires the service-role config, SUPABASE_REGION and a
+  // past-dated DPA confirmation. Both the mocked and the live tier build with
+  // the three public variables only, so accountReady is false and /login
+  // correctly renders its unavailable branch instead of redirecting. Enable
+  // when a tier builds with the complete server-side account configuration.
+  test.fixme(
+    "a live session redirects /login back to /konto",
+    async ({ page }) => {
+      await page.goto("/login", { waitUntil: "domcontentloaded" });
+      await expect(page).toHaveURL(/\/konto(\?|$)/);
+    },
+  );
 });
 
 // ---------------------------------------------------------------------------

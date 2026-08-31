@@ -5,6 +5,7 @@ interface CourseArtworkProps {
   readonly src: string;
   readonly wide: boolean;
   readonly plateClassName: string;
+  readonly accentClassName: string;
 }
 
 /**
@@ -16,6 +17,7 @@ export function CourseArtwork({
   src,
   wide,
   plateClassName,
+  accentClassName,
 }: CourseArtworkProps) {
   return (
     <span
@@ -50,7 +52,10 @@ export function CourseArtwork({
       />
       <span
         aria-hidden="true"
-        className="absolute bottom-0 left-0 h-1.5 w-0 bg-brand-acid transition-[width] duration-300 group-hover:w-1/3 group-focus-visible:w-1/3 motion-reduce:transition-none"
+        className={cn(
+          "absolute bottom-0 left-0 h-1.5 w-0 transition-[width] duration-300 group-hover:w-1/3 group-focus-visible:w-1/3 motion-reduce:transition-none",
+          accentClassName,
+        )}
       />
     </span>
   );

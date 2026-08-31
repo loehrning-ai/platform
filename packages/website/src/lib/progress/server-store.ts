@@ -294,6 +294,27 @@ function isUniqueViolation(error: unknown): boolean {
   return (error as { readonly code?: unknown }).code === "23505";
 }
 
+/**
+ * A single course row exceeded `pg_column_size(progress) <= 65536`
+ * (`user_course_progress_size_check`, migration 009). The request-body cap is
+ * a different unit — it bounds the whole multi-course payload — so a write
+ * can pass every request-level check and still be rejected here. Callers must
+ * name this outcome rather than reporting a generic write failure, or the
+ * learner loses the write with no indication why.
+ */
+export function isRowSizeViolation(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const { code, message } = error as {
+    readonly code?: unknown;
+    readonly message?: unknown;
+  };
+  if (code !== "23514") return false;
+  return (
+    typeof message === "string" &&
+    message.includes("user_course_progress_size_check")
+  );
+}
+
 async function readStoredProgressRow(
   supabase: SupabaseClient,
   userId: string,

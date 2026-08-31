@@ -80,7 +80,6 @@
      ornament; their darker twins carry normal-sized text. */
   --color-paper: #fffcf5;
   --color-brand-acid: #ddf45a;
-  --color-brand-lilac: #cbbcff;
   --color-brand-sky: #a9ddfc;
   --color-brand-pink: #ffb8c8;
   --color-brand-peach: #ffb38a;
@@ -237,17 +236,31 @@
     background-size: 64px 64px;
   }
 
-  /* Shared atmospheric canvas inspired by 21st's grain/mesh backgrounds,
-     rebuilt as CSS so it is fast, deterministic, and motion-free. */
-  .site-atmosphere {
+  /* Hero atmosphere behind the globe. Restored after removal left the globe
+     reading as a bare wireframe on flat paper: the sphere has no light of its
+     own, so the radial at 74% 36% is what gives it volume, and the acid
+     gradient at the foot is what stops the pillar row below from floating.
+     The colour literals are inlined rather than tokenised so this cannot
+     resurrect the retired brand-lilac token. Scoped to the hero only, never a
+     site-wide backdrop. */
+  .berlin-hero {
+    /* Gives the globe volume so it does not read as a bare wireframe on flat
+       paper. No purple: the original wash glowed lilac, which is the exact
+       "purple glow" the design research rejects, so both radials are
+       brand-sky. Two layers, not the original three - the dropped third was a
+       full-hero linear tint at the foot, the least visible layer and the most
+       expensive to paint on the largest above-the-fold element of a page that
+       runs at its blocking-time budget. */
     background:
-      radial-gradient(circle at 8% 8%, rgba(221, 244, 90, 0.44), transparent 23rem),
-      radial-gradient(circle at 92% 13%, rgba(203, 188, 255, 0.42), transparent 28rem),
-      radial-gradient(circle at 74% 86%, rgba(169, 221, 252, 0.32), transparent 32rem),
-      radial-gradient(circle at 14% 78%, rgba(255, 184, 200, 0.22), transparent 26rem);
+      radial-gradient(circle at 74% 36%, rgba(169, 221, 252, 0.5), transparent 24rem),
+      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.34), transparent 22rem),
+      var(--color-paper);
   }
 
-  .site-atmosphere::after,
+  /* Paper-grain overlay, used by the hero. Was formerly shared with the
+     retired .site-atmosphere fixed backdrop via a comma-joined selector --
+     kept standalone so removing that backdrop cannot silently take the
+     hero's grain texture with it. */
   .berlin-grain::after {
     position: absolute;
     inset: 0;
@@ -257,20 +270,6 @@
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='2' r='.45' fill='%2319232d' fill-opacity='.2'/%3E%3Ccircle cx='7' cy='5' r='.35' fill='%2319232d' fill-opacity='.13'/%3E%3Ccircle cx='4' cy='9' r='.3' fill='%2319232d' fill-opacity='.1'/%3E%3C/svg%3E");
     background-repeat: repeat;
     mix-blend-mode: multiply;
-  }
-
-  .berlin-hero {
-    background:
-      radial-gradient(circle at 74% 36%, rgba(203, 188, 255, 0.62), transparent 24rem),
-      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.48), transparent 22rem),
-      linear-gradient(128deg, var(--color-paper) 0 58%, rgba(221, 244, 90, 0.2) 100%);
-  }
-
-  .berlin-footer {
-    background:
-      radial-gradient(circle at 12% 15%, rgba(221, 244, 90, 0.16), transparent 18rem),
-      radial-gradient(circle at 88% 82%, rgba(203, 188, 255, 0.2), transparent 24rem),
-      var(--color-dark-bg);
   }
 
   .bg-grid-dark {
@@ -456,75 +455,6 @@
   }
 }
 
-/* ── Typenschild assembly ─────────────────────────────────────────────────
-   The course data plates "assemble" exactly once when they scroll into view:
-   the rule draws, the fact rows stamp in left-to-right, the numeral settles.
-   Gated by [data-assembled] (set by PlateReveal); without JS the plate
-   renders settled and fully visible. `backwards` fill keeps the pre-state
-   only while the animation is armed; every animation is finite and ends at
-   full opacity, and the global reduced-motion kill-switch below collapses
-   all of it to 0.01ms. */
-@keyframes plate-rule-in {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-@keyframes plate-row-in {
-  from {
-    opacity: 0;
-    transform: translateX(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes plate-numeral-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-[data-assembled] .plate-rule {
-  animation: plate-rule-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
-[data-assembled] .plate-row {
-  animation: plate-row-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-  animation-delay: calc(var(--row-i, 0) * 60ms);
-}
-
-[data-assembled] .plate-numeral {
-  animation: plate-numeral-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards;
-}
-
-/* One-shot stamp landing for status chips ("erreicht", "Link kopiert"):
-   the rectangular stamp presses onto the paper. Finite, settles at scale 1. */
-@keyframes stamp-in {
-  0% {
-    opacity: 0;
-    transform: scale(1.12);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.stamp-in {
-  animation: stamp-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -573,6 +503,88 @@
 .demo-gallery-tile {
   content-visibility: auto;
   contain-intrinsic-size: auto 420px;
+}
+
+/* Gallery preview micro-motion.
+   Deliberately NOT ambient miniatures. The motion policy above removes
+   decorative loops and allows one region to carry meaningful motion at a
+   time, so twelve looping thumbnails are out. These run only while a tile is
+   hovered or holds focus, play once, and finish inside the 250-450ms window
+   the policy sets for finite reveals. They are pure CSS, so they add no
+   JavaScript and cost nothing against the gallery's blocking-time budget.
+   The whole block sits inside prefers-reduced-motion: no-preference, so under
+   `reduce` the previews are completely static rather than merely shortened. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The sparkline draws itself, which is the one thing a still image of a
+     time series cannot say: that it is a series. Needs pathLength="1" on the
+     polyline so the dash units are normalized. */
+  .demo-gallery-tile:hover .demo-pv-draw,
+  .demo-gallery-tile:focus-within .demo-pv-draw {
+    animation: demo-pv-draw 420ms ease-out both;
+  }
+  .demo-gallery-tile:hover .demo-pv-fade,
+  .demo-gallery-tile:focus-within .demo-pv-fade {
+    animation: demo-pv-fade 420ms ease-out both;
+  }
+  /* Result chips arrive in sequence: evaluation output landing, not a pulse. */
+  .demo-gallery-tile:hover .demo-pv-rise,
+  .demo-gallery-tile:focus-within .demo-pv-rise {
+    animation: demo-pv-rise 260ms ease-out both;
+  }
+  .demo-gallery-tile:hover .demo-pv-rise:nth-child(2),
+  .demo-gallery-tile:focus-within .demo-pv-rise:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .demo-gallery-tile:hover .demo-pv-rise:nth-child(3),
+  .demo-gallery-tile:focus-within .demo-pv-rise:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .demo-gallery-tile:hover .demo-pv-rise:nth-child(4),
+  .demo-gallery-tile:focus-within .demo-pv-rise:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  /* The redaction closing over the value: the block IS the action. */
+  .demo-gallery-tile:hover .demo-pv-snap,
+  .demo-gallery-tile:focus-within .demo-pv-snap {
+    animation: demo-pv-snap 200ms ease-out both;
+  }
+}
+
+@keyframes demo-pv-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes demo-pv-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes demo-pv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes demo-pv-snap {
+  from {
+    opacity: 0.5;
+    transform: scaleX(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 @media (min-width: 768px) {
   .demo-gallery-grid {

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 type KonfidenzLevel = "hoch" | "mittel" | "niedrig";
@@ -190,7 +189,11 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
           fontWeight: 700,
         }}
       >
-        Gefundene Schlüsselwörter:{" "}
+        {/* Carries the definition the shell badge cannot: this engine's
+            "Konfidenz" is a keyword-hit count, not a model score. Relocated
+            here from the engine's own SimulationDisclosure, which restated
+            the simulation mode the detail shell already states once. */}
+        Gefundene Schlüsselwörter (Konfidenz = Anzahl Treffer):{" "}
       </span>
       {terms.map((term, i) => (
         <span
@@ -367,13 +370,6 @@ function RagVertragsassistentGerman() {
           ● DEMO-MODUS
         </span>
       </div>
-
-      <SimulationDisclosure>
-        Diese Simulation zeigt keine Vektordatenbank und keine KI-Inferenz, sie
-        demonstriert, wie eine Keyword-Suche Dokumente filtert. Die angezeigte
-        &quot;Konfidenz&quot; misst, wie viele Schlüsselbegriffe der Anfrage in
-        einem Dokument gefunden wurden.
-      </SimulationDisclosure>
 
       <div
         ref={scrollRef}
@@ -1095,12 +1091,6 @@ function RagContractAssistantEnglish() {
         </p>
       </div>
 
-      <SimulationDisclosure>
-        Documents, clauses, answers, confidence labels, and register entries are
-        fictional samples. Verify every answer against the governing agreement
-        and qualified legal review.
-      </SimulationDisclosure>
-
       <div
         aria-label="Suggested contract questions"
         style={{ display: "flex", flexWrap: "wrap", gap: 7 }}
@@ -1279,6 +1269,10 @@ function RagContractAssistantEnglish() {
                               fontSize: 12,
                               textTransform: "uppercase",
                             }}
+                            // Locale parity with the German engine, which
+                            // defines this metric beside its own chip: the
+                            // label is a keyword-hit count, not a model score.
+                            title="Confidence = overlap with query keywords found in the document"
                           >
                             {source.confidence}
                           </span>

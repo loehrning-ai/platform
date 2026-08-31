@@ -7,7 +7,7 @@ const LOCALES = [
     route: "/ueber-mich",
     htmlLang: "de",
     title: "Über Tim Löhr",
-    h1: "Ich baue loehrning.ai als öffentliches Lernarchiv.",
+    h1: "Ich baue loehrning.ai, damit KI-Wissen prüfbar bleibt.",
     timeline: "Berufliche Stationen",
     academic: "Akademischer Hintergrund",
     feedback: "/feedback",
@@ -18,7 +18,7 @@ const LOCALES = [
     route: "/en/ueber-mich",
     htmlLang: "en",
     title: "About Tim Löhr",
-    h1: "I build loehrning.ai as a public learning archive.",
+    h1: "I build loehrning.ai to keep knowledge about AI verifiable.",
     timeline: "Professional timeline",
     academic: "Academic background",
     feedback: "/en/feedback",
@@ -358,7 +358,6 @@ test("reduced-motion preference leaves every profile section visible", async ({
     LOCALES[1].h1,
     LOCALES[1].timeline,
     LOCALES[1].academic,
-    "How I review content",
     "Contact me directly",
   ]) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();

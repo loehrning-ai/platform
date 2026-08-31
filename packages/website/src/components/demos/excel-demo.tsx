@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import type { Locale } from "@/lib/i18n/locale";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
-const ROWS = [
+type RegionKey = "Nord" | "Süd" | "West";
+
+const REGION_EN: Record<RegionKey, string> = {
+  Nord: "North",
+  Süd: "South",
+  West: "West",
+};
+
+const ROWS: readonly {
+  readonly w: string;
+  readonly region: RegionKey;
+  readonly stk: number;
+  readonly umsatz: number;
+}[] = [
   { w: "KW 14", region: "Nord", stk: 142, umsatz: 688_700 },
   { w: "KW 14", region: "Süd", stk: 98, umsatz: 475_300 },
   { w: "KW 14", region: "West", stk: 174, umsatz: 843_900 },
@@ -15,66 +29,116 @@ const ROWS = [
   { w: "KW 16", region: "Nord", stk: 161, umsatz: 780_850 },
   { w: "KW 16", region: "Süd", stk: 94, umsatz: 455_900 },
   { w: "KW 16", region: "West", stk: 203, umsatz: 984_550 },
-] as const;
+];
 
 type TaskId = "formula" | "pivot" | "forecast";
 
 interface Task {
   readonly id: TaskId;
-  readonly t: string;
-  readonly d: string;
-  readonly action: string;
-  readonly time: string;
+  readonly title: { readonly de: string; readonly en: string };
+  readonly detail: { readonly de: string; readonly en: string };
+  readonly action: { readonly de: string; readonly en: string };
+  readonly time: { readonly de: string; readonly en: string };
 }
 
 const TASKS: readonly Task[] = [
   {
     id: "formula",
-    t: "Formel für Wachstum",
-    d: "Prozentuale Abweichung Woche / Woche, pro Region",
-    action: "Formel generieren",
-    time: "12 Sek.",
+    title: {
+      de: "Formel für Wachstum",
+      en: "Week-over-week growth",
+    },
+    detail: {
+      de: "Prozentuale Abweichung Woche / Woche, pro Region",
+      en: "Percentage change week over week, per region",
+    },
+    action: { de: "Formel generieren", en: "Generate formula" },
+    time: { de: "12 Sek.", en: "12 sec." },
   },
   {
     id: "pivot",
-    t: "Pivot nach Region",
-    d: "Summen & Anteile, sortiert nach Umsatz",
-    action: "Pivot erstellen",
-    time: "9 Sek.",
+    title: { de: "Pivot nach Region", en: "Revenue by region" },
+    detail: {
+      de: "Summen & Anteile, sortiert nach Umsatz",
+      en: "Totals & share, sorted by revenue",
+    },
+    action: { de: "Pivot erstellen", en: "Build pivot" },
+    time: { de: "9 Sek.", en: "9 sec." },
   },
   {
     id: "forecast",
-    t: "Forecast KW 17–20",
-    d: "Lineare Projektion mit 90 %-Konfidenz",
-    action: "Prognose rechnen",
-    time: "18 Sek.",
+    title: { de: "Forecast KW 17–20", en: "Forecast, weeks 17–20" },
+    detail: {
+      de: "Lineare Projektion mit 90 %-Konfidenz",
+      en: "Linear projection with a 90% confidence band",
+    },
+    action: { de: "Prognose rechnen", en: "Calculate forecast" },
+    time: { de: "18 Sek.", en: "18 sec." },
   },
 ];
 
-const PIVOT_ROWS = [
-  { region: "West", stk: 565, umsatz: "2.740.250 €", anteil: "41%" },
-  { region: "Nord", stk: 459, umsatz: "2.226.150 €", anteil: "33%" },
-  { region: "Süd", stk: 274, umsatz: "1.328.900 €", anteil: "20%" },
-] as const;
+const PIVOT_ROWS: readonly {
+  readonly region: RegionKey;
+  readonly stk: number;
+  readonly umsatz: number;
+  readonly anteil: number;
+}[] = [
+  { region: "West", stk: 565, umsatz: 2_740_250, anteil: 41 },
+  { region: "Nord", stk: 459, umsatz: 2_226_150, anteil: 33 },
+  { region: "Süd", stk: 274, umsatz: 1_328_900, anteil: 20 },
+];
 
-const FORECAST_ROWS = [
-  { w: "KW 17", pred: 492, lo: 458, hi: 526 },
-  { w: "KW 18", pred: 548, lo: 498, hi: 598 },
-  { w: "KW 19", pred: 612, lo: 544, hi: 680 },
-  { w: "KW 20", pred: 684, lo: 590, hi: 778 },
-] as const;
+const FORECAST_WEEKS = ["KW 17", "KW 18", "KW 19", "KW 20"] as const;
+const FORECAST_BASE = 492;
+const FORECAST_DEFAULT_RATE = 8;
+const FORECAST_CHART_MAX = 820;
 
-export default function ExcelDemo() {
-  const { locale } = useDemoLocale();
-  return locale === "en" ? <ExcelDemoEnglish /> : <ExcelDemoGerman />;
+interface ForecastRow {
+  readonly w: (typeof FORECAST_WEEKS)[number];
+  readonly pred: number;
+  readonly lo: number;
+  readonly hi: number;
 }
 
-function ExcelDemoGerman() {
+function computeForecast(growthRatePercent: number): readonly ForecastRow[] {
+  const rate = growthRatePercent / 100;
+  let pred = FORECAST_BASE;
+  return FORECAST_WEEKS.map((w, i) => {
+    if (i > 0) pred *= 1 + rate;
+    // Uncertainty compounds with both elapsed weeks and the assumed rate
+    // itself — a higher growth assumption is not just a higher forecast, it
+    // is a less certain one.
+    const uncertainty = pred * (0.05 + i * 0.02 + rate * 0.35);
+    return {
+      w,
+      pred: Math.round(pred),
+      lo: Math.round(Math.max(0, pred - uncertainty)),
+      hi: Math.round(pred + uncertainty),
+    };
+  });
+}
+
+function formatCurrency(value: number, locale: Locale): string {
+  const formatted = value.toLocaleString(locale === "de" ? "de-DE" : "en-GB");
+  return locale === "de" ? `${formatted} €` : `€${formatted}`;
+}
+
+function weekLabel(week: string, locale: Locale): string {
+  return locale === "de" ? week : week.replace("KW", "Wk");
+}
+
+export default function ExcelDemo() {
+  const { locale, text } = useDemoLocale();
   const [task, setTask] = useState<TaskId>(TASKS[0].id);
 
   return (
     <div
       data-demo-id="excel"
+      role="region"
+      aria-label={text(
+        "Excel-Lab mit KI-Assistent",
+        "Spreadsheet analysis example",
+      )}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -83,16 +147,11 @@ function ExcelDemoGerman() {
         color: DEMO.ink,
         minHeight: DEMO_HEIGHT,
         width: "100%",
+        minWidth: 0,
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 6,
-        }}
-      >
+      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         <div
           style={{
             display: "flex",
@@ -102,7 +161,9 @@ function ExcelDemoGerman() {
             flexWrap: "wrap",
           }}
         >
-          <Overline>Excel-Lab mit KI-Assistent</Overline>
+          <Overline>
+            {text("Excel-Lab mit KI-Assistent", "Spreadsheet lab · fixed sample data")}
+          </Overline>
           <div
             style={{
               display: "flex",
@@ -122,7 +183,7 @@ function ExcelDemoGerman() {
                 background: DEMO.schiefer,
               }}
             />
-            Manuell
+            {text("Manuell", "Manual")}
           </div>
         </div>
         <h2
@@ -134,371 +195,55 @@ function ExcelDemoGerman() {
             margin: 0,
           }}
         >
-          Formeln, Pivots und Forecasts im Beispiel-Lab,{" "}
+          {text("Formeln, Pivots und Forecasts im Beispiel-Lab,", "Inspect the calculation,")}{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
-            ohne Microsoft-365-Verbindung.
-          </span>
-        </h2>
-      </div>
-
-      {/* Main split — stacks on mobile, 2-col from ~560px */}
-      <div
-        style={{
-          display: "grid",
-          gap: 14,
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-        }}
-      >
-        <Spreadsheet />
-        <TaskPicker activeId={task} onSelect={setTask} />
-      </div>
-
-      {/* Output */}
-      <div style={{ minHeight: 220 }}>
-        {task === "formula" && <FormulaOutput />}
-        {task === "pivot" && <PivotOutput />}
-        {task === "forecast" && <ForecastOutput />}
-      </div>
-    </div>
-  );
-}
-
-const TASKS_EN = [
-  {
-    id: "formula" as const,
-    title: "Week-over-week growth",
-    detail: "Calculate the percentage change for each region.",
-    output: "=(D5-D2)/D2",
-    result: "North: +9.9% · South: −16.3% · West: +8.0%",
-  },
-  {
-    id: "pivot" as const,
-    title: "Revenue by region",
-    detail: "Group the sample rows and sort by total revenue.",
-    output: "West · €2,740,250 · 41%",
-    result: "North · €2,226,150 · 33%  |  South · €1,328,900 · 20%",
-  },
-  {
-    id: "forecast" as const,
-    title: "Forecast weeks 17–20",
-    detail: "Extend the sample series with a linear projection.",
-    output: "Week 17: 492 units · 90% interval: 458–526",
-    result:
-      "Illustrative projection only; validate against held-out data before use.",
-  },
-] as const;
-
-function ExcelDemoEnglish() {
-  const [task, setTask] = useState<TaskId>("formula");
-  const active = TASKS_EN.find((item) => item.id === task) ?? TASKS_EN[0];
-
-  return (
-    <div
-      data-demo-id="excel"
-      role="region"
-      aria-label="Spreadsheet analysis example"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-        minHeight: DEMO_HEIGHT,
-        width: "100%",
-        minWidth: 0,
-        fontFamily: DEMO.font.sans,
-        color: DEMO.ink,
-      }}
-    >
-      <div>
-        <Overline>Spreadsheet lab · fixed sample data</Overline>
-        <h2
-          style={{
-            margin: "6px 0 0",
-            fontSize: "clamp(20px, 4vw, 28px)",
-            lineHeight: 1.08,
-          }}
-        >
-          Inspect the calculation.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Then challenge it.
+            {text("ohne Microsoft-365-Verbindung.", "then challenge it.")}
           </span>
         </h2>
         <p
           style={{
-            margin: "8px 0 0",
+            margin: 0,
             maxWidth: 720,
             color: DEMO.schiefer,
             fontSize: 12,
             lineHeight: 1.55,
           }}
         >
-          This browser-only example uses nine fictional sales rows. It does not
-          connect to Excel, Microsoft 365, or an AI provider.
+          {text(
+            "Neun fiktive Verkaufszeilen, rein im Browser. Keine Verbindung zu Excel, Microsoft 365 oder einem KI-Anbieter.",
+            "This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.",
+          )}
         </p>
       </div>
 
+      {/* Main split — stacks on mobile, 2-col from ~560px */}
       <div
         style={{
           display: "grid",
           width: "100%",
           minWidth: 0,
-          maxWidth: "100%",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
           gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
         }}
       >
-        <section
-          style={{
-            width: "100%",
-            minWidth: 0,
-            maxWidth: "100%",
-            border: `1px solid ${DEMO.ink}`,
-            background: DEMO.kalk,
-          }}
-          aria-label="Sample worksheet"
-        >
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              gap: 8,
-              padding: "8px 10px",
-              background: "#107C41",
-              color: "white",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-            }}
-          >
-            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>
-              X
-            </strong>
-            <span style={{ overflowWrap: "anywhere" }}>
-              sales-weeks-14-16.xlsx
-            </span>
-            <span style={{ marginLeft: "auto", opacity: 0.8 }}>
-              local sample
-            </span>
-          </div>
-          <div
-            data-course-horizontal-scroll
-            role="region"
-            aria-label="Sample worksheet data"
-            tabIndex={0}
-            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
-            style={{
-              width: "100%",
-              minWidth: 0,
-              maxWidth: "100%",
-              overflowX: "auto",
-              overscrollBehaviorX: "contain",
-            }}
-          >
-            <div
-              style={{
-                minWidth: 430,
-                display: "grid",
-                gridTemplateColumns: "42px 1fr 1fr 0.75fr 1.15fr",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-              }}
-            >
-              {(["", "Week", "Region", "Units", "Revenue"] as const).map(
-                (label) => (
-                  <div
-                    key={label || "row"}
-                    style={{
-                      padding: "7px 8px",
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                      background: DEMO.birke,
-                      fontWeight: 700,
-                    }}
-                  >
-                    {label}
-                  </div>
-                ),
-              )}
-              {ROWS.map((row, index) => (
-                <div
-                  key={`${row.w}-${row.region}`}
-                  style={{ display: "contents" }}
-                >
-                  <div
-                    style={{
-                      padding: "6px 8px",
-                      color: DEMO.schiefer,
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                    }}
-                  >
-                    {index + 2}
-                  </div>
-                  <div
-                    style={{
-                      padding: "6px 8px",
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                    }}
-                  >
-                    {row.w.replace("KW", "Wk")}
-                  </div>
-                  <div
-                    style={{
-                      padding: "6px 8px",
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                    }}
-                  >
-                    {
-                      ({ Nord: "North", Süd: "South", West: "West" } as const)[
-                        row.region
-                      ]
-                    }
-                  </div>
-                  <div
-                    style={{
-                      padding: "6px 8px",
-                      textAlign: "right",
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                    }}
-                  >
-                    {row.stk}
-                  </div>
-                  <div
-                    style={{
-                      padding: "6px 8px",
-                      textAlign: "right",
-                      borderBottom: `1px solid ${DEMO.leinen}`,
-                    }}
-                  >
-                    €{row.umsatz.toLocaleString("en-GB")}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          style={{
-            minWidth: 0,
-            border: `1px solid ${DEMO.leinen}`,
-            background: DEMO.birke,
-            padding: 12,
-          }}
-          aria-label="Analysis tasks"
-        >
-          <Overline>Choose an analysis</Overline>
-          <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
-            {TASKS_EN.map((item, index) => {
-              const selected = item.id === task;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setTask(item.id)}
-                  style={{
-                    minHeight: 58,
-                    width: "100%",
-                    minWidth: 0,
-                    padding: "10px 12px",
-                    textAlign: "left",
-                    background: selected ? DEMO.ink : DEMO.kalk,
-                    color: selected ? DEMO.kalk : DEMO.ink,
-                    border: `1px solid ${DEMO.ink}`,
-                    boxShadow: selected
-                      ? `3px 3px 0 var(--color-brand-orange)`
-                      : "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: DEMO.font.mono,
-                      fontSize: 12,
-                      color: selected
-                        ? "var(--color-brand-orange)"
-                        : DEMO.schiefer,
-                    }}
-                  >
-                    0{index + 1}
-                  </span>
-                  <strong
-                    style={{
-                      display: "block",
-                      marginTop: 3,
-                      overflowWrap: "anywhere",
-                    }}
-                  >
-                    {item.title}
-                  </strong>
-                  <span
-                    style={{
-                      display: "block",
-                      marginTop: 3,
-                      fontSize: 12,
-                      lineHeight: 1.4,
-                      opacity: 0.75,
-                    }}
-                  >
-                    {item.detail}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
+        <Spreadsheet locale={locale} />
+        <TaskPicker activeId={task} onSelect={setTask} locale={locale} text={text} />
       </div>
 
-      <section
-        aria-live="polite"
-        style={{
-          minWidth: 0,
-          borderLeft: "4px solid var(--color-brand-orange)",
-          background: DEMO.ink,
-          color: DEMO.kalk,
-          padding: "14px 16px",
-        }}
-      >
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.13em",
-            color: "var(--color-brand-orange)",
-            textTransform: "uppercase",
-          }}
-        >
-          Deterministic sample output
-        </div>
-        <code
-          style={{
-            display: "block",
-            marginTop: 9,
-            overflowWrap: "anywhere",
-            whiteSpace: "pre-wrap",
-            fontSize: 13,
-          }}
-        >
-          {active.output}
-        </code>
-        <p
-          style={{
-            margin: "9px 0 0",
-            color: "rgba(243,240,233,0.76)",
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
-          {active.result}
-        </p>
-      </section>
+      {/* Output */}
+      <div style={{ minHeight: 220 }}>
+        {task === "formula" && <FormulaOutput locale={locale} text={text} />}
+        {task === "pivot" && <PivotOutput locale={locale} text={text} />}
+        {task === "forecast" && <ForecastOutput locale={locale} text={text} />}
+      </div>
     </div>
   );
 }
 
 /* ------------------------------ Spreadsheet ------------------------------ */
 
-function Spreadsheet() {
+function Spreadsheet({ locale }: { readonly locale: Locale }) {
+  const isDe = locale === "de";
   return (
     <div
       style={{
@@ -515,6 +260,7 @@ function Spreadsheet() {
         style={{
           display: "flex",
           alignItems: "center",
+          flexWrap: "wrap",
           gap: 8,
           padding: "7px 10px",
           background: "#107C41",
@@ -544,15 +290,16 @@ function Spreadsheet() {
         </div>
         <span
           style={{
+            overflowWrap: "anywhere",
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
           }}
         >
-          Absatz-KW14-16.xlsx
+          {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
         </span>
         <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 12 }}>
-          · gespeichert
+          {isDe ? "· gespeichert" : "· local sample"}
         </span>
       </div>
 
@@ -584,15 +331,26 @@ function Spreadsheet() {
         </span>
         <span style={{ opacity: 0.6 }}>ƒx</span>
         <span style={{ color: "var(--color-brand-orange)", fontWeight: 600 }}>
-          Wachstum W/W
+          {isDe ? "Wachstum W/W" : "Growth W/W"}
         </span>
       </div>
 
-      {/* Data table — scroll-lock prevented via table-layout fixed */}
-      <div style={{ overflowX: "auto" }}>
+      {/* Data table — horizontally scrollable, keyboard-reachable. The
+          data-course-horizontal-scroll marker is asserted by
+          route-ai-native-locales.spec.ts, which checks that every horizontally
+          scrolling region stays contained inside the lesson column. */}
+      <div
+        data-course-horizontal-scroll
+        role="region"
+        aria-label={isDe ? "Beispiel-Arbeitsblatt" : "Sample worksheet data"}
+        tabIndex={0}
+        className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+        style={{ overflowX: "auto", overscrollBehaviorX: "contain" }}
+      >
         <table
           style={{
             width: "100%",
+            minWidth: 430,
             borderCollapse: "collapse",
             fontFamily: DEMO.font.mono,
             fontSize: 12,
@@ -608,7 +366,10 @@ function Spreadsheet() {
           </colgroup>
           <thead>
             <tr style={{ background: DEMO.birke }}>
-              {["", "Woche", "Region", "Stk", "Umsatz"].map((h, i) => (
+              {(isDe
+                ? ["", "Woche", "Region", "Stk", "Umsatz"]
+                : ["", "Week", "Region", "Units", "Revenue"]
+              ).map((h, i) => (
                 <th
                   key={h + i}
                   style={{
@@ -629,11 +390,10 @@ function Spreadsheet() {
           <tbody>
             {ROWS.map((r, i) => (
               <tr
-                key={i}
+                key={`${r.w}-${r.region}`}
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background:
-                    i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
+                  background: i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
                 }}
               >
                 <td
@@ -648,11 +408,11 @@ function Spreadsheet() {
                 >
                   {i + 2}
                 </td>
-                <td style={{ padding: "4px 8px" }}>{r.w}</td>
-                <td style={{ padding: "4px 8px" }}>{r.region}</td>
-                <td style={{ padding: "4px 8px", textAlign: "right" }}>
-                  {r.stk}
+                <td style={{ padding: "4px 8px" }}>{weekLabel(r.w, locale)}</td>
+                <td style={{ padding: "4px 8px" }}>
+                  {isDe ? r.region : REGION_EN[r.region]}
                 </td>
+                <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.stk}</td>
                 <td
                   style={{
                     padding: "4px 8px",
@@ -661,7 +421,7 @@ function Spreadsheet() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {r.umsatz.toLocaleString("de-DE")}
+                  {r.umsatz.toLocaleString(isDe ? "de-DE" : "en-GB")}
                 </td>
               </tr>
             ))}
@@ -686,7 +446,7 @@ function Spreadsheet() {
           marginTop: "auto",
         }}
       >
-        <span>Blatt1 · 9 Zeilen</span>
+        <span>{isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}</span>
         <span
           style={{
             color: "var(--color-brand-orange)",
@@ -717,19 +477,17 @@ function Spreadsheet() {
 function TaskPicker({
   activeId,
   onSelect,
+  locale,
+  text,
 }: {
-  activeId: TaskId;
-  onSelect: (id: TaskId) => void;
+  readonly activeId: TaskId;
+  readonly onSelect: (id: TaskId) => void;
+  readonly locale: Locale;
+  readonly text: (de: string, en: string) => string;
 }) {
+  const isDe = locale === "de";
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        minWidth: 0,
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
       <div
         style={{
           display: "flex",
@@ -738,7 +496,7 @@ function TaskPicker({
           gap: 8,
         }}
       >
-        <Overline>Aufgabe an Claude</Overline>
+        <Overline>{text("Aufgabe an Claude", "Task for Claude")}</Overline>
         <span
           style={{
             fontFamily: DEMO.font.mono,
@@ -748,7 +506,7 @@ function TaskPicker({
             textTransform: "uppercase",
           }}
         >
-          {TASKS.length} Aufgaben
+          {TASKS.length} {text("Aufgaben", "tasks")}
         </span>
       </div>
 
@@ -763,23 +521,20 @@ function TaskPicker({
             style={{
               position: "relative",
               minHeight: 44,
+              width: "100%",
+              minWidth: 0,
               textAlign: "left",
               padding: "11px 13px",
               background: active ? DEMO.ink : DEMO.birke,
               color: active ? DEMO.kalk : DEMO.ink,
-              border: `1px solid ${
-                active ? "var(--color-brand-orange)" : DEMO.leinen
-              }`,
-              boxShadow: active
-                ? `3px 3px 0 0 var(--color-brand-orange)`
-                : "none",
+              border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
+              boxShadow: active ? `3px 3px 0 0 var(--color-brand-orange)` : "none",
               transform: active ? "translate(-2px,-2px)" : "translate(0,0)",
               cursor: "pointer",
               fontFamily: "inherit",
               transition:
                 "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
               overflow: "hidden",
-              minWidth: 0,
             }}
             onMouseEnter={(e) => {
               if (!active) {
@@ -802,14 +557,7 @@ function TaskPicker({
                 gap: 10,
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  minWidth: 0,
-                }}
-              >
+              <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                 <span
                   style={{
                     fontFamily: DEMO.font.mono,
@@ -831,7 +579,7 @@ function TaskPicker({
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {t.t}
+                  {isDe ? t.title.de : t.title.en}
                 </span>
               </div>
               <span
@@ -843,7 +591,7 @@ function TaskPicker({
                   flexShrink: 0,
                 }}
               >
-                ⟶ {t.time}
+                ⟶ {isDe ? t.time.de : t.time.en}
               </span>
             </div>
             <div
@@ -854,7 +602,7 @@ function TaskPicker({
                 color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
               }}
             >
-              {t.d}
+              {isDe ? t.detail.de : t.detail.en}
             </div>
             <div
               style={{
@@ -866,7 +614,7 @@ function TaskPicker({
                 fontWeight: 700,
               }}
             >
-              {t.action} →
+              {(isDe ? t.action.de : t.action.en)} →
             </div>
           </button>
         );
@@ -877,7 +625,7 @@ function TaskPicker({
 
 /* --------------------------------- Overline ------------------------------- */
 
-function Overline({ children }: { children: React.ReactNode }) {
+function Overline({ children }: { readonly children: ReactNode }) {
   return (
     <div
       style={{
@@ -901,9 +649,9 @@ function OutputShell({
   caption,
   children,
 }: {
-  label: string;
-  caption: string;
-  children: React.ReactNode;
+  readonly label: string;
+  readonly caption: string;
+  readonly children: ReactNode;
 }) {
   return (
     <div
@@ -944,9 +692,17 @@ function OutputShell({
   );
 }
 
-function FormulaOutput() {
+interface OutputProps {
+  readonly locale: Locale;
+  readonly text: (de: string, en: string) => string;
+}
+
+function FormulaOutput({ text }: OutputProps) {
   return (
-    <OutputShell label="Formel · Zelle F2" caption="Ergebnis eingefügt">
+    <OutputShell
+      label={text("Formel · Zelle F2", "Formula · cell F2")}
+      caption={text("Ergebnis eingefügt", "Result inserted")}
+    >
       <div
         style={{
           background: "rgba(11,9,8,0.04)",
@@ -960,9 +716,10 @@ function FormulaOutput() {
         }}
       >
         =
-        {
-          'WENN(INDIREKT("E"&ZEILE()-3)=0;"";(E2-INDIREKT("E"&ZEILE()-3))/INDIREKT("E"&ZEILE()-3))'
-        }
+        {text(
+          'WENN(INDIREKT("E"&ZEILE()-3)=0;"";(E2-INDIREKT("E"&ZEILE()-3))/INDIREKT("E"&ZEILE()-3))',
+          'IF(INDIRECT("E"&ROW()-3)=0,"",(E2-INDIRECT("E"&ROW()-3))/INDIRECT("E"&ROW()-3))',
+        )}
       </div>
       <div
         style={{
@@ -972,15 +729,23 @@ function FormulaOutput() {
           marginTop: 12,
         }}
       >
-        <FormulaNote k="Region-Bezug" v="−3 Zeilen = Vorwoche" />
-        <FormulaNote k="Absicherung" v="÷0 abgefangen" />
-        <FormulaNote k="Format" v="Prozent, 1 Nachk." />
+        <FormulaNote
+          k={text("Region-Bezug", "Region reference")}
+          v={text("−3 Zeilen = Vorwoche", "−3 rows = prior week")}
+        />
+        <FormulaNote
+          k={text("Absicherung", "Guard")}
+          v={text("÷0 abgefangen", "Divide-by-zero caught")}
+        />
+        <FormulaNote
+          k={text("Format", "Format")}
+          v={text("Prozent, 1 Nachk.", "Percent, 1 decimal")}
+        />
       </div>
       <p
         style={{
           fontSize: 12,
           color: DEMO.schiefer,
-          marginTop: 12,
           lineHeight: 1.55,
           fontStyle: "italic",
           borderLeft: `2px solid var(--color-brand-orange)`,
@@ -988,14 +753,16 @@ function FormulaOutput() {
           margin: "12px 0 0",
         }}
       >
-        Greift auf die Vorwoche derselben Region zu und berechnet die relative
-        Veränderung. Zieh die Formel herunter, sie läuft für alle Regionen.
+        {text(
+          "Greift auf die Vorwoche derselben Region zu und berechnet die relative Veränderung. Zieh die Formel herunter, sie läuft für alle Regionen.",
+          "Reaches back to the prior week for the same region and computes the relative change. Fill the formula down; it works for every region.",
+        )}
       </p>
     </OutputShell>
   );
 }
 
-function FormulaNote({ k, v }: { k: string; v: string }) {
+function FormulaNote({ k, v }: { readonly k: string; readonly v: string }) {
   return (
     <div
       style={{
@@ -1016,26 +783,34 @@ function FormulaNote({ k, v }: { k: string; v: string }) {
       >
         {k}
       </div>
-      <div
-        style={{
-          fontSize: 12,
-          color: DEMO.ink,
-          fontWeight: 700,
-          marginTop: 2,
-        }}
-      >
+      <div style={{ fontSize: 12, color: DEMO.ink, fontWeight: 700, marginTop: 2 }}>
         {v}
       </div>
     </div>
   );
 }
 
-function PivotOutput() {
+function PivotOutput({ locale, text }: OutputProps) {
+  const isDe = locale === "de";
   return (
     <OutputShell
-      label="Pivot · nach Region sortiert"
-      caption="absteigend nach Umsatz"
+      label={text("Pivot · nach Region sortiert", "Pivot · sorted by region")}
+      caption={text("absteigend nach Umsatz", "descending by revenue")}
     >
+      <div
+        style={{
+          fontFamily: DEMO.font.mono,
+          fontSize: 12,
+          fontWeight: 700,
+          color: "var(--color-brand-orange)",
+          letterSpacing: "0.06em",
+          marginBottom: 10,
+        }}
+      >
+        {text("Spitzenreiter", "Top region")}:{" "}
+        {isDe ? PIVOT_ROWS[0].region : REGION_EN[PIVOT_ROWS[0].region]} ·{" "}
+        {formatCurrency(PIVOT_ROWS[0].umsatz, locale)}
+      </div>
       <div style={{ overflowX: "auto" }}>
         <table
           style={{
@@ -1047,7 +822,10 @@ function PivotOutput() {
         >
           <thead>
             <tr style={{ borderBottom: `2px solid ${DEMO.ink}` }}>
-              {["Region", "Stück (Σ)", "Umsatz (Σ)", "Anteil"].map((h, i) => (
+              {(isDe
+                ? ["Region", "Stück (Σ)", "Umsatz (Σ)", "Anteil"]
+                : ["Region", "Units (Σ)", "Revenue (Σ)", "Share"]
+              ).map((h, i) => (
                 <th
                   key={h}
                   style={{
@@ -1100,7 +878,7 @@ function PivotOutput() {
                       #1
                     </span>
                   )}
-                  {r.region}
+                  {isDe ? r.region : REGION_EN[r.region]}
                 </td>
                 <td
                   style={{
@@ -1120,19 +898,18 @@ function PivotOutput() {
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {r.umsatz}
+                  {formatCurrency(r.umsatz, locale)}
                 </td>
                 <td
                   style={{
                     padding: "10px 8px",
                     textAlign: "right",
                     fontFamily: DEMO.font.mono,
-                    color:
-                      i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
                     fontWeight: 700,
                   }}
                 >
-                  {r.anteil}
+                  {r.anteil}%
                 </td>
               </tr>
             ))}
@@ -1143,7 +920,6 @@ function PivotOutput() {
         style={{
           fontSize: 12,
           color: DEMO.schiefer,
-          marginTop: 14,
           lineHeight: 1.55,
           fontStyle: "italic",
           borderLeft: `2px solid var(--color-brand-orange)`,
@@ -1151,17 +927,113 @@ function PivotOutput() {
           margin: "14px 0 0",
         }}
       >
-        West führt mit 41 % Umsatz-Anteil bei 40 % der Stückzahl, also höhere
-        Preisrealisierung. Süd schwächelt strukturell.
+        {text(
+          "West führt mit 41 % Umsatz-Anteil bei 40 % der Stückzahl, also höhere Preisrealisierung. Süd schwächelt strukturell.",
+          "West leads with a 41% revenue share on 40% of units, so it realizes a higher average price. South is structurally weak.",
+        )}
       </p>
     </OutputShell>
   );
 }
 
-function ForecastOutput() {
-  const max = 820;
+function ForecastOutput({ locale, text }: OutputProps) {
+  const [growthRate, setGrowthRate] = useState(FORECAST_DEFAULT_RATE);
+  const max = FORECAST_CHART_MAX;
+  const rows = useMemo(() => computeForecast(growthRate), [growthRate]);
+  const exceedsRange = rows.some((r) => r.hi > max);
+
   return (
-    <OutputShell label="Forecast · KW 17–20" caption="Konfidenz 90 %">
+    <OutputShell
+      label={text("Forecast · KW 17–20", "Forecast · weeks 17–20")}
+      caption={text("Konfidenz 90 %", "90% confidence")}
+    >
+      <label
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+          marginBottom: 14,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            gap: 8,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: DEMO.schiefer,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              fontWeight: 700,
+            }}
+          >
+            {text("Angenommenes Wachstum / Woche", "Assumed growth / week")}
+          </span>
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 13,
+              fontWeight: 800,
+              color: exceedsRange
+                ? "var(--color-destructive)"
+                : "var(--color-brand-orange)",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {locale === "de"
+              ? `+${growthRate} %`
+              : `+${growthRate}%`}
+          </span>
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={25}
+          step={1}
+          value={growthRate}
+          onChange={(e) => setGrowthRate(Number(e.target.value))}
+          aria-label={text(
+            "Angenommenes wöchentliches Wachstum in Prozent",
+            "Assumed weekly growth in percent",
+          )}
+          aria-valuemin={0}
+          aria-valuemax={25}
+          aria-valuenow={growthRate}
+          style={{
+            minHeight: 44,
+            width: "100%",
+            accentColor: "var(--color-brand-orange)",
+          }}
+        />
+      </label>
+
+      {exceedsRange ? (
+        <p
+          role="alert"
+          style={{
+            margin: "0 0 14px",
+            padding: "8px 10px",
+            fontSize: 12,
+            lineHeight: 1.5,
+            fontWeight: 700,
+            color: "var(--color-destructive)",
+            background: "rgba(153,27,27,0.08)",
+            border: "1px solid var(--color-destructive)",
+          }}
+        >
+          {text(
+            `Bei +${growthRate} % pro Woche übersteigt die obere Schätzung für KW 20 den sinnvollen Darstellungsbereich. Eine lineare Fortschreibung wird bei diesem Wachstum unzuverlässig.`,
+            `At +${growthRate}% per week the upper estimate for week 20 exceeds a sensible display range. A linear extrapolation stops being trustworthy at this rate.`,
+          )}
+        </p>
+      ) : null}
+
       <div
         style={{
           position: "relative",
@@ -1194,10 +1066,10 @@ function ForecastOutput() {
           />
         ))}
 
-        {FORECAST_ROWS.map((r) => {
-          const predH = (r.pred / max) * 100;
-          const loH = (r.lo / max) * 100;
-          const hiH = (r.hi / max) * 100;
+        {rows.map((r) => {
+          const predH = Math.min(100, (r.pred / max) * 100);
+          const loH = Math.min(100, (r.lo / max) * 100);
+          const hiH = Math.min(100, (r.hi / max) * 100);
           return (
             <div
               key={r.w}
@@ -1263,7 +1135,7 @@ function ForecastOutput() {
                   whiteSpace: "nowrap",
                 }}
               >
-                {r.w}
+                {weekLabel(r.w, locale)}
               </div>
             </div>
           );
@@ -1283,8 +1155,15 @@ function ForecastOutput() {
         }}
       >
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-          <LegendDot color="var(--color-brand-orange)" label="Prognose" />
-          <LegendDot color={DEMO.kupferMist} label="Konfidenz-Band" border />
+          <LegendDot
+            color="var(--color-brand-orange)"
+            label={text("Prognose", "Forecast")}
+          />
+          <LegendDot
+            color={DEMO.kupferMist}
+            label={text("Konfidenz-Band", "Confidence band")}
+            border
+          />
         </div>
         <div
           style={{
@@ -1295,9 +1174,17 @@ function ForecastOutput() {
             letterSpacing: "0.08em",
           }}
         >
-          Trend{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>+7,9 %</span>/
-          Woche
+          {text("Trend", "Trend")}{" "}
+          <span
+            style={{
+              color: exceedsRange
+                ? "var(--color-destructive)"
+                : "var(--color-brand-orange)",
+            }}
+          >
+            {locale === "de" ? `+${growthRate} %` : `+${growthRate}%`}
+          </span>
+          /{text("Woche", "week")}
         </div>
       </div>
 
@@ -1313,8 +1200,10 @@ function ForecastOutput() {
           margin: "12px 0 0",
         }}
       >
-        Lineare Projektion mit leichter Quartals-Saisonalität. Die Konfidenz
-        weitet sich mit jeder Woche, realistisch, nicht geschönt.
+        {text(
+          "Lineare Projektion mit leichter Quartals-Saisonalität. Die Konfidenz weitet sich mit jeder Woche, realistisch, nicht geschönt.",
+          "A linear projection with light quarterly seasonality. The confidence band widens each week: realistic, not flattering.",
+        )}
       </p>
     </OutputShell>
   );
@@ -1325,9 +1214,9 @@ function LegendDot({
   label,
   border,
 }: {
-  color: string;
-  label: string;
-  border?: boolean;
+  readonly color: string;
+  readonly label: string;
+  readonly border?: boolean;
 }) {
   return (
     <span

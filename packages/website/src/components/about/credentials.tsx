@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { BookOpen, GraduationCap, Globe2 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/locale";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
@@ -8,8 +9,15 @@ const ICONS = {
   research: BookOpen,
 } as const;
 
+// Institution marks, keyed by credential id. Only degree carries one today.
+const INSTITUTION_MARKS: Partial<
+  Record<"degree" | "international" | "research", { src: string; width: number; height: number }>
+> = {
+  degree: { src: "/ueber-mich/logos/fau.svg", width: 196, height: 28 },
+};
+
 const CREDENTIAL_STYLES = {
-  degree: "bg-brand-lilac/45 md:col-span-7",
+  degree: "bg-brand-peach/45 md:col-span-7",
   international: "bg-brand-sky/45 md:col-span-5 md:mt-8",
   research: "bg-paper md:col-span-10 md:col-start-2",
 } as const;
@@ -71,6 +79,17 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
                   <p className="mt-2 break-words text-sm font-semibold text-brand-orange [overflow-wrap:anywhere]">
                     {credential.subtitle}
                   </p>
+                ) : null}
+                {INSTITUTION_MARKS[credential.id] ? (
+                  <Image
+                    src={INSTITUTION_MARKS[credential.id]!.src}
+                    alt=""
+                    aria-hidden="true"
+                    width={INSTITUTION_MARKS[credential.id]!.width}
+                    height={INSTITUTION_MARKS[credential.id]!.height}
+                    loading="eager"
+                    className="mt-3 h-7 w-auto max-w-full object-contain object-left opacity-90"
+                  />
                 ) : null}
                 <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
                   {credential.detail}

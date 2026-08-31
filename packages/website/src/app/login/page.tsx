@@ -100,6 +100,37 @@ export default async function LoginPage({
                 {loginReasonMessage(params.reason, loginAvailable, locale)}
               </div>
             ) : null}
+            {/* Stated before signing in, not discovered after: anonymous
+                progress is never merged into an account (see store.ts), so a
+                learner who studied signed-out would otherwise meet an empty
+                dashboard with no warning. */}
+            <section
+              aria-labelledby="login-account-value"
+              className="mt-6 max-w-2xl border border-border border-l-[3px] border-l-brand-orange bg-card p-4"
+            >
+              <h2
+                id="login-account-value"
+                className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange"
+              >
+                {copy.accountValue.heading}
+              </h2>
+              <ul className="mt-3 grid gap-2">
+                {copy.accountValue.items.map((item) => (
+                  <li
+                    key={item}
+                    className="grid grid-cols-[0.75rem_minmax(0,1fr)] gap-2 text-sm leading-relaxed text-foreground"
+                  >
+                    <span aria-hidden="true" className="text-brand-orange">
+                      /
+                    </span>
+                    <span className="min-w-0 break-words">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 border-t border-border pt-3 text-sm leading-relaxed text-muted-foreground">
+                {copy.accountValue.localNote}
+              </p>
+            </section>
             {!loginAvailable ? <div className="mt-5">{loginForm}</div> : null}
           </div>
           {loginAvailable ? loginForm : null}

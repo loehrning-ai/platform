@@ -20,6 +20,9 @@ interface Position {
 
 interface Extracted {
   readonly nr: string;
+  readonly company: string;
+  readonly cityLine: string;
+  readonly file: string;
   readonly datum: string;
   readonly von: string;
   readonly faellig: string;
@@ -30,10 +33,14 @@ interface Extracted {
   readonly brutto: string;
   readonly positionen: readonly Position[];
   readonly confidence: number;
+  readonly needsReview: boolean;
 }
 
 const DATA: Extracted = {
   nr: "RE-2026-04211",
+  company: "FIKTIVWERK-BEISPIEL AG",
+  cityLine: "00000 Musterstadt (DUMMY)",
+  file: "fiktivwerk_re-2026-04211.pdf · 284 KB",
   datum: "14.04.2026",
   von: "FIKTIVWERK-BEISPIEL AG · Musterstadt (rein fiktiv)",
   faellig: "28.04.2026",
@@ -69,12 +76,14 @@ const DATA: Extracted = {
     },
   ],
   confidence: 0.97,
+  needsReview: false,
 };
 
 const DATA_EN: Extracted = {
   ...DATA,
   datum: "14 Apr 2026",
   von: "FIKTIVWERK-BEISPIEL AG · Sample City (entirely fictional)",
+  cityLine: "00000 Sample City (DUMMY)",
   faellig: "28 Apr 2026",
   netto: "€84,300.00",
   ust: "€16,017.00",
@@ -103,6 +112,91 @@ const DATA_EN: Extracted = {
       ep: "7,700.00",
       sum: "7,700.00",
       conf: 0.97,
+    },
+  ],
+};
+
+// A second scenario where OCR confidence is genuinely low on one line (a
+// handwritten discount note) — the pipeline runs the same four stages but
+// lands on "needs review" instead of a clean export, so the one control that
+// picks between DATA and DATA_FLAGGED is an input that changes the outcome,
+// not just the numbers on screen.
+const DATA_FLAGGED: Extracted = {
+  nr: "RE-2026-04298",
+  company: "NORDLICHT-MUSTER GMBH",
+  cityLine: "00000 Musterhafen (DUMMY)",
+  file: "nordlicht_re-2026-04298.pdf · 191 KB",
+  datum: "22.04.2026",
+  von: "NORDLICHT-MUSTER GMBH · Musterhafen (rein fiktiv)",
+  faellig: "06.05.2026",
+  ustId: "DE111111111 (DUMMY)",
+  iban: "DE11 1111 1111 1111 1111 11 (DUMMY)",
+  netto: "12.480,00 €",
+  ust: "2.371,20 €",
+  brutto: "14.851,20 €",
+  positionen: [
+    {
+      pos: "01",
+      t: "Ersatzteil-Kontingent Q2",
+      menge: 40,
+      ep: "245,00",
+      sum: "9.800,00",
+      conf: 0.96,
+    },
+    {
+      pos: "02",
+      t: "Expressversand",
+      menge: 1,
+      ep: "680,00",
+      sum: "680,00",
+      conf: 0.74,
+    },
+    {
+      pos: "03",
+      t: "Sonderrabatt (handschriftlich)",
+      menge: 1,
+      ep: "2.000,00",
+      sum: "2.000,00",
+      conf: 0.58,
+    },
+  ],
+  confidence: 0.76,
+  needsReview: true,
+};
+
+const DATA_FLAGGED_EN: Extracted = {
+  ...DATA_FLAGGED,
+  datum: "22 Apr 2026",
+  von: "NORDLICHT-MUSTER GMBH · Sample Harbor (entirely fictional)",
+  cityLine: "00000 Sample Harbor (DUMMY)",
+  faellig: "6 May 2026",
+  netto: "€12,480.00",
+  ust: "€2,371.20",
+  brutto: "€14,851.20",
+  positionen: [
+    {
+      pos: "01",
+      t: "Spare-parts allotment, Q2",
+      menge: 40,
+      ep: "245.00",
+      sum: "9,800.00",
+      conf: 0.96,
+    },
+    {
+      pos: "02",
+      t: "Express shipping",
+      menge: 1,
+      ep: "680.00",
+      sum: "680.00",
+      conf: 0.74,
+    },
+    {
+      pos: "03",
+      t: "Special discount (handwritten)",
+      menge: 1,
+      ep: "2,000.00",
+      sum: "2,000.00",
+      conf: 0.58,
     },
   ],
 };
@@ -136,17 +230,34 @@ const BLOCK_LINES: ReadonlyArray<{ w: string; dim?: boolean }> = [
 
 export default function RechnungZuSapDemo() {
   const { locale, text } = useDemoLocale();
-  const data = locale === "de" ? DATA : DATA_EN;
+  const [scenario, setScenario] = useState<"clean" | "flagged">("clean");
+  const data =
+    locale === "de"
+      ? scenario === "clean"
+        ? DATA
+        : DATA_FLAGGED
+      : scenario === "clean"
+        ? DATA_EN
+        : DATA_FLAGGED_EN;
   const stages = locale === "de" ? STAGES : STAGES_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const [replayNonce, setReplayNonce] = useState(0);
 
   useEffect(() => {
     if (reduced) {
       setStage(4);
       return;
     }
+    // Manual step-through (autoplay=false) must survive regardless of
+    // visibility — otherwise every autoplay-state change re-fires this
+    // effect and the "!visible" branch below silently resets a step the
+    // user just took (visible is permanently false in jsdom, and can be
+    // false in a real browser too right after a manual click scrolls the
+    // demo to the edge of the viewport).
+    if (!autoplay) return;
     if (!visible) {
       setStage(0);
       return;
@@ -159,7 +270,25 @@ export default function RechnungZuSapDemo() {
       setTimeout(() => setStage(4), 3600),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [visible, reduced]);
+  }, [visible, reduced, autoplay, replayNonce]);
+
+  const goBack = () => {
+    setAutoplay(false);
+    setStage((s) => (s > 0 ? ((s - 1) as 0 | 1 | 2 | 3 | 4) : s));
+  };
+  const goNext = () => {
+    setAutoplay(false);
+    setStage((s) => (s < 4 ? ((s + 1) as 0 | 1 | 2 | 3 | 4) : s));
+  };
+  const replay = () => {
+    setAutoplay(true);
+    setReplayNonce((n) => n + 1);
+  };
+  const selectScenario = (next: "clean" | "flagged") => {
+    setScenario(next);
+    setAutoplay(true);
+    setReplayNonce((n) => n + 1);
+  };
 
   return (
     <div
@@ -212,6 +341,125 @@ export default function RechnungZuSapDemo() {
       </div>
 
       <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={stage === 0}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              padding: "0 12px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              background: DEMO.kalk,
+              color: stage === 0 ? DEMO.leinen : DEMO.ink,
+              border: `1px solid ${DEMO.leinen}`,
+              cursor: stage === 0 ? "not-allowed" : "pointer",
+            }}
+          >
+            {text("◀ Zurück", "◀ Back")}
+          </button>
+          <span
+            style={{
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: DEMO.schiefer,
+              letterSpacing: "0.08em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {text(
+              `Schritt ${stage} / ${stages.length}`,
+              `Step ${stage} / ${stages.length}`,
+            )}
+          </span>
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={stage === 4}
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              padding: "0 12px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              background: DEMO.kalk,
+              color: stage === 4 ? DEMO.leinen : DEMO.ink,
+              border: `1px solid ${DEMO.leinen}`,
+              cursor: stage === 4 ? "not-allowed" : "pointer",
+            }}
+          >
+            {text("Weiter ▶", "Next ▶")}
+          </button>
+          <button
+            type="button"
+            onClick={replay}
+            style={{
+              minHeight: 44,
+              padding: "0 12px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              background: DEMO.kalk,
+              color: "var(--color-brand-orange)",
+              border: "1px solid var(--color-brand-orange)",
+              cursor: "pointer",
+            }}
+          >
+            {text("↻ Neu abspielen", "↻ Replay")}
+          </button>
+        </div>
+        <div style={{ display: "flex", gap: 6, marginLeft: "auto" }}>
+          <button
+            type="button"
+            onClick={() => selectScenario("clean")}
+            aria-pressed={scenario === "clean"}
+            style={{
+              minHeight: 44,
+              padding: "0 10px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              background: scenario === "clean" ? DEMO.ink : DEMO.kalk,
+              color: scenario === "clean" ? DEMO.kalk : DEMO.ink,
+              border: `1px solid ${scenario === "clean" ? DEMO.ink : DEMO.leinen}`,
+              cursor: "pointer",
+            }}
+          >
+            {text("Beleg A · sauber", "Document A · clean")}
+          </button>
+          <button
+            type="button"
+            onClick={() => selectScenario("flagged")}
+            aria-pressed={scenario === "flagged"}
+            style={{
+              minHeight: 44,
+              padding: "0 10px",
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              fontWeight: 700,
+              background: scenario === "flagged" ? DEMO.ink : DEMO.kalk,
+              color: scenario === "flagged" ? DEMO.kalk : DEMO.ink,
+              border: `1px solid ${scenario === "flagged" ? DEMO.ink : DEMO.leinen}`,
+              cursor: "pointer",
+            }}
+          >
+            {text("Beleg B · Abweichung", "Document B · flagged")}
+          </button>
+        </div>
+      </div>
+
+      <div
         className="rechnung-grid"
         style={{
           display: "grid",
@@ -228,7 +476,13 @@ export default function RechnungZuSapDemo() {
               maxWidth: 300,
               aspectRatio: "210/297",
               background: DEMO.kalk,
-              border: `1px solid ${stage === 4 ? DEMO.statusGreen : DEMO.leinen}`,
+              border: `1px solid ${
+                stage === 4
+                  ? data.needsReview
+                    ? DEMO.statusAmber
+                    : DEMO.statusGreen
+                  : DEMO.leinen
+              }`,
               boxShadow: "0 1px 0 rgba(11,9,8,0.04)",
               padding: "16px 18px",
               overflow: "hidden",
@@ -246,7 +500,7 @@ export default function RechnungZuSapDemo() {
                 lineHeight: 1.15,
               }}
             >
-              FIKTIVWERK-BEISPIEL AG
+              {data.company}
             </div>
             <div
               style={{
@@ -256,7 +510,7 @@ export default function RechnungZuSapDemo() {
                 marginTop: 2,
               }}
             >
-              {text("00000 Musterstadt (DUMMY)", "00000 Sample City (DUMMY)")}
+              {data.cityLine}
             </div>
 
             <div
@@ -281,7 +535,7 @@ export default function RechnungZuSapDemo() {
                 marginTop: 2,
               }}
             >
-              RE-2026-04211
+              {data.nr}
             </div>
 
             {/* Abstract body lines — grayscale bars simulating paragraph content */}
@@ -368,7 +622,9 @@ export default function RechnungZuSapDemo() {
                 style={{
                   position: "absolute",
                   inset: 0,
-                  background: "rgba(34,197,94,0.08)",
+                  background: data.needsReview
+                    ? "rgba(234,179,8,0.08)"
+                    : "rgba(34,197,94,0.08)",
                   pointerEvents: "none",
                 }}
               />
@@ -384,7 +640,7 @@ export default function RechnungZuSapDemo() {
               letterSpacing: "0.02em",
             }}
           >
-            fiktivwerk_re-2026-04211.pdf · 284 KB
+            {data.file}
           </div>
 
           <style>{`
@@ -424,6 +680,9 @@ export default function RechnungZuSapDemo() {
               const done = stage > st.s;
               const active = stage === st.s;
               const payoff = st.s === 4 && stage >= 4;
+              const payoffColor = data.needsReview
+                ? DEMO.statusAmber
+                : DEMO.statusGreen;
               return (
                 <div
                   key={st.s}
@@ -434,7 +693,9 @@ export default function RechnungZuSapDemo() {
                     gap: 10,
                     padding: "7px 10px",
                     background: payoff
-                      ? "rgba(34,197,94,0.08)"
+                      ? data.needsReview
+                        ? "rgba(234,179,8,0.08)"
+                        : "rgba(34,197,94,0.08)"
                       : active
                         ? "rgba(249,115,22,0.08)"
                         : done
@@ -442,7 +703,7 @@ export default function RechnungZuSapDemo() {
                           : "transparent",
                     border: `1px solid ${
                       payoff
-                        ? DEMO.statusGreen
+                        ? payoffColor
                         : active
                           ? "var(--color-brand-orange)"
                           : DEMO.leinen
@@ -529,7 +790,7 @@ export default function RechnungZuSapDemo() {
             <div
               style={{
                 background: DEMO.kalk,
-                borderTop: `3px solid ${DEMO.statusGreen}`,
+                borderTop: `3px solid ${data.needsReview ? DEMO.statusAmber : DEMO.statusGreen}`,
                 borderRight: `1px solid ${DEMO.leinen}`,
                 borderBottom: `1px solid ${DEMO.leinen}`,
                 borderLeft: `1px solid ${DEMO.leinen}`,
@@ -555,32 +816,45 @@ export default function RechnungZuSapDemo() {
                       justifyContent: "center",
                       width: 16,
                       height: 16,
-                      background: DEMO.statusGreen,
+                      background: data.needsReview
+                        ? DEMO.statusAmber
+                        : DEMO.statusGreen,
                       color: DEMO.kalk,
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
                       fontWeight: 700,
                     }}
                   >
-                    ✓
+                    {data.needsReview ? "!" : "✓"}
                   </span>
                   <div
                     style={{
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
-                      color: DEMO.statusGreen,
+                      color: data.needsReview
+                        ? DEMO.statusAmber
+                        : DEMO.statusGreen,
                       letterSpacing: "0.14em",
                       textTransform: "uppercase",
                       fontWeight: 700,
                     }}
                   >
-                    IDoc INVOIC02 · {text("Entwurf", "draft")}
+                    {data.needsReview
+                      ? text(
+                          "Manuelle Prüfung erforderlich",
+                          "Manual review required",
+                        )
+                      : `IDoc INVOIC02 · ${text("Entwurf", "draft")}`}
                   </div>
                 </div>
                 <span
                   style={{
-                    background: "rgba(34,197,94,0.12)",
-                    color: DEMO.statusGreen,
+                    background: data.needsReview
+                      ? "rgba(234,179,8,0.14)"
+                      : "rgba(34,197,94,0.12)",
+                    color: data.needsReview
+                      ? DEMO.statusAmber
+                      : DEMO.statusGreen,
                     padding: "2px 8px",
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,

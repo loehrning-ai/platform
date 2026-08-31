@@ -31,7 +31,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
     "bg-brand-sky/55",
     "bg-brand-pink/45",
     "bg-brand-acid/50",
-    "bg-brand-lilac/48",
+    "bg-brand-teal/15",
     "bg-brand-peach/45",
   ] as const;
   const iconTones = [
@@ -45,7 +45,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-lilac/20 py-16 md:py-24"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-16 md:py-24"
       data-testid="ressourcen-section"
     >
       <div className="mx-auto max-w-6xl px-6 md:px-12">

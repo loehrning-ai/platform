@@ -32,7 +32,7 @@ function SwitchLinks({
       aria-label={copy.language}
       data-language-switch
       className={cn(
-        "relative isolate inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-xl border border-foreground/15 bg-paper p-0.5 shadow-[3px_3px_0_var(--color-brand-lilac)]",
+        "relative isolate inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-xl border border-foreground/15 bg-paper p-0.5",
         className,
       )}
     >

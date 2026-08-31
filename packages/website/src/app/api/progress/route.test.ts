@@ -63,12 +63,20 @@ vi.mock("@/lib/observability/api-error", () => ({
 // outcome into the right HTTP status + body (the client-facing contract).
 const mockFetchUnifiedProgressForUser = vi.fn();
 const mockUpsertUnifiedProgressForUser = vi.fn();
-vi.mock("@/lib/progress/server-store", () => ({
-  fetchUnifiedProgressForUser: (...args: unknown[]) =>
-    mockFetchUnifiedProgressForUser(...args),
-  upsertUnifiedProgressForUser: (...args: unknown[]) =>
-    mockUpsertUnifiedProgressForUser(...args),
-}));
+vi.mock("@/lib/progress/server-store", async (importOriginal) => {
+  // isRowSizeViolation is a pure predicate over a Postgres error shape, so the
+  // real one is used: mocking it would let route.ts pass this file's tests
+  // while mapping the wrong errors to 413 in production.
+  const actual =
+    await importOriginal<typeof import("@/lib/progress/server-store")>();
+  return {
+    isRowSizeViolation: actual.isRowSizeViolation,
+    fetchUnifiedProgressForUser: (...args: unknown[]) =>
+      mockFetchUnifiedProgressForUser(...args),
+    upsertUnifiedProgressForUser: (...args: unknown[]) =>
+      mockUpsertUnifiedProgressForUser(...args),
+  };
+});
 
 import { GET, PUT } from "./route";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
@@ -499,6 +507,41 @@ describe("PUT /api/progress happy path + conflict", () => {
     mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
       ok: false,
       error: new Error("db down"),
+    });
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(500);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_write_failed",
+    });
+  });
+
+  it("names an oversize course row 413 instead of a retryable 500", async () => {
+    // The request-body cap bounds the whole multi-course payload; the DB
+    // CHECK bounds ONE course row, so a write can clear every request-level
+    // check and still be rejected. Reported as a generic 500 it reads as
+    // transient and the client retries a payload that can never be accepted.
+    mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: false,
+      error: Object.assign(new Error(
+        'new row for relation "user_course_progress" violates check constraint "user_course_progress_size_check"',
+      ), { code: "23514" }),
+    });
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(413);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_too_large",
+    });
+  });
+
+  it("keeps an unrelated check-constraint violation a 500", async () => {
+    mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: false,
+      error: Object.assign(
+        new Error(
+          'violates check constraint "user_course_progress_schema_version_check"',
+        ),
+        { code: "23514" },
+      ),
     });
     const response = await PUT(putRequest(VALID_PROGRESS));
     expect(response.status).toBe(500);

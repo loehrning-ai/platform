@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, Eye, Lock } from "lucide-react";
 import { books, getBookCover, type Book } from "@/lib/books";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import {
   BOOK_PAGE_COPY,
@@ -17,7 +18,7 @@ const SECONDARY_LINK_CLASS =
   "inline-flex min-h-11 max-w-full items-center gap-2 py-2 text-sm font-semibold text-brand-orange underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
 
 const BOOK_WASHES = [
-  "bg-brand-lilac/55",
+  "bg-brand-peach/55",
   "bg-brand-sky/55",
   "bg-brand-pink/50",
 ] as const;
@@ -62,7 +63,7 @@ export function BuecherContent({
           aria-hidden="true"
         />
         <span
-          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-lilac/55"
+          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-peach/55"
           aria-hidden="true"
         />
         <div
@@ -81,9 +82,9 @@ export function BuecherContent({
               className={`${headingFontClassName} relative mt-5 max-w-[14ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground`}
             >
               {copy.heading}{" "}
-              <span className="box-decoration-clone bg-brand-acid/80 px-1 text-foreground">
+              <HighlightedText colorVar="--color-brand-acid">
                 {copy.headingAccent}
-              </span>
+              </HighlightedText>
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
               {copy.introduction(catalogBooks.length)}

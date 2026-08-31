@@ -7,7 +7,6 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
-import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
 interface Lead {
@@ -75,6 +74,8 @@ function OutboundWorkflowDemoGerman() {
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [showChecklist, setShowChecklist] = useState(false);
+  const [leadIndex, setLeadIndex] = useState(0);
+  const [minScore, setMinScore] = useState(70);
 
   useEffect(() => {
     if (reduced) {
@@ -95,8 +96,13 @@ function OutboundWorkflowDemoGerman() {
     return () => timers.forEach(clearTimeout);
   }, [visible, reduced]);
 
-  const lead = LEADS[0];
+  const lead = LEADS[leadIndex];
   const email = lead.address;
+  // The intent score was previously display-only. A real gate compares it
+  // against a learner-adjustable threshold: the failure beat is what
+  // happens when that threshold is set above every lead's score — a
+  // pipeline that reaches "review complete" and sends nothing.
+  const gated = lead.score < minScore;
 
   return (
     <div
@@ -284,6 +290,40 @@ function OutboundWorkflowDemoGerman() {
             boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
+          {/* Lead picker — switches which of the 3 fictional contacts is shown */}
+          <div
+            role="group"
+            aria-label="Kontakt wählen"
+            style={{ display: "flex", gap: 6 }}
+          >
+            {LEADS.map((l, i) => {
+              const selected = i === leadIndex;
+              return (
+                <button
+                  key={l.address}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setLeadIndex(i)}
+                  style={{
+                    flex: 1,
+                    minHeight: 44,
+                    padding: "5px 8px",
+                    border: `1px solid ${DEMO.ink}`,
+                    background: selected ? DEMO.ink : DEMO.kalk,
+                    color: selected ? DEMO.kalk : DEMO.ink,
+                    fontFamily: DEMO.font.mono,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "0.04em",
+                    cursor: "pointer",
+                  }}
+                >
+                  {l.name.split(" ").pop()}
+                </button>
+              );
+            })}
+          </div>
+
           {/* Fictional scenario banner */}
           <div
             style={{
@@ -338,7 +378,7 @@ function OutboundWorkflowDemoGerman() {
                 letterSpacing: "0.12em",
               }}
             >
-              CRM · ROW 1/{LEADS.length}
+              CRM · ROW {leadIndex + 1}/{LEADS.length}
             </div>
           </div>
           <div
@@ -465,6 +505,62 @@ function OutboundWorkflowDemoGerman() {
               </div>
             </div>
           </div>
+          <label
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+              fontFamily: DEMO.font.mono,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span
+                style={{
+                  color: DEMO.schiefer,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  fontWeight: 700,
+                  fontSize: 12,
+                }}
+              >
+                Score-Schwelle
+              </span>
+              <span
+                style={{
+                  color: gated
+                    ? "var(--color-destructive)"
+                    : "var(--color-brand-orange)",
+                  fontWeight: 700,
+                  fontSize: 12,
+                }}
+              >
+                {minScore}/100
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={1}
+              value={minScore}
+              onChange={(e) => setMinScore(Number(e.target.value))}
+              aria-label="Minimale Score-Schwelle für den Versand"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={minScore}
+              style={{
+                minHeight: 44,
+                width: "100%",
+                accentColor: "var(--color-brand-orange)",
+              }}
+            />
+          </label>
           <div
             style={{
               position: "relative",
@@ -586,14 +682,22 @@ function OutboundWorkflowDemoGerman() {
               an: {email}
             </span>
             <span
+              role={stage >= 4 && gated ? "alert" : undefined}
               style={{
-                color: stage >= 4 ? DEMO.statusGreen : "rgba(243,240,233,0.55)",
+                color:
+                  stage >= 4 && gated
+                    ? "var(--color-destructive)"
+                    : stage >= 4
+                      ? DEMO.statusGreen
+                      : "rgba(243,240,233,0.55)",
                 transition: "color 200ms ease-out",
                 flexShrink: 0,
               }}
             >
               {stage >= 4
-                ? "● Versand simuliert 09:14"
+                ? gated
+                  ? "⛔ Nicht gesendet: unter Score-Schwelle"
+                  : "● Versand simuliert 09:14"
                 : stage >= 3
                   ? "◆ DRAFT"
                   : "○ WARTE…"}
@@ -754,7 +858,7 @@ function OutboundWorkflowDemoGerman() {
               <span>◆ Sonnet 4.6</span>
               <span>◆ 1,8 s</span>
               <span>◆ Quelle geprüft</span>
-              {stage >= 4 && (
+              {stage >= 4 && !gated && (
                 <span
                   style={{
                     marginLeft: "auto",
@@ -823,12 +927,6 @@ function OutboundWorkflowDemoGerman() {
           </div>
         ))}
       </div>
-
-      <SimulationDisclosure>
-        Kein Versand findet statt. Dieses Praxisbeispiel zeigt den
-        Entwurfsprozess, nicht die tatsächliche Zustellung. Alle Kontaktdaten
-        sind fiktive Beispieldaten.
-      </SimulationDisclosure>
 
       {/* Failure mode beat: was fehlt vor echtem Versand? */}
       {stage >= 4 && (
@@ -983,7 +1081,12 @@ const LEADS_EN: readonly Lead[] = [
 function OutboundWorkflowDemoEnglish() {
   const [leadIndex, setLeadIndex] = useState(0);
   const [showControls, setShowControls] = useState(false);
+  const [minScore, setMinScore] = useState(70);
   const lead = LEADS_EN[leadIndex];
+  // The sample score was previously display-only. A real gate compares it
+  // against a learner-adjustable threshold: the failure beat is what
+  // happens when the threshold is set above every lead's score.
+  const gated = lead.score < minScore;
 
   return (
     <div
@@ -1197,6 +1300,63 @@ function OutboundWorkflowDemoEnglish() {
             >
               {lead.signal}
             </div>
+            <label
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+                marginTop: 10,
+                fontFamily: DEMO.font.mono,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 8,
+                }}
+              >
+                <span
+                  style={{
+                    color: DEMO.schiefer,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    fontWeight: 700,
+                    fontSize: 12,
+                  }}
+                >
+                  Score threshold
+                </span>
+                <span
+                  style={{
+                    color: gated
+                      ? "var(--color-destructive)"
+                      : "var(--color-brand-orange)",
+                    fontWeight: 700,
+                    fontSize: 12,
+                  }}
+                >
+                  {minScore}/100
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                step={1}
+                value={minScore}
+                onChange={(e) => setMinScore(Number(e.target.value))}
+                aria-label="Minimum score threshold for outreach"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={minScore}
+                style={{
+                  minHeight: 44,
+                  width: "100%",
+                  accentColor: "var(--color-brand-orange)",
+                }}
+              />
+            </label>
           </div>
         </section>
 
@@ -1227,8 +1387,14 @@ function OutboundWorkflowDemoEnglish() {
               REVIEW DRAFT
             </strong>
             <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>
-            <span style={{ marginLeft: "auto", color: "#fbbf24" }}>
-              NOT SENT
+            <span
+              role={gated ? "alert" : undefined}
+              style={{
+                marginLeft: "auto",
+                color: gated ? "#fca5a5" : "#fbbf24",
+              }}
+            >
+              {gated ? "HOLD · BELOW THRESHOLD" : "QUALIFIED · NOT SENT"}
             </span>
           </div>
           <div
@@ -1270,11 +1436,6 @@ function OutboundWorkflowDemoEnglish() {
           </div>
         </section>
       </div>
-
-      <SimulationDisclosure>
-        No delivery takes place. The interface demonstrates draft review with
-        fictional data; it has no SMTP, CRM, or provider connection.
-      </SimulationDisclosure>
 
       <section
         style={{

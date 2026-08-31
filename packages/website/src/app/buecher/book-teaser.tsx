@@ -59,7 +59,7 @@ export function BookTeaser({
       />
 
       <div className="relative z-10 flex max-h-[92svh] w-full min-w-0 max-w-6xl flex-col overflow-hidden overscroll-contain bg-paper shadow-card ring-1 ring-foreground/40">
-        <div className="relative flex min-w-0 items-start justify-between gap-4 overflow-hidden border-b border-foreground/20 bg-brand-lilac/60 px-4 py-4 sm:px-6">
+        <div className="relative flex min-w-0 items-start justify-between gap-4 overflow-hidden border-b border-foreground/20 bg-brand-peach/60 px-4 py-4 sm:px-6">
           <span
             className="pointer-events-none absolute -bottom-8 right-20 h-16 w-36 -rotate-6 bg-brand-acid/75"
             aria-hidden="true"

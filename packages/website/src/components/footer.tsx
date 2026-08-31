@@ -167,14 +167,20 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    <footer className="berlin-footer dark-section relative overflow-hidden border-t border-border">
+    <footer className="dark-section relative overflow-hidden border-t border-border">
+      {/* Outline only, no fill. These sit behind real footer text, and a 10%
+          tint over --color-dark-bg lifts the background to #373844, where the
+          dark-section accent (#e07050) drops to 3.64:1. Until this branch the
+          footer also painted a radial-gradient wash, which made the background
+          unresolvable to axe and hid the failure rather than fixing it. The
+          geometric motif survives in the border. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-10 size-44 rounded-[2.5rem] border border-brand-orange/40 bg-brand-acid/10"
+        className="pointer-events-none absolute left-0 top-10 size-44 rounded-[2.5rem] border border-brand-orange/40"
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30 bg-brand-lilac/10"
+        className="pointer-events-none absolute right-0 bottom-8 size-52 rounded-full border border-brand-orange/30"
       />
       <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <div className="grid min-w-0 gap-6 border-b border-border pb-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">

@@ -156,7 +156,7 @@ test.describe("edge: retired routes 301 to a live destination or 410 Gone", () =
     ["/ki-readiness", "/ki-check"],
     ["/eu-ai-act-check", "/ki-check"],
     ["/methodik", "/blog"],
-    ["/arbeitsweise", "/ueber-mich#redaktion"],
+    ["/arbeitsweise", "/ueber-mich"],
   ] as const;
 
   for (const [route, target] of RETIRED_REDIRECTS) {
