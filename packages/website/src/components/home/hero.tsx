@@ -1,17 +1,22 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Pause, Play } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
-import {
-  HERO_GLOBE_INTRO_MS,
-  HeroNetwork,
-} from "@/components/home/hero-network";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+
+const HeroNetwork = dynamic(
+  () =>
+    import("@/components/home/hero-network").then(
+      (module) => module.HeroNetwork,
+    ),
+  { ssr: false },
+);
 
 function usePrefersReducedMotion(): boolean {
   const [prefersReduced, setPrefersReduced] = useState(false);
@@ -86,9 +91,8 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     "bg-brand-sky/60",
   ] as const;
   const sectionRef = useRef<HTMLElement>(null);
-  const globeIntroDeadlineRef = useRef<number | null>(null);
   const prefersReduced = usePrefersReducedMotion();
-  const [globeSettled, setGlobeSettled] = useState(false);
+  const [networkPaused, setNetworkPaused] = useState(false);
   const [networkMode, setNetworkMode] = useState<"desktop" | "mobile" | null>(
     null,
   );
@@ -117,37 +121,22 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (networkMode !== "desktop" || prefersReduced || globeSettled) return;
-    const now = window.performance.now();
-    const deadline =
-      globeIntroDeadlineRef.current ?? now + HERO_GLOBE_INTRO_MS;
-    globeIntroDeadlineRef.current = deadline;
-    const remaining = Math.max(0, deadline - now);
-    if (remaining === 0) {
-      setGlobeSettled(true);
-      return;
-    }
-    const timer = window.setTimeout(() => setGlobeSettled(true), remaining);
-    return () => window.clearTimeout(timer);
-  }, [globeSettled, networkMode, prefersReduced]);
-
   return (
     <section
       ref={sectionRef}
       data-section="hero"
-      className="berlin-grain berlin-hero relative -mt-16 flex min-h-[38rem] flex-col overflow-hidden px-6 pb-9 pt-24 md:px-12 md:pb-12 md:pt-24"
+      className="berlin-grain berlin-hero relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -left-10 top-32 size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50"
+        className="pointer-events-none absolute -left-10 top-32 hidden size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50 lg:block"
       />
 
       {/* ── Print-shop registration marks at the four corners ─────────── */}
-      <RegisterMark className="left-3 top-20 hidden md:block" />
-      <RegisterMark className="right-3 top-20 hidden md:block" />
-      <RegisterMark className="bottom-4 left-3 hidden md:block" />
-      <RegisterMark className="bottom-4 right-3 hidden md:block" />
+      <RegisterMark className="left-3 top-20 hidden lg:block" />
+      <RegisterMark className="right-3 top-20 hidden lg:block" />
+      <RegisterMark className="bottom-4 left-3 hidden lg:block" />
+      <RegisterMark className="bottom-4 right-3 hidden lg:block" />
 
       {/* The globe is the hero's only animated signal. */}
       <style>{`
@@ -163,7 +152,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
               aria-label={copy.headline.join(" ")}
               className="font-bold leading-[0.94] text-foreground"
               style={{
-                fontSize: "clamp(3rem, min(8.4vw, 12.5svh), 8rem)",
+                fontSize: "clamp(2.25rem, min(8.4vw, 12.5svh), 8rem)",
                 letterSpacing: "0",
               }}
             >
@@ -203,43 +192,64 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
           <div className="hidden lg:block" />
         </div>
 
-        {/* One real projection tree is present in the server response. A
-            lightweight first-frame shell makes the same globe visible before
-            hydration; viewport mode only decides whether it animates. */}
-        <m.div
-          data-hero-globe-motion={
-            prefersReduced || networkMode !== "desktop"
-              ? "static"
-              : globeSettled
-                ? "settled"
-                : "running"
-          }
-          className="home-hero-network-mask pointer-events-none absolute inset-0 flex items-center justify-center rounded-full bg-brand-peach/20 lg:inset-auto lg:bottom-0 lg:right-0 lg:block lg:h-[110%] lg:w-[70vw] lg:overflow-visible lg:rounded-none lg:bg-transparent"
-        >
+        {/* The projection module is desktop-only. Mobile receives no hidden
+            SVG tree, no atmosphere mask, and no projection startup cost. */}
+        {networkMode === "desktop" ? (
           <m.div
-            className="flex h-full w-full items-center justify-center lg:block"
-            style={
-              networkMode === "desktop" && !prefersReduced
-                ? { y: globeY, opacity: globeOpacity }
-                : undefined
+            id="home-hero-network"
+            data-hero-globe-motion={
+              prefersReduced ? "static" : networkPaused ? "paused" : "running"
             }
+            className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 block h-[110%] w-[70vw] overflow-visible"
           >
-            <HeroNetwork
-              locale={locale}
-              scrollProgress={scrollYProgress}
-              mobile={networkMode === "mobile"}
-              frozen={frozen}
-              paused={globeSettled || networkMode !== "desktop"}
-              reducedMotion={prefersReduced}
-              className="h-[300px] w-[280px] opacity-40 lg:h-full lg:w-full lg:opacity-100"
-            />
+            <m.div
+              className="h-full w-full"
+              style={
+                !prefersReduced
+                  ? { y: globeY, opacity: globeOpacity }
+                  : undefined
+              }
+            >
+              <HeroNetwork
+                locale={locale}
+                scrollProgress={scrollYProgress}
+                frozen={frozen}
+                paused={networkPaused}
+                reducedMotion={prefersReduced}
+                className="h-full w-full opacity-100"
+              />
+            </m.div>
           </m.div>
-        </m.div>
+        ) : null}
 
+        {networkMode === "desktop" && !prefersReduced ? (
+          <button
+            type="button"
+            aria-controls="home-hero-network"
+            aria-label={
+              networkPaused
+                ? locale === "de"
+                  ? "Globus fortsetzen"
+                  : "Resume globe motion"
+                : locale === "de"
+                  ? "Globus anhalten"
+                  : "Pause globe motion"
+            }
+            aria-pressed={networkPaused}
+            onClick={() => setNetworkPaused((current) => !current)}
+            className="absolute right-0 top-0 z-30 hidden size-11 items-center justify-center rounded-xl border border-foreground/15 bg-paper/90 text-foreground shadow-card outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden motion-reduce:transform-none lg:inline-flex"
+          >
+            {networkPaused ? (
+              <Play size={16} aria-hidden="true" />
+            ) : (
+              <Pause size={16} aria-hidden="true" />
+            )}
+          </button>
+        ) : null}
       </div>
 
       {/* Three direct uses of the platform in one compact register. */}
-      <ol className="relative z-10 mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-3 sm:grid-cols-3 md:mt-10">
+      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3 md:mt-8 lg:mt-10">
         {copy.pillars.map((pillar, index) => {
           const href = pillar.href;
           const entry = (
@@ -264,7 +274,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             <li
               key={pillar.title}
               className={
-                "min-w-0 rounded-2xl border border-foreground/10 p-5 shadow-card transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none " +
+                "min-w-0 rounded-2xl border border-foreground/10 p-4 shadow-card transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none sm:p-5 " +
                 (pillarTones[index] ?? pillarTones[0])
               }
             >

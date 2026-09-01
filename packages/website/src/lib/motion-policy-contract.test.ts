@@ -57,6 +57,21 @@ describe("website motion policy", () => {
     expect(globalCss).toMatch(/scroll-behavior:\s*auto\s*!important/);
   });
 
+  it("gives the globe intrinsic neutral volume without a coloured hero wash", () => {
+    const globalCss = read("app/globals.css");
+    const hero = read("components/home/hero.tsx");
+    const network = read("components/home/hero-network.tsx");
+    const heroRule = globalCss.match(/\.berlin-hero\s*\{[^}]*\}/s)?.[0] ?? "";
+
+    expect(heroRule).toContain("background: var(--color-paper)");
+    expect(heroRule).not.toMatch(
+      /169\s*,\s*221\s*,\s*252|203\s*,\s*188\s*,\s*255/,
+    );
+    expect(hero).not.toContain("bg-brand-peach/20");
+    expect(network).toContain('id="sphereVolume"');
+    expect(network).not.toContain('id="limbHalo"');
+  });
+
   it("stops formerly ambient demos after one finite explanatory run", () => {
     for (const file of [
       "components/demos/cost-drift-observability-demo.tsx",
@@ -96,16 +111,36 @@ describe("website motion policy", () => {
     );
   });
 
-  it("keeps globe motion finite without an overlay control and static when reduced", () => {
+  it("bounds the homepage globe continuous-motion exception", () => {
     const hero = read("components/home/hero.tsx");
     const network = read("components/home/hero-network.tsx");
+    const policy = readFileSync(
+      join(SRC, "..", "docs/experience-system.md"),
+      "utf8",
+    );
 
-    expect(hero).not.toMatch(/Pause globe motion|Globus anhalten/);
-    expect(hero).toContain("setGlobeSettled(true)");
-    const duration = network.match(/HERO_GLOBE_INTRO_MS\s*=\s*([\d_]+)/)?.[1];
-    expect(Number(duration?.replaceAll("_", ""))).toBeLessThan(5_000);
+    expect(hero).not.toContain("setGlobeSettled(true)");
+    expect(hero).toContain('import("@/components/home/hero-network")');
+    expect(hero).toContain('networkMode === "desktop" ?');
+    expect(hero).toContain('type="button"');
+    expect(hero).toContain("aria-pressed={networkPaused}");
+    expect(hero).toContain("size-11");
+    expect(hero).toContain("motion-reduce:hidden");
     expect(hero).toContain("data-hero-globe-motion");
-    expect(network).toContain("prefersReduced || mobile || paused");
+    expect(network).toContain(
+      'window.matchMedia("(prefers-reduced-motion: reduce)")',
+    );
+    expect(network).toContain("IntersectionObserver");
+    expect(network).toContain('frozen?.on("change"');
+    expect(network).toContain('document.addEventListener("visibilitychange"');
+    expect(network).toContain("HERO_GLOBE_INTRO_FPS = 20");
+    expect(network).toContain("HERO_GLOBE_AMBIENT_FPS = 10");
     expect(network).toContain("data-hero-network-motion");
+    expect(policy).toContain(
+      "Homepage globe: narrow continuous-motion exception",
+    );
+    expect(policy).toContain(
+      "The projection module and SVG tree are not loaded or rendered on mobile",
+    );
   });
 });

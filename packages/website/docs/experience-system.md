@@ -69,8 +69,21 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - Learner-triggered state transitions take 120–200ms; finite structural reveals take 250–450ms.
 - Animate transforms and opacity. Do not use `transition: all`.
 - One region may carry meaningful motion at a time.
-- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed.
+- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. The homepage globe is the single narrow exception defined below.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
+
+### Homepage globe: narrow continuous-motion exception
+
+The desktop homepage globe may rotate continuously because its movement carries the route map: each pan connects one of six public-resource words to a geographic position. Freezing after the first word makes that relationship unavailable and turns the globe into a large decorative wireframe. This exception does not permit ambient motion elsewhere. The globe remains the only moving region in the hero.
+
+The exception has four enforced boundaries:
+
+- It exists only at 1024px and wider. The projection module and SVG tree are not loaded or rendered on mobile, where they compete with the first action and can overlap the headline.
+- A persistent 44px keyboard-operable control pauses and resumes it. Leaving the hero viewport, hiding the document, or scrolling through the hero also suspends projection work.
+- `prefers-reduced-motion: reduce` produces a static desktop composition. The animation effect checks the media query directly, so it cannot run a live frame while React synchronizes the preference.
+- Projection work runs at 20fps for the first 4.4 seconds and 10fps afterward. Unit sphere vectors are precomputed, frame rotation trigonometry runs once per frame, and CSS owns no large coloured hero wash or blur filter. Local Lighthouse is indicative; the CI median and its 200ms total-blocking-time cap remain authoritative.
+
+A CSS rotation of one pre-rendered disc was rejected because it breaks the country projection and disconnects the typed resource word from the destination pan. Keeping the real projection at a reduced cadence preserves the information while bounding main-thread and paint cost.
 
 ### Gallery previews: why there are no live miniatures
 
