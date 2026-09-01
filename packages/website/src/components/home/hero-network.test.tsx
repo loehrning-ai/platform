@@ -17,7 +17,23 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { motionValue } from "framer-motion";
-import { HeroNetwork, STEPS } from "./hero-network";
+import {
+  HERO_GLOBE_DWELL_RATIO,
+  HERO_GLOBE_FPS,
+  HERO_GLOBE_START_DELAY_SECONDS,
+  HERO_GLOBE_STEP_SECONDS,
+  HeroNetwork,
+  STEPS,
+} from "./hero-network";
+
+describe("globe motion cadence", () => {
+  it("matches the smooth, measured August production profile", () => {
+    expect(HERO_GLOBE_FPS).toBe(60);
+    expect(HERO_GLOBE_STEP_SECONDS).toBe(7);
+    expect(HERO_GLOBE_DWELL_RATIO).toBe(0.78);
+    expect(HERO_GLOBE_START_DELAY_SECONDS).toBe(2);
+  });
+});
 
 describe("STEPS journey data", () => {
   it("labels the six public-resource beats in canonical order", () => {

@@ -81,9 +81,9 @@ The exception has four enforced boundaries:
 - It exists only at 1024px and wider. The projection module and SVG tree are not loaded or rendered on mobile, where they compete with the first action and can overlap the headline.
 - A persistent 44px keyboard-operable control pauses and resumes it. Leaving the hero viewport, hiding the document, or scrolling through the hero also suspends projection work.
 - `prefers-reduced-motion: reduce` produces a static desktop composition. The animation effect checks the media query directly, so it cannot run a live frame while React synchronizes the preference.
-- Projection work runs at 20fps for the first 4.4 seconds and 10fps afterward. Unit sphere vectors are precomputed, frame rotation trigonometry runs once per frame, and CSS owns no large coloured hero wash or blur filter. Local Lighthouse is indicative; the CI median and its 200ms total-blocking-time cap remain authoritative.
+- Projection work follows the historical production cadence: a 60fps cap, a 7-second location cycle, a 78% dwell, and a 2-second opening delay. This replaces the visibly stepped 10fps ambient mode and the accelerated 4.6-second cycle. Unit sphere vectors are precomputed, frame rotation trigonometry runs once per frame, and high-refresh displays remain capped. Local Lighthouse is indicative; the CI median and its 200ms total-blocking-time cap remain authoritative.
 
-A CSS rotation of one pre-rendered disc was rejected because it breaks the country projection and disconnects the typed resource word from the destination pan. Keeping the real projection at a reduced cadence preserves the information while bounding main-thread and paint cost.
+A CSS rotation of one pre-rendered disc was rejected because it breaks the country projection and disconnects the typed resource word from the destination pan. Keeping the real projection with desktop-only loading, viewport suspension, scroll suspension, document-visibility suspension, and a 60fps cap preserves the information while bounding unnecessary main-thread and paint work.
 
 ### Gallery previews: why there are no live miniatures
 
