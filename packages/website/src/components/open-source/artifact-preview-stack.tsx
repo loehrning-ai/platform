@@ -103,9 +103,23 @@ export function ArtifactPreviewStack({
           <span
             aria-live="polite"
             aria-atomic="true"
-            className="text-sm leading-relaxed text-muted-foreground"
+            className="grid text-sm leading-relaxed text-muted-foreground"
+            data-preview-caption-stack
           >
-            {activeFrame.caption}
+            {frames.map((frame, index) => {
+              const active = index === activeIndex;
+              return (
+                <span
+                  key={frame.src}
+                  aria-hidden={active ? undefined : true}
+                  className={`col-start-1 row-start-1 ${active ? "visible" : "invisible"}`}
+                  data-preview-caption={index}
+                  data-preview-caption-active={active ? "true" : "false"}
+                >
+                  {frame.caption}
+                </span>
+              );
+            })}
           </span>
         </figcaption>
       </figure>
@@ -126,10 +140,10 @@ export function ArtifactPreviewStack({
               type="button"
               aria-pressed={active}
               aria-label={selectLabels[index]}
-              className={`min-h-11 border-b border-r px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 [touch-action:manipulation] hover:bg-card-hover hover:text-foreground focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none sm:border-b-0 ${
+              className={`min-h-11 border-b border-r px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 [touch-action:manipulation] focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none sm:border-b-0 ${
                 active
-                  ? "border-brand-orange bg-brand-orange text-white"
-                  : "border-border bg-background text-muted-foreground"
+                  ? "border-brand-orange bg-brand-orange text-white hover:bg-brand-orange hover:text-white focus-visible:ring-white"
+                  : "border-border bg-background text-muted-foreground hover:bg-card-hover hover:text-foreground focus-visible:ring-foreground"
               }`}
               onClick={() => setActiveIndex(index)}
               onKeyDown={(event) => handleSelectorKeyDown(event, index)}
