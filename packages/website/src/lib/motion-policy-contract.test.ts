@@ -133,8 +133,11 @@ describe("website motion policy", () => {
     expect(network).toContain("IntersectionObserver");
     expect(network).toContain('frozen?.on("change"');
     expect(network).toContain('document.addEventListener("visibilitychange"');
-    expect(network).toContain("HERO_GLOBE_INTRO_FPS = 20");
-    expect(network).toContain("HERO_GLOBE_AMBIENT_FPS = 10");
+    expect(network).toContain("HERO_GLOBE_FPS = 60");
+    expect(network).toContain("HERO_GLOBE_STEP_SECONDS = 7");
+    expect(network).toContain("HERO_GLOBE_DWELL_RATIO = 0.78");
+    expect(network).toContain("HERO_GLOBE_START_DELAY_SECONDS = 2");
+    expect(network).not.toContain("HERO_GLOBE_AMBIENT_FPS");
     expect(network).toContain("data-hero-network-motion");
     expect(policy).toContain(
       "Homepage globe: narrow continuous-motion exception",

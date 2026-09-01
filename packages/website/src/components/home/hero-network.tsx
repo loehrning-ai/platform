@@ -39,11 +39,14 @@ const WARM = "rgb(40,30,22)";
 // Step/journey data (Step type + STEPS constant) now lives in
 // ./hero-network-steps — imported above and re-exported for compatibility.
 
-export const HERO_GLOBE_INTRO_MS = 4_400;
-export const HERO_GLOBE_INTRO_FPS = 20;
-export const HERO_GLOBE_AMBIENT_FPS = 10;
-const STEP_DUR = 4.6;
-const DWELL = 0.28;
+// Restore the motion profile from the 10 August production build while keeping
+// the newer visibility and reduced-motion guards. Capping at 60 avoids doing
+// duplicate projection work on high-refresh displays.
+export const HERO_GLOBE_FPS = 60;
+export const HERO_GLOBE_STEP_SECONDS = 7;
+export const HERO_GLOBE_DWELL_RATIO = 0.78;
+export const HERO_GLOBE_START_DELAY_SECONDS = 2;
+const FRAME_INTERVAL_MS = 1000 / HERO_GLOBE_FPS;
 
 // ─── Math ───────────────────────────────────────────────────────────────────
 
@@ -461,15 +464,15 @@ export function HeroNetwork({
     // !prefersReduced && !mobile. The static fallback is rendered via JSX
     // (staticGrid / staticCountry / staticCountryFill) without RAF.
     const now = performance.now();
-    const elapsedMs = startRef.current === 0 ? 0 : now - startRef.current;
-    // Keep the initial arrival responsive, then shift to an affordable ambient
-    // cadence. Ten projections per second still gives each 3.3 second pan more
-    // than thirty distinct frames, while avoiding permanent 30 fps SVG churn.
-    const frameRate =
-      elapsedMs < HERO_GLOBE_INTRO_MS
-        ? HERO_GLOBE_INTRO_FPS
-        : HERO_GLOBE_AMBIENT_FPS;
-    if (now - lastFrameRef.current < 1000 / frameRate) {
+    // The August production globe followed every 60 Hz animation frame. Keep
+    // that smooth cadence, but cap high-refresh displays so they do not repeat
+    // the expensive projection more than sixty times per second. A one
+    // millisecond tolerance prevents a nominal 16.6 ms display interval from
+    // falling through to every second frame because of timer precision.
+    if (
+      lastFrameRef.current !== 0 &&
+      now - lastFrameRef.current < FRAME_INTERVAL_MS - 1
+    ) {
       if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
       return;
     }
@@ -483,11 +486,14 @@ export function HeroNetwork({
     const isFrozen = (frozen?.get() ?? 0) > 0.5;
 
     // Step panning
-    const activeT = Math.max(0, t - 0.1);
-    const totalCycle = localizedSteps.length * STEP_DUR;
+    const activeT = Math.max(0, t - HERO_GLOBE_START_DELAY_SECONDS);
+    const totalCycle = localizedSteps.length * HERO_GLOBE_STEP_SECONDS;
     const cycleT = activeT % totalCycle;
-    const stepIdx = Math.floor(cycleT / STEP_DUR) % localizedSteps.length;
-    const stepT = (cycleT - stepIdx * STEP_DUR) / STEP_DUR;
+    const stepIdx =
+      Math.floor(cycleT / HERO_GLOBE_STEP_SECONDS) % localizedSteps.length;
+    const stepT =
+      (cycleT - stepIdx * HERO_GLOBE_STEP_SECONDS) /
+      HERO_GLOBE_STEP_SECONDS;
     const cur = localizedSteps[stepIdx];
     const next = localizedSteps[(stepIdx + 1) % localizedSteps.length];
     // Globe rotation centers — fall back to the city's coords if no override.
@@ -503,7 +509,7 @@ export function HeroNetwork({
       targetLon: number,
       isTransitioning = false;
 
-    if (isFrozen || stepT < DWELL) {
+    if (isFrozen || stepT < HERO_GLOBE_DWELL_RATIO) {
       targetLat = curRLat;
       targetLon = curRLon;
       if (!isFrozen) {
@@ -512,7 +518,10 @@ export function HeroNetwork({
       }
     } else {
       isTransitioning = true;
-      const transT = sfEase((stepT - DWELL) / (1 - DWELL));
+      const transT = sfEase(
+        (stepT - HERO_GLOBE_DWELL_RATIO) /
+          (1 - HERO_GLOBE_DWELL_RATIO),
+      );
       targetLat = curRLat + (nextRLat - curRLat) * transT;
       targetLon = lerpLon(curRLon, nextRLon, transT);
     }
@@ -524,7 +533,10 @@ export function HeroNetwork({
     // City label flips to the destination at 50% of the transition so the
     // sidebar feels like it's leading the eye toward where the globe is going.
     const displayIdx =
-      isTransitioning && (stepT - DWELL) / (1 - DWELL) > 0.5
+      isTransitioning &&
+      (stepT - HERO_GLOBE_DWELL_RATIO) /
+        (1 - HERO_GLOBE_DWELL_RATIO) >
+        0.5
         ? (stepIdx + 1) % localizedSteps.length
         : stepIdx;
     stepIdxOut?.set(displayIdx);
@@ -707,7 +719,7 @@ export function HeroNetwork({
     const cursorEl = cursorRef.current;
     if (textEl && cursorEl) {
       if (!isTransitioning && !isFrozen && activeT > 0) {
-        const dwellT = stepT / DWELL;
+        const dwellT = stepT / HERO_GLOBE_DWELL_RATIO;
         const word = cur.word;
         textEl.setAttribute("opacity", String(entrance));
 
