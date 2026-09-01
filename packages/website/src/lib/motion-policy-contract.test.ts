@@ -122,10 +122,13 @@ describe("website motion policy", () => {
     expect(hero).not.toContain("setGlobeSettled(true)");
     expect(hero).toContain('import("@/components/home/hero-network")');
     expect(hero).toContain('networkMode === "desktop" ?');
-    expect(hero).toContain('type="button"');
-    expect(hero).toContain("aria-pressed={networkPaused}");
-    expect(hero).toContain("size-11");
-    expect(hero).toContain("motion-reduce:hidden");
+    expect(hero).toContain("data-hero-globe-surface-control");
+    expect(hero).toContain('aria-controls="home-hero-network"');
+    expect(hero).toContain("Pause globe motion");
+    expect(hero).toContain("Resume globe motion");
+    expect(hero).toContain("Globus anhalten");
+    expect(hero).toContain("Globus fortsetzen");
+    expect(hero).not.toContain("aria-pressed={networkPaused}");
     expect(hero).toContain("data-hero-globe-motion");
     expect(network).toContain(
       'window.matchMedia("(prefers-reduced-motion: reduce)")',

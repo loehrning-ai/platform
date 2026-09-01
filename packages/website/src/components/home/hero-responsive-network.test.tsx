@@ -9,7 +9,6 @@ import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/components/home/hero-network", () => ({
-  HERO_GLOBE_INTRO_MS: 4_400,
   HeroNetwork: function HeroNetworkMock(props: {
     mobile?: boolean;
     paused?: boolean;
@@ -112,7 +111,7 @@ describe("HeroSection responsive globe", () => {
     );
   });
 
-  it("omits the projection tree and control below the desktop breakpoint", async () => {
+  it("omits the projection tree below the desktop breakpoint", async () => {
     setDesktopMatch(false);
     render(<HeroSection locale="en" />);
 
@@ -125,30 +124,29 @@ describe("HeroSection responsive globe", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("keeps the desktop globe running until its 44px control pauses it", async () => {
+  it("uses the globe surface instead of a visible overlay control", async () => {
     setDesktopMatch(true);
     render(<HeroSection locale="en" />);
 
-    const network = await screen.findByTestId("hero-network");
+    await screen.findByTestId("hero-network");
     expect(screen.getByTestId("hero-network")).toHaveAttribute(
       "data-paused",
       "false",
     );
-    const pause = screen.getByRole("button", { name: /pause globe motion/i });
-    expect(pause).toHaveClass("size-11");
-    expect(pause).toHaveAttribute("aria-pressed", "false");
     expect(
       document.querySelector('[data-hero-globe-motion="running"]'),
     ).not.toBeNull();
+    const surfaceControl = screen.getByRole("button", {
+      name: "Pause globe motion",
+    });
+    expect(surfaceControl).toHaveAttribute("data-hero-globe-surface-control");
 
-    fireEvent.click(pause);
-    expect(network).toHaveAttribute("data-paused", "true");
-    expect(
-      document.querySelector('[data-hero-globe-motion="paused"]'),
-    ).not.toBeNull();
-    const resume = screen.getByRole("button", { name: /resume globe motion/i });
-    fireEvent.click(resume);
-    expect(network).toHaveAttribute("data-paused", "false");
+    fireEvent.click(surfaceControl);
+    expect(screen.getByTestId("hero-network")).toHaveAttribute(
+      "data-paused",
+      "true",
+    );
+    expect(surfaceControl).toHaveAccessibleName("Resume globe motion");
   });
 
   it("unmounts the desktop projection during a responsive interruption", async () => {

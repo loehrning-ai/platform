@@ -1,7 +1,7 @@
 "use client";
 
 import { m, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -235,16 +235,10 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
                   ? "Globus anhalten"
                   : "Pause globe motion"
             }
-            aria-pressed={networkPaused}
+            data-hero-globe-surface-control
             onClick={() => setNetworkPaused((current) => !current)}
-            className="absolute right-0 top-0 z-30 hidden size-11 items-center justify-center rounded-xl border border-foreground/15 bg-paper/90 text-foreground shadow-card outline-none transition-[border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hidden motion-reduce:transform-none lg:inline-flex"
-          >
-            {networkPaused ? (
-              <Play size={16} aria-hidden="true" />
-            ) : (
-              <Pause size={16} aria-hidden="true" />
-            )}
-          </button>
+            className="absolute bottom-[8%] right-[1%] z-30 hidden h-[82%] min-h-11 w-[43%] min-w-11 cursor-pointer rounded-[50%] border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:block"
+          />
         ) : null}
       </div>
 
