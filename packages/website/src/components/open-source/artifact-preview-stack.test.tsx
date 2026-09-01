@@ -52,6 +52,20 @@ describe("<ArtifactPreviewStack>", () => {
       container.querySelector('img[width="1696"][height="1060"]'),
     ).toBeTruthy();
     expect(container.querySelectorAll("img")).toHaveLength(1);
+    const captionStack = container.querySelector(
+      "[data-preview-caption-stack]",
+    );
+    const captions = container.querySelectorAll("[data-preview-caption]");
+    expect(captionStack).toHaveClass("grid");
+    expect(captions).toHaveLength(FRAMES.length);
+    for (const caption of captions) {
+      expect(caption).toHaveClass("col-start-1", "row-start-1");
+    }
+    expect(captions[0]).toHaveAttribute(
+      "data-preview-caption-active",
+      "true",
+    );
+    expect(captions[1]).toHaveAttribute("aria-hidden", "true");
 
     fireEvent.click(form);
     expect(form).toHaveAttribute("aria-pressed", "true");
@@ -70,6 +84,12 @@ describe("<ArtifactPreviewStack>", () => {
       container.querySelector('img[width="1696"][height="1060"]'),
     ).toBeNull();
     expect(container.querySelectorAll("img")).toHaveLength(1);
+    expect(captions[0]).toHaveAttribute("aria-hidden", "true");
+    expect(captions[1]).toHaveAttribute(
+      "data-preview-caption-active",
+      "true",
+    );
+    expect(captions[1]).not.toHaveAttribute("aria-hidden");
   });
 
   it("supports arrow, Home, and End navigation with visible focus", () => {
@@ -90,7 +110,11 @@ describe("<ArtifactPreviewStack>", () => {
     fireEvent.keyDown(pdf, { key: "Home" });
     expect(editor).toHaveFocus();
     expect(editor).toHaveAttribute("aria-pressed", "true");
-    expect(editor).toHaveClass("focus-visible:ring-2");
+    expect(editor).toHaveClass(
+      "focus-visible:ring-2",
+      "focus-visible:ring-white",
+    );
+    expect(form).toHaveClass("focus-visible:ring-foreground");
   });
 
   it("limits motion to stack state changes and disables it for reduced motion", () => {

@@ -236,25 +236,11 @@
     background-size: 64px 64px;
   }
 
-  /* Hero atmosphere behind the globe. Restored after removal left the globe
-     reading as a bare wireframe on flat paper: the sphere has no light of its
-     own, so the radial at 74% 36% is what gives it volume, and the acid
-     gradient at the foot is what stops the pillar row below from floating.
-     The colour literals are inlined rather than tokenised so this cannot
-     resurrect the retired brand-lilac token. Scoped to the hero only, never a
-     site-wide backdrop. */
+  /* Keep the hero on plain paper. The globe owns its warm-neutral volume
+     inside the SVG, which avoids a large coloured background wash and keeps
+     the above-the-fold paint surface cheap. */
   .berlin-hero {
-    /* Gives the globe volume so it does not read as a bare wireframe on flat
-       paper. No purple: the original wash glowed lilac, which is the exact
-       "purple glow" the design research rejects, so both radials are
-       brand-sky. Two layers, not the original three - the dropped third was a
-       full-hero linear tint at the foot, the least visible layer and the most
-       expensive to paint on the largest above-the-fold element of a page that
-       runs at its blocking-time budget. */
-    background:
-      radial-gradient(circle at 74% 36%, rgba(169, 221, 252, 0.5), transparent 24rem),
-      radial-gradient(circle at 93% 72%, rgba(169, 221, 252, 0.34), transparent 22rem),
-      var(--color-paper);
+    background: var(--color-paper);
   }
 
   /* Paper-grain overlay, used by the hero. Was formerly shared with the

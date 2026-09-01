@@ -21,11 +21,11 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
     GitFork,
   ];
   const resourceSpans = [
-    "lg:col-span-7",
-    "lg:col-span-5",
-    "lg:col-span-5",
-    "lg:col-span-7",
-    "lg:col-span-12",
+    "sm:col-span-1 lg:col-span-7",
+    "sm:col-span-1 lg:col-span-5",
+    "sm:col-span-1 lg:col-span-5",
+    "sm:col-span-1 lg:col-span-7",
+    "sm:col-span-2 lg:col-span-12",
   ] as const;
   const resourceTones = [
     "bg-brand-sky/55",
@@ -45,7 +45,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-16 md:py-24"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 md:py-20 lg:py-24"
       data-testid="ressourcen-section"
     >
       <div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -68,7 +68,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
         </div>
 
         <ul
-          className="mt-10 grid auto-rows-fr gap-4 lg:grid-cols-12"
+          className="mt-8 grid auto-rows-fr gap-3 sm:grid-cols-2 sm:gap-4 lg:mt-10 lg:grid-cols-12"
           aria-label={copy.boardAriaLabel}
         >
           {copy.resources.map((resource, index) => {
@@ -77,11 +77,12 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
               <li key={resource.label} className={resourceSpans[index]}>
                 <Link
                   href={localizeHref(resource.href, locale)}
-                  className={`group relative grid h-full min-h-52 min-w-0 overflow-hidden rounded-[1.6rem] border border-foreground/10 ${resourceTones[index] ?? resourceTones[0]} p-5 shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-card motion-reduce:transform-none motion-reduce:transition-none md:p-6`}
+                  className={`group relative grid h-full min-h-[10.5rem] min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${resourceTones[index] ?? resourceTones[0]} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-card motion-reduce:transform-none motion-reduce:transition-none md:p-5 lg:min-h-52 lg:rounded-[1.6rem] lg:p-6`}
+                  data-home-resource-card
                 >
                   <span
                     aria-hidden="true"
-                    className="absolute -right-8 -top-8 size-36 rotate-6 rounded-[2.5rem] border border-foreground/10 bg-paper/30 opacity-75 transition-transform duration-300 group-hover:rotate-12 group-focus-visible:rotate-12 motion-reduce:transform-none motion-reduce:transition-none"
+                    className="absolute -right-8 -top-8 hidden size-36 rotate-6 rounded-[2.5rem] border border-foreground/10 bg-paper/30 opacity-75 transition-transform duration-300 group-hover:rotate-12 group-focus-visible:rotate-12 motion-reduce:transform-none motion-reduce:transition-none lg:block"
                   />
                   <span className="relative flex items-start justify-between gap-6">
                     <span
@@ -89,11 +90,13 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                     >
                       <Icon size={22} strokeWidth={1.6} />
                     </span>
-                    <span className="font-ui-mono text-xs font-bold tabular-nums text-brand-orange">
+                    <span
+                      className={`font-ui-mono text-xs font-bold tabular-nums ${index === 3 ? "text-foreground" : "text-brand-orange"}`}
+                    >
                       R{String(index + 1).padStart(2, "0")}
                     </span>
                   </span>
-                  <span className="relative mt-8 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-5 self-end">
+                  <span className="relative mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-4 self-end lg:mt-8 lg:gap-5">
                     <span className="min-w-0">
                       <span className="block text-xl font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange">
                         {resource.label}
@@ -114,7 +117,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
           })}
         </ul>
 
-        <div className="mt-7 grid gap-4 rounded-[1.6rem] border border-brand-cobalt bg-brand-cobalt px-5 py-5 shadow-card-hover sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6">
+        <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-brand-cobalt bg-brand-cobalt p-4 shadow-card-hover sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6 md:py-5 lg:mt-7 lg:rounded-[1.6rem]">
           <p className="max-w-2xl text-sm leading-relaxed text-white">
             {copy.accountBody}
           </p>

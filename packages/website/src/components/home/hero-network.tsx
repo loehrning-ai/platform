@@ -10,10 +10,8 @@ import {
 import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
 import type { Locale } from "@/lib/i18n/locale";
 
-// Re-exported for backward compatibility (hero-network.test.tsx imports
-// STEPS from this module). hero.tsx imports STEPS directly from
-// hero-network-steps.ts to avoid statically pulling in this file's heavy
-// projection math + COUNTRY_POLYLINES_3D data — see hero.tsx for why.
+// Re-exported for backward compatibility while the homepage parent loads this
+// heavy projection module only for desktop viewports.
 export { STEPS };
 
 /** Maps STEPS index → country key. Aligned 1:1 with the STEPS array below. */
@@ -42,12 +40,18 @@ const WARM = "rgb(40,30,22)";
 // ./hero-network-steps — imported above and re-exported for compatibility.
 
 export const HERO_GLOBE_INTRO_MS = 4_400;
+export const HERO_GLOBE_INTRO_FPS = 20;
+export const HERO_GLOBE_AMBIENT_FPS = 10;
 const STEP_DUR = 4.6;
 const DWELL = 0.28;
 
 // ─── Math ───────────────────────────────────────────────────────────────────
 
-function ll3d(lat: number, lon: number): [number, number, number] {
+type Vec3 = readonly [number, number, number];
+type ProjectedPoint = Readonly<{ sx: number; sy: number; z: number }>;
+type Projector = (point: Vec3) => ProjectedPoint;
+
+function ll3d(lat: number, lon: number): Vec3 {
   const la = lat * DEG,
     lo = lon * DEG;
   return [
@@ -56,41 +60,58 @@ function ll3d(lat: number, lon: number): [number, number, number] {
     Math.cos(la) * Math.sin(lo),
   ];
 }
-function rY(
-  x: number,
-  y: number,
-  z: number,
-  a: number,
-): [number, number, number] {
-  const c = Math.cos(a),
-    s = Math.sin(a);
-  return [x * c + z * s, y, -x * s + z * c];
-}
-function rX(
-  x: number,
-  y: number,
-  z: number,
-  a: number,
-): [number, number, number] {
-  const c = Math.cos(a),
-    s = Math.sin(a);
-  return [x, y * c - z * s, y * s + z * c];
-}
 /** Project (lat, lon) to screen, with the globe rotated so that
  *  (rLat, rLon) lands dead center on the front face (z ≈ 1). The -0.15 rad
  *  X tilt biases the city slightly above the equator-of-view so it sits
  *  comfortably alongside the typing word in the upper-right area. */
-function project(
-  lat: number,
-  lon: number,
-  rLon: number,
-  rLat: number,
-): { sx: number; sy: number; z: number } {
-  let [x, y, z] = ll3d(lat, lon);
-  [x, y, z] = rY(x, y, z, (rLon - 90) * DEG);
-  [x, y, z] = rX(x, y, z, rLat * DEG - 0.15);
-  return { sx: CX + x * R, sy: CY - y * R, z };
+function createProjector(rLon: number, rLat: number): Projector {
+  // Rotation angles are identical for every point in a frame. Cache their
+  // trigonometry once instead of repeating four trig calls for each of the
+  // roughly 7,500 grid and country projections.
+  const yaw = (rLon - 90) * DEG;
+  const pitch = rLat * DEG - 0.15;
+  const yawCos = Math.cos(yaw);
+  const yawSin = Math.sin(yaw);
+  const pitchCos = Math.cos(pitch);
+  const pitchSin = Math.sin(pitch);
+
+  return ([x, y, z]) => {
+    const rotatedX = x * yawCos + z * yawSin;
+    const yawZ = -x * yawSin + z * yawCos;
+    const rotatedY = y * pitchCos - yawZ * pitchSin;
+    const rotatedZ = y * pitchSin + yawZ * pitchCos;
+    return {
+      sx: CX + rotatedX * R,
+      sy: CY - rotatedY * R,
+      z: rotatedZ,
+    };
+  };
 }
+
+const COUNTRY_RINGS_3D = Object.fromEntries(
+  STEP_COUNTRY.map((key) => [
+    key,
+    COUNTRY_POLYLINES_3D[key].map((ring) =>
+      ring.map(([lat, lon]) => ll3d(lat, lon)),
+    ),
+  ]),
+) as unknown as Readonly<Record<CountryKey3D, readonly (readonly Vec3[])[]>>;
+
+const GRID_LINES_3D: readonly (readonly Vec3[])[] = (() => {
+  const lines: Vec3[][] = [];
+  for (let lat = -80; lat <= 80; lat += GRID_STEP) {
+    const points: Vec3[] = [];
+    for (let lon = -180; lon <= 180; lon += 4) points.push(ll3d(lat, lon));
+    lines.push(points);
+  }
+  for (let lon = -180; lon < 180; lon += GRID_STEP) {
+    const points: Vec3[] = [];
+    for (let lat = -90; lat <= 90; lat += 4) points.push(ll3d(lat, lon));
+    lines.push(points);
+  }
+  return lines;
+})();
+
 function dp(sx: number, sy: number, z: number): number {
   const ed = Math.sqrt((sx - CX) ** 2 + (sy - CY) ** 2) / R;
   return (1 - Math.pow(Math.min(ed, 1), 1.6)) * Math.max(0, z);
@@ -118,9 +139,8 @@ interface Seg {
  *  cumulative screen-space length of its sub-path so callers can drive a
  *  stroke-dashoffset draw-in animation. Same trace pattern as buildGrid. */
 function projectRings(
-  rings: readonly (readonly (readonly [number, number])[])[],
-  rLon: number,
-  rLat: number,
+  rings: readonly (readonly Vec3[])[],
+  project: Projector,
 ): Seg[] {
   const out: Seg[] = [];
   for (const ring of rings) {
@@ -131,8 +151,8 @@ function projectRings(
       len = 0,
       lastSx = 0,
       lastSy = 0;
-    for (const [lat, lon] of ring) {
-      const pt = project(lat, lon, rLon, rLat);
+    for (const point of ring) {
+      const pt = project(point);
       if (pt.z > 0) {
         const c = `${pt.sx.toFixed(1)},${pt.sy.toFixed(1)}`;
         if (live) {
@@ -167,13 +187,12 @@ function projectRings(
  *  the visible front of the country. Outlines should keep using
  *  `projectRings()` (strokes don't auto-close, so no chord problem). */
 function projectRingsClosed(
-  rings: readonly (readonly (readonly [number, number])[])[],
-  rLon: number,
-  rLat: number,
+  rings: readonly (readonly Vec3[])[],
+  project: Projector,
 ): Seg[] {
   const out: Seg[] = [];
   for (const ring of rings) {
-    const pts = ring.map(([lat, lon]) => project(lat, lon, rLon, rLat));
+    const pts = ring.map(project);
     const n = pts.length;
     if (n === 0) continue;
 
@@ -305,10 +324,10 @@ function projectRingsClosed(
 const BERLIN_LAT = 52.5;
 const BERLIN_LON = 13.4;
 
-function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
+function buildGrid(project: Projector): { front: Seg[]; back: Seg[] } {
   const front: Seg[] = [],
     back: Seg[] = [];
-  const trace = (points: { sx: number; sy: number; z: number }[]) => {
+  const trace = (points: readonly Vec3[]) => {
     let pF = "",
       pB = "",
       lF = false,
@@ -317,7 +336,8 @@ function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
       cF = 0,
       sB = 0,
       cB = 0;
-    for (const p of points) {
+    for (const point of points) {
+      const p = project(point);
       const c = `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
       if (p.z > 0) {
         if (!lF && pB) {
@@ -356,18 +376,7 @@ function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
         dp: cB > 0 ? Math.round((sB / cB) * 10000) / 10000 : 0,
       });
   };
-  for (let lat = -80; lat <= 80; lat += GRID_STEP) {
-    const pts = [];
-    for (let lon = -180; lon <= 180; lon += 4)
-      pts.push(project(lat, lon, rLon, rLat));
-    trace(pts);
-  }
-  for (let lon = -180; lon < 180; lon += GRID_STEP) {
-    const pts = [];
-    for (let lat = -90; lat <= 90; lat += 4)
-      pts.push(project(lat, lon, rLon, rLat));
-    trace(pts);
-  }
+  for (const line of GRID_LINES_3D) trace(line);
   return { front, back };
 }
 
@@ -375,20 +384,18 @@ function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
 // document. This sparse frame uses the exact same Berlin projection and ink
 // values, so the real globe is visible in the first HTML paint without a
 // visually unrelated poster or a large SVG payload.
-const initialGrid = buildGrid(BERLIN_LON, BERLIN_LAT);
+const berlinProjector = createProjector(BERLIN_LON, BERLIN_LAT);
+const initialGrid = buildGrid(berlinProjector);
 const INITIAL_SHELL_GRID = {
   back: initialGrid.back.filter((_, index) => index % 8 === 0),
   front: initialGrid.front.filter((_, index) => index % 8 === 0),
 };
 const INITIAL_SHELL_COUNTRY = STEP_COUNTRY.flatMap((key) =>
   projectRings(
-    COUNTRY_POLYLINES_3D[key].map((ring) =>
-      ring.filter(
-        (_, index) => index % 3 === 0 || index === ring.length - 1,
-      ),
+    COUNTRY_RINGS_3D[key].map((ring) =>
+      ring.filter((_, index) => index % 3 === 0 || index === ring.length - 1),
     ),
-    BERLIN_LON,
-    BERLIN_LAT,
+    berlinProjector,
   ),
 );
 
@@ -422,8 +429,8 @@ export function HeroNetwork({
 }: HeroNetworkProps) {
   const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
   // The parent reads matchMedia after hydration and passes a stable boolean.
-  // Reading it again here during the first client render makes this SVG tree
-  // disagree with the server response for reduced-motion users.
+  // Keep rendering tied to that explicit input; the animation effect performs
+  // its own direct media-query guard before scheduling any work.
   const prefersReduced = reducedMotion;
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
@@ -454,10 +461,15 @@ export function HeroNetwork({
     // !prefersReduced && !mobile. The static fallback is rendered via JSX
     // (staticGrid / staticCountry / staticCountryFill) without RAF.
     const now = performance.now();
-    // The projection rebuilds thousands of points. Thirty visual updates per
-    // second preserve the slow editorial rotation while halving main-thread
-    // and large-SVG paint work on high-refresh displays.
-    if (now - lastFrameRef.current < 1000 / 30) {
+    const elapsedMs = startRef.current === 0 ? 0 : now - startRef.current;
+    // Keep the initial arrival responsive, then shift to an affordable ambient
+    // cadence. Ten projections per second still gives each 3.3 second pan more
+    // than thirty distinct frames, while avoiding permanent 30 fps SVG churn.
+    const frameRate =
+      elapsedMs < HERO_GLOBE_INTRO_MS
+        ? HERO_GLOBE_INTRO_FPS
+        : HERO_GLOBE_AMBIENT_FPS;
+    if (now - lastFrameRef.current < 1000 / frameRate) {
       if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
       return;
     }
@@ -465,8 +477,8 @@ export function HeroNetwork({
     if (startRef.current === 0) startRef.current = now;
     const t = (now - startRef.current) / 1000;
 
-    // The server frame already establishes the sphere. The live projection
-    // starts settled instead of blanking that frame and fading it back in.
+    // The declarative first frame already establishes the sphere. The live
+    // projection starts settled instead of blanking it and fading it back in.
     const entrance = 1;
     const isFrozen = (frozen?.get() ?? 0) > 0.5;
 
@@ -518,7 +530,8 @@ export function HeroNetwork({
     stepIdxOut?.set(displayIdx);
 
     // ── Grid ────────────────────────────────────────────────────────────
-    const grid = buildGrid(targetLon, targetLat);
+    const project = createProjector(targetLon, targetLat);
+    const grid = buildGrid(project);
 
     // Back grid
     const gbEl = gridBackRef.current;
@@ -629,10 +642,9 @@ export function HeroNetwork({
       const outlineSegs: Seg[] = [];
       const fillSegs: Seg[] = [];
       for (const key of STEP_COUNTRY) {
-        const rings = COUNTRY_POLYLINES_3D[key];
-        for (const seg of projectRings(rings, targetLon, targetLat))
-          outlineSegs.push(seg);
-        for (const seg of projectRingsClosed(rings, targetLon, targetLat))
+        const rings = COUNTRY_RINGS_3D[key];
+        for (const seg of projectRings(rings, project)) outlineSegs.push(seg);
+        for (const seg of projectRingsClosed(rings, project))
           fillSegs.push(seg);
       }
       // 1. Radial glow — barely there, just a soft tint at the centroid.
@@ -686,7 +698,7 @@ export function HeroNetwork({
       });
     }
 
-    // Every live layer is populated at this point. The sparse server frame
+    // Every live layer is populated at this point. The sparse initial frame
     // shares the same geometry, so removing it is a seamless detail upgrade.
     initialShellRef.current?.setAttribute("opacity", "0");
 
@@ -772,7 +784,16 @@ export function HeroNetwork({
   }, [frozen, latOut, localizedSteps, lonOut, stepIdxOut]);
 
   useEffect(() => {
-    if (prefersReduced || mobile || paused) return;
+    // The parent switches to the declarative static composition after
+    // hydration. Read the system preference here as well so a reduced-motion
+    // browser cannot execute even one live projection while that state syncs.
+    if (
+      prefersReduced ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      mobile ||
+      paused
+    )
+      return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -795,10 +816,22 @@ export function HeroNetwork({
     };
 
     let onScreen = false;
+    let sceneFrozen = (frozen?.get() ?? 0) > 0.5;
     const sync = () => {
-      if (onScreen && document.visibilityState === "visible") play();
+      if (
+        onScreen &&
+        !sceneFrozen &&
+        document.visibilityState === "visible"
+      )
+        play();
       else pause();
     };
+    const stopFrozenSubscription = frozen?.on("change", (value) => {
+      const nextFrozen = value > 0.5;
+      if (nextFrozen === sceneFrozen) return;
+      sceneFrozen = nextFrozen;
+      sync();
+    });
 
     // rootMargin gives a small head-start so the globe is already spinning by
     // the time the hero scrolls back into view.
@@ -814,12 +847,13 @@ export function HeroNetwork({
 
     return () => {
       io.disconnect();
+      stopFrozenSubscription?.();
       document.removeEventListener("visibilitychange", sync);
       if (runningRef.current) pausedAtRef.current = performance.now();
       cancelAnimationFrame(rafRef.current);
       runningRef.current = false;
     };
-  }, [animate, paused, prefersReduced, mobile]);
+  }, [animate, frozen, mobile, paused, prefersReduced]);
 
   useEffect(() => {
     if (!prefersReduced && !mobile) return;
@@ -846,7 +880,7 @@ export function HeroNetwork({
   // projection math is expensive and the inputs only change with the
   // reduced-motion / mobile flags.
   const staticGrid = useMemo(
-    () => (prefersReduced || mobile ? buildGrid(BERLIN_LON, BERLIN_LAT) : null),
+    () => (prefersReduced || mobile ? buildGrid(berlinProjector) : null),
     [prefersReduced, mobile],
   );
   // Outlines: open per-arc paths.
@@ -854,7 +888,7 @@ export function HeroNetwork({
     () =>
       prefersReduced || mobile
         ? STEP_COUNTRY.flatMap((key) =>
-            projectRings(COUNTRY_POLYLINES_3D[key], BERLIN_LON, BERLIN_LAT),
+            projectRings(COUNTRY_RINGS_3D[key], berlinProjector),
           )
         : null,
     [prefersReduced, mobile],
@@ -864,11 +898,7 @@ export function HeroNetwork({
     () =>
       prefersReduced || mobile
         ? STEP_COUNTRY.flatMap((key) =>
-            projectRingsClosed(
-              COUNTRY_POLYLINES_3D[key],
-              BERLIN_LON,
-              BERLIN_LAT,
-            ),
+            projectRingsClosed(COUNTRY_RINGS_3D[key], berlinProjector),
           )
         : null,
     [prefersReduced, mobile],
@@ -894,25 +924,15 @@ export function HeroNetwork({
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="atmo" cx="50%" cy="50%" r="50%">
-            <stop offset="75%" stopColor={WARM} stopOpacity="0" />
-            <stop offset="92%" stopColor={WARM} stopOpacity="0.025" />
-            <stop offset="100%" stopColor={WARM} stopOpacity="0.06" />
-          </radialGradient>
-          <radialGradient id="limb" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={LC} stopOpacity="0" />
-            <stop offset="60%" stopColor={LC} stopOpacity="0" />
-            <stop offset="85%" stopColor={LC} stopOpacity="0.03" />
-            <stop offset="95%" stopColor={LC} stopOpacity="0.08" />
-            <stop offset="100%" stopColor={LC} stopOpacity="0.14" />
+          <radialGradient id="sphereVolume" cx="38%" cy="30%" r="72%">
+            <stop offset="0%" stopColor={WARM} stopOpacity="0.012" />
+            <stop offset="58%" stopColor={WARM} stopOpacity="0.02" />
+            <stop offset="84%" stopColor={WARM} stopOpacity="0.055" />
+            <stop offset="100%" stopColor={WARM} stopOpacity="0.11" />
           </radialGradient>
           <clipPath id="gc">
             <circle cx={CX} cy={CY} r={R} />
           </clipPath>
-          {/* Soft halo around the limb so the sphere reads as 3D, not a flat disc */}
-          <filter id="limbHalo" x="-15%" y="-15%" width="130%" height="130%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-          </filter>
           {/* Diagonal hatching for the country interior — static blueprint
                texture. Thicker hairlines (0.85 px) so the lines actually
                read as scaffolding, not as a wash. */}
@@ -943,18 +963,17 @@ export function HeroNetwork({
           </radialGradient>
         </defs>
 
-        <circle cx={CX} cy={CY} r={R + 20} fill="url(#atmo)" />
-        <circle cx={CX} cy={CY} r={R} fill="url(#limb)" />
-        {/* Limb halo — blurred outer ring sells the spherical depth */}
+        <circle cx={CX} cy={CY} r={R} fill="url(#sphereVolume)" />
+        {/* A warm-neutral silhouette gives the sphere volume without a large
+            coloured background wash or a paint-heavy blur filter. */}
         <circle
           cx={CX}
           cy={CY}
           r={R + 1}
-          stroke={LC}
+          stroke={WARM}
           strokeOpacity={0.12}
           strokeWidth={2.4}
           fill="none"
-          filter="url(#limbHalo)"
         />
 
         <g clipPath="url(#gc)" strokeLinecap="round" strokeLinejoin="round">
@@ -981,9 +1000,7 @@ export function HeroNetwork({
                   key={`if${i}`}
                   d={s.d}
                   stroke={LC}
-                  strokeOpacity={
-                    Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
-                  }
+                  strokeOpacity={Math.round((0.06 + s.dp * 0.16) * 1000) / 1000}
                   strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
                   fill="none"
                 />
@@ -993,9 +1010,7 @@ export function HeroNetwork({
                   key={`ic${i}`}
                   d={s.d}
                   stroke={KUPFER}
-                  strokeOpacity={
-                    Math.round((0.13 + s.dp * 0.05) * 1000) / 1000
-                  }
+                  strokeOpacity={Math.round((0.13 + s.dp * 0.05) * 1000) / 1000}
                   strokeWidth={2}
                   fill="none"
                 />
@@ -1093,6 +1108,7 @@ export function HeroNetwork({
           <>
             <text
               ref={textRef}
+              data-hero-network-word
               x={CX}
               y={CY - R * 0.45}
               fontFamily="var(--font-loehrning-sans), sans-serif"

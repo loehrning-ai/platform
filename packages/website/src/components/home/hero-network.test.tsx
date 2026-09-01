@@ -2,13 +2,13 @@
  * hero-network.test.tsx (regression coverage)
  *
  * HeroNetwork is a rotating-globe SVG whose heavy spherical-projection helpers
- * (buildGrid / projectRings / projectRingsClosed / project / ll3d / rX / rY /
- * dp) are module-private, so they cannot be imported directly. They ARE
+ * (buildGrid / projectRings / projectRingsClosed / createProjector / ll3d /
+ * dp) are module-private, so they cannot be imported directly. They are
  * exercised end-to-end by the component's STATIC fallback render (mobile +
  * prefers-reduced-motion), which projects the real world-atlas country
  * polylines at Berlin and emits distinguishable SVG paths. The animated path
- * begins with a sparse server-rendered frame generated from the same geometry;
- * its rAF loop replaces that shell after hydration.
+ * begins with a sparse declarative frame generated from the same geometry;
+ * its rAF loop replaces that shell after the client mount.
  *
  * We also assert the exported STEPS journey data (order, coordinate ranges,
  * the San-Francisco rotation override, and real diacritic spellings).

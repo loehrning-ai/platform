@@ -609,6 +609,62 @@ test.describe("/open-source mobile", () => {
   });
 });
 
+test("keeps the artifact card fixed while product views change", async ({
+  page,
+}) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+
+    const artifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
+    const artifactRow = page.getByRole("listitem").filter({
+      has: page.getByRole("heading", {
+        name: artifact.title,
+        exact: true,
+      }),
+    });
+    const card = artifactRow.locator("[data-open-source-artifact-sheet]");
+    const preview = artifactRow.locator("[data-artifact-preview-stack]");
+    const buttons = OPEN_SOURCE_PAGE_COPY.de.showcase.previewLabels.map(
+      (label) =>
+        preview.getByRole("button", {
+          name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect(label),
+        }),
+    );
+
+    await expect(card).toBeVisible();
+    const initialCardBox = await card.boundingBox();
+    const initialPreviewBox = await preview.boundingBox();
+    expect(initialCardBox).not.toBeNull();
+    expect(initialPreviewBox).not.toBeNull();
+
+    for (const [index, button] of buttons.entries()) {
+      await button.click();
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+      await expect(
+        preview.locator(`[data-preview-frame="${index}"]`),
+      ).toBeVisible();
+
+      const cardBox = await card.boundingBox();
+      const previewBox = await preview.boundingBox();
+      expect(cardBox).not.toBeNull();
+      expect(previewBox).not.toBeNull();
+      expect(
+        Math.abs(cardBox!.height - initialCardBox!.height),
+        `artifact card height changed at ${viewport.width}px on view ${index + 1}`,
+      ).toBeLessThan(0.5);
+      expect(
+        Math.abs(previewBox!.height - initialPreviewBox!.height),
+        `preview height changed at ${viewport.width}px on view ${index + 1}`,
+      ).toBeLessThan(0.5);
+    }
+  }
+});
+
 // Registry-driven admission coverage. These loops intentionally register no
 // current cases while the tool, project, and video arrays are empty. The same
 // change that publishes the first entry automatically adds its real detail

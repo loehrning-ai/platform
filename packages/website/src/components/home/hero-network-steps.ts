@@ -1,13 +1,11 @@
 /**
  * Shared step/journey data for the homepage hero.
  *
- * Lives in its own module (not hero-network.tsx) so hero.tsx can import
- * STEPS eagerly (needed synchronously for the geographic readout labels)
- * without statically pulling in hero-network.tsx's heavy projection math and
- * the COUNTRY_POLYLINES_3D dataset. HeroNetwork itself is next/dynamic-loaded
- * with ssr:false purely for bundle-size reasons — see hero.tsx. hero-network.tsx
- * re-exports STEPS for backward compatibility (its existing test imports it
- * from there).
+ * Lives outside hero-network.tsx so the journey data remains independent of
+ * the heavy projection math and COUNTRY_POLYLINES_3D dataset. HeroNetwork is
+ * loaded only for desktop viewports; this module stays available to tests and
+ * future non-visual consumers without pulling in that projection code.
+ * hero-network.tsx re-exports STEPS for backward compatibility.
  */
 
 // `rLat` / `rLon` are optional rotation overrides — when present, the globe
