@@ -23,7 +23,7 @@ export function CourseArtwork({
     <span
       data-course-artwork
       className={cn(
-        "relative block aspect-[16/7] overflow-hidden border-b border-foreground/10 bg-paper",
+        "relative block h-full min-h-[9.5rem] overflow-hidden border-r border-foreground/10 bg-paper sm:aspect-[16/7] sm:h-auto sm:min-h-0 sm:border-b sm:border-r-0",
         plateClassName,
       )}
     >
@@ -41,8 +41,8 @@ export function CourseArtwork({
         decoding="async"
         sizes={
           wide
-            ? "(min-width: 1280px) 606px, (min-width: 1024px) 54vw, calc(100vw - 48px)"
-            : "(min-width: 1280px) 426px, (min-width: 1024px) 38vw, calc(100vw - 48px)"
+            ? "(max-width: 639px) 112px, (min-width: 1280px) 606px, (min-width: 1024px) 54vw, (min-width: 768px) calc(50vw - 60px), calc(100vw - 48px)"
+            : "(max-width: 639px) 112px, (min-width: 1280px) 426px, (min-width: 1024px) 38vw, (min-width: 768px) calc(50vw - 60px), calc(100vw - 48px)"
         }
         className="absolute inset-0 h-full w-full scale-[1.008] object-cover object-center transition-transform duration-300 group-hover:translate-x-[3px] group-hover:-translate-y-[2px] group-hover:scale-[1.015] group-focus-visible:translate-x-[3px] group-focus-visible:-translate-y-[2px] group-focus-visible:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none"
       />
