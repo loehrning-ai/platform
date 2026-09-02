@@ -15,7 +15,7 @@ test.describe("landing globe motion", () => {
     expect(html).not.toContain("data-hero-globe-poster");
   });
 
-  test("keeps rotating and cycling words until the user pauses it", async ({
+  test("keeps rotating and uses the globe surface as its motion control", async ({
     page,
   }) => {
     const runtimeErrors: string[] = [];
@@ -26,11 +26,20 @@ test.describe("landing globe motion", () => {
 
     await page.goto("/en");
 
-    const network = page.locator('[data-hero-globe-motion="running"]');
+    const network = page.locator("#home-hero-network");
     await expect(network).toBeVisible();
-    const control = page.getByRole("button", { name: /pause globe motion/i });
-    await expect(control).toBeVisible();
-    await expect(control).toHaveAttribute("aria-pressed", "false");
+    await expect(network).toHaveAttribute("data-hero-globe-motion", "running");
+    const surfaceControl = page.getByRole("button", {
+      name: "Pause globe motion",
+    });
+    await expect(surfaceControl).toHaveAttribute(
+      "data-hero-globe-surface-control",
+      "true",
+    );
+    await expect(surfaceControl).toHaveCSS(
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
 
     const livePath = page
       .locator('[data-hero-network-live="grid-back"] path')
@@ -48,21 +57,14 @@ test.describe("landing globe motion", () => {
       .poll(() => word.textContent(), { timeout: 5_000 })
       .toMatch(/\S/);
 
-    await control.click();
-    await expect(
-      page.locator('[data-hero-globe-motion="paused"]'),
-    ).toBeVisible();
-    await expect(
-      page.locator('[data-hero-network-motion="paused"]'),
-    ).toBeVisible();
+    await surfaceControl.click();
+    await expect(network).toHaveAttribute("data-hero-globe-motion", "paused");
     const pausedPath = await livePath.getAttribute("d");
-    await page.waitForTimeout(350);
+    await page.waitForTimeout(300);
     expect(await livePath.getAttribute("d")).toBe(pausedPath);
 
-    await page.getByRole("button", { name: /resume globe motion/i }).click();
-    await expect(
-      page.locator('[data-hero-globe-motion="running"]'),
-    ).toBeVisible();
+    await page.getByRole("button", { name: "Resume globe motion" }).click();
+    await expect(network).toHaveAttribute("data-hero-globe-motion", "running");
     await expect
       .poll(() => livePath.getAttribute("d"), { timeout: 1_500 })
       .not.toBe(pausedPath);
@@ -84,9 +86,9 @@ test.describe("landing globe motion", () => {
     await expect(
       page.locator('[data-hero-globe-motion="static"]'),
     ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /globe motion/i }),
-    ).toBeHidden();
+    await expect(page.getByRole("button", { name: /globe motion/i })).toHaveCount(
+      0,
+    );
     expect(runtimeErrors).toEqual([]);
   });
 
