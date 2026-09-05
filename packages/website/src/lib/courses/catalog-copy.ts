@@ -71,7 +71,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 03 · Regulation",
     tagline: "Classify a use case, determine roles, and map obligations.",
     description:
-      "Prohibited, transparency-bound, general-purpose, or high-risk: your use case belongs in one of those classes. Every time-dependent statement names its legal date and primary source. Not legal advice.",
+      "Prohibited, transparency-bound, general-purpose, high-risk, or none of these: the course sorts a use case into the class it belongs to. Every time-dependent statement names its legal date and primary source. Not legal advice.",
     duration: "about 1 hr 50 min",
     unitLabel: "units",
     audience: "Compliance, IT leadership, management",

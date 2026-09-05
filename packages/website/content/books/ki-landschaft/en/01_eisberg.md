@@ -2,7 +2,7 @@
 
 # The iceberg problem
 
-The loud AI debate is about software development and new models. The work where a system could genuinely help every day sits somewhere else, in administration, finance, customer service, procurement. Nobody there calls it AI work. So nobody checks it.
+The loud AI debate is about software development and new models. The work where a system could genuinely help every day sits somewhere else, in administration, finance, customer service, procurement. Nobody there calls it AI work. So hardly anyone checks it.
 
 ## What the Iceberg Index measures
 
@@ -19,7 +19,7 @@ Both values measure a modelled overlap between tasks and technical capabilities.
 
 ## What an organization can infer from this
 
-These US numbers are not a German statistic. Anyone who sells them as one is misleading you. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
+These US numbers are not a German statistic. Anyone who presents them as one has not read the source. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
 
 So do not look at products first. Look at tasks:
 

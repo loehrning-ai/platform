@@ -688,8 +688,10 @@ test.describe("AI-Native Operator Course golden path", () => {
       "xpath=ancestor::*[@data-widget-frame][1]",
     );
     await expect(
+      // Copy lock updated: the exercise now says take rather than list, and
+      // names the run time instead of the elapsed time.
       widgetFrame.getByText(
-        "List three tasks from this week that took more than 30 minutes",
+        "Take three tasks from this week that ran longer than 30 minutes",
         { exact: false },
       ),
     ).toBeVisible();

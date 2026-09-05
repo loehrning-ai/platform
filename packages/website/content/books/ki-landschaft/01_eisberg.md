@@ -2,7 +2,7 @@
 
 # Das Eisberg-Problem
 
-Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Dort sagt niemand KI-Arbeit dazu. Deshalb prüft sie auch niemand.
+Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Dort sagt niemand KI-Arbeit dazu. Deshalb prüft sie kaum jemand.
 
 ## Was der Iceberg Index misst
 
@@ -19,7 +19,7 @@ Beide Werte messen eine modellierte Überschneidung von Aufgaben und technischen
 
 ## Was du daraus ableiten darfst
 
-Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche verkauft, täuscht. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
+Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche ausgibt, hat die Quelle nicht gelesen. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
 
 Schau also nicht zuerst auf Produkte. Schau auf Aufgaben:
 
