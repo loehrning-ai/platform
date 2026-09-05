@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * /neuigkeiten smoke + structure (regression coverage). A small static changelog
@@ -13,25 +18,11 @@ import { test, expect, type Page } from "@playwright/test";
 
 const ROUTE = "/neuigkeiten";
 
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("/neuigkeiten changelog", () => {
   test("loads with 200, shows the heading, and logs no console error", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
@@ -43,8 +34,11 @@ test.describe("/neuigkeiten changelog", () => {
     await expect(h1).toBeVisible();
     await expect(h1).toContainText("Was ist neu");
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("renders changelog entries from the markdown source", async ({

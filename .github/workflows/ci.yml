@@ -9,10 +9,24 @@ permissions:
   contents: read
 
 concurrency:
-  group: verify-${{ github.ref }}
+  # Keyed on the workflow and the ref. `github.workflow` rather than a literal,
+  # so renaming this workflow cannot leave two different workflows sharing one
+  # group. `github.ref` is refs/pull/<n>/merge on a pull request and
+  # refs/heads/main on a push, so the two event kinds never share a group
+  # either: every push to a pull request cancels only that pull request's own
+  # in-flight run.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Cancel-on-push is scoped to pull requests. A new commit there supersedes
+  # the previous one, so the 18-shard e2e matrix still running for a tree
+  # nobody will merge is stopped rather than run to completion.
+  #
   # A push to main is the only run that verifies the commit that actually
   # landed (merges here are squash-only, so the PR run verified a different
-  # tree). Never cancel it. PR runs remain cancel-on-push.
+  # tree), and `verify` below is the required check whose green is the release
+  # signal. GitHub reports a cancelled run as cancelled, never as success, so
+  # cancelling on the default branch would turn a rapid second merge into a
+  # missing release signal for a commit that was never fully tested. Never
+  # cancel it: two pushes to main queue and both run.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:

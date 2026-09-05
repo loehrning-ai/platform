@@ -5,6 +5,11 @@ import {
   type Page,
 } from "@playwright/test";
 import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
+import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
   OPEN_SOURCE_TOOL_ARTIFACTS,
   OPEN_SOURCE_VIDEO_ARTIFACTS,
@@ -54,36 +59,6 @@ const STATUS_LABELS = {
   maintenance: "Wartungsmodus",
   archived: "Archiviert",
 } as const;
-
-function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
-  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
-    message,
-  );
-}
-
-// Production smoke tests treat every browser error as a defect. The sole
-// exception is WebKit's exact navigation-aborted Next RSC prefetch page error,
-// which is also isolated in the blog and workshop route contracts.
-function collectConsoleErrors(page: Page, browserName: string): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => {
-    if (
-      browserName === "webkit" &&
-      isExpectedWebKitRscPrefetchCancellation(err.message)
-    ) {
-      return;
-    }
-    errors.push(err.message);
-  });
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 async function expectStoredAsset(
   request: APIRequestContext,
@@ -340,10 +315,9 @@ async function expectSoftwareGuide(
 
 test.describe("/open-source hub", () => {
   test("loads, shows the h1, renders to the bottom, and logs no console error", async ({
-    browserName,
     page,
   }) => {
-    const errors = collectConsoleErrors(page, browserName);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
@@ -406,10 +380,11 @@ test.describe("/open-source hub", () => {
       }),
     ).toBeVisible();
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
-      [],
-    );
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("keeps the lead preview and primary actions inside the reviewed desktop viewport", async ({
@@ -507,11 +482,10 @@ test.describe("/open-source hub", () => {
 });
 
 test("English open-source hub and one detail per published kind use localized public contracts", async ({
-  browserName,
   page,
 }) => {
   test.setTimeout(90_000);
-  const errors = collectConsoleErrors(page, browserName);
+  const errors = collectBrowserErrors(page);
   const hubResponse = await page.goto("/en/open-source", {
     waitUntil: "domcontentloaded",
   });
@@ -566,7 +540,7 @@ test("English open-source hub and one detail per published kind use localized pu
     );
   }
 
-  expect(meaningfulErrors(errors)).toEqual([]);
+  expect(meaningfulBrowserErrors(errors)).toEqual([]);
 });
 
 test.describe("/open-source mobile", () => {

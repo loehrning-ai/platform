@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * /buecher/[slug] book overview deep-dive (regression coverage). The open-reader
@@ -13,20 +18,6 @@ import { test, expect, type Page } from "@playwright/test";
  * Only ki-landschaft is in the published catalog (src/lib/books.ts) — the
  * other two books are pending re-review and their /buecher/<slug> routes 404.
  */
-
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 // Real data read from src/lib/books.ts + content/books/<slug>/manifest.json.
 // chapterCount = number of manifest chapters (what the page actually renders).
@@ -45,7 +36,7 @@ test.describe("/buecher/[slug] book overview", () => {
       test("loads with h1, TOC count matching the manifest, and hints", async ({
         page,
       }) => {
-        const errors = collectConsoleErrors(page);
+        const errors = collectBrowserErrors(page);
         const res = await page.goto(`/buecher/${book.slug}`, {
           waitUntil: "domcontentloaded",
         });
@@ -87,10 +78,10 @@ test.describe("/buecher/[slug] book overview", () => {
           page.getByRole("link", { name: "Zur Buchübersicht" }),
         ).toHaveAttribute("href", "/buecher");
 
-        const noise = meaningfulErrors(errors);
+        const noise = meaningfulBrowserErrors(errors);
         expect(
           noise,
-          `console errors on /buecher/${book.slug}\n${noise.join("\n")}`,
+          `console errors on /buecher/${book.slug}\n${formatBrowserErrors(noise)}`,
         ).toEqual([]);
       });
 

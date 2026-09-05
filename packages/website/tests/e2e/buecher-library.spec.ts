@@ -1,5 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
-import { isKnownBenignConsoleNoise } from "./fixtures/console-noise";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * /buecher library index deep-dive (regression coverage). The existing
@@ -39,22 +43,6 @@ const BOOKS = [
 
 const HERO_HEADLINE = "Sachbücher mit sichtbaren Quellen und Grenzen.";
 
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[], browserName: string): string[] {
-  return errors.filter(
-    (error) => !isKnownBenignConsoleNoise(error, browserName),
-  );
-}
-
 // Scope to one card via its testid + the unique book heading it contains.
 function cardFor(page: Page, title: string) {
   return page
@@ -65,9 +53,8 @@ function cardFor(page: Page, title: string) {
 test.describe("/buecher library index", () => {
   test(`loads without login, shows the h1 and exactly ${BOOKS.length} book card(s)`, async ({
     page,
-    browserName,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
@@ -79,10 +66,11 @@ test.describe("/buecher library index", () => {
 
     await expect(page.getByTestId("book-card")).toHaveCount(BOOKS.length);
 
-    const noise = meaningfulErrors(errors, browserName);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
-      [],
-    );
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   for (const book of BOOKS) {

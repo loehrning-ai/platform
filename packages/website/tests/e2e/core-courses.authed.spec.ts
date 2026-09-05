@@ -1,4 +1,9 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Projects where the SERVER resolves a real session, so the signed-in DOM is
@@ -38,15 +43,6 @@ const CORE_ROUTES = [
     lessonHeading: "Der Moment, in dem du aufhörst, selbst zu schreiben.",
   },
 ] as const;
-
-function collectBrowserErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (message) => {
-    if (message.type() === "error") errors.push(message.text());
-  });
-  page.on("pageerror", (error) => errors.push(error.message));
-  return errors;
-}
 
 test.describe("authenticated German core-course journey", () => {
   test.beforeEach(({}, testInfo) => {
@@ -98,7 +94,8 @@ test.describe("authenticated German core-course journey", () => {
       await expect(
         page.getByRole("heading", { level: 1, name: route.lessonHeading }),
       ).toBeVisible();
-      expect(errors, errors.join("\n")).toEqual([]);
+      const noise = meaningfulBrowserErrors(errors);
+      expect(noise, formatBrowserErrors(noise)).toEqual([]);
     });
   }
 

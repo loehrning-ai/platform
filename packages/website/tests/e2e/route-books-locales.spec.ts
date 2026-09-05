@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 const CHAPTERS = [
   ["01_eisberg", "Das Eisberg-Problem", "The iceberg problem"],
@@ -73,11 +74,10 @@ function collectErrors(page: Page): string[] {
     }
   });
   page.on("pageerror", (error) => {
-    const expectedRscPrefetchCancellation =
-      /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
-        error.message,
-      );
-    if (expectedRscPrefetchCancellation) return;
+    // Deliberately not engine-scoped here, unlike the shared allowlist entry:
+    // this file has always tolerated the cancellation on every engine, and
+    // narrowing it is a separate decision from removing the duplicated regex.
+    if (isWebKitRscPrefetchCancellation(error.message)) return;
     errors.push(`${page.url()} :: pageerror :: ${error.message}`);
   });
   return errors;

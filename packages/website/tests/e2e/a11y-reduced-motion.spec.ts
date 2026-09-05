@@ -1,5 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
-import { isKnownBenignConsoleNoise } from "./fixtures/console-noise";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * prefers-reduced-motion content-visibility guard (regression coverage).
@@ -20,22 +24,6 @@ test.describe.configure({ timeout: 60_000 });
 const CHAPTER = "/buecher/ki-landschaft/03_reifegrad_ueberblick";
 const HOMEPAGE_STATIC_REVEAL_ROOTS =
   '[data-testid="kurse-section"], [data-testid="ressourcen-section"], [data-testid="platform-principles"]';
-
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[], browserName: string): string[] {
-  return errors.filter(
-    (error) => !isKnownBenignConsoleNoise(error, browserName),
-  );
-}
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
 function firstH1Opacity(page: Page): Promise<number> {
@@ -117,11 +105,10 @@ async function fireAllReveals(page: Page): Promise<void> {
 async function expectReducedMotionHonored(
   page: Page,
   route: string,
-  browserName: string,
   headingText?: RegExp,
   expectVisibleBeforeScroll = false,
 ): Promise<void> {
-  const errors = collectConsoleErrors(page);
+  const errors = collectBrowserErrors(page);
   await page.goto(route, { waitUntil: "domcontentloaded" });
 
   // Guard the test itself: the context truly reports reduced motion.
@@ -250,34 +237,23 @@ async function expectReducedMotionHonored(
     })
     .toEqual([]);
 
-  const noise = meaningfulErrors(errors, browserName);
-  expect(noise, `console errors on ${route}\n${noise.join("\n")}`).toEqual([]);
+  const noise = meaningfulBrowserErrors(errors);
+  expect(
+    noise,
+    `console errors on ${route}\n${formatBrowserErrors(noise)}`,
+  ).toEqual([]);
 }
 
 test.describe("reduced-motion content visibility", () => {
-  test("homepage reveals all resolve to visible", async ({
-    page,
-    browserName,
-  }) => {
-    await expectReducedMotionHonored(page, "/", browserName, /KI/, true);
+  test("homepage reveals all resolve to visible", async ({ page }) => {
+    await expectReducedMotionHonored(page, "/", /KI/, true);
   });
 
-  test("/buecher library reveals all resolve to visible", async ({
-    page,
-    browserName,
-  }) => {
-    await expectReducedMotionHonored(page, "/buecher", browserName);
+  test("/buecher library reveals all resolve to visible", async ({ page }) => {
+    await expectReducedMotionHonored(page, "/buecher");
   });
 
-  test("book chapter reader renders fully visible", async ({
-    page,
-    browserName,
-  }) => {
-    await expectReducedMotionHonored(
-      page,
-      CHAPTER,
-      browserName,
-      /Selbstprüfung/,
-    );
+  test("book chapter reader renders fully visible", async ({ page }) => {
+    await expectReducedMotionHonored(page, CHAPTER, /Selbstprüfung/);
   });
 });

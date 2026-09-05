@@ -1,4 +1,9 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * AI-Native sub-page smoke + interaction coverage (regression coverage, wave 2).
@@ -10,20 +15,6 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
  * marketing copy, so a wording refresh stays green while a real regression
  * (dead page, unwired search, broken funnel link, mobile overflow) fails.
  */
-
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 // Each leaf ships a distinct, stable, above-the-fold anchor beyond its <h1>.
 const SUBPAGES: ReadonlyArray<{
@@ -57,7 +48,7 @@ test.describe("ai-native sub-pages smoke", () => {
     test(`${path} loads public with an h1 and no console error`, async ({
       page,
     }) => {
-      const errors = collectConsoleErrors(page);
+      const errors = collectBrowserErrors(page);
       const response = await page.goto(path, { waitUntil: "domcontentloaded" });
 
       expect(response?.status(), `status for ${path}`).toBe(200);
@@ -67,10 +58,11 @@ test.describe("ai-native sub-pages smoke", () => {
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(anchor(page)).toBeVisible();
 
-      const noise = meaningfulErrors(errors);
-      expect(noise, `console errors on ${path}\n${noise.join("\n")}`).toEqual(
-        [],
-      );
+      const noise = meaningfulBrowserErrors(errors);
+      expect(
+        noise,
+        `console errors on ${path}\n${formatBrowserErrors(noise)}`,
+      ).toEqual([]);
     });
   }
 });

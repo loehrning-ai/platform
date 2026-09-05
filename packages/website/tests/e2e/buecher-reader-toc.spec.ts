@@ -1,4 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Book reader - TOC sidebar, heading list, and anchor deep-links (release hardening
@@ -19,19 +24,6 @@ const SLUG = "ki-landschaft";
 const CHAPTER = "03_reifegrad_ueberblick";
 const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung";
 const READER_PATH = `/buecher/${SLUG}/${CHAPTER}`;
-
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 /** Heading ids the reader actually rendered (rehype-slug/github-slugger). */
 async function renderedHeadingIds(page: Page): Promise<string[]> {
@@ -69,7 +61,7 @@ test.describe("book reader TOC + heading anchors", () => {
   test("renders the chapter, its h1 and heading anchors without console errors", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const res = await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
 
     expect(res?.status(), `status for ${READER_PATH}`).toBe(200);
@@ -81,8 +73,11 @@ test.describe("book reader TOC + heading anchors", () => {
     const ids = await renderedHeadingIds(page);
     expect(ids.length, "rendered h2/h3 heading ids").toBeGreaterThan(1);
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${READER_PATH}\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${READER_PATH}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("sidebar TOC lists the chapter headings as fragment links (desktop)", async ({
