@@ -14,6 +14,11 @@
     "content/eu-ai-act-kurs/block-5-governance-lessons.json",
     "content/eu-ai-act-kurs/block-6-praxis-lessons.json",
     "content/eu-ai-act-kurs/glossary.json",
-    "content/eu-ai-act-kurs/quiz/questions.json"
+    "content/eu-ai-act-kurs/quiz/questions.json",
+    "content/ki-und-gesellschaft/block-1-arbeit-lessons.json",
+    "content/ki-und-gesellschaft/block-2-deepfakes-lessons.json",
+    "content/ki-und-gesellschaft/block-3-ethik-lessons.json",
+    "content/ki-und-gesellschaft/quiz/questions.json",
+    "content/claude/de/"
   ]
 }
