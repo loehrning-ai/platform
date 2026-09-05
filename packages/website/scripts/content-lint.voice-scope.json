@@ -29,6 +29,19 @@
     "content/ai-native/course.json",
     "content/ai-native/modules.json",
     "content/ai-native/quiz/questions.json",
-    "content/books/ki-arbeitsalltag/"
+    "content/books/ki-arbeitsalltag/",
+    "src/lib/codex/lessons/de/",
+    "src/lib/data-infrastructure/lessons/de/",
+    "src/lib/ai-native-operator/modules/de/",
+    "content/books/ki-landschaft/01_eisberg.md",
+    "content/books/ki-landschaft/02_methodik.md",
+    "content/books/ki-landschaft/03_reifegrad_ueberblick.md",
+    "content/books/ki-landschaft/04_bundesland.md",
+    "content/books/ki-landschaft/05_branchen.md",
+    "content/books/ki-landschaft/06_eu_ki_verordnung.md",
+    "content/books/ki-landschaft/07_schnellstart.md",
+    "content/books/ki-landschaft/08_fahrplan.md",
+    "content/books/ki-landschaft/09_ausblick.md",
+    "content/books/ki-landschaft/10_anhang.md"
   ]
 }
