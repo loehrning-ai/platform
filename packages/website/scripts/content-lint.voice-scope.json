@@ -19,6 +19,15 @@
     "content/ki-und-gesellschaft/block-2-deepfakes-lessons.json",
     "content/ki-und-gesellschaft/block-3-ethik-lessons.json",
     "content/ki-und-gesellschaft/quiz/questions.json",
-    "content/claude/de/"
+    "content/claude/de/",
+    "content/ai-native/modul-1-lessons.json",
+    "content/ai-native/modul-2-lessons.json",
+    "content/ai-native/modul-3-lessons.json",
+    "content/ai-native/modul-4-lessons.json",
+    "content/ai-native/challenges.json",
+    "content/ai-native/glossary.json",
+    "content/ai-native/course.json",
+    "content/ai-native/modules.json",
+    "content/ai-native/quiz/questions.json"
   ]
 }
