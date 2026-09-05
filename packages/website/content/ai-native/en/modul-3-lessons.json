@@ -36,15 +36,15 @@
           "id": "modul_3_lesson_1_section_1",
           "title": "The documentation paradox",
           "readTimeMinutes": 2,
-          "content": "Statements such as \"We discussed this, but I cannot find the decision\" indicate a record-keeping problem. Searching consumes time and can delay a decision.\n\nA CRM or decision log records structured facts, owners and sources. Human judgment remains necessary for interpretation, conflicts and approval.",
-          "keyTakeaway": "Use records for structured data and your judgment to interpret them."
+          "content": "\"We discussed this. I just cannot find the decision.\" Not a memory problem. A record-keeping problem. The search costs time, and the decision waits.\n\nA CRM or a decision log holds the decision, owners and sources. Interpreting it, settling conflicts, approving: that stays with you.",
+          "keyTakeaway": "The record holds the facts. You hold the judgment."
         },
         {
           "id": "modul_3_lesson_1_section_2",
           "title": "BI for one person",
           "readTimeMinutes": 3,
-          "content": "Business-intelligence systems answer defined questions from maintained data. When notes are dispersed, the same question can trigger a manual search across several repositories.\n\nAn Obsidian vault with Smart Connections or Copilot can support retrieval for one person. A question such as \"Which decisions about Customer Y are documented in the last 90 days?\" should return source paths for review.\n\nValue does not follow from the number of stored notes. It depends on maintenance, metadata, provenance and retrieval quality. Pricing, model access and data flow depend on the current plugin and provider configuration.",
-          "keyTakeaway": "AI-assisted retrieval can make a maintained external knowledge base practical, but every result still needs source review."
+          "content": "A BI system answers a controller's defined questions out of maintained data. Your notes sit in several places, so you search by hand.\n\nAn Obsidian vault with Smart Connections or Copilot does that job for one person. You ask: \"Which decisions about Customer Y are documented in the last 90 days?\" The answer carries source paths, and you open them before you believe it.\n\nThe value is not in how many notes you stored. It is maintenance, metadata, provenance and retrieval quality. Pricing, model access and data flow follow the current plugin and provider configuration.",
+          "keyTakeaway": "AI-assisted retrieval makes a maintained knowledge base workable. Every result is still checked at the source."
         }
       ],
       "quiz": [
@@ -73,7 +73,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Embeddings can support semantic retrieval over maintained notes. Result quality, cost and data flow depend on the model, index and configuration."
+          "explanation": "Embeddings find notes that match in meaning, not only in wording. Quality, cost and data flow follow the model, index and configuration."
         }
       ]
     },
@@ -100,21 +100,21 @@
           "id": "modul_3_lesson_0_section_1",
           "title": "Installing Obsidian",
           "readTimeMinutes": 3,
-          "content": "This setup lesson has no time limit. Complete and verify each step before continuing.\n\n**Step 1:** Open `obsidian.md`, download the current build for your operating system, verify the source and install the application.\n\n**Step 2: decide on synchronization.** A local vault does not automatically prevent external data flows. Before enabling a sync service, review encryption, accounts, device access, recovery and organizational approval.\n\n**Step 3: import the vault template.**\n\nOption A: Create an empty practice vault, unzip `vault-template.zip` and copy its contents into the vault.\n\nOption B: Back up an existing vault and copy only the required directories. Do not overwrite existing files without a diff and backup.",
-          "keyTakeaway": "Complete and verify the setup once before relying on it in the daily workflow."
+          "content": "No time limit here. Each step gets finished and checked before the next.\n\n**Step 1:** Open `obsidian.md`, download the current build for your operating system, verify the source and install the application.\n\n**Step 2: decide on synchronization.** A local vault does not mean no data leaves the device. Before any sync service, check encryption, accounts, device access, recovery and your organization's approval.\n\n**Step 3: import the vault template.**\n\nOption A: Create an empty practice vault, unzip `vault-template.zip` and copy its contents into the vault.\n\nOption B: Back up an existing vault and copy only the directories you need. No file gets overwritten without a diff and a backup.",
+          "keyTakeaway": "Set it up once, check it once, then let it into your day."
         },
         {
           "id": "modul_3_lesson_0_section_2",
           "title": "The 5 core plugins",
           "readTimeMinutes": 8,
-          "content": "Community plugins execute code with access to the vault. Before each installation, review the publisher, repository, current version, change history, requested permissions, data flow and maintenance status. Enable only the plugins required for the practice workflow.\n\n**Course configuration:**\n1. **Templater:** template folder `_System/Templates`; enable JavaScript only for a reviewed need\n2. **Dataview:** begin with queries that do not use JavaScript; review code before enabling JavaScript queries\n3. **Smart Connections:** verify the embedding model and network behavior in current documentation\n4. **Obsidian Copilot:** verify provider, model, billing, retention and API-key storage\n5. **Note Companion:** optional; keep automatic moves disabled initially\n\nTest each plugin with fictional data. Model names, prices, menus and capabilities can change; use current documentation rather than a fixed course claim.",
+          "content": "A community plugin is someone else's code with access to your vault. Before every installation you check the publisher, repository, current version, change history, requested permissions, data flow and maintenance status. Only what the practice workflow needs gets enabled.\n\n**Course configuration:**\n1. **Templater:** template folder `_System/Templates`; enable JavaScript only for a reviewed need\n2. **Dataview:** begin with queries that do not use JavaScript; review code before enabling JavaScript queries\n3. **Smart Connections:** verify the embedding model and network behavior in current documentation\n4. **Obsidian Copilot:** verify provider, model, billing, retention and API-key storage\n5. **Note Companion:** optional; keep automatic moves disabled initially\n\nEvery plugin gets a test with fictional data. Model names, prices, menus and capabilities change; current documentation beats any course claim.",
           "keyTakeaway": "Install only reviewed plugins and document version, permissions, data flow and rollback."
         },
         {
           "id": "modul_3_lesson_0_section_3",
           "title": "Web Clipper + your first daily note",
           "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper in the browser:**\n1. Open the official Clipper page and install the extension from the browser's official source.\n2. Select the practice vault and `00 Inbox/` as the target.\n3. Leave the AI Interpreter disabled initially. Before enabling it, verify which provider receives content, how keys are stored and what data is retained.\n\nTest with a non-sensitive public page. Check the title, URL, capture date and content of the new note.\n\n**First daily note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nThen verify:\n- expected plugins and versions are visible\n- the Clipper writes to the correct practice folder\n- the template produces the expected file name and fields\n- linking or chat features operate only with the documented configuration\n\nIf a check fails, stop at that step, record the error and correct it before using real data.",
+          "content": "**Obsidian Web Clipper in the browser:**\n1. Open the official Clipper page and install the extension from the browser's official source.\n2. Select the practice vault and `00 Inbox/` as the target.\n3. Leave the AI Interpreter off. Switch it on and you first check which provider receives content, where the key lives and what is retained.\n\nTest with a non-sensitive public page. Check the title, URL, capture date and content of the new note.\n\n**First daily note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nThen verify:\n- expected plugins and versions are visible\n- the Clipper writes to the correct practice folder\n- the template produces the expected file name and fields\n- linking or chat features operate only with the documented configuration\n\nA failed check stops the workflow there. Record the error, fix it, then bring in real data.",
           "keyTakeaway": "Verify the Clipper, template, data flow and failure path with non-sensitive test data."
         }
       ],
@@ -447,28 +447,28 @@
           "id": "modul_3_lesson_2_section_1",
           "title": "PARA as a four-part storage structure",
           "readTimeMinutes": 2,
-          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n**P. Projects:** things with a clear endpoint, for example the explicitly fictitious project \"Close the proposal for Customer Alpha.\"\n\n**A. Areas:** ongoing responsibilities with no endpoint, such as sales, finance or team.\n\n**R. Resources:** reference material like articles, PDFs and templates.\n\n**A. Archive:** completed projects and resources that are no longer active.\n\n**Decision tree per note:**\n- active project → Projects\n- ongoing responsibility → Areas\n- reference material → Resources\n- completed or inactive → Archive\n\nThe structure is a working convention, not a general rule. Adapt it to your findability, retention and data-protection needs.",
-          "keyTakeaway": "Projects, Areas, Resources and Archive separate time-bound work, ongoing responsibility, reference material and completed content."
+          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n**P. Projects:** anything with an endpoint, for example the explicitly fictitious project \"Close the proposal for Customer Alpha.\"\n\n**A. Areas:** ongoing responsibilities with no endpoint, such as sales, finance or team.\n\n**R. Resources:** reference material like articles, PDFs and templates.\n\n**A. Archive:** completed projects and resources that are no longer active.\n\n**Decision tree per note:**\n- active project → Projects\n- ongoing responsibility → Areas\n- reference material → Resources\n- completed or inactive → Archive\n\nPARA is a working convention, not a law. Where findability, retention or data protection ask for something else, they win.",
+          "keyTakeaway": "Four folders, one question per note: time-bound, ongoing, reference or done?"
         },
         {
           "id": "modul_3_lesson_2_section_2",
           "title": "The skeleton in the vault",
           "readTimeMinutes": 3,
-          "content": "```\nvault-root/\n├── 00 Inbox/              ← new input\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← overview note\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nThe German path names are retained because they are part of the supplied template. If you imported it in Lesson 3.0, the structure already exists.\n\n**Bounded migration exercise:**\n1. Confirm the inbox\n2. Move in three to five active Projects\n3. Create only the Areas needed now\n4. Classify a small, representative set of reference files\n5. Move completed material to Archive\n\nDo not migrate the full repository until search, links and backup work with this sample.",
-          "keyTakeaway": "Start with a small set of active material and expand only after a successful check."
+          "content": "```\nvault-root/\n├── 00 Inbox/              ← new input\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← overview note\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nThe German path names are retained because they are part of the supplied template. If you imported it in Lesson 3.0, the structure already exists.\n\n**Bounded migration exercise:**\n1. Confirm the inbox\n2. Move in three to five active Projects\n3. Create only the Areas needed now\n4. Classify a small, representative set of reference files\n5. Move completed material to Archive\n\nThe rest stays where it is until search, links and backup work on that sample.",
+          "keyTakeaway": "The sample first. The full repository after."
         },
         {
           "id": "modul_3_lesson_2_section_3",
           "title": "MOC: the master-note concept",
           "readTimeMinutes": 4,
-          "content": "**MOC = Map of Content.** A master note can serve as the hub for a project.\n\nFictitious structure from `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Proposal for Customer Alpha (fictitious)\n\n## Goal\nDraft for three fictitious sample machines; price and delivery date are unverified placeholders.\n\n## Status\n- [x] fictitious inquiry recorded\n- [ ] verify technical details\n- [ ] approve the proposal internally\n\n## Participants\n- Fictitious role Alpha: decision\n- Fictitious role Beta: price approval\n\n## Open questions\n- Have price, availability and discount been confirmed?\n```\n\nThe YAML field names and values remain unchanged because they are identifiers in the supplied template. The MOC is a status board. In a real note, use only the necessary, approved data and appropriate access permissions.",
+          "content": "**MOC = Map of Content.** One master note per project, the hub for everything else.\n\nFictitious structure from `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Proposal for Customer Alpha (fictitious)\n\n## Goal\nDraft for three fictitious sample machines; price and delivery date are unverified placeholders.\n\n## Status\n- [x] fictitious inquiry recorded\n- [ ] verify technical details\n- [ ] approve the proposal internally\n\n## Participants\n- Fictitious role Alpha: decision\n- Fictitious role Beta: price approval\n\n## Open questions\n- Have price, availability and discount been confirmed?\n```\n\nThe YAML field names and values remain unchanged because they are identifiers in the supplied template. The MOC is a status board, not a dumping ground. A real note carries only necessary, approved data and matching access permissions.",
           "keyTakeaway": "A Project MOC keeps status, next actions, participants and links in one reviewable overview note."
         },
         {
           "id": "modul_3_lesson_2_section_4",
           "title": "Tagging policy",
           "readTimeMinutes": 3,
-          "content": "Begin with a small documented tag set, for example:\n- `#todo`: open action\n- `#entscheidung`: documented decision\n- `#warten-auf`: blocked action\n- `#idee`: untested proposal\n- `#followup`: item to review again\n- `#archivieren`: archive candidate\n\nUse folders for broad storage, MOCs for Project context and tags for a few cross-cutting states. Do not place personal names or sensitive attributes in tags without a data policy.\n\nA number such as ten is a starting constraint, not a universal rule. If the set grows, review overlaps, document meanings and test whether queries remain predictable.",
+          "content": "Begin with a small documented tag set, for example:\n- `#todo`: open action\n- `#entscheidung`: documented decision\n- `#warten-auf`: blocked action\n- `#idee`: untested proposal\n- `#followup`: item to review again\n- `#archivieren`: archive candidate\n\nFolders for coarse filing. MOCs for Project context. Tags for the few states that cut across everything. Personal names or sensitive attributes do not belong in tags without a data policy.\n\nTen tags is a starting limit, not a law of nature. If the set grows, check overlaps, document meanings and test whether queries still answer predictably.",
           "keyTakeaway": "Keep tags small and documented; use folders for storage and MOCs for Project context."
         }
       ],
@@ -555,21 +555,21 @@
           "id": "modul_3_lesson_3_section_1",
           "title": "Smart Connections in action",
           "readTimeMinutes": 3,
-          "content": "In the fictional example, a new note asks about a volume discount for Customer Alpha. Smart Connections suggests older discount notes and a current policy.\n\nA similarity score is not professional evidence. Open the source note, review its date and context, and confirm whether the current approval rule permits the same terms.\n\nSmart Connections uses embeddings to retrieve semantically related text. The model, runtime, network access and cost depend on the current plugin configuration.",
-          "keyTakeaway": "Semantic suggestions are search leads; review the model, data flow and every retrieved source note."
+          "content": "You open a new note. Fictitious question: volume discount for Customer Alpha? Smart Connections offers older discount notes and a current policy.\n\nA similarity score proves nothing. Whether the current rule still permits those terms shows up in the source note, with date and context.\n\nUnderneath it runs on embeddings, vectors for semantic similarity. Which model produces them, where it runs, whether it reaches the network and what it costs is in your plugin configuration, not in this course.",
+          "keyTakeaway": "A suggestion is a lead, not evidence. Model, data flow and source note you check yourself."
         },
         {
           "id": "modul_3_lesson_3_section_2",
           "title": "Copilot as a vault search interface",
           "readTimeMinutes": 4,
-          "content": "In an isolated practice vault, you can ask: \"Which fictitious discount decisions are documented in the last 90 days? Give the file path and date for each statement.\"\n\nA sample output might list entries for Customer Alpha, Beta or Gamma. Treat it as a search draft regardless: open every linked note, check the context and watch for missing or contradictory entries.\n\nA second practice question is: \"Summarize the approved practice notes on Customer Alpha and flag every statement without a source.\"\n\nNeither speed nor factual accuracy is guaranteed. Source links improve verifiability, but they don't replace checking the content yourself.",
-          "keyTakeaway": "Copilot output remains a search draft; source paths make subsequent review possible."
+          "content": "In the isolated practice vault you ask Copilot: \"Which fictitious discount decisions are documented in the last 90 days? Give the file path and date for each statement.\"\n\nBack comes a list, say Customer Alpha, Beta and Gamma. A search draft, nothing more. You open every linked note, check the context and look for what is missing or contradictory.\n\nSecond practice question: \"Summarize the approved practice notes on Customer Alpha and flag every statement without a source.\"\n\nNothing here is guaranteed, neither speed nor accuracy. Source links make the result checkable. They do not make it checked.",
+          "keyTakeaway": "Copilot delivers search drafts with source paths. It does not deliver the review."
         },
         {
           "id": "modul_3_lesson_3_section_3",
           "title": "Asking the right questions",
           "readTimeMinutes": 3,
-          "content": "Copilot results depend on the question and indexed source material. Apply three constraints:\n\n**Concrete rather than abstract.** Ask \"Which discount decisions are documented in the last 90 days?\" instead of \"What do I think about pricing policy?\"\n\n**Time-bound.** Use a period such as \"Q1 2026\" or \"since March 2026\" when it is relevant to the task.\n\n**Source-linked.** Require the file path, date and relevant passage for each statement.\n\nSmart Connections suggests related notes; Copilot answers a query over indexed material. Both outputs are retrieval aids, not authoritative records.\n\nCompare retrieval time, missing-source rate and correction effort with the previous workflow. Keep the configuration only if those measures improve for the task.",
+          "content": "Copilot answers as well as your question and index allow. Three constraints help:\n\n**Concrete rather than abstract.** Not \"What do I think about pricing policy?\" but \"Which discount decisions are documented in the last 90 days?\"\n\n**Time-bound.** A period such as \"Q1 2026\" or \"since March 2026\", as soon as it fits the task.\n\n**Source-linked.** For every statement the file path, the date and the relevant passage.\n\nSmart Connections suggests related notes. Copilot answers a query over indexed material. Both are retrieval aids, not authoritative records.\n\nMeasure retrieval time, missing-source rate and correction effort against your old workflow. If the numbers do not improve, the configuration goes back out.",
           "keyTakeaway": "Three principles: concrete, time-bound, with sources."
         }
       ],
@@ -599,7 +599,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Smart Connections uses embeddings for semantic similarity. Verify which model is configured and where note content is processed."
+          "explanation": "Embeddings, not keyword search. Which model computes them, and where your note content goes, is in your current configuration."
         },
         {
           "id": "modul_3_lesson_3_q2",
@@ -626,7 +626,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Concrete, time-bound questions with source requirements narrow the retrieval task and improve verifiability; they do not guarantee factual accuracy."
+          "explanation": "Concrete, time-bound, with a source requirement: the hits get narrower and reviewable. Factual accuracy is still not guaranteed."
         }
       ]
     },
@@ -680,22 +680,22 @@
           "id": "modul_3_lesson_4_section_1",
           "title": "The browser-tab reality",
           "readTimeMinutes": 2,
-          "content": "Count the browser tabs you keep for later reading or reference. An open tab is not a durable record: it has no consistent storage location, metadata or retrieval path.\n\nThis lesson tests a capture workflow in which Web Clipper saves an article, the AI Interpreter proposes metadata and Obsidian indexes the note. Record the time per article instead of adopting a fixed example result.",
-          "keyTakeaway": "A captured article is durable and searchable; an open browser tab is not."
+          "content": "Count your open tabs. The ones for reading later, the ones you keep as reference. An open tab is not a record: no fixed storage location, no metadata, no way back to it.\n\nThe workflow in this lesson: Web Clipper saves the article, the AI Interpreter proposes metadata, Obsidian indexes the note. Time it per article yourself instead of adopting an example number.",
+          "keyTakeaway": "A note stays, and it can be searched. A tab does neither."
         },
         {
           "id": "modul_3_lesson_4_section_2",
           "title": "Review a clip with the AI Interpreter",
           "readTimeMinutes": 3,
-          "content": "Open a non-sensitive public article for the exercise and start Web Clipper. The panel may offer a title, target folder, tags, template and optional summary.\n\nBefore saving, verify:\n- title, canonical URL and capture date\n- the proposed folder against the storage rule\n- tags against the documented tag set\n- every summary statement against the article\n- removal of embedded personal or confidential details\n\nThe AI Interpreter may send article content to a configured model provider. Review provider, model, API-key storage, retention and cost in the current extension. Store the source alongside every generated summary.",
-          "keyTakeaway": "The AI Interpreter proposes a summary, tags and a folder before import; review each field before saving."
+          "content": "Take a non-sensitive public article and start Web Clipper. The panel may offer title, target folder, tags, template and an optional summary.\n\nBefore saving, verify:\n- title, canonical URL and capture date\n- the proposed folder against the storage rule\n- tags against the documented tag set\n- every summary statement against the article\n- removal of embedded personal or confidential details\n\nWith the AI Interpreter active, article content goes to the model provider. So check provider, model, API-key storage, retention and cost in the current extension. Every generated summary is stored with its source, never without.",
+          "keyTakeaway": "The AI Interpreter proposes summary, tags and folder. Data flow and every field you check before saving."
         },
         {
           "id": "modul_3_lesson_4_section_3",
           "title": "A capture criterion",
           "readTimeMinutes": 3,
-          "content": "Capture an article when it is relevant to an active Project, contains recurring reference material or provides a documented source that is difficult to replace.\n\nDo not capture it when it duplicates an existing source, has no foreseeable use or repeats unsupported claims.\n\nBefore saving, complete this sentence: \"I will use this source for [Project or Area] to answer [specific question].\" If no defensible sentence exists, close the tab.\n\n**Exercise:** Select no more than three existing tabs. Store source, capture date and intended use, review generated fields and process the notes during the next scheduled inbox session.",
-          "keyTakeaway": "Store only sources with a concrete use and traceable metadata."
+          "content": "An article comes in when it touches an active Project, supplies reference material you need again, or is a documented source that is hard to replace.\n\nIt stays out as a duplicate, without a foreseeable use, or when it only repeats unsupported claims.\n\nThe test before saving: \"I will use this source for [Project or Area] to answer [specific question].\" If you cannot make that sentence hold, close the tab.\n\n**Exercise:** No more than three existing tabs. Store source, capture date and intended use, review the generated fields and process the notes in the next scheduled inbox session.",
+          "keyTakeaway": "No concrete use and no traceable metadata means nothing gets stored."
         }
       ],
       "quiz": [
@@ -724,7 +724,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The AI Interpreter can propose a summary, tags and a folder before import. The actual provider and data flow depend on current configuration."
+          "explanation": "Before import it proposes a summary, tags and a folder. Which provider sees the content to do that is in your configuration."
         }
       ]
     },
@@ -782,22 +782,22 @@
           "id": "modul_3_lesson_5_section_1",
           "title": "A bounded maintenance workflow",
           "readTimeMinutes": 3,
-          "content": "A knowledge base remains useful only when new entries are processed and overview notes are maintained. Use a bounded session with four steps:\n\n1. **Inspect the inbox:** count new clips, transcripts and notes; do not forward real data automatically without approval.\n2. **Classify:** assign each entry to Project, Area, Resource or Archive. Leave uncertain entries marked in the inbox rather than filing them blindly.\n3. **Update MOCs:** add status, next action and source link for affected Projects.\n4. **Create the daily note:** carry priorities and open points from reviewed records.\n\nSet a time box suited to the volume and record backlog and misclassification. An empty inbox is not proof of quality if items were filed incorrectly.",
-          "keyTakeaway": "Maintain the inbox, MOCs and daily notes in a bounded workflow and measure backlog and misclassification."
+          "content": "A knowledge base nobody maintains turns back into a pile of files. What holds that off is a fixed, bounded session with four steps:\n\n1. **Inspect the inbox:** count new clips, transcripts and notes; do not forward real data automatically without approval.\n2. **Classify:** assign each entry to Project, Area, Resource or Archive. Uncertain entries stay flagged in the inbox instead of being filed blindly.\n3. **Update MOCs:** add status, next action and source link for affected Projects.\n4. **Create the daily note:** carry priorities and open points over from reviewed records.\n\nThe time box follows your volume. Backlog and misclassification you write down. An empty inbox proves nothing when the items landed in the wrong place.",
+          "keyTakeaway": "A bounded pass over inbox, MOCs and daily note. What gets measured is backlog and misclassification."
         },
         {
           "id": "modul_3_lesson_5_section_2",
           "title": "RCTFC: the prompt schema",
           "readTimeMinutes": 3,
-          "content": "**RCTFC** means **Role, Context, Task, Format, Constraints.**\n\nOpen request:\n> \"Write a customer decline email.\"\n\nStructured brief:\n- **Role:** sales representative at a mid-sized mechanical-engineering company\n- **Context:** fictional established Customer Alpha has made a documented request that cannot be fulfilled\n- **Task:** prepare an internal decline-email draft\n- **Format:** subject, greeting, two paragraphs and signature\n- **Constraints:** fewer than 120 words, no invented reasons or commitments, and any alternative stated only as a reviewed placeholder\n\nThe fields restrict decisions that the model would otherwise infer from common patterns. A structured draft still requires review. `P020-rctfc-template` in the course materials provides the template.",
+          "content": "**RCTFC** means **Role, Context, Task, Format, Constraints.**\n\nOpen request:\n> \"Write a customer decline email.\"\n\nStructured brief:\n- **Role:** sales representative at a mid-sized mechanical-engineering company\n- **Context:** fictional established Customer Alpha has made a documented request that cannot be fulfilled\n- **Task:** prepare an internal decline-email draft\n- **Format:** subject, greeting, two paragraphs and signature\n- **Constraints:** fewer than 120 words, no invented reasons or commitments, and any alternative stated only as a reviewed placeholder\n\nEvery field takes a decision away from the model that it would otherwise guess. The draft still needs review. `P020-rctfc-template` in the course materials is the template.",
           "keyTakeaway": "Role + Context + Task + Format + Constraints. Without structure: generic. With it: more constrained."
         },
         {
           "id": "modul_3_lesson_5_section_3",
           "title": "Structured Output (JSON) + Few-shot + CoT",
           "readTimeMinutes": 4,
-          "content": "**Structured Output (JSON):** Sometimes you want **processable data**, not prose.\n\n```\nAnalyze this meeting transcript. Return strictly valid JSON:\n\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": \"...\"}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": \"YYYY-MM-DD\", \"verantwortlich\": \"...\"}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": \"...\"}]\n}\n\nNo prose or explanation; return only the JSON.\n```\n\nThe German JSON keys remain unchanged because downstream workflow steps may depend on those identifiers. Validate the result before passing it to n8n or Python.\n\n**Few-shot:** provide 2-3 examples of the required result before the actual request. This constrains the output pattern.\n\n**Stepwise analysis:** request explicit intermediate steps only when they are safe and useful for review:\n```\nWork through the task in four steps:\n1. Analyze the situation.\n2. Identify the 3 main options.\n3. Evaluate each option.\n4. State your recommendation.\n```\n\nDo not request hidden reasoning. Ask for concise, reviewable evidence and conclusions instead. For simple text tasks, intermediate steps usually add length without improving the result.\n\nThe daily routine governs consistency. RCTFC, JSON schemas and examples govern output quality. Measure both against the task rather than assuming a fixed productivity gain.",
-          "keyTakeaway": "Use a repeatable routine and explicit output constraints; measure whether they improve the actual task."
+          "content": "**Structured Output (JSON):** A machine downstream needs **a fixed schema**, not prose.\n\n```\nAnalyze this meeting transcript. Return strictly valid JSON:\n\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": \"...\"}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": \"YYYY-MM-DD\", \"verantwortlich\": \"...\"}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": \"...\"}]\n}\n\nNo prose or explanation; return only the JSON.\n```\n\nThe German JSON keys remain unchanged because downstream workflow steps may depend on those identifiers. Validate the result before n8n or Python touch it.\n\n**Few-shot:** give 2-3 examples of the required result before the actual request. That pins down the output pattern.\n\n**Stepwise analysis:** request explicit intermediate steps only when they are safe and useful for review:\n```\nWork through the task in four steps:\n1. Analyze the situation.\n2. Identify the 3 main options.\n3. Evaluate each option.\n4. State your recommendation.\n```\n\nDo not ask for hidden reasoning. Ask for concise, reviewable evidence instead. On a simple text task, intermediate steps add length and nothing else.\n\nThe daily routine governs consistency. RCTFC, JSON schemas and examples govern output quality. The task decides whether either pays off, not a fixed productivity gain.",
+          "keyTakeaway": "A repeatable routine, explicit output constraints, real validation. You measure the benefit on the task."
         }
       ],
       "quiz": [
@@ -826,7 +826,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "RCTFC is the five-part structure for precise prompts: define the role, provide context, name the task, set the format, set the constraints."
+          "explanation": "RCTFC in five fields: define the role, give the context, name the task, set the format, set the constraints."
         },
         {
           "id": "modul_3_lesson_5_q2",
@@ -853,7 +853,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "For complex tasks, ask for concise, reviewable evidence and assumptions. Hidden reasoning is neither required nor proof of quality."
+          "explanation": "Concise, reviewable evidence and assumptions are enough. Hidden reasoning is not required, and it proves nothing about quality."
         }
       ]
     },
@@ -882,29 +882,29 @@
           "id": "modul_3_lesson_6_section_1",
           "title": "The third connection",
           "readTimeMinutes": 3,
-          "content": "An Obsidian plugin provides an interface inside the vault; copy and paste transfers selected content manually. An MCP integration adds a programmatic interface and therefore expands the permission and review surface.\n\nThe course reference `obsidian-claude-code-mcp` describes a WebSocket bridge. Before use, review its repository, current version, maintainer, license, dependencies, security notices and compatibility.\n\nDepending on the implemented tools, a server may read, search, create or modify notes. Do not grant access to the full vault by default. Begin with a copied practice vault and read-only operations limited to one folder.",
-          "keyTakeaway": "A WebSocket bridge adds programmatic vault access; restrict permissions and test read-only first."
+          "content": "Two ways into the vault you know: the plugin inside Obsidian, and copy and paste by hand. The third is MCP, a programmatic interface. What a client may do grows, and so does what you review.\n\nThe course reference `obsidian-claude-code-mcp` describes a WebSocket bridge. Before you use it, review the repository, current version, maintainer, license, dependencies, security notices and compatibility.\n\nDepending on its tools, the server reads, searches, creates or modifies notes. You do not hand over the whole vault. You start on a copy of the practice vault, read-only, one folder.",
+          "keyTakeaway": "MCP opens the vault to programs. Keep the permissions narrow, test read-only first."
         },
         {
           "id": "modul_3_lesson_6_section_2",
           "title": "Setup",
           "readTimeMinutes": 4,
-          "content": "The course bundle contains `install-obsidian-claude-code-mcp.sh`. Do not run a setup script without reviewing it.\n\n**Before execution:**\n1. Read the script and pinned dependency versions\n2. Verify the repository URL and commit\n3. Back up the Claude Code configuration\n4. Set an explicit path to a copied practice vault\n5. Review loopback binding, port and authentication for the bridge\n6. Confirm that existing MCP entries are not overwritten\n7. Do not provide secrets as command arguments\n\nThen run start and stop checks. Record changed files, running processes and the complete rollback procedure.",
-          "keyTakeaway": "Review installation source, changes, network binding and rollback; use a copied practice vault first."
+          "content": "The course bundle contains `install-obsidian-claude-code-mcp.sh`. No setup script runs unread.\n\n**Before execution:**\n1. Read the script and pinned dependency versions\n2. Verify the repository URL and commit\n3. Back up the Claude Code configuration\n4. Set an explicit path to a copied practice vault\n5. Review loopback binding, port and authentication for the bridge\n6. Confirm that existing MCP entries are not overwritten\n7. Do not provide secrets as command arguments\n\nThen a start check and a stop check. Changed files, running processes and the complete rollback procedure get recorded.",
+          "keyTakeaway": "Source, changes, network binding, rollback: all reviewed, and on a copied practice vault."
         },
         {
           "id": "modul_3_lesson_6_section_3",
           "title": "The first query",
           "readTimeMinutes": 4,
-          "content": "Begin with a read-only test in the copied practice vault:\n\n> \"List the top-level directories and count Markdown files in each. Do not open file contents and do not perform any write action.\"\n\nCompare the output with a local file listing. Confirm that unapproved directories are absent.\n\nThen expand to a bounded task:\n> \"Read only approved MOCs in `10 Projects/` with `status: aktiv`. Prepare an internal status draft with source path and date for every statement. Do not write a file yet.\"\n\nAllow a new file in a separate output directory only after reviewing sources, permissions and output. Record runtime and correction effort in your own test.",
-          "keyTakeaway": "Begin read-only, reconcile visible data and allow writes only after review."
+          "content": "The first test is read-only, in the copied practice vault:\n\n> \"List the top-level directories and count Markdown files in each. Do not open file contents and do not perform any write action.\"\n\nCompare the output with a local file listing. If an unapproved directory shows up, the test failed.\n\nThen expand to a bounded task:\n> \"Read only approved MOCs in `10 Projects/` with `status: aktiv`. Prepare an internal status draft with source path and date for every statement. Do not write a file yet.\"\n\nA new file in a separate output directory waits until sources, permissions and output are reviewed. Runtime and correction effort you measure yourself.",
+          "keyTakeaway": "Read first, reconcile what is visible, allow writes last."
         },
         {
           "id": "modul_3_lesson_6_section_4",
           "title": "More use cases",
           "readTimeMinutes": 3,
-          "content": "**Follow-up extraction:**\n> \"Find all open `#warten-auf` entries in the approved practice notes. Create internal drafts and name the source file for each statement. Don't send anything.\"\n\n**Decision overview:**\n> \"List practice notes tagged `#entscheidung`. Give the date, topic, decision, follow-up action and source file for each. Flag any contradictions.\"\n\n**Fictitious customer profile:**\n> \"Build a profile for Customer Alpha (fictitious) from the approved practice notes. Don't use any real personal or contact data.\"\n\nMCP can enable controlled access to a vault. It doesn't turn notes into an automatically correct database. Permissions, data minimization, source verification and read-only testing all remain necessary. Product roadmaps and integrations can change; check the current official documentation instead of relying on a date prediction.",
-          "keyTakeaway": "MCP does not make notes automatically correct; permissions, data minimization and source review remain necessary."
+          "content": "**Follow-up extraction:**\n> \"Find all open `#warten-auf` entries in the approved practice notes. Create internal drafts and name the source file for each statement. Don't send anything.\"\n\n**Decision overview:**\n> \"List practice notes tagged `#entscheidung`. Give the date, topic, decision, follow-up action and source file for each. Flag any contradictions.\"\n\n**Fictitious customer profile:**\n> \"Build a profile for Customer Alpha (fictitious) from the approved practice notes. Don't use any real personal or contact data.\"\n\nMCP gives you controlled access to a vault. It does not turn your notes into a correct database. Permissions, data minimization, source verification and read-only testing all stay. Roadmaps and integrations change; read the current official documentation instead of trusting a date prediction.",
+          "keyTakeaway": "MCP does not make notes more correct. Permissions, data minimization and source review stay."
         }
       ],
       "quiz": [
@@ -933,7 +933,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Copilot is an interface inside Obsidian. MCP describes a tool interface for compatible clients; transport and available actions depend on the specific server."
+          "explanation": "Copilot is an interface inside Obsidian. MCP is a tool interface for compatible clients; transport and available actions depend on the specific server."
         }
       ]
     }
