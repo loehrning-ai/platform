@@ -12,7 +12,7 @@
       "blockId": "block_2",
       "number": 1,
       "title": "Where your data goes",
-      "subtitle": "How data protection differs between AI tools",
+      "subtitle": "Where a prompt goes before the answer",
       "durationMinutes": 5,
       "keyConcepts": [
         "Product edition",
@@ -23,17 +23,17 @@
       "sections": [
         {
           "id": "block_2_lesson_1_section_1",
-          "title": "Assess product and operation together",
+          "title": "Check product and operation together",
           "readTimeMinutes": 3,
-          "content": "Data protection and information security depend on the concrete product edition, contract, configuration, and workflow. Check at least:\n\n| Review field | Concrete questions |\n|---|---|\n| **Roles** | Who is the controller, processor, or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata, and logs leave which system? In which regions are they stored or processed? |\n| **Provider use** | Are inputs or outputs used for model development, quality review, or abuse monitoring? Which settings and contractual commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions, and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs, and backups retained? How do access, deletion, and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups, and configurations does the approval cover? |\n\nCloud, local, free, paid, consumer, and enterprise are not data protection classes. Local systems can still have telemetry, extensions, or network access. An enterprise contract does not automatically cover every function and data class. Review current contractual and product documentation during procurement and after material changes.",
-          "keyTakeaway": "Assess roles, data flows, provider use, access, retention, and the approved purpose. Product category and brand do not replace this review."
+          "content": "Where does your prompt land? Not the brand decides it. Product edition, contract, configuration, workflow do. Six fields:\n\n| Review field | Concrete questions |\n|---|---|\n| **Roles** | Who is the controller, processor, or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata, and logs leave which system? In which regions are they stored or processed? |\n| **Provider use** | Are inputs or outputs used for model development, quality review, or abuse monitoring? Which settings and contractual commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions, and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs, and backups retained? How do access, deletion, and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups, and configurations does the approval cover? |\n\nCloud or local, free or paid, consumer or enterprise: sales categories, not protection classes. A local system sends telemetry, loads extensions, reaches the network. An enterprise contract does not cover every function and data class. Read the current contract and product documentation at procurement and after material changes.",
+          "keyTakeaway": "Roles, data flows, provider use, access, retention, approved purpose. That is your check. Product category and brand name check nothing."
         },
         {
           "id": "block_2_lesson_1_section_2",
-          "title": "Shadow AI and how to address it",
+          "title": "Shadow AI, and what works against it",
           "readTimeMinutes": 2,
-          "content": "Shadow AI means using AI products or functions for organizational tasks without approval. It includes more than private chat accounts: browser extensions, new functions inside already procured software, personal API keys, and local models outside the operating process can also qualify.\n\nAn unapproved workflow may lack a suitable contract, legal basis, permissions, data region, retention rule, logging, or technical controls. Disabling training use does not resolve those questions by itself.\n\nControls must be usable in practice: a current approval matrix, understandable data rules, reachable owners, a reviewable procurement path, and suitable approved alternatives. Depending on risk, technical measures can include access control, configuration policies, logging, or blocks.\n\nBefore processing work information, check the published approval status for the exact purpose, data class, product edition, and active configuration.",
-          "keyTakeaway": "Shadow AI covers any unapproved AI workflow. Clear approvals, suitable alternatives, and technical controls reduce the risk."
+          "content": "Shadow AI is any AI use for work that nobody approved. The private chat account is the best-known case. Browser extensions count too, and the new function in long-bought software, the personal API key, the local model outside the process.\n\nAn unapproved workflow can lack contract, legal basis, permissions, data region, retention, logging, technical controls. The switch marked \"training use off\" answers none of that.\n\nWhat helps has to work in daily life. A current approval matrix, data rules people understand, contacts people reach, a procurement path people can check. Approved alternatives good enough for the task. Add access control, configuration policies, logging or blocks by risk.\n\nAnd you? Look up the published approval status before any work processing. This purpose, this data class, this product edition, this active configuration.",
+          "keyTakeaway": "Shadow AI is every AI workflow without approval. Clear approvals, usable alternatives and technical controls lower the risk."
         }
       ],
       "quiz": [
@@ -43,17 +43,17 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Any free service, because broad adoption is sufficient approval",
+              "text": "Any free service, because wide adoption counts as approval",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "A business product in a reviewed configuration that has been approved by IT and data protection",
+              "text": "An enterprise product approved by IT and data protection, in the reviewed configuration",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "A service with European headquarters, without reviewing the product or data flows",
+              "text": "A service with a European head office, unchecked product and data flows",
               "isCorrect": false
             },
             {
@@ -62,7 +62,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Security depends on the specific product, contract, permissions, data classes, and tenant or data-region configuration. A brand name alone is not enough."
+          "explanation": "Safe is what was checked: product, contract, permissions, data classes, tenant and data region. A brand name checks nothing. Nor a European head office."
         },
         {
           "id": "block_2_lesson_1_q2",
@@ -89,7 +89,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Shadow AI means unapproved AI workflows. These can include consumer services, extensions, personal API keys, local models, or new functions inside procured software."
+          "explanation": "An AI workflow nobody approved. A consumer offer, an extension, a personal API key, a local model, a new function in long-bought software."
         }
       ]
     },
@@ -109,59 +109,59 @@
       "sections": [
         {
           "id": "block_2_lesson_2_section_1",
-          "title": "An example four-level model",
+          "title": "Four levels, an example",
           "readTimeMinutes": 3,
-          "content": "Each organization determines which data may be processed in which system. The four levels below are an example, not a universal mapping to product names.\n\n**Level 1: Public**\nInformation that has already been published, such as approved website copy or product catalogues. Copyright, licences, embedded personal data, integrity, and the organization's tool policy still apply. Public does not mean unrestricted.\n\n**Level 2: Internal**\nInformation not intended for external recipients, such as internal project plans or meeting records. Use it only in a workflow approved for that purpose and data class.\n\n**Level 3: Confidential**\nInformation with heightened business, contractual, or data-protection requirements, such as unpublished metrics, customer lists, or supplier terms. Processing requires specific approval and reviewed contracts, configuration, permissions, retention, and, where applicable, a legal basis or data protection impact assessment.\n\n**Level 4: Restricted**\nInformation whose loss or misuse could cause serious harm, such as health and payroll data, application documents, or unpublished inventions. General-purpose assistants are prohibited by default. Processing is possible only in an expressly approved, tightly scoped system and workflow. Passwords, API keys, and other credentials do not belong in prompts.\n\nYour organization may use different labels and permissions. Its published policy controls; the tool's brand does not.",
-          "keyTakeaway": "Data classes and tool approvals are organization-specific. Check purpose, rights, contract, configuration, and permissions; a product name does not grant approval."
+          "content": "Your organization sets which data may go into which system. Not this course. The four levels here are an example, no mapping to product names.\n\n**Level 1: Public**\nWhat is already published: approved website copy, the product catalogue. You still check copyright, licences, embedded personal data and the tool approval. Public does not mean free to use.\n\n**Level 2: Internal**\nWhat is not meant to leave the building. Project plans, meeting records. They belong only in a workflow approved for this purpose and data class.\n\n**Level 3: Confidential**\nWhat needs more protection in business, contractual or data protection terms: unpublished figures, customer lists, supplier terms. You need a concrete approval, plus reviewed contracts, configuration, permissions and retention. A legal basis or data protection impact assessment can come on top.\n\n**Level 4: Restricted**\nWhat can do serious damage when lost or mishandled. Health data, payroll data, application documents, inventions before filing. General assistants are blocked by default. Processing only in an expressly approved, tightly scoped system and workflow. Passwords, API keys and other credentials belong in no prompt, whatever the level.\n\nYour organization may name the levels differently and draw the lines elsewhere. Fine. What counts is the published policy, not the brand name.",
+          "keyTakeaway": "Your organization sets data class and tool approval. You check purpose, rights, contract, configuration and permissions; a product name grants nothing."
         },
         {
           "id": "block_2_lesson_2_section_2",
           "title": "The decision tree",
           "readTimeMinutes": 2,
-          "content": "Check five points before every input:\n\n1. **Purpose:** What specific task should the system perform?\n2. **Data and rights:** Which data types, people, copyrights, trade secrets, or contractual duties are involved?\n3. **Internal classification:** Which data class does your organization's policy assign?\n4. **Approval:** Is this exact product, configuration, extension set, and workflow approved for that use?\n5. **Minimization:** What can you omit, anonymize, or replace with synthetic examples?\n\nIf an answer is missing, do not enter the data. Use the organization's published approval or escalation route. A paid licence, enterprise tenant, or disabled training setting does not answer these questions by itself.\n\nConservative classification reduces risk but does not replace a legal basis, purpose limitation, authorization, or contract.",
-          "keyTakeaway": "Check purpose, data and rights, internal classification, specific system approval, and minimization. If an answer is missing, stop and use the organization's review route."
+          "content": "Five questions before every input. Every time:\n\n1. **Purpose:** What specific task should the system perform?\n2. **Data and rights:** Which data types, people, copyrights, trade secrets, or contractual duties are involved?\n3. **Internal classification:** Which data class does your organization's policy assign?\n4. **Approval:** Is this exact product, configuration, extension set, and workflow approved for that use?\n5. **Minimization:** What can you omit, anonymize, or replace with synthetic examples?\n\nOne answer missing, you enter nothing. Full stop. Then through the published approval or escalation route. A paid licence answers none of the five, and neither does an enterprise tenant or a disabled training setting.\n\nCautious classification lowers the risk. It replaces no legal basis, purpose limitation, authorization or contract.",
+          "keyTakeaway": "Purpose, data and rights, internal classification, concrete system approval, minimization. One answer missing, you stop and take the organizational route."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_2_q1",
-          "questionText": "An employee wants to process a customer list containing names and email addresses in an unapproved AI service. Which statement is correct?",
+          "questionText": "An employee wants to process a customer list with names and email addresses in an unapproved AI service. Which statement holds?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Business contact details are always public and may be used without further checks",
+              "text": "Business contact details are always public and usable without further checks",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "A paid licence is sufficient approval",
+              "text": "A paid licence is approval enough",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Processing must stop until the purpose, legal basis, data class, and specific tool approval have been established",
+              "text": "Processing waits until purpose, legal basis, data class and the concrete tool approval are settled",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Digitally stored data may never be processed by software",
+              "text": "Digitally stored data may not be processed by software",
               "isCorrect": false
             }
           ],
-          "explanation": "Names and email addresses may be personal data. Permitted processing depends on factors including purpose, legal basis, internal classification, contract, configuration, and minimization. A product name or pricing tier does not decide this."
+          "explanation": "Names and email addresses can be personal data. Whether processing is permitted follows from purpose, legal basis, internal classification, contract, configuration and minimization. Not from the product name. Not from the price tier."
         },
         {
           "id": "block_2_lesson_2_q2",
-          "questionText": "What should you do if you are unsure which confidentiality level applies to a piece of data?",
+          "questionText": "What should you do when the confidentiality level of a data item is unclear?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Choose the lowest level to avoid delaying the work",
+              "text": "Pick the lowest level so work does not stall",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Stop the input and consult the applicable policy or responsible approval function",
+              "text": "Stop the input and use the policy or the responsible approval function",
               "isCorrect": true
             },
             {
@@ -175,7 +175,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A conservative classification can be useful, but it does not replace approval. If the data class or permitted workflow is unclear, do not proceed until it has been resolved."
+          "explanation": "Cautious classification is good. An approval it is not. If the data class or the permitted workflow is unclear, you settle it first and enter afterwards."
         }
       ]
     },
@@ -184,7 +184,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Exercise: classify ten data items",
-      "subtitle": "Apply data classification in practice",
+      "subtitle": "What the level alone misses",
       "durationMinutes": 5,
       "keyConcepts": [
         "Data classification",
@@ -196,21 +196,21 @@
           "id": "block_2_lesson_3_section_1",
           "title": "The exercise",
           "readTimeMinutes": 3,
-          "content": "Use the example model from the previous lesson. These classifications are assumptions for a fictional organization; your own policy controls in practice.\n\n| No. | Data item | Example level | Additional check |\n|-----|-----------|---------------|------------------|\n| 1 | Approved website copy | Public | Usage rights, personal data, and currency |\n| 2 | Internal meeting record | Internal | Participants, topics, consent or legal basis, approved workflow |\n| 3 | Quarterly revenue before publication | Confidential | Market-disclosure, secrecy, and access rules |\n| 4 | Customer list with contact details | Confidential | Purpose, legal basis, processor terms, and minimization |\n| 5 | Payroll record | Restricted | Expressly approved specialist systems only; no general assistants |\n| 6 | Published product catalogue | Public | Rights, version, and approved use |\n| 7 | Application documents | Restricted | Purpose limitation, access, retention, and effects on applicants |\n| 8 | Invention description before filing | Restricted | Patent and trade-secret controls; express approval required |\n| 9 | Draft press release | Internal or confidential | Content and planned publication date |\n| 10 | Supplier terms | Confidential | Contractual secrecy and permissions |\n\nDo more than assign a level. Record the purpose, minimization, required approval, and responsible function.",
-          "keyTakeaway": "A data class is only part of the decision. Purpose, rights, specific system approval, configuration, and minimization determine whether a workflow is permitted."
+          "content": "Take the example model from the last lesson. The levels below are assumptions for a fictional company. Your policy applies, not this table.\n\n| No. | Data item | Example level | Additional check |\n|-----|-----------|---------------|------------------|\n| 1 | Approved website copy | Public | Usage rights, personal data, and currency |\n| 2 | Internal meeting record | Internal | Participants, topics, consent or legal basis, approved workflow |\n| 3 | Quarterly revenue before publication | Confidential | Market-disclosure, secrecy, and access rules |\n| 4 | Customer list with contact details | Confidential | Purpose, legal basis, processor terms, and minimization |\n| 5 | Payroll record | Restricted | Expressly approved specialist systems only; no general assistants |\n| 6 | Published product catalogue | Public | Rights, version, and approved use |\n| 7 | Application documents | Restricted | Purpose limitation, access, retention, and effects on applicants |\n| 8 | Invention description before filing | Restricted | Patent and trade-secret controls; express approval required |\n| 9 | Draft press release | Internal or confidential | Content and planned publication date |\n| 10 | Supplier terms | Confidential | Contractual secrecy and permissions |\n\nAssigning a level is the easy part. Note purpose, minimization, approval and owner beside every row.",
+          "keyTakeaway": "The data class is one part of the decision. Purpose, rights, system approval, configuration and minimization decide whether the workflow is permitted."
         },
         {
           "id": "block_2_lesson_3_section_2",
-          "title": "Review and practical note",
+          "title": "What the table shows",
           "readTimeMinutes": 2,
-          "content": "**Review of the example model:**\n\n- **Public (items 1 and 6):** The content has already been approved for publication. Rights, personal data, currency, and organizational tool rules still apply.\n- **Internal (item 2 and sometimes item 9):** The content stays within its intended audience. Use only the approved workflow and remove unnecessary details.\n- **Confidential (items 3, 4, and 10; sometimes item 9):** Contract, legal basis, permissions, data region, retention, and system configuration must fit the purpose. An enterprise product alone is insufficient.\n- **Restricted (items 5, 7, and 8):** General assistants are blocked in this example. Any exception requires a documented workflow reviewed by the relevant technical, legal, and security functions.\n\nA real policy must also name owners, approved products and features, prohibited data, incident reporting, and the review process for new uses.",
-          "keyTakeaway": "Record not only the level, but also the purpose, approved system, permitted features, owner, and escalation route."
+          "content": "**How the example model resolves the ten rows:**\n\n- **Public (items 1 and 6):** Already approved. You still check rights, personal data, currency and the tool rules.\n- **Internal (item 2, sometimes item 9):** Stays inside the intended audience. Only the approved workflow, and out goes what the purpose does not need.\n- **Confidential (items 3, 4 and 10; item 9 depending on content):** Contract, legal basis, permissions, data region, retention and configuration have to fit the purpose. \"It is an enterprise product\" is no argument.\n- **Restricted (items 5, 7 and 8):** General assistants are blocked here. An exception needs a documented workflow reviewed on the technical and legal side.\n\nA real policy needs more than four levels: owners, approved products and functions, prohibited data, a reporting route for incidents, a process for new cases.",
+          "keyTakeaway": "The level alone documents nothing. Purpose, approved system, permitted functions, owners and escalation route belong with it."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_3_q1",
-          "questionText": "How should an invention description before a patent filing be handled under the example model?",
+          "questionText": "How is an invention description before a patent filing handled under the example model?",
           "answerOptions": [
             {
               "id": "a",
@@ -219,7 +219,7 @@
             },
             {
               "id": "b",
-              "text": "As internal; an enterprise subscription is sufficient for processing",
+              "text": "As internal; an enterprise subscription is enough for processing",
               "isCorrect": false
             },
             {
@@ -229,15 +229,15 @@
             },
             {
               "id": "d",
-              "text": "As restricted; do not enter it without an expressly approved workflow because disclosure can jeopardize patent or trade-secret protection",
+              "text": "As restricted; not without an expressly approved workflow, because disclosure can jeopardize patent or trade-secret protection",
               "isCorrect": true
             }
           ],
-          "explanation": "Uncontrolled disclosure can jeopardize novelty or trade-secret protection. The approved patent, security, and data-protection process must determine whether a specific use is permitted; neither cloud nor local processing is automatically appropriate."
+          "explanation": "Uncontrolled disclosure can cost the novelty, or the trade-secret protection. The approved patent, security and data protection process decides whether a concrete use is permitted. Neither cloud nor local is automatically right."
         },
         {
           "id": "block_2_lesson_3_q2",
-          "questionText": "An internal meeting record needs to be summarized with AI. Which selection rule is correct?",
+          "questionText": "An internal meeting record is to be summarized with AI. Which selection rule holds?",
           "answerOptions": [
             {
               "id": "a",
@@ -246,12 +246,12 @@
             },
             {
               "id": "b",
-              "text": "Only a workflow approved for meeting records, the data involved, and the exact configuration; unnecessary details must be removed",
+              "text": "Only a workflow approved for records, the data types involved and the exact configuration; unnecessary details come out",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "No system is ever suitable, including an approved specialist system",
+              "text": "No system is ever suitable, not even an approved one",
               "isCorrect": false
             },
             {
@@ -260,7 +260,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Meeting records can contain personal, confidential, or restricted information. The product, contract, recording and transcription features, permissions, retention, and purpose must all be expressly approved."
+          "explanation": "A record looks harmless and can carry personal, confidential or restricted content. Product, contract, recording and transcription, permissions, retention and purpose must be expressly approved. Installed locally does not mean approved."
         }
       ],
       "widgets": [
