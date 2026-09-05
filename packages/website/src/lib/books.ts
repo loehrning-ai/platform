@@ -69,11 +69,11 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/eu-ai-act-kurs",
     relatedResourceLabel: "EU AI Act Kurs öffnen",
     description:
-      "Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Ausgangspunkt qualitativ erfassen und wie man Benchmarks vorsichtig liest.",
+      "Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohne Score qualitativ erfasst, was fünf Arbeitsfelder digitaler und KI-bezogener Reife verlangen und wie du einen Benchmark liest, ohne mehr hineinzulesen, als drinsteht.",
     highlights: [
-      "Qualitative Standortbestimmung ohne proprietären Score",
+      "Qualitative Selbstprüfung ohne proprietären Score",
       "Fünf Arbeitsfelder für digitale und KI-bezogene Reife",
-      "Einordnung von Benchmarks, Branchen und Grenzen",
+      "Benchmarks, Branchen und ihre Grenzen, eingeordnet",
     ],
     pdfPath: "/api/buecher/ki-landschaft/download.pdf",
     pages: [
@@ -114,7 +114,7 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/ki-fuehrerschein",
     relatedResourceLabel: "Zum KI-Führerschein",
     description:
-      "Ein ruhiger Einstieg in Begriffe, typische Anwendungsfälle, Prompting, Datenschutz und Artikel 4. Gedacht für Menschen, die KI im Arbeitsalltag nutzen, aber keine technische Vorbildung mitbringen.",
+      "Begriffe, typische Anwendungsfälle, Prompting, Datenschutz und Artikel 4. Geschrieben für Menschen, die KI im Arbeitsalltag nutzen und keine technische Vorbildung mitbringen.",
     highlights: [
       "Grundbegriffe ohne Anbieterjargon",
       "Prompt-Beispiele mit Ziel, Kontext und Prüfschritt",
@@ -159,7 +159,7 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/ai-native",
     relatedResourceLabel: "Zum AI-Native Arbeitskurs",
     description:
-      "Eine praktische Werkzeugkarte für kleine Arbeitskontexte: Welche Aufgaben eignen sich für KI, welche bleiben menschlich, wie prüft man Ergebnisse und wie dokumentiert man wiederholbare Abläufe.",
+      "Welche Aufgabe gibst du an KI ab, welche behältst du? Eine Werkzeugkarte für kleine Arbeitskontexte: Aufgaben sortieren, Ergebnisse prüfen, wiederholbare Abläufe dokumentieren.",
     highlights: [
       "Werkzeugklassen statt Rankinglisten",
       "Auswahlkriterien, Risiken und Kontrollfragen",

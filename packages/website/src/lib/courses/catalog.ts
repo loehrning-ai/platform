@@ -157,7 +157,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 01 · KI-Kompetenz",
     tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
     description:
-      "Der Einstieg erklärt Funktionsweise, Fehlertypen, Datenschutz und sichere Nutzung. Er ordnet außerdem die seit 27. Juli 2026 geltende Fassung von Artikel 4 ein. Mit lokal erstellter Teilnahmebestätigung.",
+      "Wie generative KI antwortet, wo sie scheitert, welche Daten draußen bleiben und wie du sie trotzdem sicher einsetzt. Dazu die seit 27. Juli 2026 geltende Fassung von Artikel 4, eingeordnet. Am Ende eine lokal erstellte Teilnahmebestätigung.",
     href: "/ki-fuehrerschein",
     startHref: "/ki-fuehrerschein/kurs",
     continueHref: "/ki-fuehrerschein/kurs",
@@ -181,7 +181,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Deepfakes, Bias und Folgen für Arbeit anhand von Beispielen prüfen.",
     description:
-      "Drei Blöcke untersuchen veränderte Arbeit, manipulierte Medien und diskriminierende Systeme. Quellen, Interessen und Unsicherheit werden getrennt ausgewiesen.",
+      "Arbeit verändert sich, Medien werden manipuliert, Systeme diskriminieren. Drei Blöcke trennen belastbare Befunde von Behauptungen. Quelle, Interesse und Unsicherheit stehen jeweils getrennt.",
     href: "/ki-und-gesellschaft",
     startHref: "/ki-und-gesellschaft/kurs",
     continueHref: "/ki-und-gesellschaft/kurs",
@@ -205,7 +205,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Anwendungsfall klassifizieren, Rolle bestimmen, Pflichten zuordnen.",
     description:
-      "Der Kurs trennt verbotene Praktiken, Transparenzpflichten, GPAI und Hochrisiko-Systeme. Zeitabhängige Aussagen nennen Rechtsstand und Primärquelle. Keine Rechtsberatung.",
+      "Verboten, transparenzpflichtig, GPAI oder Hochrisiko: Der Kurs sortiert deinen Anwendungsfall in die richtige Klasse. Jede zeitabhängige Aussage nennt Rechtsstand und Primärquelle. Rechtsberatung ist das nicht.",
     href: "/eu-ai-act-kurs",
     startHref: "/eu-ai-act-kurs/kurs",
     continueHref: "/eu-ai-act-kurs/kurs",
@@ -229,7 +229,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
     description:
-      "Vier Module zeigen einen wiederholbaren Arbeitsablauf für Recherche, Dokumentation und Automatisierung. Übungen benennen Werkzeug, Eingabe, Prüfschritt und Abbruchkriterium.",
+      "Ein Arbeitsablauf, der sich wiederholen lässt: Recherche, Dokumentation, Automatisierung. Vier Module, und jede Übung benennt Werkzeug, Eingabe, Prüfschritt und Abbruchkriterium.",
     href: "/ai-native",
     startHref: "/ai-native/kurs/modul_1",
     continueHref: "/ai-native/kurs/modul_1/modul_1_lesson_1",
@@ -262,7 +262,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Claude mit explizitem Kontext, Werkzeugen und Prüfungen einsetzen.",
     description:
-      "Zwölf Lektionen behandeln Prompt-Aufbau, Kontextdateien, Tool-Nutzung, Grounding, Reviews, Evaluation und Zusammenarbeit. Jede Lektion verbindet ein Modell mit einer begrenzten Übung.",
+      "Zwölf Lektionen, immer dasselbe Muster: ein Modell, eine begrenzte Übung. Die Themen: Prompt-Aufbau, Kontextdateien, Tool-Nutzung, Grounding, Reviews, Evaluation und Zusammenarbeit.",
     href: "/kurse/open-source/claude",
     startHref: "/kurse/open-source/claude/kurs/mental-model",
     continueHref: "/kurse/open-source/claude/kurs",
@@ -325,7 +325,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Codeaufgaben mit Spezifikation, Tests und Review an Codex delegieren.",
     description:
-      "Zwölf Lektionen behandeln Sandbox-Grenzen, AGENTS.md, Aufgabenspezifikation, Akzeptanzkriterien, Werkzeugwahl, parallele Arbeit und Code-Review. Der Abschlussfall verbindet den gesamten Ablauf.",
+      "Codex schreibt den Code. Du schreibst die Spezifikation, die Akzeptanzkriterien und das Review. Zwölf Lektionen zu Sandbox-Grenzen, AGENTS.md, Werkzeugwahl und paralleler Arbeit; der Abschlussfall zieht alles zusammen.",
     href: "/kurse/open-source/codex",
     startHref: "/kurse/open-source/codex/kurs/L01",
     continueHref: "/kurse/open-source/codex/kurs",
@@ -387,7 +387,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Speicher-, Streaming- und Konsistenzentscheidungen systematisch vergleichen.",
     description:
-      "Zwölf Lektionen behandeln CAP und PACELC, Datenmodelle, Dateiformate, Lakehouse-Tabellen, Streaming, CDC, Idempotenz und Daten-SLAs. Simulationen machen Ausfall- und Skalierungsgrenzen sichtbar.",
+      "Wo bricht ein Datensystem? Zwölf Lektionen zu CAP und PACELC, Datenmodellen, Dateiformaten, Lakehouse-Tabellen, Streaming, CDC, Idempotenz und Daten-SLAs. Simulationen zeigen die Ausfall- und Skalierungsgrenze, bevor der Betrieb sie zeigt.",
     href: "/kurse/open-source/data-infrastructure",
     startHref: "/kurse/open-source/data-infrastructure/kurs/mental-model",
     continueHref: "/kurse/open-source/data-infrastructure/kurs",
@@ -450,7 +450,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Eine belastbare Datenpipeline von der Quelle bis zur Nutzung entwerfen.",
     description:
-      "Zwölf Kapitel behandeln Ingest, Streaming, Speicherung, Compute, Orchestrierung, Qualität, Discovery, Serving und Governance. Siebzehn Simulationen und ein Abschlussfall zeigen typische Fehlerketten.",
+      "Eine Pipeline scheitert selten an einer Stelle. Zwölf Kapitel folgen den Daten von Ingest über Streaming, Speicherung, Compute, Orchestrierung, Qualität, Discovery und Serving bis zur Governance. Siebzehn Simulationen und ein Abschlussfall spielen die typischen Fehlerketten durch.",
     href: "/kurse/open-source/data-engineering-fundamentals",
     startHref: "/kurse/open-source/data-engineering-fundamentals/home",
     continueHref: "/kurse/open-source/data-engineering-fundamentals",
@@ -509,7 +509,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Modelle bewerten, Fehlinterpretationen erkennen und Betrieb überwachen.",
     description:
-      "Zwölf Kapitel verbinden Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimente, Kausalität und Drift. Siebenunddreißig Simulationen zeigen, wie Kennzahlen täuschen können.",
+      "Eine Kennzahl kann gut aussehen und trotzdem täuschen. Zwölf Kapitel verbinden Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimente, Kausalität und Drift. Siebenunddreißig Simulationen zeigen, wo genau das passiert.",
     href: "/kurse/open-source/data-science",
     startHref: "/kurse/open-source/data-science",
     continueHref: "/kurse/open-source/data-science",
@@ -571,7 +571,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "KI-gestützte Arbeit mit Zuständigkeit, Kontrolle und Messung organisieren.",
     description:
-      "Neun Module mit 39 Lektionen behandeln Engineering, Produktarbeit, Betrieb, Rollen, Organisationsmodell, Daten, Governance und Messung. Dreißig Übungen prüfen konkrete Entscheidungen statt Begriffsabfrage.",
+      "Wer trägt die Verantwortung, wenn KI mitarbeitet? Neun Module mit 39 Lektionen zu Engineering, Produktarbeit, Betrieb, Rollen, Organisationsmodell, Daten, Governance und Messung. Dreißig Übungen fragen nach Entscheidungen, nicht nach Begriffen.",
     href: "/kurse/open-source/ai-native-operator",
     startHref: "/kurse/open-source/ai-native-operator/mindset/1",
     continueHref: "/kurse/open-source/ai-native-operator",

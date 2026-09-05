@@ -19,73 +19,73 @@ export interface DemoCopy {
 
 export const demoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "Viele Mittelstandsanalysen entstehen in Excel. Das Praxisbeispiel zeigt, wie KI dort helfen kann, wo Tabellen, Formeln und Plausibilitätschecks ohnehin liegen.",
+    why: "Viele Analysen im Mittelstand entstehen in Excel. Also setzt das Praxisbeispiel dort an: bei den Formeln, Pivots und Plausibilitätschecks, die es ohnehin schon gibt.",
     proof:
       "Sandbox-Szenario: 42 fiktive Rollen im Controlling und eine angenommene Entlastung von 4,2 Stunden pro Woche und Person. Keine der beiden Zahlen ist ein Messergebnis.",
     ogSubtitle: "Excel-Lab: Formel, Pivot, Prognose im Beispiel.",
   },
   word: {
-    why: "Memos, Briefe und strukturierte Dokumente kosten täglich Zeit. Das Praxisbeispiel zeigt, wie ein Assistent Dokumentmuster nutzt, ohne Stil, Quellen und Freigabeprozess zu verlieren.",
+    why: "Memos, Briefe, Vorlagen: jeden Tag dieselbe Arbeit. Das Praxisbeispiel lässt einen Assistenten Dokumentmuster nutzen, ohne dass Stil, Quellen und Freigabe verloren gehen.",
     proof:
       "Sandbox-Szenario: ein fiktives Monatsvolumen von 180 Entwürfen mit klaren Prüfschritten. Es misst keinen produktiven Durchsatz.",
     ogSubtitle: "Word-Lab mit Musterstil und Review.",
   },
   "outbound-workflow": {
-    why: "Generische Nachrichten sind schlecht prüfbar. Wenn ein Entwurf konkret auf ein öffentliches Signal Bezug nimmt, lässt sich nachvollziehen, warum er geschrieben wurde und welche Quelle dahintersteht.",
+    why: "Eine generische Nachricht kann niemand prüfen. Bezieht sich der Entwurf auf ein öffentliches Signal, siehst du, warum er geschrieben wurde und welche Quelle dahintersteht.",
     proof:
       "Sandbox-Szenario: Beispielkontakte, öffentliche Signale und ein Quellencheck vor Versand.",
     ogSubtitle: "Nachrichten mit öffentlichen Signalen begründen.",
   },
   "agent-pipeline": {
-    why: "Getrennte Schritte für Recherche, Synthese, Kritik und Redaktion machen Zuständigkeiten sichtbar. Der zusätzliche Koordinationsaufwand ist nur bei Aufgaben vertretbar, die von unabhängigen Prüfungen profitieren.",
+    why: "Recherche, Synthese, Kritik, Redaktion: vier Schritte, vier Zuständigkeiten. Der Koordinationsaufwand lohnt sich nur, wenn eine unabhängige Prüfung die Aufgabe besser macht.",
     proof:
       "Sandbox-Szenario: ein protokollierter Ablauf mit vier Rollen und ein hypothetischer Vergleich manueller und assistierter Entwurfszeit. Es ist kein gemessenes Produktivitätsergebnis.",
     ogSubtitle: "Vier spezialisierte Agenten, ein Memo.",
   },
   "n8n-supply-chain": {
-    why: "Ausnahme-Kommunikation folgt oft klaren Regeln: Verzug erkennen, Bestand prüfen, Nachricht entwerfen, Nachbestellung markieren. Das Praxisbeispiel zeigt, wo Automatisierung endet und menschliche Kontrolle beginnt.",
+    why: "Verzug erkennen, Bestand prüfen, Nachricht entwerfen, Nachbestellung markieren. Ausnahmen in der Lieferkette folgen Regeln, und Regeln lassen sich automatisieren. Das Praxisbeispiel zeigt, wo die Automatik endet und ein Mensch entscheidet.",
     proof:
       "Sandbox-Szenario: Statusereignis, Bestandsprüfung, Nachricht, Fallback und Review-Schritt.",
     ogSubtitle: "Supply-Chain-Ausnahmen automatisch koordiniert.",
   },
   "rag-vertragsassistent": {
-    why: "RAG kann Suchzeit reduzieren, wenn Quellenqualität und Review-Prozess stimmen. Das Praxisbeispiel zeigt Fundstellen und Grenzen, nicht eine rechtsverbindliche Auskunft.",
+    why: "RAG spart Suchzeit. Aber nur, wenn das Archiv sauber ist und ein Review dahintersteht. Das Praxisbeispiel zeigt Fundstellen und Grenzen, keine rechtsverbindliche Auskunft.",
     proof:
       "Sandbox-Szenario: Beispielarchiv, Fundstellenkarten und angenommene Suchzeitreduktion im Kontext des Praxisbeispiels.",
     ogSubtitle: "Chat mit Beispielverträgen; Antworten zeigen Fundstellen.",
   },
   "rechnung-zu-sap": {
-    why: "Rechnungseingang ist in vielen Firmen noch manuelle Arbeit. Das Praxisbeispiel zeigt einen begrenzten KI-Einsatz mit klaren Feldern, Validierung und menschlicher Freigabe.",
+    why: "Rechnungseingang ist in vielen Firmen Handarbeit. Das Praxisbeispiel begrenzt den KI-Einsatz auf das, was prüfbar bleibt: klare Felder, Validierung, menschliche Freigabe.",
     proof:
       "Sandbox-Szenario: PDF-Rechnung, Feldextraktion, Duplikatprüfung und Review vor Import.",
     ogSubtitle: "PDF-Beispiel rein, IDoc-Entwurf zur Prüfung raus.",
   },
   "prompt-scanner": {
-    why: "Wer KI im Unternehmen nutzt, braucht Governance vor dem Prompt, nicht erst nach dem Vorfall. Das Praxisbeispiel zeigt, wie PII und Geschäftsgeheimnisse vor der Weitergabe markiert werden.",
+    why: "Governance gehört vor den Prompt, nicht hinter den Vorfall. Das Praxisbeispiel markiert PII und Geschäftsgeheimnisse, bevor ein Text das Haus verlässt.",
     proof:
       "Sandbox-Szenario: Beispielvolumen für Prompt-Prüfung; PII-Blockade als Kontrollmechanismus.",
     ogSubtitle: "PII-Hinweise markiert, bevor ein Prompt weitergegeben wird.",
   },
   "cost-drift-observability": {
-    why: "LLMs ohne Observability sind schwer zu betreiben. Logs, Budget-Alerts und Qualitätsmetriken machen sichtbar, ob ein KI-Workflow stabil bleibt.",
+    why: "Ein LLM ohne Observability betreibst du blind. Logs, Budget-Alerts und Qualitätsmetriken zeigen, ob ein KI-Workflow stabil bleibt oder gerade kippt.",
     proof:
       "Sandbox-Szenario: 4 Beispiel-Anwendungen; Budget-Monitoring soll Overspend-Risiken früher zeigen.",
     ogSubtitle: "Spend, Latenz und Drift als simulierte Betriebsansicht.",
   },
   "llm-observability": {
-    why: "Ob ein LLM-System besser oder schlechter wird, lässt sich nur mit eigenen Messpunkten beurteilen. Das Praxisbeispiel zeigt, wie Eval-Metriken, Drift-Erkennung und ein menschlicher Review zusammenspielen, und wo automatische Bewertung an ihre Grenzen stößt.",
+    why: "Wird dein LLM-System besser oder schlechter? Ohne eigene Messpunkte weißt du es nicht. Das Praxisbeispiel verbindet Eval-Metriken, Drift-Erkennung und menschlichen Review und zeigt, wo die automatische Bewertung aufhört zu taugen.",
     proof:
       "Sandbox-Szenario: 4 Beispielantworten mit Auto-Eval und menschlicher Bewertung; ein Fall, in dem beide Urteile auseinanderlaufen, und ein markierter Drift-Indikator.",
     ogSubtitle: "Eval-Score, Drift und menschliches Urteil im Vergleich.",
   },
   "fine-tune-playground": {
-    why: "Domänenspezifische Anpassung kann Antwortqualität verbessern, wenn Daten und Evaluation passen. Das Praxisbeispiel trennt Baseline, Anpassung und Holdout-Prüfung.",
+    why: "Fine-Tuning verbessert Antworten nur, wenn Daten und Evaluation stimmen. Das Praxisbeispiel trennt deshalb Baseline, Anpassung und Holdout-Prüfung.",
     proof:
       "Sandbox-Szenario: 2.400 fiktive gelabelte Fragen und eine vorgegebene Scoredifferenz von 38 Punkten. Das sind keine Trainingsergebnisse.",
     ogSubtitle: "Baseline vs. Domänenbeispiel: Unterschied in 3 Prompts.",
   },
   "roi-rechner": {
-    why: "KI-Projekte scheitern oft nicht an der Technik, sondern an unklaren Annahmen. Transparente Zahlen und offene Formel helfen beim Prüfen, nicht beim Verkaufen.",
+    why: "KI-Projekte scheitern selten an der Technik. Sie scheitern an Annahmen, die niemand aufgeschrieben hat. Der Rechner legt jede Zahl und die Formel offen: zum Prüfen, nicht zum Verkaufen.",
     proof:
       "Sandbox-Szenario: Teamgröße, Stundensatz, Adoption und gesparte Stunden als offen sichtbare Annahmen.",
     ogSubtitle: "Teamgröße × Stundensatz × Adoption = Szenario.",

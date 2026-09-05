@@ -82,7 +82,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     metadata: {
       title: "Login | Freie Lernplattform",
       description:
-        "Optionales Lernkonto für Kursfortschritt, Lernnachweise und Zertifikate auf loehrning.ai.",
+        "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     },
     eyebrow: "Freie Lernplattform · Konto",
     heading: {
@@ -102,7 +102,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailable:
         "Das optionale Lernkonto ist hier nicht aktiviert. Fortschritt bleibt in diesem Browser.",
       records:
-        "Lernnachweise und Zertifikate basieren auf dem gespeicherten Abschlussstatus.",
+        "Die Teilnahmebestätigung beruht auf dem gespeicherten Abschlussstatus.",
     },
     reason: {
       accountUnavailable:
@@ -112,7 +112,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Melde dich an, um deinen Lernfortschritt zwischen Geräten zu synchronisieren. Bücher und technische Kurse bleiben ohne Anmeldung nutzbar.",
       progressSaveLink: "Zurück zum Kursangebot",
       courseLogin:
-        "Dieser Grundlagenkurs führt zu einem Lernnachweis oder Zertifikat und benötigt ein Lernkonto. Technische Kurse, Bücher und Demos bleiben ohne Anmeldung nutzbar.",
+        "Dieser Grundlagenkurs führt zu einer Teilnahmebestätigung und benötigt ein Lernkonto. Technische Kurse, Bücher und Demos bleiben ohne Anmeldung nutzbar.",
       courseLoginLink: "Zurück zum Kursangebot",
       otherDevice:
         "Der Link wurde auf einem anderen Gerät oder in einem anderen Browser geöffnet. Fordere dort einen neuen Link an.",

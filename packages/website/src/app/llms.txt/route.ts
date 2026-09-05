@@ -202,7 +202,7 @@ ${sections}
 
 ## Wiederverwendung und Zitation / Reuse and citation
 
-Öffentliche Seiten dürfen als Lernressource zitiert und verlinkt werden. Abschlussdokumente sind selbst ausgestellte Teilnahme- oder Lernnachweise, keine amtlichen oder akkreditierten Nachweise. Rechtsbezogene Inhalte ersetzen keine Rechtsberatung.
+Öffentliche Seiten dürfen als Lernressource zitiert und verlinkt werden. Abschlussdokumente sind selbst ausgestellte Teilnahmebestätigungen, keine amtlichen oder akkreditierten Nachweise. Rechtsbezogene Inhalte ersetzen keine Rechtsberatung.
 
 Public pages may be cited and linked as learning resources. Completion documents are self-issued participation or learning records, not official or accredited credentials. Legal content is not legal advice.
 

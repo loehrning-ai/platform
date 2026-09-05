@@ -6,7 +6,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     metadata: {
       title: "Open Source",
       description:
-        "Offene Werkzeuge von loehrning.ai mit echten Produktansichten, öffentlichem Quellstand, Lizenz und Betriebsanleitung.",
+        "Offene Werkzeuge von loehrning.ai: echte Produktansichten, öffentlicher Quellstand, Lizenz und Betriebsanleitung.",
       socialDescription:
         "Offene Werkzeuge mit echten Ansichten, öffentlichem Quellstand und klaren Betriebsgrenzen.",
     },
@@ -45,7 +45,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     footnoteTitle: "Offen heißt nachvollziehbar.",
     footnote:
-      "Code, Lerntexte und Medien haben getrennte Rechte. Die Zuordnung bleibt am Artefakt sichtbar; technische Lernkurse stehen im Kursatlas.",
+      "Code, Lerntexte und Medien haben getrennte Rechte. Welche Lizenz wofür gilt, steht am Artefakt; die technischen Kurse findest du im Kursatlas.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
     courses: "Zu den technischen Kursen",

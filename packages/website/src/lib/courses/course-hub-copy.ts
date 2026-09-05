@@ -4,20 +4,19 @@ export const COURSE_HUB_COPY = {
   de: {
     metadataTitle: "KI-Kurse: Grundlagen, Technik und Workshops",
     metadataDescription:
-      "Zehn Kurse auf Deutsch und Englisch sowie Workshops und Lernbücher mit ausgewiesenem Umfang, Zugang und Quellstand.",
+      "Zehn Kurse auf Deutsch und Englisch, dazu Workshops und Lernbücher. Jede Karte nennt Umfang, Zugang und Quellstand.",
     metadataImageAlt:
       "loehrning.ai Kursübersicht mit Grundlagenpfad und Technikkursen",
     headingLead: "KI verstehen,",
     headingAccent: "einsetzen und prüfen.",
     intro:
-      "Vier Grundlagenkurse bilden den Lernpfad; sechs Technikkurse vertiefen einzelne Werkzeuge. Jede Karte nennt Dauer, Zugang und Ergebnis.",
-    firstStep: "Unsicher beim Einstieg?",
+      "Vier Grundlagenkurse in fester Reihenfolge. Sechs Technikkurse, wenn du tiefer willst.",
+    firstStep: "Unsicher, wo du stehst?",
     checkLabel: "In fünf Minuten einordnen",
     accessKicker: "§ Warum kostenlos",
-    accessHeading:
-      "Zugang, Fortschritt und Nachweise sind getrennt ausgewiesen.",
+    accessHeading: "Alles kostenlos. Vier Reader brauchen trotzdem ein Konto.",
     accessBody:
-      "Die Kursseiten sind öffentlich. Die vier Reader des Grundlagenpfads benötigen ein Lernkonto, weil Fortschritt und Abschlussstatus synchronisiert werden. Technikkurse, Workshops und Buch-Reader bleiben ohne Konto erreichbar. Der Zugang zu Downloads steht an der jeweiligen Ressource; das PDF des veröffentlichten Lernbuchs benötigt ein Konto. Die Abschlussdokumente sind selbst ausgestellt und keine akkreditierten Zertifikate.",
+      "Die Kursseiten sind öffentlich, kein Kurs kostet Geld. Die vier Reader des Grundlagenpfads brauchen ein Lernkonto, weil Fortschritt und Abschlussstatus zwischen deinen Geräten synchronisiert werden; Technikkurse, Workshops und Buch-Reader laufen ohne Konto. Downloads regelt jede Ressource selbst, das PDF des veröffentlichten Lernbuchs benötigt ein Konto. Die Teilnahmebestätigung stellt loehrning.ai selbst aus. Akkreditiert ist sie nicht.",
     aboutMe: "Über mich",
     aiCheck: "KI-Check",
   },

@@ -389,13 +389,13 @@ export const COURSE_SECTIONS: Readonly<
     title: "Grundlagenpfad",
     eyebrow: "4 Kurse · DE + EN · fester Ablauf",
     blurb:
-      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte sind auf Deutsch und Englisch verfügbar. Fortschritt, Umfang und Abschlussbedingung werden je Kurs ausgewiesen. Teilnahmebestätigungen und Lernnachweise werden von loehrning.ai selbst ausgestellt.",
+      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte gibt es auf Deutsch und Englisch. Fortschritt, Umfang und Abschlussbedingung stehen an jedem Kurs. Die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
   },
   deeper: {
     title: "Technikkurse",
     eyebrow: "6 Kurse · DE + EN · offener Quellstand",
     blurb:
-      "Sechs Kurse behandeln Prompting, Coding Agents, Datenarbeit und technische Betriebsmodelle. Alle Inhalte sind auf Deutsch und Englisch verfügbar. Umfang, Voraussetzungen, Lizenz und übernommener Quellstand bleiben sichtbar. Das Abschlussdokument wird von loehrning.ai selbst ausgestellt.",
+      "Sechs Kurse zu Prompting, Coding Agents, Datenarbeit und technischen Betriebsmodellen. Alle Inhalte gibt es auf Deutsch und Englisch. Umfang, Voraussetzungen, Lizenz und übernommener Quellstand bleiben sichtbar. Die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
   },
 };
 

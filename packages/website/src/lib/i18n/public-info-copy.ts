@@ -7,63 +7,63 @@ export const ENTRY_COPY = {
     metadata: {
       title: "Was ist KI? Ein Einstieg ohne Vorwissen",
       description:
-        "Eine 10-minütige Einführung in Künstliche Intelligenz: Arbeitsdefinition, Alltagsbeispiele, Grenzen und nächste Lernschritte. Ohne Konto.",
+        "Zehn Minuten, kein Konto, kein Vorwissen: eine Arbeitsdefinition von Künstlicher Intelligenz, drei Alltagsbeispiele, die wichtigste Grenze und der nächste Schritt.",
     },
     eyebrow: "Grundlagen / 01",
     title: "Was ist Künstliche Intelligenz?",
     intro:
-      "Eine Arbeitsdefinition, drei Beispiele und die wichtigste Grenze. Für diesen Einstieg brauchst du weder Vorwissen noch ein Konto.",
+      "Eine Arbeitsdefinition, drei Beispiele, eine Grenze. Vorwissen brauchst du dafür nicht, ein Konto auch nicht.",
     facts: ["10 Minuten", "Ohne Konto", "Keine Vorkenntnisse"],
     definitionIndex: "01 / Definition",
     definitionHeading: "Eine brauchbare Arbeitsdefinition",
     definition:
-      "KI-Systeme verarbeiten Eingaben und leiten daraus Ausgaben wie Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen ab. Welche Ausgaben entstehen, hängt vom Modell, seinen Daten und seinem Einsatzkontext ab.",
+      "Ein KI-System nimmt Eingaben und leitet daraus Ausgaben ab: Vorhersagen, Inhalte, Empfehlungen, Entscheidungen. Was herauskommt, hängt vom Modell ab, von seinen Daten und vom Einsatzkontext.",
     definitionSourceLabel: "Zur Einordnung",
     definitionSource:
-      "Das ist eine vereinfachte Arbeitsdefinition. Die rechtliche Definition eines KI-Systems in Artikel 3 der EU-KI-Verordnung ist ausführlicher und für Rechtsfragen maßgeblich.",
+      "Das ist die Kurzfassung. Die rechtliche Definition eines KI-Systems steht in Artikel 3 der EU-KI-Verordnung, ist länger und gilt bei Rechtsfragen.",
     examplesHeading: "Drei Anwendungen aus dem Alltag",
     examplesIndex: "02 / Beispiele",
     examplesIntro:
-      "Der Begriff KI beschreibt unterschiedliche Verfahren. Diese Beispiele zeigen drei typische Aufgaben: klassifizieren, schätzen und ordnen.",
+      "KI ist kein Verfahren, sondern viele. Drei davon nutzt du täglich: klassifizieren, schätzen, ordnen.",
     examples: [
       {
         id: "gesicht",
         number: "01",
         heading: "Gesichtserkennung",
         task: "Klassifizieren",
-        body: "Beim Entsperren vergleicht das Gerät Merkmale des aufgenommenen Gesichts mit einem hinterlegten Muster. Das Ergebnis ist eine Wahrscheinlichkeitsaussage, keine Gewissheit.",
+        body: "Dein Handy vergleicht beim Entsperren Merkmale deines Gesichts mit einem hinterlegten Muster. Das Ergebnis ist eine Wahrscheinlichkeit, keine Gewissheit.",
       },
       {
         id: "route",
         number: "02",
         heading: "Routenplanung",
         task: "Schätzen",
-        body: "Navigationsdienste verbinden Kartendaten, aktuelle Verkehrssignale und gelernte Verkehrsmuster. Daraus schätzen sie Fahrzeiten und schlagen Routen vor.",
+        body: "Die Navigations-App verbindet Kartendaten, aktuelle Verkehrssignale und gelernte Muster. Daraus schätzt sie deine Fahrzeit und schlägt eine Route vor.",
       },
       {
         id: "empfehlungen",
         number: "03",
         heading: "Medienempfehlungen",
         task: "Ordnen",
-        body: "Empfehlungssysteme ordnen Inhalte anhand beobachteter Nutzungsmuster. Sie kennen weder deine Absicht noch deinen Geschmack vollständig und können bestehende Muster verstärken.",
+        body: "Der Streamingdienst ordnet Inhalte nach dem, was du bisher angeklickt hast. Deine Absicht kennt er nicht, deinen Geschmack nur zum Teil, und er verstärkt, was du ohnehin schon siehst.",
       },
     ],
     boundaryLabel: "Die wichtigste Grenze",
     boundaryHeading: "Ein plausibles Ergebnis kann falsch sein.",
     boundaryBody:
-      "Ein Modell prüft seine Ausgabe nicht automatisch gegen die Wirklichkeit. Bei wichtigen Entscheidungen brauchst du Quellen, fachliche Prüfung und einen klaren Verantwortlichen.",
+      "Ein Modell prüft seine Antwort nicht gegen die Wirklichkeit. Das musst du tun. Bei wichtigen Entscheidungen heißt das: Quellen, fachliche Prüfung und ein Mensch, der die Verantwortung trägt.",
     faqHeading: "Drei kurze Antworten",
     faqIndex: "03 / Fragen",
     faqs: [
       {
         question: "Brauche ich Programmierkenntnisse?",
         answer:
-          "Nein. Diese Einführung und der KI-Check setzen kein technisches Vorwissen voraus.",
+          "Nein. Weder diese Seite noch der KI-Check setzen technisches Vorwissen voraus.",
       },
       {
         question: "Ist dieser Einstieg kostenlos?",
         answer:
-          "Ja. Diese Seite und der KI-Check sind ohne Konto zugänglich. Einzelne Kursreader haben eigene, offen ausgewiesene Zugangsbedingungen.",
+          "Ja. Diese Seite und der KI-Check laufen ohne Konto. Einzelne Kursreader haben eigene Zugangsbedingungen, und die stehen offen am Kurs.",
       },
       {
         question: "Wer verantwortet die Inhalte?",
@@ -76,22 +76,22 @@ export const ENTRY_COPY = {
     nextHeading: "Nächster Schritt",
     nextIndex: "04 / Auswahl",
     nextIntro:
-      "Wähle nach deinem Ziel. Der KI-Check ordnet deinen Stand ein; die anderen Wege beginnen direkt mit Lernstoff.",
+      "Wähle nach Ziel. Der KI-Check sagt dir, wo du stehst; die beiden anderen Wege starten direkt mit Lernstoff.",
     primaryLabel: "Stand einordnen",
     primaryTitle: "KI-Check",
     primaryMeta: "ca. 5 Minuten",
     primaryBody:
-      "{count} Fragen führen zu einer begründeten Kursempfehlung. Das Ergebnis bleibt in diesem Browser.",
+      "{count} Fragen, eine begründete Kursempfehlung. Das Ergebnis bleibt in diesem Browser.",
     primaryCta: "KI-Check starten",
     courseLabel: "Grundkurs ansehen",
     courseTitle: "KI-Führerschein",
     courseBody:
-      "Die Kursübersicht erklärt Inhalte, Umfang und Zugangsbedingungen vor dem Start.",
+      "Inhalte, Umfang und Zugang stehen auf der Kursübersicht, bevor du startest.",
     courseCta: "Kursübersicht öffnen",
     primerLabel: "Weiterlesen",
     primerTitle: "Blog",
     primerBody:
-      "Quellenbasierte Artikel erklären KI im Alltag, Regulierung und gesellschaftliche Folgen.",
+      "Artikel mit Quellen zu KI im Alltag, Regulierung und gesellschaftlichen Folgen.",
     primerCta: "Blog öffnen",
   },
   en: {
@@ -197,7 +197,7 @@ export const HELP_COPY = {
     eyebrow: "Hilfe / Referenz",
     title: "Hilfe und häufige Fragen",
     intro:
-      "Kurze Antworten zu Zugang, Fortschritt, Abschluss und Daten. Die Angaben zur Anmeldung richten sich nach der aktuell verfügbaren Serverkonfiguration.",
+      "Kurze Antworten zu Zugang, Fortschritt, Abschluss und Daten. Was hier zur Anmeldung steht, folgt der Serverkonfiguration, die gerade läuft.",
     indexLabel: "Themen auf dieser Seite",
     topics: [
       "Einstieg",
@@ -225,7 +225,7 @@ export const HELP_COPY = {
       signIn: "Wie melde ich mich an?",
       devices: "Kann ich auf mehreren Geräten lernen?",
       quiz: "Wie funktionieren Quiz und Neuversuche?",
-      records: "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+      records: "Was bedeutet die Teilnahmebestätigung?",
       simulations: "Was ist ein Praxisbeispiel oder eine Sandbox?",
       books: "Bücher: Was kann ich lesen oder herunterladen?",
       data: "Wie lösche ich mein Konto oder exportiere meine Daten?",
@@ -240,13 +240,13 @@ export const HELP_COPY = {
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
-        "Bücher, Demos, KI-Check und 6 technische Kursreader funktionieren ohne Konto. 4 Grundlagen-Kursreader erfordern ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen Geräten. Abschlussdokumente bleiben selbst ausgestellt und sind nicht servergeprüft.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten. Die Teilnahmebestätigung bleibt selbst ausgestellt und ist nicht servergeprüft.",
       accountUnavailable:
-        "Bücher, Demos, KI-Check und 6 technische Kursreader funktionieren ohne Konto. 4 Grundlagen-Kursreader erfordern ein Lernkonto. Da aktuell keine vollständig freigeschaltete Anmeldemethode vorliegt, sind diese 4 Reader vorübergehend nicht erreichbar.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Solange keine Anmeldemethode vollständig freigeschaltet ist, sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
-        "Fortschritt wird zuerst im Browser gespeichert und bei angemeldetem Lernkonto zusätzlich serverseitig synchronisiert. Gelöschte Website-Daten, private Tabs oder ein anderer Browser können den lokalen Stand entfernen.",
+        "Dein Fortschritt liegt zuerst im Browser. Mit angemeldetem Lernkonto wird er zusätzlich serverseitig synchronisiert. Gelöschte Website-Daten, ein privater Tab oder ein anderer Browser können den lokalen Stand löschen.",
       progressLocal:
-        "Fortschritt wird nur im Browser gespeichert. Gelöschte Website-Daten, private Tabs oder ein anderes Gerät können diesen Stand entfernen. Serverseitige Synchronisierung ist aktuell nicht verfügbar.",
+        "Dein Fortschritt liegt nur im Browser. Gelöschte Website-Daten, ein privater Tab oder ein anderes Gerät können diesen Stand löschen. Serverseitige Synchronisierung gibt es aktuell nicht.",
       signInBoth:
         "Die Login-Seite bietet Google-Anmeldung und einen Einmal-Link per E-Mail. Einmal-Links laufen ab und sind nur einmal nutzbar. Fordere bei einem abgelaufenen Link einen neuen an und prüfe den Spam-Ordner.",
       signInGoogle:
@@ -254,23 +254,23 @@ export const HELP_COPY = {
       signInMagic:
         "Die Login-Seite bietet aktuell einen Einmal-Link per E-Mail. Der Link läuft ab und ist nur einmal nutzbar. Fordere bei einem abgelaufenen Link einen neuen an und prüfe den Spam-Ordner.",
       signInUnavailable:
-        "Aktuell ist keine Anmeldemethode vollständig freigeschaltet. Öffentliche Kurse, Bücher, Demos und der KI-Check bleiben ohne Anmeldung erreichbar.",
+        "Aktuell ist keine Anmeldemethode vollständig freigeschaltet. Öffentliche Kurse, Bücher, Praxisbeispiele und der KI-Check bleiben ohne Anmeldung erreichbar.",
       devicesSynced:
         "Ja. Bei einem angemeldeten Lernkonto wird der Kursfortschritt synchronisiert. Ohne Anmeldung verwaltet jedes Gerät einen eigenen lokalen Stand.",
       devicesLocal:
         "Ja, aber jedes Gerät verwaltet einen eigenen lokalen Stand. Eine geräteübergreifende Synchronisierung ist aktuell nicht verfügbar.",
-      quiz: "Quizze lassen sich wiederholen; es gibt keinen Zeitdruck. Nach dem Absenden siehst du Ergebnis und Erklärung. Je nach Kurs gilt ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen als Kursabschluss.",
+      quiz: "Quizze kannst du wiederholen, Zeitdruck gibt es keinen. Nach dem Absenden siehst du Ergebnis und Erklärung. Was als Kursabschluss zählt, hängt vom Kurs ab: ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder die letzte abgeschlossene Lektion.",
       recordsBeforeLimits:
-        "Diese selbst ausgestellten Dokumente halten einen Abschluss innerhalb der Plattform fest. Je nach Kurs beruhen sie auf einem Quiz, einer eingereichten Aufgabe oder abgeschlossenen Lektionen. ",
+        "Sie hält fest, dass du einen Kurs auf dieser Plattform abgeschlossen hast. Je nach Kurs steht dahinter ein Quiz, eine eingereichte Aufgabe oder die letzte Lektion. loehrning.ai stellt sie selbst aus. ",
       recordsLimitsLink:
-        "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
+        "Sie ist nicht servergeprüft und belegt für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
       recordsAfterLimits: "",
       simulations:
-        "Interaktive Praxisbeispiele verwenden synthetische Daten und simulierte Abläufe. Sie versenden keine echten E-Mails, rufen keine produktiven Drittanbieter-APIs auf und verarbeiten keine echten Kundendaten. Sie erklären ein Konzept; sie sind kein produktives System.",
+        "Ein Praxisbeispiel läuft mit synthetischen Daten und simulierten Abläufen. Es verschickt keine echte E-Mail, ruft keine produktive Drittanbieter-API auf und verarbeitet keine echten Kundendaten. Es erklärt ein Konzept. Ein produktives System ist es nicht.",
       oneBookAvailable:
-        "Das Buch ist kostenlos im Browser lesbar. Angemeldete Nutzer können die angebotene PDF-Datei herunterladen. Das Buch ist Lernmaterial, keine zitierfähige Rechtsquelle.",
+        "Das Buch ist kostenlos im Browser lesbar. Mit Lernkonto lädst du zusätzlich die PDF-Datei. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
       oneBookUnavailable:
-        "Das Buch ist kostenlos im Browser lesbar. Der kontogebundene PDF-Download ist aktuell nicht verfügbar. Das Buch ist Lernmaterial, keine zitierfähige Rechtsquelle.",
+        "Das Buch ist kostenlos im Browser lesbar. Der kontogebundene PDF-Download ist aktuell nicht verfügbar. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
       manyBooks:
         "Alle {bookCount} Bücher sind kostenlos im Browser lesbar. Sie sind Lernmaterialien, keine zitierfähigen Rechtsquellen.",
       dataAvailableBeforeLink: "Datenexport und Kontolöschung stehen unter ",
@@ -287,9 +287,9 @@ export const HELP_COPY = {
         "Das serverseitige Feedback-Formular ist deaktiviert. Fehler und Rückmeldungen gehen per E-Mail an tim@loehrning.ai.",
       limitsBeforeLink: "Bekannte Einschränkungen: ",
       limitsLink:
-        "Abschlussdokumente sind selbst ausgestellt, Praxisbeispiele simuliert, Inhalte an einen ausgewiesenen Prüfstand gebunden und Fortschritt kann nur lokal gespeichert sein",
+        "Die Teilnahmebestätigung ist selbst ausgestellt, Praxisbeispiele sind simuliert, Inhalte gelten für den ausgewiesenen Prüfstand, und Fortschritt kann nur lokal gespeichert sein",
       limitsAfterLink:
-        ". Die jeweilige Kurs- oder Ressourcenseite weist die konkrete Grenze aus.",
+        ". Die konkrete Grenze steht auf der jeweiligen Kurs- oder Ressourcenseite.",
     },
   },
   en: {
@@ -407,7 +407,7 @@ export const HELP_COPY = {
 export const HELP_LIMITATIONS_COPY = {
   de: {
     intro:
-      "Lernhilfe, technische Funktion und belastbarer Nachweis sind verschiedene Dinge. Jede Grenze nennt deshalb die praktische Folge und den nächsten Prüfschritt.",
+      "Lernhilfe, technische Funktion und belastbarer Nachweis sind drei verschiedene Dinge. Jede Grenze nennt deshalb, was sie praktisch bedeutet und was du als Nächstes prüfst.",
     scopeLabel: "Grenze",
     consequenceLabel: "Was du tun kannst:",
     sourceLabel: "Amtliche Quelle zum Rechtsstand",
@@ -417,21 +417,21 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Selbst ausgestellte Abschlussdokumente",
         description:
-          "Teilnahmebestätigungen und Lernnachweise werden im Browser erstellt. Sie haben keine serverseitige Prüfung, keine digitale Signatur und keine externe Zertifizierungsstelle. Ein solches Dokument belegt für sich allein nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
+          "Die Teilnahmebestätigung entsteht in deinem Browser. Keine serverseitige Prüfung, keine digitale Signatur, keine externe Zertifizierungsstelle. Für sich allein belegt sie nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
         mitigation:
-          "Behandle das Dokument als persönliche Lernaufzeichnung. Artikel 4 verlangt Maßnahmen zur Förderung von KI-Kompetenz unter Berücksichtigung von Kenntnissen, Erfahrung, Bildung, Nutzungskontext und betroffenen Personen; er verlangt keine Garantie eines bestimmten individuellen Kompetenzniveaus. Organisationen müssen ihre eigenen Maßnahmen und Nachweise festlegen und rechtlich prüfen.",
+          "Behandle das Dokument als persönliche Lernaufzeichnung. Artikel 4 verlangt Maßnahmen zur Förderung von KI-Kompetenz, abhängig von Kenntnissen, Erfahrung, Bildung, Nutzungskontext und betroffenen Personen. Ein garantiertes individuelles Kompetenzniveau verlangt er nicht. Welche Maßnahmen und Nachweise gelten, legt jede Organisation selbst fest und lässt es rechtlich prüfen.",
       },
       simulations: {
         title: "Simulierte Praxisbeispiele",
         description:
-          "Interaktive Demos und Sandboxen verwenden synthetische Daten und simulierte Schnittstellen. Sie versenden keine echten E-Mails, rufen keine produktiven Drittanbieter-APIs auf und verarbeiten keine echten Kundendaten.",
+          "Interaktive Praxisbeispiele und Sandboxen laufen mit synthetischen Daten und simulierten Schnittstellen. Sie verschicken keine echte E-Mail, rufen keine produktive Drittanbieter-API auf und verarbeiten keine echten Kundendaten.",
         mitigation:
-          "Nutze die Beispiele zum Verstehen des Ablaufs. Prüfe vor einer realen Implementierung Anbieter-Dokumentation, Datenflüsse, Berechtigungen, Protokollierung und interne Freigaben separat.",
+          "Nutze die Beispiele, um den Ablauf zu verstehen. Vor dem echten Einsatz prüfst du Anbieter-Dokumentation, Datenflüsse, Berechtigungen, Protokollierung und interne Freigaben, jedes für sich.",
       },
       freshness: {
         title: "Keine Echtzeit-Aktualisierung",
         description:
-          "Rechtslage, Produkte, Preise und Statistiken können sich zwischen redaktionellen Prüfungen ändern. Die Plattform überwacht externe Quellen nicht in Echtzeit. Ein sichtbares Prüfdatum ist deshalb kein Aktualitätsversprechen.",
+          "Rechtslage, Produkte, Preise und Statistiken ändern sich auch zwischen zwei redaktionellen Prüfungen. Die Plattform überwacht externe Quellen nicht in Echtzeit. Ein Prüfdatum sagt, wann geprüft wurde. Mehr nicht.",
         mitigation:
           "Prüfe vor Entscheidungen die jeweils aktuelle Primärquelle. Für EU-Recht sind EUR-Lex und das Amtsblatt maßgeblich. Veröffentlichte inhaltliche Änderungen stehen unter /neuigkeiten.",
       },
@@ -442,7 +442,7 @@ export const HELP_LIMITATIONS_COPY = {
         mitigationAvailable:
           "Ein angemeldetes Lernkonto synchronisiert Fortschritt serverseitig. Der lokale Stand bleibt trotzdem von den Website-Daten des jeweiligen Browsers abhängig.",
         mitigationUnavailable:
-          "Die serverseitige Synchronisierung ist aktuell nicht vollständig freigeschaltet. Behandle den lokalen Stand nicht als dauerhaftes Backup und sichere wichtige Ergebnisse unmittelbar.",
+          "Die serverseitige Synchronisierung ist aktuell nicht vollständig freigeschaltet. Der lokale Stand ist kein Backup. Sichere wichtige Ergebnisse sofort.",
       },
       books: {
         title: "Lernbücher sind keine Primärquellen",
@@ -451,7 +451,7 @@ export const HELP_LIMITATIONS_COPY = {
         descriptionMany:
           "Die {bookCount} verfügbaren Bücher sind redaktionell bearbeitete Lernfassungen. Sie sind keine amtlichen Dokumente, keine zitierfähigen Rechtsquellen und kein Ersatz für Rechtsberatung.",
         mitigation:
-          "Nutze bei Rechtsfragen den konsolidierten Rechtsakt und das Amtsblatt auf EUR-Lex. Ziehe bei einer konkreten rechtlichen Entscheidung qualifizierte Beratung hinzu.",
+          "Bei Rechtsfragen zählen der konsolidierte Rechtsakt und das Amtsblatt auf EUR-Lex. Steht eine konkrete rechtliche Entscheidung an, hol dir qualifizierte Beratung.",
       },
     },
   },
@@ -517,7 +517,7 @@ export const NEWS_COPY = {
     eyebrow: "Änderungsprotokoll",
     title: "Was ist neu",
     intro:
-      "Datierte Hinweise zu neuen Inhalten und redaktionellen Änderungen. Ein Eintrag beschreibt eine Veröffentlichung, nicht die laufende Vollständigkeit der gesamten Plattform.",
+      "Datierte Hinweise zu neuen Inhalten und redaktionellen Änderungen. Ein Eintrag beschreibt eine Veröffentlichung. Dass die ganze Plattform an diesem Tag vollständig war, behauptet er nicht.",
     statusLabel: "Einträge",
     statusValue: "{count} dokumentiert",
     sourceLabel: "Quelle",

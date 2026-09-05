@@ -80,7 +80,8 @@ describe("login locale surface", () => {
     [
       "de",
       "Login | Freie Lernplattform",
-      "Optionales Lernkonto für Kursfortschritt, Lernnachweise und Zertifikate auf loehrning.ai.",
+      // Copy lock updated: German UI copy names completion documents "Teilnahmebestätigung".
+      "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     ],
     [
       "en",

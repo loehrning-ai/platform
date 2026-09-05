@@ -182,11 +182,11 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     metadata: {
       title: "Bücher über KI und Datenreife",
       description: (count) =>
-        `${count} veröffentlichte${count === 1 ? " Lesefassung" : " Lesefassungen"} über KI-Reife, Datenfundament und prüfbare Entscheidungen. Kostenlos online, ohne Konto.`,
+        `${count} veröffentlichte${count === 1 ? " Lesefassung" : " Lesefassungen"}: KI-Reife, Datenfundament, prüfbare Entscheidungen. Online lesbar, ohne Konto.`,
       openGraphTitle: (count) =>
         `${count} freie${count === 1 ? " Lesefassung" : " Lesefassungen"} über KI`,
       openGraphDescription:
-        "Redaktionell geprüfte Lernbücher mit offenem HTML-Reader, Quellenhinweisen und klar gekennzeichneten Grenzen.",
+        "Lernbücher im offenen HTML-Reader. Die Quellen stehen dabei, die Grenzen auch.",
       detailTitleSuffix: "Lernbuch",
       detailDescription: (book) =>
         `${book.subtitle}. Deutsche HTML-Lesefassung, kostenlos und ohne Konto.`,
@@ -196,7 +196,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       books: "Bücher",
       collectionName: "Bücher über KI und Datenreife",
       collectionDescription:
-        "Veröffentlichte deutsche Lernbücher mit offenem HTML-Reader, Quellenhinweisen und klar gekennzeichneten Grenzen.",
+        "Veröffentlichte deutsche Lernbücher im offenen HTML-Reader, mit Quellenhinweisen und ausgewiesenen Grenzen.",
       freeReadingEdition: "Kostenlose HTML-Lesefassung",
     },
     catalog: {
@@ -204,7 +204,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       heading: "Sachbücher mit",
       headingAccent: "sichtbaren Quellen und Grenzen.",
       introduction: (count) =>
-        `${count} redaktionell freigegebene${count === 1 ? " Lesefassung" : " Lesefassungen"}. Autor, Lernziel, Quellenstand und Zugang stehen direkt am Titel.`,
+        `${count} redaktionell freigegebene${count === 1 ? " Lesefassung" : " Lesefassungen"}. Autor, Lernziel, Quellenstand und Zugang stehen am Titel, nicht im Kleingedruckten.`,
       collectionHeading: "Der aktuelle Bestand",
       collectionDescription: "Offener HTML-Reader. Kein Konto erforderlich.",
       publicationNumber: (position) =>
@@ -227,7 +227,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       pdfAfterLogin: "Deutsches PDF nach Login",
       pdfUnavailable: "PDF-Download nicht verfügbar",
       sourceNote:
-        "Die veröffentlichte Lesefassung basiert auf redaktioneller Arbeit aus 2025–2026. Primärquellen und Einschränkungen stehen in den jeweiligen Kapiteln.",
+        "Die Lesefassung entstand aus redaktioneller Arbeit in 2025 und 2026. Primärquellen und Einschränkungen stehen im jeweiligen Kapitel.",
       editorialOwner: (owner) => `Redaktion: ${owner}`,
       detailsLabel: "Ausgabe, Quellen und Zugang",
       sourceInputs: "Dokumentierte Quellengrundlage",
@@ -246,7 +246,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Lernpfad · Stufe 6: Vertiefen",
       contextBody:
-        "Dieses Lernbuch ergänzt den Grundlagenkurs mit Quellen, Einordnung und längeren Argumenten.",
+        "Der Kurs gibt die Regel. Das Lernbuch liefert Quellen, Einordnung und das längere Argument.",
       kicker: "Lernbuch · Offene HTML-Lesefassung",
       chapterCount: (count) => `${count} Kapitel`,
       readingTime: (minutes) => `ca. ${minutes} Min.`,
@@ -266,7 +266,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       contentsAria: "Inhaltsverzeichnis",
       contentsHeading: "Inhaltsverzeichnis",
       contentsIntro:
-        "Die Kapitel öffnen im deutschen Reader. Kapitelstand und Quellen gehören zur jeweiligen Fassung.",
+        "Die Kapitel öffnen im deutschen Reader. Kapitelstand und Quellen gehören zu genau dieser Fassung.",
       chapterLanguage: "Deutsch",
       chapterAria: (title) => `Kapitel „${title}“ öffnen`,
       minutesShort: (minutes) => `${minutes} Min.`,
@@ -407,7 +407,7 @@ export function getBookDisplay(
     highlights: book.highlights,
     adaptationNote:
       book.id === "ki-landschaft"
-        ? "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen."
+        ? "Preise aus dem Beratungsmarkt, private Unternehmensdaten, proprietäre Scores und die Rankings daraus: alles raus. Stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen."
         : "",
   };
 }
