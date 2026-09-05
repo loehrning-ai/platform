@@ -37,28 +37,28 @@
           "id": "modul_4_lesson_1_section_1",
           "title": "Die Stufe ohne manuellen Trigger",
           "readTimeMinutes": 2,
-          "content": "Du hast jetzt Claude, Skills, Plugins, Obsidian, das ist alles **manuell getriggert**. Du machst etwas, Claude reagiert.\n\nJetzt kommt die Stufe, auf der Dinge ohne dich laufen. Eine E-Mail kommt an, wird klassifiziert, ein CRM-Entwurf wird vorbereitet und ein Mensch prüft den nächsten Schritt.\n\nn8n ist ein quelloffenes, selbst hostbares Workflow-Werkzeug. Self-hosting kann Datenflüsse und Konfiguration kontrollierbarer machen, ist aber keine DSGVO-Garantie. Du verantwortest unter anderem Rechtsgrundlage, Verträge mit Hosting- und API-Anbietern, HTTPS, Secrets, Zugriffe, Updates, Backups, Logging, Löschung und Vorfallbehandlung.",
+          "content": "Claude, Skills, Plugins, Obsidian: bis hier war alles **manuell getriggert**. Du machst etwas, Claude reagiert.\n\nJetzt kommt die Stufe, auf der Dinge ohne dich laufen. Eine E-Mail kommt an, wird klassifiziert, ein CRM-Entwurf steht bereit, und ein Mensch prüft den nächsten Schritt.\n\nn8n ist ein quelloffenes, selbst hostbares Workflow-Werkzeug. Self-hosting kann Datenflüsse und Konfiguration kontrollierbarer machen. Eine DSGVO-Garantie ist es nicht. Du verantwortest unter anderem Rechtsgrundlage, Verträge mit Hosting- und API-Anbietern, HTTPS, Secrets, Zugriffe, Updates, Backups, Logging, Löschung und Vorfallbehandlung.",
           "keyTakeaway": "Self-hosting schafft Kontrolle, nicht automatische Compliance. Erst Datenfluss, Verträge, Sicherheit und Betrieb machen den Workflow freigabefähig."
         },
         {
           "id": "modul_4_lesson_1_section_2",
           "title": "Warum n8n, nicht Zapier/Make",
           "readTimeMinutes": 3,
-          "content": "**Drei Betriebsmodelle, drei Trade-offs:**\n\n| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|-------------|-----------|------------------|\n| Betrieb | Anbieter | Anbieter | deine Organisation |\n| Kosten | aktuelle Preis- und Nutzungseinheiten prüfen | aktuelle Pläne prüfen | Hosting plus Betriebszeit |\n| Datenschutz | Rollen, DPA/AVV, Transfers und Optionen prüfen | Vertrag und konkrete Region prüfen | Hostingvertrag und alle angebundenen APIs bleiben relevant |\n| Sicherheit | Anbieter plus eigene Konfiguration | Anbieter plus eigene Konfiguration | Patches, HTTPS, Secrets, Backups und Monitoring selbst |\n\nDie richtige Wahl hängt von Datenklassen, vorhandener Betriebskompetenz, Integrationen, Volumen und Exit-Anforderungen ab. Wir lehren n8n, weil die Workflow-Logik übertragbar ist, nicht weil ein Produkt pauschal gewinnt.",
+          "content": "**Drei Betriebsmodelle, drei Trade-offs:**\n\n| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|-------------|-----------|------------------|\n| Betrieb | Anbieter | Anbieter | deine Organisation |\n| Kosten | aktuelle Preis- und Nutzungseinheiten prüfen | aktuelle Pläne prüfen | Hosting plus Betriebszeit |\n| Datenschutz | Rollen, DPA/AVV, Transfers und Optionen prüfen | Vertrag und konkrete Region prüfen | Hostingvertrag und alle angebundenen APIs bleiben relevant |\n| Sicherheit | Anbieter plus eigene Konfiguration | Anbieter plus eigene Konfiguration | Patches, HTTPS, Secrets, Backups und Monitoring selbst |\n\nWas passt, entscheiden Datenklassen, Betriebskompetenz, Integrationen, Volumen und Exit-Anforderungen. Wir lehren n8n, weil die Workflow-Logik übertragbar ist. Nicht, weil ein Produkt pauschal gewinnt.",
           "keyTakeaway": "Managed oder self-hosted ist eine Verantwortungsentscheidung. Vergleiche Datenfluss, Vertrag, Betrieb, Kosten und Exit für den konkreten Workflow."
         },
         {
           "id": "modul_4_lesson_1_section_3",
           "title": "Self-hosted n8n sicher vorbereiten",
           "readTimeMinutes": 5,
-          "content": "**Vor dem Installieren:**\n1. Datenklassen und erlaubte Integrationen festlegen.\n2. Hostingregion, Vertrag, DPA/AVV und Unterauftragsverarbeiter prüfen.\n3. Eine passende Servergröße anhand der aktuellen n8n-Anforderungen und der erwarteten Last wählen.\n4. SSH nur per Schlüssel, restriktive Firewall und automatische Sicherheitsupdates einrichten.\n5. Eine geprüfte n8n-Version fest pinnen; nicht unkontrolliert `latest` verwenden.\n6. n8n nicht unverschlüsselt auf Port 80 ins Internet stellen. Zuerst Domain, HTTPS-Reverse-Proxy und Zugriffsschutz konfigurieren.\n7. Secrets außerhalb von Workflow-Exporten verwalten und Zugriffsrechte minimieren.\n8. Verschlüsselte Backups samt Wiederherstellungstest, Logging, Monitoring und Patchprozess definieren.\n\nDie offizielle n8n-Dokumentation enthält die jeweils aktuellen Docker- und Konfigurationsschritte. Kopiere keine alte Ein-Zeilen-Installation in eine Produktivumgebung. Baue zunächst eine isolierte Sandbox ohne echte Personen-, Kunden- oder Zugangsdaten.\n\nSelf-hosting endet nicht beim erfolgreichen Login: Erst HTTPS, Secrets, Rechte, Updates, Backups, Wiederherstellung und Monitoring machen die Installation betrieblich belastbar.",
+          "content": "**Vor dem Installieren:**\n1. Datenklassen und erlaubte Integrationen festlegen.\n2. Hostingregion, Vertrag, DPA/AVV und Unterauftragsverarbeiter prüfen.\n3. Eine passende Servergröße anhand der aktuellen n8n-Anforderungen und der erwarteten Last wählen.\n4. SSH nur per Schlüssel, restriktive Firewall und automatische Sicherheitsupdates einrichten.\n5. Eine geprüfte n8n-Version fest pinnen; nicht unkontrolliert `latest` verwenden.\n6. n8n nicht unverschlüsselt auf Port 80 ins Internet stellen. Zuerst Domain, HTTPS-Reverse-Proxy und Zugriffsschutz konfigurieren.\n7. Secrets außerhalb von Workflow-Exporten verwalten und Zugriffsrechte minimieren.\n8. Verschlüsselte Backups samt Wiederherstellungstest, Logging, Monitoring und Patchprozess definieren.\n\nDie aktuellen Docker- und Konfigurationsschritte stehen in der offiziellen n8n-Dokumentation. Eine alte Ein-Zeilen-Installation hat in einer Produktivumgebung nichts verloren. Erst kommt eine isolierte Sandbox ohne echte Personen-, Kunden- oder Zugangsdaten.\n\nDer erfolgreiche Login ist nicht das Ende, sondern der Anfang. Belastbar wird die Installation erst mit HTTPS, Secrets, Rechten, Updates, Backups, Wiederherstellung und Monitoring.",
           "keyTakeaway": "Eine erreichbare n8n-Instanz ist noch kein sicherer Dienst. Version pinnen, HTTPS, Secrets, Rechte, Updates, Backups und Wiederherstellung vor echten Daten prüfen."
         },
         {
           "id": "modul_4_lesson_1_section_4",
           "title": "Erster Flow + n8n.cloud-Fallback",
           "readTimeMinutes": 3,
-          "content": "**Hello-World: Webhook-to-Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, kein automatischer Versand.\n\n**Managed Fallback:**\n- Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit.\n- Du prüfst trotzdem für deine Organisation den aktuellen Vertrag, DPA/AVV, Region, Unterauftragsverarbeiter, Zugriffe, Logging, Export und Löschung.\n- Die Sandbox-Muster in Modul 4 lassen sich grundsätzlich auch managed testen.\n\n**Self-hosted vs. managed ist nicht nur eine Preisfrage:**\n- Datenfluss und Zugriffskontrolle prüfen\n- Betriebsaufwand und Reaktionsfähigkeit bewerten\n- Verträge, Protokollierung, Exit und Wiederherstellung klären",
+          "content": "**Hello-World: Webhook-to-Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, kein automatischer Versand.\n\n**Managed Fallback:**\n- Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit.\n- Vertrag, DPA/AVV, Region, Unterauftragsverarbeiter, Zugriffe, Logging, Export und Löschung prüfst du trotzdem für deine Organisation.\n- Die Sandbox-Muster in Modul 4 laufen auch managed.\n\n**Self-hosted oder managed ist keine Preisfrage allein:**\n- Datenfluss und Zugriffskontrolle prüfen\n- Betriebsaufwand und Reaktionsfähigkeit bewerten\n- Verträge, Protokollierung, Exit und Wiederherstellung klären",
           "keyTakeaway": "Wähle managed oder self-hosted anhand von Datenfluss, Vertrag, Sicherheitskontrollen, Betriebskompetenz, Kosten und Exit."
         }
       ],
@@ -84,11 +84,11 @@
             },
             {
               "id": "d",
-            "text": "Managed-Dienste sind grundsätzlich unzulässig",
+            "text": "Managed-Dienste sind immer unzulässig",
               "isCorrect": false
             }
           ],
-        "explanation": "Self-hosting kann Kontrolle erhöhen, ist aber keine Compliance-Abkürzung. Hosting, angebundene APIs und weitere Dienstleister bleiben Teil des Datenflusses; die eigene Organisation trägt zusätzlich den sicheren Betrieb."
+        "explanation": "Self-hosting erhöht die Kontrolle. Eine Compliance-Abkürzung ist es nicht: Hosting, angebundene APIs und weitere Dienstleister bleiben im Datenfluss, und den sicheren Betrieb trägst du obendrauf."
         },
         {
           "id": "modul_4_lesson_1_q2",
@@ -115,7 +115,7 @@
               "isCorrect": false
             }
           ],
-        "explanation": "Die Anzahl der Flows entscheidet nicht allein. Datenklassen, Vertrag, Sicherheitsanforderungen, Integrationen, Betriebsfähigkeit, Kosten und Exit bestimmen die geeignete Betriebsform."
+        "explanation": "Die Zahl der Flows entscheidet das nicht allein. Datenklassen, Vertrag, Sicherheitsanforderungen, Integrationen, Betriebsfähigkeit, Kosten und Exit bestimmen die Betriebsform."
         }
       ]
     },
@@ -220,7 +220,7 @@
           "id": "modul_4_lesson_2_section_1",
           "title": "Der Flow in 5 Knoten",
           "readTimeMinutes": 3,
-          "content": "Eingehende Kundenanfragen, Leads und Follow-ups müssen häufig sortiert und in einem CRM dokumentiert werden. Ob sich eine Automatisierung lohnt, ergibt sich erst aus dem gemessenen Volumen, der Bearbeitungszeit und der Fehlerquote.\n\nIn dieser Sandbox baust du einen Flow, der aus synthetischen E-Mails eine Review-Liste vorbereitet.\n\n```\n  [Beispiel-Mail Trigger]\n         |\n         v\n  [Modell-Klassifikator]: Lead / Kunde / Intern / Spam?\n         |\n         v\n  [Switch-Knoten]\n    ├── Lead → [Feld-Extraktion] → [CRM-Review-Eintrag]\n    ├── Kunde → [Activity-Review-Eintrag]\n    └── Rest → [Ignorieren-Vorschlag]\n```\n\nKlassifikation und Extraktion sind getrennte Schritte. Dadurch lassen sich Schema, Modellkonfiguration, Tests und Fehlerbehandlung pro Schritt unabhängig festlegen.",
+          "content": "Anfragen, Leads und Follow-ups landen bei der Vertriebsleiterin und müssen sortiert ins CRM. Ob sich das automatisieren lohnt, sagen gemessenes Volumen, Bearbeitungszeit und Fehlerquote, kein Bauchgefühl.\n\nIn dieser Sandbox baust du einen Flow, der aus synthetischen E-Mails eine Review-Liste vorbereitet.\n\n```\n  [Beispiel-Mail Trigger]\n         |\n         v\n  [Modell-Klassifikator]: Lead / Kunde / Intern / Spam?\n         |\n         v\n  [Switch-Knoten]\n    ├── Lead → [Feld-Extraktion] → [CRM-Review-Eintrag]\n    ├── Kunde → [Activity-Review-Eintrag]\n    └── Rest → [Ignorieren-Vorschlag]\n```\n\nKlassifikation und Extraktion bleiben getrennt. Jeder Schritt bekommt eigenes Schema, eigene Modellkonfiguration, eigene Tests und eigene Fehlerbehandlung.",
           "keyTakeaway": "Die Sandbox trennt Klassifikation, Extraktion und Review. Schreibzugriff bleibt bis zur fachlichen und technischen Freigabe deaktiviert."
         },
         {
@@ -234,14 +234,14 @@
           "id": "modul_4_lesson_2_section_3",
           "title": "Testen + DSGVO",
           "readTimeMinutes": 2,
-          "content": "- Flow im n8n-UI speichern\n- Test: synthetische Beispiel-Mail einspielen\n- Flow läuft: Trigger erkennt, Claude klassifiziert, Review-Eintrag wird vorbereitet\n\n**Datenschutz- und Betriebsgate:** Produktiv erst prüfen:\n- Rollen jedes Dienstes bestimmen; ein DPA/AVV ist erforderlich, wenn tatsächlich eine Auftragsverarbeitung vorliegt\n- Rechtsgrundlage, Zweckbindung, Datenminimierung, Transparenz, Transfers, Aufbewahrung und Löschung klären\n- Art. 22 DSGVO gesondert prüfen, wenn eine Entscheidung ausschließlich automatisiert erfolgt und rechtliche oder ähnlich erhebliche Wirkung hat\n- Schreibzugriff ins CRM erst nach technischer und fachlicher Freigabe aktivieren\n\nDer Flow ist **modular**. Austauschbar: CRM-Export gegen CRM-API, Mail-Beispiel gegen freigegebenes Postfach.",
+          "content": "- Flow im n8n-UI speichern\n- Test: synthetische Beispiel-Mail einspielen\n- Flow läuft: Trigger erkennt, Claude klassifiziert, Review-Eintrag wird vorbereitet\n\n**Datenschutz- und Betriebsgate:** Vor dem Produktivbetrieb prüfst du:\n- Rollen jedes Dienstes bestimmen; ein DPA/AVV ist erforderlich, wenn tatsächlich eine Auftragsverarbeitung vorliegt\n- Rechtsgrundlage, Zweckbindung, Datenminimierung, Transparenz, Transfers, Aufbewahrung und Löschung klären\n- Art. 22 DSGVO gesondert prüfen, wenn eine Entscheidung ausschließlich automatisiert erfolgt und rechtliche oder ähnlich erhebliche Wirkung hat\n- Schreibzugriff ins CRM erst nach technischer und fachlicher Freigabe aktivieren\n\nDer Flow ist **modular**. CRM-Export gegen CRM-API, Mail-Beispiel gegen ein freigegebenes Postfach: tauschbar, aber erst nach dem Gate.",
           "keyTakeaway": "Sandbox zuerst. Produktiv erst nach Rollen-, Rechtsgrundlagen-, Datenfluss-, Sicherheits- und Freigabeprüfung."
         },
         {
           "id": "modul_4_lesson_2_section_4",
-          "title": "Der Frame-Shift",
+          "title": "Kontrollsystem, kein Autopilot",
           "readTimeMinutes": 2,
-          "content": "**Der erste gute Flow ist ein Kontrollsystem, kein Autopilot.**\n\nBis jetzt war Claude ein Tool, das du aufrufst. Im Flow wird Claude ein Verarbeitungsschritt mit klaren Grenzen, Logs und Review.\n\n**Homework:** Adaptiere den Flow als Pilot.\n1. Muster aus den Kursmaterialien kopieren\n2. Beispielkategorien auf deine Arbeit anpassen\n3. Mit anonymisierten Testmails laufen lassen\n4. Klassifikation manuell bewerten\n5. Erst danach entscheiden, ob ein echter Datenfluss zulässig ist\n\nDokumentiere 5 Beispiele + Claude-Klassifikation + dein Urteil.",
+          "content": "**Der erste gute Flow ist ein Kontrollsystem, kein Autopilot.**\n\nBis jetzt war Claude ein Tool, das du aufrufst. Im Flow ist Claude ein Verarbeitungsschritt mit Grenzen, Logs und Review. Das ist der Wechsel.\n\n**Hausaufgabe:** Adaptiere den Flow als Pilot.\n1. Muster aus den Kursmaterialien kopieren\n2. Beispielkategorien auf deine Arbeit anpassen\n3. Mit anonymisierten Testmails laufen lassen\n4. Klassifikation manuell bewerten\n5. Erst danach entscheiden, ob ein echter Datenfluss zulässig ist\n\nDokumentiere 5 Beispiele + Claude-Klassifikation + dein Urteil.",
           "keyTakeaway": "Erster Flow = Kontrollsystem. Kein Auto-CRM, bevor Testdaten, Review und Freigaben stimmen."
         }
       ],
@@ -271,7 +271,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die Trennung macht jeden Schritt einzeln testbar. Modellwahl, Kosten und Qualität müssen mit den eigenen Daten und der aktuellen Anbieterkonfiguration gemessen werden."
+          "explanation": "Getrennt ist jeder Schritt einzeln testbar. Modellwahl, Kosten und Qualität misst du mit deinen Daten und der aktuellen Anbieterkonfiguration, nicht mit einer Kurszahl."
         },
         {
           "id": "modul_4_lesson_2_q2",
@@ -328,15 +328,15 @@
           "id": "modul_4_lesson_3_section_1",
           "title": "Vom Transkript zur Review-Liste",
           "readTimeMinutes": 2,
-          "content": "Nach einem Meeting liegen Entscheidungen und Aufgaben oft verteilt in Notizen oder einem Transkript. Diese Informationen müssen strukturiert werden, bevor Verantwortliche sie bestätigen können.\n\nIn dieser Sandbox baust du einen Flow, der aus einem synthetischen Beispieltranskript eine Aufgabenliste vorbereitet.\n\n**Architektur:**\n```\n  [Beispiel-Transkript] → [Strukturierte Extraktion] → [Aufgabenliste] + [Review-Hinweis]\n```\n\n- Das Transkript enthält nur Beispieldaten\n- Das Modell liefert strukturiertes JSON\n- Die Ausgabe wird gegen ein Schema validiert\n- Verantwortliche, Termine und Entscheidungen werden vor der Übertragung bestätigt",
+          "content": "Ein Transkript ist kein Protokoll. Entscheidungen und Aufgaben stehen irgendwo drin, verstreut über Mitschrift und Notizen, unbestätigt. Bevor Verantwortliche etwas bestätigen können, muss das Material strukturiert vorliegen.\n\nIn dieser Sandbox baust du einen Flow, der aus einem synthetischen Beispieltranskript eine Aufgabenliste vorbereitet.\n\n**Architektur:**\n```\n  [Beispiel-Transkript] → [Strukturierte Extraktion] → [Aufgabenliste] + [Review-Hinweis]\n```\n\n- Das Transkript enthält nur Beispieldaten\n- Das Modell liefert strukturiertes JSON\n- Die Ausgabe wird gegen ein Schema validiert\n- Verantwortliche, Termine und Entscheidungen werden vor der Übertragung bestätigt",
           "keyTakeaway": "Meeting-Nachbereitung wird vorbereitet, nicht ersetzt. Transkript → Aufgabenliste → Review."
         },
         {
           "id": "modul_4_lesson_3_section_2",
           "title": "tl;dv + Claude-Extractor",
           "readTimeMinutes": 4,
-          "content": "**Webhook vorbereiten:**\n\nPrüfe in der aktuellen Dokumentation des Transkriptionsdienstes, ob Webhooks, Ereignisname, Signaturprüfung und Payload für deinen Tarif verfügbar sind. Verwende ausschließlich eine geschützte HTTPS-URL.\n\n**n8n-Seite:** Webhook-Trigger anlegen, Signatur oder gemeinsamen Secret-Wert prüfen und nur die benötigten Felder weiterreichen.\n\n**Extraktion mit JSON-Output:**\n\n```\nExtrahiere aus diesem Meeting-Transkript JSON nach diesem Schema:\n\n{\n  \"meeting\": {\n    \"thema\": \"...\",\n    \"datum\": \"YYYY-MM-DD\",\n    \"teilnehmer\": [\"...\"]\n  },\n  \"entscheidungen\": [\n    {\"text\": \"...\", \"kontext\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"verantwortlich\": \"... (Name)\",\n      \"faelligkeit\": \"YYYY-MM-DD oder null\",\n      \"prioritaet\": \"hoch | mittel | niedrig\"\n    }\n  ],\n  \"offene_fragen\": [\n    {\"text\": \"...\", \"wer_antwortet\": \"...\"}\n  ]\n}\n\nTranskript: {{ $json.transcript }}\n\nGib nur ein JSON-Objekt aus. Wenn ein Feld nicht belegt ist, setze `null`; ergänze keine Information aus Vermutung.\n```\n\nValidiere die Antwort technisch gegen ein JSON-Schema. Eine Aufforderung, interne Denkschritte auszugeben, ist weder für gültiges JSON noch für die fachliche Prüfung erforderlich.",
-          "keyTakeaway": "Definiertes Schema, null-Regel und technische Validierung sind die belastbare Grundlage für strukturierte Ausgabe."
+          "content": "**Webhook vorbereiten:**\n\nOb dein Tarif beim Transkriptionsdienst Webhooks, Ereignisname, Signaturprüfung und Payload hergibt, steht in dessen aktueller Dokumentation, nirgends sonst. Die URL ist HTTPS und geschützt, ohne Ausnahme.\n\n**n8n-Seite:** Webhook-Trigger anlegen, Signatur oder gemeinsamen Secret-Wert prüfen und nur die benötigten Felder weiterreichen.\n\n**Extraktion mit JSON-Output:**\n\n```\nExtrahiere aus diesem Meeting-Transkript JSON nach diesem Schema:\n\n{\n  \"meeting\": {\n    \"thema\": \"...\",\n    \"datum\": \"YYYY-MM-DD\",\n    \"teilnehmer\": [\"...\"]\n  },\n  \"entscheidungen\": [\n    {\"text\": \"...\", \"kontext\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"verantwortlich\": \"... (Name)\",\n      \"faelligkeit\": \"YYYY-MM-DD oder null\",\n      \"prioritaet\": \"hoch | mittel | niedrig\"\n    }\n  ],\n  \"offene_fragen\": [\n    {\"text\": \"...\", \"wer_antwortet\": \"...\"}\n  ]\n}\n\nTranskript: {{ $json.transcript }}\n\nGib nur ein JSON-Objekt aus. Wenn ein Feld nicht belegt ist, setze `null`; ergänze keine Information aus Vermutung.\n```\n\nDie Antwort wird technisch gegen ein JSON-Schema validiert. Interne Denkschritte ausgeben lassen? Bringt weder gültiges JSON noch eine bessere fachliche Prüfung.",
+          "keyTakeaway": "Schema, null-Regel, technische Validierung: mehr Grundlage braucht strukturierte Ausgabe nicht."
         },
         {
           "id": "modul_4_lesson_3_section_3",
@@ -372,7 +372,7 @@
               "isCorrect": false
             }
           ],
-        "explanation": "Transkriptionsqualität hängt von Sprache, Akzent, Tonqualität und Fachvokabular ab. Ein eigener Test mit freigegebenem Material plus Vertrags- und Datenflussprüfung ist belastbarer als ein pauschales Produktranking."
+        "explanation": "Sprache, Akzent, Tonqualität, Fachvokabular: davon hängt die Transkriptionsqualität ab. Ein eigener Test mit freigegebenem Material plus Vertrags- und Datenflussprüfung trägt mehr als jedes Produktranking."
         },
         {
           "id": "modul_4_lesson_3_q2",
@@ -495,14 +495,14 @@
           "id": "modul_4_lesson_4_section_1",
           "title": "Freitag-Nachmittag-Ritual",
           "readTimeMinutes": 2,
-          "content": "Freitag Nachmittag. Du hast deinen Wochenbericht noch nicht geschrieben. Kunden-Calls, Meetings, halb-gelöste Probleme, alles fragmentiert.\n\nDie Übung zeigt ein Muster: Wiederkehrende Notizen werden gesammelt, ein Entwurf wird synthetisiert, der Mensch prüft und verschickt selbst.\n\n**Architektur:**\n```\n[Cron-Trigger Freitag 16:00]\n         |\n         v\n[Beispiel-Notizen]: Daily Notes + aktive MOCs\n         |\n         v\n[Claude]: synthetisiert Wochenbericht\n         |\n         v\n[Review-Entwurf]: wartet auf menschliche Prüfung\n         |\n         v\n[Team-Hinweis]: \"Wochenbericht-Draft wartet auf Review\"\n```",
+          "content": "Freitag Nachmittag. Du hast deinen Wochenbericht noch nicht geschrieben. Kunden-Calls, Meetings, halb-gelöste Probleme, alles fragmentiert.\n\nDas Muster dahinter: wiederkehrende Notizen einsammeln, einen Entwurf synthetisieren, und der Mensch prüft und verschickt selbst.\n\n**Architektur:**\n```\n[Cron-Trigger Freitag 16:00]\n         |\n         v\n[Beispiel-Notizen]: Daily Notes + aktive MOCs\n         |\n         v\n[Claude]: synthetisiert Wochenbericht\n         |\n         v\n[Review-Entwurf]: wartet auf menschliche Prüfung\n         |\n         v\n[Team-Hinweis]: \"Wochenbericht-Draft wartet auf Review\"\n```",
           "keyTakeaway": "Cron → Entwurf → Review. Der Kurs zeigt das Muster, nicht eine verbundene Produktivinstallation."
         },
         {
           "id": "modul_4_lesson_4_section_2",
           "title": "Kritisch: Draft, nicht Send",
           "readTimeMinutes": 3,
-          "content": "**Kritischer Teil:** Der Flow **erstellt einen Entwurf**, sendet ihn aber nicht selbst. Eine benannte Person prüft Quellen, Zahlen, Empfänger und Freigabestatus.\n\nOb ein automatischer Versand vertretbar ist, hängt von Inhalt, Empfängern, Fehlerfolgen und bestehenden Kontrollen ab. Für diesen Kurs bleibt der manuelle Review das feste Gate.\n\n**Cron-Trigger + Notiz-Query:**\n\n1. **Cron-Trigger:**\n   - Cron-Expression: `0 16 * * 5` (Freitag 16:00 Uhr)\n   - Timezone: Europe/Berlin\n\n2. **Notiz-Query-Knoten**:\n   - Query 1: Daily Notes der aktuellen Woche\n   - Query 2: aktive Projekt-MOCs\n   - Query 3: Notizen mit Tag `#entscheidung` aus letzten 7 Tagen\n\nDer Knoten aggregiert Rohdaten in ein strukturiertes JSON.\n\n**Technischer Hinweis:** Der Kurs zeigt das Muster mit Beispieldaten. Eine echte Integration braucht Rechteprüfung, Logging, Fallback und Review-Prozess.",
+          "content": "**Der kritische Teil:** Der Flow **erstellt einen Entwurf**. Gesendet wird nichts. Eine benannte Person prüft Quellen, Zahlen, Empfänger und Freigabestatus.\n\nOb automatischer Versand vertretbar ist, hängt von Inhalt, Empfängern, Fehlerfolgen und bestehenden Kontrollen ab. In diesem Kurs bleibt der manuelle Review das Gate.\n\n**Cron-Trigger + Notiz-Query:**\n\n1. **Cron-Trigger:**\n   - Cron-Expression: `0 16 * * 5` (Freitag 16:00 Uhr)\n   - Timezone: Europe/Berlin\n\n2. **Notiz-Query-Knoten**:\n   - Query 1: Daily Notes der aktuellen Woche\n   - Query 2: aktive Projekt-MOCs\n   - Query 3: Notizen mit Tag `#entscheidung` aus letzten 7 Tagen\n\nDer Knoten aggregiert Rohdaten in ein strukturiertes JSON.\n\n**Technischer Hinweis:** Der Kurs zeigt das Muster mit Beispieldaten. Eine echte Integration braucht Rechteprüfung, Logging, Fallback und Review-Prozess.",
           "keyTakeaway": "Entwurf statt Versand. Quellen, Zahlen, Empfänger und Freigabe werden vor jeder Weitergabe geprüft."
         },
         {
@@ -516,7 +516,7 @@
           "id": "modul_4_lesson_4_section_4",
           "title": "Das generelle Muster",
           "readTimeMinutes": 3,
-          "content": "**Du schreibst Wochenberichte nicht mehr von null. Du reviewst einen Entwurf.**\n\nDieser Flow zeigt ein größeres Muster: wiederkehrender Bericht + strukturierte Notizen + Claude-Synthese + manueller Review.\n\n**Homework:** Baue das Muster erst mit Beispieldaten nach.\n\n1. Kopiere das Muster `F004-wochenbericht-obsidian` aus den Kursmaterialien\n2. Entscheide: echte Daten erst nach Datenschutz- und Rechteprüfung\n3. Einmal manuell testen\n4. Ergebnis reviewen, korrigieren, dokumentieren\n5. Zeit-Vorher/Nachher mit drei Durchläufen messen\n\nTeile nur anonymisierte Screenshots oder Beschreibungen.",
+          "content": "**Du schreibst Wochenberichte nicht mehr von null. Du reviewst einen Entwurf.**\n\nDieser Flow zeigt ein größeres Muster: wiederkehrender Bericht + strukturierte Notizen + Claude-Synthese + manueller Review.\n\n**Hausaufgabe:** Baue das Muster erst mit Beispieldaten nach.\n\n1. Kopiere das Muster `F004-wochenbericht-obsidian` aus den Kursmaterialien\n2. Entscheide: echte Daten erst nach Datenschutz- und Rechteprüfung\n3. Einmal manuell testen\n4. Ergebnis reviewen, korrigieren, dokumentieren\n5. Zeit-Vorher/Nachher mit drei Durchläufen messen\n\nTeile nur anonymisierte Screenshots oder Beschreibungen.",
           "keyTakeaway": "Template für regelmäßige Berichte. Erst Beispieldaten, dann Rechteprüfung, dann Pilot."
         }
       ],
@@ -573,7 +573,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das Muster kann auf andere wiederkehrende Berichte übertragen werden, wenn Datenquellen, Berechtigungen, Fehlerfolgen und Review-Gate für den jeweiligen Zweck passen."
+          "explanation": "Übertragbar auf andere wiederkehrende Berichte, sofern Datenquellen, Berechtigungen, Fehlerfolgen und Review-Gate für den Zweck passen."
         }
       ]
     },
@@ -604,28 +604,28 @@
           "id": "modul_4_lesson_5_section_1",
           "title": "Wann lokal, wann Cloud",
           "readTimeMinutes": 3,
-          "content": "Cloud- und lokale Verarbeitung sind keine pauschalen Sicherheitsklassen. Entscheidend sind Daten, Zweck, Freigabe und der konkrete technische und vertragliche Aufbau.\n\nBei einem kommerziellen KI-Dienst prüfst du unter anderem Produktvariante, Rollen, Vertrag und DPA/AVV, Trainingsnutzung, Aufbewahrung, Region und Transfers, Zugriffe und Löschung. Bei Anthropic unterscheiden sich die dokumentierten Regeln für kommerzielle Claude-for-Work/API-Angebote von Verbraucherangeboten; eine Markenbewertung ersetzt diese Prüfung nicht.\n\nLokale Verarbeitung kann für freigegebene vertrauliche Daten sinnvoll sein. Sie ist aber nur lokal, wenn Prompts und Dokumente nicht durch Suche, Erweiterungen, Telemetrie, Synchronisierung, Backups oder Remote-APIs das Gerät verlassen. Auch Geräteverschlüsselung, Benutzerrechte, Updates, Modellherkunft und Löschung gehören zur Prüfung.\n\n**Entscheidungsfragen:**\n\n| Frage | Cloud-Dienst | Lokale Anwendung |\n|------|--------------|------------------|\n| Ist der konkrete Dienst freigegeben? | Vertrag und Konfiguration prüfen | Anwendung, Modell und Gerät prüfen |\n| Wohin fließen Eingaben? | dokumentierte Anbieter- und Unterauftragsflüsse | Netzwerkverkehr, Erweiterungen, Sync und Backups prüfen |\n| Reicht die Qualität? | mit repräsentativen Aufgaben testen | mit dem konkret lauffähigen Modell testen |\n| Wer betreibt die Kontrollen? | Anbieter und eigene Organisation | eigene Organisation |\n\nEs gibt keine belastbare allgemeine Prozentregel für Cloud gegen lokal und keine feste Qualitätsquote zwischen Modellfamilien.",
-          "keyTakeaway": "Entscheide pro Datenklasse und Use Case. Cloud braucht Produkt- und Vertragsprüfung; lokal braucht Geräte-, Anwendungs-, Modell- und Netzwerkprüfung."
+          "content": "\"Lokal ist sicher, Cloud ist riskant.\" Falsch, in beide Richtungen. Was zählt, sind Daten, Zweck, Freigabe und der konkrete technische und vertragliche Aufbau.\n\nBei einem kommerziellen KI-Dienst prüfst du unter anderem Produktvariante, Rollen, Vertrag und DPA/AVV, Trainingsnutzung, Aufbewahrung, Region und Transfers, Zugriffe und Löschung. Bei Anthropic unterscheiden sich die dokumentierten Regeln für kommerzielle Claude-for-Work/API-Angebote von Verbraucherangeboten; eine Markenbewertung ersetzt diese Prüfung nicht.\n\nLokale Verarbeitung kann für freigegebene vertrauliche Daten sinnvoll sein. Lokal ist sie aber nur, solange Prompts und Dokumente nicht über Suche, Erweiterungen, Telemetrie, Synchronisierung, Backups oder Remote-APIs das Gerät verlassen. Geräteverschlüsselung, Benutzerrechte, Updates, Modellherkunft und Löschung stehen mit auf der Prüfliste.\n\n**Entscheidungsfragen:**\n\n| Frage | Cloud-Dienst | Lokale Anwendung |\n|------|--------------|------------------|\n| Ist der konkrete Dienst freigegeben? | Vertrag und Konfiguration prüfen | Anwendung, Modell und Gerät prüfen |\n| Wohin fließen Eingaben? | dokumentierte Anbieter- und Unterauftragsflüsse | Netzwerkverkehr, Erweiterungen, Sync und Backups prüfen |\n| Reicht die Qualität? | mit repräsentativen Aufgaben testen | mit dem konkret lauffähigen Modell testen |\n| Wer betreibt die Kontrollen? | Anbieter und eigene Organisation | eigene Organisation |\n\nEine allgemeine Prozentregel für Cloud gegen lokal gibt es nicht. Eine feste Qualitätsquote zwischen Modellfamilien auch nicht.",
+          "keyTakeaway": "Entscheide pro Datenklasse und Anwendungsfall. Cloud braucht Produkt- und Vertragsprüfung, lokal braucht Geräte-, Anwendungs-, Modell- und Netzwerkprüfung."
         },
         {
           "id": "modul_4_lesson_5_section_2",
           "title": "LM Studio installieren",
           "readTimeMinutes": 3,
-          "content": "1. Die aktuelle Anwendung nur von der offiziellen LM-Studio-Seite beziehen.\n2. Systemanforderungen, Signatur und aktuelle Datenschutzhinweise prüfen.\n3. Zunächst ein Modell auswählen, dessen Speicherbedarf laut Anwendung sicher unter dem verfügbaren Arbeitsspeicher beziehungsweise VRAM liegt.\n4. Lizenz, Herausgeber, Dateiformat und Herkunft des konkreten Modellartefakts prüfen.\n5. Mit synthetischen Testdaten laden und Qualität, Geschwindigkeit und Speicherverbrauch messen.\n6. Nach dem Modelldownload den Offline-Modus testen: Netzwerk trennen, Anfrage ausführen und bei höherem Schutzbedarf ausgehenden Netzwerkverkehr technisch kontrollieren.\n\nLM Studio dokumentiert, dass seine Kernfunktionen nach dem Herunterladen eines Modells offline arbeiten können. Modellsuche, Downloads und Updates brauchen Netzwerkzugriff; Erweiterungen oder andere Systemdienste können eigene Datenflüsse haben.\n\nEin großes quantisiertes Modell ist nicht automatisch für ein Gerät geeignet. Quantisierung, Kontextfenster, Parallelität und Betriebssystem brauchen zusätzlichen Speicher. Nutze die aktuelle Speicherabschätzung der Anwendung statt einer festen Geräte- oder Modellbehauptung.",
+          "content": "1. Die aktuelle Anwendung nur von der offiziellen LM-Studio-Seite beziehen.\n2. Systemanforderungen, Signatur und aktuelle Datenschutzhinweise prüfen.\n3. Zunächst ein Modell auswählen, dessen Speicherbedarf laut Anwendung sicher unter dem verfügbaren Arbeitsspeicher beziehungsweise VRAM liegt.\n4. Lizenz, Herausgeber, Dateiformat und Herkunft des konkreten Modellartefakts prüfen.\n5. Mit synthetischen Testdaten laden und Qualität, Geschwindigkeit und Speicherverbrauch messen.\n6. Nach dem Modelldownload den Offline-Modus testen: Netzwerk trennen, Anfrage ausführen und bei höherem Schutzbedarf ausgehenden Netzwerkverkehr technisch kontrollieren.\n\nLM Studio dokumentiert, dass seine Kernfunktionen nach dem Herunterladen eines Modells offline arbeiten können. Modellsuche, Downloads und Updates brauchen Netzwerkzugriff; Erweiterungen oder andere Systemdienste können eigene Datenflüsse haben.\n\nEin großes quantisiertes Modell passt nicht automatisch auf dein Gerät. Quantisierung, Kontextfenster, Parallelität und Betriebssystem fressen zusätzlichen Speicher. Verlass dich auf die aktuelle Speicherabschätzung der Anwendung, nicht auf eine Geräte- oder Modellbehauptung.",
           "keyTakeaway": "Modell nach aktuellem Speicherbedarf, Lizenz, Herkunft und eigener Messung wählen. Offline-Verarbeitung technisch prüfen, nicht nur annehmen."
         },
         {
           "id": "modul_4_lesson_5_section_3",
           "title": "Vertrauliche Dokument-Zusammenfassung",
           "readTimeMinutes": 2,
-          "content": "Teste zuerst mit einem fiktiven Strategiepapier:\n\n```\nHier ist ein synthetisches Strategiepapier. Fasse zusammen in:\n- 3 Sätze Executive Summary\n- 5 Initiativen\n- 3 Risiken\n\nAntwort auf Deutsch. Markiere Unsicherheiten und erfinde keine Fakten.\n```\n\nBewerte den Output gegen eine vorab definierte Soll-Liste: Faktentreue, Vollständigkeit, Format, Auslassungen und erfundene Aussagen. Miss Laufzeit und Speicherverbrauch auf deinem Gerät.\n\nPrüfe separat, ob die Verarbeitung tatsächlich lokal blieb. Ein lokal geladenes Modell belegt das nicht allein; Netzwerkverkehr, Erweiterungen, Zwischenablage, Synchronisierung, Backups und Protokolle können weitere Wege bilden.\n\nErst wenn Datenklasse, Gerät, Anwendung, Modell, Netzwerk und Löschprozess freigegeben sind, folgt ein Pilot mit geeigneten realen Daten. Ergebnisse bleiben fachlich zu prüfen. Ob lokal oder Cloud sinnvoller ist, zeigt der konkrete Vergleich, nicht eine feste Nutzungsquote.",
+          "content": "Teste zuerst mit einem fiktiven Strategiepapier:\n\n```\nHier ist ein synthetisches Strategiepapier. Fasse zusammen in:\n- 3 Sätze Executive Summary\n- 5 Initiativen\n- 3 Risiken\n\nAntwort auf Deutsch. Markiere Unsicherheiten und erfinde keine Fakten.\n```\n\nBewerte den Output gegen eine vorab definierte Soll-Liste: Faktentreue, Vollständigkeit, Format, Auslassungen und erfundene Aussagen. Miss Laufzeit und Speicherverbrauch auf deinem Gerät.\n\nBlieb die Verarbeitung wirklich lokal? Das prüfst du getrennt. Ein lokal geladenes Modell beweist es nicht; Netzwerkverkehr, Erweiterungen, Zwischenablage, Synchronisierung, Backups und Protokolle sind weitere Wege nach draußen.\n\nEin Pilot mit realen Daten kommt erst, wenn Datenklasse, Gerät, Anwendung, Modell, Netzwerk und Löschprozess freigegeben sind. Fachlich geprüft wird trotzdem. Und ob lokal oder Cloud, entscheidet der konkrete Vergleich, keine Nutzungsquote.",
           "keyTakeaway": "Qualität und lokale Datenhaltung getrennt testen. Synthetische Daten zuerst; reale vertrauliche Daten erst nach technischer und organisatorischer Freigabe."
         },
         {
           "id": "modul_4_lesson_5_section_4",
           "title": "Vergleichs-Übung + Hinweise",
           "readTimeMinutes": 2,
-          "content": "**Vergleichsübung mit synthetischem Dokument:**\n1. Eine von der Organisation freigegebene Cloud-Produktvariante verwenden, falls vorhanden.\n2. Dasselbe Dokument mit einem aktuell kompatiblen lokalen Modell bearbeiten.\n3. Beide Outputs blind anhand derselben Kriterien bewerten: Faktentreue, Vollständigkeit, Format, Laufzeit und Kosten.\n4. Datenflüsse und betriebliche Kontrollen getrennt dokumentieren.\n\nOllama ist eine alternative lokale Laufzeit mit eigener Konfiguration und eigenen Sicherheitsprüfungen. Ein Modell auf einer gemieteten GPU-Instanz ist Remote-Hosting, nicht lokale Verarbeitung. EU-Hosting allein bedeutet weder automatische DSGVO-Konformität noch alleinige Datenhoheit; Vertrag, Zugriffe, Unterauftragsverarbeiter, Sicherheit und Transfers bleiben zu prüfen.\n\nVeröffentliche nur synthetische Ergebnisse oder vollständig geprüfte, anonymisierte Ausschnitte.",
+          "content": "**Vergleichsübung mit synthetischem Dokument:**\n1. Eine von der Organisation freigegebene Cloud-Produktvariante verwenden, falls vorhanden.\n2. Dasselbe Dokument mit einem aktuell kompatiblen lokalen Modell bearbeiten.\n3. Beide Outputs blind anhand derselben Kriterien bewerten: Faktentreue, Vollständigkeit, Format, Laufzeit und Kosten.\n4. Datenflüsse und betriebliche Kontrollen getrennt dokumentieren.\n\nOllama ist eine andere lokale Laufzeit mit eigener Konfiguration und eigenen Sicherheitsprüfungen. Ein Modell auf einer gemieteten GPU-Instanz ist Remote-Hosting, egal wie lokal sich das anfühlt. Und EU-Hosting allein bedeutet weder DSGVO-Konformität noch Datenhoheit; Vertrag, Zugriffe, Unterauftragsverarbeiter, Sicherheit und Transfers bleiben zu prüfen.\n\nVeröffentliche nur synthetische Ergebnisse oder vollständig geprüfte, anonymisierte Ausschnitte.",
           "keyTakeaway": "Cloud und lokal mit demselben synthetischen Test und derselben Rubrik vergleichen. Remote-Hosting bleibt ein externer Datenfluss."
         }
       ],
@@ -641,7 +641,7 @@
             },
             {
               "id": "b",
-            "text": "Wenn der Use Case lokal freigegeben ist und Gerät, Anwendung, Modell, Netzwerk, Rechte, Backups und Löschung kontrolliert sind",
+            "text": "Wenn der Anwendungsfall lokal freigegeben ist und Gerät, Anwendung, Modell, Netzwerk, Rechte, Backups und Löschung kontrolliert sind",
               "isCorrect": true
             },
             {
@@ -655,7 +655,7 @@
               "isCorrect": false
             }
           ],
-        "explanation": "Vertraulichkeit allein macht eine lokale Anwendung nicht sicher. Die gesamte lokale Verarbeitungskette und der konkrete Use Case müssen freigegeben und kontrolliert sein."
+        "explanation": "Vertraulich heißt nicht automatisch sicher lokal. Freigegeben und kontrolliert sein müssen die ganze lokale Verarbeitungskette und der konkrete Anwendungsfall."
         },
         {
           "id": "modul_4_lesson_5_q2",
@@ -690,8 +690,8 @@
       "id": "modul_4_lesson_6",
       "moduleId": "modul_4",
       "number": 6,
-      "title": "EU AI Act Deep-Dive: Annex III Risiko-Klassifizierung",
-      "subtitle": "Ist dein Use Case Hochrisiko?",
+      "title": "EU AI Act im Detail: Annex III Risiko-Klassifizierung",
+      "subtitle": "Ist dein Anwendungsfall Hochrisiko?",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "ON-TOOL-RELEASE",
@@ -745,7 +745,7 @@
                         "id": "d",
                         "label": "Hängt von GPAI ab",
                         "correct": false,
-                        "explanation": "GPAI ist die Modellebene (Anthropic). Als Nutzer bist du Deployer, aber hier nicht einmal Annex III."
+                        "explanation": "GPAI ist die Modellebene (Anthropic). Wer das System einsetzt, ist Deployer, und hier nicht einmal unter Annex III."
                       }
                     ]
                   },
@@ -842,7 +842,7 @@
                         "id": "d",
                         "label": "Provider-Pflichten",
                         "correct": false,
-                        "explanation": "Du bist Deployer, aber der Use-Case ist nicht Annex III."
+                        "explanation": "Du bist Deployer, aber der Anwendungsfall ist nicht Annex III."
                       }
                     ]
                   },
@@ -927,7 +927,7 @@
                         "id": "b",
                         "label": "Annex III Hochrisiko: Sicherheitskritisch",
                         "correct": true,
-                    "explanation": "Der beschriebene Zweck fällt grundsätzlich unter Anhang III Nr. 2. Zusätzliche sektorale Sicherheitsregeln sind separat zu prüfen."
+                    "explanation": "Der beschriebene Zweck fällt in der Regel unter Anhang III Nr. 2. Zusätzliche sektorale Sicherheitsregeln sind separat zu prüfen."
                       },
                       {
                         "id": "c",
@@ -987,7 +987,7 @@
                         "id": "b",
                         "label": "Annex III Hochrisiko: biometrische Identifikation",
                         "correct": true,
-                    "explanation": "Der beschriebene Fernidentifikationszweck fällt grundsätzlich unter Anhang III Nr. 1 lit. a. Biometrische Daten nach Art. 9 DSGVO und Mitbestimmung sind anhand des konkreten Einsatzes gesondert zu prüfen."
+                    "explanation": "Der beschriebene Fernidentifikationszweck fällt in der Regel unter Anhang III Nr. 1 lit. a. Biometrische Daten nach Art. 9 DSGVO und Mitbestimmung sind anhand des konkreten Einsatzes gesondert zu prüfen."
                       },
                       {
                         "id": "c",
@@ -1014,28 +1014,28 @@
           "id": "modul_4_lesson_6_section_1",
           "title": "Die drei Rollen",
           "readTimeMinutes": 3,
-          "content": "**Rechtlicher Disclaimer vorweg:** Das ist kein Rechtsrat. Bei konkreten Fällen: Fachanwalt für IT-Recht konsultieren.\n\nWas ich dir gebe: ein Framework, mit dem du viele Fälle sauberer vorsortieren kannst.\n\n**Provider (Anbieter):** baut das AI-System oder lässt es bauen und bringt es unter eigener Marke in den Markt.\n\n**Deployer (Betreiber):** setzt das AI-System unter eigener Autorität ein (nicht für rein persönliche, nicht-berufliche Zwecke).\n\n**Importer (Importeur):** bringt ein AI-System aus einem Drittland (außerhalb EU) in die EU.\n\n**Für Mittelstand-Mitarbeiter + Studenten wichtig:** In Unternehmen ist meist die Organisation Betreiber. Du handelst als Mitarbeitender im Auftrag dieser Organisation.\n\n- Deine Firma setzt Claude, Copilot oder n8n + Claude ein. Die Firma ist regelmäßig Betreiber.\n- Anthropic, Microsoft oder der jeweilige Anbieter bleiben Provider für ihre Systeme.\n\n**Betreiber-Pflichten** (verkürzt):\n- Bei Hochrisiko-Systemen: Nutzung nach Anleitung, Monitoring, menschliche Aufsicht und Logs nach Art. 26; FRIA nur für Art.-27-Fälle.\n- Transparenz gegenüber betroffenen Personen nach Art. 50, soweit der Use Case darunter fällt.\n- Art. 4: rollen- und risikogerechte KI-Kompetenzmaßnahmen, nicht nur ein Kurszertifikat.\n- Bei Nicht-Hochrisiko: weniger Spezialpflichten, aber Datenschutz, Betriebsrat, Geheimhaltung und Fachprüfung bleiben relevant.",
+          "content": "**Vorweg:** Das ist kein Rechtsrat. Für den konkreten Fall gehst du zum Fachanwalt für IT-Recht.\n\nWas ich dir gebe: ein Framework, mit dem du viele Fälle sauberer vorsortieren kannst.\n\n**Provider (Anbieter):** baut das AI-System oder lässt es bauen und bringt es unter eigener Marke in den Markt.\n\n**Deployer (Betreiber):** setzt das AI-System unter eigener Autorität ein (nicht für rein persönliche, nicht-berufliche Zwecke).\n\n**Importer (Importeur):** bringt ein AI-System aus einem Drittland (außerhalb EU) in die EU.\n\n**Für Mitarbeitende im Mittelstand und Studierende:** Im Unternehmen ist meist die Organisation Betreiber. Du handelst in ihrem Auftrag.\n\n- Deine Firma setzt Claude, Copilot oder n8n + Claude ein. Die Firma ist regelmäßig Betreiber.\n- Anthropic, Microsoft oder der jeweilige Anbieter bleiben Provider für ihre Systeme.\n\n**Betreiber-Pflichten** (verkürzt):\n- Bei Hochrisiko-Systemen: Nutzung nach Anleitung, Monitoring, menschliche Aufsicht und Logs nach Art. 26; FRIA nur für Art.-27-Fälle.\n- Transparenz gegenüber betroffenen Personen nach Art. 50, soweit der Anwendungsfall darunter fällt.\n- Art. 4: rollen- und risikogerechte KI-Kompetenzmaßnahmen; eine Teilnahmebestätigung allein reicht nicht.\n- Bei Nicht-Hochrisiko: weniger Spezialpflichten, aber Datenschutz, Betriebsrat, Geheimhaltung und Fachprüfung bleiben relevant.",
           "keyTakeaway": "Deine Organisation ist häufig Betreiber. Anbieter- und Betreiberpflichten unterscheiden sich; FRIA ist kein Standardpunkt für jeden Hochrisiko-Fall."
         },
         {
           "id": "modul_4_lesson_6_section_2",
           "title": "Annex III: die Hochrisiko-Kategorien",
           "readTimeMinutes": 3,
-          "content": "Anhang III gliedert Hochrisiko-Use-Cases in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\n**Prüfung:**\n1. vorgesehenen Zweck und tatsächliche Nutzung dokumentieren;\n2. passenden Anhang-III-Unterpunkt im Wortlaut prüfen;\n3. Art. 6 Abs. 3 und 4 prüfen; Profiling natürlicher Personen ist besonders behandelt;\n4. Rolle und Anwendungsdatum bestimmen;\n5. andere Pflichten getrennt prüfen.\n\n**Beispiele:**\n\n| Use Case | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| System zum Sichten oder Filtern von Bewerbungen | grundsätzlich Anhang III Nr. 4 lit. a; Art. 6 Abs. 3 prüfen |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | grundsätzlich Anhang III Nr. 5 lit. b |\n| FAQ-Chatbot | nicht allein Anhang III; Transparenz nach Art. 50 kann greifen |",
+          "content": "Anhang III gliedert Hochrisiko-Anwendungsfälle in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\n**Prüfung:**\n1. vorgesehenen Zweck und tatsächliche Nutzung dokumentieren;\n2. passenden Anhang-III-Unterpunkt im Wortlaut prüfen;\n3. Art. 6 Abs. 3 und 4 prüfen; Profiling natürlicher Personen ist besonders behandelt;\n4. Rolle und Anwendungsdatum bestimmen;\n5. andere Pflichten getrennt prüfen.\n\n**Beispiele:**\n\n| Anwendungsfall | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| System zum Sichten oder Filtern von Bewerbungen | in der Regel Anhang III Nr. 4 lit. a; Art. 6 Abs. 3 prüfen |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | in der Regel Anhang III Nr. 5 lit. b |\n| FAQ-Chatbot | nicht allein Anhang III; Transparenz nach Art. 50 kann greifen |",
           "keyTakeaway": "Acht Bereiche mit engen Unterpunkten. Immer vorgesehenen Zweck, Art. 6 Abs. 3 und 4, Rolle, Anwendungsdatum und Parallelpflichten prüfen."
         },
         {
           "id": "modul_4_lesson_6_section_3",
           "title": "Der 4-Schritt-Self-Audit",
           "readTimeMinutes": 3,
-          "content": "Für jeden Use Case:\n\n**Schritt 1: System und Zweck.** Version, vorgesehener Zweck, tatsächliche Nutzung, Betroffene und Folgehandlung dokumentieren.\n\n**Schritt 2: Rolle.** Anbieter, Betreiber und mögliche Rollenwechsel nach Art. 25 begründen.\n\n**Schritt 3: Klassifizierung.** Art. 5, Art. 6 mit Anhang I und III sowie Art. 50 jeweils im Wortlaut prüfen. Menschliche Prüfung allein nimmt einen in Anhang III genannten Zweck nicht automatisch aus der Hochrisikoklasse.\n\n**Schritt 4: Pflichten und Datum.** Für Hochrisiko Betreiberpflichten nach Art. 26 zuordnen; FRIA nur für den Adressatenkreis des Art. 27; DSGVO, DSFA, Mitbestimmung, Geheimhaltung und Fachrecht separat prüfen. Auch außerhalb von Hochrisiko bleiben Art. 4 und weitere einschlägige Pflichten bestehen.",
+          "content": "Für jeden Anwendungsfall:\n\n**Schritt 1: System und Zweck.** Version, vorgesehener Zweck, tatsächliche Nutzung, Betroffene und Folgehandlung dokumentieren.\n\n**Schritt 2: Rolle.** Anbieter, Betreiber und mögliche Rollenwechsel nach Art. 25 begründen.\n\n**Schritt 3: Klassifizierung.** Art. 5, Art. 6 mit Anhang I und III sowie Art. 50 jeweils im Wortlaut prüfen. Menschliche Prüfung allein nimmt einen in Anhang III genannten Zweck nicht automatisch aus der Hochrisikoklasse.\n\n**Schritt 4: Pflichten und Datum.** Für Hochrisiko Betreiberpflichten nach Art. 26 zuordnen; FRIA nur für den Adressatenkreis des Art. 27; DSGVO, DSFA, Mitbestimmung, Geheimhaltung und Fachrecht separat prüfen. Auch außerhalb von Hochrisiko bleiben Art. 4 und weitere einschlägige Pflichten bestehen.",
           "keyTakeaway": "Vier Schritte: System und Zweck, Rolle, Klassifizierung im Wortlaut, dann Pflichten samt Anwendungsdatum."
         },
         {
           "id": "modul_4_lesson_6_section_4",
           "title": "Beispiele durchgespielt",
           "readTimeMinutes": 3,
-          "content": "**Beispiel 1: E-Mail-Triage als Review-Entwurf.** Kein in Anhang III genannter Zweck im beschriebenen Einsatz. Art. 4, Datenschutz, Geheimhaltung, Sicherheit und fachliche Freigabe bleiben.\n\n**Beispiel 2: System filtert Bewerbungen für eine Auswahlliste.** Grundsätzlich Anhang III Nr. 4 lit. a. Art. 6 Abs. 3, Betreiberpflichten, Datenschutz und Mitbestimmung prüfen. Eine FRIA folgt bei einem privaten Arbeitgeber nicht allein aus diesem HR-Zweck.\n\n**Beispiel 3: generischer FAQ-Chatbot.** Nicht allein Anhang III. Art. 50 Abs. 1 kann eine Information über die KI-Interaktion verlangen, sofern dies nicht offensichtlich ist; Datenschutz und Verbraucherrecht bleiben je nach Einsatz.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Hochrisiko-Systeme und den 2. August 2028 für produktintegrierte Anhang-I-Systeme. Prüfe vor Einsatz den aktuellen konsolidierten Rechtsstand.\n\n**Übung:** Dokumentiere drei Use Cases mit System, Zweck, Rolle, Klassifizierungsbegründung, Anwendungsdatum und offenen Prüfpunkten.",
+          "content": "**Beispiel 1: E-Mail-Triage als Review-Entwurf.** Kein in Anhang III genannter Zweck im beschriebenen Einsatz. Art. 4, Datenschutz, Geheimhaltung, Sicherheit und fachliche Freigabe bleiben.\n\n**Beispiel 2: System filtert Bewerbungen für eine Auswahlliste.** In der Regel Anhang III Nr. 4 lit. a. Art. 6 Abs. 3, Betreiberpflichten, Datenschutz und Mitbestimmung prüfen. Eine FRIA folgt bei einem privaten Arbeitgeber nicht allein aus diesem HR-Zweck.\n\n**Beispiel 3: generischer FAQ-Chatbot.** Nicht allein Anhang III. Art. 50 Abs. 1 kann eine Information über die KI-Interaktion verlangen, sofern dies nicht offensichtlich ist; Datenschutz und Verbraucherrecht bleiben je nach Einsatz.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Hochrisiko-Systeme und den 2. August 2028 für produktintegrierte Anhang-I-Systeme. Prüfe vor Einsatz den aktuellen konsolidierten Rechtsstand.\n\n**Übung:** Dokumentiere drei Anwendungsfälle mit System, Zweck, Rolle, Klassifizierungsbegründung, Anwendungsdatum und offenen Prüfpunkten.",
           "keyTakeaway": "Nicht-Hochrisiko bedeutet nicht pflichtenfrei. Begründe jede Einordnung und prüfe Rolle, Datum und Parallelrecht."
         }
       ],
@@ -1151,21 +1151,21 @@
           "id": "modul_4_lesson_7_section_1",
           "title": "Warum ein Capstone",
           "readTimeMinutes": 2,
-          "content": "Ein Kursabschluss zeigt erst dann praktische Anwendung, wenn eine Methode auf einen realen Arbeitsablauf übertragen und anhand definierter Kriterien geprüft wird.\n\nDer Capstone ist deshalb **ein konkreter Workflow, der als begrenzter Pilot dokumentiert wird**. Er wird mit freigegebenen Daten getestet, gegen einen bisherigen Ablauf verglichen und nicht ungeprüft produktiv gesetzt.\n\nDer vorgeschlagene Projektzeitraum beträgt sieben Tage. Umfang und Zeitbudget legst du anhand der eigenen Verfügbarkeit und des Risikos fest.",
-          "keyTakeaway": "Der Capstone dokumentiert die Übertragung einer Kursmethode in einen begrenzten, messbaren und reviewbaren Pilot."
+          "content": "Lektionen lesen heißt noch nichts. Ob du eine Methode anwenden kannst, zeigt sich erst am echten Arbeitsablauf, geprüft nach definierten Kriterien.\n\nDeshalb ist der Capstone **ein konkreter Workflow, der als begrenzter Pilot dokumentiert wird**. Getestet mit freigegebenen Daten, verglichen mit dem bisherigen Ablauf, und nicht ungeprüft produktiv gesetzt.\n\nVorgeschlagen sind sieben Tage. Umfang und Zeitbudget legst du nach deiner Verfügbarkeit und dem Risiko fest.",
+          "keyTakeaway": "Der Capstone überträgt eine Kursmethode in einen begrenzten, messbaren Pilot mit Review."
         },
         {
           "id": "modul_4_lesson_7_section_2",
           "title": "Was ein gutes Capstone ist",
           "readTimeMinutes": 3,
-          "content": "**Prüfbarer Capstone:**\n- **Relevant:** bearbeitet ein echtes, wiederkehrendes Problem\n- **Messbar:** erfasst mindestens Qualität, Fehler, Review-Aufwand oder Durchlaufzeit vor und nach dem Pilot\n- **Begrenzt:** hat klaren Start, klares Ende, erlaubte Daten und einen Fallback\n- **Dokumentiert:** enthält Workflow-Diagramm, Risiko- und Datenschutzprüfung sowie Fehlerbehandlung\n- **Übergabefähig:** nennt Voraussetzungen, Betriebsschritte, Zuständigkeit und Abschaltweg\n\n**Nicht ausreichend:**\n- unveränderte Tutorial-Replikation\n- keine Anwendung auf den gewählten Arbeitsablauf\n- unbelegte Nutzenaussage ohne Ausgangswert\n- fehlender Umgang mit Fehlern, Ausfällen oder falschen Ergebnissen\n\n**Drei mögliche Pilotmuster:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot erfasst → Entwurf nach definierter Frist → Mensch prüft Empfänger, Inhalt und Versand.\n2. **Finanzen, Rechnungs-Ingestion.** synthetische Rechnungen → Felder extrahieren → CSV validieren → fachlicher Review vor Import.\n3. **HR, Onboarding-Pack.** freigegebene Stammdaten → Dokumententwürfe → HR prüft Rechte, Vollständigkeit und Versand.",
+          "content": "**Prüfbarer Capstone:**\n- **Relevant:** bearbeitet ein echtes, wiederkehrendes Problem\n- **Messbar:** erfasst mindestens Qualität, Fehler, Review-Aufwand oder Durchlaufzeit vor und nach dem Pilot\n- **Begrenzt:** hat klaren Start, klares Ende, erlaubte Daten und einen Fallback\n- **Dokumentiert:** enthält Workflow-Diagramm, Risiko- und Datenschutzprüfung sowie Fehlerbehandlung\n- **Übergabefähig:** nennt Voraussetzungen, Betriebsschritte, Zuständigkeit und Abschaltweg\n\n**Nicht ausreichend:**\n- unveränderte Tutorial-Replikation\n- keine Anwendung auf den gewählten Arbeitsablauf\n- unbelegte Nutzenaussage ohne Ausgangswert\n- fehlender Umgang mit Fehlern, Ausfällen oder falschen Ergebnissen\n\n**Drei mögliche Pilotmuster:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot erfasst → Entwurf nach definierter Frist → Mensch prüft Empfänger, Inhalt und Versand.\n2. **Finanzen, Rechnungs-Ingestion.** synthetische Rechnungen → Felder extrahieren → CSV validieren → fachlicher Review vor Import.\n3. **HR, Einarbeitungspaket.** freigegebene Stammdaten → Dokumententwürfe → HR prüft Rechte, Vollständigkeit und Versand.",
           "keyTakeaway": "Relevant, messbar, begrenzt, dokumentiert und übergabefähig. Der Capstone bleibt ein Pilot, bis die Produktionsfreigaben vorliegen."
         },
         {
           "id": "modul_4_lesson_7_section_3",
           "title": "Scope in 7 Tagen",
           "readTimeMinutes": 3,
-          "content": "**Zeitbudget festlegen:**\n- Verfügbare Arbeitszeit und Review-Kapazität notieren\n- Einen ersten prüfbaren Durchlauf innerhalb dieses Budgets planen\n- Zeit für Testdaten, Fehlerfälle, Dokumentation und Rückbau reservieren\n\n**Scope zu groß:**\n- \"Ich baue ein komplettes CRM-System mit KI\"\n- \"Ich digitalisiere die gesamte Buchhaltung\"\n- \"Ich migriere die komplette Firmendokumentation\"\n\n**Begrenzbarer Scope:**\n- \"Angebotsentwurf aus freigegebenem Briefing und versionierter Preisliste\"\n- \"Lead-E-Mail-Triage mit synthetischen Testmails und Review-Liste\"\n- \"Wochenbericht aus einem definierten Satz freigegebener Notizen\"\n\n**Scope-Reduktion:** Formuliere den kleinsten Durchlauf, der die zentrale Annahme prüft. Entferne weitere Datenquellen, automatische Schreibaktionen und Sonderfälle, bis Start, Ende, Review und Fallback eindeutig sind.\n\n**Sieben Pflicht-Elemente der Capstone-Rubrik:**\n1. Problem-Statement\n2. Workflow-Diagramm (Trigger → Schritte → Output)\n3. Begründung der Tool-Wahl\n4. Risiko- und Datenschutzprüfung\n5. Messung anhand von mindestens drei vergleichbaren Durchläufen\n6. Fehlerfall + Fallback\n7. Liste der offenen Entscheidungen und nächsten Schritte\n\n**Homework:** Workflow auswählen und intern dokumentieren: Titel, Problem, erlaubte Daten, geplanter Stack, Zeitbudget, Review-Kriterien und Abbruchbedingung. Vor dem Bau anhand der Rubrik prüfen.",
+          "content": "**Zeitbudget festlegen:**\n- Verfügbare Arbeitszeit und Review-Kapazität notieren\n- Einen ersten prüfbaren Durchlauf innerhalb dieses Budgets planen\n- Zeit für Testdaten, Fehlerfälle, Dokumentation und Rückbau reservieren\n\n**Scope zu groß:**\n- \"Ich baue ein komplettes CRM-System mit KI\"\n- \"Ich digitalisiere die gesamte Buchhaltung\"\n- \"Ich migriere die komplette Firmendokumentation\"\n\n**Begrenzbarer Scope:**\n- \"Angebotsentwurf aus freigegebenem Briefing und versionierter Preisliste\"\n- \"Lead-E-Mail-Triage mit synthetischen Testmails und Review-Liste\"\n- \"Wochenbericht aus einem definierten Satz freigegebener Notizen\"\n\n**Scope-Reduktion:** Such den kleinsten Durchlauf, der die zentrale Annahme prüft. Weitere Datenquellen, automatische Schreibaktionen, Sonderfälle: alles raus, bis Start, Ende, Review und Fallback eindeutig sind.\n\n**Sieben Pflicht-Elemente der Capstone-Rubrik:**\n1. Problem-Statement\n2. Workflow-Diagramm (Trigger → Schritte → Output)\n3. Begründung der Tool-Wahl\n4. Risiko- und Datenschutzprüfung\n5. Messung anhand von mindestens drei vergleichbaren Durchläufen\n6. Fehlerfall + Fallback\n7. Liste der offenen Entscheidungen und nächsten Schritte\n\n**Hausaufgabe:** Workflow auswählen und intern dokumentieren: Titel, Problem, erlaubte Daten, geplanter Stack, Zeitbudget, Review-Kriterien und Abbruchbedingung. Vor dem Bau anhand der Rubrik prüfen.",
           "keyTakeaway": "Das Zeitbudget kommt vor dem Scope. Reduziere auf einen prüfbaren Durchlauf und dokumentiere die sieben Rubrik-Elemente."
         }
       ],
@@ -1222,7 +1222,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein kleiner prüfbarer Durchlauf liefert belastbarere Erkenntnisse als ein breiter, unfertiger Aufbau. Erweiterungen folgen erst nach Auswertung des Piloten."
+          "explanation": "Ein kleiner, prüfbarer Durchlauf schlägt jeden breiten, unfertigen Aufbau. Erweitert wird erst nach Auswertung des Piloten."
         }
       ]
     },
@@ -1277,28 +1277,28 @@
           "id": "modul_4_lesson_8_section_1",
           "title": "Capstone-Bewertung und Rubric",
           "readTimeMinutes": 3,
-          "content": "Sobald der Capstone einen prüfbaren Stand erreicht, bewertest du ihn gegen die dokumentierte Rubrik und entscheidest getrennt, ob er intern bleibt oder geteilt werden darf.\n\n**Selbstbewertung nach der Capstone-Rubrik:**\n\nDie Teilnahmebestätigung beruht auf deiner eigenen Angabe zu den sieben Kriterien (erfüllt / nicht erfüllt). Sie ist keine externe Prüfung des Systems oder deiner Kompetenz.\n\n**Ablauf:**\n1. **Capstone dokumentieren:** Workflow, Testdaten, Ergebnisse und Fehlerfälle festhalten\n2. **Rubrik prüfen:** jedes Kriterium mit einem Beleg versehen\n3. **Freigabe getrennt entscheiden:** Teilen erfordert ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung\n4. **Optional iterieren:** Feedback und Messwerte in einer neuen Version dokumentieren\n\n**Selbstbewertungsfragen:**\n- Funktioniert der Workflow innerhalb der definierten Automations- und Review-Grenzen?\n- Sind relevante Fehlerfälle, Stop-Bedingungen und Fallbacks dokumentiert?\n- Kann eine benannte Person den Workflow sicher betreiben und abschalten?",
+          "content": "Der Capstone hat einen prüfbaren Stand. Jetzt zwei getrennte Entscheidungen: Wie schneidet er gegen die dokumentierte Rubrik ab? Und bleibt er intern oder darf er geteilt werden?\n\n**Selbstbewertung nach der Capstone-Rubrik:**\n\nDie Teilnahmebestätigung beruht auf deiner eigenen Angabe zu den sieben Kriterien, erfüllt oder nicht erfüllt. Eine externe Prüfung des Systems oder deiner Kompetenz ist sie nicht.\n\n**Ablauf:**\n1. **Capstone dokumentieren:** Workflow, Testdaten, Ergebnisse und Fehlerfälle festhalten\n2. **Rubrik prüfen:** jedes Kriterium mit einem Beleg versehen\n3. **Freigabe getrennt entscheiden:** Teilen erfordert ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung\n4. **Optional iterieren:** Feedback und Messwerte in einer neuen Version dokumentieren\n\n**Selbstbewertungsfragen:**\n- Funktioniert der Workflow innerhalb der definierten Automations- und Review-Grenzen?\n- Sind relevante Fehlerfälle, Stop-Bedingungen und Fallbacks dokumentiert?\n- Kann eine benannte Person den Workflow sicher betreiben und abschalten?",
           "keyTakeaway": "Die sieben Kriterien brauchen Belege. Die Teilnahmebestätigung ist eine Selbstauskunft; Teilen und fachliche Freigabe sind getrennte Entscheidungen."
         },
         {
           "id": "modul_4_lesson_8_section_2",
           "title": "Drei Betriebsfragen",
           "readTimeMinutes": 3,
-          "content": "Nutze drei Betriebsfragen für den Review:\n\n**1. Ist der Workflow übergabefähig?**\n\nKann eine benannte Vertretung Start, Review, Stopp und Wiederherstellung anhand der Dokumentation ausführen? Fehlende Zugangsvoraussetzungen oder implizites Wissen werden als offene Punkte notiert.\n\n**2. Sind die wichtigsten Fehlerfälle explizit?**\n\nDokumentiere mindestens Fehler bei Eingabedaten, Modellantwort, Schema-Validierung, Zielsystem und Berechtigung. Lege pro relevantem Risiko fest: erkennen, loggen, stoppen oder isoliert wiederholen, zuständige Person informieren und in einen manuellen Ablauf wechseln. Retry-Zahl und Intervall sind keine Universalwerte; sie richten sich nach Fehlerart und Nebenwirkungen.\n\n**3. Ist die Methode nachvollziehbar?**\n\nEine andere Person muss Zweck, Annahmen, Datenfluss, Messung und Grenzen verstehen können. Wiederverwendung ist erst sinnvoll, wenn sie diese Punkte für den neuen Zweck erneut prüft.",
+          "content": "Drei Fragen für den Review:\n\n**1. Ist der Workflow übergabefähig?**\n\nKann deine Vertretung Start, Review, Stopp und Wiederherstellung allein mit der Dokumentation ausführen? Was nur in deinem Kopf liegt, Zugänge inklusive, ist ein offener Punkt.\n\n**2. Sind die wichtigsten Fehlerfälle explizit?**\n\nDokumentiere mindestens Fehler bei Eingabedaten, Modellantwort, Schema-Validierung, Zielsystem und Berechtigung. Lege pro relevantem Risiko fest: erkennen, loggen, stoppen oder isoliert wiederholen, zuständige Person informieren und in einen manuellen Ablauf wechseln. Retry-Zahl und Intervall sind keine Universalwerte; sie richten sich nach Fehlerart und Nebenwirkungen.\n\n**3. Ist die Methode nachvollziehbar?**\n\nEine andere Person muss Zweck, Annahmen, Datenfluss, Messung und Grenzen verstehen. Wiederverwendung erst, wenn sie diese Punkte für den neuen Zweck erneut geprüft hat.",
           "keyTakeaway": "Prüfe Übergabe, risikobasierte Fehlerbehandlung und nachvollziehbare Methodik."
         },
         {
           "id": "modul_4_lesson_8_section_3",
           "title": "Privacy-Primer",
           "readTimeMinutes": 2,
-          "content": "Ein Capstone kann personenbezogene, kundenbezogene oder vertrauliche Geschäftsdaten enthalten. Vor jeder Weitergabe prüfst du Datenklassen und Empfänger; Redaktion ersetzt keine Rechtsgrundlage oder Freigabe.\n\n```\nVOR DEM TEILEN PRÜFEN UND BEI BEDARF ENTFERNEN ODER ERSETZEN:\n- Namen realer Personen → kontextarmer Platzhalter\n- Kunden- und Lieferantennamen → neutraler Platzhalter\n- E-Mail-Adressen und Telefonnummern → synthetische Beispieldaten\n- Konto-, Steuer- und Vertragskennungen → entfernen\n- besondere Kategorien personenbezogener Daten → nicht in das Beispiel übernehmen\n- Preise, Margen und interne Kennzahlen → nur mit dokumentierter Freigabe; sonst entfernen\n- IP-Adressen, interne URLs und Hostnamen → entfernen\n- API-Keys, Tokens, Cookies und Secrets → immer entfernen und bei Offenlegung rotieren\n```\n\n**Zusätzliche Prüfung:**\n- Verantwortlicher, Empfänger, Zweck, Rechtsgrundlage und Aufbewahrung\n- vertragliche Geheimhaltung, Urheberrechte und interne Klassifizierung\n- indirekte Identifizierbarkeit durch Kombination verbleibender Angaben\n\nWenn eine Galerie oder ein anderer öffentlicher Kanal angeboten wird, ist die dortige Moderation nur eine zusätzliche Kontrolle. Die Freigabe durch die verantwortliche Organisation bleibt erforderlich.",
+          "content": "In einem Capstone stecken schnell personenbezogene Daten, Kundendaten oder vertrauliche Geschäftszahlen. Vor jeder Weitergabe prüfst du Datenklassen und Empfänger. Schwärzen ersetzt weder Rechtsgrundlage noch Freigabe.\n\n```\nVOR DEM TEILEN PRÜFEN UND BEI BEDARF ENTFERNEN ODER ERSETZEN:\n- Namen realer Personen → kontextarmer Platzhalter\n- Kunden- und Lieferantennamen → neutraler Platzhalter\n- E-Mail-Adressen und Telefonnummern → synthetische Beispieldaten\n- Konto-, Steuer- und Vertragskennungen → entfernen\n- besondere Kategorien personenbezogener Daten → nicht in das Beispiel übernehmen\n- Preise, Margen und interne Kennzahlen → nur mit dokumentierter Freigabe; sonst entfernen\n- IP-Adressen, interne URLs und Hostnamen → entfernen\n- API-Keys, Tokens, Cookies und Secrets → immer entfernen und bei Offenlegung rotieren\n```\n\n**Zusätzliche Prüfung:**\n- Verantwortlicher, Empfänger, Zweck, Rechtsgrundlage und Aufbewahrung\n- vertragliche Geheimhaltung, Urheberrechte und interne Klassifizierung\n- indirekte Identifizierbarkeit durch Kombination verbleibender Angaben\n\nGibt es eine Galerie oder einen anderen öffentlichen Kanal, ist die Moderation dort eine zusätzliche Kontrolle, nicht die Freigabe. Die kommt von der verantwortlichen Organisation.",
           "keyTakeaway": "Datenklassifizierung und Freigabe kommen vor der Redaktion. Secrets werden entfernt und bei möglicher Offenlegung rotiert."
         },
         {
           "id": "modul_4_lesson_8_section_4",
           "title": "Abschluss",
           "readTimeMinutes": 2,
-          "content": "Modul 4 schließt den Arbeitskurs ab.\n\nDie 27 Lektionen behandeln Aufgabenanalyse, Modellnutzung, Wissensbasis und Workflow-Automation. Der Abschluss dokumentiert, welche Inhalte du bearbeitet und wie du den Capstone selbst bewertet hast. Er ist kein externes Audit und kein Nachweis für den sicheren Produktivbetrieb.\n\nDie Teilnahmebestätigung kann nach dem Quiz oder Capstone heruntergeladen werden. Der QR-Code enthält lesbare Abschlussdaten zur technischen Prüfung; er bestätigt keine externe Bewertung.\n\n**Abschlussarbeit:**\n1. Zwei fremde oder ältere Workflows anhand der Rubrik prüfen\n2. Den eigenen Capstone mit Messwerten, Fehlerfällen und Datenfreigabe dokumentieren\n3. Festhalten, welche Annahmen bestätigt, widerlegt oder noch offen sind",
+          "content": "Modul 4 schließt den Arbeitskurs ab.\n\n27 Lektionen: Aufgabenanalyse, Modellnutzung, Wissensbasis, Workflow-Automation. Der Abschluss dokumentiert, was du bearbeitet und wie du den Capstone selbst bewertet hast. Ein externes Audit ist er nicht, ein Nachweis für sicheren Produktivbetrieb auch nicht.\n\nDie Teilnahmebestätigung lädst du nach dem Quiz oder dem Capstone herunter. Der QR-Code enthält lesbare Abschlussdaten für die technische Prüfung. Eine externe Bewertung bestätigt er nicht.\n\n**Abschlussarbeit:**\n1. Zwei fremde oder ältere Workflows anhand der Rubrik prüfen\n2. Den eigenen Capstone mit Messwerten, Fehlerfällen und Datenfreigabe dokumentieren\n3. Festhalten, welche Annahmen bestätigt, widerlegt oder noch offen sind",
           "keyTakeaway": "Abschluss = dokumentierter Lernstand und Capstone-Rubrik, kein externes Audit."
         }
       ],
@@ -1332,7 +1332,7 @@
         },
         {
           "id": "modul_4_lesson_8_q2",
-          "questionText": "Warum Redaktion vor Public-Share?",
+          "questionText": "Warum Redaktion vor dem öffentlichen Teilen?",
           "answerOptions": [
             {
               "id": "a",
