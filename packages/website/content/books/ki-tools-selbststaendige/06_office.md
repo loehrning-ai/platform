@@ -1,6 +1,6 @@
 # Büroarbeit automatisieren
 
-Ich habe mal ausgerechnet, wie viele E-Mails ich pro Woche als Selbstständiger schreibe.
+Ich habe eine Woche lang mitgezählt, wie viele E-Mails ich als Selbstständiger schreibe.
 
 47.
 
@@ -16,7 +16,7 @@ E-Mails sind der Zeitfresser Nummer eins. Nicht weil sie schwierig sind, sondern
 
 Mein System: **Inbox-Triage.**
 
-Jede E-Mail wird in eine von drei Kategorien sortiert:
+Jede E-Mail landet in einer von drei Kategorien.
 
 1. **Unter 2 Minuten** → Sofort beantworten. Mit KI-Entwurf.
 2. **Über 2 Minuten** → Vormittag-Block. Sammeln, dann am Stück bearbeiten.
@@ -52,9 +52,11 @@ Bei 37 Routine-Mails pro Woche, je 4 Minuten gespart: 2,5 Stunden. Pro Woche. Oh
 
 ## Dokumente und Verträge
 
-Als Freelancer bekommst du Verträge. Werkverträge, NDAs, AGB, Rahmenverträge. Und meistens hast du 48 Stunden Zeit, sie zu prüfen, neben deiner eigentlichen Arbeit.
+Als Freelancer bekommst du Verträge. Werkverträge, NDAs, AGB, Rahmenverträge. Und meistens hast du 48 Stunden Zeit, sie zu prüfen, neben der Arbeit, für die du bezahlt wirst.
 
-KI kann Verträge analysieren. Schnell. Aber, und das ist wichtig, sie ersetzt keinen Anwalt. KI ist kein Jurist. Sie gibt keine Rechtsberatung. Was sie kann: Dir in 5 Minuten eine Zusammenfassung geben und auf ungewöhnliche Klauseln hinweisen.
+KI liest einen Vertrag in Minuten. Sie ersetzt trotzdem keinen Anwalt.
+
+KI ist kein Jurist. Sie gibt keine Rechtsberatung. Sie kann dir in 5 Minuten eine Zusammenfassung liefern und auf ungewöhnliche Klauseln hinweisen.
 
 > **KRAFT-Prompt: Vertrag prüfen**
 >
@@ -72,9 +74,9 @@ KI kann Verträge analysieren. Schnell. Aber, und das ist wichtig, sie ersetzt k
 
 **Wichtig:** Anonymisiere den Vertrag, bevor du ihn in die KI gibst. Keine Firmennamen, keine konkreten Beträge, keine personenbezogenen Daten. "Auftraggeber A beauftragt Auftragnehmer B mit..."
 
-Für eigene Dokumente, Datenschutzerklärungen, AGB oder Projektverträge kannst du KI als Entwurfswerkzeug nutzen. Ein solcher Entwurf ist weder Rechtsberatung noch ein Nachweis, dass die Klauseln zu deinem Geschäftsmodell passen. Lass rechtlich relevante Fassungen fachkundig prüfen.
+Für eigene Dokumente, Datenschutzerklärungen, AGB oder Projektverträge nutzt du KI als Entwurfswerkzeug. Ein Entwurf ist weder Rechtsberatung noch ein Nachweis, dass die Klauseln zu deinem Geschäftsmodell passen. Was rechtlich zählt, lässt du fachkundig prüfen.
 
-**Präsentationen** lassen sich mit KI strukturieren: "Erstelle eine Gliederung für eine 20-minütige Präsentation zum Thema [THEMA] für [ZIELGRUPPE]. 10 Folien. Pro Folie: Headline und 3 Stichpunkte." Werkzeuge wie Gamma oder Microsoft 365 Copilot können Layoutentwürfe erzeugen. Prüfe Inhalt, Quellen, Barrierefreiheit und visuelle Hierarchie selbst; der Nutzen hängt stark von Thema und Ausgangsmaterial ab.
+**Präsentationen** strukturierst du mit demselben Handgriff: "Erstelle eine Gliederung für eine 20-minütige Präsentation zum Thema [THEMA] für [ZIELGRUPPE]. 10 Folien. Pro Folie: Headline und 3 Stichpunkte." Werkzeuge wie Gamma oder Microsoft 365 Copilot erzeugen Layoutentwürfe. Inhalt, Quellen, Barrierefreiheit und visuelle Hierarchie prüfst du selbst, und wie viel das bringt, hängt von Thema und Ausgangsmaterial ab.
 
 ## Meeting-Vorbereitung und -Nachbereitung
 
@@ -101,21 +103,23 @@ Schreibe nach dem Meeting Stichworte auf, 5-10 Punkte, aus dem Gedächtnis. Oder
 
 "Hier sind meine Notizen von einem Meeting mit [WER] am [DATUM]: [NOTIZEN]. Erstelle daraus ein strukturiertes Protokoll mit: Besprochene Themen, Entscheidungen, Action Items mit Verantwortlichkeiten und Fristen."
 
-KI kann Rohnotizen konsistent strukturieren. Ob das Ergebnis besser ist, zeigt erst der Abgleich mit Aufnahme, Notizen und den anwesenden Personen. Verantwortlichkeiten, Fristen und Entscheidungen müssen vor dem Teilen bestätigt werden.
+KI strukturiert Rohnotizen konsistent. Ob das Protokoll auch stimmt, zeigt erst der Abgleich mit Aufnahme, Notizen und den Leuten, die dabei waren. Verantwortlichkeiten, Fristen und Entscheidungen bestätigst du, bevor du das Protokoll verschickst.
 
-In einem Kundenprojekt sagte ein Klient nach drei Meetings: "Deine Protokolle sind die besten, die ich je bekommen habe." Ich habe ihm nicht gesagt, dass ich 3 Minuten gebraucht habe statt 20. Was er bemerkt hat: Alles war da. Jede Entscheidung. Jeder Action Item. Jede Frist. KI macht dich nicht faul. Sie macht dich gründlich.
+In einem Kundenprojekt sagte ein Klient nach drei Meetings: "Deine Protokolle sind die besten, die ich je bekommen habe." Ich habe ihm nicht gesagt, dass ich 3 Minuten gebraucht habe statt 20.
+
+Was er bemerkt hat: Alles war da. Jede Entscheidung. Jeder Action Item. Jede Frist. KI macht dich nicht faul. Sie macht dich gründlich.
 
 ### Meetings transkribieren mit KI
 
-Du sitzt in einem Kundengespräch. Eine Stunde. Danach: Was hat er nochmal zu den Deadlines gesagt? Und was war der Name des Ansprechpartners für die IT? Du weißt es nicht mehr. Weil du zugehört hast statt mitzuschreiben. Und das ist richtig so, wer mitschreibt, hört nicht zu.
+Du sitzt in einem Kundengespräch, eine Stunde lang. Danach: Was hat er nochmal zu den Deadlines gesagt? Und wie hieß der Ansprechpartner für die IT? Du weißt es nicht mehr, weil du zugehört hast statt mitzuschreiben. Und das ist richtig so, wer mitschreibt, hört nicht zu.
 
-Die Lösung: Lass KI mitschreiben. Automatisch. Im Hintergrund.
+Die Lösung: Lass KI mitschreiben. Automatisch, im Hintergrund.
 
 **Whisper (OpenAI): lokal ausführbare Transkription**
 
-Whispers Code und Modellgewichte stehen unter MIT-Lizenz und können lokal ausgeführt werden. Bei einer lokalen Kommandozeilen-Installation wird die Audiodatei lokal verarbeitet; Installation und Modelldownload benötigen zunächst Netzverkehr. Drittanbieter-Oberflächen, Erweiterungen, Synchronisation und Backups haben eigene Datenflüsse und müssen separat geprüft werden.
+Whispers Code und Modellgewichte stehen unter MIT-Lizenz, du kannst sie lokal ausführen. Bei einer lokalen Kommandozeilen-Installation bleibt die Audiodatei auf deinem Rechner; Netzverkehr brauchen nur Installation und Modelldownload. Drittanbieter-Oberflächen, Erweiterungen, Synchronisation und Backups haben eigene Datenflüsse. Die prüfst du separat.
 
-Qualität und Laufzeit hängen von Aufnahme, Sprache, Dialekt, Modellgröße und Hardware ab. Teste das gewählte Modell mit deinem Audiomaterial und kontrolliere Namen, Zahlen und Fachbegriffe.
+Wie gut und wie schnell das läuft, entscheiden Aufnahme, Sprache, Dialekt, Modellgröße und Hardware. Teste das gewählte Modell an deinem eigenen Audiomaterial. Namen, Zahlen und Fachbegriffe kontrollierst du danach von Hand.
 
 **Vor jeder Aufnahme:** Informiere alle Teilnehmenden und hole eine nachweisbare Einwilligung ein. § 201 StGB stellt die unbefugte Aufnahme des nichtöffentlich gesprochenen Wortes unter Strafe. Eine lokale Verarbeitung löst diese vorgelagerte Pflicht nicht.
 
@@ -138,7 +142,7 @@ Für Nicht-Techniker: Es gibt grafische Oberflächen wie "Whisper Transcription"
 
 **Entscheidungsregel:** Kein Markenname und kein EU-Server-Versprechen macht einen Workflow automatisch DSGVO-konform. Prüfe Rechtsgrundlage, Rollen, Vertrag, Datenflüsse, Zugriffe, Aufbewahrung und Löschung für deine konkrete Konfiguration. Lokale Transkription kann den Datenfluss reduzieren, ersetzt aber weder Einwilligung noch Geräte- und Zugriffsschutz.
 
-**Eigener Vergleich statt pauschaler Kostenrechnung:** Miss an drei repräsentativen Aufnahmen die Bearbeitungszeit, Korrekturzeit, Fehlerrate bei Namen und Zahlen sowie Infrastruktur- und Lizenzkosten. Vergleiche diese Werte mit deinem bisherigen Prozess. Erst dieser Test liefert eine belastbare Entscheidung.
+**Eigener Vergleich statt pauschaler Kostenrechnung:** Nimm drei repräsentative Aufnahmen und miss Bearbeitungszeit, Korrekturzeit, Fehlerrate bei Namen und Zahlen, Infrastruktur- und Lizenzkosten. Stell die Werte neben deinen bisherigen Prozess. Vorher entscheidest du nicht, vorher rätst du.
 
 **Der komplette Workflow: Vom Meeting zum geprüften Protokoll**
 
@@ -169,7 +173,7 @@ Ton: Sachlich, präzise, keine Interpretation.
 
 Jeder Freelancer recherchiert. Neue Märkte, neue Tools, Wettbewerber, Trends, Regulierungen. Die meisten machen es mit Google, Tab auf, nächster Tab, noch einer, 20 Tabs offen, 90 Minuten später weißt du alles über ein Thema, das du nicht brauchst.
 
-KI kann dir eine strukturierte Zusammenfassung liefern. In 5 Minuten. Nicht perfekt, du musst die Fakten prüfen. Als Startpunkt für deine eigene Recherche ein gewaltiger Zeitgewinn.
+KI liefert dir stattdessen eine strukturierte Zusammenfassung. In 5 Minuten. Nicht perfekt, du musst die Fakten prüfen. Als Startpunkt für deine eigene Recherche ein gewaltiger Zeitgewinn.
 
 ```
 Kontext: Ich bin [BERUF] und recherchiere [THEMA] für [ZWECK].
@@ -187,7 +191,7 @@ Für aktuelle Gesetze, Preise und Fristen ist kein Chatbot die Primärquelle. Nu
 
 Du jonglierst 3-5 Projekte gleichzeitig. Jedes mit anderen Deadlines, anderen Ansprechpartnern, anderen Anforderungen. Und das Projektmanagement-Tool? "Mein Kopf und eine Excel-Tabelle."
 
-KI kann dir helfen, Struktur zu schaffen. Nicht als Projektmanagement-Tool, dafür gibt es Notion, Asana, Trello. Sondern als Assistent, der dir hilft, Projekte zu planen, Meilensteine zu setzen und den Überblick zu behalten.
+KI schafft dir Struktur. Nicht als Projektmanagement-Tool, dafür gibt es Notion, Asana, Trello. Sondern als Assistent, der Projekte plant, Meilensteine setzt und den Überblick hält.
 
 ```
 Kontext: Ich starte ein neues Projekt für [KUNDE]. Leistung:
@@ -236,4 +240,4 @@ Ich nutze diesen Workflow für jedes neue Beratungsprojekt. 5 Minuten für den P
 > | +187 EUR/Woche | 637 EUR/Woche |
 > | Toolkosten: +0 EUR (Whisper ist kostenlos) | Gesamt: 40 EUR/Mo |
 
-Büro läuft. Jetzt die Finanzen.
+Das Büro läuft. Jetzt die Finanzen.
