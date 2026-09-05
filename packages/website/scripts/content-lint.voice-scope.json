@@ -1,6 +1,19 @@
 {
-  "$comment": "Learner-facing paths (relative to packages/website) under STRICT voice enforcement: voice findings there are errors. Everything else gets the same findings as warnings. A directory prefix ends with a slash; a file path is matched exactly. Add a surface once it has been rewritten.",
+  "$comment": "Learner-facing paths (relative to packages/website) under STRICT voice enforcement: voice findings there are errors. Everything else gets the same findings as warnings. A directory prefix ends with a slash; a file path is matched exactly. Add a surface once it has been rewritten. German files are listed individually while the English twins in en/ are not yet rewritten.",
   "strict": [
-    "content/ki-fuehrerschein"
+    "content/ki-fuehrerschein/block-1-entdeckung-lessons.json",
+    "content/ki-fuehrerschein/block-2-datenschutz-lessons.json",
+    "content/ki-fuehrerschein/block-3-anwendung-lessons.json",
+    "content/ki-fuehrerschein/block-4-verifikation-lessons.json",
+    "content/ki-fuehrerschein/block-5-richtlinie-lessons.json",
+    "content/ki-fuehrerschein/quiz/questions.json",
+    "content/eu-ai-act-kurs/block-1-grundlagen-lessons.json",
+    "content/eu-ai-act-kurs/block-2-risikoklassen-lessons.json",
+    "content/eu-ai-act-kurs/block-3-hochrisiko-lessons.json",
+    "content/eu-ai-act-kurs/block-4-gpai-transparenz-lessons.json",
+    "content/eu-ai-act-kurs/block-5-governance-lessons.json",
+    "content/eu-ai-act-kurs/block-6-praxis-lessons.json",
+    "content/eu-ai-act-kurs/glossary.json",
+    "content/eu-ai-act-kurs/quiz/questions.json"
   ]
 }
