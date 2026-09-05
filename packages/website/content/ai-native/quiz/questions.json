@@ -18,14 +18,14 @@
     "id": "an_w02",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Was ist die zentrale Verschiebung in Modul 1 \"Von der Aufgabe zum Workflow\"?",
+    "questionText": "Welcher Wechsel prägt Modul 1 \"Von der Aufgabe zum Workflow\"?",
     "answerOptions": [
       { "id": "a", "text": "Du ersetzt jeden Mitarbeiter durch KI.", "isCorrect": false },
       { "id": "b", "text": "Du wechselst von rein manueller Ausführung zur Orchestrierung: Arbeit definieren, begrenzte Schritte delegieren und Ergebnisse prüfen.", "isCorrect": true },
       { "id": "c", "text": "Du lernst, selbst Code zu schreiben.", "isCorrect": false },
       { "id": "d", "text": "Du nutzt KI nur für E-Mails, sonst nichts.", "isCorrect": false }
     ],
-    "explanation": "Orchestrierung bedeutet, geeignete Arbeit auszuwählen, sie präzise zu beschreiben, Kontrollen festzulegen und den Output zu prüfen. Urteilskraft und Verantwortung bleiben bei der Person.",
+    "explanation": "Orchestrierung bedeutet, geeignete Arbeit auszuwählen, sie präzise zu beschreiben, Kontrollen festzulegen und den Output zu prüfen. Urteilskraft und Verantwortung bleiben bei dir.",
     "version": 1,
     "active": true
   },
@@ -40,7 +40,7 @@
       { "id": "c", "text": "Urteilskraft anwenden, die Eignung des Ergebnisses bewerten und die Verantwortung für seine Nutzung tragen.", "isCorrect": true },
       { "id": "d", "text": "Nichts mehr, Claude übernimmt alle Entscheidungen.", "isCorrect": false }
     ],
-    "explanation": "Delegation beseitigt keine Verantwortung. Briefing, Berechtigungen, Fakten- und Fachprüfung sowie die Entscheidung über die Nutzung bleiben bei dir.",
+    "explanation": "Delegieren nimmt dir keine Verantwortung ab. Briefing, Berechtigungen, Fakten- und Fachprüfung und die Entscheidung über die Nutzung bleiben bei dir.",
     "version": 1,
     "active": true
   },
@@ -55,7 +55,7 @@
       { "id": "c", "text": "Kompilieren, Testen und Deployen.", "isCorrect": false },
       { "id": "d", "text": "Lesen, Schreiben und Rechnen.", "isCorrect": false }
     ],
-    "explanation": "Die wiederkehrenden Muster sind ein erster Entwurf, die Analyse bereitgestellten Materials und Recherche anhand definierter Fragen. Jedes Muster braucht zur Aufgabe passende Quellen- und Outputprüfungen.",
+    "explanation": "Die drei Muster: ein erster Entwurf, die Analyse von Material, das du bereitstellst, und Recherche anhand definierter Fragen. Jedes braucht passende Quellen- und Outputprüfungen.",
     "version": 1,
     "active": true
   },
@@ -85,7 +85,7 @@
       { "id": "c", "text": "Als konfigurierbares System mit definiertem Kontext, begrenzten Aufgaben, Rechten und Review.", "isCorrect": true },
       { "id": "d", "text": "Claude ist nur ein Chatbot für Smalltalk.", "isCorrect": false }
     ],
-    "explanation": "Projects, Skills, Plugins und MCP konfigurieren Kontext und Zugriffe. Menschen begrenzen Rechte, prüfen Ergebnisse und verantworten Entscheidungen.",
+    "explanation": "Projects, Skills, Plugins und MCP konfigurieren Kontext und Zugriffe. Du begrenzt Rechte, prüfst Ergebnisse und verantwortest Entscheidungen.",
     "version": 1,
     "active": true
   },
@@ -100,7 +100,7 @@
       { "id": "c", "text": "Es löscht automatisch alle Chats nach 24 Stunden.", "isCorrect": false },
       { "id": "d", "text": "Es ist ein reines Datei-Backup ohne KI-Funktion.", "isCorrect": false }
     ],
-    "explanation": "Ein Project kann relevante Anweisungen und Referenzmaterial zusammenhalten, damit Kontext nicht für jede Aufgabe neu eingegeben werden muss. Konkrete Funktionen und Aufbewahrung hängen vom aktuellen Produkt und den Kontoeinstellungen ab.",
+    "explanation": "Ein Project hält Anweisungen und Referenzmaterial zusammen, damit du den Kontext nicht für jede Aufgabe neu eingibst. Funktionen und Aufbewahrung hängen vom aktuellen Produkt und den Kontoeinstellungen ab.",
     "version": 1,
     "active": true
   },
@@ -115,7 +115,7 @@
       { "id": "c", "text": "Connectors brauchen gar keine Autorisierung.", "isCorrect": false },
       { "id": "d", "text": "Über OAuth, das definierte Zugriffsrechte ohne Weitergabe des Kontopassworts erteilt.", "isCorrect": true }
     ],
-    "explanation": "OAuth erlaubt begrenzte Zugriffsrechte, ohne das Passwort des verbundenen Kontos an die Anwendung zu geben. Freigaben sollten auf notwendige Scopes beschränkt und normalerweise beim Anbieter widerrufbar sein.",
+    "explanation": "OAuth vergibt begrenzte Zugriffsrechte, ohne dass die Anwendung das Passwort des verbundenen Kontos sieht. Beschränke Freigaben auf die nötigen Scopes; beim Anbieter lassen sie sich normalerweise widerrufen.",
     "version": 1,
     "active": true
   },
@@ -130,7 +130,7 @@
       { "id": "c", "text": "Eine Hardware-Komponente von Anthropic.", "isCorrect": false },
       { "id": "d", "text": "Ein wiederverwendbares Anweisungspaket für eine wiederkehrende Aufgabe, etwa mit SKILL.md und ergänzenden Ressourcen.", "isCorrect": true }
     ],
-    "explanation": "Ein Skill bündelt Anweisungen und optionale Ressourcen für einen wiederkehrenden Ablauf. Die genaue Struktur hängt vom Produkt ab; Berechtigungen und enthaltene Dateien müssen vor der Nutzung geprüft werden.",
+    "explanation": "Ein Skill bündelt Anweisungen und optionale Ressourcen für einen wiederkehrenden Ablauf. Die genaue Struktur hängt vom Produkt ab; Berechtigungen und enthaltene Dateien prüfst du vor der Nutzung.",
     "version": 1,
     "active": true
   },
@@ -145,7 +145,7 @@
       { "id": "c", "text": "Managed Cloud Platform.", "isCorrect": false },
       { "id": "d", "text": "Multi-Channel-Posting.", "isCorrect": false }
     ],
-    "explanation": "Ein MCP-Server stellt einem kompatiblen Client definierte Tools oder Ressourcen bereit. Die Verbindung erweitert Funktionen und Risiken; Code, Transport, Herkunft und Berechtigungen müssen geprüft werden.",
+    "explanation": "Ein MCP-Server stellt einem kompatiblen Client definierte Tools oder Ressourcen bereit. Die Verbindung erweitert Funktionen und Risiken; Code, Transport, Herkunft und Berechtigungen prüfst du vorher.",
     "version": 1,
     "active": true
   },
@@ -153,14 +153,14 @@
     "id": "an_w11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Projektdatei kann Claude Code dauerhafte Anweisungen und Konventionen bereitstellen?",
+    "questionText": "Welche Projektdatei versorgt Claude Code mit dauerhaften Anweisungen und Konventionen?",
     "answerOptions": [
       { "id": "a", "text": "README.txt im Download-Ordner.", "isCorrect": false },
       { "id": "b", "text": "Eine Excel-Tabelle mit Makros.", "isCorrect": false },
       { "id": "c", "text": "CLAUDE.md, die gepflegten Projektkontext, Anweisungen und Konventionen festhält.", "isCorrect": true },
       { "id": "d", "text": "Die Windows-Registry.", "isCorrect": false }
     ],
-    "explanation": "Claude Code kann eine CLAUDE.md aus der Projekthierarchie als Anweisungsdatei laden. Sie sollte knappe, aktuelle Projekthinweise enthalten und darf nicht als Ablage für Secrets dienen.",
+    "explanation": "Claude Code kann eine CLAUDE.md aus der Projekthierarchie als Anweisungsdatei laden. Halte sie knapp und aktuell, und leg dort keine Secrets ab.",
     "version": 1,
     "active": true
   },
@@ -220,7 +220,7 @@
       { "id": "c", "text": "Gar nicht, der Vault bleibt eine reine Sammlung.", "isCorrect": false },
       { "id": "d", "text": "Durch Ausdrucken und Einscannen.", "isCorrect": false }
     ],
-    "explanation": "Embeddings unterstützen semantische Suche nach ähnlicher Bedeutung statt nur nach identischen Wörtern. Qualität und Datenfluss hängen von Modell, Index und Konfiguration ab.",
+    "explanation": "Embeddings erlauben die Suche nach ähnlicher Bedeutung statt nur nach identischen Wörtern. Qualität und Datenfluss hängen von Modell, Index und Konfiguration ab.",
     "version": 1,
     "active": true
   },
@@ -295,7 +295,7 @@
       { "id": "c", "text": "Ein Synonym für Endkunde ohne jede Pflicht.", "isCorrect": false },
       { "id": "d", "text": "Eine Behörde, die KI verbietet.", "isCorrect": false }
     ],
-    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist grundsätzlich Betreiber.",
+    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist in der Regel Betreiber.",
     "version": 1,
     "active": true
   },
@@ -303,7 +303,7 @@
     "id": "an_w21",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Wofür steht die Abkürzung FRIA, die im EU-AI-Act-Deep-Dive auftaucht?",
+    "questionText": "Wofür steht FRIA im EU-AI-Act-Teil von Modul 4?",
     "answerOptions": [
       { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
       { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
@@ -318,14 +318,14 @@
     "id": "an_w22",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welchen Scope setzt der Capstone-Brief in Modul 4?",
+    "questionText": "Welchen Umfang setzt der Capstone-Brief in Modul 4?",
     "answerOptions": [
       { "id": "a", "text": "Einen begrenzten Workflow als Pilot planen, dokumentieren und mit freigegebenen Daten testen; Produktivbetrieb folgt erst nach den erforderlichen Kontrollen und Freigaben.", "isCorrect": true },
       { "id": "b", "text": "Eine 100-seitige theoretische Hausarbeit zu schreiben.", "isCorrect": false },
       { "id": "c", "text": "Ein börsenreifes Startup zu gründen.", "isCorrect": false },
       { "id": "d", "text": "Nichts zu liefern, der Capstone ist optional und ohne Kriterien.", "isCorrect": false }
     ],
-    "explanation": "Der Capstone umfasst einen kleinen, prüfbaren Workflow. Zeitbudget und Umfang richten sich nach Verfügbarkeit und Risiko; die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, nicht ein garantiertes Deployment-Datum.",
+    "explanation": "Der Capstone ist ein kleiner, prüfbarer Workflow. Zeitbudget und Umfang richten sich nach Verfügbarkeit und Risiko; die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, kein garantiertes Deployment-Datum.",
     "version": 1,
     "active": true
   },
@@ -340,7 +340,7 @@
       { "id": "c", "text": "Gar nicht, es gibt kein Bewertungsschema.", "isCorrect": false },
       { "id": "d", "text": "Anhand von sieben binären Rubrik-Kriterien als Selbsteinschätzung, ohne externe Beurteilung; eine mögliche Veröffentlichung ist eine getrennte Freigabeentscheidung.", "isCorrect": true }
     ],
-    "explanation": "Die sieben Kriterien werden mit erfüllt oder nicht erfüllt dokumentiert. Es gibt keine unabhängige Prüfung. Falls eine Beispielsammlung angeboten wird, erfordert die Veröffentlichung ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung.",
+    "explanation": "Du dokumentierst die sieben Kriterien mit erfüllt oder nicht erfüllt. Eine unabhängige Prüfung gibt es nicht. Falls eine Beispielsammlung angeboten wird, braucht die Veröffentlichung ausdrückliches Opt-in und Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung.",
     "version": 1,
     "active": true
   },
@@ -355,7 +355,7 @@
       { "id": "c", "text": "Es ist eine Teilnahmebestätigung, die lokal im Browser erstellt wird und auf deiner eigenen Einschätzung basiert, nicht auf einer externen Prüfung.", "isCorrect": true },
       { "id": "d", "text": "Es ist ein kostenpflichtiges Add-on, das separat erworben werden muss.", "isCorrect": false }
     ],
-    "explanation": "Das Dokument ist eine lokal im Browser erzeugte Teilnahme- und Abschlussbestätigung. Es wird nicht von einer Behörde oder unabhängigen Prüfstelle ausgestellt; der Bewertungsstand stammt aus der eigenen Capstone-Rubrik oder dem Workshop-Quiz.",
+    "explanation": "Das Dokument entsteht lokal in deinem Browser und bestätigt Teilnahme und Abschluss. Keine Behörde und keine unabhängige Prüfstelle stellt es aus; der Bewertungsstand stammt aus deiner Capstone-Rubrik oder dem Workshop-Quiz.",
     "version": 1,
     "active": true
   }
