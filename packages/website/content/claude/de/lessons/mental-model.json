@@ -2,10 +2,10 @@
   "id": "mental-model",
   "number": 1,
   "title": "Was Claude tatsächlich ist",
-  "subtitle": "Ein belastbares mentales Modell für die Arbeit mit Prompts.",
+  "subtitle": "Ein mentales Modell, das unter Druck hält.",
   "durationMinutes": 8,
   "trackId": "foundations",
-  "hook": "Ein Sprachmodell erzeugt Antworten aus dem bereitgestellten Kontext. Retrieval und Persistenz kommen aus Produktfunktionen und Tools.",
+  "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suchen und Erinnern sind Produktfunktionen und Tools.",
   "keyConcepts": [
     "Vervollständigungs-Engine",
     "Konstitutionelle KI",
@@ -19,32 +19,32 @@
       "id": "what-it-is",
       "title": "Was es ist (und was nicht)",
       "readTimeMinutes": 3,
-      "content": "Claude erzeugt eine Antwort auf Grundlage der Anfrage, des Gesprächs, der Systemanweisungen sowie der Dokumente und Tool-Ergebnisse, die das Produkt bereitstellt. Die Ausgabe ist probabilistisch: Dieselbe Anfrage kann zu unterschiedlichen Formulierungen oder Schlussfolgerungen führen.\n\nDrei Grenzen sind wichtig:\n\n**Generierung ist kein Retrieval.** Eine Antwort belegt nicht, dass eine Quelle durchsucht wurde. Websuche, Repository-Zugriff oder Datenbankabfragen benötigen ein freigegebenes Tool und einen erfolgreichen Tool-Aufruf.\n\n**Das Modell ist kein dauerhafter Speicher.** Produkte können Verlauf, Projektkontext oder Memory-Dateien ergänzen. Prüfe die aktiven Funktionen, statt eine Übertragung zwischen Gesprächen vorauszusetzen.\n\n**Flüssige Sprache ist keine unabhängige Prüfung.** Das Modell kann einer falschen Prämisse folgen oder unbelegte Details erzeugen. Behandle wichtige Ausgaben als Entwurf und prüfe sie mit Quellen, Tests oder menschlichem Review.\n\n> Bewerte Antworten nach Belegen und Prüfung, nicht nach Sprachfluss.",
-      "keyTakeaway": "Claude erzeugt Antworten aus dem bereitgestellten Kontext. Retrieval, Persistenz und Prüfung benötigen explizite Produktfunktionen oder Tools."
+      "content": "Eine flüssige Antwort beweist nichts. Claude erzeugt sie aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen, dazu Dokumente und Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch. Dieselbe Anfrage kann morgen anders enden.\n\nDrei Grenzen gelten immer.\n\n**Generierung ist kein Retrieval.** Eine sichere Antwort belegt nicht, dass jemand nachgeschlagen hat. Websuche, Repository-Zugriff und Datenbankabfragen brauchen ein freigegebenes Tool und einen Tool-Aufruf, der gelaufen ist.\n\n**Das Modell ist kein Speicher.** Verlauf, Projektkontext oder Memory-Dateien kommen vom Produkt, wenn überhaupt. Prüfe, was aktiv ist, statt zu hoffen, dass ein Chat den nächsten kennt.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell folgt auch einer falschen Prämisse und erzeugt Details ohne Beleg. Wichtige Ausgaben sind Entwürfe. Quellen, Tests oder ein Reviewer entscheiden, was stimmt.\n\n> Belege und Prüfung zählen. Sprachfluss zählt nicht.",
+      "keyTakeaway": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suche, Speicher und Prüfung sind Produktfunktionen oder Tools."
     },
     {
       "id": "three-things",
       "title": "Die drei Dinge in jeder Interaktion",
       "readTimeMinutes": 2,
-      "content": "Drei Eingaben prägen eine Generierung:\n\n- **Aktueller Kontext.** System- und Produktanweisungen, Nachrichten, Anhänge und Tool-Ergebnisse im aktiven Kontextfenster.\n- **Modelltraining.** Allgemeine Muster und Informationen aus dem Training. Abdeckung und Aktualität variieren; private oder aktuelle Fakten brauchen Quellen.\n- **Einstellungen und Schutzmechanismen.** Modell, Sampling, freigegebene Tools und Produktrichtlinien beeinflussen die Antwort.\n\n> **Fundierungsregel.** Wenn eine Antwort von aktuellen, privaten oder folgenreichen Fakten abhängt, stelle eine autoritative Quelle bereit und prüfe, ob die Antwort dadurch gestützt wird."
+      "content": "Drei Eingaben formen jede Antwort.\n\n- **Der aktuelle Kontext.** Alles im aktiven Fenster, von der Systemanweisung bis zum letzten Tool-Ergebnis.\n- **Das Training.** Allgemeine Muster, Abdeckung und Stand variieren. Private oder frische Fakten fehlen dort. Die brauchen Quellen.\n- **Einstellungen und Schutzmechanismen.** Modell, Sampling, freigegebene Tools, Produktrichtlinien. Jede Stellschraube verändert die Antwort.\n\n> **Fundierungsregel.** Hängt die Antwort an aktuellen, privaten oder folgenreichen Fakten, gib eine autoritative Quelle mit und prüfe, ob die Antwort sich daraus ergibt."
     },
     {
       "id": "constitutional-ai",
       "title": "Konstitutionelle KI in Kurzform",
       "readTimeMinutes": 2,
-      "content": "Konstitutionelle KI ist eine Methode, die Anthropic im Modelltraining einsetzt. Eine schriftliche Sammlung von Prinzipien dient dazu, Kritiken, Überarbeitungen und Präferenzdaten zu erzeugen. Diese Methode ergänzt weitere Trainings- und Sicherheitsverfahren; sie macht nicht jede Antwort korrekt und nicht jede Ablehnung konsistent.\n\nPraktische Folgen:\n\n1. **Eine Ablehnung ist eine Modellausgabe, keine verbindliche Richtlinienentscheidung.** Ergänze bei legitimen Aufgaben fehlenden Zweck und Grenzen, ohne gültige Schutzmechanismen zu umgehen.\n2. **Unsicherheitssprache ist kein kalibriertes Konfidenzmaß.** Prüfe die Belege unabhängig vom Ton.\n3. **Ein definierter Ausstieg hilft.** Lege fest, was bei unzureichenden Quellen zurückgegeben wird, und teste bekannte sowie unbekannte Fälle."
+      "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic. Eine schriftliche Sammlung von Prinzipien erzeugt Kritiken, Überarbeitungen und Präferenzdaten. Ein Baustein neben anderen Trainings- und Sicherheitsverfahren. Er macht keine Antwort automatisch richtig, keine Ablehnung konsistent.\n\nWas heißt das konkret?\n\n**Eine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid.** Fehlt bei einer legitimen Aufgabe Zweck oder Grenze, ergänze sie, ohne gültige Schutzmechanismen zu umgehen. **„Ich bin mir nicht sicher“ ist kein Konfidenzmaß.** Prüfe die Belege, egal wie der Ton klingt. **Ein definierter Ausstieg hilft:** Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
     },
     {
       "id": "feel-it",
       "title": "Praxistest: Wissen ohne Kontext",
       "readTimeMinutes": 1,
-      "content": "Stelle eine Frage, die von privaten Projektdaten abhängt, die du nicht bereitgestellt hast. Die Antwort kann ablehnen, Kontext anfordern oder eine unbelegte Aussage enthalten; das Verhalten variiert nach Modell, Produkt und Prompt.\n\nDas Prüfkriterium bleibt gleich: Eine projektspezifische Aussage braucht projektspezifische Belege.\n\n> Quelle bereitstellen, Beleg anfordern, Beleg prüfen."
+      "content": "Frag nach etwas, das nur in deinem Projekt steht, ohne es mitzugeben. Die Antwort lehnt ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Was kommt, hängt von Modell, Produkt und Prompt ab.\n\nDas Kriterium bleibt gleich. Eine projektspezifische Aussage braucht projektspezifische Belege.\n\n> Quelle bereitstellen, Beleg anfordern, Beleg prüfen."
     },
     {
       "id": "failure-modes",
       "title": "Drei typische Fehlerbilder",
       "readTimeMinutes": 1,
-      "content": "Nutze diese Begriffe zur Diagnose, bevor du einen Prompt änderst:\n\n- **Unbelegte Aussage.** Eine Behauptung wird von keiner erlaubten Quelle gestützt. Ergänze Retrieval oder Quellen, fordere Belege und prüfe sie.\n- **Vorgabendrift.** Die Ausgabe verletzt ein Format oder eine Regel. Formuliere das Kriterium prüfbar, nutze gegebenenfalls Schemavalidierung oder teile die Aufgabe.\n- **Generische Ausgabe.** Fachdetails oder der erforderliche Stil fehlen. Ergänze relevanten Kontext und ein geprüftes Beispiel, dann vergleiche repräsentative Fälle."
+      "content": "Diagnose vor Therapie. Benenne den Fehler, bevor du am Prompt drehst.\n\n- **Unbelegte Aussage.** Keine erlaubte Quelle stützt die Behauptung. Gib Quellen oder Retrieval dazu, fordere Belege ein und prüfe sie.\n- **Vorgabendrift.** Format oder Regel werden verletzt. Mach das Kriterium prüfbar, validiere gegen ein Schema oder teile die Aufgabe.\n- **Generische Ausgabe.** Fachdetails oder der geforderte Stil fehlen. Gib relevanten Kontext und ein geprüftes Beispiel mit, dann vergleiche repräsentative Fälle."
     }
   ],
   "widgets": [
@@ -55,8 +55,8 @@
       "props": {
         "lessonId": "mental-model",
         "cpId": "feel-it",
-        "title": "Frage nach etwas, das es nicht wissen kann",
-        "hint": "Versuche: „Welche Bereitschaftsrotation ist für den Authentifizierungsdienst in meinem Team zuständig?“, und beobachte dann, wie es antwortet.",
+        "title": "Frag nach etwas, das Claude nicht wissen kann",
+        "hint": "Probier: „Welche Bereitschaftsrotation ist für den Authentifizierungsdienst in meinem Team zuständig?“ Dann schau, was zurückkommt.",
         "placeholder": "Frage Claude etwas, das von Kontext abhängt, den du ihm nicht gegeben hast…"
       }
     },
@@ -75,7 +75,7 @@
           "Claude gibt den String „unknown“ zurück."
         ],
         "correct": 2,
-        "explanation": "Ohne Telemetrie wäre jeder benannte Dienst unbelegt. Stelle Messwerte oder ein lesendes Metrik-Tool bereit und prüfe die Antwort daran.",
+        "explanation": "Ohne Telemetrie ist jeder genannte Dienst geraten. Gib Messwerte oder ein lesendes Metrik-Tool mit und prüfe daran.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -100,7 +100,7 @@
           "Nur wenn du extra bezahlt hast."
         ],
         "correct": 1,
-        "explanation": "Persistenz ist eine Produktfunktion. Produktoberflächen können Projects, CLAUDE.md oder auto-memory bereitstellen; prüfe die aktuelle Konfiguration, statt chatübergreifende Erinnerung vorauszusetzen.",
+        "explanation": "Persistenz ist eine Produktfunktion. Projects, CLAUDE.md oder auto-memory können sie liefern. Prüfe die Konfiguration, statt auf Erinnerung über Chats hinweg zu bauen.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -125,7 +125,7 @@
           "Unabhängig von der Eingabe aus ersten Prinzipien argumentieren."
         ],
         "correct": 1,
-        "explanation": "Das Modell erzeugt eine Antwort abhängig von Eingabe und Kontext. Korrektheit erfordert weiterhin Belege und Prüfung.",
+        "explanation": "Das Modell erzeugt eine Fortsetzung aus Eingabe und Kontext. Ob sie stimmt, klären Belege und Prüfung.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

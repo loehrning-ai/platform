@@ -17,25 +17,25 @@
       "id": "why-evals",
       "title": "Warum Evals?",
       "readTimeMinutes": 1,
-      "content": "Eine Prompt-Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval definiert Eingaben, Erfolgskriterien und Bewertungslogik, damit Versionen unter denselben Bedingungen verglichen werden.\n\nBeginne mit einer kleinen repräsentativen Menge aus häufigen Fällen, Grenzfällen und bekannten Fehlern. Erweitere sie mit Evidenz aus dem Betrieb. Da Modellausgaben variieren, sind bei Entscheidungen über Erfolgsquoten mehrere Durchläufe nötig.\n\n> Dokumentiere Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben und Bewertungen."
+      "content": "Ist der neue Prompt besser? Woher weißt du das? Eine Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval legt Eingaben, Erfolgskriterien und Bewertungslogik fest, damit zwei Versionen unter denselben Bedingungen antreten.\n\nFang klein an, mit häufigen Fällen, Grenzfällen und bekannten Fehlern. Was der Betrieb an Evidenz liefert, kommt dazu. Und weil Modellausgaben variieren, braucht jede Entscheidung über Erfolgsquoten mehrere Durchläufe.\n\n> Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben, Bewertungen. Alles dokumentiert."
     },
     {
       "id": "mvp-eval",
       "title": "Ein kleines Eval-Set",
       "readTimeMinutes": 2,
-      "content": "Eine Tabelle, JSON-Datei oder ein Testmodul reicht für den Anfang. Jeder Fall benötigt eine realistische Eingabe und explizite Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nFühre vor und nach einer Änderung dieselben Fälle aus. Speichere Rohdaten und Bewertungen, damit Meinungsverschiedenheiten geprüft werden können."
+      "content": "Eine Tabelle reicht. Oder eine JSON-Datei, oder ein Testmodul. Jeder Fall braucht eine realistische Eingabe und explizite Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nVor und nach jeder Änderung laufen dieselben Fälle. Speichere Rohdaten und Bewertungen, damit ein Streit über ein Ergebnis am Transkript geklärt wird."
     },
     {
       "id": "debugging",
       "title": "Debugging eines fehlerhaften Prompts",
       "readTimeMinutes": 2,
-      "content": "Reproduziere eine Regression zuerst mit fester Eingabe, Modell, Einstellungen und Tool-Zustand. Vereinfache oder deaktiviere anschließend Prompt-Abschnitte, um widersprüchliche Anweisungen einzugrenzen. Führe Abschnitte einzeln wieder ein und teste dieselben Fälle.\n\nDas ähnelt Delta-Debugging. Wegen Modellvarianz beweist ein einzelner Durchlauf jedoch keine Ursache. Wiederhole Versuche und prüfe die Transkripte."
+      "content": "Erst reproduzieren: feste Eingabe, festes Modell, feste Einstellungen, fester Tool-Zustand. Dann Prompt-Abschnitte vereinfachen oder abschalten, bis der Widerspruch eingekreist ist. Abschnitte einzeln zurückholen, dieselben Fälle testen.\n\nDas ähnelt Delta-Debugging, mit einem Haken: Modellvarianz. Ein einzelner Durchlauf beweist keine Ursache. Wiederhole, und lies die Transkripte."
     },
     {
       "id": "llm-as-judge",
       "title": "Qualität mit einem zweiten Modell beurteilen",
       "readTimeMinutes": 2,
-      "content": "Ein Modell-Grader kann offene Ausgaben anhand einer Rubrik bewerten, bringt aber eigene Fehler und Präferenzen ein. Kalibriere ihn mit menschlich geprüften Beispielen, variiere bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss Abweichungen.\n\nNutze deterministische Grader für Schema, Pflichtfelder, Zitate und ausführbare Tests. Kombiniere Grader nur, wenn jeder eine definierte Anforderung misst."
+      "content": "Ein Modell-Grader bewertet offene Ausgaben anhand einer Rubrik. Und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung, miss die Abweichung.\n\nSchema, Pflichtfelder, Zitate, ausführbare Tests: Das prüfen deterministische Grader, kein Modell. Mehrere Grader kombinierst du nur, wenn jeder eine definierte Anforderung misst."
     }
   ],
   "widgets": [
@@ -47,7 +47,7 @@
         "lessonId": "evals",
         "cpId": "tagger",
         "title": "Benenne den Fehlerfall",
-        "scenario": "Fünf simulierte Ausgaben enthalten unterschiedliche Fehlerbilder. Die Beispiele sind feste Kursdaten, keine Live-Antworten von Claude.",
+        "scenario": "Fünf simulierte Ausgaben mit unterschiedlichen Fehlerbildern. Feste Kursdaten, keine Live-Antworten von Claude.",
         "modes": [
           {
             "id": "halluzination",
@@ -83,28 +83,28 @@
             "prompt": "Schreibe ein kurzes JSON-Objekt, das einen generischen Benutzer beschreibt: {name, role, email}.",
             "output": "Ich kann keine Beispieldaten mit E-Mails generieren, da dies mit einer realen Person verwechselt werden könnte. Könntest du deinen Anwendungsfall präzisieren?",
             "correct": "verweigerung",
-            "why": "Die Anfrage ist harmlos und betrifft Beispieldaten. Dies ist eine klassische übervorsichtige Verweigerung."
+            "why": "Harmlose Anfrage, Beispieldaten. Eine klassische übervorsichtige Verweigerung."
           },
           {
             "id": "c3",
             "prompt": "Gib ein JSON-Array mit 3 Objekten zurück, jedes mit den Schlüsseln „term“ und „definition“. Kein Fließtext.",
             "output": "Sicher! Hier sind drei wichtige Begriffe:\n\n1. Kontextfenster: der Textbereich, den das Modell auf einmal berücksichtigen kann.\n2. Token: eine Texteinheit, die das Modell verarbeitet.\n3. Temperatur: Parameter für die Stichprobenzufälligkeit.",
             "correct": "formatdrift",
-            "why": "Explizit ein JSON-Array ohne Fließtext angefordert. Erhalten wurde Fließtext mit nummerierten Aufzählungspunkten."
+            "why": "Angefordert: ein JSON-Array ohne Fließtext. Geliefert: Fließtext mit nummerierten Punkten."
           },
           {
             "id": "c4",
             "prompt": "Fasse den angehängten Vorfallbericht in einem Satz zusammen.",
             "output": "Vorfälle sind in schnelllebigen Teams üblich. Hier sind sieben Best Practices für Post-Mortems: 1. Fehlerfreie Kultur 2. Klare Zeitlinie 3. Ursachenanalyse...",
             "correct": "themaverfehlung",
-            "why": "Hat den spezifischen Bericht nicht zusammengefasst, sondern ist zu allgemeinen Ratschlägen über Post-Mortems übergegangen."
+            "why": "Der konkrete Bericht wurde nie zusammengefasst. Stattdessen allgemeine Ratschläge über Post-Mortems."
           },
           {
             "id": "c5",
             "prompt": "Was ist die aktuelle Version unserer internen AuthKit-Bibliothek?",
             "output": "AuthKit ist derzeit in Version 3.7.2, angeblich in einem aktuellen Release veröffentlicht, mit Fehlerbehebungen für den OAuth-Flow und einem neuen MFA-Modul.",
             "correct": "halluzination",
-            "why": "Das Modell kann die Version deiner internen Bibliothek unmöglich kennen. Es hat Version, Datum und Release Notes erfunden."
+            "why": "Die Version deiner internen Bibliothek kann das Modell nicht kennen. Version, Datum und Release Notes sind erfunden."
           }
         ],
         "passThreshold": 4,
@@ -175,7 +175,7 @@
           "Bitte Claude, den Prompt von Grund auf neu zu schreiben."
         ],
         "correct": 1,
-        "explanation": "Deaktiviere Abschnitte, um Konflikte einzugrenzen, und wiederhole dieselben Eval-Durchläufe, bevor du eine Ursache festlegst.",
+        "explanation": "Abschnitte deaktivieren grenzt Konflikte ein. Dieselben Eval-Durchläufe wiederholen, bevor du eine Ursache festlegst.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
