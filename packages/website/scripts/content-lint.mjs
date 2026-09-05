@@ -18,12 +18,36 @@
  *
  * Exit code 0 = clean. Exit code 1 = at least one ERROR found.
  * Warnings are logged but do not affect exit code.
+ *
+ * VOICE RULES (German and English) run over every learner-facing file; see
+ * the "Voice rules" section near the end of this file. Three JSON files next
+ * to this script configure them:
+ *   content-lint.voice-scope.json  strict paths: voice findings there are
+ *                                  errors, everywhere else warnings
+ *   content-lint.allowlist.json    per-file, per-rule exceptions; `reason`
+ *                                  is mandatory and an entry without one
+ *                                  fails the lint
+ *   content-lint.form-map.json     form of address (du | sie) per German
+ *                                  course directory
+ * The rule tables live in content-voice-rules.mjs, file discovery and prose
+ * extraction in content-prose.mjs; content-voice-report.mjs reuses both.
  */
 
 import { execSync } from "node:child_process";
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, extname, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import {
+  collectLearnerFacingFiles,
+  extractProseUnits,
+} from "./content-prose.mjs";
+import {
+  analyzeVoice,
+  applyAllowlist,
+  loadVoiceConfig,
+  severityFor,
+} from "./content-voice-rules.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -1278,6 +1302,92 @@ function checkFreshnessSourceStaleness() {
 }
 
 // ---------------------------------------------------------------------------
+// Voice rules: openers, filler, hedges, transitions, claims, per-lesson and
+// per-course counters, form of address, completion terminology and the
+// structural warnings (paragraph length, restating closers, three-item
+// lists). German and English tables apply to every learner-facing file; the
+// form check applies to German files only. Tables and analysis:
+// content-voice-rules.mjs. Discovery and prose extraction: content-prose.mjs.
+// ---------------------------------------------------------------------------
+//
+// Configuration files next to this script:
+//   content-lint.voice-scope.json
+//     { "strict": ["content/<dir>/", "src/lib/<course>/lessons/de/"] }
+//     Files under a strict prefix (or an exact file path) report the strict
+//     voice rules as errors. Every other learner-facing file gets the same
+//     findings as warnings. The list starts empty and grows as surfaces are
+//     rewritten. VOICE-TERM, VOICE-PARAGRAPH, VOICE-CLOSER and VOICE-LISTS
+//     stay warnings everywhere.
+//   content-lint.allowlist.json
+//     { "entries": [{ "file", "rule", "phrase"?, "reason" }] }
+//     Suppresses one rule (optionally one phrase id from the rule tables) for
+//     one file, or for a directory when `file` ends with a slash. `reason`
+//     is mandatory: an entry without a non-empty reason fails the lint, and
+//     an entry that matches nothing is reported as VOICE-ALLOWLIST-UNUSED.
+//   content-lint.form-map.json
+//     { "default": "du", "courses": { "content/eu-ai-act-kurs": "sie", ... } }
+//     Form of address per German course directory (longest prefix wins). A
+//     German file that carries markers of the other form is a VOICE-FORM
+//     finding. English files and copy modules with both locales are exempt.
+
+const VOICE_CONFIG_PATHS = {
+  scopePath: join(__dirname, "content-lint.voice-scope.json"),
+  allowlistPath: join(__dirname, "content-lint.allowlist.json"),
+  formMapPath: join(__dirname, "content-lint.form-map.json"),
+};
+
+/**
+ * Runs the voice rules over the learner-facing files below `root` and returns
+ * { errors, warnings, suppressed, configErrors } without printing. Tests call
+ * this with a fixture root and an in-memory config; checkVoice() prints the
+ * result through error() and warn().
+ */
+export function runVoiceLint({
+  root = ROOT,
+  config = null,
+  configPaths = VOICE_CONFIG_PATHS,
+} = {}) {
+  const resolved = config ?? loadVoiceConfig(configPaths);
+  const units = collectLearnerFacingFiles(root).map((relFile) =>
+    extractProseUnits(relFile, readFileSync(join(root, relFile), "utf-8")),
+  );
+  const findings = analyzeVoice(units, { formMap: resolved.formMap });
+  const { kept, suppressed, unused } = applyAllowlist(
+    findings,
+    resolved.allowlist,
+  );
+  const errors = [];
+  const warnings = [];
+  for (const item of kept) {
+    const bucket = severityFor(item, resolved.strict) === "error" ? errors : warnings;
+    bucket.push(item);
+  }
+  for (const entry of unused) {
+    warnings.push({
+      relFile: "scripts/content-lint.allowlist.json",
+      line: 1,
+      rule: "VOICE-ALLOWLIST-UNUSED",
+      phrase: entry.rule,
+      message: `allowlist entry for ${entry.file} / ${entry.rule}${entry.phrase ? ` / ${entry.phrase}` : ""} matched nothing; remove it`,
+    });
+  }
+  return { errors, warnings, suppressed, configErrors: resolved.errors };
+}
+
+function checkVoice() {
+  const result = runVoiceLint();
+  for (const problem of result.configErrors) {
+    error(`scripts/${problem.file}`, 1, "VOICE-CONFIG", problem.message);
+  }
+  for (const item of result.errors) {
+    error(item.relFile, item.line, item.rule, item.message);
+  }
+  for (const item of result.warnings) {
+    warn(item.relFile, item.line, item.rule, item.message);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main runner
 // ---------------------------------------------------------------------------
 
@@ -1295,6 +1405,7 @@ function runAllChecks() {
   checkMetadataCompleteness();
   checkFreshnessSurfaceConsistency();
   checkFreshnessSourceStaleness();
+  checkVoice();
 
   console.log(
     `\nContent lint complete: ${errorCount} error(s), ${warningCount} warning(s).`,

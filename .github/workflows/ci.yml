@@ -286,6 +286,82 @@ jobs:
           retention-days: 7
 
   # ---------------------------------------------------------------------------
+  # Voice report: before/after prose metrics for the learner-facing files a
+  # pull request touches, posted as one comment that is updated in place.
+  # Advisory only: it is not in the `verify` aggregate and never blocks a merge.
+  # `pull-requests: write` is scoped to this job alone; the job skips itself
+  # when no learner-facing file changed. Fork pull requests get a read-only
+  # token, so the comment step is limited to same-repository heads and the
+  # report stays visible in the job log.
+  # ---------------------------------------------------------------------------
+  voice-report:
+    name: voice report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The report diffs against the merge base, which a depth-1 checkout
+          # does not contain.
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Find changed learner-facing files
+        id: changes
+        run: |
+          git fetch --no-tags origin main
+          bun run content:voice-report -- --changed-since origin/main --list > changed-learner-files.txt
+          if [ -s changed-learner-files.txt ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            cat changed-learner-files.txt
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No learner-facing file changed; skipping the voice report."
+          fi
+      - name: Build the voice report
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          {
+            bun run content:voice-report -- --markdown --baseline origin/main
+            echo
+            bun run content:voice-report -- --markdown --baseline origin/main --changed-since origin/main --verbose
+          } > voice-report.md
+          cat voice-report.md
+      - name: Upsert the pull-request comment
+        if: >-
+          steps.changes.outputs.changed == 'true'
+          && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const { readFile } = require("node:fs/promises");
+            const marker = "<!-- voice-report -->";
+            const limit = 60000;
+            let report = await readFile("voice-report.md", "utf8");
+            if (report.length > limit) {
+              report = `${report.slice(0, limit)}\n\n(truncated; the full report is in the job log)`;
+            }
+            const body = `${marker}\n${report}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) => comment.body?.startsWith(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+  # ---------------------------------------------------------------------------
   # The required status check. Branch-protection ruleset 19653327 requires the
   # literal context `verify`, so this job keeps that name and no matrix job is
   # ever made required.

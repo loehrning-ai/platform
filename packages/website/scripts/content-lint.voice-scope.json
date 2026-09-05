@@ -1,0 +1,4 @@
+{
+  "$comment": "Learner-facing paths (relative to packages/website) under STRICT voice enforcement: voice findings there are errors. Everything else gets the same findings as warnings. A directory prefix ends with a slash; a file path is matched exactly. Add a surface once it has been rewritten.",
+  "strict": []
+}

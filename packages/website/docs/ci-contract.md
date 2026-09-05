@@ -53,6 +53,7 @@ action at `.github/actions/setup`.
 | `e2e` (18-way matrix) | `bun run --cwd packages/website e2e:shard:built`               | yes           |
 | `auth-scaffold`       | `bun run test:e2e:auth-scaffold:built`                         | yes           |
 | `server-log-privacy`  | `bun run --cwd packages/website test:server-log-privacy:built` | yes           |
+| `voice-report`        | `bun run content:voice-report -- --markdown --baseline origin/main` (pull requests only, advisory PR comment, not in `verify`) | no            |
 | `verify`              | aggregation only                                               | no            |
 
 Each build-dependent job runs `bun run --cwd packages/website verify:build`

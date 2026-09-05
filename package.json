@@ -48,6 +48,7 @@
     "audit": "bun audit --ignore=GHSA-jmr9-qjv8-65gv",
     "license:audit": "node scripts/audit-dependency-licenses.mjs",
     "content:lint": "bun run --cwd packages/website content:lint",
+    "content:voice-report": "bun run --cwd packages/website content:voice-report",
     "marketing:check": "node scripts/verify-marketing.mjs",
     "test:marketing": "node --test scripts/__tests__/verify-marketing.test.mjs",
     "scan:public": "node scripts/scan-public-candidate.mjs",

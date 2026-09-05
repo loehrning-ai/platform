@@ -1,0 +1,4 @@
+{
+  "$comment": "Per-file, per-rule exceptions for the voice rules in content-lint.mjs. Every entry needs `file` (relative to packages/website; a trailing slash allows a directory), `rule` (a VOICE-* rule id) and a non-empty `reason`. Optional `phrase` narrows the entry to one phrase id from the rule tables. An entry without a reason fails the lint.",
+  "entries": []
+}
