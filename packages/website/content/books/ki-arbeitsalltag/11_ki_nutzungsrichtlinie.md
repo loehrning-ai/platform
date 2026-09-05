@@ -1,6 +1,6 @@
 # Die KI-Nutzungsrichtlinie: Was sie bedeutet und warum sie dich schützt
 
-Samsung, Frühjahr 2023. ChatGPT wird intern eingeführt. Ohne Regeln. Ohne Richtlinie. Ohne Training.
+Samsung, Frühjahr 2023. ChatGPT wird intern eingeführt. Ohne Regeln, ohne Richtlinie, ohne Training.
 
 Innerhalb von 20 Tagen: drei Datenlecks. Mitarbeiter geben Quellcode ein, Meeting-Protokolle, Testdaten für Halbleiter. Samsung muss ChatGPT unternehmensweit sperren und eine eigene Lösung bauen. Monate Verzögerung, Reputationsschaden, interne Reorganisation.
 
@@ -8,46 +8,46 @@ Das ist keine Horrorgeschichte. Das ist die Realität in Unternehmen ohne KI-Ric
 
 ## Warum du eine brauchst, auch als Einzelner
 
-Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025). Das sind nicht Rebellen. Das sind Leute wie du, die eine Aufgabe schneller erledigen wollen und dafür ChatGPT öffnen. Verständlich. Aber gefährlich.
+Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025). Das sind keine Rebellen. Das sind Leute wie du, die eine Aufgabe schneller erledigen wollen und dafür ChatGPT öffnen. Verständlich, aber gefährlich.
 
-Bei Apple war Datenklassifizierung Pflicht, Public/Internal/Confidential/Restricted, ab Tag 1. Vor KI-Hype. Einfach gute Hygiene. Als ich dann bei Red Bull ohne diese Struktur gearbeitet habe, habe ich verstanden, warum Apple das macht. Die Bürokratie der Klassifizierung schützt dich vor der Katastrophe des Lecks.
+Bei Apple war Datenklassifizierung Pflicht, Public/Internal/Confidential/Restricted, ab Tag 1. Vor jedem KI-Hype, einfach gute Hygiene. Als ich dann bei Red Bull ohne diese Struktur gearbeitet habe, habe ich verstanden, warum Apple das macht. Die Bürokratie der Klassifizierung schützt dich vor der Katastrophe des Lecks.
 
 Dein Unternehmen braucht keine Apple-Level-Security. Es braucht eine Seite Papier.
 
 ## Die 6 Bausteine
 
-Eine KI-Nutzungsrichtlinie hat sechs Teile. Nicht mehr.
+Eine KI-Nutzungsrichtlinie hat sechs Teile, nicht mehr.
 
-**1. Geltungsbereich.** Für wen gilt das? Alle. Festangestellte, Freelancer, externe Dienstleister mit Datenzugriff. Keine Ausnahmen.
+**1. Geltungsbereich.** Für wen gilt das? Alle. Festangestellte, Freelancer, externe Dienstleister mit Datenzugriff, keine Ausnahmen.
 
-**2. Genehmigte Tools.** Liste: Toolname, Anbieter, erlaubte Datenstufe, verantwortliche Person. Kostenlose Tools, ChatGPT Free, Gemini Free, Claude Free, sind verboten. Kein AVV, Eingaben können fürs Training verwendet werden. Das ist nicht Paranoia. Das ist DSGVO.
+**2. Genehmigte Tools.** Liste: Toolname, Anbieter, erlaubte Datenstufe, verantwortliche Person. Kostenlose Tools, ChatGPT Free, Gemini Free, Claude Free, sind verboten. Ohne AVV können Eingaben fürs Training verwendet werden. Das ist nicht Paranoia, das ist DSGVO.
 
-**3. Datenregeln.** Die vier Stufen aus Kapitel 4 werden hier verbindlich. Stufe 1 und 2: genehmigte Tools. Stufe 3: nur Enterprise-KI mit Vertrag. Stufe 4: nie. In keinem Tool.
+**3. Datenregeln.** Die vier Stufen aus Kapitel 4 werden hier verbindlich. Stufe 1 und 2: genehmigte Tools. Stufe 3: nur Enterprise-KI mit Vertrag. Stufe 4: nie, in keinem Tool.
 
 **4. Prüfpflicht.** Jeder KI-Output durchläuft die 3-Schritt-Prüfung aus Kapitel 10. Sachlich korrekt? Vollständig? Angemessen? Externe Dokumente, alles, was das Unternehmen verlässt, brauchen eine Vier-Augen-Kontrolle.
 
 **5. Eskalationspfad.** Ein KI-Vorfall ist: vertrauliche Daten in nicht genehmigtem Tool, ODER KI-generierte Fehlinformation versandt, ODER personenbezogene Daten ohne Rechtsgrundlage verarbeitet.
 
-Was du tust:
+Was du tust.
 
 - Sofort: Vorgesetzten informieren
 - Innerhalb von 4 Stunden: IT-Leitung + Datenschutzbeauftragte
 - Innerhalb von 24 Stunden: Geschäftsführung
 - DSGVO Art. 33: Meldung an die Aufsichtsbehörde innerhalb von 72 Stunden
 
-**6. Review-Zyklus.** Quartalsweise Überprüfung. Sofort bei: neuem Tool, Sicherheitsvorfall, Gesetzesänderung. Jede Änderung bekommt eine Versionsnummer.
+**6. Review-Zyklus.** Quartalsweise Überprüfung. Sofort bei neuem Tool, Sicherheitsvorfall, Gesetzesänderung. Jede Änderung bekommt eine Versionsnummer.
 
 ## EU AI Act: Was dich direkt betrifft
 
 Verordnung (EU) 2024/1689, die EU-KI-Verordnung, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) gilt seit 2. Februar 2025. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber Maßnahmen ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Vorwissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen sind zu berücksichtigen; ein bestimmtes individuelles Kompetenzniveau muss nicht garantiert werden.
 
-Seit 2. August 2025 ist der Sanktionsrahmen des Art. 99 grundsätzlich anwendbar. Ob eine Sanktion in Betracht kommt, hängt davon ab, ob die jeweilige Pflicht bereits gilt und wer zuständig ist. Art. 4 und große Teile des Art. 5 gelten seit Februar 2025, die GPAI-Anbieterpflichten seit August 2025 und Art. 50 ab 2. August 2026. Die Verordnung (EU) 2026/1744 ist am 27. Juli 2026 in Kraft getreten. Sie verschiebt die Hochrisiko-Regeln für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.
+Seit 2. August 2025 ist der Sanktionsrahmen des Art. 99 dem Grunde nach anwendbar. Ob eine Sanktion in Betracht kommt, hängt davon ab, ob die jeweilige Pflicht bereits gilt und wer zuständig ist. Art. 4 und große Teile des Art. 5 gelten seit Februar 2025, die GPAI-Anbieterpflichten seit August 2025 und Art. 50 ab 2. August 2026. Die Verordnung (EU) 2026/1744 ist am 27. Juli 2026 in Kraft getreten. Sie verschiebt die Hochrisiko-Regeln für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.
 
-Dieses Buch oder ein Kurszertifikat kann eine Kompetenzmaßnahme dokumentieren, erfüllt Art. 4 aber nicht automatisch. Die Organisation muss Bedarf, Rolle, Einsatzkontext, Maßnahme und Wirksamkeitsprüfung nachvollziehbar dokumentieren. Eine Richtlinie ist ein Baustein davon.
+Dieses Buch oder eine Teilnahmebestätigung kann eine Kompetenzmaßnahme dokumentieren, erfüllt Art. 4 aber nicht automatisch. Die Organisation muss Bedarf, Rolle, Einsatzkontext, Maßnahme und Wirksamkeitsprüfung nachvollziehbar dokumentieren. Eine Richtlinie ist ein Baustein davon.
 
 ## Die Vorlage
 
-Hier ist die Rohfassung. Eine bis zwei Seiten. Kopiere, passe an, gib sie deiner Geschäftsführung oder IT-Leitung:
+Hier ist die Rohfassung. Eine bis zwei Seiten. Kopiere, passe an, gib sie der Geschäftsführung oder IT-Leitung:
 
 ```
 KI-NUTZUNGSRICHTLINIE, [Firma]
@@ -116,16 +116,16 @@ Das ist keine juristische Beratung, aber eine Struktur, mit der du in den meiste
 
 > **So bekommst du die Richtlinie in einem 25-Personen-Betrieb verabschiedet:**
 > 1. Schick die Rohfassung an Geschäftsführung und IT-Verantwortliche mit einem Satz: „Art. 4 EU-KI-Verordnung gilt seit Februar 2025, hier ist die Seite, die uns absichert."
-> 2. Plan keinen Workshop, sondern fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halt Einwände direkt fest.
+> 2. Plan keinen Workshop, sondern fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halte Einwände direkt fest.
 > 3. Trag Datum und Version ein, lass im selben Termin unterschreiben, häng eine Kopie an den gemeinsamen Drucker. In kleinen Betrieben sterben Richtlinien an der Vertagung, nicht am Widerspruch.
 
-Das bringt dir zwei Dinge: Rechtssicherheit gegenüber Art. 4. Und eine Karte, auf der du als KI-Verantwortliche/r stehen kannst, falls es mal Richtung Beförderung geht.
+Das bringt dir zwei Dinge. Rechtssicherheit gegenüber Art. 4. Und eine Karte, auf der du als KI-Verantwortliche/r stehen kannst, falls es mal Richtung Beförderung geht.
 
 ## Das unterschreibst du
 
-Die Richtlinie wird unterschrieben von: Geschäftsführung, IT-Leitung, Datenschutzbeauftragte, Betriebsrat (falls vorhanden). Und von dir. Nicht als Kontrolle, als Schutz. Wenn etwas schiefgeht und du dich an die Richtlinie gehalten hast, stehst du nicht allein da.
+Unterschrieben wird von Geschäftsführung, IT-Leitung, Datenschutzbeauftragten, Betriebsrat (falls vorhanden). Und von dir. Nicht als Kontrolle, als Schutz. Wenn etwas schiefgeht und du dich an die Richtlinie gehalten hast, stehst du nicht allein da.
 
-Bei Meta unterschreibe ich regelmäßig Policy-Updates. Das dauert zwei Minuten. Und es gibt mir Sicherheit, weil klar ist, was erlaubt ist und was nicht.
+Bei Meta unterschreibe ich regelmäßig Policy-Updates. Das dauert zwei Minuten. Und es gibt Sicherheit, weil klar ist, was erlaubt ist und was nicht.
 
 ---
 
