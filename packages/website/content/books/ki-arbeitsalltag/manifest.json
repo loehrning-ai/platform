@@ -2,13 +2,13 @@
   "bookSlug": "ki-arbeitsalltag",
   "title": "KI im Arbeitsalltag",
   "owner": "editorial:books",
-  "lastReviewed": "2026-07-28",
-  "nextReview": "2026-10-28",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2026-12-05",
   "reviewCadence": "quarterly",
   "riskClass": "legal",
   "publicationStatus": "hold",
   "publicationReason": "Bilingual review, legal sign-off, and public-release approval are incomplete; public routing remains disabled.",
-  "adaptationNote": "Keine Kapitel entfernt. Leichtes Re-Framing für allgemeines Publikum.",
+  "adaptationNote": "Kein Kapitel fehlt. Leicht umformuliert fürs allgemeine Publikum.",
   "chapters": [
     {
       "slug": "00_intro",

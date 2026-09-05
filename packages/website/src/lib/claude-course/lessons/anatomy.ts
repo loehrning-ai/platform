@@ -28,28 +28,28 @@ const lesson: ClaudeLesson = {
       title: "Prompts are contracts, not incantations",
       readTimeMinutes: 2,
       content:
-        "Treat a prompt as a specification. State the task, supply relevant context, define constraints, and describe an output that can be checked. Add a role or example only when it contributes information the task needs.\n\nThe six-part structure in this lesson is a checklist, not a required syntax or universal order. Short tasks may need only a direct instruction. Complex, repeated tasks benefit from explicit sections and evaluation criteria.\n\n> Write requirements that a reviewer or test can verify.",
+        "You type one line into the box and get back a wall of hedging. The prompt was not wrong, it was underspecified. A prompt is a specification: state the task, supply the context, define constraints, describe an output that can be checked. Add a role or an example only when it carries information the task needs.\n\nThe six parts below are a checklist, not a syntax and not a required order. Short tasks need one direct instruction. Repeated tasks earn explicit sections and acceptance criteria.\n\n> Write requirements a reviewer or test can verify.",
     },
     {
       id: "six-parts",
       title: "The six parts",
       readTimeMinutes: 4,
       content:
-        "- **01 · Role: which perspective is relevant?** Use a role to set domain, audience, or review standard; do not treat it as expertise evidence.\n  ```\n  Review this as a technical editor for internal documentation.\n  ```\n- **02 · Context: which facts does the task depend on?** Include the audience and authorized source material. Remove secrets and unrelated data.\n  ```\n  Audience: SREs. Release cadence: weekly. Planned auth-library migration: Q2.\n  ```\n- **03 · Task: what action is required?** Use a direct verb and separate multiple deliverables into numbered items.\n  ```\n  Draft a rollout document with an overview, risks, and an on-call runbook.\n  ```\n- **04 · Constraints: what must the output satisfy?** State length, exclusions, and required facts as testable rules.\n  ```\n  At most 600 words. No marketing language. Include the kill-switch procedure.\n  ```\n- **05 · Examples: what does an accepted result look like?** A reviewed input-output example can clarify tone or structure. Confirm that it is representative and safe to share.\n  ```\n  <example>\n  Input: …\n  Output: …\n  </example>\n  ```\n- **06 · Format: how will the result be consumed?** Request Markdown, JSON, a table, or a schema when downstream use depends on it. Validate machine-readable output.\n  ```\n  Output Markdown with H2 sections and bullet lists.\n  ```\n\nThis order is one readable arrangement. Move source documents or instructions when the model-specific guidance for your tested use case calls for it.",
+        "- **01 · Role: whose perspective?** A role sets domain, audience, or review standard. It is not evidence of expertise.\n  ```\n  Review this as a technical editor for internal documentation.\n  ```\n- **02 · Context: which facts does the task depend on?** Name the audience and the authorized source material. Strip secrets and unrelated data.\n  ```\n  Audience: SREs. Release cadence: weekly. Planned auth-library migration: Q2.\n  ```\n- **03 · Task: what action is required?** One direct verb. Split several deliverables into numbered items.\n  ```\n  Draft a rollout document with an overview, risks, and an on-call runbook.\n  ```\n- **04 · Constraints: what must the output satisfy?** State length, exclusions, and required facts as testable rules.\n  ```\n  At most 600 words. No marketing language. Include the kill-switch procedure.\n  ```\n- **05 · Examples: what does an accepted result look like?** A reviewed input-output pair fixes tone or structure. Check that it is representative and shareable.\n  ```\n  <example>\n  Input: …\n  Output: …\n  </example>\n  ```\n- **06 · Format: how will the result be consumed?** Ask for Markdown, JSON, a table, or a schema when downstream use depends on it. Validate machine-readable output.\n  ```\n  Output Markdown with H2 sections and bullet lists.\n  ```\n\nThis is one readable arrangement. Move documents or instructions when the guidance for your tested model and use case calls for it.",
     },
     {
       id: "xml-tags",
       title: "XML tags for clear boundaries",
       readTimeMinutes: 2,
       content:
-        "Anthropic documents XML tags as one way to separate instructions, context, examples, and variable input. Tags are most useful when a prompt mixes several content types; they are not a substitute for clear requirements or evaluation.\n\nThe pattern:\n\n```\n<context>\nWe're migrating the auth service from cookies to OAuth 2.1 over Q2.\nAudience for this doc: SREs on the infra team.\n</context>\n\n<task>\nDraft a rollout doc with four sections: overview, risks, on-call runbook, rollback plan.\n</task>\n\n<constraints>\n- Under 600 words.\n- No marketing language.\n- Must mention the kill-switch procedure.\n</constraints>\n\n<example>\n[paste a prior rollout doc here that matches the voice you want]\n</example>\n\n<format>\nMarkdown. H2 for each section. Code blocks for shell commands.\n</format>\n```\n\nUse consistent, descriptive tag names. Nest tags only when the content has a real hierarchy, then test the prompt on representative inputs.",
+        "Anthropic documents XML tags as one way to separate instructions, context, examples, and variable input. They help most when a prompt mixes several content types. They replace neither clear requirements nor evaluation.\n\nThe pattern:\n\n```\n<context>\nWe're migrating the auth service from cookies to OAuth 2.1 over Q2.\nAudience for this doc: SREs on the infra team.\n</context>\n\n<task>\nDraft a rollout doc with four sections: overview, risks, on-call runbook, rollback plan.\n</task>\n\n<constraints>\n- Under 600 words.\n- No marketing language.\n- Must mention the kill-switch procedure.\n</constraints>\n\n<example>\n[paste a prior rollout doc here that matches the voice you want]\n</example>\n\n<format>\nMarkdown. H2 for each section. Code blocks for shell commands.\n</format>\n```\n\nUse consistent, descriptive tag names. Nest them only where the content has a real hierarchy, then test the prompt on representative inputs.",
     },
     {
       id: "pro-moves",
       title: "Three current controls",
       readTimeMinutes: 2,
       content:
-        "- **Use supported reasoning controls.** For a model and API that support extended thinking, configure it through the documented API. Ask for conclusions and evidence; do not depend on exposing private chain-of-thought text.\n- **Use supported output controls.** Prefer structured outputs or an explicit schema when available. Claude 4.6 and later do not support assistant-response prefilling; check the selected model's API documentation before using that pattern.\n- **Define insufficient evidence.** State the exact response expected when required information is missing. This reduces pressure to guess but does not guarantee factual accuracy; evaluate and verify the result.",
+        "- **Use supported reasoning controls.** Where a model and API support extended thinking, configure it through the documented API. Ask for conclusions and evidence. Do not depend on exposing private chain-of-thought text.\n- **Use supported output controls.** Prefer structured outputs or an explicit schema where available. Claude 4.6 and later do not support assistant-response prefilling. Check the selected model's API documentation before reaching for that pattern.\n- **Define insufficient evidence.** State the exact response expected when required information is missing. That lowers the pressure to guess. It guarantees nothing about accuracy; evaluate and verify the result.",
     },
   ],
   widgets: [
@@ -75,7 +75,7 @@ const lesson: ClaudeLesson = {
         title: "Put them in order",
         prompt:
           "Arrange the sections into the example order used in this lesson.",
-        hint: "Drag a card, or use the up/down buttons. This is one readable order, not a universal requirement.",
+        hint: "Drag a card or use the up/down buttons. One readable order, not a universal rule.",
         blocks: [
           {
             id: "role",

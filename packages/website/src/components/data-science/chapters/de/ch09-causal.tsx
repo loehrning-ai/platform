@@ -18,7 +18,7 @@ export default function Ch09CausalDe() {
       <Hero
         eyebrow="Kapitel 09 · Kausalität"
         title='Korrelation ist eine <em>Hypothese.</em><br/>Kausalität verlangt <span class="accent">Arbeit.</span>'
-        hook="Wenn kein Experiment möglich ist, braucht es kausale Inferenz: DAGs, Backdoor-Anpassung, Difference-in-Differences und Instrumentvariablen. Die Mathematik ist anspruchsvoll; das fachliche Urteil noch mehr."
+        hook="Kein Experiment möglich, und trotzdem soll eine Wirkung belegt werden. Dafür gibt es DAGs, Backdoor-Anpassung, Difference-in-Differences und Instrumentvariablen. Die Mathematik ist anspruchsvoll. Das fachliche Urteil noch mehr."
         meta={[
           { k: "Lesezeit", v: "14 min" },
           { k: "Inhalt", v: "DAGs · DiD · IV" },
@@ -32,13 +32,12 @@ export default function Ch09CausalDe() {
           Eine Korrelation, die <em>kausal aussieht.</em>
         </h2>
         <p className="prose">
-          Das synthetische Beispiel verbindet Temperatur sowohl mit Eisverkauf
-          als auch mit Todesfällen durch Ertrinken. Dadurch entsteht eine
-          positive Gesamtassoziation ohne Eis-Effekt. Innerhalb der drei
-          konstruierten Temperaturgruppen ist die Assoziation deutlich kleiner.
-          Reale Daten benötigen ein Kausalmodell, Messprüfungen und
-          Unsicherheit; Stratifizierung allein beweist keine vollständige
-          Entzerrung.
+          Im synthetischen Beispiel treibt die Temperatur den Eisverkauf und die
+          Todesfälle durch Ertrinken. Heraus kommt eine positive
+          Gesamtassoziation, obwohl Eis nichts bewirkt. Innerhalb der drei
+          konstruierten Temperaturgruppen schrumpft sie deutlich. Reale Daten
+          brauchen dafür ein Kausalmodell, Messprüfungen und Unsicherheit;
+          Stratifizierung allein beweist keine vollständige Entzerrung.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -49,12 +48,12 @@ export default function Ch09CausalDe() {
           Den DAG <em>vor</em> der Regression zeichnen.
         </h2>
         <p className="prose">
-          Ein gerichteter azyklischer Graph (DAG) hält angenommene kausale
-          Beziehungen fest. Knoten sind Variablen; Pfeile sind Annahmen über
-          direkte Effekte. Bei korrektem Graphen und explizitem Estimand kann
-          die Struktur mögliche Anpassungsmengen bestimmen. Die Daten bestätigen
-          die Pfeile nicht von selbst; vier Lehrmuster sind kein vollständiges
-          Kausalmodell.
+          Ein gerichteter azyklischer Graph (DAG) hält fest, welche kausalen
+          Beziehungen du annimmst. Knoten sind Variablen, Pfeile sind Annahmen
+          über direkte Effekte. Stimmt der Graph und ist der Estimand
+          ausgesprochen, folgen daraus mögliche Anpassungsmengen. Die Daten
+          bestätigen die Pfeile nicht von selbst, und vier Lehrmuster sind kein
+          vollständiges Kausalmodell.
         </p>
         <DAGBuilder />
       </section>
@@ -63,10 +62,10 @@ export default function Ch09CausalDe() {
         <SectionLabel n="09.3">Klassische DAG-Muster</SectionLabel>
         <h2 className="h2">Confounder. Collider. Mediator.</h2>
         <p className="prose">
-          Confounder, Collider und Mediatoren verlangen unterschiedliche
-          Anpassungsentscheidungen. Regressionssoftware leitet ihre kausalen
-          Rollen nicht aus einer Tabelle ab; sie stammen aus dem angegebenen
-          Graphen und Fachannahmen.
+          Confounder, Collider und Mediatoren verlangen jeweils eine andere
+          Anpassungsentscheidung. Keine Regressionssoftware liest die kausale
+          Rolle einer Spalte aus der Tabelle ab; sie steht im angegebenen
+          Graphen und in den Fachannahmen.
         </p>
         <DAGViewer />
       </section>
@@ -95,13 +94,13 @@ export default function Ch09CausalDe() {
           Eine Variation in X mit begründbarer Exklusion und Exogenität finden.
         </h2>
         <p className="prose">
-          Wenn unbeobachtete Confounder OLS verzerren, identifiziert ein
-          Instrumentvariablen-Design nur unter starken Annahmen einen Effekt. Z
-          muss X beeinflussen (Relevanz), darf Y nur über X beeinflussen
-          (Exklusion) und muss von unbeobachteten Ursachen von Y unabhängig sein
-          (Exogenität). Bei heterogenen Effekten hängt das Estimand zusätzlich
-          von Monotonie ab. Diese Annahmen folgen aus Design und Fachwissen,
-          nicht allein aus der ersten Stufe.
+          Verzerren unbeobachtete Confounder das OLS, identifiziert ein
+          Instrumentvariablen-Design einen Effekt nur unter starken Annahmen. Z
+          muss X beeinflussen (Relevanz), darf Y ausschließlich über X
+          beeinflussen (Exklusion) und muss von unbeobachteten Ursachen von Y
+          unabhängig sein (Exogenität). Bei heterogenen Effekten kommt Monotonie
+          dazu. Diese Annahmen stammen aus Design und Fachwissen, nicht aus der
+          ersten Stufe.
         </p>
         <InstrumentalVariable />
       </section>
@@ -119,7 +118,7 @@ export default function Ch09CausalDe() {
       <BestPractices
         title="Bewährte Verfahren"
         items={[
-          "<b>Zuerst den DAG zeichnen.</b> Vor jedem Code, gemeinsam mit Fachexperten; sie erkennen falsche Pfeile.",
+          "<b>Zuerst den DAG zeichnen.</b> Vor jeder Zeile Code, gemeinsam mit der Fachexpertin aus dem Betrieb. Sie sieht den falschen Pfeil.",
           "<b>Das Backdoor-Kriterium auf den angenommenen Graphen anwenden.</b> Eine hinreichende Anpassungsmenge finden und plausible ausgelassene Strukturen per Sensitivitätsanalyse prüfen.",
           "<b>Verhalten vor dem Treatment für DiD diagnostizieren.</b> Divergenz ist ein Warnsignal; Ähnlichkeit beweist keine parallelen Trends nach dem Treatment.",
           "<b>Diagnostik der ersten Stufe und Weak-IV-robuste Inferenz berichten.</b> Eine F-Statistik über 10 validiert das Instrument nicht; die passende Diagnostik hängt vom Design ab.",
@@ -131,7 +130,7 @@ export default function Ch09CausalDe() {
         items={[
           "<b>Den DAG vor der Regression zeichnen.</b> Annahmen offenlegen und eine Anpassungsmenge vorschlagen; der Graph ist kein Beleg für die Richtigkeit seiner Pfeile.",
           ' <b>"Für X kontrollieren" ist nicht harmlos.</b> Die Wirkung hängt vollständig von der strukturellen Rolle von X ab.',
-          "<b>Kausale Inferenz aus Beobachtungsdaten benötigt starke Annahmen.</b> Diese Annahmen offenlegen und begründen.",
+          "<b>Kausale Inferenz aus Beobachtungsdaten braucht starke Annahmen.</b> Schreib sie hin und begründe sie.",
           "<b>Randomisierung bevorzugen, wenn sie machbar, ethisch und korrekt umgesetzt ist.</b> Andernfalls das Design mit den am besten begründbaren und prüfbaren Identifikationsannahmen wählen.",
         ]}
       />

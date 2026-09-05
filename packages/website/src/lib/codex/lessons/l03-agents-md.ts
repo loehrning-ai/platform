@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Codex reads `AGENTS.md` instructions before it starts work. The file is not memory; it is versioned project context. Use it for rules that should apply consistently across tasks.\n\nInstruction discovery is layered. Codex can load global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`. Instructions closer to the working directory appear later and can override broader guidance.\n\nA repository-level file should contain information that changes the work: exact setup and verification commands, architectural boundaries, test expectations, known constraints, and actions that require approval. Task-specific goals and acceptance criteria still belong in the task request.",
+            "`AGENTS.md` is not memory. It is versioned project context, and Codex reads it before it starts work. Put rules there that should hold across every task.\n\nDiscovery is layered. Codex can load global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`. Instructions closer to the working directory come later and can override the broader ones.\n\nWhat earns a place in the repository-level file? Anything that changes the work. Exact setup and verification commands, architectural boundaries, test expectations, known constraints, actions that require approval. Task-specific goals and acceptance criteria stay in the task request.",
         },
         {
           kind: "pull-quote",
@@ -48,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "AGENTS.md is Markdown without a required content schema. Organize it around rules the agent can apply and checks it can execute.",
+            "AGENTS.md is Markdown. No required schema. Organize it around rules the agent can apply and checks it can run.",
         },
       ],
     },
@@ -60,7 +60,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "This is an illustrative `AGENTS.md`, not a universal template. Its useful property is specificity.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint.\n\n## Running locally\n$ make setup       # installs dependencies\n$ make test         # pytest; required before review\n$ make lint         # ruff + mypy; also required\n\n## Conventions we enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. Flag v1 patterns; migration is in progress.\n\n## Known constraints\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py is already oversized. Do not add responsibilities to it.\n- Tests use non-production fixtures; never request or print live credentials.\n\n## Requires explicit approval\n- Changes under legacy/.\n- New top-level dependencies.\n- Any edit to deprecated server_v1.py.\n```",
+            "An illustrative `AGENTS.md`, not a universal template. What makes it work is specificity.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint.\n\n## Running locally\n$ make setup       # installs dependencies\n$ make test         # pytest; required before review\n$ make lint         # ruff + mypy; also required\n\n## Conventions we enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. Flag v1 patterns; migration is in progress.\n\n## Known constraints\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py is already oversized. Do not add responsibilities to it.\n- Tests use non-production fixtures; never request or print live credentials.\n\n## Requires explicit approval\n- Changes under legacy/.\n- New top-level dependencies.\n- Any edit to deprecated server_v1.py.\n```",
         },
       ],
     },
@@ -72,12 +72,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'The following comparison is illustrative. Both patches answer "add a /health endpoint that checks the database"; the second also follows the repository rules stated in `AGENTS.md`.',
+            'Both patches below answer "add a /health endpoint that checks the database". Only the second one also follows the repository rules stated in `AGENTS.md`.',
         },
         {
           kind: "callout",
           title: "Both versions work.",
-          body: "The second version also follows the stated project rules: structlog, a specific OperationalError branch, and an integration test under tests/api/. The review can check those choices against explicit instructions instead of inferred preferences.",
+          body: "The second one also follows the stated project rules. structlog, a specific OperationalError branch, an integration test under tests/api/. Now the review can check those choices against written instructions instead of inferred preferences.",
         },
       ],
     },
@@ -100,7 +100,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Build the file from observed project needs:\n\n1. **Start with executable basics.** State the repository purpose, setup command, required checks, and boundaries that are not obvious from code.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Review it with code.** When commands or conventions change, update the instruction file in the same change.\n\n### Context management: what goes in, what stays out\n\nInstruction files consume context alongside the task and code. Keep them specific:\n\n- **Include:** rules that affect implementation, review, or safety.\n- **Exclude:** marketing copy, meeting notes, and preferences with no testable effect.\n- **Include:** exact commands such as `make test`, with prerequisites when needed.\n- **Exclude:** vague goals such as "write clean code." Replace them with observable rules.\n\nLength is not a quality measure. Retain instructions that prevent a known error, define a boundary, or enable verification.',
+            'Build it from what the project actually needs.\n\n1. **Start with executable basics.** State the repository purpose, setup command, required checks, and boundaries that are not obvious from code.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Review it with code.** When commands or conventions change, update the instruction file in the same change.\n\n### Context management: what goes in, what stays out\n\nInstruction files consume context alongside the task and code. Keep them specific:\n\n- **Include:** rules that affect implementation, review, or safety.\n- **Exclude:** marketing copy, meeting notes, and preferences with no testable effect.\n- **Include:** exact commands such as `make test`, with prerequisites when needed.\n- **Exclude:** vague goals such as "write clean code." Replace them with observable rules.\n\nLength proves nothing. Keep the instructions that prevent a known error, define a boundary, or make verification possible.',
         },
         {
           kind: "callout",

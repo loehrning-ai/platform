@@ -51,7 +51,7 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Bereitstellung: <span class='accent'>Versionierte Metriken</span> über mehrere Schnittstellen."
-        hook="Unabhängiges Dashboard-SQL kann für denselben Metriknamen verschiedene Granularitäten, Filter und Quellenstichtage enthalten. Ein gemeinsames Register reduziert diese Definitionsabweichung, wenn Verbraucher die registrierte Version auflösen."
+        hook="Drei Dashboards, derselbe Metrikname, drei verschiedene Granularitäten, Filter und Quellenstichtage. Ein gemeinsames Register drückt diese Abweichung, sobald Verbraucher die registrierte Version auflösen."
         meta={[
           { k: "Vertrag", v: "versionierte Definition pro Metrik" },
           { k: "Verantwortlich", v: "deklarierte fachliche Zuständigkeit" },
@@ -64,8 +64,8 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <h2 className="h2">Metrikversion und Ausführungskontext deklarieren.</h2>
         <p className="prose">
           Eine Metrikschicht ist ein <b>Register</b> aus Namen, Versionen, Zuständigkeiten, Granularitäten, Quellen, Formeln und zulässigen Filtern.
-          Verbraucher einer registrierten Metrik können dieselbe Definition teilen. Der Abfragedienst benötigt weiterhin Authentifizierung,
-          Autorisierung, Quellauswahl und Ausführungsprotokollierung.
+          Wer eine registrierte Metrik abfragt, bekommt dieselbe Definition wie alle anderen. Authentifizierung, Autorisierung, Quellauswahl und
+          Ausführungsprotokollierung bleiben trotzdem Aufgabe des Abfragedienstes.
         </p>
         <MetricsRegistryDe />
         <p className="prose" style={{ marginTop: 18 }}>
@@ -79,16 +79,16 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <SectionLabel n="8.2">Der Weg einer Abfrage</SectionLabel>
         <h2 className="h2">Dieselbe Frage darf nicht zu unterschiedlichem SQL führen.</h2>
         <p className="prose">
-          Ohne Metrikschicht sucht ein Analyst nach ähnlich benannten Tabellen,
-          wählt eine davon nach Erfahrung und schreibt Ad-hoc-SQL. Dabei kann
-          eine seit Jahren abgekündigte Tabelle oder ein inzwischen umbenannter
-          Spaltenname verwendet werden. <b>Am Ergebnis allein ist dieser Fehler
-          nicht erkennbar.</b>
+          Ohne Metrikschicht sucht die Analystin nach ähnlich benannten
+          Tabellen, wählt eine nach Erfahrung und schreibt Ad-hoc-SQL. Getroffen
+          hat sie vielleicht eine seit Jahren abgekündigte Tabelle oder einen
+          längst umbenannten Spaltennamen. <b>Am Ergebnis allein ist dieser
+          Fehler nicht erkennbar.</b>
         </p>
         <p className="prose">
-          Mit einem Register wird eine Frage einer Metrikversion zugeordnet, unterstützte Filter werden gebunden und die gespeicherte Definition
-          gegen ihre deklarierte Quelle oder Quellmenge ausgeführt. Metrikversion, Filter, Quellen-Snapshot oder Partitionen und Ausführungsidentität
-          werden mit dem Ergebnis erfasst.
+          Mit einem Register bekommt die Frage eine Metrikversion, die unterstützten Filter werden gebunden und die gespeicherte Definition läuft
+          gegen ihre deklarierte Quelle oder Quellmenge. Metrikversion, Filter, Quellen-Snapshot oder Partitionen und Ausführungsidentität landen
+          zusammen mit dem Ergebnis im Protokoll.
         </p>
         <MetricsSim />
       </section>
@@ -97,8 +97,8 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <SectionLabel n="8.3">Was Verbraucher sehen</SectionLabel>
         <h2 className="h2">Eine Metrik, mehrere Schnittstellen.</h2>
         <p className="prose">
-          Ein gemeinsames Register entfernt eine Abweichungsquelle: die Metrikformel. Ergebnisse können sich weiterhin durch Quellenaktualität,
-          Filterbindung, Zeitzone, Berechtigung, Cache oder Definitionsversion unterscheiden. Dieser Kontext gehört in den Vergleich.
+          Ein gemeinsames Register räumt genau eine Abweichungsquelle weg: die Metrikformel. Quellenaktualität, Filterbindung, Zeitzone,
+          Berechtigung, Cache und Definitionsversion trennen die Ergebnisse weiterhin. Dieser Kontext gehört in jeden Vergleich.
         </p>
         <div className="cards-2">
           <div className="ccard">
@@ -139,9 +139,9 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "Eine Metrikschicht stellt eine stabile Schnittstelle zwischen Datensätzen und Verbraucherwerkzeugen bereit.",
+          "Eine Metrikschicht ist die stabile Schnittstelle zwischen Datensätzen und Verbraucherwerkzeugen.",
           "Ein Register reduziert Definitionsabweichung nur, wenn Verbraucher es verwenden und Quellen-, Autorisierungs- und Versionskontext erhalten bleiben.",
-          "Metrikversion, Zuständigkeit, Granularität, Quellmenge, Filter und Gültigkeitszeitraum deklarieren.",
+          "Deklarier Metrikversion, Zuständigkeit, Granularität, Quellmenge, Filter und Gültigkeitszeitraum.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

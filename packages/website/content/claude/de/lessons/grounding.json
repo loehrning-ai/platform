@@ -5,7 +5,7 @@
   "subtitle": "Aussagen mit Quellen verbinden, Abstention definieren und Zitate prüfen.",
   "durationMinutes": 10,
   "trackId": "advanced",
-  "hook": "Auch eine flüssig formulierte Aussage braucht Belege.",
+  "hook": "Flüssig formuliert heißt nicht belegt.",
   "keyConcepts": [
     "Einfügen, zitieren, Ablehnungsmodus",
     "Grüne Flaggen vs. rote Flaggen"
@@ -16,19 +16,19 @@
       "id": "not-a-bug",
       "title": "Warum unbelegte Antworten entstehen",
       "readTimeMinutes": 1,
-      "content": "Eine unbelegte Aussage lässt sich durch keine erlaubte Quelle rechtfertigen und kann auch bei vorhandenem relevantem Kontext entstehen. Ursachen sind unter anderem fehlendes Retrieval, widersprüchliche Dokumente, unklare Anweisungen, Modellfehler oder Zitate ohne passenden Beleg.\n\nVerringere das Risiko strukturell: autoritative Daten bereitstellen, erlaubte Quellen festlegen, prüfbare Zitate verlangen, Abstention erlauben und das Ergebnis kontrollieren.\n\n> Ein Zitat ist ein zu prüfender Verweis, kein Beweis an sich."
+      "content": "Relevanter Kontext im Fenster verhindert keine unbelegte Aussage. Unbelegt heißt: Keine erlaubte Quelle rechtfertigt sie. Ursachen gibt es viele, fehlendes Retrieval, widersprüchliche Dokumente, unklare Anweisungen, Modellfehler, Zitate ohne passenden Beleg.\n\nDas Risiko senkst du strukturell, nicht mit Appellen: autoritative Daten bereitstellen, erlaubte Quellen festlegen, prüfbare Zitate verlangen, Abstention erlauben, Ergebnis kontrollieren.\n\n> Ein Zitat ist ein Verweis, den jemand prüfen muss. Kein Beweis."
     },
     {
       "id": "three-grounding-moves",
       "title": "Die drei Verankerungsstrategien",
       "readTimeMinutes": 2,
-      "content": "- **01 · Quelle bereitstellen oder abrufen.** Nutze aktuelle Richtlinien, Logs oder Code statt Modelltraining für private oder veränderliche Fakten.\n- **02 · Nachvollziehbarkeit verlangen.** Fordere für jede wesentliche Aussage Quellenkennung und kurze Belegpassage. Prüfe, ob die Passage die Aussage stützt.\n- **03 · Abstention definieren.** Beispiel: „Wenn die erlaubten Quellen keine Antwort stützen, gib `NOT_IN_CONTEXT` aus und nenne die fehlende Information.“ Teste beantwortbare und unbeantwortbare Fälle."
+      "content": "- **01 · Quelle bereitstellen oder abrufen.** Für private oder veränderliche Fakten zählen aktuelle Richtlinien, Logs oder Code, nicht das Modelltraining.\n- **02 · Nachvollziehbarkeit verlangen.** Jede wesentliche Aussage bekommt Quellenkennung und eine kurze Belegpassage. Dann lesen, ob die Passage die Aussage wirklich trägt.\n- **03 · Abstention definieren.** Etwa so: „Wenn die erlaubten Quellen keine Antwort stützen, gib `NOT_IN_CONTEXT` aus und nenne die fehlende Information.“ Teste beantwortbare und unbeantwortbare Fälle."
     },
     {
       "id": "smell-test",
       "title": "Prüfsignale für unbelegte Aussagen",
       "readTimeMinutes": 2,
-      "content": "**Nützliche Signale:** Quellenkennungen, kurze Belegzitate, explizite Lücken und eine Trennung von Quellenfakt und Schlussfolgerung.\n\n**Prüfauslöser:** präzise Zahlen ohne Quelle, Entitäten außerhalb des erlaubten Materials, irrelevante Zitate und breite Verallgemeinerungen ohne benannten Beleg. Diese Signale lenken das Review, ersetzen es aber nicht."
+      "content": "**Grüne Flaggen:** Quellenkennungen, kurze Belegzitate, explizit benannte Lücken, Quellenfakt und Schlussfolgerung getrennt.\n\n**Rote Flaggen:** präzise Zahlen ohne Quelle, Entitäten außerhalb des erlaubten Materials, Zitate, die nichts stützen, breite Verallgemeinerungen ohne Beleg. Solche Signale lenken das Review. Ersetzen tun sie es nicht."
     }
   ],
   "widgets": [
@@ -40,7 +40,7 @@
         "lessonId": "grounding",
         "cpId": "try",
         "title": "Zitate erzwingen",
-        "hint": "Füge ein kurzes Dokument ein. Füge dann hinzu: „Antworte nur aus dem Dokument. Zitiere Zeilennummern. Falls nicht vorhanden, antworte NOT_IN_CONTEXT.“",
+        "hint": "Füge ein kurzes Dokument ein und ergänze: „Antworte nur aus dem Dokument. Zitiere Zeilennummern. Falls nicht vorhanden, antworte NOT_IN_CONTEXT.“",
         "placeholder": "DOKUMENT:\n<kurzes Dokument einfügen>\n\nFRAGE:\n<frage stellen>\n\nREGELN:\n- Antworte nur aus dem Dokument.\n- Zitiere für jede Behauptung die genaue Zeile.\n- Falls nicht im Dokument, antworte genau: NOT_IN_CONTEXT"
       }
     },
@@ -59,7 +59,7 @@
           "Frage zweimal und vergleiche die Antworten."
         ],
         "correct": 2,
-        "explanation": "Stelle autoritative Daten bereit, verlange nachvollziehbare Belege, definiere Abstention und prüfe die zitierten Passagen.",
+        "explanation": "Autoritative Daten bereitstellen, nachvollziehbare Belege verlangen, Abstention definieren, zitierte Passagen prüfen.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

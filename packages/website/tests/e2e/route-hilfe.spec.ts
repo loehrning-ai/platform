@@ -55,7 +55,8 @@ test.describe("/hilfe Help & FAQ", () => {
     for (const question of [
       "Wo fange ich an?",
       "Warum brauche ich ein Konto?",
-      "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+      // Copy lock updated: German UI copy converged on "Teilnahmebestätigung" for completion documents.
+      "Was bedeutet die Teilnahmebestätigung?",
     ] as const) {
       await expect(
         page.getByText(question, { exact: true }),

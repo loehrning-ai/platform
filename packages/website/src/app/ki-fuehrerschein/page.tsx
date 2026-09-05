@@ -126,7 +126,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Free foundation course with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study. No technical background required.",
       openGraphTitle: "Everyday AI Literacy: what you need to know",
       openGraphDescription:
-        "5 blocks, 18 lessons, about 1 hour 40 minutes. Includes a learning account and a locally generated course completion record.",
+        "5 blocks, 18 lessons, about 1 hour 40 minutes. Includes a learning account and a locally generated certificate of participation.",
     },
     graph: {
       home: "Home",

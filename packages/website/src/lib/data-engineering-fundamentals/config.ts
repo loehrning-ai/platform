@@ -36,7 +36,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Engineering Fundamentals",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
   certificateModules: [
     "Fundamentals: storage, formats, and query engines",
     "Ingest and streaming: where data is born, watermarks, and the bridge to the warehouse",
@@ -44,14 +44,13 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
     "Orchestrate, quality, discovery, serving, and governance: idempotency, quality signals, and a reference deploy gate",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: data-pipeline design from source to serving",
-  quizPassMessage:
-    "Congratulations! You completed the Data Engineering Fundamentals course.",
+    "Personal certificate of participation: data-pipeline design from source to serving",
+  quizPassMessage: "Data Engineering Fundamentals is complete.",
   certificateFileStem: "Data-Engineering-Fundamentals",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Certificate of Participation",
+    possessive: "Your certificate of participation",
+    demonstrative: "This certificate of participation",
   },
 } satisfies CourseConfig;
 
@@ -63,7 +62,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE =
       title: "Data Engineering Fundamentals",
       certificateTitle: "Teilnahmebestätigung: Data Engineering Fundamentals",
       certificateSubtitle:
-        "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+        "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
       certificateModules: [
         "Grundlagen: Speicher, Formate und Abfrage-Engines",
         "Datenaufnahme und Streaming: Ereigniszeit, Watermarks und der Weg ins Warehouse",
@@ -71,7 +70,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE =
         "Orchestrierung, Qualität, Ermittlung, Bereitstellung und Governance: Idempotenz, Qualitätsnachweise und eine Referenz-Freigabeschranke",
       ],
       certificateReferenceLabel:
-        "Persönlicher Abschlussnachweis: Entwurf von Datenpipelines von der Quelle bis zur Bereitstellung",
+        "Persönliche Teilnahmebestätigung: Entwurf von Datenpipelines von der Quelle bis zur Bereitstellung",
       quizPassMessage:
         "Der Kurs Data Engineering Fundamentals ist abgeschlossen.",
       certificateFileStem: "Data-Engineering-Fundamentals",

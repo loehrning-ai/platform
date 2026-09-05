@@ -9,9 +9,9 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Work-sample interviews with approved tools",
     subtitle:
-      "Use a job-relevant task and an anchored rubric to observe how a candidate works with available tools.",
+      "Use a job-relevant task and an anchored rubric to watch how a candidate works with the tools.",
     objective:
-      "Use a job-relevant task and an anchored rubric to observe how a candidate works with available tools.",
+      "Use a job-relevant task and an anchored rubric to watch how a candidate works with the tools.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Choose a representative work sample",
         readTimeMinutes: 7,
         content:
-          "The task should represent important work in the role without requiring unpaid production work or confidential company knowledge. Keep the scope compatible with the stated time box, provide the same materials to every candidate, and offer reasonable accommodations. Assess job requirements, not familiarity with an interview puzzle.",
+          "What does an interview measure once the candidate may use the same tools as the job? The task should mirror important work in the role without demanding unpaid production work or confidential knowledge. Fit the scope to the time box, give every candidate the same materials, offer reasonable accommodations. Assess job requirements, not familiarity with an interview puzzle.",
       },
       {
         id: "s2",
         title: "Observe the working process",
         readTimeMinutes: 7,
         content:
-          "Let candidates use the same approved tools they could use in the role. Observe how they clarify the request, decompose the task, specify work, select what to delegate, inspect outputs, test assumptions, and explain the result. Protect candidate data and intellectual property; do not require personal accounts or undisclosed data sharing.",
+          "Let candidates use the same approved tools the role allows. Watch how they clarify the request, decompose the task, specify the work, choose what to delegate, inspect outputs, test assumptions, and explain the result. Protect candidate data and intellectual property. Never require personal accounts or undisclosed data sharing.",
       },
       {
         id: "s3",
         title: "Score against anchored evidence",
         readTimeMinutes: 6,
         content:
-          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication, and the final result. Train assessors on the rubric and compare independent ratings. Do not infer capability from typing speed, amount of tool use, or polished output when the candidate cannot explain or verify the work.",
+          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication, and the final result. Train assessors on the rubric, then compare independent ratings. Typing speed, tool volume, and a polished output say nothing when the candidate cannot explain or verify the work.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -75,21 +75,21 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "A four-level capability rubric",
         readTimeMinutes: 6,
         content:
-          "L1 uses approved assistance for bounded tasks and checks the result. L2 runs a repeatable workflow with documented inputs, review, and escalation. L3 designs controls, evaluations, and monitoring for shared workflows. L4 sets role or organizational standards and is accountable for their operation. Adapt the levels to the actual work; they are not universal promotion gates.",
+          "L1 uses approved assistance for bounded tasks and checks the result. L2 runs a repeatable workflow with documented inputs, review, and escalation. L3 designs controls, evaluations, and monitoring for shared workflows. L4 sets role or organizational standards and is accountable for how they run. Adapt the levels to the actual work; they are not universal promotion gates.",
       },
       {
         id: "s2",
         title: "Measure artifacts and decisions",
         readTimeMinutes: 6,
         content:
-          "Use evidence such as specifications, evaluation sets, review records, incident responses, reusable workflows, and documented decisions. Assess the person's reasoning, controls, and outcomes rather than prompt volume or claimed productivity. Calibrate examples across reviewers so that the same behavior receives comparable ratings.",
+          "Look at specifications, evaluation sets, review records, incident responses, reusable workflows, documented decisions. Judge the person's reasoning, controls, and outcomes, not prompt volume or claimed productivity. Calibrate examples across reviewers so the same behavior earns comparable ratings.",
       },
       {
         id: "s3",
         title: "Provide access, training, and due process",
         readTimeMinutes: 6,
         content:
-          "Do not evaluate a capability before people have approved tools, role-relevant training, practice time, and clear expectations. Account for accommodations and roles where model use is restricted or inappropriate. Communicate changes before applying them to promotion or performance decisions, document evidence, and provide a route to challenge an assessment.",
+          "Do not assess a capability before people have approved tools, role-relevant training, practice time, and clear expectations. Account for accommodations, and for roles where model use is restricted or inappropriate. Announce a change before it touches promotion or performance decisions, document the evidence, and leave a route to challenge an assessment.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -134,27 +134,27 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Keep tool use separate from compensation",
         readTimeMinutes: 8,
         content:
-          "Using a model is an input, not a result. Directly rewarding its use can encourage unnecessary processing, concealment of manual work, and unsafe delegation. Compensation decisions should consider role-relevant outcomes, quality, collaboration, and control responsibilities, including cases where the correct choice is not to use a model.",
+          "Using a model is an input, not a result. Reward the input directly and you invite unnecessary processing, hidden manual work, and unsafe delegation. Compensation decisions weigh role-relevant outcomes, quality, collaboration, and control duties, including cases where the right choice was no model at all.",
       },
       {
         id: "s2",
         title: "Use balanced evidence",
         readTimeMinutes: 7,
         content:
-          "Select measures that reflect the role and pair each measure with a countermeasure. Faster cycle time needs quality and incident data; throughput needs scope and complexity context; shared tooling needs adoption, maintenance, and support evidence. Do not impose a fixed formula across teams whose work, risk, and measurement quality differ.",
+          "Pick measures that fit the role, and pair each one with a countermeasure. Faster cycle time needs quality and incident data. Throughput needs scope and complexity. Shared tooling needs adoption, maintenance, and support evidence. Do not impose one formula across teams whose work, risk, and measurement quality differ.",
       },
       {
         id: "s3",
         title: "Control a high-stakes measurement process",
         readTimeMinutes: 7,
         content:
-          "Compensation metrics can be incomplete, gameable, or biased. Document data sources and exclusions, review patterns across groups, use independent calibration, and preserve an appeal process. Involve human resources and legal owners before changing compensation criteria, especially where employment, discrimination, privacy, or worker-monitoring rules apply.",
+          "Compensation metrics can be incomplete, gameable, or biased. Document data sources and exclusions, review patterns across groups, use independent calibration, keep an appeal process. Bring in human resources and legal owners before you change compensation criteria, especially where employment, discrimination, privacy, or worker-monitoring rules apply.",
       },
     ],
     callout: {
       kind: "warn",
       h: "Activity metrics are not performance evidence",
-      text: "Prompt counts, token volume, agent counts, and time in a tool can be increased without improving the work. Do not use them as direct compensation metrics. Evaluate verified outcomes and controls with enough context to identify quality loss, risk transfer, and metric gaming.",
+      text: "Prompt counts, token volume, agent counts, time in a tool. Each can be raised without improving the work. Do not use them as direct compensation metrics. Evaluate verified outcomes and controls with enough context to spot quality loss, risk transfer, and metric gaming.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -180,8 +180,8 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Module 5 knowledge check",
-    subtitle: "Check the talent practices from this module.",
-    objective: "Check the talent practices from this module.",
+    subtitle: "Two questions on hiring and pay.",
+    objective: "Two questions on hiring and pay.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
@@ -212,7 +212,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A representative work sample provides evidence about how the candidate frames, performs, checks, and explains relevant work. Speed, tool volume, and a polished result without understandable reasoning are insufficient signals on their own.",
+          "A representative work sample shows how the candidate frames, performs, checks, and explains relevant work. Speed, tool volume, and a polished result with no reasoning behind it are not enough on their own.",
       },
       {
         id: "ano-talent-q2",
@@ -241,7 +241,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Prompt count measures tool activity and can rise without any improvement in outcome or quality. The other measures can also mislead when used alone, which is why they require countermeasures, context, and calibration.",
+          "Prompt count measures tool activity, and it rises without any improvement in outcome or quality. The other measures mislead when used alone too, which is why each needs countermeasures, context, and calibration.",
       },
     ],
     sections: [],

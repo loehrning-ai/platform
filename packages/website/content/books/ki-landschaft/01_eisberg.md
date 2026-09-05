@@ -1,27 +1,27 @@
-> **Hinweis:** Dieses Buch vermittelt eine prüfbare Arbeitsweise für KI im beruflichen Kontext. Es enthält keine Rankings einzelner Unternehmen und keine Auswertung eines privaten Unternehmensdatensatzes. Empfohlener Lesepfad: Kapitel 1 bis 3 für den Einstieg, danach die Kapitel zum eigenen Einsatzkontext. Das Buch begleitet den [EU AI Act Kurs](/eu-ai-act-kurs).
+> **Hinweis:** Dieses Lernbuch zeigt eine prüfbare Arbeitsweise für KI im Beruf. Keine Rankings einzelner Unternehmen, keine Auswertung eines privaten Firmendatensatzes. Für den Einstieg liest du Kapitel 1 bis 3, danach die Kapitel zu deinem Einsatzkontext. Das Buch begleitet den [EU AI Act Kurs](/eu-ai-act-kurs).
 
 # Das Eisberg-Problem
 
-Die sichtbare KI-Debatte konzentriert sich oft auf Softwareentwicklung und neue Modelle. Ein großer Teil der praktisch relevanten Aufgaben liegt jedoch in Verwaltung, Finanzen, Kundenservice, Einkauf und anderen Prozessen, die selten als „KI-Arbeit“ bezeichnet werden.
+Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Dort sagt niemand KI-Arbeit dazu. Deshalb prüft sie kaum jemand.
 
 ## Was der Iceberg Index misst
 
-Chopra et al. veröffentlichten 2025 den Forschungsartikel [The Iceberg Index: Measuring Workforce Exposure Across the AI Economy](https://arxiv.org/abs/2510.25137). Das Modell bildet 151 Millionen Beschäftigte in den USA, mehr als 32.000 Fähigkeiten und tausende KI-Werkzeuge ab.
+Chopra et al. legten 2025 den Forschungsartikel [The Iceberg Index: Measuring Workforce Exposure Across the AI Economy](https://arxiv.org/abs/2510.25137) vor. Das Modell bildet 151 Millionen Beschäftigte in den USA ab, dazu mehr als 32.000 Fähigkeiten und tausende KI-Werkzeuge.
 
-Die Autoren berichten zwei zentrale Größen:
+Zwei Größen stehen im Zentrum:
 
 | Kennzahl | Ergebnis im Modell | Bedeutung |
 |---|---:|---|
 | Sichtbare Exposition | 2,2 % des US-Lohnwerts | Schwerpunkt in Computer- und Technologieberufen |
 | Breitere technische Exposition | 11,7 % des US-Lohnwerts | zusätzliche kognitive Aufgaben in Verwaltung, Finanzen und professionellen Dienstleistungen |
 
-Diese Werte messen eine modellierte Überschneidung zwischen Aufgaben und technischen Fähigkeiten. Sie messen weder tatsächliche Einführung noch Produktivitätsgewinn, Arbeitsplatzverlust oder einen deutschen Marktanteil.
+Beide Werte messen eine modellierte Überschneidung von Aufgaben und technischen Fähigkeiten. Mehr nicht. Kein Produktivitätsgewinn, keine tatsächliche Einführung, kein Arbeitsplatzverlust, kein deutscher Marktanteil.
 
-## Was sich daraus für eine Organisation ableiten lässt
+## Was du daraus ableiten darfst
 
-Die US-Ergebnisse dürfen nicht als deutsche Statistik ausgegeben werden. Die Fragestellung ist trotzdem nützlich: Welche Aufgaben enthalten wiederkehrende Informationsarbeit, und unter welchen Bedingungen kann ein System sie unterstützen?
+Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche ausgibt, hat die Quelle nicht gelesen. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
 
-Betrachte deshalb nicht zuerst Produkte, sondern Aufgaben:
+Schau also nicht zuerst auf Produkte. Schau auf Aufgaben:
 
 - Informationen aus mehreren Quellen zusammentragen
 - Inhalte klassifizieren oder strukturieren
@@ -30,19 +30,19 @@ Betrachte deshalb nicht zuerst Produkte, sondern Aufgaben:
 - Entscheidungen dokumentieren
 - wiederkehrende Statusinformationen zusammenfassen
 
-Technische Machbarkeit ist nur eine Dimension. Datenqualität, Fehlerfolgen, menschliche Aufsicht, Datenschutz, Sicherheit, Mitbestimmung und Fachverantwortung bestimmen, ob ein Einsatz sinnvoll und zulässig ist.
+Machbar heißt nicht zulässig und erst recht nicht sinnvoll. Darüber entscheiden Datenqualität, Fehlerfolgen, menschliche Aufsicht, Datenschutz, Sicherheit, Mitbestimmung und Fachverantwortung.
 
 ## Die zwei Inventuren
 
-Eine belastbare Bestandsaufnahme trennt zwei Fragen:
+Eine ehrliche Bestandsaufnahme trennt zwei Fragen:
 
-1. **Welche KI-Systeme und Funktionen werden bereits genutzt?** Erfasse freigegebene und nicht freigegebene Konten, eingebettete Funktionen, Integrationen und automatisierte Entscheidungen.
-2. **Welche Aufgaben könnten unterstützt werden?** Erfasse Volumen, Fehlerkosten, Datenklassen, notwendige Fachprüfung und messbare Erfolgskriterien.
+1. **Welche KI-Systeme und Funktionen laufen schon?** Erfasse freigegebene und nicht freigegebene Konten, eingebettete Funktionen, Integrationen und automatisierte Entscheidungen.
+2. **Welche Aufgaben könnten Unterstützung vertragen?** Erfasse Volumen, Fehlerkosten, Datenklassen, nötige Fachprüfung und messbare Erfolgskriterien.
 
-Die erste Inventur schafft Kontrolle. Die zweite schafft eine priorisierte Lern- und Pilotliste. Keine der beiden braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
+Die erste Inventur schafft Kontrolle. Die zweite eine priorisierte Lern- und Pilotliste. Keine davon braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
 
 ## Der richtige Ausgangspunkt
 
-Beginne mit einem Prozess, dessen Eingangsdaten freigegeben sind, dessen Output ein Mensch vor Nutzung prüft und dessen Erfolg messbar ist. Dokumentiere die Ausgangslage, teste mit repräsentativen Fällen und halte Fehler fest.
+Nimm einen Prozess, dessen Eingangsdaten freigegeben sind, dessen Ergebnis ein Mensch vor der Verwendung prüft und dessen Erfolg du messen kannst. Dokumentiere die Ausgangslage. Teste mit repräsentativen Fällen. Schreib jeden Fehler mit.
 
-Das Eisberg-Problem besteht nicht darin, eine spektakuläre KI-Anwendung zu übersehen. Es besteht darin, alltägliche Informationsarbeit weder systematisch zu prüfen noch kontrolliert zu verbessern.
+Das Eisberg-Problem ist nicht die übersehene spektakuläre Anwendung. Es ist die alltägliche Informationsarbeit, die niemand systematisch prüft und niemand kontrolliert verbessert.

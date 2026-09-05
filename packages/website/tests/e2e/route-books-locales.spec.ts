@@ -290,10 +290,12 @@ test.describe("published book chapters without JavaScript", () => {
       const basePath = "/buecher/ki-landschaft/01_eisberg";
       const path = localized(basePath, locale);
       const title = locale === "de" ? "Das Eisberg-Problem" : "The iceberg problem";
+      // Copy lock updated: the chapter now opens on the debate itself rather
+      // than describing where the debate points.
       const bodyText =
         locale === "de"
-          ? "Die sichtbare KI-Debatte konzentriert sich oft auf Softwareentwicklung und neue Modelle."
-          : "The visible debate about AI often focuses on software development and new models.";
+          ? "Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle."
+          : "The loud AI debate is about software development and new models.";
       const linkName = locale === "de" ? "EU AI Act Kurs" : "EU AI Act course";
       const tableLabel =
         locale === "de"

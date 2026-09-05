@@ -23,7 +23,7 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Ermittlung: <span class='accent'>Zuständigkeit, Vertrag und Lineage finden.</span>"
-        hook="Der Kurs verwendet eine fiktive Befehlspalette, eine DatasetSpec-Datei und einen Lineage-Graphen für typische Ermittlungsaufgaben. Diese Schnittstellen sind Referenzentwürfe und keine Industriestandards."
+        hook="Der Kurs arbeitet mit einer fiktiven Befehlspalette, einer DatasetSpec-Datei und einem Lineage-Graphen. Diese Schnittstellen sind Referenzentwürfe, keine Industriestandards."
         meta={[
           { k: "Glossar", v: "Palette + wut" },
           { k: "Metadaten", v: "DatasetSpec" },
@@ -33,11 +33,11 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
 
       <section className="section">
         <SectionLabel n="7.1">Die sechs Kürzel</SectionLabel>
-        <h2 className="h2">Vor der Übernahme eines Datensatzes die Kurspalette verwenden.</h2>
+        <h2 className="h2">Erst die Kurspalette, dann der Datensatz.</h2>
         <p className="prose">
-          Vor der Nutzung einer Tabelle werden Zweck, Zuständigkeit, Status, vorgelagerter Produzent und registrierte Verbraucher geprüft.
+          Bevor du eine Tabelle nutzt, klärst du Zweck, Zuständigkeit, Status, vorgelagerten Produzenten und registrierte Verbraucher.
           <code> ht</code> zeigt im Kurs die Tabellenmetadaten, <code>fpl</code> öffnet die erzeugende Datei, <code>ds produce</code> listet
-          registrierte Verbraucher, <code>qbgs</code> sucht Beispiele, <code>udf</code> findet eine Funktion und <code>wut</code> öffnet einen Glossareintrag.
+          registrierte Verbraucher, <code>qbgs</code> sucht Beispiele, <code>udf</code> findet eine Funktion, <code>wut</code> öffnet einen Glossareintrag.
         </p>
         <DiscoverySpeedrun />
       </section>
@@ -45,9 +45,9 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
       <section className="section">
         <SectionLabel n="7.2">Die Metadatendatei</SectionLabel>
         <p className="prose">
-          Im Referenzdesign besitzt jeder Datensatz eine versionierte <b>DatasetSpec</b> neben dem Pipelinecode. Integrationen können
-          Beschreibungen, Zuständigkeit, Status und Akteur-Annotationen lesen. Die Datei ist ein deklarierter Vertrag. Vor der Nutzung muss geprüft
-          werden, ob Katalog- und Lineage-Aufnahme aktuell sind.
+          Im Referenzdesign liegt neben dem Pipelinecode jedes Datensatzes eine versionierte <b>DatasetSpec</b>. Integrationen lesen daraus
+          Beschreibungen, Zuständigkeit, Status und Akteur-Annotationen. Die Datei ist ein deklarierter Vertrag, mehr nicht. Prüf vor der Nutzung,
+          ob Katalog- und Lineage-Aufnahme aktuell sind.
         </p>
         <CodeBlock
           title="dim_users.spec.yaml · Datensatzmetadaten"
@@ -59,8 +59,8 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
       <section className="section">
         <SectionLabel n="7.3">Lineage als Kamera</SectionLabel>
         <p className="prose">
-          Ein Lineage-Graph kann übermittelte vor- und nachgelagerte Kanten zeigen, einschließlich Spaltenbeziehungen, wenn die Integrationen sie
-          liefern. Er kann unvollständig sein. Vor einer Auswirkungsanalyse werden Graph, Zuständigkeiten, Quellcode, Katalogsuche und Laufzeitdaten kombiniert.
+          Ein Lineage-Graph zeigt die übermittelten vor- und nachgelagerten Kanten, mit Spaltenbeziehungen, sofern die Integrationen sie liefern.
+          Vollständig ist er selten. Für eine Auswirkungsanalyse kombinierst du Graph, Zuständigkeiten, Quellcode, Katalogsuche und Laufzeitdaten.
         </p>
         <LineageCamera />
       </section>
@@ -76,7 +76,7 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
       <BestPractices
         title="Saubere Umsetzung"
         items={[
-          "Vor explorativem SQL mit der Kurspalette die Metadaten prüfen.",
+          "Prüf die Metadaten mit der Kurspalette, bevor du das erste explorative SQL schreibst.",
           "DatasetSpec und beobachtete Tabelle lesen. Deklarierter Vertrag und bereitgestellter Zustand können auseinanderlaufen.",
           "<b>Einen Schritt nach oben und einen nach unten verfolgen.</b> Vor der Nutzung einer Tabelle mindestens Produzent und Verbraucher prüfen.",
         ]}
@@ -84,7 +84,7 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "Ein Ermittlungsablauf stellt Zweck, Zuständigkeit, Status, Schema und bekannte Lineage vor der Übernahme bereit.",
+          "Ein Ermittlungsablauf liefert Zweck, Zuständigkeit, Status, Schema und bekannte Lineage, bevor du die Tabelle übernimmst.",
           "Eine DatasetSpec ist eine versionierte Deklaration. Bei wichtigen Entscheidungen mit bereitgestelltem Katalog und Daten vergleichen.",
           "Lineage ist Nachweis aus instrumentierten Systemen und kein garantiert vollständiges Abhängigkeitsverzeichnis.",
         ]}

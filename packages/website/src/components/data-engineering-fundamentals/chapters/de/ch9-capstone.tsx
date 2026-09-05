@@ -14,7 +14,7 @@ export function Ch9CapstoneDe({ chapter }: Ch9CapstoneDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Eine von <span class='accent'>sechs modellierten Kontrollen</span> ändern und das Ergebnis prüfen."
-        hook="Das Abschlussprojekt kombiniert sechs Kurskontrollen in einer simulierten <code>dim_users</code>-Pipeline. Jeder Fehlerzustand zeigt, wie eine plausible Ausgabe Vollständigkeit, Wiederholungsschutz oder Veröffentlichungsnachweis verlieren kann."
+        hook="Sechs Kurskontrollen, eine simulierte <code>dim_users</code>-Pipeline. Jeder Fehlerzustand zeigt dieselbe Sache aus einem anderen Winkel: wie eine völlig plausible Ausgabe Vollständigkeit, Wiederholungsschutz oder Veröffentlichungsnachweis verliert."
         meta={[
           { k: "Datensatz", v: "dim_users" },
           { k: "Kontrollen", v: "6 ausgewählte Kurskontrollen" },
@@ -27,12 +27,12 @@ export function Ch9CapstoneDe({ chapter }: Ch9CapstoneDeProps) {
         <h2 className="h2">Simulierte Zeilen durchlaufen sechs ausgewählte Kontrollen.</h2>
         <p className="prose">
           Jeder Punkt steht für eine simulierte Nutzerzeile. Das Szenario modelliert einen additiven Merge, Wiederholungsschutz,
-          Nachzüglerbehandlung, Orchestrierung, ausgewählte Qualitätsprüfungen und eine registrierte Metrik. Diese Kontrollen bilden keine
-          vollständige Produktionsarchitektur.
+          Nachzüglerbehandlung, Orchestrierung, ausgewählte Qualitätsprüfungen und eine registrierte Metrik. Eine vollständige
+          Produktionsarchitektur ist das nicht.
         </p>
         <p className="prose">
-          Eine Kontrolle unter einer Stufe ändern, modellierte Zeilen und Signalzustand beobachten und anschließend die Analyseabfrage ausführen.
-          Den angezeigten Wert mit Quellenkontext und Prüfnachweisen vergleichen.
+          Änder eine Kontrolle unter einer Stufe, beobachte modellierte Zeilen und Signalzustand, führ danach die Analyseabfrage aus. Und stell
+          den angezeigten Wert neben Quellenkontext und Prüfnachweise.
         </p>
         <LivingPipeline />
       </section>
@@ -42,8 +42,8 @@ export function Ch9CapstoneDe({ chapter }: Ch9CapstoneDeProps) {
         items={[
           "Eine Pipeline verbindet Daten-, Ausführungs-, Qualitäts-, Zugriffs- und Bereitstellungsverträge; diese sechs bilden eine ausgewählte Lernmenge.",
           "Ein Signal trennt einen abgeschlossenen Schreibvorgang von einem Schreibvorgang, der die benannten Prüfungen bestand. Es beweist nicht jeden fachlichen Wert.",
-          "Eine plausible Zahl benötigt Quelle, Stichtag, Definitionsversion und Prüfnachweise, bevor sie interpretiert werden kann.",
-          "Einen Fehler zum verantwortlichen Vertrag zurückverfolgen und den betroffenen Zustand neu aufbauen, statt nur das nachgelagerte Symptom zu verdecken.",
+          "Eine plausible Zahl braucht Quelle, Stichtag, Definitionsversion und Prüfnachweise, bevor du sie interpretierst.",
+          "Verfolg einen Fehler bis zum verantwortlichen Vertrag zurück und bau den betroffenen Zustand neu auf. Das nachgelagerte Symptom zu verdecken ist keine Lösung.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

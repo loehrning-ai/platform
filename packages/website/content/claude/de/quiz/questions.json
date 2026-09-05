@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ohne Telemetrie wäre jeder benannte Dienst unbelegt. Stelle Messwerte oder ein lesendes Metrik-Tool bereit und prüfe die Antwort daran.",
+    "explanation": "Ohne Telemetrie ist jeder genannte Dienst geraten. Gib Messwerte oder ein lesendes Metrik-Tool mit und prüfe daran.",
     "version": 1,
     "active": true
   },
@@ -53,7 +53,7 @@
       },
       { "id": "d", "text": "Nur gegen Aufpreis.", "isCorrect": false }
     ],
-    "explanation": "Persistenz ist eine Produktfunktion. Produktoberflächen können Projects, CLAUDE.md oder auto-memory bereitstellen; prüfe die aktuelle Konfiguration, statt chatübergreifende Erinnerung vorauszusetzen.",
+    "explanation": "Persistenz ist eine Produktfunktion. Projects, CLAUDE.md oder auto-memory können sie liefern. Prüfe die Konfiguration, statt auf Erinnerung über Chats hinweg zu bauen.",
     "version": 1,
     "active": true
   },
@@ -84,7 +84,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das Modell erzeugt eine Antwort abhängig von Eingabe und Kontext. Korrektheit erfordert weiterhin Belege und Prüfung.",
+    "explanation": "Das Modell erzeugt eine Fortsetzung aus Eingabe und Kontext. Ob sie stimmt, klären Belege und Prüfung.",
     "version": 1,
     "active": true
   },
@@ -146,7 +146,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Tokenisierung variiert nach Modell, Sprache, Zeichensetzung und Inhaltstyp. Nutze den unterstützten Zähler, wenn Kontextgrenze oder Kosten relevant sind.",
+    "explanation": "Tokenisierung variiert nach Modell, Sprache, Zeichensetzung und Inhaltstyp. Bei Kontextgrenze oder Kosten zählt der unterstützte Zähler, nicht deine Schätzung.",
     "version": 1,
     "active": true
   },
@@ -177,7 +177,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Anthropics Langkontext-Anleitung platziert Dokumente bei Mehrdokument-Aufgaben vor der Frage. Bestätige die Anordnung mit Evals für Modell und Eingaben.",
+    "explanation": "Anthropics Langkontext-Anleitung setzt bei Mehrdokument-Aufgaben die Dokumente vor die Frage. Ob das bei deinem Modell trägt, zeigen Evals.",
     "version": 1,
     "active": true
   },
@@ -208,7 +208,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "CLAUDE.md liefert projektbezogene Anweisungen. Halte die Datei kurz und konkret: Konventionen, Befehle und Antimuster. Speichere dort keine Geheimnisse.",
+    "explanation": "CLAUDE.md liefert projektbezogene Anweisungen. Kurz und konkret, also Konventionen, Befehle und Antimuster. Geheimnisse gehören nicht hinein.",
     "version": 1,
     "active": true
   },
@@ -239,7 +239,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Untergeordnete CLAUDE.md-Dateien werden entdeckt, wenn Claude Code Dateien im jeweiligen Verzeichnis liest. Mit /memory prüfst du das tatsächliche Laden.",
+    "explanation": "Untergeordnete CLAUDE.md-Dateien werden entdeckt, wenn Claude Code Dateien im jeweiligen Verzeichnis liest. Ob sie wirklich geladen sind, zeigt /memory.",
     "version": 1,
     "active": true
   },
@@ -247,7 +247,7 @@
     "id": "claude-q09",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welche Turn-2-Korrektur verändert das Ergebnis am wahrscheinlichsten?",
+    "questionText": "Welche Korrektur in Runde 2 verändert das Ergebnis am wahrscheinlichsten?",
     "answerOptions": [
       { "id": "a", "text": "\"Verbessere den Text.\"", "isCorrect": false },
       {
@@ -262,7 +262,7 @@
       },
       { "id": "d", "text": "\"Versuche es noch einmal.\"", "isCorrect": false }
     ],
-    "explanation": "Die wirksame Korrektur ist konkret, ausführbar und überprüfbar. Die anderen Formulierungen liefern keine eindeutige Handlungsanweisung.",
+    "explanation": "Nur diese Korrektur benennt eine prüfbare Änderung. Die anderen drei sind Stimmung, keine Anweisung.",
     "version": 1,
     "active": true
   },
@@ -293,7 +293,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein freigegebenes Beispiel macht Stilanforderungen beobachtbar. Prüfe, dass die Überarbeitung Quellenfakten erhält und keine Fakten aus dem Stilbeispiel übernimmt.",
+    "explanation": "Ein freigegebenes Beispiel macht Stil beobachtbar. Prüfe, dass die Überarbeitung die Quellenfakten behält und keine aus dem Stilbeispiel einschleppt.",
     "version": 1,
     "active": true
   },
@@ -324,7 +324,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ohne erzwungene Abbruchgrenze kann der Harness Modell- und Tool-Aufrufe fortsetzen, bis eine andere Ressource oder externe Grenze greift.",
+    "explanation": "Ohne erzwungene Abbruchgrenze setzt der Harness Modell- und Tool-Aufrufe fort, bis eine andere Ressource oder externe Grenze greift.",
     "version": 1,
     "active": true
   },
@@ -355,7 +355,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Für die Zusammenfassung reichen ein einzelner Prompt und das Protokoll. Die zusätzliche Komplexität eines Agenten ist erst bei mehreren Werkzeugaufrufen begründet.",
+    "explanation": "Für die Zusammenfassung reichen ein Prompt und das Protokoll. Ein Agent lohnt seine Komplexität erst, wenn die Aufgabe mehrere Tool-Aufrufe braucht.",
     "version": 1,
     "active": true
   },
@@ -386,7 +386,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Prompts steuern den Fokus. Lege fest, was die Prüfung priorisieren und was sie ignorieren soll.",
+    "explanation": "Prompts steuern den Fokus. Sag dem Reviewer, was zählt und was er ignorieren soll.",
     "version": 1,
     "active": true
   },
@@ -417,7 +417,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Stelle autoritative Daten bereit, verlange nachvollziehbare Belege, definiere Abstention und prüfe die zitierten Passagen.",
+    "explanation": "Autoritative Daten bereitstellen, nachvollziehbare Belege verlangen, Abstention definieren, zitierte Passagen prüfen. Ein Appell im Prompt ersetzt nichts davon.",
     "version": 1,
     "active": true
   },
@@ -440,7 +440,7 @@
       { "id": "c", "text": "Die Tageszeit.", "isCorrect": false },
       { "id": "d", "text": "Zu wenige Adjektive.", "isCorrect": false }
     ],
-    "explanation": "Teilbare Prompts verwenden Parameter und enthalten eine Dokumentation. Entferne fallspezifische Angaben, beschreibe den Einsatzbereich und zeige eine Beispielausgabe.",
+    "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Fallspezifisches raus, Einsatzbereich rein, Beispielausgabe dazu.",
     "version": 1,
     "active": true
   },
@@ -467,7 +467,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein kontrollierter Vergleich zeigt, welche Anforderungen besser oder schlechter erfüllt werden. Eine bevorzugte Einzelantwort zeigt das nicht.",
+    "explanation": "Ein kontrollierter Vergleich zeigt, welche Anforderungen besser oder schlechter erfüllt sind. Eine bevorzugte Einzelantwort zeigt das nicht.",
     "version": 1,
     "active": true
   },
@@ -498,7 +498,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Kontrolliertes Entfernen kann Konflikte eingrenzen. Wiederhole dieselben Durchläufe, weil eine variable Modellausgabe keine Ursache beweist.",
+    "explanation": "Kontrolliertes Entfernen grenzt Konflikte ein. Wiederhole dieselben Durchläufe, denn eine variable Modellausgabe beweist keine Ursache.",
     "version": 1,
     "active": true
   },
@@ -525,7 +525,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Behandle jedes offengelegte Geheimnis als kompromittiert. Erneuere es und entferne Geheimnisse vor allen künftigen Eingaben.",
+    "explanation": "Ein offengelegtes Geheimnis gilt als kompromittiert. Erneuern, und künftige Eingaben vorher redigieren.",
     "version": 1,
     "active": true
   },
@@ -556,7 +556,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Prompt-Injection erfordert mehrschichtige Kontrollen. Eine Anweisung zum Ignorieren eingebetteten Textes ist nützlicher Kontext, erzwingt aber keine Tool- oder Datengrenze.",
+    "explanation": "Prompt-Injection braucht mehrere Schichten. Die Anweisung, eingebetteten Text zu ignorieren, ist nützlicher Kontext. Eine Tool- oder Datengrenze erzwingt sie nicht.",
     "version": 1,
     "active": true
   }

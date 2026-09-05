@@ -404,7 +404,7 @@ export async function generateCertificatePdf(
   doc.setFontSize(8);
   doc.text(
     isEn
-      ? "Locally generated certificate of completion. No cryptographic signature."
+      ? "Locally generated certificate of participation. No cryptographic signature."
       : "Lokal erzeugte Teilnahmebestätigung. Keine kryptografische Signatur.",
     W / 2,
     H - 16,

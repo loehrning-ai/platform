@@ -281,7 +281,8 @@ describe("<CourseAssessmentCta>", () => {
     ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/quiz");
     expect(
       screen.queryByRole("link", {
-        name: "Download Certificate of Completion",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation", including the Operator course that used to say "Course Completion Record".
+        name: "Download Certificate of Participation",
       }),
     ).not.toBeInTheDocument();
 
@@ -294,7 +295,7 @@ describe("<CourseAssessmentCta>", () => {
     );
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Completion",
+        name: "Download Certificate of Participation",
       }),
     ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/zertifikat");
   });
@@ -321,7 +322,8 @@ describe("<CourseAssessmentCta>", () => {
     emitProgress(progressFor("ai-native-operator", 39, true));
     expect(
       screen.getByRole("link", {
-        name: "Download Course Completion Record",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation", including the Operator course that used to say "Course Completion Record".
+        name: "Download Certificate of Participation",
       }),
     ).toHaveAttribute(
       "href",

@@ -6,7 +6,7 @@ Er betrifft auch dich. Ja, dich, die Freelancerin mit dem Einzelunternehmen. Auc
 
 Das Risiko für die meisten Selbstständigen ist überschaubar. "Überschaubar" heißt aber nicht "null". Und Unwissenheit schützt bekanntlich vor Strafe nicht, auch nicht vor KI-Strafen.
 
-Dieses Kapitel zeigt die Prüffelder. Es ersetzt weder den aktuellen Gesetzestext noch eine Einzelfallprüfung.
+Was hier steht, sind die Prüffelder. Kein Ersatz für den aktuellen Gesetzestext und keiner für die Einzelfallprüfung.
 
 > **Rechtlicher Hinweis:** Dieses Kapitel gibt allgemeine Orientierung, keine Rechtsberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG). Für deine individuelle Situation konsultiere einen Fachanwalt oder Datenschutzbeauftragten. Rechtsstand der überprüften AI-Act-Angaben: 28. Juli 2026.
 
@@ -21,22 +21,22 @@ Dieses Kapitel zeigt die Prüffelder. Es ersetzt weder den aktuellen Gesetzestex
 > - **Block 5:** Richtlinie, wie du KI im Unternehmen verantwortungsvoll einsetzt
 >
 > **Kursdauer:** 5 × 30 Minuten + Praxisübungen
-> **Abschluss:** Der Kurs dokumentiert deinen Lernfortschritt. Ein plattformeigener Nachweis ist kein behördliches Zertifikat und belegt allein keine organisationsbezogene Erfüllung von Art. 4.
+> **Abschluss:** Der Kurs dokumentiert deinen Lernfortschritt. Die Teilnahmebestätigung ist kein behördlicher Nachweis und belegt allein keine organisationsbezogene Erfüllung von Art. 4.
 > **URL:** /ki-fuehrerschein
 >
 > Für Selbstständige ist Block 2 die Grundlage für die Datenschutzprüfung dieser Anleitung.
 
 ## DSGVO und KI: was darfst du?
 
-Bei Apple habe ich Privacy by Design gelernt. Nicht als Konzept. Als Praxis.
+Bei Apple habe ich Privacy by Design gelernt. Nicht als Konzept, als tägliche Praxis.
 
-Bei Apple war Datenklassifizierung Pflicht, Public, Internal, Confidential, Restricted, ab Tag 1. In meinem ersten Projekt dort wollte ich Nutzerdaten für ein ML-Modell verwenden, aggregiert, anonymisiert, harmlos, dachte ich. Mein Lead hat den Antrag zurückgeschickt. Dreimal. Nicht weil die Daten problematisch waren, sondern weil die Dokumentation nicht lückenlos nachweisen konnte, dass sie es nicht sind. Ich war frustriert. Und dann habe ich verstanden: Datenschutz ist kein Hindernis. Gute Hygiene, egal ob mit KI oder ohne.
+Datenklassifizierung war dort Pflicht, Public, Internal, Confidential, Restricted, ab Tag 1. In meinem ersten Projekt wollte ich Nutzerdaten für ein ML-Modell verwenden, aggregiert, anonymisiert, harmlos, dachte ich. Mein Lead hat den Antrag zurückgeschickt. Dreimal. Nicht weil die Daten problematisch waren, sondern weil die Dokumentation nicht lückenlos nachweisen konnte, dass sie es nicht sind. Ich war frustriert. Und dann habe ich verstanden: Datenschutz ist kein Hindernis. Gute Hygiene, egal ob mit KI oder ohne.
 
-Als Freelancer denkst du vielleicht: Apple hat eine ganze Datenschutzabteilung. Ich habe mich. Stimmt. Aber die gute Nachricht: Dein Risiko ist kleiner, und die Regeln sind einfacher. Das Prinzip bleibt dasselbe.
+Als Freelancer denkst du vielleicht: Apple hat eine ganze Datenschutzabteilung, ich habe mich. Der Einwand stimmt. Dein Risiko ist trotzdem kleiner und die Regeln sind einfacher. Das Prinzip bleibt dasselbe.
 
 **Was du nicht ohne dokumentierte Freigabe in KI-Tools eingeben solltest:**
 
-Das haben wir in Kapitel 2 angerissen. Hier die vollständige Liste:
+Kapitel 2 hat das angerissen. Hier die vollständige Liste:
 
 1. **Personenbezogene Daten deiner Kunden:** Namen, Adressen, Telefonnummern, E-Mail-Adressen
 2. **Gesundheitsdaten:** besonders relevant für Therapeuten, Coaches, Heilpraktiker (DSGVO Art. 9)
@@ -44,19 +44,19 @@ Das haben wir in Kapitel 2 angerissen. Hier die vollständige Liste:
 4. **Vertrauliche Geschäftsinformationen:** Verträge mit echten Firmennamen und Beträgen
 5. **Inhalte unter NDA:** Alles, was du unter Geheimhaltung erhalten hast
 
-Eine risikomindernde Maßnahme ist Pseudonymisierung: "Kunde A, mittelständisches Unternehmen im Maschinenbau" statt eines echten Namens. Pseudonymisierte Daten bleiben nach DSGVO personenbezogen. Kombinationen aus Branche, Ort, Umsatz oder Alter können Personen oder Unternehmen weiterhin identifizierbar machen. Datenminimierung, Zweck, Rechtsgrundlage, Vertrag und Zugriffsschutz bleiben zu prüfen.
+Pseudonymisierung mindert das Risiko: "Kunde A, mittelständisches Unternehmen im Maschinenbau" statt eines echten Namens. Pseudonymisierte Daten bleiben nach DSGVO trotzdem personenbezogen. Kombinationen aus Branche, Ort, Umsatz oder Alter können Personen oder Unternehmen weiterhin identifizierbar machen. Datenminimierung, Zweck, Rechtsgrundlage, Vertrag und Zugriffsschutz bleiben zu prüfen.
 
 > **Rechtlicher Hinweis:** Art. 28 DSGVO verlangt einen Auftragsverarbeitungsvertrag (AVV), wenn ein Anbieter personenbezogene Daten in deinem Auftrag verarbeitet. Ob ein KI-Anbieter Auftragsverarbeiter, eigener Verantwortlicher oder in verschiedenen Funktionen tätig ist, hängt von Produkt, Zweck und Vertrag ab.
 
 **Brauchst du einen Auftragsverarbeitungsvertrag (AVV)?**
 
-Kurze Antwort: Zuerst die Rollen bestimmen. Verarbeitet der Anbieter personenbezogene Daten in deinem Auftrag, brauchst du grundsätzlich die Anforderungen aus Art. 28 DSGVO. Daneben bleiben Rechtsgrundlage, Transparenz, Drittlandtransfer, Sicherheit und gegebenenfalls eine Folgenabschätzung eigenständige Prüfungen.
+Kurze Antwort: Zuerst die Rollen bestimmen. Verarbeitet der Anbieter personenbezogene Daten in deinem Auftrag, greifen die Anforderungen aus Art. 28 DSGVO. Rechtsgrundlage, Transparenz, Drittlandtransfer, Sicherheit und gegebenenfalls eine Folgenabschätzung bleiben davon unberührt und werden einzeln geprüft.
 
-OpenAI und Anthropic veröffentlichen Vertragsunterlagen für bestimmte kommerzielle Produkte. Anthropic bindet nach eigener Dokumentation ein DPA mit Standardvertragsklauseln in seine Commercial Terms ein. Prüfe immer die tatsächlich verwendete Produktstufe, das Datum der Bedingungen, Rollen, Unterauftragnehmer, Transfers und mögliche Opt-ins. Das Ablegen eines DPA allein macht den Prozess nicht zulässig.
+OpenAI und Anthropic veröffentlichen Vertragsunterlagen für bestimmte kommerzielle Produkte. Anthropic bindet nach eigener Dokumentation ein DPA mit Standardvertragsklauseln in seine Commercial Terms ein. Prüfe immer die tatsächlich verwendete Produktstufe, das Datum der Bedingungen, Rollen, Unterauftragnehmer, Transfers und mögliche Opt-ins. Ein abgelegtes DPA macht deinen Prozess nicht zulässig.
 
 **Kommerziell vs. Consumer:** Vertrags- und Datenkontrollen unterscheiden sich nach Anbieter und Produktstufe. Anthropic dokumentiert für Claude for Work und die API standardmäßig keine Nutzung kommerzieller Kundendaten zum Modelltraining, außer bei bestimmten Opt-ins oder übermitteltem Feedback; Verbraucherprodukte folgen anderen Regeln. Prüfe diese Regeln am Entscheidungstag. Kein Tarif ersetzt die Freigabe einer konkreten Datenklasse.
 
-**Datenschutzerklärung prüfen:** Verarbeitet eine Website-Funktion personenbezogene Daten, müssen die Informationen nach Art. 13 beziehungsweise 14 DSGVO den tatsächlichen Prozess abbilden: Zwecke, Daten, Empfänger, Rechtsgrundlage, Speicherdauer und gegebenenfalls Transfers. Server- und Verarbeitungsorte werden aus der aktuellen Konfiguration und den Anbieterunterlagen ermittelt, nicht pauschal angenommen.
+**Datenschutzerklärung prüfen:** Verarbeitet eine Website-Funktion personenbezogene Daten, müssen die Informationen nach Art. 13 beziehungsweise 14 DSGVO den tatsächlichen Prozess abbilden: Zwecke, Daten, Empfänger, Rechtsgrundlage, Speicherdauer und gegebenenfalls Transfers. Server- und Verarbeitungsorte ermittelst du aus der aktuellen Konfiguration und den Anbieterunterlagen, nicht aus dem Bauchgefühl.
 
 > **KRAFT-Prompt: DSGVO-Check**
 >
@@ -87,7 +87,7 @@ OpenAI und Anthropic veröffentlichen Vertragsunterlagen für bestimmte kommerzi
 > - [ ] Regelmäßige Prüfung: Welche Daten gehen in welche Tools?
 > - [ ] Dokumentation: Welche KI-Tools nutze ich wofür?
 
-Belastbar ist nicht der Satz "DSGVO-konform", sondern eine nachprüfbare Beschreibung: freigegebene Zwecke und Datenklassen, Rollen und Rechtsgrundlagen, Verträge, Transfers, Zugriffskontrollen, Löschfristen und ein dokumentierter Review. Ein AVV und Pseudonymisierung sind Teile dieser Prüfung, keine Pauschalgarantie.
+Der Satz "DSGVO-konform" trägt nichts. Belastbar ist eine nachprüfbare Beschreibung: freigegebene Zwecke und Datenklassen, Rollen und Rechtsgrundlagen, Verträge, Transfers, Zugriffskontrollen, Löschfristen und ein dokumentierter Review. Ein AVV und Pseudonymisierung sind Teile dieser Prüfung, keine Pauschalgarantie.
 
 ## EU AI Act: betrifft dich das?
 
@@ -99,14 +99,14 @@ Kurze Antwort: Mehr als du denkst. Weniger als du befürchtest.
 
 ### Wo steht Deutschland? Die Aufsichtsbehörden
 
-Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026; am 10. Juli passierte es den Bundesrat. Das Gesetz ist am 29. Juli 2026 in Kraft getreten. Es weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall müssen deshalb das jeweilige Fachrecht und der aktuell veröffentlichte Behördenweg geprüft werden.
+Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026; am 10. Juli passierte es den Bundesrat. Das Gesetz ist am 29. Juli 2026 in Kraft getreten. Es weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall prüfst du deshalb das jeweilige Fachrecht und den aktuell veröffentlichten Behördenweg.
 
 | Behörde | Zuständigkeit |
 |---------|---------------|
 | **Bundesnetzagentur (BNetzA)** | nach dem seit 29. Juli 2026 geltenden KI-MIG zentrale Anlaufstelle und Marktüberwachung, soweit keine Fachbehörde zuständig ist; sektorale Zuständigkeit prüfen |
 | **Sektorale Marktüberwachung** | Zuständigkeit kann insbesondere aus Finanz-, Medizinprodukt-, Datenschutz- oder anderem Fachrecht folgen; die konkrete Behörde fallbezogen prüfen |
 
-Für dich heißt das: Einzelne AI-Act-Pflichten gelten bereits, weitere greifen nach dem gesetzlichen Zeitplan. Prüfe für Beschwerden und Meldungen die aktuell veröffentlichte Zuständigkeit; die BNetzA ist nicht automatisch für jeden Sektor und jeden Vorgang die alleinige Stelle.
+Einzelne AI-Act-Pflichten gelten für dich bereits, weitere greifen nach dem gesetzlichen Zeitplan. Prüfe für Beschwerden und Meldungen die aktuell veröffentlichte Zuständigkeit; die BNetzA ist nicht automatisch für jeden Sektor und jeden Vorgang die alleinige Stelle.
 
 ### August 2026: Die nächste Deadline
 
@@ -120,19 +120,19 @@ Die Bußgelder sind kein Spaß:
 | Hochrisiko-Pflichten verletzen | 15 Mio. EUR oder 3% Weltumsatz |
 | Falsche/unvollständige Angaben | 7,5 Mio. EUR oder 1% Weltumsatz |
 
-Gewöhnliche Unterstützung beim Formulieren von E-Mails oder Angeboten ist regelmäßig kein Anhang-III-Hochrisiko-Fall. Art. 4, Datenschutz, Geheimhaltung, Urheber- und Wettbewerbsrecht können trotzdem relevant bleiben. Eine Risikoklasse wird nach System, Zweck und Einsatzkontext bestimmt, nicht nach dem Produktnamen.
+Wer E-Mails oder Angebote formulieren lässt, landet damit regelmäßig nicht im Anhang-III-Hochrisiko-Bereich. Art. 4, Datenschutz, Geheimhaltung, Urheber- und Wettbewerbsrecht können trotzdem relevant bleiben. Eine Risikoklasse folgt aus System, Zweck und Einsatzkontext, nicht aus dem Produktnamen.
 
-**Rollenprüfung:** Betreiber ist, wer ein KI-System unter eigener Verantwortung verwendet, außer bei rein persönlicher, nicht beruflicher Tätigkeit. Welche Pflichten greifen, hängt zusätzlich von Risikoklasse und Use Case ab. Ein FAQ-Chatbot, Bewerberauswahl und ein eigenes Bewertungssystem sind deshalb getrennt zu klassifizieren.
+**Rollenprüfung:** Betreiber ist, wer ein KI-System unter eigener Verantwortung verwendet, außer bei rein persönlicher, nicht beruflicher Tätigkeit. Welche Pflichten greifen, hängt zusätzlich von Risikoklasse und Use Case ab. Ein FAQ-Chatbot, Bewerberauswahl und ein eigenes Bewertungssystem klassifizierst du deshalb getrennt.
 
 ### Die Bewusstseinslücke (und deine Chance)
 
-Typisch bei neuer Regulierung: Die Bekanntheit hinkt den Pflichten hinterher. Die DSGVO hat 2018 gezeigt, was passiert, wenn Regulierung auf Unwissenheit trifft: Panik, überteuerte Berater, Schnellschüsse. Beim AI Act passiert gerade dasselbe, in Zeitlupe.
+Bei neuer Regulierung hinkt die Bekanntheit den Pflichten hinterher. Die DSGVO hat 2018 gezeigt, was dann passiert. Panik, überteuerte Berater, Schnellschüsse. Beim AI Act läuft gerade derselbe Film, in Zeitlupe.
 
 Für dich als Freelancer bedeutet das zwei Dinge:
 
 **Erstens:** Du liest gerade dieses Buch. Damit bist du weiter als die meisten Selbstständigen. Das ist kein Marketingspruch, das ist Empirie.
 
-**Zweitens:** Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein. Du kannst solche Maßnahmen unterstützen. Du selbst, ein einzelner Kurs oder ein Zertifikat bist jedoch nicht automatisch der gesetzliche Nachweis für die Organisation.
+**Zweitens:** Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein. Du kannst solche Maßnahmen unterstützen. Weder du selbst noch ein einzelner Kurs noch eine Teilnahmebestätigung sind automatisch der gesetzliche Nachweis für die Organisation.
 
 ### Compliance als echtes Geschäftsargument
 
@@ -154,7 +154,7 @@ Ab 2. August 2026 verlangt Art. 50 in bestimmten Fällen technische Markierung o
 
 > **Rechtlicher Hinweis:** Ob Werbung mit Begriffen wie "handgefertigt" oder "persönlich geschrieben" bei KI-Unterstützung irreführend ist, hängt vom Verständnis der angesprochenen Verbraucher und vom tatsächlichen Herstellungsprozess ab. Keine pauschale Rechtssicherheit aus einer freiwilligen Kennzeichnung ableiten.
 
-Eine freiwillige Formulierung wie "Dieser Text wurde mit KI-Unterstützung erstellt und redaktionell geprüft" kann Transparenz schaffen, wenn sie stimmt. Sie ersetzt keine Prüfung der konkret anwendbaren Pflichten und schützt nicht pauschal vor künftigen Regeländerungen.
+Eine freiwillige Formulierung wie "Dieser Text wurde mit KI-Unterstützung erstellt und redaktionell geprüft" schafft Transparenz, wenn sie stimmt. Sie ersetzt keine Prüfung der konkret anwendbaren Pflichten und schützt nicht pauschal vor künftigen Regeländerungen.
 
 ### Reglementierte Berufe: Warum §203 StGB und KI nicht zusammenpassen
 
@@ -162,9 +162,9 @@ Wenn du Rechtsanwalt, Steuerberater, Arzt, Psychotherapeut oder Heilpraktiker bi
 
 > **Rechtlicher Hinweis:** §203 StGB stellt die Offenbarung fremder Geheimnisse unter Strafe. Die Übertragung mandanten- oder patientenbezogener Daten in Cloud-KI-Systeme ohne ausreichende vertragliche und technische Absicherung kann diesen Tatbestand erfüllen.
 
-Die Eingabe mandanten- oder patientenbezogener Daten in einen Cloud-Dienst kann Verschwiegenheits-, Datenschutz- und Berufsrecht verletzen, wenn Befugnis, Vertrag und technische Schutzmaßnahmen fehlen. Prüfe das konkrete Produkt, Speicher- und Verarbeitungsorte, Zugriffe, Transfers und berufsrechtliche Vorgaben; pauschale Länderannahmen reichen nicht.
+Mandanten- oder patientenbezogene Daten in einem Cloud-Dienst können Verschwiegenheits-, Datenschutz- und Berufsrecht verletzen, wenn Befugnis, Vertrag und technische Schutzmaßnahmen fehlen. Prüfe das konkrete Produkt, Speicher- und Verarbeitungsorte, Zugriffe, Transfers und berufsrechtliche Vorgaben; pauschale Länderannahmen reichen nicht.
 
-Spezialisierte Legal-AI-Angebote können andere Betriebs- und Vertragsmodelle bieten. Auch dort müssen Kanzlei, Berufsgeheimnisträger und Datenschutzverantwortliche die konkrete Konfiguration prüfen. Ein europäischer Anbieter oder Hostingort erteilt keine automatische Freigabe für Mandantendaten.
+Spezialisierte Legal-AI-Angebote können andere Betriebs- und Vertragsmodelle bieten. Auch dort prüfen Kanzlei, Berufsgeheimnisträger und Datenschutzverantwortliche die konkrete Konfiguration. Ein europäischer Anbieter oder Hostingort erteilt keine automatische Freigabe für Mandantendaten.
 
 Was für Kanzleien gilt, gilt auch für dich als Freiberufler mit Schweigepflicht. Deine Optionen:
 
@@ -211,7 +211,7 @@ Der paradoxe Punkt: Ehrliche KI-Kommunikation ist ein Verkaufsargument. "Ich nut
 
 ## Verträge und AGB mit KI-Unterstützung
 
-KI kann Verträge analysieren und Entwürfe erstellen. Aber sie kann keine Rechtsberatung leisten. Diesen Unterschied musst du kennen, und respektieren.
+KI kann Verträge analysieren und Entwürfe erstellen. Rechtsberatung kann sie nicht leisten. Diesen Unterschied musst du kennen, und respektieren.
 
 **Was KI kann:**
 - Vertragsentwürfe als Ausgangspunkt erstellen
@@ -227,7 +227,7 @@ KI kann Verträge analysieren und Entwürfe erstellen. Aber sie kann keine Recht
 
 Die goldene Regel: KI für den Entwurf. Anwalt für die Prüfung.
 
-Plane für rechtlich relevante Vertragswerke eine fachkundige Prüfung ein. Kosten und Umfang hängen von Geschäftsmodell, Klauseln und Beratungsbedarf ab; pauschale Beträge sind keine belastbare Entscheidungsgrundlage.
+Plane für rechtlich relevante Vertragswerke eine fachkundige Prüfung ein. Kosten und Umfang hängen von Geschäftsmodell, Klauseln und Beratungsbedarf ab; ein pauschaler Betrag taugt nicht als Entscheidungsgrundlage.
 
 ```
 Kontext: Ich bin [BERUF] mit einem Einzelunternehmen. Ich brauche
@@ -246,7 +246,7 @@ Ergebnis: Ein Entwurf, den du deinem Anwalt zeigst. Nicht deinem Kunden. Erst na
 
 ## Steuern und Betriebsausgaben
 
-Kosten für KI-Tools können Betriebsausgaben sein, soweit sie betrieblich veranlasst sind. Bei gemischter Nutzung ist nur der betriebliche beziehungsweise berufliche Anteil anzusetzen; Zuordnung und Nachweise mit der aktuellen steuerlichen Behandlung abstimmen.
+Kosten für KI-Tools können Betriebsausgaben sein, soweit sie betrieblich veranlasst sind. Bei gemischter Nutzung setzt du nur den betrieblichen beziehungsweise beruflichen Anteil an; Zuordnung und Nachweise stimmst du mit der aktuellen steuerlichen Behandlung ab.
 
 | Ausgabe | Steuerlich prüfen | Mögliche Zuordnung |
 |---------|-------------------|--------------------|
@@ -282,7 +282,7 @@ Dein Steuerberater wird sich freuen. Ordentliche Dokumentation ist das, was ihn 
 
 ---
 
-Das ist kein Rechtsrat. Der erforderliche Prüfungsumfang hängt von Tätigkeit, Daten, Rolle und System ab. Wer in einer reglementierten Branche arbeitet, klärt die Nutzung zusätzlich mit Kammer, Datenschutzbeauftragten oder fachkundiger Rechtsberatung.
+Das ist kein Rechtsrat. Wie tief du prüfen musst, hängt von Tätigkeit, Daten, Rolle und System ab. Wer in einer reglementierten Branche arbeitet, klärt die Nutzung zusätzlich mit Kammer, Datenschutzbeauftragten oder fachkundiger Rechtsberatung.
 
 > **Zeitgewinn-Tracker**
 >
@@ -292,4 +292,4 @@ Das ist kein Rechtsrat. Der erforderliche Prüfungsumfang hängt von Tätigkeit,
 > | Gegenwert | Im eigenen Prozess messen |
 > | Toolkosten | Aktuelle Anbieterpreise und Beratungskosten separat prüfen |
 
-Abgesichert. Mach das. Heute.
+Abgesichert bist du nicht vom Lesen. Fang heute an.

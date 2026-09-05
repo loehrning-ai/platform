@@ -13,25 +13,25 @@
       "id": "why-gdocs",
       "title": "Google Docs als gemeinsame Arbeitsfläche",
       "readTimeMinutes": 1,
-      "content": "Teams nutzen gemeinsame Dokumente für Entscheidungen, Spezifikationen, Incident-Reviews und Rollout-Pläne. Ein brauchbarer generierter Entwurf erhält bereitgestellte Fakten, kennzeichnet fehlende Angaben und folgt einer vertrauten Struktur.\n\nDrei Kontrollen helfen: Abschnittsstruktur vorgeben, ein freigegebenes Stilbeispiel bereitstellen und Aussagen vor der sprachlichen Überarbeitung prüfen."
+      "content": "Teams entscheiden in Dokumenten. Spezifikationen, Incident-Reviews, Rollout-Pläne landen im gemeinsamen Doc. Ein brauchbarer Entwurf behält die gelieferten Fakten, markiert Lücken und folgt einer vertrauten Struktur.\n\nDrei Hebel: Struktur vorgeben, ein freigegebenes Stilbeispiel mitgeben, Aussagen vor dem Feinschliff prüfen."
     },
     {
       "id": "move-1-skeleton",
       "title": "Schritt 1: Gib Claude die Struktur vor",
       "readTimeMinutes": 2,
-      "content": "Google Docs folgen bestimmten Konventionen. Design-Dokumente enthalten TL;DRs. PRDs umfassen Erfolgsmetriken. Post-Mortems beinhalten Zeitpläne. Ohne eine vorgegebene Struktur erstellt Claude einen generischen „Artikel“.\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```"
+      "content": "Jede Dokumentsorte hat Konventionen. Design-Dokumente haben ein TL;DR. PRDs haben Erfolgsmetriken. Post-Mortems haben eine Zeitleiste. Ohne vorgegebene Struktur liefert Claude einen generischen „Artikel“.\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```"
     },
     {
       "id": "move-2-voice",
       "title": "Schritt 2: Gib Claude den Stil vor",
       "readTimeMinutes": 2,
-      "content": "Wenn Terminologie und Satzbau wichtig sind, stelle eine kurze, freigegebene Referenz bereit und benenne die zu übernehmenden Eigenschaften. Entferne vertrauliche Details und verbiete die Übernahme von Fakten aus dem Stilbeispiel.\n\n> Ein Stilbeispiel zeigt das Ziel; ein Eval prüft, ob die Ausgabe dazu passt."
+      "content": "Zählen Terminologie und Satzbau, gib eine kurze, freigegebene Referenz mit und benenne, was übernommen werden soll. Vertrauliche Details raus. Und verbiete ausdrücklich, Fakten aus dem Stilbeispiel zu übernehmen.\n\n> Das Stilbeispiel zeigt das Ziel. Ob die Ausgabe es trifft, prüft ein Eval."
     },
     {
       "id": "move-3-critique",
       "title": "Schritt 3: Bitte um Kritik vor der Überarbeitung",
       "readTimeMinutes": 2,
-      "content": "Prüfe den ersten Entwurf anhand expliziter Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe und Strukturfehler. Fordere eine kurze Befundliste mit zitierten Belegen an und beauftrage danach nur die freigegebenen Änderungen.\n\nSo entsteht ein nachvollziehbarer Prüfschritt. Private Chain-of-Thought-Texte sind dafür weder nötig noch vorgesehen."
+      "content": "Erst Kritik, dann Überarbeitung. Prüfe den ersten Entwurf an expliziten Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe, Strukturfehler. Fordere eine kurze Befundliste mit zitierten Belegen an und beauftrage danach nur freigegebene Änderungen.\n\nDas ergibt einen Prüfschritt, den jemand nachlesen kann. Private Chain-of-Thought-Texte sind dafür weder nötig noch vorgesehen."
     }
   ],
   "widgets": [
@@ -86,7 +86,7 @@
           "Bitte Claude, „weniger wie eine KI zu sein“."
         ],
         "correct": 2,
-        "explanation": "Ein freigegebenes Beispiel macht Stilanforderungen beobachtbar. Prüfe, dass die Überarbeitung Quellenfakten erhält und keine Fakten aus dem Stilbeispiel übernimmt.",
+        "explanation": "Ein freigegebenes Beispiel macht Stil beobachtbar. Prüfe, dass die Überarbeitung die Quellenfakten behält und keine aus dem Stilbeispiel einschleppt.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

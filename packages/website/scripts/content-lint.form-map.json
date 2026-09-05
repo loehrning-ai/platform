@@ -1,0 +1,18 @@
+{
+  "$comment": "Form of address per German course directory (relative to packages/website). The lint reports Du/Sie mixing against this map; unmapped German directories use `default`. English files and copy modules that carry both locales are never checked.",
+  "default": "du",
+  "courses": {
+    "content/ai-native": "du",
+    "content/books/ki-arbeitsalltag": "du",
+    "content/books/ki-landschaft": "du",
+    "content/books/ki-tools-selbststaendige": "du",
+    "content/claude": "du",
+    "content/eu-ai-act-kurs": "sie",
+    "content/ki-fuehrerschein": "du",
+    "content/ki-und-gesellschaft": "du",
+    "src/lib/ai-native-operator": "du",
+    "src/lib/claude-course": "du",
+    "src/lib/codex": "du",
+    "src/lib/data-infrastructure": "du"
+  }
+}

@@ -40,7 +40,7 @@ export default localizeCodexLessonToGerman(canonical, {
       canonical.subtitle,
       "Versionierte Anweisungen geben Codex ausdrückliche Projektregeln, Befehle und Grenzen.",
     ],
-    [canonical.hook, "Mache Repository-Regeln ausdrücklich."],
+    [canonical.hook, "Schreib die Repository-Regeln auf."],
     ["AGENTS.md", "AGENTS.md"],
     ["Convention file", "Konventionsdatei"],
     ["Context management", "Kontextverwaltung"],
@@ -48,45 +48,45 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Onboarding the agent", "Den Agenten einarbeiten"],
     [
       prose(0, 0),
-      "Codex liest `AGENTS.md`-Anweisungen, bevor die Arbeit beginnt. Die Datei ist kein Gedächtnis, sondern versionierter Projektkontext. Sie enthält Regeln, die über mehrere Aufträge hinweg gelten sollen.\n\nDie Anweisungen werden geschichtet ermittelt. Codex kann globale Regeln aus dem Codex-Ausgangsverzeichnis laden und anschließend Projektregeln vom Projektstamm bis zum aktuellen Arbeitsverzeichnis. In jedem Verzeichnis hat `AGENTS.override.md` Vorrang vor `AGENTS.md`. Näher am Arbeitsverzeichnis liegende Anweisungen stehen später und können allgemeinere Regeln überschreiben.\n\nEine Repository-Datei sollte Informationen enthalten, die die Arbeit verändern: genaue Einrichtungs- und Prüfkommandos, Architekturgrenzen, Testerwartungen, bekannte Einschränkungen und freigabepflichtige Aktionen. Auftragsspezifische Ziele und Akzeptanzkriterien gehören weiterhin in den Auftrag.",
+      "Codex liest `AGENTS.md`, bevor die Arbeit beginnt. Die Datei ist kein Gedächtnis. Sie ist versionierter Projektkontext für Regeln, die über viele Aufträge hinweg gelten sollen.\n\nDie Anweisungen werden geschichtet gesucht. Codex kann globale Regeln aus dem Codex-Ausgangsverzeichnis laden, danach Projektregeln vom Projektstamm bis ins aktuelle Arbeitsverzeichnis. In jedem Verzeichnis schlägt `AGENTS.override.md` die `AGENTS.md`. Was näher am Arbeitsverzeichnis liegt, kommt später und kann allgemeinere Regeln überschreiben.\n\nIn die Repository-Datei gehört, was die Arbeit verändert, also exakte Setup- und Prüfkommandos, Architekturgrenzen, Testerwartungen, bekannte Einschränkungen und freigabepflichtige Aktionen. Ziele und Akzeptanzkriterien des einzelnen Auftrags gehören weiterhin in den Auftrag.",
     ],
     [
       pullQuote(0, 1),
-      "Verwende AGENTS.md für dauerhafte Projektregeln und den Auftrag für die aktuelle Änderung.",
+      "AGENTS.md für dauerhafte Projektregeln. Der Auftrag für die aktuelle Änderung.",
     ],
     ["What to put in it", "Welche Angaben hineingehören"],
     [
       prose(1, 0),
-      "AGENTS.md ist Markdown ohne vorgeschriebenes Inhaltsschema. Gliedere die Datei nach Regeln, die der Agent anwenden, und Prüfungen, die er ausführen kann.",
+      "AGENTS.md ist Markdown, ohne Schema. Zwei Fragen ordnen die Datei: Welche Regeln kann der Agent anwenden? Welche Prüfungen kann er ausführen?",
     ],
     ["A real example", "Ein konkretes Beispiel"],
     [
       prose(2, 0),
-      "Dies ist ein beispielhaftes `AGENTS.md`, keine allgemeingültige Vorlage. Entscheidend ist seine Konkretheit.\n\n```\n# AGENTS.md\n\n## Zweck des Repositorys\nPayments-Service. Python 3.11, Flask, Postgres, Stripe.\nKritischer Pfad: Endpunkt /checkout.\n\n## Lokal ausführen\n$ make setup       # installiert Abhängigkeiten\n$ make test         # pytest; vor dem Review erforderlich\n$ make lint         # ruff + mypy; ebenfalls erforderlich\n\n## Verbindliche Konventionen\n- Keine unqualifizierten except:-Blöcke. Konkrete Ausnahmen abfangen.\n- Jeder Endpunkt erhält einen Integrationstest in tests/api/.\n- Mit structlog protokollieren, niemals print verwenden. Kontext als kwargs, nicht als f-Strings.\n- Migrationen liegen nummeriert in db/migrations/ und werden nach dem Merge nicht geändert.\n- Wir verwenden pydantic v2. Muster aus v1 kennzeichnen; die Migration läuft.\n\n## Bekannte Einschränkungen\n- tests/integration/test_webhooks.py ist instabil. Vor der Fehlersuche einmal wiederholen.\n- user_service.py ist bereits zu groß. Keine weitere Verantwortung hinzufügen.\n- Tests verwenden produktionsferne Fixtures; niemals Live-Zugangsdaten anfordern oder ausgeben.\n\n## Erfordert ausdrückliche Freigabe\n- Änderungen unter legacy/.\n- Neue Top-Level-Abhängigkeiten.\n- Jede Änderung an der veralteten Datei server_v1.py.\n```",
+      "Ein Beispiel-`AGENTS.md`, keine Vorlage. Was es brauchbar macht, ist seine Konkretheit.\n\n```\n# AGENTS.md\n\n## Zweck des Repositorys\nPayments-Service. Python 3.11, Flask, Postgres, Stripe.\nKritischer Pfad: Endpunkt /checkout.\n\n## Lokal ausführen\n$ make setup       # installiert Abhängigkeiten\n$ make test         # pytest; vor dem Review erforderlich\n$ make lint         # ruff + mypy; ebenfalls erforderlich\n\n## Verbindliche Konventionen\n- Keine unqualifizierten except:-Blöcke. Konkrete Ausnahmen abfangen.\n- Jeder Endpunkt erhält einen Integrationstest in tests/api/.\n- Mit structlog protokollieren, niemals print verwenden. Kontext als kwargs, nicht als f-Strings.\n- Migrationen liegen nummeriert in db/migrations/ und werden nach dem Merge nicht geändert.\n- Wir verwenden pydantic v2. Muster aus v1 kennzeichnen; die Migration läuft.\n\n## Bekannte Einschränkungen\n- tests/integration/test_webhooks.py ist instabil. Vor der Fehlersuche einmal wiederholen.\n- user_service.py ist bereits zu groß. Keine weitere Verantwortung hinzufügen.\n- Tests verwenden produktionsferne Fixtures; niemals Live-Zugangsdaten anfordern oder ausgeben.\n\n## Erfordert ausdrückliche Freigabe\n- Änderungen unter legacy/.\n- Neue Top-Level-Abhängigkeiten.\n- Jede Änderung an der veralteten Datei server_v1.py.\n```",
     ],
     ["Before & after", "Ohne und mit Konventionsdatei"],
     [
       prose(3, 0),
-      'Der folgende Vergleich ist illustrativ. Beide Patches beantworten den Auftrag "Ergänze einen /health-Endpunkt, der die Datenbank prüft". Der zweite hält zusätzlich die in `AGENTS.md` genannten Repository-Regeln ein.',
+      'Ein illustrativer Vergleich. Zwei Patches, ein Auftrag: "Ergänze einen /health-Endpunkt, der die Datenbank prüft". Nur der zweite hält die Repository-Regeln aus `AGENTS.md` ein.',
     ],
-    ["Both versions work.", "Beide Fassungen können funktionieren."],
+    ["Both versions work.", "Beide Fassungen funktionieren."],
     [
       callout(3, 1, "body"),
-      "Die zweite Fassung hält zusätzlich die genannten Projektregeln ein: structlog, ein eigener OperationalError-Zweig und ein Integrationstest unter tests/api/. Das Review kann diese Entscheidungen gegen ausdrückliche Anweisungen statt gegen vermutete Vorlieben prüfen.",
+      "Die zweite hält zusätzlich die Projektregeln ein und ergänzt structlog, einen eigenen OperationalError-Zweig und einen Integrationstest unter tests/api/. Die Reviewerin prüft diese Entscheidungen gegen geschriebene Anweisungen statt gegen vermutete Vorlieben.",
     ],
     [
       "One question on writing a good AGENTS.md entry.",
-      "Eine Frage zu einem brauchbaren Eintrag in AGENTS.md.",
+      "Eine Frage dazu, was einen brauchbaren AGENTS.md-Eintrag ausmacht.",
     ],
     ["Rollout plan", "Einführungsplan"],
     [
       prose(5, 0),
-      'Baue die Datei aus beobachteten Projektanforderungen auf:\n\n1. **Mit ausführbaren Grundlagen beginnen.** Nenne Repository-Zweck, Einrichtungsbefehl, erforderliche Prüfungen und Grenzen, die nicht aus dem Code hervorgehen.\n2. **Aus Reviews aktualisieren.** Führt eine wiederkehrende Projektregel zur Ablehnung einer Änderung, ergänze die genaue Regel und den sicheren Weg.\n3. **Mit dem Code prüfen.** Ändern sich Befehle oder Konventionen, aktualisiere die Anweisungsdatei in derselben Änderung.\n\n### Kontextverwaltung: aufnehmen und weglassen\n\nAnweisungsdateien verbrauchen Kontext neben Auftrag und Code. Halte sie konkret:\n\n- **Aufnehmen:** Regeln mit Auswirkungen auf Implementierung, Review oder Sicherheit.\n- **Weglassen:** Marketingtexte, Besprechungsnotizen und Vorlieben ohne prüfbare Wirkung.\n- **Aufnehmen:** genaue Befehle wie `make test`, bei Bedarf mit Voraussetzungen.\n- **Weglassen:** vage Ziele wie "sauberen Code schreiben". Ersetze sie durch beobachtbare Regeln.\n\nLänge ist kein Qualitätsmaß. Behalte Anweisungen, die einen bekannten Fehler verhindern, eine Grenze definieren oder Verifikation ermöglichen.',
+      'Baue die Datei aus dem auf, was das Projekt tatsächlich verlangt.\n\n1. **Mit ausführbaren Grundlagen anfangen.** Zweck des Repositorys, Setup-Befehl, Pflichtprüfungen und Grenzen, die nicht im Code stehen.\n2. **Aus Reviews nachziehen.** Kippt eine Änderung wegen einer wiederkehrenden Projektregel, kommt die exakte Regel samt sicherem Weg in die Datei.\n3. **Mit dem Code prüfen.** Ändern sich Befehle oder Konventionen, ändert sich die Anweisungsdatei in derselben Änderung.\n\n### Kontextverwaltung: aufnehmen und weglassen\n\nAnweisungsdateien kosten Kontext, genau wie Auftrag und Code. Halte sie konkret.\n\n- **Aufnehmen:** Regeln mit Wirkung auf Implementierung, Review oder Sicherheit.\n- **Weglassen:** Marketingtexte, Besprechungsnotizen, Vorlieben ohne prüfbare Wirkung.\n- **Aufnehmen:** exakte Befehle wie `make test`, bei Bedarf mit Voraussetzungen.\n- **Weglassen:** vage Ziele wie "sauberen Code schreiben". Ersetze sie durch beobachtbare Regeln.\n\nLänge sagt nichts über Qualität. Behalte, was einen bekannten Fehler verhindert, eine Grenze zieht oder Verifikation ermöglicht.',
     ],
     ["Directory-specific rules.", "Verzeichnisspezifische Regeln."],
     [
       callout(5, 1, "body"),
-      "Codex ermittelt je ein Anweisungsdokument pro Verzeichnis vom Projektstamm bis zum aktuellen Arbeitsverzeichnis. Repository-weite Regeln gehören an die Wurzel, engere Regeln nahe an den betroffenen Code. Innerhalb eines Verzeichnisses hat AGENTS.override.md Vorrang.",
+      "Codex sammelt pro Verzeichnis ein Anweisungsdokument, vom Projektstamm bis zum Arbeitsverzeichnis. Repository-weite Regeln gehören an die Wurzel, engere Regeln neben den betroffenen Code. Innerhalb eines Verzeichnisses gewinnt AGENTS.override.md.",
     ],
     [
       "Assemble a useful AGENTS.md",
@@ -94,16 +94,16 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Toggle each section on if you'd include it in your team's first draft. Aim for at least four.",
-      "Aktiviere die Abschnitte, die in eine erste Teamfassung gehören. Mindestens vier sind sachlich relevant.",
+      "Schalte jeden Abschnitt ein, der in den ersten Entwurf deines Teams gehört. Ziel: mindestens vier.",
     ],
     [
       "Onboard Codex to a Python payments service in one file.",
-      "Codex in einer Datei mit einem Python-Payments-Service vertraut machen.",
+      "Codex mit einer einzigen Datei in einen Python-Payments-Service einarbeiten.",
     ],
     ["What this repo is", "Zweck des Repositorys"],
     [
       "One paragraph. Business purpose, not architecture.",
-      "Ein Absatz zum fachlichen Zweck, nicht zur vollständigen Architektur.",
+      "Ein Absatz. Fachlicher Zweck, nicht Architektur.",
     ],
     [
       "Payments service. Python 3.11, Flask, Postgres.",
@@ -116,7 +116,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["How to run tests & lint", "Tests und Linting ausführen"],
     [
       "Exact commands Codex can run when the environment supports them.",
-      "Genaue Befehle, die Codex bei passender Umgebung ausführen kann.",
+      "Exakte Befehle, die Codex ausführen kann, wenn die Umgebung mitspielt.",
     ],
     ["Conventions we enforce", "Verbindliche Konventionen"],
     [
@@ -134,24 +134,24 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Known quirks", "Bekannte Besonderheiten"],
     [
       "The undocumented minefields. Saves wasted runs.",
-      "Nicht offensichtliche Besonderheiten, die unnötige Fehlersuche verhindern.",
+      "Die undokumentierten Minenfelder. Spart verschwendete Läufe.",
     ],
     [
       "test_webhooks.py has a documented intermittent failure; preserve the first log before retrying.",
-      "test_webhooks.py ist instabil; einmal wiederholen.",
+      "test_webhooks.py ist instabil; erstes Protokoll sichern, dann einmal wiederholen.",
     ],
     [
       "Do not add responsibilities to user_service.py; a separate extraction is planned.",
-      "user_service.py keine weitere Verantwortung hinzufügen; eine getrennte Extraktion ist geplant.",
+      "user_service.py bekommt keine weitere Verantwortung; eine getrennte Extraktion ist geplant.",
     ],
     ["Definitely don't", "Nicht ändern"],
     [
       "Hard stops. More useful than style preferences.",
-      "Verbindliche Grenzen statt Stilvorlieben.",
+      "Harte Grenzen, nützlicher als Stilvorlieben.",
     ],
     [
       "Never edit legacy/. Runs in prod, unowned.",
-      "legacy/ niemals ohne Freigabe ändern; der Bereich läuft produktiv und ist ohne Zuständigkeit.",
+      "legacy/ nie ohne Freigabe anfassen. Läuft in Prod, niemand ist zuständig.",
     ],
     [
       "No new top-level deps without asking.",
@@ -164,11 +164,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Without AGENTS.md, generic, doesn't match repo",
-      "Ohne AGENTS.md: generisch und nicht projektspezifisch",
+      "Ohne AGENTS.md: generisch, passt nicht zum Repo",
     ],
     [
       "With AGENTS.md, fits the codebase, tests included",
-      "Mit AGENTS.md: passend zur Codebasis und mit Test",
+      "Mit AGENTS.md: passt zur Codebasis, Test inklusive",
     ],
     [
       "# --- tests/api/test_health.py, also added ---",
@@ -176,7 +176,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Notice the specifics: OperationalError (not generic Exception), structlog with kwargs (not f-strings), 503 not 500, and a test file in tests/api/. None of this was in the task. All of it was in AGENTS.md.",
-      "Beachte die konkreten Unterschiede: OperationalError statt Exception, structlog mit kwargs statt f-String, Status 503 statt 500 und ein Test unter tests/api/. Diese Regeln stammen aus AGENTS.md, nicht aus dem einzelnen Auftrag.",
+      "Schau auf die Details: OperationalError statt Exception, structlog mit kwargs statt f-String, 503 statt 500, ein Test unter tests/api/. Nichts davon stand im Auftrag. Alles stand in AGENTS.md.",
     ],
     [
       'Which is the better AGENTS.md entry for "how we handle errors"?',
@@ -197,7 +197,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       '"Best practices" does not define observable behavior. Concrete rules name the required exception type, logging API, status-code boundary, and error-formatting path, so both the agent and reviewer can check them.',
-      '"Best Practices" definiert kein beobachtbares Verhalten. Konkrete Regeln nennen Ausnahmetyp, Logging-API, Statuscode-Grenze und Fehlerformatierung, sodass Agent und Review sie prüfen können.',
+      '"Best Practices" beschreibt kein beobachtbares Verhalten. Die konkrete Regel nennt Ausnahmetyp, Logging-API, Statuscode-Grenze und Fehlerformatierung, und Agent wie Reviewerin können jede davon prüfen.',
     ],
   ],
   preserve: [

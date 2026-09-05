@@ -1,7 +1,7 @@
 [
   {
     "term": "KI-Verordnung",
-    "definition": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence. It is the world's first comprehensive legal framework for AI, in force since 1 August 2024 and becoming applicable in stages through 2028.",
+    "definition": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence. The world's first legal framework written specifically for AI, in force since 1 August 2024 and applicable in stages through 2028.",
     "english": "AI Act",
     "category": "regulatorik",
     "relatedTerms": ["Risikobasierter Ansatz", "KI-System"],
@@ -17,7 +17,7 @@
   },
   {
     "term": "Risikobasierter Ansatz",
-    "definition": "The basic principle of Regulation (EU) 2024/1689: obligations depend on the risk posed by an AI system, not on the technology. Four levels (prohibited, high, limited, and minimal risk) determine the extent of the requirements.",
+    "definition": "The core principle of Regulation (EU) 2024/1689: obligations follow the risk an AI system poses, not the technology. Four levels, from prohibited through high and limited to minimal, set the extent of the requirements.",
     "english": "Risk-Based Approach",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "KI-Verordnung"],
@@ -25,7 +25,7 @@
   },
   {
     "term": "Verbotene Praktiken",
-    "definition": "AI practices presenting an unacceptable risk that are prohibited under Art. 5 of Regulation (EU) 2024/1689. They include social scoring by public authorities, manipulative conduct that harms people and untargeted mass scraping of biometric data. Applicable since 2 February 2025.",
+    "definition": "AI practices presenting an unacceptable risk, prohibited under Art. 5 of Regulation (EU) 2024/1689. Among them social scoring by public authorities, manipulative conduct that harms people, and untargeted mass scraping of biometric data. Applicable since 2 February 2025.",
     "english": "Prohibited Practices",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "Social Scoring"],
@@ -57,7 +57,7 @@
   },
   {
     "term": "Minimales Risiko",
-    "definition": "The lowest level of the risk pyramid. AI systems such as spam filters, AI used in warehouse management or recommendation systems are not subject to special obligations tied to a risk class under Regulation (EU) 2024/1689. Art. 4 on AI literacy has nevertheless applied to providers and deployers since 2 February 2025.",
+    "definition": "The bottom level of the risk pyramid. Spam filters, AI in warehouse management, recommendation systems: under Regulation (EU) 2024/1689 they carry no obligations tied to a risk class. Art. 4 on AI literacy has applied to providers and deployers since 2 February 2025 all the same.",
     "english": "Minimal Risk",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
@@ -65,7 +65,7 @@
   },
   {
     "term": "Konformitätsbewertung",
-    "definition": "The procedure for demonstrating that a high-risk system meets the requirements of Regulation (EU) 2024/1689. It results in an EU declaration of conformity and, as a rule, CE marking before the system is placed on the market (Art. 43, 47 and 48).",
+    "definition": "The procedure for demonstrating that a high-risk system meets the requirements of Regulation (EU) 2024/1689. The result is an EU declaration of conformity and, as a rule, CE marking before the system is placed on the market (Art. 43, 47 and 48).",
     "english": "Conformity Assessment",
     "category": "regulatorik",
     "relatedTerms": ["Hochrisiko-System", "CE-Kennzeichnung"],
@@ -73,7 +73,7 @@
   },
   {
     "term": "Risikomanagementsystem",
-    "definition": "A continuous, documented process maintained throughout the lifecycle of a high-risk system to identify, assess and mitigate risks (Art. 9 of Regulation (EU) 2024/1689). It provides the basis for the other high-risk obligations.",
+    "definition": "A continuous, documented process across the whole lifecycle of a high-risk system that identifies, assesses and mitigates risks (Art. 9 of Regulation (EU) 2024/1689). Every other high-risk obligation builds on it.",
     "english": "Risk Management System",
     "category": "regulatorik",
     "relatedTerms": ["Hochrisiko-System", "Technische Dokumentation"],
@@ -89,7 +89,7 @@
   },
   {
     "term": "GPAI-Modell",
-    "definition": "A general-purpose AI (GPAI) model that can perform a wide range of tasks and can be integrated into downstream systems. It is subject to specific obligations under Art. 53 et seq. of Regulation (EU) 2024/1689, applicable from 2 August 2025.",
+    "definition": "A general-purpose AI (GPAI) model that performs a wide range of tasks and can be integrated into downstream systems. It carries its own obligations under Art. 53 et seq. of Regulation (EU) 2024/1689, applicable from 2 August 2025.",
     "english": "General-Purpose AI Model",
     "category": "technik",
     "relatedTerms": ["Systemisches Risiko", "GPAI Code of Practice"],
@@ -97,7 +97,7 @@
   },
   {
     "term": "Systemisches Risiko",
-    "definition": "A distinct risk associated with highly capable GPAI models. Models trained using more than 10^25 FLOP are presumed to have systemic risk and are subject to additional obligations, including model evaluations and serious-incident reporting (Art. 51 and 55 of Regulation (EU) 2024/1689).",
+    "definition": "The particular risk of very capable GPAI models. A model trained using more than 10^25 FLOP is presumed to carry systemic risk and takes on tighter obligations, among them model evaluations and serious-incident reporting (Art. 51 and 55 of Regulation (EU) 2024/1689).",
     "english": "Systemic Risk",
     "category": "technik",
     "relatedTerms": ["GPAI-Modell", "GPAI Code of Practice"],
@@ -169,7 +169,7 @@
   },
   {
     "term": "DSGVO-Brücke",
-    "definition": "The practical connection between the General Data Protection Regulation and the AI Act. An organisation that maintains GDPR processes such as records of processing activities and data protection impact assessments has already established a large part of the governance foundation needed for Regulation (EU) 2024/1689.",
+    "definition": "The practical connection between the General Data Protection Regulation and the AI Act. An organisation that already keeps GDPR processes running, records of processing activities and data protection impact assessments, has a large part of the governance foundation for Regulation (EU) 2024/1689 in place.",
     "english": "GDPR Bridge",
     "category": "praxis",
     "relatedTerms": ["Betreiber", "Technische Dokumentation"],
@@ -177,7 +177,7 @@
   },
   {
     "term": "KI-Inventar",
-    "definition": "A maintained list of all AI systems used by an organisation, including their purpose, risk class and responsible owners. It is the first and most important step in an SME audit under Regulation (EU) 2024/1689.",
+    "definition": "A maintained list of every AI system in use in the organisation, with purpose, risk class and responsible owner. The first and most important step of an SME audit under Regulation (EU) 2024/1689.",
     "english": "AI Inventory",
     "category": "praxis",
     "relatedTerms": ["Risikobasierter Ansatz", "Betreiber"],

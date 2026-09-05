@@ -9,9 +9,9 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Define the product boundary",
     subtitle:
-      "Identify the user outcome that depends on model behavior and the fallback required when that behavior is unavailable.",
+      "Name the user outcome that depends on model behavior, and the fallback for when that behavior is gone.",
     objective:
-      "Identify the user outcome that depends on model behavior and the fallback required when that behavior is unavailable.",
+      "Name the user outcome that depends on model behavior, and the fallback for when that behavior is gone.",
     durationMinutes: 13,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "A visible AI control is not a product strategy",
         readTimeMinutes: 4,
         content:
-          "Adding a chat control can be useful, but its presence does not show that the product solves a better problem. Start from the user's job, identify the delay or decision the model changes, and define how success will be observed. Remove controls that do not improve that outcome.",
+          "A chat box is not a strategy. It can be useful, but it says nothing about whether the product solves a better problem. Start from the user's job. Name the delay or decision the model changes, and define how success is observed. Controls that do not move that outcome come out.",
       },
       {
         id: "s2",
         title: "Integrate capability with existing controls",
         readTimeMinutes: 5,
         content:
-          "A model-backed capability needs the same product boundaries as any other system: supported inputs, permissions, failure states, latency expectations, data handling, and accountable owners. Keep structured controls where they improve clarity or constrain risk. Make model involvement visible when users need it to interpret or challenge a result.",
+          "A model-backed capability needs the same product boundaries as any other system: supported inputs, permissions, failure states, latency expectations, data handling, and accountable owners. Keep structured controls wherever they add clarity or hold down risk. Show the model's involvement when a user needs it to interpret or challenge the result.",
       },
       {
         id: "s3",
         title: "Use a dependency and fallback test",
         readTimeMinutes: 4,
         content:
-          "Ask which user outcome changes if the model is removed or degraded. If no material outcome changes, the capability may be unnecessary. If a core outcome depends on it, specify the fallback, recovery path, and user communication. Both embedded features and model-centred products can be valid when their boundaries are explicit.",
+          "Ask what user outcome changes when the model is removed or degraded. Nothing material? Then the capability may be unnecessary. If a core outcome hangs on it, specify the fallback, the recovery path, and what the user gets told. Embedded features and model-centred products are equally valid, as long as the boundary is explicit.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -48,7 +48,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "product/1",
           cpId: "exercise",
           scenario:
-            "Audit three model-backed flows. For each, state the user outcome, the model-dependent step, the failure mode, and the fallback when the model is unavailable.",
+            "Audit three model-backed flows. For each one, state the user outcome, the model-dependent step, the failure mode, and the fallback when the model is unavailable.",
           rows: 3,
         },
       },
@@ -62,9 +62,9 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Find the delegable boundary",
     subtitle:
-      "Separate user intent from the decisions, permissions, and confirmations that must remain explicit.",
+      "Separate user intent from the decisions, permissions, and confirmations that must stay explicit.",
     objective:
-      "Separate user intent from the decisions, permissions, and confirmations that must remain explicit.",
+      "Separate user intent from the decisions, permissions, and confirmations that must stay explicit.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
@@ -74,21 +74,21 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Intent is not authority",
         readTimeMinutes: 6,
         content:
-          "A search query, button click, uploaded document, or written request can express a desired outcome. It does not automatically authorise every action needed to reach that outcome. Record what the user asked for, which assumptions the system may make, and which side effects require a separate confirmation or permission check.",
+          "A search query, a button click, an uploaded document, or a written request expresses a wanted outcome. None authorises every action needed to reach it. Record what the user asked for, which assumptions the system may make alone, and which side effects need a separate confirmation or permission check.",
       },
       {
         id: "s2",
         title: "Evaluate each step before compressing the flow",
         readTimeMinutes: 6,
         content:
-          "For every step after intent, ask whether it is deterministic, reversible, observable, and within the user's authority. Delegate steps that meet the control requirements. Keep review or confirmation where ambiguity, money movement, data disclosure, legal effect, or other material consequences remain. Fewer steps are useful only when important information and control are preserved.",
+          "For every step after intent, ask four questions. Is it deterministic, reversible, observable, and inside the user's authority? Delegate the steps that clear all four. Keep review or confirmation wherever ambiguity, money movement, data disclosure, legal effect, or another material consequence remains. Fewer steps help only when the information and the control survive the cut.",
       },
       {
         id: "s3",
         title: "Combine conversation with structured controls",
         readTimeMinutes: 6,
         content:
-          "Conversation is useful for ambiguous input and clarification. Structured controls are useful for exact values, constrained choices, comparison, and confirmation. Select the surface from the information and risk in the current step rather than treating chat as the default interface.",
+          "Conversation handles ambiguous input and clarification well. Structured controls handle exact values, constrained choices, comparison, and confirmation well. Pick the surface from the information and the risk in the current step. Chat is not the default interface.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -101,7 +101,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "product/2",
           cpId: "exercise",
           scenario:
-            "Choose one flow with more than five steps after the user states intent. Mark which steps can be delegated, which need confirmation, what the system must show, and how the user can recover from an error.",
+            "Choose one flow with more than five steps after the user states intent. Mark which steps can be delegated, which need confirmation, what the system must show, and how a user recovers from an error.",
           rows: 4,
         },
       },
@@ -127,27 +127,27 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Generate compositions, not arbitrary markup",
         readTimeMinutes: 7,
         content:
-          "Define a component library, typed data contracts, permitted layouts, and known interaction states. Let the model select and compose from that vocabulary. Validate the generated structure before rendering it, and provide a stable fallback when validation fails.",
+          "Define the component library, the typed data contracts, the permitted layouts, and the known interaction states. The model composes from that vocabulary, nothing wider. Validate the generated structure before it renders, and keep a stable fallback for when validation fails.",
       },
       {
         id: "s2",
         title: "Specify the constraint hierarchy",
         readTimeMinutes: 7,
         content:
-          "Security, accessibility, permissions, data integrity, and legal requirements are hard constraints. Design-system rules and product conventions define the permitted space. Personalisation operates only inside that space. Log the selected components and inputs so unexpected behavior can be reproduced.",
+          "Security, accessibility, permissions, data integrity, and legal requirements are hard constraints. Design-system rules and product conventions mark the permitted space. Personalisation moves inside it and nowhere else. Log the selected components and inputs so unexpected behavior can be reproduced.",
       },
       {
         id: "s3",
         title: "Keep consequential surfaces deterministic",
         readTimeMinutes: 7,
         content:
-          "Use fixed, reviewed flows for payments, legal acceptance, account recovery, permission changes, destructive actions, and other consequential steps. A generative interface may support explanation or preparation, but the final action and confirmation state should remain predictable and testable.",
+          "Payments, legal acceptance, account recovery, permission changes, destructive actions. Those get fixed, reviewed flows. A generative interface can explain or prepare, but the final action and its confirmation state stay predictable and testable.",
       },
     ],
     callout: {
       kind: "note",
       h: "A bounded starting point",
-      text: "Choose a reversible, low-impact surface with varied information needs. Restrict generation to approved components, add schema validation and a static fallback, then review real failures before widening the scope.",
+      text: "Choose a reversible, low-impact surface with varied information needs. Restrict generation to approved components, add schema validation and a static fallback, then read the real failures before you widen the scope.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -159,7 +159,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "product/3",
           cpId: "exercise",
           scenario:
-            "Identify one reversible, low-impact surface with varied user intent. Define its approved components, hard constraints, validation rule, and static fallback.",
+            "Pick one reversible, low-impact surface with varied user intent. Define its approved components, hard constraints, validation rule, and static fallback.",
           rows: 3,
         },
       },
@@ -185,21 +185,21 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Offline evaluations do not cover production",
         readTimeMinutes: 6,
         content:
-          "A pre-release suite covers known cases. Production adds new inputs, changing data, tool failures, latency, user behavior, and distribution shift. Observe these conditions directly. Use privacy-preserving traces, version identifiers, error categories, and sampled review so an incident can be reproduced without collecting unnecessary sensitive content.",
+          "A pre-release suite covers known cases. Production adds new inputs, shifting data, tool failures, latency, real user behavior, and distribution shift. Watch those conditions directly. Use privacy-preserving traces, version identifiers, error categories, and sampled review so an incident can be reproduced without hoarding sensitive content.",
       },
       {
         id: "s2",
         title: "Measure observable signals",
         readTimeMinutes: 6,
         content:
-          "Track task completion where it can be verified, user corrections, tool errors, refusals, latency, cost, safety-rule triggers, and fallback use. Add human labels for a documented sample when automated signals cannot establish quality. Segment results by workflow and version; an overall average can hide a critical subgroup failure.",
+          "Track verified task completion, user corrections, tool errors, refusals, latency, cost, safety-rule triggers, and fallback use. Where automated signals cannot establish quality, add human labels for a documented sample. Segment by workflow and version. One overall average will hide a failing subgroup.",
       },
       {
         id: "s3",
         title: "Separate alerts, containment, and rollback",
         readTimeMinutes: 5,
         content:
-          "Define thresholds from baseline behavior and error cost. Some signals should alert an owner, some should disable one capability, and some justify rollback to a known version. Test these controls before an incident. Automatic action needs safeguards against noisy metrics, and a named person must investigate and close the event.",
+          "Set thresholds from baseline behavior and error cost. Some signals alert an owner, some disable a single capability, some justify rollback to a known version. Test those controls before an incident, not during one. Automatic action needs safeguards against noisy metrics, and a named person investigates and closes the event.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -227,9 +227,9 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "quiz",
     title: "Module 3, knowledge check",
     subtitle:
-      "Check your understanding of product boundaries, delegation, constrained interfaces, and production controls.",
+      "Four things to test: product boundaries, delegation, constrained interfaces, production controls.",
     objective:
-      "Check your understanding of product boundaries, delegation, constrained interfaces, and production controls.",
+      "Four things to test: product boundaries, delegation, constrained interfaces, production controls.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
@@ -260,7 +260,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A product boundary connects model behavior to a specific user outcome, operating constraints, and a failure path. Model choice, marketing language, or interface style does not establish that boundary.",
+          "A product boundary ties model behavior to one specific user outcome, its operating constraints, and a failure path. Model choice, marketing language, and interface style establish nothing.",
       },
       {
         id: "ano-product-q2",
@@ -289,7 +289,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Step reduction is useful only when authority, material information, and recovery remain intact. Classify each step by reversibility, observability, permissions, and consequence before delegating it.",
+          "Cutting steps helps only when authority, material information, and recovery survive the cut. Classify each step by reversibility, observability, permissions, and consequence before you delegate it.",
       },
       {
         id: "ano-product-q3",
@@ -317,7 +317,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Generative composition is best introduced where variation is useful, consequences are limited, validation is available, and a stable fallback exists. Consequential confirmations should remain deterministic and testable.",
+          "Introduce generative composition where variation helps, consequences stay small, validation exists, and a stable fallback is already in place. Consequential confirmations stay deterministic and testable.",
       },
     ],
     sections: [],

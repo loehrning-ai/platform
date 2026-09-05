@@ -35,7 +35,7 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Compute: <span class='accent'>the planner bets on statistics.</span> Wrong stats, wrong plan."
-        hook="A cost-based planner uses table statistics and configuration to choose join strategies. Stale or incomplete statistics can select a build side or distribution that exceeds worker memory or concentrates work on a few partitions."
+        hook="A cost-based planner picks join strategies from table statistics and configuration. Stale or incomplete statistics pick badly: a build side that exceeds worker memory, or a distribution that concentrates work on a few partitions."
         meta={[
           { k: "Engines", v: '<span class="chip">Presto</span><span class="chip">Spark</span><span class="chip">Snowflake</span>' },
           { k: "Planners", v: "CBO · statistics-driven" },
@@ -46,10 +46,7 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
       <section className="section">
         <SectionLabel n="4.1">Pick the engine for the query.</SectionLabel>
         <h2 className="h2">Three engines, one set of bytes.</h2>
-        <p className="prose">
-          Engines that support the same table format and catalog can read the same Parquet data. Choose using measured workload requirements:
-          startup and response time, shuffle volume, memory and spill, retry behavior, concurrency, operational ownership, and cost.
-        </p>
+        <p className="prose">Engines that speak the same table format and catalog read the same Parquet data. So choose on measured workload: startup and response time, shuffle volume, memory and spill, retry behavior, concurrency, operational ownership, cost.</p>
         <EngineMatrix />
       </section>
 

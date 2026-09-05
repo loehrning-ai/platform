@@ -82,7 +82,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     metadata: {
       title: "Login | Freie Lernplattform",
       description:
-        "Optionales Lernkonto für Kursfortschritt, Lernnachweise und Zertifikate auf loehrning.ai.",
+        "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     },
     eyebrow: "Freie Lernplattform · Konto",
     heading: {
@@ -102,7 +102,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailable:
         "Das optionale Lernkonto ist hier nicht aktiviert. Fortschritt bleibt in diesem Browser.",
       records:
-        "Lernnachweise und Zertifikate basieren auf dem gespeicherten Abschlussstatus.",
+        "Die Teilnahmebestätigung beruht auf dem gespeicherten Abschlussstatus.",
     },
     reason: {
       accountUnavailable:
@@ -112,7 +112,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Melde dich an, um deinen Lernfortschritt zwischen Geräten zu synchronisieren. Bücher und technische Kurse bleiben ohne Anmeldung nutzbar.",
       progressSaveLink: "Zurück zum Kursangebot",
       courseLogin:
-        "Dieser Grundlagenkurs führt zu einem Lernnachweis oder Zertifikat und benötigt ein Lernkonto. Technische Kurse, Bücher und Demos bleiben ohne Anmeldung nutzbar.",
+        "Dieser Grundlagenkurs führt zu einer Teilnahmebestätigung und benötigt ein Lernkonto. Technische Kurse, Bücher und Demos bleiben ohne Anmeldung nutzbar.",
       courseLoginLink: "Zurück zum Kursangebot",
       otherDevice:
         "Der Link wurde auf einem anderen Gerät oder in einem anderen Browser geöffnet. Fordere dort einen neuen Link an.",
@@ -194,7 +194,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     metadata: {
       title: "Login | Open learning platform",
       description:
-        "Optional learning account for course progress, learning records, and certificates on loehrning.ai.",
+        "Optional learning account for course progress and certificates of participation on loehrning.ai.",
     },
     eyebrow: "Open learning platform · Account",
     heading: {
@@ -213,7 +213,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailable:
         "The optional learning account is disabled here. Progress remains in this browser.",
       records:
-        "Learning records and certificates are based on stored completion data.",
+        "The certificate of participation rests on the stored completion status.",
     },
     reason: {
       accountUnavailable:
@@ -223,7 +223,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Sign in to sync your learning progress between devices. Books and technical courses remain available without an account.",
       progressSaveLink: "Back to all courses",
       courseLogin:
-        "This foundation course leads to a learning record or certificate and requires an account. Technical courses, books, and demos remain available without signing in.",
+        "This foundation course leads to a certificate of participation and needs a learning account. Technical courses, books, and demos stay usable without signing in.",
       courseLoginLink: "Back to all courses",
       otherDevice:
         "The link was opened on another device or in another browser. Request a new link there.",

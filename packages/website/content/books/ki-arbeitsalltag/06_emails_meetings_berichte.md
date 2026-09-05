@@ -2,15 +2,17 @@
 
 Zwölf Minuten für eine Reklamationsantwort.
 
-Bei Red Bull habe ich das gemessen. Nicht weil ich pedantisch bin, der Teamleiter wollte wissen, wo unsere Zeit hingeht. Das Ergebnis: 40 Prozent des Arbeitstags steckten in Kommunikation. E-Mails schreiben, Meetings zusammenfassen, Berichte formatieren. Keine davon war Kernarbeit. Alles war Verpackung.
+Bei Red Bull habe ich das gemessen. Nicht weil ich pedantisch bin, der Teamleiter wollte wissen, wo unsere Zeit hingeht. Das Ergebnis: 40 Prozent des Arbeitstags steckten in Kommunikation. E-Mails schreiben, Meetings zusammenfassen, Berichte formatieren.
+
+Keine davon war Kernarbeit. Alles war Verpackung.
 
 Mit KI schrumpfen diese drei Aufgaben auf ein Drittel der Zeit. Nicht irgendwann. Heute.
 
-> **Tipp:** Die Prompt-Vorlagen in diesem Kapitel folgen dem KRAFT-Schema (Kontext · Rolle · Aufgabe · Format · Ton). Das lernst du ausführlich in Kapitel 8, hier kannst du es schon benutzen.
+> **Tipp:** Die Prompt-Vorlagen in diesem Kapitel folgen dem KRAFT-Schema (Kontext · Rolle · Aufgabe · Format · Ton). Ausführlich lernst du das in Kapitel 8, hier benutzt du es einfach.
 
 ## E-Mails: Zwölf Minuten werden vier
 
-Szenario: Firma Bergmann, seit vier Jahren Kunde, hydraulische Komponenten. Lieferung acht Werktage verspätet. Der Einkaufsleiter schreibt dir. Nicht freundlich.
+Szenario: Firma Bergmann, seit vier Jahren Kunde, hydraulische Komponenten. Lieferung acht Werktage verspätet. Der Einkaufsleiter schreibt dir, und freundlich ist die Mail nicht.
 
 Ohne KI: Du ringst mit dem Ton. Verständnisvoll, aber nicht unterwürfig. Professionell, aber nicht kalt. Du formulierst, löschst, formulierst neu. Zwölf Minuten später steht die Antwort.
 
@@ -18,7 +20,7 @@ Mit KI, ein Prompt:
 
 > **Prompt-Vorlage:** Rolle: Du bist Key Account Manager bei einem deutschen Maschinenbauer. Kontext: Stammkunde seit vier Jahren, Lieferung acht Werktage verspätet, Einkaufsleiter verärgert. Aufgabe: Antworte auf die Reklamation. Ton: verständnisvoll, sachlich, nicht unterwürfig. Format: Maximal 150 Wörter. Biete eine Lösung an, aber mache keine Zusagen zu Rabatten, Expresslieferungen oder Gutschriften ohne Rücksprache mit dem Vertrieb.
 
-Fünf Kontrollelemente stecken drin. „Rolle" gibt die Stimme vor. „Kontext" schneidet die Antwort zu. „Ton" verhindert, dass die KI sich übertrieben entschuldigt oder eiskalt klingt. „Format: maximal 150 Wörter" erzwingt Kürze, ohne diese Vorgabe schreibt die KI 300. Und „keine Zusagen ohne Rücksprache" ist der wichtigste Teil: KI bietet liebend gern Rabatte, Expresslieferungen oder Gutschriften an, die nie autorisiert wurden.
+Fünf Kontrollelemente stecken drin. „Rolle" gibt die Stimme vor. „Kontext" schneidet die Antwort zu. „Ton" verhindert Kriecherei und Eiseskälte. „Format: maximal 150 Wörter" erzwingt Kürze, ohne diese Vorgabe schreibt die KI 300. Und „keine Zusagen ohne Rücksprache" ist der wichtigste Teil: KI verschenkt liebend gern Rabatte, Expresslieferungen und Gutschriften, die nie jemand autorisiert hat.
 
 Was die KI daraus macht (gekürzt):
 
@@ -32,11 +34,13 @@ Was die KI daraus macht (gekürzt):
 >
 > Mit freundlichen Grüßen
 
-Solide 80 Prozent. Ton stimmt, Struktur stimmt, Länge stimmt. Aber lies den vorletzten Satz nochmal: „einen Rabatt von 5 Prozent". Genau das hatte ich verboten. Die KI hat die Regel überschrieben, weil ein Rabatt die Mail freundlicher macht, und freundlich ist ihr Standardziel. Das ist kein Tippfehler. Das ist der teuerste Satz im ganzen Text.
+Solide 80 Prozent. Ton stimmt, Struktur stimmt, Länge stimmt. Aber lies den vorletzten Satz nochmal: „einen Rabatt von 5 Prozent". Genau das hatte ich verboten. Die KI hat die Regel überschrieben, weil ein Rabatt die Mail freundlicher macht, und freundlich ist ihr Standardziel.
 
-Meine Korrektur, dreißig Sekunden: Den Rabatt-Satz raus, ersetzt durch „Bitte entschuldigen Sie die Umstände, gerne bespreche ich mit unserem Vertrieb, wie wir das ausgleichen." Damit ist die Zusage wieder offen, und die Entscheidung liegt da, wo sie hingehört, nicht bei der KI. Den Platzhalter „[Name]" fülle ich erst im Mail-Client, nicht im Prompt (siehe Achtung-Kasten unten).
+Das ist kein Tippfehler. Das ist der teuerste Satz im ganzen Text.
 
-So sieht der Loop in echt aus: Du tippst den Prompt, die KI liefert, du liest gegen, du korrigierst die eine Stelle, die sie nie hätte schreiben dürfen. Vier Minuten statt zwölf, und du bist es, der unterschreibt, nicht das Modell.
+Meine Korrektur, dreißig Sekunden: Den Rabatt-Satz raus, ersetzt durch „Bitte entschuldigen Sie die Umstände, gerne bespreche ich mit unserem Vertrieb, wie wir das ausgleichen." Damit ist die Zusage wieder offen, und die Entscheidung liegt, wo sie hingehört: nicht bei der KI. Den Platzhalter „[Name]" fülle ich erst im Mail-Client, nicht im Prompt (siehe Achtung-Kasten unten).
+
+So läuft der Loop: Du tippst den Prompt, die KI liefert, du liest gegen und korrigierst die eine Stelle, die sie nie hätte schreiben dürfen. Vier Minuten statt zwölf, und unterschreiben tust du, nicht das Modell.
 
 Du schickst also nie ab, ohne drei Fragen zu beantworten:
 
@@ -44,13 +48,13 @@ Du schickst also nie ab, ohne drei Fragen zu beantworten:
 2. Keine unautorisierten Zusagen?
 3. Keine vertraulichen Daten im Text?
 
-60 Sekunden. Jedes Mal.
+60 Sekunden, jedes Mal.
 
 > **Achtung:** Der Kundenname „Firma Bergmann" gehört nicht in eine Free-KI ohne AVV. Entweder anonymisieren („Stammkunde aus dem Maschinenbau") oder Copilot mit AVV nutzen. Siehe Kapitel 3 bis 5.
 
 ## Meetings: 30 Minuten werden fünf
 
-Montagmorgen, Vertriebsmeeting. Pipeline 1,2 Mio. Euro offen, 400.000 Euro heiß. Neukunde Stöcker will ein Pilotprojekt Predictive Maintenance für 35.000 Euro. Hartmann möchte den Wartungsvertrag auf die zweite Fabrik ausweiten, 8.000 Euro monatlich, Deadline 15. April. CRM-Daten veraltet, 30 Prozent ohne aktuelle Telefonnummern.
+Montagmorgen im Vertriebsmeeting. Pipeline 1,2 Mio. Euro offen, 400.000 Euro heiß. Neukunde Stöcker will ein Pilotprojekt Predictive Maintenance für 35.000 Euro. Hartmann möchte den Wartungsvertrag auf die zweite Fabrik ausweiten, 8.000 Euro monatlich, Deadline 15. April. CRM-Daten veraltet, 30 Prozent ohne aktuelle Telefonnummern.
 
 Wer schreibt das Protokoll? Bisher: eine Person tippt mit, verpasst die Hälfte, braucht 30 Minuten zur Nachbearbeitung.
 
@@ -60,29 +64,29 @@ Wer schreibt das Protokoll? Bisher: eine Person tippt mit, verpasst die Hälfte,
 
 > **Prompt-Vorlage:** Rolle: Du bist Assistent für Meeting-Protokolle. Kontext: Vertriebsmeeting mit 4 Teilnehmenden, 60 Minuten. Aufgabe: Fasse das folgende Transkript zusammen. Extrahiere: (1) Entscheidungen, (2) Aufgaben mit Verantwortlichen und Fristen, (3) offene Fragen, (4) nächste Schritte. Format: Bulletpoints, maximal eine A4-Seite. Ton: sachlich, keine Interpretationen.
 
-Bei vier Meetings pro Woche sparst du 60 bis 100 Minuten. Pro Woche.
+Bei vier Meetings pro Woche sparst du 60 bis 100 Minuten, Woche für Woche.
 
-> **Achtung:** Harte Regel. Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren und vertrauliche Strategiediskussionen, diese Meetings fasst du nie mit KI zusammen. Nie. Das ist Restricted-Zone und zusätzlich mitbestimmungsrelevant.
+> **Achtung:** Harte Regel, ohne Ausnahme. Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren und vertrauliche Strategiediskussionen fasst du nie mit KI zusammen. Das ist Restricted-Zone und zusätzlich mitbestimmungsrelevant.
 
 ## Berichte: 45 Minuten werden zehn
 
-Freitagnachmittag. Status-Report für die Geschäftsführung. Du hast sieben Stichpunkte. Die GF will einen lesbaren Bericht.
+Freitagnachmittag, Status-Report für die Geschäftsführung. Du hast sieben Stichpunkte. Die GF will einen lesbaren Bericht.
 
 > **Prompt-Vorlage:** Rolle: Du bist Assistent für Status-Berichte an die Geschäftsführung. Kontext: Marketing-Wochenbericht, sieben Stichpunkte, Leser sind GF und CFO. Aufgabe: Erstelle aus den Stichpunkten einen strukturierten Bericht. Format: Zusammenfassung in drei Sätzen, dann Details als Unterpunkte, zum Schluss nächste Schritte mit Verantwortlichen und Fristen. Ton: sachlich, knapp, keine Marketing-Sprache.
 
 Zehn Minuten statt 45. Aber drei Dinge korrigierst du immer:
 
-- **Prioritäten.** Die KI weiß nicht, dass der Cookie-Banner dringender ist als der LinkedIn-Erfolg. Du sortierst.
-- **Unbelegte Bewertungen.** „Unsere Content-Strategie greift" klingt gut, stand aber nicht in deinen Stichpunkten. Raus damit.
+- **Prioritäten.** Die KI weiß nicht, dass der Cookie-Banner dringender ist als der LinkedIn-Erfolg. Das sortierst du.
+- **Unbelegte Bewertungen.** „Unsere Content-Strategie greift" klingt gut, stand aber nicht in deinen Stichpunkten. Streich den Satz.
 - **Fehlender Kontext.** Warum ist der Cookie-Banner plötzlich dringend? Die KI kennt den Hintergrund nicht. Du ergänzt ihn.
 
 ## Nicht nur Büro: Produktion und Service
 
-Die drei Beispiele oben sind Profil A, Wissensarbeit. Aber dieselben drei Zeitfresser treffen auch die Halle und die Hotline. Zwei Fälle.
+Die drei Beispiele oben sind Profil A, Wissensarbeit. Dieselben drei Zeitfresser treffen aber auch die Halle und die Hotline. Zwei Beispiele dafür.
 
 ### Profil C: Die Schichtübergabe vom Schichtleiter
 
-Eine fiktive Schichtleitung notiert: „Anlage 3 zickt, Lager 7 fast leer, Fiktivperson Alpha krank, Charge 4471 nachprüfen." Die Frühschicht versteht nur einen Teil. Das Beispiel ist erfunden; die Gesundheitsangabe demonstriert gerade das Datenschutzproblem.
+Eine fiktive Schichtleitung notiert: „Anlage 3 zickt, Lager 7 fast leer, Fiktivperson Alpha krank, Charge 4471 nachprüfen." Die Frühschicht versteht nur einen Teil. Das Beispiel ist erfunden, die Gesundheitsangabe zeigt genau das Datenschutzproblem.
 
 Vorher: Marco kritzelt drei Zeilen, keiner blickt durch.
 
@@ -90,7 +94,7 @@ Nachher: Er diktiert seine Notizen ins Handy, schickt sie durch einen Prompt.
 
 > **Prompt-Vorlage:** Rolle: Du bist Assistent für Schichtübergaben in der Produktion. Kontext: Übergabe von Spät- an Frühschicht, Metallverarbeitung, Empfänger ist der nächste Schichtleiter. Aufgabe: Mach aus meinen Stichworten eine klare Übergabe. Gliedere nach: (1) Anlagenstatus und Störungen, (2) Material und Bestand, (3) Personal, (4) offene Punkte zum Nachprüfen. Format: kurze Bulletpoints, sortiert nach Dringlichkeit. Ton: sachlich, knapp, keine Ausschmückung. Markiere alles, was sofort Handlung braucht, mit „ACHTUNG".
 
-Ergebnis: ein sauberer Zettel in zwei Minuten. „ACHTUNG: Anlage 3, Lagerschaden möglich, vor Anlauf prüfen." Keine Rückfragen mehr. Marco prüft nur noch: Stimmen die Maschinennummern? Fehlt nichts Sicherheitsrelevantes? Dann raus.
+Ergebnis: ein sauberer Zettel in zwei Minuten. „ACHTUNG: Anlage 3, Lagerschaden möglich, vor Anlauf prüfen." Keine Rückfragen mehr. Marco prüft nur noch: Stimmen die Maschinennummern? Fehlt nichts Sicherheitsrelevantes? Dann geht der Zettel raus.
 
 > **Achtung:** Auch Maschinendaten können vertraulich sein. „Fiktivperson Alpha krank" ist trotz Fiktivkennzeichnung ein Beispiel für eine Gesundheitsangabe. In einem realen Fall gehören weder Name noch indirekt identifizierende Beschreibung in einen ungeprüften KI-Dienst. Nutze nur den für Planung erforderlichen, freigegebenen Abwesenheitsstatus.
 
@@ -120,7 +124,7 @@ Ergebnis: eine ruhige, klare Antwort. Der Kunde fühlt sich gehört, der Ball li
 
 Nicht mit einem teuren Tool. Mit einem Prompt-Fenster, das du schon hast.
 
-> **Das Wichtigste:** Drei Workflows, drei Prompt-Vorlagen, drei Sicherheitsregeln. Mehr brauchst du für 80 Prozent deiner wöchentlichen Kommunikation nicht. Den Rest lernst du in den kommenden Kapiteln.
+> **Das Wichtigste:** Drei Workflows, jeweils mit Vorlage und Sicherheitsregel. Mehr brauchst du für 80 Prozent deiner wöchentlichen Kommunikation nicht. Den Rest lernst du in den kommenden Kapiteln.
 
 ---
 

@@ -1,8 +1,8 @@
 {
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-09",
-  "nextReview": "2027-02-09",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
   "triggerEvents": ["major-conceptual-update"],
@@ -12,12 +12,12 @@
       "id": "ethik-3-1",
       "blockId": "block_3",
       "number": 1,
-      "title": "Drei dokumentierte Fälle und ihre Grenzen",
+      "title": "Drei berühmte Fälle und was sie wirklich belegen",
       "subtitle": "COMPAS, Amazons Experiment und Gender Shades",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -30,24 +30,24 @@
       "sections": [
         {
           "id": "ethik-3-1-s1",
-          "title": "COMPAS: unterschiedliche Fairness-Maße",
+          "title": "COMPAS: zwei Fairness-Maße, ein Streit",
           "readTimeMinutes": 2,
-          "content": "COMPAS ist ein Risikobewertungsinstrument, dessen Werte in Teilen des US-Justizsystems als eine Information unter mehreren verwendet wurden. ProPublica untersuchte 2016 mehr als 7.000 in Broward County, Florida, vergebene Scores und verglich sie mit später registrierten Festnahmen. Die Redaktion berichtete unter anderem, dass schwarze Beschuldigte, die im Beobachtungszeitraum nicht erneut festgenommen wurden, häufiger fälschlich als hohes Risiko eingestuft worden waren als entsprechende weiße Beschuldigte. (Quelle: Angwin et al., ProPublica, 2016)\n\nNorthpointe widersprach der Bewertung und verwies darauf, dass die Scores innerhalb der Risikostufen für beide Gruppen ähnlich kalibriert gewesen seien. Damit standen verschiedene Kriterien nebeneinander: vergleichbare Kalibrierung innerhalb eines Scores und vergleichbare Fehlerraten zwischen Gruppen. Chouldechova zeigte, dass solche Kriterien bei unterschiedlichen Grundraten im Allgemeinen nicht gleichzeitig erfüllt werden können, sofern die Vorhersage nicht perfekt ist. (Quelle: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nDie Analyse belegt eine Differenz in ProPublicas Fehlerratenmaß. Sie belegt nicht für sich allein, welche Daten- oder Designentscheidung diese Differenz verursacht hat.",
-          "keyTakeaway": "Beim COMPAS-Streit wurden unterschiedliche Fairness-Maße verwendet. Ein Modell kann innerhalb von Risikostufen ähnlich kalibriert sein und zugleich unterschiedliche Fehlerraten zwischen Gruppen aufweisen."
+          "content": "COMPAS ist ein Risikobewertungsinstrument. In Teilen des US-Justizsystems floss sein Wert als eine Information unter mehreren in Entscheidungen ein. ProPublica untersuchte 2016 mehr als 7.000 in Broward County, Florida, vergebene Scores und verglich sie mit später registrierten Festnahmen. Die Redaktion berichtete unter anderem: Schwarze Beschuldigte, die im Beobachtungszeitraum nicht erneut festgenommen wurden, waren häufiger fälschlich als hohes Risiko eingestuft worden als entsprechende weiße Beschuldigte. (Quelle: Angwin et al., ProPublica, 2016)\n\nNorthpointe widersprach: Innerhalb der Risikostufen seien die Scores für beide Gruppen ähnlich kalibriert gewesen. Der Streit drehte sich damit um zwei verschiedene Maße: vergleichbare Kalibrierung innerhalb eines Scores auf der einen Seite, vergleichbare Fehlerraten zwischen Gruppen auf der anderen. Chouldechova zeigte, dass sich solche Kriterien bei unterschiedlichen Grundraten im Allgemeinen nicht gleichzeitig erfüllen lassen, sofern die Vorhersage nicht perfekt ist. (Quelle: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nWas die Analyse belegt: eine Differenz in ProPublicas Fehlerratenmaß. Was sie für sich allein nicht belegt: welche Daten- oder Designentscheidung diese Differenz verursacht hat. Und welches Maß zählen soll, entscheidet keine Formel. Das ist die Frage, die vor dem Einsatz eines solchen Systems beantwortet werden muss.",
+          "keyTakeaway": "Im COMPAS-Streit standen zwei Fairness-Maße gegeneinander. Ein Modell kann innerhalb der Risikostufen ähnlich kalibriert sein und trotzdem unterschiedliche Fehlerraten zwischen Gruppen haben."
         },
         {
           "id": "ethik-3-1-s2",
-          "title": "Amazon: ein abgebrochenes Recruiting-Experiment",
+          "title": "Amazon: ein Experiment, das abgebrochen wurde",
           "readTimeMinutes": 2,
-          "content": "Reuters berichtete 2018 unter Berufung auf mit dem Projekt vertraute Personen über ein internes, experimentelles Amazon-System zur Bewertung von Lebensläufen. Die Modelle waren mit Bewerbungen aus einem Zeitraum von zehn Jahren entwickelt worden; viele dieser Bewerbungen stammten von Männern. Ein Modell benachteiligte unter anderem Begriffe wie „women's“ und die Namen zweier Frauen-Colleges. (Quelle: Dastin, J., Reuters, Oktober 2018)\n\nDas Team entfernte erkennbare geschlechtsbezogene Signale, konnte aber laut Bericht nicht garantieren, dass das System nicht andere mittelbare Merkmale verwenden würde. Amazon löste das Projektteam bis Anfang 2017 auf. Das Unternehmen erklärte Reuters, das Werkzeug sei von Recruitern nie zur Bewertung von Bewerbenden eingesetzt worden.\n\nDer Fall dokumentiert ein Entwicklungsrisiko: Historische Bewerbungsdaten können frühere Auswahlmuster enthalten. Ob und wie ein Modell diese Muster übernimmt, hängt zusätzlich von Zielgröße, Merkmalen, Validierung und Einsatzentscheidung ab. Der Bericht belegt keinen durch dieses Werkzeug verursachten Einstellungsentscheid.",
-          "keyTakeaway": "Reuters dokumentierte ein internes Experiment mit geschlechtsbezogenen Bewertungseffekten. Amazon erklärte, Recruiter hätten das Werkzeug nie zur Bewertung von Bewerbenden eingesetzt."
+          "content": "Zehn Jahre Bewerbungen als Trainingsmaterial, viele davon von Männern. Was lernt ein Modell daraus? Reuters berichtete 2018 unter Berufung auf mit dem Projekt vertraute Personen über ein internes, experimentelles Amazon-System zur Bewertung von Lebensläufen, das mit genau solchen Daten entwickelt worden war. Ein Modell benachteiligte unter anderem Begriffe wie „women's“ und die Namen zweier Frauen-Colleges. (Quelle: Dastin, J., Reuters, Oktober 2018)\n\nDas Team entfernte die erkennbaren geschlechtsbezogenen Signale. Garantieren, dass das System nicht auf andere, mittelbare Merkmale auswich, konnte es laut Bericht nicht. Amazon löste das Projektteam bis Anfang 2017 auf und erklärte Reuters, Recruiter hätten das Werkzeug nie zur Bewertung von Bewerbenden eingesetzt.\n\nDer Fall dokumentiert ein Entwicklungsrisiko. Nicht mehr, aber auch nicht weniger. Historische Bewerbungsdaten können frühere Auswahlmuster enthalten. Ob ein Modell diese Muster übernimmt, hängt zusätzlich von Zielgröße, Merkmalen, Validierung und der Einsatzentscheidung ab. Einen durch dieses Werkzeug verursachten Einstellungsentscheid belegt der Bericht nicht.",
+          "keyTakeaway": "Reuters dokumentierte ein internes Experiment mit geschlechtsbezogenen Bewertungseffekten. Amazon erklärte, Recruiter hätten das Werkzeug nie zur Bewertung von Bewerbenden eingesetzt. Wer den Fall zitiert, muss beides sagen."
         },
         {
           "id": "ethik-3-1-s3",
-          "title": "Gender Shades: Audit kommerzieller Geschlechtsklassifikation",
+          "title": "Gender Shades: 0,8 Prozent gegen 34,7 Prozent",
           "readTimeMinutes": 2,
-          "content": "Joy Buolamwini und Timnit Gebru prüften 2018 kommerzielle Systeme von IBM, Microsoft und Face++ darauf, wie sie binäres Geschlecht aus Gesichtsbildern klassifizierten. Das war Geschlechtsklassifikation, nicht die Identifizierung einer Person durch Gesichtserkennung. (Quelle: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\nFür hellhäutige Männer lag die höchste berichtete Fehlerrate bei 0,8 Prozent. Für dunkelhäutige Frauen reichten die Fehlerraten je nach System bis 34,7 Prozent. Die Studie zeigte damit erhebliche intersektionale Leistungsunterschiede in den geprüften Produkten.\n\nDie Autorinnen untersuchten außerdem die demografische Zusammensetzung zweier verbreiteter Benchmarks und dokumentierten dort Repräsentationsschieflagen. Daraus lässt sich jedoch nicht ohne Zugang zu den jeweiligen Trainingsdaten ableiten, dass genau diese Benchmarks oder eine bestimmte Datenverteilung die Fehler jedes geprüften Herstellers verursacht haben.\n\nDer belastbare Befund ist die gemessene Leistungsdifferenz unter dem Studienaufbau. Ursache, Übertragbarkeit auf andere Aufgaben und heutige Produktleistung müssen getrennt geprüft werden.",
-          "keyTakeaway": "Gender Shades maß bei kommerzieller Geschlechtsklassifikation bis zu 34,7 Prozent Fehler für dunkelhäutige Frauen und höchstens 0,8 Prozent für hellhäutige Männer. Die Studie bewies keine konkrete Trainingsdatenursache für jeden Anbieter."
+          "content": "Joy Buolamwini und Timnit Gebru prüften 2018 kommerzielle Systeme von IBM, Microsoft und Face++ darauf, wie sie binäres Geschlecht aus Gesichtsbildern klassifizierten. Das war Geschlechtsklassifikation, nicht die Identifizierung einer Person durch Gesichtserkennung, und der Unterschied zählt. (Quelle: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\n0,8 Prozent. Das ist die höchste berichtete Fehlerrate für hellhäutige Männer. Bei dunkelhäutigen Frauen reichten die Fehlerraten je nach System bis 34,7 Prozent. Erhebliche intersektionale Leistungsunterschiede, gemessen in kommerziellen Produkten.\n\nDie Autorinnen untersuchten auch die demografische Zusammensetzung zweier verbreiteter Benchmarks und fanden dort Repräsentationsschieflagen. Der naheliegende Schluss: Also waren die Daten schuld. Ohne Zugang zu den jeweiligen Trainingsdaten lässt sich aber nicht ableiten, dass genau diese Benchmarks oder eine bestimmte Datenverteilung die Fehler jedes geprüften Herstellers verursacht haben.\n\nBelastbar ist die gemessene Leistungsdifferenz unter dem Studienaufbau. Ursache, Übertragbarkeit auf andere Aufgaben und die heutige Produktleistung sind drei getrennte Prüfungen.",
+          "keyTakeaway": "Gender Shades maß bei kommerzieller Geschlechtsklassifikation bis zu 34,7 Prozent Fehler für dunkelhäutige Frauen und höchstens 0,8 Prozent für hellhäutige Männer. Eine konkrete Trainingsdatenursache für jeden Anbieter bewies die Studie nicht."
         }
       ],
       "quiz": [
@@ -76,7 +76,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "ProPublica berichtete unterschiedliche Fehlerraten. Northpointe verwies auf Kalibrierung innerhalb der Risikostufen. Chouldechovas Analyse erklärt, warum Kalibrierung und gleiche Fehlerraten bei unterschiedlichen Grundraten im Allgemeinen unvereinbar sein können."
+          "explanation": "ProPublica berichtete unterschiedliche Fehlerraten. Northpointe hielt die Kalibrierung innerhalb der Risikostufen dagegen. Chouldechova erklärt, warum beides bei unterschiedlichen Grundraten im Allgemeinen nicht zugleich zu haben ist."
         },
         {
           "id": "ethik-3-1-q2",
@@ -103,7 +103,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Reuters beschrieb ein internes Experiment, das Begriffe wie „women's“ benachteiligte. Amazon erklärte, das Werkzeug sei nie von Recruitern zur Bewertung von Bewerbenden verwendet worden. Der Bericht belegt daher ein Entwicklungsrisiko, nicht einen konkreten Einstellungsentscheid."
+          "explanation": "Reuters beschrieb ein internes Experiment, das Begriffe wie „women's“ benachteiligte. Amazon erklärte, Recruiter hätten das Werkzeug nie zur Bewertung von Bewerbenden verwendet. Belegt ist damit ein Entwicklungsrisiko, kein konkreter Einstellungsentscheid."
         },
         {
           "id": "ethik-3-1-q3",
@@ -130,7 +130,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Gender Shades prüfte die binäre Geschlechtsklassifikation von IBM, Microsoft und Face++. Die Studie maß erhebliche intersektionale Leistungsunterschiede. Sie war keine Studie zur Personenidentifikation und bewies keine konkrete Trainingsdatenursache für jeden Anbieter."
+          "explanation": "Gender Shades prüfte die binäre Geschlechtsklassifikation von IBM, Microsoft und Face++ und maß erhebliche intersektionale Leistungsunterschiede. Um Personenidentifikation ging es nicht, und eine konkrete Trainingsdatenursache für jeden Anbieter bewies die Studie nicht."
         }
       ]
     },
@@ -139,11 +139,11 @@
       "blockId": "block_3",
       "number": 2,
       "title": "Ethik auf drei Ebenen: Technik, Unternehmen, Gesellschaft",
-      "subtitle": "Wie man Verantwortung verteilt, ohne sie zu verwässern",
+      "subtitle": "Verantwortung verteilen, ohne sie zu verwässern",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -157,22 +157,22 @@
           "id": "ethik-3-2-s1",
           "title": "Ebene 1: Technik",
           "readTimeMinutes": 2,
-          "content": "Auf technischer Ebene werden Systemleistung, Fehlerverteilung und Grenzen geprüft.\n\nAttributionsverfahren wie SHAP (SHapley Additive exPlanations) oder LIME (Local Interpretable Model-agnostic Explanations) schätzen unter gewählten Modell-, Referenz- und Störungsannahmen, welchen Beitrag Eingabemerkmale zu einer Ausgabe leisten. Sie zeigen keine kausale Wirkung und liefern nicht automatisch eine vollständige Erklärung des Entscheidungsprozesses.\n\nEine Bias-Prüfung vergleicht zum Beispiel Fehler- oder Auswahlraten zwischen sinnvoll abgegrenzten Gruppen. Aussagekraft setzt geeignete Zielgrößen, Nenner, Stichproben und Unsicherheitsangaben voraus. Für Hochrisiko-KI-Systeme regelt Art. 9 ein Risikomanagementsystem. Art. 10 enthält Daten- und Data-Governance-Anforderungen sowie, soweit einschlägig, eine Prüfung möglicher Verzerrungen. Art. 15 behandelt Genauigkeit, Robustheit und Cybersicherheit. Ob diese Pflichten für ein konkretes System bereits gelten, hängt von Einordnung, Rolle und aktuellem Anwendungsdatum ab.\n\nTechnische Prüfungen können Risiken sichtbar machen. Ob ein Einsatzzweck zulässig oder gesellschaftlich vertretbar ist, entscheiden sie nicht.",
-          "keyTakeaway": "Attribution, Gruppenmetriken und Robustheitstests beantworten verschiedene Fragen. Keine einzelne Kennzahl erklärt Ursache, Fairness und Zulässigkeit zugleich."
+          "content": "Auf der technischen Ebene geht es um drei Dinge: Wie gut ist das System, wie verteilen sich seine Fehler, wo liegen seine Grenzen. Mehr nicht.\n\nAttributionsverfahren wie SHAP (SHapley Additive exPlanations) oder LIME (Local Interpretable Model-agnostic Explanations) schätzen unter gewählten Modell-, Referenz- und Störungsannahmen, welchen Beitrag einzelne Eingabemerkmale zu einer Ausgabe leisten. Eine kausale Wirkung zeigen sie nicht. Eine vollständige Erklärung des Entscheidungsprozesses liefern sie auch nicht automatisch.\n\nEine Bias-Prüfung vergleicht zum Beispiel Fehler- oder Auswahlraten zwischen sinnvoll abgegrenzten Gruppen. Ohne geeignete Zielgrößen, Nenner, Stichproben und Unsicherheitsangaben sagt so ein Vergleich nichts. Für Hochrisiko-KI-Systeme regelt Art. 9 ein Risikomanagementsystem, Art. 10 enthält Daten- und Data-Governance-Anforderungen sowie, soweit einschlägig, eine Prüfung möglicher Verzerrungen, und Art. 15 behandelt Genauigkeit, Robustheit und Cybersicherheit. Ob diese Pflichten für ein konkretes System schon gelten, hängt von Einordnung, Rolle und aktuellem Anwendungsdatum ab.\n\nTechnische Prüfungen können Risiken sichtbar machen. Ob ein Einsatzzweck zulässig oder gesellschaftlich vertretbar ist, entscheiden sie nicht.",
+          "keyTakeaway": "Attribution, Gruppenmetriken und Robustheitstests beantworten verschiedene Fragen. Keine einzelne Kennzahl erklärt dir Ursache, Fairness und Zulässigkeit auf einmal."
         },
         {
           "id": "ethik-3-2-s2",
           "title": "Ebene 2: Unternehmen",
           "readTimeMinutes": 2,
-          "content": "Auf Organisationsebene braucht jeder Einsatz einen benannten Zweck, eine zuständige Rolle, Freigabekriterien und einen dokumentierten Eskalationsweg.\n\nSoweit die jeweiligen Hochrisiko-Vorschriften anwendbar sind, muss ein System nach Art. 12 technisch eine automatische Protokollierung ermöglichen. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 grundsätzlich mindestens sechs Monate auf, sofern anderes Unions- oder nationales Recht keine andere Frist vorsieht. Welche Informationen vorhanden sind, hängt vom System und vom tatsächlichen Betreiberzugriff ab.\n\nEin internes Prüfungsgremium kann sinnvoll sein, ist aber nicht pauschal als „Ethikrat“ vorgeschrieben. Entscheidend sind Kompetenz, Entscheidungsbefugnis, dokumentierte Freigabe und ein Verfahren für Vorfälle. Art. 87 verweist für Meldungen von Verstößen gegen die KI-Verordnung und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937; ihr Anwendungsbereich und nationales Recht bleiben zu prüfen.",
-          "keyTakeaway": "Protokollierungspflicht, Aufbewahrung und interne Freigabe sind getrennte Anforderungen. Ihr Anwendungsbereich hängt von Systemkategorie, Rolle und Anwendungsdatum ab."
+          "content": "\"Wer hat das freigegeben?\" Wenn im Unternehmen niemand diese Frage beantworten kann, ist diese Ebene gescheitert. Jeder Einsatz braucht einen benannten Zweck, eine zuständige Rolle, Freigabekriterien und einen dokumentierten Eskalationsweg.\n\nSoweit die Hochrisiko-Vorschriften anwendbar sind, muss ein System nach Art. 12 technisch eine automatische Protokollierung ermöglichen. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 in der Regel mindestens sechs Monate auf, sofern anderes Unions- oder nationales Recht keine andere Frist vorsieht. Welche Informationen dann tatsächlich vorliegen, hängt vom System und vom Zugriff des Betreibers ab.\n\nEin internes Prüfungsgremium kann helfen. Als „Ethikrat“ vorgeschrieben ist es pauschal nicht, und ein Gremium ohne Kompetenz, Entscheidungsbefugnis, dokumentierte Freigabe und ein Verfahren für Vorfälle ist Dekoration. Art. 87 verweist für Meldungen von Verstößen gegen die KI-Verordnung und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937; Anwendungsbereich und nationales Recht bleiben zu prüfen.",
+          "keyTakeaway": "Protokollierungspflicht, Aufbewahrung und interne Freigabe sind drei getrennte Anforderungen. Ob sie für ein System gelten, hängt von Systemkategorie, Rolle und Anwendungsdatum ab."
         },
         {
           "id": "ethik-3-2-s3",
           "title": "Ebene 3: Gesellschaft",
           "readTimeMinutes": 2,
-          "content": "Auf gesellschaftlicher Ebene werden zulässige Zwecke, Rechte und Kontrollwege festgelegt. KI-Verordnung, Datenschutz-, Gleichbehandlungs- und Grundrechtevorgaben können parallel gelten und beantworten unterschiedliche Fragen.\n\nArt. 22 Abs. 1 DSGVO betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung einschließlich Profiling beruhen und rechtliche Wirkung entfalten oder eine Person ähnlich erheblich beeinträchtigen. Art. 22 Abs. 2 enthält Ausnahmen. Für die Fälle nach Abs. 2 lit. a und c verlangt Abs. 3 mindestens die Möglichkeit menschlichen Eingreifens, der Darlegung des eigenen Standpunkts und der Anfechtung. Art. 13, 14 und 15 enthalten bei einschlägiger automatisierter Entscheidungsfindung Informationspflichten beziehungsweise Auskunftsrechte zur involvierten Logik sowie zur Tragweite und zu den angestrebten Auswirkungen. Das ist kein pauschaler Anspruch auf Quellcode oder eine Erklärung für jeden Algorithmus.\n\nBei einer erheblichen Entscheidung sind daher vier Punkte getrennt zu prüfen: War sie ausschließlich automatisiert? Welche Wirkung hatte sie? Greift eine Ausnahme? Welche Informations- und Schutzrechte gelten?",
-          "keyTakeaway": "Art. 22 DSGVO betrifft ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung und kennt Ausnahmen. Schutzmaßnahmen und Informationsrechte sind präzise nach Art. 13 bis 15 und Art. 22 zu prüfen."
+          "content": "Wofür darf ein System überhaupt eingesetzt werden? Das entscheidet keine Fachabteilung und kein Hersteller. Das entscheidet die Gesellschaft über Gesetze, Rechte und Kontrollwege. KI-Verordnung, Datenschutz-, Gleichbehandlungs- und Grundrechtevorgaben können parallel gelten und beantworten verschiedene Fragen.\n\nArt. 22 Abs. 1 DSGVO betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung einschließlich Profiling beruhen und rechtliche Wirkung entfalten oder eine Person ähnlich erheblich beeinträchtigen. Art. 22 Abs. 2 enthält Ausnahmen. Für die Fälle nach Abs. 2 lit. a und c verlangt Abs. 3 mindestens die Möglichkeit menschlichen Eingreifens, der Darlegung des eigenen Standpunkts und der Anfechtung. Art. 13, 14 und 15 enthalten bei einschlägiger automatisierter Entscheidungsfindung Informationspflichten beziehungsweise Auskunftsrechte zur involvierten Logik sowie zur Tragweite und zu den angestrebten Auswirkungen. Ein Anspruch auf den Quellcode oder auf eine Erklärung für jeden Algorithmus ist das nicht.\n\nTrifft dich eine erhebliche Entscheidung, prüfst du vier Punkte getrennt: War sie ausschließlich automatisiert? Welche Wirkung hatte sie? Greift eine Ausnahme? Welche Informations- und Schutzrechte gelten?",
+          "keyTakeaway": "Art. 22 DSGVO betrifft ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung, und er kennt Ausnahmen. Schutzmaßnahmen und Informationsrechte prüfst du präzise nach Art. 13 bis 15 und Art. 22."
         }
       ],
       "quiz": [
@@ -187,7 +187,7 @@
             },
             {
               "id": "b",
-              "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, grundsätzlich mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts",
+              "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, in der Regel mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts",
               "isCorrect": true
             },
             {
@@ -201,11 +201,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Soweit die Vorschriften anwendbar sind, verlangt Art. 12 die technische Möglichkeit automatischer Protokollierung. Art. 26 Abs. 6 verlangt vom Betreiber grundsätzlich die Aufbewahrung der unter seiner Kontrolle befindlichen Logs für mindestens sechs Monate, sofern anderes Recht keine andere Frist vorsieht."
+          "explanation": "Soweit die Vorschriften anwendbar sind, verlangt Art. 12 die technische Möglichkeit automatischer Protokollierung. Art. 26 Abs. 6 verlangt vom Betreiber in der Regel, die Logs unter seiner Kontrolle mindestens sechs Monate aufzubewahren, sofern anderes Recht keine andere Frist vorsieht."
         },
         {
           "id": "ethik-3-2-q2",
-          "questionText": "Welche Aussage zu DSGVO Art. 22 ist richtig?",
+          "questionText": "Welche Aussage zu Art. 22 DSGVO stimmt?",
           "answerOptions": [
             {
               "id": "a",
@@ -228,11 +228,11 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Art. 22 Abs. 1 betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung beruhen und rechtliche oder ähnlich erhebliche Wirkung haben. Abs. 2 kennt Ausnahmen. Bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung verlangt Abs. 3 mindestens menschliches Eingreifen, Darlegung des eigenen Standpunkts und Anfechtung; weitere Informationsrechte ergeben sich aus Art. 13 bis 15."
+          "explanation": "Art. 22 Abs. 1 betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung beruhen und rechtliche oder ähnlich erhebliche Wirkung haben. Abs. 2 kennt Ausnahmen. Bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung verlangt Abs. 3 mindestens die Möglichkeit menschlichen Eingreifens, der Darlegung des eigenen Standpunkts und der Anfechtung. Weitere Informationsrechte stehen in Art. 13 bis 15."
         },
         {
           "id": "ethik-3-2-q3",
-          "questionText": "Was ist ein zentraler Unterschied zwischen technischer und gesellschaftlicher Ebene der KI-Ethik?",
+          "questionText": "Was unterscheidet die technische von der gesellschaftlichen Ebene der KI-Ethik?",
           "answerOptions": [
             {
               "id": "a",
@@ -255,7 +255,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Technische Maßnahmen (Explainability, Bias-Messung, Robustheit) sind wichtig, aber sie lösen keine politischen Fragen. Ein technisch optimiertes Gesichtserkennungssystem kann immer noch für Massenüberwachung eingesetzt werden. Die Entscheidung, ob das erlaubt ist, trifft die Gesellschaft, nicht die Technik."
+          "explanation": "Explainability, Bias-Messung, Robustheit: alles nötig, nichts davon beantwortet eine politische Frage. Ein technisch optimiertes Gesichtserkennungssystem lässt sich immer noch für Massenüberwachung einsetzen. Ob das erlaubt ist, entscheidet die Gesellschaft, nicht die Technik."
         }
       ]
     },
@@ -267,8 +267,8 @@
       "subtitle": "Daten, Zuständigkeit und Kontrollweg",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -282,22 +282,22 @@
           "id": "ethik-3-3-s1",
           "title": "Prüfung 1: Daten und Zielgröße trennen",
           "readTimeMinutes": 1,
-          "content": "Historische Daten können frühere Ungleichheiten, Messfehler oder Auswahlentscheidungen enthalten. Daraus folgt nicht automatisch, dass jedes darauf trainierte Modell dieselbe Verzerrung reproduziert. Das Ergebnis hängt auch von Stichprobe, Labels, Merkmalen, Zielgröße, Optimierung, Schwellenwerten und Einsatzkontext ab.\n\nPrüfe deshalb nicht nur, woher die Daten stammen. Frage auch: Wer ist in den Daten vertreten? Was gilt als richtiges Ergebnis? Welche Fehler werden für welche Gruppen gemessen? Wurde die Leistung im tatsächlichen Einsatzkontext geprüft?\n\nDie Fälle COMPAS, Amazon und Gender Shades zeigen unterschiedliche Probleme. Sie dürfen nicht auf die eine Formel „schlechte Trainingsdaten“ reduziert werden.",
-          "keyTakeaway": "Datenherkunft, Zielgröße, Fehlermetrik und Einsatzkontext sind getrennt zu prüfen. Historische Daten können Verzerrungen enthalten, bestimmen das Ergebnis aber nicht allein."
+          "content": "\"Die Daten waren schlecht.\" Der Satz erklärt alles und deshalb nichts. Historische Daten können frühere Ungleichheiten, Messfehler oder Auswahlentscheidungen enthalten. Daraus folgt nicht, dass jedes darauf trainierte Modell dieselbe Verzerrung reproduziert. Stichprobe, Labels, Merkmale, Zielgröße, Optimierung, Schwellenwerte und Einsatzkontext entscheiden mit.\n\nFrag deshalb nicht nur, woher die Daten stammen. Wer ist in den Daten vertreten? Was gilt als richtiges Ergebnis? Welche Fehler werden für welche Gruppen gemessen? Wurde die Leistung im tatsächlichen Einsatzkontext geprüft?\n\nCOMPAS, Amazon und Gender Shades zeigen drei verschiedene Probleme. Wer sie auf die eine Formel „schlechte Trainingsdaten“ eindampft, hat keinen der drei Fälle verstanden.",
+          "keyTakeaway": "Datenherkunft, Zielgröße, Fehlermetrik und Einsatzkontext prüfst du getrennt. Historische Daten können Verzerrungen enthalten. Das Ergebnis bestimmen sie nicht allein."
         },
         {
           "id": "ethik-3-3-s2",
           "title": "Prüfung 2: Rolle und Pflicht zuordnen",
           "readTimeMinutes": 1,
-          "content": "„Die KI hat entschieden“ benennt weder eine zuständige Organisation noch eine Rechtsgrundlage. Die KI-Verordnung weist Pflichten nach tatsächlicher Rolle und Handlung zu: Art. 16 enthält Pflichten für Anbieter, Art. 22 für Bevollmächtigte, Art. 23 für Einführer, Art. 24 für Händler und Art. 26 für Betreiber. Art. 25 regelt Fälle, in denen ein anderer Akteur als Anbieter gilt.\n\nDiese Rollenverteilung ist keine pauschale Aussage über Haftung oder darüber, wer einen konkreten diskriminierenden Erfolg verursacht hat. Zusätzlich können Datenschutz-, Gleichbehandlungs-, Arbeits- oder Zivilrecht gelten.\n\nDokumentiere für den Einzelfall: Wer stellt das System bereit? Wer bestimmt Zweck und Einsatz? Wer trifft oder bestätigt die Entscheidung? Welche Vorschrift knüpft an diese Handlung an?",
-          "keyTakeaway": "Ordne erst die tatsächliche Rolle zu, dann die konkrete Pflicht. Art. 16 sowie Art. 22 bis 26 regeln unterschiedliche Akteure; daraus folgt keine pauschale Alleinverantwortung."
+          "content": "„Die KI hat entschieden.“ Dieser Satz nennt keine Organisation und keine Rechtsgrundlage. Er nennt niemanden. Die KI-Verordnung tut das Gegenteil und weist Pflichten nach tatsächlicher Rolle und Handlung zu: Art. 16 den Anbietern, Art. 22 den Bevollmächtigten, Art. 23 den Einführern, Art. 24 den Händlern und Art. 26 den Betreibern. Art. 25 regelt die Fälle, in denen ein anderer Akteur als Anbieter gilt.\n\nDiese Rollenverteilung sagt nichts Pauschales über Haftung, und nichts darüber, wer einen konkreten diskriminierenden Erfolg verursacht hat. Datenschutz-, Gleichbehandlungs-, Arbeits- oder Zivilrecht können zusätzlich gelten.\n\nHalte für den Einzelfall vier Antworten fest: Wer stellt das System bereit? Wer bestimmt Zweck und Einsatz? Wer trifft oder bestätigt die Entscheidung? Welche Vorschrift knüpft an genau diese Handlung an?",
+          "keyTakeaway": "Erst die tatsächliche Rolle, dann die konkrete Pflicht. Art. 16 und Art. 22 bis 26 regeln verschiedene Akteure. Eine pauschale Alleinverantwortung folgt daraus nicht."
         },
         {
           "id": "ethik-3-3-s3",
-          "title": "Prüfung 3: einen nachvollziehbaren Kontrollweg nutzen",
+          "title": "Prüfung 3: ein Kontrollweg, den andere nachgehen können",
           "readTimeMinutes": 2,
-          "content": "Nutze für überprüfbare Fälle einen festen Ablauf:\n\n1. Zweck, verantwortliche Rolle, Datenquelle und menschliche Entscheidungsstelle dokumentieren.\n2. Bei einer erheblichen automatisierten Entscheidung prüfen, ob sie ausschließlich automatisiert war, welche Wirkung sie hatte, welche Ausnahme greifen könnte und welche Informations- oder Schutzrechte bestehen.\n3. Bei mutmaßlich synthetischen Medien die Originalfundstelle sichern und Herkunft sowie Kontext nach dem Ablauf aus Block 2 prüfen.\n4. Befund, Unsicherheit und nächsten Zuständigkeitsweg getrennt festhalten.\n\nFür unabhängige Einordnung veröffentlichen AlgorithmWatch (algorithmwatch.org), die von Joy Buolamwini gegründete Algorithmic Justice League (ajl.org) und netzpolitik.org Recherchen zu algorithmischen Systemen, Bias und digitaler Regulierung.",
-          "keyTakeaway": "Ein belastbarer Kontrollweg dokumentiert Zweck, Rolle, Daten, Entscheidung, Befund und Unsicherheit. Er ersetzt Vermutungen durch prüfbare Schritte."
+          "content": "Vermutungen sind billig. Ein Kontrollweg, den eine andere Person Schritt für Schritt nachgehen kann, ist Arbeit. Für überprüfbare Fälle nimmst du einen festen Ablauf:\n\n1. Zweck, verantwortliche Rolle, Datenquelle und menschliche Entscheidungsstelle dokumentieren.\n2. Bei einer erheblichen automatisierten Entscheidung prüfen, ob sie ausschließlich automatisiert war, welche Wirkung sie hatte, welche Ausnahme greifen könnte und welche Informations- oder Schutzrechte bestehen.\n3. Bei mutmaßlich synthetischen Medien die Originalfundstelle sichern und Herkunft sowie Kontext nach dem Ablauf aus Block 2 prüfen.\n4. Befund, Unsicherheit und den nächsten Zuständigkeitsweg getrennt festhalten.\n\nWenn du eine unabhängige Einordnung suchst: AlgorithmWatch (algorithmwatch.org), die von Joy Buolamwini gegründete Algorithmic Justice League (ajl.org) und netzpolitik.org veröffentlichen Recherchen zu algorithmischen Systemen, Bias und digitaler Regulierung.",
+          "keyTakeaway": "Ein belastbarer Kontrollweg dokumentiert Zweck, Rolle, Daten, Entscheidung, Befund und Unsicherheit. Vermutungen ersetzt er durch prüfbare Schritte."
         }
       ],
       "quiz": [
@@ -312,7 +312,7 @@
             },
             {
               "id": "b",
-              "text": "Weil Modelle grundsätzlich zu wenige Trainingsdaten verwenden, unabhängig von deren Zusammensetzung",
+              "text": "Weil Modelle immer zu wenige Trainingsdaten verwenden, unabhängig von deren Zusammensetzung",
               "isCorrect": false
             },
             {
@@ -326,7 +326,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Historische Daten können frühere Ungleichheiten abbilden. Ob daraus eine nachteilige Modellwirkung entsteht, hängt außerdem von Auswahl, Labels, Zielgröße, Modellierung, Schwellenwerten, Evaluation und Einsatz ab."
+          "explanation": "Historische Daten können frühere Ungleichheiten abbilden. Ob daraus eine nachteilige Modellwirkung wird, entscheiden zusätzlich Auswahl, Labels, Zielgröße, Modellierung, Schwellenwerte, Evaluation und Einsatz."
         },
         {
           "id": "ethik-3-3-q2",
@@ -353,11 +353,11 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Die Pflichten stehen in unterschiedlichen Artikeln und knüpfen an die tatsächliche Rolle an. Art. 25 kann einen Rollenwechsel zum Anbieter auslösen. Diese Zuordnung ersetzt keine gesonderte Prüfung von Haftung, Datenschutz oder Gleichbehandlung."
+          "explanation": "Die Pflichten stehen in verschiedenen Artikeln und hängen an der tatsächlichen Rolle. Art. 25 kann einen Rollenwechsel zum Anbieter auslösen. Haftung, Datenschutz und Gleichbehandlung prüfst du trotzdem gesondert."
         },
         {
           "id": "ethik-3-3-q3",
-          "questionText": "Welche Organisation von Joy Buolamwini forscht und bildet zu algorithmischem Bias aus?",
+          "questionText": "Welche von Joy Buolamwini gegründete Organisation forscht zu algorithmischem Bias und leistet Bildungsarbeit dazu?",
           "answerOptions": [
             { "id": "a", "text": "AlgorithmWatch", "isCorrect": false },
             { "id": "b", "text": "netzpolitik.org", "isCorrect": false },
@@ -372,7 +372,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Joy Buolamwini gründete die Algorithmic Justice League (ajl.org), die zu Schäden und Ungleichheiten in algorithmischen Systemen forscht und Bildungsarbeit leistet. AlgorithmWatch (algorithmwatch.org) untersucht algorithmische Entscheidungssysteme in Europa."
+          "explanation": "Joy Buolamwini gründete die Algorithmic Justice League (ajl.org). Die Organisation forscht zu Schäden und Ungleichheiten in algorithmischen Systemen und leistet Bildungsarbeit. AlgorithmWatch (algorithmwatch.org) untersucht algorithmische Entscheidungssysteme in Europa."
         }
       ]
     }

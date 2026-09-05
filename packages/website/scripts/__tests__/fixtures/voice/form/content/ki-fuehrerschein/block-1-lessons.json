@@ -1,0 +1,15 @@
+{
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "Inventar mit formellem Einschub",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Anrede",
+          "content": "Du prüfst dein Inventar jede Woche. Prüfen Sie Ihre Daten trotzdem noch einmal."
+        }
+      ]
+    }
+  ]
+}

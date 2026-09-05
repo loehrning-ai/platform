@@ -15,31 +15,31 @@ const lesson = localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Begrenzte Review-Schleife",
-      content: `Ein Design-Review benötigt Struktur; Reihenfolge und Zeitanteile hängen aber von der Aufgabe ab. Nutze diese Schleife und investiere mehr Zeit in hohe Unsicherheit oder hohes Risiko:
+      content: `Ein Design-Review braucht eine Reihenfolge. Welche, entscheidet die Aufgabe. Nutze diese Schleife, und gib der größten Unsicherheit die meiste Zeit.
 
-1. **Klären.** Consumer, Entscheidungen, Spitzenlast beim Schreiben und Lesen, Freshness, Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Kosten bestimmen. Offene Annahmen dokumentieren.
-2. **Rahmen setzen.** Nur die für die Aufgabe relevanten Grenzen zeichnen. Hauptgefahren nennen und den Vertrag des Lesepfads vor Produkten definieren.
+1. **Klären.** Consumer, Entscheidungen, Spitzenlast beim Schreiben und Lesen, Freshness, Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Kosten festnageln. Offene Annahmen aufschreiben.
+2. **Rahmen setzen.** Nur die Grenzen zeichnen, die die Aufgabe braucht. Hauptgefahren nennen und den Lesevertrag definieren, bevor ein Produktname fällt.
 3. **Schätzen und entwerfen.** Größenordnung von Durchsatz, Speicher und Gleichzeitigkeit berechnen. Partitionierung, Verarbeitung, Speicher und Serving daraus ableiten.
-4. **Fehlerfälle prüfen.** Verspätete und doppelte Daten, Schiefe, Schemaänderungen, Backfills, Abhängigkeitsausfälle, Zugriffstrennung und Wiederherstellung untersuchen. Jedem Risiko Erkennungs- und Wiederherstellungsevidenz zuordnen.
+4. **Fehlerfälle prüfen.** Verspätete und doppelte Daten, Schiefe, Schemaänderungen, Backfills, Abhängigkeitsausfälle, Zugriffstrennung und Wiederherstellung durchgehen. Jedes Risiko bekommt Erkennungs- und Wiederherstellungsevidenz.
 5. **Zielkonflikte prüfen.** Benennen, worauf der Entwurf optimiert, was er nicht garantiert und welche Entscheidungen Benchmark oder Prototyp benötigen.
 
-Klärung verhindert, dass ein selten benötigter Bericht zu einem unnötigen Streaming-System wird. Schätzungen verhindern Produktauswahl vor Kenntnis der Last.`,
+Ohne Klärung wird aus einem selten gelesenen Bericht ein unnötiges Streaming-System. Ohne Schätzung fällt die Produktwahl vor der Last.`,
       keyTakeaway:
         "Consumer-Vertrag klären und Last quantifizieren, bevor Komponenten gewählt werden.",
     },
     {
       id: "s2",
       title: "Durchgearbeitetes Szenario",
-      content: `Der interaktive Ablauf verwendet einen hypothetischen Marktplatz, in dem Händler Bestell- und Umsatzaggregate sehen. Sämtliche Verkehrs-, Größen-, Verspätungs- und Freshness-Werte sind Eingaben der Übung, keine Benchmarks oder empfohlenen Vorgaben. Benannte Produkte machen Zielkonflikte konkret. Eine Produktionsentscheidung benötigt trotzdem aktuelle Kompatibilitätsprüfung, Security Review, Kostenmodell und repräsentative Lasttests.`,
+      content: `Der interaktive Ablauf spielt einen hypothetischen Marktplatz durch, auf dem Händler Bestell- und Umsatzaggregate sehen. Alle Verkehrs-, Größen-, Verspätungs- und Freshness-Werte sind Eingaben der Übung, keine Benchmarks und keine Empfehlung. Benannte Produkte machen Zielkonflikte konkret. Für eine Produktionsentscheidung brauchst du aktuelle Kompatibilitätsprüfung, Security Review, Kostenmodell und repräsentative Lasttests.`,
     },
     {
       id: "s3",
       title: "Präzise Formulierungen",
-      content: `Verwende Sprache, die Annahmen und Evidenz sichtbar macht:
+      content: `Diese Formulierungen machen Annahmen und Evidenz sichtbar.
 
 - *„Welche Entscheidung trifft der Consumer aus dieser Ausgabe und wie alt darf sie sein?“* definiert den Lesevertrag.
 - *„Wird Freshness ab Ereignisentstehung, Quell-Commit oder Ingestion gemessen?“* verhindert ein mehrdeutiges SLI.
-- *„Ich schätze zuerst und wähle danach eine Komponente.“* Eine Milliarde Ereignisse zu je 1 KB entsprechen ungefähr 1 TB pro Tag und durchschnittlich 11.6 MB/s vor Replikation, Kodierung, Indizes und Protokoll-Overhead. Für die Spitze ist eine weitere Annahme nötig.
+- *„Ich schätze zuerst und wähle danach eine Komponente.“* Eine Milliarde Ereignisse zu je 1 KB sind rund 1 TB pro Tag und im Schnitt 11.6 MB/s, vor Replikation, Kodierung, Indizes und Protokoll-Overhead. Die Spitze braucht eine weitere Annahme.
 - *„Diese Komponente ist ein Kandidat, weil sie die Anforderungen erfüllt; Connector-Semantik und Pfadleistung prüfe ich separat.“* trennt Entwurfshypothese und Nachweis.
 - *„Das Risiko ist X, die Gegenmaßnahme Y und Z bleibt ungemindert.“* macht Restrisiko prüfbar.
 - *„Diese Garantie gilt nur zwischen diesen Grenzen.“* verhindert, dass lokale Verarbeitungssemantik zur End-to-End-Aussage wird.`,
@@ -53,7 +53,7 @@ Klärung verhindert, dass ein selten benötigter Bericht zu einem unnötigen Str
 - *„Alles kommt in ein Warehouse.“* Welche Last-, Isolations- und Wiederherstellungsanforderungen tragen diese Wahl?
 - *„Dieser Fehler ist unwahrscheinlich.“* Welche Evidenz trägt die Wahrscheinlichkeit und wie hoch ist der Schaden?
 
-Jede Aussage überspringt eine Entscheidungsgrenze. Ergänze Anforderung, Annahme, Evidenz und Bedingung für eine Neubewertung.`,
+Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung, Annahme, Evidenz und die Bedingung für eine Neubewertung.`,
     },
     {
       id: "s5",
@@ -63,7 +63,7 @@ Jede Aussage überspringt eine Entscheidungsgrenze. Ergänze Anforderung, Annahm
     {
       id: "s6",
       title: "Kursüberblick",
-      content: `Nutze diese Aussagen als Review-Fragen, nicht als universelle Regeln.
+      content: `Lies diese Aussagen als Review-Fragen, nicht als universelle Regeln.
 
 - **Referenzebenen**, Quelle → Log → Verarbeitung → Speicher → Serving → Nutzung ist ein Modell zur Lokalisierung von Grenzen; nicht benötigte Ebenen entfallen.
 - **CAP**, bei einer Netzwerkpartition kann ein verteiltes Register nicht zugleich linearisierbare Antworten und eine Antwort jedes nicht ausgefallenen Knotens garantieren. Modell und Fehlergrenze benennen.
@@ -99,9 +99,9 @@ Jede Aussage überspringt eine Entscheidungsgrenze. Ergänze Anforderung, Annahm
     {
       id: "s7",
       title: "Betrieblicher Abschluss",
-      content: `Schließe das Review mit offenen Betriebsfragen: Wer verantwortet Datenqualitätsvorfälle, wie werden Backfills autorisiert und isoliert, welche Wiederherstellungsziele wurden tatsächlich erprobt und welche Garantien werden in Produktion gemessen?
+      content: `Schließe das Review mit den Betriebsfragen: Wer verantwortet Datenqualitätsvorfälle, wie werden Backfills autorisiert und isoliert, welche Wiederherstellungsziele wurden wirklich erprobt und welche Garantien misst du in Produktion?
 
-Ein Entwurf ist erst vollständig, wenn Zuständigkeit, Evidenz, Fehlerreaktion und Restrisiken explizit sind.`,
+Ohne benannte Zuständigkeit, Evidenz, Fehlerreaktion und Restrisiken ist der Entwurf nicht fertig.`,
     },
   ],
   widgets: [
@@ -118,7 +118,7 @@ Ein Entwurf ist erst vollständig, wenn Zuständigkeit, Evidenz, Fehlerreaktion 
         "„Welches Budget besteht?“ und „Wie viele Engineers stehen bereit?“",
       ],
       explanation:
-        "Spitzenlast beim Schreiben, Lese- oder Entscheidungslatenz und Freshness begrenzen die Architektur. Sie genügen nicht allein: Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Wiederherstellung müssen vor Freigabe ebenfalls feststehen.",
+        "Spitzenlast beim Schreiben, Lese- oder Entscheidungslatenz und Freshness begrenzen die Architektur. Allein genügen sie nicht. Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Wiederherstellung stehen vor der Freigabe ebenfalls fest.",
     },
     {
       kind: "quiz",
@@ -133,7 +133,7 @@ Ein Entwurf ist erst vollständig, wenn Zuständigkeit, Evidenz, Fehlerreaktion 
         "Weitere Broker teilen die Partition selbstständig auf.",
       ],
       explanation:
-        "Eine Consumer Group kann eine Partition nicht gleichzeitig durch mehrere aktive Consumer verarbeiten. Schiefe kann deshalb den Durchsatz begrenzen, während andere Partitionen unbeschäftigt sind. Ein kontrollierter Teilschlüssel verteilt Arbeit, fügt aber eine zweite Aggregationsstufe hinzu und verändert die Ordnung. Bucket-Anzahl aus gemessener Schiefe und Kapazität ableiten sowie Wiederherstellung und Re-Keying testen.",
+        "Eine Consumer Group kann eine Partition nicht auf mehrere aktive Consumer verteilen. Schiefe deckelt deshalb den Durchsatz, während andere Partitionen leerlaufen. Ein kontrollierter Teilschlüssel verteilt die Arbeit, kostet eine zweite Aggregationsstufe und verändert die Ordnung. Leite die Bucket-Anzahl aus gemessener Schiefe und Kapazität ab, teste Wiederherstellung und Re-Keying.",
     },
     {
       kind: "flashcards",
@@ -312,7 +312,7 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
     tag: "clarify",
     title: "Problem ohne neue Anforderungen wiedergeben",
     body: `<p>Aufgabe: <em>„Entwirf Analysen für einen Marktplatz, auf dem Händler Bestell- und Umsatz-Dashboards sehen.“</em></p><p>Wiedergabe: <b>„Das System veröffentlicht händlerbezogene Aggregate aus Bestelländerungen. Freshness, Verkehr, Aufbewahrung, Autorisierung und Konsistenz sind noch offen.“</b></p>`,
-    note: "Eine neutrale Wiedergabe bestätigt den Umfang, ohne aus einem unbestimmten Dashboard still ein Echtzeitsystem zu machen.",
+    note: "Eine neutrale Wiedergabe bestätigt den Umfang. Aus einem vagen Dashboard wird so nicht heimlich ein Echtzeitsystem.",
   },
   {
     tag: "scope",
@@ -323,8 +323,8 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
   {
     tag: "estimate",
     title: "Vor Kapazitätswahl schätzen",
-    body: `<p>Würde die angenommene Spitze einen ganzen Tag anhalten: 10,000 × 86,400 = <b>864 Millionen Änderungen pro Tag</b>. Bei einer beispielhaften Nutzlast von 1 KB sind das <b>864 GB pro Tag</b> vor Replikation, Indizes, Kodierung und Protokoll-Overhead.</p><p>Kompressionsrate, Spitzendauer, Aggregatgröße und Cache-Residency bleiben unbekannt. Vor Dimensionierung von Knoten oder Kosten mit repräsentativen Daten messen.</p>`,
-    note: "Die Rechnung begrenzt das Problem. Verteilung, Overhead, Ausfallverhalten und Benchmarks bleiben separat zu messen.",
+    body: `<p>Würde die angenommene Spitze einen ganzen Tag anhalten: 10,000 × 86,400 = <b>864 Millionen Änderungen pro Tag</b>. Bei einer beispielhaften Nutzlast von 1 KB sind das <b>864 GB pro Tag</b> vor Replikation, Indizes, Kodierung und Protokoll-Overhead.</p><p>Kompressionsrate, Spitzendauer, Aggregatgröße und Cache-Residency kennst du noch nicht. Miss mit repräsentativen Daten, bevor du Knoten oder Kosten dimensionierst.</p>`,
+    note: "Die Rechnung steckt das Problem ab. Verteilung, Overhead, Ausfallverhalten und Benchmarks misst du getrennt.",
   },
   {
     tag: "api",
@@ -336,8 +336,8 @@ WS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre>
   {
     tag: "data model",
     title: "Ereignisidentität und Ordnung definieren",
-    body: `<p>Verwende einen unveränderlichen Änderungsumschlag mit <code>event_id, order_id, seller_id, operation, source_commit_position, occurred_at, amount_minor, currency, schema_version</code>.</p><p><code>seller_id</code> unterstützt händlerbezogene Aggregation; Schiefe und Ordnung je Bestellung müssen jedoch gemessen werden. Ein Schlüssel erfüllt nicht automatisch jede nachgelagerte Operation.</p>`,
-    note: "Stabile Identität unterstützt Deduplizierung; der Partitionsschlüssel definiert Ordnungs- und Schiefegrenzen.",
+    body: `<p>Verwende einen unveränderlichen Änderungsumschlag mit <code>event_id, order_id, seller_id, operation, source_commit_position, occurred_at, amount_minor, currency, schema_version</code>.</p><p><code>seller_id</code> trägt die händlerbezogene Aggregation; Schiefe und Ordnung je Bestellung misst du trotzdem. Ein Schlüssel bedient nicht jede nachgelagerte Operation.</p>`,
+    note: "Stabile Identität trägt die Deduplizierung. Der Partitionsschlüssel setzt die Grenzen für Ordnung und Schiefe.",
   },
   {
     tag: "streaming",
@@ -360,7 +360,7 @@ WS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre>
   {
     tag: "tradeoff",
     title: "Konsistenzgrenze benennen",
-    body: `<p>Das Dashboard liefert das neueste im Serving Store verfügbare commitete Aggregat und zeigt dessen Datenzeitpunkt. Es verspricht keine linearisierbaren Lesezugriffe gegenüber der Bestelldatenbank.</p><p>Das Übungsziel erlaubt begrenzte Veröffentlichungsverzögerung. Verhalten bei Ausfall oder Partition benötigt weiterhin eine Produktentscheidung: veraltete Antwort mit sichtbarem Zeitpunkt, explizite Nichtverfügbarkeit oder reduzierte Übersicht.</p>`,
+    body: `<p>Das Dashboard liefert das neueste im Serving Store verfügbare commitete Aggregat und zeigt dessen Datenzeitpunkt. Es verspricht keine linearisierbaren Lesezugriffe gegenüber der Bestelldatenbank.</p><p>Das Übungsziel erlaubt begrenzte Veröffentlichungsverzögerung. Das Verhalten bei Ausfall oder Partition bleibt eine Produktentscheidung, zwischen veralteter Antwort mit sichtbarem Zeitpunkt, expliziter Nichtverfügbarkeit und reduzierter Übersicht.</p>`,
     note: "Beschreibe beobachtbares Verhalten für einen konkreten Lesevorgang und Fehler, nicht ein produktweites Konsistenzetikett.",
   },
   {
@@ -372,13 +372,13 @@ WS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre>
   {
     tag: "tradeoff",
     title: "Ausschlüsse und Restrisiko dokumentieren",
-    body: `<p>Dieser Entwurf behandelt weder Mehrregionen-Wiederherstellung noch Datenschutzlöschung über aufbewahrte Logs und Snapshots, Betrugsentscheidungen oder mobile Zustellung.</p><p>Jeder Ausschluss kommt mit Zuständigkeit und Entscheidungsdatum in das Risikoregister. Kein Replikationsprodukt als Lösung darstellen, bevor Failover, Ordnung, Datenverlust und Wiederherstellung erprobt wurden.</p>`,
+    body: `<p>Dieser Entwurf behandelt weder Mehrregionen-Wiederherstellung noch Datenschutzlöschung über aufbewahrte Logs und Snapshots, Betrugsentscheidungen oder mobile Zustellung.</p><p>Jeder Ausschluss kommt mit Zuständigkeit und Entscheidungsdatum in das Risikoregister. Kein Replikationsprodukt gilt als Lösung, bevor Failover, Ordnung, Datenverlust und Wiederherstellung erprobt sind.</p>`,
     note: "Ein begrenzter Entwurf benennt ausgeschlossene Pflichten, statt sie zu verstecken.",
   },
   {
     tag: "follow-up",
     title: "Mit Betriebsevidenz abschließen",
-    body: `<p>Überwache End-to-End-Veröffentlichungsverzögerung, Vollständigkeit von Quelle zu Ziel, ungültige Datensätze, Partitionsschiefe, Checkpoint- und Ziel-Commit-Fehler, Reconciliation-Abweichungen und Datenalter im Serving Store.</p><p>Alarmierung folgt einem nutzerwirksamen SLO; Komponentenmetriken dienen der Diagnose. Runbooks decken Replay, teilweisen Zielerfolg, Zugriffsvorfälle und Backfill-Rollback ab.</p>`,
+    body: `<p>Überwache End-to-End-Veröffentlichungsverzögerung, Vollständigkeit von Quelle zu Ziel, ungültige Datensätze, Partitionsschiefe, Checkpoint- und Ziel-Commit-Fehler, Reconciliation-Abweichungen und Datenalter im Serving Store.</p><p>Alarmiert wird auf ein nutzerwirksames SLO. Komponentenmetriken dienen der Diagnose. Runbooks decken Replay, teilweisen Zielerfolg, Zugriffsvorfälle und Backfill-Rollback ab.</p>`,
     note: "Der Entwurf ist nur prüfbar, wenn Garantien Messungen, Zuständigkeiten und Wiederherstellungsabläufe haben.",
   },
 ];

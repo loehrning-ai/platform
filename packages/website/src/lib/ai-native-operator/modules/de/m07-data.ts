@@ -21,27 +21,27 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Mit den unterstützten Entscheidungen beginnen",
         readTimeMinutes: 8,
         content:
-          "Legen Sie fest, welche Fragen oder Handlungen die Retrieval-Schicht unterstützen soll, bevor Sie Quellen anbinden. Benennen Sie für jeden Anwendungsfall die maßgeblichen Datensätze, das zulässige Alter, die Datenklassifizierung und die erforderlichen Belege. Eine gemeinsame Suchoberfläche kann den Zugriff vereinfachen, muss Unterschiede bei Verbindlichkeit, Sensibilität und Aufbewahrung jedoch erhalten.",
+          "Erst die Frage, dann der Konnektor. Lege fest, welche Fragen und Handlungen die Retrieval-Schicht stützen soll, und benenne je Anwendungsfall die maßgeblichen Datensätze, das zulässige Alter, die Datenklassifizierung und die nötigen Belege. Eine gemeinsame Suchoberfläche vereinfacht den Zugriff. Unterschiede bei Verbindlichkeit, Sensibilität und Aufbewahrung muss sie trotzdem abbilden.",
       },
       {
         id: "s2",
         title: "Nur begründete Quellen anbinden",
         readTimeMinutes: 8,
         content:
-          "Dokumente, Quellcode, Tickets, Kundendaten, Nachrichten, Kalender und weitere Quellen haben unterschiedliche Risiken. Wenden Sie Zweckbindung und Datenminimierung an. Binden Sie Verantwortliche für Datenschutz, Sicherheit, Recht und Beschäftigtenvertretung ein, soweit erforderlich. Übernehmen Sie eine Quelle nicht allein deshalb, weil ein Konnektor verfügbar ist.",
+          "Dokumente, Quellcode, Tickets, Kundendaten, Nachrichten, Kalender: jede Quelle bringt ihr eigenes Risiko mit. Es gilt Zweckbindung und Datenminimierung. Hol Datenschutz, Sicherheit, Recht und Beschäftigtenvertretung dazu, wo es nötig ist. Ein verfügbarer Konnektor ist kein Grund, eine Quelle anzubinden.",
       },
       {
         id: "s3",
         title: "Belege mit dem Ergebnis ausgeben",
         readTimeMinutes: 8,
         content:
-          "Ein abgerufenes Ergebnis sollte Quellenverweise, maßgebliche Versionen oder Zeitstempel sowie wesentliche Zugriffs- und Aktualitätsgrenzen zeigen. Nutzende müssen die Belege prüfen können. Bei unzureichender Abdeckung oder widersprüchlichen Quellen sollte das System die Einschränkung nennen oder auf eine Antwort verzichten, statt eine unbelegte Zusammenfassung als Tatsache darzustellen.",
+          "Ein abgerufenes Ergebnis zeigt Quellenverweise, maßgebliche Versionen oder Zeitstempel und die wesentlichen Zugriffs- und Aktualitätsgrenzen. Wer damit arbeitet, muss die Belege prüfen können. Reicht die Abdeckung nicht oder widersprechen sich die Quellen, nennt das System die Einschränkung oder antwortet nicht, statt eine unbelegte Zusammenfassung als Tatsache auszugeben.",
       },
     ],
     callout: {
       kind: "note",
       h: "Nach Nutzen und Risiko staffeln",
-      text: "Beginnen Sie mit Quellen für einen klaren Anwendungsfall, eindeutiger Zuständigkeit, stabilen Zugriffsregeln und beherrschbarer Sensibilität. Ergänzen Sie Betriebsdaten, sobald Aktualität und Löschungen kontrolliert sind. Binden Sie Kommunikation erst nach ausdrücklicher Prüfung von Datenschutz, Sicherheit, Aufbewahrung und Auswirkungen auf Beschäftigte ein.",
+      text: "Fang mit Quellen an, die einen klaren Anwendungsfall, eine eindeutige Zuständigkeit, stabile Zugriffsregeln und beherrschbare Sensibilität haben. Betriebsdaten kommen dazu, sobald Aktualität und Löschungen kontrolliert sind. Kommunikation erst nach ausdrücklicher Prüfung von Datenschutz, Sicherheit, Aufbewahrung und Auswirkungen auf Beschäftigte.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -54,7 +54,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Quellenregister",
           scenario:
-            "Listen Sie fünf mögliche Quellen auf. Erfassen Sie jeweils Anwendungsfall, Zuständigkeit, Verbindlichkeit, Datenklassifizierung, Zugriffsmodell, Aktualitätsanforderung, Aufbewahrungsregel und die für Nutzende sichtbaren Belege.",
+            "Liste fünf mögliche Quellen auf. Erfasse je Anwendungsfall, Zuständigkeit, Verbindlichkeit, Datenklassifizierung, Zugriffsmodell, Aktualitätsanforderung, Aufbewahrungsregel und die für Nutzende sichtbaren Belege.",
           rows: 5,
         },
       },
@@ -80,21 +80,21 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Die Kontrolle vor die Offenlegung setzen",
         readTimeMinutes: 7,
         content:
-          "Die Berechtigungsprüfung gehört in den Abrufpfad und an die Grenze der Quelle. Ein Ausgabefilter greift erst, nachdem Inhalte bereits abgerufen wurden, und kann indirekte Offenlegungen übersehen. Prüfen Sie den Zugriff, bevor Dokumente, Ausschnitte, Metadaten oder abgeleitete Ergebnisse ausgegeben werden, und testen Sie die Richtlinie mit erlaubten sowie abgelehnten Fällen.",
+          "Die Berechtigungsprüfung gehört in den Abrufpfad und an die Grenze der Quelle. Ein Ausgabefilter greift erst, wenn die Inhalte längst geholt sind, und übersieht indirekte Offenlegungen. Prüfe den Zugriff, bevor Dokumente, Ausschnitte, Metadaten oder abgeleitete Ergebnisse herausgehen. Und teste die Richtlinie mit erlaubten wie abgelehnten Fällen.",
       },
       {
         id: "s2",
         title: "Person und ausführenden Dienst getrennt abbilden",
         readTimeMinutes: 7,
         content:
-          "Das System sollte erkennen, welche Person die Anfrage ausgelöst und welcher Agent oder Dienst sie ausgeführt hat. Der wirksame Zugriff darf nicht weiter reichen als die Schnittmenge aus Rechten der Person, zugewiesenem Umfang des Dienstes und aktueller Richtlinie. Verwenden Sie kurzlebige Zugangsdaten und ausdrückliche Delegation statt eines gemeinsam genutzten Kontos mit erweiterten Rechten.",
+          "Das System erkennt, welche Person die Anfrage ausgelöst hat und welcher Agent oder Dienst sie ausführt. Der wirksame Zugriff reicht nie weiter als die Schnittmenge aus Rechten der Person, zugewiesenem Umfang des Dienstes und geltender Richtlinie. Nutze kurzlebige Zugangsdaten und ausdrückliche Delegation. Kein gemeinsames Konto mit erweiterten Rechten.",
       },
       {
         id: "s3",
         title: "Entscheidungen protokollieren, ohne ein neues Leck zu schaffen",
         readTimeMinutes: 6,
         content:
-          "Erfassen Sie Person, Dienstidentität, Zeitpunkt, angeforderte Ressourcenkennungen, Richtlinienversion, Berechtigungsentscheidung und ausgegebene Quellenkennungen. Schützen Sie das Protokoll selbst und speichern Sie weder rohe Geheimnisse noch unnötige sensible Anfragetexte. Der Datensatz soll eine Störung nachvollziehbar machen, ohne zu einem zweiten unkontrollierten Datenspeicher zu werden.",
+          "Protokolliere Person, Dienstidentität, Zeitpunkt, angeforderte Ressourcenkennungen, Richtlinienversion, Berechtigungsentscheidung und ausgegebene Quellenkennungen. Schütze das Protokoll selbst. Rohe Geheimnisse und unnötige sensible Anfragetexte gehören nicht hinein. Der Datensatz soll eine Störung nachvollziehbar machen, nicht zum zweiten unkontrollierten Datenspeicher werden.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -107,7 +107,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "data/2",
           cpId: "exercise",
           scenario:
-            "Bestimmen Sie für einen Abrufablauf Person, Dienstidentität, Berechtigungsquelle, Regel für wirksame Rechte, Gültigkeitsdauer der Zugangsdaten, Verhalten bei Ablehnung und Protokollfelder. Benennen Sie jede derzeit nicht rekonstruierbare Lücke.",
+            "Bestimme für einen Abrufablauf Person, Dienstidentität, Berechtigungsquelle, Regel für wirksame Rechte, Gültigkeitsdauer der Zugangsdaten, Verhalten bei Ablehnung und Protokollfelder. Benenne jede Lücke, die sich heute nicht rekonstruieren lässt.",
           rows: 3,
         },
       },
@@ -133,14 +133,14 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Aktualität an die Entscheidung anpassen",
         readTimeMinutes: 11,
         content:
-          "Eine regelmäßige Momentaufnahme kann für stabiles Referenzmaterial genügen und für einen Ablauf mit Handlungen auf schnell veränderlichen Daten ungeeignet sein. Definieren Sie für jeden Anwendungsfall und jede Quelle ein höchstens zulässiges Alter. Nehmen Sie Änderungen, Widerrufe und Löschungen in die Zusage auf; veraltete Berechtigungen können ebenso folgenreich sein wie veraltete Inhalte.",
+          "Für stabiles Referenzmaterial genügt eine regelmäßige Momentaufnahme. Für einen Ablauf, der auf schnell veränderlichen Daten handelt, genügt sie nicht. Lege je Anwendungsfall und Quelle ein höchstens zulässiges Alter fest. Änderungen, Widerrufe und Löschungen gehören in dieselbe Zusage: eine veraltete Berechtigung wirkt genauso folgenreich wie ein veralteter Inhalt.",
       },
       {
         id: "s2",
         title: "Veraltete Zustände erkennen und ausweisen",
         readTimeMinutes: 11,
         content:
-          "Wählen Sie ereignisgesteuerte, geplante oder bedarfsgesteuerte Synchronisierung anhand der erforderlichen Aktualität und Betriebskosten. Überwachen Sie Verzögerungen und fehlgeschlagene Aktualisierungen. Geben Sie einen Datenstand oder eine Version mit Ergebnissen aus und legen Sie fest, ob der Ablauf bei Überschreitung warnt, Bestätigung verlangt, auf die Quelle zurückgreift oder stoppt.",
+          "Ereignisgesteuerte, geplante oder bedarfsgesteuerte Synchronisierung: die Wahl folgt der nötigen Aktualität und den Betriebskosten. Überwache Verzögerungen und fehlgeschlagene Aktualisierungen. Gib Datenstand oder Version mit jedem Ergebnis aus. Und leg fest, ob der Ablauf bei Überschreitung warnt, eine Bestätigung verlangt, auf die Quelle zurückgreift oder stoppt.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -153,7 +153,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "data/3",
           cpId: "exercise",
           scenario:
-            "Erfassen Sie für jede wichtige Quelle Aktualisierungsverfahren, beobachtete Verzögerung, höchstes zulässiges Alter, Löschverhalten, Hinweis auf veraltete Daten und Reaktion des Ablaufs bei einer Überschreitung.",
+            "Erfasse je wichtiger Quelle Aktualisierungsverfahren, beobachtete Verzögerung, höchstes zulässiges Alter, Löschverhalten, Hinweis auf veraltete Daten und Reaktion des Ablaufs bei Überschreitung.",
           rows: 4,
         },
       },
@@ -165,16 +165,16 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Wissensprüfung zu Modul 7",
-    subtitle: "Prüfen Sie die Abrufkontrollen dieses Moduls.",
-    objective: "Prüfen Sie die Abrufkontrollen dieses Moduls.",
+    title: "Modul 7, Wissensprüfung",
+    subtitle: "Zwei Fragen zu den Abrufkontrollen.",
+    objective: "Zwei Fragen zu den Abrufkontrollen.",
     durationMinutes: 9,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-data-q1",
         questionText:
-          "Ein Abrufsystem gibt ein vertrauliches Dokument aus, auf das die anfragende Person nicht zugreifen darf. Welche grundlegende Architekturkorrektur ist erforderlich?",
+          "Ein Abrufsystem gibt ein vertrauliches Dokument aus, auf das die anfragende Person keinen Zugriff hat. Welche Architekturkorrektur behebt das?",
         answerOptions: [
           {
             id: "a",
@@ -198,7 +198,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Das System muss nicht berechtigte Inhalte vor einer Offenlegung abweisen. Ein Ausgabefilter greift zu spät und kann indirekte Datenlecks übersehen. Der wirksame Zugriff sollte sowohl die Rechte der anfragenden Person als auch den ausdrücklich zugewiesenen Umfang des Dienstes berücksichtigen.",
+          "Nicht berechtigte Inhalte weist das System vor der Offenlegung ab. Ein Ausgabefilter greift zu spät und übersieht indirekte Datenlecks. Der wirksame Zugriff berücksichtigt die Rechte der anfragenden Person und den ausdrücklich zugewiesenen Umfang des Dienstes.",
       },
       {
         id: "ano-data-q2",
@@ -207,7 +207,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         answerOptions: [
           {
             id: "a",
-            text: "Jede Momentaufnahme lässt sich grundsätzlich nur langsam erstellen.",
+            text: "Eine Momentaufnahme lässt sich nie schnell erstellen.",
             isCorrect: false,
           },
           {
@@ -227,7 +227,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Die Häufigkeit einer Momentaufnahme ist nur im Verhältnis zur Aktualitätsanforderung sicher. Die Kontrolle besteht darin, diese Anforderung festzulegen, die wirkliche Verzögerung zu messen, den Datenstand zu zeigen und den Ablauf bei Überschreitung einzuschränken oder zu stoppen.",
+          "Eine Momentaufnahme ist nur im Verhältnis zur geforderten Aktualität sicher. Die Kontrolle heißt: Anforderung festlegen, wirkliche Verzögerung messen, Datenstand zeigen und den Ablauf bei Überschreitung einschränken oder stoppen.",
       },
     ],
     sections: [],

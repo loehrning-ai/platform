@@ -206,7 +206,8 @@ test.describe("Claude Course golden path", () => {
       assessment.getByRole("link", { name: "Retake quiz" }),
     ).toHaveAttribute("href", QUIZ_ROUTE);
     const certificate = assessment.getByRole("link", {
-      name: "Download Certificate of Completion",
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      name: "Download Certificate of Participation",
     });
     await expect(certificate).toHaveAttribute("href", CERT_ROUTE);
     await certificate.click();

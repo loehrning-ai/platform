@@ -1,8 +1,8 @@
 {
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-09",
-  "nextReview": "2027-02-09",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
   "triggerEvents": ["major-conceptual-update"],
@@ -12,12 +12,12 @@
       "id": "ethik-3-1",
       "blockId": "block_3",
       "number": 1,
-      "title": "Three documented cases and their limits",
+      "title": "Three famous cases and what they prove",
       "subtitle": "COMPAS, Amazon's experiment and Gender Shades",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -30,30 +30,30 @@
       "sections": [
         {
           "id": "ethik-3-1-s1",
-          "title": "COMPAS: different fairness measures",
+          "title": "COMPAS: two fairness measures, one fight",
           "readTimeMinutes": 2,
-          "content": "COMPAS is a risk-assessment instrument whose scores were used in parts of the US justice system as one input among others. In 2016, ProPublica examined more than 7,000 scores assigned in Broward County, Florida, and compared them with later recorded arrests. The publication reported, among other findings, that Black defendants who were not arrested again during the observation period had been incorrectly classified as high risk more often than comparable white defendants. (Source: Angwin et al., ProPublica, 2016)\n\nNorthpointe disputed the assessment and argued that scores were similarly calibrated for both groups within risk bands. Different criteria were therefore being compared: similar calibration within a score and similar error rates between groups. Chouldechova showed that, where base rates differ, such criteria generally cannot be satisfied at the same time unless prediction is perfect. (Source: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nThe analysis establishes a disparity under ProPublica's error-rate measure. By itself, it does not establish which data or design choice caused that disparity.",
-          "keyTakeaway": "The COMPAS dispute used different fairness measures. A model can be similarly calibrated within risk bands while producing different error rates between groups."
+          "content": "COMPAS is a risk-assessment instrument. In parts of the US justice system its score was one input among several. In 2016 ProPublica examined more than 7,000 scores assigned in Broward County, Florida, and compared them with later arrests. The newsroom reported, among other findings, that Black defendants not arrested again in the observation period had been wrongly classified as high risk more often than comparable white defendants. (Source: Angwin et al., ProPublica, 2016)\n\nNorthpointe disagreed: within the risk bands, it argued, the scores were similarly calibrated for the two groups. So the fight was about two measures: calibration within a score against error rates between groups. Chouldechova showed that such criteria generally cannot hold at once where base rates differ, unless prediction is perfect. (Source: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nWhat the analysis proves: a difference under ProPublica's error-rate measure. What it does not prove: which data or design choice caused it. No formula decides which measure counts. Answer that question before such a system is used.",
+          "keyTakeaway": "Two fairness measures stood against each other in the COMPAS fight. A model can be calibrated within risk bands and still show different error rates between groups."
         },
         {
           "id": "ethik-3-1-s2",
-          "title": "Amazon: an abandoned recruitment experiment",
+          "title": "Amazon: an experiment that was stopped",
           "readTimeMinutes": 2,
-          "content": "In 2018, Reuters reported, citing people familiar with the project, on an internal experimental Amazon system for ranking resumes. The models had been developed using applications submitted over a ten-year period; many came from men. One model penalised terms including \"women's\" and the names of two women's colleges. (Source: Dastin, J., Reuters, October 2018)\n\nThe team removed identifiable gender-related signals but, according to the report, could not guarantee that the system would not use other proxy features. Amazon disbanded the project team by early 2017. The company told Reuters that recruiters had never used the tool to evaluate candidates.\n\nThe case documents a development risk: historical application data can contain earlier selection patterns. Whether and how a model adopts those patterns also depends on the target, features, validation and deployment decision. The report does not establish a hiring decision caused by this tool.",
-          "keyTakeaway": "Reuters documented an internal experiment with gender-related ranking effects. Amazon said recruiters had never used the tool to evaluate candidates."
+          "content": "Ten years of applications as training material, many from men. What does a model learn from that? In 2018 Reuters reported, citing people familiar with the project, on an internal experimental Amazon system for rating CVs built on such data. One model penalised terms such as \"women's\" and the names of two women's colleges. (Source: Dastin, J., Reuters, October 2018)\n\nThe team removed the identifiable gender signals. Per the report, it could not guarantee the system would not fall back on other, indirect features. Amazon disbanded the project team by early 2017 and told Reuters recruiters had never used the tool to evaluate candidates.\n\nThe case documents a development risk. No more, no less. Historical application data can carry earlier selection patterns. Whether a model takes them over depends on target, features, validation and deployment. A hiring decision caused by this tool the report does not establish.",
+          "keyTakeaway": "Reuters documented an internal experiment with gender-related ranking effects. Amazon said recruiters never used the tool on candidates. Cite the case, say both."
         },
         {
           "id": "ethik-3-1-s3",
-          "title": "Gender Shades: an audit of commercial gender classification",
+          "title": "Gender Shades: 0.8 percent against 34.7 percent",
           "readTimeMinutes": 2,
-          "content": "In 2018, Joy Buolamwini and Timnit Gebru tested commercial systems from IBM, Microsoft and Face++ on how they classified binary gender from facial images. This was gender classification, not identifying a person through facial recognition. (Source: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\nFor lighter-skinned men, the highest reported error rate was 0.8 percent. For darker-skinned women, error rates reached 34.7 percent depending on the system. The study therefore found substantial intersectional performance differences in the tested products.\n\nThe authors separately examined the demographic composition of two widely used benchmarks and documented representation skews. Without access to each system's training data, however, this does not establish that those benchmarks or one particular data distribution caused each vendor's errors.\n\nThe supported finding is the measured performance disparity under the study design. Its cause, transfer to other tasks and current product performance require separate evidence.",
-          "keyTakeaway": "Gender Shades measured error rates of up to 34.7 percent for darker-skinned women and at most 0.8 percent for lighter-skinned men in commercial gender classification. It did not prove a particular training-data cause for every vendor."
+          "content": "In 2018 Joy Buolamwini and Timnit Gebru tested commercial systems from IBM, Microsoft and Face++ on how they classified binary gender from facial images. That was gender classification, not identifying a person through facial recognition, and the difference counts. (Source: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\n0.8 percent. That is the highest reported error rate for lighter-skinned men. For darker-skinned women the error rates reached 34.7 percent depending on the system. Substantial intersectional performance differences, measured in commercial products.\n\nThe authors also examined the demographic mix of two widely used benchmarks and found representation skews there. The obvious conclusion: so the data were to blame. Without access to each system's training data, you cannot derive that these benchmarks or one data distribution caused every vendor's errors.\n\nWhat holds is the measured performance difference under the study design. Cause, transfer and today's product performance are three separate questions.",
+          "keyTakeaway": "Gender Shades measured up to 34.7 percent error for darker-skinned women in commercial gender classification, at most 0.8 percent for lighter-skinned men. It proved no training-data cause for any vendor."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-1-q1",
-          "questionText": "Which finding did ProPublica report in its COMPAS analysis?",
+          "questionText": "Which finding did ProPublica report in the COMPAS analysis?",
           "answerOptions": [
             {
               "id": "a",
@@ -62,12 +62,12 @@
             },
             {
               "id": "b",
-              "text": "White defendants were twice as likely as Black defendants to be wrongly classified as posing a high risk of reoffending",
+              "text": "White defendants were twice as likely as Black defendants to be wrongly classified as high risk",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Under ProPublica's error-rate measure, Black defendants without a subsequent arrest were incorrectly classified as high risk more often than comparable white defendants",
+              "text": "Under ProPublica's error-rate measure, Black defendants without a later arrest were wrongly classified as high risk more often than comparable white defendants",
               "isCorrect": true
             },
             {
@@ -76,61 +76,61 @@
               "isCorrect": false
             }
           ],
-          "explanation": "ProPublica reported different error rates. Northpointe pointed to calibration within risk bands. Chouldechova's analysis explains why calibration and equal error rates can generally be incompatible when base rates differ."
+          "explanation": "ProPublica reported different error rates. Northpointe held calibration within the risk bands against that. Chouldechova explains why, with differing base rates, you generally cannot have both at once."
         },
         {
           "id": "ethik-3-1-q2",
-          "questionText": "What is established about Amazon's experimental recruitment tool?",
+          "questionText": "What is established about Amazon's experimental recruiting tool?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "The model was deliberately programmed to do so",
+              "text": "The model was deliberately programmed that way",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Reuters reported gender-related ranking effects; Amazon said recruiters had never used the tool to evaluate candidates",
+              "text": "Reuters reported gender-related ranking effects; Amazon said recruiters never used the tool to evaluate candidates",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "The system could not identify applicants' gender",
+              "text": "The system could not detect applicants' gender",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Applications from women were actually weaker",
+              "text": "Applications from women really were weaker",
               "isCorrect": false
             }
           ],
-          "explanation": "Reuters described an internal experiment that penalised terms including \"women's\". Amazon said recruiters had never used the tool to evaluate candidates. The report therefore establishes a development risk, not a particular hiring decision."
+          "explanation": "Reuters described an internal experiment that penalised terms such as \"women's\". Amazon said recruiters never used the tool on candidates. What that establishes is a development risk, not a hiring decision."
         },
         {
           "id": "ethik-3-1-q3",
-          "questionText": "What did Gender Shades find about commercial gender classification?",
+          "questionText": "What did Gender Shades find for commercial gender classification?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "The systems identified all faces with similar accuracy",
+              "text": "The systems recognised all faces with similar accuracy",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Only less expensive systems had bias problems",
+              "text": "Only cheaper systems had bias problems",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "At almost 12 percent, darker-skinned men had the highest error rate among the four groups studied",
+              "text": "At almost 12 percent, darker-skinned men had the highest error rate of the four groups studied",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "The highest error rate was 0.8 percent for lighter-skinned men and reached 34.7 percent for darker-skinned women depending on the system",
+              "text": "The highest error rate for lighter-skinned men was 0.8 percent, and for darker-skinned women it reached 34.7 percent depending on the system",
               "isCorrect": true
             }
           ],
-          "explanation": "Gender Shades tested binary gender classification by IBM, Microsoft and Face++. It measured substantial intersectional performance differences. It was not a study of person identification and did not prove a particular training-data cause for every vendor."
+          "explanation": "Gender Shades tested binary gender classification by IBM, Microsoft and Face++ and measured substantial intersectional performance differences. Person identification was not the subject, and no training-data cause was proved."
         }
       ]
     },
@@ -138,12 +138,12 @@
       "id": "ethik-3-2",
       "blockId": "block_3",
       "number": 2,
-      "title": "Ethics at three levels: technology, organisations and society",
-      "subtitle": "How to allocate responsibility without diluting it",
+      "title": "Ethics on three levels: technology, company, society",
+      "subtitle": "Spread responsibility without diluting it",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -157,51 +157,51 @@
           "id": "ethik-3-2-s1",
           "title": "Level 1: technology",
           "readTimeMinutes": 2,
-          "content": "At the technical level, examine system performance, error distribution and limitations.\n\nAttribution methods such as SHAP (SHapley Additive exPlanations) or LIME (Local Interpretable Model-agnostic Explanations) estimate, under chosen model, reference and perturbation assumptions, how input features contributed to an output. They do not show causation and do not automatically provide a complete explanation of the decision process.\n\nA bias audit can compare error or selection rates across meaningfully defined groups. Its validity requires suitable targets, denominators, samples and uncertainty reporting. For high-risk AI systems, Article 9 governs a risk-management system. Article 10 contains data and data-governance requirements and, where relevant, examination of possible biases. Article 15 addresses accuracy, robustness and cybersecurity. Whether these duties already apply to a particular system depends on its classification, the operator's role and the current application date.\n\nTechnical tests can expose risks. They do not decide whether a use is lawful or socially acceptable.",
-          "keyTakeaway": "Attribution, group metrics and robustness tests answer different questions. No single metric explains causation, fairness and permissibility at once."
+          "content": "On the technical level three things matter. How good the system is, how its errors spread, where its limits sit.\n\nAttribution methods such as SHAP (SHapley Additive exPlanations) or LIME (Local Interpretable Model-agnostic Explanations) estimate, under chosen model, reference and perturbation assumptions, what single input features contribute to an output. They show no causal effect, and no full explanation of the decision process.\n\nA bias audit compares error or selection rates across sensibly bounded groups. Without suitable targets, denominators, samples and uncertainty figures it says nothing. For high-risk AI systems Article 9 governs a risk-management system, Article 10 holds data and data-governance requirements plus, where relevant, an examination of possible bias, and Article 15 covers accuracy, robustness and cybersecurity. Whether they already apply to a system depends on classification, role and application date.\n\nTechnical tests can make risks visible. Whether a purpose is lawful or defensible, they do not decide.",
+          "keyTakeaway": "Attribution, group metrics and stress tests answer different questions. No single metric explains cause, fairness and permissibility."
         },
         {
           "id": "ethik-3-2-s2",
-          "title": "Level 2: organisations",
+          "title": "Level 2: the company",
           "readTimeMinutes": 2,
-          "content": "At the organisational level, every deployment needs a named purpose, a responsible role, approval criteria and a documented escalation route.\n\nWhere the relevant high-risk provisions apply, Article 12 requires a system to be technically capable of automatic logging. Under Article 26(6), deployers generally retain automatically generated logs under their control for at least six months unless other Union or national law provides a different period. The information available depends on the system and the deployer's actual access.\n\nAn internal review body can be useful, but an 'ethics board' is not mandated in every case. What matters is expertise, decision authority, documented approval and an incident process. Article 87 refers reporting of infringements of the AI Regulation and protection of reporting persons to Directive (EU) 2019/1937; the directive's scope and national law still require assessment.",
-          "keyTakeaway": "Logging capability, retention and internal approval are separate requirements. Their scope depends on system category, role and application date."
+          "content": "\"Who signed this off?\" If nobody in the company can answer that, this level has failed. Every deployment needs a named purpose, a responsible role, approval criteria and a documented escalation route.\n\nWhere the high-risk provisions apply, Article 12 requires a system capable of automatic logging. Under Article 26(6) deployers generally keep the automatically generated logs under their control for at least six months, unless other law sets a different period. What information is actually there depends on the system and the deployer's access.\n\nAn internal review body can help. No rule mandates an \"ethics board\" everywhere, and a body without expertise, decision authority, documented approval and an incident process is decoration. For reports of infringements and protection of reporting persons, Article 87 refers to Directive (EU) 2019/1937; scope and national law still need checking.",
+          "keyTakeaway": "Logging duty, retention and internal approval are three separate requirements. Application depends on category, role and date."
         },
         {
           "id": "ethik-3-2-s3",
           "title": "Level 3: society",
           "readTimeMinutes": 2,
-          "content": "At the societal level, permissible purposes, rights and oversight routes are set. The AI Regulation, data-protection law, equal-treatment law and fundamental-rights requirements can apply in parallel and answer different questions.\n\nArticle 22(1) GDPR concerns decisions based solely on automated processing, including profiling, that produce legal effects or similarly significantly affect a person. Article 22(2) contains exceptions. For cases under paragraph 2(a) and (c), paragraph 3 requires at least the opportunity to obtain human intervention, express one's point of view and contest the decision. For relevant automated decision-making, Articles 13, 14 and 15 contain information duties or access rights concerning the logic involved and the significance and envisaged consequences. This is not a blanket entitlement to source code or an explanation for every algorithm.\n\nFor a significant decision, assess four points separately: Was it solely automated? What effect did it have? Could an exception apply? Which information and safeguards are available?",
-          "keyTakeaway": "Article 22 GDPR concerns solely automated decisions with legal or similarly significant effects and contains exceptions. Safeguards and information rights must be assessed precisely under Articles 13 to 15 and Article 22."
+          "content": "What may a system be used for at all? Not a department, not a vendor. Society decides, through laws, rights and routes of control. The AI Regulation, data protection, equal treatment and fundamental rights can apply in parallel and answer different questions.\n\nArticle 22(1) GDPR concerns decisions based solely on automated processing, including profiling, that produce legal effects or similarly significantly affect a person. Article 22(2) holds exceptions. For the cases under paragraph 2(a) and (c), paragraph 3 requires at least human intervention, a chance to express a point of view and to contest. For relevant automated decision-making, Articles 13, 14 and 15 hold information duties and access rights on the logic involved, the significance and the envisaged consequences. A claim to source code, or an explanation for every algorithm, it is not.\n\nDoes a significant decision hit you? Then check four points separately: was it solely automated? What effect did it have? Does an exception apply? Which information and protection rights apply?",
+          "keyTakeaway": "Article 22 GDPR concerns solely automated decisions with legal or similarly significant effect, and it has exceptions. Safeguards and information rights you check under Articles 13 to 15 and Article 22."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-2-q1",
-          "questionText": "Which retention duty can Article 26(6) impose on deployers of high-risk AI systems?",
+          "questionText": "Which retention duty can Article 26(6) place on deployers of high-risk AI systems?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Send a monthly report to the EU AI Office",
+              "text": "Sending a monthly report to the EU AI Office",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Generally retain automatically generated logs under their control for at least six months, subject to other applicable law",
+              "text": "Generally keeping the automatically generated logs under their control for at least six months, subject to other law",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Make every algorithm publicly accessible",
+              "text": "Making every algorithm publicly accessible",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Establish an internal ethics board",
+              "text": "Setting up an internal ethics board",
               "isCorrect": false
             }
           ],
-          "explanation": "Where the provisions apply, Article 12 requires the technical capability for automatic logging. Article 26(6) generally requires the deployer to retain logs under its control for at least six months unless other law provides a different period."
+          "explanation": "Where the provisions apply, Article 12 requires the technical capability for automatic logging. Article 26(6) requires the deployer to keep those logs for at least six months, unless other law sets a different period."
         },
         {
           "id": "ethik-3-2-q2",
@@ -209,44 +209,44 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "It creates a right to demand the deletion of all personal data",
+              "text": "It creates a right to demand deletion of all your data",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Article 22 prohibits every use of an algorithm in a decision",
+              "text": "Article 22 bans every use of an algorithm in a decision",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Article 22 automatically creates a complete right to see the source code for every AI output",
+              "text": "Article 22 grants an automatic right to see the source code behind any AI output",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Article 22 protects against solely automated decisions with legal or similarly significant effects; its exceptions and the required safeguards must be assessed",
+              "text": "Article 22 protects against solely automated decisions with legal or similarly significant effect; exceptions and the safeguards required in each case have to be checked",
               "isCorrect": true
             }
           ],
-          "explanation": "Article 22(1) concerns decisions based solely on automated processing that produce legal or similarly significant effects. Paragraph 2 provides exceptions. For contractual necessity or explicit consent, paragraph 3 requires at least human intervention, the opportunity to express one's point of view and the ability to contest the decision; further information rights arise under Articles 13 to 15."
+          "explanation": "Article 22(1) concerns decisions based solely on automated processing with legal or similarly significant effect. Paragraph 2 holds exceptions. Where a contract requires it or the person explicitly consented, paragraph 3 requires at least human intervention, a chance to express a point of view and to contest. Further information rights sit in Articles 13 to 15."
         },
         {
           "id": "ethik-3-2-q3",
-          "questionText": "What is a central difference between the technical and societal levels of AI ethics?",
+          "questionText": "What separates the technical level of AI ethics from the societal one?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Societal measures are ineffective because technology moves faster than policy",
+              "text": "Societal measures are useless because technology moves faster than policy",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Technical measures alone determine the purposes for which an AI system may be used",
+              "text": "Technical measures alone already fix what an AI system may be used for",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "The technical level has clear answers, whereas the societal level has none",
+              "text": "The technical level has clear answers, the societal level has none",
               "isCorrect": false
             },
             {
@@ -255,7 +255,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Technical measures such as explainability, bias measurement and robustness matter, but they do not resolve political questions. A technically optimised facial recognition system can still be used for mass surveillance. Society, not technology, decides whether that use is permitted."
+          "explanation": "Explainability, bias measurement, stress testing: all necessary, none of it answers a political question. A technically optimised facial recognition system can still be pointed at mass surveillance. Whether that is allowed, society decides."
         }
       ]
     },
@@ -264,11 +264,11 @@
       "blockId": "block_3",
       "number": 3,
       "title": "Three checks for real AI deployments",
-      "subtitle": "Data, responsibility and oversight route",
+      "subtitle": "Data, responsibility, oversight route",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2027-02-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2027-03-05",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -280,30 +280,30 @@
       "sections": [
         {
           "id": "ethik-3-3-s1",
-          "title": "Check 1: separate data from the target",
+          "title": "Check 1: separate data from target",
           "readTimeMinutes": 1,
-          "content": "Historical data can contain earlier inequalities, measurement errors or selection decisions. It does not follow automatically that every model trained on those data reproduces the same disparity. The outcome also depends on sampling, labels, features, target, optimisation, thresholds and deployment context.\n\nDo not ask only where the data came from. Also ask: Who is represented? What counts as the correct outcome? Which errors are measured for which groups? Was performance tested in the actual deployment context?\n\nThe COMPAS, Amazon and Gender Shades cases concern different problems. They cannot be reduced to the single formula 'bad training data'.",
-          "keyTakeaway": "Assess data origin, target, error metric and deployment context separately. Historical data can contain disparities, but do not determine the outcome on their own."
+          "content": "\"The data were bad.\" The sentence explains everything and therefore nothing. Historical data can hold earlier inequalities, measurement errors or selection decisions. It does not follow that every model trained on them reproduces the same distortion. Sample, labels, features, target, optimisation, thresholds and deployment all have a say.\n\nSo do not just ask where the data came from. Who is represented? What counts as the right result? Which errors are measured for which groups? Was performance tested in the real deployment context?\n\nCOMPAS, Amazon and Gender Shades show three different problems. Boil them down to \"bad training data\" and you have understood none of them.",
+          "keyTakeaway": "Data origin, target, error metric and deployment context you check separately. Historical data can hold distortions. They do not determine the result."
         },
         {
           "id": "ethik-3-3-s2",
-          "title": "Check 2: map the role to the duty",
+          "title": "Check 2: map role to duty",
           "readTimeMinutes": 1,
-          "content": "'The AI decided' identifies neither a responsible organisation nor a legal basis. The AI Regulation assigns duties according to actual role and conduct: Article 16 contains provider duties, Article 22 duties for authorised representatives, Article 23 for importers, Article 24 for distributors and Article 26 for deployers. Article 25 governs cases in which another operator is treated as the provider.\n\nThis role allocation is not a blanket statement about liability or about who caused a discriminatory outcome. Data-protection, equal-treatment, employment or civil law may also apply.\n\nFor the individual case, document: Who provides the system? Who determines the purpose and deployment? Who makes or confirms the decision? Which provision attaches to that conduct?",
-          "keyTakeaway": "Assign the actual role before the specific duty. Article 16 and Articles 22 to 26 govern different operators; they do not create one blanket responsible party."
+          "content": "\"The AI decided.\" That sentence names no organisation and no legal basis. It names nobody. The AI Regulation does the opposite and assigns duties by actual role and conduct: Article 16 to providers, Article 22 to authorised representatives, Article 23 to importers, Article 24 to distributors, Article 26 to deployers. Article 25 governs the cases in which another operator counts as the provider.\n\nThis allocation says nothing blanket about liability, nor about who caused a specific discriminatory outcome. Data protection, equal treatment, employment or civil law can apply on top.\n\nFor the individual case, pin down four answers. Who provides the system? Who sets purpose and deployment? Who makes or confirms the decision? Which provision attaches to exactly that conduct?",
+          "keyTakeaway": "Actual role first, specific duty second. Article 16 and Articles 22 to 26 govern different operators. No blanket sole responsibility follows."
         },
         {
           "id": "ethik-3-3-s3",
-          "title": "Check 3: use a traceable oversight route",
+          "title": "Check 3: an oversight route others can walk",
           "readTimeMinutes": 2,
-          "content": "Use a fixed process for verifiable cases:\n\n1. Document the purpose, responsible role, data source and human decision point.\n2. For a significant automated decision, determine whether it was solely automated, what effect it had, which exception might apply and which information or safeguards are available.\n3. For suspected synthetic media, preserve the original source and check provenance and context using the process from Block 2.\n4. Record the finding, uncertainty and next responsible route separately.\n\nFor independent context, AlgorithmWatch (algorithmwatch.org), the Algorithmic Justice League (ajl.org) founded by Joy Buolamwini, and netzpolitik.org publish investigations into algorithmic systems, bias and digital regulation.",
-          "keyTakeaway": "A defensible oversight route documents purpose, role, data, decision, finding and uncertainty. It replaces assumptions with verifiable steps."
+          "content": "Guesses are cheap. An oversight route another person can walk step by step is work. For checkable cases, a fixed process:\n\n1. Document purpose, responsible role, data source and the human decision point.\n2. For a significant automated decision, check whether it was solely automated, its effect, which exception might apply and which information or protection rights exist.\n3. For suspected synthetic media, preserve the original source and check provenance and context with the Block 2 process.\n4. Record finding, uncertainty and the next responsible route separately.\n\nWant an independent read? AlgorithmWatch (algorithmwatch.org), the Algorithmic Justice League (ajl.org) founded by Joy Buolamwini, and netzpolitik.org publish investigations into algorithmic systems, bias and digital regulation.",
+          "keyTakeaway": "A defensible oversight route documents purpose, role, data, decision, finding and uncertainty. It swaps guesses for checkable steps."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-3-q1",
-          "questionText": "Which statement precisely describes the relationship between training data and model effects?",
+          "questionText": "Which statement describes the relation between training data and model effect precisely?",
           "answerOptions": [
             {
               "id": "a",
@@ -312,21 +312,21 @@
             },
             {
               "id": "b",
-              "text": "Because models always use too little training data, regardless of its composition",
+              "text": "Because models always use too little training data, whatever its composition",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Because individual developers directly program their personal preferences into the model without realising it",
+              "text": "Because individual developers unknowingly program their personal preferences into the model",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Historical data can contain inequalities; model effects also depend on the target, features, testing and deployment",
+              "text": "Historical data can hold inequalities; the model effect also depends on target, features, testing and deployment",
               "isCorrect": true
             }
           ],
-          "explanation": "Historical data can reflect earlier inequalities. Whether they produce a harmful model effect also depends on selection, labels, target, modelling, thresholds, evaluation and deployment."
+          "explanation": "Historical data can mirror earlier inequalities. Whether that becomes a harmful model effect depends further on selection, labels, target, modelling, thresholds, evaluation and deployment."
         },
         {
           "id": "ethik-3-3-q2",
@@ -339,28 +339,36 @@
             },
             {
               "id": "b",
-              "text": "Nobody, because AI systems act independently",
+              "text": "Nobody, because AI systems act on their own",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Only the market surveillance authority in the relevant EU Member State",
+              "text": "Only the market surveillance authority of the relevant EU Member State",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "By actual role: notably providers under Article 16, authorised representatives under Article 22, importers under Article 23, distributors under Article 24 and deployers under Article 26; Article 25 governs role changes",
+              "text": "By actual role: providers under Article 16, authorised representatives under Article 22, importers under Article 23, distributors under Article 24 and deployers under Article 26; Article 25 governs role changes",
               "isCorrect": true
             }
           ],
-          "explanation": "The duties appear in different articles and attach to the actual role. Article 25 can cause an operator to be treated as a provider. This allocation does not replace separate analysis of liability, data protection or equal treatment."
+          "explanation": "The duties sit in different articles and attach to the actual role. Article 25 can turn another operator into the provider. Liability, data protection and equal treatment you check separately."
         },
         {
           "id": "ethik-3-3-q3",
-          "questionText": "Which organisation founded by Joy Buolamwini conducts research and education on algorithmic bias?",
+          "questionText": "Which organisation founded by Joy Buolamwini researches algorithmic bias?",
           "answerOptions": [
-            { "id": "a", "text": "AlgorithmWatch", "isCorrect": false },
-            { "id": "b", "text": "netzpolitik.org", "isCorrect": false },
+            {
+              "id": "a",
+              "text": "AlgorithmWatch",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "netzpolitik.org",
+              "isCorrect": false
+            },
             {
               "id": "c",
               "text": "Data & Society Research Institute",
@@ -372,7 +380,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Joy Buolamwini founded the Algorithmic Justice League (ajl.org), which researches harms and inequities in algorithmic systems and provides education. AlgorithmWatch (algorithmwatch.org) examines algorithmic decision systems in Europe."
+          "explanation": "Joy Buolamwini founded the Algorithmic Justice League (ajl.org). It researches harms and inequities in algorithmic systems and teaches. AlgorithmWatch (algorithmwatch.org) examines algorithmic decision systems in Europe."
         }
       ]
     }

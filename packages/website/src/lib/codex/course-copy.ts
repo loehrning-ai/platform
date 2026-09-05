@@ -82,7 +82,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       eyebrow: "Codex / Kurs",
       title: "Codex kontrolliert im Repository einsetzen.",
       intro:
-        "Der Kurs behandelt Codex als auftragsorientierten Coding-Agenten. Du lernst, Kontext bereitzustellen, Änderungen abzugrenzen, Nachweise zu verlangen und einen Diff vor dem Merge zu prüfen.",
+        "Der Kurs behandelt Codex als auftragsorientierten Coding-Agenten: Kontext bereitstellen, Änderungen abgrenzen, Nachweise verlangen und den Diff vor dem Merge lesen.",
       start: "Lektion 01 starten",
       map: "Kursübersicht",
       facts: [
@@ -94,12 +94,12 @@ export const CODEX_COURSE_COPY = Object.freeze({
       courseEyebrow: "Kursaufbau",
       courseTitle: "Vier Tracks. Zwölf Lektionen. Ein Abschlussfall.",
       courseIntro:
-        "Beginne mit dem Arbeitsmodell. Lege dann Spezifikation, Umfang und Akzeptanz fest. Schließe mit einem vollständigen, prüfbaren Ablauf ab.",
+        "Erst das Arbeitsmodell. Dann Spezifikation, Umfang und Akzeptanz. Am Ende ein vollständiger, prüfbarer Ablauf.",
       lessonLabel: (number) => `Lektion ${number}`,
       finalEyebrow: "Einstieg",
       finalTitle: "Lektion 01: das Arbeitsmodell",
       finalBody:
-        "Die erste Lektion trennt die Bearbeitung begrenzter Repository-Aufträge von Autovervollständigung und Chat. Danach prüfst du Aufgabe, Repository-Kontext und Ausführungsgrenze als zusammenhängenden Rahmen.",
+        "Die erste Lektion trennt begrenzte Repository-Aufträge von Autovervollständigung und Chat. Danach betrachtest du Aufgabe, Repository-Kontext und Ausführungsgrenze als einen zusammenhängenden Rahmen.",
       finalCta: "Beginnen",
       breadcrumbs: ["Start", "Kurse", "Codex-Kurs"],
       jsonLdDescription:
@@ -167,7 +167,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       eyebrow: "Codex / course",
       title: "Use Codex under explicit repository controls.",
       intro:
-        "This course treats Codex as a task-oriented coding agent. Learn to supply context, bound changes, require evidence, and review the diff before merge.",
+        "Codex is treated here as a task-oriented coding agent. Supply the context, bound the change, require evidence, read the diff before merge.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
@@ -184,7 +184,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       finalEyebrow: "Entry point",
       finalTitle: "Lesson 01: the operating model",
       finalBody:
-        "The first lesson separates bounded repository tasks from autocomplete and chat. You then examine task, repository context, and execution boundary as one operating contract.",
+        "The first lesson separates bounded repository tasks from autocomplete and chat. After that, task, repository context and execution boundary read as one operating contract.",
       finalCta: "Begin",
       breadcrumbs: ["Home", "Courses", "Codex Course"],
       jsonLdDescription:
@@ -221,7 +221,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       notFoundTitle: "Lesson not found",
     },
     certificateMetadata: {
-      title: "Certificate of completion: Codex Course",
+      title: "Certificate of participation: Codex Course",
       description:
         "Download the locally generated completion record for the Codex Course.",
     },

@@ -9,9 +9,9 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Teams auf klar verantwortete Ergebnisse ausrichten",
     subtitle:
-      "Die Teamstruktur aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiken statt aus einer allgemeinen Größenregel ableiten.",
+      "Teamgröße folgt aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiko, nicht aus einer Faustregel.",
     objective:
-      "Die Teamstruktur aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiken statt aus einer allgemeinen Größenregel ableiten.",
+      "Teamgröße folgt aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiko, nicht aus einer Faustregel.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Mit dem Verantwortungsbereich beginnen",
         readTimeMinutes: 7,
         content:
-          "Definieren Sie das Ergebnis, für das ein Team verantwortlich ist, die bedienten Nutzergruppen, die Leistungszusagen, Abhängigkeiten, Entscheidungsrechte und Kontrollpflichten. Ermitteln Sie danach Arbeitslast und benötigte Fähigkeiten. Klare Verantwortung kann Übergaben verringern; die Teamgröße hängt dennoch von Nachfrage, notwendiger Erreichbarkeit, Komplexität und Risiko ab.",
+          "Beginne beim Ergebnis, für das ein Team verantwortlich ist: bediente Nutzergruppen, Leistungszusagen, Abhängigkeiten, Entscheidungsrechte, Kontrollpflichten. Erst danach Arbeitslast und benötigte Fähigkeiten. Klare Verantwortung spart Übergaben. Die Teamgröße hängt trotzdem an Nachfrage, notwendiger Erreichbarkeit, Komplexität und Risiko.",
       },
       {
         id: "s2",
         title: "Kapazitätsoptionen ausdrücklich bewerten",
         readTimeMinutes: 7,
         content:
-          "Ein Kapazitätsantrag sollte Arbeitslast, Engpässe, Auswirkungen auf zugesagte Leistungen, Kontrollvorgaben und bereits geprüfte Optionen zeigen. Mögliche Optionen sind Prozessänderungen, eine Begrenzung des Umfangs, bessere Werkzeuge, Automatisierung, Schulung oder zusätzliche Personen. Die Belege stützen eine Entscheidung; sie begründen keine Regel, nach der jedes Team vor einer Einstellung automatisieren muss.",
+          "Ein Kapazitätsantrag zeigt Arbeitslast, Engpässe, Auswirkungen auf zugesagte Leistungen, Kontrollvorgaben und die bereits geprüften Optionen. Optionen sind Prozessänderungen, weniger Umfang, bessere Werkzeuge, Automatisierung, Schulung oder zusätzliche Personen. Die Belege stützen eine Entscheidung. Eine Regel, nach der jedes Team vor jeder Einstellung erst automatisieren muss, folgt daraus nicht.",
       },
       {
         id: "s3",
         title: "Die Struktur anhand von Betriebsdaten anpassen",
         readTimeMinutes: 6,
         content:
-          "Größere oder anders zusammengesetzte Teams können für regulierte Arbeit, Fachentscheidungen, physische Abläufe, Rufbereitschaft, Barrierefreiheit oder anhaltende Nachfrage notwendig sein. Beobachten Sie nach einer Änderung Arbeitslast, Qualität, Störungen, Alter offener Vorgänge und Belastung der Beschäftigten. Vergrößern, teilen oder verbinden Sie das Team neu, wenn diese Signale zeigen, dass der Verantwortungsbereich nicht funktioniert.",
+          "Regulierte Arbeit, Fachentscheidungen, physische Abläufe, Rufbereitschaft, Barrierefreiheit und anhaltende Nachfrage brauchen oft größere oder anders zusammengesetzte Teams. Beobachte nach jeder Änderung Arbeitslast, Qualität, Störungen, Alter offener Vorgänge und Belastung der Beschäftigten. Zeigen diese Signale, dass der Verantwortungsbereich nicht trägt, vergrößerst, teilst oder verbindest du das Team neu.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +49,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Verantwortungsbereich eines Teams",
           scenario:
-            "Wählen Sie ein Team oder einen Produktbereich. Erfassen Sie verantwortetes Ergebnis, Nutzergruppen, Leistungszusagen, Abhängigkeiten, Entscheidungsrechte, Kontrollpflichten, Arbeitslast, benötigte Fähigkeiten und Kapazitätssignale.",
+            "Nimm ein Team oder einen Produktbereich. Erfasse verantwortetes Ergebnis, Nutzergruppen, Leistungszusagen, Abhängigkeiten, Entscheidungsrechte, Kontrollpflichten, Arbeitslast, benötigte Fähigkeiten und Kapazitätssignale.",
           rows: 5,
         },
       },
@@ -63,9 +63,9 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Breite Verantwortung mit fachlicher Prüfung verbinden",
     subtitle:
-      "Umfassende Zuständigkeit zur Verringerung von Übergaben nutzen und fachliche Verantwortung dort bewahren, wo Fehlerkosten sie erfordern.",
+      "Breite Zuständigkeit spart Übergaben. Fachliche Verantwortung bleibt dort, wo Fehlerkosten sie verlangen.",
     objective:
-      "Umfassende Zuständigkeit zur Verringerung von Übergaben nutzen und fachliche Verantwortung dort bewahren, wo Fehlerkosten sie erfordern.",
+      "Breite Zuständigkeit spart Übergaben. Fachliche Verantwortung bleibt dort, wo Fehlerkosten sie verlangen.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
@@ -75,14 +75,14 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Breite Verantwortung braucht klare Grenzen",
         readTimeMinutes: 9,
         content:
-          "Eine breit aufgestellte Person kann Arbeit über mehrere Fachgebiete koordinieren und Werkzeuge einsetzen, um Kontext abzurufen, Artefakte zu entwerfen oder begrenzte Analysen auszuführen. Das kann Übergaben verringern, doch ein Modell erzeugt weder Fachkunde noch Verantwortung. Legen Sie fest, welche Entscheidungen diese Person treffen darf und welche fachliche Zuständigkeit oder Prüfung erfordern.",
+          "Eine breit aufgestellte Person koordiniert Arbeit über mehrere Fachgebiete und nutzt Werkzeuge, um Kontext abzurufen, Artefakte zu entwerfen oder begrenzte Analysen zu fahren. Das spart Übergaben. Fachkunde und Verantwortung erzeugt kein Modell. Also leg fest, welche Entscheidungen diese Person selbst trifft und welche fachliche Zuständigkeit oder Prüfung brauchen.",
       },
       {
         id: "s2",
         title: "Fachliche Prüfpunkte nach Risiko setzen",
         readTimeMinutes: 9,
         content:
-          "Fachleute können fachliche Entscheidungen mit hohen Folgen verantworten, ausgewählte Arbeit prüfen, neuartige Fälle untersuchen und wiederkehrende Hinweise in Standards oder Evaluationskriterien überführen. Leiten Sie die Einbindung aus Fehlerkosten, Neuartigkeit, Regulierung und Umkehrbarkeit ab. Beobachten Sie, ob der Prüfpunkt Schäden verhindert, ohne eine vermeidbare Warteschlange zu erzeugen.",
+          "Fachleute verantworten folgenreiche Fachentscheidungen, prüfen ausgewählte Arbeit, untersuchen neuartige Fälle und überführen wiederkehrende Hinweise in Standards oder Evaluationskriterien. Ihre Einbindung folgt Fehlerkosten, Neuartigkeit, Regulierung und Umkehrbarkeit. Prüf danach, ob der Prüfpunkt Schäden verhindert oder nur eine Warteschlange erzeugt.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -95,7 +95,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "orgmodel/2",
           cpId: "exercise",
           scenario:
-            "Bestimmen Sie zwei Abläufe, in denen eine breit aufgestellte Person die Hauptverantwortung mit einem fachlichen Prüfpunkt übernehmen kann. Definieren Sie Entscheidungsgrenze, Prüfauslöser, Belegpaket, Reaktionszeit und Eskalationsverantwortung.",
+            "Bestimme zwei Abläufe, in denen eine breit aufgestellte Person die Hauptverantwortung mit einem fachlichen Prüfpunkt trägt. Lege Entscheidungsgrenze, Prüfauslöser, Belegpaket, Reaktionszeit und Eskalationsverantwortung fest.",
           rows: 3,
         },
       },
@@ -121,14 +121,14 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Jede Freigabe einem Zweck zuordnen",
         readTimeMinutes: 7,
         content:
-          "Erfassen Sie für jede Freigabe das Entscheidungsrecht, das behandelte Risiko, die benötigten Belege und die verantwortliche Rolle. Entfernen Sie Schritte, die dieselbe Prüfung wiederholen, ohne Informationen oder Kontrolle hinzuzufügen. Erhalten Sie Freigaben, die wegen Tragweite, Regulierung, unabhängiger Aufsicht oder Funktionstrennung erforderlich sind.",
+          "Notiere zu jeder Freigabe das Entscheidungsrecht, das behandelte Risiko, die nötigen Belege und die verantwortliche Rolle. Streiche jeden Schritt, der dieselbe Prüfung wiederholt, ohne Information oder Kontrolle hinzuzufügen. Was wegen Tragweite, Regulierung, unabhängiger Aufsicht oder Funktionstrennung nötig ist, bleibt.",
       },
       {
         id: "s2",
         title: "Entscheidungsvorlagen als ungeprüfte Hilfsmittel nutzen",
         readTimeMinutes: 7,
         content:
-          "Ein Modell kann eine Vorlage mit durch Quellen belegten Fakten, Optionen, Annahmen, Risiken und offenen Punkten zusammenstellen. Freigabeverantwortliche müssen die Quellen prüfen und Auslassungen korrigieren können. Die Vorlage bestimmt weder die notwendige Zahl der Freigaben noch überträgt sie die Verantwortung von den Menschen mit den Entscheidungsrechten.",
+          "Ein Modell kann eine Vorlage bauen: belegte Fakten, Optionen, Annahmen, Risiken, offene Punkte. Freigabeverantwortliche müssen die Quellen prüfen und Auslassungen korrigieren können. Die Vorlage bestimmt nicht, wie viele Freigaben nötig sind. Und sie nimmt niemandem die Verantwortung ab, der ein Entscheidungsrecht hält.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -141,7 +141,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "orgmodel/3",
           cpId: "exercise",
           scenario:
-            "Zeichnen Sie eine Freigabekette auf. Erfassen Sie für jeden Schritt Entscheidungsrecht, Risiko, Belege und verantwortliche Rolle. Entfernen Sie doppelte Schritte und legen Sie fest, wo eine durch Quellen belegte Entscheidungsvorlage die verbleibenden Freigaben unterstützt.",
+            "Zeichne eine Freigabekette auf. Notiere je Schritt Entscheidungsrecht, Risiko, Belege und verantwortliche Rolle. Streiche doppelte Schritte und markiere, wo eine belegte Entscheidungsvorlage die verbleibenden Freigaben stützt.",
           rows: 4,
         },
       },
@@ -153,16 +153,16 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Wissensprüfung zu Modul 6",
-    subtitle: "Prüfen Sie die Organisationskontrollen dieses Moduls.",
-    objective: "Prüfen Sie die Organisationskontrollen dieses Moduls.",
+    title: "Modul 6, Wissensprüfung",
+    subtitle: "Zwei Fragen zu den Organisationskontrollen.",
+    objective: "Zwei Fragen zu den Organisationskontrollen.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-orgmodel-q1",
         questionText:
-          "Ein Team beantragt zusätzliche Stellen. Was sollte die Leitung zuerst tun?",
+          "Ein Team beantragt zusätzliche Stellen. Was tut die Geschäftsführerin zuerst?",
         answerOptions: [
           {
             id: "a",
@@ -186,12 +186,11 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine Kapazitätsentscheidung braucht Belege zu Nachfrage, Auswirkungen auf zugesagte Leistungen, Engpässen, Risiko und möglichen Optionen. Automatisierung kann eine Option sein. Weder die Mittelverfügbarkeit noch der Nachweis früherer Automatisierung reichen jedoch als Regel für die Genehmigung oder Ablehnung zusätzlicher Personen.",
+          "Eine Kapazitätsentscheidung braucht Belege zu Nachfrage, Auswirkung auf zugesagte Leistungen, Engpässen, Risiko und möglichen Optionen. Automatisierung ist eine dieser Optionen. Weder verfügbare Mittel noch der Nachweis früherer Automatisierung taugen als Regel für Zusage oder Absage.",
       },
       {
         id: "ano-orgmodel-q2",
-        questionText:
-          "Wo schaffen Fachleute den größten organisatorischen Wert?",
+        questionText: "Wo wirken Fachleute organisatorisch am stärksten?",
         answerOptions: [
           {
             id: "a",
@@ -215,7 +214,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Fachleute sind besonders wertvoll, wenn Fehlerkosten, Neuartigkeit oder Regulierung fundierte Fachurteile erfordern. Sie können eine Entscheidung verantworten, begrenzte Arbeit prüfen, neuartige Fälle bearbeiten und wiederkehrende Hinweise nutzbar machen. Ihre Rolle folgt dem Risiko und nicht einem allgemeinen Beratungsmodell.",
+          "Fachleute zählen dort am meisten, wo Fehlerkosten, Neuartigkeit oder Regulierung ein fundiertes Fachurteil verlangen. Sie verantworten eine Entscheidung, prüfen begrenzte Arbeit, bearbeiten neuartige Fälle und machen wiederkehrende Hinweise nutzbar. Ihre Rolle folgt dem Risiko, nicht einem allgemeinen Beratungsmodell.",
       },
     ],
     sections: [],

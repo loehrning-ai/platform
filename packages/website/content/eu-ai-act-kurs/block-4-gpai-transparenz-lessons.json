@@ -1,8 +1,8 @@
 {
   "blockId": "block_4",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -15,7 +15,7 @@
       "blockId": "block_4",
       "number": 1,
       "title": "GPAI-Modelle verstehen",
-      "subtitle": "Wann ein Modell unter Kapitel V fällt und welche Pflichten Anbieter trifft",
+      "subtitle": "Wann ein Modell unter Kapitel V fällt und welche Pflichten seinen Anbieter treffen",
       "durationMinutes": 5,
       "keyConcepts": [
         "KI-Modell mit allgemeinem Verwendungszweck",
@@ -30,22 +30,22 @@
           "id": "block_4_lesson_1_section_1",
           "title": "Was ist ein GPAI-Modell und wer ist Anbieter?",
           "readTimeMinutes": 2,
-          "content": "Ein **KI-Modell mit allgemeinem Verwendungszweck** (GPAI) ist ein Modell, das eine breite Palette unterschiedlicher Aufgaben erfüllen kann und in viele nachgelagerte Systeme integriert wird. Typische Beispiele sind GPT-4, Claude, Gemini, Llama oder Mistral (Erwägungsgrund 97-99, Verordnung (EU) 2024/1689).\n\n**Anbieter** im Sinne der KI-VO ist, wer ein Modell entwickelt oder entwickeln lässt und unter eigenem Namen in den Verkehr bringt. Wer ein bestehendes GPAI-Modell lediglich in eigene Produkte integriert, ist **nachgelagerter Anbieter** eines KI-Systems (Art. 3 Nr. 68).\n\nFür den Mittelstand bedeutet das: Sie bauen keine GPAI-Modelle. Sie sind entweder **Betreiber** (wenn Sie ein KI-System nur nutzen) oder **nachgelagerter Anbieter** (wenn Sie ein Modell in Ihr eigenes Produkt einbetten). Art. 53-55 treffen primär OpenAI, Anthropic, Google, Mistral und Aleph Alpha, nicht Sie.\n\nBeispiel: Ein Maschinenbauer integriert GPT-4 über die OpenAI-API in seinen Kundensupport-Chatbot. Anbieter des Modells bleibt OpenAI. Der Maschinenbauer ist nachgelagerter Anbieter eines KI-Systems. Art. 53 trifft ihn nicht. Art. 50 Abs. 1 (Chatbot-Hinweis) schon.",
-          "keyTakeaway": "Der Mittelstand baut keine GPAI-Modelle. Art. 53-55 adressieren die globalen Foundation-Model-Anbieter. Sie sind Betreiber oder nachgelagerter Anbieter."
+          "content": "Ein Maschinenbauer hängt GPT-4 über die OpenAI-API an seinen Kundensupport-Chatbot. Anbieter des Modells bleibt OpenAI. Der Maschinenbauer ist nachgelagerter Anbieter eines KI-Systems: Art. 53 trifft ihn nicht, Art. 50 Abs. 1 (Chatbot-Hinweis) schon.\n\nDie Begriffe dahinter: Ein **KI-Modell mit allgemeinem Verwendungszweck** (GPAI) erfüllt eine breite Palette unterschiedlicher Aufgaben und wird in viele nachgelagerte Systeme integriert. GPT-4, Claude, Gemini, Llama, Mistral (Erwägungsgrund 97-99, Verordnung (EU) 2024/1689).\n\n**Anbieter** im Sinne der KI-VO ist, wer ein Modell entwickelt oder entwickeln lässt und unter eigenem Namen in Verkehr bringt. Wer ein bestehendes GPAI-Modell nur in eigene Produkte integriert, ist **nachgelagerter Anbieter** eines KI-Systems (Art. 3 Nr. 68).\n\nFür den Mittelstand heißt das: Sie bauen keine GPAI-Modelle. Sie sind **Betreiber**, wenn Sie ein KI-System nur nutzen, oder **nachgelagerter Anbieter**, wenn Sie ein Modell in Ihr Produkt einbetten. Art. 53-55 zielen auf OpenAI, Anthropic, Google, Mistral und Aleph Alpha. Nicht auf Sie.",
+          "keyTakeaway": "Art. 53-55 adressieren die Anbieter der Basismodelle. Sie sind Betreiber oder nachgelagerter Anbieter, und beide Rollen haben eigene Pflichten."
         },
         {
           "id": "block_4_lesson_1_section_2",
           "title": "Die vier Anbieter-Pflichten nach Art. 53",
           "readTimeMinutes": 2,
-          "content": "Art. 53 Abs. 1 legt für jeden GPAI-Anbieter vier Pflichten fest, unabhängig vom Modellrisiko:\n\n- **Technische Dokumentation** (Art. 53 Abs. 1 Buchst. a): Inhalte nach Anhang XI, inklusive Trainings- und Bewertungsverfahren. Auf Anfrage an das AI Office herauszugeben.\n- **Downstream-Information** (Art. 53 Abs. 1 Buchst. b): Informationen für nachgelagerte Anbieter nach Anhang XII, damit diese das Modell verstehen und compliant integrieren können.\n- **Urheberrechts-Strategie** (Art. 53 Abs. 1 Buchst. c): Insbesondere die Beachtung des Text-and-Data-Mining-Opt-outs nach Art. 4 Abs. 3 Richtlinie (EU) 2019/790.\n- **Trainingsdaten-Zusammenfassung** (Art. 53 Abs. 1 Buchst. d): Hinreichend detaillierte Zusammenfassung nach Vorlage des AI Office.\n\n**Open-Source-Ausnahme** (Art. 53 Abs. 2): Für frei lizenzierte Modelle entfallen Buchst. a und b, aber nicht, wenn systemisches Risiko vorliegt. Buchst. c und d (Urheberrecht, Trainingsdaten) gelten immer, auch für Open-Source.\n\n**Drittland-Anbieter** (z. B. OpenAI, Anthropic) müssen zusätzlich vor Inverkehrbringen einen **EU-Bevollmächtigten** benennen (Art. 54 Abs. 1). Dieser ist Adressat für Behördenkommunikation in der Union.",
-          "keyTakeaway": "Vier Pflichten: Dokumentation, Downstream-Info, Urheberrecht, Trainingsdaten-Summary. Open-Source spart nur die ersten beiden. Urheberrecht und Trainingsdaten gelten immer."
+          "content": "Vier Pflichten, für jeden GPAI-Anbieter, unabhängig vom Risiko des Modells (Art. 53 Abs. 1):\n\n- **Technische Dokumentation** (Art. 53 Abs. 1 Buchst. a): Inhalte nach Anhang XI, inklusive Trainings- und Bewertungsverfahren. Auf Anfrage geht sie an das AI Office.\n- **Downstream-Information** (Art. 53 Abs. 1 Buchst. b): Informationen für nachgelagerte Anbieter nach Anhang XII, damit die das Modell verstehen und regelkonform integrieren können.\n- **Urheberrechts-Strategie** (Art. 53 Abs. 1 Buchst. c): vor allem die Beachtung des Text-and-Data-Mining-Opt-outs nach Art. 4 Abs. 3 Richtlinie (EU) 2019/790.\n- **Trainingsdaten-Zusammenfassung** (Art. 53 Abs. 1 Buchst. d): hinreichend detailliert, nach der Vorlage des AI Office.\n\n**Open-Source-Ausnahme** (Art. 53 Abs. 2): Für frei lizenzierte Modelle entfallen Buchst. a und b. Nicht aber bei systemischem Risiko. Und Buchst. c und d (Urheberrecht, Trainingsdaten) gelten immer, auch für Open-Source.\n\n**Drittland-Anbieter** (z. B. OpenAI, Anthropic) benennen vor dem Inverkehrbringen zusätzlich einen **EU-Bevollmächtigten** (Art. 54 Abs. 1). An ihn wenden sich die Behörden in der Union.",
+          "keyTakeaway": "Vier Pflichten: Dokumentation, Downstream-Info, Urheberrecht, Trainingsdaten-Zusammenfassung. Open-Source spart nur die ersten beiden, und nur ohne systemisches Risiko."
         },
         {
           "id": "block_4_lesson_1_section_3",
           "title": "Kettenwirkung für den Mittelstand",
           "readTimeMinutes": 1,
-          "content": "Auch wenn Art. 53 Sie nicht direkt trifft: Sie sind auf die Anbieter-Dokumentation angewiesen. Ohne Model Documentation Form und Trainingsdaten-Summary können Sie als nachgelagerter Anbieter Ihre eigenen Pflichten (Hochrisiko-Einordnung, Transparenz nach Art. 50) nicht erfüllen.\n\n**Mittelstand-Checkliste für Vendor-Selection:**\n\n- Ist mein LLM-Lieferant **CoP-Signatar**? Die offizielle Signatarliste liegt auf `digital-strategy.ec.europa.eu`.\n- Liegt ein **Model Documentation Form** nach Anhang XII vor?\n- Existiert eine **Trainingsdaten-Zusammenfassung** nach AI-Office-Vorlage?\n- Gibt es einen benannten **EU-Bevollmächtigten** (Art. 54 Abs. 1)?\n\nAnbieter, die dem **GPAI Code of Practice** folgen, können die Einhaltung als Mittel zum Nachweis der Compliance nutzen, bis harmonisierte Normen nach Art. 40-41 vorliegen (Art. 53 Abs. 4). Das ist keine Konformitätsvermutung im rechtlichen Sinne, macht die CoP-Signatur aber zum schnellsten Filter bei der Vendor-Auswahl. (Quelle: AI Office, GPAI Code of Practice, 10. Juli 2025; Art. 53 Abs. 4 Verordnung (EU) 2024/1689)",
-          "keyTakeaway": "Vendor-Selection wird zur Compliance-Entscheidung. Ohne Anbieter-Dokumentation erfüllen Sie Ihre eigenen Pflichten nicht. CoP-Signatur ist der schnellste Qualitätsfilter."
+          "content": "Art. 53 trifft Sie nicht, abhängig sind Sie trotzdem: Ohne Model Documentation Form und Trainingsdaten-Zusammenfassung des Modellanbieters können Sie als nachgelagerter Anbieter Ihre eigenen Pflichten nicht erfüllen, weder die Hochrisiko-Einordnung noch die Transparenz nach Art. 50.\n\n**Checkliste für die Vendor-Auswahl:**\n\n- Ist mein LLM-Lieferant **CoP-Signatar**, und welche Kapitel hat er unterzeichnet? Die offizielle Signatarliste liegt auf `digital-strategy.ec.europa.eu`.\n- Liegt ein **Model Documentation Form** nach Anhang XII vor?\n- Gibt es eine **Trainingsdaten-Zusammenfassung** nach AI-Office-Vorlage?\n- Ist ein **EU-Bevollmächtigter** benannt (Art. 54 Abs. 1)?\n\nAnbieter, die dem **GPAI Code of Practice** folgen, können die Einhaltung als Mittel zum Nachweis der Compliance nutzen, bis harmonisierte Normen nach Art. 40-41 vorliegen (Art. 53 Abs. 4). Das ist keine Konformitätsvermutung im rechtlichen Sinne. Die Signatur belegt Zusagen, nicht deren Einhaltung: kein Qualitätsurteil, aber ein brauchbarer erster Filter, bevor Sie Dokumentation und Verträge prüfen. (Quelle: AI Office, GPAI Code of Practice, 10. Juli 2025; Art. 53 Abs. 4 Verordnung (EU) 2024/1689)",
+          "keyTakeaway": "Vendor-Auswahl ist eine Compliance-Entscheidung. Ohne Anbieter-Dokumentation erfüllen Sie Ihre eigenen Pflichten nicht. Die CoP-Signatur ist der schnellste erste Filter, kein Qualitätsurteil."
         }
       ],
       "quiz": [
@@ -74,7 +74,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Anbieter ist, wer das Modell entwickelt und unter eigenem Namen in Verkehr bringt (Art. 3 Nr. 68). OpenAI bleibt Anbieter. Der Maschinenbauer ist nachgelagerter Anbieter eines KI-Systems. Art. 53 trifft ihn nicht, Art. 50 Abs. 1 (Chatbot-Hinweis) sehr wohl."
+          "explanation": "Anbieter ist, wer das Modell entwickelt und unter eigenem Namen in Verkehr bringt (Art. 3 Nr. 68). Das bleibt OpenAI. Der Maschinenbauer ist nachgelagerter Anbieter eines KI-Systems: Art. 53 trifft ihn nicht, Art. 50 Abs. 1 (Chatbot-Hinweis) sehr wohl."
         },
         {
           "id": "block_4_lesson_1_q2",
@@ -101,7 +101,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 53 Abs. 2 nimmt Open-Source-Modelle ohne systemisches Risiko von Buchst. a (Dokumentation) und Buchst. b (Downstream-Info) aus. Urheberrechts-Strategie und Trainingsdaten-Summary (Buchst. c und d) gelten immer, auch Open-Source."
+          "explanation": "Art. 53 Abs. 2 nimmt Open-Source-Modelle ohne systemisches Risiko von Buchst. a (Dokumentation) und Buchst. b (Downstream-Info) aus. Urheberrechts-Strategie und Trainingsdaten-Zusammenfassung (Buchst. c und d) gelten immer, auch für Open-Source."
         },
         {
           "id": "block_4_lesson_1_q3",
@@ -128,7 +128,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 54 Abs. 1 verpflichtet Drittland-Anbieter von GPAI-Modellen, vor Inverkehrbringen auf dem Unionsmarkt einen EU-Bevollmächtigten zu benennen. Dieser ist Ansprechpartner für das AI Office und andere Aufsichtsbehörden."
+          "explanation": "Art. 54 Abs. 1 verpflichtet Drittland-Anbieter von GPAI-Modellen, vor dem Inverkehrbringen auf dem Unionsmarkt einen EU-Bevollmächtigten zu benennen. Er ist der Ansprechpartner für das AI Office und die anderen Aufsichtsbehörden."
         }
       ]
     },
@@ -137,7 +137,7 @@
       "blockId": "block_4",
       "number": 2,
       "title": "Systemic Risk und der GPAI Code of Practice",
-      "subtitle": "Was ab 10^25 FLOPs passiert und warum der Mittelstand indirekt betroffen ist",
+      "subtitle": "Was ab 10^25 FLOPs passiert und warum es Sie trotzdem angeht",
       "durationMinutes": 5,
       "keyConcepts": [
         "Systemisches Risiko (Art. 51 Abs. 1)",
@@ -152,22 +152,22 @@
           "id": "block_4_lesson_2_section_1",
           "title": "Wann ist ein GPAI-Modell systemisch riskant?",
           "readTimeMinutes": 2,
-          "content": "Art. 51 Abs. 1 definiert zwei alternative Wege zur Einstufung als **GPAI-Modell mit systemischem Risiko**:\n\n- **Buchst. a, Fähigkeiten mit hohem Wirkungsgrad**, gemessen mit geeigneten Indikatoren und Benchmarks.\n- **Buchst. b, Kommissionsentscheidung** nach den Kriterien in Anhang XIII.\n\nDie **Vermutungsregel** steht in Art. 51 Abs. 2: Ein Modell gilt als Modell mit Fähigkeiten hohen Wirkungsgrades, wenn die kumulierte Trainings-Compute mehr als **10^25 Gleitkommaoperationen** beträgt. Die Kommission kann die Schwelle per delegiertem Rechtsakt anpassen (Art. 51 Abs. 3).\n\nEin Produkt- oder Modellfamilienname beweist die Einstufung nicht. Prüfen Sie die aktuelle Kommissionsentscheidung, Anbieterinformation und Modellversion. Betreiberpflichten folgen außerdem aus dem eigenen System, Zweck und Einsatzkontext; die Nutzung eines systemischen GPAI-Modells macht den Betreiber nicht automatisch zum GPAI-Anbieter.",
-          "keyTakeaway": "Art. 51 enthält eine widerlegbare Compute-Vermutung und eine Kommissionsentscheidung. Modellnamen und pauschale Anbieterlisten ersetzen die aktuelle Einstufung nicht."
+          "content": "10^25 Gleitkommaoperationen. Ab dieser kumulierten Trainings-Compute vermutet die KI-VO Fähigkeiten mit hohem Wirkungsgrad (Art. 51 Abs. 2). Zum **GPAI-Modell mit systemischem Risiko** führen zwei Wege (Art. 51 Abs. 1):\n\n- **Buchst. a, Fähigkeiten mit hohem Wirkungsgrad**, gemessen mit geeigneten Indikatoren und Benchmarks.\n- **Buchst. b, Kommissionsentscheidung** nach den Kriterien in Anhang XIII.\n\nDie Schwelle ist eine Vermutung, keine feste Grenze: Die Kommission kann sie per delegiertem Rechtsakt anpassen (Art. 51 Abs. 3), der Anbieter kann Gegenargumente vorlegen (nächster Abschnitt).\n\nEin Produkt- oder Modellfamilienname beweist die Einstufung nicht. Prüfen Sie die aktuelle Kommissionsentscheidung, die Anbieterinformation und die Modellversion. Und: Wer ein systemisches GPAI-Modell nutzt, wird dadurch nicht zum GPAI-Anbieter; Ihre Betreiberpflichten folgen aus Ihrem System, seinem Zweck und dem Einsatzkontext.",
+          "keyTakeaway": "Art. 51: eine widerlegbare Compute-Vermutung ab 10^25 FLOPs oder eine Kommissionsentscheidung. Ein Modellname ist keine Einstufung; die aktuelle Entscheidung zählt."
         },
         {
           "id": "block_4_lesson_2_section_2",
           "title": "Notifizierung und Zusatzpflichten nach Art. 55",
           "readTimeMinutes": 2,
-          "content": "**Notifizierungspflicht** (Art. 52 Abs. 1): Wer die Schwelle erreicht oder absehbar erreicht, meldet dies der Kommission **unverzüglich, in jedem Fall binnen zwei Wochen**. Der Anbieter kann nach Art. 52 Abs. 2 begründete Gegenargumente vorlegen, warum sein Modell trotz Schwellenüberschreitung kein systemisches Risiko birgt. Die Kommission kann das ablehnen.\n\n**Zusatzpflichten Art. 55 Abs. 1** (additiv zu Art. 53 und Art. 54):\n\n- **Modellbewertung** mit standardisierten Protokollen inklusive Adversarial Testing.\n- **Bewertung und Minderung** systemischer Risiken auf Unionsebene.\n- **Meldung schwerer Vorfälle** an das AI Office und gegebenenfalls nationale Behörden.\n- **Angemessene Cybersicherheit** für Modell und physische Infrastruktur.\n\n**Zeitlicher Anwendungsbeginn:** Die GPAI-Pflichten aus Kapitel V gelten ab **2. August 2025**. Die Kommissionsdurchsetzung gegenüber GPAI-Anbietern beginnt ab **2. August 2026**.",
+          "content": "**Zwei Wochen.** Wer die Schwelle erreicht oder absehbar erreicht, meldet das der Kommission **unverzüglich, in jedem Fall binnen zwei Wochen** (Art. 52 Abs. 1). Der Anbieter kann nach Art. 52 Abs. 2 begründet darlegen, warum sein Modell trotz Schwellenüberschreitung kein systemisches Risiko birgt. Die Kommission kann das ablehnen.\n\n**Zusatzpflichten Art. 55 Abs. 1** (zusätzlich zu Art. 53 und Art. 54):\n\n- **Modellbewertung** mit standardisierten Protokollen inklusive Adversarial Testing.\n- **Bewertung und Minderung** systemischer Risiken auf Unionsebene.\n- **Meldung schwerer Vorfälle** an das AI Office und gegebenenfalls nationale Behörden.\n- **Angemessene Cybersicherheit** für Modell und physische Infrastruktur.\n\n**Zeitlicher Anwendungsbeginn:** Kapitel V gilt seit **2. August 2025**. Die Kommission setzt gegenüber GPAI-Anbietern ab **2. August 2026** durch.",
           "keyTakeaway": "Zwei-Wochen-Meldefrist (Art. 52 Abs. 1). Zusatzpflichten Art. 55: Modellbewertung, Risikominderung, Vorfallmeldung, Cybersicherheit. Kapitel V gilt seit 2. August 2025."
         },
         {
           "id": "block_4_lesson_2_section_3",
           "title": "GPAI Code of Practice als pragmatischer Pfad",
           "readTimeMinutes": 1,
-          "content": "Der **GPAI Code of Practice** wurde am **10. Juli 2025** nach einem Multistakeholder-Prozess veröffentlicht. Er gliedert sich in Transparency, Copyright sowie Safety & Security.\n\nDer Code ist **freiwillig**. Anbieter können seine Einhaltung als Mittel zum Nachweis ihrer Pflichten nutzen; daraus folgt keine automatische Konformitätsvermutung. Unterzeichnerlisten und der Umfang einzelner Beitritte können sich ändern und müssen auf der aktuellen Seite des AI Office geprüft werden.\n\nDas AI Office beaufsichtigt GPAI-Anbieter auf EU-Ebene nach dem gesetzlichen Zuständigkeitsregime. Welche Behörde für ein darauf aufbauendes KI-System zuständig ist, hängt von Anbieter, System, Rolle, Sektor und den Sonderregeln des Art. 88 ab.",
-          "keyTakeaway": "Der GPAI Code of Practice (10. Juli 2025) ist ein freiwilliges Instrument, das Anbietern erlaubt, die Einhaltung als Mittel zum Nachweis der Compliance zu nutzen, keine Konformitätsvermutung im rechtlichen Sinne. Ob ein LLM-Anbieter CoP-Signatar ist, bleibt ein nützliches Vendor-Kriterium.",
+          "content": "Der **GPAI Code of Practice** ist am **10. Juli 2025** erschienen, nach einem Multistakeholder-Prozess, in drei Kapiteln: Transparency, Copyright, Safety & Security.\n\nDer Code ist **freiwillig**. Wer ihn einhält, kann das als Mittel zum Nachweis seiner Pflichten nutzen; eine automatische Konformitätsvermutung folgt daraus nicht. Unterzeichnerlisten und der Umfang einzelner Beitritte ändern sich, also prüfen Sie die aktuelle Seite des AI Office.\n\nGPAI-Anbieter beaufsichtigt das AI Office auf EU-Ebene nach dem gesetzlichen Zuständigkeitsregime. Welche Behörde für ein KI-System zuständig ist, das auf so einem Modell aufbaut, hängt von Anbieter, System, Rolle, Sektor und den Sonderregeln des Art. 88 ab.",
+          "keyTakeaway": "Der GPAI Code of Practice (10. Juli 2025) ist freiwillig: Anbieter können die Einhaltung als Mittel zum Nachweis der Compliance nutzen, eine Konformitätsvermutung im rechtlichen Sinne ist das nicht. Ob Ihr LLM-Anbieter unterzeichnet hat, bleibt ein brauchbares Vendor-Kriterium.",
           "_claimRef": "gpai-code-compliance-demonstration-only",
           "sources": [
             {
@@ -256,7 +256,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der GPAI Code of Practice wurde am 10. Juli 2025 vom AI Office nach mehrmonatigem Multistakeholder-Prozess veröffentlicht. Er umfasst drei Kapitel (Transparency, Copyright, Safety & Security). Unterzeichner können die Einhaltung als Mittel zum Nachweis der Compliance nutzen (Art. 53 Abs. 4); eine Konformitätsvermutung im rechtlichen Sinne begründet der Code of Practice nicht."
+          "explanation": "Das AI Office hat den GPAI Code of Practice am 10. Juli 2025 nach einem mehrmonatigen Multistakeholder-Prozess veröffentlicht, in drei Kapiteln (Transparency, Copyright, Safety & Security). Unterzeichner können die Einhaltung als Mittel zum Nachweis der Compliance nutzen (Art. 53 Abs. 4); eine Konformitätsvermutung im rechtlichen Sinne begründet der Code nicht."
         }
       ]
     },
@@ -265,7 +265,7 @@
       "blockId": "block_4",
       "number": 3,
       "title": "Art. 4 als Organisationspflicht",
-      "subtitle": "Wie Geschäftsführer KI-Kompetenz strukturell verankern, nicht wie ein Mitarbeiter sie lernt",
+      "subtitle": "Warum Art. 4 die Geschäftsführung trifft und nicht die Mitarbeiterin, die den Kurs macht",
       "durationMinutes": 5,
       "keyConcepts": [
         "Organisationspflicht (keine Individualpflicht)",
@@ -280,22 +280,22 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Wortlaut und Reichweite von Art. 4",
           "readTimeMinutes": 2,
-          "content": "Art. 4 Abs. 1 KI-VO verpflichtet **Anbieter und Betreiber** von KI-Systemen, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Ausbildung, Einsatzkontext sowie die Personen oder Gruppen, bei denen die Systeme eingesetzt werden.\n\nDie am **27. Juli 2026** in Kraft getretene Verordnung (EU) 2026/1744 stellt ausdrücklich klar: Anbieter und Betreiber müssen **kein bestimmtes individuelles Kompetenzniveau garantieren**. Die Pflicht zu unterstützenden, kontextgerechten Maßnahmen bleibt bestehen.\n\n**Adressat ist die Organisation, nicht der einzelne Mitarbeiter.** Die Legaldefinition in **Art. 3 Nr. 56** beschreibt KI-Kompetenz als Fähigkeiten, Kenntnisse und Verständnis, die es ermöglichen, KI-Systeme sachkundig einzusetzen sowie sich der Chancen und Risiken bewusst zu werden.\n\n**Anwendbar seit 2. Februar 2025.** Die KI-VO nennt keinen Zertifikatsstandard für Art. 4. Organisationen sollten nachvollziehbar dokumentieren, welche rollen- und risikogerechten Maßnahmen sie gewählt haben. Ein einzelner Kurs erfüllt die Pflicht nicht automatisch.",
-          "keyTakeaway": "Art. 4 verpflichtet Anbieter und Betreiber zu kontextgerechten Maßnahmen, die KI-Kompetenz entwickeln. Seit 27. Juli 2026 ist klargestellt, dass kein bestimmtes individuelles Niveau garantiert werden muss."
+          "content": "Art. 4 richtet sich nicht an Ihre Mitarbeiterin, sondern an das Unternehmen, für das sie arbeitet. Art. 4 Abs. 1 KI-VO verpflichtet **Anbieter und Betreiber** von KI-Systemen zu Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Ausbildung, Einsatzkontext sowie die Personen oder Gruppen, bei denen die Systeme eingesetzt werden.\n\nDie am **27. Juli 2026** in Kraft getretene Verordnung (EU) 2026/1744 sagt es ausdrücklich: Anbieter und Betreiber müssen **kein bestimmtes individuelles Kompetenzniveau garantieren**. Die Pflicht zu unterstützenden, kontextgerechten Maßnahmen bleibt.\n\n**Adressat ist die Organisation, nicht der einzelne Mitarbeiter.** Was KI-Kompetenz ist, definiert **Art. 3 Nr. 56**: Fähigkeiten, Kenntnisse und Verständnis, die es ermöglichen, KI-Systeme sachkundig einzusetzen und sich der Chancen und Risiken bewusst zu werden.\n\n**Anwendbar seit 2. Februar 2025.** Die KI-VO nennt für Art. 4 keinen Standard und keine Zertifizierung. Dokumentieren Sie, welche rollen- und risikogerechten Maßnahmen Sie gewählt haben. Ein einzelner Kurs erfüllt die Pflicht nicht automatisch.",
+          "keyTakeaway": "Art. 4 verpflichtet Anbieter und Betreiber, nicht die Einzelperson, zu kontextgerechten Maßnahmen, die KI-Kompetenz unterstützen. Seit 27. Juli 2026 ist klar, dass kein bestimmtes individuelles Niveau garantiert werden muss."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "Abgrenzung zum KI-Führerschein",
           "readTimeMinutes": 1,
-          "content": "Den Einstieg in KI-Grundlagen bietet Stufe 2 des Lernpfads (KI-Führerschein). Er ist eine mögliche Vermittlungsmaßnahme unter vielen, die Organisationen als Baustein für Art. 4 wählen können.\n\nDiese Lektion adressiert die **andere Seite**: Wie stellt ein Unternehmen seinen Betrieb strukturell so auf, dass Art. 4 angemessen umgesetzt und nachvollziehbar dokumentiert wird?\n\n- **KI-Führerschein:** Was muss eine Mitarbeiterin über KI wissen? (Inhalt = KI-Wissen; Adressat = Person)\n- **Diese Lektion:** Welche Strukturen braucht ein Betrieb, damit relevante Personen das Nötige wissen und die Maßnahmen plausibel belegt werden können? (Inhalt = Policy, Prozess, Dokumentation; Adressat = Geschäftsführung)\n\nEine Schulung allein ist kein vollständiges Art.-4-System. Eine **dokumentierte Schulungspolitik mit Bedarfsanalyse, Rollendifferenzierung, Wiederholungsrhythmus und Nachweisführung** ist ein belastbarer Umsetzungsbaustein.",
-          "keyTakeaway": "KI-Führerschein = Vermittlung an die Person. Art. 4 = Organisationsauftrag. Schulung allein reicht nicht; Policy, Bedarfsanalyse und Dokumentation machen die Umsetzung belastbar."
+          "content": "Der KI-Führerschein (Stufe 2 des Lernpfads) vermittelt KI-Grundlagen. Er ist ein möglicher Baustein für Art. 4, einer von vielen.\n\nDiese Lektion nimmt die andere Seite: Wie stellt die Geschäftsführung den Betrieb so auf, dass Art. 4 angemessen umgesetzt und nachvollziehbar dokumentiert ist?\n\n- **KI-Führerschein:** Was muss eine Mitarbeiterin über KI wissen? (Inhalt = KI-Wissen; Adressat = Person)\n- **Diese Lektion:** Welche Strukturen braucht ein Betrieb, damit die richtigen Personen das Nötige wissen und die Maßnahmen belegbar sind? (Inhalt = Policy, Prozess, Dokumentation; Adressat = Geschäftsführung)\n\nEine Schulung allein ist kein Art.-4-System. Eine **dokumentierte Schulungspolitik mit Bedarfsanalyse, Rollendifferenzierung, Wiederholungsrhythmus und Nachweisführung** trägt. Ein bestimmtes Programmdesign oder einen Auffrischungstakt schreibt Art. 4 nicht vor.",
+          "keyTakeaway": "Der KI-Führerschein schult die Person. Art. 4 verpflichtet die Organisation. Schulung allein reicht nicht; Policy, Bedarfsanalyse, Rollen und Dokumentation machen die Umsetzung belastbar."
         },
         {
           "id": "block_4_lesson_3_section_3",
-          "title": "Die fünf organisationalen Bausteine",
+          "title": "Fünf Bausteine für die Umsetzung",
           "readTimeMinutes": 2,
-          "content": "Art. 4 wird in der Praxis über fünf Bausteine umgesetzt:\n\n1. **KI-Inventur und Bedarfsanalyse.** Welche KI-Systeme nutzen wir? Risikokategorie? Wer interagiert in welcher Tiefe? Ergebnis: Liste plus Rollen-Mapping.\n2. **KI-Policy.** Schriftliche Anweisung, was Mitarbeiter dürfen und nicht. Zum Beispiel: keine vertraulichen Daten in externe LLMs, Output-Verifikation vor Kundenkontakt, Eskalationsweg bei Fehlern.\n3. **Schulungsprogramm mit Rollendifferenzierung.** Basisschulung für alle plus Vertiefung für Power-User, Führungskräfte und KI-Beauftragte. Eine einheitliche Schulungsgröße für alle kann zu grob sein, wenn Rollen, Risiko und Einsatzkontext stark auseinanderfallen.\n4. **Dokumentation und Audit-Trail.** Teilnehmerlisten, Inhalte, Daten, Trainer, Auffrischungsrhythmus, Onboarding-Prozess für neue Mitarbeiter. Vor einer Aufsichtsbehörde zählt nachvollziehbare Dokumentation.\n5. **Lieferanten-Compliance.** Verträge mit Personio, DATEV oder Microsoft müssen klären, welche KI-Features eingebaut sind und welche Schulungsmaterialien geliefert werden. Ohne Anbieter-Information bleibt die Schulung unvollständig.\n\n**CEO-Checkliste Art. 4:** (1) KI-Inventar existiert, (2) Schulungskonzept dokumentiert, (3) Rollen und Verantwortlichkeiten definiert, (4) Wiederholungsrhythmus festgelegt, (5) Nachweise archiviert. Fünf Punkte, die Art. 4 operationalisieren.",
-          "keyTakeaway": "Fünf Bausteine: Inventur, Policy, rollendifferenziertes Training, Dokumentation, Lieferantenprüfung. Ohne diese Struktur bleibt Restrisiko trotz Mitarbeiterschulung."
+          "content": "Fünf Bausteine, mit denen sich Art. 4 im Betrieb umsetzen lässt. Ein Umsetzungsrahmen, keine gesetzliche Checkliste:\n\n1. **KI-Inventur und Bedarfsanalyse.** Welche KI-Systeme laufen bei uns, in welcher Risikokategorie, und wer arbeitet in welcher Tiefe damit? Ergebnis: eine Liste plus Rollen-Mapping.\n2. **KI-Policy.** Eine schriftliche Anweisung, was Mitarbeiter dürfen und was nicht. Zum Beispiel keine vertraulichen Daten in externe LLMs, Output-Prüfung vor dem Kundenkontakt, ein Eskalationsweg bei Fehlern.\n3. **Schulungsprogramm mit Rollendifferenzierung.** Basisschulung für alle, Vertiefung für Power-User, Führungskräfte und KI-Beauftragte. Eine Einheitsschulung wird zu grob, sobald Rollen, Risiko und Einsatzkontext auseinanderlaufen.\n4. **Dokumentation und Audit-Trail.** Teilnehmerlisten, Inhalte, Termine, Trainer, Auffrischungsrhythmus, Onboarding neuer Mitarbeiter. Vor einer Aufsichtsbehörde zählt, was Sie belegen können.\n5. **Lieferanten-Compliance.** Die Verträge mit Personio, DATEV oder Microsoft müssen klären, welche KI-Funktionen eingebaut sind und welche Schulungsmaterialien mitkommen. Ohne diese Information bleibt Ihre Schulung lückenhaft.\n\n**Checkliste für die Geschäftsführung:** KI-Inventar vorhanden, Schulungskonzept dokumentiert, Rollen und Verantwortlichkeiten definiert, Wiederholungsrhythmus festgelegt, Nachweise archiviert.",
+          "keyTakeaway": "Fünf Bausteine: Inventur, Policy, rollendifferenzierte Schulung, Dokumentation, Lieferantenprüfung. Wer nur schult, hat einen von fünf."
         }
       ],
       "quiz": [
@@ -320,11 +320,11 @@
             },
             {
               "id": "d",
-              "text": "Ausschliesslich GPAI-Anbieter",
+              "text": "Ausschließlich GPAI-Anbieter",
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 4 Abs. 1 richtet sich an Anbieter und Betreiber von KI-Systemen. Es handelt sich um eine Organisationspflicht, vergleichbar mit Arbeitsschutz oder Art. 32 DSGVO. Nicht der einzelne Mitarbeiter, sondern die Organisation trägt die Verantwortung."
+          "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber von KI-Systemen, also die Organisation. Das ist eine Organisationspflicht wie der Arbeitsschutz oder Art. 32 DSGVO. Die Verantwortung trägt der Arbeitgeber, nicht der einzelne Mitarbeiter."
         },
         {
           "id": "block_4_lesson_3_q2",
@@ -351,7 +351,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Einheits-Schulung ohne Bedarfsanalyse, Rollendifferenzierung und Dokumentation bildet den Einsatzkontext nicht ab. Art. 4 verlangt unterstützende Maßnahmen auf Organisationsebene, nicht einen isolierten Kurs oder ein garantiertes individuelles Kompetenzniveau."
+          "explanation": "Eine Einheitsschulung ohne Bedarfsanalyse, Rollendifferenzierung und Dokumentation bildet den Einsatzkontext nicht ab. Art. 4 verlangt unterstützende Maßnahmen auf Organisationsebene, keinen isolierten Kurs und kein garantiertes individuelles Kompetenzniveau."
         },
         {
           "id": "block_4_lesson_3_q3",
@@ -387,7 +387,7 @@
       "blockId": "block_4",
       "number": 4,
       "title": "Transparenz und Wasserzeichen nach Art. 50",
-      "subtitle": "Wer kennzeichnet, wer legt offen. Die saubere Trennung zwischen Anbieter und Betreiber",
+      "subtitle": "Wer kennzeichnet, wer legt offen: die Trennung zwischen Anbieter und Betreiber",
       "durationMinutes": 5,
       "keyConcepts": [
         "Chatbot-Disclosure (Art. 50 Abs. 1)",
@@ -402,22 +402,22 @@
           "id": "block_4_lesson_4_section_1",
           "title": "Die vier Transparenzpflichten in Art. 50",
           "readTimeMinutes": 2,
-          "content": "Art. 50 KI-VO regelt Transparenzpflichten in vier Absätzen:\n\n- **Abs. 1, Chatbot-Disclosure (Anbieter).** KI-Systeme zur direkten Interaktion mit natürlichen Personen müssen so gestaltet sein, dass Nutzer erkennen, dass sie mit KI interagieren, es sei denn, das ist aus Sicht einer informierten Person offensichtlich.\n- **Abs. 2, Maschinenlesbare Kennzeichnung (Anbieter, inklusive GPAI).** Anbieter von KI-Systemen, die synthetische Audio-, Bild-, Video- oder Textinhalte erzeugen, sorgen dafür, dass die Outputs maschinenlesbar als KI-erzeugt gekennzeichnet sind. Technische Lösungen müssen, soweit technisch möglich, wirksam, interoperabel, belastbar und zuverlässig sein (Wasserzeichen, Metadaten, kryptografische Signaturen).\n- **Abs. 3, Emotionserkennung und biometrische Kategorisierung (Betreiber).** Wer ein solches System einsetzt, informiert die betroffenen Personen.\n- **Abs. 4, Deepfakes und KI-generierter Text (Betreiber).** Wer Bild-, Ton- oder Videoinhalte erzeugt, die Deepfakes sind, muss offenlegen, dass sie künstlich erzeugt wurden. Für künstlerische oder satirische Werke gilt eine angemessene, den Werkgenuss nicht beeinträchtigende Offenlegung. KI-generierter Text zu öffentlichem Interesse muss ebenfalls offengelegt werden. Ausnahme: redaktionelle Verantwortung einer natürlichen oder juristischen Person.\n\nArt. 50 wird **ab 2. August 2026** wirksam.",
-          "keyTakeaway": "Vier Transparenzpflichten: Chatbot-Hinweis (Abs. 1), Wasserzeichen (Abs. 2), Emotionserkennung (Abs. 3), Deepfakes und Öffentlichkeits-Texte (Abs. 4). Anwendbar ab 2. August 2026."
+          "content": "Wer weist den Chatbot aus, wer das Deepfake? Art. 50 KI-VO verteilt vier Transparenzpflichten auf Anbieter und Betreiber:\n\n- **Abs. 1, Chatbot-Disclosure (Anbieter).** KI-Systeme für die direkte Interaktion mit natürlichen Personen müssen so gestaltet sein, dass die Person erkennt, dass sie mit KI interagiert. Ausnahme: Es ist aus Sicht einer angemessen informierten Person ohnehin offensichtlich.\n- **Abs. 2, Maschinenlesbare Kennzeichnung (Anbieter, inklusive GPAI).** Wer KI-Systeme anbietet, die synthetische Audio-, Bild-, Video- oder Textinhalte erzeugen, sorgt dafür, dass die Outputs maschinenlesbar als KI-erzeugt gekennzeichnet sind. Die technischen Lösungen (Wasserzeichen, Metadaten, kryptografische Signaturen) müssen, soweit technisch machbar, wirksam, interoperabel, belastbar und zuverlässig sein.\n- **Abs. 3, Emotionserkennung und biometrische Kategorisierung (Betreiber).** Wer ein solches System einsetzt, informiert die betroffenen Personen.\n- **Abs. 4, Deepfakes und KI-generierter Text (Betreiber).** Wer Bild-, Ton- oder Videoinhalte erzeugt, die Deepfakes sind, legt offen, dass sie künstlich erzeugt oder manipuliert wurden. Bei künstlerischen oder satirischen Werken reicht eine Offenlegung, die den Werkgenuss nicht beeinträchtigt. KI-generierter Text zu Themen von öffentlichem Interesse ebenfalls, außer eine natürliche oder juristische Person trägt die redaktionelle Verantwortung.\n\nArt. 50 gilt **ab 2. August 2026**.",
+          "keyTakeaway": "Abs. 1 und 2 (Chatbot-Hinweis, maschinenlesbare Kennzeichnung) treffen den Anbieter, Abs. 3 und 4 (Emotionserkennung, Deepfakes, Texte von öffentlichem Interesse) den Betreiber. Gilt ab 2. August 2026."
         },
         {
           "id": "block_4_lesson_4_section_2",
-          "title": "Anbieter vs. Betreiber, die kritische Unterscheidung",
+          "title": "Anbieter oder Betreiber: technisch zwingend getrennt",
           "readTimeMinutes": 2,
-          "content": "Die Aufteilung zwischen Anbieter und Betreiber in Art. 50 ist nicht zufällig, sondern technisch zwingend:\n\n- **Wasserzeichen müssen bei der Erzeugung eingebettet werden.** Das kann nur der **Anbieter** (OpenAI im DALL-E-Output, ElevenLabs im Audio-Output). Art. 50 Abs. 2 ist **Anbieter-Pflicht**.\n- **Deepfake-Offenlegung** erfordert eine Entscheidung im **Veröffentlichungskontext**. Das kann nur der **Betreiber** (die Marketingagentur, die das Deepfake-Video erstellt und postet). Art. 50 Abs. 4 ist **Betreiber-Pflicht**.\n\n**Konsequenz für den Mittelstand:** Wer ein KI-Bild-Tool einsetzt und die Bilder veröffentlicht, ist Betreiber und unterliegt Art. 50 Abs. 4, selbst wenn der Wasserzeichen-Anbieter aus Abs. 2 ein US-Konzern ist.\n\n**Doppelpflicht möglich:** Wer sowohl ein KI-System anbietet als auch dessen Outputs selbst einsetzt (interner Chatbot, eigene Bilderzeugung für Marketing), trägt beide Pflichten gleichzeitig.\n\n**Ausnahmen:** (1) Strafverfolgung; (2) bei Abs. 2 KI-Systeme mit reiner Hilfsfunktion oder ohne wesentliche semantische Veränderung; (3) bei Abs. 4 künstlerische oder satirische Werke sowie Texte mit redaktioneller Kontrolle.",
-          "keyTakeaway": "Wasserzeichen ist Anbieter-Sache, Deepfake-Offenlegung ist Betreiber-Sache. Mittelstand ist fast immer Betreiber. Doppelpflicht bei Eigenentwicklung plus Eigenverwendung."
+          "content": "Die Aufteilung in Art. 50 folgt der Technik, nicht dem Zufall:\n\n- **Ein Wasserzeichen entsteht bei der Erzeugung.** Das kann nur der **Anbieter**: OpenAI im DALL-E-Output, ElevenLabs im Audio-Output. Art. 50 Abs. 2 ist deshalb **Anbieter-Pflicht**.\n- **Die Deepfake-Offenlegung ist eine Entscheidung im Veröffentlichungskontext.** Die trifft nur der **Betreiber**, etwa die Marketingagentur, die das Video erstellt und postet. Art. 50 Abs. 4 ist deshalb **Betreiber-Pflicht**.\n\n**Für den Mittelstand heißt das:** Wer ein KI-Bild-Tool einsetzt und die Bilder veröffentlicht, ist Betreiber und unterliegt Art. 50 Abs. 4. Dass der Anbieter aus Abs. 2 ein US-Konzern ist, ändert daran nichts.\n\n**Doppelpflicht:** Wer ein KI-System anbietet und dessen Outputs selbst einsetzt (interner Chatbot, eigene Bilderzeugung fürs Marketing), trägt beide Pflichten zugleich.\n\n**Ausnahmen:** (1) Strafverfolgung; (2) bei Abs. 2 KI-Systeme mit reiner Hilfsfunktion oder ohne wesentliche semantische Veränderung; (3) bei Abs. 4 künstlerische oder satirische Werke sowie Texte mit redaktioneller Kontrolle.",
+          "keyTakeaway": "Wasserzeichen: Anbieter. Deepfake-Offenlegung: Betreiber. Der Mittelstand ist fast immer Betreiber; wer selbst entwickelt und selbst einsetzt, trägt beides."
         },
         {
           "id": "block_4_lesson_4_section_3",
           "title": "Operative Umsetzung im Mittelstand",
           "readTimeMinutes": 1,
-          "content": "Konkrete Maßnahmen bis 2. August 2026:\n\n- **KI-Interaktionshinweis (Abs. 1):** vor oder bei der ersten Interaktion, klar, unterscheidbar und barrierefrei nach Art. 50 Abs. 5, sofern die KI-Natur nicht ohnehin offensichtlich ist.\n- **Maschinenlesbare Markierung (Abs. 2):** Anbieter prüfen eine technisch geeignete Lösung. C2PA oder andere Verfahren können Umsetzungsoptionen sein; Art. 50 schreibt keine einzelne Technologie vor. Betreiber sollten beim Anbieter erfragen, welche Markierung die konkrete Version erzeugt und ob sie in der Veröffentlichungskette erhalten bleibt.\n- **Deepfake-Offenlegung (Abs. 4):** Betreiber prüfen vor Veröffentlichung, ob der Inhalt ein Deepfake ist und welche Form der Offenlegung verlangt wird. Nicht jedes synthetische Bild ist ein Deepfake.\n- **Transparenz-Code:** Der freiwillige Code of Practice on Transparency of AI-Generated Content wurde am **10. Juni 2026** veröffentlicht und unterstützt die Umsetzung von Art. 50 Abs. 2, 4 und 5. Er ersetzt keine Einzelfallprüfung.\n- **Sanktionen:** Art. 99 Abs. 4 erfasst die dort genannten Verstöße; Höhe und Verantwortlichkeit sind fallbezogen zu prüfen.\n\nOrganisationen können je nach Funktion Anbieter, Betreiber oder beides sein. Die Rolle muss pro System und Verwendung dokumentiert werden.",
-          "keyTakeaway": "Drei operative Baustellen: Chatbot-Banner, C2PA/SynthID-fähige Vendors, Deepfake-Offenlegung vor Veröffentlichung. Stichtag: 2. August 2026."
+          "content": "Was zum 2. August 2026 stehen muss:\n\n- **KI-Interaktionshinweis (Abs. 1):** spätestens bei der ersten Interaktion, klar, unterscheidbar und barrierefrei nach Art. 50 Abs. 5, sofern die KI-Natur nicht ohnehin offensichtlich ist. Der Anbieter baut ihn ein; der Betreiber prüft, ob er in der eigenen Integration noch wirkt.\n- **Maschinenlesbare Markierung (Abs. 2):** Anbieter wählen eine technisch geeignete Lösung. C2PA oder ein anderes Verfahren kann das sein; Art. 50 schreibt keine einzelne Technologie vor. Betreiber fragen beim Anbieter, welche Markierung die konkrete Version erzeugt und ob sie die Veröffentlichungskette übersteht.\n- **Deepfake-Offenlegung (Abs. 4):** Betreiber prüfen vor der Veröffentlichung, ob der Inhalt ein Deepfake ist und welche Form der Offenlegung verlangt ist. Nicht jedes synthetische Bild ist ein Deepfake.\n- **Transparenz-Code:** Der freiwillige Code of Practice on Transparency of AI-Generated Content wurde am **10. Juni 2026** veröffentlicht und hilft bei Art. 50 Abs. 2, 4 und 5. Die Einzelfallprüfung ersetzt er nicht.\n- **Sanktionen:** Art. 99 Abs. 4 erfasst die dort genannten Verstöße; Höhe und Verantwortlichkeit sind fallbezogen zu prüfen.\n\nEin Betrieb kann Anbieter sein, Betreiber oder beides. Halten Sie die Rolle pro System und Verwendung fest.",
+          "keyTakeaway": "Drei Baustellen: Chatbot-Hinweis, Markierung, die die Veröffentlichung übersteht, Deepfake-Prüfung vor dem Posten. Stichtag: 2. August 2026."
         }
       ],
       "quiz": [
@@ -446,7 +446,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 Abs. 2 verpflichtet Midjourney als Anbieter, die Outputs maschinenlesbar zu kennzeichnen. Art. 50 Abs. 4 verpflichtet die Agentur als Betreiber, offenzulegen, dass das Video künstlich erzeugt wurde. Beide Pflichten laufen parallel und ergänzen sich."
+          "explanation": "Art. 50 Abs. 2 verpflichtet Midjourney als Anbieter, die Outputs maschinenlesbar zu kennzeichnen. Art. 50 Abs. 4 verpflichtet die Agentur als Betreiber, offenzulegen, dass das Video künstlich erzeugt wurde. Beide Pflichten laufen parallel, keine ersetzt die andere."
         },
         {
           "id": "block_4_lesson_4_q2",
@@ -473,7 +473,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 Abs. 1 kennt die Ausnahme, wenn der KI-Charakter aus Sicht einer angemessen informierten Person aufgrund der Umstände offensichtlich ist. Die explizite Begrüßung als KI-Auskunft spricht dafür. Ein zusätzlicher, eindeutiger Hinweis bei Interaktionsbeginn reduziert das Rechtsrisiko weiter."
+          "explanation": "Art. 50 Abs. 1 kennt die Ausnahme, wenn der KI-Charakter aus Sicht einer angemessen informierten Person nach den Umständen offensichtlich ist. Die Begrüßung als KI-Auskunft spricht dafür. Ein zusätzlicher, eindeutiger Hinweis zu Beginn der Interaktion senkt das Rechtsrisiko trotzdem."
         },
         {
           "id": "block_4_lesson_4_q3",

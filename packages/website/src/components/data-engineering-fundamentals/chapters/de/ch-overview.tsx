@@ -35,8 +35,8 @@ export function ChOverviewDe() {
           <span>Kurs von der Quelle bis zur Bereitstellung</span>
         </div>
         <h1 className="ov2-title">
-          Eine <em>Datenpipeline</em> von der Quelle bis zur Bereitstellung
-          verfolgen.
+          Eine <em>Datenpipeline</em> von der Quelle bis zur Bereitstellung,
+          Stufe für Stufe.
         </h1>
         <p className="ov2-sub">
           Entscheidend ist das System, nicht die Werkzeugliste.{" "}
@@ -81,9 +81,9 @@ export function ChOverviewDe() {
             simulierte Datenzeile.
           </h2>
           <p className="ov2-lede">
-            Eine Stufe auswählen, ihren Vertrag prüfen und das zugehörige
-            Kapitel öffnen. Das Abschlussprojekt kombiniert alle zehn Stufen
-            in einem Szenario.
+            Wähl eine Stufe, lies ihren Vertrag, öffne das Kapitel dazu. Im
+            Abschlussprojekt laufen alle zehn Stufen in einem Szenario
+            zusammen.
           </p>
         </div>
         <PipelineBar

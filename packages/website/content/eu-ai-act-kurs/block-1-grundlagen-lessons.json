@@ -1,8 +1,8 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -16,7 +16,7 @@
       "blockId": "block_1",
       "number": 1,
       "title": "Warum es den AI Act gibt",
-      "subtitle": "Wie aus DSGVO-Erfahrung, CE-Tradition und 27 nationalen Alleingängen das weltweit erste KI-Gesetz wurde.",
+      "subtitle": "27 nationale Alleingänge, eine DSGVO-Lehre und die CE-Tradition: So wurde aus einem Binnenmarktproblem das weltweit erste KI-Gesetz.",
       "durationMinutes": 4,
       "keyConcepts": [
         "Binnenmarkt-Fragmentierung",
@@ -28,30 +28,30 @@
       "sections": [
         {
           "id": "block_1_lesson_1_section_1",
-          "title": "Das Problem: 27 nationale KI-Gesetze in der Pipeline",
+          "title": "27 nationale KI-Gesetze in der Pipeline",
           "readTimeMinutes": 2,
-          "content": "Bis 2023 bereiteten mehrere EU-Mitgliedstaaten eigene KI-Vorschriften vor. Die französische CNIL, die spanische AESIA, der italienische Garante (ChatGPT-Bann März 2023). Ohne Harmonisierung hätten deutsche Mittelständler bald 27 Compliance-Regime parallel managen müssen, jeweils mit eigenen Definitionen, Meldepflichten und Bußgeldern.\n\nErwägungsgrund 3 der Verordnung (EU) 2024/1689 nennt das Problem beim Namen: Unterschiedliche nationale Vorschriften können zu einer Fragmentierung des Binnenmarkts führen. Die Europäische Kommission formuliert in ihren Guidelines zwei explizite Ziele: vertrauenswürdige KI im Binnenmarkt sichern und gleichzeitig Innovation fördern (Art. 1 Abs. 1 Buchstaben a, h).\n\n**Rechtsgrundlage:** Art. 114 AEUV (Binnenmarkt), nicht Art. 16 AEUV (Datenschutz). Der AI Act behandelt KI als Produkt, nicht als Datenproblem. Das hat Folgen für die Systematik: Konformitätsbewertung, technische Dokumentation, Marktüberwachung, CE-Kennzeichnung.\n\n**Was das für Sie heißt:** Ein Regelwerk, egal ob Sie in München, Mailand oder Madrid liefern (Art. 1 Abs. 1).",
-          "keyTakeaway": "Eine harmonisierte Verordnung ist für den Mittelstand billiger als 27 nationale Gesetze. Der AI Act folgt der Logik des Binnenmarktrechts (Art. 114 AEUV), nicht dem Datenschutzrecht."
+          "content": "Bis 2023 bereiteten mehrere Mitgliedstaaten eigene KI-Vorschriften vor. Die französische CNIL, die spanische AESIA, der italienische Garante mit seinem ChatGPT-Bann im März 2023. Ohne Harmonisierung hätte ein deutscher Mittelständler bald 27 Compliance-Regime parallel bedienen müssen, jedes mit eigenen Definitionen, Meldepflichten und Bußgeldern.\n\nErwägungsgrund 3 der Verordnung (EU) 2024/1689 nennt das Problem beim Namen: Unterschiedliche nationale Vorschriften können zu einer Fragmentierung des Binnenmarkts führen. Die Europäische Kommission formuliert in ihren Guidelines zwei Ziele: vertrauenswürdige KI im Binnenmarkt sichern und zugleich Innovation fördern (Art. 1 Abs. 1 Buchstaben a, h).\n\n**Rechtsgrundlage:** Art. 114 AEUV, der Binnenmarkt. Nicht Art. 16 AEUV, der Datenschutz. Der AI Act behandelt KI als Produkt, nicht als Datenproblem. Daraus folgt die ganze Systematik: Konformitätsbewertung, technische Dokumentation, Marktüberwachung, CE-Kennzeichnung.\n\n**Für Sie:** ein Regelwerk, egal ob Sie nach München, Mailand oder Madrid liefern (Art. 1 Abs. 1).",
+          "keyTakeaway": "Ein Regelwerk ist für den Mittelstand billiger als 27. Der AI Act folgt dem Binnenmarktrecht (Art. 114 AEUV), nicht dem Datenschutzrecht."
         },
         {
           "id": "block_1_lesson_1_section_2",
-          "title": "Warum keine Selbstverpflichtung wie die OECD-Principles",
+          "title": "Warum Selbstverpflichtungen nicht gereicht haben",
           "readTimeMinutes": 2,
-          "content": "Zwischen 2019 und 2023 gab es eine Flut freiwilliger Leitfäden: die OECD-AI-Principles, die EU-Ethikleitlinien der HLEG, diverse Industriekodizes. Keiner hat Big Tech davon abgehalten, problematische Systeme auszurollen. Social-Scoring-Prototypen, biometrische Massenüberwachung in öffentlichen Räumen, Emotionserkennung am Arbeitsplatz, alles im Graubereich.\n\nErwägungsgrund 8 zieht daraus die Konsequenz: Es braucht harmonisierte Vorschriften, weil freiwillige Codes nicht ausreichen, um Grundrechte zu schützen. Die EU hat aus der DSGVO-Erfahrung gelernt, dass nur verbindliches Recht Verhalten ändert.\n\n**Brussels Effect 2.0:** Wer in der EU verkauft, muss EU-Regeln erfüllen. Und weil niemand für 500 Millionen Konsumenten zwei Produktvarianten baut, wird der EU-Standard global. Die DSGVO hat das vorgemacht: Kaliforniens CCPA, Brasiliens LGPD, Japans APPI sind alle nachgezogen. Der AI Act folgt demselben Muster. Wenn OpenAI oder Anthropic ihre Systeme EU-konform machen, profitieren alle Kunden von dieser Vorarbeit, Ihre eigenen Betreiberpflichten ersetzt das nicht (Erwägungsgrund 1).",
-          "keyTakeaway": "Freiwillige Codes haben Grundrechte nicht geschützt. Erwägungsgrund 8 verlangt deshalb verbindliche, harmonisierte Vorschriften. Der Brussels Effect macht aus EU-Regeln globale Standards."
+          "content": "Zwischen 2019 und 2023 gab es eine Flut freiwilliger Leitfäden. OECD-AI-Principles, EU-Ethikleitlinien der HLEG, diverse Industriekodizes. Keiner hat Big Tech davon abgehalten, problematische Systeme auszurollen. Social-Scoring-Prototypen, biometrische Massenüberwachung im öffentlichen Raum, Emotionserkennung am Arbeitsplatz. Alles im Graubereich.\n\nErwägungsgrund 8 zieht die Konsequenz: harmonisierte Vorschriften, weil freiwillige Codes die Grundrechte nicht ausreichend schützen. Die EU hat aus der DSGVO gelernt, dass sich Verhalten erst ändert, wenn Recht verbindlich ist.\n\n**Brussels Effect 2.0:** Wer in der EU verkauft, erfüllt EU-Regeln. Und weil niemand für 500 Millionen Konsumenten zwei Produktvarianten baut, wird der EU-Standard zum Weltstandard. Die DSGVO hat es vorgemacht, Kaliforniens CCPA, Brasiliens LGPD und Japans APPI zogen nach. Machen OpenAI oder Anthropic ihre Systeme EU-konform, profitieren alle Kunden von dieser Vorarbeit. Ihre eigenen Betreiberpflichten ersetzt das nicht (Erwägungsgrund 1).",
+          "keyTakeaway": "Freiwillige Codes haben Grundrechte nicht geschützt, deshalb verlangt Erwägungsgrund 8 verbindliche, harmonisierte Vorschriften. Der Brussels Effect macht aus EU-Regeln Weltstandards."
         },
         {
           "id": "block_1_lesson_1_section_3",
           "title": "Die Tradition: CE, Maschinen-VO, Produkthaftung",
           "readTimeMinutes": 2,
-          "content": "Der AI Act ist kein rechtliches Neuland, sondern Produktsicherheitsrecht. Über die Verordnung 765/2008 (den sogenannten Neuen Rechtsrahmen) ist er an die CE-Logik angedockt, die jeder deutsche Maschinenbauer seit Jahrzehnten kennt: Konformitätsbewertung, benannte Stelle, technische Dokumentation, EU-Konformitätserklärung, CE-Kennzeichen, Marktüberwachung.\n\n**Was das für Sie heißt:** Wer heute CE-konform produziert, ob Maschinen, Medizinprodukte oder Spielzeug, kennt die Mechanik bereits. Der AI Act setzt einen weiteren Layer obendrauf. Für viele Mittelständler ist der KI-Teil einfach ein zusätzliches Kapitel in der bestehenden technischen Dokumentation.\n\n**DSGVO bleibt parallel anwendbar.** Art. 2 Abs. 7 stellt das klar: Die Verordnung lässt die Datenschutz-Grundverordnung unberührt. Wer personenbezogene Daten in ein KI-System einspeist, muss beide Regelwerke einhalten. Doppelarbeit? Nein, ergänzende Pflichten. Die DSGVO regelt das Ob, der AI Act regelt das Wie (Erwägungsgrund 9).\n\n**Verordnung, nicht Richtlinie.** Der AI Act ist eine EU-Verordnung (Art. 288 Abs. 2 AEUV). Sie gilt unmittelbar in allen 27 Mitgliedstaaten, ohne nationales Umsetzungsgesetz. Verbote (Art. 5) und KI-Kompetenzpflicht (Art. 4) gelten seit 2. Februar 2025 direkt. Deutschland braucht kein eigenes Gesetz, damit diese Pflichten Sie betreffen.",
-          "keyTakeaway": "Der AI Act ist Produktsicherheitsrecht im Stil der CE-Kennzeichnung. DSGVO und AI Act gelten parallel, sie ersetzen einander nicht."
+          "content": "Der AI Act ist kein Neuland. Er ist Produktsicherheitsrecht. Über die Verordnung 765/2008, den sogenannten Neuen Rechtsrahmen, hängt er an der CE-Logik, die jeder deutsche Maschinenbauer seit Jahrzehnten kennt: Konformitätsbewertung, benannte Stelle, technische Dokumentation, EU-Konformitätserklärung, CE-Kennzeichen, Marktüberwachung.\n\nWer heute CE-konform produziert, ob Maschinen, Medizinprodukte oder Spielzeug, kennt die Mechanik. Der AI Act legt eine Schicht obendrauf. Für viele Mittelständler ist der KI-Teil ein weiteres Kapitel in der technischen Dokumentation, die es schon gibt.\n\n**Die DSGVO bleibt daneben anwendbar.** Art. 2 Abs. 7 stellt das klar: Die Verordnung lässt die Datenschutz-Grundverordnung unberührt. Wer personenbezogene Daten in ein KI-System einspeist, hält beide Regelwerke ein. Doppelarbeit? Nein, ergänzende Pflichten: Die DSGVO regelt das Ob, der AI Act das Wie (Erwägungsgrund 9).\n\n**Verordnung, nicht Richtlinie.** Der AI Act ist eine EU-Verordnung (Art. 288 Abs. 2 AEUV) und gilt unmittelbar in allen 27 Mitgliedstaaten, ohne nationales Umsetzungsgesetz. Verbote (Art. 5) und KI-Kompetenzpflicht (Art. 4) gelten seit 2. Februar 2025 direkt. Deutschland muss kein eigenes Gesetz erlassen, damit diese Pflichten Sie treffen.",
+          "keyTakeaway": "Der AI Act ist Produktsicherheitsrecht nach CE-Muster. DSGVO und AI Act gelten nebeneinander, keiner ersetzt den anderen."
         }
       ],
       "quiz": [
         {
           "id": "block_1_lesson_1_q1",
-          "questionText": "Worauf stützt sich die Rechtsgrundlage des AI Act primär?",
+          "questionText": "Worauf stützt sich der AI Act als Rechtsgrundlage?",
           "answerOptions": [
             {
               "id": "a",
@@ -74,7 +74,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der AI Act ist ein Binnenmarktrechtsakt nach Art. 114 AEUV. Erwägungsgrund 3 der Verordnung (EU) 2024/1689 begründet das Ziel als Vermeidung nationaler Fragmentierung, nicht als Datenschutzregulierung."
+          "explanation": "Der AI Act ist ein Binnenmarktrechtsakt nach Art. 114 AEUV. Erwägungsgrund 3 der Verordnung (EU) 2024/1689 nennt als Ziel die Vermeidung nationaler Fragmentierung, nicht den Datenschutz."
         },
         {
           "id": "block_1_lesson_1_q2",
@@ -101,7 +101,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Erwägungsgrund 8 verlangt harmonisierte Vorschriften, weil freiwillige Codes kein ausreichend hohes Schutzniveau für Grundrechte sichern. Die DSGVO-Erfahrung hat gezeigt, dass nur verbindliches Recht tatsächlich Verhalten ändert."
+          "explanation": "Erwägungsgrund 8 verlangt harmonisierte Vorschriften, weil freiwillige Codes kein ausreichendes Schutzniveau für Grundrechte sichern. Die DSGVO hat gezeigt: Verhalten ändert sich erst mit verbindlichem Recht."
         },
         {
           "id": "block_1_lesson_1_q3",
@@ -128,7 +128,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 2 Abs. 7 der Verordnung (EU) 2024/1689 stellt klar, dass der AI Act die DSGVO unberührt lässt. Erwägungsgrund 9 ordnet den AI Act zusätzlich in den Neuen Rechtsrahmen der EU-Produktsicherheit ein."
+          "explanation": "Art. 2 Abs. 7 der Verordnung (EU) 2024/1689: Der AI Act lässt die DSGVO unberührt. Erwägungsgrund 9 ordnet ihn zusätzlich in den Neuen Rechtsrahmen der EU-Produktsicherheit ein."
         }
       ]
     },
@@ -137,7 +137,7 @@
       "blockId": "block_1",
       "number": 2,
       "title": "Rollen: Anbieter, Betreiber, Einführer, Händler",
-      "subtitle": "Wer Sie unter dem AI Act sind, entscheidet über den Großteil Ihrer Pflichten, und viele Mittelständler ordnen sich falsch ein.",
+      "subtitle": "Ihre Rolle entscheidet über den Großteil Ihrer Pflichten. Viele Mittelständler ordnen sich falsch ein.",
       "durationMinutes": 4,
       "keyConcepts": [
         "Anbieter (provider)",
@@ -151,22 +151,22 @@
           "id": "block_1_lesson_2_section_1",
           "title": "Vier Rollen, eine Verordnung",
           "readTimeMinutes": 2,
-          "content": "Art. 3 der Verordnung (EU) 2024/1689 definiert vier Rollen mit wortgenauen Legaldefinitionen. Die Reihenfolge entscheidet über den Umfang Ihrer Pflichten:\n\n- **Anbieter (Art. 3 Nr. 3):** entwickelt ein KI-System und bringt es unter eigenem Namen oder eigener Marke in Verkehr. Beispiele: OpenAI, Microsoft, Aleph Alpha, SAP.\n- **Betreiber (Art. 3 Nr. 4):** verwendet ein KI-System in eigener Verantwortung im Rahmen beruflicher Tätigkeit. Beispiele: jeder Mittelständler mit ChatGPT Enterprise, Personio oder DATEV KI-Funktion.\n- **Bevollmächtigter (Art. 3 Nr. 5):** in der EU niedergelassene Person mit Vollmacht eines Drittland-Anbieters.\n- **Einführer (Art. 3 Nr. 6):** bringt ein KI-System mit Drittland-Marke erstmals in der EU in Verkehr.\n- **Händler (Art. 3 Nr. 7):** jeder weitere Vertriebsakteur, außer Anbieter und Einführer.\n\n**Rollenwechsel-Regel (Art. 25):** Wer ein KI-System selbst wesentlich ändert, wird zum Anbieter, mit dem vollen Pflichtenkatalog. Die meisten deutschen Mittelständler starten als Betreiber.",
+          "content": "Welche Rolle haben Sie? Art. 3 der Verordnung (EU) 2024/1689 kennt vier, jede mit wortgenauer Legaldefinition, und die Antwort entscheidet über den Umfang Ihrer Pflichten:\n\n- **Anbieter (Art. 3 Nr. 3):** entwickelt ein KI-System und bringt es unter eigenem Namen oder eigener Marke in Verkehr. Beispiele: OpenAI, Microsoft, Aleph Alpha, SAP.\n- **Betreiber (Art. 3 Nr. 4):** verwendet ein KI-System in eigener Verantwortung im Rahmen beruflicher Tätigkeit. Beispiel: jeder Mittelständler mit ChatGPT Enterprise, Personio oder einer DATEV-KI-Funktion.\n- **Bevollmächtigter (Art. 3 Nr. 5):** in der EU niedergelassene Person mit Vollmacht eines Drittland-Anbieters.\n- **Einführer (Art. 3 Nr. 6):** bringt ein KI-System mit Drittland-Marke erstmals in der EU in Verkehr.\n- **Händler (Art. 3 Nr. 7):** jeder weitere Vertriebsakteur, außer Anbieter und Einführer.\n\n**Rollenwechsel (Art. 25):** Wer ein KI-System selbst wesentlich ändert, wird Anbieter, mit dem vollen Pflichtenkatalog. Die meisten deutschen Mittelständler starten als Betreiber. Nicht alle bleiben es.",
           "keyTakeaway": "Art. 3 Nr. 3 bis 7 definieren vier Rollen: Anbieter, Betreiber, Einführer, Händler. Die meisten Mittelständler sind Betreiber."
         },
         {
           "id": "block_1_lesson_2_section_2",
-          "title": "Mittelstand-Beispiele: wo die Rolle kippt",
+          "title": "Wo die Rolle kippt",
           "readTimeMinutes": 2,
-          "content": "**Fall 1 (Betreiber):** Ein Maschinenbauer kauft ein Predictive-Maintenance-Modell von einem Startup ein und integriert es in die eigenen Anlagen. Er nutzt das System, er trainiert es nicht um. Rolle: Betreiber.\n\n**Fall 2 (Anbieter):** Derselbe Maschinenbauer trainiert das Modell mit eigenen Sensordaten weiter und verkauft die Anlage inklusive Modell unter eigener Marke. Das Weitertraining ist eine wesentliche Veränderung (Art. 3 Nr. 23). Rollenwechsel. Rolle: Anbieter, mit voller Konformitätsbewertungspflicht bei Hochrisiko-Systemen (Art. 25).\n\n**Fall 3 (Betreiber):** Ein HR-Team nutzt Personio mit aktivem KI-Matching für die Bewerberauswahl. Personio ist Anbieter. Der Arbeitgeber ist Betreiber, mit besonderen Pflichten, weil Bewerbermatching ein Hochrisiko-Anwendungsfall ist (Anhang III Nr. 4).\n\n**Fall 4 (Einführer):** Eine HR-Beraterin vertreibt einen US-amerikanischen Bewerbungs-Bot über ihre Webseite an deutsche Mandanten. Der US-Anbieter hat keinen EU-Sitz. Rolle: Einführer.\n\n**Was das für Sie heißt:** Sobald Sie KI-Systeme white-labeln, substantiell modifizieren oder unter eigener Marke vertreiben, kippen Sie in die Anbieter-Rolle. Und damit in den vollen Pflichtenkatalog (Art. 25).",
-          "keyTakeaway": "Weitertraining oder Vertrieb unter eigener Marke macht aus dem Betreiber einen Anbieter (Art. 3 Nr. 23, Art. 25). Das erhöht den Compliance-Aufwand erheblich."
+          "content": "**Fall 1 (Betreiber):** Ein Maschinenbauer kauft ein Predictive-Maintenance-Modell von einem Startup und baut es in die eigenen Anlagen ein. Er nutzt das System, er trainiert es nicht um. Rolle: Betreiber.\n\n**Fall 2 (Anbieter):** Derselbe Maschinenbauer trainiert das Modell mit eigenen Sensordaten weiter und verkauft die Anlage samt Modell unter eigener Marke. Das Weitertraining ist eine wesentliche Veränderung (Art. 3 Nr. 23). Damit kippt die Rolle: Anbieter, bei Hochrisiko-Systemen mit voller Konformitätsbewertungspflicht (Art. 25).\n\n**Fall 3 (Betreiber):** Die Personalleiterin nutzt Personio mit aktivem KI-Matching für die Bewerberauswahl. Personio ist Anbieter. Der Arbeitgeber ist Betreiber, mit besonderen Pflichten, weil Bewerbermatching ein Hochrisiko-Anwendungsfall ist (Anhang III Nr. 4).\n\n**Fall 4 (Einführer):** Eine HR-Beraterin vertreibt einen US-amerikanischen Bewerbungs-Bot über ihre Webseite an deutsche Mandanten. Der US-Anbieter hat keinen EU-Sitz, also ist sie Einführer.\n\nWas heißt das für Sie? Sobald Sie ein KI-System white-labeln, substanziell verändern oder unter eigener Marke vertreiben, sind Sie Anbieter. Und damit im vollen Pflichtenkatalog (Art. 25).",
+          "keyTakeaway": "Weitertraining oder Vertrieb unter eigener Marke macht aus dem Betreiber einen Anbieter (Art. 3 Nr. 23, Art. 25). Der Compliance-Aufwand steigt erheblich."
         },
         {
           "id": "block_1_lesson_2_section_3",
-          "title": "Die Akteur-Definition und die private Ausnahme (Art. 2 Abs. 10)",
+          "title": "Akteur oder nicht: die private Ausnahme (Art. 2 Abs. 10)",
           "readTimeMinutes": 1,
-          "content": "Art. 3 Nr. 8 fasst alle vier Rollen plus Bevollmächtigte und Produkthersteller unter dem Begriff **Akteur** zusammen. Sobald Sie Akteur sind, gilt mindestens Art. 4 (KI-Kompetenz), unabhängig von der genauen Rolle.\n\nKonsequenz: Wer KI beruflich nutzt oder vertreibt, ist erfasst. Die Frage ist nur, welcher Pflichtenkatalog gilt.\n\n**Die private Ausnahme (Art. 2 Abs. 10):**\n\nWer KI **ausschließlich privat** nutzt (z. B. ChatGPT für eigene Texte, Bilder oder die Steuererklärung) ist **keine Betreiberin im Sinne der Verordnung**. Art. 2 Abs. 10 nimmt rein private Nutzung durch natürliche Personen explizit aus. Das bedeutet:\n\n- Eine Privatperson, die ChatGPT für ihre Urlaubsplanung nutzt: **nicht erfasst**.\n- Dieselbe Person als Angestellte, die ChatGPT im Auftrag ihres Arbeitgebers für Kundenkorrespondenz nutzt: **erfasst** (als Betreiber nach Art. 3 Nr. 4 über die berufliche Tätigkeit des Arbeitgebers).\n- Eine Geschäftsführerin mit ChatGPT für Angebotstexte: **erfasst**, weil sie als Betreiber gilt.\n\n**Merksatz:** Die KI-Verordnung reguliert berufliche Nutzung und Inverkehrbringen, nicht das, was Sie zuhause für sich selbst machen.",
-          "keyTakeaway": "Wer KI ausschließlich privat nutzt (z. B. ChatGPT für eigene Texte) ist keine Betreiberin im Sinne der Verordnung. Art. 2 Abs. 10 nimmt rein private Nutzung explizit aus. Berufliche Nutzung hingegen ist erfasst, unabhängig von der Unternehmensgröße.",
+          "content": "Art. 3 Nr. 8 fasst alle vier Rollen plus Bevollmächtigte und Produkthersteller unter dem Begriff **Akteur** zusammen. Sobald Sie Akteur sind, gilt mindestens Art. 4 (KI-Kompetenz), unabhängig von der genauen Rolle.\n\nWer KI beruflich nutzt oder vertreibt, ist also erfasst. Die Frage ist nur, welcher Pflichtenkatalog gilt.\n\n**Die private Ausnahme (Art. 2 Abs. 10):**\n\nWer KI **ausschließlich privat** nutzt, etwa ChatGPT für eigene Texte, Bilder oder die Steuererklärung, ist **keine Betreiberin im Sinne der Verordnung**. Art. 2 Abs. 10 nimmt rein private Nutzung durch natürliche Personen ausdrücklich aus. Konkret:\n\n- Eine Privatperson, die ChatGPT für ihre Urlaubsplanung nutzt: **nicht erfasst**.\n- Dieselbe Person als Angestellte, die ChatGPT im Auftrag ihres Arbeitgebers für Kundenkorrespondenz nutzt: **erfasst** (als Betreiber nach Art. 3 Nr. 4 über die berufliche Tätigkeit des Arbeitgebers).\n- Eine Geschäftsführerin mit ChatGPT für Angebotstexte: **erfasst**, weil sie als Betreiber gilt.\n\nDie KI-Verordnung regelt berufliche Nutzung und Inverkehrbringen. Was Sie zuhause für sich selbst machen, geht sie nichts an.",
+          "keyTakeaway": "Wer KI ausschließlich privat nutzt, ist keine Betreiberin im Sinne der Verordnung: Art. 2 Abs. 10 nimmt rein private Nutzung aus. Berufliche Nutzung ist erfasst, egal wie klein der Betrieb.",
           "_claimRef": "ai-act-general-application-2026-08-02",
           "sources": [
             {
@@ -201,7 +201,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 3 Nr. 3 definiert den Anbieter über das Inverkehrbringen unter eigenem Namen. Art. 3 Nr. 23 macht aus dem Weitertraining eine wesentliche Veränderung, die laut Art. 25 einen Rollenwechsel zum Anbieter auslöst."
+          "explanation": "Art. 3 Nr. 3 definiert den Anbieter über das Inverkehrbringen unter eigenem Namen. Das Weitertraining ist eine wesentliche Veränderung (Art. 3 Nr. 23), und die löst nach Art. 25 den Rollenwechsel zum Anbieter aus."
         },
         {
           "id": "block_1_lesson_2_q2",
@@ -277,22 +277,22 @@
           "id": "block_1_lesson_3_section_1",
           "title": "Der Output-Trigger: Art. 2 Abs. 1 Buchstabe c",
           "readTimeMinutes": 2,
-          "content": "Art. 2 Abs. 1 Buchstabe c der Verordnung (EU) 2024/1689 erfasst Anbieter und Betreiber von KI-Systemen mit Sitz in einem Drittland, wenn die vom KI-System hervorgebrachte Ausgabe in der Union verwendet wird.\n\n**Konsequenz in einem Satz:** OpenAI in San Francisco generiert eine Vertragszusammenfassung. Eine Mitarbeiterin in Nürnberg liest sie. Damit fällt OpenAI in den Anwendungsbereich des AI Act.\n\n**Konkretes Szenario:** Ein US-Anbieter, der ein KI-System in der EU bereitstellt, muss einen EU-Bevollmächtigten benennen (Art. 22). Ohne diese Benennung darf er nicht in Verkehr bringen.\n\nErwägungsgrund 22 begründet den Output-Trigger als Umgehungsschutz: Um die Umgehung dieser Verordnung zu verhindern und einen wirksamen Schutz in der Union ansässiger natürlicher Personen zu gewährleisten. Ohne diese Klausel hätte jeder Anbieter einfach seinen Serverstandort nach Nevada verlegt.\n\n**Was das für Sie heißt:** Die Compliance-Pflicht liegt beim US-Anbieter. Fragen Sie im Vendor-Gespräch konkret nach, ob er sie erfüllt.",
-          "keyTakeaway": "Art. 2 Abs. 1 Buchstabe c macht den AI Act exterritorial: Sobald der Output in der EU verwendet wird, gilt die Verordnung, auch für Drittland-Anbieter. Erwägungsgrund 22 begründet das als Umgehungsschutz."
+          "content": "OpenAI in San Francisco erzeugt eine Vertragszusammenfassung. Eine Sachbearbeiterin in Nürnberg liest sie. Damit fällt OpenAI in den Anwendungsbereich des AI Act.\n\nDie Regel dahinter: Art. 2 Abs. 1 Buchstabe c der Verordnung (EU) 2024/1689 erfasst Anbieter und Betreiber von KI-Systemen mit Sitz in einem Drittland, wenn die vom KI-System hervorgebrachte Ausgabe in der Union verwendet wird. Es zählt, wo die Ausgabe verwendet wird.\n\n**Folge:** Ein US-Anbieter, der ein KI-System in der EU bereitstellt, muss einen EU-Bevollmächtigten benennen (Art. 22). Ohne diese Benennung darf er nicht in Verkehr bringen.\n\nErwägungsgrund 22 begründet den Output-Trigger als Umgehungsschutz: Um die Umgehung dieser Verordnung zu verhindern und einen wirksamen Schutz in der Union ansässiger natürlicher Personen zu gewährleisten. Ohne diese Klausel hätte jeder Anbieter seine Server nach Nevada verlegt.\n\nFür Sie heißt das: Die Compliance-Pflicht liegt beim US-Anbieter. Fragen Sie im Vendor-Gespräch konkret nach, ob er sie erfüllt.",
+          "keyTakeaway": "Art. 2 Abs. 1 Buchstabe c macht den AI Act exterritorial: Wird der Output in der EU verwendet, gilt die Verordnung, auch für Drittland-Anbieter. Erwägungsgrund 22 nennt den Grund: Umgehungsschutz."
         },
         {
           "id": "block_1_lesson_3_section_2",
-          "title": "Der Bevollmächtigte als Pflicht-Brückenkopf in der EU",
+          "title": "Der Bevollmächtigte: Brückenkopf in der EU",
           "readTimeMinutes": 2,
-          "content": "Art. 3 Nr. 5 definiert den **Bevollmächtigten** als in der EU niedergelassene natürliche oder juristische Person mit schriftlicher Vollmacht, die Pflichten des Anbieters wahrzunehmen. Art. 22 macht daraus eine Pflicht: Drittland-Anbieter von Hochrisiko-KI-Systemen müssen einen in der EU ansässigen Bevollmächtigten benennen, der die Verordnung im Namen des Anbieters durchsetzt.\n\n**Praktische Folge:** OpenAI (Irland), Anthropic (im Aufbau), Microsoft (Irland), Salesforce, Workday, alle haben oder bauen gerade EU-Entitäten zur Erfüllung dieser Pflicht. Das ist kein Zufall, das ist Art. 22.\n\n**Was das für Sie heißt:** Im nächsten Vendor-Vertrag fragen Sie nach drei Dingen:\n\n- **Wer ist der EU-Bevollmächtigte?** (Art. 22) Name, Sitz, Kontakt.\n- **Liegt die technische Dokumentation gemäß Art. 11 vor?** Falls ja, Einsicht auf Anforderung zusichern lassen.\n- **Welche Risikoklassifikation hat das System?** Kein Risiko, begrenztes Risiko, hohes Risiko (Anhang III), oder GPAI?\n\nWer diese Fragen nicht schnell beantworten kann, ist nicht compliance-ready.",
-          "keyTakeaway": "Drittland-Anbieter von Hochrisiko-KI brauchen einen EU-Bevollmächtigten (Art. 3 Nr. 5, Art. 22). Das ist der Ansprechpartner, den Sie im Vendor-Vertrag explizit nennen lassen."
+          "content": "Art. 3 Nr. 5 definiert den **Bevollmächtigten** als in der EU niedergelassene natürliche oder juristische Person mit schriftlicher Vollmacht, die Pflichten des Anbieters wahrzunehmen. Art. 22 macht daraus eine Pflicht: Drittland-Anbieter von Hochrisiko-KI-Systemen müssen einen in der EU ansässigen Bevollmächtigten benennen, der die Verordnung im Namen des Anbieters durchsetzt.\n\nOpenAI (Irland), Anthropic (im Aufbau), Microsoft (Irland), Salesforce, Workday. Alle haben EU-Entitäten für diese Pflicht oder bauen sie gerade auf. Das ist kein Zufall. Das ist Art. 22.\n\nIm nächsten Vendor-Vertrag fragen Sie nach drei Dingen:\n\n- **Wer ist der EU-Bevollmächtigte?** (Art. 22) Name, Sitz, Kontakt.\n- **Liegt die technische Dokumentation gemäß Art. 11 vor?** Falls ja, Einsicht auf Anforderung zusichern lassen.\n- **Welche Risikoklassifikation hat das System?** Minimales Risiko, begrenztes Risiko, hohes Risiko (Anhang III) oder GPAI?\n\nWer diese Fragen nicht zügig beantworten kann, ist nicht bereit.",
+          "keyTakeaway": "Drittland-Anbieter von Hochrisiko-KI brauchen einen EU-Bevollmächtigten (Art. 3 Nr. 5, Art. 22). Lassen Sie ihn im Vendor-Vertrag namentlich nennen."
         },
         {
           "id": "block_1_lesson_3_section_3",
           "title": "Brussels Effect 2.0 für den deutschen Mittelstand",
           "readTimeMinutes": 1,
-          "content": "Wenn Ihr SaaS-Anbieter den AI Act umsetzen muss, werden Sie compliance-fertig beliefert: Transparenzpflichten (Art. 50), technische Dokumentation und Konformitätsbewertung übernimmt er für sein System. Wenn OpenAI oder Anthropic ihre Systeme EU-konform machen, profitieren alle Kunden von dieser Vorarbeit, Ihre eigenen Betreiberpflichten ersetzt das nicht.\n\n**Aber Vorsicht:** Ihre Betreiberpflichten bleiben Ihre Verantwortung. Art. 26 listet die Pflichten der Betreiber von Hochrisiko-KI-Systemen auf: Anweisungen des Anbieters befolgen, menschliche Aufsicht sicherstellen, Logs aufbewahren, Input-Daten prüfen. Und Art. 4 (KI-Kompetenz) gilt für jeden Akteur, also auch für Sie.\n\nVendor-Compliance ersetzt nicht die eigene Compliance. Die beiden Ebenen verzahnen sich.\n\n**Was das konkret bedeutet:** Schreiben Sie Anbieter-Compliance-Klauseln in jeden neuen SaaS-Vertrag. Lassen Sie sich Konformitätserklärung und Bevollmächtigten vertraglich zusichern. Wer ausweicht, ist nicht bereit. Als Betreiber haften Sie am Ende mit.",
-          "keyTakeaway": "Der Brussels Effect liefert compliance-fertige US-Systeme. Art. 26 und Art. 4 bleiben trotzdem Ihre Verantwortung. Vendor-Compliance ersetzt keine Betreiber-Compliance."
+          "content": "Muss Ihr SaaS-Anbieter den AI Act umsetzen, bekommen Sie einen Teil der Arbeit fertig geliefert: Transparenzpflichten (Art. 50), technische Dokumentation und Konformitätsbewertung erledigt er für sein System. Diese Vorarbeit nützt jedem Kunden. Ihre eigenen Betreiberpflichten ersetzt sie nicht.\n\nAber: Ihre Betreiberpflichten bleiben bei Ihnen. Art. 26 listet sie für Hochrisiko-KI-Systeme auf: Anweisungen des Anbieters befolgen, menschliche Aufsicht sicherstellen, Logs aufbewahren, Input-Daten prüfen. Und Art. 4 (KI-Kompetenz) gilt für jeden Akteur, also auch für Sie.\n\nZwei Ebenen, die ineinandergreifen. Keine ersetzt die andere.\n\nKonkret: Schreiben Sie Anbieter-Compliance-Klauseln in jeden neuen SaaS-Vertrag. Lassen Sie sich Konformitätserklärung und Bevollmächtigten vertraglich zusichern. Wer ausweicht, ist nicht bereit. Und am Ende haften Sie als Betreiber mit.",
+          "keyTakeaway": "Der Brussels Effect liefert compliance-fertige US-Systeme. Art. 26 und Art. 4 bleiben trotzdem bei Ihnen: Vendor-Compliance ersetzt keine Betreiber-Compliance."
         }
       ],
       "quiz": [
@@ -321,7 +321,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 2 Abs. 1 Buchstabe c der Verordnung (EU) 2024/1689 erfasst Drittland-Anbieter, sobald die Systemausgabe in der EU verwendet wird. Erwägungsgrund 22 macht klar, dass dies eine bewusste Anti-Umgehungs-Vorschrift ist."
+          "explanation": "Art. 2 Abs. 1 Buchstabe c der Verordnung (EU) 2024/1689 erfasst Drittland-Anbieter, sobald die Systemausgabe in der EU verwendet wird. Erwägungsgrund 22 macht klar: Das ist eine bewusste Anti-Umgehungs-Vorschrift."
         },
         {
           "id": "block_1_lesson_3_q2",
@@ -348,7 +348,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 3 Nr. 5 definiert den Bevollmächtigten als in der EU niedergelassene Person mit schriftlicher Vollmacht. Art. 22 verpflichtet Drittland-Anbieter von Hochrisiko-KI, einen solchen zu benennen, er vertritt den Anbieter, ersetzt ihn aber nicht."
+          "explanation": "Art. 3 Nr. 5 definiert den Bevollmächtigten als in der EU niedergelassene Person mit schriftlicher Vollmacht. Art. 22 verpflichtet Drittland-Anbieter von Hochrisiko-KI, einen solchen zu benennen. Er vertritt den Anbieter, er ersetzt ihn nicht."
         },
         {
           "id": "block_1_lesson_3_q3",
@@ -384,7 +384,7 @@
       "blockId": "block_1",
       "number": 4,
       "title": "Zeitplan: Februar 2025, August 2025, August 2026, Dezember 2027, August 2028",
-      "subtitle": "Gestaffelte Anwendung: KI-Kompetenz und Verbote laufen bereits; der beschlossene Hochrisiko-Zeitplan wartet noch auf Veröffentlichung.",
+      "subtitle": "Gestaffelte Anwendung: KI-Kompetenz und Verbote gelten schon, Art. 50 folgt im August 2026, die Hochrisiko-Termine 2027 und 2028 sind seit Juli 2026 geltendes Recht.",
       "durationMinutes": 4,
       "keyConcepts": [
         "Art. 113 (gestaffelte Anwendbarkeit)",
@@ -398,7 +398,7 @@
           "id": "block_1_lesson_4_section_1",
           "title": "Die Stichtage und der geänderte Hochrisiko-Zeitplan",
           "readTimeMinutes": 2,
-          "content": "Die Verordnung (EU) 2024/1689 trat am **1. August 2024** in Kraft. Danach folgt eine gestaffelte Anwendbarkeit:\n\n- **2. Februar 2025:** Artikel 4 zur KI-Kompetenz und große Teile der Verbote nach Artikel 5 gelten.\n- **2. August 2025:** GPAI-Modellregeln, Governance-Struktur und große Teile des Sanktionsrahmens werden anwendbar; die Kommissionsdurchsetzung gegenüber GPAI-Anbietern startet am **2. August 2026**.\n- **27. Juli 2026:** Die Verordnung (EU) 2026/1744 tritt in Kraft und ändert unter anderem Artikel 4, einzelne Verbote, Übergangsregeln und den Hochrisiko-Zeitplan.\n- **2. August 2026:** Transparenzpflichten nach Artikel 50 und weitere allgemeine Anwendungspunkte greifen.\n- **2. Dezember 2027:** Hochrisiko-Regeln für eigenständige Systeme nach Artikel 6 Absatz 2 und Anhang III.\n- **2. August 2028:** Hochrisiko-Regeln für produktintegrierte Systeme nach Artikel 6 Absatz 1 und Anhang I.\n\nDie Hochrisiko-Termine sind durch die veröffentlichte Änderungsverordnung geltendes Recht. Für Systeme, die vor den neuen Stichtagen auf den Markt kamen, enthält die Verordnung eigene Übergangsregeln.",
+          "content": "Die Verordnung (EU) 2024/1689 trat am **1. August 2024** in Kraft. Seitdem gilt sie stufenweise:\n\n- **2. Februar 2025:** Artikel 4 zur KI-Kompetenz und große Teile der Verbote nach Artikel 5 gelten.\n- **2. August 2025:** GPAI-Modellregeln, Governance-Struktur und große Teile des Sanktionsrahmens werden anwendbar; die Kommissionsdurchsetzung gegenüber GPAI-Anbietern startet am **2. August 2026**.\n- **27. Juli 2026:** Die Verordnung (EU) 2026/1744 tritt in Kraft und ändert unter anderem Artikel 4, einzelne Verbote, Übergangsregeln und den Hochrisiko-Zeitplan.\n- **2. August 2026:** Transparenzpflichten nach Artikel 50 und weitere allgemeine Anwendungspunkte greifen.\n- **2. Dezember 2027:** Hochrisiko-Regeln für eigenständige Systeme nach Artikel 6 Absatz 2 und Anhang III.\n- **2. August 2028:** Hochrisiko-Regeln für produktintegrierte Systeme nach Artikel 6 Absatz 1 und Anhang I.\n\nDie Hochrisiko-Termine sind mit der veröffentlichten Änderungsverordnung geltendes Recht. Für Systeme, die vor den neuen Stichtagen auf den Markt kamen, gelten eigene Übergangsregeln.",
           "keyTakeaway": "Artikel 4 gilt seit Februar 2025, wurde zum 27. Juli 2026 geändert; Artikel 50 greift ab 2. August 2026. Die Hochrisiko-Termine 2. Dezember 2027 und 2. August 2028 sind geltendes Recht.",
           "_claimRef": "ai-act-article-4-literacy-2025-02-02",
           "sources": [
@@ -409,10 +409,10 @@
         },
         {
           "id": "block_1_lesson_4_section_2",
-          "title": "Was das für Sie heißt, pro Stichtag",
+          "title": "Ihre Aufgaben pro Stichtag",
           "readTimeMinutes": 2,
-          "content": "**Stand: 28. Juli 2026:** Artikel 4 verlangt kein bestimmtes Zertifikat und seit der Änderung auch kein garantiertes individuelles Kompetenzniveau. Anbieter und Betreiber müssen Maßnahmen ergreifen, die die Entwicklung der KI-Kompetenz kontextgerecht unterstützen.\n\n**Was jetzt wichtig ist:**\n\n- vollständiges Inventar aller KI-Systeme im Haus (Shadow-IT eingeschlossen)\n- Risikoklassifizierung pro System (Anhang III, Art. 5, GPAI oder geringes Risiko)\n- rollen- und risikogerechte KI-Kompetenzmaßnahmen nach Art. 4 dokumentieren\n- Transparenz- und Interaktionshinweise nach Art. 50 bis zum 2. August 2026 umsetzen, soweit der konkrete Tatbestand greift\n\n**Für 2027/2028:**\n\n- eigenständige Hochrisiko-Pflichten auf **2. Dezember 2027** planen\n- produktintegrierte Hochrisiko-Systeme auf **2. August 2028** planen\n- Vendor-Unterlagen, Logs, menschliche Aufsicht und eine gegebenenfalls erforderliche Grundrechtefolgenabschätzung rechtzeitig vorbereiten\n\n**Bestandsschutz mit Falle:** Wesentliche Änderungen können Übergangsregeln beenden oder eine neue Bewertung auslösen. Jedes größere Update braucht deshalb eine erneute Klassifizierung.",
-          "keyTakeaway": "KI-Inventar, kontextgerechte Art.-4-Maßnahmen und Art.-50-Vorbereitung sind jetzt relevant. Die Hochrisiko-Termine 2027/2028 sind geltendes Recht.",
+          "content": "**Stand: 28. Juli 2026:** Artikel 4 verlangt keine bestimmte Bescheinigung und seit der Änderung auch kein garantiertes individuelles Kompetenzniveau. Verlangt sind von Anbietern und Betreibern Maßnahmen, die die Entwicklung der KI-Kompetenz kontextgerecht unterstützen.\n\n**Jetzt:**\n\n- ein vollständiges Inventar aller KI-Systeme im Haus, Schatten-IT eingeschlossen\n- Risikoklassifizierung pro System (Anhang III, Art. 5, GPAI oder geringes Risiko)\n- rollen- und risikogerechte KI-Kompetenzmaßnahmen nach Art. 4 dokumentieren\n- Transparenz- und Interaktionshinweise nach Art. 50 bis zum 2. August 2026 umsetzen, soweit der konkrete Tatbestand greift\n\n**Für 2027/2028:**\n\n- eigenständige Hochrisiko-Pflichten auf den **2. Dezember 2027** planen\n- produktintegrierte Hochrisiko-Systeme auf den **2. August 2028** planen\n- Vendor-Unterlagen, Logs, menschliche Aufsicht und eine gegebenenfalls erforderliche Grundrechtefolgenabschätzung rechtzeitig vorbereiten\n\n**Bestandsschutz mit Falle:** Eine wesentliche Änderung kann Übergangsregeln beenden oder eine neue Bewertung auslösen. Jedes größere Update heißt deshalb: neu klassifizieren.",
+          "keyTakeaway": "KI-Inventar, kontextgerechte Art.-4-Maßnahmen und Art.-50-Vorbereitung sind jetzt dran. Die Hochrisiko-Termine 2027/2028 sind geltendes Recht.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
             {
@@ -424,7 +424,7 @@
           "id": "block_1_lesson_4_section_3",
           "title": "Wann greift die Durchsetzung?",
           "readTimeMinutes": 2,
-          "content": "Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Maßgeblich ist für Unternehmen grundsätzlich der höhere der beiden Werte:\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. € oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3).\n- **Die in Art. 99 Abs. 4 genannten Pflichten:** bis **15 Mio. € oder 3 %**.\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. € oder 1 %** (Art. 99 Abs. 5).\n\n**KMU-Klausel:** Für KMU und nach der Änderung auch kleine Mid-Caps gelten besondere Höchstgrenzen. Die konkrete Berechnung und Pflichtzuordnung ist fallbezogen zu prüfen.\n\n**Zur Einordnung:** Art. 4 gilt seit dem 2. Februar 2025 und wurde durch Verordnung (EU) 2026/1744 geändert. Nach der Kommissions-FAQ beginnt die nationale Aufsicht und Durchsetzung Anfang August 2026. Art. 50 wird am 2. August 2026 anwendbar. Ob ein Bußgeld droht, hängt vom verletzten Artikel, dem Zeitplan, der zuständigen Behörde und dem Einzelfall ab.\n\nDie Hochrisiko-Termine 2. Dezember 2027 für eigenständige Anhang-III-Systeme und 2. August 2028 für produktintegrierte Anhang-I-Systeme sind seit 27. Juli 2026 geltendes Recht.",
+          "content": "Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Für Unternehmen zählt der höhere der beiden Werte:\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. € oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3).\n- **Die in Art. 99 Abs. 4 genannten Pflichten:** bis **15 Mio. € oder 3 %**.\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. € oder 1 %** (Art. 99 Abs. 5).\n\n**KMU-Klausel:** Für KMU und seit der Änderung auch für kleine Mid-Caps gelten eigene Höchstgrenzen. Berechnung und Pflichtzuordnung sind im Einzelfall zu prüfen.\n\nArt. 4 gilt seit dem 2. Februar 2025, geändert durch Verordnung (EU) 2026/1744. Nach der Kommissions-FAQ beginnen nationale Aufsicht und Durchsetzung Anfang August 2026. Art. 50 wird am 2. August 2026 anwendbar. Ob ein Bußgeld droht, hängt vom verletzten Artikel, vom Zeitplan, von der zuständigen Behörde und vom Einzelfall ab.\n\nDie Hochrisiko-Termine 2. Dezember 2027 für eigenständige Anhang-III-Systeme und 2. August 2028 für produktintegrierte Anhang-I-Systeme sind seit 27. Juli 2026 geltendes Recht.",
           "keyTakeaway": "Artikel 4 gilt seit Februar 2025 in der seit 27. Juli 2026 geänderten Form. Die nationale Aufsicht und Durchsetzung beginnen nach der Kommissions-FAQ Anfang August 2026.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
@@ -460,7 +460,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 113 Buchstabe a der Verordnung (EU) 2024/1689 stellt klar, dass Kapitel I (in dem Art. 4 steht) und Kapitel II ab dem 2. Februar 2025 gelten. Die Pflicht ist seit diesem Datum anwendbar; die Kommissions-FAQ nennt den 2. August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung."
+          "explanation": "Art. 113 Buchstabe a der Verordnung (EU) 2024/1689: Kapitel I, in dem Art. 4 steht, und Kapitel II gelten ab dem 2. Februar 2025. Seit diesem Datum ist die Pflicht anwendbar. Die Kommissions-FAQ nennt den 2. August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung."
         },
         {
           "id": "block_1_lesson_4_q2",
@@ -514,7 +514,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 3 normiert für Verstöße gegen die in Art. 5 genannten verbotenen Praktiken bis zu 35 Mio. € oder 7 % des weltweiten Jahresumsatzes. Bei KMU greift Art. 99 Abs. 6 mit dem niedrigeren der beiden Werte als Cap."
+          "explanation": "Art. 99 Abs. 3 setzt für Verstöße gegen die Verbote des Art. 5 bis zu 35 Mio. € oder 7 % des weltweiten Jahresumsatzes an. Bei KMU deckelt Art. 99 Abs. 6 auf den niedrigeren der beiden Werte."
         }
       ]
     }

@@ -1,8 +1,8 @@
 {
   "blockId": "block_5",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-07-14",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -15,7 +15,7 @@
       "blockId": "block_5",
       "number": 1,
       "title": "AI Office, KI-Gremium und die deutsche Behördenlandkarte",
-      "subtitle": "Wer Sie als Mittelständler tatsächlich kontrolliert: EU-Ebene, BNetzA und sektorale Aufsicht",
+      "subtitle": "Wer Sie als Mittelständler wirklich kontrolliert: EU-Ebene, BNetzA und sektorale Aufsicht",
       "durationMinutes": 4,
       "keyConcepts": [
         "AI Office",
@@ -29,22 +29,22 @@
           "id": "block_5_lesson_1_section_1",
           "title": "EU-Ebene: AI Office und KI-Gremium",
           "readTimeMinutes": 2,
-          "content": "Das **AI Office** (Europäisches Büro für Künstliche Intelligenz) sitzt in der EU-Kommission, Generaldirektion CNECT (Communications Networks, Content and Technology). Es hat inzwischen über 125 Mitarbeitende in sechs Units, darunter Regulation and Compliance sowie AI Safety.\n\nSeine Aufgaben sind eng umrissen. Das AI Office hat **ausschließliche Aufsichtsbefugnis über GPAI-Modelle** (KI-Modelle mit allgemeinem Verwendungszweck wie GPT-4, Claude, Gemini) gemäß Art. 88. Es koordiniert Codes of Practice, führt das Sekretariat des KI-Gremiums und betreibt seit 8. Oktober 2025 den öffentlichen Service Desk.\n\nDas **KI-Gremium** (European AI Board) ist in Art. 65 geregelt. Jeder Mitgliedstaat entsendet einen Vertreter. Es koordiniert die nationalen Behörden und berät die Kommission.\n\nWichtig für den Mittelstand: **AI Office und KI-Gremium sind für Sie praktisch nicht zuständig**, solange Sie nur KI einsetzen, statt ein Foundation Model selbst in Verkehr zu bringen. Ihre Ansprechpartner sitzen in Deutschland.",
-          "keyTakeaway": "AI Office beaufsichtigt GPAI-Modelle auf EU-Ebene. KI-Gremium (Art. 65) koordiniert die Mitgliedstaaten. Für klassischen Mittelstandseinsatz sind beide nicht direkt zuständig."
+          "content": "Über 125 Mitarbeitende in sechs Units, darunter Regulation and Compliance und AI Safety, Sitz in der Generaldirektion CNECT der EU-Kommission: Das ist das **AI Office** (Europäisches Büro für Künstliche Intelligenz).\n\nSein Mandat ist schmal und scharf. Über **GPAI-Modelle** (KI-Modelle mit allgemeinem Verwendungszweck wie GPT-4, Claude, Gemini) hat das AI Office nach Art. 88 die **ausschließliche Aufsichtsbefugnis**. Dazu koordiniert es die Codes of Practice, führt das Sekretariat des KI-Gremiums und betreibt seit 8. Oktober 2025 den öffentlichen Service Desk.\n\nDas **KI-Gremium** (European AI Board) steht in Art. 65. Ein Vertreter pro Mitgliedstaat. Es koordiniert die nationalen Behörden und berät die Kommission.\n\nWas heißt das für Sie? Solange Sie KI nur einsetzen und kein Foundation Model in Verkehr bringen, sind **AI Office und KI-Gremium praktisch nicht zuständig**. Ihre Ansprechpartner sitzen in Deutschland.",
+          "keyTakeaway": "Das AI Office beaufsichtigt GPAI-Modelle, das KI-Gremium (Art. 65) koordiniert die Mitgliedstaaten. Für den Mittelständler, der KI nur einsetzt, ist keines direkt zuständig."
         },
         {
           "id": "block_5_lesson_1_section_2",
           "title": "Deutschland: BNetzA als Default-Behörde",
           "readTimeMinutes": 1,
-          "content": "Art. 70 Abs. 2 verpflichtet jeden Mitgliedstaat, eine **zentrale Anlaufstelle** zu benennen. Das KI-MIG benennt hierfür die **Bundesnetzagentur (BNetzA)**. Der Bundestag nahm das Gesetz am **11. Juni 2026** an; am **10. Juli 2026** passierte es den Bundesrat ohne Anrufung des Vermittlungsausschusses. Das Gesetz ist am **29. Juli 2026 in Kraft getreten**. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften aber nach dem gestaffelten Zeitplan.\n\nSeitdem ist die BNetzA Marktüberwachungsbehörde für Bereiche ohne zugewiesene sektorale Aufsicht sowie zentrale Anlaufstelle und Beschwerdestelle. Das Gesetz sieht innerhalb der BNetzA ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** sowie eine unabhängige Marktüberwachungskammer für bestimmte Bereiche vor.\n\nWelcher Meldekanal im Einzelfall der richtige ist, ergibt sich weiterhin aus Fachrecht und Sektor. Für echte Fälle sind das Gesetz, das jeweilige Fachrecht und die aktuellen Behördeninformationen maßgeblich.",
-          "keyTakeaway": "Das KI-MIG ist seit dem 29. Juli 2026 in Kraft und macht die BNetzA zur zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Der konkrete Meldeweg richtet sich weiterhin nach Sektor und Fachrecht."
+          "content": "Art. 70 Abs. 2 verlangt von jedem Mitgliedstaat eine **zentrale Anlaufstelle**. Deutschland hat sie: die **Bundesnetzagentur (BNetzA)**, benannt im KI-MIG. Der Bundestag nahm das Gesetz am **11. Juni 2026** an, der Bundesrat ließ es am **10. Juli 2026** ohne Vermittlungsausschuss passieren, seit dem **29. Juli 2026 ist es in Kraft**. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften nach dem gestaffelten Zeitplan.\n\nSeitdem ist die BNetzA Marktüberwachungsbehörde für alle Bereiche ohne zugewiesene sektorale Aufsicht, dazu zentrale Anlaufstelle und Beschwerdestelle. Das Gesetz sieht im Haus ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** vor und für bestimmte Bereiche eine unabhängige Marktüberwachungskammer.\n\nDen richtigen Meldekanal bestimmt weiterhin das Fachrecht Ihres Sektors. Für echte Fälle zählen Gesetz, Fachrecht und aktuelle Behördeninformationen, nicht diese Lektion.",
+          "keyTakeaway": "Seit dem 29. Juli 2026 macht das KI-MIG die BNetzA zur zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Den konkreten Meldeweg bestimmen weiterhin Sektor und Fachrecht."
         },
         {
           "id": "block_5_lesson_1_section_3",
           "title": "Sektorale Aufsicht: Wer zusätzlich zuständig bleibt",
           "readTimeMinutes": 1,
-          "content": "Art. 74 ordnet Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu. Zusätzlich bleiben Datenschutz- und anderes Fachrecht mit eigenen Zuständigkeiten relevant.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die zuständige Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Dort bezeichnete Datenschutz- oder andere Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA die Auffangrolle zu; die konkrete Zuständigkeitsnorm ist vor Nutzung zu prüfen.\n\n**Praxis:** Dokumentieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Behandeln Sie das Mapping bis zur behördlichen Konsolidierung ausdrücklich als zu bestätigende Rechtsfrage.",
-          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben relevant. Die BNetzA-Auffangrolle folgt aus dem KI-MIG, das seit dem 29. Juli 2026 in Kraft ist."
+          "content": "Die BNetzA ist die Auffangbehörde, nicht die einzige. Art. 74 ordnet die Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu; Datenschutz- und anderes Fachrecht behalten eigene Zuständigkeiten.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist in der Regel auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die Marktüberwachung folgt in der Regel dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Die dort bezeichneten Datenschutz- oder anderen Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA die Auffangrolle zu. Die Zuständigkeitsnorm prüfen Sie vor der Nutzung.\n\n**Praxis:** Notieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Bis die Zuständigkeiten konsolidiert sind, bleibt dieses Mapping eine zu bestätigende Rechtsfrage.",
+          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben im Spiel. Die Auffangrolle der BNetzA folgt aus dem KI-MIG, in Kraft seit dem 29. Juli 2026."
         }
       ],
       "quiz": [
@@ -73,7 +73,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten und benennt die Bundesnetzagentur als zentrale Anlaufstelle. Welche Behörde im Einzelfall zuständig ist, richtet sich weiterhin nach Sektor und Fachrecht."
+          "explanation": "Das KI-MIG ist seit dem 29. Juli 2026 in Kraft und benennt die Bundesnetzagentur als zentrale Anlaufstelle. Welche Behörde im Einzelfall zuständig ist, entscheiden weiterhin Sektor und Fachrecht."
         },
         {
           "id": "block_5_lesson_1_q2",
@@ -100,7 +100,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 74 Abs. 6 KI-VO überträgt die Marktüberwachung für KI-Systeme von Finanzinstituten an die zuständige Finanzaufsicht. In Deutschland ist das die BaFin. Dasselbe KI-Modell in einer anderen Abteilung (z. B. HR) fällt dagegen unter die BNetzA."
+          "explanation": "Art. 74 Abs. 6 KI-VO legt die Marktüberwachung für KI-Systeme von Finanzinstituten in die Hände der zuständigen Finanzaufsicht, in Deutschland also der BaFin. Dasselbe Modell in der HR-Abteilung derselben Bank fällt dagegen unter die BNetzA."
         },
         {
           "id": "block_5_lesson_1_q3",
@@ -127,7 +127,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das AI Office sitzt in der EU-Kommission (GD CNECT) und hat gem. Art. 88 ausschließliche Befugnis für GPAI-Modelle (z. B. GPT-4, Claude, Gemini). Klassische Mittelstands-KI fällt in die Zuständigkeit der nationalen Behörden (Art. 70), in Deutschland primär der BNetzA."
+          "explanation": "Das AI Office sitzt in der EU-Kommission (GD CNECT). Nach Art. 88 hat es die ausschließliche Befugnis für GPAI-Modelle wie GPT-4, Claude oder Gemini. Für klassische Mittelstands-KI sind die nationalen Behörden zuständig (Art. 70), in Deutschland vor allem die BNetzA."
         }
       ]
     },
@@ -150,21 +150,21 @@
           "id": "block_5_lesson_2_section_1",
           "title": "Die drei Sanktionsstufen nach Art. 99",
           "readTimeMinutes": 2,
-          "content": "Art. 99 KI-VO kennt drei Bußgeld-Stufen. Welche Stufe greift, entscheidet darüber, ob ein Verstoß unangenehm oder existenzbedrohend wird.\n\n**Stufe 1: Verbotene KI-Praktiken (Art. 5)**. Bis zu **35.000.000 Euro oder 7 Prozent des weltweiten Jahresumsatzes**, der jeweils höhere Wert (Art. 99 Abs. 3). Beispiele: Social Scoring, Emotionserkennung am Arbeitsplatz, Echtzeit-biometrische Identifizierung im öffentlichen Raum.\n\n**Stufe 2: Die meisten Operator-Pflichten**. Bis zu **15.000.000 Euro oder 3 Prozent Jahresumsatz**, der höhere Wert (Art. 99 Abs. 4). Erfasst: Anbieterpflichten nach Art. 16, Bevollmächtigte (Art. 22), Einführer (Art. 23), Händler (Art. 24), **Betreiberpflichten nach Art. 26** und **Transparenzpflichten nach Art. 50**.\n\n**Stufe 3: Falsche Angaben an Behörden**. Bis zu **7.500.000 Euro oder 1 Prozent Jahresumsatz**, der höhere Wert (Art. 99 Abs. 5). Diese Stufe greift, wenn Sie der BNetzA falsche, unvollständige oder irreführende Informationen liefern.",
+          "content": "35 Millionen Euro. Die Summe steht in jeder Schlagzeile, und für ein KMU ist sie nie der Deckel. Art. 99 KI-VO kennt drei Bußgeld-Stufen. Welche greift, entscheidet, ob ein Verstoß unangenehm oder existenzbedrohend wird.\n\n**Stufe 1: Verbotene KI-Praktiken (Art. 5).** Bis zu **35.000.000 Euro oder 7 Prozent des weltweiten Jahresumsatzes**, der jeweils höhere Wert (Art. 99 Abs. 3). Social Scoring, Emotionserkennung am Arbeitsplatz, Echtzeit-biometrische Identifizierung im öffentlichen Raum.\n\n**Stufe 2: Die meisten Operator-Pflichten.** Bis zu **15.000.000 Euro oder 3 Prozent Jahresumsatz**, der höhere Wert (Art. 99 Abs. 4). Darunter fallen Anbieterpflichten nach Art. 16, Bevollmächtigte (Art. 22), Einführer (Art. 23), Händler (Art. 24), **Betreiberpflichten nach Art. 26** und **Transparenzpflichten nach Art. 50**.\n\n**Stufe 3: Falsche Angaben an Behörden.** Bis zu **7.500.000 Euro oder 1 Prozent Jahresumsatz**, der höhere Wert (Art. 99 Abs. 5). Wer der BNetzA falsche, unvollständige oder irreführende Informationen liefert, landet hier.",
           "keyTakeaway": "Drei Stufen: verbotene Praktiken (35 Mio / 7 Prozent), Standardpflichten (15 Mio / 3 Prozent), falsche Auskunft (7,5 Mio / 1 Prozent). Art. 99 Abs. 3-5."
         },
         {
           "id": "block_5_lesson_2_section_2",
           "title": "KMU-Regel: der niedrigere Wert gilt",
           "readTimeMinutes": 1,
-          "content": "Für Großunternehmen gilt bei Bußgeldern die **höhere** der beiden Größen (absoluter Betrag oder Prozentsatz). Für KMU einschließlich Start-ups kehrt Art. 99 Abs. 6 diese Regel um: Es gilt der **niedrigere** Wert.\n\nDas ist oft übersehen und für den Mittelstand entscheidend. Konkret: Ein 20-Millionen-Betrieb bekommt für eine verbotene Praktik maximal 1,4 Mio Euro (7 Prozent), nicht 35 Mio Euro.\n\nZusätzlich zwingt Art. 99 Abs. 7 die Behörde, **10 Faktoren** bei der Bemessung zu berücksichtigen. Darunter: Schwere, Anzahl Betroffener, Vorsatz versus Fahrlässigkeit, Unternehmensgröße, Kooperationsbereitschaft und, explizit wichtig, **technische und organisatorische Maßnahmen** (Art. 99 Abs. 7 lit. g).\n\nWer eine dokumentierte KI-Governance hat (Art. 4-Schulungsnachweise, Risikoregister, Vorfall-Prozess), erhält im Ernstfall **strukturell weniger** Bußgeld als jemand, der nichts hat.",
+          "content": "Großunternehmen zahlen den **höheren** der beiden Werte, absoluter Betrag oder Prozentsatz. Für KMU einschließlich Start-ups dreht Art. 99 Abs. 6 das um: Es gilt der **niedrigere** Wert.\n\nDas wird oft übersehen und ist für den Mittelstand entscheidend. Ein 20-Millionen-Betrieb bekommt für eine verbotene Praktik höchstens 1,4 Mio Euro (7 Prozent), nicht 35 Mio Euro.\n\nWürfeln darf die Behörde nicht. Art. 99 Abs. 7 zwingt sie, **10 Faktoren** zu berücksichtigen, darunter Schwere, Anzahl der Betroffenen, Vorsatz oder Fahrlässigkeit, Unternehmensgröße, Kooperationsbereitschaft und, ausdrücklich, **technische und organisatorische Maßnahmen** (Art. 99 Abs. 7 lit. g).\n\nWer dokumentierte KI-Governance vorweist (Schulungen nach Art. 4, Risikoregister, Vorfall-Prozess), bekommt im Ernstfall **strukturell weniger** Bußgeld als jemand ohne.",
           "keyTakeaway": "KMU-Regel (Art. 99 Abs. 6): niedrigerer Wert gilt. 10 Bemessungsfaktoren (Art. 99 Abs. 7) berücksichtigen dokumentierte technische und organisatorische Maßnahmen."
         },
         {
           "id": "block_5_lesson_2_section_3",
           "title": "Rechenbeispiele für den Mittelstand",
           "readTimeMinutes": 1,
-          "content": "**Beispiel A: Maschinenbauer, 20 Mio Euro Umsatz**\n\n- Stufe 1 (z. B. Emotionserkennung am Werkstor): 7 Prozent = 1,4 Mio Euro. KMU-Deckel: max. 1,4 Mio.\n- Stufe 2 (z. B. fehlende Risikobewertung bei HR-KI): 3 Prozent = 600 TEUR. KMU-Deckel: max. 600 TEUR.\n- Stufe 3 (falsche Auskunft an BNetzA): 1 Prozent = 200 TEUR. KMU-Deckel: max. 200 TEUR.\n\n**Beispiel B: Handwerksbetrieb, 1,5 Mio Euro Umsatz**\n\n- Stufe 1: 7 Prozent = 105 TEUR. Existenzbedrohend für einen 3-Personen-Betrieb.\n\nSanktionen werden in Deutschland nach dem OWiG durch die zuständige Marktüberwachungsbehörde verhängt. Klage zum Verwaltungsgericht ist möglich (Art. 99 Abs. 10). Die Mitgliedstaaten berichten jährlich an die Kommission (Art. 99 Abs. 11).\n\nDie Schlagzeile von 35 Mio. EUR ist meist nicht das reale Risiko für kleine und mittlere Organisationen. Ihr realistischer Rahmen liegt bei 100 TEUR bis 1,4 Mio Euro pro Verstoßart, und mit dokumentierter Governance deutlich darunter.\n\nZur Einordnung: Die Höchststrafe für die meisten Pflichten liegt bei 3 % des weltweiten Jahresumsatzes (Art. 99 Abs. 4). Bei einem mittelgroßen Unternehmen mit 50 Mio. EUR Umsatz sind das bis zu 1,5 Mio. EUR. Die tatsächliche Sanktionshöhe hängt von Verhältnismäßigkeit und dokumentierten Maßnahmen ab.",
+          "content": "**Beispiel A: Maschinenbauer, 20 Mio Euro Umsatz**\n\n- Stufe 1 (etwa Emotionserkennung am Werkstor): 7 Prozent = 1,4 Mio Euro. KMU-Deckel: 1,4 Mio.\n- Stufe 2 (etwa fehlende Risikobewertung bei HR-KI): 3 Prozent = 600 TEUR. KMU-Deckel: 600 TEUR.\n- Stufe 3 (falsche Auskunft an die BNetzA): 1 Prozent = 200 TEUR. KMU-Deckel: 200 TEUR.\n\n**Beispiel B: Handwerksbetrieb, 1,5 Mio Euro Umsatz**\n\n- Stufe 1: 7 Prozent = 105 TEUR. Für einen 3-Personen-Betrieb existenzbedrohend.\n\nVerhängt werden Sanktionen in Deutschland nach dem OWiG durch die zuständige Marktüberwachungsbehörde. Dagegen steht die Klage zum Verwaltungsgericht offen (Art. 99 Abs. 10). Die Mitgliedstaaten berichten der Kommission jährlich (Art. 99 Abs. 11).\n\nDie Schlagzeile von 35 Mio. EUR ist für kleine und mittlere Betriebe meist nicht das reale Risiko. Ihr Rahmen liegt bei 100 TEUR bis 1,4 Mio Euro pro Verstoßart, mit dokumentierter Governance deutlich darunter.\n\nZur Einordnung: Für die meisten Pflichten liegt die Höchststrafe bei 3 % des weltweiten Jahresumsatzes (Art. 99 Abs. 4). Bei 50 Mio. EUR Umsatz sind das bis zu 1,5 Mio. EUR. Was auf dem Bescheid steht, hängt von Verhältnismäßigkeit und dokumentierten Maßnahmen ab.",
           "keyTakeaway": "Realistischer Rahmen für einen 20-Mio-Betrieb: 200 TEUR bis 1,4 Mio Euro. Dokumentierte Governance senkt die Höhe strukturell (Art. 99 Abs. 7 lit. g)."
         }
       ],
@@ -194,7 +194,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 3 KI-VO sieht für verbotene Praktiken nach Art. 5 Bußgelder bis 35 Mio Euro oder 7 Prozent des weltweiten Jahresumsatzes vor, jeweils der höhere Wert. Bei KMU gilt nach Art. 99 Abs. 6 der niedrigere Wert."
+          "explanation": "Art. 99 Abs. 3 KI-VO: für verbotene Praktiken nach Art. 5 bis 35 Mio Euro oder 7 Prozent des weltweiten Jahresumsatzes, jeweils der höhere Wert. Für KMU gilt nach Art. 99 Abs. 6 der niedrigere Wert."
         },
         {
           "id": "block_5_lesson_2_q2",
@@ -221,7 +221,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 6 KI-VO kehrt die Regel für KMU um: Statt des höheren gilt der niedrigere Wert aus absolutem Betrag oder Prozentsatz. Für einen 20-Mio-Betrieb heißt das bei Stufe 1 max. 1,4 Mio Euro statt 35 Mio Euro."
+          "explanation": "Art. 99 Abs. 6 KI-VO dreht die Regel für KMU um: Nicht der höhere, sondern der niedrigere Wert aus absolutem Betrag und Prozentsatz gilt. Für einen 20-Mio-Betrieb heißt das in Stufe 1 höchstens 1,4 Mio Euro statt 35 Mio Euro."
         },
         {
           "id": "block_5_lesson_2_q3",
@@ -248,7 +248,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 5 KI-VO sanktioniert falsche, unvollständige oder irreführende Informationen an notifizierte Stellen oder zuständige nationale Behörden mit bis zu 7,5 Mio Euro oder 1 Prozent des Jahresumsatzes. Bei einer BNetzA-Anfrage ist Kooperation Pflicht, aber keine Geschäftsgeheimnisse müssen preisgegeben werden."
+          "explanation": "Art. 99 Abs. 5 KI-VO sanktioniert falsche, unvollständige oder irreführende Informationen an notifizierte Stellen oder zuständige nationale Behörden mit bis zu 7,5 Mio Euro oder 1 Prozent des Jahresumsatzes. Bei einer Anfrage der BNetzA ist Kooperation Pflicht. Geschäftsgeheimnisse preisgeben müssen Sie deshalb nicht."
         }
       ]
     },
@@ -257,7 +257,7 @@
       "blockId": "block_5",
       "number": 3,
       "title": "KI-Reallabore: kostenloser Probebetrieb für KMU",
-      "subtitle": "Was Art. 57 vorsieht und warum Originaltext, AI Omnibus und tatsächliches Angebot getrennt werden müssen",
+      "subtitle": "Was Art. 57 vorsieht, und warum Originaltext, AI Omnibus und tatsächliches Angebot drei verschiedene Dinge sind",
       "durationMinutes": 4,
       "keyConcepts": [
         "KI-Reallabor",
@@ -271,22 +271,22 @@
           "id": "block_5_lesson_3_section_1",
           "title": "Was ein KI-Reallabor nach Art. 57 ist",
           "readTimeMinutes": 2,
-          "content": "Ein **KI-Reallabor** (auch: AI Regulatory Sandbox) ist laut Art. 3 Nr. 55 ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt in Art. 57 Abs. 1 den **2. August 2027** als Frist für mindestens ein nationales KI-Reallabor.\n\nArt. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor. Ob, wann und unter welchen Bedingungen ein konkretes deutsches Reallabor Anträge annimmt, ergibt sich nicht allein aus dem Stichtag. Dafür müssen das verkündete KI-MIG und aktuelle Informationen der zuständigen Stelle geprüft werden.",
-          "keyTakeaway": "Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 verschiebt die Reallaborfrist auf den 2. August 2027. Ein aktives deutsches Angebot ist damit nicht automatisch belegt."
+          "content": "Sie bauen ein Hochrisiko-KI-System und wollen mit der Behörde reden, bevor Sie es in Verkehr bringen. Dafür gibt es das **KI-Reallabor** (AI Regulatory Sandbox): nach Art. 3 Nr. 55 ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDie Frist dafür ist verschoben. Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt in Art. 57 Abs. 1 den **2. August 2027** als Termin für mindestens ein nationales KI-Reallabor.\n\nArt. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor. Ob, wann und zu welchen Bedingungen ein deutsches Reallabor Anträge annimmt, steht nicht im Stichtag, sondern im verkündeten KI-MIG und in den aktuellen Informationen der zuständigen Stelle.",
+          "keyTakeaway": "Verordnung (EU) 2026/1744, in Kraft seit dem 27. Juli 2026, verschiebt die Reallaborfrist auf den 2. August 2027. Ein aktives deutsches Angebot belegt der Stichtag nicht."
         },
         {
           "id": "block_5_lesson_3_section_2",
           "title": "Was der Mittelstand konkret bekommt",
           "readTimeMinutes": 1,
-          "content": "Art. 58 Abs. 2 lit. d verankert **vorrangigen Zugang für KMU und Start-ups**. Der Zugang ist **kostenlos**. Die Behörde darf nur außergewöhnliche Kosten in fairer und verhältnismäßiger Weise einfordern.\n\nWeitere Vorteile:\n\n- **Haftungsbefreiung**: Art. 57 Abs. 12 stellt klar, dass bei Befolgung des Reallabor-Plans keine Bußgelder für Verstöße gegen die Verordnung verhängt werden. Zivilrechtliche Schädigerhaftung gegenüber Dritten bleibt bestehen.\n- **3-Monats-Antwortpflicht**: Nach Art. 58 Abs. 2 lit. a muss die Behörde binnen drei Monaten über den Antrag entscheiden.\n- **Konformitätsbeschleunigung**: Der Abschlussbericht wird in späteren Konformitätsbewertungen positiv gewertet (Art. 57 Abs. 7).\n\nWer ein Hochrisiko-KI-System baut, etwa KI für Personalauswahl oder als Sicherheitsbauteil einer Maschine, kann **vor** dem Inverkehrbringen mit der Behörde sprechen, statt **nach** dem Inverkehrbringen mit ihr zu streiten.",
-          "keyTakeaway": "Vorrangig für KMU, kostenlos, Haftungsbefreiung bei Plankonformität, Entscheidung binnen 3 Monaten. Wer Hochrisiko-KI plant, sollte den Antrag als ersten Schritt prüfen."
+          "content": "Art. 58 Abs. 2 lit. d gibt **KMU und Start-ups vorrangigen Zugang**. Und er kostet nichts: Die Behörde darf nur außergewöhnliche Kosten verlangen, fair und verhältnismäßig.\n\nDrei weitere Zusagen:\n\n- **Haftungsbefreiung**: Wer den Reallabor-Plan befolgt, bekommt nach Art. 57 Abs. 12 keine Bußgelder für Verstöße gegen die Verordnung. Die zivilrechtliche Haftung gegenüber Dritten bleibt.\n- **3-Monats-Antwortpflicht**: Die Behörde muss nach Art. 58 Abs. 2 lit. a binnen drei Monaten über den Antrag entscheiden.\n- **Konformitätsbeschleunigung**: Der Abschlussbericht zählt in späteren Konformitätsbewertungen positiv (Art. 57 Abs. 7).\n\nWer ein Hochrisiko-KI-System baut, etwa für die Personalauswahl oder als Sicherheitsbauteil einer Maschine, kann **vor** dem Inverkehrbringen mit der Behörde reden statt **danach** zu streiten.",
+          "keyTakeaway": "Vorrang für KMU, kostenlos, keine Bußgelder bei Plankonformität, Entscheidung binnen 3 Monaten. Wer Hochrisiko-KI plant, prüft den Antrag als ersten Schritt."
         },
         {
           "id": "block_5_lesson_3_section_3",
           "title": "Status Deutschland: BNetzA, BfDI und Hessen",
           "readTimeMinutes": 1,
-          "content": "Das deutsche Pilotprojekt 2025/2026 wurde von der **Bundesnetzagentur** gemeinsam mit dem **BfDI** und dem **Hessischen Digitalministerium** durchgeführt. Zwei Start-up-Anwendungsfälle wurden mit Schwerpunkt KI-VO und MDR simuliert. Ein Pilot belegt jedoch noch kein allgemein verfügbares Reallabor mit offenem Antragssystem.\n\nDas seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA Aufgaben bei der Innovationsförderung zu. Die neue EU-Reallaborfrist 2. August 2027 ist dagegen seit dem 27. Juli 2026 geltendes Recht.\n\nOb die BNetzA bereits Anträge annimmt, prüfen Sie vor einem Antrag auf der aktuellen Behördenseite.",
-          "keyTakeaway": "Das Pilotprojekt belegt Vorbereitung, nicht einen aktiven Regelbetrieb. Ein deutsches Reallabor und sein Antragsweg müssen anhand aktueller offizieller Informationen verifiziert werden."
+          "content": "Ein Pilot ist kein Regelbetrieb. Das deutsche Pilotprojekt 2025/2026 haben die **Bundesnetzagentur**, der **BfDI** und das **Hessische Digitalministerium** gemeinsam durchgeführt, mit zwei simulierten Start-up-Fällen zu KI-VO und MDR. Ein offenes Antragssystem belegt das nicht.\n\nDas seit dem 29. Juli 2026 geltende KI-MIG gibt der BNetzA Aufgaben in der Innovationsförderung. Die EU-Frist 2. August 2027 ist seit dem 27. Juli 2026 geltendes Recht.\n\nOb die BNetzA schon Anträge annimmt, steht auf der aktuellen Behördenseite. Erst dort nachsehen, dann den Antrag schreiben.",
+          "keyTakeaway": "Das Pilotprojekt belegt Vorbereitung, keinen Regelbetrieb. Ob es ein deutsches Reallabor gibt und wie man hineinkommt, prüfen Sie an aktuellen offiziellen Informationen."
         }
       ],
       "quiz": [
@@ -342,7 +342,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 58 Abs. 2 lit. d KI-VO sieht ausdrücklich vorrangigen Zugang für KMU einschließlich Start-ups vor und macht den Zugang kostenlos. Nur außergewöhnliche Kosten dürfen in fairer und verhältnismäßiger Weise eingefordert werden."
+          "explanation": "Art. 58 Abs. 2 lit. d KI-VO gibt KMU einschließlich Start-ups ausdrücklich Vorrang und macht den Zugang kostenlos. Nur außergewöhnliche Kosten darf die Behörde fair und verhältnismäßig in Rechnung stellen."
         },
         {
           "id": "block_5_lesson_3_q3",
@@ -369,7 +369,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das deutsche Pilotprojekt wurde von der Bundesnetzagentur gemeinsam mit dem Bundesdatenschutzbeauftragten (BfDI) und dem Hessischen Digitalministerium durchgeführt, mit Schwerpunkt auf KI-VO- und MDR-relevanten Start-up-Fällen."
+          "explanation": "Bundesnetzagentur, Bundesdatenschutzbeauftragter (BfDI) und Hessisches Digitalministerium haben das deutsche Pilotprojekt gemeinsam durchgeführt, mit Schwerpunkt auf Start-up-Fällen zu KI-VO und MDR."
         }
       ]
     },
@@ -392,21 +392,21 @@
           "id": "block_5_lesson_4_section_1",
           "title": "Was Sie selbst melden müssen: Art. 72 und 73",
           "readTimeMinutes": 2,
-          "content": "Sobald die einschlägigen Hochrisiko-Regeln anwendbar sind, treffen Anbieter insbesondere Pflichten zur Beobachtung nach dem Inverkehrbringen und zur Meldung schwerwiegender Vorfälle. Die Verordnung (EU) 2026/1744 setzt den Anwendungsbeginn für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.\n\n**Art. 72:** Das Beobachtungssystem erhebt systematisch Leistungsdaten über die Lebensdauer; der Plan ist Teil der technischen Dokumentation.\n\n**Art. 73:** Ein schwerwiegender Vorfall wird nach Eintritt der Anwendbarkeit der zuständigen Marktüberwachungsbehörde gemeldet. Die Verordnung nennt grundsätzlich 15 Tage, bei bestimmten Todesfällen zehn Tage und bei weitverbreiteten Verstößen oder kritischer Infrastruktur zwei Tage. Produkt- und Datenschutzrecht können unabhängig davon eigene, bereits geltende Meldewege und Fristen auslösen.\n\nDie Fristen belegen nicht, welche deutsche Behörde oder welcher Kanal operativ verfügbar ist.",
-          "keyTakeaway": "Art. 72 und 73 gehören zum Hochrisiko-Regime. Anwendungsdatum, zuständige Behörde und parallele Meldepflichten müssen vor einem realen Vorfall aktuell geprüft werden."
+          "content": "Zwei Tage. So kurz kann eine Meldefrist nach Art. 73 sein. Beobachtung nach dem Inverkehrbringen und Meldung schwerwiegender Vorfälle treffen Anbieter, sobald die Hochrisiko-Regeln anwendbar sind. Die Verordnung (EU) 2026/1744 setzt den Anwendungsbeginn für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.\n\n**Art. 72:** Das Beobachtungssystem sammelt über die gesamte Lebensdauer systematisch Leistungsdaten. Der Plan dafür gehört in die technische Dokumentation.\n\n**Art. 73:** Ein schwerwiegender Vorfall geht nach Eintritt der Anwendbarkeit an die zuständige Marktüberwachungsbehörde. Regelfrist 15 Tage, bei bestimmten Todesfällen zehn Tage, bei weitverbreiteten Verstößen oder kritischer Infrastruktur zwei Tage. Produkt- und Datenschutzrecht können unabhängig davon eigene Meldewege und Fristen auslösen, und die gelten bereits.\n\nWelche deutsche Behörde und welcher Kanal operativ bereitstehen, sagen diese Fristen nicht.",
+          "keyTakeaway": "Art. 72 und 73 gehören zum Hochrisiko-Regime. Anwendungsdatum, zuständige Behörde und parallele Meldepflichten prüfen Sie vor dem Vorfall, nicht danach."
         },
         {
           "id": "block_5_lesson_4_section_2",
           "title": "Wer Sie meldet: Art. 85 Beschwerderecht",
           "readTimeMinutes": 1,
-          "content": "**Art. 85 KI-VO:** Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nDas deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die **BNetzA zur zentralen Anlaufstelle und Beschwerdestelle**, soweit keine Fachbehörde zuständig ist. Prüfen Sie vor einer Beschwerde zusätzlich das jeweilige Fachrecht und die aktuelle Behördeninformation, um Zuständigkeit und Beschwerdekanal zu bestätigen.\n\n**Verwandt: Art. 86** sieht unter seinen Voraussetzungen ein Recht auf eine klare und aussagekräftige Erläuterung der Rolle eines in Anhang III genannten Hochrisiko-Systems im Entscheidungsprozess vor. Das ist kein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe.",
-          "keyTakeaway": "Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Die konkrete deutsche Behörde und ihr aktiver Kanal müssen nach Verkündung des KI-MIG verifiziert werden."
+          "content": "Jeder darf Sie melden. **Art. 85 KI-VO:** Jede natürliche oder juristische Person, die Grund zur Annahme eines Verstoßes hat, kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nSeit dem 29. Juli 2026 macht das KI-MIG die **BNetzA zur zentralen Anlaufstelle und Beschwerdestelle**, soweit keine Fachbehörde zuständig ist. Vor einer Beschwerde prüfen Sie trotzdem Fachrecht und aktuelle Behördeninformation.\n\n**Verwandt: Art. 86.** Unter seinen Voraussetzungen gibt er ein Recht auf eine klare und aussagekräftige Erläuterung, welche Rolle ein in Anhang III genanntes Hochrisiko-System im Entscheidungsprozess gespielt hat. Ein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe ist das nicht.",
+          "keyTakeaway": "Art. 85 öffnet die Beschwerde bei der zuständigen Marktüberwachungsbehörde für jede Person. Die konkrete deutsche Behörde und ihren aktiven Kanal verifizieren Sie nach Verkündung des KI-MIG."
         },
         {
           "id": "block_5_lesson_4_section_3",
           "title": "Behördenanfrage: Reaktionsplan in 5 Schritten",
           "readTimeMinutes": 1,
-          "content": "**Befugnisse der Behörde** (Art. 74): uneingeschränkter Zugang zu Dokumentation und Trainings-, Validierungs- und Testdatensätzen über API möglich (Art. 74 Abs. 12). **Quellcode-Zugang** nur auf begründete Anfrage und nur, wenn andere Prüfverfahren ausgeschöpft sind (Art. 74 Abs. 13).\n\nWenn die Behörde Nichtkonformität feststellt, fordert sie zur Korrektur auf. Die Frist beträgt **maximal 15 Arbeitstage** (Art. 79 Abs. 2). Bei Verstößen gegen das Verbot nach Art. 5 verkürzt sich die unionsweite Einwendungsfrist auf 30 Tage (Art. 81).\n\n**Ihr Erstreaktionsplan:**\n\n1. **Schriftlich bestätigen**, Frist notieren. Niemals sofort Quellcode oder Trainingsdaten herausgeben. Anwalt einbeziehen.\n2. **Vorfall-Log starten**: Datum, Anfrage, beteiligte Personen, kommunizierte Inhalte.\n3. **Zuständigkeit prüfen**: Ist BNetzA wirklich zuständig oder eine sektorale Behörde (BaFin, BfArM, LMA)?\n4. **Compliance-Dokumente sammeln**: Art. 4-Schulungsnachweise, Risikobewertung, Post-Market-Protokolle, Konformitätserklärung. Das demonstriert technische und organisatorische Maßnahmen nach Art. 99 Abs. 7 lit. g und senkt Bußgelder.\n5. **Kooperieren, aber nicht falsch antworten**: Falsche oder unvollständige Angaben sind Stufe 3 (7,5 Mio Euro oder 1 Prozent, Art. 99 Abs. 5).\n\nVorbereitung schlägt Hektik: Dokumentierte Compliance plus Krisen-Anwalt im Telefonbuch plus ein definierter Sprecher reichen, um die ersten 48 Stunden ohne Bußgeldverschärfung zu überstehen.",
+          "content": "Die Behörde darf viel. Nach Art. 74 bekommt sie uneingeschränkten Zugang zu Dokumentation und zu Trainings-, Validierungs- und Testdatensätzen, auch über API (Art. 74 Abs. 12). Den **Quellcode** bekommt sie nur auf begründete Anfrage und nur, wenn andere Prüfverfahren ausgeschöpft sind (Art. 74 Abs. 13).\n\nStellt sie Nichtkonformität fest, fordert sie zur Korrektur auf. Frist: **maximal 15 Arbeitstage** (Art. 79 Abs. 2). Bei Verstößen gegen das Verbot nach Art. 5 verkürzt sich die unionsweite Einwendungsfrist auf 30 Tage (Art. 81).\n\n**Ihr Erstreaktionsplan:**\n\n1. **Schriftlich bestätigen**, Frist notieren. Niemals sofort Quellcode oder Trainingsdaten herausgeben. Anwalt einbeziehen.\n2. **Vorfall-Log starten**: Datum, Anfrage, beteiligte Personen, was kommuniziert wurde.\n3. **Zuständigkeit prüfen**: Ist die BNetzA wirklich zuständig, oder eine sektorale Behörde wie BaFin, BfArM oder LMA?\n4. **Unterlagen sammeln**: dokumentierte Schulungen nach Art. 4, Risikobewertung, Post-Market-Protokolle, Konformitätserklärung. Das belegt technische und organisatorische Maßnahmen nach Art. 99 Abs. 7 lit. g und senkt das Bußgeld.\n5. **Kooperieren, aber nicht falsch antworten**: Falsche oder unvollständige Angaben sind Stufe 3 (7,5 Mio Euro oder 1 Prozent, Art. 99 Abs. 5).\n\nVorbereitung schlägt Hektik. Dokumentierte Compliance, ein Krisen-Anwalt im Telefonbuch und ein benannter Sprecher reichen für die ersten 48 Stunden ohne Bußgeldverschärfung.",
           "keyTakeaway": "Korrekturfrist max. 15 Arbeitstage (Art. 79 Abs. 2). 5-Schritte-Plan: bestätigen, loggen, Zuständigkeit prüfen, Dokumente sammeln, kooperieren ohne falsche Angaben."
         }
       ],

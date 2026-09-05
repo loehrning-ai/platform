@@ -1,0 +1,63 @@
+{
+  "blockId": "block_fixture",
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "Inventar aufbauen",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Anfang",
+          "content": "In der heutigen Zeit ist KI überall. In einer zunehmend digitalisierten Arbeitswelt zählt das Inventar. In diesem Kapitel lernst du, wie ein Inventar entsteht.\n\nEin ganzheitlicher Blick hilft. Eine umfassende Liste ist grundlegende Arbeit. Eigentlich reicht ein Blatt Papier, im Prinzip sogar ein Zettel. Grundsätzlich zählt jede Funktion, quasi jede App, sozusagen alles. Das ist halt so."
+        },
+        {
+          "id": "s2",
+          "title": "Hinweise",
+          "content": "Es ist wichtig zu betonen, dass Inventare leben. Es sei darauf hingewiesen, dass Versionen wechseln. Es ist anzumerken, dass Anbieter Namen ändern. Der Spamfilter ist möglicherweise älter als gedacht, und die Autovervollständigung ist möglicherweise neuer."
+        },
+        {
+          "id": "s3",
+          "title": "Übergänge",
+          "content": "Darüber hinaus zählt Excel mit. Zusammenfassend lässt sich sagen, dass alles zählt. Lass uns einen Blick auf Outlook werfen. Wie bereits erwähnt zählt der Spamfilter, wie oben erwähnt auch Teams, und wie du bereits weißt auch DeepL."
+        },
+        {
+          "id": "s4",
+          "title": "Behauptungen",
+          "content": "Experten sind sich einig, dass eine disruptive Technik das Büro verändert. Eine Standortbestimmung zeigt den Stand. Ein Schulungsnachweis und ein Compliance-Nachweis sind nicht dasselbe wie ein Zertifikat oder ein Lernnachweis."
+        },
+        {
+          "id": "s5",
+          "title": "Zähler",
+          "content": "Stell dir vor, dein Postfach sortiert sich selbst. Das gilt sowohl für Gmail als auch für Outlook, und sowohl für Teams als auch für Slack. Das Inventar ist nicht nur eine Liste, sondern auch ein Werkzeug, und nicht nur ein Werkzeug, sondern auch ein Ritual. Prüfen Sie Ihre Daten trotzdem."
+        },
+        {
+          "id": "s6",
+          "title": "Struktur",
+          "content": "Erstens zählt der Spamfilter. Zweitens zählt Outlook. Drittens zählt Teams. Viertens zählt Excel. Fünftens zählt DeepL. Sechstens zählt die Navi-App.\n\n- Spamfilter\n- Outlook\n- Teams\n\n- Excel\n- DeepL\n- OCR\n\n- Navi\n- Kamera\n- Diktat\n\nFazit: Alles zählt, und das Inventar wächst."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q1",
+          "questionText": "Was zählt zum Inventar?",
+          "answerOptions": [
+            { "id": "a", "text": "Darüber hinaus zählt nichts.", "isCorrect": false },
+            { "id": "b", "text": "Jede Funktion zählt.", "isCorrect": true }
+          ],
+          "explanation": "Das Inventar erfasst jede Funktion, nicht nur Produktnamen."
+        }
+      ]
+    },
+    {
+      "id": "lesson-2",
+      "title": "Inventar pflegen",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Pflege",
+          "content": "Stell dir vor, die Liste ist fertig. Dann beginnt die Pflege."
+        }
+      ]
+    }
+  ]
+}

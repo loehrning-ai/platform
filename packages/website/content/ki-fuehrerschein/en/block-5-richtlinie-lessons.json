@@ -1,8 +1,8 @@
 {
   "blockId": "block_5",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-08",
-  "nextReview": "2027-02-08",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": ["eu-ai-act-amendment", "commission-qa-update"],
@@ -12,8 +12,8 @@
       "id": "block_5_lesson_1",
       "blockId": "block_5",
       "number": 1,
-      "title": "Why every organisation needs an AI policy",
-      "subtitle": "Shadow AI, Samsung and Article 4",
+      "title": "Why every organization needs an AI policy",
+      "subtitle": "Shadow AI, Article 4, one document",
       "durationMinutes": 6,
       "keyConcepts": [
         "Shadow AI",
@@ -24,17 +24,17 @@
       "sections": [
         {
           "id": "block_5_lesson_1_section_1",
-          "title": "The problem: shadow AI",
+          "title": "The shadow AI problem",
           "readTimeMinutes": 3,
-          "content": "> **At work:** This block is for people who implement or govern AI use in an organization. The template is a starting point and must be adapted to the jurisdiction, sector, worker representation, contracts, and existing security controls.\n\nShadow AI means AI services or functions used outside the approved inventory and intended controls. The risk is not limited to free chat services. Browser extensions, embedded writing features, meeting bots, and locally installed models can also create unknown data flows and unclear accountability.\n\nA policy creates a reviewable framework: Which purposes are allowed? Which systems and features are approved? Which data, recipients, and decisions are involved? Who reviews new cases and handles incidents?\n\nThe document alone does not prevent misuse. It must connect to the inventory, technical controls, training, procurement, data protection, information security, and an accessible approval process.",
-          "keyTakeaway": "Shadow AI operates outside the approved inventory and intended controls. A policy works only with accountable owners, technical controls, and a usable approval process."
+          "content": "> **At work:** This block is for people who implement or govern AI use in an organization. The template is a starting point. Jurisdiction, sector, worker representation, contracts and existing security rules you add yourself.\n\nThe sales lead runs a meeting bot. The working student has a browser extension, the assistant the new writing feature. Nobody asked. That is shadow AI: services or functions outside the approved inventory and the intended controls. Browser extensions, embedded writing features, meeting bots and local models create the same unknown data flows.\n\nA policy turns that into a reviewable frame. Which purposes are allowed, which systems and features approved? Which data, recipients and decisions are involved, and who reviews new cases and handles incidents?\n\nThe document alone prevents nothing. It works once it is tied to inventory, technical controls, training, procurement, data protection, information security and an approval process people can reach.",
+          "keyTakeaway": "Shadow AI grows outside the approved inventory and the intended controls. A policy works only with named owners, technical controls and a usable approval process."
         },
         {
           "id": "block_5_lesson_1_section_2",
           "title": "The obligation: Article 4 since February 2025",
           "readTimeMinutes": 3,
-          "content": "Article 4 of the EU AI Act has applied since 2 February 2025. Following the amendment made by Regulation (EU) 2026/1744, providers and deployers must take measures to support the development of AI literacy among their staff and other people dealing with the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context, and affected people or groups must be taken into account. Providers and deployers do not have to guarantee a specific level of competence for each individual. Nor does the law prescribe a standard certificate or fixed training format.\n\nWhat does this mean in practice? Providers and deployers need traceable elements: roles, permitted tools, data rules, review procedures, escalation and learning records. An AI policy is one important part of this documentation.\n\nThis policy is not complete evidence of Article 4 compliance. It records which tools are approved, which data may be entered into which tool, how outputs are checked and what happens after an incident. Depending on the use case, the organisation may also need training, an inventory, risk classification, a data protection review and other internal procedures.",
-          "keyTakeaway": "Article 4 has applied since 2 February 2025. An AI policy is one documented element of AI literacy measures, not complete evidence of Article 4 compliance.",
+          "content": "Article 4 of the EU AI Act has applied since 2 February 2025. Not an outlook, but law in force. Since the amendment by Regulation (EU) 2026/1744, providers and deployers must take measures supporting the development of AI literacy in their staff and other people dealing with the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context and the people or groups affected must be taken into account. What the Article does not require: a guaranteed level of competence for every individual, a standard attestation, a fixed training format.\n\nWhat does that mean concretely? Providers and deployers need building blocks that can be traced. Roles, permitted tools, data rules, review routines, escalation, documented training. The AI policy is an important part of that.\n\nComplete evidence under Article 4 the policy is not. It records which tools are approved, which data may go where, how outputs are checked and what happens after an incident. Depending on the use case, training, inventory, risk classification, data protection review and further internal processes come on top.",
+          "keyTakeaway": "Article 4 has applied since 2 February 2025. The AI policy is one documented building block of AI literacy measures, not complete evidence under Article 4.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
@@ -69,11 +69,11 @@
             },
             {
               "id": "d",
-              "text": "It is not yet in force",
+              "text": "It is not in force yet",
               "isCorrect": false
             }
           ],
-          "explanation": "Article 4 of the EU AI Act has applied since 2 February 2025. In its current form, it requires providers and deployers to take measures supporting the development of AI literacy among people acting on their behalf."
+          "explanation": "Since 2 February 2025. In its current form, providers and deployers must take measures supporting the development of AI literacy in people acting on their behalf. Not an announcement. It applies."
         },
         {
           "id": "block_5_lesson_1_q2",
@@ -86,7 +86,7 @@
             },
             {
               "id": "b",
-              "text": "Every local AI installation, including approved ones",
+              "text": "Every local AI installation, approved ones included",
               "isCorrect": false
             },
             {
@@ -100,7 +100,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Shadow AI is not defined by price, provider, or hosting location. The issue is that the use, purpose, data flow, or accountability falls outside approved controls."
+          "explanation": "Price, provider, hosting location. None of it matters. Shadow AI sits outside the approved controls in use, purpose, data flow or accountability. An approved local installation is not shadow AI."
         }
       ]
     },
@@ -109,7 +109,7 @@
       "blockId": "block_5",
       "number": 2,
       "title": "The six parts of your AI policy",
-      "subtitle": "An adaptable baseline for responsibilities and rules",
+      "subtitle": "Six sections, one frame",
       "durationMinutes": 5,
       "keyConcepts": [
         "AI policy",
@@ -124,15 +124,15 @@
           "id": "block_5_lesson_2_section_1",
           "title": "Parts 1 to 3: scope, tools and data",
           "readTimeMinutes": 3,
-          "content": "This template uses six sections. It is not a universally complete compliance framework; a specific use may also require procurement, copyright, product-safety, high-risk-system, transparency, worker-representation, or export-control provisions.\n\n**1. Scope and definitions:** Which people, entities, systems, functions, and use types does the document cover?\n\n**2. Inventory and approvals:** Which exact product version, feature, configuration, and integration is approved for which purpose? Who owns the decision?\n\n**3. Data and decision rules:** Which data classes, rights, recipients, and impacts are permitted? Which uses are prohibited or require case-specific review?",
-          "keyTakeaway": "The first three sections define scope, specific system approvals, and data and decision rules. Product names alone are insufficient."
+          "content": "Six sections. The template claims no more. No compliance scheme complete everywhere. Depending on the use, procurement, copyright, product safety, high-risk duties, transparency, worker representation or export control come on top.\n\n**1. Scope and definitions:** Which people, entities, systems, functions, and use types does the document cover?\n\n**2. Inventory and approvals:** Which exact product version, feature, configuration, and integration is approved for which purpose? Who owns the decision?\n\n**3. Data and decision rules:** Which data classes, rights, recipients, and impacts are permitted? Which uses are prohibited or require case-specific review?",
+          "keyTakeaway": "Scope, system approvals, data and decision rules. The first three sections. A product name fills none."
         },
         {
           "id": "block_5_lesson_2_section_2",
           "title": "Parts 4 to 6: review, escalation and maintenance",
           "readTimeMinutes": 2,
-          "content": "**4. Review and human responsibility:** Which controls apply at each impact level? Who may approve the result, and when is dual control or specialist legal, security, or domain review required?\n\n**5. Incidents and escalation:** Which internal reporting channel applies? Which information and evidence must be preserved? Who assesses a data breach, security incident, faulty decision, or provider event?\n\n**6. Ownership, changes, and review:** Who maintains the policy and inventory? Which events trigger immediate review? How are versions, approvals, and communication documented?\n\nThe necessary detail depends on the organization and risk. A short policy can work when the inventory, approval matrix, and operating procedures are maintained separately and linked unambiguously.",
-          "keyTakeaway": "Parts 4 to 6 cover quality control, incident management and continuing maintenance. All six parts build on the previous blocks."
+          "content": "**4. Review and human responsibility:** Which controls apply at each impact level? Who may approve the result, and when is dual control or specialist legal, security, or domain review required?\n\n**5. Incidents and escalation:** Which internal reporting channel applies? Which information and evidence must be preserved? Who assesses a data breach, security incident, faulty decision, or provider event?\n\n**6. Ownership, changes, and review:** Who maintains the policy and inventory? Which events trigger immediate review? How are versions, approvals, and communication documented?\n\nLength follows organization and risk. A short policy can be enough when inventory, approval matrix and operating procedures are maintained separately and linked without ambiguity.",
+          "keyTakeaway": "Parts 4 to 6 govern review, incidents and updating. All six build on the earlier blocks."
         }
       ],
       "quiz": [
@@ -161,11 +161,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The course template uses six baseline sections. It is an adaptable structure, not a guarantee of legal or organizational completeness."
+          "explanation": "Six. A scaffold to adapt, not a guarantee of legal or organizational completeness."
         },
         {
           "id": "block_5_lesson_2_q2",
-          "questionText": "Which part of the AI policy is based directly on the three-step review from block 4?",
+          "questionText": "Which part of the AI policy rests directly on the three-step review from block 4?",
           "answerOptions": [
             {
               "id": "a",
@@ -188,7 +188,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Part 4 adopts the three baseline questions from block 4: factual accuracy, completeness, and suitability. The policy then assigns review depth, approval roles, and additional controls by purpose and impact."
+          "explanation": "Part 4 carries the three baseline questions from block 4: factually correct, complete, appropriate. The policy then sets, by purpose and impact, review depth, approvers and additional controls."
         }
       ]
     },
@@ -197,7 +197,7 @@
       "blockId": "block_5",
       "number": 3,
       "title": "Exercise: complete the policy",
-      "subtitle": "Create your AI usage policy step by step",
+      "subtitle": "Placeholders out, owners in",
       "durationMinutes": 10,
       "keyConcepts": [
         "AI usage policy",
@@ -209,15 +209,15 @@
           "id": "block_5_lesson_3_section_1",
           "title": "The template: scope, tools and data",
           "readTimeMinutes": 5,
-          "content": "Complete the template with the responsible functions. Replace every bracketed placeholder before approval.\n\n**1. Scope:** [Organization] specifies which workers, contractors, sites, systems, functions, and work devices the policy covers. Link the definitions to the current AI inventory.\n\n**2. Approval matrix:** For each entry, record the product, version or tier, feature, integration, purpose, data classes, responsible person, contract, region, retention, permissions, and approval date. Combinations of purpose, feature, and data class that are not listed remain blocked pending review. Price and brand are not control criteria.\n\n**3. Data and decision rules:** Refer to the organization's classification policy. Add data minimization, rights in content, permitted recipients, prohibited secrets and credentials, and rules for decisions affecting people. Define an accessible route for uncertainty.",
-          "keyTakeaway": "The approval matrix links purpose, feature, data class, contract, configuration, and accountability. Neither free nor enterprise is a security category by itself."
+          "content": "Fill the template in with the responsible functions. Every bracketed placeholder is an open point.\n\n**1. Scope:** [Organization] specifies which workers, contractors, sites, systems, functions, and work devices the policy covers. Link the definitions to the current AI inventory.\n\n**2. Approval matrix:** For each entry, record the product, version or tier, feature, integration, purpose, data classes, responsible person, contract, region, retention, permissions, and approval date. Combinations of purpose, feature, and data class that are not listed stay blocked until they are reviewed. Price and brand are not control criteria.\n\n**3. Data and decision rules:** Refer to the organization's classification policy. Add data minimization, rights in content, permitted recipients, prohibited secrets and credentials, and rules for decisions affecting people. And a route out of uncertainty people can reach.",
+          "keyTakeaway": "The approval matrix links purpose, feature, data class, contract, configuration and accountability. Free is not a security category. Neither is enterprise."
         },
         {
           "id": "block_5_lesson_3_section_2",
           "title": "Review requirement, escalation and signatures",
           "readTimeMinutes": 5,
-          "content": "**4. Review and approval:** Define controls by impact: source checks, calculation verification, specialist approval, dual control, or a prohibition on automated decisions. Name the person accountable for the final result.\n\n**5. Incident reporting:** Workers report suspected misuse without delay through [reporting channel] and preserve the time, system, account, input data, output, and actions already taken. They do not delete or alter evidence on their own. [Incident Response], information security, data protection, and other responsible functions assess the case under the existing procedure.\n\nFor a personal data breach, the controller assesses whether the risk triggers notification under GDPR Article 33. Where notification is required, it is made without undue delay and, where feasible, within 72 hours after the controller became aware. Internal deadlines belong in the incident-response plan; this template does not invent four- or 24-hour stages.\n\n**6. Ownership and review:** Name [Policy Owner], the regular review date, and events that trigger immediate review, including new features, changed contracts, incidents, or legal changes. Record the version, approvers, effective date, and communication. Required approvals follow the organization's governance; fixed signature roles are not universal.",
-          "keyTakeaway": "The policy names risk-based controls, an immediately usable reporting channel, responsible decision-makers, and documented review triggers."
+          "content": "**4. Review and approval:** Controls by impact: source checks, calculation verification, specialist approval, dual control, or a prohibition on automated decisions. And a name. The person who answers for the final result.\n\n**5. Incident reporting:** Workers report suspected misuse without delay through [reporting channel] and preserve the time, system, account, input data, output, and actions already taken. Nobody deletes or alters evidence on their own. [Incident Response], information security, data protection, and other responsible functions assess the case under the existing procedure.\n\nWhere a personal data breach has occurred, the controller decides on the risk whether GDPR Article 33 requires notification to the supervisory authority. If so, without undue delay and, where feasible, within 72 hours after becoming aware. Internal deadlines belong in the incident-response plan. This template invents no four- or 24-hour stages.\n\n**6. Ownership and review:** Name [Policy Owner], the regular review date, and the events that trigger immediate review: new features, changed contracts, incidents, legal changes. Record the version, approvers, effective date, and communication. Who has to approve follows the organization's governance. Fixed signature roles do not exist.",
+          "keyTakeaway": "The policy names risk-based controls, a usable reporting channel, responsible decision-makers and documented review triggers."
         }
       ],
       "quiz": [
@@ -227,30 +227,30 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Because they produce worse results than paid versions",
+              "text": "Because they deliver worse results than paid versions",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Because unapproved consumer products generally offer no DPA reviewed by the organisation and no binding configuration for data use",
+              "text": "Because unapproved consumer offers usually provide no DPA reviewed by the organization and no binding configuration for data use",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Because they are available only in English",
+              "text": "Because they are available in English only",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Because they require an internet connection",
+              "text": "Because they need an internet connection",
               "isCorrect": false
             }
           ],
-          "explanation": "With unapproved consumer products, the organisation generally lacks a reviewed DPA, binding data controls and an agreed data region. Whether inputs may be used for training depends on the particular product and its settings."
+          "explanation": "Not quality, not language, not the internet connection. Unapproved consumer offers usually leave the organization without a reviewed DPA, binding data controls and an agreed data region. Whether inputs flow into training depends on the product and its settings."
         },
         {
           "id": "block_5_lesson_3_q2",
-          "questionText": "Which statement accurately describes GDPR Article 33?",
+          "questionText": "Which statement describes GDPR Article 33 correctly?",
           "answerOptions": [
             {
               "id": "a",
@@ -269,11 +269,11 @@
             },
             {
               "id": "d",
-              "text": "Notification is allowed only after the technical investigation is complete",
+              "text": "Notification is allowed only once the technical investigation is complete",
               "isCorrect": false
             }
           ],
-          "explanation": "Article 33 links notification to a personal data breach and the risk assessment. The 72-hour period starts when the controller becomes aware and is not a universal internal escalation schedule."
+          "explanation": "Article 33 ties the duty to a personal data breach and the controller's risk assessment. The 72 hours run from awareness. No 24-hour duty exists for every processing error."
         }
       ]
     },
@@ -282,7 +282,7 @@
       "blockId": "block_5",
       "number": 4,
       "title": "Summary",
-      "subtitle": "Your five documents at a glance",
+      "subtitle": "Five documents, none finished",
       "durationMinutes": 4,
       "keyConcepts": [
         "AI inventory",
@@ -296,21 +296,21 @@
           "id": "block_5_lesson_4_section_1",
           "title": "Five documents, one system",
           "readTimeMinutes": 2,
-          "content": "The course provides five working artifacts:\n\n1. **AI inventory** with concrete functions, purposes, data, and owners.\n2. **Example data classification** that must be adapted to the organization.\n3. **Four task patterns** for email, meetings, data analysis, and reports.\n4. **Output review** as a baseline for risk-based controls.\n5. **AI usage policy** as the linking governance document.\n\nAn artifact is ready for use only after placeholders have been replaced, assumptions reviewed, owners named, and required approvals documented.",
-          "keyTakeaway": "The five artifacts are working materials. Organization-specific review, ownership, and documented approval make them operational."
+          "content": "Five documents, in your hands:\n\n1. **AI inventory** with concrete functions, purposes, data, and owners.\n2. **Example data classification** your organization still has to adapt.\n3. **Four task patterns** for email, meetings, data analysis, and reports.\n4. **Output review** as a starting point for risk-based controls.\n5. **AI usage policy** linking everything else.\n\nNone of them is finished. A document is finished when the placeholders are replaced, the assumptions checked, the owners named and the approvals documented.",
+          "keyTakeaway": "Five working foundations, not finished documents. Review, named owners and documented approval make them usable."
         },
         {
           "id": "block_5_lesson_4_section_2",
           "title": "Next steps",
           "readTimeMinutes": 2,
-          "content": "This policy can be one documented element of AI literacy measures under Article 4. Before it takes effect:\n\n1. **Review and approve:** Include the functions responsible under governance, data protection, information security, procurement, and worker representation.\n2. **Connect operations:** Link the inventory, approval matrix, technical controls, procurement, and incident response unambiguously.\n3. **Teach by role:** Affected people must be able to apply permitted purposes, boundaries, review duties, and the reporting channel.\n4. **Control review:** Document a risk-based regular date and immediate review triggers.\n\nEffectiveness is not shown by a signature. It is shown when people can find the correct approval, systems enforce boundaries, and incidents are reported and handled.",
-          "keyTakeaway": "Effectiveness comes from approved ownership, technical implementation, role-based application, and documented reviews."
+          "content": "The policy can be one documented building block of AI literacy measures under Article 4. Four steps first:\n\n1. **Review and approve:** Bring in governance, data protection, information security, procurement and worker representation.\n2. **Connect operations:** Link the inventory, approval matrix, technical controls, procurement, and incident response with unambiguous references.\n3. **Teach by role:** The case worker, the team lead, the working student. Each applies permitted purposes, boundaries, review duties and the reporting channel.\n4. **Control review:** Document a risk-based regular date and immediate review triggers.\n\nWhether it works is not read off the signature. It shows when people find the right approval, when systems are bounded, and when incidents get reported. Actually reported, not merely reportable.",
+          "keyTakeaway": "Effectiveness comes from approved ownership, technical implementation, role-based application and documented reviews."
         }
       ],
       "quiz": [
         {
           "id": "block_5_lesson_4_q1",
-          "questionText": "How many documents do you create over the full AI Fundamentals course?",
+          "questionText": "How many documents come out of the whole course?",
           "answerOptions": [
             {
               "id": "a",
@@ -333,15 +333,15 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The five blocks produce five documents: the AI inventory, data-classification card, prompt templates, three-step review and AI usage policy."
+          "explanation": "Five, one per block: AI inventory, data-classification card, prompt templates, three-step review and the AI usage policy."
         },
         {
           "id": "block_5_lesson_4_q2",
-          "questionText": "What is the most important next step after creating the AI policy?",
+          "questionText": "What is the most important next step once the AI policy exists?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "File the policy and retrieve it only when needed",
+              "text": "File the policy and dig it out when needed",
               "isCorrect": false
             },
             {
@@ -360,7 +360,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A policy works only when responsible functions approve it, operational controls implement it, affected people can apply it, and defined events trigger review."
+          "explanation": "In a folder it does nothing. A policy works when responsible functions approve it, controls implement it, people can apply it, and defined events trigger a review."
         }
       ]
     }

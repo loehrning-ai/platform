@@ -64,7 +64,8 @@ describe("HilfePage locale and provider boundaries", () => {
     await renderPage("de");
 
     expect(
-      screen.getByText(/Bücher, Demos, KI-Check und 6 technische/),
+      // Copy lock updated: the German UI names them "Praxisbeispiele", never "Demos".
+      screen.getByText(/Bücher, Praxisbeispiele, KI-Check und 6 technische/),
     ).toHaveTextContent(/4 Reader vorübergehend nicht erreichbar/);
     expect(
       screen.getByText(/Aktuell ist keine Anmeldemethode/),

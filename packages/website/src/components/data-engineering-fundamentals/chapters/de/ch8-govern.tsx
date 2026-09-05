@@ -22,7 +22,7 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Governance: Datenschutz ist kein später Prüfschritt, sondern die <span class='accent'>Deployment-Schranke</span>."
-        hook="Der Kurs verwendet eine Referenzschranke, die deklarierte Identitätsklassen, ACL-Metadaten und Transformationsregeln prüft. Eine bestandene automatisierte Prüfung bestätigt nur diese konfigurierten Regeln und stellt keine rechtliche Konformität fest."
+        hook="Der Kurs verwendet eine Referenzschranke, die deklarierte Identitätsklassen, ACL-Metadaten und Transformationsregeln prüft. Grün heißt hier: Die konfigurierten Regeln halten. Über rechtliche Konformität sagt das nichts."
         meta={[
           { k: "Deployment-Schranke", v: "Access Gateway" },
           { k: "ACL", v: "dataset_acl" },
@@ -34,11 +34,11 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         <SectionLabel n="9.1">Akteur-Annotationen</SectionLabel>
         <h2 className="h2">Jede Spalte deklariert, wen oder was sie identifiziert.</h2>
         <p className="prose">
-          Eine Spalte hat sowohl einen technischen Typ als auch ein richtlinienrelevantes
-          <em> Subjekt</em>. <code>employee_email</code> identifiziert eine
-          Person, <code>service_account_id</code> eine Anwendung und
+          Eine Spalte hat einen technischen Typ. Sie hat außerdem ein richtlinienrelevantes
+          <em> Subjekt</em>: <code>employee_email</code> identifiziert eine
+          Person, <code>service_account_id</code> eine Anwendung,
           <code>contractor_id</code> eine externe Arbeitskraft. Die drei folgenden Bezeichnungen gehören zur Kurstaxonomie. Eine produktive
-          Taxonomie muss mit den Rechts-, Datenschutz-, Sicherheits- und Aufbewahrungsregeln der Organisation abgestimmt sein.
+          Taxonomie stimmst du mit den Rechts-, Datenschutz-, Sicherheits- und Aufbewahrungsregeln deiner Organisation ab.
         </p>
         <div className="cards-3">
           <div className="ccard">
@@ -69,9 +69,9 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         <SectionLabel n="9.2">Die Deployment-Schranke</SectionLabel>
         <h2 className="h2">Die Referenzschranke prüft deklarierte Metadaten.</h2>
         <p className="prose">
-          Im Simulator prüft Access Gateway jede deklarierte Spalte gegen die Kursregeln, löst <code>dataset_acl</code> auf und prüft optional
-          eine Richtlinienzonen-Bindung. Die Schranke kann konfigurierte Metadatenlücken erkennen. Ohne weitere Prüfung und Nachweise erkennt sie
-          nicht jeden sensiblen Wert, Richtlinienkonflikt oder rechtlichen Anspruch.
+          Im Simulator hält Access Gateway jede deklarierte Spalte gegen die Kursregeln, löst <code>dataset_acl</code> auf und prüft optional
+          eine Richtlinienzonen-Bindung. Konfigurierte Metadatenlücken findet die Schranke. Jeden sensiblen Wert, jeden Richtlinienkonflikt und
+          jeden rechtlichen Anspruch findet sie ohne weitere Prüfung und Nachweise nicht.
         </p>
         <PermissionGateSim />
       </section>
@@ -79,9 +79,9 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
       <section className="section">
         <SectionLabel n="9.3">Richtlinienzonen und abgeschottete Transformationen</SectionLabel>
         <p className="prose">
-          Im Referenzdesign begrenzt eine <b>Richtlinienzone</b> die Ausführung auf eine benannte Rechenumgebung. Eine abgeschottete Transformation
-          kann mit <code>network=NO_NETWORK</code> direkten Netzwerk-Egress entfernen. Keine der Einstellungen genügt allein: Identität,
-          Speicher, Logs, Abhängigkeiten, Ausgaben und Deployment-Konfiguration müssen ebenfalls erzwungen und getestet werden.
+          Im Referenzdesign bindet eine <b>Richtlinienzone</b> die Ausführung an eine benannte Rechenumgebung. Eine abgeschottete Transformation
+          nimmt mit <code>network=NO_NETWORK</code> den direkten Netzwerk-Egress weg. Beides allein reicht nicht: Identität, Speicher, Logs,
+          Abhängigkeiten, Ausgaben und Deployment-Konfiguration gehören ebenso erzwungen und getestet.
         </p>
         <CodeBlock
           title="dim_users.spec.yaml · ausgelieferte Annotation"
@@ -95,7 +95,7 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         items={[
           "<b>Erforderliche Klassifikationsmetadaten auslassen.</b> Die Deklaration korrigieren und untersuchen, warum Schema- oder Klassifikationsprüfung die neue Spalte nicht früher erkannt hat.",
           "<b><code>network=NO_NETWORK</code> als vollständige Isolation behandeln.</b> Abhängigkeiten, lokalen Speicher, Logs, Ausgaben, Laufzeitidentität und Durchsetzungsgrenze prüfen.",
-          "<b>Breite ACL-Gruppen verwenden.</b> Nur den für den dokumentierten Zweck erforderlichen Zugriff vergeben und Mitgliedschaft sowie Zuständigkeit regelmäßig prüfen.",
+          "<b>Breite ACL-Gruppen verwenden.</b> Vergib nur den Zugriff, den der dokumentierte Zweck braucht, und prüf Mitgliedschaft und Zuständigkeit regelmäßig.",
           "<b>Eine Kursbezeichnung als Rechtsauskunft verwenden.</b> Taxonomie auf genehmigte Richtlinie, Rechtsordnung, Aufbewahrung und Betroffenenregeln abbilden.",
         ]}
       />

@@ -27,7 +27,7 @@ export default function Ch12Capstone() {
       <Hero
         eyebrow="Chapter 12 · Capstone"
         title='<em>Credit card fraud detection:</em> <span class="accent">the full DS loop.</span>'
-        hook="A public dataset with 284,807 transactions and 492 recorded fraud cases. Use it to connect exploration, leakage control, evaluation, threshold policy, and deployment review without treating the teaching simulation as a production model."
+        hook="A public dataset: 284,807 transactions, 492 recorded fraud cases. Connect exploration, leakage control, evaluation, threshold policy, and deployment review on it. Never mistake the teaching simulation for a production model."
         meta={[
           { k: "Dataset", v: "Kaggle · 284K transactions" },
           { k: "Target", v: "Fraud · 0.17% base rate" },
@@ -42,13 +42,13 @@ export default function Ch12Capstone() {
           cases per fraud case.
         </h2>
         <p className="prose">
-          The public Credit Card Fraud dataset is useful for studying severe
+          The public Credit Card Fraud dataset is built for studying severe
           class imbalance, anonymized inputs, and evaluation choices. A baseline
-          that predicts every transaction as legitimate achieves about{" "}
-          <strong>99.83% accuracy</strong> while detecting no fraud. Accuracy
-          alone therefore hides the failure. PR-AUC summarizes ranking quality
-          under imbalance, while an operating threshold still needs costs,
-          capacity, calibration, and time-aware validation.
+          that calls every transaction legitimate hits about{" "}
+          <strong>99.83% accuracy</strong> and catches no fraud at all. Accuracy
+          alone hides the failure. PR-AUC summarizes ranking quality under
+          imbalance, and the operating threshold still needs costs, capacity,
+          calibration, and time-aware validation.
         </p>
         <DatasetExplorer />
       </section>
@@ -59,10 +59,10 @@ export default function Ch12Capstone() {
           Six decisions. Each one a chapter in this course.
         </h2>
         <p className="prose">
-          Run each pipeline step in order. The output of one becomes the input
-          of the next. Watch the log. Notice where leakage could enter (scaling
-          before the split is a common mistake; this local sequence prevents
-          that specific error but does not validate a real pipeline).
+          Run each pipeline step in order. The output of one is the input of
+          the next. Watch the log. Notice where leakage could enter: scaling
+          before the split is the classic mistake, and this local sequence
+          blocks that error while validating no real pipeline.
         </p>
         <PipelineProgress />
       </section>
@@ -71,8 +71,8 @@ export default function Ch12Capstone() {
         items={[
           "<b>Fitting the scaler on the full dataset.</b> Scaler must be fit on train only, then applied to test. Fitting on all data leaks test statistics into training.",
           "<b>Stratifying after scaling.</b> Split first, scale after. Order matters.",
-          "<b>Using accuracy alone.</b> At a 0.17% event rate, a trivial majority prediction looks accurate. Add ranking, calibration, threshold, and cost-sensitive evaluation.",
-          "<b>Leaving imbalance handling untested.</b> Compare weighting, resampling, thresholding, and suitable objectives inside the validation design; no single method is mandatory.",
+          "<b>Using accuracy alone.</b> At a 0.17% event rate, the trivial majority prediction looks accurate. Add ranking, calibration, threshold, and cost-sensitive evaluation.",
+          "<b>Leaving imbalance handling untested.</b> Compare weighting, resampling, thresholding, and suitable objectives inside the validation design. No single method is mandatory.",
         ]}
       />
       <BestPractices
@@ -94,13 +94,13 @@ export default function Ch12Capstone() {
         </h2>
         <p className="prose">
           Every fraud model produces a probability score per transaction. You
-          decide the cutoff. Too low: you flag half your legitimate customers as
-          fraudsters (ops cost explodes). Too high: you miss real fraud (revenue
-          loss and reputational damage).
+          decide the cutoff. Too low and you flag half your legitimate customers
+          as fraudsters, and the ops cost explodes. Too high and you miss real
+          fraud, which costs revenue and reputation.
           <strong>
             {" "}
-            Use the cost calculator to inspect this synthetic cost model, then
-            replace its assumptions with reviewed domain inputs.
+            Use the cost calculator on this synthetic cost model, then replace
+            its assumptions with reviewed domain inputs.
           </strong>
         </p>
         <PrecisionRecallTradeoff />
@@ -115,10 +115,10 @@ export default function Ch12Capstone() {
           system.
         </h2>
         <p className="prose">
-          Before a fraud model affects a live transaction, collect evidence for
-          the relevant review areas. This eight-item teaching checklist prompts
-          that review; completing it in the browser does not eliminate a failure
-          mode or approve a deployment.
+          Before a fraud model touches a live transaction, collect evidence for
+          every relevant review area. This eight-item teaching checklist
+          prompts that review. Ticking it in the browser removes no failure mode
+          and approves no deployment.
         </p>
         <PostDeployChecklist />
       </section>
@@ -127,7 +127,7 @@ export default function Ch12Capstone() {
         items={[
           "<b>No representative pre-promotion evidence.</b> Use replay, batch evaluation, shadowing, or staged exposure according to risk and data constraints.",
           "<b>No model documentation.</b> Record intended use, exclusions, training and evaluation data, metrics, thresholds, owners, limitations, and known failure modes.",
-          "<b>No monitoring contract.</b> Fraud patterns, input quality, label delay, and operating costs can change; connect each monitored signal to an owner and response.",
+          "<b>No monitoring contract.</b> Fraud patterns, input quality, label delay, and operating costs all change. Wire each monitored signal to an owner and a response.",
           "<b>An unreviewed permanent threshold.</b> Reassess after material cost, prevalence, calibration, policy, or capacity changes on a documented cadence.",
         ]}
       />
@@ -141,8 +141,8 @@ export default function Ch12Capstone() {
       />
       <Takeaway
         items={[
-          "<b>Class imbalance changes what metrics reveal.</b> Report the base rate and evaluate ranking, calibration, and threshold behavior alongside accuracy.",
-          "<b>Learned preprocessing belongs inside validation.</b> Leakage can inflate offline results; provenance and time-aware tests can expose it before release.",
+          "<b>Class imbalance changes what a metric reveals.</b> Report the base rate, and evaluate ranking, calibration, and threshold behavior next to accuracy.",
+          "<b>Learned preprocessing belongs inside validation.</b> Leakage inflates offline results. Provenance and time-aware tests expose it before release.",
           "<b>The threshold encodes consequences.</b> Select it from explicit costs, capacity, policy, and calibrated probabilities, then monitor it.",
           "<b>Production performance is system behavior.</b> Model quality, features, services, data contracts, monitoring, incident response, and rollback all contribute.",
           "<b>Re-evaluate after material change.</b> New data, fraud patterns, costs, policy, and infrastructure can invalidate the previous decision.",

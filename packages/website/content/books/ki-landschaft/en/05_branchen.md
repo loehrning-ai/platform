@@ -1,22 +1,22 @@
 # Sector patterns as hypotheses, not rankings
 
-The following examples are fictional learning cases. They make no claims about measured adoption, product leadership, or guaranteed savings in time or cost.
+What follows are four invented learning cases. They evidence no adoption, no product lead, and no guaranteed saving of time or cost.
 
 ## Construction: structure records produced during a project
 
-**Hypothesis:** Approved construction-log notes and photos are combined into a draft for structured daily documentation.
+**Hypothesis:** Approved construction-log notes and photos become a draft for structured daily documentation.
 
 **Measurement:** Completeness against required fields, incorrect assignments, editing time, and the share of rejected drafts.
 
-**Controls:** Classify project and personal data, restrict permissions by construction site, retain originals, have a domain expert review every statement, and do not automate safety-critical decisions.
+**Controls:** Classify project and personal data, restrict permissions per construction site, keep the originals, have the site foreman check every statement, automate no safety-critical decision.
 
 ## Tax and accounting: pre-sort documents
 
-**Hypothesis:** A system extracts fields from approved documents and prepares draft accounting entries.
+**Hypothesis:** A system pulls fields from approved documents and prepares draft accounting entries.
 
 **Measurement:** Field accuracy by document type, incorrect tax coding, exceptions, review time, and correction rate.
 
-**Controls:** Protect professional secrets and client data, review processor arrangements and transfers, do not post entries automatically without adequate professional review, and retain a complete audit trail.
+**Controls:** Respect professional secrets and client data, check processor arrangements and transfers, post no entry without approval by the tax adviser, keep the audit trail complete.
 
 ## Hospitality: draft answers to standard inquiries
 
@@ -24,24 +24,24 @@ The following examples are fictional learning cases. They make no claims about m
 
 **Measurement:** Factual accuracy, unanswered questions, escalation rate, processing time, and complaints.
 
-**Controls:** Obtain prices and availability only from current systems, do not guess about allergies or accessibility, minimize personal data, and require human approval for booking changes.
+**Controls:** Take prices and availability only from current systems, never guess about allergies or accessibility, minimize personal data, change a booking only with human approval.
 
 ## Care: draft documentation from approved information
 
-**Hypothesis:** A system structures approved notes into a draft without making medical decisions.
+**Hypothesis:** A system structures approved notes into a draft and makes no medical decision.
 
 **Measurement:** Omissions, fabricated details, professional corrections, time to approval, and safety-relevant errors.
 
-**Controls:** Give health data special protection, restrict purpose and access, do not record data without a lawful basis, preserve the original documentation, and require approval by qualified staff.
+**Controls:** Give health data special protection, keep purpose and access narrow, record nothing without a lawful basis, preserve the original documentation, let only qualified staff approve.
 
 ## The same method in every sector
 
 1. Name the process and the accountable domain role.
 2. Measure the baseline with real, lawful cases.
-3. Review the data class, legal basis, and system role.
+3. Check the data class, legal basis, and system role.
 4. Test with synthetic or appropriately approved data.
 5. Define error types and stop criteria in advance.
-6. Limit the pilot and document the results.
-7. Expand only after quality and protection gates have passed.
+6. Keep the pilot small and document the results.
+7. Expand only once quality and protection gates have passed.
 
-Sector knowledge helps identify the consequences of errors and the necessary controls. It does not replace measurement in the organization's own process.
+Sector knowledge helps you with the cost of errors and the controls you need. It does not replace measuring your own process.

@@ -2,7 +2,7 @@
 
 ## 42 KI-Begriffe: Das vollständige Glossar
 
-Alphabetisch. Jeder Begriff mit einer kurzen Definition und, wo relevant, einem Verweis auf das Kapitel, in dem er ausführlich behandelt wird.
+Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel, das ihn ausführt.
 
 | Begriff | Erklärung |
 |---------|-----------|
@@ -51,11 +51,11 @@ Alphabetisch. Jeder Begriff mit einer kurzen Definition und, wo relevant, einem 
 
 ## Prompt-Bibliothek: 8 Vorlagen für deinen Arbeitsalltag
 
-Das ganze Buch sagt dir: Bau dir eine Prompt-Bibliothek. Hier ist sie. Acht getestete Vorlagen, sortiert nach Aufgabe, nicht nach Tool. Du suchst nicht nach der Technik. Du suchst nach dem Problem, das du gerade hast.
+Das ganze Buch sagt dir: Bau dir eine Prompt-Bibliothek. Hier ist sie. Acht getestete Vorlagen, sortiert nach Aufgabe, nicht nach Tool. Du suchst nicht nach der Technik, sondern nach dem Problem, das du gerade hast.
 
 Jede Vorlage folgt dem KRAFT-Schema aus Kapitel 8. Die angegebene **Datenstufe** ist eine konservative Orientierung, keine automatische Toolfreigabe. Maßgeblich bleiben deine Unternehmensrichtlinie sowie der konkrete Zweck, Vertrag und Datenfluss.
 
-Kopiere. Passe an. Speichere in deinem eigenen Dokument. Nach einem Monat hast du deine persönliche Sammlung.
+Kopiere, passe an, speichere in deinem eigenen Dokument. Nach einem Monat hast du deine persönliche Sammlung.
 
 **1. E-Mail höflich absagen** (Profil A · Büro)
 
@@ -128,7 +128,7 @@ Kopiere. Passe an. Speichere in deinem eigenen Dokument. Nach einem Monat hast d
 
 ## Deine zwei Arbeitsblätter zum Ausfüllen
 
-Kapitel 12 sagt, du hast am Ende fünf Dokumente. Zwei davon füllst du hier aus. Mach es jetzt, mit Bleistift, oder kopier die Tabellen in ein eigenes Dokument. Eine ausgefüllte Karte schützt dich mehr als zehn gelesene Kapitel.
+Kapitel 12 sagt, du hast am Ende fünf Dokumente. Zwei davon füllst du hier aus. Jetzt, mit Bleistift, oder kopier die Tabellen in ein eigenes Dokument. Eine ausgefüllte Karte schützt dich mehr als zehn gelesene Kapitel.
 
 ### Datenklassifizierungs-Karte
 
@@ -146,7 +146,7 @@ Faustregel beim Ausfüllen: Im Zweifel eine Stufe höher einordnen, nicht tiefer
 
 ### KI-Inventar
 
-Liste die KI-Tools, die du dienstlich nutzt oder nutzen willst, aus deiner Inventur in Kapitel 1. Die erste Zeile zeigt, wie gemeint. „Freigegeben?" heißt: hat IT oder Compliance das Tool für diese Datenklasse erlaubt?
+Liste die KI-Tools, die du dienstlich nutzt oder nutzen willst, aus deiner Inventur in Kapitel 1. Die erste Zeile zeigt das Muster. „Freigegeben?" heißt: hat IT oder Compliance das Tool für diese Datenklasse erlaubt?
 
 | Tool | Zweck | Höchste Datenklasse | Freigegeben? | Verantwortliche/r |
 |------|-------|---------------------|--------------|-------------------|

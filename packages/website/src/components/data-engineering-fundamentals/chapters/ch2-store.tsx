@@ -24,7 +24,7 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Store: <span class='accent'>cumulative state</span> carries errors forward."
-        hook="In this additive example, each partition combines the previous state with the current day's deltas. An error in one partition affects later partitions until the affected range is rebuilt."
+        hook="Each partition in this additive example combines yesterday's state with today's deltas. One bad partition poisons every partition after it until the affected range is rebuilt."
         meta={[
           { k: "Pattern", v: "state-carrying" },
           { k: "Engine", v: "Spark (FULL OUTER JOIN)" },
@@ -35,15 +35,10 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
       <section className="section">
         <SectionLabel n="3.1">The pattern</SectionLabel>
         <h2 className="h2">Yesterday + today = today&apos;s cumulative.</h2>
-        <p className="prose">
-          This additive course example uses a <code>FULL OUTER JOIN</code> between the prior partition and today&apos;s deltas, followed by
-          <code> COALESCE</code>. That join preserves keys present on either side. Other cumulative models may require merges, deletions,
-          validity intervals, or different conflict rules.
-        </p>
-        <p className="prose">
-          Day 7 depends on day 6, which already contains earlier inputs. If day 3 is wrong, rebuild from the earliest affected partition through
-          every dependent partition. A code fix alone does not rewrite stored history.
-        </p>
+        <p className="prose">The additive course example joins the prior partition to today&apos;s deltas with a <code>FULL OUTER JOIN</code>, then sends
+          <code> COALESCE</code> after it. Keys on either side survive. Other cumulative models need merge rules, deletions, validity intervals,
+          or different conflict handling on top.</p>
+        <p className="prose">Day 7 rests on day 6, which already carries everything before it. If day 3 is wrong, rebuild from the earliest affected partition through every dependent partition. A code fix rewrites no stored history.</p>
       </section>
 
       <section className="section">

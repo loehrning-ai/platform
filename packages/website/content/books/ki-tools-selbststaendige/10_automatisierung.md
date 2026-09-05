@@ -4,11 +4,11 @@ Die ersten 9 Kapitel waren Handarbeit. Du gibst einen Prompt ein, du bekommst ei
 
 Das ist gut. Aber es ist nicht genug.
 
-Wiederkehrende manuelle Schritte können Automatisierungskandidaten sein. Allgemeine Studienwerte sagen jedoch nicht, was in deinem Betrieb technisch, wirtschaftlich oder rechtlich automatisierbar ist. Miss den eigenen Prozess und beginne mit einem begrenzten Pilot.
+Jeder Schritt, den du wöchentlich von Hand wiederholst, ist ein Automatisierungskandidat. Was bei dir technisch, wirtschaftlich und rechtlich automatisierbar ist, sagt kein allgemeiner Studienwert. Miss deinen eigenen Prozess und beginne mit einem begrenzten Pilot.
 
-Low-Code- und No-Code-Plattformen wie Zapier, Make und n8n können solche Abläufe verbinden. Auch ohne klassische Programmierung brauchst du Kenntnisse zu Datenflüssen, Berechtigungen, Fehlerbehandlung, Tests und Betrieb.
+Low-Code- und No-Code-Plattformen wie Zapier, Make und n8n verbinden solche Abläufe. Auch ohne klassische Programmierung brauchst du Kenntnisse zu Datenflüssen, Berechtigungen, Fehlerbehandlung, Tests und Betrieb.
 
-**Fiktives Referenzmuster:** Eine Kontaktanfrage wird nach dokumentierten Regeln kategorisiert, ein Antwortentwurf vorbereitet und ein Review-Eintrag angelegt. Kein Kontakt wird automatisch angeschrieben oder ohne Rechtsgrundlage in ein CRM übernommen. Fehler, Ausfälle und falsche Klassifikationen müssen überwacht werden.
+**Fiktives Referenzmuster:** Eine Kontaktanfrage wird nach dokumentierten Regeln kategorisiert, ein Antwortentwurf vorbereitet und ein Review-Eintrag angelegt. Kein Kontakt wird automatisch angeschrieben oder ohne Rechtsgrundlage in ein CRM übernommen. Fehler, Ausfälle und falsche Klassifikationen musst du überwachen.
 
 ## Was sich automatisieren lässt (und was nicht)
 
@@ -22,7 +22,7 @@ Aktion: Das System kategorisiert, fasst zusammen oder erstellt einen internen En
 
 Ergebnis: Du hast weniger zu tun. Oder bessere Ergebnisse. Oder beides.
 
-Eine Automation kann zeitgesteuert oder ereignisbasiert laufen. Sie kann trotzdem ausfallen, Daten doppelt verarbeiten, falsche Ergebnisse erzeugen oder Zugriffsrechte verlieren. Monitoring, Wiederholbarkeit, Idempotenz, Alarmierung und ein manueller Rückfallweg gehören zum Design.
+Eine Automation läuft zeitgesteuert oder ereignisbasiert. Sie kann trotzdem ausfallen, Daten doppelt verarbeiten, falsche Ergebnisse erzeugen oder Zugriffsrechte verlieren. Monitoring, Wiederholbarkeit, Idempotenz, Alarmierung und ein manueller Rückfallweg gehören ins Design.
 
 **Was sich als begrenzter Pilot eignen kann:**
 - E-Mail-Triage und Entwürfe für Standardantworten
@@ -64,7 +64,7 @@ Du musst nicht programmieren können, um Workflows zu automatisieren. Dafür gib
 
 **Die Lernkurve hängt vom Risiko ab:** Ein ungefährlicher Testworkflow ist schneller gebaut als ein Prozess mit Kunden-, Finanz- oder Gesundheitsdaten. Plane Zeit für Rechtekonzept, Tests, Monitoring, Dokumentation und Wiederherstellung ein.
 
-**Preisprüfung:** Tarife und Zählweisen ändern sich. Erstelle vor einem Jahresvertrag drei Volumenszenarien und berücksichtige Operationen, Wiederholungen, Speicher, Netzwerk, Modell-API, Hosting, Backups, Wartung und Arbeitszeit. Self-Hosting ist nicht automatisch günstiger.
+**Preisprüfung:** Tarife und Zählweisen ändern sich. Rechne vor einem Jahresvertrag drei Volumenszenarien durch und berücksichtige Operationen, Wiederholungen, Speicher, Netzwerk, Modell-API, Hosting, Backups, Wartung und Arbeitszeit. Self-Hosting ist nicht automatisch günstiger.
 
 Das Prinzip ist bei allen gleich: Du wählst einen Trigger (z.B. "Neue E-Mail in Gmail"), definierst eine Aktion (z.B. "Sende den Inhalt an ChatGPT API"), und bestimmst, was mit dem Ergebnis passiert (z.B. "Speichere die Antwort in Google Sheets und sende mir eine Slack-Nachricht").
 
@@ -76,13 +76,13 @@ Das Prinzip ist bei allen gleich: Du wählst einen Trigger (z.B. "Neue E-Mail in
 
 ## KI-Agenten: Die nächste Stufe
 
-Klassische Workflows folgen vorab festgelegten Schritten. Agentische Systeme können innerhalb gesetzter Grenzen Werkzeuge auswählen und mehrere Schritte planen. Die Grenze muss durch Berechtigungen, Budgets, erlaubte Aktionen und Abbruchregeln technisch erzwungen werden.
+Klassische Workflows folgen vorab festgelegten Schritten. Agentische Systeme wählen innerhalb gesetzter Grenzen Werkzeuge aus und planen mehrere Schritte. Diese Grenze muss durch Berechtigungen, Budgets, erlaubte Aktionen und Abbruchregeln technisch erzwungen werden.
 
 Ein mögliches Testszenario lautet: „Lies einen fiktiven Rechnungsdatensatz, markiere nach einer vorgegebenen Regel mögliche Fälle und erstelle ausschließlich interne Entwürfe." Reale Mahnungen erfordern geprüfte Daten, Vertragsregeln, Fristen, Zuständigkeit und Freigabe.
 
 **Was können KI-Agenten für Freelancer?**
 
-Ein menschlicher Prüfschritt ist wichtig, reicht aber nicht allein. Eingaben, Berechtigungen, erlaubte Werkzeuge, Tests, Protokollierung und technische Stopps müssen verhindern, dass ein fehlerhaftes System bereits vor der Prüfung Schaden anrichtet. Umfang der Nacharbeit ist zu messen.
+Ein menschlicher Prüfschritt ist wichtig, reicht aber nicht allein. Eingaben, Berechtigungen, erlaubte Werkzeuge, Tests, Protokollierung und technische Stopps müssen verhindern, dass ein fehlerhaftes System schon vor deiner Prüfung Schaden anrichtet. Miss den Umfang der Nacharbeit.
 
 **Konkrete Agenten-Szenarien:**
 
@@ -107,13 +107,13 @@ Ein menschlicher Prüfschritt ist wichtig, reicht aber nicht allein. Eingaben, B
 4. Schreibt Post-Entwürfe für jede Woche
 5. Sendet dir montags den Entwurf der Woche
 
-**Wichtig:** Agentische Systeme sind nicht „set and forget". Sie können Routinearbeit vorbereiten, aber auch falsche Aktionen wiederholen. Nutze minimale Rechte, Entwurfsmodus, Freigaben, Limits, Monitoring und einen manuellen Rückfallweg.
+**Wichtig:** Agentische Systeme sind nicht „set and forget". Sie bereiten Routinearbeit vor und wiederholen Fehler genauso zuverlässig. Nutze minimale Rechte, Entwurfsmodus, Freigaben, Limits, Monitoring und einen manuellen Rückfallweg.
 
 ## MCP: Das neue Automatisierungsprotokoll
 
-MCP standardisiert, wie kompatible KI-Anwendungen Werkzeuge und Datenquellen ansprechen können. Ob ein konkreter CRM-, Rechnungs- oder Kalenderzugriff möglich ist, hängt von Client, Server, Autorisierung und verfügbarer Integration ab.
+MCP standardisiert, wie kompatible KI-Anwendungen Werkzeuge und Datenquellen ansprechen. Ob ein konkreter CRM-, Rechnungs- oder Kalenderzugriff möglich ist, hängt von Client, Server, Autorisierung und verfügbarer Integration ab.
 
-Das ist MCP, **Model Context Protocol**. Ein offener Standard, der KI-Modelle direkt mit Datenquellen verbindet.
+MCP heißt ausgeschrieben **Model Context Protocol**. Ein offener Standard, der KI-Modelle direkt mit Datenquellen verbindet.
 
 **Die Analogie:** USB-C für KI. Vor USB-C hatte jedes Gerät einen eigenen Stecker. MCP macht dasselbe für KI-Integrationen: ein Standard, der überall funktioniert. Unterstützt von OpenAI, Google, Microsoft und Anthropic.
 
@@ -144,7 +144,7 @@ Eine API ist eine Schnittstelle, über die Software ein Modell anspricht. Abrech
 - Du hast weniger als 3 Workflows
 - Du willst nicht technisch werden
 
-Für die meisten Freelancer: Zapier oder Make mit den eingebauten KI-Integrationen reicht. API ist die Kür, nicht die Pflicht.
+Für die meisten Freelancer reicht Zapier oder Make mit den eingebauten KI-Integrationen. API ist die Kür, nicht die Pflicht.
 
 Berechne Kosten mit der aktuellen offiziellen Preisseite und gemessenen Ein- und Ausgabetokens. Ergänze Wiederholungen, Fehlversuche, Werkzeuge, Speicherung, Entwicklung, Prüfung und Monitoring. Ein Preis pro „Anfrage" ohne Längen- und Modellannahmen ist nicht belastbar.
 
@@ -226,7 +226,7 @@ To-dos als Checkliste.
 Ton: Sachlich, präzise, keine Interpretation.
 ```
 
-**Ergebnis:** Strukturiertes Protokoll in deiner Ablage. Automatisch. Jedes Mal.
+**Ergebnis:** Strukturiertes Protokoll in deiner Ablage, automatisch, jedes Mal.
 
 ## Fehler vermeiden: Die Automatisierungs-Falle
 

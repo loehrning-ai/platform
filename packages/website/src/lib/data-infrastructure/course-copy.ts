@@ -188,7 +188,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       eyebrow: "Data Infrastructure / course",
       title: "Design data platforms from explicit system boundaries.",
       intro:
-        "The course follows data from source to use. Each lesson separates requirements, technical decisions, failure modes, and operating evidence. Interactive models illustrate consistency, storage layout, streaming time, and retries with fixed sample data.",
+        "The course follows data from source to use. Each lesson separates requirements, technical decisions, failure modes, and operating evidence. Interactive models show consistency, storage layout, streaming time, and retries on fixed sample data.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
@@ -228,7 +228,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       eyebrow: "Course map",
       title: "Four tracks. Twelve lessons.",
       intro:
-        "Work through the lessons in order. Each lesson identifies a decision, a failure mode, and operating evidence.",
+        "Take the lessons in order. Each one names a decision, a failure mode, and operating evidence.",
       trackLabel: (number) => `Track ${String(number).padStart(2, "0")}`,
       lessonLabel: (number) => `Lesson ${String(number).padStart(2, "0")}`,
       duration: (minutes) => `estimated ${minutes} min`,
@@ -252,7 +252,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     },
     progress: { overall: "Overall progress", lessons: "lessons" },
     certificateMetadata: {
-      title: "Certificate of completion: Data Infrastructure",
+      title: "Certificate of participation: Data Infrastructure",
       description:
         "Download the locally generated completion record for Data Infrastructure.",
     },

@@ -1,6 +1,11 @@
 # Public Content Guide
 
 - Use direct German prose and define technical terms at first use.
+- Open with the fact, the question, or the example. No filler openers ("In der heutigen Zeit", "In today's world"), no hedging frames ("Es ist wichtig zu betonen", "It is important to note"), no restating closers ("Zusammenfassend", "In conclusion").
+- Vary the rhythm: short and long sentences, paragraphs of five sentences or fewer, lists that do not all have three items.
+- Keep one form of address per course: Du everywhere except the EU AI Act course (Sie); English addresses the reader as "you".
+- The completion document is a "Teilnahmebestätigung" ("certificate of participation"); "Zertifikat" and "Lernnachweis" stay out of prose.
+- `bun run content:lint` enforces these rules (strict scope in `packages/website/scripts/content-lint.voice-scope.json`); `bun run content:voice-report` measures them per file.
 - Separate observed facts, interpretation, examples, and recommendations.
 - Cite primary sources for legal, regulatory, scientific, and product claims.
 - Attach a review date to time-sensitive material.

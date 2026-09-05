@@ -21,27 +21,27 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Start with the supported decisions",
         readTimeMinutes: 8,
         content:
-          "Define which questions or actions the retrieval layer will support before connecting sources. For each use case, name the authoritative records, acceptable staleness, data classification, and required evidence. A single search surface can simplify access, but it must preserve differences in authority, sensitivity, and retention.",
+          "Which decisions is this retrieval layer for? Answer that before you connect anything. Per use case, name the authoritative records, acceptable staleness, data classification, and required evidence. One search surface simplifies access. It still has to preserve differences in authority, sensitivity, and retention.",
       },
       {
         id: "s2",
         title: "Connect only justified sources",
         readTimeMinutes: 8,
         content:
-          "Documents, code, tickets, customer records, messages, calendars, and other sources carry different risks. Apply purpose limitation and data minimization. Involve privacy, security, legal, and worker-representation owners where required. Do not ingest a source merely because a connector exists.",
+          "Documents, code, tickets, customer records, messages, calendars. Each carries a different risk. Apply purpose limitation and data minimization. Involve privacy, security, legal, and worker-representation owners where required. A connector existing is not a reason to ingest the source behind it.",
       },
       {
         id: "s3",
         title: "Return evidence with the result",
         readTimeMinutes: 8,
         content:
-          "A retrieved answer should expose source references, relevant versions or timestamps, and any material access or freshness limits. The user must be able to inspect the evidence. When coverage is insufficient or sources conflict, the system should state the limitation or abstain instead of presenting unsupported synthesis as fact.",
+          "A retrieved answer exposes its source references, the relevant versions or timestamps, and any material access or freshness limit. The user must be able to inspect that evidence. Where coverage is thin or sources conflict, the system states the limitation or abstains. Unsupported synthesis presented as fact is the failure mode.",
       },
     ],
     callout: {
       kind: "note",
       h: "Sequence by value and risk",
-      text: "Begin with sources that support a defined use case and have clear ownership, stable access rules, and manageable sensitivity. Add operational records when freshness and deletion handling are controlled. Add communications only after explicit privacy, security, retention, and worker-impact review.",
+      text: "Begin with sources that serve a defined use case and have clear ownership, stable access rules, and manageable sensitivity. Add operational records once freshness and deletion handling are controlled. Add communications only after explicit privacy, security, retention, and worker-impact review.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -80,21 +80,21 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Place the control before disclosure",
         readTimeMinutes: 7,
         content:
-          "Authorization belongs in the retrieval path and at the source boundary. A response filter acts after content has already been retrieved and may miss indirect disclosure. Evaluate access before returning documents, passages, metadata, or derived results, and test the policy with both allowed and denied cases.",
+          "Authorization belongs in the retrieval path and at the source boundary. A response filter runs after the content is already retrieved, and it misses indirect disclosure. Evaluate access before returning documents, passages, metadata, or derived results. Test the policy on allowed cases and on denied ones.",
       },
       {
         id: "s2",
-        title: "Represent both user and workload identity",
+        title: "Represent the user and the workload",
         readTimeMinutes: 7,
         content:
-          "The system should know which user initiated the request and which agent or service executed it. Effective access should be no broader than the intersection of the user's rights, the workload's assigned scope, and current policy. Use short-lived credentials and explicit delegation; do not rely on a shared elevated account.",
+          "The system knows which user started the request and which agent or service executed it. Effective access is no broader than the intersection of the user's rights, the workload's assigned scope, and current policy. Short-lived credentials, explicit delegation. Never a shared elevated account.",
       },
       {
         id: "s3",
         title: "Log decisions without creating a new leak",
         readTimeMinutes: 6,
         content:
-          "Record the user, workload identity, time, requested resource identifiers, policy version, authorization decision, and returned source identifiers. Protect the log itself and avoid storing raw secrets or unnecessary sensitive query text. The record should support incident reconstruction without becoming a second uncontrolled data store.",
+          "Record the user, the workload identity, the time, the requested resource identifiers, the policy version, the authorization decision, and the returned source identifiers. Protect that log, and keep raw secrets and unnecessary sensitive query text out. The record supports incident reconstruction. It must not become a second uncontrolled data store.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -133,14 +133,14 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Match freshness to the decision",
         readTimeMinutes: 11,
         content:
-          "A periodic snapshot may be adequate for stable reference material and unsafe for a workflow acting on rapidly changing state. Define a maximum acceptable age for each use case and source. Include updates, revocations, and deletions in the contract; stale permissions can be as consequential as stale content.",
+          "A periodic snapshot can be fine for stable reference material and unsafe for a workflow acting on fast-changing state. Define a maximum acceptable age per use case and source. Put updates, revocations, and deletions in the contract too. A stale permission hurts as much as stale content.",
       },
       {
         id: "s2",
         title: "Detect and expose stale state",
         readTimeMinutes: 11,
         content:
-          "Choose event-driven, scheduled, or on-demand synchronization from the required freshness and operating cost. Monitor ingestion delay and failed updates. Return an as-of timestamp or version with results, and define whether the workflow warns, requests confirmation, falls back to the source, or stops when the freshness limit is exceeded.",
+          "Choose event-driven, scheduled, or on-demand synchronization from the required freshness and the operating cost. Monitor ingestion delay and failed updates. Return an as-of timestamp or version with the result. And decide in advance whether the workflow warns, asks for confirmation, falls back to the source, or stops when the limit is passed.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -166,8 +166,8 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Module 7 knowledge check",
-    subtitle: "Check the retrieval controls from this module.",
-    objective: "Check the retrieval controls from this module.",
+    subtitle: "Two questions on authorization and freshness.",
+    objective: "Two questions on authorization and freshness.",
     durationMinutes: 9,
     keyConcepts: [],
     quiz: [
@@ -198,7 +198,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "The system must deny unauthorized content before disclosure. A response filter is too late and can miss indirect leakage. Effective access should reflect both the requesting user's rights and the workload's explicitly assigned scope.",
+          "The system denies unauthorized content before disclosure. A response filter arrives too late and misses indirect leakage. Effective access reflects the requesting user's rights together with the workload's explicitly assigned scope.",
       },
       {
         id: "ano-data-q2",
@@ -227,7 +227,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Snapshot frequency is safe only relative to the decision's freshness requirement. The control is to define that requirement, measure actual delay, expose the data timestamp, and stop or degrade the workflow when the limit is exceeded.",
+          "Snapshot frequency is safe only relative to the freshness the decision requires. Define that requirement, measure the actual delay, expose the data timestamp, and stop or degrade the workflow when the limit is passed.",
       },
     ],
     sections: [],

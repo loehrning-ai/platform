@@ -51,62 +51,62 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Einen Coding-Agenten-Ablauf auswählen"],
     [
       canonical.subtitle,
-      "Vergleiche Interaktionsmodell, Ausführungsgrenze, Anbieteranforderungen und Review-Pfad vor der Werkzeugwahl.",
+      "Erst Interaktionsmodell, Ausführungsgrenze, Anbieteranforderungen und Review-Pfad vergleichen, dann wählen.",
     ],
-    [canonical.hook, "Nach Betriebsanforderungen auswählen."],
+    [canonical.hook, "Wähle nach Betriebsanforderungen, nicht nach Logo."],
     [canonical.keyConcepts[0], "Werkzeuglandschaft"],
     [canonical.keyConcepts[2], "Passung zur Aufgabenform"],
     [canonical.keyConcepts[3], "IDE-Integration"],
     [canonical.sections[0].title, "Die Landschaft"],
     [
       prose(0, 0),
-      "Coding-Werkzeuge kombinieren mehrere Interaktionsmodelle: Inline-Vervollständigung, Editor-Chat, Terminal-Agenten, IDE-Agenten und Hintergrundaufträge, die ein Diff oder einen Pull Request liefern. Produktfähigkeiten ändern sich; mehrere Werkzeuge decken inzwischen mehr als eine Kategorie ab.\n\nWähle anhand betrieblicher Anforderungen statt einer statischen Anbieterrangliste. Prüfe, welchen Repository-Kontext das Werkzeug lesen kann, wo Befehle ausgeführt werden, welche Schreibzugriffe eine Freigabe verlangen, ob Netzwerkzugriff besteht, wie Modell- und Datenrichtlinien konfiguriert sind und wie das Ergebnis in den Review gelangt.\n\nEntscheidend sind Arbeitsablauf und Kontrollen, nicht allein der Produktname.",
+      "Vergiss die Anbieterrangliste. Coding-Werkzeuge mischen mehrere Interaktionsmodelle: Inline-Vervollständigung, Editor-Chat, Terminal-Agenten, IDE-Agenten und Hintergrundaufträge, die ein Diff oder einen Pull Request liefern. Die Fähigkeiten ändern sich, und mehrere Werkzeuge decken inzwischen mehr als eine Kategorie ab.\n\nWähle nach betrieblichen Anforderungen. Prüfe, welchen Repository-Kontext das Werkzeug lesen kann, wo Befehle laufen, welche Schreibzugriffe eine Freigabe brauchen, ob Netzwerkzugriff besteht, wie Modell- und Datenrichtlinien konfiguriert sind und wie das Ergebnis in den Review kommt.\n\nBewertet wird der Arbeitsablauf mit seinen Kontrollen, nicht das Logo.",
     ],
     [canonical.sections[1].title, "Sechs beispielhafte Werkzeugoberflächen"],
     [card(1, 0, 0, "title"), "Editor- und GitHub-Abläufe"],
     [
       card(1, 0, 0, "body"),
-      "Bietet Inline-Vervollständigung, Chat und Agentenabläufe in unterstützten Editoren und GitHub-Oberflächen. Prüfe Repository-Zugriff, Ausführungsort und Review-Kontrollen für den verwendeten Modus.",
+      "Inline-Vervollständigung, Chat und Agentenabläufe in unterstützten Editoren und auf GitHub. Prüfe pro Modus Repository-Zugriff, Ausführungsort und Review-Kontrollen.",
     ],
     [card(1, 0, 1, "title"), "KI-orientierter Editor"],
     [
       card(1, 0, 1, "body"),
-      "Verbindet Editor-Kontext, Chat und Agentenausführung in einer IDE. Interaktive Repository-Untersuchung und Änderungen über mehrere Dateien hängen vom gewählten Modell und den Berechtigungen ab.",
+      "Eine IDE, die Editor-Kontext, Chat und Agentenausführung verbindet. Wie gut interaktive Repository-Untersuchung und Änderungen über mehrere Dateien laufen, hängt an Modell und Berechtigungen.",
     ],
     [card(1, 0, 2, "title"), "Terminalorientierter Agent"],
     [
       card(1, 0, 2, "body"),
-      "Läuft im Terminal und kann Repository-Dateien sowie Shell-Werkzeuge innerhalb konfigurierter Berechtigungen verwenden. Hooks und Skripte binden ihn in bestehende Entwicklungsabläufe ein.",
+      "Läuft im Terminal und kann Repository-Dateien und Shell-Werkzeuge innerhalb der konfigurierten Berechtigungen nutzen. Hooks und Skripte binden ihn in bestehende Entwicklungsabläufe ein.",
     ],
     [card(1, 0, 3, "title"), "Open-Source-CLI-Oberfläche"],
     [
       card(1, 0, 3, "body"),
-      "Unterstützt mehrere Modellanbieter in einem Kommandozeilenablauf. Offline- oder isolierter Betrieb hängt vom gewählten Modellendpunkt und der lokalen Infrastruktur ab, nicht allein von der CLI.",
+      "Mehrere Modellanbieter in einem Kommandozeilenablauf. Ob das offline oder isoliert läuft, entscheiden Modellendpunkt und lokale Infrastruktur, nicht die CLI allein.",
     ],
     [card(1, 0, 4, "title"), "Agent als VSCode-Erweiterung"],
     [card(1, 0, 4, "eyebrow"), "Cline (früher Claude Dev)"],
     [
       card(1, 0, 4, "body"),
-      "Ergänzt VS Code um Agentenabläufe mit mehreren Anbietern und MCP-Integrationen. Prüfe Befehlsfreigaben, Anbieter-Konfiguration und Datenpfad, bevor Schreibzugriff erteilt wird.",
+      "Agentenabläufe mit mehreren Anbietern und MCP-Integrationen in VS Code. Bevor du Schreibzugriff erteilst, prüfe Befehlsfreigaben, Anbieter-Konfiguration und Datenpfad.",
     ],
     [card(1, 0, 5, "title"), "Lokale und cloudbasierte Codex-Oberflächen"],
     [
       card(1, 0, 5, "body"),
-      "Codex unterstützt interaktive lokale Arbeit in CLI und IDE sowie Hintergrundaufträge in dedizierten Cloud-Umgebungen. Wähle die Oberfläche nach Umgebungs-, Berechtigungs- und Review-Anforderungen.",
+      "Interaktive lokale Arbeit in CLI und IDE, dazu Hintergrundaufträge in dedizierten Cloud-Umgebungen. Die Oberfläche wählst du nach Umgebungs-, Berechtigungs- und Review-Anforderungen.",
     ],
     [canonical.sections[2].title, "Auswahl nach Aufgabenform"],
     [
       prose(2, 0),
-      "Ordne Arbeitsablauf, Aufgabe und Kontrollgrenze einander zu:\n\n- **Kleine lokale Änderung mit bekannter Umsetzung** → Direktbearbeitung oder Inline-Vervollständigung, wenn Delegation keinen zusätzlichen Nutzen bringt.\n- **Unbekannte Codebasis** → Zunächst lesend-interaktiv arbeiten und Datei- sowie Aufrufpfade belegen lassen, bevor Schreibzugriff besteht.\n- **Klar spezifizierter Hintergrundauftrag** → Dedizierte Umgebung, ausdrückliche Prüfungen und Diff- oder Pull-Request-Gate verwenden.\n- **Terminalzentrierter Ablauf** → Einen CLI-Agenten einsetzen, der bestehende Repository-Befehle innerhalb der erforderlichen Sandbox- und Freigaberegeln ausführt.\n- **Anbieter-, Residenz- oder Offline-Vorgabe** → Gesamten Pfad aus Modellendpunkt, Telemetrie, Zugangsdaten und Netzwerk prüfen. Ein lokaler Client macht den Ablauf nicht automatisch offline.\n\nBei Sicherheits- oder Beschaffungsentscheidungen aktuelle Produktdokumentation prüfen; Fähigkeiten ändern sich.",
+      "Arbeitsablauf, Aufgabe und Kontrollgrenze gehören zusammen:\n\n- **Kleine lokale Änderung, Umsetzung bekannt** → Direkt bearbeiten oder Inline-Vervollständigung, wenn Delegation nichts bringt.\n- **Unbekannte Codebasis** → Erst lesend und interaktiv, Datei- und Aufrufpfade belegen lassen, dann Schreibzugriff.\n- **Sauber spezifizierter Hintergrundauftrag** → Dedizierte Umgebung, ausdrückliche Prüfungen, Diff- oder Pull-Request-Gate.\n- **Terminalzentrierter Ablauf** → Ein CLI-Agent, der die vorhandenen Repository-Befehle innerhalb der Sandbox- und Freigaberegeln ausführt.\n- **Anbieter-, Residenz- oder Offline-Vorgabe** → Modellendpunkt, Telemetrie, Zugangsdaten und Netzwerk als ganzen Pfad prüfen. Ein lokaler Client macht den Ablauf nicht offline.\n\nGeht es um Sicherheit oder Beschaffung, lies die aktuelle Produktdokumentation. Fähigkeiten ändern sich.",
     ],
     [canonical.sections[3].title, "MCP-Server"],
     [
       prose(3, 0),
-      "MCP steht für Model Context Protocol. Es standardisiert, wie ein Client Werkzeuge, Ressourcen und Prompts ermittelt und aufruft, die ein MCP-Server bereitstellt.\n\nMCP erteilt selbst keinen Zugriff. Server, Transport, Zugangsdaten, Client-Richtlinie und Benutzerfreigaben bestimmen, was ein Werkzeug lesen oder ändern darf. Eine Datenbank- oder GitHub-Integration sollte nur die engsten brauchbaren Operationen bereitstellen und Lesezugriffe von folgenreichen Schreibzugriffen trennen.\n\nKonzeptionell:\n\n```\n# 1. Einen geprüften MCP-Server im Client konfigurieren.\n# 2. Der Server veröffentlicht benannte Fähigkeiten mit Eingabeschemata.\n# 3. Der Client kann eine erlaubte Fähigkeit aufrufen, wenn der Auftrag sie benötigt.\n# 4. Authentifizierung, Autorisierung, Protokollierung und Freigabe gelten weiterhin.\n```\n\nMCP kann manuelle Kopierabläufe durch strukturierte Aufrufe ersetzen, erweitert aber auch die Vertrauensgrenze des Agenten. Jeder konfigurierte Server braucht Zuständigkeit, minimale Rechte und Prüfbarkeit.",
+      "MCP heißt Model Context Protocol. Es standardisiert, wie ein Client die Werkzeuge, Ressourcen und Prompts eines MCP-Servers findet und aufruft.\n\nZugriff erteilt MCP nicht. Was ein Werkzeug lesen oder ändern darf, bestimmen Server, Transport, Zugangsdaten, Client-Richtlinie und deine Freigaben. Eine Datenbank- oder GitHub-Integration sollte nur die engsten brauchbaren Operationen bereitstellen und Lesen von folgenreichem Schreiben trennen.\n\nKonzeptionell:\n\n```\n# 1. Einen geprüften MCP-Server im Client konfigurieren.\n# 2. Der Server veröffentlicht benannte Fähigkeiten mit Eingabeschemata.\n# 3. Der Client kann eine erlaubte Fähigkeit aufrufen, wenn der Auftrag sie benötigt.\n# 4. Authentifizierung, Autorisierung, Protokollierung und Freigabe gelten weiterhin.\n```\n\nMCP kann Copy-and-paste durch strukturierte Aufrufe ersetzen. Es erweitert damit auch die Vertrauensgrenze des Agenten. Jeder konfigurierte Server ist eine Integration mit Zuständigkeit, minimalen Rechten und Prüfbarkeit.",
     ],
     [
       prose(4, 0),
-      "Editor- und Terminal-Abläufe können dieselben Repository-Kontrollen verwenden:\n\n- **Diff prüfen:** Geänderte Dateien, Tests, Löschungen und erzeugte Artefakte in der normalen Git-Oberfläche untersuchen.\n- **Repository-Prüfungen ausführen:** Dokumentierte Lint-, Typ-, Test- und Build-Befehle verwenden statt werkzeugspezifischer Erfolgsmeldungen.\n- **Kontext bewusst begrenzen:** Nur die für den Auftrag erforderlichen Dateien und Protokolle bereitstellen; Repository- oder Geheimniszugriff nicht aus Bequemlichkeit erweitern.\n- **Gleichzeitige Arbeit isolieren:** Getrennte Branches oder Worktrees reduzieren Dateikonflikte. Gemeinsame Abhängigkeiten und erzeugter Zustand können dennoch kollidieren.\n\nDie Integration muss Review- und Sicherheitsgates des Projekts erhalten, nicht umgehen.",
+      "Editor- und Terminal-Abläufe können dieselben Repository-Kontrollen nutzen.\n\n- **Diff prüfen:** geänderte Dateien, Tests, Löschungen und erzeugte Artefakte in der normalen Git-Oberfläche.\n- **Repository-Prüfungen ausführen:** die dokumentierten Lint-, Typ-, Test- und Build-Befehle, keine werkzeugeigenen Erfolgsmeldungen.\n- **Kontext bewusst begrenzen:** nur die Dateien und Protokolle, die der Auftrag braucht. Repository- oder Geheimniszugriff wird nicht aus Bequemlichkeit breiter.\n- **Gleichzeitige Arbeit isolieren:** getrennte Branches oder Worktrees gegen Dateikonflikte. Gemeinsame Abhängigkeiten und erzeugter Zustand können trotzdem kollidieren.\n\nDie Integration erhält die Review- und Sicherheitsgates des Projekts. Umgehen ist keine Option.",
     ],
     [prose(5, 0), "Zwei Fragen zur Werkzeugauswahl und zu MCP."],
     [widgetString(0, "title"), "Dieselbe Aufgabe, zwei Werkzeugentscheidungen"],
@@ -114,23 +114,23 @@ export default localizeCodexLessonToGerman(canonical, {
     [widgetString(0, "goodLabel"), "Passender Umfang"],
     [
       widgetString(0, "bad"),
-      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Eine Hintergrundumgebung und einen eigenen Pull Request für eine Änderung erzeugen, die direkt an Ort und Stelle geprüft werden kann.\n\nAufwand: zusätzlicher Umgebungs- und Review-Zustand ohne entsprechende Risikoreduktion.",
+      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: für eine Änderung, die man an Ort und Stelle prüfen kann, eine Hintergrundumgebung hochfahren und einen eigenen Pull Request öffnen.\n\nAufwand: zusätzlicher Umgebungs- und Review-Zustand, kein Risiko weniger.",
     ],
     [
       widgetString(0, "good"),
-      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Den Kommentar neben der Funktion bearbeiten oder erzeugen, gegen die Implementierung prüfen und in die bestehende Änderung aufnehmen.\n\nAufwand: keine getrennte Ausführungsumgebung und kein zusätzliches Review-Objekt.",
+      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Kommentar direkt neben der Funktion schreiben oder erzeugen lassen, gegen die Implementierung prüfen, in die bestehende Änderung aufnehmen.\n\nAufwand: keine getrennte Umgebung, kein zusätzliches Review-Objekt.",
     ],
     [
       widgetString(0, "note"),
-      "Delegierte Aufträge verursachen zusätzlichen Umgebungs-, Kontext- und Review-Aufwand. Nutze diese Trennung, wenn sie Isolation, Verifikation oder Parallelität verbessert; sonst bleibt die Änderung im aktuellen Arbeitsablauf.",
+      "Jeder delegierte Auftrag kostet Umgebung, Kontext und Review. Zahl den Preis, wenn Isolation, Verifikation oder Parallelität davon profitieren. Sonst bleibt die Änderung im aktuellen Arbeitsablauf.",
     ],
     [
       widgetString(1, "question"),
-      "Du musst die Authentifizierung in einer unbekannten Codebasis verstehen, bevor du Änderungen vornimmst. Welcher Ablauf ist der sicherste erste Schritt?",
+      "Unbekannte Codebasis, und du musst die Authentifizierung verstehen, bevor du etwas änderst. Welcher Ablauf ist der sicherste erste Schritt?",
     ],
     [
       widgetStrings(1, "options")[0],
-      "Sofort Schreib- und Netzwerkzugriff erteilen, damit die Untersuchung nicht eingeschränkt ist.",
+      "Sofort Schreib- und Netzwerkzugriff erteilen, damit nichts die Untersuchung bremst.",
     ],
     [
       widgetStrings(1, "options")[1],
@@ -138,7 +138,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(1, "options")[2],
-      "Das Produkt mit dem kürzesten Einrichtungsablauf auswählen.",
+      "Das Produkt mit dem kürzesten Setup nehmen.",
     ],
     [
       widgetStrings(1, "options")[3],
@@ -146,11 +146,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Lesende Untersuchung begrenzt versehentliche Änderungen und liefert prüfbare Nachweise. Sobald Authentifizierungspfad und Vertrauensgrenzen bekannt sind, folgt ein eigener Auftrag mit ausdrücklichem Umfang und Prüfungen.",
+      "Lesende Untersuchung begrenzt versehentliche Änderungen und liefert prüfbare Nachweise. Sind Authentifizierungspfad und Vertrauensgrenzen bekannt, folgt ein eigener Auftrag mit ausdrücklichem Umfang und Prüfungen.",
     ],
     [
       widgetString(2, "question"),
-      "Was ergänzt MCP zu einem Coding-Agenten-Ablauf?",
+      "Was bringt MCP in einen Coding-Agenten-Ablauf?",
     ],
     [widgetStrings(2, "options")[0], "Code schneller schreiben."],
     [
@@ -161,7 +161,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [widgetStrings(2, "options")[3], "Mehr Programmiersprachen verstehen."],
     [
       widgetString(2, "explanation"),
-      "MCP standardisiert Ermittlung und Aufruf von Fähigkeiten. Es ersetzt weder Authentifizierung noch Autorisierung, Freigabe, Protokollierung oder ein Berechtigungsmodell mit minimalen Rechten.",
+      "MCP standardisiert, wie Fähigkeiten gefunden und aufgerufen werden. Authentifizierung, Autorisierung, Freigabe, Protokollierung und minimale Rechte ersetzt es nicht.",
     ],
   ],
   preserve: [

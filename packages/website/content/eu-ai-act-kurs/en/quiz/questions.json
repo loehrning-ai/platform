@@ -120,7 +120,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The extraterritorial scope covers providers and deployers from third countries through two triggers: Art. 2(1)(a), when an AI system is placed on the market or put into service in the EU, and Art. 2(1)(c), when the output produced by the AI system is used in the EU. Block 1 L3 gives particular emphasis to point (c) because it is the more common situation for learners assessing foreign SaaS providers: the provider is established in the United States and the output reaches a user in Germany. The provider's location or nationality is irrelevant; either trigger establishes the Regulation's applicability independently.",
+    "explanation": "The extraterritorial scope covers providers and deployers from third countries through two triggers: Art. 2(1)(a), when an AI system is placed on the market or put into service in the EU, and Art. 2(1)(c), when the output produced by the AI system is used in the EU. Block 1 L3 emphasises point (c) because it is the more common case with foreign SaaS providers: the provider sits in the United States, the output lands with a user in Germany. Location and nationality of the provider are irrelevant; either trigger establishes the Regulation's applicability independently.",
     "version": 1,
     "active": true
   },
@@ -151,7 +151,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 5(1), points (a) to (h), lists eight prohibited practices. They include social scoring, manipulative techniques, real-time remote biometric identification in publicly accessible spaces and emotion recognition in the workplace.",
+    "explanation": "Art. 5(1), points (a) to (h), lists eight prohibited practices. Among them social scoring, manipulative techniques, real-time remote biometric identification in publicly accessible spaces, and emotion recognition in the workplace.",
     "version": 1,
     "active": true
   },
@@ -182,7 +182,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Annex III, point 4(a), classifies AI systems intended for the recruitment or selection of natural persons, particularly systems used to evaluate applications, as high-risk. All high-risk obligations in Chapter III, Section 2 therefore apply.",
+    "explanation": "Annex III, point 4(a), classifies AI systems intended for the recruitment or selection of natural persons, in particular systems that evaluate applications, as high-risk. Every high-risk obligation in Chapter III, Section 2 then applies.",
     "version": 1,
     "active": true
   },
@@ -283,7 +283,7 @@
     "id": "q_w10",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "For at least how long must the automatically generated logs of high-risk AI systems be retained?",
+    "questionText": "What is the minimum retention period for the automatically generated logs of a high-risk AI system?",
     "answerOptions": [
       {
         "id": "a",
@@ -461,7 +461,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 51(2) sets the threshold at 10^25 floating-point operations. The Commission may amend this threshold through delegated acts. Models in the GPT-4, Claude 3 and Gemini Ultra capability class exceed this threshold.",
+    "explanation": "Art. 51(2) sets the threshold at 10^25 floating-point operations. The Commission may adjust that figure through delegated acts. Models in the GPT-4, Claude 3 and Gemini Ultra capability class are above it.",
     "version": 1,
     "active": true
   },
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The KI-MIG entered into force on 29 July 2026. It designates the Federal Network Agency as the market-surveillance authority, single point of contact and complaints body for the AI Act, unless a sectoral authority is responsible. Check the official Federal Network Agency website for the specific complaints procedure.",
+    "explanation": "The KI-MIG has been in force since 29 July 2026. It makes the Federal Network Agency the market-surveillance authority, single point of contact and complaints body for the AI Act, unless a sectoral authority is responsible. The specific complaints route is on the official Federal Network Agency website.",
     "version": 1,
     "active": true
   },
@@ -679,7 +679,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 85 gives any natural or legal person the right to lodge a complaint with the relevant market-surveillance authority. The person does not have to be directly affected. The authority assesses the complaint and decides how to proceed.",
+    "explanation": "Art. 85 gives any natural or legal person the right to lodge a complaint with the relevant market-surveillance authority. Being directly affected is not required. The authority assesses the complaint and decides how to proceed.",
     "version": 1,
     "active": true
   },
@@ -772,7 +772,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Without an inventory, there can be no classification; without classification, the applicable obligations cannot be identified. Step 1 is a complete AI inventory covering the provider, purpose and data flows. Risk classification, documentation, gap analysis and remediation follow.",
+    "explanation": "No inventory, no classification. No classification, no way to name the obligations that apply. Step 1 is a complete AI inventory covering provider, purpose and data flows. Risk classification, documentation, gap analysis and remediation come after that.",
     "version": 1,
     "active": true
   },

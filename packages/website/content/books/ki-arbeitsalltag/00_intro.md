@@ -4,11 +4,11 @@
 
 KI-Kompetenz am Arbeitsplatz ist seit dem 2. Februar 2025 keine Kür mehr.
 
-Sie ist Pflicht. Per Gesetz.
+Pflicht. Per Gesetz.
 
-Artikel 4 der EU-KI-Verordnung. Drei Sätze, die jeden Arbeitgeber in Europa betreffen. Der Kurs liefert dir das Bewusstsein. Dieses Buch liefert dir das Nachschlagewerk.
+Artikel 4 der EU-KI-Verordnung, drei Sätze, und sie treffen jeden Arbeitgeber in Europa. Der Kurs liefert dir das Bewusstsein. Dieses Buch liefert dir das Nachschlagewerk.
 
-Du hast den KI-Führerschein gemacht. Vielleicht alle fünf Blöcke. Vielleicht stehst du gerade bei Block 2. Egal.
+Du hast den KI-Führerschein gemacht, vielleicht alle fünf Blöcke, vielleicht stehst du gerade bei Block 2. Spielt keine Rolle.
 
 Das Buch ist **nicht dafür gedacht, von vorne bis hinten gelesen zu werden**. Du schlägst nach, was du brauchst. Den Rest lässt du liegen.
 
@@ -34,38 +34,38 @@ Das Buch folgt den fünf Kurs-Blöcken, ergänzt um Einleitung und Anhang:
 - **Block 5: Richtlinie** → Kapitel 11-12
 - **Anhang** → Kapitel 13
 
-Wenn du den Kurs in Blöcken machst, lies nach jedem Block das entsprechende Kapitel.
+Machst du den Kurs in Blöcken, lies nach jedem Block das passende Kapitel.
 
 ## Wie es funktioniert
 
-Jedes Kapitel hat:
+Jedes Kapitel ist gleich gebaut.
 
-1. **Ein tieferes Konzept.** Was der Kurs in fünf Minuten anreißt, vertiefen wir auf acht bis zehn Seiten.
+1. **Ein tieferes Konzept.** Was der Kurs in fünf Minuten anreißt, bekommt hier acht bis zehn Seiten.
 2. **Praktische Beispiele.** So sieht das im echten Job aus.
-3. **Fallstudien.** Ein Vertriebsmitarbeiter nutzt KI so. Eine HR-Kollegin anders.
-4. **Eine Checkliste.** Was du prüfen solltest, bevor du loslegst.
+3. **Fallstudien.** Ein Vertriebsmitarbeiter nutzt KI so, eine HR-Kollegin anders.
+4. **Eine Checkliste.** Was du prüfst, bevor du loslegst.
 
 *Alle Namen und Zahlen in Beispielen sind erfunden.*
 
 ## Die Tipps
 
-Im Kurs siehst du Tipps-Boxen (grüne Kästen). Hier im Buch findest du sie als Callouts.
+Im Kurs sind die Tipps grüne Kästen. Hier im Buch stehen sie als Callouts.
 
 > **Tipp:** Speichere deine besten Prompts in einer Datei. Nach zehn Prompts hast du ein System, das für dich arbeitet.
 
 ## Die Warnungen
 
-Warnungen zeigen, wo KI problematisch wird.
+Warnungen markieren die Stellen, an denen KI zum Problem wird.
 
 > **Achtung:** ChatGPT kennt keine firmeninternen Daten. Kundennamen und Preise gehören niemals in die Free-Version.
 
 ## Glossar
 
-Im Anhang findest du 42 Begriffe. Wenn du ein Wort nicht kennst, schlag es nach.
+Im Anhang stehen 42 Begriffe. Kennst du ein Wort nicht, schlag es dort nach.
 
 ## Du brauchst nicht alles auf einmal
 
-Manche Kapitel sind für dich nicht relevant. Du arbeitest in der IT? Dann brauchst du Kapitel 7 (Excel) wahrscheinlich nicht. Du bist im Vertrieb? Dann ist Kapitel 6 (E-Mails und Meetings) Pflicht.
+Nicht jedes Kapitel ist für dich. Du sitzt in der IT? Dann brauchst du Kapitel 7 (Excel) wahrscheinlich nicht. Du bist im Vertrieb? Dann ist Kapitel 6 (E-Mails und Meetings) Pflicht.
 
 **Lies, was du brauchst. Ignorier den Rest.**
 
@@ -79,8 +79,8 @@ Nach dem Kurs und diesem Buch:
 - [ ] Ich kann KI-Ergebnisse kritisch bewerten
 - [ ] Ich kenne unsere KI-Richtlinie und halte mich dran
 
-Wenn alle fünf Punkte stimmen, hast du den KI-Führerschein nicht nur *gemacht*, du hast ihn **verstanden**.
+Stimmen alle fünf Punkte, hast du den KI-Führerschein nicht nur *gemacht*, sondern **verstanden**.
 
 ---
 
-**Auf geht's. Block 1 kommt jetzt.**
+**Block 1 kommt jetzt.**

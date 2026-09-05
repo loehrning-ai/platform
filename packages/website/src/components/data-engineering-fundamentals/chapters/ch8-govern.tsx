@@ -36,7 +36,7 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Govern: privacy isn't an audit step. It's the <span class='accent'>deploy gate</span>."
-        hook="This course uses a reference deployment gate that checks declared identity classes, ACL metadata, and transform policy. Passing the automated gate confirms those configured rules only; it does not establish legal compliance."
+        hook="The reference deployment gate checks declared identity classes, ACL metadata, and transform policy. Passing it confirms those configured rules. It does not establish legal compliance."
         meta={[
           { k: "Deploy gate", v: "Access Gateway" },
           { k: "ACL", v: "dataset_acl" },
@@ -75,21 +75,13 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
       <section className="section">
         <SectionLabel n="9.2">The deploy gate</SectionLabel>
         <h2 className="h2">The reference gate evaluates declared metadata.</h2>
-        <p className="prose">
-          In the simulator, Access Gateway checks each declared column against the course classification rules, resolves
-          <code> dataset_acl</code>, and optionally checks a Policy Zone binding. The gate can catch configured metadata omissions. It cannot
-          detect every sensitive value, policy conflict, or legal requirement without additional review and evidence.
-        </p>
+        <p className="prose">In the simulator, Access Gateway checks each declared column against the course classification rules, resolves <code> dataset_acl</code>, and optionally checks a Policy Zone binding. The gate catches configured metadata omissions. On its own it detects no sensitive value, no policy conflict, and no legal requirement, without further review and evidence.</p>
         <PermissionGateSim />
       </section>
 
       <section className="section">
         <SectionLabel n="9.3">Policy zones &amp; opaque transforms</SectionLabel>
-        <p className="prose">
-          In the reference design, a <b>Policy Zone</b> limits execution to a named compute environment. An opaque transform can run with
-          <code> network=NO_NETWORK</code> to remove direct network egress. Neither setting is sufficient alone: identity, storage, logs,
-          dependencies, output controls, and deployment configuration also require enforcement and testing.
-        </p>
+        <p className="prose">In the reference design a <b>Policy Zone</b> pins execution to a named compute environment, and an opaque transform can run with <code> network=NO_NETWORK</code> to remove direct egress. Neither setting is enough alone. Identity, storage, logs, dependencies, output controls, and deployment configuration all need enforcement and testing too.</p>
         <CodeBlock title="dim_users.spec.yaml · the shipped annotation" lang="YAML" html={ANNOTATED_SPEC_YAML} />
       </section>
 

@@ -1,0 +1,51 @@
+{
+  "$comment": "Per-file, per-rule exceptions for the voice rules in content-lint.mjs. Every entry needs `file` (relative to packages/website; a trailing slash allows a directory), `rule` (a VOICE-* rule id) and a non-empty `reason`. Optional `phrase` narrows the entry to one phrase id from the rule tables. An entry without a reason fails the lint.",
+  "entries": [
+    {
+      "file": "content/ki-und-gesellschaft/quiz/questions.json",
+      "rule": "VOICE-FILLER",
+      "reason": "Two answer options use the word inside the claim the learner must judge; rewording an option could change which answer is correct, so the option texts stay verbatim."
+    },
+    {
+      "file": "content/books/ki-arbeitsalltag/06_emails_meetings_berichte.md",
+      "rule": "VOICE-FORM",
+      "reason": "The chapter quotes a customer reply the model drafts. Sie is the correct form in German business correspondence, so the example keeps it while the chapter around it stays Du."
+    },
+    {
+      "file": "content/books/ki-arbeitsalltag/13_anhang.md",
+      "rule": "VOICE-FORM",
+      "reason": "A glossary example quotes a formal notice addressed to a third party, where Sie is correct; the surrounding reference text stays Du."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/03_prompting.md",
+      "rule": "VOICE-FILLER",
+      "reason": "The chapter teaches readers to recognise filler in their own prompts, so the banned words appear inside quoted bad examples, two of them within frozen code fences."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/03_prompting.md",
+      "rule": "VOICE-OPENER",
+      "reason": "The announcing openers are quoted weak prompts the chapter then rewrites; removing them would delete the lesson."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/04_akquise.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted boilerplate of a bad acquisition mail addressed to a client, where German business correspondence uses Sie."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/07_finanzen.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted speech addressed to the reader client, where Sie is the correct German form."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/09_branchen.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted client question in a sales scene, where Sie is the correct German form."
+    },
+    {
+      "file": "content/eu-ai-act-kurs/en/block-3-hochrisiko-lessons.json",
+      "rule": "VOICE-COUNT-LESSON",
+      "phrase": "en-filler-robust",
+      "reason": "\"Robustness\" is the statutory term in the Article 15 heading of Regulation (EU) 2024/1689 (\"accuracy, robustness and cybersecurity\"). The lesson on human oversight names it once in its key concepts and once when quoting Article 15(1); a synonym would misname the requirement, and the German twin cites the same term as \"Robustheit\"."
+    }
+  ]
+}

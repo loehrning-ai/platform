@@ -12,8 +12,8 @@ export default function Ch01FundamentalsDe() {
     <DataScienceLocaleProvider locale="de">
       <Hero
         eyebrow="Kapitel 01 · Grundlagen"
-        title='Datenwissenschaft übersetzt <em>Rauschen</em> <span class="accent">in Entscheidungen.</span>'
-        hook="Vor jedem Modell, jeder SQL-Abfrage und jedem Dashboard stehen drei Unterscheidungen: <strong>Stichprobe und Grundgesamtheit.</strong> <strong>Signal und Rauschen.</strong> <strong>Korrelation und Kausalität.</strong>"
+        title='Die Data Scientistin macht aus <em>Rauschen</em> <span class="accent">Entscheidungen.</span>'
+        hook="Vor jedem Modell, jeder SQL-Abfrage, jedem Dashboard stehen drei Unterscheidungen: <strong>Stichprobe und Grundgesamtheit.</strong> <strong>Signal und Rauschen.</strong> <strong>Korrelation und Kausalität.</strong> Sitzen die drei, sitzt der Rest."
         meta={[
           { k: "Lesezeit", v: "7 min" },
           { k: "Inhalt", v: "CLT · Stichproben · Data-Science-Zyklus" },
@@ -28,30 +28,27 @@ export default function Ch01FundamentalsDe() {
           nicht die Grundgesamtheit.
         </h2>
         <p className="prose">
-          Angenommen, ein fiktiver Dienst hat{" "}
-          <strong>44 Millionen Nutzer</strong>
-          und ein A/B-Test enthält <strong>180,000</strong> geeignete
-          Beobachtungen. Eine Retention-Differenz von 2.3% schätzt eine
-          Populationsgröße aus dieser Stichprobe. Ihre Aussage hängt von
-          Zuweisung, Fehlwerten, Messung, Auswahl und statistischer Unsicherheit
-          ab.
+          Ein fiktiver Dienst mit <strong>44 Millionen Nutzern</strong>, darin
+          ein A/B-Test mit <strong>180,000</strong> geeigneten Beobachtungen.
+          Die Retention-Differenz von 2.3% schätzt eine Größe der
+          Grundgesamtheit. Was sie bedeutet, hängt an Zuweisung, Fehlwerten,
+          Messung, Ziehung und Unsicherheit.
         </p>
         <p className="prose">
-          Datenwissenschaft arbeitet häufig mit <code>samples</code> und trifft
-          Aussagen über <code>populations</code> oder künftige Fälle.
-          Konfidenzintervalle, Tests, Validierung und Versuchsdesign erfassen
-          unterschiedliche Unsicherheiten; sie reparieren keine verzerrte
-          Stichprobe oder ungültige Messung.
+          Datenwissenschaft rechnet auf <code>samples</code> und redet über{" "}
+          <code>populations</code> oder künftige Fälle. Konfidenzintervalle,
+          Tests, Validierung und Versuchsdesign beziffern verschiedene Teile
+          dieser Unsicherheit. Keines repariert eine verzerrte Stichprobe oder
+          ungültige Messung.
         </p>
         <GaltonSim />
         <p className="prose" style={{ marginTop: 22 }}>
-          Erhöhe <code>n</code> von 2 auf 100. In diesem unabhängigen Generator
+          Schieb <code>n</code> von 2 auf 100. In diesem unabhängigen Generator
           mit endlicher Varianz skaliert der Standardfehler des Mittelwerts mit{" "}
-          <code>1/√n</code>; die Stichprobenverteilung nähert sich bei
-          wachsendem n einer Normalform. Der zentrale Grenzwertsatz hat
-          Bedingungen. Abhängigkeit, schwere Verteilungsschwänze, kleine
-          Stichproben und wechselnde Populationen können die Approximation
-          verschlechtern.
+          <code>1/√n</code>; die Stichprobenverteilung nähert sich mit
+          wachsendem n der Normalform. Der Grenzwertsatz hat Bedingungen.
+          Abhängigkeit, schwere Verteilungsschwänze, kleine Stichproben und
+          wechselnde Grundgesamtheiten verschlechtern die Approximation.
         </p>
       </section>
 
@@ -62,12 +59,12 @@ export default function Ch01FundamentalsDe() {
           <em>Die Reihenfolge hängt vom Problem ab.</em>
         </h2>
         <p className="prose">
-          Ein nützlicher Arbeitszyklus umfasst{" "}
+          Der Arbeitszyklus lautet{" "}
           <strong>
             Daten → Exploration → Bereinigung → Merkmale → Modell → Evaluation
           </strong>{" "}
-          und beginnt danach erneut. Spätere Kapitel ergänzen Experimente,
-          Kausalanalyse und Betrieb.
+          und beginnt von vorn. Experimente, Kausalanalyse und Betrieb kommen
+          später dazu.
         </p>
         <div className="loop-mini">
           {[
@@ -89,9 +86,9 @@ export default function Ch01FundamentalsDe() {
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<b>Modellieren vor der Exploration.</b> Wer <code>model.fit()</code> ausführt, bevor die Daten visualisiert wurden, kann versehentlich eine Indexspalte lernen.",
-            "<b>Die falsche Kennzahl optimieren.</b> Hohe Güte auf einer irrelevanten Kennzahl ist schlechter als mäßige Güte auf der richtigen Kennzahl.",
-            "<b>Korrelation mit Kausalität verwechseln.</b> Wenn Nutzer mit Kontakt zu Funktion X länger bleiben, beweist das keine kausale Wirkung von X.",
+            "<b>Fitten, bevor du hinschaust.</b> Wer <code>model.fit()</code> ungeplottet laufen lässt, liefert ein Modell mit gelernter Indexspalte aus.",
+            "<b>Eine Zahl optimieren, nach der niemand gefragt hat.</b> Hohe Güte auf der falschen Kennzahl ist schlechter als mäßige auf der richtigen.",
+            "<b>Korrelation für Kausalität halten.</b> „Wer Funktion X sieht, bleibt länger“ heißt nicht, dass X die Retention verursacht.",
           ]}
         />
       </section>
@@ -99,9 +96,9 @@ export default function Ch01FundamentalsDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Die Zielpopulation benennen.</b> Angeben, wie Auswahl, Zuweisung, Fehlwerte und Messung die Schätzung begrenzen.",
-          "<b>Der zentrale Grenzwertsatz hat Bedingungen.</b> In vielen unabhängigen Situationen mit endlicher Varianz werden Mittelwerte bei wachsendem n annähernd normal; die Eignung prüfen.",
-          "<b>Den Zyklus als Kontrollsystem verwenden.</b> Nach neuen Daten oder Transformationen erneut explorieren, validieren und überwachen.",
+          "<b>Nenn die Zielpopulation.</b> Und wie Ziehung, Zuweisung, Fehlwerte und Messung sie begrenzen.",
+          "<b>Der zentrale Grenzwertsatz hat Bedingungen.</b> In vielen unabhängigen Situationen mit endlicher Varianz werden Mittelwerte bei wachsendem n annähernd normal. Prüf die Eignung.",
+          "<b>Nutz den Zyklus als Kontrollsystem.</b> Explorier, validier und überwach, wo neue Daten oder Transformationen alte Evidenz entwerten.",
         ]}
       />
     </DataScienceLocaleProvider>

@@ -5,6 +5,7 @@
     "supabase/functions/**",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/test/**"
+    "src/test/**",
+    "scripts/__tests__/fixtures/**"
   ]
 }

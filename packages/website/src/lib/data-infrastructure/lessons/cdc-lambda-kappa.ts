@@ -30,7 +30,7 @@ const lesson: DataInfraLesson = {
       title: "CDC, why",
       readTimeMinutes: 3,
       content:
-        "A source database must be mirrored into an analytical system, including inserts, updates, and deletes. Periodic polling can work when volume, freshness, deletion tracking, and source load are bounded, but timestamp polling needs reliable change markers and explicit delete handling.\n\n**Change Data Capture (CDC)** reads a database change interface, often a transaction log or logical replication stream, and emits row-change events. The event shape, ordering scope, before-images, transaction metadata, and delivery guarantees depend on the database, connector, and configuration. CDC also consumes source resources through snapshots, log decoding, replication slots, network, and retention.\n\n**Bootstrap and continuation.** A connector may take a consistent snapshot and then continue from a recorded log position. Debezium's PostgreSQL connector supports several snapshot modes and isolation settings; its initial workflow reads a log position, scans configured data, records completion, and streams from that point. Snapshot locking, visibility, retries, and duration are configuration- and workload-dependent. Consumers do not necessarily repeat the initial snapshot once durable connector offsets exist.",
+        "You need a source database mirrored into an analytical system. Inserts, updates, deletes, all of them. Periodic polling handles that when volume, freshness, deletion tracking, and source load stay bounded, and timestamp polling still needs reliable change markers plus explicit delete handling.\n\n**Change Data Capture (CDC)** reads a database change interface, often a transaction log or logical replication stream, and emits row-change events. Event shape, ordering scope, before-images, transaction metadata, and delivery guarantees all follow from the database, connector, and configuration. CDC is not free either: it consumes source resources through snapshots, log decoding, replication slots, network, and retention.\n\n**Bootstrap and continuation.** A connector takes a consistent snapshot, then continues from a recorded log position. Debezium's PostgreSQL connector supports several snapshot modes and isolation settings; its initial workflow reads a log position, scans configured data, records completion, and streams from that point. Snapshot locking, visibility, retries, and duration depend on configuration and workload. Consumers do not necessarily repeat the initial snapshot once durable connector offsets exist.",
       keyTakeaway:
         "A CDC design must specify snapshot mode, log position, ordering scope, retention, restart behavior, and source impact.",
     },
@@ -39,21 +39,21 @@ const lesson: DataInfraLesson = {
       title: "Pipeline visualization",
       readTimeMinutes: 2,
       content:
-        "The interactive diagram compares two simplified topologies: a single replayable processing path and separate fast and recomputation paths. It does not execute connectors or measure freshness.\n\nDebezium is one open-source CDC platform and its PostgreSQL connector uses logical decoding and replication slots. A stalled slot can retain WAL and exhaust storage, so monitor retained bytes, connector lag, slot state, snapshot progress, and permission scope. Managed and open alternatives differ in supported sources, snapshot behavior, schemas, security boundaries, and delivery semantics. Verify current connector documentation and run failure tests before selecting one.",
+        "The interactive diagram compares two simplified topologies: a single replayable processing path, and separate fast and recomputation paths. It executes no connectors and measures no freshness.\n\nDebezium is one open-source CDC platform, and its PostgreSQL connector uses logical decoding and replication slots. A stalled slot retains WAL and can exhaust storage, so monitor retained bytes, connector lag, slot state, snapshot progress, and permission scope. Managed and open alternatives differ in supported sources, snapshot behavior, schemas, security boundaries, and delivery semantics. Read the current connector documentation and run failure tests before you pick one.",
     },
     {
       id: "s3",
       title: "Payload anatomy",
       readTimeMinutes: 3,
       content:
-        '```json\n{\n  "op": "u",\n  "ts_ms": 1714233601000,\n  "source": {\n    "db": "shop", "schema": "public", "table": "orders",\n    "lsn": 287345128,\n    "txId": 442817\n  },\n  "before": { "id": 42, "status": "pending", "amount": 4890 },\n  "after":  { "id": 42, "status": "shipped", "amount": 4890 }\n}\n```\n\n`op` values can identify creates, updates, deletes, and snapshot reads. Important caveats:\n\n1. **Before and after images are conditional.** Database replica identity and connector settings determine whether a complete `before` image exists.\n2. **Source positions are opaque progress tokens.** PostgreSQL LSN values are byte positions in WAL, not consecutive event numbers. A numeric jump does not prove a missing event. Use connector offsets, transaction metadata, source health, and reconciliation to detect gaps.\n3. **Deletes need a defined representation.** A delete event, tombstone, or source-side soft-delete policy must be propagated and retained consistently.\n\nSerialization is configurable: JSON, Avro, Protobuf, and registry integrations are deployment choices. A compatibility setting checks schema evolution under format-specific rules; it cannot prove consumer business logic handles a new nullable field. Test producer and consumer versions through replay before rollout.',
+        '```json\n{\n  "op": "u",\n  "ts_ms": 1714233601000,\n  "source": {\n    "db": "shop", "schema": "public", "table": "orders",\n    "lsn": 287345128,\n    "txId": 442817\n  },\n  "before": { "id": 42, "status": "pending", "amount": 4890 },\n  "after":  { "id": 42, "status": "shipped", "amount": 4890 }\n}\n```\n\n`op` values identify creates, updates, deletes, and snapshot reads. Three caveats matter:\n\n1. **Before and after images are conditional.** Database replica identity and connector settings decide whether a complete `before` image exists.\n2. **Source positions are opaque progress tokens.** PostgreSQL LSN values are byte positions in WAL, not consecutive event numbers. A numeric gap proves nothing about lost events. Use connector offsets, transaction metadata, source health, and reconciliation to detect real gaps.\n3. **Deletes need a defined representation.** A delete event, tombstone, or source-side soft-delete policy has to be propagated and retained consistently.\n\nSerialization is configurable: JSON, Avro, Protobuf, and registry integrations are deployment choices. A compatibility setting checks schema evolution under format-specific rules. It cannot prove your consumer business logic handles a new nullable field. Test producer and consumer versions through replay before rollout.',
     },
     {
       id: "s4",
       title: "Lambda vs Kappa",
       readTimeMinutes: 3,
       content:
-        "**Lambda architecture** maintains a low-latency path and a separate recomputation path whose outputs are reconciled in serving. It can use a trusted batch source to correct or rebuild results, but duplicates logic and creates reconciliation work.\n\n**Kappa architecture** uses one stream-processing path for live work and replay. It reduces dual implementations only when the source retains complete replayable history, the same code and dependencies can reproduce old semantics, sinks tolerate replay, and recovery time is acceptable. Starting from offset zero is not a general backfill plan when retention expired or source data came from bulk snapshots.\n\nNeither pattern dominates every workload. Choose one path when replay completeness and recovery objectives are proven. Keep a separate recomputation path when authoritative bulk data, long history, complex batch algorithms, or independent reconciliation justify it. In either design, version business logic and compare replay output against durable source evidence.",
+        "**Lambda architecture** runs a low-latency path and a separate recomputation path whose outputs are reconciled in serving. A trusted batch source can correct or rebuild results. The price is duplicated logic and reconciliation work.\n\n**Kappa architecture** uses one stream-processing path for live work and replay. It removes the dual implementation only when the source retains complete replayable history, the same code and dependencies reproduce old semantics, sinks tolerate replay, and recovery time is acceptable. Starting from offset zero is no backfill plan once retention expired or the source data arrived by bulk snapshot.\n\nNeither pattern wins everywhere. Take the single path when replay completeness and recovery objectives are proven. Keep a separate recomputation path when authoritative bulk data, long history, complex batch algorithms, or independent reconciliation earn it. Either way, version the business logic and compare replay output against durable source evidence.",
       keyTakeaway:
         "A single processing path reduces duplicate logic only when retained input and versioned code can reproduce the required history.",
     },
@@ -62,20 +62,20 @@ const lesson: DataInfraLesson = {
       title: "Real-time pattern",
       readTimeMinutes: 2,
       content:
-        "One possible topology is PostgreSQL logical decoding → a partitioned log → stateful processing → a lakehouse table plus a query-serving projection. It is an example, not a default stack.\n\nBefore using it, define source-of-truth ownership, partition ordering, snapshot bootstrap, schema evolution, log retention, checkpoint and sink guarantees, deletion propagation, serving freshness, and reconciliation. The log can replay only the records it retained; the source database, snapshots, object storage, and external effects may hold authoritative state that the log does not.",
+        "One possible topology is PostgreSQL logical decoding → a partitioned log → stateful processing → a lakehouse table plus a query-serving projection. An example, not a default stack.\n\nBefore you use it, define source-of-truth ownership, partition ordering, snapshot bootstrap, schema evolution, log retention, checkpoint and sink guarantees, deletion propagation, serving freshness, and reconciliation. The log replays only the records it retained. The source database, snapshots, object storage, and external effects may hold authoritative state the log never saw.",
     },
     {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on what you just read.",
+      content: "Two questions on capture and replay.",
     },
     {
       id: "s7",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **WAL / binlog**, database-specific transaction-log mechanisms that can expose ordered source positions for CDC. Permissions, retention, replica identity, and failover behavior matter.\n- **Snapshot + stream**, a bootstrap pattern that captures a point-in-time view and continues from a compatible log position. Snapshot mode and consistency are configurable.\n- **Tombstone**, a Kafka record with a key and null value. In a compacted topic it participates in key deletion under compaction and retention rules; removal is not immediate.\n- **Schema registry**, stores versioned schemas and applies configured compatibility rules. It does not validate business meaning or every consumer implementation.\n- **Outbox pattern**, writes business state and an outbox row in one database transaction, then publishes the outbox asynchronously. It removes the application-level dual write but still needs publisher retries, deduplication, retention, and monitoring.",
+        "- **WAL / binlog**, database-specific transaction-log mechanisms that expose ordered source positions for CDC. Permissions, retention, replica identity, and failover behavior all matter.\n- **Snapshot + stream**, a bootstrap pattern that captures a point-in-time view and continues from a compatible log position. Snapshot mode and consistency are configurable.\n- **Tombstone**, a Kafka record with a key and null value. In a compacted topic it participates in key deletion under compaction and retention rules; removal is not immediate.\n- **Schema registry**, stores versioned schemas and applies configured compatibility rules. It validates neither business meaning nor every consumer implementation.\n- **Outbox pattern**, writes business state and an outbox row in one database transaction, then publishes the outbox asynchronously. It removes the application-level dual write and still needs publisher retries, deduplication, retention, and monitoring.",
     },
   ],
   widgets: [
@@ -97,7 +97,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          "Polling can be correct for bounded workloads if updates and deletes have durable markers and queries are indexed and measured. CDC can expose committed row changes with lower polling overhead, but it adds snapshot scans, log decoding, replication-slot retention, connector offsets, and at-least-once or scoped transactional semantics. Compare the complete failure and operating model.",
+          "Polling is correct for bounded workloads when updates and deletes carry durable markers and queries are indexed and measured. CDC exposes committed row changes with lower polling overhead, and it adds snapshot scans, log decoding, replication-slot retention, connector offsets, and at-least-once or scoped transactional semantics. Compare the complete failure and operating model.",
       },
     },
     {
@@ -118,7 +118,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          "Two implementations can diverge through code, state, timing, late data, and source differences. A single versioned path can reduce that risk, but replay can still differ if input retention, dependencies, nondeterminism, or sinks changed. Establish one calculation contract, version it, and reconcile outputs.",
+          "Two implementations diverge through code, state, timing, late data, and source differences. A single versioned path lowers that risk, and replay still differs when input retention, dependencies, nondeterminism, or sinks changed. Establish one calculation contract, version it, and reconcile the outputs.",
       },
     },
     {
@@ -138,7 +138,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Snapshot + stream",
             q: "How does CDC bootstrap?",
-            a: "A connector can take a configured consistent snapshot and continue from a compatible log position. Snapshot modes, locking or isolation, restart behavior, and whether a later consumer snapshots again depend on configuration and stored offsets.",
+            a: "A connector takes a configured consistent snapshot and continues from a compatible log position. Snapshot modes, locking or isolation, restart behavior, and whether a later consumer snapshots again all depend on configuration and stored offsets.",
           },
           {
             term: "Tombstone",
@@ -153,7 +153,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Outbox pattern",
             q: "When CDC isn't enough",
-            a: "The application writes business state and an outbox row in one database transaction. A separate publisher or CDC process delivers the row asynchronously, with retries and deduplication. This removes the application-level database-plus-broker dual write.",
+            a: "The application writes business state and an outbox row in one database transaction. A separate publisher or CDC process delivers the row asynchronously, with retries and deduplication. That removes the application-level database-plus-broker dual write.",
           },
         ],
       },

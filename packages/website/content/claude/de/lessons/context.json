@@ -2,10 +2,10 @@
   "id": "context",
   "number": 3,
   "title": "Kontextfenster, Tokens und Retrieval",
-  "subtitle": "Was in eine Anfrage eingeht, wie Tokenisierung funktioniert und was geprüft werden muss.",
+  "subtitle": "Was in eine Anfrage eingeht, wie Tokens gezählt werden, was du prüfen musst.",
   "durationMinutes": 10,
   "trackId": "foundations",
-  "hook": "Kontext ist begrenzt. Relevanz, Quellenqualität und Anordnung müssen getestet werden.",
+  "hook": "Kontext ist begrenzt. Relevanz, Quellenqualität und Anordnung werden getestet, nicht geraten.",
   "keyConcepts": [
     "Kontext-Engineering",
     "Semantischer Raum",
@@ -19,37 +19,37 @@
       "id": "context-is-the-product",
       "title": "Kontext ist das Produkt",
       "readTimeMinutes": 3,
-      "content": "Kontext-Engineering bezeichnet Auswahl und Anordnung der Informationen, die einem Modell für eine Aufgabe zur Verfügung stehen: Anweisungen, Quelldokumente, Beispiele, frühere Nachrichten und Tool-Ergebnisse. Klare Sprache bleibt wichtig, kann aber keine fehlende private Tatsache liefern oder eine unzuverlässige Quelle reparieren.\n\nZwei technische Punkte helfen:\n\n**Semantische Repräsentationen.** Modelle verarbeiten Tokens über hochdimensionale numerische Zustände. Verwandte Begriffe können ähnliche Repräsentationen haben; eine zweidimensionale Karte ist jedoch nur eine Illustration und kein Einblick in eine Claude-Anfrage.\n\n**Begrenzter Kontext.** Modell und Produkt haben dokumentierte Kontextgrenzen. Lange Eingaben können dennoch scheitern, weil relevante Stellen schwer auffindbar sind, Quellen widersprechen oder die Ausgabe Budget benötigt. Teste mit dem tatsächlich eingesetzten Modell und den realen Eingaben."
+      "content": "Der Prompt ist sauber formuliert, die Antwort trotzdem falsch. Klare Sprache liefert keine fehlende private Tatsache und repariert keine unzuverlässige Quelle. Das leistet nur der Kontext. Kontext-Engineering heißt auswählen und anordnen, was das Modell bekommt: Anweisungen, Quelldokumente, Beispiele, frühere Nachrichten, Tool-Ergebnisse.\n\nZwei technische Punkte dahinter.\n\n**Semantische Repräsentationen.** Modelle verarbeiten Tokens als hochdimensionale numerische Zustände. Verwandte Begriffe können ähnliche Repräsentationen haben. Eine zweidimensionale Karte davon ist Illustration, kein Blick in eine Claude-Anfrage.\n\n**Begrenzter Kontext.** Modell und Produkt haben dokumentierte Grenzen. Lange Eingaben scheitern trotzdem, wenn die relevante Stelle untergeht, Quellen sich widersprechen oder die Antwort selbst Budget braucht. Teste mit dem echten Modell und echten Eingaben."
     },
     {
       "id": "meaning-in-space",
       "title": "Bedeutung lebt im Raum",
       "readTimeMinutes": 1,
-      "content": "Die Übung unten ist eine lokale, regelbasierte Illustration. Dabei werden Wörter vordefinierten Themenfeldern zugeordnet; Claude wird nicht aufgerufen und Modell-Embeddings werden nicht berechnet.\n\n> Begriffe wie „prägnant“ und „erschöpfend“ stehen für unterschiedliche Anforderungen. Wenn Konsistenz wichtig ist, übersetze solche Begriffe in prüfbare Grenzen."
+      "content": "Die Übung unten ist eine lokale Regel, keine Modellrechnung. Wörter landen in vordefinierten Themenfeldern. Claude wird nicht aufgerufen, Embeddings werden nicht berechnet.\n\n> „Prägnant“ und „erschöpfend“ sind verschiedene Anforderungen. Soll das Ergebnis konsistent sein, übersetze solche Wörter in prüfbare Grenzen."
     },
     {
       "id": "window-as-budget",
       "title": "Das Kontextfenster als begrenzte Ressource",
       "readTimeMinutes": 2,
-      "content": "Der Kontext einer Anfrage kann System- und Produktanweisungen, Nachrichten, Dokumente, frühere Interaktionen und Tool-Ergebnisse enthalten. Auch die Antwort verbraucht Tokens.\n\nDrei praktische Kontrollen:\n\n1. **Trenne Dokumente und Frage.** Anthropics Langkontext-Anleitung platziert Quellen bei Mehrdokument-Aufgaben vor der Frage. Prüfe diese Anordnung mit eigenen Evals.\n2. **Beschrifte jede Quelle.** Tags wie `<document index=\"1\" source=\"…\">` erhalten Quellgrenzen und erleichtern ein festes Zitatformat.\n3. **Definiere die Belegregel neben der Aufgabe.** Lege erlaubte Quellen und die Ausgabe bei fehlender Stützung fest.\n\nReiche große Dokumentmengen nicht ohne Retrieval- oder Relevanzstrategie ein. Mehr Text kann Widersprüche und Ablenkung hinzufügen."
+      "content": "Systemanweisung, Nachrichten, Dokumente, frühere Interaktionen, Tool-Ergebnisse, alles liegt im selben Fenster. Und die Antwort verbraucht ebenfalls Tokens.\n\nDrei Handgriffe dagegen.\n\n1. **Dokumente und Frage trennen.** Anthropics Langkontext-Anleitung setzt bei Mehrdokument-Aufgaben die Quellen vor die Frage. Ob das bei dir gilt, zeigen deine Evals.\n2. **Jede Quelle beschriften.** Tags wie `<document index=\"1\" source=\"…\">` halten Quellgrenzen sichtbar und erleichtern ein festes Zitatformat.\n3. **Die Belegregel neben die Aufgabe schreiben.** Welche Quellen gelten, und was zurückkommt, wenn keine trägt.\n\nGroße Dokumentmengen ohne Retrieval- oder Relevanzstrategie sind keine Abkürzung. Mehr Text bringt Widersprüche und Ablenkung mit."
     },
     {
       "id": "long-context-template",
       "title": "Die Langkontext-Vorlage",
       "readTimeMinutes": 2,
-      "content": "Nutze eine Struktur wie diese, wenn eine Antwort ausschließlich auf bereitgestellten Dokumenten beruhen soll.\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [vollständiger Text von Dokument 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [vollständiger Text von Dokument 2]\n  </document>\n</documents>\n\n<instructions>\nAntworte NUR unter Verwendung der oben genannten Dokumente. Wenn die Antwort nicht vorhanden ist, sage dies.\nZitiere Quellen als [doc-1] oder [doc-2] inline.\n</instructions>\n\n<question>\nWie lautet unser Rollback-Verfahren, wenn die erzwungene Umstellung fehlschlägt?\n</question>\n```\n\nDie Struktur trennt Quellen, Regeln und Frage. Zitate machen Aussagen prüfbar, müssen aber weiterhin mit der zitierten Passage abgeglichen werden."
+      "content": "Soll die Antwort ausschließlich aus den mitgelieferten Dokumenten kommen, sieht der Prompt so aus.\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [vollständiger Text von Dokument 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [vollständiger Text von Dokument 2]\n  </document>\n</documents>\n\n<instructions>\nAntworte NUR unter Verwendung der oben genannten Dokumente. Wenn die Antwort nicht vorhanden ist, sage dies.\nZitiere Quellen als [doc-1] oder [doc-2] inline.\n</instructions>\n\n<question>\nWie lautet unser Rollback-Verfahren, wenn die erzwungene Umstellung fehlschlägt?\n</question>\n```\n\nDrei Blöcke, sauber getrennt. Zitate machen Aussagen prüfbar. Geprüft sind sie erst, wenn jemand die zitierte Passage aufschlägt."
     },
     {
       "id": "tokens-briefly",
       "title": "Tokens in Kurzform",
       "readTimeMinutes": 1,
-      "content": "Claude-API-Eingaben werden vor der Inferenz tokenisiert. Die Anzahl hängt von Modell, Sprache, Zeichensetzung und Inhaltstyp ab; Wort-zu-Token-Formeln sind nur Planungswerte.\n\nNutze den Token-Counting-Endpunkt oder das Werkzeug des ausgewählten Produkts, wenn Kontextgrenze oder Kosten relevant sind."
+      "content": "Vor der Inferenz wird jede Claude-API-Eingabe tokenisiert. Die Tokenzahl hängt von Modell, Sprache, Zeichensetzung und Inhaltstyp ab. Wort-zu-Token-Formeln sind Planungswerte, mehr nicht.\n\nGeht es um Kontextgrenze oder Kosten, zählt der Token-Counting-Endpunkt oder das Produktwerkzeug. Nicht deine Schätzung."
     },
     {
       "id": "too-big-docs",
       "title": "Wenn deine Dokumente zu groß sind",
       "readTimeMinutes": 1,
-      "content": "Wenn der Quellenbestand größer als das nutzbare Kontextbudget ist, erhalte die Nachvollziehbarkeit:\n\n1. **Retrieval vor Antwort.** Wähle relevante Passagen mit Quellenkennungen und miss die Trefferquote an bekannten Fragen.\n2. **Aufgabe stufenweise bearbeiten.** Trenne Extraktion, Klassifikation, Entwurf und Review, wenn jede Stufe ein prüfbares Ergebnis hat.\n3. **Tools für veränderliche Quellen.** Datei-, Datenbank- oder Websuche kann aktuelle Belege liefern. Beschränke Berechtigungen und protokolliere die genutzten Quellen.\n\nEine Zusammenfassung ist selbst eine abgeleitete Quelle und kann Details verlieren. Verlinke Originalpassagen und prüfe dort kritische Aussagen."
+      "content": "Passt der Quellenbestand nicht ins Kontextbudget, bleibt eines nicht verhandelbar: die Nachvollziehbarkeit.\n\n1. **Retrieval vor Antwort.** Hol relevante Passagen mit Quellenkennung und miss die Trefferquote an bekannten Fragen.\n2. **In Stufen arbeiten.** Extraktion, Klassifikation, Entwurf, Review, getrennt, sobald jede Stufe ein prüfbares Ergebnis liefert.\n3. **Tools für Quellen, die sich ändern.** Datei-, Datenbank- oder Websuche liefert aktuelle Belege. Berechtigungen eng halten, genutzte Quellen protokollieren.\n\nEine Zusammenfassung ist selbst eine abgeleitete Quelle und kann Details verlieren. Verlinke die Originalpassage und prüfe kritische Aussagen dort."
     }
   ],
   "widgets": [
@@ -271,7 +271,7 @@
         "lessonId": "context",
         "cpId": "feel",
         "title": "Kontext rein, Kontext raus",
-        "hint": "Füge etwas ein, einen Thread, eine PR-Beschreibung, und frage dann etwas, das davon abhängt.",
+        "hint": "Füge einen Thread oder eine PR-Beschreibung ein. Dann frag etwas, das davon abhängt.",
         "placeholder": "<documents>\n<document index=\"1\">\n[füge hier ein kurzes Dokument ein]\n</document>\n</documents>\n\n<question>\nStelle eine Frage, die nur aus dem Dokument beantwortet werden kann\n</question>"
       }
     },
@@ -332,7 +332,7 @@
       "props": {
         "lessonId": "context",
         "cpId": "q3",
-        "question": "Du hast drei Quelldokumente und eine Frage. Wo empfiehlt Anthropics, die Frage zu platzieren?",
+        "question": "Du hast drei Quelldokumente und eine Frage. Wo empfiehlt Anthropic, die Frage zu platzieren?",
         "options": [
           "Ganz oben, Claude liest von oben nach unten.",
           "Nach den Dokumenten, nahe am Ende des Prompts.",
@@ -340,7 +340,7 @@
           "Die Reihenfolge spielt keine Rolle."
         ],
         "correct": 1,
-        "explanation": "Anthropics Langkontext-Anleitung platziert Dokumente bei Mehrdokument-Aufgaben vor der Frage. Bestätige die Anordnung mit Evals für Modell und Eingaben.",
+        "explanation": "Anthropics Langkontext-Anleitung setzt bei Mehrdokument-Aufgaben die Dokumente vor die Frage. Ob das bei deinem Modell trägt, zeigen Evals.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
