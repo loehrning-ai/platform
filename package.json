@@ -66,7 +66,7 @@
   "overrides": {
     "postcss": "^8.5.26",
     "uuid": "^14.0.0",
-    "fast-uri": ">=4.1.2",
+    "fast-uri": ">=4.1.3",
     "esbuild": "^0.28.1",
     "form-data": "^4.0.6",
     "undici": "^7.29.0",
@@ -78,7 +78,8 @@
     "minimatch": "^10.2.5",
     "nanoid": "^3.3.17",
     "tmp": "0.2.7",
-    "browserslist": "4.28.7"
+    "browserslist": "4.28.7",
+    "qs": ">=6.16.0"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1"
