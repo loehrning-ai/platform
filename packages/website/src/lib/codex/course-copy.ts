@@ -221,7 +221,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       notFoundTitle: "Lesson not found",
     },
     certificateMetadata: {
-      title: "Certificate of completion: Codex Course",
+      title: "Certificate of participation: Codex Course",
       description:
         "Download the locally generated completion record for the Codex Course.",
     },

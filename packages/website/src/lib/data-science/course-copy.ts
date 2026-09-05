@@ -96,7 +96,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     jsonLdDescription:
       "Twelve interactive chapters covering the complete data science loop, from exploration and feature engineering to causality, drift, and production operations.",
     certificateMetadata: {
-      title: "Certificate of completion: Data Science Fundamentals",
+      title: "Certificate of participation: Data Science Fundamentals",
       description:
         "Download the locally generated completion record for Data Science Fundamentals.",
     },

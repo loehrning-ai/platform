@@ -1,8 +1,8 @@
 {
   "blockId": "block_2",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [

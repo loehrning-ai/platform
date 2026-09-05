@@ -1,8 +1,8 @@
 {
   "blockId": "block_5",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-08",
-  "nextReview": "2027-02-08",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2027-03-05",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": ["eu-ai-act-amendment", "commission-qa-update"],

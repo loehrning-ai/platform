@@ -203,7 +203,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       notFoundTitle: "Chapter not found",
     },
     certificateMetadata: {
-      title: "Certificate of completion: Data Engineering Fundamentals",
+      title: "Certificate of participation: Data Engineering Fundamentals",
       description:
         "Download the locally generated completion record for Data Engineering Fundamentals.",
     },

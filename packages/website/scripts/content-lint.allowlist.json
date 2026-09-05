@@ -40,6 +40,12 @@
       "file": "content/books/ki-tools-selbststaendige/09_branchen.md",
       "rule": "VOICE-FORM",
       "reason": "Quoted client question in a sales scene, where Sie is the correct German form."
+    },
+    {
+      "file": "content/eu-ai-act-kurs/en/block-3-hochrisiko-lessons.json",
+      "rule": "VOICE-COUNT-LESSON",
+      "phrase": "en-filler-robust",
+      "reason": "\"Robustness\" is the statutory term in the Article 15 heading of Regulation (EU) 2024/1689 (\"accuracy, robustness and cybersecurity\"). The lesson on human oversight names it once in its key concepts and once when quoting Article 15(1); a synonym would misname the requirement, and the German twin cites the same term as \"Robustheit\"."
     }
   ]
 }

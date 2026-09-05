@@ -159,9 +159,9 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
         "Twenty-two questions from the nine module checks. Pass mark: 70 percent. Time limit: 28 minutes.",
     },
     certificateMetadata: {
-      title: "Course completion record: AI-Native Operator",
+      title: "Certificate of participation: AI-Native Operator",
       description:
-        "Download a locally generated course completion record. It is not server-verified, externally assessed, or accredited.",
+        "Download a locally generated certificate of participation. It is not server-verified, externally assessed, or accredited.",
     },
     verificationMetadata: {
       title: "Read course-record data: AI-Native Operator",

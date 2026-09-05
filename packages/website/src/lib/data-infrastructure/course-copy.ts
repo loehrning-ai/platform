@@ -252,7 +252,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     },
     progress: { overall: "Overall progress", lessons: "lessons" },
     certificateMetadata: {
-      title: "Certificate of completion: Data Infrastructure",
+      title: "Certificate of participation: Data Infrastructure",
       description:
         "Download the locally generated completion record for Data Infrastructure.",
     },

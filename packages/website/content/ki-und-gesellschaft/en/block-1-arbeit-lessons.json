@@ -1,8 +1,8 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-09",
-  "nextReview": "2026-11-09",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2026-12-05",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
   "triggerEvents": ["major-conceptual-update"],
@@ -16,8 +16,8 @@
       "subtitle": "What OECD and IAB numbers do not say",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-12-05",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -140,8 +140,8 @@
       "subtitle": "Who checks, who approves, which data go in",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-12-05",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -265,8 +265,8 @@
       "subtitle": "Task characteristics instead of occupation lists",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-11-09",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-12-05",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [

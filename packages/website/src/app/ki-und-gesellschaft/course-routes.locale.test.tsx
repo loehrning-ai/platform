@@ -105,7 +105,8 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
       alternates: { canonical: null },
     });
     expect(await generateCertificateMetadata()).toMatchObject({
-      title: "Course completion record: AI and Society",
+      // Copy lock updated: the English completion document is named a "certificate of participation" platform-wide.
+      title: "Certificate of participation: AI and Society",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

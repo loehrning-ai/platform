@@ -11,11 +11,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       locale === "en"
-        ? "Course completion record: EU AI Act Course"
+        ? "Certificate of participation: EU AI Act Course"
         : "Teilnahmebestätigung: EU AI Act Kurs",
     description:
       locale === "en"
-        ? "Download a locally generated course completion record. It is unsigned, not server-verified, and not evidence of legal compliance."
+        ? "Download a locally generated certificate of participation. It is unsigned, not server-verified, and not evidence of legal compliance."
         : "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht signiert, nicht servergeprüft und keine Rechts- oder Compliance-Bestätigung.",
     robots: { index: false, follow: false },
     alternates: { canonical: null },

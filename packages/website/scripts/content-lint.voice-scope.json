@@ -1,5 +1,5 @@
 {
-  "$comment": "Learner-facing paths (relative to packages/website) under STRICT voice enforcement: voice findings there are errors. Everything else gets the same findings as warnings. A directory prefix ends with a slash; a file path is matched exactly. Add a surface once it has been rewritten. German files are listed individually while the English twins in en/ are not yet rewritten.",
+  "$comment": "Learner-facing paths (relative to packages/website) under STRICT voice enforcement: voice findings there are errors. Everything else gets the same findings as warnings. A directory prefix ends with a slash; a file path is matched exactly. Add a surface once it has been rewritten. Both locales of every rewritten course are listed; a directory is used only where every file below it has been rewritten, otherwise the files are listed individually.",
   "strict": [
     "content/ki-fuehrerschein/block-1-entdeckung-lessons.json",
     "content/ki-fuehrerschein/block-2-datenschutz-lessons.json",
@@ -30,9 +30,9 @@
     "content/ai-native/modules.json",
     "content/ai-native/quiz/questions.json",
     "content/books/ki-arbeitsalltag/",
-    "src/lib/codex/lessons/de/",
-    "src/lib/data-infrastructure/lessons/de/",
-    "src/lib/ai-native-operator/modules/de/",
+    "src/lib/codex/lessons/",
+    "src/lib/data-infrastructure/lessons/",
+    "src/lib/ai-native-operator/modules/",
     "content/books/ki-landschaft/01_eisberg.md",
     "content/books/ki-landschaft/02_methodik.md",
     "content/books/ki-landschaft/03_reifegrad_ueberblick.md",
@@ -55,6 +55,23 @@
     "content/books/ki-tools-selbststaendige/10_automatisierung.md",
     "content/books/ki-tools-selbststaendige/11_skalierung.md",
     "content/books/ki-tools-selbststaendige/12_toolbox.md",
-    "content/books/ki-tools-selbststaendige/13_prompt_bibliothek.md"
+    "content/books/ki-tools-selbststaendige/13_prompt_bibliothek.md",
+    "content/ki-fuehrerschein/en/",
+    "content/eu-ai-act-kurs/en/",
+    "content/ki-und-gesellschaft/en/",
+    "content/ai-native/en/",
+    "content/claude/quiz/questions.json",
+    "content/ai-native-operator/quiz/questions.json",
+    "src/lib/claude-course/lessons/",
+    "content/books/ki-landschaft/en/01_eisberg.md",
+    "content/books/ki-landschaft/en/02_methodik.md",
+    "content/books/ki-landschaft/en/03_reifegrad_ueberblick.md",
+    "content/books/ki-landschaft/en/04_bundesland.md",
+    "content/books/ki-landschaft/en/05_branchen.md",
+    "content/books/ki-landschaft/en/06_eu_ki_verordnung.md",
+    "content/books/ki-landschaft/en/07_schnellstart.md",
+    "content/books/ki-landschaft/en/08_fahrplan.md",
+    "content/books/ki-landschaft/en/09_ausblick.md",
+    "content/books/ki-landschaft/en/10_anhang.md"
   ]
 }

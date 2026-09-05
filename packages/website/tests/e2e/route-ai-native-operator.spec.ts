@@ -642,7 +642,8 @@ test.describe("AI-Native Operator Course golden path", () => {
       assessment.getByRole("link", { name: "Retake quiz" }),
     ).toHaveAttribute("href", QUIZ_ROUTE);
     const certificate = assessment.getByRole("link", {
-      name: "Download Course Completion Record",
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      name: "Download Certificate of Participation",
     });
     await expect(certificate).toHaveAttribute("href", CERT_ROUTE);
     await certificate.click();
@@ -758,7 +759,8 @@ test.describe("AI-Native Operator Course golden path", () => {
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        name: "Course completion record: AI-Native Operator",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation".
+        name: "Certificate of participation: AI-Native Operator",
       }),
     ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);

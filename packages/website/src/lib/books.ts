@@ -82,8 +82,8 @@ export const allBooks: readonly Book[] = [
       "/book-covers/ki-landschaft-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-08-09",
-    nextReview: "2026-11-09",
+    lastReviewed: "2026-09-05",
+    nextReview: "2026-12-05",
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
@@ -127,8 +127,8 @@ export const allBooks: readonly Book[] = [
       "/book-covers/ki-arbeitsalltag-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-28",
-    nextReview: "2026-10-28",
+    lastReviewed: "2026-09-05",
+    nextReview: "2026-12-05",
     sourceInputs: [
       "KI-Führerschein lesson content",
       "European Commission AI literacy guidance",
@@ -172,8 +172,8 @@ export const allBooks: readonly Book[] = [
       "/book-covers/ki-tools-selbststaendige-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-28",
-    nextReview: "2026-10-28",
+    lastReviewed: "2026-09-05",
+    nextReview: "2026-12-05",
     sourceInputs: [
       "AI-Native course content",
       "Tool-selection editorial notes",

@@ -34,7 +34,7 @@ export const DATA_SCIENCE_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Science Fundamentals",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
   certificateModules: [
     "Fundamentals and exploration: sampling, the DS loop, EDA, and data cleaning",
     "Feature engineering and modeling: encoding, leakage, and the bias/variance tradeoff",
@@ -42,13 +42,13 @@ export const DATA_SCIENCE_CONFIG = {
     "Causal inference and production: DAGs, peeking/CUPED, drift monitoring, and deployment",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: the data science loop, EDA to deployment",
+    "Personal certificate of participation: the data science loop, EDA to deployment",
   quizPassMessage: "Data Science Fundamentals is complete.",
   certificateFileStem: "Data-Science-Fundamentals",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Certificate of Participation",
+    possessive: "Your certificate of participation",
+    demonstrative: "This certificate of participation",
   },
 } satisfies CourseConfig;
 
@@ -59,7 +59,7 @@ export const DATA_SCIENCE_CONFIG_DE = createLocalizedTechnicalCourseConfig(
     title: "Data Science Fundamentals",
     certificateTitle: "Teilnahmebestätigung: Data Science Fundamentals",
     certificateSubtitle:
-      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
     certificateModules: [
       "Grundlagen und Exploration: Stichproben, Data-Science-Zyklus, EDA und Datenbereinigung",
       "Feature Engineering und Modellierung: Kodierung, Leakage und Bias-Varianz-Abwägung",
@@ -67,7 +67,7 @@ export const DATA_SCIENCE_CONFIG_DE = createLocalizedTechnicalCourseConfig(
       "Kausale Inferenz und Betrieb: DAGs, Peeking/CUPED, Drift-Monitoring und Deployment",
     ],
     certificateReferenceLabel:
-      "Persönlicher Abschlussnachweis: Data-Science-Zyklus von EDA bis Deployment",
+      "Persönliche Teilnahmebestätigung: Data-Science-Zyklus von EDA bis Deployment",
     quizPassMessage: "Der Kurs Data Science Fundamentals ist abgeschlossen.",
     certificateFileStem: "Data-Science-Fundamentals",
     recordNoun: {

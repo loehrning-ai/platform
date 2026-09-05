@@ -1,8 +1,8 @@
 {
   "blockId": "block_2",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-08-09",
-  "nextReview": "2026-09-20",
+  "lastReviewed": "2026-09-05",
+  "nextReview": "2026-10-17",
   "reviewCadence": "6-weekly",
   "riskClass": "vendor",
   "triggerEvents": ["major-conceptual-update"],
@@ -16,8 +16,8 @@
       "subtitle": "Nicht jedes erzeugte Bild ist ein Deepfake",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-10-17",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": [
@@ -129,8 +129,8 @@
       "subtitle": "Quellenarbeit statt Detektor-Urteil",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-10-17",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": [
@@ -254,8 +254,8 @@
       "subtitle": "Sichern, melden, Betroffene schützen. Nicht teilen.",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-09",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-09-05",
+      "nextReview": "2026-10-17",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": [

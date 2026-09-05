@@ -272,7 +272,8 @@ test.describe("Data Science Fundamentals golden path", () => {
 
     const name = page.getByRole("textbox", { name: "Full name" });
     await page
-      .getByRole("button", { name: "Download Certificate of Completion" })
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      .getByRole("button", { name: "Download Certificate of Participation" })
       .click();
     await expect(name).toBeFocused();
     await expect(name).toHaveAttribute("aria-invalid", "true");
