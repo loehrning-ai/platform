@@ -1,12 +1,12 @@
 # Die KI-Toolbox: auswählen statt sammeln
 
-KI-Produkte, Preise, Modellnamen und Limits ändern sich schnell. Eine statische Bestenliste veraltet deshalb schneller als die Arbeitsweise, die sie erklären soll. Dieses Kapitel gibt dir eine wiederholbare Auswahlmethode.
+Eine Bestenliste für KI-Tools veraltet schneller, als du sie liest. Preise, Modellnamen und Limits ändern sich ständig. Was bleibt, ist die Methode, mit der du auswählst.
 
-> **Prüfregel:** Preise und Funktionen immer auf der offiziellen Produktseite kontrollieren. Datenschutz- und Sicherheitsentscheidungen zusätzlich anhand der aktuellen Vertragsunterlagen, des DPA/AVV, der Unterauftragnehmerliste und der technischen Konfiguration prüfen. Ein Standort, Zertifikat oder Herstellername beweist für sich allein keine DSGVO-Konformität.
+> **Prüfregel:** Preise und Funktionen kontrollierst du immer auf der offiziellen Produktseite. Bei Datenschutz und Sicherheit liest du zusätzlich die aktuellen Vertragsunterlagen, DPA/AVV, Unterauftragnehmerliste und technische Konfiguration. Standort, Zertifikat oder Herstellername beweisen für sich allein keine DSGVO-Konformität.
 
 ## Starte mit der Aufgabe
 
-Formuliere vor jeder Toolsuche einen Testsatz:
+Erst die Aufgabe, dann das Tool. Formuliere vor der Suche einen Testsatz:
 
 > Ich will **[konkrete Aufgabe]** mit **[zulässiger Datenklasse]** erledigen. Das Ergebnis ist gut, wenn **[messbares Kriterium]** erfüllt ist. Ein Mensch prüft **[kritische Punkte]** vor der Nutzung.
 
@@ -28,11 +28,13 @@ Beispiele:
 | **Sicherheit** | Berechtigungen, Verschlüsselung, Schlüsselverwaltung, Updates, Backups und Incident-Prozess |
 | **Kosten** | aktueller Grundpreis, nutzungsabhängige Kosten, Korrekturzeit, Betrieb und Exit-Aufwand |
 
-Bewerte nicht nur die Oberfläche. Zwei Tarife desselben Anbieters können unterschiedliche Verträge und Datenkontrollen haben. Auch ein Self-Hosted-Produkt bleibt ein System, das du absichern, aktualisieren und rechtmäßig betreiben musst.
+Die Oberfläche sagt dir nichts.
+
+Zwei Tarife desselben Anbieters können unterschiedliche Verträge und Datenkontrollen haben. Und ein Self-Hosted-Produkt bleibt ein System, das du absichern, aktualisieren und rechtmäßig betreiben musst.
 
 ## Allgemeine Assistenten
 
-ChatGPT, Claude, Gemini, Microsoft 365 Copilot und Le Chat sind Beispiele für allgemeine Assistenten. Wähle nicht nach einem pauschalen Sieger, sondern mit demselben Testdatensatz.
+ChatGPT, Claude, Gemini, Microsoft 365 Copilot und Le Chat sind Beispiele für allgemeine Assistenten. Einen pauschalen Sieger gibt es nicht. Wähle mit demselben Testdatensatz.
 
 Prüfe insbesondere:
 
@@ -64,11 +66,11 @@ Für Gesetze, Fristen, Preise und Produktbedingungen führt der letzte Prüfschr
 
 ## Bild, Audio und Video
 
-Midjourney, Adobe Firefly, Canva und Bildfunktionen allgemeiner Assistenten unterscheiden sich bei Lizenzbedingungen, Trainingsdaten, Inhaltsnachweisen und Nutzungsrechten. Prüfe diese Punkte pro Produkt und Ausgabe; ein Abonnement allein garantiert keine exklusiven Rechte.
+Midjourney, Adobe Firefly, Canva und Bildfunktionen allgemeiner Assistenten unterscheiden sich bei Lizenzbedingungen, Trainingsdaten, Inhaltsnachweisen und Nutzungsrechten. Prüfe diese Punkte pro Produkt und Ausgabe. Ein Abonnement garantiert dir keine exklusiven Rechte.
 
 Für Audio und Meetings kommen lokale Modelle wie OpenAI Whisper sowie Cloud-Dienste wie Otter, Fathom oder Amberscript infrage. Vor einer nichtöffentlichen Aufnahme müssen alle Teilnehmenden informiert werden und die Aufnahme muss befugt sein. § 201 StGB erfasst die unbefugte Aufnahme des nichtöffentlich gesprochenen Wortes.
 
-Whispers Code und Modellgewichte stehen unter MIT-Lizenz und können lokal laufen. Lokal bedeutet hier: Die gewählte Kommandozeilen-Inferenz verarbeitet die Datei auf dem Gerät. Drittanbieter-Apps, Backups, Erweiterungen und Synchronisation sind gesondert zu prüfen.
+Whispers Code und Modellgewichte stehen unter MIT-Lizenz und können lokal laufen. Lokal bedeutet hier: Die gewählte Kommandozeilen-Inferenz verarbeitet die Datei auf dem Gerät. Drittanbieter-Apps, Backups, Erweiterungen und Synchronisation prüfst du gesondert.
 
 Bei Cloud-Transkription kontrollierst du zusätzlich Bot-Einwilligung, DPA/AVV, Speicher- und Verarbeitungsorte, Aufbewahrung, Trainingsnutzung, Unterauftragnehmer und Löschung. Begriffe wie „EU-Hosting“ oder „DSGVO-freundlich“ reichen nicht.
 
@@ -82,11 +84,11 @@ Zapier, Make, n8n und Power Automate unterscheiden sich bei Integrationen, Betri
 | Self-hosted | mehr technische Kontrolle | Patches, HTTPS, Secrets, Backups, Logs und Zugriffe selbst betreiben |
 | Lokale Automation | begrenzter externer Datenfluss | Gerät, Benutzerrechte, lokale Backups und Verfügbarkeit absichern |
 
-Self-hosting macht einen Prozess nicht automatisch DSGVO-konform. Es verschiebt technische und organisatorische Verantwortung zu dir. Auch der Hostinganbieter kann Auftragsverarbeiter sein.
+Self-hosting macht einen Prozess nicht automatisch DSGVO-konform. Es verschiebt technische und organisatorische Verantwortung zu dir. Und der Hostinganbieter kann Auftragsverarbeiter sein.
 
 ## Buchhaltung und regulierte Daten
 
-Bei Lexware Office, sevDesk, FastBill oder anderen Fachprodukten zählt nicht nur eine KI-Funktion. Prüfe E-Rechnungsformat, Aufbewahrung, Export, Rollen, Steuerberaterzugang und die aktuelle Herstellerdokumentation. Bei Gesundheits-, Mandats-, Personal- oder Finanzdaten gelten zusätzliche fach- und berufsrechtliche Grenzen; eine allgemeine Toolliste kann keine Freigabe erteilen.
+Bei Lexware Office, sevDesk, FastBill oder anderen Fachprodukten zählt nicht nur eine KI-Funktion. Prüfe E-Rechnungsformat, Aufbewahrung, Export, Rollen, Steuerberaterzugang und die aktuelle Herstellerdokumentation. Bei Gesundheits-, Mandats-, Personal- oder Finanzdaten gelten zusätzliche fach- und berufsrechtliche Grenzen. Keine Toolliste erteilt dir dafür eine Freigabe.
 
 ## Dein Auswahltest
 
@@ -107,4 +109,4 @@ Bei Lexware Office, sevDesk, FastBill oder anderen Fachprodukten zählt nicht nu
 - Erfüllt das Produkt den gemessenen Zweck weiterhin?
 - Gibt es einen einfacheren Exit?
 
-Die beste Toolbox ist nicht die längste Liste. Sie besteht aus wenigen freigegebenen Werkzeugen, deren Zweck, Datenfluss, Vertrag, Kosten und Ausstieg du erklären kannst.
+Die beste Toolbox ist nicht die längste. Sie besteht aus wenigen freigegebenen Werkzeugen, deren Zweck, Datenfluss, Vertrag, Kosten und Ausstieg du erklären kannst.

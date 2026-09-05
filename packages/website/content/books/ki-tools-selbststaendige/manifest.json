@@ -8,7 +8,7 @@
   "riskClass": "vendor",
   "publicationStatus": "hold",
   "publicationReason": "Bilingual review, vendor-claim sign-off, and public-release approval are incomplete; public routing remains disabled.",
-  "adaptationNote": "Nachwort-Kapitel (Autor-/Sales-Block) nicht importiert. Kommerzieller Self-Promo-Text entfernt.",
+  "adaptationNote": "Nachwort mit Autoren-/Verkaufsblock entfernt. Kommerzielle Eigenwerbung ebenso.",
   "chapters": [
     {
       "slug": "01_ki_fuer_selbststaendige",
