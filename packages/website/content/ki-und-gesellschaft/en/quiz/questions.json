@@ -3,11 +3,11 @@
     "id": "kug-q01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Which statement correctly distinguishes task exposure, substitution potential and employment effects?",
+    "questionText": "Which statement keeps task exposure, substitution potential and employment effect apart?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "A high exposure value proves that the same share of jobs will disappear",
+        "text": "A high exposure value proves the same share of jobs will go",
         "isCorrect": false
       },
       {
@@ -17,16 +17,16 @@
       },
       {
         "id": "c",
-        "text": "Once one core task can be automated, the entire occupation is treated as abolished",
+        "text": "Once one core task can be automated, the whole occupation counts as abolished",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "The three terms denote the same statistical measure",
+        "text": "The three terms name the same statistical quantity",
         "isCorrect": false
       }
     ],
-    "explanation": "The OECD Employment Outlook 2023 describes employment in occupations at high risk of automation across the OECD countries studied. The IAB substitution potential describes the share of an occupation's core tasks that could potentially be automated technically. Neither measure is an adoption rate or a forecast of job losses.",
+    "explanation": "The OECD Employment Outlook 2023 describes employment in occupations at high risk of automation across the OECD countries studied. The IAB substitution potential describes the share of core tasks that would be technically automatable. Neither is an adoption rate. Neither is a forecast of job losses.",
     "version": 1,
     "active": true
   },
@@ -34,30 +34,30 @@
     "id": "kug-q02",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which method provides a defensible comparison for an AI-assisted task?",
+    "questionText": "How do you get a defensible comparison for an AI-assisted task?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Accept one time estimate without a comparison task or quality check",
+        "text": "Take one time estimate without a comparison task or quality check",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Test the same bounded task with and without assistance and record time, errors, quality and human rework",
+        "text": "Test the same bounded task with and without assistance, and record time, errors, quality and human rework",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Generalise from one successful demonstration to every occupation",
+        "text": "Generalise from one good demo to every occupation",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Measure productivity only by the volume of generated text",
+        "text": "Measure productivity by the volume of text produced",
         "isCorrect": false
       }
     ],
-    "explanation": "A comparison needs the same task, defined quality criteria and documented rework. Only then can it show whether assistance saves time, shifts errors or creates additional review work in the specific workflow.",
+    "explanation": "Same task, defined quality criteria, documented rework. Only then do you see whether assistance saves time, merely shifts errors or creates extra review in your workflow.",
     "version": 1,
     "active": true
   },
@@ -65,30 +65,30 @@
     "id": "kug-q03",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Which description best matches practical AI literacy?",
+    "questionText": "Which description fits practical AI literacy best?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Programming, training models and analysing data",
+        "text": "Programming, training models, analysing data",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Speaking English, using international AI tools and collecting certifications",
+        "text": "Speaking English, using international AI tools, collecting certifications",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Understand the system's purpose and limits, review outputs, and address privacy, responsibility and escalation",
+        "text": "Understand the system's purpose and limits, review the output, and mind data protection, responsibility and escalation",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Identifying deepfakes, programming chatbots and maintaining databases",
+        "text": "Spotting deepfakes, programming chatbots, maintaining databases",
         "isCorrect": false
       }
     ],
-    "explanation": "Practical AI literacy combines system understanding with review and operational judgement. Article 4 of the AI Regulation requires providers and deployers to take measures to support a sufficient level of AI literacy among staff and other people operating systems on their behalf; it does not guarantee one identical individual training level.",
+    "explanation": "Practical AI literacy joins system understanding to review and confident action. Article 4 of the AI Regulation requires providers and deployers to take measures fostering a sufficient level of literacy among their staff and other people they deploy. An identical level of training for every single person it does not guarantee.",
     "version": 1,
     "active": true
   },
@@ -96,30 +96,30 @@
     "id": "kug-q04",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "When does Section 87(1)(6) BetrVG apply?",
+    "questionText": "When does Section 87(1)(6) BetrVG bite?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "The right to program AI systems itself",
+        "text": "The right to program AI systems yourself",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "When technical devices designed to monitor employees' behaviour or performance are introduced or used",
+        "text": "On the introduction or use of technical equipment intended to monitor employees' behaviour or performance",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "The right to train employees to use AI tools",
+        "text": "The right to train employees on AI tools",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "The right to reject every AI system completely",
+        "text": "The right to reject every AI system outright",
         "isCorrect": false
       }
     ],
-    "explanation": "Section 87(1)(6) covers the introduction and use of technical devices designed to monitor behaviour or performance, where no statutory or collective-agreement rule exists. The right belongs to the works council; if agreement cannot be reached, Section 87(2) provides for a conciliation committee decision.",
+    "explanation": "Section 87(1)(6) BetrVG covers the introduction and use of technical equipment meant to monitor behaviour or performance, where no statutory or collective-agreement rule exists. The right sits with the works council. If the two sides do not agree, Section 87(2) lets the conciliation committee decide.",
     "version": 1,
     "active": true
   },
@@ -131,7 +131,7 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "Through elaborate manual image editing by specialist graphic designers",
+        "text": "Through elaborate manual editing by specialist graphic designers",
         "isCorrect": false
       },
       {
@@ -141,7 +141,7 @@
       },
       {
         "id": "c",
-        "text": "Exclusively by state intelligence services using specialist hardware",
+        "text": "Only through state intelligence services with specialist hardware",
         "isCorrect": false
       },
       {
@@ -150,7 +150,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Article 3(60) defines the term through AI generation or manipulation, resemblance to existing people, objects, places, entities or events, and a false appearance of authenticity or truthfulness. It does not prescribe a particular technique or amount of reference material.",
+    "explanation": "Article 3(60) needs three things at once: AI generation or manipulation, resemblance to existing people, objects, places, entities or events, and a false impression of authenticity or truth. A particular technique or amount of reference material it does not prescribe.",
     "version": 1,
     "active": true
   },
@@ -158,7 +158,7 @@
     "id": "kug-q06",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which statement about the application date of Article 50 of the AI Regulation is correct?",
+    "questionText": "Which statement about when Article 50 of the AI Regulation starts to apply is correct?",
     "answerOptions": [
       {
         "id": "a",
@@ -177,11 +177,11 @@
       },
       {
         "id": "d",
-        "text": "This requirement has not yet been adopted",
+        "text": "This duty has not been adopted yet",
         "isCorrect": false
       }
     ],
-    "explanation": "Article 50 has applied since 2 August 2026. Providers covered by paragraph 2 mark outputs in a machine-readable format; deployers covered by paragraph 4 generally disclose deepfakes visibly. For systems placed on the market before 2 August 2026, Article 50(2) applies from 2 December 2026 under Regulation (EU) 2026/1744.",
+    "explanation": "Article 50 has applied since 2 August 2026. Providers of covered generative systems mark in machine-readable form under paragraph 2; deployers generally disclose deepfakes visibly under paragraph 4. For systems on the market before 2 August 2026, Article 50(2) applies from 2 December 2026 under Regulation (EU) 2026/1744.",
     "version": 1,
     "active": true
   },
@@ -189,21 +189,21 @@
     "id": "kug-q07",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "What is the correct first response to a suspected deepfake?",
+    "questionText": "What do you do first with a suspected deepfake?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Call the Federal Criminal Police Office immediately and file a complaint",
+        "text": "Call the Federal Criminal Police Office at once and file a complaint",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Forward the content to everyone you know so that they can check it",
+        "text": "Forward the content to everyone you know so they can check it",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Do not share it publicly; preserve the source location, time and available evidence locally",
+        "text": "Do not share it publicly; preserve source location, time and available evidence locally",
         "isCorrect": true
       },
       {
@@ -212,7 +212,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Public redistribution can increase reach. Preserve the original source, check provenance and context, then use the appropriate platform, authority or private contact route.",
+    "explanation": "Every public pass-along can grow the reach. Preserve the original source, check provenance and context, and only then take the right platform, authority or private route.",
     "version": 1,
     "active": true
   },
@@ -229,21 +229,21 @@
       },
       {
         "id": "b",
-        "text": "The right to delete images created by AI",
+        "text": "The right to delete images made by AI",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "As a general rule, portraits may be distributed or publicly displayed only with consent; Section 23 contains statutory exceptions",
+        "text": "As a general rule, portraits may be distributed or publicly shown only with consent; Section 23 holds statutory exceptions",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Protection for journalists conducting undercover investigations",
+        "text": "Protection for journalists doing undercover research",
         "isCorrect": false
       }
     ],
-    "explanation": "Section 22 KUG contains the general consent rule for distributing and publicly displaying portraits. Section 23 contains exceptions and, in paragraph 2, a balancing rule. Section 22 KUG does not protect a voice by itself.",
+    "explanation": "Section 22 KUG holds the consent rule for distributing and publicly displaying portraits. Section 23 holds the exceptions and, in paragraph 2, a balancing of interests. Your voice, Section 22 KUG does not protect on its own.",
     "version": 1,
     "active": true
   },
@@ -251,16 +251,16 @@
     "id": "kug-q09",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Which account of the COMPAS dispute is supported by the evidence?",
+    "questionText": "Which account of the COMPAS controversy is supported?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "The system worked without errors and treated every demographic group fairly",
+        "text": "The system worked flawlessly and fairly for every group",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "ProPublica reported different error rates; Northpointe pointed to similar calibration within risk bands",
+        "text": "ProPublica reported different error rates; Northpointe pointed to similar calibration within the risk bands",
         "isCorrect": true
       },
       {
@@ -274,7 +274,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "For the Broward County scores it examined, ProPublica reported differences in error rates. Northpointe disputed the assessment and emphasised calibration. Different fairness criteria generally cannot all be satisfied when base rates differ.",
+    "explanation": "For the Broward County scores it examined, ProPublica reported differences in error rates. Northpointe disagreed and held calibration against that. Where base rates differ, the two fairness criteria generally cannot be met at once.",
     "version": 1,
     "active": true
   },
@@ -282,11 +282,11 @@
     "id": "kug-q10",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "What did the Gender Shades study find about commercial gender classification?",
+    "questionText": "What did Gender Shades find for commercial gender classification?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Every system identified faces with an error rate below 5 percent",
+        "text": "Every system recognised faces with an error rate below 5 percent",
         "isCorrect": false
       },
       {
@@ -296,16 +296,16 @@
       },
       {
         "id": "c",
-        "text": "Only older systems showed bias; modern systems are free of it",
+        "text": "Only older systems showed bias; modern ones are free of it",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "The highest error rate was 0.8 percent for lighter-skinned men and reached 34.7 percent for darker-skinned women depending on the system",
+        "text": "The highest error rate for lighter-skinned men was 0.8 percent, and for darker-skinned women it reached 34.7 percent depending on the system",
         "isCorrect": true
       }
     ],
-    "explanation": "Gender Shades tested binary gender classification, not identification of people through facial recognition. It measured substantial intersectional performance differences. It did not prove a particular training-data cause for every vendor.",
+    "explanation": "Gender Shades tested binary gender classification, not identifying people through facial recognition. What it measured was substantial intersectional performance differences. A training-data cause for each vendor it did not prove.",
     "version": 1,
     "active": true
   },
@@ -317,12 +317,12 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "The right to have all of your data deleted completely",
+        "text": "The right to have all your data deleted",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Article 22 concerns solely automated decisions with legal or similarly significant effects and contains exceptions and case-dependent safeguards",
+        "text": "Article 22 concerns solely automated decisions with legal or similarly significant effect, and it holds exceptions and case-dependent safeguards",
         "isCorrect": true
       },
       {
@@ -332,11 +332,11 @@
       },
       {
         "id": "d",
-        "text": "The right to deactivate the model",
+        "text": "The right to switch the model off",
         "isCorrect": false
       }
     ],
-    "explanation": "Article 22(1) covers solely automated decisions with legal or similarly significant effects. Paragraph 2 contains exceptions. For contractual necessity or explicit consent, paragraph 3 requires at least human intervention, an opportunity to express one's point of view and the ability to contest the decision.",
+    "explanation": "Article 22(1) covers solely automated decisions with legal or similarly significant effect. Paragraph 2 holds exceptions. Where a contract requires it or the person explicitly consented, paragraph 3 requires at least human intervention, a chance to express a point of view and to contest.",
     "version": 1,
     "active": true
   },
@@ -348,12 +348,12 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "Modern tools identify every deepfake with nearly 100 percent accuracy",
+        "text": "Modern tools spot every deepfake with almost 100 percent accuracy",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "A result depends on the model, data and threshold; neither a positive nor a negative result is proof on its own",
+        "text": "A result depends on model, data and threshold; neither a positive nor a negative result is proof on its own",
         "isCorrect": true
       },
       {
@@ -363,11 +363,11 @@
       },
       {
         "id": "d",
-        "text": "Reverse image searches reliably identify every AI-generated image",
+        "text": "Reverse image search reliably spots every AI-generated image",
         "isCorrect": false
       }
     ],
-    "explanation": "Detectors operate under particular training and test conditions. Compression, cropping, post-processing, unknown generators and thresholds affect their meaning. Provenance and context remain necessary.",
+    "explanation": "A detector works under its own training and test conditions. Compression, crop, post-processing, unknown generators and the threshold change what its result is worth. Provenance and context you cannot skip.",
     "version": 1,
     "active": true
   },
@@ -375,11 +375,11 @@
     "id": "kug-q13",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which tool can split videos into keyframes, initiate reverse searches and display available metadata?",
+    "questionText": "Which tool splits videos into keyframes, triggers reverse searches and shows available metadata?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "An arbitrary AI text detector",
+        "text": "Any AI text detector",
         "isCorrect": false
       },
       {
@@ -398,7 +398,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "InVID/WeVerify (weverify.eu) is a research tool for verifying images and videos. It can generate keyframes, support reverse searches and display available metadata. It does not issue an automatic truth verdict.",
+    "explanation": "InVID/WeVerify (weverify.eu) is a research tool for verifying images and videos. It generates keyframes, supports reverse searches and shows available metadata. A verdict on truth it does not deliver.",
     "version": 1,
     "active": true
   },
@@ -415,21 +415,21 @@
       },
       {
         "id": "b",
-        "text": "Because training datasets are always too small, regardless of their composition",
+        "text": "Because training data are always too small, whatever their composition",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Because building fair AI systems is impossible",
+        "text": "Because there is no way to build fair AI systems",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Historical data can contain unequal structures; model effects also depend on the target, features, evaluation and deployment",
+        "text": "Historical data can hold unequal structures; the model effect also depends on target, features, evaluation and deployment",
         "isCorrect": true
       }
     ],
-    "explanation": "Data can reflect earlier selection or power structures. Whether this causes a harmful effect also depends on sampling, labels, target, modelling, thresholds, testing and deployment.",
+    "explanation": "Data can mirror earlier selection or power structures. Whether that turns into a harmful effect is decided at the same time by sample, labels, target, modelling, thresholds, testing and deployment.",
     "version": 1,
     "active": true
   },
@@ -441,26 +441,26 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "The EU AI Act prohibits all deepfakes with immediate effect",
+        "text": "The EU AI Act bans all deepfakes with immediate effect",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "The EU AI Act contains no rules on AI-generated content",
+        "text": "The EU AI Act has no rule on AI-generated content",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Article 50 separates technical marking by providers from visible disclosure by deployers; the competent complaint route must be checked against current information",
+        "text": "Article 50 separates technical provider marking from visible deployer disclosure; the competent complaint route has to be checked against current information",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Deepfakes are relevant only to providers, not individuals",
+        "text": "Deepfakes matter only to providers, not to individuals",
         "isCorrect": false
       }
     ],
-    "explanation": "Article 50 does not impose a blanket ban on deepfakes. Providers of covered generative systems generally mark outputs in a machine-readable format; deployers generally disclose deepfakes visibly. Exceptions and transition rules still require assessment. Article 85 provides for complaints to the competent market surveillance authority; under the KI-MIG, the Bundesnetzagentur is generally competent unless a sector-specific authority is competent.",
+    "explanation": "Article 50 does not ban deepfakes across the board. Providers of covered generative systems generally mark output in machine-readable form, deployers generally disclose deepfakes visibly. Exceptions and transition rules stay to be checked. Article 85 provides for complaints to the competent market surveillance authority; under the KI-MIG that is generally the Bundesnetzagentur, unless a sector authority is competent.",
     "version": 1,
     "active": true
   }
