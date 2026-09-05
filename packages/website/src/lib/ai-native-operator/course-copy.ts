@@ -253,7 +253,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Lektüre",
       minutes: (minutes) => `${minutes} Min.`,
       quizIntro:
-        "Wählen Sie zu jeder Frage die beste Antwort. Antworten werden nur mit dem Kursfortschritt dieses Browsers gespeichert.",
+        "Wähle zu jeder Frage die beste Antwort. Die Antworten liegen nur im Kursfortschritt dieses Browsers.",
       quickCheck: "Wissensprüfung",
       check: "Prüfen",
       answerOptions: "Antwortmöglichkeiten",
@@ -277,12 +277,12 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
     certificateMetadata: {
       title: "Teilnahmebestätigung: AI-Native Operator",
       description:
-        "Laden Sie eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht servergeprüft, nicht fremdbewertet und nicht akkreditiert.",
+        "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht servergeprüft, nicht fremdbewertet und nicht akkreditiert.",
     },
     verificationMetadata: {
       title: "Teilnahmedaten lesen: AI-Native Operator",
       description:
-        "Lesen Sie die Teilnahmedaten aus einem QR-Link. Die Daten sind keine kryptografische Signatur oder serverseitige Prüfung.",
+        "Lies die Teilnahmedaten aus einem QR-Link. Sie sind keine kryptografische Signatur und keine serverseitige Prüfung.",
     },
     boundaries: {
       course: {

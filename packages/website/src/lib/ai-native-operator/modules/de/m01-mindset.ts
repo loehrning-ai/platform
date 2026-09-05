@@ -8,39 +8,37 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     number: 1,
     kind: "reading",
     title: "Erst die Aufgabe wählen, dann das Werkzeug",
-    subtitle:
-      "Prüfe vor der Delegation, ob eine Aufgabe für Modellunterstützung geeignet ist.",
-    objective:
-      "Prüfe vor der Delegation, ob eine Aufgabe für Modellunterstützung geeignet ist.",
+    subtitle: "Prüfe vor der Delegation, ob die Aufgabe für ein Modell taugt.",
+    objective: "Prüfe vor der Delegation, ob die Aufgabe für ein Modell taugt.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Mit dem erforderlichen Ergebnis beginnen",
+        title: "Beim Ergebnis anfangen, nicht beim Modell",
         readTimeMinutes: 5,
         content:
-          "Beginne nicht mit der Frage, wo sich KI ergänzen lässt. Bestimme zuerst das Ergebnis, die zulässige Fehlerquote und die Person, die dafür verantwortlich ist. Modellunterstützung ist sinnvoll, wenn sie Aufwand reduziert, ohne diese Bedingungen zu schwächen. Ist das Ergebnis unklar, kläre es vor der Werkzeugwahl.",
+          "Die falsche Frage: Wo können wir KI einbauen? Die richtige: Welches Ergebnis brauchen wir, wie viele Fehler sind erlaubt, wer steht dafür gerade? Ein Modell lohnt sich, wenn es Aufwand spart, ohne eine davon zu schwächen. Ist das Ergebnis unklar, kläre erst das. Dann das Werkzeug.",
       },
       {
         id: "s2",
-        title: "Eignung für eine Delegation prüfen",
+        title: "Guter Kandidat, schlechter Kandidat",
         readTimeMinutes: 5,
         content:
-          "Gute erste Kandidaten haben definierte Eingaben, beobachtbare Ausgaben und einen Prüfschritt, der weniger kostet als die vollständige manuelle Bearbeitung. Ungeeignet sind zunächst Aufgaben mit unklarer Entscheidungsbefugnis, unumkehrbaren Folgen, sensiblen Daten ohne freigegebene Schutzmaßnahmen oder nicht prüfbaren Ergebnissen. Durch bessere Spezifikationen und Kontrollen kann sich diese Einordnung ändern.",
+          "Ein guter erster Kandidat hat klare Eingaben, ein sichtbares Ergebnis und einen Prüfschritt, der weniger kostet als die Handarbeit. Ein schlechter: unklare Befugnis, unumkehrbare Folgen, sensible Daten ohne freigegebenen Schutz, ein Ergebnis, das niemand prüfen kann. Das ist nicht endgültig. Bessere Spezifikation, bessere Kontrollen, und die Aufgabe wechselt die Liste.",
       },
       {
         id: "s3",
-        title: "Einen begrenzten ersten Schritt delegieren",
+        title: "Klein delegieren, dann erst erweitern",
         readTimeMinutes: 4,
         content:
-          "Gib dem Modell eine eng begrenzte Aufgabe, eine klare Abbruchbedingung und ausdrückliche Vorgaben. Entscheidungen, Freigaben und externe Nebenwirkungen bleiben bei einer benannten Person, bis der Arbeitsablauf seine Kontrollen anhand realer Ergebnisse belegt hat. Erweitere den Umfang erst nach der Prüfung von Ausgaben und Fehlerfällen.",
+          "Gib dem Modell eine enge Aufgabe, eine klare Abbruchbedingung und ausdrückliche Vorgaben. Entscheidungen, Freigaben und alles, was nach außen wirkt, bleiben bei einer benannten Person, bis der Arbeitsablauf an echten Ergebnissen zeigt, dass seine Kontrollen greifen. Ausgaben gelesen, Fehlerfälle gelesen, dann erweitern. Nicht vorher.",
       },
     ],
     callout: {
       kind: "quote",
-      text: "Delegiere Arbeit nur, wenn der erwartete Nutzen die Kosten für Spezifikation, Prüfung und Korrektur übersteigt.",
+      text: "Delegiere nur, wenn der Nutzen die Kosten für Spezifikation, Prüfung und Korrektur übersteigt.",
       attr: "Arbeitsregel",
     },
     exerciseKind: "reflect-box",
@@ -53,7 +51,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "mindset/1",
           cpId: "exercise",
           scenario:
-            "Liste drei Aufgaben aus dieser Woche auf, die länger als 30 Minuten dauerten. Notiere jeweils das erwartete Ergebnis, die Kosten eines Fehlers und einen begrenzten Teil, der sicher delegiert werden könnte.",
+            "Nimm drei Aufgaben dieser Woche, die länger als 30 Minuten gedauert haben. Notiere zu jeder das erwartete Ergebnis, die Kosten eines Fehlers und einen begrenzten Teil, den du gefahrlos delegieren könntest.",
           rows: 3,
         },
       },
@@ -67,9 +65,9 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Vier Stufen betrieblicher Kontrolle",
     subtitle:
-      "Bewerte auf vier Stufen, wie konsequent du modellgestützte Arbeit definierst, prüfst und steuerst.",
+      "Vier Stufen zeigen, wie konsequent du modellgestützte Arbeit definierst, prüfst und steuerst.",
     objective:
-      "Bewerte auf vier Stufen, wie konsequent du modellgestützte Arbeit definierst, prüfst und steuerst.",
+      "Vier Stufen zeigen, wie konsequent du modellgestützte Arbeit definierst, prüfst und steuerst.",
     durationMinutes: 11,
     keyConcepts: [],
     quiz: [],
@@ -79,34 +77,34 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "L0, Ungeprüft",
         readTimeMinutes: 3,
         content:
-          "Aufgaben werden mit bestehenden manuellen Verfahren erledigt. Das Team hat noch nicht bewertet, wo Modellunterstützung geeignet oder ungeeignet wäre. Für einzelne Aufgaben kann das richtig sein. Die Entscheidung sollte aber auf Risiko und Kosten beruhen und nicht auf einer ungeprüften Gewohnheit.",
+          "Alles läuft wie immer, von Hand. Niemand im Team hat geprüft, wo ein Modell helfen würde und wo nicht. Für eine einzelne Aufgabe kann das die richtige Wahl sein. Aber als Entscheidung aus Risiko und Kosten, nicht aus Gewohnheit.",
       },
       {
         id: "s2",
         title: "L1, Unterstützt",
         readTimeMinutes: 3,
         content:
-          "Eine Person nutzt ein Modell für begrenzte Entwürfe, Zusammenfassungen oder Umformungen. Sie bleibt in der Aufgabe, liefert das Ausgangsmaterial und prüft das Ergebnis vor der Nutzung. Die Praxis ist individuell und im Team noch nicht zwingend wiederholbar.",
+          "Eine Person lässt sich in engem Rahmen Entwürfe, Zusammenfassungen oder Umformungen erzeugen. Sie bleibt in der Aufgabe, liefert das Material und prüft das Ergebnis vor der Nutzung. Die Praxis gehört ihr allein. Im Team ist nichts davon wiederholbar.",
       },
       {
         id: "s3",
         title: "L2, Kontrollierter Arbeitsablauf",
         readTimeMinutes: 3,
         content:
-          "Wiederkehrende Aufgaben haben Spezifikationen, freigegebenen Kontext, Prüfkriterien und klare Zuständigkeiten. Modellergebnisse durchlaufen die üblichen technischen oder betrieblichen Kontrollen, statt sie zu umgehen. Fehler werden erfasst und zur Verbesserung des Arbeitsablaufs verwendet.",
+          "Wiederkehrende Aufgaben haben Spezifikation, freigegebenen Kontext, Prüfkriterien und klare Prüfverantwortung. Modellergebnisse laufen durch dieselben technischen und betrieblichen Kontrollen wie alles andere, nicht daran vorbei. Fehler werden erfasst und fließen in den Ablauf zurück.",
       },
       {
         id: "s4",
         title: "L3, Orchestriertes Aufgabenportfolio",
         readTimeMinutes: 2,
         content:
-          "Mehrere unabhängige Aufgaben können parallel in getrennten Arbeitsbereichen mit klaren Berechtigungen, Freigabeschranken und benannten menschlichen Verantwortlichen laufen. Parallelität wird nur genutzt, wenn Abhängigkeiten verstanden sind. Eine Person bleibt für Annahme, Ablehnung oder Veröffentlichung jedes Ergebnisses verantwortlich.",
+          "Mehrere unabhängige Aufgaben laufen parallel, jede im eigenen Arbeitsbereich mit klaren Berechtigungen, Freigabeschranken und benannter Verantwortung. Parallel läuft nur, was in seinen Abhängigkeiten verstanden ist. Und eine Person nimmt jedes Ergebnis an, lehnt es ab oder gibt es frei.",
       },
     ],
     callout: {
       kind: "note",
-      h: "Kontrollen statt Werkzeugnutzung bewerten",
-      text: "Häufige Modellnutzung belegt keine hohe Reifestufe. Suche nach wiederholbaren Spezifikationen, Prüfnachweisen, Vorfallbehandlung und klarer Verantwortung. Bewerte Aufgabenfamilien getrennt, wenn sich die Praxis unterscheidet.",
+      h: "Kontrollen bewerten, nicht Werkzeugnutzung",
+      text: "Häufige Modellnutzung ist kein Reifegrad. Zähl wiederholbare Spezifikationen, Prüfnachweise, Vorfallbehandlung und klare Verantwortung. Unterscheiden sich die Praktiken, bewerte jede Aufgabenfamilie für sich.",
     },
     exerciseKind: "self-rate",
     widgets: [
@@ -119,7 +117,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Selbsteinschätzung der Kontrollen",
           scenario:
-            "Bewerte deine heutige Arbeitsweise anhand kürzlich erledigter Aufgaben, nicht anhand geplanter Verbesserungen.",
+            "Bewerte deine heutige Arbeitsweise an zuletzt erledigten Aufgaben, nicht an geplanten Verbesserungen.",
           axes: [
             {
               id: "tasks",
@@ -164,9 +162,9 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Prüfaufwand an Fehlerkosten ausrichten",
     subtitle:
-      "Lege die Prüftiefe anhand von Wahrscheinlichkeit, Auswirkung und Erkennbarkeit eines Fehlers fest.",
+      "Wie tief du prüfst, folgt aus Wahrscheinlichkeit, Auswirkung und Erkennbarkeit eines Fehlers.",
     objective:
-      "Lege die Prüftiefe anhand von Wahrscheinlichkeit, Auswirkung und Erkennbarkeit eines Fehlers fest.",
+      "Wie tief du prüfst, folgt aus Wahrscheinlichkeit, Auswirkung und Erkennbarkeit eines Fehlers.",
     durationMinutes: 16,
     keyConcepts: [],
     quiz: [],
@@ -176,27 +174,27 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Vertrauen gilt für Aufgabe und Kontrollsatz",
         readTimeMinutes: 5,
         content:
-          "Ein Modell ist nicht allgemein vertrauenswürdig oder unzuverlässig. Nachweise gelten für eine bestimmte Aufgabe, Modellversion, Eingabe, Kontextquelle, Werkzeugausstattung und Prüfmethode. Ändert sich eine dieser Bedingungen, sagt das bisherige Ergebnis möglicherweise wenig über das aktuelle Verhalten aus.",
+          "Ein Modell ist weder vertrauenswürdig noch unzuverlässig. Beide Urteile treffen die falsche Einheit. Ein Nachweis gilt für eine bestimmte Aufgabe, Modellversion, Eingabe, Kontextquelle, Werkzeugausstattung und Prüfmethode. Ändert sich eine davon, sagt das alte Ergebnis nichts über das neue Verhalten.",
       },
       {
         id: "s2",
         title: "Fehlerkosten systematisch bewerten",
         readTimeMinutes: 6,
         content:
-          "Schätze die Fehlerwahrscheinlichkeit, ihre Auswirkung und die Erkennbarkeit durch eine prüfende Person. Ein umkehrbarer interner Entwurf braucht vielleicht nur eine kurze Durchsicht. Eine Sicherheitsänderung, Kundenentscheidung, Finanzkennzahl oder Offenlegung kann Quellenprüfung, Tests, eine zweite Prüfung oder den Verzicht auf Modellunterstützung verlangen. Der Prüfaufwand steigt mit dem verbleibenden Risiko.",
+          "Drei Fragen: Wie wahrscheinlich ist ein Fehler, was kostet er, sieht die Prüferin ihn? Ein umkehrbarer interner Entwurf braucht eine kurze Durchsicht. Eine Sicherheitsänderung, eine Kundenentscheidung, eine Kennzahl für den Controller oder eine Offenlegung verlangt Quellenprüfung, Tests, ein zweites Augenpaar oder den Verzicht aufs Modell. Der Prüfaufwand wächst mit dem Restrisiko.",
       },
       {
         id: "s3",
         title: "Nachweise aus geprüften Fällen aufbauen",
         readTimeMinutes: 5,
         content:
-          "Beginne mit Aufgaben, für die eine verlässliche Referenz oder ein eindeutiger Test existiert. Vergleiche Ausgaben mit dieser Referenz, kennzeichne die Fehlerart und dokumentiere die Bedingungen. Prüfe die Stichprobe nach Änderungen an Modell, Eingabe, Daten oder Werkzeugen erneut. So wird allgemeines Vertrauen durch aufgabenspezifische Nachweise ersetzt.",
+          "Fang mit Aufgaben an, für die eine verlässliche Referenz oder ein eindeutiger Test existiert. Vergleiche die Ausgabe damit, benenne die Fehlerart, halte die Bedingungen fest. Ändern sich Modell, Eingabe, Daten oder Werkzeuge, prüfst du die Stichprobe erneut. So wird pauschales Vertrauen zum Nachweis für diese Aufgabe.",
       },
     ],
     callout: {
       kind: "warn",
       h: "Verantwortung geht nicht auf das Modell über",
-      text: "Eine selbstsichere Ausgabe und eine erfahrene prüfende Person können trotzdem zu einem akzeptierten Fehler führen. Die benannte verantwortliche Person muss die Kontrollen für das verbleibende Risiko durchführen und die Annahmeentscheidung erklären können.",
+      text: "Eine selbstsichere Ausgabe und eine erfahrene Prüferin können zusammen trotzdem einen Fehler durchwinken. Die benannte Person führt die Kontrollen fürs Restrisiko selbst durch und muss erklären können, warum sie angenommen hat.",
     },
     exerciseKind: "matrix-grid",
     widgets: [
@@ -209,13 +207,13 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Prüfmatrix",
           scenario:
-            "Wähle für jede Aufgabenart eine Mindestprüfung in deinem aktuellen Kontext. Erhöhe sie, wenn Fehler teuer oder schwer erkennbar sind.",
+            "Lege je Aufgabenart die Mindestprüfung in deinem heutigen Umfeld fest. Teuer oder schwer erkennbar heißt: eine Stufe höher.",
           rows: [
             "Interner E-Mail-Entwurf",
             "Externe Kunden-E-Mail",
             "Codeänderung unter 50 Zeilen",
             "Codeänderung über 200 Zeilen",
-            "Kennzahl für die Unternehmensleitung",
+            "Kennzahl für die Geschäftsführung",
             "Entwurf einer Leistungsbeurteilung",
           ],
           cols: [
@@ -236,9 +234,9 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Zuverlässige Systeme statt Heldentum belohnen",
     subtitle:
-      "Richte Anerkennung im Team an klarer Verantwortung, wiederholbarer Arbeit und kontrollierten Ergebnissen aus.",
+      "Anerkennung im Team gehört klarer Verantwortung, wiederholbarer Arbeit und kontrollierten Ergebnissen.",
     objective:
-      "Richte Anerkennung im Team an klarer Verantwortung, wiederholbarer Arbeit und kontrollierten Ergebnissen aus.",
+      "Anerkennung im Team gehört klarer Verantwortung, wiederholbarer Arbeit und kontrollierten Ergebnissen.",
     durationMinutes: 12,
     keyConcepts: [],
     quiz: [],
@@ -248,21 +246,21 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Manueller Aufwand ist kein Qualitätsmaß",
         readTimeMinutes: 4,
         content:
-          "Arbeitsstunden und geschriebene Zeilen zeigen nicht, ob eine Änderung korrekt, wartbar oder nützlich ist. Modellnutzung zeigt es ebenfalls nicht. Bewerte das Ergebnis, die zugrunde liegenden Nachweise, die Betriebskosten und die Frage, ob eine andere Person das Verfahren verstehen und wiederholen kann.",
+          "Freitagabend, die Änderung steht, der Entwickler war die halbe Nacht dran. Beeindruckend. Nur sagen Arbeitsstunden und Codezeilen nichts darüber, ob die Änderung korrekt, wartbar oder nützlich ist. Modellnutzung genauso wenig. Bewerte Ergebnis, Nachweise, Betriebskosten und ob jemand anderes das Verfahren verstehen und wiederholen kann.",
       },
       {
         id: "s2",
         title: "Teamwirksame Kontrollen anerkennen",
         readTimeMinutes: 4,
         content:
-          "Erkenne Beiträge an, die Spezifikationen klären, Regressionstests ergänzen, Fehlerarten dokumentieren, unnötige Schritte entfernen oder unsichere Arbeit stoppen. Diese Maßnahmen verbessern mehr als eine Auslieferung. Belohne weder Personalabbau noch Ausgabemenge, ohne Qualität, Belastung und Folgerisiken zu prüfen.",
+          "Lob gehört denen, die Spezifikationen klären, Regressionstests ergänzen, Fehlerarten dokumentieren, unnötige Schritte streichen oder unsichere Arbeit stoppen. Solche Beiträge verbessern nicht eine Auslieferung, sondern jede danach. Belohne weder Stellenabbau noch Ausgabemenge ohne Blick auf Qualität, Belastung und Folgerisiken.",
       },
       {
         id: "s3",
         title: "Erfahrung an Prüfgrenzen einsetzen",
         readTimeMinutes: 4,
         content:
-          "Erfahrene Fachkräfte bringen Domänenwissen, Architekturkontext und ein Gespür für schwer erkennbare Fehler ein. Nutze diese Erfahrung, um Vorgaben zu definieren, Ausnahmen zu prüfen und anderen die Bewertung von Ergebnissen zu vermitteln. Das Werkzeug kann ein Arbeitsergebnis erzeugen; die verantwortliche Person entscheidet über seine Eignung.",
+          "Erfahrene Leute bringen Domänenwissen, Architekturkontext und einen Blick für Fehler mit, die sonst niemand sieht. Setz sie dort ein, wo Vorgaben entstehen, Ausnahmen geprüft werden und andere lernen, Ergebnisse zu bewerten. Das Werkzeug liefert ein Arbeitsergebnis; ob es taugt, entscheidet die verantwortliche Person.",
       },
     ],
     exerciseKind: "plays",
@@ -283,9 +281,9 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           options: [
             "Vor einer modellgestützten Aufgabe die Delegationsgrenze in einem Satz festhalten.",
             "Jede Woche einen modellgestützten Arbeitsablauf auf Fehler und Kontrolllücken prüfen.",
-            "Wöchentlich ein geprüftes Beispiel einschließlich Fehler und Erkennungsmethode teilen.",
-            "Wiederholbare Ergebnisse statt langer Arbeitszeit oder Ausgabemenge anerkennen.",
-            "Eine andere Person bitten, eine Annahme bei einer folgenreichen Entscheidung zu hinterfragen.",
+            "Wöchentlich ein geprüftes Beispiel teilen, samt Fehler und Erkennungsweg.",
+            "Wiederholbare Ergebnisse anerkennen statt langer Arbeitszeit oder Ausgabemenge.",
+            "Bei einer folgenreichen Entscheidung eine andere Person bitten, eine Annahme zu hinterfragen.",
           ],
         },
       },
@@ -299,45 +297,45 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "quiz",
     title: "Modul 1, Wissensprüfung",
     subtitle:
-      "Prüfe dein Verständnis von Aufgabenauswahl, Betriebskontrollen, Prüfung und Verantwortung.",
+      "Drei Fragen zu Aufgabenauswahl, Kontrollstufen, Prüfung und Verantwortung.",
     objective:
-      "Prüfe dein Verständnis von Aufgabenauswahl, Betriebskontrollen, Prüfung und Verantwortung.",
+      "Drei Fragen zu Aufgabenauswahl, Kontrollstufen, Prüfung und Verantwortung.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-mindset-q1",
         questionText:
-          "Eine Person im Team lehnt nach einem falschen Ergebnis jede Modellunterstützung ab. Welche Antwort ist am hilfreichsten?",
+          "Nach einem falschen Ergebnis lehnt jemand im Team jede Modellunterstützung ab. Welche Antwort hilft am meisten?",
         answerOptions: [
           {
             id: "a",
-            text: "Zustimmen, dass Modelle für ernsthafte Arbeit ungeeignet sind.",
+            text: "Zustimmen: Für ernsthafte Arbeit taugen Modelle nicht.",
             isCorrect: false,
           },
           {
             id: "b",
-            text: "Die konkrete Aufgabe, Fehlerkosten und verfügbaren Prüfkontrollen bewerten.",
+            text: "Konkrete Aufgabe, Fehlerkosten und vorhandene Prüfkontrollen bewerten.",
             isCorrect: true,
           },
           {
             id: "c",
-            text: "Ohne Änderung des Arbeitsablaufs ein neueres Modell verwenden.",
+            text: "Ein neueres Modell nehmen, Arbeitsablauf unverändert.",
             isCorrect: false,
           },
           {
             id: "d",
-            text: "Warten, bis Modelle keine Fehler mehr erzeugen.",
+            text: "Warten, bis Modelle keine Fehler mehr machen.",
             isCorrect: false,
           },
         ],
         explanation:
-          "Ein Ergebnis belegt keine Zuverlässigkeit für alle Aufgaben. Entscheide anhand aufgabenspezifischer Nachweise, der Auswirkung und Erkennbarkeit eines Fehlers sowie der Kontrollen für das verbleibende Risiko.",
+          "Ein Ergebnis belegt nichts über alle Aufgaben. Entscheide nach aufgabenspezifischen Nachweisen, Auswirkung und Erkennbarkeit eines Fehlers und den Kontrollen fürs Restrisiko.",
       },
       {
         id: "ano-mindset-q2",
         questionText:
-          "Welche Praxis beschreibt L3, ein orchestriertes Aufgabenportfolio, am besten?",
+          "Welche Praxis beschreibt L3, das orchestrierte Aufgabenportfolio, am besten?",
         answerOptions: [
           {
             id: "a",
@@ -346,12 +344,12 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Für jedes Dokument einen Modellentwurf erstellen lassen.",
+            text: "Jedes Dokument vom Modell vorentwerfen lassen.",
             isCorrect: false,
           },
           {
             id: "c",
-            text: "Unabhängige Aufgaben getrennt und parallel mit Freigabeschranken und benannten menschlichen Verantwortlichen ausführen.",
+            text: "Unabhängige Aufgaben getrennt und parallel ausführen, mit Freigabeschranken und benannten menschlichen Verantwortlichen.",
             isCorrect: true,
           },
           {
@@ -361,16 +359,16 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "L3 verbindet begrenzte parallele Arbeit mit Trennung, Berechtigungen, Prüfkontrollen und ausdrücklicher Annahmeverantwortung. Parallele Werkzeugnutzung ohne diese Kontrollen erfüllt die Definition nicht.",
+          "L3 heißt begrenzte parallele Arbeit plus Trennung, Berechtigungen, Prüfkontrollen und eine Person, die jedes Ergebnis annimmt. Parallele Werkzeugnutzung ohne diese Kontrollen zählt nicht.",
       },
       {
         id: "ano-mindset-q3",
         questionText:
-          "Eine erfahrene Person setzt allein über Nacht eine Änderung um. Was sollte die Führungskraft prüfen?",
+          "Eine erfahrene Person setzt eine Änderung allein über Nacht um. Was prüft die Führungskraft?",
         answerOptions: [
           {
             id: "a",
-            text: "Ob der hohe Zeitaufwand öffentlich gelobt werden sollte.",
+            text: "Ob der Einsatz öffentlich gelobt werden sollte.",
             isCorrect: false,
           },
           {
@@ -380,17 +378,17 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Ob beim nächsten Mal Modellnutzung vorgeschrieben werden kann.",
+            text: "Ob sich beim nächsten Mal Modellnutzung vorschreiben lässt.",
             isCorrect: false,
           },
           {
             id: "d",
-            text: "Nur wie schnell die Änderung die Produktion erreicht hat.",
+            text: "Nur, wie schnell die Änderung in Produktion war.",
             isCorrect: false,
           },
         ],
         explanation:
-          "Weder manueller Aufwand noch Modellnutzung sind Qualitätsmaße. Prüfe Ergebnis, Nachweise, Wartbarkeit, Betriebsrisiko und die Nachvollziehbarkeit des Verfahrens.",
+          "Weder Nachtschichten noch Modellnutzung sind ein Qualitätsmaß. Prüfe Ergebnis, Nachweise, Wartbarkeit, Betriebsrisiko und ob das Verfahren nachvollziehbar ist.",
       },
     ],
     sections: [],
