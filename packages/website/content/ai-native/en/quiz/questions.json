@@ -3,7 +3,7 @@
     "id": "an_w01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "In the AI-Native Workflow Course, RCTFC names five parts of a clear Claude brief. What does the first R stand for?",
+    "questionText": "RCTFC names five parts of a clear brief in this course. What does the first R stand for?",
     "answerOptions": [
       { "id": "a", "text": "Role. You assign Claude a defined perspective, such as an experienced sales lead.", "isCorrect": true },
       { "id": "b", "text": "Research. Claude must search the internet first.", "isCorrect": false },
@@ -25,7 +25,7 @@
       { "id": "c", "text": "Learn to write all code yourself.", "isCorrect": false },
       { "id": "d", "text": "Use AI only for email and nothing else.", "isCorrect": false }
     ],
-    "explanation": "Orchestration means deciding which work is suitable, giving a precise brief, setting controls and reviewing the output. It does not transfer judgement or accountability to the model.",
+    "explanation": "Orchestration means picking suitable work, briefing it precisely, setting controls and checking the output. Judgement and accountability stay with you.",
     "version": 1,
     "active": true
   },
@@ -33,14 +33,14 @@
     "id": "an_w03",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "What remains your responsibility as orchestrator when Claude assists with execution?",
+    "questionText": "What stays your responsibility when Claude helps with execution?",
     "answerOptions": [
       { "id": "a", "text": "Typing every line manually.", "isCorrect": false },
       { "id": "b", "text": "Only correcting spelling.", "isCorrect": false },
       { "id": "c", "text": "Applying judgement, deciding whether the result is suitable and accepting responsibility for its use.", "isCorrect": true },
       { "id": "d", "text": "Nothing. Claude takes every decision.", "isCorrect": false }
     ],
-    "explanation": "Delegation does not remove accountability. You remain responsible for the brief, permissions, factual and professional review, and the decision to use the result.",
+    "explanation": "Delegating removes no accountability. The brief, the permissions, the factual and professional review and the decision to use the result stay with you.",
     "version": 1,
     "active": true
   },
@@ -55,7 +55,7 @@
       { "id": "c", "text": "Compiling, testing and deploying.", "isCorrect": false },
       { "id": "d", "text": "Reading, writing and arithmetic.", "isCorrect": false }
     ],
-    "explanation": "The recurring patterns are drafting a first version, analysing supplied material and researching against defined questions. Each pattern still needs source and output checks appropriate to the task.",
+    "explanation": "The three patterns are drafting a first version, analysing supplied material and researching against defined questions. Each one still needs source and output checks that fit the task.",
     "version": 1,
     "active": true
   },
@@ -85,7 +85,7 @@
       { "id": "c", "text": "As a configurable system with defined context, bounded tasks, permissions and review.", "isCorrect": true },
       { "id": "d", "text": "As a chatbot used only for small talk.", "isCorrect": false }
     ],
-    "explanation": "Projects, Skills, plugins and MCP configure context and access. People limit permissions, review outputs and remain responsible for decisions.",
+    "explanation": "Projects, Skills, plugins and MCP set context and access. People limit the permissions, check the output and stay responsible for the decision.",
     "version": 1,
     "active": true
   },
@@ -100,7 +100,7 @@
       { "id": "c", "text": "It automatically deletes every conversation after 24 hours.", "isCorrect": false },
       { "id": "d", "text": "It is only a file backup and has no AI function.", "isCorrect": false }
     ],
-    "explanation": "A Project can keep relevant instructions and reference material together so the same context does not need to be re-entered for each task. Exact features and retention depend on the current product and account settings.",
+    "explanation": "A Project keeps instructions and reference material together, so the same context does not get typed in again for every task. Exact features and retention depend on the product version and account settings.",
     "version": 1,
     "active": true
   },
@@ -115,7 +115,7 @@
       { "id": "c", "text": "Connectors require no authorisation.", "isCorrect": false },
       { "id": "d", "text": "Through OAuth, which grants defined access without sharing the account password.", "isCorrect": true }
     ],
-    "explanation": "OAuth lets a user grant scoped access without giving the connected application the account password. The grant should be limited to required scopes and can normally be revoked through the provider.",
+    "explanation": "OAuth grants scoped access without handing the connected application the account password. Keep the grant to the scopes you need; the provider can normally revoke it.",
     "version": 1,
     "active": true
   },
@@ -125,12 +125,12 @@
     "difficulty": "medium",
     "questionText": "What is a Skill in the Claude stack?",
     "answerOptions": [
-      { "id": "a", "text": "A certificate issued after a course.", "isCorrect": false },
+      { "id": "a", "text": "A badge you get for finishing a course.", "isCorrect": false },
       { "id": "b", "text": "A paid subscription upgrade.", "isCorrect": false },
       { "id": "c", "text": "An Anthropic hardware component.", "isCorrect": false },
       { "id": "d", "text": "A reusable instruction package for a recurring task, defined through files such as SKILL.md and supporting resources.", "isCorrect": true }
     ],
-    "explanation": "A Skill packages instructions and optional resources for a recurring workflow. Its exact structure depends on the product, so permissions and included files should be inspected before use.",
+    "explanation": "A Skill packages instructions and optional resources for a recurring workflow. Its exact structure depends on the product, so check the permissions and the included files before you use it.",
     "version": 1,
     "active": true
   },
@@ -160,7 +160,7 @@
       { "id": "c", "text": "CLAUDE.md, which records maintained project context, instructions and conventions.", "isCorrect": true },
       { "id": "d", "text": "The Windows Registry.", "isCorrect": false }
     ],
-    "explanation": "CLAUDE.md is an instruction file that Claude Code can load from a project hierarchy. It should contain concise, current project guidance and must not be treated as a place for secrets.",
+    "explanation": "CLAUDE.md is an instruction file that Claude Code can load from a project hierarchy. Keep it concise and current. It is not a place for secrets.",
     "version": 1,
     "active": true
   },
@@ -175,7 +175,7 @@
       { "id": "c", "text": "It can only be used by software developers.", "isCorrect": false },
       { "id": "d", "text": "Replacing the operating system.", "isCorrect": false }
     ],
-    "explanation": "Claude Code can perform approved operations across multiple files rather than returning only chat text. Users should review the target paths, proposed changes and resulting diff before accepting them.",
+    "explanation": "Claude Code can run approved operations across many files instead of returning chat text only. Check the target paths, the proposed changes and the diff before you accept them.",
     "version": 1,
     "active": true
   },
@@ -235,7 +235,7 @@
       { "id": "c", "text": "Clearing browser history.", "isCorrect": false },
       { "id": "d", "text": "Saving web content into the vault, optionally processing it with a template or AI-assisted interpreter.", "isCorrect": true }
     ],
-    "explanation": "The Web Clipper transfers selected web content into the vault. A template or interpreter can structure it, but the saved note should retain its source and capture date.",
+    "explanation": "The Web Clipper moves selected web content into the vault. A template or interpreter can structure it. The saved note keeps its source and capture date.",
     "version": 1,
     "active": true
   },
@@ -258,7 +258,7 @@
     "id": "an_w18",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "In the module 4 sandbox build from email triage to a review list, which component sends an incoming message to the appropriate branch?",
+    "questionText": "In the module 4 sandbox build from email triage to a review list, what sends an incoming message down the right branch?",
     "answerOptions": [
       { "id": "a", "text": "The printer driver.", "isCorrect": false },
       { "id": "b", "text": "A random selection.", "isCorrect": false },
@@ -280,7 +280,7 @@
       { "id": "c", "text": "Only for playing video.", "isCorrect": false },
       { "id": "d", "text": "When a reviewed architecture calls for documents to remain on controlled local infrastructure, using a suitable local model and security controls.", "isCorrect": true }
     ],
-    "explanation": "LM Studio can run supported models on local hardware, reducing transfers to a hosted API. The choice still requires evaluation of access, model files, logs, device security, output quality and the organisation's policies.",
+    "explanation": "LM Studio can run supported models on local hardware and cut transfers to a hosted API. The choice still needs an assessment of access, model files, logs, device security, output quality and company policy.",
     "version": 1,
     "active": true
   },
@@ -325,7 +325,7 @@
       { "id": "c", "text": "Create a company ready for a stock-market listing.", "isCorrect": false },
       { "id": "d", "text": "Submit nothing because the capstone has no criteria.", "isCorrect": false }
     ],
-    "explanation": "The capstone covers one small, reviewable workflow. Set its time budget and scope from availability and risk; the rubric checks documentation, measurement, failure handling, and controls rather than promising a deployment date.",
+    "explanation": "The capstone is one small, reviewable workflow. Time budget and scope follow from availability and risk. The rubric checks documentation, measurement, failure handling and controls, not a guaranteed deployment date.",
     "version": 1,
     "active": true
   },
@@ -340,7 +340,7 @@
       { "id": "c", "text": "There is no assessment scheme.", "isCorrect": false },
       { "id": "d", "text": "Against seven binary rubric criteria as a self-assessment, without external assessment; any publication is a separate approval decision.", "isCorrect": true }
     ],
-    "explanation": "The seven criteria are recorded as met or not met. No independent examiner validates the work. If an example collection is offered, publication requires explicit opt-in plus data-protection, confidentiality, and security review.",
+    "explanation": "The seven criteria are recorded as met or not met. No independent examiner validates the work. If an example collection is offered, publication requires explicit opt-in plus data-protection, confidentiality and security review.",
     "version": 1,
     "active": true
   },
@@ -348,14 +348,14 @@
     "id": "an_w24",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "What is the status of the AI-Native Workflow Course capstone certificate?",
+    "questionText": "What is the status of the capstone certificate of participation in the AI-Native Workflow Course?",
     "answerOptions": [
       { "id": "a", "text": "It is an officially recognised qualification issued by an external body.", "isCorrect": false },
       { "id": "b", "text": "It is emailed automatically after every completed lesson.", "isCorrect": false },
-      { "id": "c", "text": "It is a completion record generated locally in the browser from the learner's own progress and assessment, not an externally examined credential.", "isCorrect": true },
+      { "id": "c", "text": "It is a certificate of participation generated locally in the browser from your own progress and assessment, not an externally examined credential.", "isCorrect": true },
       { "id": "d", "text": "It is a paid add-on that must be purchased separately.", "isCorrect": false }
     ],
-    "explanation": "The document is a participation and completion record generated locally in the browser. It is not issued by an authority or independent examiner. Its assessment state comes from the learner's own capstone rubric or workshop quiz.",
+    "explanation": "The document is created locally in your browser and confirms participation and completion. No authority and no independent examiner issues it. Its assessment state comes from your own capstone rubric or the workshop quiz.",
     "version": 1,
     "active": true
   }
