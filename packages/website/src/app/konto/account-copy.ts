@@ -194,7 +194,7 @@ export const ACCOUNT_COPY = {
       "No outcomes from completed courses yet. They appear after the corresponding course record is earned.",
     outcomeBoundary:
       "These entries describe content covered by completed courses. They prove neither individual mastery nor an accredited qualification.",
-    deepenHeading: "Reference material",
+    deepenHeading: "Go deeper",
     resources: [
       {
         key: "books",

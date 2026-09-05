@@ -194,7 +194,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     metadata: {
       title: "Login | Open learning platform",
       description:
-        "Optional learning account for course progress, learning records, and certificates on loehrning.ai.",
+        "Optional learning account for course progress and certificates of participation on loehrning.ai.",
     },
     eyebrow: "Open learning platform · Account",
     heading: {
@@ -213,7 +213,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailable:
         "The optional learning account is disabled here. Progress remains in this browser.",
       records:
-        "Learning records and certificates are based on stored completion data.",
+        "The certificate of participation rests on the stored completion status.",
     },
     reason: {
       accountUnavailable:
@@ -223,7 +223,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Sign in to sync your learning progress between devices. Books and technical courses remain available without an account.",
       progressSaveLink: "Back to all courses",
       courseLogin:
-        "This foundation course leads to a learning record or certificate and requires an account. Technical courses, books, and demos remain available without signing in.",
+        "This foundation course leads to a certificate of participation and needs a learning account. Technical courses, books, and demos stay usable without signing in.",
       courseLoginLink: "Back to all courses",
       otherDevice:
         "The link was opened on another device or in another browser. Request a new link there.",

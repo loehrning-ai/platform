@@ -54,7 +54,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     metadata: {
       title: "Open source",
       description:
-        "Open loehrning.ai tools with real product views, a public source revision, license, and operating guide.",
+        "Open loehrning.ai tools: real product views, a public source revision, license, and operating guide.",
       socialDescription:
         "Open tools with real product views, public source revisions, and clear operating boundaries.",
     },
@@ -93,7 +93,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     footnoteTitle: "Open means inspectable.",
     footnote:
-      "Code, learning text, and media carry separate rights. The allocation stays visible on each artifact; technical courses remain in the course atlas.",
+      "Code, learning text, and media carry separate rights. Which license covers what stays on the artifact; the technical courses sit in the course atlas.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
     courses: "Browse technical courses",
@@ -213,7 +213,7 @@ export const SOFTWARE_GUIDE_COPY = {
     dataFlow: "Data flow",
     shortDemo: "Short walkthrough",
     demoIntroduction:
-      "Four captures from the tool in the order in which it is used. Every image comes from the pinned source revision.",
+      "Four captures from the tool, in the order you use it. All of them come from the pinned source revision.",
     prerequisites: "Requirements",
     installation: "Installation",
     usage: "Use",

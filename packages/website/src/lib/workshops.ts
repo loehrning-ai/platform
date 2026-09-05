@@ -530,17 +530,17 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Can AI predict the future?",
     eyebrow: "Self-study workshop · Forecasts and decisions",
     summary:
-      "Decide when a forecast is useful: price the two error directions, set buffers, and define a release gate. Three decision labs end with a launch whose demand exceeds supply.",
+      "When may you trust a forecast? You price the cost of being wrong, size the buffer, and check the go-live: three decision labs and one launch where supply runs short.",
     description:
-      "A forecast earns its cost only when it changes a decision. This workshop therefore starts before model selection: does the model beat the process already in use? What does excess capacity cost, what does insufficient capacity cost, and which buffer balances the two? How does a team detect that a live forecast is failing? Three interactive decision labs and one worked business case lead to a defensible go or no-go decision. No programming, installation, or AI account is required; the material runs as static pages in the browser.",
+      "A forecast earns its cost only when it changes a decision, so the model question comes last here. First comes the question of whether the model beats the process already running, then the costs: too much capacity costs differently than too little, and a buffer balances both. And in operation you have to notice when a forecast tips over. Three interactive decision labs and one worked business case lead to a defensible go or no-go decision. No programming, no installation, no AI account; everything runs as static pages in the browser.",
     format: "Self-study kit",
     duration: "About 90 minutes",
     accessNote:
       "No AI account is required. Everything runs statically in the browser; practice data stays local.",
     audience: [
-      "Planning, supply-chain, and operations teams that work with demand or capacity forecasts",
-      "Specialists and managers who are accountable for forecasts but do not build the models",
-      "Data and analytics teams that must compare a model with the existing process",
+      "Schedulers, planners, and operations teams working with demand or capacity forecasts",
+      "Managers who own a forecast without calculating it themselves",
+      "Data and analytics teams that have to defend a model against the existing process",
     ],
     decisionLab: {
       kicker: "Decision 01 · Supply limit",
@@ -579,7 +579,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         },
         {
           id: "request-gap",
-          label: "Three hundred and twenty requested units cannot be supplied.",
+          label: "320 requested units go unserved.",
         },
       ],
       recommendedChoiceId: "controlled-allocation",
@@ -592,19 +592,19 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Release with a gate",
-          body: "Scarcity requires a traceable allocation rule. The remaining model error also requires a named human release for exceptions.",
+          body: "Scarcity requires a traceable allocation rule. And the 12% residual error requires a named person to release exceptions.",
         },
         decisionOnly: {
           title: "Right direction, weak evidence",
-          body: "Better model accuracy alone does not justify automation. The hard supply limit and residual error matter together.",
+          body: "Better model accuracy alone does not justify automation. Only the supply limit and the residual error together carry the rule.",
         },
         evidenceOnly: {
           title: "The evidence contradicts the release",
-          body: "You identified scarcity and residual error. A raw or equal split does not translate that evidence into a defensible rule.",
+          body: "You spotted scarcity and residual error. A raw or equal split does not turn that into a defensible rule.",
         },
         unsupported: {
           title: "Not ready for release",
-          body: "Neither requests nor one accuracy number determines allocation on its own. Connect supply, demand, and residual error.",
+          body: "Requests alone are not demand, one accuracy number alone is not a rule. Connect supply limit, demand, and residual error.",
         },
       },
     },
@@ -613,7 +613,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         n: "01",
         title: "Beat the existing process in euros",
         description:
-          "In the first decision lab, six weeks of parcel demand run as a shadow test against the planner's current baseline: the same weekday one week earlier. Insufficient capacity costs more than excess capacity, so that asymmetry determines the result. Switch among three model stages and identify which one earns its cost. A promotion that was never entered remains invisible to every stage and is escalated to a person.",
+          "First act in the decision lab. Six weeks of parcel demand run as a shadow test against the number a planner uses today, the same weekday one week earlier. Too little capacity costs more than too much, and that imbalance decides. Switch between three model stages and read off which one earns its cost. A promotion nobody entered stays invisible to every stage, and goes to a person.",
         tool: "Lab · Act 1",
       },
       {
@@ -627,7 +627,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         n: "03",
         title: "Test the release loop under pressure",
         description:
-          "The third lab introduces demand shocks and compares two operating modes. The blind mode keeps running the plan from launch day. The monitored mode detects the deviation, closes the gate, assigns the case to a named person, and resumes automation only after retraining. The value lies in the controlled process, not in a smoother chart.",
+          "Third act. You trigger demand shocks and compare two operating modes. The blind one keeps running the plan from launch day. The monitored one detects the deviation, closes the gate, hands the case to a named person, and restarts automation only after retraining. The value sits in the controlled process, not the smoother curve.",
         tool: "Lab · Act 3",
       },
       {
@@ -641,7 +641,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         n: "05",
         title: "Calculate two forecasts and four measures",
         description:
-          "The exercise provides 104 weeks of demand as a CSV file. Hold back the final 14 weeks, forecast them once with a naive method and once with smoothing, then assess both with mean error and systematic bias. Four numbers and one sentence answer the relevant question: did smoothing earn its cost? A spreadsheet is sufficient; no code is required.",
+          "The exercise provides 104 weeks of demand as a CSV file. Hold back the final 14 weeks, forecast them once with a naive method and once with smoothing, then assess each with mean error and systematic bias. Four numbers and one sentence answer the relevant question: did smoothing earn its cost? A spreadsheet is sufficient; no code is required.",
         tool: "Exercise",
       },
       {
@@ -659,7 +659,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Consumer electronics · Supply and demand management",
       period: "Launch week for a new device",
       narrative:
-        "The case reconstructs a common launch-planning problem: estimated demand is higher than confirmed supply. Three sites request 1,370 units in total, a model estimates underlying demand at 1,180, and confirmed supply is fixed at 1,050. Three departments review the same week and use three different numbers. Companies mentioned in the exercise represent typical operating perspectives. All figures were constructed for teaching and do not come from a real company report.",
+        "The case rebuilds a situation from every launch plan. Demand runs higher than the quantity actually confirmed: three sites request 1,370 units in total, a model estimates underlying demand at 1,180, and confirmed supply is fixed at 1,050. Three departments look at the same week and pull out three different numbers. Companies named in the exercise stand for typical operating perspectives. Every figure was built for teaching and comes from no real company report.",
       metrics: [
         { label: "Site requests", value: "1,370" },
         { label: "Underlying demand (p50)", value: "1,180" },
@@ -723,17 +723,17 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Read business reports with AI",
     eyebrow: "Self-study workshop · Business reports",
     summary:
-      "Read a monthly report as an analyst: define metrics in plain language, record the rules as a reusable skill, populate a dashboard, and defend a decision. Then apply the method to a real quarterly report.",
+      "Read a monthly report like an analyst: define the metrics in plain language, keep them as a skill, fill a dashboard, argue a decision. Then the same method on a real quarterly report.",
     description:
-      "Five prompts in the Claude app build a small AI analyst. You work with a synthetic company's monthly report and the raw data from which it was written, then define what its metrics mean in plain language. Those rules become a reusable skill that extracts the report, populates a dashboard, and supports a reasoned decision. In the second case, apply the same method to a real company's public quarterly figures. No programming or API key is required. The Claude steps require access to a suitable Claude product.",
+      "Five prompts, one analyst. In the Claude app you work for a synthetic company, get its monthly report along with the raw data it was written from, and record in plain language what the numbers mean here. Those rules become a reusable skill; it reads the report, fills a dashboard, and supports a reasoned decision. In case 2 you leave the sandbox and apply the same method to a real company's public quarterly figures. No programming and no API key; the Claude steps need suitable Claude access.",
     format: "Self-study kit",
     duration: "About 90 minutes",
     accessNote:
       "Claude steps require suitable Claude access. Use only the fictional kit; files may reach that service.",
     audience: [
-      "People who read or prepare monthly and quarterly business reports",
+      "Controllers who write or read monthly and quarterly reports",
       "Controlling and finance teams in small and medium-sized companies",
-      "People evaluating Claude as an analysis tool without writing code",
+      "Anyone trying Claude as an analysis tool without writing code",
     ],
     decisionLab: {
       kicker: "Decision 01 · CRAFT",

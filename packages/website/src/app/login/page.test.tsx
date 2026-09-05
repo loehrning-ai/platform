@@ -86,7 +86,8 @@ describe("login locale surface", () => {
     [
       "en",
       "Login | Open learning platform",
-      "Optional learning account for course progress, learning records, and certificates on loehrning.ai.",
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      "Optional learning account for course progress and certificates of participation on loehrning.ai.",
     ],
   ] as const)("uses precise %s noindex metadata", async (locale, title, description) => {
     mocks.getRequestLocale.mockResolvedValue(locale);

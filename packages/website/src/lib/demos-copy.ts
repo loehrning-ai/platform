@@ -94,77 +94,76 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
 
 const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "Many business analyses already happen in Excel. This example keeps formula suggestions, pivot design, and plausibility checks inside that familiar review context.",
+    why: "Many business analyses happen in Excel. So the example starts there, with the formulas, pivots, and plausibility checks that already exist.",
     proof:
       "Sandbox scenario: 42 fictional controlling roles and a 4.2-hour weekly time-saving assumption per person. Neither figure is measured evidence.",
-    ogSubtitle: "Excel lab: inspect formulas, pivots, and a forecast.",
+    ogSubtitle: "Excel lab: formula, pivot, forecast in an example.",
   },
   word: {
-    why: "Memos, letters, and structured documents require more than fluent text. This example separates drafting from checks for style, facts, sources, approval, and sensitive data.",
+    why: "Memos, letters, templates: the same work every day. The example lets an assistant use document patterns without losing style, sources, and approval.",
     proof:
       "Sandbox scenario: a fictional monthly volume of 180 drafts with explicit review steps. It does not measure production throughput.",
-    ogSubtitle: "Word lab with a sample style and explicit review.",
+    ogSubtitle: "Word lab with a sample style and review.",
   },
   "outbound-workflow": {
-    why: "A message is easier to review when every substantive claim points to a recorded signal. The workflow keeps the evidence and approval step next to the draft.",
+    why: "Nobody can check a generic message. When the draft points at a public signal, you see why it was written and which source stands behind it.",
     proof:
       "Sandbox scenario: fictional contacts, public-signal examples, and a source check. No message is sent.",
-    ogSubtitle: "Ground an outbound draft in recorded public signals.",
+    ogSubtitle: "Ground a message in public signals.",
   },
   "agent-pipeline": {
-    why: "Separating research, synthesis, criticism, and editing makes responsibilities visible. The added coordination cost only makes sense for work that benefits from independent checks.",
+    why: "Research, synthesis, criticism, editing. Four steps, four responsibilities. The coordination cost pays off only when an independent check makes the work better.",
     proof:
       "Sandbox scenario: a recorded four-role trace and a hypothetical comparison of manual and assisted drafting time. It is not a measured productivity result.",
-    ogSubtitle: "A recorded trace through four specialist roles.",
+    ogSubtitle: "Four specialist agents, one memo.",
   },
   "n8n-supply-chain": {
-    why: "Exception handling often follows a known sequence: detect a delay, inspect stock, draft communication, escalate, and obtain approval. The example identifies where automation stops.",
+    why: "Detect a delay, check stock, draft the message, flag the reorder. Supply-chain exceptions follow rules. The example shows where automation stops and a person decides.",
     proof:
       "Sandbox scenario: fictional status, inventory, message, fallback, and review events. No external action runs.",
-    ogSubtitle: "Inspect a simulated supply-chain exception flow.",
+    ogSubtitle: "Supply-chain exceptions coordinated automatically.",
   },
   "rag-vertragsassistent": {
-    why: "Retrieval can reduce search effort only when the archive, citation, and review process are reliable. This example returns passages and uncertainty, not legal advice.",
+    why: "Retrieval saves search time. But only when the archive is clean and a review stands behind it. The example returns passages and limits, not legal advice.",
     proof:
       "Sandbox scenario: a fictional contract archive, source cards, and deterministic keyword matching.",
-    ogSubtitle: "Ask a fictional contract archive and inspect each source.",
+    ogSubtitle: "Chat with sample contracts; answers show their sources.",
   },
   "rechnung-zu-sap": {
-    why: "Invoice processing is suitable for a bounded workflow because expected fields and validation rules are explicit. Low confidence must stop the process before posting.",
+    why: "In many companies, incoming invoices are still handwork. The example limits the AI to what stays checkable: clear fields, validation, human approval.",
     proof:
       "Sandbox scenario: a fictional PDF invoice, field extraction, duplicate checks, and review before a simulated import.",
-    ogSubtitle:
-      "Inspect extracted invoice fields before a simulated SAP import.",
+    ogSubtitle: "Sample PDF in, IDoc draft out for review.",
   },
   "prompt-scanner": {
-    why: "A pre-submission check can identify common personal-data and confidentiality patterns. Fixed rules remain incomplete, so the interface also exposes a prompt-injection case they miss.",
+    why: "Governance belongs in front of the prompt, not behind the incident. The example marks personal data and trade secrets, and one injection case its rules miss.",
     proof:
       "Sandbox scenario: fictional text and local regular-expression checks. No prompt leaves the browser.",
-    ogSubtitle: "Inspect rule-based data warnings before prompt submission.",
+    ogSubtitle: "Personal-data flags before a prompt is passed on.",
   },
   "cost-drift-observability": {
-    why: "An LLM workflow needs its own cost, latency, error, and quality signals. This example shows the structure of an operating view without presenting seeded values as telemetry.",
+    why: "Run an LLM without observability and you run it blind. Logs, budget alerts, and quality metrics show whether an AI workflow stays stable or tips over.",
     proof:
       "Sandbox scenario: four fictional applications with fixed cost, latency, error, and drift indicators.",
-    ogSubtitle: "Seeded cost, latency, error, and drift indicators.",
+    ogSubtitle: "Spend, latency, and drift as a simulated operating view.",
   },
   "llm-observability": {
-    why: "Quality change requires a use-case-specific baseline and repeated review. This example compares automated metrics with a human judgement and shows a disagreement case.",
+    why: "Is your LLM system getting better or worse? Without your own measurements, you cannot tell. Eval metrics, drift detection, and human review mark where automated scoring stops.",
     proof:
       "Sandbox scenario: four fictional answers, fixed automated scores, human ratings, and one seeded drift indicator.",
-    ogSubtitle: "Compare automated evaluation, drift, and human review.",
+    ogSubtitle: "Eval score, drift, and human judgement side by side.",
   },
   "fine-tune-playground": {
-    why: "Domain adaptation is useful only when it outperforms a documented baseline on held-out examples. The comparison also keeps retrieval and prompt changes in view as simpler alternatives.",
+    why: "Fine-tuning improves answers only when the data and the evaluation hold up. So the example separates baseline, adaptation, and holdout check.",
     proof:
       "Sandbox scenario: 2,400 fictional labelled questions and a seeded 38-point score difference. These are not training results.",
-    ogSubtitle: "Compare a baseline answer with a domain-adapted example.",
+    ogSubtitle: "Baseline vs. domain example: the difference in 3 prompts.",
   },
   "roi-rechner": {
-    why: "A use-case estimate is only as useful as its assumptions. The calculator exposes headcount, hourly cost, adoption, time saved, and an uncertainty range.",
+    why: "AI projects rarely fail on the technology. They fail on assumptions nobody wrote down. The calculator shows every number and the formula, to check rather than sell.",
     proof:
       "Sandbox scenario: editable assumptions and a deterministic formula. The result is not a return promise.",
-    ogSubtitle: "Inspect every assumption behind a use-case estimate.",
+    ogSubtitle: "Team size \u00d7 hourly rate \u00d7 adoption = scenario.",
   },
 };
 

@@ -117,26 +117,26 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the EU AI Act course",
     description:
-      "An introduction to AI readiness: why a sound data foundation matters more than tool selection, how teams can assess their starting point qualitatively, and how to read benchmarks without overstating them.",
+      "The data foundation decides, not tool selection. How a team captures its starting point without a score, what five areas of digital and AI readiness demand, and how to read a benchmark without overstating it.",
     highlights: [
       "Qualitative assessment without a proprietary score",
       "Five areas of work for digital and AI readiness",
       "Interpretation of benchmarks, sectors, and limitations",
     ],
     adaptationNote:
-      "The open edition removes consulting-market pricing, private company data, proprietary scores, and rankings derived from them. It uses traceable self-assessments and linked primary sources instead.",
+      "Consulting-market pricing, private company data, proprietary scores, and the rankings built on them: all out. Traceable self-assessments and linked primary sources instead.",
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
-    subtitle: "Companion book for the AI Essentials course",
+    subtitle: "Companion book for AI Fundamentals",
     edition: "Working edition 2026",
     audience: "Employees and teams",
     resourceType: "HTML companion book",
     accessLabel: "Free online reader",
     statusLabel: "Reader available",
-    relatedResourceLabel: "Open the AI Essentials course",
+    relatedResourceLabel: "Open the AI Fundamentals course",
     description:
-      "A measured introduction to core terms, common applications, prompting, data protection, and Article 4. Written for people who use AI at work without a technical background.",
+      "Core terms, common applications, prompting, data protection, and Article 4. Written for people who use AI at work and bring no technical background.",
     highlights: [
       "Core terms without vendor jargon",
       "Prompt examples with an objective, context, and verification step",
@@ -154,7 +154,7 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the AI-native work course",
     description:
-      "A practical map of tool categories for small working contexts: which tasks are suitable for AI, which remain human, how to verify output, and how to document repeatable workflows.",
+      "Which task do you hand to AI, and which do you keep? A tool map for small working contexts: sort the tasks, check the output, document the repeatable workflows.",
     highlights: [
       "Tool categories instead of rankings",
       "Selection criteria, risks, and control questions",
@@ -289,7 +289,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       openGraphTitle: (count) =>
         `${count} free English reading edition${count === 1 ? "" : "s"} on AI`,
       openGraphDescription:
-        "Editorially reviewed learning books with an open HTML reader, source notes, and explicit limitations.",
+        "Learning books in an open HTML reader. Sources are named, limits too.",
       detailTitleSuffix: "Learning book",
       detailDescription: (book) =>
         `${book.subtitle}. English HTML reading edition, available without payment or an account.`,
@@ -307,7 +307,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       heading: "Reference books with",
       headingAccent: "visible sources and limits.",
       introduction: (count) =>
-        `${count} editorially approved English reading edition${count === 1 ? "" : "s"}. Author, reading outcome, source record, and access are stated on the title.`,
+        `${count} editorially approved English reading edition${count === 1 ? "" : "s"}. Author, reading outcome, source record, and access are on the title, not in the small print.`,
       collectionHeading: "The current collection",
       collectionDescription: "Open HTML reader. No account required.",
       publicationNumber: (position) =>
@@ -329,7 +329,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       pdfAfterLogin: "German PDF after sign-in",
       pdfUnavailable: "PDF download unavailable",
       sourceNote:
-        "The published English reading edition is based on editorial work from 2025–2026. Primary sources and limitations are stated in the relevant chapters.",
+        "The published English reading edition is based on editorial work from 2025 and 2026. Primary sources and limitations are stated in the relevant chapters.",
       editorialOwner: (owner) => `Editorial owner: ${owner}`,
       detailsLabel: "Edition, sources, and access",
       sourceInputs: "Documented source basis",
@@ -348,7 +348,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Learning path · Stage 6: Deepen",
       contextBody:
-        "This learning book adds sources, context, and longer arguments to the foundation course.",
+        "The course gives the rule. The book gives sources, context, and the longer argument.",
       kicker: "Learning book · Open HTML reading edition",
       chapterCount: (count) => `${count} chapters`,
       readingTime: (minutes) => `approx. ${minutes} min`,
@@ -363,7 +363,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       pdfAfterLogin: "Sign in to download the German PDF",
       pdfUnavailable: "PDF download is unavailable in this version",
       onlineAccessNote:
-        "The English HTML edition is available without payment or an account.",
+        "The English HTML edition is free and needs no account.",
       adaptationLabel: "Editorial note",
       contentsAria: "Table of contents",
       contentsHeading: "Table of contents",

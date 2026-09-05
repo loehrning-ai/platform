@@ -23,20 +23,19 @@ export const COURSE_HUB_COPY = {
   en: {
     metadataTitle: "AI courses: foundations, technical practice, and workshops",
     metadataDescription:
-      "Ten courses in English and German, plus workshops and learning books with explicit scope, access requirements, and source revisions.",
+      "Ten courses in English and German, plus workshops and learning books. Every card states scope, access, and source revision.",
     metadataImageAlt:
       "loehrning.ai course catalogue with a foundation path and technical courses",
     headingLead: "Understand AI.",
     headingAccent: "Use it and check the result.",
     intro:
-      "Four foundation courses form the learning path; six technical courses deepen individual tools. Every card states duration, access, and outcome.",
-    firstStep: "Unsure where to start?",
+      "Four foundation courses in a fixed order. Six technical courses when you want to go deeper.",
+    firstStep: "Unsure where you stand?",
     checkLabel: "Map it in five minutes",
-    accessKicker: "§ Access model",
-    accessHeading:
-      "Access, progress, and completion records are stated separately.",
+    accessKicker: "§ Why it is free",
+    accessHeading: "Everything is free. Four readers still need an account.",
     accessBody:
-      "Course landing pages are public. The four foundation-path readers require a learning account because progress and completion status are synchronized. Technical courses, workshops, and book readers remain available without an account. Download access is stated on each resource; the published learning book's PDF requires an account. Completion documents are issued by loehrning.ai and are not accredited certificates.",
+      "Course pages are public. The four foundation-path readers need a learning account, which syncs progress and completion status across your devices; technical courses, workshops, and book readers run without one. Each resource states its own download rule, and the published learning book's PDF requires an account. loehrning.ai issues the certificate of participation itself. It is not accredited.",
     aboutMe: "About me",
     aiCheck: "AI check",
   },
