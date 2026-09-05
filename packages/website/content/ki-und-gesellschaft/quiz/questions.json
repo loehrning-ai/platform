@@ -3,7 +3,7 @@
     "id": "kug-q01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welche Aussage unterscheidet Aufgabenexposition, Substituierbarkeitspotenzial und Beschäftigungswirkung korrekt?",
+    "questionText": "Welche Aussage hält Aufgabenexposition, Substituierbarkeitspotenzial und Beschäftigungswirkung sauber auseinander?",
     "answerOptions": [
       {
         "id": "a",
@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Der OECD Employment Outlook 2023 beschreibt für die betrachteten OECD-Länder Beschäftigung in Berufen mit hoher Automatisierungsgefahr. Das IAB-Substituierbarkeitspotenzial beschreibt den Anteil beruflicher Kerntätigkeiten, der technisch potenziell automatisierbar ist. Beide Maße sind weder Einführungsquote noch Arbeitsplatzverlustprognose.",
+    "explanation": "Der OECD Employment Outlook 2023 beschreibt für die betrachteten OECD-Länder Beschäftigung in Berufen mit hoher Automatisierungsgefahr. Das IAB-Substituierbarkeitspotenzial beschreibt den Anteil beruflicher Kerntätigkeiten, der technisch automatisierbar wäre. Keines der beiden Maße ist eine Einführungsquote. Keines ist eine Prognose für Arbeitsplatzverluste.",
     "version": 1,
     "active": true
   },
@@ -34,7 +34,7 @@
     "id": "kug-q02",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welches Vorgehen liefert einen belastbaren Vergleich für eine KI-gestützte Aufgabe?",
+    "questionText": "Wie bekommst du einen belastbaren Vergleich für eine KI-gestützte Aufgabe?",
     "answerOptions": [
       {
         "id": "a",
@@ -57,7 +57,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein Vergleich braucht dieselbe Aufgabe, definierte Qualitätskriterien und dokumentierte Nacharbeit. Nur so lässt sich erkennen, ob Assistenz im konkreten Workflow Zeit spart, Fehler verlagert oder zusätzlichen Prüfaufwand erzeugt.",
+    "explanation": "Dieselbe Aufgabe, definierte Qualitätskriterien, dokumentierte Nacharbeit. Erst dann siehst du, ob die Assistenz in deinem Workflow Zeit spart, Fehler nur verlagert oder zusätzlichen Prüfaufwand erzeugt.",
     "version": 1,
     "active": true
   },
@@ -88,7 +88,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Praktische KI-Kompetenz verbindet Systemverständnis mit Prüfung und Handlungssicherheit. Art. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber, Maßnahmen zur Förderung eines ausreichenden Kompetenzniveaus ihres Personals und weiterer eingesetzter Personen zu treffen; er garantiert kein identisches individuelles Ausbildungsniveau.",
+    "explanation": "Praktische KI-Kompetenz verbindet Systemverständnis mit Prüfung und Handlungssicherheit. Art. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber, Maßnahmen zur Förderung eines ausreichenden Kompetenzniveaus ihres Personals und weiterer eingesetzter Personen zu treffen. Ein identisches Ausbildungsniveau für jede einzelne Person garantiert er nicht.",
     "version": 1,
     "active": true
   },
@@ -119,7 +119,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "§ 87 Abs. 1 Nr. 6 BetrVG betrifft Einführung und Anwendung technischer Einrichtungen, die zur Überwachung von Verhalten oder Leistung bestimmt sind, soweit keine gesetzliche oder tarifliche Regelung besteht. Das Recht liegt beim Betriebsrat; bei fehlender Einigung kann nach § 87 Abs. 2 die Einigungsstelle entscheiden.",
+    "explanation": "§ 87 Abs. 1 Nr. 6 BetrVG erfasst Einführung und Anwendung technischer Einrichtungen, die Verhalten oder Leistung überwachen sollen, soweit keine gesetzliche oder tarifliche Regelung besteht. Das Recht liegt beim Betriebsrat. Einigen sich die Seiten nicht, kann nach § 87 Abs. 2 die Einigungsstelle entscheiden.",
     "version": 1,
     "active": true
   },
@@ -150,7 +150,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 3 Nr. 60 definiert den Begriff über KI-Erzeugung oder -Manipulation, Ähnlichkeit mit bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen und den falschen Eindruck von Authentizität oder Wahrheit. Eine bestimmte Technik oder Referenzmenge ist nicht vorgeschrieben.",
+    "explanation": "Art. 3 Nr. 60 verlangt drei Dinge zugleich: KI-Erzeugung oder -Manipulation, Ähnlichkeit mit bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen und den falschen Eindruck von Authentizität oder Wahrheit. Eine bestimmte Technik oder Referenzmenge schreibt die Definition nicht vor.",
     "version": 1,
     "active": true
   },
@@ -158,7 +158,7 @@
     "id": "kug-q06",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Aussage zum Anwendungsbeginn von Art. 50 der KI-Verordnung ist korrekt?",
+    "questionText": "Welche Angabe zum Anwendungsbeginn von Art. 50 der KI-Verordnung stimmt?",
     "answerOptions": [
       { "id": "a", "text": "Ab dem 2. Februar 2025", "isCorrect": false },
       { "id": "b", "text": "Ab dem 2. August 2026", "isCorrect": true },
@@ -169,7 +169,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50 ist seit dem 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme markieren nach Abs. 2 maschinenlesbar; Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. Für bereits vor dem 2. August 2026 vermarktete Systeme gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.",
+    "explanation": "Art. 50 ist seit dem 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme markieren nach Abs. 2 maschinenlesbar, Betreiber legen Deepfakes nach Abs. 4 in der Regel sichtbar offen. Für Systeme, die vor dem 2. August 2026 schon auf dem Markt waren, gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.",
     "version": 1,
     "active": true
   },
@@ -177,7 +177,7 @@
     "id": "kug-q07",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Was ist der richtige erste Umgang mit einem mutmaßlichen Deepfake?",
+    "questionText": "Was tust du als Erstes mit einem mutmaßlichen Deepfake?",
     "answerOptions": [
       {
         "id": "a",
@@ -200,7 +200,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Öffentliche Weitergabe kann die Reichweite erhöhen. Sichere die Originalfundstelle, prüfe Quelle und Kontext und nutze danach den passenden Plattform-, Behörden- oder Kontaktweg.",
+    "explanation": "Jede öffentliche Weitergabe kann die Reichweite vergrößern. Sichere die Originalfundstelle, prüfe Quelle und Kontext, und geh erst danach den passenden Plattform-, Behörden- oder Kontaktweg.",
     "version": 1,
     "active": true
   },
@@ -208,7 +208,7 @@
     "id": "kug-q08",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Aussage zu § 22 KUG ist korrekt?",
+    "questionText": "Welche Aussage zu § 22 KUG stimmt?",
     "answerOptions": [
       {
         "id": "a",
@@ -231,7 +231,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "§ 22 KUG enthält die allgemeine Einwilligungsregel für die Verbreitung und öffentliche Zurschaustellung von Bildnissen. § 23 enthält Ausnahmen und in Abs. 2 eine Interessenabwägung. Die Stimme wird durch § 22 KUG nicht für sich allein geschützt.",
+    "explanation": "§ 22 KUG enthält die Einwilligungsregel für die Verbreitung und öffentliche Zurschaustellung von Bildnissen. § 23 enthält die Ausnahmen und in Abs. 2 eine Interessenabwägung. Die Stimme schützt § 22 KUG nicht für sich allein.",
     "version": 1,
     "active": true
   },
@@ -262,7 +262,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "ProPublica berichtete für die untersuchten Broward-County-Scores Unterschiede in Fehlerraten. Northpointe widersprach der Bewertung und betonte Kalibrierung. Unterschiedliche Fairness-Kriterien können bei unterschiedlichen Grundraten im Allgemeinen nicht gleichzeitig erfüllt werden.",
+    "explanation": "ProPublica berichtete für die untersuchten Broward-County-Scores Unterschiede in den Fehlerraten. Northpointe widersprach und hielt die Kalibrierung dagegen. Beide Fairness-Kriterien lassen sich bei unterschiedlichen Grundraten im Allgemeinen nicht gleichzeitig erfüllen.",
     "version": 1,
     "active": true
   },
@@ -293,7 +293,7 @@
         "isCorrect": true
       }
     ],
-    "explanation": "Gender Shades prüfte binäre Geschlechtsklassifikation, nicht die Identifizierung von Personen durch Gesichtserkennung. Die Studie maß erhebliche intersektionale Leistungsunterschiede. Sie bewies keine konkrete Trainingsdatenursache für jeden Anbieter.",
+    "explanation": "Gender Shades prüfte binäre Geschlechtsklassifikation, nicht die Identifizierung von Personen durch Gesichtserkennung. Gemessen wurden erhebliche intersektionale Leistungsunterschiede. Eine konkrete Trainingsdatenursache für jeden Anbieter bewies die Studie nicht.",
     "version": 1,
     "active": true
   },
@@ -301,7 +301,7 @@
     "id": "kug-q11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Aussage zu Art. 22 DSGVO ist korrekt?",
+    "questionText": "Welche Aussage zu Art. 22 DSGVO stimmt?",
     "answerOptions": [
       {
         "id": "a",
@@ -324,7 +324,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 22 Abs. 1 erfasst ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung. Abs. 2 enthält Ausnahmen. Bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung verlangt Abs. 3 mindestens menschliches Eingreifen, Darlegung des eigenen Standpunkts und Anfechtung.",
+    "explanation": "Art. 22 Abs. 1 erfasst ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung. Abs. 2 enthält Ausnahmen. Bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung verlangt Abs. 3 mindestens die Möglichkeit menschlichen Eingreifens, der Darlegung des eigenen Standpunkts und der Anfechtung.",
     "version": 1,
     "active": true
   },
@@ -332,7 +332,7 @@
     "id": "kug-q12",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welche Aussage zu Deepfake-Detektoren ist korrekt?",
+    "questionText": "Welche Aussage zu Deepfake-Detektoren stimmt?",
     "answerOptions": [
       {
         "id": "a",
@@ -355,7 +355,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Detektoren arbeiten unter bestimmten Trainings- und Testbedingungen. Kompression, Ausschnitt, Nachbearbeitung, unbekannte Generatoren und Schwellenwerte verändern ihre Aussagekraft. Herkunft und Kontext bleiben notwendig.",
+    "explanation": "Ein Detektor arbeitet unter seinen Trainings- und Testbedingungen. Kompression, Ausschnitt, Nachbearbeitung, unbekannte Generatoren und der Schwellenwert verändern, was sein Ergebnis wert ist. Um Herkunft und Kontext kommst du nicht herum.",
     "version": 1,
     "active": true
   },
@@ -374,7 +374,7 @@
       { "id": "c", "text": "Google Lens", "isCorrect": false },
       { "id": "d", "text": "TinEye (tineye.com)", "isCorrect": false }
     ],
-    "explanation": "InVID/WeVerify (weverify.eu) ist ein Recherchewerkzeug für die Verifikation von Bildern und Videos. Es kann Schlüsselbilder erzeugen, Rückwärtssuchen unterstützen und verfügbare Metadaten anzeigen. Es fällt kein automatisches Wahrheitsurteil.",
+    "explanation": "InVID/WeVerify (weverify.eu) ist ein Recherchewerkzeug für die Verifikation von Bildern und Videos. Es erzeugt Schlüsselbilder, unterstützt Rückwärtssuchen und zeigt verfügbare Metadaten an. Ein Wahrheitsurteil fällt es nicht.",
     "version": 1,
     "active": true
   },
@@ -405,7 +405,7 @@
         "isCorrect": true
       }
     ],
-    "explanation": "Daten können frühere Auswahl- oder Machtstrukturen abbilden. Ob daraus eine nachteilige Wirkung entsteht, wird zugleich von Stichprobe, Labels, Zielgröße, Modellierung, Schwellenwerten, Prüfung und Einsatz bestimmt.",
+    "explanation": "Daten können frühere Auswahl- oder Machtstrukturen abbilden. Ob daraus eine nachteilige Wirkung wird, entscheiden zugleich Stichprobe, Labels, Zielgröße, Modellierung, Schwellenwerte, Prüfung und Einsatz.",
     "version": 1,
     "active": true
   },
@@ -413,7 +413,7 @@
     "id": "kug-q15",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welche Aussage zum EU AI Act und Deepfakes ist korrekt?",
+    "questionText": "Welche Aussage zum EU AI Act und zu Deepfakes stimmt?",
     "answerOptions": [
       {
         "id": "a",
@@ -436,7 +436,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben grundsätzlich maschinenlesbar markieren; Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen. Ausnahmen und Übergangsregeln bleiben zu prüfen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor; nach dem KI-MIG ist grundsätzlich die Bundesnetzagentur zuständig, soweit keine Fachbehörde zuständig ist.",
+    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben in der Regel maschinenlesbar markieren, Betreiber müssen Deepfakes in der Regel sichtbar offenlegen. Ausnahmen und Übergangsregeln bleiben zu prüfen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor; nach dem KI-MIG ist das in der Regel die Bundesnetzagentur, soweit keine Fachbehörde zuständig ist.",
     "version": 1,
     "active": true
   }
