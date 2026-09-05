@@ -4,7 +4,7 @@ Der größte Irrtum, den Freelancer machen: Sie glauben, gute Arbeit spricht fü
 
 Tut sie nicht.
 
-Gute Arbeit wird empfohlen, manchmal. Aber die meisten deiner potenziellen Kunden wissen nicht, dass es dich gibt. Die, die es wissen, haben gerade keinen Bedarf. Die, die Bedarf haben, antworten nicht auf deine erste Mail.
+Gute Arbeit wird empfohlen, manchmal. Die meisten deiner potenziellen Kunden wissen aber nicht, dass es dich gibt. Die, die es wissen, haben gerade keinen Bedarf. Und die, die Bedarf haben, antworten nicht auf deine erste Mail.
 
 Akquise ist ein Zahlenspiel. Und Zahlenspiele sind genau das, worin KI gut ist.
 
@@ -14,7 +14,7 @@ Akquise ist ein Zahlenspiel. Und Zahlenspiele sind genau das, worin KI gut ist.
 
 Bevor du angelst, musst du wissen, wo die Fische sind.
 
-Die meisten Freelancer starten bei der Akquise am falschen Ende. Sie schreiben eine E-Mail und hoffen, dass jemand antwortet. Aber sie haben nie definiert, wer dieser Jemand eigentlich ist. Welche Position hat er? Welche Probleme hat sein Unternehmen? Welches Budget? Welche Entscheidungskriterien?
+Die meisten Freelancer starten bei der Akquise am falschen Ende. Sie schreiben eine E-Mail und hoffen, dass jemand antwortet. Nur haben sie nie definiert, wer dieser Jemand ist. Welche Position, welche Probleme im Unternehmen, welches Budget, welche Entscheidungskriterien?
 
 Eine Buyer Persona ist kein Marketing-Buzzword. Es ist ein konkreter Steckbrief deines idealen Kunden. Und KI kann dir helfen, ihn zu erstellen.
 
@@ -37,7 +37,7 @@ Das Ergebnis ist ein Hypothesen-Steckbrief. Er ersetzt keine Kundengespräche, M
 
 Entscheidungsdauer und Beteiligte unterscheiden sich nach Branche, Risiko, Budget und Beschaffungsprozess. Frage reale Kunden, wer entscheidet, welche Nachweise zählen und wie lange vergleichbare Beschaffungen dauern.
 
-Aber, und das ist entscheidend, prüfe das Ergebnis gegen deine Erfahrung. Die KI kennt allgemeine Muster. Du kennst deine spezifischen Kunden. Wenn die Persona sagt, der Entscheider sei der IT-Leiter, du aber weißt, dass in deiner Branche immer der Geschäftsführer entscheidet, korrigiere. Die KI liefert den Entwurf. Dein Wissen macht ihn richtig.
+Und dann prüfst du das Ergebnis gegen deine Erfahrung. Die KI kennt allgemeine Muster, du kennst deine Kunden. Wenn die Persona den IT-Leiter zum Entscheider erklärt, du aber weißt, dass in deiner Branche der Geschäftsführer unterschreibt, korrigierst du. Die KI liefert den Entwurf. Dein Wissen macht ihn richtig.
 
 > **Template: Persona-Steckbrief**
 >
@@ -91,9 +91,9 @@ Miss die vollständige Bearbeitungszeit einschließlich Recherche, Rechtsprüfun
 
 Kurze Nachrichten können funktionieren, wenn Anlass, Relevanz und nächster Schritt klar sind. Länge allein garantiert keine Antwort.
 
-> **Rechtliche Grenze:** Werbung per elektronischer Post erfordert in Deutschland grundsätzlich eine vorherige ausdrückliche Einwilligung. Die enge Bestandskundenausnahme hat mehrere kumulative Voraussetzungen. Prüfe vor jedem Versand den aktuellen [§ 7 UWG](https://www.gesetze-im-internet.de/uwg_2004/__7.html) und hole bei Unsicherheit Rechtsrat ein. KI-Personalisierung schafft keine Einwilligung. Massenversand bleibt problematisch, auch wenn jeder Text anders klingt.
+> **Rechtliche Grenze:** Werbung per elektronischer Post erfordert in Deutschland in der Regel eine vorherige ausdrückliche Einwilligung. Die enge Bestandskundenausnahme hat mehrere kumulative Voraussetzungen. Prüfe vor jedem Versand den aktuellen [§ 7 UWG](https://www.gesetze-im-internet.de/uwg_2004/__7.html) und hole bei Unsicherheit Rechtsrat ein. KI-Personalisierung schafft keine Einwilligung. Massenversand bleibt problematisch, auch wenn jeder Text anders klingt.
 
-**Wichtig für den deutschen Markt:** Die deutsche Geschäftskultur ist bei Kaltakquise formeller als die amerikanische. "Hey [Vorname]" funktioniert auf LinkedIn bei jungen Startups. Bei einem Geschäftsführer eines mittelständischen Maschinenbauers, eher nicht. Die Betreffzeile entscheidet. Der Bezug muss in den ersten zwei Sätzen stehen. Und der Ton muss auf Augenhöhe sein: nicht unterwürfig, nicht pushy.
+**Wichtig für den deutschen Markt:** Bei Kaltakquise ist die deutsche Geschäftskultur formeller als die amerikanische. "Hey [Vorname]" funktioniert auf LinkedIn bei jungen Startups, beim Geschäftsführer eines mittelständischen Maschinenbauers eher nicht. Die Betreffzeile entscheidet, und der Bezug steht in den ersten zwei Sätzen. Der Ton bleibt auf Augenhöhe, nicht unterwürfig, nicht pushy.
 
 Ein Follow-up ist nur vertretbar, wenn der ursprüngliche Kontakt und die weitere Nachricht rechtlich zulässig sind und kein Widerspruch vorliegt.
 
@@ -114,17 +114,17 @@ Lege Frequenz und Ende der Sequenz vorab fest. Stoppe sofort bei Widerspruch ode
 
 Verbände und Fachveranstaltungen können ein passender Kanal sein. Prüfe aktuelle Programme, Zielgruppen und Bewerbungsbedingungen direkt bei der zuständigen Organisation. Ein Vortrag garantiert keine Kontakte oder Aufträge.
 
-**A/B-Testing:** Bei einer hinreichend großen, rechtmäßig kontaktierten Gruppe kannst du zwei Betreffvarianten vergleichen. Definiere vorab Zielmetrik und Testdauer. Öffnungsraten sind durch technische Datenschutzfunktionen unzuverlässig; Antworten oder qualifizierte Folgegespräche sind oft aussagekräftiger. Ein kleiner Test beweist keine allgemeine Wirkung.
+**A/B-Testing:** Bei einer hinreichend großen, rechtmäßig kontaktierten Gruppe kannst du zwei Betreffvarianten vergleichen. Definiere vorab Zielmetrik und Testdauer. Öffnungsraten sind durch technische Datenschutzfunktionen unzuverlässig. Antworten oder qualifizierte Folgegespräche sagen mehr. Ein kleiner Test beweist trotzdem keine allgemeine Wirkung.
 
 ## LinkedIn als Akquise-Kanal
 
-Ob LinkedIn der richtige Kanal ist, hängt davon ab, wo deine Zielgruppe tatsächlich aktiv ist. Prüfe eigene Anfragequellen und aktuelle Plattformdaten statt einer allgemeinen Rangfolge zu vertrauen.
+Ob LinkedIn der richtige Kanal ist, hängt davon ab, wo deine Zielgruppe wirklich unterwegs ist. Schau in deine Anfragequellen und in aktuelle Plattformdaten, statt einer Rangfolge zu glauben.
 
-LinkedIn kann viel Zeit binden. Erfasse deshalb separat, wie lange Entwurf, fachliche Prüfung, Interaktion und Auswertung dauern. KI kann Entwürfe beschleunigen, aber Moderation und Beziehungspflege nicht übernehmen.
+LinkedIn frisst Zeit. Erfasse deshalb getrennt, wie lange Entwurf, fachliche Prüfung, Interaktion und Auswertung dauern. KI kann Entwürfe beschleunigen. Moderation und Beziehungspflege nimmt sie dir nicht ab.
 
 **Profil-Optimierung: Dein 24/7-Verkäufer**
 
-Dein LinkedIn-Profil ist deine Landingpage. Wenn jemand deinen Namen googelt, findet er zuerst LinkedIn. Die Headline und der About-Bereich müssen in 10 Sekunden klarmachen: Was tust du? Für wen? Mit welchem Ergebnis?
+Dein LinkedIn-Profil ist deine Landingpage. Googelt jemand deinen Namen, findet er zuerst LinkedIn. Headline und About-Bereich müssen in 10 Sekunden klarmachen: Was tust du? Für wen? Mit welchem Ergebnis?
 
 > **KRAFT-Prompt: LinkedIn-Profil optimieren**
 >
@@ -142,7 +142,7 @@ Dein LinkedIn-Profil ist deine Landingpage. Wenn jemand deinen Namen googelt, fi
 
 **Content-Strategie: ein messbarer Wochenablauf**
 
-Wähle eine realistische Frequenz. KI kann Entwürfe vorbereiten. Dein Job bleibt, Aussagen zu prüfen und eigene Erfahrung oder Meinung nur dort einzubauen, wo sie wahr ist.
+Wähle eine Frequenz, die du durchhältst. KI bereitet Entwürfe vor. Dein Job bleibt, Aussagen zu prüfen und eigene Erfahrung oder Meinung nur dort einzubauen, wo sie wahr ist.
 
 Der Wochen-Workflow:
 - **Montag:** Fachlicher Hinweis aus einer belegbaren Quelle
@@ -151,17 +151,17 @@ Der Wochen-Workflow:
 
 Für jeden Post: Briefing, Entwurf, Fakten- und Rechteprüfung, redaktionelle Überarbeitung und Freigabe. Miss die Dauer statt sie vorzugeben.
 
-Aber: KI-generierte Posts riechen. LinkedIn-Nutzer erkennen sie sofort, an den austauschbaren Formulierungen, dem glattgebügelten Aufbau, der Glätte, die niemand so schreibt. Nutze KI als Entwurf, nicht als Endprodukt. Dein persönlicher Touch, deine Meinung, deine Stimme, das macht den Unterschied zwischen Content, der scrollt, und Content, der bleibt.
+Aber: KI-generierte Posts riechen. Wer viel auf LinkedIn liest, erkennt sie sofort, an den austauschbaren Formulierungen, am glattgebügelten Aufbau, an dieser Glätte, die niemand so schreibt. Nutze KI als Entwurf, nicht als Endprodukt. Deine Meinung und deine Stimme machen den Unterschied zwischen Content, der weggescrollt wird, und Content, der bleibt.
 
 Authentizität schlägt Frequenz. Lieber 2 echte Posts pro Woche als 5 generische.
 
 ## Website-Texte und SEO
 
-Deine Website kann Informationen und Kontaktwege jederzeit bereitstellen. Gute Texte allein garantieren keinen Verkauf.
+Deine Website hält Informationen und Kontaktwege jederzeit bereit. Gute Texte allein verkaufen trotzdem nichts.
 
 Die meisten Freelancer-Websites haben ein Problem: Sie reden über sich selbst. "Ich biete professionelle Beratung." "Mein Fokus liegt auf." "Mit über 10 Jahren Erfahrung."
 
-Kein Besucher kommt auf deine Website, um zu hören, wie toll du bist. Er kommt, weil er ein Problem hat. Deine Website muss in 5 Sekunden sagen: "Ich verstehe dein Problem. Hier ist die Lösung."
+Niemand kommt auf deine Website, um zu hören, wie toll du bist. Die Handwerksmeisterin kommt, weil sie ein Problem hat. Deine Website muss in 5 Sekunden sagen: "Ich verstehe dein Problem. Hier ist die Lösung."
 
 > **KRAFT-Prompt: Landingpage-Texte**
 >
@@ -179,11 +179,11 @@ Kein Besucher kommt auf deine Website, um zu hören, wie toll du bist. Er kommt,
 > Ton: Überzeugend, klar, kein Marketingsprech.
 > ```
 
-**Lokale SEO** kann relevant sein, wenn Menschen deine Leistung regional suchen. Prüfe Nachfrage mit aktuellen Suchdaten und echten Kundenfragen. KI kann Themen clustern und Entwürfe erstellen, garantiert aber weder Rankings noch Anfragen. Veröffentliche nur hilfreiche, geprüfte Inhalte; Frequenz allein erzeugt keine Sichtbarkeit.
+**Lokale SEO** kann relevant sein, wenn Menschen deine Leistung regional suchen. Prüfe Nachfrage mit aktuellen Suchdaten und echten Kundenfragen. KI kann Themen clustern und Entwürfe erstellen, garantiert aber weder Rankings noch Anfragen. Veröffentliche nur hilfreiche, geprüfte Inhalte. Frequenz allein erzeugt keine Sichtbarkeit.
 
 ## Angebote, die überzeugen
 
-Ein strukturierter Entwurfsprozess kann Angebotsarbeit verkürzen. Messe dabei den gesamten Ablauf von Recherche bis Versand einschließlich fachlicher Prüfung und Korrekturen.
+Ein strukturierter Entwurfsprozess kann Angebotsarbeit verkürzen. Miss dabei den ganzen Ablauf von der Recherche bis zum Versand, samt fachlicher Prüfung und Korrekturen.
 
 **Die Angebotsstruktur (8 Abschnitte):**
 
@@ -196,7 +196,7 @@ Ein strukturierter Entwurfsprozess kann Angebotsarbeit verkürzen. Messe dabei d
 7. **Nächste Schritte:** Was muss der Kunde tun, um zu starten?
 8. **Über mich**, 2-3 Sätze. Relevante Erfahrung. Kein Lebenslauf.
 
-Gib diese Struktur mit anonymisiertem Kontext an die KI. Prüfe anschließend Leistungsumfang, Zahlen, Rechtsfolgen und Ton. Zeitbedarf und Qualität variieren.
+Gib diese Struktur mit anonymisiertem Kontext an die KI. Danach prüfst du Leistungsumfang, Zahlen, Rechtsfolgen und Ton. Zeitbedarf und Qualität schwanken.
 
 Für eine Preisargumentation kann KI einen Entwurf strukturieren: „Erkläre Leistungsumfang, Preisannahmen und belegbaren Nutzen. Kennzeichne Prognosen. Vergleiche nur mit nachgewiesenen Problemkosten und vermeide künstlichen Druck."
 
