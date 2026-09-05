@@ -82,7 +82,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       eyebrow: "Codex / Kurs",
       title: "Codex kontrolliert im Repository einsetzen.",
       intro:
-        "Der Kurs behandelt Codex als auftragsorientierten Coding-Agenten. Du lernst, Kontext bereitzustellen, Änderungen abzugrenzen, Nachweise zu verlangen und einen Diff vor dem Merge zu prüfen.",
+        "Der Kurs behandelt Codex als auftragsorientierten Coding-Agenten: Kontext bereitstellen, Änderungen abgrenzen, Nachweise verlangen und den Diff vor dem Merge lesen.",
       start: "Lektion 01 starten",
       map: "Kursübersicht",
       facts: [
@@ -94,12 +94,12 @@ export const CODEX_COURSE_COPY = Object.freeze({
       courseEyebrow: "Kursaufbau",
       courseTitle: "Vier Tracks. Zwölf Lektionen. Ein Abschlussfall.",
       courseIntro:
-        "Beginne mit dem Arbeitsmodell. Lege dann Spezifikation, Umfang und Akzeptanz fest. Schließe mit einem vollständigen, prüfbaren Ablauf ab.",
+        "Erst das Arbeitsmodell. Dann Spezifikation, Umfang und Akzeptanz. Am Ende ein vollständiger, prüfbarer Ablauf.",
       lessonLabel: (number) => `Lektion ${number}`,
       finalEyebrow: "Einstieg",
       finalTitle: "Lektion 01: das Arbeitsmodell",
       finalBody:
-        "Die erste Lektion trennt die Bearbeitung begrenzter Repository-Aufträge von Autovervollständigung und Chat. Danach prüfst du Aufgabe, Repository-Kontext und Ausführungsgrenze als zusammenhängenden Rahmen.",
+        "Die erste Lektion trennt begrenzte Repository-Aufträge von Autovervollständigung und Chat. Danach betrachtest du Aufgabe, Repository-Kontext und Ausführungsgrenze als einen zusammenhängenden Rahmen.",
       finalCta: "Beginnen",
       breadcrumbs: ["Start", "Kurse", "Codex-Kurs"],
       jsonLdDescription:
