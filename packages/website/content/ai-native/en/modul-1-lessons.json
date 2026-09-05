@@ -74,31 +74,31 @@
       "sections": [
         {
           "id": "modul_1_lesson_1_section_1",
-          "title": "The 24-minute comparison",
+          "title": "Two drafts, one stopwatch",
           "readTimeMinutes": 2,
-          "content": "Fictional scenario: Customer Alpha sends a sample email about a delayed delivery. Draft one reply manually and one with AI assistance.\n\nFor both versions, record drafting time, factual errors, required corrections and tone. The AI-assisted version remains an internal draft until a person approves it.\n\nThis exercise does not promise a fixed time saving or equal quality. Your comparison determines whether the workflow is useful for this task.",
-          "keyTakeaway": "Starting from a blank document is only one drafting method; a structured AI brief provides a measurable alternative."
+          "content": "Customer Alpha, fictional, writes about a late delivery. You answer twice: once by hand, once with Claude drafting for you.\n\nStart the stopwatch. For both versions, record drafting time, factual errors, corrections needed and tone. The Claude version stays an internal draft until a person approves it.\n\nNo promise of a fixed time saving, no promise of equal quality. Your comparison decides whether this workflow is worth anything here.",
+          "keyTakeaway": "The blank document is one starting point of two. The brief is the one you can measure."
         },
         {
           "id": "modul_1_lesson_1_section_2",
-          "title": "Why a blank document is often the wrong starting point",
+          "title": "When the blank document is the wrong starting point",
           "readTimeMinutes": 2,
-          "content": "A blank document gives you complete control, but it also requires you to generate every sentence. An AI-assisted draft changes the starting point from writing to briefing and review.\n\nPeople still start with blank documents for reasonable reasons:\n- Habit: years of established muscle memory\n- Control: you know exactly what entered the document\n- Professional identity: writing may be part of your role\n\nThe exercise is to test whether a structured brief reduces effort without weakening accuracy or tone.",
-          "keyTakeaway": "Choose the starting method based on measured quality and effort, not habit."
+          "content": "A blank document hands you every decision and every sentence to write. A Claude draft moves the starting point from writing to briefing and review.\n\nSo why do so many still start at zero? Three reasons, none of them stupid:\n- Habit: routines drilled in over years\n- Control: you know exactly what went into the text\n- Professional identity: for a controller, writing is part of the job\n\nOne question per task: does the brief cut effort without weakening accuracy or tone?",
+          "keyTakeaway": "Measured quality and working time decide the starting point. Not habit."
         },
         {
           "id": "modul_1_lesson_1_section_3",
           "title": "The three-part Claude brief",
           "readTimeMinutes": 3,
-          "content": "Open Claude. Avoid a vague instruction such as \"Write a reply to this customer inquiry.\" It leaves too many decisions unspecified.\n\nProvide three elements instead:\n\n**Role:** \"You are my sales assistant at an 80-person mechanical-engineering company in Bavaria. Use a pragmatic, direct and plain-spoken tone.\"\n\n**Context:** paste the customer email, provided its contents are approved for the tool.\n\n**Task:** \"Draft a reply. Confirm Friday as the target, but ask the customer for the batch number and number of affected parts. Keep the tone polite and current. Use fewer than 150 words.\"\n\nReview the result. Correct any inaccurate claim, commitment or tonal mismatch before sending it. Measure the time and correction effort rather than assuming the AI-assisted draft is better.",
-          "keyTakeaway": "Role + context + task produces a more constrained draft than an open-ended request."
+          "content": "Open Claude. Do not type \"Write a reply to this customer inquiry.\" That hands the model every decision that belongs to you.\n\nThree constraints instead of a request:\n\n**Role:** \"You are my sales assistant at an 80-person mechanical-engineering company in Bavaria. Use a pragmatic, direct and plain-spoken tone.\"\n\n**Context:** paste the customer email, provided its contents are approved for the tool.\n\n**Task:** \"Draft a reply. Confirm Friday as the target, but ask the customer for the batch number and number of affected parts. Keep the tone polite and current. Use fewer than 150 words.\"\n\nThen you read it. Fix every wrong statement, every uncovered commitment and every tonal slip before it goes out. Measure time and correction effort instead of assuming the Claude draft is better.",
+          "keyTakeaway": "Role, context and task narrow the draft. An open request does not."
         },
         {
           "id": "modul_1_lesson_1_section_4",
-          "title": "Why the method works",
+          "title": "Why three constraints are enough",
           "readTimeMinutes": 2,
-          "content": "Three elements narrow the model's task:\n\n**Role:** defines the perspective and communication style. In this example, the tone is that of an established industrial company, not generic startup marketing.\n\n**Context:** supplies the information needed for the draft. Only include data that is approved for the selected tool.\n\n**Task:** makes the result testable: fewer than 150 words, one confirmation, one question and a defined tone.\n\nIf one element is missing, the output is more likely to be generic or based on assumptions. That is a briefing problem, not proof of model quality.\n\nYour responsibility shifts from producing every sentence to specifying the task, checking the facts and approving the final text.",
-          "keyTakeaway": "The model drafts; you remain responsible for the reasoning, facts and approval."
+          "content": "Each constraint takes one degree of freedom away from the model.\n\n**Role:** sets perspective and style. In this example the draft sounds like an industrial company, not like startup advertising.\n\n**Context:** supplies what the draft needs to know. Only data approved for the selected tool.\n\n**Task:** makes the result checkable. Fewer than 150 words, one confirmation, one question, a defined tone.\n\nDrop one constraint and the text turns generic, or the model invents its own assumptions. That is a briefing error. It says nothing about the model.\n\nYour work shifts. Not formulating every sentence, but setting the task, checking the facts and approving the text.",
+          "keyTakeaway": "The model writes the draft. Facts, reasoning and approval stay with you."
         }
       ],
       "quiz": [
@@ -127,11 +127,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Role, context and task are the three core elements. The later RCTFC framework adds format and constraints."
+          "explanation": "Role, context and task. RCTFC adds format and constraints later."
         },
         {
           "id": "modul_1_lesson_1_q2",
-          "questionText": "What is the appropriate use of your time in an AI-assisted role?",
+          "questionText": "Where does your time belong in an AI-assisted role?",
           "answerOptions": [
             {
               "id": "a",
@@ -154,7 +154,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Delegate drafting work where appropriate, but retain judgment, fact-checking and final approval."
+          "explanation": "Hand over the drafting when the task suits it. Judgment and approval stay with you."
         }
       ]
     },
@@ -216,24 +216,24 @@
       "sections": [
         {
           "id": "modul_1_lesson_2_section_1",
-          "title": "How AI-assisted engineering work is changing",
+          "title": "From my own working week, anonymized",
           "readTimeMinutes": 2,
-          "content": "I work as a data engineer at a large US technology company. Experienced engineers in my working environment increasingly use AI systems to generate initial code from a specification. They still inspect the repository, read the output, run tests, correct defects and approve the change.\n\nThe IDE remains important for inspection, navigation, debugging and review. The shift is narrower: less time entering routine code, more time defining the problem and evaluating the result.\n\nThe same division of work can apply outside software engineering wherever a task has a describable output and a meaningful review step.",
+          "content": "I work as a data engineer at a large US technology company. The experienced developers around me increasingly generate a first code version from a specification. What they do not hand over: inspecting the repository, reading the output, running tests, correcting defects, approving the change.\n\nThe IDE stays open for navigation, debugging and review. The shift is smaller than the hype claims. Less time typing routine code, more time on what gets built and whether it holds.\n\nThe same division of work travels outside software engineering. The task needs a describable output and a review step that holds.",
           "keyTakeaway": "Typing is only one part of the work. Judgment determines whether the result is usable."
         },
         {
           "id": "modul_1_lesson_2_section_2",
-          "title": "What orchestration means in practice",
+          "title": "Orchestrating instead of executing",
           "readTimeMinutes": 3,
-          "content": "Execution means completing each production step yourself: typing, formatting, calculating or moving information between tools.\n\nOrchestration means **specifying the required result**, giving a system the permitted inputs and then checking its output. You correct errors and retain authority over the final action.\n\nClaude produces output from instructions and context. It does not understand intent, automatically verify every fact or accept responsibility. The brief, permitted data and review criteria therefore need to be explicit.\n\nDelegate bounded, reviewable production steps. Keep decisions, accountability and sensitive actions with a person.",
-          "keyTakeaway": "Orchestration separates specification and review from routine production steps."
+          "content": "Executing means every production step is yours. Typing, formatting, calculating, carrying data from tool to tool.\n\nOrchestrating means you **describe the result you need**, give the system the permitted inputs and check what comes back. You correct the errors. The final action is yours.\n\nClaude produces output from instructions and context. Nothing more. It understands no intent, verifies no fact on its own, carries no responsibility. So you fix the brief, the permitted data and the review criteria up front.\n\nHand over bounded, reviewable production steps. Decisions, accountability and sensitive actions stay with a person.",
+          "keyTakeaway": "You specify and check. The routine goes to the system."
         },
         {
           "id": "modul_1_lesson_2_section_3",
-          "title": "How different roles change",
+          "title": "What changes in your role",
           "readTimeMinutes": 3,
-          "content": "The division of work can change even when you are not a developer:\n\n- **Sales:** Claude drafts a quotation; you decide the pricing strategy and approve every commitment.\n- **Finance:** Claude drafts a read-only SQL query; you validate it and interpret the figures.\n- **HR:** Claude drafts a job advertisement; you check legal, factual and organizational requirements.\n- **Operations:** Claude structures process data; you decide what should change.\n\nThe transferable skill is not merely typing. It is applying domain knowledge, identifying missing information and judging whether an output is correct for the situation.\n\nAI assistance can reduce routine production work. It does not remove professional responsibility or the need for expertise.",
-          "keyTakeaway": "Use AI for bounded production work; keep domain judgment and accountability with the role owner."
+          "content": "The developer is only the nearest example. The same shift is waiting in other departments:\n\n- **Sales:** Claude drafts the quotation. Pricing strategy and every commitment stay with you.\n- **Finance:** Claude drafts a read-only SQL query. You validate it and read the figures.\n- **HR:** Claude drafts the job advertisement. You check the legal, factual and organizational requirements.\n- **Operations:** Claude structures the process data. You decide what changes.\n\nThe skill that counts was never typing. Applying domain knowledge, spotting the missing information, judging whether the result fits. That is the work.\n\nAI assistance can cut routine production. It does not cut professional responsibility or the need for expertise.",
+          "keyTakeaway": "AI for the bounded production work. Domain judgment and accountability stay with the role owner."
         }
       ],
       "quiz": [
@@ -262,7 +262,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Routine drafting can be reduced. Judgment, domain expertise and relationships remain necessary and may take a larger share of the work."
+          "explanation": "Routine drafting can shrink. Judgment, domain expertise and customer relationships stay, and often take a larger share of the work."
         },
         {
           "id": "modul_1_lesson_2_q2",
@@ -289,7 +289,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Model output is produced from inputs and configuration. It becomes usable work only through task-specific review, documented approval and assigned accountability."
+          "explanation": "Model output comes from inputs and configuration. It becomes a work result only through task-specific review, documented approval and someone who carries the responsibility."
         }
       ]
     },
@@ -348,22 +348,22 @@
           "id": "modul_1_lesson_3_section_1",
           "title": "Three basic patterns",
           "readTimeMinutes": 3,
-          "content": "**Pattern 1: Drafting**\n\nYou need a first version of an email, report or presentation. Claude produces V1; you check and edit V2.\n\n> \"Draft V1 of [output] using [approved context]. Follow [tone]. Length: [limit].\"\n\nRecord the time and correction effort for your actual task.\n\n**Pattern 2: Analysis**\n\nYou have data or text and need a defined extraction or summary.\n\n> \"Here is [input]. Extract [fields]. Summarize [patterns]. Format: [table, list or prose]. State uncertainty.\"\n\nThe appropriate workflow depends on input size, sensitivity and validation requirements.\n\n**Pattern 3: Research**\n\nYou need evidence about a topic. Use a search-capable tool and verify the cited primary sources.\n\n> \"Research [topic]. Answer [specific questions]. Use [required source types]. Return [structure] with links and publication dates.\"\n\nThese patterns cover many common knowledge-work tasks, but each output still needs task-specific checks.",
+          "content": "**Pattern 1: Drafting**\n\nYou need a first version: email, report, presentation. Claude delivers V1, you turn it into V2.\n\n> \"Draft V1 of [output] using [approved context]. Follow [tone]. Length: [limit].\"\n\nNote time and correction effort. Every time.\n\n**Pattern 2: Analysis**\n\nYou have data or text and want something specific pulled out or summarized.\n\n> \"Here is [input]. Extract [fields]. Summarize [patterns]. Format: [table, list or prose]. State uncertainty.\"\n\nThe workflow depends on size, sensitivity and how much checking the output needs.\n\n**Pattern 3: Research**\n\nYou need evidence. Take a tool that can search, then open the cited primary sources.\n\n> \"Research [topic]. Answer [specific questions]. Use [required source types]. Return [structure] with links and publication dates.\"\n\nThree patterns cover a large share of knowledge work. The task-specific check is still yours.",
           "keyTakeaway": "Drafting, analysis and research require different inputs and review criteria."
         },
         {
           "id": "modul_1_lesson_3_section_2",
-          "title": "A reusable context brief",
+          "title": "Write the context once",
           "readTimeMinutes": 3,
-          "content": "A Claude Project can hold stable, non-confidential context and approved communication rules for recurring tasks.\n\nCreate a Project called \"Sales drafts\" and use an instruction such as:\n\n```\nI work in sales at an 80-person mechanical-engineering company\nin Bavaria with customers in Germany and Austria.\nOur products are specialist machines for metal processing.\nTypical price range: EUR 15,000 to EUR 200,000 per machine.\n\nCustomer communication rules:\n- Informal address for established customers; formal address for new customers\n- Pragmatic, plain language\n- No buzzwords or promotional claims\n- Do not make delivery, price or contract commitments without approval\n```\n\nOnly include information approved for persistent Project context. A later request can add the case-specific facts without repeating the stable rules:\n\n> \"New-customer inquiry for three Type X machines. Draft a reply and mark missing commercial details.\"",
-          "keyTakeaway": "Store approved recurring context once; keep sensitive and case-specific information out of persistent instructions."
+          "content": "Typing the same company context every week wastes time. A Claude Project holds stable, non-confidential context and the communication rules for recurring tasks.\n\nCreate a Project called \"Sales drafts\" and use an instruction such as:\n\n```\nI work in sales at an 80-person mechanical-engineering company\nin Bavaria with customers in Germany and Austria.\nOur products are specialist machines for metal processing.\nTypical price range: EUR 15,000 to EUR 200,000 per machine.\n\nCustomer communication rules:\n- Informal address for established customers; formal address for new customers\n- Pragmatic, plain language\n- No buzzwords or promotional claims\n- Do not make delivery, price or contract commitments without approval\n```\n\nOnly what is approved for permanent Project context goes in. A later request carries the case, not the rules:\n\n> \"New-customer inquiry for three Type X machines. Draft a reply and mark missing commercial details.\"",
+          "keyTakeaway": "Approved recurring context once, in the Project. Sensitive and case-specific material stays out."
         },
         {
           "id": "modul_1_lesson_3_section_3",
-          "title": "Three levels of revision",
+          "title": "Narrow, medium, deep",
           "readTimeMinutes": 2,
-          "content": "When V1 needs work, state the scale and reason for the revision.\n\n**Narrow:** change one sentence. \"Remove the second paragraph. Make the tone one level more direct.\"\n\n**Medium:** change the structure. \"Reorder the arguments and put the strongest evidence first.\"\n\n**Deep:** restart from a new premise. \"V1 is too generic. Rewrite it with a direct tone and focus on the customer's time cost rather than our features.\"\n\nThe model handles the rewrite. You remain responsible for deciding whether the result meets the factual and professional standard.",
-          "keyTakeaway": "Use narrow, medium or deep revision instructions according to the defect you found."
+          "content": "V1 rarely lands. When you revise, say how much should change and why.\n\n**Narrow:** change one sentence. \"Remove the second paragraph. Make the tone one level more direct.\"\n\n**Medium:** change the structure. \"Reorder the arguments and put the strongest evidence first.\"\n\n**Deep:** new premise, new attempt. \"V1 is too generic. Rewrite it with a direct tone and focus on the customer's time cost rather than our features.\"\n\nThe model does the rewrite. Whether the result holds up professionally is still your call.",
+          "keyTakeaway": "Narrow, medium or deep: the level follows the defect, not your mood."
         }
       ],
       "quiz": [
@@ -464,25 +464,25 @@
                         "id": "a",
                         "label": "Write every response manually and work until 18:30.",
                         "correct": false,
-                        "explanation": "This may be necessary for sensitive questions, but it does not test whether a structured draft can reduce routine work."
+                        "explanation": "Working by hand is legitimate for sensitive questions. It never tests whether a structured draft takes the routine off you."
                       },
                       {
                         "id": "b",
                         "label": "Wait until tomorrow because careful work takes time.",
                         "correct": false,
-                        "explanation": "Delay may be justified when facts are missing. If the answers are available, a reviewed draft can still meet today's deadline."
+                        "explanation": "Waiting is right when facts are missing. Once the answers exist, a reviewed draft still makes today's deadline."
                       },
                       {
                         "id": "c",
                         "label": "Brief Claude with the role, approved email context, five required answers and a 200-word limit. Review every technical claim and send only after approval.",
                         "correct": true,
-                        "explanation": "This workflow separates first-draft production from technical verification and final approval."
+                        "explanation": "First draft, technical check and approval stay separate. That is how it should run."
                       },
                       {
                         "id": "d",
                         "label": "Find and adapt an old template.",
                         "correct": false,
-                        "explanation": "A template can be useful, but it often requires the same case-specific edits and may preserve outdated wording."
+                        "explanation": "A template helps. It does not replace the case-specific edit, and it carries old wording along."
                       }
                     ]
                   },
@@ -494,7 +494,7 @@
                         "id": "a",
                         "label": "Open the CRM five minutes before the meeting and rely on memory.",
                         "correct": false,
-                        "explanation": "A quick scan can miss unresolved points. Define the preparation questions and review the source material deliberately."
+                        "explanation": "A quick look misses the open points. Define your preparation questions and read the source material properly."
                       },
                       {
                         "id": "b",
@@ -506,13 +506,13 @@
                         "id": "c",
                         "label": "Ask a colleague who knows the fictional case.",
                         "correct": false,
-                        "explanation": "A colleague may add useful context, but their availability and recollection are not a substitute for reviewing the records."
+                        "explanation": "A colleague who knows the case adds context. Recollection is no substitute for opening the records."
                       },
                       {
                         "id": "d",
                         "label": "Cancel the meeting because there is too little preparation time.",
                         "correct": false,
-                        "explanation": "Cancellation may be avoidable if the source set is small and the preparation output is checked."
+                        "explanation": "Three emails and a few notes are not worth a cancellation. Small source set, checkable preparation."
                       }
                     ]
                   },
@@ -524,25 +524,25 @@
                         "id": "a",
                         "label": "Ask Controlling and wait two days.",
                         "correct": false,
-                        "explanation": "Controlling review may still be required. A validated read-only query can shorten the first step."
+                        "explanation": "Controlling still reviews the numbers. A validated read-only query shortens the first step."
                       },
                       {
                         "id": "b",
                         "label": "Rebuild the analysis in Excel by hand.",
                         "correct": false,
-                        "explanation": "This can work, but manual joins and repeated steps create avoidable error risk."
+                        "explanation": "It works, and it is fragile. Manual joins, repeated every week, add avoidable error risk."
                       },
                       {
                         "id": "c",
                         "label": "Provide Claude with the table schema and ask for read-only SQL. Have a qualified person review it before running it.",
                         "correct": true,
-                        "explanation": "This uses AI to draft a query, not to authorize database access or validate the result."
+                        "explanation": "Claude drafts the query. That grants no database access, and the result is still unchecked."
                       },
                       {
                         "id": "d",
                         "label": "Skip the analysis.",
                         "correct": false,
-                        "explanation": "Omitting relevant evidence weakens sales planning."
+                        "explanation": "Leaving out the evidence weakens sales planning. No upside anywhere."
                       }
                     ]
                   }
@@ -561,25 +561,25 @@
                         "id": "a",
                         "label": "Copy a 2023 advertisement and change the date.",
                         "correct": false,
-                        "explanation": "The old advertisement may contain outdated facts or language. It still requires a full review."
+                        "explanation": "The old advertisement carries outdated facts and language. It needs a full review either way."
                       },
                       {
                         "id": "b",
                         "label": "Create an HR Project with approved company context and tone. Ask for a draft for the working-student role and verify every condition.",
                         "correct": true,
-                        "explanation": "Reusable context can shorten the brief. Legal, factual and employment terms still require human review."
+                        "explanation": "Maintained context shortens the brief. Legal, factual and contractual terms still go past a person."
                       },
                       {
                         "id": "c",
                         "label": "Hire an agency and wait three weeks.",
                         "correct": false,
-                        "explanation": "External support may be appropriate, but it is not necessary for every first draft."
+                        "explanation": "An agency has its place. You do not need one for a first draft."
                       },
                       {
                         "id": "d",
                         "label": "Ask ChatGPT to write a generic advertisement without company or role context.",
                         "correct": false,
-                        "explanation": "Without context or constraints, the result is likely to be generic and may invent requirements."
+                        "explanation": "Without role, company and tone you get stock text, and the model invents requirements."
                       }
                     ]
                   },
@@ -591,25 +591,25 @@
                         "id": "a",
                         "label": "Spend three hours polishing the wording before management review.",
                         "correct": false,
-                        "explanation": "The policy decision requires care. First-draft production can be separated from policy review."
+                        "explanation": "The policy decision needs care. The wording does not. Separate the two."
                       },
                       {
                         "id": "b",
                         "label": "Brief Claude with the HR role, approved policy facts, reasons, 180-word limit, plain tone and an FAQ link. Review with the responsible people before sending.",
                         "correct": true,
-                        "explanation": "A structured draft can reduce writing time while approval and accountability remain unchanged."
+                        "explanation": "A structured draft saves the writing. Decision, sign-off and accountability stay where they were."
                       },
                       {
                         "id": "c",
                         "label": "Ask an executive assistant to draft it.",
                         "correct": false,
-                        "explanation": "That may be a valid allocation decision, but it still transfers routine drafting work to another person."
+                        "explanation": "That is a legitimate allocation decision. It also hands routine drafting to another person."
                       },
                       {
                         "id": "d",
                         "label": "Announce the rule only in the monthly meeting.",
                         "correct": false,
-                        "explanation": "A verbal announcement alone does not provide a durable, accessible record of the policy."
+                        "explanation": "Nobody can look up a spoken announcement. The rule needs a text everyone can reach."
                       }
                     ]
                   },
@@ -621,25 +621,25 @@
                         "id": "a",
                         "label": "Say you do not remember and search your email later.",
                         "correct": false,
-                        "explanation": "The answer should be based on the decision record, not recollection."
+                        "explanation": "The answer is in the decision record, not in your memory."
                       },
                       {
                         "id": "b",
                         "label": "Search Notion, file storage, email and the CRM manually for 20 minutes.",
                         "correct": false,
-                        "explanation": "A manual search may still be necessary, but dispersed records make retrieval slower and less reliable."
+                        "explanation": "Sometimes a manual search is all you have. Four separate stores make it slow and leave gaps."
                       },
                       {
                         "id": "c",
                         "label": "Query an approved decision log through Claude or an Obsidian assistant: \"Remote-work decision, January 2026. Cite the source note.\"",
                         "correct": true,
-                        "explanation": "AI-assisted retrieval is useful only when it points back to the authoritative record."
+                        "explanation": "AI-assisted retrieval holds only when it names the authoritative record and you open it."
                       },
                       {
                         "id": "d",
                         "label": "Say you will check and then fail to follow up.",
                         "correct": false,
-                        "explanation": "The missing follow-up is exactly what a decision log should prevent."
+                        "explanation": "Promised and forgotten. Exactly what a decision log exists to prevent."
                       }
                     ]
                   }
@@ -658,25 +658,25 @@
                         "id": "a",
                         "label": "Write an Excel macro and spend four hours debugging it.",
                         "correct": false,
-                        "explanation": "A macro may be appropriate for a recurring controlled process, but first define and test the normalization rules."
+                        "explanation": "A macro pays off for a recurring, controlled process. Test the normalization rules first, or you debug into the void."
                       },
                       {
                         "id": "b",
                         "label": "Give Claude a fictional CSV and explicit normalization rules. Request a change log and validate the result before replacing any source data.",
                         "correct": true,
-                        "explanation": "This is a bounded data-transformation exercise with a reversible output and review step."
+                        "explanation": "Bounded transformation, reversible output, a fixed review point. That is a good test case."
                       },
                       {
                         "id": "c",
                         "label": "Assign an intern for two days.",
                         "correct": false,
-                        "explanation": "Manual cleanup is slow and difficult to reproduce unless the rules and checks are documented."
+                        "explanation": "Manual cleanup is slow, and the next export starts the same game. Not reproducible either."
                       },
                       {
                         "id": "d",
                         "label": "Leave the data unchanged because the dashboard can tolerate it.",
                         "correct": false,
-                        "explanation": "Inconsistent identifiers can split totals and lead to incorrect decisions."
+                        "explanation": "Three spellings, three rows in the dashboard. Every total is wrong."
                       }
                     ]
                   },
@@ -688,25 +688,25 @@
                         "id": "a",
                         "label": "Read the complete transcript and extract every item manually.",
                         "correct": false,
-                        "explanation": "Manual review remains the fallback, but a structured extraction can provide a faster first pass."
+                        "explanation": "You have to read it anyway. A structured extraction can prepare the first pass."
                       },
                       {
                         "id": "b",
                         "label": "Ask Claude to extract decisions, action items with owners and dates, and open questions into a table. Verify each item against the transcript.",
                         "correct": true,
-                        "explanation": "This applies the analysis pattern while keeping the transcript as the source of truth."
+                        "explanation": "Structured extraction, and the transcript stays the authoritative source."
                       },
                       {
                         "id": "c",
                         "label": "Ask each participant to submit their own action items.",
                         "correct": false,
-                        "explanation": "Participant input can help, but inconsistent formats may omit cross-team decisions."
+                        "explanation": "Asking participants helps. Everyone sends a different format, and the cross-team decision is missing."
                       },
                       {
                         "id": "d",
                         "label": "Remember the three most important items and ignore the rest.",
                         "correct": false,
-                        "explanation": "Unrecorded actions are easy to miss and difficult to audit later."
+                        "explanation": "Unrecorded actions come back later. As an escalation."
                       }
                     ]
                   },
@@ -718,25 +718,25 @@
                         "id": "a",
                         "label": "Reserve 90 minutes every Friday to write it from scratch.",
                         "correct": false,
-                        "explanation": "Manual drafting works, but repeated structure is suitable for a reusable, reviewed template."
+                        "explanation": "It works. A weekly report with a fixed structure is asking for a reviewed template."
                       },
                       {
                         "id": "b",
                         "label": "Provide an approved activity list and ask Claude for a factual three-section draft: highlights, problems and next week. Remove unsupported claims before sending.",
                         "correct": true,
-                        "explanation": "This uses drafting and a stable structure. Measure the actual time saved rather than assuming it."
+                        "explanation": "Drafting with a stable structure. Then you time it instead of assuming a saving."
                       },
                       {
                         "id": "c",
                         "label": "Hold a status call with every project lead and then summarize it.",
                         "correct": false,
-                        "explanation": "Calls may be needed for decisions, but collecting routine updates asynchronously can reduce meeting time."
+                        "explanation": "Decisions need conversations. Routine updates you collect asynchronously and check afterwards."
                       },
                       {
                         "id": "d",
                         "label": "Tell management there will be no report this week.",
                         "correct": false,
-                        "explanation": "Missing an agreed report reduces visibility into project risks."
+                        "explanation": "Skipping an agreed report hides the project risks. And costs you credibility."
                       }
                     ]
                   }
@@ -752,21 +752,21 @@
           "title": "Tasks 1 to 5",
           "readTimeMinutes": 3,
           "content": "**Task 1: Draft emails from bullet points**\n> \"Fictional notes: Customer Alpha, delayed delivery, unverified target date, request for batch number. Create an internal email draft and mark every commitment for review.\"\n\n**Task 2: Prepare for meetings from approved records**\n> \"I have a practice meeting with Customer Alpha at 15:00. Here are fictional sample emails and notes. List open points, documented interests and three questions. Do not infer motives.\"\n\n**Task 3: Extract action items from a meeting**\n> \"Here is an approved or fictional transcript. Extract decisions, action items with owners and dates, and open questions. Mark uncertainty.\"\n\n**Task 4: Research for a decision**\n> \"Compare accounting systems using current official sources. Separate documented features, current prices and unresolved contract or privacy questions.\"\n\n**Task 5: Draft a form**\n> \"Fictional Customer Alpha needs a fictional sample machine. Fill the quotation template only with confirmed information; keep price, payment term and delivery date as reviewed placeholders.\"",
-          "keyTakeaway": "Email drafts, meeting preparation, action extraction, research and form drafts are candidates for bounded assistance."
+          "keyTakeaway": "Email drafts, meeting prep, action items, research, form drafts: five candidates for bounded assistance."
         },
         {
           "id": "modul_1_lesson_4_section_2",
           "title": "Tasks 6 to 10",
           "readTimeMinutes": 3,
           "content": "**Task 6: Clean data in Excel**\n> \"Here is a fictional CSV export with inconsistent labels for Customer Alpha and mixed date formats. Normalize it according to the supplied rules and log every change.\"\n\n**Task 7: Structure a presentation from source material**\n> \"Here are approved notes and three charts. Propose a structure with source references and mark unsupported statements.\"\n\n**Task 8: Draft SQL for a database lookup**\n> \"In a test database, I need revenue by fictional customer for the last quarter. Write read-only SQL and explain every assumption.\"\n\n**Task 9: Translate and localize**\n> \"Here is a fictional German customer letter. Translate it into English and flag legally or culturally uncertain wording for review.\"\n\n**Task 10: Draft a status update**\n> \"Here is an approved activity list. Prepare a factual draft with highlights, problems, uncertainties and next steps.\"",
-          "keyTakeaway": "These tasks do not require an AI specialist, but each needs appropriate data controls and review."
+          "keyTakeaway": "No AI specialist needed for any of this. Data control and review still are."
         },
         {
           "id": "modul_1_lesson_4_section_3",
           "title": "The main source of friction",
           "readTimeMinutes": 2,
-          "content": "The ten examples are ordinary knowledge-work tasks. You do not need a separate AI program to test one bounded workflow, but you may need organizational approval before entering data into a tool.\n\nChoose one task with low-risk or fictional data. Define the input, expected output and review criteria. Run the manual and AI-assisted versions, then compare time, factual accuracy and correction effort.\n\nScale only after the test demonstrates a benefit and the data use is approved.",
-          "keyTakeaway": "Start with one bounded task and measure the result before expanding the workflow."
+          "content": "Ten ordinary knowledge tasks. Testing one needs no AI program and no large project. It can need your organization's approval before any data moves.\n\nTake one task with low-risk or fictional data. Fix the input, the expected result and the review criteria. Then run it both ways, by hand and with Claude, and compare time, accuracy and correction effort.\n\nScale only when the test shows a benefit and the data use is approved. Not before.",
+          "keyTakeaway": "One bounded task, one measured result. Expand after that."
         }
       ],
       "quiz": [
@@ -795,7 +795,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Organizational scope can become the barrier. A low-risk, reversible use case can be tested with defined inputs, review criteria and approval."
+          "explanation": "The apparatus around the test becomes the obstacle. A low-risk, reversible use case needs defined inputs, review criteria and approval. Nothing else."
         },
         {
           "id": "modul_1_lesson_4_q2",
@@ -855,22 +855,22 @@
           "id": "modul_1_lesson_5_section_1",
           "title": "The five dimensions",
           "readTimeMinutes": 3,
-          "content": "This self-assessment uses five dimensions. It is a diagnostic framework, not an externally validated competency standard.\n\n**1. Drafting:** do you create first drafts with Claude where appropriate, or write every version manually?\n\n**2. Delegation:** do you assign complete, bounded tasks with context, or request isolated fragments?\n\n**3. Automation:** do approved workflows run automatically, or does every step require a manual trigger?\n\n**4. Knowledge:** can you query an approved knowledge base and cite its records, or is information fragmented across memory and email?\n\n**5. Governance:** can you classify data and apply organizational rules, including GDPR and the EU AI Act?\n\nEach dimension has five levels:\n- Level 0: Never\n- Level 1: Occasional, unstructured use\n- Level 2: Regular, deliberate use\n- Level 3: Default method for suitable tasks\n- Level 4: Consistent method with defined controls\n\nScore observed behavior, not intent.",
-          "keyTakeaway": "Record a baseline now and apply the same assessment after the course."
+          "content": "This test does not score ability. It scores behavior. Five dimensions, a diagnostic model, not an externally validated competency standard.\n\n**1. Drafting:** do first drafts come out of Claude, or do you write every version yourself?\n\n**2. Delegation:** do you hand over whole, bounded tasks with context, or single fragments?\n\n**3. Automation:** do approved workflows run on their own, or does every step wait for your click?\n\n**4. Knowledge:** can you query an approved knowledge base and cite every record, or does it sit in heads and inboxes?\n\n**5. Governance:** can you classify data and apply your organization's rules, GDPR and the EU AI Act included?\n\nEach dimension has five levels:\n- Level 0: never\n- Level 1: occasional, unstructured\n- Level 2: regular and deliberate\n- Level 3: default for suitable tasks\n- Level 4: consistent, with defined controls\n\nScore what you do. Not what you intend.",
+          "keyTakeaway": "Record the starting point now, run the same assessment later."
         },
         {
           "id": "modul_1_lesson_5_section_2",
           "title": "The test: ten scenarios",
           "readTimeMinutes": 5,
-          "content": "Review each scenario and select what you **actually do today**, not what you intend to do.\n\n**Scenario 1, Drafting:** A customer email requires a reply today.\nA) I open Google Docs and type it from scratch\nB) I open Claude and enter brief notes\nC) I give Claude the approved email, role, context and task, then review the draft\nD) I use a reviewed skill such as `/customer-reply`\n\n**Scenario 2, Delegation:** You need a job advertisement.\nA) I open Word and type it from scratch\nB) I ask Claude to \"write a job advertisement\"\nC) I provide the role, approved company context, work profile and salary range\nD) I use a maintained Project brief and specify only the case-specific details\n\n**Scenario 3, Automation:** A website form inquiry arrives.\nA) I copy it into the CRM manually\nB) The form writes to the CRM\nC) The form writes to the CRM and prepares a reply draft for review\nD) An approved workflow handles routing, drafting and review assignment\n\n**Scenario 4, Knowledge:** A manager asks what was decided about a subject in January.\nA) I rely on memory\nB) I search email, Notion and file storage\nC) I query an approved knowledge tool and open the cited record\nD) I use a maintained decision-log workflow with source links\n\n**Scenario 5, Governance:** A colleague asks whether customer data may be entered into ChatGPT.\nA) I do not know\nB) I assume GDPR prohibits it\nC) I classify the data and apply the approved tool policy\nD) I refer to a maintained AI policy and escalation owner\n\n_(Scenarios 6 to 10 are in the Fluency Test on the AI-Native page.)_",
-          "keyTakeaway": "Use the published scoring rule consistently; the result is a baseline, not a certification."
+          "content": "Read each scenario and pick what you **actually do today**. Not what you plan to.\n\n**Scenario 1, Drafting:** A customer email requires a reply today.\nA) I open Google Docs and type it from scratch\nB) I open Claude and enter brief notes\nC) I give Claude the approved email, role, context and task, then review the draft\nD) I use a reviewed skill such as `/customer-reply`\n\n**Scenario 2, Delegation:** You need a job advertisement.\nA) I open Word and type it from scratch\nB) I ask Claude to \"write a job advertisement\"\nC) I provide the role, approved company context, work profile and salary range\nD) I use a maintained Project brief and specify only the case-specific details\n\n**Scenario 3, Automation:** A website form inquiry arrives.\nA) I copy it into the CRM manually\nB) The form writes to the CRM\nC) The form writes to the CRM and prepares a reply draft for review\nD) An approved workflow handles routing, drafting and review assignment\n\n**Scenario 4, Knowledge:** A manager asks what was decided about a subject in January.\nA) I rely on memory\nB) I search email, Notion and file storage\nC) I query an approved knowledge tool and open the cited record\nD) I use a maintained decision-log workflow with source links\n\n**Scenario 5, Governance:** A colleague asks whether customer data may be entered into ChatGPT.\nA) I do not know\nB) I assume GDPR prohibits it\nC) I classify the data and apply the approved tool policy\nD) I refer to a maintained AI policy and escalation owner\n\n_(Scenarios 6 to 10 are in the Fluency Test on the AI-Native page.)_",
+          "keyTakeaway": "Same scoring rule on every run. The result is a starting value, not a qualification."
         },
         {
           "id": "modul_1_lesson_5_section_3",
-          "title": "How to interpret the score",
+          "title": "What your score tells you",
           "readTimeMinutes": 2,
-          "content": "**Interpretation used by this course:**\n- **0 to 2 per dimension:** limited observed use; identify one controlled practice task\n- **3 to 4 per dimension:** regular use, but not yet consistent across suitable tasks\n- **5 to 6 per dimension:** consistent use of the assessed behaviors\n\nThe course does not publish a representative population benchmark for this assessment. Do not compare your result with an unsupported average.\n\nInstead, record your own baseline and repeat the same test after completing Modules 2 to 4. Compare the evidence behind each answer: completed workflows, source checks, approvals and governance controls.",
-          "keyTakeaway": "Use your own repeated score and supporting evidence; no population benchmark is claimed."
+          "content": "**How this course reads the result:**\n- **0 to 2 per dimension:** little observed use; pick one controlled practice task\n- **3 to 4 per dimension:** regular, but not yet across every suitable task\n- **5 to 6 per dimension:** consistent use of the assessed behaviors\n\nThere is no comparison value here. This course has not measured a representative average, and you do not measure yourself against an unsupported number.\n\nYou are your own benchmark. Repeat the test after Modules 2 to 4 and compare the evidence behind each answer: completed workflows, source checks, approvals, governance controls.",
+          "keyTakeaway": "Your own score, measured again and evidenced. This course claims no population comparison."
         }
       ],
       "quiz": [
