@@ -23,7 +23,7 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Orchestrierung: <span class='accent'>Wiederholungen gehören zum Betrieb.</span> Sicher sind sie nur bei idempotenten Schreibvorgängen."
-        hook="Airflow ist der Scheduler der Kursarchitektur. Konfigurierte Wiederholungen, manuelle Neustarts und Backfills können einen Task erneut ausführen. Jeder Task muss festlegen, wie Wiederholungen Ausgaben und Nebeneffekte behandeln."
+        hook="Airflow ist der Scheduler der Kursarchitektur. Konfigurierte Wiederholungen, manuelle Neustarts und Backfills führen denselben Task erneut aus. Jeder Task sagt selbst, was eine Wiederholung mit Ausgaben und Nebeneffekten macht."
         meta={[
           { k: "Scheduler", v: "Airflow · Cron + DAG" },
           { k: "Einheit", v: "Task · eine Operation auf einer Partition" },
@@ -35,16 +35,19 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
         <SectionLabel n="5.1">Pipelines sind Graphen</SectionLabel>
         <h2 className="h2">Ein DAG aus Tasks, Partition für Partition.</h2>
         <p className="prose">
-          Eine geplante Pipeline kann als <b>gerichteter azyklischer Graph</b> dargestellt werden. Knoten sind
-          Tasks, etwa das Lesen einer Tabelle oder das Schreiben einer
-          Partition. Kanten bilden Datenabhängigkeiten ab: <em>agg</em> kann erst
-          starten, wenn <em>clean</em> vorliegt. Airflow plant bereite Knoten. Wiederholung, Löschen eines Task-Zustands, Backfill und
-          nachgelagertes Verhalten hängen von DAG-Konfiguration und Operatorsemantik ab.
+          Eine geplante Pipeline ist ein <b>gerichteter azyklischer Graph</b>.
+          Knoten sind Tasks, etwa das Lesen einer Tabelle oder das Schreiben
+          einer Partition. Kanten sind Datenabhängigkeiten: <em>agg</em> startet
+          erst, wenn <em>clean</em> vorliegt. Airflow plant, was bereit ist. Wie
+          Wiederholung, gelöschter Task-Zustand und Backfill ausgehen, hängt an
+          DAG-Konfiguration und Operatorsemantik.
         </p>
         <DAGDiagram />
         <p className="prose" style={{ marginTop: 18 }}>
-          Idempotenz ist ein Vertrag des Tasks und keine Zusage des Schedulers. Bei denselben logischen Eingaben soll eine Wiederholung auf den
-          vorgesehenen Zustand zulaufen oder doppelte Nebeneffekte erkennbar und unterdrückbar machen.
+          Idempotenz ist ein Vertrag des Tasks, keine Zusage des Schedulers.
+          Bei denselben logischen Eingaben läuft eine Wiederholung auf den
+          vorgesehenen Zustand zu, oder sie macht doppelte Nebeneffekte
+          erkennbar und unterdrückbar.
         </p>
       </section>
 
@@ -74,7 +77,7 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
           "<b>Auf einem wiederholbaren Pfad ohne stabilen Schlüssel anhängen.</b> Mehrere Versuche können Duplikate erhalten, wenn das Ziel keinen idempotenten Merge- oder Deduplizierungsvertrag besitzt.",
           "<b>Externe Nebeneffekte mit dem Datenschreiben vermischen.</b> Benachrichtigungen und API-Schreibvorgänge auslagern und mit Idempotenzschlüssel oder Zustellungs-Ledger schützen.",
           "<b><code>CURRENT_DATE</code> oder <code>NOW()</code> zur Auswahl der logischen Partition verwenden.</b> Die geplante Partition explizit übergeben.",
-          "<b>Vorhandene Alarmierung annehmen.</b> Fristen, Callbacks, Zuständigkeit und Routing ausdrücklich konfigurieren und den Fehlerpfad testen.",
+          "<b>Auf Alarmierung vertrauen, die niemand konfiguriert hat.</b> Setz Fristen, Callbacks, Zuständigkeit und Routing ausdrücklich; test den Fehlerpfad.",
         ]}
       />
       <BestPractices
@@ -89,7 +92,7 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "Airflow kann Tasks durch Wiederholungen, Löschen von Zuständen und Backfills mehrfach ausführen. Das Task-Design muss dieses Modell berücksichtigen.",
+          "Airflow führt Tasks durch Wiederholungen, gelöschte Zustände und Backfills mehrfach aus. Dein Task-Design rechnet damit.",
           "Ein logisches Datum, deterministische Eingabeauswahl und geeignete Zielsemantik können einen Partitionsschreibvorgang idempotent machen.",
           "Externe Nebeneffekte isolieren und mit stabilen Idempotenzschlüsseln oder einem Zustellungs-Ledger schützen.",
         ]}

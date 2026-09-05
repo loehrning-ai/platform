@@ -13,7 +13,7 @@ export default function Ch06EvaluateDe() {
       <Hero
         eyebrow="Kapitel 06 · Evaluation"
         title='Die Metrik <em>vor</em> <span class="accent">dem Modell auswählen.</span>'
-        hook="Metrik und Schwellenwert kodieren Fehlerkosten, Klassenhäufigkeit, Kalibrierungsbedarf und Betriebskapazität. Die synthetische Score-Verteilung macht diese Zielkonflikte sichtbar."
+        hook="In Metrik und Schwellenwert stecken Fehlerkosten, Klassenhäufigkeit, Kalibrierungsbedarf und Betriebskapazität. Die synthetische Score-Verteilung legt diese Zielkonflikte offen."
         meta={[
           { k: "Lesezeit", v: "8 min" },
           { k: "Inhalt", v: "Konfusionsmatrix · ROC · PR" },
@@ -27,10 +27,11 @@ export default function Ch06EvaluateDe() {
           Vier Felder. <em>Eintausend Entscheidungen.</em>
         </h2>
         <p className="prose">
-          An einem Schwellenwert ergeben binäre Vorhersagen TP, FP, FN und TN.
-          Präzision, Recall, Spezifität und F1 werden daraus berechnet. ROC-AUC
-          und PR-AUC fassen mehrere Schwellenwerte zusammen; Log Loss und
-          Kalibrierung nutzen die Wahrscheinlichkeitswerte direkt.
+          Ein Schwellenwert macht aus Scores binäre Vorhersagen, und daraus
+          werden TP, FP, FN und TN. Präzision, Recall, Spezifität und F1 rechnen
+          sich aus diesen vier Feldern. ROC-AUC und PR-AUC fassen mehrere
+          Schwellenwerte zusammen; Log Loss und Kalibrierung greifen direkt auf
+          die Wahrscheinlichkeitswerte zu.
         </p>
         <ThresholdSim />
       </section>
@@ -62,9 +63,9 @@ export default function Ch06EvaluateDe() {
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<b>Nur Genauigkeit für seltene Ereignisse berichten.</b> Bei 0.1% Ereignisrate ergibt eine durchgehend negative Vorhersage 99.9% Genauigkeit und erkennt kein Ereignis.",
-            "<b>Trainings- und Entscheidungsziel ungeprüft vermischen.</b> Ein auf Log Loss optimiertes Modell kann für Kosten geschwellenwertet werden; Kalibrierung und Betriebsmetriken benötigen jeweils Validierung.",
-            "<b>τ=0.5 als Standard übernehmen.</b> Der Schwellenwert muss das Kostenverhältnis des Anwendungsfalls abbilden, nicht die Bibliotheksvorgabe.",
+            "<b>Bei seltenen Ereignissen nur Genauigkeit berichten.</b> Bei 0.1% Ereignisrate liefert ein Modell, das immer negativ sagt, 99.9% Genauigkeit und erkennt kein einziges Ereignis.",
+            "<b>Trainingsziel und Entscheidungsziel ungeprüft vermischen.</b> Ein auf Log Loss optimiertes Modell lässt sich auf Kosten schwellenwerten; Kalibrierung und Betriebsmetriken brauchen dann jeweils eigene Validierung.",
+            "<b>τ=0.5 einfach stehen lassen.</b> Der Schwellenwert bildet das Kostenverhältnis deines Anwendungsfalls ab, nicht die Bibliotheksvorgabe.",
           ]}
         />
       </section>
@@ -73,7 +74,7 @@ export default function Ch06EvaluateDe() {
         title="Kernaussagen"
         items={[
           "<b>Eine Metrik enthält ein Werturteil.</b> Sie legt fest, welcher Fehler schwerer wiegt.",
-          "<b>Der Schwellenwert ist ein Stellhebel, keine Vorgabe.</b> Er muss angepasst werden.",
+          "<b>Der Schwellenwert ist ein Stellhebel, keine Vorgabe.</b> Stell ihn ein.",
           "<b>Kalibrierung betrifft Gruppen von Vorhersagen.</b> Unter Fällen mit Score nahe 0.7 sollten über die angegebene Population und Zeit ungefähr 70% positiv sein; dies garantiert nichts für einen Einzelfall.",
         ]}
       />

@@ -33,7 +33,7 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Verarbeitung: <span class='accent'>Der Planer entscheidet anhand von Statistiken.</span> Falsche Statistiken erzeugen einen falschen Plan."
-        hook="Ein kostenbasierter Planer verwendet Tabellenstatistiken und Konfiguration, um eine Join-Strategie zu wählen. Veraltete oder unvollständige Statistiken können eine Build-Seite oder Verteilung wählen, die den Arbeitsspeicher überschreitet oder Arbeit auf wenige Partitionen konzentriert."
+        hook="Ein kostenbasierter Planer wählt die Join-Strategie aus Tabellenstatistiken und Konfiguration. Sind die Statistiken veraltet oder unvollständig, landet er bei einer Build-Seite oder Verteilung, die den Arbeitsspeicher sprengt oder alle Arbeit auf wenige Partitionen kippt."
         meta={[
           { k: "Engines", v: '<span class="chip">Presto</span><span class="chip">Spark</span><span class="chip">Snowflake</span>' },
           { k: "Planer", v: "CBO · statistikbasiert" },
@@ -44,14 +44,14 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
       <section className="section">
         <SectionLabel n="4.1">Die Engine nach der Abfrage wählen</SectionLabel>
         <h2 className="h2">Drei Engines, dieselben Bytes.</h2>
-        <p className="prose">Engines mit Unterstützung für dasselbe Tabellenformat und denselben Katalog können dieselben Parquet-Dateien lesen. Die Auswahl folgt gemessenen Anforderungen: Start- und Antwortzeit, Shuffle-Volumen, Speicher und Spill, Wiederholungsverhalten, Parallelität, Betriebsverantwortung und Kosten.</p>
+        <p className="prose">Jede Engine, die dasselbe Tabellenformat und denselben Katalog unterstützt, liest dieselben Parquet-Dateien. Entschieden wird nach gemessenen Anforderungen: Start- und Antwortzeit, Shuffle-Volumen, Speicher und Spill, Wiederholungsverhalten, Parallelität, Betriebsverantwortung und Kosten.</p>
         <EngineMatrixDe />
       </section>
 
       <section className="section">
         <SectionLabel n="4.2">Der Planer im Simulator</SectionLabel>
         <h2 className="h2">Die tatsächliche Ausführung eines Joins.</h2>
-        <p className="prose">Ein partitionierter <b>Hash-Join</b> verteilt Zeilen nach dem Join-Schlüssel neu. Ungleiche Schlüsselhäufigkeit kann einem Worker deutlich mehr Daten zuweisen. Ein <b>Broadcast-Join</b> kopiert die Build-Seite auf Worker und ist nur geeignet, wenn sie mit Reserve neben der übrigen Abfrage in deren Arbeitsspeicher passt.</p>
+        <p className="prose">Ein partitionierter <b>Hash-Join</b> verteilt Zeilen nach dem Join-Schlüssel neu. Ist ein Schlüssel viel häufiger als die anderen, bekommt ein Worker deutlich mehr Daten als der Rest. Ein <b>Broadcast-Join</b> kopiert die Build-Seite auf jeden Worker und taugt nur, wenn sie dort mit Reserve neben der übrigen Abfrage in den Arbeitsspeicher passt.</p>
         <p className="prose">Erhöhe den Skew und beobachte, wie Worker 0 mehr modellierte Last erhält. Ein häufiger Sentinel-Wert wie <code>user_id = 0</code> kann diese Verteilung erzeugen, wenn er Teil des Join-Schlüssels ist.</p>
         <ShuffleSim />
       </section>
@@ -61,7 +61,7 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
         items={[
           "<b>Eine ungemessene Build-Seite per Broadcast verteilen.</b> Komprimierte und entpackte Größe, Worker-Anzahl, parallele Arbeit und Speichergrenzen vor einem Hint prüfen.",
           "<b>Einen Hash-Join über eine Spalte mit einem stark belasteten Schlüssel ausführen.</b> Typisches Beispiel: <code>user_id = 0</code> für abgemeldeten Verkehr. Den Schlüssel salzen oder vorher filtern.",
-          "<b>Annehmen, eine Engine könne oder werde auslagern.</b> Genaue Engine-Version, Operatorunterstützung und Clusterkonfiguration vor der Zuweisung eines großen Joins prüfen.",
+          "<b>Darauf setzen, dass die Engine schon auslagern wird.</b> Prüf Engine-Version, Operatorunterstützung und Clusterkonfiguration, bevor du ihr einen großen Join gibst.",
           "<b>Veraltete Tabellenstatistiken verwenden.</b> Nach wesentlichen Datenänderungen aktualisieren und Schätzungen im Plan mit Laufzeitzeilen vergleichen.",
         ]}
       />
@@ -77,7 +77,7 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
         title="Kernaussagen"
         items={[
           "Der Planer wählt <b>Shuffle oder Broadcast</b> anhand von Statistiken, Konfiguration und Hints. Schätzungen mit Laufzeitdaten prüfen.",
-          "Skew konzentriert Arbeit. Schlüssel- und Partitionsverteilungen prüfen, bevor die Clustergröße als Ursache gilt.",
+          "Skew konzentriert Arbeit. Schau auf Schlüssel- und Partitionsverteilungen, bevor du die Clustergröße verantwortlich machst.",
           "Die Engine-Wahl gehört zum Jobdesign. Die Zielabfrage mit Zielkonfiguration und repräsentativer Datenverteilung testen.",
         ]}
       />

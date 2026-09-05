@@ -21,7 +21,7 @@ export default function Ch12CapstoneDe() {
       <Hero
         eyebrow="Kapitel 12 · Abschlussprojekt"
         title='<em>Kreditkartenbetrug erkennen:</em> <span class="accent">der vollständige Data-Science-Zyklus.</span>'
-        hook="Ein öffentlicher Datensatz mit 284,807 Transaktionen und 492 erfassten Betrugsfällen. Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung werden verbunden, ohne die Lehrsimulation als Produktionsmodell auszugeben."
+        hook="Ein öffentlicher Datensatz, 284,807 Transaktionen, 492 erfasste Betrugsfälle. Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung greifen hier ineinander. Die Lehrsimulation bleibt dabei eine Lehrsimulation, kein Produktionsmodell."
         meta={[
           { k: "Datensatz", v: "Kaggle · 284K Transaktionen" },
           { k: "Ziel", v: "Betrug · 0.17% Basisrate" },
@@ -36,14 +36,14 @@ export default function Ch12CapstoneDe() {
           Fälle je Betrugsfall.
         </h2>
         <p className="prose">
-          Der öffentliche Credit-Card-Fraud-Datensatz eignet sich zur Analyse
-          von starkem Klassenungleichgewicht, anonymisierten Eingaben und
-          Evaluationsentscheidungen. Eine Basislinie, die alles als legitim
-          vorhersagt, <strong>99.83% Genauigkeit</strong> erreicht und keinen
-          Betrugsfall erkennt. Genauigkeit allein verdeckt diesen Fehler. PR-AUC
-          beschreibt die Rangfolge bei ungleichen Klassen; ein operativer
-          Schwellenwert benötigt zusätzlich Kosten, Kapazität, Kalibrierung und
-          eine zeitgerechte Validierung.
+          Der öffentliche Credit-Card-Fraud-Datensatz zeigt starkes
+          Klassenungleichgewicht, anonymisierte Eingaben und harte
+          Evaluationsentscheidungen auf einmal. Eine Basislinie, die alles als
+          legitim vorhersagt, erreicht <strong>99.83% Genauigkeit</strong> und
+          erkennt keinen einzigen Betrugsfall. Genauigkeit deckt diesen Fehler
+          zu. PR-AUC beschreibt die Rangfolge bei ungleichen Klassen; für einen
+          operativen Schwellenwert brauchst du zusätzlich Kosten, Kapazität,
+          Kalibrierung und eine zeitgerechte Validierung.
         </p>
         <DatasetExplorer />
       </section>
@@ -54,11 +54,11 @@ export default function Ch12CapstoneDe() {
           Sechs Entscheidungen. Jede entspricht einem Kapitel dieses Kurses.
         </h2>
         <p className="prose">
-          Jeden Pipeline-Schritt in Reihenfolge ausführen. Die Ausgabe eines
-          Schritts wird zur Eingabe des nächsten. Das Protokoll zeigt, wo
-          Leakage entstehen kann. Der klassische Fehler ist die Skalierung vor
-          dem Split; diese lokale Sequenz verhindert genau diesen Fehler, prüft
-          aber keine reale Pipeline.
+          Führ die Schritte der Reihe nach aus. Die Ausgabe des einen ist die
+          Eingabe des nächsten, und das Protokoll zeigt dir, wo Leakage
+          entstehen kann. Der Klassiker bleibt die Skalierung vor dem Split.
+          Diese lokale Sequenz schließt genau diesen Fehler aus und prüft
+          trotzdem keine reale Pipeline.
         </p>
         <PipelineProgress />
       </section>
@@ -67,8 +67,8 @@ export default function Ch12CapstoneDe() {
         title="Fehlmuster"
         items={[
           "<b>Den Scaler am vollständigen Datensatz anpassen.</b> Der Scaler wird nur am Training angepasst und dann auf den Test angewendet. Eine Anpassung an allen Daten überträgt Teststatistiken ins Training.",
-          "<b>Nach der Skalierung stratifizieren.</b> Zuerst aufteilen, danach skalieren. Die Reihenfolge ist relevant.",
-          "<b>Nur Genauigkeit verwenden.</b> Bei einer Ereignisrate von 0.17% sieht eine triviale Mehrheitsvorhersage genau aus. Ranking, Kalibrierung, Schwellenwerte und Kosten ergänzen.",
+          "<b>Nach der Skalierung stratifizieren.</b> Erst aufteilen, dann skalieren. Die Reihenfolge entscheidet.",
+          "<b>Nur Genauigkeit berichten.</b> Bei einer Ereignisrate von 0.17% sieht sogar eine triviale Mehrheitsvorhersage gut aus. Nimm Ranking, Kalibrierung, Schwellenwerte und Kosten dazu.",
           "<b>Verfahren für Klassenungleichgewicht ungeprüft lassen.</b> Gewichtung, Resampling, Schwellenwertwahl und geeignete Zielfunktionen innerhalb des Validierungsdesigns vergleichen; kein einzelnes Verfahren ist vorgeschrieben.",
         ]}
       />
@@ -91,11 +91,11 @@ export default function Ch12CapstoneDe() {
           fachliche Entscheidung.
         </h2>
         <p className="prose">
-          Jedes Betrugsmodell erzeugt je Transaktion einen
-          Wahrscheinlichkeitswert. Der Grenzwert wird fachlich festgelegt. Zu
-          niedrig: Viele legitime Kunden werden als Betrugsfälle markiert und
-          die Betriebskosten steigen. Zu hoch: Echte Betrugsfälle bleiben
-          unentdeckt und verursachen Umsatz- sowie Reputationsschäden.
+          Jedes Betrugsmodell liefert je Transaktion einen
+          Wahrscheinlichkeitswert. Wo der Grenzwert liegt, entscheidet die
+          Fachseite. Zu niedrig: Die Sachbearbeiterin im Fraud-Team prüft
+          reihenweise legitime Kunden, und die Betriebskosten steigen. Zu hoch:
+          Echte Betrugsfälle laufen durch und kosten Umsatz und Reputation.
           <strong>
             {" "}
             Der Kostenrechner untersucht dieses synthetische Kostenmodell; reale
@@ -114,10 +114,10 @@ export default function Ch12CapstoneDe() {
           Engineering-System.
         </h2>
         <p className="prose">
-          Bevor ein Betrugsmodell eine Live-Transaktion beeinflusst, muss für
-          die relevanten Prüffelder Evidenz vorliegen. Diese acht Lehrpunkte
-          stoßen die Prüfung an; Häkchen im Browser beseitigen keinen
-          Fehlermodus und genehmigen kein Deployment.
+          Bevor ein Betrugsmodell eine Live-Transaktion anfasst, liegt für jedes
+          relevante Prüffeld Evidenz vor. Diese acht Lehrpunkte stoßen die
+          Prüfung an. Ein Häkchen im Browser beseitigt keinen Fehlermodus und
+          genehmigt kein Deployment.
         </p>
         <PostDeployChecklist />
       </section>
@@ -137,7 +137,7 @@ export default function Ch12CapstoneDe() {
           "<b>Rollout-Evidenz aus dem Risiko ableiten.</b> Repräsentativen Verkehr, Beobachtungsdauer, verzögerte Labels, Leitplanken und Abbruchverhalten statt einer festen Shadow-Frist definieren.",
           "<b>Unveränderliche Kandidaten gegen einen schriftlichen Vertrag freigeben.</b> Unsicherheitsbewusste Ergebnismetriken und Sicherheitsleitplanken verlangen, kein festes Sprint-Ritual.",
           "<b>Alarmgrenzen an Auswirkungen auf Geschäft und Nutzer koppeln.</b> Quantile und Driftstatistiken sind Eingaben, keine selbstbegründenden Aktionsgrenzen.",
-          "<b>Model Cards als Dokumentation verwenden, nicht als Compliance-Nachweis.</b> Anwendbare rechtliche und Governance-Pflichten benötigen eine separate systemspezifische Prüfung.",
+          "<b>Model Cards sind Dokumentation, kein Nachweis gegenüber einer Aufsicht.</b> Rechtliche und Governance-Pflichten brauchen eine eigene, systemspezifische Prüfung.",
         ]}
       />
       <Takeaway
@@ -155,10 +155,10 @@ export default function Ch12CapstoneDe() {
         <div className="ov-cta-eyebrow">Der Kurs ist abgeschlossen.</div>
         <div className="ov-cta-title">Jetzt ein reales Problem bearbeiten.</div>
         <div className="ov-cta-sub">
-          Einen realen Datensatz wählen, den vollständigen Zyklus durchlaufen
-          und v1 ausliefern. Danach anhand der Beobachtungen weiterarbeiten.
-          Data Science wird durch die Arbeit an einem relevanten Problem
-          gelernt.
+          Such dir einen echten Datensatz, lauf den Zyklus einmal ganz durch,
+          liefer v1 aus. Danach arbeitest du an dem weiter, was du beobachtet
+          hast. Data Science lernt man an einem Problem, das einen wirklich
+          interessiert.
         </div>
         <div className="ov-cta-row">
           <Link

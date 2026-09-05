@@ -17,7 +17,7 @@ export default function Ch04FeatureDe() {
       <Hero
         eyebrow="Kapitel 04 · Merkmalskonstruktion"
         title="Merkmalsdesign definiert <em>die Modelleingabe.</em>"
-        hook="Merkmalsdesign bestimmt, welche Information das Modell erreicht und ob dieselben Werte bei der Inferenz verfügbar sind. Kodierung, nichtlineare Terme, Auswahl und Interaktionen werden unter einem Leakage-sicheren Validierungsplan verglichen."
+        hook="Was hier nicht ins Merkmal kommt, sieht das Modell nie. Und was hineinkommt, muss bei der Inferenz noch da sein. Kodierung, nichtlineare Terme, Auswahl und Interaktionen vergleichst du Leakage-sicher."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           { k: "Inhalt", v: "Kodieren · Erweitern · Auswählen · Interagieren" },
@@ -29,13 +29,13 @@ export default function Ch04FeatureDe() {
         <SectionLabel n="04.1">Kategoriale Merkmale kodieren</SectionLabel>
         <h2 className="h2">Vier Verfahren. Ein häufiger Fehler.</h2>
         <p className="prose">
-          Modelle verarbeiten Zahlen, während viele Eingaben Kategorien sind.{" "}
-          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab, kann
-          aber viele Spalten erzeugen. <strong>Target Encoding</strong> nutzt
-          Labels und benötigt deshalb fold-lokale Schätzung, Glättung und Regeln
-          für unbekannte Kategorien. Ganzzahlige Codes führen für Modelle mit
-          numerischer Distanz eine Rangfolge ein; Frequency Encoding verbindet
-          gleich häufige Kategorien.
+          Modelle rechnen mit Zahlen. Viele Eingaben sind Kategorien.{" "}
+          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab und
+          bezahlt mit Spalten. <strong>Target Encoding</strong> greift auf
+          Labels zu und braucht fold-lokale Schätzung, Glättung und eine Regel
+          für unbekannte Kategorien. Ganzzahlige Codes schmuggeln für Modelle
+          mit numerischer Distanz eine Rangfolge ein; Frequency Encoding wirft
+          gleich häufige Kategorien zusammen.
         </p>
         <EncodingComparison />
       </section>
@@ -43,8 +43,8 @@ export default function Ch04FeatureDe() {
         title="Fehlmuster"
         items={[
           "<b>Nominale Kategorien als Zahlenfolge kodieren.</b> Berlin (5) ist nicht fünfmal New York (1).",
-          "<b>Target Encoding vor der Fold-Bildung.</b> Validierungszeilen können eigene oder benachbarte Labels sehen. Encoder in jedem Trainingsfold mit Glättung und Regel für unbekannte Kategorien schätzen.",
-          "<b>Hochkardinale Kennungen ohne Ressourcenplan one-hot kodieren.</b> Hashing, gruppierte Kategorien oder gelernte Encoder unter Speicher- und Validierungsgrenzen vergleichen; keine Kategorienzahl ist universell.",
+          "<b>Target Encoding vor der Fold-Bildung.</b> Dann sehen Validierungszeilen eigene oder benachbarte Labels. Schätz den Encoder je Trainingsfold neu, mit Glättung und Regel für unbekannte Kategorien.",
+          "<b>Hochkardinale Kennungen ohne Ressourcenplan one-hot kodieren.</b> Vergleich Hashing, gruppierte Kategorien und gelernte Encoder unter deinen Speicher- und Validierungsgrenzen; eine universelle Kategorienzahl gibt es nicht.",
         ]}
       />
       <BestPractices
@@ -62,10 +62,10 @@ export default function Ch04FeatureDe() {
           Mit x² kann ein lineares Modell eine Krümmung abbilden.
         </h2>
         <p className="prose">
-          Ein lineares Modell zeichnet Geraden. Explizite Merkmale{" "}
-          <code>x²</code> und <code>x³</code> ermöglichen Kurven, ohne das
-          Modell zu wechseln. Zu wenige Terme führen zu Underfitting, zu viele
-          passen Rauschen an.
+          Ein lineares Modell zeichnet Geraden. Mit den Merkmalen{" "}
+          <code>x²</code> und <code>x³</code> zeichnet es Kurven, ohne
+          Modellwechsel. Zu wenige Terme untermodellieren, zu viele lernen
+          Rauschen.
         </p>
         <PolynomialExpansion />
       </section>
@@ -93,9 +93,9 @@ export default function Ch04FeatureDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Merkmale vor dem Train-Test-Split auf dem vollständigen Datensatz auswählen.</b> Das nutzt Information aus dem späteren Testsatz.",
-          "<b>Merkmale nur wegen niedriger Korrelation entfernen.</b> Korrelation misst nur lineare Beziehungen; r=0.04 kann mit hoher Mutual Information zusammenfallen.",
-          "<b>300 Merkmale erzeugen und vollständig auf LASSO vertrauen.</b> Merkmale werden in kleinen, gemessenen Schritten ergänzt.",
+          "<b>Merkmale vor dem Train-Test-Split auf dem vollständigen Datensatz auswählen.</b> Damit nutzt du Information aus dem späteren Testsatz.",
+          "<b>Merkmale wegen niedriger Korrelation wegwerfen.</b> Korrelation misst lineare Beziehungen, sonst nichts; r=0.04 verträgt sich bestens mit hoher Mutual Information.",
+          "<b>300 Merkmale bauen und auf LASSO hoffen.</b> Merkmale kommen in kleinen, gemessenen Schritten dazu.",
         ]}
       />
 
@@ -103,11 +103,10 @@ export default function Ch04FeatureDe() {
         <SectionLabel n="04.4">Interaktionsterme</SectionLabel>
         <h2 className="h2">A × B ist nicht A + B.</h2>
         <p className="prose">
-          Bei einer Interaktion hängt der Effekt von A vom Wert B ab. Die
-          Wirkung einer Anzeige hängt etwa von ihrer Relevanz und der
-          betrachtenden Person ab. Lineare Modelle benötigen dafür ein
-          explizites A×B-Merkmal; Baummodelle können Interaktionen selbst
-          lernen.
+          Bei einer Interaktion hängt der Effekt von A am Wert von B. Ob eine
+          Anzeige wirkt, entscheidet ihre Relevanz zusammen mit der Person
+          davor. Lineare Modelle brauchen ein explizites A×B-Merkmal;
+          Baummodelle lernen Interaktionen selbst.
         </p>
         <InteractionTerms />
       </section>
@@ -123,7 +122,7 @@ export default function Ch04FeatureDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Kodierung ist Teil der Modellentscheidung.</b> Target Encoding mit Leakage erhöht Validierungswerte künstlich.",
+          "<b>Kodierung ist Teil der Modellentscheidung.</b> Target Encoding mit Leakage bläst Validierungswerte künstlich auf.",
           "<b>Polynomiale Erweiterung verändert Bias und Varianz.</b> Die lokale Simulation mit 40 Punkten macht höhere Grade instabil; Basis und Regularisierung auf dem realen Design fold-lokal wählen.",
           "<b>Merkmalsauswahl gehört in die Kreuzvalidierung.</b> Auswahl vor dem Split ist Leakage.",
           "<b>Interaktionssuchen erzeugen Multiplizität.</b> Fachhypothesen verwenden, die Suche innerhalb der Validierung kontrollieren und behaltene Terme auf unberührten Daten bestätigen.",

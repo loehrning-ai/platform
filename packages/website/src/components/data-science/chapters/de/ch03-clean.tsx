@@ -17,7 +17,7 @@ export default function Ch03CleanDe() {
       <Hero
         eyebrow="Kapitel 03 · Datenbereinigung"
         title='Datenqualität bestimmt, <em><span class="accent">was das Modell lernen kann.</span></em>'
-        hook="Fehlwerte, Einheiten, Zeitstempel, Joins, Duplikate und Information nach dem Ergebnis verändern Estimand und verfügbares Signal. Jede Transformation innerhalb der Validierungsgrenze prüfen."
+        hook="Fehlwerte, Einheiten, Zeitstempel, Joins, Duplikate und Information von nach dem Ergebnis verschieben Estimand und verfügbares Signal. Prüf jede Transformation innerhalb der Validierungsgrenze."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           { k: "Inhalt", v: "Fehlwerte · Imputation · Skalierung · Leakage" },
@@ -27,30 +27,28 @@ export default function Ch03CleanDe() {
 
       <section className="section">
         <SectionLabel n="03.1">Fehlwertmechanismen</SectionLabel>
-        <h2 className="h2">
-          Fehlwerte entstehen aus unterschiedlichen Mechanismen.
-        </h2>
+        <h2 className="h2">Fehlt ist nicht gleich fehlt.</h2>
         <p className="prose">
-          Drei Mechanismen beschreiben unterschiedliche Annahmen.{" "}
-          <strong>MCAR</strong> bedeutet, dass das Fehlen von beobachteten und
-          unbeobachteten Werten unabhängig ist. Vollständige Fälle können dann
-          für bestimmte Estimands unverzerrt bleiben, verlieren aber
-          Information. <strong>MAR</strong>
-          bedeutet, dass das Fehlen durch andere beobachtete Spalten erklärbar
-          ist, etwa eine übersprungene deutsche Umfrageseite für EU-Nutzer.{" "}
+          Drei Mechanismen, drei Annahmen. <strong>MCAR</strong> bedeutet, dass
+          das Fehlen von beobachteten und unbeobachteten Werten unabhängig ist;
+          vollständige Fälle bleiben für bestimmte Estimands unverzerrt und
+          kosten trotzdem Information. <strong>MAR</strong> bedeutet, dass
+          andere beobachtete Spalten das Fehlen erklären, etwa eine
+          übersprungene deutsche Umfrageseite für EU-Nutzer.{" "}
           <strong>MNAR</strong> bedeutet, dass der fehlende Wert seine eigene
           Abwesenheit vorhersagt, etwa wenn Personen mit hohem Einkommen die
-          Einkommensfrage auslassen. MNAR benötigt zusätzliche Annahmen,
-          Sensitivitätsanalyse oder ein explizites Modell des Fehlprozesses.
+          Einkommensfrage auslassen. Der dritte Fall ist der teure: Er braucht
+          zusätzliche Annahmen, Sensitivitätsanalyse oder ein Modell des
+          Fehlprozesses.
         </p>
         <MissingnessSim />
         <p className="prose" style={{ marginTop: 18 }}>
-          Bei MNAR steigt die Fehlrate im oberen Wertebereich deutlich. Eine
-          Imputation mit dem beobachteten Mittelwert unterschätzt dann den
-          tatsächlichen Mittelwert. Ein Indikator wie{" "}
-          <code>feature_was_missing</code> ist ein Kandidat, wenn er zum
-          Vorhersagezeitpunkt verfügbar ist, in der Validierung trägt und keinen
-          unzulässigen Proxy für Prozessänderungen oder sensible Gruppen bildet.
+          Bei MNAR steigt die Fehlrate im oberen Wertebereich deutlich, und eine
+          Imputation mit dem beobachteten Mittelwert schätzt den echten
+          Mittelwert zu niedrig. Ein Indikator wie{" "}
+          <code>feature_was_missing</code> ist ein Kandidat, sofern er zum
+          Vorhersagezeitpunkt verfügbar ist, in der Validierung trägt und kein
+          unzulässiger Proxy für Prozessänderungen oder sensible Gruppen ist.
         </p>
       </section>
 
@@ -60,21 +58,20 @@ export default function Ch03CleanDe() {
           Lücken füllen, ohne die Verteilung zu verfälschen.
         </h2>
         <p className="prose">
-          Mittelwert-Imputation verringert die Varianz. Forward-Fill kann in
-          Zeitreihen künstliche Plateaus erzeugen. KNN-Imputation ist
-          aufwendiger, kann aber bei sinnvoller Distanz lokale Struktur
-          abbilden. Die folgende Demo kennt die synthetische Wahrheit. Bei
-          realen Fehlwerten erfordern Methodenvergleich und Unsicherheit
-          konstruierte Holdouts sowie Sensitivitätsanalysen.
+          Mittelwert-Imputation drückt die Varianz. Forward-Fill baut in
+          Zeitreihen künstliche Plateaus. KNN kostet Rechenzeit und bildet bei
+          sinnvoller Distanz lokale Struktur ab. Die Demo hier kennt die
+          synthetische Wahrheit; bei echten Fehlwerten vergleichst du Verfahren
+          und Unsicherheit über konstruierte Holdouts und Sensitivitätsanalysen.
         </p>
         <ImputationRace />
         <AntiPatterns
           title="Fehlmuster bei Imputation"
           items={[
-            "<b>Mit dem Mittelwert des vollständigen Datensatzes imputieren.</b> Der Imputer wird ausschließlich auf dem Trainingssatz angepasst.",
-            "<b>Einen einzelnen Füllwert ohne Prüfung des Estimands wählen.</b> Weder Mittelwert noch Median erhalten gemeinsame Beziehungen oder Imputationsunsicherheit; Verfahren im Validierungsdesign vergleichen.",
-            "<b>Imputationsherkunft verbergen.</b> Erfassen, welche Werte imputiert wurden. Einen Fehlwertindikator nur bei Verfügbarkeit zur Inferenz und geprüftem Nutzen verwenden.",
-            "<b>KNN mit ungeeigneter Distanz verwenden.</b> Numerische Eingaben bei dominierenden Einheiten skalieren, gemischte Daten gezielt kodieren und Nachbarn in der Validierung abstimmen.",
+            "<b>Mit dem Mittelwert des vollständigen Datensatzes imputieren.</b> Der Imputer gehört ausschließlich auf den Trainingssatz.",
+            "<b>Einen Füllwert wählen, ohne den Estimand zu prüfen.</b> Weder Mittelwert noch Median erhalten gemeinsame Beziehungen oder Imputationsunsicherheit; vergleich die Verfahren im Validierungsdesign.",
+            "<b>Die Imputationsherkunft verschwinden lassen.</b> Halt fest, welche Werte imputiert wurden. Einen Fehlwertindikator nimmst du nur bei Inferenzverfügbarkeit und geprüftem Nutzen.",
+            "<b>KNN mit ungeeigneter Distanz fahren.</b> Numerische Eingaben bei dominierenden Einheiten skalieren, gemischte Daten gezielt kodieren, Nachbarn in der Validierung abstimmen.",
           ]}
         />
       </section>
@@ -86,13 +83,13 @@ export default function Ch03CleanDe() {
           <em>Ohne Skalierung dominieren Einheiten das Modell.</em>
         </h2>
         <p className="prose">
-          Regularisierte lineare Modelle bestrafen große Koeffizienten, während
-          ein Einkommenskoeffizient in Rohwährung natürlicherweise klein ist.
-          Die Einheit verändert dadurch effektive Regularisierung und
-          Koeffizienteninterpretation. Distanzbasierte Verfahren wie kNN,
-          Kernel-SVM und PCA sind ebenfalls empfindlicher: Distanzen im
-          Wertebereich 200,000 überlagern den Altersbereich. Skalierung stellt
-          vergleichbare Größenordnungen her.
+          Regularisierte lineare Modelle bestrafen große Koeffizienten. Ein
+          Einkommenskoeffizient in Rohwährung ist von Natur aus klein, also
+          entscheidet die Einheit über effektive Regularisierung und
+          Interpretation. Distanzbasierte Verfahren wie kNN, Kernel-SVM und PCA
+          trifft es genauso, weil Distanzen im Wertebereich 200,000 den
+          Altersbereich übertönen. Skalierung stellt vergleichbare
+          Größenordnungen her.
         </p>
         <ScalerDemo />
         <BestPractices
@@ -113,11 +110,11 @@ export default function Ch03CleanDe() {
         </h2>
         <p className="prose">
           <strong>Leakage</strong> liegt vor, wenn Trainingsmerkmale Information
-          enthalten, die zum Vorhersagezeitpunkt nicht verfügbar wäre. Hinweise
+          tragen, die zum Vorhersagezeitpunkt nicht verfügbar wäre. Hinweise
           sind unplausibel starke Validierung, nach dem Zielereignis erfasste
-          Merkmale oder ein Einbruch bei zeit- oder gruppengerechter Aufteilung.
-          Starke Werte allein beweisen Leakage nicht; normale Werte schließen es
-          nicht aus.
+          Merkmale, ein Einbruch bei zeit- oder gruppengerechter Aufteilung.
+          Starke Werte beweisen Leakage nicht. Normale Werte schließen es nicht
+          aus.
         </p>
         <p className="prose">
           Drei Formen sind besonders häufig: <strong>Target Leakage</strong>,
@@ -130,8 +127,8 @@ export default function Ch03CleanDe() {
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<b>Den Scaler auf dem vollständigen Datensatz anpassen.</b> Der Trainingsprozess sieht dadurch Teststatistiken.",
-            "<b>Target Encoding ohne Out-of-Fold-Berechnung.</b> Jede Zeile fließt sonst in ihre eigene Kodierung ein.",
+            "<b>Den Scaler auf dem vollständigen Datensatz anpassen.</b> Damit sieht das Training Teststatistiken.",
+            "<b>Target Encoding ohne Out-of-Fold-Berechnung.</b> Sonst fließt jede Zeile in ihre eigene Kodierung ein.",
             "<b>Merkmale nach dem Ereignis verwenden.</b> <code>total_purchases_lifetime</code> darf für <code>will_churn</code> keine Käufe nach dem Churn-Zeitpunkt enthalten.",
             "<b>Den Testsatz während der EDA untersuchen.</b> Jede daraus abgeleitete Anpassung überträgt Testinformation in den Entwicklungsprozess.",
           ]}
@@ -150,9 +147,9 @@ export default function Ch03CleanDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Fehlwertherkunft ist Information.</b> Für Audits erhalten; einen Indikator nur nach Prüfung von Inferenzverfügbarkeit und Validierungsnutzen als Merkmal verwenden.",
-          "<b>Der Mechanismus ist eine Annahme.</b> MCAR, MAR und MNAR werden nicht automatisch aus den Daten erkannt; Sensitivitätsanalyse gehört zur Behandlung.",
-          "<b>Skalierung hängt von Algorithmus und Pipeline ab.</b> Nur auf Trainingsfolds anpassen und den Umgang mit Werten außerhalb des Trainingsbereichs dokumentieren.",
+          "<b>Fehlwertherkunft ist Information.</b> Heb sie für Audits auf; als Merkmal nimmst du einen Indikator erst nach geprüfter Inferenzverfügbarkeit und Validierungsnutzen.",
+          "<b>Der Mechanismus ist eine Annahme, kein Messwert.</b> MCAR, MAR und MNAR liest niemand automatisch aus den Daten ab; Sensitivitätsanalyse gehört zur Behandlung.",
+          "<b>Skalierung hängt von Algorithmus und Pipeline ab.</b> Nur auf Trainingsfolds anpassen und dokumentieren, was mit Werten außerhalb des Trainingsbereichs passiert.",
           "<b>Leakage kann vor dem Betrieb sichtbar werden.</b> Zeit- oder gruppengerechte Splits, Zeitstempel, Herkunftsnachweise und fold-lokale Vorverarbeitung sind direkte Prüfungen, kein Beweis vollständiger Abwesenheit.",
           "<b>Datenbereinigung ist fortlaufend.</b> Jedes neue Merkmal, jeder Join und jede Aggregation kann Fehler oder Leakage einführen.",
         ]}

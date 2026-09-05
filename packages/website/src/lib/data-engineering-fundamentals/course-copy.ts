@@ -77,9 +77,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data Engineering / Grundlagen",
-      title: "Datenpipelines als zusammenhängendes System verstehen.",
+      title: "Eine Datenpipeline ist ein zusammenhängendes System.",
       intro:
-        "Der Kurs verfolgt Daten von der Quelle bis zur Nutzung. Er erklärt Ereigniszeit, Dateiformate, verteilte Verarbeitung, Idempotenz, Qualitätsprüfungen, Metadaten, Metrikschichten und Freigabeschranken anhand ausführbarer Simulationen.",
+        "Daten von der Quelle bis zur Nutzung, Station für Station. Ereigniszeit, Dateiformate, verteilte Verarbeitung, Idempotenz, Qualitätsprüfungen, Metadaten, Metrikschichten und Freigabeschranken stehen hier als ausführbare Simulationen, nicht als Aufzählung.",
       start: "Überblick öffnen",
       browse: "Kapitel anzeigen",
       facts: [
@@ -97,14 +97,14 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       courseEyebrow: "Kursaufbau",
       courseTitle: "Eine Pipeline. Zwölf Kapitel. Ein durchgängiger Fall.",
       courseIntro:
-        "Die Kapitel bauen aufeinander auf. Beginne mit Speicher und Abfrage-Engines, verfolge danach den Datenfluss und untersuche im Abschlussprojekt sechs ausgewählte Kurskontrollen gemeinsam.",
+        "Die Kapitel bauen aufeinander auf. Beginne bei Speicher und Abfrage-Engines, verfolge danach den Datenfluss, und im Abschlussprojekt laufen sechs ausgewählte Kurskontrollen zusammen.",
       chapterLabel: (displayNumber, id) =>
         id === "home" ? "Kursüberblick" : `Kapitel ${displayNumber}`,
       duration: (minutes) => `${minutes} Min.`,
       finalEyebrow: "Einstieg",
-      finalTitle: "Zuerst die vollständige Pipeline ansehen.",
+      finalTitle: "Erst die ganze Pipeline. Dann die Teile.",
       finalBody:
-        "Der Überblick ordnet jede technische Entscheidung einer Pipeline-Station zu. Danach behandelt jedes Kapitel einen Teil des Systems im Detail.",
+        "Der Überblick ordnet jede technische Entscheidung einer Pipeline-Station zu. Jedes Kapitel danach nimmt sich einen Teil dieses Systems vor.",
       finalCta: "Überblick starten",
       breadcrumbs: ["Start", "Kurse", "Data Engineering Fundamentals"],
       jsonLdDescription:
@@ -123,23 +123,23 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Teilnahmebestätigung: Data Engineering Fundamentals",
       description:
-        "Lokale Teilnahmebestätigung für den abgeschlossenen Kurs Data Engineering Fundamentals herunterladen.",
+        "Die lokal erzeugte Teilnahmebestätigung für den abgeschlossenen Kurs Data Engineering Fundamentals herunterladen.",
     },
     verificationMetadata: {
       title: "Teilnahmebestätigungsdaten lesen: Data Engineering Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Die Daten sind nicht servergeprüft und nicht kryptografisch signiert.",
+        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Engineering / Fehler",
       title: "Das Kapitel konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Der gespeicherte Lernstand wurde nicht verändert.",
+      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Dein gespeicherter Lernstand bleibt unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Kapitel nicht gefunden",
-      body: "Die angeforderte Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht enthält alle zwölf gültigen Kapitel.",
+      body: "Diese Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht listet alle zwölf gültigen Kapitel.",
       back: "Alle Kapitel anzeigen",
     },
     socialImage: {

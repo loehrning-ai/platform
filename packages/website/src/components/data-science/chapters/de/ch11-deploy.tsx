@@ -17,7 +17,7 @@ export default function Ch11DeployDe() {
       <Hero
         eyebrow="Kapitel 11 · Betrieb"
         title="Ein bereitgestelltes Modell ist ein <em>gewartetes System.</em>"
-        hook="Der Produktionsbetrieb verbindet Request-Verarbeitung, Merkmalsberechnung, Model Serving, Monitoring und Rollback. Jede Kontrolle reduziert ein benanntes Risiko; keine zertifiziert das System allein."
+        hook="Nach dem Deployment hört die Arbeit nicht auf, sie wechselt die Form. Request-Verarbeitung, Merkmalsberechnung, Model Serving, Monitoring, Rollback. Jede Kontrolle senkt ein benanntes Risiko. Keine zertifiziert das System."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           {
@@ -35,11 +35,11 @@ export default function Ch11DeployDe() {
           zuordnen.
         </h2>
         <p className="prose">
-          Produktions-ML ist kein einzelnes Modell, sondern ein System aus
+          Produktions-ML ist kein Modell, sondern ein System aus
           Request-Routing, Merkmalsabruf, Modellbereitstellung und Monitoring.
-          Für jede Komponente müssen Eigentümerschaft, Timeouts, Fallbacks,
-          Beobachtbarkeit und Rollback-Verhalten definiert sein, bevor der
-          Gesamtpfad als belastbar gilt.
+          Solange auch nur eine Komponente ohne Eigentümerschaft, Timeouts,
+          Fallbacks, Beobachtbarkeit und Rollback-Verhalten läuft, ist der
+          Gesamtpfad nicht belastbar.
         </p>
         <ModelServingArchitecture />
       </section>
@@ -60,12 +60,12 @@ export default function Ch11DeployDe() {
           keinen Leistungsverlust.
         </p>
         <p className="prose">
-          <strong>Konzeptdrift</strong> ist weniger offensichtlich: Die
-          Beziehung zwischen Merkmalen und Labels verändert sich. Auch bei
-          gleichen Eingaben ist die Entscheidungsgrenze des Modells nun falsch.
-          Die Erkennung benötigt Ergebnislabels oder einen begründeten Proxy.
-          Die Label-Verzögerung reicht je nach Produkt von sofort bis zu Monaten
-          und muss im Monitoring-Design angegeben werden.
+          <strong>Konzeptdrift</strong> sieht man schlechter. Hier verschiebt
+          sich die Beziehung zwischen Merkmalen und Labels: Die Eingaben bleiben
+          gleich, die Entscheidungsgrenze des Modells stimmt trotzdem nicht
+          mehr. Erkennen lässt sich das nur mit Ergebnislabels oder einem
+          begründeten Proxy. Die Label-Verzögerung reicht je nach Produkt von
+          sofort bis zu Monaten und gehört ins Monitoring-Design geschrieben.
         </p>
         <DriftSimulator />
       </section>
@@ -76,13 +76,14 @@ export default function Ch11DeployDe() {
           Das Rollout-Muster aus Fehlerkosten und Reversibilität wählen.
         </h2>
         <p className="prose">
-          Shadow-Auswertung kann Kandidatenausgaben vergleichen, ohne sie für
-          Entscheidungen zu verwenden, erzeugt aber weiterhin Kapazitäts-,
-          Protokollierungs-, Datenschutz- und Latenzrisiken. Canary setzt einen
-          geeigneten Teil des Live-Verkehrs dem Kandidaten aus. Blue-Green hält
-          zwei Umgebungen vor; die Rollback-Geschwindigkeit hängt dennoch von
-          Zustand, Schemas, Caches und Folgewirkungen ab. Die Muster sind
-          kombinierbar und keine vorgeschriebene Reihenfolge.
+          Shadow-Auswertung vergleicht Kandidatenausgaben, ohne sie für
+          Entscheidungen zu verwenden, und kostet trotzdem Kapazität,
+          Protokollierung, Datenschutz und Latenz. Canary setzt einen geeigneten
+          Teil des Live-Verkehrs dem Kandidaten aus. Blue-Green hält zwei
+          Umgebungen vor, und wie schnell der Rollback wirklich greift,
+          entscheiden Zustand, Schemas, Caches und Folgewirkungen. Die Muster
+          lassen sich kombinieren; eine vorgeschriebene Reihenfolge gibt es
+          nicht.
         </p>
         <ShadowDeployment />
       </section>
@@ -96,12 +97,12 @@ export default function Ch11DeployDe() {
         </h2>
         <p className="prose">
           Training-Serving-Skew entsteht, wenn Trainings- und
-          Bereitstellungspipeline Merkmale unterschiedlich berechnen. Das Modell
-          wurde auf einer Darstellung trainiert und erhält eine andere.
-          Gemeinsame Definitionen, versionierte Transformationen,
-          zeitpunktkorrekte Trainings-Joins und Paritätstests senken dieses
-          Risiko. Ein Feature Store kann den Vertrag unterstützen, garantiert
-          aber weder Datenfrische und Backfills noch Abhängigkeiten oder gleiche
+          Bereitstellungspipeline dasselbe Merkmal unterschiedlich rechnen. Das
+          Modell hat auf einer Darstellung gelernt und bekommt eine andere
+          serviert. Gemeinsame Definitionen, versionierte Transformationen,
+          zeitpunktkorrekte Trainings-Joins und Paritätstests drücken dieses
+          Risiko. Ein Feature Store trägt den Vertrag mit, garantiert aber weder
+          Datenfrische und Backfills noch Abhängigkeiten oder gleiche
           Online-/Offline-Semantik.
         </p>
         <FeatureStoreDiagram />
@@ -110,8 +111,8 @@ export default function Ch11DeployDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Kein getesteter Rollback-Pfad.</b> Ein vorheriges Artefakt reicht nicht, wenn Schemas, Zustand, Caches oder Folgewirkungen nicht mit zurückgesetzt werden können.",
-          "<b>Unabhängige Merkmalslogik.</b> Unterschiedliche SQL-Abfragen, Scaler, Zeitfenster oder Imputationsregeln erzeugen Skew, wenn ihre Parität nicht geprüft wird.",
+          "<b>Kein getesteter Rollback-Pfad.</b> Das alte Artefakt hilft nichts, wenn Schemas, Zustand, Caches oder Folgewirkungen nicht mit zurückgehen.",
+          "<b>Merkmalslogik, die zweimal getrennt entsteht.</b> Unterschiedliche SQL-Abfragen, Scaler, Zeitfenster oder Imputationsregeln erzeugen Skew, sobald niemand ihre Parität prüft.",
           "<b>Unbeobachtetes Kandidatenverhalten.</b> Vor der Freigabe den Kandidaten mit repräsentativen Eingaben über Replay, Shadow, Batch oder eine gestufte Route prüfen.",
           "<b>Nur eine verzögerte Ergebnismetrik überwachen.</b> Eingabequalität, Merkmals- und Vorhersageverteilungen, Latenz, Fehler und fachliche Leitplanken ergänzen, ohne Proxys als Leistungsnachweis zu behandeln.",
           "<b>Ein Modellartefakt direkt überschreiben.</b> Retraining benötigt unveränderliche Versionen, Evaluation, Freigabe, gestufte Bereitstellung und einen wiederherstellbaren Rollback-Pfad.",
@@ -133,7 +134,7 @@ export default function Ch11DeployDe() {
           "<b>Modellverhalten hängt von Code, Daten, Konfiguration und Kontext ab.</b> Jede Ebene überwachen und Alarme mit Verantwortlichen und Reaktion verbinden.",
           "<b>Deployment-Strategie ist Risikosteuerung.</b> Shadow, Replay, Canary, Blue-Green oder ein anderes Muster nach Exposition, Evidenzbedarf und Reversibilität auswählen.",
           "<b>Merkmalsparität benötigt Kontrollen.</b> Gemeinsame Definitionen helfen; Versionierung, zeitpunktkorrekte Joins, Frischeprüfungen und Online-/Offline-Paritätstests bleiben erforderlich.",
-          "<b>Retraining ist ein Freigabeprozess.</b> Unveränderliche Kandidaten erzeugen, gegen einen Vertrag evaluieren, die Freigabe bestätigen und einen getesteten Wiederherstellungspfad behalten.",
+          "<b>Retraining ist ein Freigabeprozess, kein Cronjob.</b> Unveränderliche Kandidaten bauen, gegen einen Vertrag evaluieren, Freigabe bestätigen, getesteten Wiederherstellungspfad behalten.",
         ]}
       />
     </DataScienceLocaleProvider>

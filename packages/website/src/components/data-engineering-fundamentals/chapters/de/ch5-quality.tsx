@@ -22,7 +22,7 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Qualität: Eine Pipeline, die <span class='accent'>lief</span>, ist noch keine Pipeline, die <span class='accent'>korrekt</span> lief."
-        hook="Ein erfolgreicher Task kann unvollständige, veraltete, doppelte oder schemawidrige Daten schreiben. Qualitätsprüfungen liefern Nachweise zu ausgewählten Eigenschaften. Sie beweisen nicht, dass jeder Wert oder jede fachliche Definition korrekt ist."
+        hook="Ein grüner Task schreibt genauso unvollständige, veraltete, doppelte oder schemawidrige Daten wie ein roter. Qualitätsprüfungen belegen ausgewählte Eigenschaften. Dass jeder Wert und jede fachliche Definition stimmt, belegen sie nicht."
         meta={[
           { k: "Prüfwerkzeug", v: "ExpectationSuite" },
           { k: "Schranke", v: "Signaltabelle + ExternalTaskSensor" },
@@ -34,14 +34,14 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         <SectionLabel n="6.1">Prüfungen sind günstig, Fehler teuer</SectionLabel>
         <h2 className="h2">Vier Prüfungen für unterschiedliche Fehlerarten.</h2>
         <p className="prose">
-          <b>Zeilenzahlband:</b> Die aktuelle Partition mit einer tabellenspezifischen Basislinie und Schwelle vergleichen. Das kann leere oder
-          unvollständige Schreibvorgänge sowie Quelländerungen erkennen.
+          <b>Zeilenzahlband:</b> Vergleich die aktuelle Partition mit einer tabellenspezifischen Basislinie und Schwelle. Das fängt leere oder
+          unvollständige Schreibvorgänge und Quelländerungen ab.
           <br />
-          <b>Schemaabgleich:</b> Das beobachtete Schema mit dem versionierten Vertrag und seiner Kompatibilitätsregel vergleichen.
+          <b>Schemaabgleich:</b> Stell das beobachtete Schema neben den versionierten Vertrag und seine Kompatibilitätsregel.
           <br />
-          <b>Aktualität:</b> Die benannte Partition oder den Ereigniszeit-Stichtag gegen das Ziel des Datensatzes prüfen.
+          <b>Aktualität:</b> Halt die benannte Partition oder den Ereigniszeit-Stichtag gegen das Ziel des Datensatzes.
           <br />
-          <b>Eindeutigkeit:</b> Den deklarierten Schlüssel auf der deklarierten Granularität prüfen. Nicht jede Faktentabelle besitzt einen
+          <b>Eindeutigkeit:</b> Prüf den deklarierten Schlüssel auf der deklarierten Granularität. Nicht jede Faktentabelle hat einen
           Primärschlüssel mit genau einer Zeile.
         </p>
         <TrustMeterSim />
@@ -51,10 +51,10 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         <SectionLabel n="6.2">Die Signaltabelle als Schranke</SectionLabel>
         <h2 className="h2">Konfigurierte Verbraucher auf ein benanntes Qualitätssignal warten lassen.</h2>
         <p className="prose">
-          Im Referenzdesign laufen Prüfungen nach dem Schreiben einer Partition und vor abhängigen Tasks. Bestandene ausgewählte Prüfungen
-          erzeugen eine Zeile in einer <b>Signaltabelle</b>. Verbraucher mit einem <code>ExternalTaskSensor</code> können darauf warten. Die
-          Datentabelle kann technisch weiterhin lesbar sein; Sichtbarkeit und Zugriff benötigen getrennte Kontrollen. Auch Alarm-Routing muss
-          konfiguriert und getestet werden.
+          Im Referenzdesign laufen die Prüfungen nach dem Schreiben einer Partition und vor den abhängigen Tasks. Bestehen die ausgewählten
+          Prüfungen, entsteht eine Zeile in einer <b>Signaltabelle</b>, und Verbraucher mit einem <code>ExternalTaskSensor</code> warten darauf.
+          Lesbar bleibt die Datentabelle trotzdem: Sichtbarkeit und Zugriff brauchen getrennte Kontrollen. Und das Alarm-Routing gehört
+          konfiguriert und getestet.
         </p>
         <div className="cards-2">
           <div className="ccard">
@@ -62,8 +62,8 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
             <div className="ccard-n">Verbraucher wartet auf die Datentabelle</div>
             <div className="ccard-d">
               Unvollständige oder fehlerhafte Daten sind direkt nach dem Commit
-              lesbar. Eine spätere Wiederholung kommt zu spät: Verbraucher
-              wurden bereits ausgeführt.
+              lesbar. Die Wiederholung danach kommt zu spät, die Verbraucher
+              sind längst gelaufen.
             </div>
           </div>
           <div className="ccard">
@@ -90,7 +90,7 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         items={[
           "<b>Prüfungen ohne Datensatzvertrag ergänzen.</b> Eine Schwelle benötigt Granularität, Basislinie, Ausnahmeregel und Zuständigkeit.",
           "<b>Ein Signal veröffentlichen, das Verbraucher nicht verlangen.</b> Abhängigkeiten prüfen; eine Signalzeile schränkt direkte Tabellenzugriffe nicht ein.",
-          "<b>Ein Aktualitätsziel ohne Alarmverantwortung deklarieren.</b> Ziel, Messpunkt, Routing und erwartete Reaktion festhalten.",
+          "<b>Ein Aktualitätsziel ohne Alarmverantwortung deklarieren.</b> Halt Ziel, Messpunkt, Routing und erwartete Reaktion fest.",
           "<b>Nur <code>assert len(df) &gt; 0</code> prüfen.</b> Eine einzelne Zeile besteht diese Prüfung auch bei einem Quellausfall. Zeilenzahlbänder statt bloßer Plausibilitätsprüfung verwenden.",
         ]}
       />
@@ -107,7 +107,7 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         title="Kernaussagen"
         items={[
           "Qualitätsprüfungen liefern Nachweise zu benannten Eigenschaften; sie zertifizieren nicht die vollständige fachliche Bedeutung eines Datensatzes.",
-          "Zeilenzahl, Schema, Aktualität und Eindeutigkeit adressieren unterschiedliche Risiken und benötigen tabellenspezifische Konfiguration.",
+          "Zeilenzahl, Schema, Aktualität und Eindeutigkeit decken unterschiedliche Risiken ab und wollen je Tabelle eigene Konfiguration.",
           "Ein Signal ist nur nützlich, wenn es die bestandenen Prüfungen benennt und abhängige Verbraucher es verlangen.",
         ]}
       />

@@ -15,7 +15,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Streaming: <span class='accent'>Zustellung, Fenster und Veröffentlichung.</span>"
-        hook="In der Kursarchitektur transportiert Kafka Ereignisse, und Flink verarbeitet sie. Kafka Streams ist eine alternative Verarbeitungsbibliothek und keine Schicht unter Flink. Eine veröffentlichte Ausgabe benötigt klare Angaben zu Zustellung, Fenstern und Vollständigkeit."
+        hook="In der Kursarchitektur trägt Kafka die Ereignisse, und Flink verarbeitet sie. Kafka Streams ist eine alternative Verarbeitungsbibliothek, keine Schicht unter Flink. Wer eine Ausgabe veröffentlicht, sagt dazu, wie zugestellt, wie gefenstert und wie vollständig sie ist."
         meta={[
           { k: "Streaming-Engine", v: "Flink" },
           { k: "Bus", v: "Kafka" },
@@ -26,7 +26,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
       <section className="section">
         <SectionLabel n="2.1">Kontinuierliche Verarbeitung</SectionLabel>
         <h2 className="h2">Micro-Batch oder kontinuierlich, Exactly Once oder At Least Once.</h2>
-        <p className="prose">Batch-Engines verarbeiten begrenzte Eingaben nach einem Zeitplan. Streaming-Engines verarbeiten eine fortlaufende Eingabe und halten Zustand. Beide können richtige oder falsche Ergebnisse erzeugen. Ihre Verträge unterscheiden sich darin, wann ein Ergebnis erscheint, wann es endgültig ist und wie Wiederholungen, Duplikate und Nachzügler behandelt werden.</p>
+        <p className="prose">Batch-Engines verarbeiten begrenzte Eingaben nach einem Zeitplan. Streaming-Engines verarbeiten eine fortlaufende Eingabe und halten Zustand. Beide liefern richtige oder falsche Ergebnisse. Der Unterschied steckt im Vertrag: wann ein Ergebnis erscheint, wann es endgültig ist, was mit Wiederholungen, Duplikaten und Nachzüglern passiert.</p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">Latenz</div>
@@ -49,7 +49,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
       <section className="section">
         <SectionLabel n="2.2">Das Problem an der Systemgrenze</SectionLabel>
         <h2 className="h2">Die Kursgrenze modelliert Wiederholungsschutz und Watermark.</h2>
-        <p className="prose">Wiederholungen und Wiederherstellung können Datensätze erneut zustellen; Ereigniszeit und Ankunftszeit können abweichen. An der Warehouse-Grenze schützen idempotentes Schreiben oder ein deterministischer Deduplizierungsschlüssel vor Wiederholungen. Watermark und Nachzüglerregel steuern Veröffentlichung und spätere Datensätze. Der Simulator zeigt beide Kontrollen getrennt.</p>
+        <p className="prose">Wiederholungen und Wiederherstellung stellen Datensätze erneut zu, und Ereigniszeit und Ankunftszeit laufen auseinander. An der Warehouse-Grenze halten idempotentes Schreiben oder ein deterministischer Deduplizierungsschlüssel die Wiederholungen ab. Watermark und Nachzüglerregel steuern Veröffentlichung und spätere Datensätze. Der Simulator zeigt beide Kontrollen getrennt, weil sie getrennte Fehler lösen.</p>
         <ConveyorSim />
       </section>
 
@@ -61,7 +61,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Eine frühe Schätzung ohne Status veröffentlichen.</b> Kennzeichnen, ob ein Ergebnis stichprobenbasiert, vorläufig oder abgeschlossen ist, und den Quellenstichtag angeben.",
+          "<b>Eine frühe Schätzung ohne Status veröffentlichen.</b> Schreib dazu, ob ein Ergebnis stichprobenbasiert, vorläufig oder abgeschlossen ist, und nenn den Quellenstichtag.",
           "<b>Eine Zustellungszusage des Produzenten als Ende-zu-Ende-Garantie behandeln.</b> Quelle, Prozessor, Zustand und Ziel bei Wiederholung und Wiederherstellung prüfen.",
           "<b>Einen Rollup unabhängig vom Fortschritt der Ereigniszeit planen.</b> Veröffentlichung an die dokumentierte Watermark oder ein Vollständigkeitssignal koppeln.",
         ]}
@@ -79,7 +79,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
         items={[
           "Streaming- und Batch-Ausgaben benötigen klare Angaben zu <b>Aktualität, Vollständigkeit und Endgültigkeit</b>.",
           "Wiederholungsschutz und Nachzüglerbehandlung lösen unterschiedliche Fehlerarten. Beide werden dort eingerichtet, wo der Vertrag sie verlangt.",
-          "Ein Abschlusssignal erst veröffentlichen, wenn die benannten Prüfungen und Watermark-Bedingungen erfüllt sind.",
+          "Ein Abschlusssignal geht erst raus, wenn die benannten Prüfungen und Watermark-Bedingungen erfüllt sind.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

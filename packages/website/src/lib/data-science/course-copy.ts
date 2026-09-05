@@ -42,7 +42,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Science Fundamentals: interaktiver Kurs",
       description:
-        "Zwölf interaktive Kapitel zum vollständigen Data-Science-Zyklus: Exploration, Merkmale, Evaluation, Experimente, Kausalität und Produktionsbetrieb.",
+        "Zwölf interaktive Kapitel entlang des Data-Science-Zyklus: Exploration, Merkmale, Evaluation, Experimente, Kausalität, Produktionsbetrieb.",
     },
     reader: {
       navLabel: "Kapitelnavigation",
@@ -54,27 +54,27 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     },
     breadcrumbs: ["Start", "Kurse", "Data Science Fundamentals"],
     jsonLdDescription:
-      "Zwölf interaktive Kapitel zum vollständigen Data-Science-Zyklus, von Exploration und Feature Engineering bis zu Kausalität, Drift und Produktionsbetrieb.",
+      "Zwölf interaktive Kapitel entlang des Data-Science-Zyklus, von Exploration und Feature Engineering bis zu Kausalität, Drift und Produktionsbetrieb.",
     certificateMetadata: {
       title: "Teilnahmebestätigung: Data Science Fundamentals",
       description:
-        "Lokale Teilnahmebestätigung für den abgeschlossenen Kurs Data Science Fundamentals herunterladen.",
+        "Die lokal erzeugte Teilnahmebestätigung für den abgeschlossenen Kurs Data Science Fundamentals herunterladen.",
     },
     verificationMetadata: {
       title: "Teilnahmebestätigungsdaten lesen: Data Science Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Die Daten sind nicht servergeprüft und nicht kryptografisch signiert.",
+        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Science / Fehler",
       title: "Das Kapitel konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Der gespeicherte Lernstand wurde nicht verändert.",
+      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Dein gespeicherter Lernstand bleibt unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Kapitel nicht gefunden",
-      body: "Die angeforderte Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht enthält alle zwölf gültigen Kapitel.",
+      body: "Diese Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht listet alle zwölf gültigen Kapitel.",
       back: "Alle Kapitel anzeigen",
     },
   },
