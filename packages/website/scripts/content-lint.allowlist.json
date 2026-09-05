@@ -5,6 +5,16 @@
       "file": "content/ki-und-gesellschaft/quiz/questions.json",
       "rule": "VOICE-FILLER",
       "reason": "Two answer options use the word inside the claim the learner must judge; rewording an option could change which answer is correct, so the option texts stay verbatim."
+    },
+    {
+      "file": "content/books/ki-arbeitsalltag/06_emails_meetings_berichte.md",
+      "rule": "VOICE-FORM",
+      "reason": "The chapter quotes a customer reply the model drafts. Sie is the correct form in German business correspondence, so the example keeps it while the chapter around it stays Du."
+    },
+    {
+      "file": "content/books/ki-arbeitsalltag/13_anhang.md",
+      "rule": "VOICE-FORM",
+      "reason": "A glossary example quotes a formal notice addressed to a third party, where Sie is correct; the surrounding reference text stays Du."
     }
   ]
 }

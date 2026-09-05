@@ -28,6 +28,7 @@
     "content/ai-native/glossary.json",
     "content/ai-native/course.json",
     "content/ai-native/modules.json",
-    "content/ai-native/quiz/questions.json"
+    "content/ai-native/quiz/questions.json",
+    "content/books/ki-arbeitsalltag/"
   ]
 }
