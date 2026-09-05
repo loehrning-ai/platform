@@ -1,7 +1,7 @@
 [
   {
     "term": "KI-Verordnung",
-    "definition": "Die Verordnung (EU) 2024/1689 zur Festlegung harmonisierter Vorschriften für künstliche Intelligenz. Erster umfassender Rechtsrahmen für KI weltweit, in Kraft seit dem 1. August 2024, gestaffelt anwendbar bis 2028.",
+    "definition": "Die Verordnung (EU) 2024/1689 zur Festlegung harmonisierter Vorschriften für künstliche Intelligenz. Weltweit der erste Rechtsrahmen eigens für KI, in Kraft seit dem 1. August 2024, gestaffelt anwendbar bis 2028.",
     "english": "AI Act",
     "category": "regulatorik",
     "relatedTerms": ["Risikobasierter Ansatz", "KI-System"],
@@ -17,7 +17,7 @@
   },
   {
     "term": "Risikobasierter Ansatz",
-    "definition": "Das Grundprinzip der Verordnung (EU) 2024/1689: Pflichten richten sich nach dem Risiko eines KI-Systems, nicht nach der Technik. Vier Stufen von verboten über hochriskant und begrenzt bis minimal bestimmen den Umfang der Auflagen.",
+    "definition": "Das Grundprinzip der Verordnung (EU) 2024/1689: Pflichten richten sich nach dem Risiko eines KI-Systems, nicht nach der Technik. Vier Stufen, von verboten über hochriskant und begrenzt bis minimal, bestimmen den Umfang der Auflagen.",
     "english": "Risk-Based Approach",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "KI-Verordnung"],
@@ -57,7 +57,7 @@
   },
   {
     "term": "Minimales Risiko",
-    "definition": "Die unterste Stufe der Risikopyramide. KI-Systeme wie Spamfilter, KI in der Lagerverwaltung oder Empfehlungssysteme unterliegen keinen besonderen risikoklassenspezifischen Pflichten der Verordnung (EU) 2024/1689. Art. 4 KI-Kompetenz gilt für Anbieter und Betreiber trotzdem seit 2. Februar 2025.",
+    "definition": "Die unterste Stufe der Risikopyramide. KI-Systeme wie Spamfilter, KI in der Lagerverwaltung oder Empfehlungssysteme unterliegen keinen risikoklassenspezifischen Pflichten der Verordnung (EU) 2024/1689. Art. 4 KI-Kompetenz gilt für Anbieter und Betreiber trotzdem seit 2. Februar 2025.",
     "english": "Minimal Risk",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
@@ -169,7 +169,7 @@
   },
   {
     "term": "DSGVO-Brücke",
-    "definition": "Die praktische Verbindung zwischen Datenschutz-Grundverordnung und KI-Verordnung. Wer DSGVO-Prozesse wie Verzeichnis der Verarbeitungstätigkeiten und Datenschutz-Folgenabschätzung pflegt, hat einen großen Teil der Governance-Grundlage für die Verordnung (EU) 2024/1689 bereits aufgebaut.",
+    "definition": "Die praktische Verbindung zwischen Datenschutz-Grundverordnung und KI-Verordnung. Wer DSGVO-Prozesse wie Verzeichnis der Verarbeitungstätigkeiten und Datenschutz-Folgenabschätzung pflegt, hat einen großen Teil der Governance-Grundlage für die Verordnung (EU) 2024/1689 schon stehen.",
     "english": "GDPR Bridge",
     "category": "praxis",
     "relatedTerms": ["Betreiber", "Technische Dokumentation"],

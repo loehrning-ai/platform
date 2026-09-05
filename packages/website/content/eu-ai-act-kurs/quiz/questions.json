@@ -89,7 +89,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Nach Art. 3 Nr. 4 ist Betreiber, wer ein KI-System unter eigener Verantwortung einsetzt. Anbieter wäre der Hersteller (hier Microsoft), nicht der Nutzer. Mittelstand ist fast immer Betreiber.",
+    "explanation": "Betreiber ist nach Art. 3 Nr. 4, wer ein KI-System unter eigener Verantwortung einsetzt. Anbieter ist der Hersteller, hier Microsoft, nicht der Nutzer. Der Mittelstand ist fast immer Betreiber.",
     "version": 1,
     "active": true
   },
@@ -120,7 +120,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Die Exterritorialität erfasst Anbieter und Betreiber aus Drittländern über zwei Auslöser: Art. 2 Abs. 1 lit. a (Inverkehrbringen oder Inbetriebnahme in der EU) und Art. 2 Abs. 1 lit. c (Output des KI-Systems wird in der EU verwendet). Block 1 L3 betont lit. c besonders, weil dies die häufigere Konstellation für Lernende ist, die ausländische SaaS-Anbieter beurteilen: der Anbieter sitzt in den USA, der Output kommt beim deutschen Nutzer an. Standort oder Nationalität des Anbieters ist irrelevant; beide Auslöser begründen die Geltung unabhängig voneinander.",
+    "explanation": "Die Exterritorialität erfasst Anbieter und Betreiber aus Drittländern über zwei Auslöser: Art. 2 Abs. 1 lit. a (Inverkehrbringen oder Inbetriebnahme in der EU) und Art. 2 Abs. 1 lit. c (der Output des KI-Systems wird in der EU verwendet). Block 1 L3 legt den Schwerpunkt auf lit. c, die häufigere Konstellation bei ausländischen SaaS-Anbietern: Der Anbieter sitzt in den USA, der Output landet beim deutschen Nutzer. Standort und Nationalität des Anbieters spielen keine Rolle; jeder der beiden Auslöser begründet die Geltung für sich.",
     "version": 1,
     "active": true
   },
@@ -213,7 +213,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Spamfilter fallen weder unter Anhang I noch Anhang III und lösen keine Transparenzpflicht nach Art. 50 aus. Sie sind damit minimales Risiko. Es gelten nur freiwillige Verhaltenskodizes nach Art. 95.",
+    "explanation": "Spamfilter stehen weder in Anhang I noch in Anhang III und lösen keine Transparenzpflicht nach Art. 50 aus. Damit sind sie minimales Risiko. Es bleibt bei freiwilligen Verhaltenskodizes nach Art. 95.",
     "version": 1,
     "active": true
   },
@@ -399,7 +399,7 @@
         "isCorrect": true
       }
     ],
-    "explanation": "Anhang IV listet 9 inhaltliche Blöcke, darunter Systembeschreibung, Entwicklungsphasen, Überwachung, Leistungskennzahlen, Risikomanagementsystem und Änderungen. Finanzberichte des Anbieters sind nicht Teil der Dokumentation.",
+    "explanation": "Anhang IV listet 9 inhaltliche Blöcke, darunter Systembeschreibung, Entwicklungsphasen, Überwachung, Leistungskennzahlen, Risikomanagementsystem und Änderungen. Die Finanzberichte des Anbieters gehören nicht dazu.",
     "version": 1,
     "active": true
   },
@@ -469,7 +469,7 @@
     "id": "q_w16",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Art. 4 verpflichtet zur Sicherstellung ausreichender KI-Kompetenz. An wen richtet sich die Pflicht primär?",
+    "questionText": "Art. 4 verpflichtet zu Maßnahmen, die die Entwicklung der KI-Kompetenz unterstützen. An wen richtet sich die Pflicht primär?",
     "answerOptions": [
       {
         "id": "a",
@@ -679,7 +679,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 85 gibt jeder natürlichen oder juristischen Person das Recht, eine Beschwerde bei der zuständigen Marktüberwachungsbehörde einzureichen. Eine unmittelbare Betroffenheit ist nicht erforderlich. Die Behörde prüft und entscheidet nach Ermessen.",
+    "explanation": "Art. 85 gibt jeder natürlichen oder juristischen Person das Recht, bei der zuständigen Marktüberwachungsbehörde Beschwerde einzureichen. Unmittelbar betroffen muss sie nicht sein. Die Behörde prüft und entscheidet nach Ermessen.",
     "version": 1,
     "active": true
   },
@@ -772,7 +772,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ohne Inventar keine Klassifikation, ohne Klassifikation keine Pflichten. Schritt 1 ist ein vollständiges KI-Inventar (Anbieter, Zweck, Datenflüsse). Erst danach folgen Risikoeinstufung, Dokumentation, Gap-Analyse und Abhilfemaßnahmen.",
+    "explanation": "Ohne Inventar keine Klassifikation, ohne Klassifikation keine Pflichten. Schritt 1 ist ein vollständiges KI-Inventar (Anbieter, Zweck, Datenflüsse). Erst danach kommen Risikoeinstufung, Dokumentation, Gap-Analyse und Abhilfemaßnahmen.",
     "version": 1,
     "active": true
   },
@@ -780,7 +780,7 @@
     "id": "q_w26",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Sie interagieren mit einem Support-Chatbot. Ab wann muss die KI-Interaktion nach Art. 50 Abs. 1 grundsätzlich erkennbar sein?",
+    "questionText": "Sie interagieren mit einem Support-Chatbot. Ab wann muss die KI-Interaktion nach Art. 50 Abs. 1 erkennbar sein?",
     "answerOptions": [
       {
         "id": "a",
@@ -803,7 +803,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50 Abs. 1 verpflichtet Anbieter, Systeme zur direkten Interaktion grundsätzlich so zu gestalten, dass Betroffene vor oder bei der ersten Interaktion über die KI-Interaktion informiert werden, sofern dies nicht ohnehin offensichtlich ist. Die Pflicht wird am 2. August 2026 anwendbar. (Quelle: Art. 50 Abs. 1, Art. 113 Verordnung (EU) 2024/1689)",
+    "explanation": "Art. 50 Abs. 1 verpflichtet Anbieter, Systeme zur direkten Interaktion so zu gestalten, dass Betroffene vor oder bei der ersten Interaktion über die KI-Interaktion informiert werden, sofern dies nicht ohnehin offensichtlich ist. Die Pflicht ist ab dem 2. August 2026 anwendbar. (Quelle: Art. 50 Abs. 1, Art. 113 Verordnung (EU) 2024/1689)",
     "claimId": "ai-act-transparency-application-2026-08-02",
     "version": 1,
     "active": true
@@ -835,7 +835,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 2 Abs. 10 der Verordnung (EU) 2024/1689 nimmt natürliche Personen ausdrücklich aus, die KI-Systeme ausschließlich für rein persönliche, nicht-berufliche Tätigkeiten nutzen. Wer ChatGPT zuhause für eigene Texte nutzt, ist keine Betreiberin im rechtlichen Sinne. Sobald die Nutzung im beruflichen Kontext erfolgt, greift die Verordnung.",
+    "explanation": "Art. 2 Abs. 10 der Verordnung (EU) 2024/1689 nimmt natürliche Personen ausdrücklich aus, die KI-Systeme ausschließlich für rein persönliche, nicht-berufliche Tätigkeiten nutzen. Wer ChatGPT zuhause für eigene Texte nutzt, ist keine Betreiberin im rechtlichen Sinne. Im beruflichen Kontext greift die Verordnung.",
     "version": 1,
     "active": true
   }
