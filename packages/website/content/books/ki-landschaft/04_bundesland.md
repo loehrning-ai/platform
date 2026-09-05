@@ -1,12 +1,12 @@
 # Regionale Rahmenbedingungen prüfen
 
-Eine belastbare Aussage über KI-Bereitschaft lässt sich nicht aus dem Sitz eines Unternehmens ableiten. Bundesländer unterscheiden sich jedoch bei Förderprogrammen, Beratungsangeboten, Hochschulnetzwerken, Branchenclustern und Verwaltungspraxis.
+Die Geschäftsführerin eines Metallbetriebs in Thüringen steht nicht schlechter da als ihr Kollege in Bayern. Aus dem Firmensitz folgt keine KI-Bereitschaft. Unterschiede gibt es trotzdem: Förderprogramme, Beratung, Hochschulnetzwerke, Branchencluster, Verwaltungspraxis.
 
 ## Keine Rangliste ohne repräsentative Daten
 
-Öffentlich sichtbare Webseiten, Firmendomains oder Anbieteradressen bilden interne Systeme und Kompetenzen nicht repräsentativ ab. Sie erlauben deshalb keine seriöse Rangliste der Bundesländer nach „KI-Reife“.
+Öffentlich sichtbare Webseiten, Firmendomains und Anbieteradressen bilden interne Systeme und Kompetenzen nicht repräsentativ ab. Eine Rangliste der Bundesländer nach „KI-Reife“ lässt sich daraus nicht bauen.
 
-Formuliere stattdessen die Entscheidung, für die regionale Information gebraucht wird.
+Formuliere stattdessen die Entscheidung, die regionale Information braucht.
 
 ## Förderung
 
@@ -19,11 +19,11 @@ Förderprogramme ändern sich. Prüfe vor Antrag oder Beauftragung:
 - Kumulierungs- und Beihilferegeln
 - Nachweis-, Aufbewahrungs- und Auszahlungsbedingungen
 
-Nutze die [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/) und die jeweilige Landesförderbank als Primärquellen. Verlasse dich nicht auf eine statische Programmliste in einem Buch.
+Nutze die [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/) und die zuständige Landesförderbank als Primärquellen. Verlass dich nicht auf statische Programmlisten in Büchern.
 
 ## Aufsicht und Beratung
 
-Für Datenschutzfragen sind die Zuständigkeiten der unabhängigen Datenschutzaufsicht zu prüfen. Für den AI Act können nationale und sektorale Marktüberwachungszuständigkeiten relevant sein. Kammern, Mittelstand-Digital-Zentren und Hochschulen können Orientierung geben, ersetzen aber keine verbindliche Einzelfallprüfung.
+Bei Datenschutzfragen prüfst du die Zuständigkeit der unabhängigen Datenschutzaufsicht. Beim AI Act können nationale und sektorale Marktüberwachungszuständigkeiten dazukommen. Kammern, Mittelstand-Digital-Zentren und Hochschulen geben Orientierung. Eine verbindliche Einzelfallprüfung ersetzen sie nicht.
 
 ## Kompetenzen und Partner
 
@@ -38,6 +38,6 @@ Vergleiche Partner nicht nach Entfernung oder Marketingrang, sondern nach:
 
 ## Infrastruktur
 
-Regionale Breitband- oder Rechenzentrumsangebote können relevant sein. Cloud-Region, Firmensitz und Datenresidenz sind jedoch unterschiedliche Begriffe. Prüfe den konkreten Dienst, seine Verträge, Unterauftragsverarbeiter, Konfiguration und Datenflüsse.
+Regionales Breitband und regionale Rechenzentren können zählen. Cloud-Region, Firmensitz und Datenresidenz sind aber drei verschiedene Dinge. Prüfe den konkreten Dienst, seine Verträge, Unterauftragsverarbeiter, Konfiguration und Datenflüsse.
 
 Der Standort ist eine Rahmenbedingung. Systemzweck, Daten, Kontrollen und Betrieb entscheiden über den Use Case.

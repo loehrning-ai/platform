@@ -27,16 +27,16 @@
 
 ## Entfernte oder nicht verwendete Behauptungen
 
-Dieses Buch verwendet keine private Unternehmensdatenbank, keine proprietäre Scoring-Engine, keine regionalen oder sektoralen Firmenrankings und keine Konkurrenzanalyse. Daraus abgeleitete Prozentwerte, Stichproben, Signalgewichte und Reifegradwerte sind nicht Bestandteil der offenen Lernmaterialien.
+Dieses Lernbuch nutzt keine private Unternehmensdatenbank, keine proprietäre Scoring-Engine, keine regionalen oder sektoralen Firmenrankings, keine Konkurrenzanalyse. Daraus abgeleitete Prozentwerte, Stichproben, Signalgewichte und Reifegradwerte stehen nicht in den offenen Lernmaterialien.
 
-Nicht verwendet werden außerdem Marktprognosen oder Produktrankings aus kommerziellen Sekundärquellen, wenn keine belastbare Primärquelle und klare Methode vorliegen.
+Marktprognosen und Produktrankings aus kommerziellen Sekundärquellen fehlen ebenfalls, solange keine belastbare Primärquelle und keine klare Methode dahinterstehen.
 
 ## Grenzen
 
-1. US-Arbeitsmarktexposition darf nicht als deutsche Adoptions- oder Beschäftigungsprognose ausgegeben werden.
-2. Unternehmensumfragen messen berichtete Nutzung oder Einschätzung, nicht automatisch technische Wirksamkeit.
+1. US-Arbeitsmarktexposition ist keine deutsche Adoptions- oder Beschäftigungsprognose.
+2. Unternehmensumfragen messen berichtete Nutzung und Einschätzung, nicht technische Wirksamkeit.
 3. Öffentliche Webmerkmale zeigen interne Prozesse, Datenqualität und Kontrollen nicht zuverlässig.
 4. Produktfunktionen, Preise, Verträge, Datenflüsse und Rechtsstand ändern sich. Volatile Angaben brauchen Prüfdatum und Primärquelle.
-5. Ein Lernmaterial ersetzt keine Rechts-, Datenschutz-, Sicherheits- oder Fachprüfung des konkreten Einsatzes.
+5. Dieses Lernbuch ersetzt keine Rechts-, Datenschutz-, Sicherheits- oder Fachprüfung des konkreten Einsatzes.
 
 **Letzte redaktionelle Prüfung:** 9. August 2026.

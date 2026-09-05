@@ -1,6 +1,6 @@
 # Fahrplan: von der Inventur zum kontrollierten Betrieb
 
-Ein Fahrplan beschreibt Gates und Verantwortlichkeiten. Er verspricht weder drei produktive Systeme nach einem Jahr noch feste Kosten oder Renditen.
+Wer stoppt den Piloten, wenn er nichts liefert? Der Fahrplan. Er verspricht keine drei produktiven Systeme nach einem Jahr, keine festen Kosten, keine Rendite.
 
 ## Horizont 1: Inventur und Auswahl
 
@@ -13,7 +13,7 @@ Ein Fahrplan beschreibt Gates und Verantwortlichkeiten. Er verspricht weder drei
 - einen kleinen, reversiblen Use Case auswählen
 - Schutz-, Qualitäts- und Abbruchkriterien definieren
 
-Kein fester 30-Tage-Zeitraum passt zu jeder Organisation. Der Horizont endet, wenn die Nachweise vorliegen.
+Kein fester 30-Tage-Zeitraum passt überall. Der Horizont endet, wenn die Nachweise vorliegen.
 
 ## Horizont 2: Lernpilot
 
@@ -26,7 +26,7 @@ Kein fester 30-Tage-Zeitraum passt zu jeder Organisation. Der Horizont endet, we
 - Sicherheit, Logs, Löschung, Backup und Fallback prüfen
 - mit eigener Ausgangslage vergleichen
 
-Ein Pilot ist nicht produktiv, nur weil echte Software läuft. Produktionsdaten und reale Folgehandlungen brauchen eine separate Freigabe.
+Ein Pilot ist nicht produktiv, nur weil echte Software läuft. Produktionsdaten und reale Folgehandlungen brauchen eigene Freigaben.
 
 ## Horizont 3: Begrenzter Betrieb
 
@@ -50,11 +50,11 @@ Keine feste Prozentregel entscheidet diese Frage.
 | Kontrolle | vertrags- und konfigurationsabhängig | höher, aber komplexer | hoch, mit voller Verantwortung |
 | Wechselkosten | Export und Lock-in prüfen | Architekturabhängig | interner Wartungs- und Wissensbedarf |
 
-Bewerte Gesamtbetrieb, Sicherheit, Datenfluss, Integrationen, Exit, Kompetenzbedarf und langfristige Wartung. Listenpreis und Demo-Geschwindigkeit reichen nicht.
+Bewerte Gesamtbetrieb, Sicherheit, Datenfluss, Integrationen, Exit, Kompetenzbedarf, Wartung. Listenpreis und Vorführtempo reichen nicht.
 
 ## Beschaffungsgate
 
-Vor Vertrag oder Verlängerung:
+Diese Punkte klärst du vor Vertrag oder Verlängerung.
 
 1. vorgesehener Zweck und Leistungsgrenzen
 2. Rollen, Vertragsbedingungen und Datenverarbeitung
@@ -77,11 +77,11 @@ Mögliche Kennzahlen:
 - Verfügbarkeit und Wiederherstellungszeit
 - Anteil geschulter und tatsächlich befähigter Nutzer
 
-Keine universellen Zielwerte wie „80 Prozent Nutzung“ oder „150 Prozent ROI“. Ziele folgen Risiko, Ausgangslage und Prozesswert.
+Zielwerte wie „80 Prozent Nutzung“ oder „150 Prozent ROI“ gelten nirgends. Ziele folgen Risiko, Ausgangslage und Prozesswert.
 
 ## Förderung nur aus aktuellem Bescheid planen
 
-Programme, Fördersätze und Bedingungen ändern sich. Nutze die [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/), zuständige Landesförderbanken und die offiziellen Programmseiten. Prüfe insbesondere, ob ein Antrag vor Maßnahmenbeginn erforderlich ist. Plane keinen Business Case mit einem Zuschuss, bevor Anspruch und Bewilligung belastbar geklärt sind.
+Programme, Fördersätze und Bedingungen ändern sich. Nutze die [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/), die zuständige Landesförderbank und die offiziellen Programmseiten. Prüfe, ob der Antrag vor Maßnahmenbeginn gestellt sein muss. Und rechne keinen Business Case mit einem unbewilligten Zuschuss.
 
 ## Skalierungsgate
 
@@ -93,4 +93,4 @@ Erweitere erst, wenn:
 - Monitoring, Vorfallweg, Fallback und Exit funktionieren
 - wirtschaftlicher Nutzen mit realen Daten belegt ist
 
-Skalierung vervielfacht auch Fehler. Das Gate verhindert, dass ein guter Demo-Output zur unkontrollierten Infrastruktur wird.
+Skalierung vervielfacht die Fehler. Das Gate verhindert, dass aus einem guten Vorführ-Ergebnis unkontrollierte Infrastruktur wird.
