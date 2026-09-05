@@ -137,7 +137,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Reading",
       minutes: (minutes) => `${minutes} min`,
       quizIntro:
-        "Choose the best answer for each question. Answers are stored only with this browser's course progress.",
+        "One best answer per question. Your answers stay in this browser's course progress, nowhere else.",
       quickCheck: "Knowledge check",
       check: "Check",
       answerOptions: "Answer options",

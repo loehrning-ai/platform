@@ -3,14 +3,14 @@
     "id": "ano-q01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "A teammate says \"I tried AI and it gave me a wrong answer, so I don't trust it.\" What is the most useful response?",
+    "questionText": "A colleague says \"I tried AI, it gave me a wrong answer, so I don't trust it.\" What is the most useful response?",
     "answerOptions": [
       { "id": "a", "text": "Agree, AI is unreliable for serious work.", "isCorrect": false },
       { "id": "b", "text": "Trust is calibrated per task type. The question is when you should verify, not whether to use it.", "isCorrect": true },
       { "id": "c", "text": "Use a different model.", "isCorrect": false },
       { "id": "d", "text": "Wait six months for the technology to improve.", "isCorrect": false }
     ],
-    "explanation": "Trust is a calibrated, domain-specific function of how often a model is right on a given task and what failure costs, not a single global verdict earned or lost from one interaction. Dismissing AI after one wrong answer is the same error as blindly trusting it after one right one; both skip the calibration step that separates senior practitioners from everyone else.",
+    "explanation": "Trust is calibrated per task: how often the model is right there, and what a failure costs. It is not a single global verdict won or lost in one interaction. Writing AI off after one wrong answer is the same mistake as trusting it after one right one. Both skip the calibration.",
     "version": 1,
     "active": true
   },
@@ -25,7 +25,7 @@
       { "id": "c", "text": "You direct multiple agents in parallel; the unit of work is a delegation, not a keystroke.", "isCorrect": true },
       { "id": "d", "text": "You have read three books on AI.", "isCorrect": false }
     ],
-    "explanation": "L3 is defined by the unit of work changing from a keystroke to a delegation: the operator directs multiple agents in parallel, assigning, checking in, redirecting, while the agents do the spec-to-PR work. Daily autocomplete use (L1) and AI-first-draft habits (L2) are real progress, but neither involves orchestrating a fleet.",
+    "explanation": "At L3 the unit of work changes from a keystroke to a delegation. The operator directs several agents in parallel, assigning, checking in, redirecting, while the agents do the spec-to-PR work. Daily autocomplete (L1) and AI-first drafts (L2) are real progress. Neither is orchestrating a fleet.",
     "version": 1,
     "active": true
   },
@@ -40,7 +40,7 @@
       { "id": "c", "text": "Punish them for not using AI.", "isCorrect": false },
       { "id": "d", "text": "Ignore it.", "isCorrect": false }
     ],
-    "explanation": "The craft behind a hand-coded overnight feature is real and worth acknowledging privately, but publicly celebrating solo heroics re-anchors the culture on hours and individual effort instead of leverage. The AI-native move is to redirect that same taste and standards toward specs, evals, and review, where it scales across a whole fleet of agents instead of one person's night.",
+    "explanation": "The craft is real, and worth acknowledging in private. Celebrate solo heroics in public and the culture re-anchors on hours and individual effort instead of scale. The AI-native move is to point that same taste and those same standards at specs, evals, and review, where they carry a whole fleet instead of one person's night.",
     "version": 1,
     "active": true
   },
@@ -55,7 +55,7 @@
       { "id": "c", "text": "The list of files", "isCorrect": false },
       { "id": "d", "text": "The author and timestamp", "isCorrect": false }
     ],
-    "explanation": "The opening sentence and the test cases constrain the search space the most: the sentence sets the goal the agent optimizes for, and the test cases pin down exactly what \"correct\" means. Long explanatory prose in the middle does comparatively little work and can even invite drift if it's vague.",
+    "explanation": "The opening sentence and the test cases constrain the search space the most. The sentence sets the goal the agent optimizes for. The test cases pin down what \"correct\" means. Long explanatory prose in the middle does little work, and invites drift when it is vague.",
     "version": 1,
     "active": true
   },
@@ -70,7 +70,7 @@
       { "id": "c", "text": "Run the eval after merge.", "isCorrect": false },
       { "id": "d", "text": "Add a comment to the PR but merge anyway.", "isCorrect": false }
     ],
-    "explanation": "Eval-driven release means no agent change reaches production without passing the suite, regressions are a hard block, enforced by the system rather than relying on someone remembering to check. Skipping the gate \"just this once\" is exactly how a model upgrade or prompt tweak silently breaks a workflow nobody is watching.",
+    "explanation": "Eval-driven release means no agent change reaches production without passing the suite. A regression is a hard block, enforced by the system rather than by someone remembering. Skipping the gate \"just this once\" is how a model upgrade or a prompt tweak silently breaks a workflow nobody is watching.",
     "version": 1,
     "active": true
   },
@@ -85,7 +85,7 @@
       { "id": "c", "text": "The specs are bad, the context is shallow, or the eval gates are missing.", "isCorrect": true },
       { "id": "d", "text": "Agents fundamentally cannot do this work.", "isCorrect": false }
     ],
-    "explanation": "Low-quality PRs from a fleet almost always trace upstream to the inputs the fleet was given: vague specs, shallow context, or missing eval gates. Swapping models or micromanaging treats the symptom; tightening the spec, deepening the context, and raising the eval bar treats the cause.",
+    "explanation": "Low-quality PRs from a fleet trace back to the inputs it was given. Vague specs, shallow context, missing eval gates. Swapping models or micromanaging treats the symptom. Tightening the spec, deepening the context, and raising the eval bar treats the cause.",
     "version": 1,
     "active": true
   },
@@ -100,7 +100,7 @@
       { "id": "c", "text": "Whether the product still works if you remove the AI. If no, AI is the product.", "isCorrect": true },
       { "id": "d", "text": "Whether it has a chat interface.", "isCorrect": false }
     ],
-    "explanation": "The clean diagnostic is counterfactual: remove the AI and ask if the product still works. If it does, the AI was a bolt-on feature riding alongside the real value. If it doesn't, the AI is the product itself, the reasoning system is the engine, not a chat bubble in the corner.",
+    "explanation": "The diagnostic is counterfactual. Remove the AI and ask whether the product still works. If it does, the AI was a bolt-on riding alongside the real value. If it does not, the AI is the product, and the reasoning system is the engine rather than a chat bubble in the corner.",
     "version": 1,
     "active": true
   },
@@ -115,7 +115,7 @@
       { "id": "c", "text": "Reorder the steps for clarity.", "isCorrect": false },
       { "id": "d", "text": "Add tooltips.", "isCorrect": false }
     ],
-    "explanation": "The AI-native instinct is compression, not decoration: take the steps that happen after the user has already stated their intent and collapse them into one delegated action. Adding a help bubble or tooltips to a long flow just makes the long flow easier to tolerate, it doesn't remove the tax.",
+    "explanation": "The AI-native instinct is compression, not decoration. Take the steps that follow the user's stated intent and collapse them into one delegated action. A help bubble or a tooltip makes a long flow easier to tolerate. The flow is still long.",
     "version": 1,
     "active": true
   },
@@ -130,7 +130,7 @@
       { "id": "c", "text": "Surfaces with high variance in user intent, dashboards, homepages, settings.", "isCorrect": true },
       { "id": "d", "text": "Every screen in the product.", "isCorrect": false }
     ],
-    "explanation": "Generative UI earns its keep on surfaces where users arrive with wildly different goals, a dashboard, a homepage, a settings panel, because a fixed layout can't serve all of them well. Payment and legal flows are exactly where consistency IS the value, so they should stay static and predictable, not generated.",
+    "explanation": "Generative UI earns its keep where users arrive with wildly different goals. A dashboard, a homepage, a settings panel. One fixed layout cannot serve all of them. Payment and legal flows are exactly where consistency IS the value, so they stay static and predictable.",
     "version": 1,
     "active": true
   },
@@ -145,7 +145,7 @@
       { "id": "c", "text": "Add an agenda.", "isCorrect": false },
       { "id": "d", "text": "Rotate the meeting time.", "isCorrect": false }
     ],
-    "explanation": "When a status meeting is mostly information that already exists in writing, the fix is to route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed, reserving the synchronous time for moments that actually require a live decision. Shortening or reorganizing the same ritual doesn't remove the coordination tax, it just trims it.",
+    "explanation": "When a status meeting mostly repeats what is already written, route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed. Keep the synchronous time for moments that genuinely need a live decision. Shortening or reorganizing the same ritual trims the coordination tax. It does not remove it.",
     "version": 1,
     "active": true
   },
@@ -160,7 +160,7 @@
       { "id": "c", "text": "The cases where the agent flagged uncertainty.", "isCorrect": true },
       { "id": "d", "text": "The ones from VIP customers only.", "isCorrect": false }
     ],
-    "explanation": "A well-designed triage agent should escalate the cases where it is genuinely unsure, not a random sample or an arbitrary rule like ticket age or customer tier, flagged uncertainty is the signal that a human's judgment is actually needed. Escalating anything else wastes the human's attention on cases the agent could already handle.",
+    "explanation": "A well-designed triage agent escalates the cases where it is genuinely unsure. Not a random sample, not ticket age, not customer tier. Flagged uncertainty is the signal that human judgment is needed. Escalating anything else spends a person's attention on cases the agent already handles.",
     "version": 1,
     "active": true
   },
@@ -175,7 +175,7 @@
       { "id": "c", "text": "Spec quality, agent direction, judgment in review, calibrated trust, and final quality.", "isCorrect": true },
       { "id": "d", "text": "Years of experience.", "isCorrect": false }
     ],
-    "explanation": "A live-build interview is designed to surface exactly the skills that matter in AI-native work: how well the candidate specs the problem, directs the agent, judges the output in review, calibrates trust, and lands at a correct final result, not how fast they type or whether they can invert a binary tree from memory.",
+    "explanation": "A live-build interview surfaces the skills that matter in AI-native work. How well the candidate specs the problem, directs the agent, judges the output in review, calibrates trust, and lands a correct result. Not typing speed, and not whether they can invert a binary tree from memory.",
     "version": 1,
     "active": true
   },
@@ -183,14 +183,14 @@
     "id": "ano-q13",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "You are designing leverage-tied comp. Which metric is the WORST choice?",
+    "questionText": "You are designing compensation tied to output. Which metric is the WORST choice?",
     "answerOptions": [
       { "id": "a", "text": "Team cycle time.", "isCorrect": false },
       { "id": "b", "text": "Defect rate.", "isCorrect": false },
       { "id": "c", "text": "Number of prompts sent per week.", "isCorrect": true },
       { "id": "d", "text": "Throughput per engineer.", "isCorrect": false }
     ],
-    "explanation": "Prompt count is a pure activity metric: it rewards typing more prompts, not producing better outcomes, and it is trivially gamed the moment it's tied to pay. Cycle time, defect rate, and throughput are all real outcome signals that move because the work actually got better, not because someone performed more AI usage.",
+    "explanation": "Prompt count is a pure activity metric. It rewards sending more prompts, not producing better outcomes, and it is trivially gamed the moment pay depends on it. Cycle time, defect rate, and throughput move because the work got better, not because someone performed more AI usage.",
     "version": 1,
     "active": true
   },
@@ -205,7 +205,7 @@
       { "id": "c", "text": "\"Show me what you tried with agents first.\"", "isCorrect": true },
       { "id": "d", "text": "Approve only senior hires.", "isCorrect": false }
     ],
-    "explanation": "\"Show me what you tried with agents first\" turns a headcount request into a forcing function: it makes teams demonstrate they've actually pushed on agentic leverage before adding humans, rather than defaulting to hiring as the first lever. Approving on budget alone or denying outright both skip that diagnostic step.",
+    "explanation": "\"Show me what you tried with agents first\" makes the request prove itself. The team has to show it pushed on what agents can absorb before adding humans, instead of reaching for hiring as the first lever. Approving on budget alone and denying outright both skip that step.",
     "version": 1,
     "active": true
   },
@@ -220,7 +220,7 @@
       { "id": "c", "text": "Managers of generalists.", "isCorrect": false },
       { "id": "d", "text": "Eliminated entirely.", "isCorrect": false }
     ],
-    "explanation": "In an AI-native org, specialists earn their leverage as advisors and reviewers whose judgment scales across many decisions, not as the sole owners of hands-on execution, that work increasingly routes through generalists wielding agents. Treating specialists as bottlenecked individual executors wastes the part of their value that actually compounds.",
+    "explanation": "In an AI-native org, specialists earn their keep as advisors and reviewers whose judgment carries across many decisions. They are not the sole owners of hands-on execution; that work increasingly routes through generalists wielding agents. Treating a specialist as a bottlenecked executor wastes the part of their value that compounds.",
     "version": 1,
     "active": true
   },
@@ -235,7 +235,7 @@
       { "id": "c", "text": "Hide the agent from senior users.", "isCorrect": false },
       { "id": "d", "text": "Disable retrieval temporarily.", "isCorrect": false }
     ],
-    "explanation": "The architectural fix is permission-aware retrieval: the agent inherits the calling user's identity, and every retrieval is filtered by that user's real ACLs, so there is never an \"agent identity\" with elevated access. A response-level content filter is a patch on the symptom; the leak keeps being possible until the retrieval layer itself respects permissions.",
+    "explanation": "The fix is permission-aware retrieval. The agent inherits the calling user's identity, and every retrieval is filtered by that user's real ACLs, so no \"agent identity\" ever carries elevated access. A response-level content filter patches the symptom. The leak stays possible until the retrieval layer itself respects permissions.",
     "version": 1,
     "active": true
   },
@@ -243,14 +243,14 @@
     "id": "ano-q17",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Why are nightly snapshots \"radioactive\" for agentic workflows?",
+    "questionText": "Why are nightly snapshots dangerous for agentic workflows?",
     "answerOptions": [
       { "id": "a", "text": "They are slow to build.", "isCorrect": false },
       { "id": "b", "text": "They use too much storage.", "isCorrect": false },
-      { "id": "c", "text": "The agent answers based on yesterday's reality, takes action in today's, and the answer is wrong.", "isCorrect": true },
+      { "id": "c", "text": "The agent answers from yesterday's reality, acts in the current one, and the answer is wrong.", "isCorrect": true },
       { "id": "d", "text": "They miss new files.", "isCorrect": false }
     ],
-    "explanation": "Nightly snapshots are dangerous for agentic workflows specifically because the agent reasons from yesterday's state but acts in today's reality, a deleted record, a changed price, a closed ticket won't show up until the next sync, and the agent will confidently act on stale facts. Build cost and storage are real concerns but not the reason this pattern is called out as dangerous.",
+    "explanation": "The agent reasons from yesterday's state and acts in the state that exists now. A deleted record, a changed price, a closed ticket: none of it shows up until the next sync, and the agent acts confidently on stale facts. Build cost and storage are real concerns. Neither is why this pattern gets called out.",
     "version": 1,
     "active": true
   },
@@ -258,14 +258,14 @@
     "id": "ano-q18",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Your security team asks: \"Which AI models are running on customer PII right now?\" You can't answer. Highest-leverage fix:",
+    "questionText": "Your security team asks: \"Which AI models are running on customer PII right now?\" You can't answer. Highest-impact fix:",
     "answerOptions": [
       { "id": "a", "text": "Disable all AI temporarily.", "isCorrect": false },
       { "id": "b", "text": "Stand up the model registry.", "isCorrect": true },
       { "id": "c", "text": "Hire a CISO.", "isCorrect": false },
       { "id": "d", "text": "Add encryption.", "isCorrect": false }
     ],
-    "explanation": "Not being able to name every model touching customer PII is a registry gap, and the highest-leverage fix is standing one up: provider, version, data classification, owner, and last review date, in one place, kept current. Disabling AI or hiring a CISO react to the symptom; the registry is the boring infrastructure that lets you actually answer the question next time.",
+    "explanation": "Not being able to name every model touching customer PII is a registry gap. Stand the registry up: provider, version, data classification, owner, last review date, in one place, kept current. Disabling AI or hiring a CISO reacts to the symptom. The registry is what lets you answer the question next time.",
     "version": 1,
     "active": true
   },
@@ -280,7 +280,7 @@
       { "id": "c", "text": "Agent identity + on-behalf-of-user + timestamp + authorization, all in the audit log.", "isCorrect": true },
       { "id": "d", "text": "A team retrospective.", "isCorrect": false }
     ],
-    "explanation": "Answering \"who did this and why\" for an agent's destructive action requires a real audit trail: the agent's identity, the user it was acting on behalf of, its authorization, and a timestamp, all captured in the log at the moment of the action. Sentiment analysis or a retrospective can only ever produce a guess after the fact.",
+    "explanation": "Answering \"who did this and why\" after a destructive action needs a real audit trail. The agent's identity, the user it acted for, its authorization, a timestamp, all captured in the log at the moment it happened. Sentiment analysis or a retrospective produces a guess, nothing more.",
     "version": 1,
     "active": true
   },
@@ -295,7 +295,7 @@
       { "id": "c", "text": "Who is the vendor?", "isCorrect": false },
       { "id": "d", "text": "How many seats?", "isCorrect": false }
     ],
-    "explanation": "The hardest and most legitimate question a board member can ask about a productivity claim is what the baseline was and when it was measured, without a baseline taken under comparable conditions, a 30% gain is a story, not a result. Model choice, vendor, and seat count are all secondary to whether the comparison is even valid.",
+    "explanation": "The hardest legitimate question about a productivity claim is what the baseline was and when it was taken. Without a baseline measured under comparable conditions, a 30% gain is a story rather than a result. Model choice, vendor, and seat count all come second to whether the comparison holds.",
     "version": 1,
     "active": true
   },
@@ -310,7 +310,7 @@
       { "id": "c", "text": "Outcome metrics (cycle time, defect rate, throughput) moving against a measured baseline.", "isCorrect": true },
       { "id": "d", "text": "Internal survey sentiment.", "isCorrect": false }
     ],
-    "explanation": "The reliable signal that an AI program is working is outcome metrics, cycle time, defect rate, throughput, moving against a measured baseline, because those numbers reflect the work actually getting better. Active-user counts, token volume, and survey sentiment are activity or vibes metrics that can rise even while nothing real improves.",
+    "explanation": "The reliable signal is outcome metrics moving against a measured baseline: cycle time, defect rate, throughput. Those numbers reflect the work getting better. Active-user counts, token volume, and survey sentiment can all rise while nothing real improves.",
     "version": 1,
     "active": true
   },
@@ -318,14 +318,14 @@
     "id": "ano-q22",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "A quarterly leverage review should look most like:",
+    "questionText": "A quarterly review of the AI program should look most like:",
     "answerOptions": [
       { "id": "a", "text": "A project status update.", "isCorrect": false },
       { "id": "b", "text": "A revenue review, with the same rigor and seriousness.", "isCorrect": true },
       { "id": "c", "text": "A demo day.", "isCorrect": false },
       { "id": "d", "text": "A retrospective.", "isCorrect": false }
     ],
-    "explanation": "A quarterly leverage review earns its seriousness by mirroring a revenue review: the same cadence, the same rigor, real numbers that moved and why, presented to people who will ask hard questions. Treating it like an informal status update or a demo day undersells the discipline the program needs to keep its funding.",
+    "explanation": "The review earns its seriousness by mirroring a revenue review. Same cadence, same rigor, real numbers that moved and the reason they moved, presented to people who ask hard questions. Treat it as an informal status update or a demo day and it undersells the discipline the program needs to keep its funding.",
     "version": 1,
     "active": true
   }

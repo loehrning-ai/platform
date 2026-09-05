@@ -9,9 +9,9 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Separate adoption from outcome measurement",
     subtitle:
-      "Use activity data to understand operation, but evaluate value with predefined outcomes, costs, and guardrails.",
+      "Use activity data to understand operation. Judge value with predefined outcomes, costs, and guardrails.",
     objective:
-      "Use activity data to understand operation, but evaluate value with predefined outcomes, costs, and guardrails.",
+      "Use activity data to understand operation. Judge value with predefined outcomes, costs, and guardrails.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
@@ -21,14 +21,14 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Activity is diagnostic, not proof of value",
         readTimeMinutes: 9,
         content:
-          "Licenses, active users, model calls, tokens, and feature use can reveal reach, load, cost, and support needs. They do not show whether the intervention improved the work. Keep adoption measures, operational measures, outcome measures, and guardrails separate so that one category is not presented as another.",
+          "Someone reports a productivity gain. What would make you believe it? Licenses, active users, model calls, tokens, and feature use reveal reach, load, cost, and support needs. None shows the intervention improved the work. Keep adoption, operational, and outcome measures apart from guardrails, so one never passes for another.",
       },
       {
         id: "s2",
         title: "Define a balanced measure set",
         readTimeMinutes: 9,
         content:
-          "Start from the expected mechanism: which behavior changes, and which outcome should follow? Select a small set of role-relevant outcomes and pair them with quality, risk, equity, and cost guardrails. Define the population, calculation, source, owner, review cadence, and decision threshold before inspecting results.",
+          "Start from the expected mechanism. Which behavior changes, which outcome follows? Pick a small set of role-relevant outcomes and pair them with quality, risk, equity, and cost guardrails. Fix population, calculation, source, owner, review cadence, and decision threshold before anyone sees a result.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -68,14 +68,14 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Choose a baseline period from the data",
         readTimeMinutes: 7,
         content:
-          "The required observation period depends on event frequency, variance, seasonality, and the size of change the decision needs to detect. Freeze the metric definition, population, exclusions, and data-quality checks before rollout. Record uncertainty rather than treating one historical average as exact.",
+          "How long you observe depends on event frequency, variance, seasonality, and the size of change the decision must detect. Freeze the metric definition, population, exclusions, and data-quality checks before rollout. Record the uncertainty instead of treating one historical average as exact.",
       },
       {
         id: "s2",
         title: "Build a credible comparison",
         readTimeMinutes: 7,
         content:
-          "A before-and-after comparison can be distorted by staffing, demand, policy, product, or market changes. Use a randomized, staggered, matched, or interrupted-time design where feasible. Record concurrent changes and interpretation limits. If the comparison cannot support a causal claim, report an association instead.",
+          "Staffing, demand, policy, product, or market changes will distort a plain before-and-after comparison. Use a randomized, staggered, matched, or interrupted-time design where feasible. Record concurrent changes and interpretation limits. If the comparison cannot carry a causal claim, report an association.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -114,14 +114,14 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Set cadence from the decision cycle",
         readTimeMinutes: 10,
         content:
-          "Review frequency should match how quickly evidence accumulates, how often the intervention can change, and the cost of delayed correction. Define participants, decision rights, required evidence, and submission dates. The review is for decisions, not a recital of activity or a product demonstration.",
+          "Review frequency follows how fast evidence accumulates, how often the intervention changes, and what a delayed correction costs. Fix participants, decision rights, required evidence, and submission dates. The review exists for decisions. Not for a recital of activity, not for a product demonstration.",
       },
       {
         id: "s2",
         title: "Use a consistent evidence packet",
         readTimeMinutes: 10,
         content:
-          "Present the hypothesis, intervention, baseline and comparison, outcome results with uncertainty, guardrails and incidents, operating cost, limitations, and proposed decision. Record whether to continue, change, pause, or stop; name the owner and next review condition. Preserve the result so later teams can reuse the evidence.",
+          "Present the hypothesis, the intervention, the baseline and comparison, the outcome results with uncertainty, guardrails and incidents, operating cost, limitations, and the proposed decision. Record whether to continue, change, pause, or stop. Name the owner and next review condition. Keep it so a later team can reuse the evidence.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -135,7 +135,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Evidence review packet",
           scenario:
-            "Draft five sections for the next review. Each section should state the evidence shown and the decision it informs.",
+            "Draft five sections for the next review. Each states its evidence and the decision it informs.",
           placeholders: [
             "1. Hypothesis and intervention",
             "2. Baseline, comparison, and uncertainty",
@@ -154,8 +154,8 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Module 9 knowledge check and capstone",
-    subtitle: "Check the measurement practices from this module.",
-    objective: "Check the measurement practices from this module.",
+    subtitle: "Three questions on adoption, baselines, and evidence reviews.",
+    objective: "Three questions on adoption, baselines, and evidence reviews.",
     durationMinutes: 15,
     keyConcepts: [],
     quiz: [
@@ -186,7 +186,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A quantified improvement needs a stable definition, a credible baseline and comparison, and an account of other changes that could explain the result. Provider, vendor, and license count do not establish that the intervention caused the reported outcome.",
+          "A quantified improvement needs a stable definition, a credible baseline and comparison, and an account of the other changes that could explain the result. Provider, vendor, and license count establish nothing about cause.",
       },
       {
         id: "ano-measurement-q2",
@@ -215,7 +215,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Adoption and sentiment can help explain operation but do not demonstrate value. The stronger evidence connects predefined outcomes and guardrails to a credible comparison while reporting cost, uncertainty, and alternative explanations.",
+          "Adoption and sentiment help explain how something operates. Neither demonstrates value. The stronger evidence ties predefined outcomes and guardrails to a credible comparison, and reports cost, uncertainty, and the alternative explanations.",
       },
       {
         id: "ano-measurement-q3",
@@ -243,7 +243,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "The review exists to decide whether to continue, change, pause, or stop an intervention. A consistent evidence packet, named decision owner, and explicit next condition make the result auditable and reusable.",
+          "The review exists to decide whether to continue, change, pause, or stop an intervention. A consistent evidence packet, a named decision owner, and an explicit next condition make the result auditable and reusable.",
       },
     ],
     sections: [],

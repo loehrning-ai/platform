@@ -9,38 +9,38 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Choose tasks before choosing tools",
     subtitle:
-      "Assess whether a task is suitable for model assistance before deciding how to delegate it.",
+      "Decide whether a task suits a model before deciding how to hand it over.",
     objective:
-      "Assess whether a task is suitable for model assistance before deciding how to delegate it.",
+      "Decide whether a task suits a model before deciding how to hand it over.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Start with the required outcome",
+        title: "Start at the outcome",
         readTimeMinutes: 5,
         content:
-          "Do not begin with the question, 'Where can I add AI?' Begin with the outcome, the acceptable error rate, and the person accountable for the result. Model assistance is useful when it reduces effort without weakening those conditions. If the outcome is unclear, clarify it before choosing a tool.",
+          '"Where can we add AI?" is the wrong first question. Start with the outcome, the error rate it tolerates, and the person accountable when one slips through. A model earns its place when it cuts effort and leaves those three intact. Outcome still vague? Then the tool choice is premature.',
       },
       {
         id: "s2",
-        title: "Check delegation fit",
+        title: "Good candidate, bad candidate",
         readTimeMinutes: 5,
         content:
-          "Good initial candidates have defined inputs, observable outputs, and a review step that costs less than doing the whole task manually. Poor candidates have ambiguous authority, irreversible effects, sensitive data without approved controls, or outputs that cannot be checked. The same task can move between these categories as its specification and safeguards improve.",
+          "A good first candidate has defined inputs, an observable output, and a review step cheaper than the manual work. A bad one has ambiguous authority, irreversible effects, sensitive data without approved controls, or an output nobody can check. Neither label is permanent. Tighten the specification, add safeguards, and the task changes lists.",
       },
       {
         id: "s3",
-        title: "Delegate a bounded first pass",
+        title: "Hand over something small first",
         readTimeMinutes: 4,
         content:
-          "Give the model a narrow task, a clear stopping condition, and explicit constraints. Keep decisions, approvals, and external side effects with a named person until the workflow has evidence that its controls work. Expand the scope only after reviewing real outputs and failure cases.",
+          "Give the model a narrow task, a clear stopping condition, and explicit constraints. Decisions, approvals, and anything that reaches the outside world stay with a named person until the workflow proves its controls hold. Read the real outputs. Read the failure cases. Then widen the scope.",
       },
     ],
     callout: {
       kind: "quote",
-      text: "Delegate work only when the expected benefit exceeds the cost of specification, review, and correction.",
+      text: "Delegate only when the benefit outruns the cost of specification, review, and correction.",
       attr: "Operating principle",
     },
     exerciseKind: "reflect-box",
@@ -53,7 +53,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "mindset/1",
           cpId: "exercise",
           scenario:
-            "List three tasks from this week that took more than 30 minutes. For each, record the expected outcome, the cost of an error, and one bounded part that could be delegated safely.",
+            "Take three tasks from this week that ran longer than 30 minutes. For each, write the expected outcome, the cost of an error, and the one bounded piece you could hand over safely.",
           rows: 3,
         },
       },
@@ -67,9 +67,9 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Four levels of operating control",
     subtitle:
-      "Assess how consistently you define, verify, and govern model-assisted work across four levels.",
+      "Four levels show how consistently you define, verify, and govern model-assisted work.",
     objective:
-      "Assess how consistently you define, verify, and govern model-assisted work across four levels.",
+      "Four levels show how consistently you define, verify, and govern model-assisted work.",
     durationMinutes: 11,
     keyConcepts: [],
     quiz: [],
@@ -79,34 +79,34 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "L0, Unexamined",
         readTimeMinutes: 3,
         content:
-          "Tasks are completed through existing manual processes, and the team has not assessed where model assistance would or would not be appropriate. This can be a valid choice for a task, but it should be a deliberate choice based on risk and cost rather than an untested default.",
+          "Everything runs by hand, as always. Nobody has asked where a model would help and where it would not. For a given task that can still be right, as long as it is a decision taken from risk and cost rather than an untested default.",
       },
       {
         id: "s2",
         title: "L1, Assisted",
         readTimeMinutes: 3,
         content:
-          "A person uses a model for bounded drafts, summaries, or transformations. The person remains inside the task, supplies the source material, and checks the result before use. Practices are individual and may not yet be repeatable across the team.",
+          "One person uses a model for bounded drafts, summaries, or transformations. They stay in the task, supply the source material, and check the result before use. The practice belongs to that person. Nothing about it is repeatable across the team yet.",
       },
       {
         id: "s3",
         title: "L2, Controlled workflow",
         readTimeMinutes: 3,
         content:
-          "Recurring tasks have specifications, approved context, evaluation criteria, and review ownership. Model outputs enter normal engineering or operational controls instead of bypassing them. Failures are recorded and used to revise the workflow.",
+          "Recurring tasks have specifications, approved context, evaluation criteria, and a named reviewer. Model output goes through the same engineering and operational controls as everything else, not around them. Failures get recorded, and the workflow changes because of them.",
       },
       {
         id: "s4",
         title: "L3, Orchestrated portfolio",
         readTimeMinutes: 2,
         content:
-          "Several independent tasks can run in parallel with isolated workspaces, explicit permissions, release gates, and named human owners. Parallelism is used only where dependencies are understood. A person remains accountable for accepting, rejecting, or releasing each result.",
+          "Several independent tasks run at once with isolated workspaces, explicit permissions, release gates, and named human owners. Parallel work happens only where dependencies are understood. A person still accepts, rejects, or releases every result.",
       },
     ],
     callout: {
       kind: "note",
       h: "Rate controls, not tool usage",
-      text: "Frequent model use does not establish a high maturity level. Look for repeatable specifications, evaluation evidence, incident handling, and clear ownership. Rate each task family separately when practices differ.",
+      text: "Heavy model use proves nothing about maturity. Look for repeatable specifications, evaluation evidence, incident handling, and clear ownership. Where practices differ between task families, rate each family separately.",
     },
     exerciseKind: "self-rate",
     widgets: [
@@ -119,7 +119,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Control self-assessment",
           scenario:
-            "Rate the way you work today. Use evidence from recent tasks rather than intended future practice.",
+            "Rate how you work today. Use evidence from recent tasks, not the practice you intend to adopt.",
           axes: [
             {
               id: "tasks",
@@ -164,39 +164,39 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Calibrate verification to error cost",
     subtitle:
-      "Set review depth from the likelihood, impact, and detectability of an error instead of relying on general trust.",
+      "Set review depth from how likely an error is, what it costs, and how easily a reviewer spots it.",
     objective:
-      "Set review depth from the likelihood, impact, and detectability of an error instead of relying on general trust.",
+      "Set review depth from how likely an error is, what it costs, and how easily a reviewer spots it.",
     durationMinutes: 16,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Trust belongs to a task and control set",
+        title: "Trust attaches to a task, not a model",
         readTimeMinutes: 5,
         content:
-          "A model is not globally trustworthy or untrustworthy. Evidence applies to a particular task, model version, prompt, context source, tool set, and evaluation method. Change one of those conditions and the previous result may no longer predict current behavior.",
+          "No model is trustworthy or untrustworthy in general. The evidence belongs to one task, one model version, one prompt, one context source, one tool set, one evaluation method. Change any of those and yesterday's result stops predicting today's behavior.",
       },
       {
         id: "s2",
         title: "Use an error-cost frame",
         readTimeMinutes: 6,
         content:
-          "Estimate the likelihood of an error, its impact, and how easily a reviewer could detect it. A reversible internal draft may need a quick check. A security change, customer decision, financial figure, or disclosure may require source verification, tests, a second reviewer, or no model involvement at all. Verification effort should rise with residual risk.",
+          "Estimate three things: how likely an error is, what it costs, how easily a reviewer would spot it. A reversible internal draft may need a glance. A security change, a customer decision, a financial figure, or a disclosure may need source verification, tests, a second reviewer, or no model at all. Verification effort rises with residual risk.",
       },
       {
         id: "s3",
         title: "Build evidence from reviewed cases",
         readTimeMinutes: 5,
         content:
-          "Start with tasks where a reliable answer or test oracle exists. Compare outputs with that reference, label the failure type, and record the conditions under which it occurred. Revisit the sample after model, prompt, data, or tool changes. This turns confidence into task-specific evidence.",
+          "Start where a reliable answer or test oracle exists. Compare the output against that reference, label the failure type, and record the conditions that produced it. Run the sample again after every model, prompt, data, or tool change. That is how feeling becomes task-specific evidence.",
       },
     ],
     callout: {
       kind: "warn",
       h: "Accountability does not transfer to the model",
-      text: "A confident output and an experienced reviewer can still produce an accepted error. The named owner must perform the checks required by the task's residual risk and must be able to explain the acceptance decision.",
+      text: "A confident output and an experienced reviewer can still add up to an accepted error. The named owner runs the checks the residual risk demands, and can explain the acceptance decision.",
     },
     exerciseKind: "matrix-grid",
     widgets: [
@@ -209,7 +209,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Verification matrix",
           scenario:
-            "For each task type, select a minimum verification level for your current context. Increase it where errors are costly or hard to detect.",
+            "Pick a minimum verification level per task type in your context. Raise it wherever an error is expensive or hard to spot.",
           rows: [
             "Internal email draft",
             "External customer email",
@@ -236,9 +236,9 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Reward reliable systems, not heroics",
     subtitle:
-      "Align team recognition with clear ownership, reproducible work, and controlled outcomes.",
+      "Point team recognition at clear ownership, reproducible work, and controlled outcomes.",
     objective:
-      "Align team recognition with clear ownership, reproducible work, and controlled outcomes.",
+      "Point team recognition at clear ownership, reproducible work, and controlled outcomes.",
     durationMinutes: 12,
     keyConcepts: [],
     quiz: [],
@@ -248,21 +248,21 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Manual effort is not the quality measure",
         readTimeMinutes: 4,
         content:
-          "Hours worked and lines written do not show whether a change is correct, maintainable, or useful. Model usage does not show that either. Evaluate the outcome, the evidence behind it, the operational cost, and whether another person can understand and repeat the process.",
+          "Hours worked and lines written say nothing about whether a change is correct, maintainable, or useful. Model usage says nothing either. Judge the outcome, its evidence, the operational cost, and whether a colleague could follow and repeat the process.",
       },
       {
         id: "s2",
         title: "Recognise controls that improve the team",
         readTimeMinutes: 4,
         content:
-          "Recognise people who clarify specifications, add regression tests, document failure modes, reduce unnecessary steps, or stop unsafe work. These actions improve more than one delivery. Do not reward head-count reduction or output volume without examining quality, workload, and downstream risk.",
+          "Recognise the people who clarify a specification, add a regression test, document a failure mode, cut an unnecessary step, or stop unsafe work. Those improve more than one delivery. And do not reward head-count reduction or output volume without examining quality, workload, and downstream risk.",
       },
       {
         id: "s3",
         title: "Apply senior judgment at review boundaries",
         readTimeMinutes: 4,
         content:
-          "Experienced practitioners contribute domain knowledge, architectural context, and the ability to recognise subtle failure. Use that expertise to define constraints, review exceptions, and teach others how to evaluate results. The tool may generate an artifact; the accountable person decides whether it is acceptable.",
+          "Experienced practitioners bring domain knowledge, architectural context, and an eye for the failure that looks fine. Spend that expertise defining constraints, reviewing exceptions, and teaching others how to judge a result. The tool produces the artifact. The accountable person decides whether it is acceptable.",
       },
     ],
     exerciseKind: "plays",
@@ -275,12 +275,12 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "mindset/4",
           cpId: "exercise",
           title: "Your next controls",
-          scenario: "Choose three practices to apply during the next month.",
+          scenario: "Pick three practices for the next month.",
           minPick: 3,
           options: [
-            "Write a one-line delegation boundary before starting a model-assisted task.",
+            "Write a one-line delegation boundary before starting any model-assisted task.",
             "Review one model-assisted workflow each week for errors and control gaps.",
-            "Share one reviewed example, including what failed and how it was detected.",
+            "Share one reviewed example, including what failed and how it was caught.",
             "Recognise reproducible outcomes instead of long hours or output volume.",
             "Ask a peer to challenge one assumption in a high-impact acceptance decision.",
           ],
@@ -296,16 +296,16 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "quiz",
     title: "Module 1, knowledge check",
     subtitle:
-      "Check your understanding of task selection, operating controls, verification, and accountability.",
+      "Three questions on task selection, operating controls, verification, and accountability.",
     objective:
-      "Check your understanding of task selection, operating controls, verification, and accountability.",
+      "Three questions on task selection, operating controls, verification, and accountability.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-mindset-q1",
         questionText:
-          "A teammate rejects model assistance after one incorrect result. Which response is most useful?",
+          "A colleague writes off model assistance after one wrong result. Which response helps most?",
         answerOptions: [
           {
             id: "a",
@@ -329,7 +329,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "One result does not establish reliability for every task. Decide from task-specific evidence, the impact and detectability of an error, and the controls available to reduce residual risk.",
+          "One result settles nothing about reliability across tasks. Decide from task-specific evidence, what an error costs, how visible it is, and which controls cut residual risk.",
       },
       {
         id: "ano-mindset-q2",
@@ -358,7 +358,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "L3 combines bounded parallel work with isolation, permissions, evaluation gates, and explicit acceptance ownership. Parallel tool use without those controls does not meet the definition.",
+          "L3 is bounded parallel work plus isolation, permissions, evaluation gates, and explicit acceptance ownership. Several tools running at once without those controls is not L3.",
       },
       {
         id: "ano-mindset-q3",
@@ -387,7 +387,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Neither manual effort nor model usage is a quality measure. Review the result, its evidence, maintainability, operational risk, and whether the process can be understood and repeated.",
+          "Neither manual effort nor model usage is a quality measure. Look at the result, its evidence, maintainability, operational risk, and whether anyone could follow and repeat the process.",
       },
     ],
     sections: [],
