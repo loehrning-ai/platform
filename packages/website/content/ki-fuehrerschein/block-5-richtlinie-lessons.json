@@ -13,23 +13,23 @@
       "blockId": "block_5",
       "number": 1,
       "title": "Warum jedes Unternehmen eine KI-Richtlinie braucht",
-      "subtitle": "Shadow AI, Samsung und Artikel 4",
+      "subtitle": "Shadow AI, Artikel 4 und ein Dokument, das allein nichts verhindert",
       "durationMinutes": 6,
       "keyConcepts": ["Shadow AI", "EU AI Act Art. 4", "Compliance", "Bußgeld"],
       "sections": [
         {
           "id": "block_5_lesson_1_section_1",
-          "title": "Das Problem: Shadow AI",
+          "title": "Shadow AI",
           "readTimeMinutes": 3,
-          "content": "> **Im Beruf:** Dieser Block richtet sich an Personen, die KI-Nutzung in einer Organisation umsetzen oder verantworten. Die Vorlage ist ein Ausgangspunkt und muss an Rechtsordnung, Branche, Mitbestimmung, Verträge und bestehende Sicherheitsregeln angepasst werden.\n\nShadow AI bezeichnet KI-Dienste oder -Funktionen, die außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen genutzt werden. Das Risiko entsteht nicht nur durch kostenlose Chatdienste. Auch Browser-Erweiterungen, integrierte Schreibfunktionen, Meeting-Bots oder lokal installierte Modelle können unbekannte Datenflüsse und Verantwortlichkeiten schaffen.\n\nEine Richtlinie schafft einen prüfbaren Rahmen: Welche Zwecke sind erlaubt? Welche Systeme und Funktionen sind freigegeben? Welche Daten, Empfänger und Entscheidungen sind betroffen? Wer prüft neue Fälle und wer bearbeitet Vorfälle?\n\nDas Dokument allein verhindert keine Fehlverarbeitung. Es muss mit Inventar, technischen Kontrollen, Schulung, Beschaffung, Datenschutz, Informationssicherheit und einem erreichbaren Freigabeprozess verbunden sein.",
-          "keyTakeaway": "Shadow AI entsteht außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Eine Richtlinie wirkt nur zusammen mit Zuständigkeiten, technischen Kontrollen und einem nutzbaren Freigabeprozess."
+          "content": "> **Im Beruf:** Dieser Block ist für alle, die KI-Nutzung in einer Organisation umsetzen oder verantworten. Die Vorlage ist ein Ausgangspunkt. Rechtsordnung, Branche, Mitbestimmung, Verträge und bestehende Sicherheitsregeln musst du selbst einarbeiten.\n\nDie Vertriebsleiterin hat einen Meeting-Bot in der Videokonferenz. Der Werkstudent hat eine Browser-Erweiterung. Die Assistenz nutzt die neue Schreibfunktion im Office-Paket. Niemand hat gefragt. Das ist Shadow AI: KI-Dienste oder -Funktionen außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Der kostenlose Chatdienst ist nur der bekannteste Fall. Browser-Erweiterungen, integrierte Schreibfunktionen, Meeting-Bots und lokal installierte Modelle können genauso unbekannte Datenflüsse und Verantwortlichkeiten schaffen.\n\nEine Richtlinie macht daraus einen prüfbaren Rahmen. Welche Zwecke sind erlaubt? Welche Systeme und Funktionen sind freigegeben? Welche Daten, Empfänger und Entscheidungen sind betroffen? Wer prüft neue Fälle, wer bearbeitet Vorfälle?\n\nDas Dokument allein verhindert nichts. Es wirkt erst, wenn es mit Inventar, technischen Kontrollen, Schulung, Beschaffung, Datenschutz, Informationssicherheit und einem Freigabeprozess verbunden ist, den die Leute auch erreichen.",
+          "keyTakeaway": "Shadow AI entsteht außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Die Richtlinie wirkt nur mit Zuständigkeiten, technischen Kontrollen und einem Freigabeprozess, den man nutzen kann."
         },
         {
           "id": "block_5_lesson_1_section_2",
           "title": "Die Pflicht: Artikel 4 seit Februar 2025",
           "readTimeMinutes": 3,
-          "content": "Seit dem 2. Februar 2025 ist Artikel 4 der EU-KI-Verordnung anwendbar. Seit der Änderung durch Verordnung (EU) 2026/1744 müssen Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen sind zu berücksichtigen. Ein bestimmtes Kompetenzniveau einzelner Personen muss nicht garantiert werden; ein einheitliches Zertifikat oder fixes Schulungsformat ist ebenfalls nicht vorgeschrieben.\n\nWas bedeutet das konkret? Anbieter und Betreiber brauchen nachvollziehbare Bausteine: Rollen, erlaubte Tools, Datenregeln, Prüfroutinen, Eskalation und Lernnachweise. Eine KI-Richtlinie ist ein wichtiger Teil dieser Dokumentation.\n\nDiese Richtlinie ist kein vollständiger Artikel-4-Nachweis. Sie dokumentiert, welche Tools genehmigt sind, welche Daten wohin dürfen, wie Outputs geprüft werden und was bei Vorfällen passiert. Je nach Use Case kommen Schulung, Inventar, Risikoklassifizierung, Datenschutzprüfung und weitere interne Prozesse dazu.",
-          "keyTakeaway": "Seit dem 2. Februar 2025 ist Artikel 4 anwendbar. Eine KI-Richtlinie ist ein Dokumentationsbaustein für KI-Kompetenzmaßnahmen, aber kein vollständiger Artikel-4-Nachweis.",
+          "content": "Artikel 4 der EU-KI-Verordnung ist seit dem 2. Februar 2025 anwendbar. Das ist kein Ausblick, das ist geltendes Recht. Seit der Änderung durch Verordnung (EU) 2026/1744 müssen Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und die betroffenen Personen oder Personengruppen. Was der Artikel nicht verlangt: ein garantiertes Kompetenzniveau jeder einzelnen Person, eine einheitliche Bescheinigung oder ein festes Schulungsformat.\n\nWas heißt das konkret? Anbieter und Betreiber brauchen Bausteine, die sich nachvollziehen lassen: Rollen, erlaubte Tools, Datenregeln, Prüfroutinen, Eskalation und dokumentierte Schulungen. Die KI-Richtlinie ist ein wichtiger Teil davon.\n\nEin vollständiger Artikel-4-Nachweis ist die Richtlinie nicht. Sie hält fest, welche Tools genehmigt sind, welche Daten wohin dürfen, wie Ausgaben geprüft werden und was bei einem Vorfall passiert. Je nach Anwendungsfall kommen Schulung, Inventar, Risikoklassifizierung, Datenschutzprüfung und weitere interne Prozesse dazu.",
+          "keyTakeaway": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar. Die KI-Richtlinie ist ein Dokumentationsbaustein für KI-Kompetenzmaßnahmen, kein vollständiger Artikel-4-Nachweis.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
@@ -68,7 +68,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Artikel 4 der EU-KI-Verordnung ist seit dem 2. Februar 2025 anwendbar. In der geltenden Fassung müssen Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen zu unterstützen."
+          "explanation": "Seit dem 2. Februar 2025. In der geltenden Fassung müssen Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen zu unterstützen. Das ist keine Ankündigung, das gilt."
         },
         {
           "id": "block_5_lesson_1_q2",
@@ -95,7 +95,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Shadow AI ist nicht an Preis, Anbieter oder Betriebsort gebunden. Entscheidend ist, dass Nutzung, Zweck, Datenfluss oder Verantwortung außerhalb der genehmigten Kontrollen liegen."
+          "explanation": "Preis, Anbieter, Betriebsort: alles egal. Shadow AI ist, was mit Nutzung, Zweck, Datenfluss oder Verantwortung außerhalb der genehmigten Kontrollen liegt. Eine freigegebene lokale Installation ist keine Shadow AI."
         }
       ]
     },
@@ -104,7 +104,7 @@
       "blockId": "block_5",
       "number": 2,
       "title": "Die 6 Bausteine deiner KI-Richtlinie",
-      "subtitle": "Ein anpassbares Grundgerüst für Zuständigkeiten und Regeln",
+      "subtitle": "Sechs Abschnitte, die zusammen einen Rahmen ergeben",
       "durationMinutes": 5,
       "keyConcepts": [
         "KI-Richtlinie",
@@ -119,15 +119,15 @@
           "id": "block_5_lesson_2_section_1",
           "title": "Bausteine 1 bis 3: Geltungsbereich, Tools, Daten",
           "readTimeMinutes": 3,
-          "content": "Diese Vorlage nutzt sechs Abschnitte. Sie ist kein universell vollständiges Compliance-Schema; je nach Einsatz kommen etwa Beschaffung, Urheberrecht, Produktsicherheit, Hochrisiko-Pflichten, Transparenz, Mitbestimmung oder Exportkontrollen hinzu.\n\n**1. Geltungsbereich und Begriffe:** Für welche Personen, Gesellschaften, Systeme, Funktionen und Nutzungsarten gilt das Dokument?\n\n**2. Inventar und Freigaben:** Welche konkrete Produktversion, Funktion, Konfiguration und Integration ist für welchen Zweck freigegeben? Wer besitzt die Entscheidung?\n\n**3. Daten- und Entscheidungsregeln:** Welche Datenklassen, Rechte, Empfänger und Auswirkungen sind zulässig? Welche Nutzungen sind verboten oder brauchen eine Einzelfallprüfung?",
-          "keyTakeaway": "Die ersten drei Abschnitte definieren Geltungsbereich, konkrete Systemfreigaben sowie Daten- und Entscheidungsregeln. Produktnamen allein reichen nicht."
+          "content": "Sechs Abschnitte. Das ist die Vorlage, und mehr behauptet sie nicht zu sein: kein Compliance-Schema, das überall vollständig wäre. Je nach Einsatz kommen Beschaffung, Urheberrecht, Produktsicherheit, Hochrisiko-Pflichten, Transparenz, Mitbestimmung oder Exportkontrollen dazu.\n\n**1. Geltungsbereich und Begriffe:** Für welche Personen, Gesellschaften, Systeme, Funktionen und Nutzungsarten gilt das Dokument?\n\n**2. Inventar und Freigaben:** Welche konkrete Produktversion, Funktion, Konfiguration und Integration ist für welchen Zweck freigegeben? Und wem gehört die Entscheidung?\n\n**3. Daten- und Entscheidungsregeln:** Welche Datenklassen, Rechte, Empfänger und Auswirkungen sind zulässig? Welche Nutzungen sind verboten oder brauchen eine Einzelfallprüfung?",
+          "keyTakeaway": "Geltungsbereich, konkrete Systemfreigaben, Daten- und Entscheidungsregeln: das sind die ersten drei Abschnitte. Ein Produktname füllt keinen davon."
         },
         {
           "id": "block_5_lesson_2_section_2",
           "title": "Bausteine 4 bis 6: Prüfpflicht, Eskalation, Review",
           "readTimeMinutes": 2,
-          "content": "**4. Prüfung und menschliche Verantwortung:** Welche Kontrollen gelten je nach Auswirkung? Wer darf freigeben, und wann ist ein Vier-Augen-Prinzip oder eine fachliche, rechtliche oder sicherheitstechnische Prüfung nötig?\n\n**5. Vorfälle und Eskalation:** Welcher interne Meldekanal gilt? Welche Informationen und Belege sind zu sichern? Wer bewertet Datenschutzverletzung, Sicherheitsvorfall, fehlerhafte Entscheidung oder Anbieterereignis?\n\n**6. Eigentümer, Änderungen und Review:** Wer pflegt Richtlinie und Inventar? Welche Ereignisse lösen eine sofortige Prüfung aus? Wie werden Versionen, Freigaben und Kommunikation dokumentiert?\n\nDer Umfang richtet sich nach Organisation und Risiko. Eine knappe Richtlinie kann funktionieren, wenn Inventar, Freigabematrix und operative Verfahren separat gepflegt und eindeutig verknüpft sind.",
-          "keyTakeaway": "Bausteine 4 bis 6 regeln Qualitätssicherung, Vorfallmanagement und kontinuierliche Aktualisierung. Alle sechs Bausteine bauen auf den vorherigen Blöcken auf."
+          "content": "**4. Prüfung und menschliche Verantwortung:** Welche Kontrollen gelten je nach Auswirkung? Wer darf freigeben, und wann ist ein Vier-Augen-Prinzip oder eine fachliche, rechtliche oder sicherheitstechnische Prüfung nötig?\n\n**5. Vorfälle und Eskalation:** Welcher interne Meldekanal gilt? Welche Informationen und Belege sind zu sichern? Wer bewertet Datenschutzverletzung, Sicherheitsvorfall, fehlerhafte Entscheidung oder Anbieterereignis?\n\n**6. Eigentümer, Änderungen und Review:** Wer pflegt Richtlinie und Inventar? Welche Ereignisse lösen eine sofortige Prüfung aus? Wie werden Versionen, Freigaben und Kommunikation dokumentiert?\n\nWie lang das Dokument wird, entscheiden Organisation und Risiko. Eine knappe Richtlinie kann reichen, wenn Inventar, Freigabematrix und operative Verfahren separat gepflegt und eindeutig verknüpft sind.",
+          "keyTakeaway": "Bausteine 4 bis 6 regeln Prüfung, Vorfälle und Aktualisierung. Alle sechs bauen auf dem auf, was du in den Blöcken davor erarbeitet hast."
         }
       ],
       "quiz": [
@@ -156,7 +156,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die Kursvorlage verwendet sechs Grundabschnitte. Das ist ein anpassbares Gerüst, keine Garantie auf rechtliche oder organisatorische Vollständigkeit."
+          "explanation": "Sechs. Das ist ein Gerüst zum Anpassen, keine Garantie für rechtliche oder organisatorische Vollständigkeit."
         },
         {
           "id": "block_5_lesson_2_q2",
@@ -183,7 +183,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Baustein 4 übernimmt die drei Basisfragen aus Block 4: sachlich korrekt, vollständig und angemessen. Die Richtlinie ordnet danach je Zweck und Auswirkung die nötige Prüftiefe, Freigaberolle und zusätzliche Kontrollen zu."
+          "explanation": "Baustein 4 nimmt die drei Grundfragen aus Block 4 mit: sachlich korrekt, vollständig, angemessen. Danach legt die Richtlinie je Zweck und Auswirkung fest, wie tief geprüft wird, wer freigibt und welche Kontrollen dazukommen."
         }
       ]
     },
@@ -192,7 +192,7 @@
       "blockId": "block_5",
       "number": 3,
       "title": "Übung: Richtlinie ausfüllen",
-      "subtitle": "Deine KI-Nutzungsrichtlinie Schritt für Schritt erstellen",
+      "subtitle": "Platzhalter raus, Zuständige rein",
       "durationMinutes": 10,
       "keyConcepts": ["KI-Nutzungsrichtlinie", "Vorlage", "AVV"],
       "sections": [
@@ -200,14 +200,14 @@
           "id": "block_5_lesson_3_section_1",
           "title": "Die Vorlage: Geltungsbereich, Tools, Daten",
           "readTimeMinutes": 5,
-          "content": "Füll die Vorlage mit den zuständigen Funktionen aus. Platzhalter in eckigen Klammern müssen vor einer Freigabe ersetzt werden.\n\n**1. Geltungsbereich:** [Organisation] legt fest, für welche Beschäftigten, Auftragnehmer, Standorte, Systeme, Funktionen und beruflichen Endgeräte die Richtlinie gilt. Verknüpfe Definitionen mit dem aktuellen KI-Inventar.\n\n**2. Freigabematrix:** Führe je Eintrag Produkt, Version oder Tarif, Funktion, Integration, Zweck, Datenklassen, verantwortliche Person, Vertrag, Region, Aufbewahrung, Berechtigungen und Freigabedatum auf. Nicht gelistete Kombinationen aus Zweck, Funktion und Datenklasse sind bis zur Prüfung gesperrt. Preis oder Markenname sind keine Kontrollkriterien.\n\n**3. Daten- und Entscheidungsregeln:** Verweise auf die organisationsspezifische Klassifizierung. Ergänze Datenminimierung, Rechte an Inhalten, zulässige Empfänger, verbotene Geheimnisse und Zugangsdaten sowie Regeln für Entscheidungen mit Auswirkungen auf Personen. Lege einen erreichbaren Klärungsweg fest.",
-          "keyTakeaway": "Die Freigabematrix verbindet Zweck, Funktion, Datenklasse, Vertrag, Konfiguration und Verantwortung. Weder kostenlos noch Enterprise ist allein eine Sicherheitskategorie."
+          "content": "Füll die Vorlage gemeinsam mit den zuständigen Funktionen aus. Jeder Platzhalter in eckigen Klammern ist ein offener Punkt. Solange einer drinsteht, ist die Richtlinie nicht freigabefähig.\n\n**1. Geltungsbereich:** [Organisation] legt fest, für welche Beschäftigten, Auftragnehmer, Standorte, Systeme, Funktionen und beruflichen Endgeräte die Richtlinie gilt. Verknüpfe Definitionen mit dem aktuellen KI-Inventar.\n\n**2. Freigabematrix:** Je Eintrag: Produkt, Version oder Tarif, Funktion, Integration, Zweck, Datenklassen, verantwortliche Person, Vertrag, Region, Aufbewahrung, Berechtigungen, Freigabedatum. Jede Kombination aus Zweck, Funktion und Datenklasse, die nicht in der Matrix steht, ist gesperrt, bis sie geprüft wurde. Preis und Markenname sind keine Kontrollkriterien.\n\n**3. Daten- und Entscheidungsregeln:** Verweise auf die Klassifizierung deiner Organisation. Dazu kommen Datenminimierung, Rechte an Inhalten, zulässige Empfänger, verbotene Geheimnisse und Zugangsdaten sowie Regeln für Entscheidungen mit Auswirkungen auf Personen. Und ein Klärungsweg, den man auch erreicht.",
+          "keyTakeaway": "Die Freigabematrix verbindet Zweck, Funktion, Datenklasse, Vertrag, Konfiguration und Verantwortung. Kostenlos ist keine Sicherheitskategorie. Enterprise auch nicht."
         },
         {
           "id": "block_5_lesson_3_section_2",
           "title": "Prüfpflicht, Eskalation und Unterschriften",
           "readTimeMinutes": 5,
-          "content": "**4. Prüfung und Freigabe:** Definiere Kontrollen nach Auswirkung: Quellenabgleich, Rechenprüfung, fachliche Freigabe, Vier-Augen-Prinzip oder Verbot automatisierter Entscheidungen. Benenne die Person, die für das Endergebnis verantwortlich bleibt.\n\n**5. Vorfallmeldung:** Beschäftigte melden eine Fehlverarbeitung unverzüglich über [Meldekanal] und sichern Zeitpunkt, System, Konto, eingegebene Daten, Ausgabe und bereits ergriffene Maßnahmen. Sie löschen oder verändern Belege nicht eigenmächtig. [Incident Response], Informationssicherheit, Datenschutz und weitere zuständige Funktionen bewerten den Fall nach dem bestehenden Verfahren.\n\nBei einer Verletzung des Schutzes personenbezogener Daten entscheidet der Verantwortliche anhand des Risikos, ob Artikel 33 DSGVO eine Meldung an die Aufsichtsbehörde verlangt. Die Meldung erfolgt ohne unangemessene Verzögerung und, soweit möglich, binnen 72 Stunden nach Kenntniserlangung. Interne Fristen legt der Incident-Response-Plan fest; diese Vorlage erfindet keine Vier- oder 24-Stunden-Stufen.\n\n**6. Eigentümer und Review:** Benenne [Policy Owner], regulären Prüftermin und Ereignisse für einen sofortigen Review, etwa neue Funktionen, geänderte Verträge, Vorfälle oder Rechtsänderungen. Dokumentiere Version, Genehmigende, Inkrafttreten und Kommunikation. Die erforderlichen Genehmigungen richten sich nach der Governance der Organisation; feste Unterschriftenrollen gelten nicht universell.",
+          "content": "**4. Prüfung und Freigabe:** Kontrollen nach Auswirkung: Quellenabgleich, Rechenprüfung, fachliche Freigabe, Vier-Augen-Prinzip oder ein Verbot automatisierter Entscheidungen. Und ein Name. Die Person, die für das Endergebnis geradesteht.\n\n**5. Vorfallmeldung:** Beschäftigte melden eine Fehlverarbeitung unverzüglich über [Meldekanal] und sichern Zeitpunkt, System, Konto, eingegebene Daten, Ausgabe und bereits ergriffene Maßnahmen. Belege werden nicht eigenmächtig gelöscht oder verändert. [Incident Response], Informationssicherheit, Datenschutz und weitere zuständige Funktionen bewerten den Fall nach dem bestehenden Verfahren.\n\nLiegt eine Verletzung des Schutzes personenbezogener Daten vor, entscheidet der Verantwortliche anhand des Risikos, ob Artikel 33 DSGVO eine Meldung an die Aufsichtsbehörde verlangt. Wenn ja: ohne unangemessene Verzögerung und, soweit möglich, binnen 72 Stunden nach Kenntniserlangung. Interne Fristen stehen im Incident-Response-Plan. Diese Vorlage erfindet keine Vier- oder 24-Stunden-Stufen.\n\n**6. Eigentümer und Review:** Benenne [Policy Owner], den regulären Prüftermin und die Ereignisse, die einen sofortigen Review auslösen: neue Funktionen, geänderte Verträge, Vorfälle, Rechtsänderungen. Dokumentiere Version, Genehmigende, Inkrafttreten und Kommunikation. Wer genehmigen muss, richtet sich nach der Governance der Organisation. Feste Unterschriftenrollen, die überall gelten, gibt es nicht.",
           "keyTakeaway": "Die Richtlinie benennt risikogerechte Kontrollen, einen sofort nutzbaren Meldekanal, zuständige Entscheider und dokumentierte Review-Auslöser."
         }
       ],
@@ -237,7 +237,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Bei nicht freigegebenen Verbraucherangeboten fehlen dem Betrieb meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Ob Eingaben für Training genutzt werden können, hängt vom konkreten Produkt und den Einstellungen ab."
+          "explanation": "Nicht die Qualität ist das Problem, nicht die Sprache, nicht die Internetverbindung. Bei nicht freigegebenen Verbraucherangeboten fehlen dem Betrieb meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Ob Eingaben ins Training fließen können, hängt vom konkreten Produkt und seinen Einstellungen ab."
         },
         {
           "id": "block_5_lesson_3_q2",
@@ -264,7 +264,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Artikel 33 knüpft die Meldepflicht an eine Verletzung des Schutzes personenbezogener Daten und die Risikobewertung. Die 72 Stunden laufen ab Kenntniserlangung des Verantwortlichen und sind kein pauschaler interner Eskalationsplan."
+          "explanation": "Artikel 33 knüpft die Meldepflicht an eine Verletzung des Schutzes personenbezogener Daten und an die Risikobewertung durch den Verantwortlichen. Die 72 Stunden laufen ab dessen Kenntniserlangung. Ein pauschaler interner Eskalationsplan sind sie nicht, und eine 24-Stunden-Pflicht für jede Fehlverarbeitung gibt es nicht."
         }
       ]
     },
@@ -273,7 +273,7 @@
       "blockId": "block_5",
       "number": 4,
       "title": "Zusammenfassung",
-      "subtitle": "Deine 5 Dokumente auf einen Blick",
+      "subtitle": "Fünf Dokumente, und keines ist fertig",
       "durationMinutes": 4,
       "keyConcepts": [
         "KI-Inventar",
@@ -287,14 +287,14 @@
           "id": "block_5_lesson_4_section_1",
           "title": "Fünf Dokumente, ein System",
           "readTimeMinutes": 2,
-          "content": "Der Kurs liefert fünf Arbeitsartefakte:\n\n1. **KI-Inventar** mit konkreten Funktionen, Zwecken, Daten und Verantwortlichen.\n2. **Beispiel für eine Datenklassifizierung**, das an die Organisation angepasst werden muss.\n3. **Vier Aufgabenmuster** für E-Mail, Meeting, Datenanalyse und Bericht.\n4. **Ausgabeprüfung** als Ausgangspunkt für risikogerechte Kontrollen.\n5. **KI-Nutzungsrichtlinie** als verknüpfendes Governance-Dokument.\n\nEin Artefakt ist erst einsatzbereit, wenn Platzhalter ersetzt, Annahmen geprüft, Zuständige benannt und die erforderlichen Freigaben dokumentiert sind.",
-          "keyTakeaway": "Die fünf Artefakte sind Arbeitsgrundlagen. Einsatzbereit werden sie erst durch organisationsspezifische Prüfung, Verantwortliche und dokumentierte Freigabe."
+          "content": "Fünf Dokumente hast du jetzt in der Hand:\n\n1. **KI-Inventar** mit konkreten Funktionen, Zwecken, Daten und Verantwortlichen.\n2. **Beispiel für eine Datenklassifizierung**, das deine Organisation noch anpassen muss.\n3. **Vier Aufgabenmuster** für E-Mail, Meeting, Datenanalyse und Bericht.\n4. **Ausgabeprüfung** als Ausgangspunkt für risikogerechte Kontrollen.\n5. **KI-Nutzungsrichtlinie**, die alles andere verknüpft.\n\nKeines davon ist fertig. Fertig ist ein Dokument erst, wenn die Platzhalter ersetzt sind, die Annahmen geprüft, die Zuständigen benannt und die Freigaben dokumentiert.",
+          "keyTakeaway": "Fünf Arbeitsgrundlagen, keine fertigen Dokumente. Einsatzbereit werden sie durch Prüfung in deiner Organisation, benannte Verantwortliche und dokumentierte Freigabe."
         },
         {
           "id": "block_5_lesson_4_section_2",
           "title": "Nächste Schritte",
           "readTimeMinutes": 2,
-          "content": "Diese Richtlinie kann ein Dokumentationsbaustein für KI-Kompetenzmaßnahmen nach Artikel 4 sein. Vor dem Inkrafttreten:\n\n1. **Prüfen und genehmigen:** Die nach Governance, Datenschutz, Informationssicherheit, Beschaffung und Mitbestimmung zuständigen Funktionen einbinden.\n2. **Operativ verknüpfen:** Inventar, Freigabematrix, technische Kontrollen, Beschaffung und Incident Response mit eindeutigen Verweisen verbinden.\n3. **Rollenbezogen vermitteln:** Betroffene Personen müssen erlaubte Zwecke, Grenzen, Prüfpflichten und Meldekanal praktisch anwenden können.\n4. **Review steuern:** Einen risikogerechten Regeltermin und sofortige Review-Auslöser dokumentieren.\n\nDie Wirksamkeit zeigt sich nicht an einer Unterschrift, sondern daran, ob Personen die richtige Freigabe finden, Systeme technisch begrenzt sind und Vorfälle tatsächlich gemeldet und bearbeitet werden.",
+          "content": "Die Richtlinie kann ein Dokumentationsbaustein für KI-Kompetenzmaßnahmen nach Artikel 4 sein. Bevor sie in Kraft tritt, vier Schritte:\n\n1. **Prüfen und genehmigen:** Die nach Governance, Datenschutz, Informationssicherheit, Beschaffung und Mitbestimmung zuständigen Funktionen einbinden.\n2. **Operativ verknüpfen:** Inventar, Freigabematrix, technische Kontrollen, Beschaffung und Incident Response mit eindeutigen Verweisen verbinden.\n3. **Rollenbezogen vermitteln:** Die Sachbearbeiterin, der Teamleiter, die Werkstudentin: jede betroffene Person muss erlaubte Zwecke, Grenzen, Prüfpflichten und Meldekanal im Alltag anwenden können.\n4. **Review steuern:** Einen risikogerechten Regeltermin und sofortige Review-Auslöser dokumentieren.\n\nOb die Richtlinie wirkt, sieht man nicht an der Unterschrift. Man sieht es daran, ob Leute die richtige Freigabe finden, ob Systeme technisch begrenzt sind und ob Vorfälle gemeldet und bearbeitet werden. Wirklich gemeldet, nicht nur theoretisch meldbar.",
           "keyTakeaway": "Wirksamkeit entsteht durch genehmigte Zuständigkeiten, technische Umsetzung, rollenbezogene Anwendung und dokumentierte Reviews."
         }
       ],
@@ -324,7 +324,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Im Laufe der fünf Blöcke entstehen fünf Dokumente: KI-Inventar, Datenklassifizierungs-Karte, Prompt-Vorlagen, 3-Schritt-Prüfung und die KI-Nutzungsrichtlinie."
+          "explanation": "Fünf, eines pro Block: KI-Inventar, Datenklassifizierungs-Karte, Prompt-Vorlagen, 3-Schritt-Prüfung und die KI-Nutzungsrichtlinie."
         },
         {
           "id": "block_5_lesson_4_q2",
@@ -351,7 +351,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Richtlinie wirkt nur, wenn zuständige Funktionen sie genehmigen, operative Kontrollen sie umsetzen, betroffene Personen sie anwenden können und definierte Ereignisse einen Review auslösen."
+          "explanation": "Im Ordner wirkt sie nicht. Eine Richtlinie wirkt, wenn die zuständigen Funktionen sie genehmigen, operative Kontrollen sie umsetzen, die betroffenen Personen sie anwenden können und definierte Ereignisse einen Review auslösen."
         }
       ]
     }
