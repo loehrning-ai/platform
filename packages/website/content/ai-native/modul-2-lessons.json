@@ -64,31 +64,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_1_section_1",
-          "title": "Warum ein einzelner Chat für wiederkehrende Arbeit nicht ausreicht",
+          "title": "Warum der einzelne Chat nicht reicht",
           "readTimeMinutes": 2,
-          "content": "Ein einzelner Chat beginnt mit dem Kontext, der in diesem Gespräch bereitgestellt wird. Dieselben Rollen-, Organisations- und Stilvorgaben wiederholt einzugeben kostet Zeit und kann zu uneinheitlichen Ergebnissen führen.\n\nEin Project kann einen gepflegten System-Prompt und freigegebene Referenzdateien für einen definierten Arbeitsbereich enthalten. Funktionen, Speicherung und Aufbewahrung unterscheiden sich nach Tarif und Einstellung; prüfe das aktuelle Verhalten, bevor du dich darauf verlässt.\n\nNutze das Project für stabilen, nicht vertraulichen Kontext. Gib fallspezifische Eingaben getrennt an und prüfe, was das Produkt speichert.",
-          "keyTakeaway": "Ein Project kann freigegebenen wiederkehrenden Kontext halten; Datenkontrolle und Output-Prüfung bleiben erforderlich."
+          "content": "Wie oft hast du Claude diese Woche erklärt, wer du bist? Jeder neue Chat weiß nur, was in ihm steht. Rolle, Organisation und Stil jedes Mal neu einzutippen kostet Zeit und macht die Ergebnisse uneinheitlich.\n\nEin Project hält einen gepflegten System-Prompt und freigegebene Referenzdateien für einen definierten Arbeitsbereich. Was gespeichert wird und wie lange, hängt von Tarif und Einstellung ab. Prüf das aktuelle Verhalten, bevor du dich darauf verlässt.\n\nIns Project gehört der stabile, nicht vertrauliche Kontext. Der Einzelfall kommt in den Chat. Und du prüfst, was das Produkt davon behält.",
+          "keyTakeaway": "Ein Project hält freigegebenen Dauerkontext. Datenkontrolle und Output-Prüfung nimmt es dir nicht ab."
         },
         {
           "id": "modul_2_lesson_1_section_2",
           "title": "Einen Project-Brief einrichten",
           "readTimeMinutes": 3,
-          "content": "Nutze drei Teile im System-Prompt:\n1. Rolle und Organisationskontext\n2. Kommunikationsregeln\n3. Daten- und Entscheidungsgrenzen\n\nBeispiel für ein Vertriebs-Project:\n\n```\nIch arbeite im Vertrieb eines Maschinenbauunternehmens\nin Bayern mit 80 Mitarbeitenden und Kunden in Deutschland und Österreich.\nTon: pragmatisch, sachlich und direkt.\nDu-Form bei Stammkunden, Sie-Form bei Neukunden.\nKeine Werbeversprechen oder Superlative.\nKeine echten Kundennamen oder laufenden Verhandlungsmargen.\nKeine erfundenen Preise, Termine oder Zusagen.\n```\n\nDu kannst ein freigegebenes, bereinigtes Angebotstemplate von 2024 als Formatbeispiel hinzufügen. Prüfe vor jedem Upload die aktuellen Regeln zu Speicherung, Zugriff und Aufbewahrung.\n\nSpätere Anfragen können auf diesen gepflegten Kontext verweisen, statt ihn vollständig zu wiederholen.",
-          "keyTakeaway": "Definiere Rolle, Kommunikationsregeln und Datengrenzen in einem gepflegten Project-Brief."
+          "content": "Der System-Prompt hat drei Teile:\n1. Rolle und Organisationskontext\n2. Kommunikationsregeln\n3. Daten- und Entscheidungsgrenzen\n\nSo sieht das für ein Vertriebs-Project aus:\n\n```\nIch arbeite im Vertrieb eines Maschinenbauunternehmens\nin Bayern mit 80 Mitarbeitenden und Kunden in Deutschland und Österreich.\nTon: pragmatisch, sachlich und direkt.\nDu-Form bei Stammkunden, Sie-Form bei Neukunden.\nKeine Werbeversprechen oder Superlative.\nKeine echten Kundennamen oder laufenden Verhandlungsmargen.\nKeine erfundenen Preise, Termine oder Zusagen.\n```\n\nEin freigegebenes, bereinigtes Angebotstemplate von 2024 kann als Formatbeispiel dazu. Vor jedem Upload prüfst du die aktuellen Regeln zu Speicherung, Zugriff und Aufbewahrung.\n\nJede spätere Anfrage baut auf diesem Kontext auf, statt ihn zu wiederholen.",
+          "keyTakeaway": "Rolle, Kommunikationsregeln, Datengrenzen: das ist der Project-Brief."
         },
         {
           "id": "modul_2_lesson_1_section_3",
           "title": "Artifacts als bearbeitbare Ergebnisse",
           "readTimeMinutes": 2,
-          "content": "Artifacts zeigen unterstützte Output-Typen in einem eigenen bearbeitbaren Bereich statt nur im Chatverlauf. Abhängig vom Produkt und aktuellen Funktionsumfang können dazu Dokumente, Code, HTML, React-Komponenten, SVG oder Markdown gehören.\n\nEin Artifact kann Übertragungen zwischen Modelloberfläche und externem Editor reduzieren. Es macht das Ergebnis nicht final: fachliche, rechtliche, barrierefreie und technische Prüfungen bleiben erforderlich.\n\nMiss für die ausgewählte Aufgabe, ob der Artifact-Ablauf Übertragungs- und Überarbeitungsaufwand tatsächlich reduziert.",
-          "keyTakeaway": "Artifacts können Kopier- und Einfügeschritte reduzieren und halten den Output für Prüfung und Bearbeitung verfügbar."
+          "content": "Ein Artifact zeigt den Output in einem eigenen, bearbeitbaren Bereich statt im Chatverlauf. Je nach Produkt und Funktionsumfang sind das Dokumente, Code, HTML, React-Komponenten, SVG oder Markdown.\n\nDas spart das Hin- und Herkopieren zwischen Modell und Editor. Final ist das Ergebnis deshalb nicht. Fachliche, rechtliche, technische und Barrierefreiheitsprüfung bleiben.\n\nOb der Artifact-Ablauf Übertragungs- und Überarbeitungsaufwand wirklich senkt, misst du an der konkreten Aufgabe.",
+          "keyTakeaway": "Artifacts sparen Kopierschritte und halten den Output für Prüfung und Bearbeitung offen."
         },
         {
           "id": "modul_2_lesson_1_section_4",
           "title": "Memory: was Claude behält",
           "readTimeMinutes": 2,
-          "content": "Memory-Funktionen unterscheiden sich nach Produkt, Tarif und aktueller Einstellung. Prüfe vor der Nutzung, welche Informationen wo gespeichert, wie lange aufbewahrt und wie sie gelöscht werden.\n\n**Project-Kontext:** Verwende für Übungen ausschließlich fiktive Angaben wie \"Kunde Alpha (fiktiv), 80 Mitarbeitende, Beispiel-Zahlungsziel.\"\n\n**Was du NICHT in Memory schreibst:**\n- echte Kunden- oder Kontaktdaten\n- vertrauliche Finanz- oder Vertragsdaten\n- Passwörter, Tokens oder API-Keys\n\n**Was vertretbar sein kann:**\n- nicht vertrauliche Rollenbeschreibung\n- allgemeine Sprach- und Formatpräferenzen\n- freigegebene Standard-Aufgaben\n\nMemory ist eine persistente Datenfunktion, kein folgenloser Komfort. Kuratiere Einträge und prüfe Löschung sowie Zugriff regelmäßig.",
-          "keyTakeaway": "Nutze Memory nur für freigegebenen, nicht vertraulichen Kontext; speichere dort keine Geheimnisse."
+          "content": "Was Claude behält, hängt von Produkt, Tarif und Einstellung ab. Vor der Nutzung klärst du: Was wird wo gespeichert, wie lange, und wie löschst du es?\n\n**Project-Kontext:** In Übungen nur fiktive Angaben wie \"Kunde Alpha (fiktiv), 80 Mitarbeitende, Beispiel-Zahlungsziel.\"\n\n**Was NICHT in Memory gehört:**\n- echte Kunden- oder Kontaktdaten\n- vertrauliche Finanz- oder Vertragsdaten\n- Passwörter, Tokens oder API-Keys\n\n**Was vertretbar sein kann:**\n- eine nicht vertrauliche Rollenbeschreibung\n- allgemeine Sprach- und Formatpräferenzen\n- freigegebene Standard-Aufgaben\n\nMemory ist eine persistente Datenfunktion, kein Komfort ohne Folgen. Kuratiere die Einträge, prüf regelmäßig Zugriff und Löschung.",
+          "keyTakeaway": "Memory nur für freigegebenen, nicht vertraulichen Kontext. Geheimnisse haben dort nichts verloren."
         }
       ],
       "quiz": [
@@ -117,7 +117,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Project-Kontext gilt innerhalb eines definierten Projects; Cross-Chat-Memory kann Einstellungen über Gespräche hinweg halten, wenn Produkt und Konfiguration dies unterstützen."
+          "explanation": "Project-Kontext gilt innerhalb eines Projects. Cross-Chat-Memory hält Einstellungen über Gespräche hinweg, wenn Produkt und Konfiguration das unterstützen."
         },
         {
           "id": "modul_2_lesson_1_q2",
@@ -144,7 +144,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Speichere keine Geheimnisse. Wende vor der Speicherung von Kunden-, Finanz- oder Vertragsinformationen die Datenklassifizierung und Werkzeugrichtlinie der Organisation an."
+          "explanation": "Keine Geheimnisse. Bei Kunden-, Finanz- oder Vertragsinformationen greifen zuerst Datenklassifizierung und Werkzeugrichtlinie deiner Organisation."
         }
       ]
     },
@@ -256,31 +256,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_2_section_1",
-          "title": "Eine Frage, die verbundene Quellen benötigt",
+          "title": "Eine Frage, die drei Quellen braucht",
           "readTimeMinutes": 2,
-          "content": "Zusagen liegen oft verteilt in E-Mails, Besprechungsnotizen und Dokumenten. Eine Suche in nur einer Quelle kann den an anderer Stelle dokumentierten Folgeschritt übersehen.\n\nDiese Lektion verbindet keine echten Konten. Gmail, Kalender und Drive dienen als Beispieldaten für einen autorisierten Connector-Ablauf: Quelle auswählen, Rechte minimieren, Datenfluss dokumentieren und Ergebnis prüfen.",
-          "keyTakeaway": "Connectors erweitern den Input eines KI-Systems, aber nur mit expliziter Autorisierung, Scope-Begrenzung und Review."
+          "content": "Montag, 7 Uhr. Die Zusagen der letzten Woche stecken in Mails, Besprechungsnotizen und Dokumenten, verteilt. Wer nur eine Quelle durchsucht, übersieht den Folgeschritt, der in einer anderen steht.\n\nEchte Konten verbindet diese Lektion nicht. Gmail, Kalender und Drive liefern Beispieldaten für den autorisierten Connector-Ablauf. Quelle auswählen, Rechte minimieren, Datenfluss dokumentieren, Ergebnis prüfen.",
+          "keyTakeaway": "Connectors erweitern den Input. Aber nur mit ausdrücklicher Autorisierung, begrenztem Scope und Review."
         },
         {
           "id": "modul_2_lesson_2_section_2",
           "title": "Was Connectors sind",
           "readTimeMinutes": 3,
-          "content": "Connector = kontrollierte Integration zwischen KI-Oberfläche und externer Quelle. In der Praxis läuft das häufig über OAuth: Konto auswählen, Scopes prüfen, Zugriff bestätigen, regelmäßig widerrufen.\n\n**Typische Quellen:**\n- Google Workspace: Gmail, Drive, Docs, Calendar\n- Microsoft 365: Outlook, OneDrive, SharePoint\n- Notion, GitHub, Slack, Airtable, Salesforce, HubSpot, Stripe, Jira, Linear\n\nDiese Lernplattform simuliert den Ablauf. Sie verbindet keine echten Konten und liest keine externen Postfächer.\n\n**Wichtige Unterscheidung zu MCP:**\n- Produkt-Connectors leben in der jeweiligen KI-Oberfläche.\n- MCPs leben auf deinem Rechner oder Server. Tiefere Integration, mehr Kontrolle, mehr Betriebsverantwortung.\n\n**DSGVO-Note:** Vor produktiver Nutzung müssen Zweck, Rechtsgrundlage, Scopes, Protokollierung, Löschkonzept, AVV/DPA und Berechtigungsreview geklärt sein.",
-          "keyTakeaway": "OAuth-basiert, aber nicht trivial: Scopes, Rechtsgrundlage, Protokollierung und Widerruf müssen geklärt sein."
+          "content": "Ein Connector ist eine kontrollierte Integration zwischen KI-Oberfläche und externer Quelle. Technisch meist OAuth: Konto auswählen, Scopes prüfen, Zugriff bestätigen, regelmäßig widerrufen.\n\n**Typische Quellen:**\n- Google Workspace: Gmail, Drive, Docs, Calendar\n- Microsoft 365: Outlook, OneDrive, SharePoint\n- Notion, GitHub, Slack, Airtable, Salesforce, HubSpot, Stripe, Jira, Linear\n\nDiese Lernplattform simuliert den Ablauf. Kein echtes Konto, kein fremdes Postfach.\n\n**Der Unterschied zu MCP:**\n- Produkt-Connectors leben in der KI-Oberfläche.\n- MCPs leben auf deinem Rechner oder Server. Tiefere Integration, mehr Kontrolle, mehr Betriebsverantwortung.\n\n**DSGVO:** Vor dem produktiven Einsatz sind Zweck, Rechtsgrundlage, Scopes, Protokollierung, Löschkonzept, AVV/DPA und Berechtigungsreview geklärt. Nicht danach.",
+          "keyTakeaway": "OAuth ist der einfache Teil. Scopes, Rechtsgrundlage, Protokollierung und Widerruf sind die Arbeit."
         },
         {
           "id": "modul_2_lesson_2_section_3",
           "title": "Die Abfrage für einen Zusagenabgleich",
           "readTimeMinutes": 3,
-          "content": "Die Übungsfrage lautet:\n\n> \"Nimm die Beispiel-Mails der letzten 7 Tage. Extrahiere alle 'ich mache X' / 'wir liefern Y' / 'bis Freitag Z': Commitments, die gemacht wurden. Prüfe gegen Beispiel-Kalender und Beispiel-Drive, ob Follow-ups dokumentiert sind. Gib mir: Liste der offenen Commitments, Absender, Fälligkeit, Status.\"\n\nDer Lernpunkt ist nicht die konkrete Gmail-Verbindung, sondern das Muster:\n- Quelle und Zeitraum begrenzen\n- Commitments strukturiert extrahieren\n- zweite Quelle als Gegencheck nutzen\n- Ergebnis als Tabelle ausgeben\n- Mensch prüft vor Aktion\n\nTypisches Übungsergebnis:\n- 14 Commitments\n- 9 bereits geliefert / dokumentiert\n- 3 überfällig\n- 2 unklar\n\nDie drei überfälligen Punkte werden nicht automatisch verschickt. Sie werden als Review-Liste vorbereitet.",
+          "content": "Die Übungsfrage:\n\n> \"Nimm die Beispiel-Mails der letzten 7 Tage. Extrahiere alle 'ich mache X' / 'wir liefern Y' / 'bis Freitag Z': Commitments, die gemacht wurden. Prüfe gegen Beispiel-Kalender und Beispiel-Drive, ob Follow-ups dokumentiert sind. Gib mir: Liste der offenen Commitments, Absender, Fälligkeit, Status.\"\n\nVergiss die Gmail-Verbindung. Das Muster zählt:\n- Quelle und Zeitraum begrenzen\n- Commitments strukturiert extrahieren\n- zweite Quelle als Gegencheck\n- Ergebnis als Tabelle\n- Mensch prüft, bevor irgendetwas passiert\n\nTypisches Übungsergebnis:\n- 14 Commitments\n- 9 bereits geliefert / dokumentiert\n- 3 überfällig\n- 2 unklar\n\nDie drei überfälligen Punkte gehen nicht automatisch raus. Sie landen als Review-Liste bei dir.",
           "keyTakeaway": "Multi-Source-Query ersetzt keine Verantwortung. Sie erzeugt eine Review-Liste, keine automatische Wahrheit."
         },
         {
           "id": "modul_2_lesson_2_section_4",
           "title": "Zugriff verändert die Risikogrenze",
           "readTimeMinutes": 2,
-          "content": "Ein Connector kann den manuellen Datentransfer reduzieren, erweitert aber den Zugriffs- und Risikoumfang. Berechtigungen, freigegebene Quellen, Protokollierung und Widerruf müssen vorab definiert sein.\n\n**Übungs-Prompts mit reinen Beispieldaten:**\n- \"Welche fiktiven Beispiel-Meetings stehen morgen an? Gib pro Meeting drei Vorbereitungsfragen.\"\n- \"Erstelle einen Briefentwurf an Kunde Alpha aus dem fiktiven Protokoll.\"\n- \"Finde in den Beispiel-Mails alle Anhänge von Kunde Alpha und fasse nur die Anhang-Titel zusammen.\"\n\nDas sind keine Live-Zugriffe. Produktive Nutzung setzt freigegebene Daten, minimalen Scope und menschliches Review voraus.",
-          "keyTakeaway": "Ein Connector reduziert manuelle Übertragung nur mit freigegebenen Quellen, minimalen Scopes und menschlicher Prüfung."
+          "content": "Weniger Kopieren, mehr Zugriff, mehr Risiko. Das ist der Tausch bei jedem Connector. Berechtigungen, freigegebene Quellen, Protokollierung und Widerruf stehen fest, bevor der erste Abruf läuft.\n\n**Übungs-Prompts mit reinen Beispieldaten:**\n- \"Welche fiktiven Beispiel-Meetings stehen morgen an? Gib pro Meeting drei Vorbereitungsfragen.\"\n- \"Erstelle einen Briefentwurf an Kunde Alpha aus dem fiktiven Protokoll.\"\n- \"Finde in den Beispiel-Mails alle Anhänge von Kunde Alpha und fasse nur die Anhang-Titel zusammen.\"\n\nLive-Zugriffe sind das nicht. Produktiv läuft so etwas nur mit freigegebenen Daten, minimalem Scope und menschlichem Review.",
+          "keyTakeaway": "Connector heißt weniger Handarbeit, aber nur mit freigegebenen Quellen, minimalen Scopes und menschlicher Prüfung."
         }
       ],
       "quiz": [
@@ -309,7 +309,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein Produkt-Connector wird innerhalb eines Produkts konfiguriert. MCP definiert die Kommunikation eines kompatiblen Clients mit bereitgestellten Tools und Ressourcen; beide können je nach Implementierung lokal oder remote sein."
+          "explanation": "Der Produkt-Connector wird im Produkt konfiguriert. MCP definiert, wie ein kompatibler Client mit bereitgestellten Tools und Ressourcen spricht. Lokal oder remote können beide sein."
         },
         {
           "id": "modul_2_lesson_2_q2",
@@ -336,7 +336,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein Connector kann wiederholtes Kopieren reduzieren und Zugriffs-Scopes sichtbar machen. Er schafft keine DSGVO-Ausnahme; prüfe Anbieterdokumentation, Vertrag und konfigurierten Datenfluss."
+          "explanation": "Ein Connector spart wiederholtes Kopieren und macht Zugriffs-Scopes sichtbar. Eine DSGVO-Ausnahme ist er nicht. Anbieterdokumentation, Vertrag und konfigurierter Datenfluss bleiben zu prüfen."
         }
       ]
     },
@@ -405,31 +405,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_3_section_1",
-          "title": "Warum gepflegte Skills ungenutzte SOPs ergänzen können",
+          "title": "Die SOP, die niemand liest",
           "readTimeMinutes": 2,
-          "content": "Eine Standardarbeitsanweisung ist nur nützlich, wenn sie auffindbar ist und angewendet wird. Lange Dokumente werden bei zeitkritischen Aufgaben leicht übersprungen.\n\nEin Skill kann die relevanten Anweisungen in den Ausführungspfad bringen. Der Aufruf `/angebot-draft` wendet das gepflegte Verfahren für einen internen Angebotsentwurf an.\n\nDer Skill ersetzt weder den SOP-Verantwortlichen noch Freigaben oder Prüfbelege. Er erleichtert die konsistente Nutzung der aktuellen Anweisung.",
+          "content": "Wann hast du zuletzt eine Standardarbeitsanweisung gelesen? Eine SOP nützt nur, wenn jemand sie findet und anwendet. Unter Zeitdruck überspringt jeder das lange Dokument.\n\nEin Skill holt die Anweisung dorthin, wo gearbeitet wird. `/angebot-draft` eintippen, und das gepflegte Verfahren für einen internen Angebotsentwurf läuft.\n\nDen SOP-Verantwortlichen ersetzt der Skill nicht, Freigaben und Prüfbelege auch nicht. Er sorgt nur dafür, dass die aktuelle Anweisung jedes Mal gleich läuft.",
           "keyTakeaway": "Ein Skill macht gepflegte Anweisungen innerhalb eines definierten Ablaufs ausführbar."
         },
         {
           "id": "modul_2_lesson_3_section_2",
           "title": "Was ist eine Skill?",
           "readTimeMinutes": 3,
-          "content": "Eine Skill ist ein **benannter, wiederverwendbarer Prompt mit Tool-Zugriffen und Hooks**, den du mit einem Slash-Kommando aufrufst.\n\nTechnisch:\n- Liegt in `.claude/skills/skill-name/`\n- Besteht aus: `SKILL.md` (Meta), `PROMPT.md` (der Prompt), `EXAMPLES.md` (Beispiele)\n- Wird aufgerufen mit `/skill-name` in Claude Code oder Claude.ai\n\nMental:\n- Wie ein Makro, aber in natürlicher Sprache\n- Wie ein Shell-Alias, aber für kognitive Arbeit\n- Wie ein SOP, aber ausführbar\n\n**Drei Kategorien:**\n1. **Output-Skills:** generieren Content (`/angebot-draft`, `/wochenbericht-auto`)\n2. **Analyse-Skills:** strukturieren Input (`/meeting-summary-de`, `/invoice-parse`)\n3. **Check-Skills:** prüfen gegen Regel (`/gdpr-audit`, `/eu-ai-act-classify`)\n\nDie Kursmaterialien enthalten Beispiele für alle drei Kategorien.",
+          "content": "Eine Skill ist ein **benannter, wiederverwendbarer Prompt mit Tool-Zugriffen und Hooks**. Aufgerufen wird sie per Slash-Kommando.\n\nTechnisch:\n- Liegt in `.claude/skills/skill-name/`\n- Besteht aus: `SKILL.md` (Meta), `PROMPT.md` (der Prompt), `EXAMPLES.md` (Beispiele)\n- Wird aufgerufen mit `/skill-name` in Claude Code oder Claude.ai\n\nDenk sie dir als Makro in natürlicher Sprache. Als Shell-Alias für Denkarbeit. Als SOP, die läuft.\n\n**Drei Kategorien:**\n1. **Output-Skills:** generieren Content (`/angebot-draft`, `/wochenbericht-auto`)\n2. **Analyse-Skills:** strukturieren Input (`/meeting-summary-de`, `/invoice-parse`)\n3. **Check-Skills:** prüfen gegen Regel (`/gdpr-audit`, `/eu-ai-act-classify`)\n\nBeispiele für alle drei findest du in den Kursmaterialien.",
           "keyTakeaway": "Skills bündeln Anweisungen, Werkzeuge und Prüfungen hinter einem benannten Befehl."
         },
         {
           "id": "modul_2_lesson_3_section_3",
-          "title": "Einen Skill als kleines, testbares Paket bauen",
+          "title": "Drei Dateien, ein Befehl",
           "readTimeMinutes": 3,
-          "content": "Wir entwerfen `/angebot-draft` als wiederverwendbaren, prüfbaren Ablauf.\n\n**Schritt 1: SKILL.md**\n```markdown\n# /angebot-draft\nBeschreibung: Erstellt einen internen Angebotsentwurf.\nInput: freigegebenes oder fiktives Briefing\nOutput: Entwurf mit markierten Preis-, Termin- und Freigabefeldern\n```\n\n**Schritt 2: PROMPT.md**\n```\nErstelle aus einem fiktiven oder freigegebenen Briefing einen Angebotsentwurf.\nErfinde keine Preise, Lieferzusagen oder Vertragsbedingungen.\nMarkiere jedes offene Feld zur menschlichen Prüfung.\n```\n\n**Schritt 3: EXAMPLES.md**\nNutze zwei oder drei klar fiktive Beispiele, etwa `Kunde Alpha (fiktiv), 2 Beispielmaschinen`.\n\nZeitbedarf und Qualität werden im Test gemessen; der Skill übernimmt weder Freigabe noch Versand.",
-          "keyTakeaway": "Nutze eine kleine Menge gepflegter Dateien und teste den Skill an repräsentativen Beispielen."
+          "content": "Bauen wir `/angebot-draft`, als wiederverwendbaren, prüfbaren Ablauf.\n\n**Schritt 1: SKILL.md**\n```markdown\n# /angebot-draft\nBeschreibung: Erstellt einen internen Angebotsentwurf.\nInput: freigegebenes oder fiktives Briefing\nOutput: Entwurf mit markierten Preis-, Termin- und Freigabefeldern\n```\n\n**Schritt 2: PROMPT.md**\n```\nErstelle aus einem fiktiven oder freigegebenen Briefing einen Angebotsentwurf.\nErfinde keine Preise, Lieferzusagen oder Vertragsbedingungen.\nMarkiere jedes offene Feld zur menschlichen Prüfung.\n```\n\n**Schritt 3: EXAMPLES.md**\nZwei oder drei klar fiktive Beispiele, etwa `Kunde Alpha (fiktiv), 2 Beispielmaschinen`.\n\nZeitbedarf und Qualität misst du im Test. Freigabe und Versand bleiben Handarbeit.",
+          "keyTakeaway": "Wenige gepflegte Dateien, getestet an repräsentativen Beispielen."
         },
         {
           "id": "modul_2_lesson_3_section_4",
           "title": "Die 3-mal-Regel",
           "readTimeMinutes": 2,
-          "content": "Wenn eine Aufgabe wiederkehrt, prüfe, ob ein Skill ihre Ausführung konsistenter machen würde. Drei Vorkommen pro Monat sind ein nützlicher Prüftrigger, keine garantierte Rendite.\n\nSchätze Einrichtung, Pflege, Ausführung und Review für die konkrete Aufgabe. Ein kurzer Prompt mit uneinheitlichem Output ist keine Verbesserung.\n\n**Übung:** Wähle eine Aufgabe, die du in diesem Monat mindestens dreimal erledigt hast. Entwirf `SKILL.md`, `PROMPT.md` und `EXAMPLES.md`. Führe den Skill mit zwei verschiedenen Eingaben aus, vergleiche die Ergebnisse und passe die Anweisungen an.",
-          "keyTakeaway": "Nutze drei monatliche Vorkommen als Anlass zur Prüfung; behalte den Skill nur, wenn der Test einen Nutzen zeigt."
+          "content": "Dreimal im Monat dieselbe Aufgabe? Dann prüf, ob ein Skill sie konsistenter macht. Drei Vorkommen sind der Prüftrigger, keine garantierte Rendite.\n\nRechne Einrichtung, Pflege, Ausführung und Review für die konkrete Aufgabe zusammen. Ein kurzer Prompt mit uneinheitlichem Output ist keine Verbesserung.\n\n**Übung:** Nimm eine Aufgabe, die du in diesem Monat mindestens dreimal erledigt hast. Entwirf `SKILL.md`, `PROMPT.md` und `EXAMPLES.md`. Lass den Skill mit zwei verschiedenen Eingaben laufen, vergleiche die Ergebnisse, schärfe die Anweisungen nach.",
+          "keyTakeaway": "Dreimal im Monat ist der Anlass zur Prüfung. Bleiben darf der Skill nur, wenn der Test Nutzen zeigt."
         }
       ],
       "quiz": [
@@ -458,7 +458,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der Kurs verwendet drei monatliche Vorkommen als Prüftrigger. Der tatsächliche Nutzen hängt von Einrichtung, Pflege und Review ab."
+          "explanation": "Drei Vorkommen im Monat sind der Prüftrigger dieses Kurses. Ob es sich lohnt, entscheiden Einrichtung, Pflege und Review."
         },
         {
           "id": "modul_2_lesson_3_q2",
@@ -514,31 +514,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_4_section_1",
-          "title": "Eine Integration erst nach Prüfung hinzufügen",
+          "title": "Installieren ist keine Freigabe",
           "readTimeMinutes": 2,
-          "content": "Ein Plugin kann mehrere Skills, MCP-Server, Hooks und Sub-Agents für zusammengehörige Arbeit bündeln. Eine GitHub-Integration kann beispielsweise Repository-Suche, Pull-Request-Prüfung und Issue-Aktionen über authentifizierte APIs bereitstellen.\n\nInstallation ist weder Fachkompetenz noch Autorisierung. Der Output braucht weiterhin Prüfung, und jede API-Aktion ist durch die vergebenen Kontorechte begrenzt.\n\nUnterscheide zwischen:\n1. **Vom Anbieter gepflegten Paketen** mit dokumentierter Herkunft und Release-Verantwortung\n2. **Community-Paketen**, die eine unabhängige Prüfung von Code, Berechtigungen und Updates benötigen\n\nNutze nur von der Organisation freigegebene Pakete und prüfe vor der Installation Quelle, Version und angeforderte Rechte.",
-          "keyTakeaway": "Ein Plugin bündelt Fähigkeiten; Herkunft, Berechtigungen und Output bleiben prüfpflichtig."
+          "content": "Installiert heißt nicht erlaubt. Ein Plugin bündelt Skills, MCP-Server, Hooks und Sub-Agents für zusammengehörige Arbeit. Eine GitHub-Integration etwa liefert Repository-Suche, Pull-Request-Prüfung und Issue-Aktionen über authentifizierte APIs.\n\nDie Installation macht dich weder zum Fachmann noch zum Berechtigten. Der Output braucht Prüfung, und jede API-Aktion endet an den Rechten deines Kontos.\n\nZwei Sorten Pakete:\n1. **Vom Anbieter gepflegte Pakete** mit dokumentierter Herkunft und Release-Verantwortung\n2. **Community-Pakete**, bei denen du Code, Berechtigungen und Updates selbst prüfen musst\n\nInstalliert wird nur, was die Organisation freigegeben hat, und erst nach Blick auf Quelle, Version und angeforderte Rechte.",
+          "keyTakeaway": "Ein Plugin bündelt Fähigkeiten. Herkunft, Berechtigungen und Output prüfst du trotzdem."
         },
         {
           "id": "modul_2_lesson_4_section_2",
           "title": "Plugins installieren",
           "readTimeMinutes": 2,
-          "content": "Diese Übung modelliert die Einrichtungsreihenfolge:\n\n```bash\n/plugin install github@claude-plugins-official\n```\n\nEin unterstützter Client kann nach Benutzer- oder Project-Scope, Authentifizierung, Berechtigungsprüfung und Neustart fragen. Prüfe aktuellen Befehl und Paketquelle vor der Ausführung.\n\nÜbergib Secrets weder in Skripten noch als Befehlsargumente. Einrichtungstools sollten einen freigegebenen Secret-Store oder interaktive Authentifizierung verwenden, Konfigurationsdateien schützen und den Widerruf dokumentieren.\n\nBeispiel nach einer korrekt autorisierten Verbindung:\n> \"Durchsuche die freigegebene Beispiel-Kundendatenbank nach fiktiven Firmen in Bayern ohne Aktivität seit sechs Monaten. Erstelle für fünf Datensätze Reaktivierungsentwürfe und sende nichts.\"\n\nDer Ablauf trennt Datenabruf, Textgenerierung und menschliche Freigabe.",
-          "keyTakeaway": "Installation verlangt Quellenprüfung, Authentifizierung, Scope-Prüfung und einen definierten Widerrufsweg."
+          "content": "Die Reihenfolge der Einrichtung, hier als Übung:\n\n```bash\n/plugin install github@claude-plugins-official\n```\n\nEin unterstützter Client fragt nach Benutzer- oder Project-Scope, Authentifizierung, Berechtigungen und Neustart. Befehl und Paketquelle prüfst du, bevor du Enter drückst.\n\nSecrets gehören weder in Skripte noch in Befehlsargumente. Das Einrichtungstool nutzt einen freigegebenen Secret-Store oder interaktive Authentifizierung, schützt die Konfigurationsdateien und dokumentiert den Widerruf.\n\nSo sieht eine Anfrage nach korrekt autorisierter Verbindung aus:\n> \"Durchsuche die freigegebene Beispiel-Kundendatenbank nach fiktiven Firmen in Bayern ohne Aktivität seit sechs Monaten. Erstelle für fünf Datensätze Reaktivierungsentwürfe und sende nichts.\"\n\nDatenabruf, Textgenerierung, menschliche Freigabe: drei getrennte Schritte.",
+          "keyTakeaway": "Installation heißt Quelle prüfen, authentifizieren, Scope prüfen und den Widerruf vorher kennen."
         },
         {
           "id": "modul_2_lesson_4_section_3",
           "title": "MCP als Werkzeugschnittstelle",
           "readTimeMinutes": 3,
-          "content": "**MCP bedeutet Model Context Protocol.** Es definiert, wie ein kompatibler KI-Client externe Tools entdecken und aufrufen sowie bereitgestellte Ressourcen lesen kann.\n\nEin MCP-Server kann anbieten:\n- **Tools:** Funktionen wie `read_file`, `update_record` oder `send_message`\n- **Ressourcen:** Dateien oder Daten, die ein Client lesen darf\n\nEin MCP-Server kann eine Integration bereitstellen, für die kein Paket existiert.\n\n**Beispielkategorien für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nFür produktive Nutzung müssen Berechtigungen, Secret-Handhabung, Protokollierung, Least Privilege, Widerruf und menschliche Freigabe folgenreicher Schreibaktionen definiert sein.",
-          "keyTakeaway": "MCP definiert eine Tool- und Ressourcenschnittstelle; jeder Server benötigt eine eigene Sicherheitsprüfung."
+          "content": "**MCP heißt Model Context Protocol.** Es legt fest, wie ein kompatibler KI-Client externe Tools findet und aufruft und bereitgestellte Ressourcen liest.\n\nEin MCP-Server bietet zwei Dinge an:\n- **Tools:** Funktionen wie `read_file`, `update_record` oder `send_message`\n- **Ressourcen:** Dateien oder Daten, die ein Client lesen darf\n\nFehlt für eine Integration das Paket, kann ein MCP-Server sie trotzdem liefern.\n\n**Beispiele für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nProduktiv braucht jeder Server geklärte Berechtigungen, Secret-Handhabung, Protokollierung, Least Privilege, Widerruf und eine menschliche Freigabe für folgenreiche Schreibaktionen.",
+          "keyTakeaway": "MCP ist die Schnittstelle für Tools und Ressourcen. Jeder Server bekommt seine eigene Sicherheitsprüfung."
         },
         {
           "id": "modul_2_lesson_4_section_4",
           "title": "Ein MCP-Setup als Dry-Run prüfen",
           "readTimeMinutes": 3,
-          "content": "Ein MCP-Setup braucht eine nachvollziehbare, geprüfte Installationsquelle. Führe kein unbekanntes Skript und kein `curl | bash` aus.\n\nEin sicherer Test dokumentiert Konfigurationspfad, benötigte Berechtigungen, Secret-Quelle, Backup und Startprüfung. Verwende im Dry-Run nur einen fiktiven Suchbegriff wie `Fiktivwerk Alpha`; erwarte ausdrücklich keinen realen Registertreffer.\n\nFür eine reale Firmenrecherche müssen Quelle, Rechtsgrundlage, Suchumfang und Zweck freigegeben sein. Ergebnisse werden gegen die rechtsverbindliche Primärquelle geprüft.",
-          "keyTakeaway": "Behandle Register- und Statistikintegrationen als Recherchehilfen und prüfe Ergebnisse an maßgeblichen Quellen."
+          "content": "Die Installationsquelle muss nachvollziehbar und geprüft sein. Kein unbekanntes Skript, kein `curl | bash`.\n\nEin sauberer Test dokumentiert Konfigurationspfad, benötigte Berechtigungen, Secret-Quelle, Backup und Startprüfung. Im Dry-Run suchst du nur nach einem fiktiven Begriff wie `Fiktivwerk Alpha` und erwartest ausdrücklich keinen realen Registertreffer.\n\nEine reale Firmenrecherche braucht die Freigabe von Quelle, Rechtsgrundlage, Suchumfang und Zweck. Und jedes Ergebnis wird an der rechtsverbindlichen Primärquelle geprüft.",
+          "keyTakeaway": "Register- und Statistikintegrationen sind Recherchehilfen. Geprüft wird an der maßgeblichen Quelle."
         }
       ],
       "quiz": [
@@ -594,7 +594,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ungeprüfte Skripte können Einstellungen überschreiben, Secrets ausleiten oder dauerhaften Zugriff hinzufügen. Prüfe Quelle, Code, Version und Berechtigungen."
+          "explanation": "Ein ungeprüftes Skript kann Einstellungen überschreiben, Secrets ausleiten oder sich dauerhaften Zugriff verschaffen. Quelle, Code, Version, Berechtigungen: alles prüfen."
         }
       ]
     },
@@ -624,29 +624,29 @@
           "id": "modul_2_lesson_5_section_1",
           "title": "Warum AI-Outputs generisch aussehen",
           "readTimeMinutes": 2,
-          "content": "Eine offene Anfrage wie \"Erstelle eine Landingpage für mein Produkt\" lässt Typografie, Farbe, Layout, Hierarchie und Bewegung unbestimmt. Das Modell greift dann häufig auf Muster zurück, die seit 2023 in generierten Oberflächen und Standardkomponenten verbreitet sind.\n\nDas Ergebnis kann Inter, einen Indigo-Verlauf, einen Hero mit drei Karten und einen allgemeinen Call-to-Action kombinieren. Keine dieser Entscheidungen ist allein falsch. Zusammen zeigen sie jedoch, dass projektspezifische Designentscheidungen fehlen.\n\nGenerischer Output entsteht meist durch einen unvollständigen Design-Brief, nicht durch eine einzelne Schrift oder ein Framework.",
-          "keyTakeaway": "Definiere visuelles System, Inhaltshierarchie und Grenzen, bevor du die Umsetzung anforderst."
+          "content": "Du tippst \"Erstelle eine Landingpage für mein Produkt\" und lässt Typografie, Farbe, Layout, Hierarchie und Bewegung offen. Das Modell füllt die Lücken mit dem, was seit 2023 in generierten Oberflächen und Standardkomponenten herumliegt.\n\nHeraus kommt Inter, ein Indigo-Verlauf, ein Hero mit drei Karten, ein Call-to-Action für alles. Keine dieser Entscheidungen ist für sich falsch. Zusammen verraten sie, dass niemand eine Designentscheidung getroffen hat.\n\nGenerisch wird ein Output durch einen unvollständigen Design-Brief. Nicht durch eine Schrift, nicht durch ein Framework.",
+          "keyTakeaway": "Visuelles System, Inhaltshierarchie, Grenzen: erst festlegen, dann bauen lassen."
         },
         {
           "id": "modul_2_lesson_5_section_2",
           "title": "Design Skill installieren + erste Ausgabe",
           "readTimeMinutes": 3,
-          "content": "Beispiel für einen Installationsbefehl:\n\n```\n/plugin install frontend-design@claude-plugins-official\n```\n\nBeispielaufruf:\n\n```\n/frontend-design \"Landingpage für ein Maschinenbauunternehmen,\n80 Mitarbeitende, Zielgruppe: Handwerksbetriebe mit 10 bis 30 Mitarbeitenden,\n35 Jahre am Markt, Qualität vor niedrigstem Preis.\"\n```\n\nDer Ablauf sollte mit einer Designrichtung statt mit Code beginnen:\n\n> **Vorschlag:**\n> - Richtung: etabliertes Industrieunternehmen mit aktueller digitaler Oberfläche\n> - Typografie: Serifenschrift für Überschriften, zurückhaltende Sans-Serif für Text\n> - Farbe: warmes Grau mit Kupferakzent\n> - Struktur: bildgeführter Einstieg, belegte Unternehmensgeschichte, Nachweisblock\n> - Bewegung: nur für sinnvolle Zustandswechsel, kein dekoratives Parallax\n>\n> Diese Richtung vor der Umsetzung bestätigen oder korrigieren.\n\nErzeuge nach Freigabe einen React- und Tailwind-Entwurf. Prüfe Barrierefreiheit, Responsivität, Inhalte, Abhängigkeiten und Eignung für den Produktivbetrieb vor der Integration.",
-          "keyTakeaway": "Trenne Designrichtung und Codegenerierung und prüfe beide Stufen."
+          "content": "Beispiel für einen Installationsbefehl:\n\n```\n/plugin install frontend-design@claude-plugins-official\n```\n\nBeispielaufruf:\n\n```\n/frontend-design \"Landingpage für ein Maschinenbauunternehmen,\n80 Mitarbeitende, Zielgruppe: Handwerksbetriebe mit 10 bis 30 Mitarbeitenden,\n35 Jahre am Markt, Qualität vor niedrigstem Preis.\"\n```\n\nZuerst kommt keine Zeile Code, sondern eine Designrichtung:\n\n> **Vorschlag:**\n> - Richtung: etabliertes Industrieunternehmen mit aktueller digitaler Oberfläche\n> - Typografie: Serifenschrift für Überschriften, zurückhaltende Sans-Serif für Text\n> - Farbe: warmes Grau mit Kupferakzent\n> - Struktur: bildgeführter Einstieg, belegte Unternehmensgeschichte, Nachweisblock\n> - Bewegung: nur für sinnvolle Zustandswechsel, kein dekoratives Parallax\n>\n> Diese Richtung vor der Umsetzung bestätigen oder korrigieren.\n\nErst nach deiner Freigabe entsteht der React- und Tailwind-Entwurf. Vor der Integration prüfst du Barrierefreiheit, Responsivität, Inhalte, Abhängigkeiten und Produktionsreife.",
+          "keyTakeaway": "Designrichtung und Code sind zwei Stufen. Beide werden geprüft."
         },
         {
           "id": "modul_2_lesson_5_section_3",
-          "title": "Warum das funktioniert",
+          "title": "Zwei Entscheidungen statt einer",
           "readTimeMinutes": 2,
-          "content": "Der Design Skill trennt zwei Entscheidungen:\n1. Designrichtung\n2. Umsetzung\n\nDie explizite erste Stufe macht die Begründung prüfbar. Du kannst allgemeine Entscheidungen verwerfen und vor dem Code ein zusammenhängendes visuelles System definieren. Die zweite Stufe setzt anschließend die geprüfte Richtung um.\n\n**Weitere Use Cases:**\n\n**Präsentation:** `/frontend-design \"Zehn Folien zum Q1-Ergebnis. Zielgruppe: Geschäftsführung. Fokus: drei Entscheidungen für Q2.\"`\n\n**Kundendashboard:** `/frontend-design \"Dashboard zum Status eines Bauprojekts. Zeige Fortschritt, nächste Meilensteine und aktuelle Blocker.\"`\n\n**Angebot als Webdokument:** `/frontend-design \"Einseitiges Angebot mit Umfang, geprüften Preisfeldern, Referenzen und Freigabeaktion.\"`\n\nJeder Output benötigt aufgabenspezifische Prüfungen zu Barrierefreiheit, Daten und Export.",
-          "keyTakeaway": "Dieselbe Briefing-Methode gilt für Landingpages, Präsentationen, Dashboards, Angebote und Berichte."
+          "content": "Der Design Skill trennt zwei Entscheidungen:\n1. Designrichtung\n2. Umsetzung\n\nWeil die erste Stufe ausgesprochen wird, kannst du sie prüfen. Allgemeine Entscheidungen fliegen raus, das visuelle System steht, bevor Code entsteht. Die zweite Stufe setzt um, was du freigegeben hast.\n\n**Weitere Anwendungsfälle:**\n\n**Präsentation:** `/frontend-design \"Zehn Folien zum Q1-Ergebnis. Zielgruppe: Geschäftsführung. Fokus: drei Entscheidungen für Q2.\"`\n\n**Kundendashboard:** `/frontend-design \"Dashboard zum Status eines Bauprojekts. Zeige Fortschritt, nächste Meilensteine und aktuelle Blocker.\"`\n\n**Angebot als Webdokument:** `/frontend-design \"Einseitiges Angebot mit Umfang, geprüften Preisfeldern, Referenzen und Freigabeaktion.\"`\n\nJeder Output braucht seine eigene Prüfung zu Barrierefreiheit, Daten und Export.",
+          "keyTakeaway": "Landingpage, Präsentation, Dashboard, Angebot, Bericht: das Briefing ist dasselbe."
         },
         {
           "id": "modul_2_lesson_5_section_4",
           "title": "Design für Nicht-Designer",
           "readTimeMinutes": 2,
-          "content": "Du kannst Zielgruppe, Hierarchie, Ton, visuelle Referenzen und Grenzen definieren, ohne React oder CSS selbst zu schreiben. Das Modell kann daraus einen Umsetzungsentwurf vorbereiten.\n\nErstellung ohne eigenen Code bedeutet nicht Betrieb ohne technische Prüfung. Prüfe responsive Verhalten, semantische Struktur, Tastaturbedienung, Kontrast, Ladeverhalten, Datenschutz und Wartbarkeit.\n\n**Übung:** Erstelle mit fiktiven oder freigegebenen Inhalten eine Landingpage-Variante. Prüfe drei inhaltlich verschiedene Designrichtungen, bevor du eine auswählst. Exportiere das finale Artifact erst nach Tests bei mobilen und Desktop-Breiten.",
-          "keyTakeaway": "Ein Prosa-Brief kann einen Umsetzungsentwurf erzeugen; Produktionsreife verlangt weiterhin technische und inhaltliche Prüfung."
+          "content": "Zielgruppe, Hierarchie, Ton, visuelle Referenzen, Grenzen. Das kannst du festlegen, ohne eine Zeile React oder CSS zu schreiben. Den Umsetzungsentwurf bereitet das Modell vor.\n\nKein eigener Code heißt nicht: keine technische Prüfung. Responsives Verhalten, semantische Struktur, Tastaturbedienung, Kontrast, Ladeverhalten, Datenschutz und Wartbarkeit prüfst du trotzdem.\n\n**Übung:** Bau mit fiktiven oder freigegebenen Inhalten eine Landingpage-Variante. Lass dir drei inhaltlich verschiedene Designrichtungen zeigen, bevor du eine wählst. Exportiere das finale Artifact erst nach Tests bei mobilen und Desktop-Breiten.",
+          "keyTakeaway": "Ein Prosa-Brief liefert den Entwurf. Produktionsreif wird er erst durch technische und inhaltliche Prüfung."
         }
       ],
       "quiz": [
@@ -675,7 +675,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der Ablauf prüft zuerst eine Designrichtung und erzeugt Code erst nach deren Freigabe."
+          "explanation": "Erst die Designrichtung, dann die Freigabe, dann der Code."
         },
         {
           "id": "modul_2_lesson_5_q2",
@@ -702,7 +702,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ohne projektspezifische Grenzen wählt ein Modell häufig verbreitete Muster wie gängige Schriften, Verläufe und Kartenlayouts."
+          "explanation": "Ohne projektspezifische Grenzen greift das Modell zu gängigen Schriften, Verläufen und Kartenlayouts, weil sie überall sind."
         }
       ]
     },
@@ -759,29 +759,29 @@
           "id": "modul_2_lesson_6_section_1",
           "title": "Was Claude Code wirklich ist",
           "readTimeMinutes": 3,
-          "content": "Claude Code ist ein terminalbasierter Agent, der Dateien prüfen und bearbeiten sowie konfigurierte Werkzeuge aufrufen kann. Entwickler nutzen ihn für Softwarearbeit; dieselben Mechanismen können auch freigegebene Dokument- und Dateiabläufe unterstützen.\n\nBeispiele:\n- Dateioperationen wie Umbenennen, Sortieren, Zusammenführen und Extrahieren\n- Dokumentanalyse wie PDF-Extraktion, Tabellenbereinigung und OCR\n- Stapelverarbeitung mit definiertem Schema und Fehlerprotokoll\n- gepflegte Notiz- und SOP-Abläufe\n- Berichte aus freigegebenen lokalen Quellen\n\nDer Funktionsumfang hängt von installierter Version, Berechtigungen und konfigurierten Werkzeugen ab. Beginne in einem kopierten Testverzeichnis, begrenze den Zugriff und prüfe die vorgeschlagenen Aktionen vor der Freigabe.",
-          "keyTakeaway": "Claude Code unterstützt Dateiabläufe außerhalb der Entwicklung, verlangt aber klaren Scope, Backups und Validierung."
+          "content": "Claude Code ist ein Agent im Terminal. Er liest und bearbeitet Dateien und ruft konfigurierte Werkzeuge auf. Entwickler nutzen ihn für Software. Dieselben Mechanismen tragen auch freigegebene Dokument- und Dateiabläufe.\n\nZum Beispiel:\n- Dateien umbenennen, sortieren, zusammenführen, extrahieren\n- Dokumente analysieren: PDF-Extraktion, Tabellenbereinigung, OCR\n- Stapelverarbeitung mit festem Schema und Fehlerprotokoll\n- gepflegte Notiz- und SOP-Abläufe\n- Berichte aus freigegebenen lokalen Quellen\n\nWas genau geht, hängt an Version, Berechtigungen und konfigurierten Werkzeugen. Fang in einem kopierten Testverzeichnis an, begrenze den Zugriff und lies jede vorgeschlagene Aktion, bevor du sie freigibst.",
+          "keyTakeaway": "Claude Code kann Dateiabläufe außerhalb der Entwicklung. Ohne klaren Scope, Backups und Validierung lässt du es bleiben."
         },
         {
           "id": "modul_2_lesson_6_section_2",
           "title": "Erster Einsatz: 80 Rechnungen zu CSV",
           "readTimeMinutes": 3,
-          "content": "Prüfe vor der Einrichtung die aktuellen Installations-, Tarif- und Authentifizierungsanforderungen auf `code.claude.com` und nutze ein freigegebenes Claude.ai-Konto.\n\nVerwende für die Übung fiktive oder bereinigte Rechnungen in einem kopierten Verzeichnis. Beispiel:\n> \"In `~/Desktop/Rechnungen-2025/` liegen 80 fiktive PDF-Rechnungen. Lies sie, ohne sie zu verändern. Extrahiere Datum, Betrag, Lieferant und Zweck. Schreibe `Rechnungen-2025-export.csv` in dasselbe Verzeichnis, protokolliere Parse-Fehler und gleiche Eingabe- und Ausgabeanzahl ab.\"\n\nPrüfe Plan und Berechtigungen vor der Ausführung. Validere anschließend jeden fehlgeschlagenen Datensatz und eine risikobasierte Stichprobe erfolgreicher Datensätze. Erfasse Ausführungszeit, Prüfzeit und Extraktionsfehler.\n\nBehaupte keine feste Zeitersparnis; dokumentiere das Ergebnis für den tatsächlichen Datensatz und die verwendete Hardware.",
-          "keyTakeaway": "Nutze kopierte, nicht sensible Testdaten und validiere den Output, bevor du den Ablauf auf reale Datensätze anwendest."
+          "content": "Vor der Einrichtung liest du die aktuellen Installations-, Tarif- und Authentifizierungsanforderungen auf `code.claude.com` und nutzt ein freigegebenes Claude.ai-Konto.\n\nFür die Übung nimmst du fiktive oder bereinigte Rechnungen in einem kopierten Verzeichnis. Beispiel:\n> \"In `~/Desktop/Rechnungen-2025/` liegen 80 fiktive PDF-Rechnungen. Lies sie, ohne sie zu verändern. Extrahiere Datum, Betrag, Lieferant und Zweck. Schreibe `Rechnungen-2025-export.csv` in dasselbe Verzeichnis, protokolliere Parse-Fehler und gleiche Eingabe- und Ausgabeanzahl ab.\"\n\nPlan und Berechtigungen prüfst du vor dem Start. Danach validierst du jeden fehlgeschlagenen Datensatz und eine risikobasierte Stichprobe der erfolgreichen. Ausführungszeit, Prüfzeit und Extraktionsfehler schreibst du auf.\n\nEine feste Zeitersparnis behauptest du nicht. Du dokumentierst, was bei deinem Datensatz auf deiner Hardware herauskam.",
+          "keyTakeaway": "Kopierte, nicht sensible Testdaten. Output validieren. Erst dann an echte Datensätze."
         },
         {
           "id": "modul_2_lesson_6_section_3",
-          "title": "Verlässlichkeit durch Validierung aufbauen",
+          "title": "Durchgelaufen heißt nicht richtig",
           "readTimeMinutes": 2,
-          "content": "Rechnungsextraktion kann durch Scanqualität, Layoutunterschiede, OCR-Fehler oder beschädigte Dateien scheitern. Ein erfolgreicher Prozessabschluss belegt nicht, dass jeder Wert richtig ist.\n\nDefiniere Prüfungen vor der Ausführung:\n- Eingabe- und Ausgabemengen abgleichen\n- jede Parse-Warnung und jedes fehlende Pflichtfeld prüfen\n- Summen an den Quelldokumenten validieren\n- über Lieferanten, Formate und Konfidenzstufen hinweg stichprobenartig prüfen\n- rechtlich oder finanziell folgenreiche Felder vollständig kontrollieren\n\nErhöhe den Automatisierungsgrad erst, wenn wiederholte Durchläufe einen dokumentierten Fehlerschwellenwert einhalten. Quelldateien bleiben unverändert und Outputs umkehrbar.",
-          "keyTakeaway": "Nutze risikobasierte Validierung und vollständige Prüfung folgenreicher Felder; leite Zuverlässigkeit nicht aus einer einzelnen Stichprobe ab."
+          "content": "Schlechte Scans, andere Layouts, OCR-Fehler, kaputte Dateien: an jedem davon kann Rechnungsextraktion scheitern. Ein Durchlauf ohne Absturz beweist nicht, dass jeder Wert stimmt.\n\nDie Prüfungen stehen fest, bevor du startest:\n- Eingabe- und Ausgabemengen abgleichen\n- jede Parse-Warnung und jedes fehlende Pflichtfeld prüfen\n- Summen an den Quelldokumenten validieren\n- Stichproben über Lieferanten, Formate und Konfidenzstufen hinweg\n- rechtlich oder finanziell folgenreiche Felder vollständig kontrollieren\n\nMehr Automatisierung gibt es erst, wenn wiederholte Durchläufe einen dokumentierten Fehlerschwellenwert halten. Quelldateien bleiben unverändert, Outputs umkehrbar.",
+          "keyTakeaway": "Risikobasiert validieren, folgenreiche Felder komplett prüfen. Eine Stichprobe beweist keine Zuverlässigkeit."
         },
         {
           "id": "modul_2_lesson_6_section_4",
-          "title": "Beispiele für mittelständische Unternehmen",
+          "title": "Drei Abläufe aus dem Mittelstand",
           "readTimeMinutes": 3,
-          "content": "**Use Case 1: Wochenbericht aus Notizen**\nLies freigegebene Notizen aus `50 Daily/` für die letzten sieben Tage. Extrahiere Entscheidungen, Action-Items und Erkenntnisse in einen einseitigen Entwurf mit Links zu den Quellnotizen.\n\n**Use Case 2: Berichtshefte**\nFühre OCR auf fiktiven Fotos in `~/Berichtshefte/` aus. Extrahiere Datum, Stunden und Arbeitsbeschreibung als CSV, markiere unleserliche Felder und lasse Unterschriften für manuelle Bearbeitung.\n\n**Use Case 3: Briefentwürfe**\nLies eine fiktive `Kunden.csv` und erstelle individualisierte Briefentwürfe in einem neuen Ausgabeverzeichnis. Sende nichts und überschreibe keine vorhandenen Dateien.\n\nErfasse für jeden Ablauf Einrichtung, Ausführung, Korrektur und Freigabe. Die Stapelgröße allein belegt keine Zeitersparnis.",
-          "keyTakeaway": "Bewerte Dateiabläufe anhand gemessener Laufzeit, Fehlerquote und Prüfaufwand statt mit festen Einsparungsbehauptungen."
+          "content": "**Anwendungsfall 1: Wochenbericht aus Notizen**\nLies freigegebene Notizen aus `50 Daily/` für die letzten sieben Tage. Extrahiere Entscheidungen, Action-Items und Erkenntnisse in einen einseitigen Entwurf mit Links zu den Quellnotizen.\n\n**Anwendungsfall 2: Berichtshefte**\nFühre OCR auf fiktiven Fotos in `~/Berichtshefte/` aus. Extrahiere Datum, Stunden und Arbeitsbeschreibung als CSV, markiere unleserliche Felder und lasse Unterschriften für manuelle Bearbeitung.\n\n**Anwendungsfall 3: Briefentwürfe**\nLies eine fiktive `Kunden.csv` und erstelle individualisierte Briefentwürfe in einem neuen Ausgabeverzeichnis. Sende nichts und überschreibe keine vorhandenen Dateien.\n\nFür jeden Ablauf zählst du Einrichtung, Ausführung, Korrektur und Freigabe. Eine große Stapelzahl allein beweist keine Zeitersparnis.",
+          "keyTakeaway": "Laufzeit, Fehlerquote, Prüfaufwand: daran misst du einen Dateiablauf, nicht an behaupteten Einsparungen."
         }
       ],
       "quiz": [
@@ -810,7 +810,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Außerhalb der Entwicklung sind unter anderem Dateioperationen, Dokumentextraktion und Stapelverarbeitung nutzbar. Ein belastbarer Prozentanteil wird nicht behauptet."
+          "explanation": "Dateioperationen, Dokumentextraktion und Stapelverarbeitung funktionieren auch ohne Softwareprojekt. Einen belastbaren Prozentanteil behauptet niemand hier."
         },
         {
           "id": "modul_2_lesson_6_q2",
@@ -837,7 +837,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Validiere Mengen und Fehler, bilde eine Stichprobe über relevante Gruppen und prüfe jedes folgenreiche Feld. Erhöhe Automatisierung nur auf Basis dokumentierter Nachweise."
+          "explanation": "Mengen und Fehler validieren, über relevante Gruppen stichproben, jedes folgenreiche Feld prüfen. Mehr Automatisierung gibt es nur gegen dokumentierte Nachweise."
         }
       ]
     },
@@ -931,31 +931,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_7_section_1",
-          "title": "Wenn Kontext nicht fortbesteht",
+          "title": "Alles speichern ist keine Lösung",
           "readTimeMinutes": 2,
-          "content": "Ohne persistente Anweisungen beginnt jedes neue Gespräch mit dem darin bereitgestellten Kontext. Stabile Organisations- und Stilregeln wiederholt einzugeben ist ineffizient; alles zu speichern erzeugt dagegen Datenschutz-, Genauigkeits- und Pflegeprobleme.\n\nDiese Lektion behandelt zwei Mechanismen:\n\n**CLAUDE.md:** eine Markdown-Anweisungsdatei, die Claude Code gemäß den aktuellen Regeln zu Dateisuche und Priorität verwendet. Sie lässt sich prüfen und versionieren.\n\n**Cross-Chat-Memory:** eine Produktfunktion, die bei Aktivierung ausgewählte Informationen über Gespräche hinweg halten kann. Verfügbarkeit, Verhalten und Kontrollen unterscheiden sich nach Produkt, Tarif und Zeitpunkt.\n\nKeiner der Mechanismen ist eine Sicherheitsgrenze. Prüfe im aktuellen Produkt Ladeverhalten, Zugriff, Aufbewahrung und Löschung.",
-          "keyTakeaway": "CLAUDE.md und Cross-Chat-Memory speichern unterschiedliche Kontextarten und benötigen getrennte Kontrollen."
+          "content": "Alles speichern klingt bequem und ist das Gegenteil. Ohne persistente Anweisungen fängt jedes Gespräch mit dem an, was drinsteht, und du tippst Organisations- und Stilregeln immer wieder neu. Speicherst du alles, handelst du dir Datenschutz-, Genauigkeits- und Pflegeprobleme ein.\n\nZwei Mechanismen gibt es dafür:\n\n**CLAUDE.md:** eine Markdown-Anweisungsdatei, die Claude Code nach den aktuellen Regeln zu Dateisuche und Priorität lädt. Prüfbar, versionierbar.\n\n**Cross-Chat-Memory:** eine Produktfunktion, die, wenn aktiviert, ausgewählte Informationen über Gespräche hinweg hält. Verfügbarkeit, Verhalten und Kontrollen ändern sich mit Produkt, Tarif und Zeitpunkt.\n\nEine Sicherheitsgrenze ist keiner von beiden. Ladeverhalten, Zugriff, Aufbewahrung und Löschung prüfst du im aktuellen Produkt.",
+          "keyTakeaway": "CLAUDE.md und Cross-Chat-Memory halten verschiedene Kontextarten. Jede braucht ihre eigenen Kontrollen."
         },
         {
           "id": "modul_2_lesson_7_section_2",
           "title": "CLAUDE.md bauen",
           "readTimeMinutes": 3,
-          "content": "Struktur einer CLAUDE.md mit klar fiktiven Daten:\n\n```markdown\n# CLAUDE.md: Fiktiv-Rolle Vertrieb\n\n## Kontext\n- Kennzeichnung: Fiktivnutzer Alpha\n- Organisation: Fiktivwerk Beispiel GmbH (fiktiv)\n- Rolle: Vertrieb für fiktive Beispielprodukte\n\n## Sprache und Format\n- Antworten: Deutsch, Du-Form\n- Stil: knapp, pragmatisch\n\n## Datengrenzen\n- Keine echten Kunden-, Finanz- oder Zugangsdaten\n- Preise, Termine und Zusagen bleiben Platzhalter bis zur Freigabe\n\n## Werkzeuge\n- Nur ausdrücklich erlaubte, minimal berechtigte Werkzeuge\n- Keine externen Nachrichten oder Schreibaktionen ohne Freigabe\n```\n\nPrüfe im konkreten Client, wann und aus welchem Pfad Projektanweisungen geladen werden. Eine Anweisungsdatei ist keine Sicherheitsgrenze.",
-          "keyTakeaway": "Nutze CLAUDE.md für minimale, freigegebene Arbeitsanweisungen; Berechtigungen werden außerhalb der Datei durchgesetzt."
+          "content": "So sieht eine CLAUDE.md mit klar fiktiven Daten aus:\n\n```markdown\n# CLAUDE.md: Fiktiv-Rolle Vertrieb\n\n## Kontext\n- Kennzeichnung: Fiktivnutzer Alpha\n- Organisation: Fiktivwerk Beispiel GmbH (fiktiv)\n- Rolle: Vertrieb für fiktive Beispielprodukte\n\n## Sprache und Format\n- Antworten: Deutsch, Du-Form\n- Stil: knapp, pragmatisch\n\n## Datengrenzen\n- Keine echten Kunden-, Finanz- oder Zugangsdaten\n- Preise, Termine und Zusagen bleiben Platzhalter bis zur Freigabe\n\n## Werkzeuge\n- Nur ausdrücklich erlaubte, minimal berechtigte Werkzeuge\n- Keine externen Nachrichten oder Schreibaktionen ohne Freigabe\n```\n\nWann und aus welchem Pfad Projektanweisungen geladen werden, prüfst du im konkreten Client. Eine Anweisungsdatei ist keine Sicherheitsgrenze.",
+          "keyTakeaway": "CLAUDE.md trägt minimale, freigegebene Arbeitsanweisungen. Berechtigungen setzt etwas anderes durch."
         },
         {
           "id": "modul_2_lesson_7_section_3",
           "title": "Cross-Chat-Memory kuratieren",
           "readTimeMinutes": 2,
-          "content": "Öffne im verwendeten Produkt die aktuellen Memory-Einstellungen und prüfe vorhandene Einträge. Beispiel mit reinen fiktiven Daten:\n- `Fiktivnutzer Alpha bevorzugt Deutsch`: prüfen und bei Bedarf korrigieren\n- `Fiktivnutzer arbeitet an Fiktivwerk Alpha`: zu spezifisch; löschen\n\nSpeichere nur notwendige, nicht vertrauliche Präferenzen. Memory ist zu kuratieren. Prüfe regelmäßig Richtigkeit, Zweck, Zugriff und Löschmöglichkeit; Menü und Funktionsumfang können sich ändern.",
-          "keyTakeaway": "Prüfe persistentes Memory regelmäßig und entferne Einträge ohne aktuellen Zweck."
+          "content": "Öffne die Memory-Einstellungen deines Produkts und lies, was drinsteht. Zwei fiktive Beispiele:\n- `Fiktivnutzer Alpha bevorzugt Deutsch`: prüfen, bei Bedarf korrigieren\n- `Fiktivnutzer arbeitet an Fiktivwerk Alpha`: zu spezifisch, löschen\n\nGespeichert wird nur, was nötig und nicht vertraulich ist. Memory kuratiert sich nicht selbst. Richtigkeit, Zweck, Zugriff und Löschmöglichkeit prüfst du regelmäßig; Menü und Funktionsumfang ändern sich.",
+          "keyTakeaway": "Memory regelmäßig durchsehen. Was keinen aktuellen Zweck hat, fliegt raus."
         },
         {
           "id": "modul_2_lesson_7_section_4",
-          "title": "Daten, die nicht in persistentes Memory gehören",
+          "title": "Was nie in Memory landet",
           "readTimeMinutes": 2,
-          "content": "Speichere personenbezogene Daten Dritter, Zugangsdaten oder vertrauliche Geschäftsinformationen nicht in persistentem Memory, sofern freigegebener Zweck, Rechtsgrundlage, Produktkonfiguration und Aufbewahrungsrichtlinie dies nicht ausdrücklich erlauben.\n\nBeispiele, die normalerweise nicht hineingehören:\n- Kundennamen und Kontaktdaten\n- Kontonummern\n- E-Mail-Adressen Dritter\n- Margen und Verhandlungsstrategien\n- HR-Datensätze\n\nNach Richtlinienprüfung möglicherweise geeignet:\n- deine öffentliche Rolle und Organisation\n- allgemeine Stilpräferenzen\n- freigegebene Werkzeuge\n- typische, nicht vertrauliche Aufgabenkategorien\n\nPersistenter Kontext reduziert wiederholtes Briefing. Jeder Eintrag erzeugt jedoch Pflichten zu Richtigkeit, Zugriff und Löschung.",
-          "keyTakeaway": "Halte persistenten Kontext auf freigegebene Arbeitspräferenzen beschränkt, nicht auf Geheimnisse oder nicht freigegebene Daten Dritter."
+          "content": "Personenbezogene Daten Dritter, Zugangsdaten, vertrauliche Geschäftsinformationen: nichts davon kommt in persistentes Memory, solange nicht freigegebener Zweck, Rechtsgrundlage, Produktkonfiguration und Aufbewahrungsrichtlinie es ausdrücklich erlauben.\n\nWas normalerweise draußen bleibt:\n- Kundennamen und Kontaktdaten\n- Kontonummern\n- E-Mail-Adressen Dritter\n- Margen und Verhandlungsstrategien\n- HR-Datensätze\n\nWas nach Richtlinienprüfung gehen kann:\n- deine öffentliche Rolle und Organisation\n- allgemeine Stilpräferenzen\n- freigegebene Werkzeuge\n- typische, nicht vertrauliche Aufgabenkategorien\n\nPersistenter Kontext spart dir das wiederholte Briefing. Jeder Eintrag bringt Pflichten zu Richtigkeit, Zugriff und Löschung mit.",
+          "keyTakeaway": "Persistenter Kontext heißt freigegebene Arbeitspräferenzen. Keine Geheimnisse, keine Daten Dritter ohne Freigabe."
         }
       ],
       "quiz": [
@@ -984,7 +984,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "CLAUDE.md liefert explizite Project-Anweisungen nach den Laderegeln des Clients; Cross-Chat-Memory ist eine über Produkteinstellungen kontrollierte Funktion."
+          "explanation": "CLAUDE.md liefert explizite Project-Anweisungen nach den Laderegeln des Clients. Cross-Chat-Memory ist eine Funktion, die du über die Produkteinstellungen kontrollierst."
         },
         {
           "id": "modul_2_lesson_7_q2",
@@ -1011,7 +1011,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Persistentes Memory ist keine allgemeine Kunden- oder HR-Datenbank. Vor der Speicherung personenbezogener Daten müssen Zweck, Rechtsgrundlage, Zugriff und Aufbewahrung geklärt sein."
+          "explanation": "Persistentes Memory ist keine Kunden- und keine HR-Datenbank. Bevor personenbezogene Daten dort landen, sind Zweck, Rechtsgrundlage, Zugriff und Aufbewahrung geklärt."
         }
       ]
     }
