@@ -47,7 +47,7 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Serve: <span class='accent'>versioned metrics</span> across consumer surfaces."
-        hook="Independent dashboard SQL can encode different grains, filters, and source cutoffs for the same metric name. A shared registry reduces that definition drift when consumers resolve the registered version."
+        hook="Two dashboards, one metric name, two numbers. Independent SQL can encode different grains, filters, and source cutoffs. A shared registry cuts that drift when consumers resolve the registered version."
         meta={[
           { k: "Contract", v: "versioned definition per metric" },
           { k: "Owner", v: "declared steward" },
@@ -58,16 +58,9 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
       <section className="section">
         <SectionLabel n="8.1">What a metrics layer actually is</SectionLabel>
         <h2 className="h2">Declare the metric version and execution context.</h2>
-        <p className="prose">
-          A metrics layer is a <b>registry</b> of names, versions, owners, grains, sources, formulas, and allowed filters. Consumers that resolve a
-          registered metric can share its definition. The query service still needs explicit authentication, authorization, source selection,
-          and execution logging.
-        </p>
+        <p className="prose">A metrics layer is a <b>registry</b>: names, versions, owners, grains, sources, formulas, allowed filters. Consumers that resolve a registered metric share one definition. The query service still owes you explicit authentication, authorization, source selection, and execution logging.</p>
         <MetricsRegistry />
-        <p className="prose" style={{ marginTop: 18 }}>
-          A metrics service can be an <b>access surface</b>, but a registry alone does not enforce row-level security, masking, or regional
-          placement. Implement those controls in the query and data layers, propagate identity, and test each consumer path.
-        </p>
+        <p className="prose" style={{ marginTop: 18 }}>A metrics service can be an <b>access surface</b>. A registry alone enforces no row-level security, no masking, no regional placement. Build those controls into the query and data layers, propagate identity, and test every consumer path.</p>
       </section>
 
       <section className="section">
@@ -79,20 +72,14 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
           deprecated two years ago. Sometimes they reference column names from memory that have since been renamed.
           <b> You cannot tell from the answer</b>.
         </p>
-        <p className="prose">
-          With a registry, a consumer resolves a metric version, binds supported filters, and executes the stored definition against its declared
-          source or sources. Record the metric version, filters, source snapshot or partitions, and execution identity with the result.
-        </p>
+        <p className="prose">With a registry the consumer resolves a metric version, binds supported filters, and runs the stored definition against its declared sources. Record the version, the filters, the source snapshot or partitions, and the execution identity next to the result.</p>
         <MetricsSim />
       </section>
 
       <section className="section">
         <SectionLabel n="8.3">What the consumer actually sees</SectionLabel>
         <h2 className="h2">One metric, many surfaces.</h2>
-        <p className="prose">
-          A shared registry removes one source of variation: the metric formula. Results can still differ because of source freshness, filter
-          bindings, timezone, permissions, cache state, or definition version. Include that context when comparing consumer outputs.
-        </p>
+        <p className="prose">A shared registry removes exactly one source of variation, the metric formula. Results still diverge on source freshness, filter bindings, timezone, permissions, cache state, or definition version. Carry that context whenever you compare consumer outputs.</p>
         <div className="cards-2">
           <div className="ccard">
             <div className="ccard-t">Dashboards</div>

@@ -69,9 +69,9 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
         <SectionLabel n="6.2">The signal-table barrier</SectionLabel>
         <h2 className="h2">Gate configured consumers on a named quality signal.</h2>
         <p className="prose">
-          In this reference design, checks run after a partition write and before dependent tasks proceed. Passing the selected checks writes a
+          In this reference design, checks run after a partition write, before dependent tasks proceed. Passing the selected checks writes a
           row to a <b>signal table</b>. Consumers explicitly configured with an <code>ExternalTaskSensor</code> can wait on that signal. The data
-          table may still be technically readable; visibility and access controls require separate enforcement. Alert routing must also be
+          table may still be technically readable. Visibility and access controls need separate enforcement, and alert routing has to be
           configured and tested.
         </p>
         <div className="cards-2">
@@ -106,7 +106,7 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
           "Select checks from the table&apos;s <b>grain, key, freshness target, source behavior, and consumer risk</b>.",
           "<b>Signal tables are first-class citizens.</b> Name them <code>&lt;table&gt;__signal</code>. They outlive the pipeline: replays, backfills, and audits all read them.",
           "Set freshness and response targets per dataset, with an owner and tested alert route.",
-          "<b>DQ config in version control, not UI.</b> Checks drift; code reviews catch drift; dashboards don't.",
+          "<b>DQ config in version control, not UI.</b> Checks drift. Code reviews catch drift. Dashboards don't.",
         ]}
       />
       <Takeaway

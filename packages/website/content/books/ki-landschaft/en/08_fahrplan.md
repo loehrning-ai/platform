@@ -1,6 +1,6 @@
 # Roadmap: from inventory to controlled operation
 
-A roadmap describes gates and responsibilities. It promises neither three productive systems after one year nor fixed costs or returns.
+Who stops the pilot when it delivers nothing? The roadmap. It promises no three productive systems after a year, no fixed costs, no return.
 
 ## Horizon 1: inventory and selection
 
@@ -8,12 +8,12 @@ A roadmap describes gates and responsibilities. It promises neither three produc
 
 - record systems, functions, and shadow use
 - document the process, users, affected people, and subsequent actions
-- assess the data flow, roles, and other applicable law
+- check the data flow, roles, and other applicable law
 - measure baseline quality, volume, and costs
 - select a small, reversible use case
 - define protection, quality, and termination criteria
 
-No fixed 30-day period suits every organization. The horizon ends when the evidence is available.
+No fixed 30-day period fits everywhere. The horizon ends when the evidence is on the table.
 
 ## Horizon 2: learning pilot
 
@@ -21,23 +21,23 @@ No fixed 30-day period suits every organization. The horizon ends when the evide
 
 - use synthetic and appropriately approved test cases
 - version the system version, settings, and prompts
-- assess output against a predefined rubric
+- check output against a rubric defined in advance
 - test human oversight and escalation
-- assess security, logs, deletion, backup, and fallback
+- check security, logs, deletion, backup, and fallback
 - compare against your own baseline
 
-A pilot is not production merely because real software is running. Production data and actual subsequent actions require separate approval.
+A pilot is not production just because real software is running. Production data and real subsequent actions need approvals of their own.
 
 ## Horizon 3: limited operation
 
 **Result:** a controlled use case with an owner and monitoring.
 
 - limit users and the scope of data
-- assign roles and rights according to the principle of least privilege
+- grant roles and rights on the minimum principle
 - measure quality and incidents continuously
-- treat changes to the model, provider, purpose, or data as review triggers
-- test support, deputy arrangements, recovery, and exit
-- adapt Art. 4 measures to roles and risks
+- treat changes to model, provider, purpose, or data as review triggers
+- test support, cover arrangements, recovery, and exit
+- fit Art. 4 measures to roles and risks
 
 ## Build, buy, or use an existing platform
 
@@ -50,11 +50,11 @@ No fixed percentage rule decides this question.
 | Control | depends on contract and configuration | higher, but more complex | high, with full responsibility |
 | Switching costs | assess export and lock-in | depends on architecture | internal need for maintenance and knowledge |
 
-Assess total operation, security, data flow, integrations, exit, competence requirements, and long-term maintenance. List price and demonstration speed are insufficient.
+Weigh total operation, security, data flow, integrations, exit, competence needs, maintenance. List price and demonstration speed are not enough.
 
 ## Procurement gate
 
-Before a contract or renewal:
+Settle these points before a contract or a renewal.
 
 1. intended purpose and performance limits
 2. roles, contractual terms, and data processing
@@ -70,27 +70,27 @@ Before a contract or renewal:
 Possible metrics:
 
 - factual accuracy and completeness
-- correction and rejection rates
+- correction and rejection rate
 - processing and review time
 - cost per reviewed result
 - number and severity of incidents
 - availability and recovery time
-- share of users who are trained and actually capable
+- share of users trained and actually capable
 
-There are no universal targets such as "80 percent adoption" or "150 percent ROI." Targets follow from risk, baseline, and process value.
+Targets such as "80 percent adoption" or "150 percent ROI" hold nowhere. Targets follow risk, baseline, and process value.
 
 ## Plan funding only from a current funding decision
 
-Programs, funding rates, and conditions change. Use the [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/), the responsible state development banks, and the official program pages. Check in particular whether an application is required before measures begin. Do not include a grant in a business case until eligibility and approval have been established reliably.
+Programs, funding rates, and conditions change. Use the [Förderdatenbank des Bundes](https://www.foerderdatenbank.de/), the responsible state development bank, and the official program pages. Check whether the application has to be filed before the measure starts. And do not build a business case on a grant nobody has approved.
 
 ## Scaling gate
 
 Expand only when:
 
-- quality and protection criteria have been met across representative cases
-- professional accountability and operational capacity are available
+- quality and protection criteria have passed across representative cases
+- domain accountability and operational capacity exist
 - new users, data, and integrations have been reassessed
 - monitoring, the incident path, fallback, and exit work
-- economic benefit is supported by actual data
+- economic benefit is evidenced with real data
 
-Scaling also multiplies errors. The gate prevents a convincing demonstration output from becoming uncontrolled infrastructure.
+Scaling multiplies the errors. The gate keeps a good demonstration result from turning into uncontrolled infrastructure.

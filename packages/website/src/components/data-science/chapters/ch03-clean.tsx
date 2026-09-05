@@ -22,7 +22,7 @@ export default function Ch03Clean() {
       <Hero
         eyebrow="Chapter 03 · Clean"
         title='Data quality defines <em><span class="accent">what the model can learn.</span></em>'
-        hook="Missingness, units, timestamps, joins, duplicates, and post-outcome information change the estimand and the available signal. Audit each transformation inside the validation boundary."
+        hook="Missingness, units, timestamps, joins, duplicates, post-outcome information. Each moves the estimand and the signal left to you. Audit every transformation inside the validation boundary."
         meta={[
           { k: "Read", v: "12 min" },
           { k: "Focus", v: "Missingness · imputation · scaling · leakage" },
@@ -34,31 +34,29 @@ export default function Ch03Clean() {
         <SectionLabel n="03.1">Missingness</SectionLabel>
         <h2 className="h2">Not all missing is missing the same way.</h2>
         <p className="prose">
-          Missing-data mechanisms change what an analysis can identify.{" "}
+          Missingness mechanisms decide what an analysis can identify.{" "}
           <strong>MCAR</strong>
           (missing completely at random) means missingness is independent of
-          observed and unobserved values. Complete-case analysis can remain
-          unbiased for some estimands under MCAR, but it loses information and
-          still depends on the analysis model.
+          observed and unobserved values. Complete-case analysis stays unbiased
+          for some estimands there, but it throws information away and still
+          leans on the analysis model.
           <strong> MAR</strong> (missing at random) means missingness depends on{" "}
-          <em>other observed columns</em>: income data might be missing more
-          often for EU users if the survey skipped a page in German. You can
-          impute, but you need to model the relationship and include suitable
-          observed predictors. <strong>MNAR</strong> (missing not at random)
-          means missingness still depends on unobserved values after
-          conditioning on the observed data. Identification then needs
-          additional assumptions, sensitivity analysis, or an explicit
-          missingness model.
+          <em>other observed columns</em>: income is missing more often for EU
+          users because the survey skipped a page in German. Impute, yes, but
+          model the relationship and bring in the right observed predictors.
+          <strong>MNAR</strong> (missing not at random) means missingness still
+          depends on unobserved values once you condition on what you see.
+          Identification then costs extra assumptions, sensitivity analysis, or
+          an explicit missingness model.
         </p>
         <MissingnessSim />
         <p className="prose" style={{ marginTop: 18 }}>
-          Notice how MNAR dramatically increases the missing rate in the
-          high-value tail. If you impute with the observed mean, you&apos;ll
-          underestimate the true mean. The pattern of absence may carry
-          predictive information. A <code>feature_was_missing</code> indicator
-          is a candidate feature when the signal exists at prediction time;
-          validate it and inspect whether it encodes a process change or
-          sensitive-group proxy.
+          Watch MNAR drive up the missing rate in the high-value tail. Impute
+          with the observed mean and you underestimate the true mean. The
+          pattern of absence itself can carry signal. A{" "}
+          <code>feature_was_missing</code> indicator is a candidate when that
+          signal exists at prediction time. Validate it, and check whether it
+          encodes a process change or a sensitive-group proxy.
         </p>
       </section>
 
@@ -66,21 +64,21 @@ export default function Ch03Clean() {
         <SectionLabel n="03.2">Imputation</SectionLabel>
         <h2 className="h2">Filling the blanks without lying to your model.</h2>
         <p className="prose">
-          The wrong imputation strategy doesn&apos;t just add noise, it
-          systematically biases estimates and model behavior. Single mean
-          imputation compresses the completed-data variance if uncertainty is
-          ignored. Forward-fill can create temporal artifacts. KNN can preserve
-          local structure when its distance and neighbors are meaningful. The
-          masked-value error shown below is available only because this
-          synthetic demo retains the generated truth; real missing values
-          require validation through designed holdouts and sensitivity analysis.
+          The wrong imputation strategy does more than add noise. It bends
+          estimates and model behavior one way. Single mean imputation
+          compresses the completed-data variance whenever uncertainty is
+          ignored. Forward-fill invents temporal artifacts. KNN keeps local
+          structure when its distance and its neighbors mean something. The
+          masked-value error below exists only because this synthetic demo kept
+          the generated truth. Real missing values need designed holdouts and
+          sensitivity analysis.
         </p>
         <ImputationRace />
         <AntiPatterns
           title="Imputation anti-patterns"
           items={[
             "<b>Imputing with the full-dataset mean.</b> Fit imputer on train only. The test mean is future information.",
-            "<b>Choosing a single fill value without checking the estimand.</b> Mean and median preserve neither joint relationships nor imputation uncertainty; compare methods inside the validation design.",
+            "<b>Choosing a single fill value without checking the estimand.</b> Mean and median preserve neither joint relationships nor imputation uncertainty. Compare methods inside the validation design.",
             "<b>Hiding imputation provenance.</b> Record which values were imputed. Add a missingness indicator only when it is available at inference and improves a relevant validation metric without unacceptable proxy behavior.",
             "<b>KNN with an unsuitable distance.</b> Scale numeric inputs where units would dominate, encode mixed data deliberately, and tune neighbors inside validation.",
           ]}
@@ -94,21 +92,21 @@ export default function Ch03Clean() {
           <em>Same model, totally different worlds.</em>
         </h2>
         <p className="prose">
-          Many algorithms are sensitive to the raw magnitude of features.
+          Plenty of algorithms react to raw feature magnitude.
           Regularized linear models penalize coefficient magnitude, so feature
-          units change the effective penalty and coefficient interpretation.
-          Distance-based models such as kNN, kernel SVMs, and PCA are also
-          exposed: Euclidean distance in a 200,000-dollar space dwarfs anything
-          in age-space. Scaling puts features on comparable footing.
+          units change the effective penalty and the coefficient you read off.
+          Distance-based models such as kNN, kernel SVMs, and PCA are exposed
+          too. Euclidean distance in a 200,000-dollar space dwarfs anything in
+          age-space. Scaling puts features on one footing.
         </p>
         <ScalerDemo />
         <BestPractices
           title="Scaling rules"
           items={[
-            "<b>StandardScaler for centered, variance-scaled inputs.</b> It does not require normality, but mean and standard deviation are sensitive to outliers.",
+            "<b>StandardScaler for centered, variance-scaled inputs.</b> It needs no normality, but mean and standard deviation bend under outliers.",
             "<b>MinMaxScaler when a fitted numeric range is useful.</b> Values outside the training range can map beyond [0, 1], and training extremes compress the remaining values.",
             "<b>RobustScaler when median and IQR are appropriate scale summaries.</b> Extreme values remain in the data but do not determine the fitted scale.",
-            "<b>Scaling is usually unnecessary for ordinary decision-tree splits.</b> Monotonic rescaling preserves ordering, although shared pipelines, numeric precision, regularization, or other model components may still justify it.",
+            "<b>Ordinary decision-tree splits rarely need scaling.</b> Monotonic rescaling keeps the ordering, though shared pipelines, numeric precision, regularization, or another model component can still call for it.",
           ]}
         />
       </section>
@@ -119,20 +117,20 @@ export default function Ch03Clean() {
           Leakage makes unavailable information look predictive.
         </h2>
         <p className="prose">
-          <strong>Leakage</strong> occurs when model development uses
-          information unavailable at the defined prediction time. Indicators
-          include features recorded after the target event, transformations
-          fitted on held-out data, or large changes under a time-aware or
-          group-aware split. Strong metrics alone do not prove leakage, and
-          ordinary metrics do not rule it out.
+          <strong>Leakage</strong> means model development used information
+          that is not available at the defined prediction time. The tells:
+          features recorded after the target event, transformations fitted on
+          held-out data, a metric that moves under a time-aware or group-aware
+          split. A strong metric proves no leakage, and an ordinary one rules
+          none out.
         </p>
         <p className="prose">
-          Three common forms are <strong>target leakage</strong> (a feature
-          encodes the label), <strong>temporal leakage</strong> (a feature uses
-          data recorded after the prediction cutoff), and
-          <strong> train/test contamination</strong> (a learned preprocessing
-          step uses held-out data). The panel uses a fixed answer key to compare
-          examples.
+          Three forms recur. <strong>Target leakage</strong>, where a feature
+          encodes the label. <strong>Temporal leakage</strong>,
+          where a feature uses data recorded after the prediction cutoff. And
+          <strong> train/test contamination</strong>, where a learned
+          preprocessing step reads held-out data. The panel compares examples
+          against a fixed answer key.
         </p>
         <LeakageDetector />
         <AntiPatterns
@@ -140,7 +138,7 @@ export default function Ch03Clean() {
             "<b>Fitting the scaler on the full dataset.</b> This transfers held-out summary statistics into model development. Fit inside each training partition and apply to its held-out partition.",
             '<b>Target encoding without out-of-fold.</b> "Mean target per category" computed across all rows lets each row see its own label.',
             "<b>Post-event features.</b> <code>total_purchases_lifetime</code> cannot predict <code>will_churn</code> at an earlier cutoff if its value includes purchases after that cutoff.",
-            "<b>Inspecting the test set during EDA.</b> Any feature or modeling change derived from held-out patterns incorporates test information into development.",
+            "<b>Inspecting the test set during EDA.</b> Any feature or modeling change you derive from held-out patterns pulls test information into development.",
           ]}
         />
         <BestPractices
@@ -155,10 +153,10 @@ export default function Ch03Clean() {
 
       <Takeaway
         items={[
-          "<b>Missingness provenance is information.</b> Preserve it for audit; use an indicator as a feature only after inference-time availability and validation checks.",
-          "<b>The mechanism matters.</b> MCAR, MAR, and MNAR are assumptions about the missingness process, not labels a dataset reveals automatically; use sensitivity analysis.",
+          "<b>Missingness provenance is information.</b> Keep it for the audit trail. Use an indicator as a feature only once inference-time availability and validation check out.",
+          "<b>The mechanism matters.</b> MCAR, MAR, and MNAR are assumptions about the missingness process, not labels a dataset hands you. Run the sensitivity analysis.",
           "<b>Scaling is algorithm- and pipeline-dependent.</b> Fit it only on training folds and document how out-of-range inference values are handled.",
-          "<b>Leakage can appear before production.</b> Time-aware or group-aware splits, feature timestamps, lineage, and fold-local preprocessing are direct checks, not a proof that all leakage is absent.",
+          "<b>Leakage shows up long before production.</b> Time-aware or group-aware splits, feature timestamps, lineage, and fold-local preprocessing are direct checks, not proof that no leakage remains.",
           "<b>Clean data is a process, not a step.</b> Every new feature, join, or aggregation is a fresh opportunity to introduce bugs, leaks, or biased imputation.",
         ]}
       />

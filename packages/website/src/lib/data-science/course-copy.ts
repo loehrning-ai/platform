@@ -82,7 +82,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Science Fundamentals: interactive course",
       description:
-        "Twelve interactive chapters covering the complete data science loop: exploration, features, evaluation, experiments, causality, and production operations.",
+        "Twelve interactive chapters along the data science loop: exploration, features, evaluation, experiments, causality, and production operations.",
     },
     reader: {
       navLabel: "Chapter navigation",
@@ -108,13 +108,13 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     error: {
       eyebrow: "Data Science / error",
       title: "The chapter could not load",
-      body: "The course view failed in this browser session. Stored learning progress was not changed.",
+      body: "The course view failed in this browser session. Your saved progress is unchanged.",
       retry: "Reload",
       back: "Back to course overview",
     },
     notFound: {
       title: "Chapter not found",
-      body: "The requested chapter ID does not belong to this course. The course overview lists all twelve valid chapters.",
+      body: "This chapter ID does not belong to this course. The overview lists all twelve valid chapters.",
       back: "View all chapters",
     },
   },

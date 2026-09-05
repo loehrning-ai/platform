@@ -25,7 +25,7 @@ const STAGES: readonly StageCard[] = [
     n: "01",
     title: "Fundamentals",
     tag: "sample and population",
-    blurb: "Generate samples and observe how their means converge.",
+    blurb: "Draw samples and watch their means converge.",
     hue: "#5B3EE8",
   },
   {
@@ -41,7 +41,7 @@ const STAGES: readonly StageCard[] = [
     n: "03",
     title: "Clean",
     tag: "missing · shifted · leaky",
-    blurb: "Impute and scale data without leaking information from the future.",
+    blurb: "Impute and scale without smuggling in information from the future.",
     hue: "#1FAF7E",
   },
   {
@@ -57,7 +57,7 @@ const STAGES: readonly StageCard[] = [
     n: "05",
     title: "Model",
     tag: "bias and variance",
-    blurb: "Fit models and compare training and test error.",
+    blurb: "Fit models, then compare training and test error.",
     hue: "#E8A031",
   },
   {
@@ -81,7 +81,7 @@ const STAGES: readonly StageCard[] = [
     n: "08",
     title: "Experiment",
     tag: "measure effects under control",
-    blurb: "Plan A/B tests, power, and MDE, then analyse 10k visitors.",
+    blurb: "Plan A/B tests, power, and MDE, then read 10k visitors.",
     hue: "#5B3EE8",
   },
   {
@@ -89,7 +89,7 @@ const STAGES: readonly StageCard[] = [
     n: "09",
     title: "Causal",
     tag: "beyond correlation",
-    blurb: "DAGs, confounders, backdoor paths.",
+    blurb: "Trace DAGs, confounders, and backdoor paths.",
     hue: "#1CA5D9",
   },
   {
@@ -97,7 +97,7 @@ const STAGES: readonly StageCard[] = [
     n: "10",
     title: "Peeking",
     tag: "when p-values mislead",
-    blurb: "Run 50 experiments in parallel and observe false positives.",
+    blurb: "Run 50 experiments in parallel and watch false positives.",
     hue: "#D83A3A",
   },
   {
@@ -105,7 +105,7 @@ const STAGES: readonly StageCard[] = [
     n: "11",
     title: "Deploy",
     tag: "models in production",
-    blurb: "Monitor drift and retrain on a signal rather than a schedule.",
+    blurb: "Monitor drift. Retrain on a signal, not on the calendar.",
     hue: "#1FAF7E",
   },
   {
@@ -113,7 +113,7 @@ const STAGES: readonly StageCard[] = [
     n: "12",
     title: "Capstone",
     tag: "the complete cycle",
-    blurb: "Complete the workflow end to end: noise → decision → feedback.",
+    blurb: "Once all the way through: noise → decision → feedback.",
     hue: "#E8318F",
   },
 ];
@@ -135,17 +135,17 @@ const OUTCOMES = [
   {
     icon: "◇",
     t: "Inspect an unfamiliar dataset systematically",
-    d: "Check distributions, missingness, and correlations with a clear first-30-minutes checklist.",
+    d: "Check distributions, missingness, and correlations against a checklist for the first 30 minutes.",
   },
   {
     icon: "○",
     t: "Train a model without hidden leakage",
-    d: "Detect leakage, split data correctly, and choose the metric before the algorithm.",
+    d: "Spot leakage, split data cleanly, and fix the metric before the algorithm.",
   },
   {
     icon: "△",
     t: "Interpret a confusion matrix correctly",
-    d: "Assess thresholds, precision and recall, calibration, and class imbalance.",
+    d: "Read thresholds, precision and recall, calibration, and class imbalance.",
   },
   {
     icon: "□",
@@ -155,12 +155,12 @@ const OUTCOMES = [
   {
     icon: "◈",
     t: "Distinguish correlation from causation",
-    d: "Inspect DAGs, confounders, and backdoor paths, then apply regression deliberately.",
+    d: "Check DAGs, confounders, and backdoor paths, then aim your regression.",
   },
   {
     icon: "✕",
     t: "Operate a model reliably in production",
-    d: "Monitor drift, trigger retraining, use shadow mode, and prepare rollbacks.",
+    d: "Watch drift, trigger retraining, run shadow mode, and prepare rollbacks.",
   },
 ] as const;
 
@@ -191,10 +191,9 @@ export default function ChOverview() {
             <span className="accent">turning data into decisions.</span>
           </h1>
           <p className="ov-hero-hook">
-            Twelve chapters form one connected workflow. Each chapter begins
-            with
-            <strong> an adjustable simulation</strong> and uses it to explain
-            concepts, methods, and limits.
+            Twelve chapters, one working loop. Each opens with
+            <strong> a simulation you turn</strong>, then explains terms,
+            methods, and limits.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -229,9 +228,9 @@ export default function ChOverview() {
         <div className="ov-section-head">
           <div className="ov-kicker">Outcomes</div>
           <h2 className="ov-h2">
-            Apply the methods and inspect
+            Apply the methods and test
             <br />
-            <em> what the evidence supports.</em>
+            <em> how much they say.</em>
           </h2>
         </div>
         <div className="ov-outcomes">
@@ -251,12 +250,12 @@ export default function ChOverview() {
           <h2 className="ov-h2">
             Twelve chapters: build the model,
             <br />
-            then test its effect.
+            then prove the effect.
           </h2>
           <p className="ov-lede">
-            The first half covers model development. The second half tests
+            The first half builds the model. The second half tests
             <em> whether the result holds</em>: evaluation, interpretation,
-            experiments, and operation.
+            experiments, and operations.
           </p>
         </div>
         <div className="ov-curriculum">
@@ -298,8 +297,8 @@ export default function ChOverview() {
             for day-to-day data science.
           </h2>
           <p className="ov-lede">
-            The simulations show the <em>behaviour</em> of these tools. The
-            concepts can be applied across other technical stacks.
+            The simulations show how these tools <em>behave</em>. The concepts
+            carry over to other stacks too.
           </p>
         </div>
         <div className="ov-tools">

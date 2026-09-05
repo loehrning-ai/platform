@@ -45,8 +45,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   ],
   certificateReferenceLabel:
     "Personal certificate of completion: data-pipeline design from source to serving",
-  quizPassMessage:
-    "Congratulations! You completed the Data Engineering Fundamentals course.",
+  quizPassMessage: "Data Engineering Fundamentals is complete.",
   certificateFileStem: "Data-Engineering-Fundamentals",
   recordNoun: {
     label: "Certificate of Completion",

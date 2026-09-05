@@ -12,7 +12,7 @@ function IngestStreams() {
         <div className="ccard-t">ClickHouse</div>
         <div className="ccard-n">Sampled · operational view</div>
         <div className="ccard-d">
-          The course scenario stores one of every N events for an operational view. Any estimate derived from that sample must use the declared
+          The course scenario keeps one of every N events for an operational view. Any estimate from that sample needs the declared
           sampling design and estimator.
         </div>
       </div>
@@ -47,7 +47,7 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Ingest: <span class='accent'>event time, processing time, and late data.</span>"
-        hook="The course reference pipeline writes a sampled operational projection to ClickHouse and a complete scheduled batch to Snowflake. A watermark closes each event-time window; the configured late-data policy determines what happens after closure."
+        hook="The course pipeline writes a sampled operational projection to ClickHouse and a complete scheduled batch to Snowflake. A watermark closes each event-time window. The late-data policy decides what happens after that."
         meta={[
           { k: "Source", v: '<span class="chip">ClickHouse</span><span class="chip">Loggers</span><span class="chip">CDC</span>' },
           { k: "Sink", v: "Snowflake · Iceberg tables" },
@@ -63,21 +63,15 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
           <b>Processing time</b> is when your stream actually saw it. Mobile clients, retries, weak cell signal, and simple clock skew make these
           diverge. Any system that pretends they&apos;re the same ships the wrong numbers.
         </p>
-        <p className="prose">
-          In the course architecture, Kafka transports events and a Flink job processes them before separate operational and batch writes. The
-          <b> watermark</b> expresses how far event-time processing has progressed. A configured policy may update a window, route late records
-          elsewhere, or discard them.
-        </p>
+        <p className="prose">In the course architecture Kafka transports events and a Flink job processes them, then the operational and batch writes split. The
+          <b> watermark</b> says how far event-time processing has come. From there the configured policy updates a window, reroutes late records,
+          or drops them.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="1.2">The compromise, visualized</SectionLabel>
         <h2 className="h2">When do you stop waiting?</h2>
-        <p className="prose">
-          Drag the blue line. Green dots arrive before the simulated watermark and amber dots arrive later. This simulator uses a discard-late
-          policy. A production pipeline can instead retain raw input and route or reprocess late records. The choice changes both publication
-          delay and completeness.
-        </p>
+        <p className="prose">Drag the blue line. Green dots arrive before the simulated watermark, amber dots after it. This simulator discards late records. A production pipeline can instead keep the raw input and route or reprocess them. That choice moves publication delay and completeness at the same time.</p>
         <WatermarkSim />
         <p className="prose" style={{ marginTop: 22 }}>
           Set the watermark from observed lateness distributions and the consumer&apos;s publication tolerance. Record how much data arrives after

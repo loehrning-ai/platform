@@ -32,7 +32,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Streaming: <span class='accent'>delivery, windows, and publication.</span>"
-        hook="In the course architecture, Kafka transports events and Flink processes them. Kafka Streams is an alternative processing library, not a layer beneath Flink. A published result needs explicit delivery, window, and completeness semantics."
+        hook="Kafka transports events. Flink processes them. Kafka Streams is an alternative processing library, not a layer beneath Flink, and a published result still needs explicit delivery, window, and completeness semantics."
         meta={[
           { k: "Streaming engine", v: "Flink" },
           { k: "Bus", v: "Kafka" },
@@ -43,11 +43,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
       <section className="section">
         <SectionLabel n="2.1">Continuous processing</SectionLabel>
         <h2 className="h2">Micro-batch vs continuous, exactly-once vs at-least-once.</h2>
-        <p className="prose">
-          Batch engines process bounded inputs on a schedule. Streaming engines process an ongoing input and maintain state as records arrive.
-          Both can produce correct or incorrect results. Their contracts differ in when a result is published, when it becomes final, and how
-          replay, duplicates, and late records are handled.
-        </p>
+        <p className="prose">Batch engines process bounded inputs on a schedule. Streaming engines process an unbounded input and carry state as records arrive. Either one produces correct results, or wrong ones. What separates them is the contract: when a result publishes, when it goes final, and what happens to replays, duplicates, and late records.</p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">Latency</div>
@@ -70,11 +66,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
       <section className="section">
         <SectionLabel n="2.2">The boundary problem</SectionLabel>
         <h2 className="h2">The course boundary models replay protection and a watermark.</h2>
-        <p className="prose">
-          Delivery may repeat during retries or recovery, and event time can differ from arrival time. At a warehouse boundary, an idempotent
-          write or deterministic dedup key protects against replay. A watermark and late-data policy control when event-time windows publish and
-          how subsequent records are handled. Toggle the two modeled controls below to see their separate effects.
-        </p>
+        <p className="prose">Retries and recovery repeat delivery. Event time drifts from arrival time. At the warehouse boundary an idempotent write or a deterministic dedup key absorbs the replay, while a watermark and late-data policy decide when event-time windows publish and what happens to records arriving after. Toggle the two modeled controls below and watch each effect on its own.</p>
         <ConveyorSim />
       </section>
 

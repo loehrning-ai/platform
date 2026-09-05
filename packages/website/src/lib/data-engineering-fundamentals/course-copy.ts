@@ -159,9 +159,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data engineering / fundamentals",
-      title: "Understand a data pipeline as one connected system.",
+      title: "A data pipeline is one connected system.",
       intro:
-        "Follow data from source to use. The course explains event time, file formats, distributed compute, idempotency, quality checks, metadata, metrics layers, and release gates through executable simulations.",
+        "Data from source to use, stage by stage. Event time, file formats, distributed compute, idempotency, quality checks, metadata, metrics layers, and release gates run here as executable simulations.",
       start: "Open the overview",
       browse: "View the chapters",
       facts: [
@@ -179,14 +179,14 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       courseEyebrow: "Course structure",
       courseTitle: "One pipeline. Twelve chapters. One end-to-end case.",
       courseIntro:
-        "The chapters build on one another. Start with storage and query engines, trace the data flow, then inspect six selected course controls together in the capstone.",
+        "The chapters build on one another. Start with storage and query engines, trace the data flow, then inspect six selected course controls in the capstone.",
       chapterLabel: (displayNumber, id) =>
         id === "home" ? "Course overview" : `Chapter ${displayNumber}`,
       duration: (minutes) => `${minutes} min`,
       finalEyebrow: "Entry point",
-      finalTitle: "Start with the complete pipeline.",
+      finalTitle: "The whole pipeline first. Then the parts.",
       finalBody:
-        "The overview assigns every technical decision to a pipeline stage. Each following chapter examines one part of that system in detail.",
+        "The overview assigns every technical decision to a pipeline stage. Each chapter after it takes one part of that system.",
       finalCta: "Start the overview",
       breadcrumbs: ["Home", "Courses", "Data Engineering Fundamentals"],
       jsonLdDescription:
