@@ -42,6 +42,19 @@
     "content/books/ki-landschaft/07_schnellstart.md",
     "content/books/ki-landschaft/08_fahrplan.md",
     "content/books/ki-landschaft/09_ausblick.md",
-    "content/books/ki-landschaft/10_anhang.md"
+    "content/books/ki-landschaft/10_anhang.md",
+    "content/books/ki-tools-selbststaendige/01_ki_fuer_selbststaendige.md",
+    "content/books/ki-tools-selbststaendige/02_grundlagen.md",
+    "content/books/ki-tools-selbststaendige/03_prompting.md",
+    "content/books/ki-tools-selbststaendige/04_akquise.md",
+    "content/books/ki-tools-selbststaendige/05_content.md",
+    "content/books/ki-tools-selbststaendige/06_office.md",
+    "content/books/ki-tools-selbststaendige/07_finanzen.md",
+    "content/books/ki-tools-selbststaendige/08_recht.md",
+    "content/books/ki-tools-selbststaendige/09_branchen.md",
+    "content/books/ki-tools-selbststaendige/10_automatisierung.md",
+    "content/books/ki-tools-selbststaendige/11_skalierung.md",
+    "content/books/ki-tools-selbststaendige/12_toolbox.md",
+    "content/books/ki-tools-selbststaendige/13_prompt_bibliothek.md"
   ]
 }

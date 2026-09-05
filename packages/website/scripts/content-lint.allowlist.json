@@ -15,6 +15,31 @@
       "file": "content/books/ki-arbeitsalltag/13_anhang.md",
       "rule": "VOICE-FORM",
       "reason": "A glossary example quotes a formal notice addressed to a third party, where Sie is correct; the surrounding reference text stays Du."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/03_prompting.md",
+      "rule": "VOICE-FILLER",
+      "reason": "The chapter teaches readers to recognise filler in their own prompts, so the banned words appear inside quoted bad examples, two of them within frozen code fences."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/03_prompting.md",
+      "rule": "VOICE-OPENER",
+      "reason": "The announcing openers are quoted weak prompts the chapter then rewrites; removing them would delete the lesson."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/04_akquise.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted boilerplate of a bad acquisition mail addressed to a client, where German business correspondence uses Sie."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/07_finanzen.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted speech addressed to the reader client, where Sie is the correct German form."
+    },
+    {
+      "file": "content/books/ki-tools-selbststaendige/09_branchen.md",
+      "rule": "VOICE-FORM",
+      "reason": "Quoted client question in a sales scene, where Sie is the correct German form."
     }
   ]
 }
