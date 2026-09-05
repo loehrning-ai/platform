@@ -2,6 +2,93 @@ const MAX_PROVIDER_DSN_LENGTH = 2_048;
 const SENTRY_DSN_PATTERN =
   /^https:\/\/[a-f0-9]+@[a-z0-9.-]+(?:\.de)?\.sentry\.io\/\d+$/;
 
+/**
+ * Next extracts the nonce it stamps into every rendered script with
+ * `/^'nonce-([A-Za-z0-9+\/_-]+={0,2})'$/` (see
+ * next/dist/server/app-render/get-script-nonce-from-header.js). This pattern is
+ * that grammar plus a length bound, and it is the only gate through which a
+ * value reaches a response header, so no delimiter, newline, or quote can be
+ * smuggled into the policy.
+ */
+const CSP_NONCE_PATTERN = /^[A-Za-z0-9+/_-]{16,128}={0,2}$/;
+
+/**
+ * 18 random bytes carry 144 bits of entropy, well past the 128 bits a CSP nonce
+ * needs to be unguessable within one response. 18 is a whole multiple of 3, so
+ * base64 encodes them as exactly 24 characters with no padding to trim.
+ *
+ * The bytes go through the platform's own base64 encoder rather than being
+ * indexed into a hand-written alphabet. A 64-character base64-alphabet literal
+ * in the source is indistinguishable from an embedded credential to the
+ * publication secret scanner, and splitting one up to slip past that scanner
+ * would blunt a gate this repository relies on.
+ */
+const CSP_NONCE_BYTES = 18;
+
+/**
+ * The request header the proxy uses to hand the generated nonce to server
+ * components. `x-nonce` is the name Next's own strict-CSP guidance uses.
+ */
+export const NONCE_REQUEST_HEADER = "x-nonce";
+
+/**
+ * Stage gate for the nonce policy.
+ *
+ * Report-only is deliberate, not a placeholder. Next reads a
+ * `Content-Security-Policy` **or** a `Content-Security-Policy-Report-Only`
+ * request header (app-render.js:209), so the nonce is stamped and the strict
+ * policy is fully exercised in real browsers while nothing can break. The
+ * enforced baseline is emitted by next.config.ts and still carries
+ * `'unsafe-inline'`, so there is exactly one enforced policy on the wire and no
+ * precedence question between the proxy and the platform's routing layer.
+ *
+ * Flipping this constant to "Content-Security-Policy" is the whole of the
+ * enforcement step; `isSharedCacheable` below then automatically withholds the
+ * policy from any response a shared cache may store.
+ */
+export const NONCE_CSP_HEADER:
+  "Content-Security-Policy" | "Content-Security-Policy-Report-Only" =
+  "Content-Security-Policy-Report-Only";
+
+/**
+ * A nonce inside a document a shared cache may store is a fixed nonce: every
+ * reader of the cached response holds a value that authorizes an injected
+ * script, which is strictly worse than no nonce at all.
+ *
+ * Fail closed: a response counts as shared-cacheable unless it explicitly
+ * forbids shared storage, so a missing or unrecognized Cache-Control is treated
+ * as cacheable rather than assumed private.
+ */
+export function isSharedCacheable(
+  cacheControl: string | null | undefined,
+): boolean {
+  const directives = (cacheControl ?? "")
+    .split(",")
+    .map((directive) => directive.trim().toLowerCase().split("=")[0]);
+  return !directives.includes("no-store") && !directives.includes("private");
+}
+
+/** Whether a value is safe to interpolate into a `'nonce-...'` source. */
+export function isCspNonce(value: string): boolean {
+  return CSP_NONCE_PATTERN.test(value);
+}
+
+/**
+ * Generate one per-request nonce. Returns null when the runtime exposes no
+ * cryptographic random source, so a missing primitive degrades to the existing
+ * nonce-free policy instead of emitting a guessable value.
+ */
+export function createCspNonce(
+  randomSource: Pick<Crypto, "getRandomValues"> | undefined = globalThis.crypto,
+): string | null {
+  if (typeof randomSource?.getRandomValues !== "function") return null;
+  const bytes = randomSource.getRandomValues(new Uint8Array(CSP_NONCE_BYTES));
+  // btoa maps each code unit below 256 to one base64 symbol, which is exactly
+  // what a Uint8Array carries, so no byte is lost or re-encoded on the way.
+  const nonce = btoa(String.fromCharCode(...bytes));
+  return isCspNonce(nonce) ? nonce : null;
+}
+
 export type SecurityHeaderEnvironment = Readonly<
   Partial<
     Record<
@@ -47,10 +134,20 @@ export function sentryOriginFromDsn(value: string | undefined): string | null {
   }
 }
 
+/**
+ * Build the policy. Passing a nonce swaps the inline-script escape hatch for
+ * that nonce plus `'strict-dynamic'` and changes nothing else, so the reported
+ * policy and the enforced baseline stay directive-for-directive identical apart
+ * from `script-src`. An absent or malformed nonce falls back to the nonce-free
+ * policy rather than emitting a policy that references a value no script
+ * carries.
+ */
 export function buildContentSecurityPolicy(
   environment: SecurityHeaderEnvironment,
   supabaseOrigin: string | null,
+  nonce: string | null = null,
 ): string {
+  const trustedNonce = nonce !== null && isCspNonce(nonce) ? nonce : null;
   const isDevelopment = environment.NODE_ENV === "development";
   const localVerificationOrigin =
     environment.LOEHRNING_LOCAL_VERIFICATION_ORIGIN;
@@ -86,15 +183,33 @@ export function buildContentSecurityPolicy(
   );
   const turnstileOrigin = "https://challenges.cloudflare.com";
 
-  const scriptSources = [
-    "'self'",
-    // Next App Router emits inline framework scripts for RSC streaming and
-    // metadata. Removing this requires a fully covered nonce architecture.
-    "'unsafe-inline'",
+  // Provider entries are shared by both script-src shapes. A CSP3 browser
+  // ignores host sources once 'strict-dynamic' is present, but a CSP2 browser
+  // ignores 'strict-dynamic' instead and falls back to this allowlist, so the
+  // entries stay in the nonce policy too.
+  const conditionalScriptSources = [
     ...(isDevelopment ? ["'unsafe-eval'"] : []),
     ...(vercelTelemetryEnabled ? ["https://va.vercel-scripts.com"] : []),
     ...(turnstileEnabled ? [turnstileOrigin] : []),
   ];
+  const scriptSources = trustedNonce
+    ? [
+        "'self'",
+        // Next stamps this nonce onto every inline framework script and every
+        // chunk it renders. 'strict-dynamic' extends that trust to the scripts
+        // those chunks create (webpack chunk loads, Sentry, Turnstile,
+        // analytics) without re-admitting arbitrary inline script.
+        `'nonce-${trustedNonce}'`,
+        "'strict-dynamic'",
+        ...conditionalScriptSources,
+      ]
+    : [
+        "'self'",
+        // Next App Router emits inline framework scripts for RSC streaming and
+        // metadata. Removing this requires a fully covered nonce architecture.
+        "'unsafe-inline'",
+        ...conditionalScriptSources,
+      ];
   const connectSources = [
     "'self'",
     ...(supabaseOrigin

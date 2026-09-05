@@ -1,9 +1,19 @@
 import { NextResponse, type NextRequest } from "next/server";
 import {
+  buildContentSecurityPolicy,
+  createCspNonce,
+  isSharedCacheable,
+  NONCE_CSP_HEADER,
+  NONCE_REQUEST_HEADER,
+  type SecurityHeaderEnvironment,
+} from "../security-headers";
+import {
   cacheHeaderFor,
   getCrawlRoute,
   NOINDEX_HEADER,
+  type CrawlRoute,
 } from "@/lib/crawl/contract";
+import { normalizeSupabaseOrigin } from "@/lib/supabase/config";
 import { redirectOriginForRequest } from "@/lib/auth/origin";
 import { isGatedCoursePath, isProtectedPlatformPath } from "@/lib/auth/routes";
 import { reportApiError } from "@/lib/observability/api-error";
@@ -16,6 +26,74 @@ import {
   parseLocalePathname,
   type Locale,
 } from "@/lib/i18n/locale";
+
+/**
+ * Every marker the policy builder reads, resolved through explicit named
+ * property access. The Edge bundle inlines only reads of a single, statically
+ * named `process.env` property, so spreading `process.env` here would silently
+ * drop the provider markers and make the policy the proxy reports disagree with
+ * the enforced baseline next.config.ts builds from the same function.
+ *
+ * Spell each marker out rather than writing a placeholder name: the
+ * child-process environment policy classifies every `process.env` key it finds
+ * in this package's sources, and a stand-in reads to it as a real one.
+ */
+const CSP_ENVIRONMENT: SecurityHeaderEnvironment = {
+  NODE_ENV: process.env.NODE_ENV,
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+  SUPABASE_URL: process.env.SUPABASE_URL,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  VERCEL: process.env.VERCEL,
+  VERCEL_TELEMETRY_ENABLED: process.env.VERCEL_TELEMETRY_ENABLED,
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+  LOEHRNING_LOCAL_VERIFICATION_ORIGIN:
+    process.env.LOEHRNING_LOCAL_VERIFICATION_ORIGIN,
+};
+
+const CSP_SUPABASE_URL =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
+const CSP_SUPABASE_ORIGIN = CSP_SUPABASE_URL
+  ? normalizeSupabaseOrigin(CSP_SUPABASE_URL)
+  : null;
+
+/**
+ * Machine-readable endpoints and static assets are the only responses this app
+ * intentionally serves from a shared cache. They render no scripts, so a
+ * per-request value in them would buy nothing and only fragment their caching.
+ */
+function issuesNonce(route: CrawlRoute): boolean {
+  return (
+    route.routeClass !== "public-machine" &&
+    route.routeClass !== "public-assets" &&
+    route.cache !== "public-static"
+  );
+}
+
+/**
+ * Publish the nonce policy on a response Next will render a document for.
+ *
+ * Fail closed: an ENFORCED nonce policy may only ride a response that a shared
+ * cache must not store. A report-only policy grants no capability at all, so it
+ * is safe on cacheable documents and is what this stage emits; if the policy is
+ * ever enforced, this guard withholds it from cacheable responses instead of
+ * shipping a nonce every reader of the cached document would hold.
+ *
+ * The final Cache-Control is only known here, after the branch that sets it, so
+ * the request header was already forwarded. A withheld response header leaves
+ * inert nonce attributes in the document and the nonce-free baseline from
+ * next.config.ts in force: the page still works, it simply is not hardened.
+ */
+function applyNoncePolicy(response: NextResponse, policy: string | null): void {
+  if (!policy) return;
+  if (
+    NONCE_CSP_HEADER === "Content-Security-Policy" &&
+    isSharedCacheable(response.headers.get("Cache-Control"))
+  ) {
+    return;
+  }
+  response.headers.set(NONCE_CSP_HEADER, policy);
+}
 
 function preserveAuthHeaders(
   source: NextResponse,
@@ -133,6 +211,23 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   // the sanitized path and overwrites any client-supplied value.
   requestHeaders.delete(LOCALE_REQUEST_HEADER);
   requestHeaders.set(LOCALE_REQUEST_HEADER, locale);
+  // Next reads a Content-Security-Policy or Content-Security-Policy-Report-Only
+  // REQUEST header and stamps the first nonce it finds onto every script it
+  // renders. Forwarding an inbound copy would therefore let a client choose
+  // that nonce, so both headers and the derived x-nonce are dropped before the
+  // proxy sets its own.
+  requestHeaders.delete("content-security-policy");
+  requestHeaders.delete("content-security-policy-report-only");
+  requestHeaders.delete(NONCE_REQUEST_HEADER);
+
+  const nonce = issuesNonce(route) ? createCspNonce() : null;
+  const noncePolicy = nonce
+    ? buildContentSecurityPolicy(CSP_ENVIRONMENT, CSP_SUPABASE_ORIGIN, nonce)
+    : null;
+  if (nonce && noncePolicy) {
+    requestHeaders.set(NONCE_CSP_HEADER, noncePolicy);
+    requestHeaders.set(NONCE_REQUEST_HEADER, nonce);
+  }
   const continuation = localeContinuation(requestHeaders);
 
   const protectedPath = isProtectedPlatformPath(pathname);
@@ -157,6 +252,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
       // or a live health response as publicly cacheable before it is handled.
       response.headers.set("Cache-Control", cacheHeaderFor(route));
     }
+    applyNoncePolicy(response, noncePolicy);
     return response;
   }
 
@@ -184,6 +280,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   if (!protectedPath) {
     response.headers.set("X-Robots-Tag", NOINDEX_HEADER);
     applyLocaleIndexing(response, locale, pathname);
+    applyNoncePolicy(response, noncePolicy);
     return response;
   }
 
@@ -246,6 +343,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   response.headers.set("X-Robots-Tag", NOINDEX_HEADER);
   response.headers.set("Cache-Control", "private, no-store");
   mergeVaryHeader(response.headers, "Cookie");
+  applyNoncePolicy(response, noncePolicy);
 
   return response;
 }
