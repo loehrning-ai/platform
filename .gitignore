@@ -101,3 +101,4 @@ docs/open-source/github-org-release.md
 *.swn
 *~
 .*.sw[a-p]
+scratchpad/
