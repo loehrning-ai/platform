@@ -11,7 +11,7 @@ const lesson: ClaudeLesson = {
   subtitle: "Persistent instructions that travel with your project.",
   durationMinutes: 9,
   trackId: "workflows",
-  hook: "Store concise project instructions in a file the team can review.",
+  hook: "Project instructions in a file the team reviews like code.",
   keyConcepts: [
     "CLAUDE.md hierarchy",
     "Lazy-loaded sub-folder files",
@@ -25,21 +25,21 @@ const lesson: ClaudeLesson = {
       title: "What it is",
       readTimeMinutes: 2,
       content:
-        "`CLAUDE.md` is a plain Markdown instruction file used by Claude Code. A project file can live at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local, and nested files have different scopes.\n\nClaude Code loads applicable instructions into the conversation context. They guide model behavior but are not enforced configuration. Use permissions, hooks, sandboxing, and CI for controls that must hold.\n\n> Keep shared project guidance specific, reviewable, and version-controlled.",
+        "A new session knows nothing about your repo. `CLAUDE.md` is the plain Markdown file Claude Code reads to fix that. A project file lives at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local, and nested files have different scopes.\n\nClaude Code loads applicable instructions into the conversation context. They steer model behavior. They enforce nothing. Use permissions, hooks, sandboxing, and CI for the controls that must hold.\n\n> Keep shared project guidance specific, reviewable, and version-controlled.",
     },
     {
       id: "hierarchy",
       title: "How the hierarchy actually loads",
       readTimeMinutes: 2,
       content:
-        "Claude Code discovers instruction files by scope and directory. A simplified project view is:\n\n```\n~/.claude/CLAUDE.md              # User instructions across projects\n<repo>/CLAUDE.md                 # Team-shared project instructions\n<repo>/.claude/CLAUDE.md         # Alternative project location\n<repo>/CLAUDE.local.md           # Personal project instructions; gitignore\n\n# Discovered on demand when files in these folders are read:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nApplicable files are combined in context. A more local instruction is read later, but conflicting instructions are not a dependable precedence mechanism; remove contradictions. Use `/memory` to inspect which files loaded. For path-specific rules, prefer `.claude/rules/` with `paths` frontmatter.",
+        "Claude Code discovers instruction files by scope and directory. Here is a simplified project view.\n\n```\n~/.claude/CLAUDE.md              # User instructions across projects\n<repo>/CLAUDE.md                 # Team-shared project instructions\n<repo>/.claude/CLAUDE.md         # Alternative project location\n<repo>/CLAUDE.local.md           # Personal project instructions; gitignore\n\n# Discovered on demand when files in these folders are read:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nApplicable files combine in context. The more local file is read later, but do not lean on precedence; remove contradictions instead of stacking them. Use `/memory` to see which files loaded. For path-specific rules, prefer `.claude/rules/` with `paths` frontmatter.",
     },
     {
       id: "keep-in-leave-out",
       title: "What goes in it",
       readTimeMinutes: 2,
       content:
-        '**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Commands for build, test, and lint\n- Verifiable coding conventions\n- Important paths and project terminology\n- Links to maintained architecture or deployment documentation\n\n**Exclude:**\n\n- Secrets, tokens, credentials, and personal data\n- Vague instructions such as "write good code"\n- Stale history that does not affect current work\n- Long procedures that belong in a skill or maintained document\n\nCLAUDE.md consumes context and longer files can reduce adherence. Anthropic\'s current guidance recommends concise, structured instructions and suggests targeting fewer than 200 lines per file. Imports improve organization but still enter context at launch. Use permission rules, not prose instructions, to block access to sensitive paths.',
+        '**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Commands for build, test, and lint\n- Verifiable coding conventions\n- Important paths and project terminology\n- Links to maintained architecture or deployment documentation\n\n**Exclude:**\n\n- Secrets, tokens, credentials, and personal data\n- Vague instructions such as "write good code"\n- Stale history that does not affect current work\n- Long procedures that belong in a skill or maintained document\n\nCLAUDE.md spends context, and a long file gets followed less. Anthropic\'s current guidance recommends concise, structured instructions and suggests targeting fewer than 200 lines per file. Imports tidy the layout and still enter context at launch. Use permission rules, not prose, to block access to sensitive paths.',
     },
     {
       id: "template",
@@ -53,7 +53,7 @@ const lesson: ClaudeLesson = {
       title: "Auto memory and project instructions",
       readTimeMinutes: 2,
       content:
-        "Claude Code versions that support auto memory can write project-specific notes to local Markdown files. Auto memory is configurable, does not save something in every session, and should be inspected rather than treated as guaranteed recall.\n\nThe two mechanisms have different ownership:\n\n- **CLAUDE.md:** instructions maintained by people, suitable for shared and reviewed project rules.\n- **Auto memory:** machine-local notes selected during use, shared across worktrees of the same repository on that machine.\n\nUse `/memory` to inspect, edit, disable, or delete stored notes. Do not place secrets in either mechanism.",
+        "Claude Code versions that support auto memory can write project-specific notes to local Markdown files. Auto memory is configurable, does not write in every session, and deserves inspection rather than blind trust.\n\nOwnership differs.\n\n- **CLAUDE.md:** instructions maintained by people, suitable for shared and reviewed project rules.\n- **Auto memory:** machine-local notes selected during use, shared across worktrees of the same repository on that machine.\n\nUse `/memory` to inspect, edit, disable, or delete stored notes. Keep secrets out of both.",
     },
   ],
   widgets: [
@@ -82,7 +82,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "Claude Code loads applicable CLAUDE.md instructions into the conversation context. Keep them concise and specific, do not store secrets there, and use technical controls for enforced policy.",
+          "Claude Code loads applicable CLAUDE.md instructions into the conversation context. Keep them short and specific, keep secrets out, and use technical controls wherever policy has to hold.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

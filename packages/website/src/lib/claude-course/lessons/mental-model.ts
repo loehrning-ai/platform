@@ -10,10 +10,10 @@ const lesson: ClaudeLesson = {
   id: "mental-model",
   number: 1,
   title: "What Claude Actually Is",
-  subtitle: "A useful mental model before you type a single prompt.",
+  subtitle: "The model that holds up when an answer sounds confident.",
   durationMinutes: 8,
   trackId: "foundations",
-  hook: "A language model generates responses from the context it receives. Retrieval and persistence come from the product and tools around it.",
+  hook: "Claude generates from the context it receives. Retrieval and memory are product features, not traits of the model.",
   keyConcepts: [
     "Completion engine",
     "Constitutional AI",
@@ -28,37 +28,37 @@ const lesson: ClaudeLesson = {
       title: "What it is (and isn't)",
       readTimeMinutes: 3,
       content:
-        "Claude generates a response conditioned on the request, the conversation, system instructions, and any tool results or documents supplied by the product. The output is probabilistic: the same request can produce different wording or conclusions.\n\nThree boundaries matter:\n\n**Generation is not retrieval.** A model response is not evidence that a source was searched. Web search, repository access, or database lookup requires an enabled tool and a successful tool call.\n\n**The model does not provide durable storage.** A product can add chat history, project context, or memory files. Check the product's controls instead of assuming that information carries between conversations.\n\n**Fluent output is not independent review.** The model can follow an incorrect premise or produce an unsupported detail. Treat important output as a draft that needs source checks, tests, or human review.\n\n> Judge a response by its evidence and verification, not by fluency.",
+        "Fluency proves nothing. Claude generates from what sits in the window, meaning the request, the conversation, system instructions, and any documents or tool results the product supplied. The output is probabilistic. The same request can land differently tomorrow.\n\nThree boundaries hold every time.\n\n**Generation is not retrieval.** A confident answer is not evidence that anything was looked up. Web search, repository access, and database queries need an enabled tool and a call that returned.\n\n**The model is not storage.** Chat history, project context, and memory files come from the product, when they come at all. Check which controls are active instead of assuming a chat remembers.\n\n**Fluent output is not review.** The model will follow a false premise and produce a detail with nothing behind it. Important output is a draft. Sources, tests, or a reviewer decide what holds.\n\n> Judge a response by its evidence, not by how it reads.",
       keyTakeaway:
-        "Claude generates responses from the supplied context; retrieval, persistence, and verification require explicit product features or tools.",
+        "Claude generates from the supplied context. Retrieval, persistence, and verification are product features, never model guarantees.",
     },
     {
       id: "three-things",
       title: "The three things in every exchange",
       readTimeMinutes: 2,
       content:
-        "Three inputs shape a generation:\n\n- **Current context.** System and product instructions, messages, attached material, and tool results that fit in the active context window.\n- **Model training.** General patterns and information learned during training. Coverage and recency vary, so training is not a source for private or current facts.\n- **Generation settings and safeguards.** The selected model, sampling settings, enabled tools, and product policies affect the response.\n\n> **Grounding rule.** When an answer depends on current, private, or high-stakes facts, provide an authoritative source and verify that the response is supported by it.",
+        "Three inputs shape a generation:\n\n- **Current context.** System and product instructions, messages, attached material, and tool results that fit in the active context window.\n- **Model training.** General patterns and information learned during training. Coverage and recency vary, so training is not a source for private or current facts.\n- **Generation settings and safeguards.** The selected model, sampling settings, enabled tools, and product policies move the answer.\n\n> **Grounding rule.** When an answer depends on current, private, or high-stakes facts, supply an authoritative source and check that the response follows from it.",
     },
     {
       id: "constitutional-ai",
       title: "Constitutional AI, in 90 seconds",
       readTimeMinutes: 2,
       content:
-        "Constitutional AI is one method Anthropic uses during model training. A written set of principles is used to generate critiques, revisions, and preference data. It complements other training and safety methods; it does not make every response correct or every refusal consistent.\n\nPractical implications:\n\n1. **A refusal is a model output, not a policy ruling.** For a legitimate task, add the missing purpose and constraints. Do not try to bypass a valid safety boundary.\n2. **Uncertainty language is not calibrated confidence.** A confident answer can be wrong, and a cautious answer can be correct. Check evidence.\n3. **An abstention path helps.** State what the model should return when the supplied sources are insufficient. Then test that behavior with known and unknown cases.",
+        "Constitutional AI is one method Anthropic uses during model training. A written set of principles generates critiques, revisions, and preference data. It sits beside other training and safety methods. No response becomes correct, no refusal consistent.\n\nWhat does that change at the keyboard?\n\n1. **A refusal is a model output, not a policy ruling.** For a legitimate task, add the missing purpose and constraints. Do not try to bypass a valid safety boundary.\n2. **Uncertainty language is not calibrated confidence.** A confident answer can be wrong, and a cautious answer can be right. Check the evidence.\n3. **An abstention path helps.** State what the model should return when the supplied sources fall short. Then test that behavior on known and unknown cases.",
     },
     {
       id: "feel-it",
       title: "Feel it: the unknown-knowns test",
       readTimeMinutes: 1,
       content:
-        "Ask a question that depends on private project data you have not supplied. The response may abstain, request context, or produce an unsupported answer; behavior varies by model, product, and prompt.\n\nThe evaluation criterion is simple: no project-specific claim is trustworthy without project-specific evidence.\n\n> Supply the source, request a citation, and verify the citation.",
+        "Ask a question that depends on project data you never supplied. The response may abstain, ask for context, or answer with nothing behind it; behavior varies by model, product, and prompt.\n\nThe criterion is simple: no project-specific claim is trustworthy without project-specific evidence.\n\n> Supply the source, request a citation, and verify the citation.",
     },
     {
       id: "failure-modes",
       title: "The three failure modes, named",
       readTimeMinutes: 1,
       content:
-        "Use these labels to diagnose output before changing a prompt:\n\n- **Unsupported claim.** A statement has no support in the supplied source. Fix: add retrieval or source material, require citations, and verify them.\n- **Instruction drift.** The response violates a stated constraint or format. Fix: make the criterion testable, use schema validation where available, or split the task.\n- **Generic output.** The response lacks the domain details or style the task requires. Fix: add relevant context and a reviewed example, then compare results on representative inputs.",
+        "Name the failure before you touch the prompt:\n\n- **Unsupported claim.** Nothing in the supplied source backs the statement. Fix: add retrieval or source material, require citations, and check them.\n- **Instruction drift.** The response breaks a stated constraint or format. Fix: make the criterion testable, validate against a schema where one exists, or split the task.\n- **Generic output.** The response lacks the domain detail or style the task needs. Fix: add relevant context and a reviewed example, then compare results on representative inputs.",
     },
   ],
   widgets: [
@@ -70,7 +70,7 @@ const lesson: ClaudeLesson = {
         lessonId: "mental-model",
         cpId: "feel-it",
         title: "Ask about something it can't know",
-        hint: 'Try: "Which oncall rotation owns the auth service in my team?", then watch it answer.',
+        hint: 'Try: "Which oncall rotation owns the auth service in my team?", then read the answer.',
         placeholder:
           "Ask Claude something that depends on context you haven't given it…",
       },
@@ -92,7 +92,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "Any named service would be unsupported without telemetry. Supply measured data or a read-only metrics tool, then verify the answer against that source.",
+          "Without telemetry, any named service is a guess. Supply measured data or a read-only metrics tool, then check the answer against it.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -114,7 +114,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "Persistence is a product feature. Surfaces can supply Projects, CLAUDE.md, or auto-memory; inspect the current product controls instead of assuming cross-chat recall.",
+          "Persistence is a product feature. Projects, CLAUDE.md, or auto-memory can supply it; inspect the active product controls instead of assuming cross-chat recall.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -136,7 +136,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "The model generates a response conditioned on the current input and context. Correctness still depends on evidence and verification.",
+          "The model continues from the current input and context. Whether it is right still depends on evidence and verification.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

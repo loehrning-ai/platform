@@ -21,28 +21,28 @@ const lesson: ClaudeLesson = {
       title: "Why shared documents matter",
       readTimeMinutes: 1,
       content:
-        "Teams use shared documents for decisions, specifications, incident reviews, and launch plans. A useful generated draft preserves the supplied facts, exposes missing information, and follows a structure reviewers recognize.\n\nThree controls help: provide the section outline, supply an approved style example, and review claims before rewriting prose.",
+        "A reviewer opens the draft and hunts for the decision. Teams keep decisions, specifications, incident reviews, and launch plans in shared documents. A useful draft preserves the supplied facts, exposes what is missing, and follows a structure reviewers recognize.\n\nThree controls help: provide the section outline, supply an approved style example, and review claims before rewriting prose.",
     },
     {
       id: "move-1-skeleton",
       title: "Move 1: give it the skeleton",
       readTimeMinutes: 2,
       content:
-        "Document types have organization-specific conventions. Provide the required sections instead of relying on a generic default. For example:\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName required evidence for each section and mark missing source material rather than filling gaps with assumptions.",
+        "Document types carry organization-specific conventions. Give the required sections instead of a generic default.\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName the evidence each section needs and mark missing material instead of guessing.",
     },
     {
       id: "move-2-voice",
       title: "Move 2: give it the voice",
       readTimeMinutes: 2,
       content:
-        "If terminology and sentence style matter, provide a short, approved reference passage and state which traits to match. Remove confidential details and tell the model not to reuse facts from the style sample.\n\n> A style example demonstrates the target; an evaluation shows whether the result matches it.",
+        "When terminology and sentence style matter, supply a short approved passage and name the traits to match. Strip confidential details and tell the model not to reuse facts from the style sample.\n\n> A style example shows the target. An evaluation shows whether you hit it.",
     },
     {
       id: "move-3-critique",
       title: "Move 3: ask for the critique before the rewrite",
       readTimeMinutes: 2,
       content:
-        "After the first draft, evaluate it against explicit criteria: unsupported claims, missing decisions, audience mismatch, and structural defects. Ask for a concise list of findings with quoted evidence, then request only the approved changes.\n\nThis produces an inspectable review step. It does not require or expose private chain-of-thought.",
+        "Judge the first draft against explicit criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for a short list of findings with quoted evidence, then request only the changes you approve.\n\nThat gives you an inspectable review step. It neither requires nor exposes private chain-of-thought.",
     },
   ],
   widgets: [
