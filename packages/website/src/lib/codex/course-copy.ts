@@ -167,7 +167,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       eyebrow: "Codex / course",
       title: "Use Codex under explicit repository controls.",
       intro:
-        "This course treats Codex as a task-oriented coding agent. Learn to supply context, bound changes, require evidence, and review the diff before merge.",
+        "Codex is treated here as a task-oriented coding agent. Supply the context, bound the change, require evidence, read the diff before merge.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
@@ -184,7 +184,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       finalEyebrow: "Entry point",
       finalTitle: "Lesson 01: the operating model",
       finalBody:
-        "The first lesson separates bounded repository tasks from autocomplete and chat. You then examine task, repository context, and execution boundary as one operating contract.",
+        "The first lesson separates bounded repository tasks from autocomplete and chat. After that, task, repository context and execution boundary read as one operating contract.",
       finalCta: "Begin",
       breadcrumbs: ["Home", "Courses", "Codex Course"],
       jsonLdDescription:

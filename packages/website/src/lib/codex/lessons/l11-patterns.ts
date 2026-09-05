@@ -33,11 +33,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Task structure influences what can be inspected and corrected. The patterns in this lesson make requirements, repository evidence, and verification boundaries explicit. They are not success guarantees; each still requires a suitable environment and human review.\n\nUse the catalog to decide which evidence should exist before edits begin, which transformations can be bounded mechanically, and when an attempt should be restarted from a corrected specification.",
+            "The shape of a task decides what you can inspect afterwards. The patterns here make requirements, repository evidence and verification boundaries explicit. None of them guarantees success. Each still needs a suitable environment and a human reading the diff.\n\nUse the catalog to decide which evidence should exist before edits begin, which transformations can be bounded mechanically, and when an attempt should be restarted from a corrected specification.",
         },
         {
           kind: "pull-quote",
-          text: "Diagnose the request, repository context, environment, diff, and checks separately; any of them can invalidate the result.",
+          text: "Diagnose the request, repository context, environment, diff and checks separately. Any one of them can invalidate the result.",
         },
       ],
     },
@@ -49,7 +49,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Pattern:** define behavior in tests before implementation when the requirement can be expressed that way.\n\n**Value:** a reviewed failing test provides an executable example and confirms that the test detects the missing behavior. Passing it later is useful evidence, but not proof of untested security, performance, or integration requirements.\n\n**Two-phase form:**\n\n1. *Test design:* request tests without production changes. Review their assertions, fixtures, boundaries, and failure reason.\n2. *Implementation:* request the bounded change and require the reviewed tests plus relevant regression checks.\n\nTests and implementation can also share one task when the scope is clear, but review them independently. The risk is circular evidence: generated tests can encode the same misunderstanding as generated code.",
+            "**Pattern:** define behavior in tests before implementation when the requirement can be expressed that way.\n\n**Value:** a reviewed failing test gives you an executable example and proves the test detects the missing behavior. Passing it later is evidence. It is not proof about untested security, performance or integration requirements.\n\n**Two-phase form:**\n\n1. *Test design:* request tests without production changes. Review their assertions, fixtures, boundaries, and failure reason.\n2. *Implementation:* request the bounded change and require the reviewed tests plus relevant regression checks.\n\nTests and implementation can share one task when the scope is clear. Review them independently anyway. The risk is circular evidence, where generated tests encode the same misunderstanding as generated code.",
         },
         {
           kind: "callout",
@@ -66,7 +66,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Pattern:** begin an unfamiliar repository task with read-only exploration. Require file paths, call paths, existing utilities, configuration, and relevant tests as evidence.\n\n**Questions to answer before edits:**\n\n- Which code and external systems does the behavior depend on?\n- Which existing utility or abstraction already covers part of it?\n- Which repository instructions and conventions apply?\n- Which tests exercise the current behavior?\n- Which security and operational boundaries can the change affect?\n\nReview the exploration before granting a broader write or network boundary. If important claims are unsupported, request direct repository evidence rather than an architectural summary.\n\n**Risk:** editing from an incomplete model can duplicate infrastructure, bypass conventions, or break callers. Exploration reduces that risk but does not eliminate the need to inspect the final diff.",
+            "**Pattern:** begin an unfamiliar repository task with read-only exploration. Require file paths, call paths, existing utilities, configuration, and relevant tests as evidence.\n\n**Questions to answer before edits:**\n\n- Which code and external systems does the behavior depend on?\n- Which existing utility or abstraction already covers part of it?\n- Which repository instructions and conventions apply?\n- Which tests exercise the current behavior?\n- Which security and operational boundaries can the change affect?\n\nReview the exploration before granting a broader write or network boundary. If important claims are unsupported, request direct repository evidence rather than an architectural summary.\n\n**Risk:** editing from an incomplete model duplicates infrastructure, bypasses conventions and breaks callers. Exploration lowers that risk. It never removes the need to read the final diff.",
         },
       ],
     },
@@ -78,7 +78,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            '**Pattern:** define a behavior-preserving transformation with an old example, an accepted new example, an explicit file set, and regression checks.\n\n**Specification fields:**\n\n- Name the old and new pattern with code examples.\n- Cite an existing repository example when it is authoritative.\n- Define included files and explicit exclusions.\n- State which public interfaces and behavior must remain unchanged.\n- Name checks for callers, generated output, types, and migrations where relevant.\n\n**Risk:** an open request such as "clean up the codebase" delegates architectural and naming decisions that have not been specified. A bounded mechanical transformation is easier to review, but broad repetition can still propagate a flawed target pattern.',
+            '**Pattern:** define a behavior-preserving transformation with an old example, an accepted new example, an explicit file set, and regression checks.\n\n**Specification fields:**\n\n- Name the old and new pattern with code examples.\n- Cite an existing repository example when it is authoritative.\n- Define included files and explicit exclusions.\n- State which public interfaces and behavior must remain unchanged.\n- Name checks for callers, generated output, types, and migrations where relevant.\n\n**Risk:** an open request such as "clean up the codebase" hands over architectural and naming decisions nobody specified. A bounded mechanical transformation reviews more easily, and broad repetition still propagates a flawed target pattern.',
         },
       ],
     },
@@ -90,7 +90,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Pattern:** provide the observed symptom, environment, exact error output, reproduction steps, and known exclusions. Ask for a hypothesis tied to a file and call path before authorizing a fix.\n\n**Useful inputs:**\n\n- exact error text and stack trace with secrets removed;\n- minimal reproduction or a failing test;\n- relevant versions, configuration, and runtime conditions;\n- prior hypotheses already ruled out and the evidence for doing so.\n\nWhen appropriate, add a regression test that fails for the reported defect before changing production code. Confirm its failure reason, then review the fix and broader checks.\n\n**Risk:** without a reproducible symptom, a plausible diff may change adjacent behavior without establishing the cause.",
+            "**Pattern:** provide the observed symptom, environment, exact error output, reproduction steps, and known exclusions. Ask for a hypothesis tied to a file and call path before authorizing a fix.\n\n**Useful inputs:**\n\n- exact error text and stack trace with secrets removed;\n- minimal reproduction or a failing test;\n- relevant versions, configuration, and runtime conditions;\n- prior hypotheses already ruled out and the evidence for doing so.\n\nWhen appropriate, add a regression test that fails for the reported defect before changing production code. Confirm its failure reason, then review the fix and broader checks.\n\n**Risk:** with no reproducible symptom, a plausible diff changes adjacent behavior and never establishes the cause.",
         },
       ],
     },
@@ -102,7 +102,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Pattern:** restart from a corrected specification when revision is preserving a false premise or expanding the diff.\n\n**Signals:**\n\n- the same requirement is implemented differently without addressing the review evidence;\n- review comments are redefining the goal or architecture rather than correcting a local defect;\n- the diff grows across unrelated files or concerns;\n- accepted behavior is repeatedly removed; or\n- the current session contains conflicting instructions.\n\nBefore restarting, retain verified repository findings, rejected approaches with reasons, and relevant command output. Do not carry speculative explanations or the entire transcript. A fixed revision count is not a reliable threshold; use convergence and task validity.",
+            "**Pattern:** restart from a corrected specification when revision is preserving a false premise or expanding the diff.\n\n**Signals:**\n\n- the same requirement is implemented differently without addressing the review evidence;\n- review comments are redefining the goal or architecture rather than correcting a local defect;\n- the diff grows across unrelated files or concerns;\n- accepted behavior is repeatedly removed; or\n- the current session contains conflicting instructions.\n\nBefore restarting, keep the verified repository findings, the rejected approaches with reasons, the relevant command output. Leave the speculation and the transcript behind. A fixed revision count is not a threshold. Convergence and task validity are.",
         },
       ],
     },

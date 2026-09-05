@@ -18,16 +18,16 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Scope creep", "Unkontrollierte Ausweitung"],
     ["A reviewable unit of work", "Eine prüfbare Arbeitseinheit"],
     [
-      "No universal file count, line count, or duration defines a suitable Codex task. Scope by **cohesion and evidence** instead. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies that can be named before implementation;\n- has a diff that a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior; and\n- can be reverted without also removing unrelated work.\n\nSplit the task when parts can be implemented, verified, deployed, or rolled back independently. Keep coupled changes together when separating them would create an invalid intermediate state.",
+      "File counts, line counts and time limits are the wrong instrument. Scope by **cohesion and evidence** instead. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies that can be named before implementation;\n- has a diff that a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior; and\n- can be reverted without also removing unrelated work.\n\nSplit the task when parts can be implemented, verified, deployed, or rolled back independently. Keep coupled changes together when separating them would create an invalid intermediate state.",
       "Wie viele Dateien darf ein Codex-Auftrag anfassen? Falsche Frage. Keine Datei-, Zeilen- oder Zeitgrenze taugt als Maß. Grenze nach **Zusammenhang und Nachweisen** ab. Meist sieht ein brauchbarer Auftrag so aus:\n\n- Er ändert ein beobachtbares Verhalten oder eine Struktur, die es ermöglicht.\n- Seine Abhängigkeiten lassen sich vor der Umsetzung benennen.\n- Die Reviewerin kann den Diff als eine Entscheidung lesen.\n- Seine Prüfungen treffen das geänderte Verhalten.\n- Er lässt sich zurücknehmen, ohne fremde Arbeit mitzureißen.\n\nTrenne, was sich unabhängig umsetzen, prüfen, ausliefern oder zurücknehmen lässt. Lass zusammen, was getrennt einen ungültigen Zwischenzustand ergäbe.",
     ],
     [
-      "A planning ticket may describe an initiative. An implementation task should describe one coherent, reviewable change.",
+      "A planning ticket describes an initiative. An implementation task describes one coherent, reviewable change.",
       "Ein Planungsticket darf ein Vorhaben beschreiben. Ein Implementierungsauftrag beschreibt eine zusammenhängende, prüfbare Änderung.",
     ],
     ["Three slicing moves", "Drei Zerlegungsmuster"],
     [
-      "Three decomposition patterns cover many broad changes. Choose the one that preserves valid intermediate states and clear ownership:",
+      "Three decomposition patterns cover many broad changes. Pick the one that keeps intermediate states valid and ownership clear.",
       "Drei Muster decken viele breite Änderungen ab. Nimm das Muster, das gültige Zwischenzustände und klare Verantwortung erhält:",
     ],
     ["move 01 · horizontal", "Muster 01 · horizontal"],
@@ -49,7 +49,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Zuerst eine Strukturänderung, die das Verhalten erhält und eigene Prüfungen mitbringt. Dann die Funktion gegen diese geprüfte Struktur. Trenne nicht, wenn der erste Schritt allein weder Nutzen noch sicheren Zustand hat.",
     ],
     [
-      "A central rule is: **change only what the current task requires.** Record independent defects or cleanup opportunities without implementing them in the same diff.\n\nAmbiguous boundaries can mix a requested behavior with unrelated refactoring, dependency changes, or test rewrites. The resulting diff represents several decisions, so reviewers cannot accept, reject, or revert them independently.\n\nThis is *scope creep*. Detect it by comparing the changed files and behaviors with the task's goal, constraints, and exclusions. Do not infer scope from whether the additional code appears useful.",
+      "**Change only what the current task requires.** That is the rule. Record independent defects and cleanup opportunities without implementing them in the same diff.\n\nAmbiguous boundaries mix the requested behavior with unrelated refactoring, dependency changes and test rewrites. The diff then carries several decisions, and nobody can accept, reject or revert them separately.\n\nThat is *scope creep*. Catch it by comparing changed files and behaviors against the task's goal, constraints and exclusions. Usefulness of the extra code is not the test.",
       "Die zentrale Regel: **Ändere nur, was der aktuelle Auftrag verlangt.** Fremde Fehler und Aufräumgelegenheiten notierst du, statt sie im selben Diff zu erledigen.\n\nUnscharfe Grenzen mischen das verlangte Verhalten mit fremdem Refactoring, Abhängigkeitsänderungen oder Testumbauten. Der Diff steht dann für mehrere Entscheidungen, und niemand kann sie einzeln annehmen, ablehnen oder zurücknehmen.\n\nDas ist *Scope Creep*. Du erkennst ihn, indem du geänderte Dateien und Verhalten gegen Ziel, Einschränkungen und Ausschlüsse des Auftrags hältst. Ob der zusätzliche Code nützlich aussieht, spielt keine Rolle.",
     ],
     ["cost 01", "Kosten 01"],
@@ -65,17 +65,17 @@ export default localizeCodexLessonToGerman(canonical, {
       "Ein Revert nimmt den ganzen Pull Request zurück, samt fremdem Refactoring und Testumbau. Enger Umfang senkt diese Kopplung. Sicher wird ein Rollback dadurch allein noch nicht.",
     ],
     [
-      'State the boundary directly: *"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them."* This instruction makes extra work visible during review, but it does not replace a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```',
+      'Say the boundary out loud. *"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them."* That makes extra work visible in review without replacing a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```',
       'Sag die Grenze direkt: *"Ändere nur Dateien, die dieser Auftrag braucht. Notiere fremde Auffälligkeiten im Pull-Request-Text, behebe sie nicht."* Der Satz macht Zusatzarbeit im Review sichtbar. Einen konkreten Umfang ersetzt er nicht. Vergleiche:\n\n```\n# Zu offen\n## Ziel\nPagination zum Endpunkt für die Benutzerliste hinzufügen. Die aktuelle\nImplementierung liefert alle Benutzer; benötigt werden seitenweise Ergebnisse.\n\n# Ausdrückliches Verhalten und Umfang\n## Ziel\nDie Query-Parameter page und page_size für GET /users in api/users.py ergänzen.\nStandard: page=1, page_size=20. Maximum: page_size=100; darüber Status 400.\nAntwort: {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Umfang\napi/users.py und tests/api/test_users.py ändern. Ist eine weitere Datei erforderlich,\nvor der Änderung begründen.\n```',
     ],
     ["Scope warning signs", "Warnsignale erkennen"],
     [
-      'Words such as "also," "while there," and "as needed" often hide a second decision. Name that decision and decide whether it belongs in the same change.',
+      'The words "also," "while there," and "as needed" hide a second decision. Name it, then decide whether it belongs in this change.',
       '"Auch", "bei der Gelegenheit", "bei Bedarf": Hinter solchen Wörtern steckt oft eine zweite Entscheidung. Sprich sie aus und entscheide, ob sie in dieselbe Änderung gehört.',
     ],
     ["Illustrative broad task", "Ablaufbeispiel: gekoppelter Großauftrag"],
     [
-      "This example combines schema, query, endpoint, audit, and migration work. The replay shows how failures become difficult to attribute when those concerns share one task.",
+      "Schema, query, endpoint, audit and migration work in one task. Watch how hard it becomes to attribute a failure.",
       "Schema, Query, Endpunkt, Audit und Migration in einem Auftrag. Der Ablauf zeigt, was passiert: Fehler lassen sich kaum noch zuordnen.",
     ],
     [

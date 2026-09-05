@@ -34,7 +34,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Warum dieses Modell? Weil es Fehler adressierbar macht. Ein mehrdeutiger Auftrag lässt Codex eine Auslegung wählen. Ohne Akzeptanzkriterien wird fertig zur Geschmacksfrage, ohne laufende Tests bleibt Korrektheit eine Behauptung. Die nächsten Lektionen machen aus diesen Lücken ausdrückliche Auftragseingaben.\n\nDer aktive Kontext ist eine **Arbeitstafel** aus Auftrag, relevantem Code, Anweisungen, Befehlsausgaben und den bisherigen Beiträgen, soweit die aktuelle Oberfläche sie mitgibt. Rechne nicht damit, dass eine neue Sitzung diese Tafel übernimmt. Dauerhafte Repository-Regeln gehören deshalb in `AGENTS.md`, und Prüfkommandos müssen ausführbar bleiben. Auftragsspezifische Grenzen stehen im Auftrag selbst, jedes Mal.",
     ],
     [
-      "Codex can inspect, edit, and test within configured boundaries; the output is a reviewable change, not proof that the task is correct.",
+      "Codex inspects, edits, and tests inside configured boundaries. The output is a reviewable change, not proof the task is correct.",
       "Codex untersucht, ändert und testet innerhalb konfigurierter Grenzen. Heraus kommt eine prüfbare Änderung, kein Beweis für die Korrektheit.",
     ],
     [
@@ -42,13 +42,13 @@ export default localizeCodexLessonToGerman(canonical, {
       "Die drei Bestandteile des Auftragsrahmens",
     ],
     [
-      "A Codex run depends on three inputs. Naming them makes failures easier to diagnose.",
+      "Three inputs decide a Codex run. Name them and the failures stop being mysterious.",
       "Drei Eingaben bestimmen einen Codex-Lauf. Wer sie benennt, findet Fehler schneller.",
     ],
     ["01 · the task", "01 · die Aufgabe"],
     ["What you're asking for", "Was du verlangst"],
     [
-      "Goal, constraints, acceptance criteria, out-of-scope. This is the entire situational brief. If a requirement isn't here, it doesn't exist to Codex.",
+      "Goal, constraints, acceptance criteria, out-of-scope. The whole brief. A requirement that is not written here does not exist to Codex.",
       "Ziel, Einschränkungen, Akzeptanzkriterien, ausgeschlossener Umfang. Das ist die ganze Lagebeschreibung. Was hier nicht steht, existiert für Codex nicht.",
     ],
     ["02 · the repo", "02 · das Repository"],
@@ -65,12 +65,12 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["The contract rule.", "Die Grundregel."],
     [
-      "An ambiguous task permits scope drift. Missing repository guidance makes local conventions harder to infer. Unavailable checks leave changes unverified. Each technique in this course makes one of those inputs more explicit.",
+      "An ambiguous task permits scope drift. Missing repository guidance leaves local conventions to guesswork. Unavailable checks leave changes unverified. Every technique in this course sharpens one of those three inputs.",
       "Ein vager Auftrag lädt zum Ausufern ein, fehlende Repository-Regeln zwingen Codex zum Ableiten aus dem Code, und ohne laufende Prüfungen bleibt jede Änderung unverifiziert. Jede Technik im Kurs schärft eine dieser Eingaben.",
     ],
     ["A real session, replayed", "Ein Lauf, gekürzt"],
     [
-      'Words are cheap. Here\'s a condensed replay of what Codex does when you give it the task *"add rate limiting to the /login endpoint"*. This is the real shape of a run: plan, probe, try, test, revise.',
+      'Words are cheap. Here is a condensed replay of one task, *"add rate limiting to the /login endpoint"*. Plan, probe, try, test, revise. That is the shape of a run.',
       'Genug Theorie. So sieht ein gekürzter Lauf für den Auftrag *"Rate Limiting zum Endpunkt /login hinzufügen"* aus. Planen, untersuchen, ändern, testen, überarbeiten.',
     ],
     [
@@ -80,7 +80,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Two questions on what you just read.", "Zwei Fragen zum Gelesenen."],
     ["Three failure modes, named", "Drei Fehlermuster mit Namen"],
     [
-      "These three failure modes are common and can be checked directly.",
+      "Three patterns keep coming back. Each one is checkable.",
       "Drei Muster, die immer wiederkommen. Alle direkt prüfbar.",
     ],
     ["mode 01", "Muster 01"],
@@ -103,7 +103,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Self-check cards", "Karten zur Selbstprüfung"],
     [
-      "Here are three questions about Codex. Your answer doesn't matter, this is a self-check. Read each, say the answer out loud, then flip the card.",
+      "Read the question, say your answer out loud, then flip the card. Self-check, not a grade.",
       "Lies die Frage, antworte laut, dreh die Karte um. Selbstprüfung, keine Note.",
     ],
     [

@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "When a diff is not acceptable, classify the mismatch before continuing. A local defect, a missing requirement, an invalid task boundary, and stale session context require different responses.\n\nUse this decision tree as a diagnostic aid rather than a fixed retry count:",
+            "The diff came back wrong. Before you reply, classify the mismatch. A local defect, a missing requirement, an invalid task boundary and stale session context call for different responses.\n\nA diagnostic aid, not a retry counter.",
         },
         {
           kind: "card-grid",
@@ -73,7 +73,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A targeted correction is appropriate only when the existing task remains valid. Compare a vague comment with one that identifies the defect, location, and expected evidence.",
+            "A targeted correction works only while the existing task is still valid. Compare a vague comment with one that names defect, location and expected evidence.",
         },
         {
           kind: "prose",
@@ -96,7 +96,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Restart when the current diff is anchored to a wrong requirement, invalid architecture, or over-broad scope. Continuing from that state can preserve assumptions that every later correction must work around.\n\nBefore discarding the attempt, record evidence that is not obvious from the repository: a rejected approach and its reason, a newly discovered constraint, relevant command output, and the files or call paths already traced. Use that evidence in a new, bounded specification.\n\nDo not use revision count as an automatic rule. A sequence of small, independent corrections may be efficient; one correction that changes the premise may justify an immediate restart.",
+            "Restart when the diff is anchored to a wrong requirement, invalid architecture or over-broad scope. Continue from there and every later correction works around the same bad assumptions.\n\nBefore you throw the attempt away, record what the repository does not already show: a rejected approach and its reason, a newly discovered constraint, relevant command output, the files or call paths already traced. That evidence goes into the new, bounded specification.\n\nRevision count is not the rule. A run of small independent corrections can be efficient. One correction that changes the premise can justify an immediate restart.",
         },
         {
           kind: "callout",
@@ -113,7 +113,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Long interactive sessions accumulate requests, corrections, logs, and rejected approaches. Relevant instructions can become harder to apply consistently, especially when later messages conflict with earlier ones or the active context is compacted.\n\nObservable signs include reintroducing a rejected approach, undoing an accepted correction, or applying a general rule while ignoring a later exception. These signs can also indicate an ambiguous task or code change, so inspect the evidence before attributing them to context length.\n\nWhen the active history is no longer a clear contract, start a new session with a concise specification and only the verified findings needed to continue.",
+            "Long interactive sessions pile up requests, corrections, logs and rejected approaches. Relevant instructions get harder to apply consistently, especially when later messages contradict earlier ones or the active context is compacted.\n\nWatch for a rejected approach coming back, an accepted correction quietly undone, a general rule applied while a later exception is ignored. Those same signs can mean an ambiguous task or a code change, so check the evidence before blaming context length.\n\nWhen the active history is no longer a clear contract, start a new session with a concise specification and only the verified findings needed to continue.",
         },
         {
           kind: "card-grid",
@@ -154,7 +154,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A new session should not inherit the entire transcript. Carry forward verified facts that are not obvious from the repository or original specification: discovered constraints, rejected approaches with reasons, relevant command results, and unresolved questions.",
+            "A new session does not need the whole transcript. Carry forward the verified facts the repository and the original specification do not already contain. Discovered constraints, rejected approaches with reasons, relevant command results, unresolved questions.",
         },
         {
           kind: "prose",
