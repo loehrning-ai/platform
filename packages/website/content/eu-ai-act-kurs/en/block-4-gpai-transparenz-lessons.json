@@ -15,7 +15,7 @@
       "blockId": "block_4",
       "number": 1,
       "title": "Understanding GPAI models",
-      "subtitle": "When a model falls within Chapter V and which duties apply to its provider",
+      "subtitle": "When a model falls under Chapter V, and which duties land on its provider",
       "durationMinutes": 5,
       "keyConcepts": [
         "General-purpose AI model",
@@ -30,22 +30,22 @@
           "id": "block_4_lesson_1_section_1",
           "title": "What is a GPAI model, and who is its provider?",
           "readTimeMinutes": 2,
-          "content": "A **general-purpose AI model** (GPAI model) is an AI model that displays significant generality, can competently perform a wide range of distinct tasks, and can be integrated into a variety of downstream systems or applications. Typical examples include models in the GPT, Claude, Gemini, Llama, and Mistral families, although the legal assessment applies to the specific model and version (recitals 97 to 99, Regulation (EU) 2024/1689).\n\nThe **provider** is the person that develops a model, or has it developed, and places it on the market under its own name or trademark. A person that integrates an existing GPAI model into its own AI system may be a **downstream provider** of that system (Article 3, point 68). The exact role depends on how the resulting system is supplied and used.\n\nMost SMEs use or integrate GPAI models rather than training them. They may therefore be **deployers**, **downstream providers**, or both in different contexts. Articles 53 to 55 primarily address providers of GPAI models, but an SME that develops or places such a model on the market can fall within those provisions.\n\nExample: a machinery company integrates GPT-4 through the OpenAI API into a customer-support chatbot that it supplies under its own name. OpenAI remains the provider of the GPAI model. The machinery company may be the downstream provider of the chatbot system. Article 53 does not apply to it merely because it uses the model, while the applicable Article 50 duty depends on its role and how the chatbot is made available.",
-          "keyTakeaway": "Most SMEs use or integrate GPAI models rather than provide the models themselves. Classify the organisation separately for the model and for the downstream AI system; the roles and duties are not interchangeable."
+          "content": "A machinery company wires GPT-4 into its customer-support chatbot through the OpenAI API and supplies that chatbot under its own name. OpenAI stays the provider of the model. The machinery company may be the **downstream provider** of the chatbot system: Article 53 does not reach it, while the applicable Article 50 duty depends on its role and how the chatbot is made available.\n\nThe terms behind that. A **general-purpose AI model** (GPAI model) displays significant generality, performs a wide range of distinct tasks competently, and can be integrated into many downstream systems or applications. The GPT, Claude, Gemini, Llama, and Mistral families are the familiar examples, although the legal assessment always attaches to the specific model and version (recitals 97 to 99, Regulation (EU) 2024/1689).\n\nThe **provider** is the person that develops a model, or has it developed, and places it on the market under its own name or trademark. Integrating an existing GPAI model into your own AI system can make you a downstream provider of that system (Article 3, point 68), and the exact role turns on how the resulting system is supplied and used.\n\nFor most SMEs that means: you do not train GPAI models. You are a **deployer** when you only use a system, or a **downstream provider** when you build a model into your product, and sometimes both in different contexts. Articles 53 to 55 speak to whoever develops or places such a model on the market.",
+          "keyTakeaway": "Articles 53 to 55 address the providers of the base models. Classify your organisation separately for the model and for the downstream system; deployer and downstream provider carry different duties."
         },
         {
           "id": "block_4_lesson_1_section_2",
           "title": "The four provider duties in Article 53",
           "readTimeMinutes": 2,
-          "content": "Article 53(1) sets four duties for providers of GPAI models, regardless of whether the model presents systemic risk:\n\n- **Technical documentation** (Article 53(1), point (a)): draw up and keep up-to-date documentation with the information specified in Annex XI, including training and evaluation processes. Make it available to the AI Office and competent national authorities on request.\n- **Information for downstream providers** (Article 53(1), point (b)): provide and maintain information and documentation in accordance with Annex XII so downstream providers can understand the model's capabilities and limitations and comply with their own duties.\n- **Copyright policy** (Article 53(1), point (c)): establish a policy to comply with Union copyright law, including identifying and complying with reservations of rights under Article 4(3) of Directive (EU) 2019/790.\n- **Training-content summary** (Article 53(1), point (d)): draw up and make publicly available a sufficiently detailed summary using the template supplied by the AI Office.\n\n**Free and open-source exception** (Article 53(2)): qualifying GPAI models released under a free and open-source licence can be exempt from points (a) and (b), subject to the conditions in that paragraph. The exception does not apply to models with systemic risk. Points (c) and (d), concerning copyright and the training-content summary, continue to apply.\n\n**Third-country providers**, such as providers established outside the Union, must appoint an **authorised representative in the Union** before placing a GPAI model on the Union market (Article 54(1)), subject to the exception in Article 54(6).",
-          "keyTakeaway": "Article 53 covers technical documentation, downstream information, a copyright-compliance policy, and a training-content summary. The free and open-source exception is conditional and does not remove the copyright-policy or summary duties."
+          "content": "Four duties, on every GPAI provider, whether or not the model presents systemic risk (Article 53(1)):\n\n- **Technical documentation** (Article 53(1), point (a)): draw up and keep up to date the information specified in Annex XI, including training and evaluation processes, and make it available to the AI Office and competent national authorities on request.\n- **Information for downstream providers** (Article 53(1), point (b)): provide and maintain information and documentation in accordance with Annex XII, so downstream providers understand the model's capabilities and limitations and can meet their own duties.\n- **Copyright policy** (Article 53(1), point (c)): put a policy in place to comply with Union copyright law, including identifying and complying with reservations of rights under Article 4(3) of Directive (EU) 2019/790.\n- **Training-content summary** (Article 53(1), point (d)): draw up and publish a sufficiently detailed summary using the template supplied by the AI Office.\n\n**Free and open-source exception** (Article 53(2)): qualifying GPAI models released under a free and open-source licence can be exempt from points (a) and (b), subject to the conditions in that paragraph. It does not apply to models with systemic risk. Points (c) and (d), copyright and the training-content summary, keep applying either way.\n\n**Third-country providers**, meaning providers established outside the Union, appoint an **authorised representative in the Union** before placing a GPAI model on the Union market (Article 54(1)), subject to the exception in Article 54(6).",
+          "keyTakeaway": "Four duties: technical documentation, downstream information, a copyright-compliance policy, a training-content summary. The free and open-source exception is conditional and lifts only the first two."
         },
         {
           "id": "block_4_lesson_1_section_3",
           "title": "How GPAI duties affect downstream SMEs",
           "readTimeMinutes": 1,
-          "content": "Even where Article 53 does not apply directly to an SME, downstream compliance can depend on information from the GPAI provider. A downstream provider may need the relevant model documentation to assess system risk, integrate the model correctly, and meet transparency or high-risk requirements that apply to its own system.\n\n**Vendor-review evidence:**\n\n- Is the model provider listed as a **Code of Practice signatory**, and which chapters did it sign? Check the current official list on `digital-strategy.ec.europa.eu`.\n- Is the required **downstream documentation** under Annex XII available?\n- Has the provider published a **training-content summary** using the AI Office template?\n- Where required, is there a named **authorised representative in the Union** under Article 54(1)?\n\nA provider may rely on an approved **GPAI Code of Practice** to demonstrate compliance until a harmonised standard is published (Article 53(4)). This is not a legal presumption of conformity. Signature is evidence about a provider's stated commitments, not proof of compliance or a general quality rating. Verify the current signatory record, scope, model documentation, and contractual evidence. (Source: AI Office, General-Purpose AI Code of Practice, 10 July 2025; Article 53(4), Regulation (EU) 2024/1689.)",
-          "keyTakeaway": "Vendor selection is part of the compliance evidence chain. Check current downstream documentation, the training-content summary, representation in the Union where required, and the exact scope of any Code of Practice signature."
+          "content": "Article 53 may not reach you, and you still depend on it. Without the model documentation and the training-content summary from the model provider, a downstream provider cannot assess system risk, integrate the model correctly, or meet the transparency and high-risk requirements that apply to its own system.\n\n**Vendor-review evidence:**\n\n- Is the model provider a **Code of Practice signatory**, and which chapters did it sign? The official list sits on `digital-strategy.ec.europa.eu`.\n- Is the **downstream documentation** under Annex XII available?\n- Has the provider published a **training-content summary** using the AI Office template?\n- Where required, is a named **authorised representative in the Union** in place under Article 54(1)?\n\nA provider may rely on an approved **GPAI Code of Practice** to demonstrate compliance until a harmonised standard is published (Article 53(4)). That is not a legal presumption of conformity. A signature evidences a provider's stated commitments, not proof of compliance or a general quality rating: a fast first filter, before you read the documentation and the contract. Verify the current signatory record, its scope, the model documentation, and the contractual evidence. (Source: AI Office, General-Purpose AI Code of Practice, 10 July 2025; Article 53(4), Regulation (EU) 2024/1689.)",
+          "keyTakeaway": "Vendor choice is a compliance decision. Without the provider's documentation you cannot meet your own duties. A Code of Practice signature is a quick first filter, never a quality verdict."
         }
       ],
       "quiz": [
@@ -74,7 +74,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The provider of the GPAI model is the person that develops the model, or has it developed, and places it on the market under its own name or trademark. OpenAI remains the model provider in this example. The machinery company may be a downstream provider of the chatbot system under Article 3, point 68. Its system-level duties must be assessed separately."
+          "explanation": "The provider of a GPAI model is the person that develops it, or has it developed, and places it on the market under its own name or trademark. Here that stays OpenAI. The machinery company may be a downstream provider of the chatbot system under Article 3, point 68, and its system-level duties are assessed separately."
         },
         {
           "id": "block_4_lesson_1_q2",
@@ -101,7 +101,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 53(2) exempts qualifying free and open-source models without systemic risk from points (a) and (b), subject to its licence and transparency conditions. The copyright-compliance policy and training-content summary in points (c) and (d) continue to apply."
+          "explanation": "Article 53(2) exempts qualifying free and open-source models without systemic risk from points (a) and (b), subject to its licence and transparency conditions. The copyright-compliance policy and the training-content summary in points (c) and (d) apply either way."
         },
         {
           "id": "block_4_lesson_1_q3",
@@ -128,7 +128,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 54(1) generally requires a third-country provider of a GPAI model to appoint an authorised representative established in the Union before placing the model on the Union market. Article 54(6) contains an exception for qualifying free and open-source models without systemic risk."
+          "explanation": "Article 54(1) generally requires a third-country provider of a GPAI model to appoint an authorised representative established in the Union before placing the model on the Union market. That representative is the contact point for the AI Office and the other authorities. Article 54(6) carries an exception for qualifying free and open-source models without systemic risk."
         }
       ]
     },
@@ -137,7 +137,7 @@
       "blockId": "block_4",
       "number": 2,
       "title": "Systemic risk and the GPAI Code of Practice",
-      "subtitle": "What happens above 10^25 FLOPs and why downstream organisations are affected",
+      "subtitle": "What changes above 10^25 FLOPs, and why it reaches you anyway",
       "durationMinutes": 5,
       "keyConcepts": [
         "Systemic risk (Article 51(1))",
@@ -152,22 +152,22 @@
           "id": "block_4_lesson_2_section_1",
           "title": "When does a GPAI model present systemic risk?",
           "readTimeMinutes": 2,
-          "content": "Article 51(1) provides two alternative routes for classifying a **GPAI model with systemic risk**:\n\n- **Point (a): high-impact capabilities**, evaluated on the basis of appropriate technical tools and methodologies, including indicators and benchmarks.\n- **Point (b): a Commission decision**, made ex officio or following a qualified alert from the scientific panel and based on the criteria in Annex XIII.\n\nThe **presumption** is in Article 51(2): a model is presumed to have high-impact capabilities when the cumulative amount of computation used for its training is greater than **10^25 floating-point operations**. The Commission may amend the threshold by delegated act under Article 51(3).\n\nA product or model-family name does not establish the legal classification. Check the current Commission decision, provider information, and exact model version. Duties for the downstream AI system also depend on that system's intended purpose, role, and use context. Using a systemic-risk GPAI model does not by itself make the user its GPAI provider.",
-          "keyTakeaway": "Article 51 contains a rebuttable compute-based presumption and a Commission-designation route. Model names and static provider lists do not replace a current, version-specific classification check."
+          "content": "10^25 floating-point operations. Above that cumulative training compute, Article 51(2) presumes high-impact capabilities. Two routes lead to a **GPAI model with systemic risk** (Article 51(1)):\n\n- **Point (a): high-impact capabilities**, evaluated on the basis of appropriate technical tools and methodologies, including indicators and benchmarks.\n- **Point (b): a Commission decision**, taken ex officio or after a qualified alert from the scientific panel, based on the criteria in Annex XIII.\n\nThe threshold is a presumption, not a wall. The Commission may amend it by delegated act under Article 51(3), and the provider may argue against classification.\n\nA product or model-family name settles nothing. Check the current Commission decision, the provider information, and the exact model version. And using a systemic-risk GPAI model does not turn you into its GPAI provider; your duties follow from your own system, its intended purpose, and its use context.",
+          "keyTakeaway": "Article 51 gives a rebuttable compute-based presumption and a Commission-designation route. A model name is not a classification; the current, version-specific check is."
         },
         {
           "id": "block_4_lesson_2_section_2",
           "title": "Notification and the additional duties in Article 55",
           "readTimeMinutes": 2,
-          "content": "**Notification duty** (Article 52(1)): where a model meets, or is expected to meet, the threshold, the provider must notify the Commission **without delay and in any event within two weeks**. Under Article 52(2), the provider may submit substantiated arguments showing why a model that meets the threshold should exceptionally not be classified as presenting systemic risk. The Commission may reject those arguments.\n\n**Additional duties in Article 55(1)**, on top of Articles 53 and 54:\n\n- **model evaluation** using standardised protocols and tools reflecting the state of the art, including adversarial testing\n- **assessment and mitigation** of possible systemic risks at Union level\n- **tracking and reporting serious incidents** to the AI Office and, where appropriate, national competent authorities\n- **adequate cybersecurity protection** for the model and its physical infrastructure\n\n**Application timeline:** the Chapter V GPAI duties have applied since **2 August 2025**. The Commission's power to impose fines on GPAI model providers applies from **2 August 2026**.",
-          "keyTakeaway": "Article 52(1) sets a notification deadline of no more than two weeks. Article 55 adds model evaluation, systemic-risk assessment and mitigation, serious-incident reporting, and cybersecurity. Chapter V has applied since 2 August 2025."
+          "content": "**Two weeks.** Where a model meets the threshold, or is expected to, the provider notifies the Commission **without delay and in any event within two weeks** (Article 52(1)). Under Article 52(2) the provider may submit substantiated arguments that its model should exceptionally not count as presenting systemic risk. The Commission may reject them.\n\n**Additional duties in Article 55(1)**, on top of Articles 53 and 54:\n\n- **model evaluation** using standardised protocols and tools reflecting the state of the art, including adversarial testing\n- **assessment and mitigation** of possible systemic risks at Union level\n- **tracking and reporting serious incidents** to the AI Office and, where appropriate, national competent authorities\n- **adequate cybersecurity protection** for the model and its physical infrastructure\n\n**Application timeline:** the Chapter V GPAI duties have applied since **2 August 2025**. The Commission's power to fine GPAI model providers applies from **2 August 2026**.",
+          "keyTakeaway": "Article 52(1) allows no more than two weeks to notify. Article 55 adds model evaluation, systemic-risk assessment and mitigation, serious-incident reporting, and cybersecurity. Chapter V has applied since 2 August 2025."
         },
         {
           "id": "block_4_lesson_2_section_3",
           "title": "The GPAI Code of Practice as a compliance route",
           "readTimeMinutes": 1,
-          "content": "The **General-Purpose AI Code of Practice** was published on **10 July 2025** following a multi-stakeholder process. It contains chapters on Transparency, Copyright, and Safety and Security.\n\nThe Code is **voluntary**. Providers may rely on an approved code to demonstrate compliance with their obligations; it does not create an automatic legal presumption of conformity. The list of signatories and the chapters each provider has signed may change and must be checked on the current AI Office page.\n\nThe AI Office supervises GPAI model providers at Union level under the statutory allocation of powers. The authority responsible for a downstream AI system depends on the provider, system, role, sector, and the specific rules in Article 88.",
-          "keyTakeaway": "The GPAI Code of Practice, published on 10 July 2025, is a voluntary instrument that providers may use to demonstrate compliance. It does not create a legal presumption of conformity. Current signatory status remains useful vendor evidence, but it must be verified.",
+          "content": "The **General-Purpose AI Code of Practice** appeared on **10 July 2025**, after a multi-stakeholder process, in three chapters: Transparency, Copyright, and Safety and Security.\n\nThe Code is **voluntary**. A provider may rely on an approved code to demonstrate compliance with its obligations; no automatic legal presumption of conformity follows. Signatory lists and the chapters each provider has signed change, so check the current AI Office page.\n\nThe AI Office supervises GPAI model providers at Union level under the statutory allocation of powers. Which authority is responsible for a downstream AI system depends on the provider, the system, the role, the sector, and the specific rules in Article 88.",
+          "keyTakeaway": "The GPAI Code of Practice of 10 July 2025 is voluntary: a provider may use it to demonstrate compliance, and it creates no legal presumption of conformity. Whether your model supplier signed remains a useful vendor criterion, once verified.",
           "_claimRef": "gpai-code-compliance-demonstration-only",
           "sources": [
             {
@@ -202,7 +202,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 51(2) presumes high-impact capabilities where the cumulative amount of computation used for training is greater than 10^25 floating-point operations. The Commission may amend the threshold by delegated act under Article 51(3)."
+          "explanation": "Article 51(2) presumes high-impact capabilities where the cumulative amount of computation used for training is greater than 10^25 floating-point operations. The Commission may amend that threshold by delegated act under Article 51(3)."
         },
         {
           "id": "block_4_lesson_2_q2",
@@ -229,7 +229,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 52(1) requires notification without delay and in any event within two weeks. The notification must include the information necessary to demonstrate that the condition in Article 51(1), point (a), has been met."
+          "explanation": "Article 52(1) requires notification without delay and in any event within two weeks. The notification carries the information needed to show that the condition in Article 51(1), point (a), has been met."
         },
         {
           "id": "block_4_lesson_2_q3",
@@ -256,7 +256,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The AI Office published the General-Purpose AI Code of Practice on 10 July 2025 following a multi-stakeholder process. It contains three chapters: Transparency, Copyright, and Safety and Security. Signatories may use an approved code to demonstrate compliance under Article 53(4); it does not create a legal presumption of conformity."
+          "explanation": "The AI Office published the General-Purpose AI Code of Practice on 10 July 2025 after a multi-stakeholder process, in three chapters: Transparency, Copyright, and Safety and Security. A signatory may use an approved code to demonstrate compliance under Article 53(4); the Code creates no legal presumption of conformity."
         }
       ]
     },
@@ -265,7 +265,7 @@
       "blockId": "block_4",
       "number": 3,
       "title": "Article 4 as an organisational duty",
-      "subtitle": "How organisations support AI literacy through structure, roles, and evidence",
+      "subtitle": "Why Article 4 lands on the managing director and not on the employee taking the course",
       "durationMinutes": 5,
       "keyConcepts": [
         "Organisational rather than individual duty",
@@ -280,22 +280,22 @@
           "id": "block_4_lesson_3_section_1",
           "title": "The wording and scope of Article 4",
           "readTimeMinutes": 2,
-          "content": "Article 4(1) of the AI Act requires **providers and deployers** of AI systems to take measures to support the development of AI literacy among their staff and other persons dealing with the operation and use of AI systems on their behalf. They must take account of technical knowledge, experience, education and training, the context in which the systems are used, and the persons or groups on whom the systems are to be used.\n\nRegulation (EU) 2026/1744, which entered into force on **27 July 2026**, expressly clarified that providers and deployers do **not have to guarantee a particular individual level of AI literacy**. The duty to take supportive, context-appropriate measures remains.\n\n**The duty addresses the organisation, not the individual employee.** The definition in **Article 3, point 56**, describes AI literacy as the skills, knowledge, and understanding that allow providers, deployers, and affected persons to make informed use of AI systems and become aware of their opportunities, risks, and possible harm.\n\n**Applicable since 2 February 2025.** The AI Act does not prescribe a certificate standard for Article 4. Organisations should retain proportionate evidence of the measures selected for relevant roles and risks. Completing one course does not by itself prove that the organisation has met the duty in its actual use context.",
-          "keyTakeaway": "Article 4 requires providers and deployers to take context-appropriate measures supporting AI-literacy development. Since 27 July 2026, the text expressly states that they need not guarantee a particular individual level."
+          "content": "Article 4 does not address your employee. It addresses the company she works for. Article 4(1) of the AI Act requires **providers and deployers** of AI systems to take measures to support the development of AI literacy among their staff and other persons dealing with the operation and use of AI systems on their behalf, taking account of technical knowledge, experience, education and training, the context in which the systems are used, and the persons or groups on whom the systems are to be used.\n\nRegulation (EU) 2026/1744, in force since **27 July 2026**, says it expressly: providers and deployers do **not have to guarantee a particular individual level of AI literacy**. The duty to take supportive, context-appropriate measures stands.\n\n**The addressee is the organisation, not the individual employee.** **Article 3, point 56**, defines AI literacy as the skills, knowledge, and understanding that allow providers, deployers, and affected persons to make informed use of AI systems and to become aware of their opportunities, risks, and possible harm.\n\n**Applicable since 2 February 2025.** The AI Act names no standard and no certification for Article 4. Record which role-appropriate and risk-appropriate measures you chose. One completed course does not discharge the duty on its own.",
+          "keyTakeaway": "Article 4 binds providers and deployers, not the individual, to context-appropriate measures that support AI literacy. Since 27 July 2026 the text says plainly that no particular individual level has to be guaranteed."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "How this differs from an introductory AI course",
           "readTimeMinutes": 1,
-          "content": "Stage 2 of this learning path, the AI Fundamentals course, introduces core AI concepts. It is one possible learning measure among many that an organisation may use as part of its Article 4 approach.\n\nThis lesson covers the **organisational side**: how a company can structure its work so Article 4 measures are appropriate to its context and supported by clear evidence.\n\n- **AI Fundamentals:** what does a person need to understand about AI? The focus is knowledge for the learner.\n- **This lesson:** what structures help an organisation identify who needs what knowledge and record the measures it has taken? The focus is policy, process, roles, and evidence.\n\nTraining is not automatically a complete Article 4 implementation. A **documented learning policy informed by role, prior knowledge, risk, and use context**, with a proportionate review and evidence process, is a stronger implementation control. Article 4 does not prescribe one programme design or refresher interval.",
-          "keyTakeaway": "An introductory course teaches the individual. Article 4 addresses measures by the provider or deployer. Needs analysis, roles, process, and evidence connect training to the organisation's actual context."
+          "content": "Stage 2 of this learning path, the AI Fundamentals course, teaches the basics. It is one possible building block for Article 4, one of many.\n\nThis lesson takes the other side: how does a managing director set the business up so Article 4 measures fit the context and can be shown afterwards?\n\n- **AI Fundamentals:** what does a person need to understand about AI? Content is knowledge, and the addressee is the individual.\n- **This lesson:** what structures let a business work out who needs which knowledge, and evidence the measures taken? Content is policy, process, roles, and records, and the addressee is management.\n\nTraining alone is not an Article 4 system. A **documented learning policy built on role, prior knowledge, risk, and use context**, with proportionate review and evidence, carries weight. Article 4 prescribes no particular programme design and no refresher interval.",
+          "keyTakeaway": "The introductory course teaches the person. Article 4 binds the organisation. Needs analysis, roles, process, and records are what tie the training to the context you actually run."
         },
         {
           "id": "block_4_lesson_3_section_3",
           "title": "Five implementation components",
           "readTimeMinutes": 2,
-          "content": "A practical Article 4 implementation can use five components. These are an implementation framework, not a statutory checklist:\n\n1. **AI inventory and needs analysis.** Record which AI systems are used, their risk context, and which roles interact with them and how. Output: an inventory with role mapping.\n2. **AI policy.** State permitted and prohibited uses. Examples include restrictions on confidential data in external LLMs, output verification before customer use, and escalation routes for errors.\n3. **Role-specific learning programme.** Combine a common baseline with deeper material for power users, managers, and people with AI responsibilities where the needs analysis supports it. A single programme for every role may be too coarse where risks and contexts differ materially.\n4. **Evidence and review trail.** Record participants, content, dates, providers, review timing, and the onboarding process where proportionate. Clear records allow the organisation to explain the measures it selected.\n5. **Supplier information.** Establish which AI features a product includes and what operating information and learning material the supplier provides. Missing product information can leave gaps in role-specific instruction.\n\n**Management review:** confirm that the AI inventory exists, measures are documented, roles and responsibilities are assigned, review timing is defined, and evidence is retained. These controls operationalise Article 4; the Regulation does not mandate these exact five artefacts.",
-          "keyTakeaway": "A practical framework covers an inventory, policy, role-specific learning, evidence, and supplier information. These five components support implementation; they are not an exhaustive statutory checklist."
+          "content": "Five components carry an Article 4 implementation in practice. An implementation framework, not a statutory checklist:\n\n1. **AI inventory and needs analysis.** Which AI systems run here, in which risk context, and who works with them how deeply? Output: a list plus role mapping.\n2. **AI policy.** A written instruction on what staff may and may not do. No confidential data in external LLMs, output checked before it reaches a customer, an escalation route for errors.\n3. **Role-specific learning programme.** A common baseline, then depth for power users, managers, and people with AI responsibilities where the needs analysis supports it. One programme for every role gets too coarse as soon as risks and contexts diverge.\n4. **Evidence and review trail.** Participants, content, dates, providers, review timing, the onboarding route for new staff. In front of an authority, what counts is what you can show.\n5. **Supplier information.** The contracts with your HR, accounting, or office software vendors settle which AI features are built in and which operating and learning material comes with them. Without that, role-specific instruction stays incomplete.\n\n**Management review:** an AI inventory exists, the measures are documented, roles and responsibilities are assigned, review timing is set, evidence is retained. These controls operationalise Article 4; the Regulation does not mandate these exact five artefacts.",
+          "keyTakeaway": "Five components: inventory, policy, role-specific learning, evidence, supplier information. Train and nothing else, and you have one of five. They support implementation and are not an exhaustive statutory checklist."
         }
       ],
       "quiz": [
@@ -324,7 +324,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 4(1) addresses providers and deployers of AI systems. They must take measures to support AI-literacy development among staff and other persons dealing with AI-system operation and use on their behalf. The Regulation does not place that organisational duty on each employee individually."
+          "explanation": "Article 4(1) addresses providers and deployers of AI systems, meaning the organisation. It is an organisational duty, in the family of occupational safety or Article 32 GDPR. The employer carries it, not the individual member of staff."
         },
         {
           "id": "block_4_lesson_3_q2",
@@ -351,7 +351,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A generic course alone does not show that the provider or deployer considered the factors named in Article 4: technical knowledge, experience, education and training, use context, and the people affected. Article 4 requires supportive organisational measures, not a particular course or a guaranteed individual competence level."
+          "explanation": "A single generic course shows nothing about the factors Article 4 names: technical knowledge, experience, education and training, use context, and the people affected. Article 4 asks for supportive organisational measures, not one isolated course and not a guaranteed individual competence level."
         },
         {
           "id": "block_4_lesson_3_q3",
@@ -378,7 +378,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 4 has applied since 2 February 2025 and was amended by Regulation (EU) 2026/1744 with effect from 27 July 2026. The Commission FAQ identifies early August 2026 as the start of national supervision and enforcement. Article 99 does not automatically impose a EUR 15 million or 3% fine for every Article 4 shortcoming."
+          "explanation": "Article 4 has applied since 2 February 2025 and was amended by Regulation (EU) 2026/1744 with effect from 27 July 2026. The Commission FAQ puts the start of national supervision and enforcement in early August 2026. Article 99 does not automatically impose a EUR 15 million or 3% fine for every Article 4 shortcoming."
         }
       ]
     },
@@ -387,7 +387,7 @@
       "blockId": "block_4",
       "number": 4,
       "title": "Transparency and machine-readable marking under Article 50",
-      "subtitle": "Who designs the disclosure and who discloses use: separating provider and deployer duties",
+      "subtitle": "Who marks the output and who discloses the use: provider and deployer, kept apart",
       "durationMinutes": 5,
       "keyConcepts": [
         "AI-interaction disclosure (Article 50(1))",
@@ -402,22 +402,22 @@
           "id": "block_4_lesson_4_section_1",
           "title": "The four transparency duties in Article 50",
           "readTimeMinutes": 2,
-          "content": "Article 50 of the AI Act contains four groups of transparency duties:\n\n- **Paragraph 1, AI-interaction disclosure (provider).** AI systems intended to interact directly with natural persons must be designed and developed so the people concerned are informed that they are interacting with AI, unless this is obvious to a reasonably well-informed, observant, and circumspect person, taking account of the circumstances and context.\n- **Paragraph 2, machine-readable marking (provider, including GPAI providers).** Providers of AI systems, including GPAI systems, that generate synthetic audio, image, video, or text content must ensure that outputs are marked in a machine-readable format and detectable as artificially generated or manipulated. Technical solutions must be effective, interoperable, robust, and reliable as far as technically feasible, taking account of the available techniques, implementation costs, and generally acknowledged state of the art.\n- **Paragraph 3, emotion recognition and biometric categorisation (deployer).** Deployers of these systems must inform the natural persons exposed to them, subject to the paragraph's law-enforcement exception, and process personal data in accordance with applicable data-protection law.\n- **Paragraph 4, deepfakes and certain AI-generated text (deployer).** A deployer that generates or manipulates image, audio, or video content constituting a deepfake must disclose that it has been artificially generated or manipulated. Limited rules apply to evidently artistic, creative, satirical, fictional, or analogous works. AI-generated or manipulated text published to inform the public on matters of public interest must also be disclosed, subject to the stated exception for human review or editorial control and editorial responsibility.\n\nArticle 50 applies **from 2 August 2026**.",
-          "keyTakeaway": "Article 50 covers AI-interaction disclosure, machine-readable marking, information about emotion recognition or biometric categorisation, and disclosure of deepfakes and specified public-interest text. It applies from 2 August 2026."
+          "content": "Who flags the chatbot, and who flags the deepfake? Article 50 of the AI Act splits four transparency duties between provider and deployer:\n\n- **Paragraph 1, AI-interaction disclosure (provider).** AI systems intended to interact directly with natural persons must be designed and developed so the people concerned are informed that they are interacting with AI, unless this is obvious to a reasonably well-informed, observant, and circumspect person, taking account of the circumstances and context.\n- **Paragraph 2, machine-readable marking (provider, GPAI providers included).** Providers of AI systems, including GPAI systems, that generate synthetic audio, image, video, or text content must ensure the outputs are marked in a machine-readable format and detectable as artificially generated or manipulated. The technical solutions must be effective, interoperable, robust, and reliable as far as technically feasible, taking account of the available techniques, implementation costs, and generally acknowledged state of the art.\n- **Paragraph 3, emotion recognition and biometric categorisation (deployer).** Deployers of these systems inform the natural persons exposed to them, subject to the paragraph's law-enforcement exception, and process personal data in line with applicable data-protection law.\n- **Paragraph 4, deepfakes and certain AI-generated text (deployer).** A deployer that generates or manipulates image, audio, or video content constituting a deepfake discloses that it was artificially generated or manipulated. Limited rules apply to evidently artistic, creative, satirical, fictional, or analogous works. AI-generated or manipulated text published to inform the public on matters of public interest must also be disclosed, subject to the stated exception for human review or editorial control and editorial responsibility.\n\nArticle 50 applies **from 2 August 2026**.",
+          "keyTakeaway": "Paragraphs 1 and 2 land on the provider, with the interaction notice and the machine-readable marking. Paragraphs 3 and 4 land on the deployer, with emotion recognition, deepfakes, and specified public-interest text. All of it applies from 2 August 2026."
         },
         {
           "id": "block_4_lesson_4_section_2",
           "title": "Provider and deployer: the critical distinction",
           "readTimeMinutes": 2,
-          "content": "Article 50 divides duties by role and by the point at which transparency can be implemented:\n\n- **Machine-readable marking must be enabled when content is generated.** Article 50(2) assigns this duty to the **provider** of the generating system or model.\n- **Deepfake disclosure depends on use and publication context.** Article 50(4) assigns this duty to the **deployer** that generates or manipulates and discloses the relevant content.\n\n**Consequence for SMEs:** an organisation using an image-generation service and publishing its output is a deployer for that use. Article 50(4) applies only if the content falls within its defined categories, such as a deepfake or specified public-interest text; not every synthetic image is a deepfake. The service provider's separate marking duty under Article 50(2) does not replace a deployer's applicable disclosure duty.\n\n**Both roles are possible:** an organisation that provides an AI system and also deploys it for its own outputs may have duties in both capacities. Classify the role for each system and use.\n\n**Exceptions and qualifications include:** law-enforcement exceptions in the relevant paragraphs; the Article 50(2) exception for systems performing an assistive function for standard editing or not substantially altering input data or its semantics; the limited disclosure treatment for artistic and similar works; and the exception for specified text subject to human review or editorial control and editorial responsibility.",
-          "keyTakeaway": "Machine-readable marking is a provider duty under Article 50(2). Contextual disclosure of deepfakes and specified public-interest text is a deployer duty under Article 50(4). Classify each role and content type separately."
+          "content": "The split in Article 50 follows the technology, not chance:\n\n- **Machine-readable marking has to happen as the content is generated.** Article 50(2) therefore puts that duty on the **provider** of the generating system or model.\n- **Deepfake disclosure is a decision taken in the publication context.** Article 50(4) therefore puts that duty on the **deployer** that generates or manipulates the content and discloses it.\n\n**What that means for an SME:** use an image-generation service, publish the output, and you are the deployer for that use. Article 50(4) bites only where the content falls into its defined categories, such as a deepfake or specified public-interest text; not every synthetic image is a deepfake. The service provider's separate marking duty under Article 50(2) does not stand in for your own disclosure duty.\n\n**Two roles at once:** an organisation that provides an AI system and also deploys it for its own outputs can owe duties in both capacities. Classify the role per system and per use.\n\n**Exceptions and qualifications include:** the law-enforcement exceptions in the relevant paragraphs; the Article 50(2) exception for systems performing an assistive function for standard editing or not substantially altering input data or its semantics; the limited disclosure treatment for artistic and similar works; and the exception for specified text subject to human review or editorial control and editorial responsibility.",
+          "keyTakeaway": "Machine-readable marking is a provider duty under Article 50(2). Contextual disclosure of deepfakes and specified public-interest text is a deployer duty under Article 50(4). Classify each role and content type on its own."
         },
         {
           "id": "block_4_lesson_4_section_3",
           "title": "Operational implementation",
           "readTimeMinutes": 1,
-          "content": "Controls to prepare for 2 August 2026:\n\n- **AI-interaction disclosure (paragraph 1):** providers design the system so the person is informed at the latest at the time of the first interaction or exposure, in a clear and distinguishable manner that meets the accessibility requirements in Article 50(5), unless the AI nature is already obvious under the statutory test. Deployers should verify that the supplied disclosure remains effective in the actual integration.\n- **Machine-readable marking (paragraph 2):** providers assess a technically appropriate solution. C2PA or another method may be an implementation option; Article 50 does not mandate one technology. Deployers can ask which marking the specific version produces and whether their publication workflow preserves it.\n- **Deepfake disclosure (paragraph 4):** deployers assess before disclosure whether content meets the deepfake definition and what form of disclosure applies. Not every synthetic image is a deepfake.\n- **Transparency Code:** the voluntary Code of Practice on Transparency of AI-Generated Content was published on **10 June 2026** to support implementation of Article 50(2), (4), and (5). It does not replace the case-specific assessment.\n- **Penalties:** Article 99(4) covers infringements of the provisions listed there. The amount and responsible operator depend on the facts and the Regulation's calculation rules.\n\nAn organisation may be a provider, deployer, or both. Record the role for each system and use case rather than assigning one permanent label to the organisation.",
-          "keyTakeaway": "Prepare three controls: effective AI-interaction disclosure, technically suitable machine-readable marking by providers, and a pre-publication assessment for deployer disclosures. The application date is 2 August 2026."
+          "content": "What has to stand by 2 August 2026:\n\n- **AI-interaction disclosure (paragraph 1):** the provider designs the system so the person is informed at the latest at the first interaction or exposure, clearly and distinguishably, meeting the accessibility requirements in Article 50(5), unless the AI nature is already obvious under the statutory test. The deployer checks that the supplied disclosure still works inside the actual integration.\n- **Machine-readable marking (paragraph 2):** the provider picks a technically suitable solution. C2PA or another method can be that solution; Article 50 does not mandate one technology. Deployers ask which marking the specific version produces and whether their publication workflow preserves it.\n- **Deepfake disclosure (paragraph 4):** the deployer assesses before publishing whether the content meets the deepfake definition and what form of disclosure applies. Not every synthetic image is a deepfake.\n- **Transparency Code:** the voluntary Code of Practice on Transparency of AI-Generated Content was published on **10 June 2026** to support Article 50(2), (4), and (5). It does not replace the case-by-case assessment.\n- **Penalties:** Article 99(4) covers the infringements listed there. Amount and responsible operator depend on the facts and the Regulation's calculation rules.\n\nA business can be provider, deployer, or both. Record the role per system and per use case instead of pinning one permanent label on the organisation.",
+          "keyTakeaway": "Three things to have ready: an AI-interaction disclosure that works, machine-readable marking chosen by the provider, and a deployer check before publication. The date is 2 August 2026."
         }
       ],
       "quiz": [
@@ -446,7 +446,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50(2) places the machine-readable marking duty on the provider of the generating system. Article 50(4) places the contextual disclosure duty on the deployer that generates or manipulates and discloses deepfake content. The duties run in parallel, subject to the exact role, content, and exceptions."
+          "explanation": "Article 50(2) puts the machine-readable marking duty on the provider of the generating system. Article 50(4) puts the contextual disclosure duty on the deployer that generates or manipulates deepfake content and discloses it. The two run in parallel, subject to the exact role, content, and exceptions."
         },
         {
           "id": "block_4_lesson_4_q2",
@@ -473,7 +473,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50(1) contains an exception where the AI interaction is obvious to a reasonably well-informed, observant, and circumspect person, taking account of the circumstances and context. An explicit opening statement identifying the service as AI directly informs the caller."
+          "explanation": "Article 50(1) carries an exception where the AI interaction is obvious to a reasonably well-informed, observant, and circumspect person, taking account of the circumstances and context. An opening line that names the service as AI informs the caller directly."
         },
         {
           "id": "block_4_lesson_4_q3",
@@ -500,7 +500,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50 applies from 2 August 2026 under Article 113. Infringements covered by Article 99(4) can attract fines of up to EUR 15 million or 3% of total worldwide annual turnover, subject to the operator category, proportionality, and calculation rules in Article 99."
+          "explanation": "Article 113 makes Article 50 applicable from 2 August 2026. Infringements covered by Article 99(4) can attract fines of up to EUR 15 million or 3% of total worldwide annual turnover, subject to the operator category, proportionality, and the calculation rules in Article 99."
         }
       ],
       "widgets": [
