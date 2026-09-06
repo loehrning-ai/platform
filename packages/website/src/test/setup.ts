@@ -43,6 +43,84 @@ if (typeof window !== "undefined") {
     value: storage,
   });
 
+  // jsdom does not implement BroadcastChannel, so a bare `BroadcastChannel`
+  // resolves to the *runtime's* worker_threads implementation instead. That
+  // channel is process-global: it delivers to every Vitest worker thread, not
+  // only to the page that opened it. Account-deletion control opens a channel
+  // to reach the origin's other tabs, so under `pool: "threads"` any test file
+  // that published a deletion marker overwrote the in-memory deletion state of
+  // the files running beside it — a foreign account id and epoch appearing
+  // mid-assertion in an unrelated spec. A real BroadcastChannel is scoped to
+  // one origin in one user agent, which here is one test file's environment.
+  //
+  // Installed unconditionally, like the storage above, and for the same
+  // reason: the ambient global is present but has the wrong scope, so a
+  // feature-detection guard would never fire. Delivery still happens for real
+  // between channels opened inside this environment, so the production publish
+  // and receive paths stay exercised rather than stubbed away.
+  const broadcastChannels = new Map<string, Set<TestBroadcastChannel>>();
+
+  class TestBroadcastChannel extends EventTarget {
+    readonly name: string;
+    onmessage: ((event: MessageEvent) => void) | null = null;
+    onmessageerror: ((event: MessageEvent) => void) | null = null;
+    private closed = false;
+
+    constructor(name: string) {
+      super();
+      this.name = String(name);
+      const peers =
+        broadcastChannels.get(this.name) ?? new Set<TestBroadcastChannel>();
+      peers.add(this);
+      broadcastChannels.set(this.name, peers);
+      super.addEventListener("message", (event) => {
+        this.onmessage?.(event as MessageEvent);
+      });
+    }
+
+    postMessage(message: unknown): void {
+      if (this.closed) {
+        throw new DOMException("Channel is closed", "InvalidStateError");
+      }
+      // A channel never receives its own message. Serialization happens now,
+      // delivery on a later turn, exactly as the platform specifies.
+      const deliveries = Array.from(broadcastChannels.get(this.name) ?? [])
+        .filter((peer) => peer !== this)
+        .map(
+          (peer) =>
+            [
+              peer,
+              typeof structuredClone === "function"
+                ? structuredClone(message)
+                : message,
+            ] as const,
+        );
+      if (deliveries.length === 0) return;
+      queueMicrotask(() => {
+        for (const [peer, data] of deliveries) {
+          if (peer.closed) continue;
+          peer.dispatchEvent(new MessageEvent("message", { data }));
+        }
+      });
+    }
+
+    close(): void {
+      if (this.closed) return;
+      this.closed = true;
+      const peers = broadcastChannels.get(this.name);
+      peers?.delete(this);
+      if (peers?.size === 0) broadcastChannels.delete(this.name);
+    }
+  }
+
+  for (const target of new Set<object>([window, globalThis])) {
+    Object.defineProperty(target, "BroadcastChannel", {
+      configurable: true,
+      writable: true,
+      value: TestBroadcastChannel,
+    });
+  }
+
   if (!("IntersectionObserver" in window)) {
     class MockIntersectionObserver {
       observe(): void {}
