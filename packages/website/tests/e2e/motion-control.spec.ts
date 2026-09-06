@@ -45,10 +45,32 @@ test.describe("landing globe motion", () => {
       .locator('[data-hero-network-live="grid-back"] path')
       .first();
     await expect(livePath).toBeAttached();
+
+    // Two reasons a fixed wait followed by a short poll measured frame luck
+    // rather than motion, and both bit the mobile-webkit shard.
+    //
+    // The projection module is deliberately absent from the mobile-first HTML,
+    // so on a project with a mobile device profile it arrives only after
+    // hydration reads the overridden desktop viewport. The path is attached
+    // before it animates, and `data-hero-globe-motion` reports React state,
+    // not whether the frame loop is actually running. So establish that a
+    // frame has landed before timing anything.
+    //
+    // The loop is then gated on intersection, on the scroll-frozen scene, and
+    // on `document.visibilityState`, so under runner contention a frame can
+    // take far longer than a second and a half to arrive. That is slow, not
+    // stopped, and this test asserts only that motion outlives the former
+    // deadline. Both polls therefore get a generous window: a fast machine
+    // still settles them in milliseconds.
+    const firstFrame = await livePath.getAttribute("d");
+    await expect
+      .poll(() => livePath.getAttribute("d"), { timeout: 15_000 })
+      .not.toBe(firstFrame);
+
     await page.waitForTimeout(4_800);
     const afterFormerDeadline = await livePath.getAttribute("d");
     await expect
-      .poll(() => livePath.getAttribute("d"), { timeout: 1_500 })
+      .poll(() => livePath.getAttribute("d"), { timeout: 15_000 })
       .not.toBe(afterFormerDeadline);
     await expect(network).toBeVisible();
 
