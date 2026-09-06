@@ -88,11 +88,9 @@ export const HOME_COPY = {
       demosEyebrow: "Ausprobieren",
       demosTitle: "Praxisbeispiele",
       demosRailLabel: "Praxisbeispiele zum Ausprobieren",
-      demosAll: "Alle Praxisbeispiele",
       booksEyebrow: "Nachlesen",
       booksTitle: "Lernbücher",
       booksRailLabel: "Lernbücher der Plattform",
-      booksAll: "Alle Lernbücher",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} Kapitel · ${minutes} Min.`,
     },
@@ -212,11 +210,9 @@ export const HOME_COPY = {
       demosEyebrow: "Try it",
       demosTitle: "Applied examples",
       demosRailLabel: "Applied examples to try",
-      demosAll: "All applied examples",
       booksEyebrow: "Read up",
       booksTitle: "Learning books",
       booksRailLabel: "Learning books on this platform",
-      booksAll: "All learning books",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} chapters · ${minutes} min`,
     },

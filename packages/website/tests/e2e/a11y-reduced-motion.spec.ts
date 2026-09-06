@@ -14,8 +14,11 @@ import {
  * outcome, not axe rules (a11y.spec.ts already scans /, /buecher): the h1 is
  * visible immediately, homepage content is visible before any scroll, and
  * nothing remains transparent after a full-page sweep. Excluded from the scan:
- * the hero ([data-section="hero"], scroll-linked parallax) and SVG /
- * aria-hidden decoration (infinite loops).
+ * the hero ([data-section="hero"], scroll-linked parallax), SVG /
+ * aria-hidden decoration (infinite loops), and anything a breakpoint utility
+ * removes at the tested width — the companion shell below `lg` legitimately
+ * does not render the wide layout's intro paragraphs, and content that is not
+ * laid out at all is a layout decision, not a reveal that failed to run.
  */
 
 test.use({ contextOptions: { reducedMotion: "reduce" } });
@@ -136,6 +139,65 @@ async function expectReducedMotionHonored(
         `${route}: static homepage section ${index} heading must be visible`,
       ).toBeVisible();
       const visibilityBlockers = await root.evaluate((element) => {
+        // A reveal that failed to run and a breakpoint utility are two
+        // different things. `max-lg:hidden` on the wide layout's intro
+        // paragraph is the companion shell deciding what a phone shows; the
+        // element is not rendered at this width and has neither geometry nor
+        // a `display`, which is not the same defect as a paragraph that is
+        // laid out and left transparent. Tell them apart by mechanism rather
+        // than by class name: collect every `display: none` declaration that
+        // sits inside a media or container condition which currently matches.
+        // A `display: none` from an inline style or from an unconditional
+        // rule is still a blocker, so a reveal that hides itself still fails.
+        const responsiveHidingSelectors: string[] = [];
+        const collect = (rules: CSSRuleList, conditional: boolean): void => {
+          for (const rule of Array.from(rules)) {
+            if (rule instanceof CSSMediaRule) {
+              if (!matchMedia(rule.conditionText).matches) continue;
+              collect(rule.cssRules, true);
+              continue;
+            }
+            if (rule instanceof CSSGroupingRule) {
+              // @layer / @supports / @scope: neutral, keep the current state.
+              collect(rule.cssRules, conditional);
+              continue;
+            }
+            if (!conditional || !(rule instanceof CSSStyleRule)) continue;
+            if (rule.style.getPropertyValue("display") === "none") {
+              responsiveHidingSelectors.push(rule.selectorText);
+            }
+          }
+        };
+        for (const sheet of Array.from(document.styleSheets)) {
+          try {
+            collect(sheet.cssRules, false);
+          } catch {
+            // A cross-origin sheet exposes no rules; nothing to classify.
+          }
+        }
+        const removedByBreakpoint = (node: Element): boolean =>
+          responsiveHidingSelectors.some((selector) => {
+            try {
+              return node.matches(selector);
+            } catch {
+              return false;
+            }
+          });
+        const notRenderedAtThisWidth = (candidate: Element): boolean => {
+          let node: Element | null = candidate;
+          while (node) {
+            if (
+              getComputedStyle(node).display === "none" &&
+              removedByBreakpoint(node)
+            ) {
+              return true;
+            }
+            if (node === document.body) break;
+            node = node.parentElement;
+          }
+          return false;
+        };
+
         const blockers: string[] = [];
         const candidates = [
           element,
@@ -153,6 +215,7 @@ async function expectReducedMotionHonored(
           ) {
             continue;
           }
+          if (notRenderedAtThisWidth(candidate)) continue;
 
           const rect = candidate.getBoundingClientRect();
           if (

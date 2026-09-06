@@ -188,9 +188,21 @@
   /* The companion tab bar is fixed over the end of the document below lg, so
      the same WCAG 2.4.11 reserve is needed at the bottom edge: without it,
      tabbing or anchoring to an element near the end of a page lands it under
-     the bar. Above lg the bar does not exist and nothing is reserved. */
+     the bar. Above lg the bar does not exist and nothing is reserved.
+
+     The reserve lands in one step; it is not animated. Below lg the shell is a
+     touch surface, and a document that keeps gliding after a scroll is a
+     second moving region under the thumb: a tap dispatched while it glides can
+     press one control and release over another, and the browser then fires no
+     click at all. `scroll-behavior: smooth` turns every programmatic scroll
+     into that animation, `scrollIntoView({ behavior: "auto" })` included --
+     the spec reads "auto" as "use the CSS scroll-behavior", not "jump" -- and
+     the two reserves above mean an anchor, a focus move and an assistive
+     scroll all aim at different offsets while the animation is still running.
+     Above lg the reviewed desktop anchor scrolling is unchanged. */
   @media (width < 64rem) {
     html {
+      scroll-behavior: auto;
       scroll-padding-bottom: var(--tabbar-band-h);
     }
   }
@@ -201,20 +213,6 @@
     }
   }
 
-  /* Below lg the page scrolls in one step. A smooth scroll is a moving region
-     under the thumb: a tap dispatched while it glides can press one control and
-     release over another, and WebKit then fires no click at all. Measured on
-     CI, mobile WebKit only: the KI-Check answer that never advanced and the
-     operator course continuation that never navigated. `scroll-behavior:
-     smooth` turns every programmatic scroll into that animation,
-     `scrollIntoView({ behavior: "auto" })` included, because the spec reads
-     "auto" as "use the CSS scroll-behavior", not "jump". Above lg the
-     reviewed desktop anchor scrolling is unchanged. */
-  @media (width < 64rem) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
 
   body {
     background-color: var(--color-background);

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { getBookDisplay } from "@/app/buecher/book-copy";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { books } from "@/lib/books";
@@ -20,11 +19,18 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
  * height, so a rail that is off-screen costs no layout or paint while the
  * document height stays the same whether it is rendered or skipped.
  *
- * Icons render on the server, so no icon library reaches the browser for this
- * section. It ships zero client JavaScript.
+ * A rail lists items, never the subject's own landing page. `/demos` and
+ * `/buecher` are two of the five cards the Ressourcen board renders directly
+ * below this section at every width, and the shell is one document with two
+ * layouts: a rail that closed with its own "all" tile would put those two
+ * destinations in the document twice, visible together on a phone and a
+ * second, hidden link set on desktop. See the "content is not duplicated into
+ * a second DOM tree" rule in docs/experience-system.md.
+ *
+ * It ships zero client JavaScript and requests no image.
  */
 
-/** How many applied examples the rail shows before its "all" tile. */
+/** How many applied examples the rail carries. */
 const RAIL_DEMO_COUNT = 6;
 
 const DEMO_TONES = [
@@ -64,34 +70,6 @@ function RailHeading({
   );
 }
 
-function AllTile({
-  href,
-  label,
-}: {
-  readonly href: string;
-  readonly label: string;
-}) {
-  return (
-    <li className="w-40 shrink-0 snap-start">
-      <Link
-        href={href}
-        prefetch={false}
-        className={`${TILE_CLASS} justify-end bg-paper`}
-      >
-        <span
-          aria-hidden="true"
-          className="flex size-9 items-center justify-center rounded-xl border border-foreground/15 bg-brand-cobalt text-white"
-        >
-          <ArrowRight size={16} />
-        </span>
-        <span className="text-sm font-bold leading-snug tracking-[-0.02em] text-foreground">
-          {label}
-        </span>
-      </Link>
-    </li>
-  );
-}
-
 export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].companion;
   const demos = getDemosForLocale(locale).slice(0, RAIL_DEMO_COUNT);
@@ -124,10 +102,6 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
               </Link>
             </li>
           ))}
-          <AllTile
-            href={localizeHref("/demos", locale)}
-            label={copy.demosAll}
-          />
         </ul>
       </div>
 
@@ -161,10 +135,6 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
               </li>
             );
           })}
-          <AllTile
-            href={localizeHref("/buecher", locale)}
-            label={copy.booksAll}
-          />
         </ul>
       </div>
     </section>
