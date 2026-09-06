@@ -2,7 +2,7 @@
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -51,7 +51,7 @@
       "quiz": [
         {
           "id": "block_1_lesson_1_q1",
-          "questionText": "Worauf stützt sich der AI Act als Rechtsgrundlage?",
+          "questionText": "Worauf stützt sich der AI Act primär als Rechtsgrundlage?",
           "answerOptions": [
             {
               "id": "a",
@@ -424,7 +424,7 @@
           "id": "block_1_lesson_4_section_3",
           "title": "Wann greift die Durchsetzung?",
           "readTimeMinutes": 2,
-          "content": "Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Für Unternehmen zählt der höhere der beiden Werte:\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. € oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3).\n- **Die in Art. 99 Abs. 4 genannten Pflichten:** bis **15 Mio. € oder 3 %**.\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. € oder 1 %** (Art. 99 Abs. 5).\n\n**KMU-Klausel:** Für KMU und seit der Änderung auch für kleine Mid-Caps gelten eigene Höchstgrenzen. Berechnung und Pflichtzuordnung sind im Einzelfall zu prüfen.\n\nArt. 4 gilt seit dem 2. Februar 2025, geändert durch Verordnung (EU) 2026/1744. Nach der Kommissions-FAQ beginnen nationale Aufsicht und Durchsetzung Anfang August 2026. Art. 50 wird am 2. August 2026 anwendbar. Ob ein Bußgeld droht, hängt vom verletzten Artikel, vom Zeitplan, von der zuständigen Behörde und vom Einzelfall ab.\n\nDie Hochrisiko-Termine 2. Dezember 2027 für eigenständige Anhang-III-Systeme und 2. August 2028 für produktintegrierte Anhang-I-Systeme sind seit 27. Juli 2026 geltendes Recht.",
+          "content": "Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Für Unternehmen zählt grundsätzlich der höhere der beiden Werte:\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. € oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3).\n- **Die in Art. 99 Abs. 4 genannten Pflichten:** bis **15 Mio. € oder 3 %**.\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. € oder 1 %** (Art. 99 Abs. 5).\n\n**KMU-Klausel:** Für KMU und seit der Änderung auch für kleine Mid-Caps gelten eigene Höchstgrenzen. Berechnung und Pflichtzuordnung sind im Einzelfall zu prüfen.\n\nArt. 4 gilt seit dem 2. Februar 2025, geändert durch Verordnung (EU) 2026/1744. Nach der Kommissions-FAQ beginnen nationale Aufsicht und Durchsetzung Anfang August 2026. Art. 50 wird am 2. August 2026 anwendbar. Ob ein Bußgeld droht, hängt vom verletzten Artikel, vom Zeitplan, von der zuständigen Behörde und vom Einzelfall ab.\n\nDie Hochrisiko-Termine 2. Dezember 2027 für eigenständige Anhang-III-Systeme und 2. August 2028 für produktintegrierte Anhang-I-Systeme sind seit 27. Juli 2026 geltendes Recht.",
           "keyTakeaway": "Artikel 4 gilt seit Februar 2025 in der seit 27. Juli 2026 geänderten Form. Die nationale Aufsicht und Durchsetzung beginnen nach der Kommissions-FAQ Anfang August 2026.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [

@@ -16,7 +16,7 @@ Was jetzt kommt, sind vier erfundene Lernfälle. Belegt ist damit weder Verbreit
 
 **Messung:** Feldgenauigkeit je Belegtyp, falsche Steuerzuordnung, Ausnahmen, Prüfzeit und Korrekturquote.
 
-**Kontrollen:** Berufsgeheimnisse und Mandantendaten beachten, Auftragsverarbeitung und Transfers prüfen, keine Buchung ohne Freigabe durch die Steuerberaterin, Prüfpfad vollständig erhalten.
+**Kontrollen:** Berufsgeheimnisse und Mandantendaten beachten, Auftragsverarbeitung und Transfers prüfen, keine automatische Buchung ohne fachliche Freigabe, Prüfpfad vollständig erhalten.
 
 ## Gastgewerbe: Antwortentwürfe für Standardanfragen
 

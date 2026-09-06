@@ -91,7 +91,7 @@ Miss die vollständige Bearbeitungszeit einschließlich Recherche, Rechtsprüfun
 
 Kurze Nachrichten können funktionieren, wenn Anlass, Relevanz und nächster Schritt klar sind. Länge allein garantiert keine Antwort.
 
-> **Rechtliche Grenze:** Werbung per elektronischer Post erfordert in Deutschland in der Regel eine vorherige ausdrückliche Einwilligung. Die enge Bestandskundenausnahme hat mehrere kumulative Voraussetzungen. Prüfe vor jedem Versand den aktuellen [§ 7 UWG](https://www.gesetze-im-internet.de/uwg_2004/__7.html) und hole bei Unsicherheit Rechtsrat ein. KI-Personalisierung schafft keine Einwilligung. Massenversand bleibt problematisch, auch wenn jeder Text anders klingt.
+> **Rechtliche Grenze:** Werbung per elektronischer Post erfordert in Deutschland grundsätzlich eine vorherige ausdrückliche Einwilligung. Die enge Bestandskundenausnahme hat mehrere kumulative Voraussetzungen. Prüfe vor jedem Versand den aktuellen [§ 7 UWG](https://www.gesetze-im-internet.de/uwg_2004/__7.html) und hole bei Unsicherheit Rechtsrat ein. KI-Personalisierung schafft keine Einwilligung. Massenversand bleibt problematisch, auch wenn jeder Text anders klingt.
 
 **Wichtig für den deutschen Markt:** Bei Kaltakquise ist die deutsche Geschäftskultur formeller als die amerikanische. "Hey [Vorname]" funktioniert auf LinkedIn bei jungen Startups, beim Geschäftsführer eines mittelständischen Maschinenbauers eher nicht. Die Betreffzeile entscheidet, und der Bezug steht in den ersten zwei Sätzen. Der Ton bleibt auf Augenhöhe, nicht unterwürfig, nicht pushy.
 

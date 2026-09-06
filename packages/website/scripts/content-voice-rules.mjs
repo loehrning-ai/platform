@@ -7,6 +7,9 @@
  * Rule ids reported by the lint:
  *   VOICE-OPENER        throat-clearing openers
  *   VOICE-FILLER        filler words and hype adjectives
+ *   VOICE-AMBIGUOUS     a word that is filler in casual prose but a term of
+ *                       art in normative prose (warning only; the strict
+ *                       scope never promotes it)
  *   VOICE-HEDGE         hedging frames
  *   VOICE-TRANSITION    connective crutches and back-references
  *   VOICE-CLAIM         unverifiable authority or sales framing
@@ -65,6 +68,7 @@ const CLAUSE = "[^.!?\\n]{0,120}?";
 export const VOICE_RULE_IDS = [
   "VOICE-OPENER",
   "VOICE-FILLER",
+  "VOICE-AMBIGUOUS",
   "VOICE-HEDGE",
   "VOICE-TRANSITION",
   "VOICE-CLAIM",
@@ -77,7 +81,13 @@ export const VOICE_RULE_IDS = [
   "VOICE-LISTS",
 ];
 
-/** Rules that become errors inside the strict voice scope. */
+/**
+ * Rules that become errors inside the strict voice scope. severityFor()
+ * promotes nothing else, so a rule is warn-only by staying out of this set.
+ * VOICE-AMBIGUOUS must never be added here: the words it reports carry a
+ * legal meaning in normative sentences, and only the author can tell which
+ * reading a sentence uses.
+ */
 export const VOICE_STRICT_RULES = new Set([
   "VOICE-OPENER",
   "VOICE-FILLER",
@@ -92,6 +102,7 @@ export const VOICE_STRICT_RULES = new Set([
 const CATEGORY_RULE = {
   opener: "VOICE-OPENER",
   filler: "VOICE-FILLER",
+  ambiguous: "VOICE-AMBIGUOUS",
   hedge: "VOICE-HEDGE",
   transition: "VOICE-TRANSITION",
   claim: "VOICE-CLAIM",
@@ -101,7 +112,8 @@ const CATEGORY_RULE = {
  * Phrase rules. `perLesson` / `perCourse` turn an entry into a budget: only
  * occurrences beyond the budget are reported (VOICE-COUNT-LESSON /
  * VOICE-COUNT-COURSE). Entries without a budget report every occurrence under
- * their category's rule id.
+ * their category's rule id. An optional `advice` string is appended to the
+ * finding message.
  */
 export const VOICE_PHRASE_RULES = [
   // German openers
@@ -166,13 +178,6 @@ export const VOICE_PHRASE_RULES = [
     pattern: wordPattern("im Prinzip", "i"),
   },
   {
-    id: "de-filler-grundsaetzlich",
-    lang: "de",
-    category: "filler",
-    label: "grunds\u00e4tzlich",
-    pattern: wordPattern("grunds\u00e4tzlich(?:e[nmrs]?)?", "i"),
-  },
-  {
     id: "de-filler-quasi",
     lang: "de",
     category: "filler",
@@ -193,6 +198,22 @@ export const VOICE_PHRASE_RULES = [
     label: "halt (particle)",
     // Lower-case only: "Halt" the noun and the imperative stay allowed.
     pattern: wordPattern("halt"),
+  },
+  // German ambiguous words: filler in casual prose, terms of art in normative
+  // prose. The lint cannot tell the readings apart, so VOICE-AMBIGUOUS stays
+  // a warning everywhere and the author decides sentence by sentence.
+  {
+    id: "de-ambiguous-grundsaetzlich",
+    lang: "de",
+    category: "ambiguous",
+    label: "grunds\u00e4tzlich",
+    // "erfordert grundsaetzlich eine Einwilligung" states a rule that the
+    // statute's exceptions qualify; "in der Regel" would turn it into a
+    // frequency claim and change what the law says. "Das ist grundsaetzlich
+    // okay" is the casual reading ("basically") and is filler.
+    pattern: wordPattern("grunds\u00e4tzlich(?:e[nmrs]?)?", "i"),
+    advice:
+      "keep it in a normative sentence, where it states a rule that statutory exceptions qualify; cut it in a casual sentence, where it means 'basically'",
   },
   // German hedges
   {
@@ -895,7 +916,8 @@ export function analyzeVoice(units, { formMap }) {
             findings.push(finding(unit, match.line, rule, entry.id, `"${entry.label}" used ${seen} times in lesson ${lesson.id}; allowed ${entry.perLesson} per lesson`));
           }
         } else {
-          findings.push(finding(unit, match.line, rule, entry.id, `"${match.text}" (${entry.category}: ${entry.label})`));
+          const advice = entry.advice ? `; ${entry.advice}` : "";
+          findings.push(finding(unit, match.line, rule, entry.id, `"${match.text}" (${entry.category}: ${entry.label})${advice}`));
         }
       }
     }

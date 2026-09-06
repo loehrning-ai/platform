@@ -169,7 +169,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50 ist seit dem 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme markieren nach Abs. 2 maschinenlesbar, Betreiber legen Deepfakes nach Abs. 4 in der Regel sichtbar offen. Für Systeme, die vor dem 2. August 2026 schon auf dem Markt waren, gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.",
+    "explanation": "Art. 50 ist seit dem 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme markieren nach Abs. 2 maschinenlesbar, Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. Für Systeme, die vor dem 2. August 2026 schon auf dem Markt waren, gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.",
     "version": 1,
     "active": true
   },
@@ -436,7 +436,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben in der Regel maschinenlesbar markieren, Betreiber müssen Deepfakes in der Regel sichtbar offenlegen. Ausnahmen und Übergangsregeln bleiben zu prüfen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor; nach dem KI-MIG ist das in der Regel die Bundesnetzagentur, soweit keine Fachbehörde zuständig ist.",
+    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben grundsätzlich maschinenlesbar markieren, Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen. Ausnahmen und Übergangsregeln bleiben zu prüfen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor; nach dem KI-MIG ist das grundsätzlich die Bundesnetzagentur, soweit keine Fachbehörde zuständig ist.",
     "version": 1,
     "active": true
   }

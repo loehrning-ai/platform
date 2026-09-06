@@ -2,7 +2,7 @@
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-08",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
   "triggerEvents": ["major-conceptual-update"],
@@ -17,7 +17,7 @@
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -143,7 +143,7 @@
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -171,7 +171,7 @@
           "id": "ethik-3-2-s3",
           "title": "Level 3: society",
           "readTimeMinutes": 2,
-          "content": "What may a system be used for at all? Not a department, not a vendor. Society decides, through laws, rights and routes of control. The AI Regulation, data protection, equal treatment and fundamental rights can apply in parallel and answer different questions.\n\nArticle 22(1) GDPR concerns decisions based solely on automated processing, including profiling, that produce legal effects or similarly significantly affect a person. Article 22(2) holds exceptions. For the cases under paragraph 2(a) and (c), paragraph 3 requires at least human intervention, a chance to express a point of view and to contest. For relevant automated decision-making, Articles 13, 14 and 15 hold information duties and access rights on the logic involved, the significance and the envisaged consequences. A claim to source code, or an explanation for every algorithm, it is not.\n\nDoes a significant decision hit you? Then check four points separately: was it solely automated? What effect did it have? Does an exception apply? Which information and protection rights apply?",
+          "content": "What may a system be used for at all? Not a department, not a vendor. Society decides, through laws, rights and routes of control. The AI Regulation, data protection, equal treatment and fundamental rights can apply in parallel and answer different questions.\n\nArticle 22(1) GDPR concerns decisions based solely on automated processing, including profiling, that produce legal effects or similarly significantly affect a person. Article 22(2) holds exceptions. For the cases under paragraph 2(a) and (c), paragraph 3 requires at least a chance to obtain human intervention, to express a point of view and to contest. For relevant automated decision-making, Articles 13, 14 and 15 hold information duties and access rights on the logic involved, the significance and the envisaged consequences. A claim to source code, or an explanation for every algorithm, it is not.\n\nDoes a significant decision hit you? Then check four points separately: was it solely automated? What effect did it have? Does an exception apply? Which information and protection rights apply?",
           "keyTakeaway": "Article 22 GDPR concerns solely automated decisions with legal or similarly significant effect, and it has exceptions. Safeguards and information rights you check under Articles 13 to 15 and Article 22."
         }
       ],
@@ -201,7 +201,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Where the provisions apply, Article 12 requires the technical capability for automatic logging. Article 26(6) requires the deployer to keep those logs for at least six months, unless other law sets a different period."
+          "explanation": "Where the provisions apply, Article 12 requires the technical capability for automatic logging. Article 26(6) generally requires the deployer to keep the logs under its control for at least six months, unless other law sets a different period."
         },
         {
           "id": "ethik-3-2-q2",
@@ -228,7 +228,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Article 22(1) concerns decisions based solely on automated processing with legal or similarly significant effect. Paragraph 2 holds exceptions. Where a contract requires it or the person explicitly consented, paragraph 3 requires at least human intervention, a chance to express a point of view and to contest. Further information rights sit in Articles 13 to 15."
+          "explanation": "Article 22(1) concerns decisions based solely on automated processing with legal or similarly significant effect. Paragraph 2 holds exceptions. Where a contract requires it or the person explicitly consented, paragraph 3 requires at least a chance to obtain human intervention, to express a point of view and to contest. Further information rights sit in Articles 13 to 15."
         },
         {
           "id": "ethik-3-2-q3",
@@ -268,7 +268,7 @@
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [

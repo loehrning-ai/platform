@@ -2,7 +2,7 @@
   "blockId": "block_5",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-02-13",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -157,7 +157,7 @@
           "id": "block_5_lesson_2_section_2",
           "title": "The SME rule: the lower amount applies",
           "readTimeMinutes": 1,
-          "content": "A large company pays the **higher** of the two amounts, the absolute figure or the percentage. For SMEs including start-ups, Article 99(6) turns that around: the **lower** amount applies.\n\nThe rule gets overlooked, and for a mid-sized business it decides everything. An undertaking with EUR 20 million in annual turnover faces at most EUR 1.4 million for a prohibited practice, equal to 7 percent. Not EUR 35 million.\n\nThe authority cannot pick a figure at will. Article 99(7) requires it to weigh **10 factors**, among them severity, the number of people affected, intent or negligence, company size, cooperation, and, expressly, **technical and organisational measures** under Article 99(7), point (g).\n\nDocumented AI governance counts in that assessment, meaning records of Article 4 training measures, a risk register, and an incident process. It does not guarantee a particular reduction.",
+          "content": "For a large company the **higher** of the two amounts applies, the absolute figure or the percentage. For SMEs including start-ups, Article 99(6) turns that around: the **lower** amount applies.\n\nThe rule gets overlooked, and for a mid-sized business it decides everything. An undertaking with EUR 20 million in annual turnover faces at most EUR 1.4 million for a prohibited practice, equal to 7 percent. Not EUR 35 million.\n\nThe authority cannot pick a figure at will. Article 99(7) requires it to weigh **10 factors**, among them severity, the number of people affected, intent or negligence, company size, cooperation, and, expressly, **technical and organisational measures** under Article 99(7), point (g).\n\nDocumented AI governance counts in that assessment, meaning records of Article 4 training measures, a risk register, and an incident process. It does not guarantee a particular reduction.",
           "keyTakeaway": "SME rule under Article 99(6): the lower amount applies. The 10 assessment factors in Article 99(7) include documented technical and organisational measures."
         },
         {

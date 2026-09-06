@@ -2,7 +2,7 @@
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2026-12-05",
+  "nextReview": "2026-12-06",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
   "triggerEvents": ["major-conceptual-update"],
@@ -17,7 +17,7 @@
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-05",
+      "nextReview": "2026-12-06",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -141,7 +141,7 @@
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-05",
+      "nextReview": "2026-12-06",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -155,7 +155,7 @@
           "id": "arbeit-1-2-s1",
           "title": "Assistance without a performance promise",
           "readTimeMinutes": 2,
-          "content": "The vendor promises time saved. Your process has seen none. An assisted workflow gives the system one bounded step. Approval and accountability stay with a named person. Whether it saves time, you measure yourself.\n\nThree synthetic examples, not case reports:\n- A nurse drafts from approved, data-protection-compliant notes and checks every statement against the record. Patient data belong only in an approved system.\n- An accountant has unusual entries flagged. The flag is a prompt to look. No fraud finding, no error finding.\n- A communications team generates image drafts. Before publishing it checks rights, factual fit, disclosure and approval.\n\nA controlled test fixes it in advance. Task, permitted data, quality criteria, who reviews, when to stop, what gets recorded. Only those measurements tell you whether it pays.",
+          "content": "The vendor promises time saved. Your process has seen none. An assisted workflow gives the system one bounded step. Approval and accountability stay with a named person. Whether it saves time, you measure yourself.\n\nThree synthetic examples, not case reports:\n- A nurse drafts from approved, data-protection-compliant notes and checks every statement against the record. Patient data belong only in a system approved for them.\n- An accountant has unusual entries flagged. The flag is a prompt to look. No fraud finding, no error finding.\n- A communications team generates image drafts. Before publishing it checks rights, factual fit, disclosure and approval.\n\nA controlled test fixes it in advance. Task, permitted data, quality criteria, who reviews, when to stop, what gets recorded. Only those measurements tell you whether it pays.",
           "keyTakeaway": "Assistance is a workflow, not a performance promise. Bound the task, protect the data, review the results, measure the benefit."
         },
         {
@@ -169,7 +169,7 @@
           "id": "arbeit-1-2-s3",
           "title": "When the works council has a say",
           "readTimeMinutes": 2,
-          "content": "A tool counts how fast your colleague closes her tickets. May the employer decide that alone? Absent a statutory or collective-agreement rule, Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council co-determination over the introduction and use of technical equipment intended to monitor employees' behaviour or performance. Function and use decide whether an AI system falls under it. And the right sits with the works council, not with each employee.\n\nFive questions that belong on the table:\n- Which purpose, which decision does it support?\n- Which employee data are collected, inferred or stored?\n- Who sees the analyses, for how long?\n- What oversight, correction and complaint route exists?\n- What training and which binding rules apply?\n\nIf the two sides cannot agree in a co-determination matter, the conciliation committee decides under Section 87(2). That question is for qualified employment-law analysis, not this lesson.",
+          "content": "A tool counts how fast your colleague closes her tickets. May the employer decide that alone? Absent a statutory or collective-agreement rule, Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council co-determination over the introduction and use of technical equipment intended to monitor employees' behaviour or performance. Function and use decide whether an AI system falls under it. And the right sits with the works council, not with each employee.\n\nFive questions that belong on the table:\n- Which purpose, which decision does it support?\n- Which employee data are collected, inferred or stored?\n- Who sees the analyses, for how long?\n- What human oversight, correction and complaint route exists?\n- What training and which binding rules apply?\n\nIf the two sides cannot agree in a co-determination matter, the conciliation committee decides under Section 87(2). That question is for qualified employment-law analysis, not this lesson.",
           "keyTakeaway": "Section 87(1)(6) BetrVG can trigger works-council co-determination for monitoring AI. Purpose and function decide, not the label."
         }
       ],
@@ -266,7 +266,7 @@
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-05",
+      "nextReview": "2026-12-06",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -286,7 +286,7 @@
           "id": "arbeit-1-3-s2",
           "title": "What makes automation hard",
           "readTimeMinutes": 1,
-          "content": "The electrician stands on a site he has never seen. The nurse has patchy information and a relative in the room. There, automation gets hard. Harder still when a task combines several traits:\n\n- a changing physical setting and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationship, trust or local knowledge\n\nNone of that makes an occupation \"AI-proof\". Documentation, planning and retrieval shift in care, trades, teaching and advice too. Robotics can move physical tasks over time. Look at tasks, not labels.",
+          "content": "The electrician stands on a site he has never seen. The nurse has patchy information and a relative in the room. There, automation gets hard. Harder still when a task combines several traits:\n\n- a changing physical setting and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationship, trust or local knowledge\n\nNone of that makes an occupation \"AI-proof\". Documentation, planning and retrieval can shift in care, trades, teaching and advice too. Robotics can move physical tasks over time. Look at tasks, not labels.",
           "keyTakeaway": "Physical, social and legal context can make automation harder. No guarantee your job stays as it is."
         },
         {

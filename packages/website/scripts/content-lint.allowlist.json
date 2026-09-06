@@ -2,11 +2,6 @@
   "$comment": "Per-file, per-rule exceptions for the voice rules in content-lint.mjs. Every entry needs `file` (relative to packages/website; a trailing slash allows a directory), `rule` (a VOICE-* rule id) and a non-empty `reason`. Optional `phrase` narrows the entry to one phrase id from the rule tables. An entry without a reason fails the lint.",
   "entries": [
     {
-      "file": "content/ki-und-gesellschaft/quiz/questions.json",
-      "rule": "VOICE-FILLER",
-      "reason": "Two answer options use the word inside the claim the learner must judge; rewording an option could change which answer is correct, so the option texts stay verbatim."
-    },
-    {
       "file": "content/books/ki-arbeitsalltag/06_emails_meetings_berichte.md",
       "rule": "VOICE-FORM",
       "reason": "The chapter quotes a customer reply the model drafts. Sie is the correct form in German business correspondence, so the example keeps it while the chapter around it stays Du."
@@ -46,6 +41,18 @@
       "rule": "VOICE-COUNT-LESSON",
       "phrase": "en-filler-robust",
       "reason": "\"Robustness\" is the statutory term in the Article 15 heading of Regulation (EU) 2024/1689 (\"accuracy, robustness and cybersecurity\"). The lesson on human oversight names it once in its key concepts and once when quoting Article 15(1); a synonym would misname the requirement, and the German twin cites the same term as \"Robustheit\"."
+    },
+    {
+      "file": "content/eu-ai-act-kurs/glossary.json",
+      "rule": "VOICE-FILLER",
+      "phrase": "de-filler-umfassend",
+      "reason": "\"Umfassend\" is the scoping qualifier the primacy claim in the KI-Verordnung entry rests on, matching the Commission own wording \"the first-ever comprehensive legal framework on AI worldwide\". Without it the entry asserts that no AI-specific legal framework existed anywhere before 1 August 2024, which AI rules already in force elsewhere contradict. Load-bearing legal qualifier, not an intensifier."
+    },
+    {
+      "file": "content/eu-ai-act-kurs/en/glossary.json",
+      "rule": "VOICE-FILLER",
+      "phrase": "en-filler-comprehensive",
+      "reason": "English twin of the German KI-Verordnung entry. \"Comprehensive\" carries the same scoping the primacy claim depends on and mirrors the Commission own wording; dropping it in one locale alone would also break the bilingual pair."
     }
   ]
 }

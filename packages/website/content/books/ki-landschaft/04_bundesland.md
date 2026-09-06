@@ -1,6 +1,6 @@
 # Regionale Rahmenbedingungen prüfen
 
-Die Geschäftsführerin eines Metallbetriebs in Thüringen steht nicht schlechter da als ihr Kollege in Bayern. Aus dem Firmensitz folgt keine KI-Bereitschaft. Unterschiede gibt es trotzdem: Förderprogramme, Beratung, Hochschulnetzwerke, Branchencluster, Verwaltungspraxis.
+Die Geschäftsführerin eines Metallbetriebs in Thüringen steht nicht schon wegen des Standorts schlechter da als ihr Kollege in Bayern. Aus dem Firmensitz folgt keine KI-Bereitschaft. Unterschiede gibt es trotzdem: Förderprogramme, Beratung, Hochschulnetzwerke, Branchencluster, Verwaltungspraxis.
 
 ## Keine Rangliste ohne repräsentative Daten
 

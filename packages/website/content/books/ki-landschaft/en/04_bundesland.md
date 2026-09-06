@@ -1,6 +1,6 @@
 # Assess regional conditions
 
-The managing director of a metal shop in Thuringia is no worse off than her peer in Bavaria. A registered office produces no AI readiness. Differences do exist: funding programs, advisory services, university networks, sector clusters, administrative practice.
+The managing director of a metal shop in Thuringia is no worse off than her peer in Bavaria just because of her address. A registered office produces no AI readiness. Differences do exist: funding programs, advisory services, university networks, sector clusters, administrative practice.
 
 ## No ranking without representative data
 

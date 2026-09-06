@@ -95,7 +95,7 @@ Der Entwurf legt fest, welche Fehler erneut versucht und welche isoliert werden,
     {
       id: "s5",
       title: "Schemaentwicklung",
-      content: `Schema Registries bieten meist die Kompatibilitätsmodi **backward**, **forward** und **full**. Was genau sie bedeuten, hängt an Serialisierungsformat, transitiver Einstellung, Subject-Strategie und Registry-Implementierung. Ein syntaktisch kompatibles Schema bricht die Fachlogik trotzdem.
+      content: `Schema Registries bieten meist die Kompatibilitätsmodi **backward**, **forward** und **full**. Was genau sie bedeuten, hängt an Serialisierungsformat, transitiver Einstellung, Subject-Strategie und Registry-Implementierung. Ein syntaktisch kompatibles Schema kann die Fachlogik trotzdem brechen.
 
 Die Kompatibilität folgt aus Auslieferungsreihenfolge, Anforderungen an erneutes Lesen, Aufbewahrung und Vielfalt der Consumer. Teste alte Daten mit neuen Readern, neue Daten bei Bedarf mit unterstützten alten Readern. Ein strikter Modus verhindert einige inkompatible Registrierungen. Historische neue Felder befüllt er nicht, Semantik prüft er nicht, und die Auslieferung nachgelagerter Systeme koordiniert er erst recht nicht allein.`,
     },
