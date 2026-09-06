@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, LogOut } from "lucide-react";
-import { COURSE_CATALOG, type CourseLevel } from "@/lib/courses/catalog";
-import {
-  COURSE_LEVEL_LABELS_BY_LOCALE,
-  localizeCatalog,
-} from "@/lib/courses/catalog-copy";
+import { LogOut } from "lucide-react";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import {
   courseOutcomeCoverage,
   coveredCourseOutcomes,
-  isCourseRecordEarned,
 } from "@/lib/courses/competencies";
 import {
   createAuthServerClient,
@@ -20,141 +15,37 @@ import {
 import { reportApiError } from "@/lib/observability/api-error";
 import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
 import type { UnifiedProgress } from "@/lib/progress/types";
-import { completedCanonicalLessonCount } from "@/lib/courses/completion";
-import {
-  hasCourseStarted,
-  resolveCourseResumeHref,
-} from "@/lib/courses/resume";
-import type { CourseSlug } from "@/lib/course/types";
-import { Card } from "@/components/ui/card";
-import { BrandButton } from "@/components/ui/brand-button";
 import { ProgressSyncNotice } from "@/components/auth/progress-sync-notice";
-import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
-import { ACCOUNT_COPY, type AccountPageCopy } from "./account-copy";
+import { isAgentAccessReady } from "@/lib/provider-readiness";
+import { ACCOUNT_COPY } from "./account-copy";
+import {
+  KONTO_SECTION_IDS,
+  buildAccountCourses,
+  groupCoveredOutcomes,
+  isCourseLevel,
+  isCourseSort,
+  orderCatalog,
+  selectNextCourse,
+  type CourseSort,
+} from "./sections/account-data";
+import { WeiterlernenSection } from "./sections/weiterlernen";
+import { MeineKurseSection } from "./sections/meine-kurse";
+import { WerkzeugeSection } from "./sections/werkzeuge";
+import {
+  WERKZEUGE_COPY,
+  WERKZEUGE_SECTION_ID,
+} from "./sections/werkzeuge-copy";
+import { DEINE_KI_SECTION_ID, DeineKiSection } from "./sections/deine-ki";
+import { AGENT_ACCESS_COPY } from "./sections/region-copy";
+import { TeilnahmebestaetigungenSection } from "./sections/teilnahmebestaetigungen";
+import { KontoVerwaltenSection } from "./sections/verwalten";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   return createNoindexPageMetadata(ACCOUNT_COPY[locale].metadata);
-}
-
-function completedLessons(
-  progress: UnifiedProgress | null,
-  slug: CourseSlug,
-): number {
-  return completedCanonicalLessonCount(progress, slug);
-}
-
-const LEVEL_VALUES: readonly CourseLevel[] = ["einstieg", "mittel", "fortg"];
-const SORT_VALUES = ["step", "duration", "progress"] as const;
-type CourseSort = (typeof SORT_VALUES)[number];
-
-function isCourseLevel(value: string | undefined): value is CourseLevel {
-  return value !== undefined && (LEVEL_VALUES as string[]).includes(value);
-}
-
-function isCourseSort(value: string | undefined): value is CourseSort {
-  return value !== undefined && (SORT_VALUES as readonly string[]).includes(value);
-}
-
-function kontoHref(params: {
-  readonly level?: CourseLevel;
-  readonly sort?: CourseSort;
-}): string {
-  const search = new URLSearchParams();
-  if (params.level) search.set("level", params.level);
-  if (params.sort && params.sort !== "step") search.set("sort", params.sort);
-  const query = search.toString();
-  return query ? `/konto?${query}` : "/konto";
-}
-
-function CourseCatalogCard({
-  entry,
-  copy,
-  locale,
-}: {
-  readonly entry: {
-    readonly course: {
-      readonly slug: string;
-      readonly title: string;
-      readonly tagline: string;
-      readonly duration: string;
-      readonly level: CourseLevel;
-      readonly totalLessons: number;
-      readonly startHref: string;
-      readonly coverImage?: string;
-      readonly coverImageAlt?: string;
-    };
-    readonly done: number;
-    readonly pct: number;
-    readonly recordEarned: boolean;
-    readonly started: boolean;
-    readonly resumeHref: string;
-  };
-  readonly copy: AccountPageCopy;
-  readonly locale: Locale;
-}) {
-  const { course, done, pct, recordEarned, started, resumeHref } = entry;
-  return (
-    <Card className="h-full gap-0 overflow-hidden p-0 sm:p-0">
-      {course.coverImage ? (
-        <span className="relative block aspect-[16/9] w-full overflow-hidden border-b border-border bg-background">
-          <Image
-            src={course.coverImage}
-            alt={course.coverImageAlt ?? ""}
-            fill
-            loading="lazy"
-            sizes="(min-width: 640px) 320px, 100vw"
-            className="object-cover"
-          />
-        </span>
-      ) : null}
-      <div className="flex h-full flex-col gap-0 p-4 sm:p-6">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-bold tracking-[-0.02em] text-foreground">
-            {course.title}
-          </h3>
-          {recordEarned ? (
-            <span className="border-l-[3px] border-brand-orange pl-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-              {copy.recordEarned}
-            </span>
-          ) : null}
-        </div>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {course.tagline}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
-          <span>{copy.lessonProgress(done, course.totalLessons, pct)}</span>
-          <span aria-hidden="true">·</span>
-          <span>{COURSE_LEVEL_LABELS_BY_LOCALE[locale][course.level]}</span>
-          <span aria-hidden="true">·</span>
-          <span>{course.duration}</span>
-        </div>
-        {/* Progress bar */}
-        <div
-          className="mt-2 h-1.5 w-full overflow-hidden bg-track"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={pct}
-          aria-label={copy.progressAria(course.title)}
-        >
-          <div
-            className="h-full bg-brand-orange"
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-        <Link
-          href={localizeHref(started ? resumeHref : course.startHref, locale)}
-          className="mt-3 inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-        >
-          {recordEarned ? copy.viewRecord : started ? copy.resume : copy.start}{" "}
-          →
-        </Link>
-      </div>
-    </Card>
-  );
 }
 
 interface KontoSearchParams {
@@ -208,6 +99,8 @@ export default async function KontoPage({
     progressUnavailable = true;
   }
   if (user && !supabase) progressUnavailable = true;
+  // The account's ONE read. Every region below receives derived props, so no
+  // region can turn a page render into a request waterfall.
   if (supabase && user) {
     const fetched = await fetchUnifiedProgressForUser(supabase, user.id);
     if (fetched.ok) {
@@ -218,80 +111,58 @@ export default async function KontoPage({
     }
   }
 
-  // Course-level rollups.
-  const courseState = courses.map((course) => {
-    const done = completedLessons(progress, course.slug);
-    const pct =
-      course.totalLessons > 0
-        ? Math.min(100, Math.round((done / course.totalLessons) * 100))
-        : 0;
-    return {
-      course,
-      done,
-      pct,
-      recordEarned: isCourseRecordEarned(progress, course.slug),
-      started: done > 0 || hasCourseStarted(progress, course.slug),
-      resumeHref: resolveCourseResumeHref(progress, course.slug),
-      lastActivity: progress?.courses[course.slug]?.lastActivity ?? null,
-    };
-  });
-
-  const coursesDone = courseState.filter((c) => c.recordEarned).length;
-  // "Next" and the "all done" state use the same record-earned definition as
-  // the count, so the available action cannot contradict the tally.
-  const nextCourse =
-    courseState
-      .filter((c) => !c.recordEarned)
-      .sort((left, right) => {
-        const leftAt = left.lastActivity ? Date.parse(left.lastActivity) : 0;
-        const rightAt = right.lastActivity ? Date.parse(right.lastActivity) : 0;
-        return rightAt - leftAt;
-      })[0] ?? null;
-  // Filter/sort apply to the catalog grid only, never to the rollups or the
-  // continue-learning rail above — those describe the whole record.
-  const catalogState = courseState
-    .filter((c) => !activeLevel || c.course.level === activeLevel)
-    .slice()
-    .sort((left, right) => {
-      if (activeSort === "duration") {
-        return left.course.durationMinutes - right.course.durationMinutes;
-      }
-      if (activeSort === "progress") return right.pct - left.pct;
-      return left.course.step - right.course.step;
-    });
-  const myCourses = catalogState.filter((c) => c.started);
-  const availableCourses = catalogState.filter((c) => !c.started);
+  const courseState = buildAccountCourses(courses, progress);
+  const coursesDone = courseState.filter((entry) => entry.recordEarned).length;
+  const nextCourse = selectNextCourse(courseState);
+  const catalogState = orderCatalog(courseState, activeLevel, activeSort);
+  const myCourses = catalogState.filter((entry) => entry.started);
+  const availableCourses = catalogState.filter((entry) => !entry.started);
+  const earnedRecords = courseState.filter((entry) => entry.recordEarned);
 
   const { covered: coveredCount, total: totalOutcomes } =
     courseOutcomeCoverage(progress);
-  const covered = coveredCourseOutcomes(progress, locale);
+  const coveredByCourse = groupCoveredOutcomes(
+    courses,
+    coveredCourseOutcomes(progress, locale),
+  );
 
-  // Group curriculum outcomes under the completed course that covered them.
-  const coveredByCourse = courses
-    .map((course) => ({
-      course,
-      items: covered.filter((outcome) => outcome.courseSlug === course.slug),
-    }))
-    .filter((g) => g.items.length > 0);
-
-  // Only offer anchors to sections that actually render. When the progress
-  // region is replaced by the outage alert, the catalog headings do not exist,
-  // so linking to them would strand the learner mid-page.
+  // Only offer anchors to regions that actually render, in the order they
+  // render. Weiterlernen, Werkzeuge and Konto verwalten survive an outage; the
+  // course and record regions do not, so linking to them would strand the
+  // learner mid-page. Werkzeuge always renders a card, in its source-only
+  // state when no hosted tool is configured, so it always carries an anchor.
+  // Deine KI renders nothing until agent access is ready, so its anchor is
+  // offered under exactly the predicate the region itself checks.
+  //
+  // Both region labels are the regions' own headings rather than a second
+  // string in account-copy.ts, so a nav entry can never name a heading the
+  // learner does not find on arrival.
   const sectionLinks: readonly { href: string; label: string }[] = [
+    { href: `#${KONTO_SECTION_IDS.weiterlernen}`, label: copy.continueHeading },
+    ...(progressUnavailable
+      ? []
+      : [{ href: `#${KONTO_SECTION_IDS.kurse}`, label: copy.coursesHeading }]),
+    {
+      href: `#${WERKZEUGE_SECTION_ID}`,
+      label: WERKZEUGE_COPY[locale].heading,
+    },
+    ...(isAgentAccessReady()
+      ? [
+          {
+            href: `#${DEINE_KI_SECTION_ID}`,
+            label: AGENT_ACCESS_COPY[locale].heading,
+          },
+        ]
+      : []),
     ...(progressUnavailable
       ? []
       : [
-          ...(myCourses.length > 0
-            ? [{ href: "#konto-meine-kurse", label: copy.coursesHeading }]
-            : []),
-          { href: "#konto-katalog", label: copy.availableCoursesHeading },
-          { href: "#outcomes-heading", label: copy.outcomesHeading },
+          {
+            href: `#${KONTO_SECTION_IDS.nachweise}`,
+            label: copy.recordsHeading,
+          },
         ]),
-    { href: "#konto-material", label: copy.deepenHeading },
-    {
-      href: localizeHref("/konto/datenschutz", locale),
-      label: copy.sectionSettings,
-    },
+    { href: `#${KONTO_SECTION_IDS.verwalten}`, label: copy.sectionSettings },
   ];
 
   return (
@@ -325,17 +196,11 @@ export default async function KontoPage({
           )}
         </div>
 
-        {/* A stopped or exhausted background sync leaves the record below
-            stale on other devices. It was previously announced only on
-            /konto/datenschutz, which a learner reading their record never
-            passes through. */}
-        {/* Persistent account navigation. 025's Done Criteria require account
-            settings to be reachable from navigation, and the catalog pushed
-            the privacy link far below the fold. Deliberately not sticky: the
-            site nav is already `fixed top-0 z-50`, so a second sticky bar
-            would stack on it. Its accessible name is distinct from
-            privacyNavigationLabel so getByRole("navigation", { name:
-            "Account privacy" }) stays a single match. */}
+        {/* Persistent account navigation over the regions below. Deliberately
+            not sticky: the site nav is already `fixed top-0 z-50`, so a second
+            sticky bar would stack on it. Its accessible name is distinct from
+            privacyNavigationLabel so getByRole("navigation", { name: "Account
+            privacy" }) stays a single match. */}
         <nav
           aria-label={copy.sectionNavigationLabel}
           data-konto-section-nav
@@ -352,323 +217,64 @@ export default async function KontoPage({
           ))}
         </nav>
 
+        {/* A stopped or exhausted background sync leaves the record below
+            stale on other devices. It was previously announced only on
+            /konto/datenschutz, which a learner reading their record never
+            passes through. */}
         <ProgressSyncNotice locale={locale} />
 
-        {progressUnavailable ? (
-          <div
-            role="alert"
-            className="mt-6 border border-border border-l-[3px] border-l-brand-orange bg-kupfer-mist p-4"
-          >
-            <p className="font-semibold text-foreground">
-              {authUnavailable
-                ? copy.authUnavailableTitle
-                : copy.unavailableTitle}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {authUnavailable ? copy.authUnavailableBody : copy.unavailableBody}
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* Overview: three honest rollups */}
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <Card className="gap-1">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {copy.coursesCompleted}
-                </span>
-                <span className="text-2xl font-bold tracking-[-0.03em] text-foreground">
-                  {coursesDone}
-                  <span className="text-muted-foreground">
-                    /{COURSE_CATALOG.length}
-                  </span>
-                </span>
-              </Card>
-              <Card className="gap-1">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {copy.outcomesCovered}
-                </span>
-                <span className="text-2xl font-bold tracking-[-0.03em] text-foreground">
-                  {coveredCount}
-                  <span className="text-muted-foreground">
-                    /{totalOutcomes}
-                  </span>
-                </span>
-              </Card>
-              <Card className="gap-1">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {copy.lastSynchronized}
-                </span>
-                <span className="text-sm font-semibold text-foreground">
-                  {updatedAt
-                    ? new Date(updatedAt).toLocaleDateString(
-                        locale === "de" ? "de-DE" : "en-GB",
-                      )
-                    : copy.noSavedProgress}
-                </span>
-              </Card>
-            </div>
+        <WeiterlernenSection
+          copy={copy}
+          locale={locale}
+          progressUnavailable={progressUnavailable}
+          authUnavailable={authUnavailable}
+          coursesDone={coursesDone}
+          courseCount={COURSE_CATALOG.length}
+          coveredCount={coveredCount}
+          totalOutcomes={totalOutcomes}
+          updatedAt={updatedAt}
+          nextCourse={nextCourse}
+        />
 
-            {/* Continue where you left off */}
-            {nextCourse ? (
-              <Card accent="kupfer" className="mt-4 bg-kupfer-mist">
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-                  {copy.continueLabel}
-                </p>
-                <p className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground">
-                  {nextCourse.course.title}
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {nextCourse.course.tagline}
-                </p>
-                <div className="mt-4">
-                  <BrandButton
-                    href={
-                      nextCourse.started
-                        ? localizeHref(nextCourse.resumeHref, locale)
-                        : localizeHref(nextCourse.course.startHref, locale)
-                    }
-                    variant="primary"
-                    size="sm"
-                  >
-                    {nextCourse.started ? copy.resume : copy.start}{" "}
-                    <ArrowRight size={15} aria-hidden="true" />
-                  </BrandButton>
-                </div>
-              </Card>
-            ) : (
-              <Card accent="kupfer" className="mt-4 bg-kupfer-mist">
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-                  {copy.statusLabel}
-                </p>
-                <p className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground">
-                  {copy.allComplete}
-                </p>
-                <div className="mt-4">
-                  <BrandButton
-                    href={localizeHref("/buecher", locale)}
-                    variant="outline"
-                    size="sm"
-                  >
-                    {copy.booksLink} <ArrowRight size={15} aria-hidden="true" />
-                  </BrandButton>
-                </div>
-              </Card>
-            )}
-
-            {/* My courses */}
-            {myCourses.length > 0 ? (
-              <>
-                <h2
-                  id="konto-meine-kurse"
-                  className="mt-12 scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
-                >
-                  {copy.coursesHeading}
-                </h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {myCourses.map((entry) => (
-                    <CourseCatalogCard
-                      key={entry.course.slug}
-                      entry={entry}
-                      copy={copy}
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              </>
-            ) : null}
-
-            {/* Available courses: filter/sort, cover art, honest gating note */}
-            <div className="mt-12 flex flex-wrap items-baseline justify-between gap-3">
-              <h2
-                id="konto-katalog"
-                className="scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
-              >
-                {copy.availableCoursesHeading}
-              </h2>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                    {copy.levelFilterLabel}
-                  </span>
-                  <Link
-                    href={localizeHref(
-                      kontoHref({ sort: activeSort }),
-                      locale,
-                    )}
-                    className={`inline-flex min-h-11 items-center px-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] ${
-                      activeLevel
-                        ? "text-muted-foreground hover:text-foreground"
-                        : "text-brand-orange underline underline-offset-4"
-                    }`}
-                  >
-                    {copy.allLevels}
-                  </Link>
-                  {LEVEL_VALUES.map((level) => (
-                    <Link
-                      key={level}
-                      href={localizeHref(
-                        kontoHref({ level, sort: activeSort }),
-                        locale,
-                      )}
-                      className={`inline-flex min-h-11 items-center px-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] ${
-                        activeLevel === level
-                          ? "text-brand-orange underline underline-offset-4"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {COURSE_LEVEL_LABELS_BY_LOCALE[locale][level]}
-                    </Link>
-                  ))}
-                </div>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                    {copy.sortLabel}
-                  </span>
-                  {(
-                    [
-                      ["step", copy.sortByStep],
-                      ["duration", copy.sortByDuration],
-                      ["progress", copy.sortByProgress],
-                    ] as const
-                  ).map(([sort, label]) => (
-                    <Link
-                      key={sort}
-                      href={localizeHref(
-                        kontoHref({ level: activeLevel, sort }),
-                        locale,
-                      )}
-                      className={`inline-flex min-h-11 items-center px-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] ${
-                        activeSort === sort
-                          ? "text-brand-orange underline underline-offset-4"
-                          : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              {copy.accountRequiredNote}
-            </p>
-            {availableCourses.length > 0 ? (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {availableCourses.map((entry) => (
-                  <CourseCatalogCard
-                    key={entry.course.slug}
-                    entry={entry}
-                    copy={copy}
-                    locale={locale}
-                  />
-                ))}
-              </div>
-            ) : (
-              <Card className="mt-4">
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {copy.noCoursesMatchFilter}
-                </p>
-              </Card>
-            )}
-
-            {/* Course outcomes covered by completed curriculum. */}
-            <section className="mt-12" aria-labelledby="outcomes-heading">
-              <div className="flex flex-wrap items-baseline justify-between gap-3">
-                <h2
-                  id="outcomes-heading"
-                  className="scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
-                >
-                  {copy.outcomesHeading}
-                </h2>
-                <span className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                  {copy.outcomeCount(coveredCount, totalOutcomes)}
-                </span>
-              </div>
-
-              {coveredByCourse.length > 0 ? (
-                <div className="mt-4 space-y-4">
-                  {coveredByCourse.map(({ course, items }) => (
-                    <div key={course.slug}>
-                      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                        {copy.outcomeSource(course.title)}
-                      </p>
-                      <ul className="mt-2 grid gap-px border border-border bg-border sm:grid-cols-2">
-                        {items.map((outcome) => (
-                          <li
-                            key={outcome.id}
-                            className="border-l-[3px] border-l-brand-orange bg-background px-3 py-2.5 text-sm font-semibold text-foreground"
-                          >
-                            {outcome.label}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <Card className="mt-4">
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {copy.noOutcomes}
-                  </p>
-                </Card>
-              )}
-
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                {copy.outcomeBoundary}
-              </p>
-            </section>
-          </>
+        {progressUnavailable ? null : (
+          <MeineKurseSection
+            copy={copy}
+            locale={locale}
+            activeLevel={activeLevel}
+            activeSort={activeSort}
+            myCourses={myCourses}
+            availableCourses={availableCourses}
+          />
         )}
 
-        {/* Supporting resources */}
-        <h2
-          id="konto-material"
-          className="mt-12 scroll-mt-24 text-2xl font-bold tracking-[-0.03em] text-foreground"
-        >
-          {copy.deepenHeading}
-        </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          {copy.resources.map((tile) => (
-            <Card
-              key={tile.href}
-              href={localizeHref(tile.href, locale)}
-              className="h-full gap-2"
-            >
-              <span className="font-bold text-foreground group-hover:text-brand-orange">
-                {tile.title}
-              </span>
-              <span className="text-sm leading-relaxed text-muted-foreground">
-                {tile.body}
-              </span>
-            </Card>
-          ))}
-        </div>
+        {/* Both regions take the locale the page already resolved. Werkzeuge
+            renders its source-only card in the same pass with it, instead of
+            resolving the request locale a second time behind its own boundary,
+            and Deine KI would otherwise print German copy on /en/konto once
+            agent access is enabled.
 
-        {/* Storage and legacy-export disclosure */}
-        <aside className="mt-8 border border-border border-l-[3px] border-l-brand-orange p-4">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-            {copy.localDataHeading}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {copy.localDataBody}
-          </p>
-        </aside>
+            Werkzeuge also takes the account id from the verified user above,
+            which is what filters its documents read to a single owner. The
+            prop is required, so this page cannot quietly stop passing it, and
+            it is null in exactly the states the read above leaves without a
+            session (an auth outage, or a deployment with no auth at all), in
+            which case the region reads nothing at all. */}
+        <WerkzeugeSection locale={locale} userId={user?.id ?? null} />
 
-        <nav
-          aria-label={copy.privacyNavigationLabel}
-          className="mt-4 border-t border-border pt-4"
-        >
-          <p className="text-sm text-muted-foreground">
-            <Link
-              href={localizeHref("/konto/datenschutz", locale)}
-              className="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              {copy.privacyLink}
-            </Link>
-            {": "}
-            {copy.privacySummary}
-          </p>
-        </nav>
+        <DeineKiSection locale={locale} />
+
+        {progressUnavailable ? null : (
+          <TeilnahmebestaetigungenSection
+            copy={copy}
+            locale={locale}
+            earnedRecords={earnedRecords}
+            coveredCount={coveredCount}
+            totalOutcomes={totalOutcomes}
+            coveredByCourse={coveredByCourse}
+          />
+        )}
+
+        <KontoVerwaltenSection copy={copy} locale={locale} />
       </div>
     </section>
   );

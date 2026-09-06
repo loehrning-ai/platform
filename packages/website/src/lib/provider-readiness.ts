@@ -169,6 +169,22 @@ export function isGoogleOAuthRuntimeReady(): boolean {
 }
 
 /**
+ * GitHub is an additional optional sign-in method with the same shape as
+ * Google: the client ID and secret live in the GitHub and Supabase provider
+ * consoles, and this application only carries the dated confirmation that the
+ * provider is enabled, every callback is allow-listed, and a real sign-in has
+ * completed in this deployment.
+ */
+export function isGithubOAuthRuntimeReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      isPastOrPresentIsoDate(
+        process.env.SUPABASE_GITHUB_OAUTH_CONFIRMED_AT,
+      ),
+  );
+}
+
+/**
  * One fail-closed runtime boundary for every route that can transmit learner
  * text to Anthropic. The build validator provides detailed diagnostics; this
  * predicate prevents local or future route code from bypassing those gates.
@@ -232,5 +248,74 @@ export function isCourseTerminalRuntimeReady(): boolean {
       courseTerminalDailyRunBudget() !== null &&
       courseTerminalSandboxImage() !== null &&
       hasCompleteSupabaseRuntimeConfig(),
+  );
+}
+
+const HOSTED_TOOL_ORIGIN_MAX_LENGTH = 2048;
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+
+/**
+ * Exact HTTPS origin of the hosted cv-engine deployment.
+ *
+ * The value is an origin, never a URL with a path, query, fragment, or
+ * credentials: account surfaces link learners to it and probe it, so an
+ * attacker-supplied or half-migrated value must not become a trusted
+ * destination. Only the project's own apex or a subdomain of loehrning.ai is
+ * accepted; anything else returns null and the hosted capability stays off.
+ */
+export function cvEngineHostedOrigin(): string | null {
+  const value = process.env.CV_ENGINE_HOSTED_URL;
+  if (
+    !value ||
+    value !== value.trim() ||
+    value.length > HOSTED_TOOL_ORIGIN_MAX_LENGTH
+  ) {
+    return null;
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return null;
+  }
+  if (
+    parsed.protocol !== "https:" ||
+    parsed.port !== "" ||
+    parsed.username !== "" ||
+    parsed.password !== "" ||
+    parsed.search !== "" ||
+    parsed.hash !== "" ||
+    (parsed.pathname !== "/" && parsed.pathname !== "") ||
+    !HOSTED_TOOL_HOSTNAME_PATTERN.test(parsed.hostname)
+  ) {
+    return null;
+  }
+  return parsed.origin;
+}
+
+/**
+ * The hosted cv-engine keeps learner documents inside the same EU account
+ * boundary as the rest of the platform, so it stays off until that boundary
+ * exists, its origin is a verified loehrning.ai HTTPS origin, and a dated
+ * confirmation records that the deployment was actually reviewed and reached.
+ */
+export function isCvEngineHostedReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      cvEngineHostedOrigin() !== null &&
+      isPastOrPresentIsoDate(process.env.CV_ENGINE_HOSTED_CONFIRMED_AT),
+  );
+}
+
+/**
+ * Agent access (the platform's own MCP server) is an explicit opt-in. It hands
+ * an external client a scoped view of one learner's account, so it requires the
+ * complete EU account boundary that stores the grants and audit trail as well
+ * as the deliberate flag. An unset or malformed flag keeps it off.
+ */
+export function isAgentAccessReady(): boolean {
+  return Boolean(
+    process.env.MCP_SERVER_ENABLED === "true" && isAccountRuntimeReady(),
   );
 }

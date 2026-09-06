@@ -1,5 +1,40 @@
 import type { Locale } from "@/lib/i18n/locale";
 
+/**
+ * Why sign-in is not offered right now. The four values are disjoint machine
+ * states, not shades of one message: an outage is temporary and needs no
+ * action, a pending configuration is a deployment fact, missing methods mean
+ * the account runtime is healthy but no provider passed verification, and
+ * `disabled` means this deployment simply runs without accounts. Each one gets
+ * its own status line, headline, body and next step below.
+ */
+export type LoginUnavailableReason =
+  | "outage"
+  | "configuration"
+  | "methods"
+  | "disabled";
+
+export interface LoginUnavailableCopy {
+  /** Short machine state, rendered as the status chip. */
+  readonly status: string;
+  readonly headline: string;
+  readonly body: string;
+  /** What the reader should do, or that there is nothing to do. */
+  readonly next: string;
+}
+
+export interface LoginAccountValueItem {
+  readonly title: string;
+  readonly body: string;
+}
+
+export interface LoginPublicLink {
+  /** German path; the page localizes it before rendering. */
+  readonly path: string;
+  readonly label: string;
+  readonly note: string;
+}
+
 export interface LoginCopy {
   readonly metadata: {
     readonly title: string;
@@ -15,10 +50,14 @@ export interface LoginCopy {
     readonly publicAccess: string;
     readonly outage: string;
     readonly available: string;
+    readonly configuration: string;
     readonly methodsUnavailable: string;
     readonly accountUnavailable: string;
     readonly records: string;
   };
+  readonly unavailable: Readonly<
+    Record<LoginUnavailableReason, LoginUnavailableCopy>
+  >;
   readonly reason: {
     readonly accountUnavailable: string;
     readonly accountUnavailableLink: string;
@@ -44,6 +83,9 @@ export interface LoginCopy {
     readonly google: string;
     readonly googlePending: string;
     readonly googleError: string;
+    readonly github: string;
+    readonly githubPending: string;
+    readonly githubError: string;
     readonly emailSeparator: string;
     readonly emailLabel: string;
     readonly emailHint: string;
@@ -56,17 +98,21 @@ export interface LoginCopy {
     readonly resendBlocked: string;
     readonly accountReadyNote: string;
     readonly accountUnavailableNote: string;
-    readonly unavailable: {
-      readonly outage: string;
-      readonly configuration: string;
-      readonly methods: string;
-      readonly disabled: string;
-    };
+    readonly unavailable: Readonly<Record<LoginUnavailableReason, string>>;
   };
   readonly accountValue: {
     readonly heading: string;
-    readonly items: readonly string[];
+    readonly lead: string;
+    readonly items: readonly LoginAccountValueItem[];
+    readonly records: string;
+    readonly control: string;
+    readonly availability: string;
     readonly localNote: string;
+  };
+  readonly publicAccess: {
+    readonly heading: string;
+    readonly lead: string;
+    readonly links: readonly LoginPublicLink[];
   };
   readonly turnstile: {
     readonly label: string;
@@ -96,13 +142,41 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       outage:
         "Der Anmeldedienst antwortet nicht. Öffentliche Inhalte funktionieren weiter.",
       available:
-        "Ein Lernkonto synchronisiert Kursfortschritt zwischen Geräten.",
+        "Ein Konto hält deinen Lernfaden, deine Werkzeuge und deinen eigenen KI-Zugang an einer Stelle zusammen.",
+      configuration:
+        "Diese Umgebung wartet noch auf die Freigabe von Server, EU-Region und Auftragsverarbeitung. Fortschritt bleibt in diesem Browser.",
       methodsUnavailable:
         "Für neue Anmeldungen ist noch keine Methode freigegeben. Ohne bestehende Sitzung bleibt der Fortschritt in diesem Browser.",
       accountUnavailable:
         "Das optionale Lernkonto ist hier nicht aktiviert. Fortschritt bleibt in diesem Browser.",
       records:
         "Die Teilnahmebestätigung beruht auf dem gespeicherten Abschlussstatus.",
+    },
+    unavailable: {
+      outage: {
+        status: "Dienst antwortet nicht",
+        headline: "Der Anmeldedienst ist gerade nicht erreichbar.",
+        body: "Die Anfrage an den Anmeldedienst ist fehlgeschlagen. Das sagt nichts über deinen Link oder dein Konto aus, und bestehende Sitzungen laufen weiter.",
+        next: "Lade die Seite in ein paar Minuten neu. Bis dahin bleiben alle öffentlichen Inhalte erreichbar.",
+      },
+      configuration: {
+        status: "Konfiguration offen",
+        headline: "Die Anmeldung ist noch nicht freigeschaltet.",
+        body: "Server, EU-Region und Auftragsverarbeitung sind für diese Umgebung noch nicht als geprüft hinterlegt. Ohne diese drei Belege bleibt das Konto absichtlich aus.",
+        next: "Hier ist nichts zu tun. Sobald die Belege eingetragen sind, schaltet der Server die Anmeldung von selbst frei.",
+      },
+      methods: {
+        status: "Keine Methode freigegeben",
+        headline: "Weder Google noch der Login-Link sind hier geprüft.",
+        body: "Das Konto selbst läuft, aber keine einzelne Anmeldemethode ist vollständig konfiguriert und verifiziert. Deshalb zeigt diese Seite kein Formular an, das ins Leere liefe.",
+        next: "Eine bestehende Sitzung bleibt gültig. Neue Anmeldungen sind erst nach der Freigabe einer Methode möglich.",
+      },
+      disabled: {
+        status: "Hier nicht eingerichtet",
+        headline: "Diese Umgebung läuft ohne Konto.",
+        body: "Es gibt hier keinen Anmeldedienst, an den sich diese Seite wenden könnte. Das ist kein Fehler, sondern die Konfiguration dieser Installation.",
+        next: "Bücher, Demos, KI-Check und die technischen Kurse bleiben vollständig offen. Dein Fortschritt liegt so lange in diesem Browser.",
+      },
     },
     reason: {
       accountUnavailable:
@@ -143,6 +217,10 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       googlePending: "Google wird geöffnet…",
       googleError:
         "Die Google-Anmeldung konnte nicht gestartet werden. Versuche es später erneut.",
+      github: "Mit GitHub anmelden",
+      githubPending: "GitHub wird geöffnet…",
+      githubError:
+        "Die GitHub-Anmeldung konnte nicht gestartet werden. Versuche es später erneut.",
       emailSeparator: "oder per E-Mail",
       emailLabel: "E-Mail-Adresse",
       emailHint:
@@ -158,7 +236,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       resendBlocked:
         "Ein Login-Link wurde gerade verschickt. Warte, bevor du einen weiteren anforderst.",
       accountReadyNote:
-        "Das Lernkonto speichert Kursfortschritt und Abschlussstatus. Die meisten Inhalte und Downloads bleiben öffentlich; vier Grundlagenkurse benötigen ein Konto.",
+        "Kein Passwort. Google oder ein einmaliger Link, mehr braucht das Konto nicht.",
       accountUnavailableNote:
         "Die meisten Kurse, Bücher, Demos und Downloads bleiben ohne Konto zugänglich.",
       unavailable: {
@@ -171,14 +249,56 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       },
     },
     accountValue: {
-      heading: "Was ein Lernkonto tut",
+      heading: "Was ein Konto dazugibt",
+      lead: "Drei Dinge, die ohne Anmeldung nicht gehen. Alles andere auf dieser Plattform bleibt offen.",
       items: [
-        "Kursfortschritt wird geräteübergreifend synchronisiert.",
-        "Erreichte Kursnachweise und behandelte Lernergebnisse bleiben abrufbar.",
-        "Daten lassen sich jederzeit exportieren, zurücksetzen oder löschen.",
+        {
+          title: "Ein Lernfaden über alle Geräte",
+          body: "Dein Kursstand liegt im Konto statt in einem einzelnen Browser. Du machst am Laptop dort weiter, wo du am Handy aufgehört hast, und siehst zuerst den nächsten Schritt.",
+        },
+        {
+          title: "Deine Werkzeuge mit deinen Dokumenten",
+          body: "Werkzeuge wie die Lebenslauf-Engine öffnen sich mit deinen eigenen Dokumenten, statt jedes Mal bei einer leeren Seite anzufangen.",
+        },
+        {
+          title: "Deine eigene KI verbunden",
+          body: "Du verbindest deinen eigenen Assistenten mit deinem Konto, gibst ihm genau den Zugriff, den du willst, und nimmst ihn genauso wieder weg.",
+        },
       ],
+      records:
+        "Abgeschlossene Kurse ergeben eine Teilnahmebestätigung, die abrufbar bleibt.",
+      control:
+        "Exportieren, zurücksetzen, löschen: jederzeit und ohne Rückfrage.",
+      availability:
+        "Werkzeuge und KI-Zugang erscheinen, sobald dieser Server sie konfiguriert hat. Der Lernfaden arbeitet ab der ersten Anmeldung.",
       localNote:
         "Ohne Konto bleibt dein Fortschritt in diesem Browser und wird beim Anmelden nicht übernommen. Ein Konto ist für keinen Kurs Voraussetzung.",
+    },
+    publicAccess: {
+      heading: "Ohne Konto offen",
+      lead: "Das hier braucht keine Anmeldung, heute nicht und später nicht.",
+      links: [
+        {
+          path: "/kurse",
+          label: "Kurse",
+          note: "Lernpfade und technische Kurse, frei lesbar.",
+        },
+        {
+          path: "/buecher",
+          label: "Bücher",
+          note: "Vollständige Bände im Browser, mit Download.",
+        },
+        {
+          path: "/demos",
+          label: "Demos",
+          note: "Laufende Beispiele zum Ausprobieren.",
+        },
+        {
+          path: "/ki-check",
+          label: "KI-Check",
+          note: "Kurzer Selbsttest, wo du gerade stehst.",
+        },
+      ],
     },
     turnstile: {
       label: "Sicherheitsprüfung",
@@ -207,13 +327,42 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Books, demos, the AI check, and technical courses are available without signing in.",
       outage:
         "The authentication service is not responding. Public content continues to work.",
-      available: "An account syncs course progress between devices.",
+      available:
+        "An account holds your learning thread, your tools, and your own AI connection in one place.",
+      configuration:
+        "This environment is still waiting on the server, EU region, and data-processing clearances. Progress remains in this browser.",
       methodsUnavailable:
         "No sign-in method is approved yet. Without an existing session, progress remains in this browser.",
       accountUnavailable:
         "The optional learning account is disabled here. Progress remains in this browser.",
       records:
         "The certificate of participation rests on the stored completion status.",
+    },
+    unavailable: {
+      outage: {
+        status: "Service not responding",
+        headline: "The authentication service cannot be reached.",
+        body: "The request to the authentication service failed. That says nothing about your link or your account, and existing sessions keep running.",
+        next: "Reload this page in a few minutes. Until then every public part of the platform stays reachable.",
+      },
+      configuration: {
+        status: "Configuration pending",
+        headline: "Sign-in has not been cleared yet.",
+        body: "The server, EU region, and data-processing clearances are not recorded for this environment. Without those three, the account stays off on purpose.",
+        next: "Nothing to do here. Once the clearances are recorded, the server enables sign-in by itself.",
+      },
+      methods: {
+        status: "No method approved",
+        headline: "Neither Google nor the email link is verified here.",
+        body: "The account runtime itself is up, but no single sign-in method is fully configured and verified. That is why this page shows no form that would lead nowhere.",
+        next: "An existing session stays valid. New sign-ins become possible once a method is approved.",
+      },
+      disabled: {
+        status: "Not set up here",
+        headline: "This deployment runs without accounts.",
+        body: "There is no authentication service for this page to talk to. That is the configuration of this installation, not a failure.",
+        next: "Books, demos, the AI check, and the technical courses stay fully open. Your progress lives in this browser meanwhile.",
+      },
     },
     reason: {
       accountUnavailable:
@@ -251,6 +400,9 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       google: "Sign in with Google",
       googlePending: "Opening Google…",
       googleError: "Google sign-in could not be started. Try again later.",
+      github: "Sign in with GitHub",
+      githubPending: "Opening GitHub…",
+      githubError: "GitHub sign-in could not be started. Try again later.",
       emailSeparator: "or use email",
       emailLabel: "Email address",
       emailHint: "You will receive a single-use link for this browser.",
@@ -264,7 +416,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       resendBlocked:
         "A sign-in link was just sent. Wait before requesting another.",
       accountReadyNote:
-        "The account stores course progress and completion status. Most content and downloads remain public; four foundation courses require an account.",
+        "No password. Google or a single-use link is all the account needs.",
       accountUnavailableNote:
         "Most courses, books, demos, and downloads remain available without an account.",
       unavailable: {
@@ -277,14 +429,55 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       },
     },
     accountValue: {
-      heading: "What a learning account does",
+      heading: "What an account adds",
+      lead: "Three things that need a sign-in. Everything else on this platform stays open.",
       items: [
-        "Course progress synchronises across your devices.",
-        "Earned course records and covered outcomes stay retrievable.",
-        "Data can be exported, reset, or deleted at any time.",
+        {
+          title: "One learning thread across devices",
+          body: "Your course position lives in the account instead of one browser. Continue on the laptop where the phone left off, with the next step shown first.",
+        },
+        {
+          title: "Your tools with your documents",
+          body: "Tools such as the CV engine open with your own documents instead of starting from a blank page every time.",
+        },
+        {
+          title: "Your own AI connected",
+          body: "Connect your own assistant to the account, grant it exactly the access you want, and take that access away again just as easily.",
+        },
       ],
+      records:
+        "Finished courses produce a certificate of participation that stays retrievable.",
+      control: "Export, reset, delete: any time and without asking.",
+      availability:
+        "Tools and the AI connection appear once this server has them configured. The learning thread works from the first sign-in.",
       localNote:
         "Without an account your progress stays in this browser and is not carried over when you sign in. No course requires an account.",
+    },
+    publicAccess: {
+      heading: "Open without an account",
+      lead: "None of this needs a sign-in, today or later.",
+      links: [
+        {
+          path: "/kurse",
+          label: "Courses",
+          note: "Learning paths and technical courses, free to read.",
+        },
+        {
+          path: "/buecher",
+          label: "Books",
+          note: "Complete volumes in the browser, with downloads.",
+        },
+        {
+          path: "/demos",
+          label: "Demos",
+          note: "Running examples you can try out.",
+        },
+        {
+          path: "/ki-check",
+          label: "AI check",
+          note: "A short assessment of where you stand.",
+        },
+      ],
     },
     turnstile: {
       label: "Security check",

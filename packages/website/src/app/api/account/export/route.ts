@@ -4,14 +4,20 @@ import { isLocale, localizeHref, type Locale } from "@/lib/i18n/locale";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { reportApiError } from "@/lib/observability/api-error";
 import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
+import { isCvEngineHostedReady } from "@/lib/provider-readiness";
 import {
   consumeRateLimit,
   hashedAuthenticatedRateLimitKey,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
 import { tryCreateServiceClient } from "@/lib/supabase/server";
+import {
+  fetchOwnedRowsPage,
+  streamOwnedRowFragments,
+  type OwnedRowsPage,
+  type OwnedRowsSource,
+} from "./owned-rows";
 
-const EXPORT_PAGE_SIZE = 1_000;
 const EXPORT_RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 const EXPORT_USER_RATE_LIMIT_MAX = 10;
 const EXPORT_CLIENT_RATE_LIMIT_MAX = 100;
@@ -125,91 +131,66 @@ async function readBoundedRequestText(request: Request): Promise<string> {
   }
 }
 
-type AssessmentTable = "assessment_runs" | "assessment_answers";
+/**
+ * Every table this account reads, in the order the exported document lists it.
+ *
+ * A DSGVO export that quietly omits a table is indistinguishable from an
+ * account that never stored anything there, so each surface the signed-in
+ * account reads gets a section here. `documents` belongs to the hosted
+ * cv-engine and only exists where `isCvEngineHostedReady()` is true; in every
+ * other deployment its section is marked `not_enabled` instead of dropped.
+ */
+const ASSESSMENT_RUNS: OwnedRowsSource = {
+  table: "assessment_runs",
+  orderColumns: ["started_at", "id"],
+  reportStep: "assessment-read",
+};
+const ASSESSMENT_ANSWERS: OwnedRowsSource = {
+  table: "assessment_answers",
+  orderColumns: ["answered_at", "id"],
+  reportStep: "assessment-read",
+};
+const CV_ENGINE_DOCUMENTS: OwnedRowsSource = {
+  table: "documents",
+  orderColumns: ["updated_at", "id"],
+  reportStep: "supabase-read",
+};
 
-interface AssessmentPage {
-  readonly rows: readonly Record<string, unknown>[];
-  readonly expectedCount: number;
+/**
+ * What happened to one section of the exported document.
+ *
+ * An empty JSON array cannot say on its own whether the learner stored
+ * nothing or whether the read failed. The manifest answers that for every
+ * section, which is why a failing table is marked here instead of silently
+ * exported as `[]`.
+ *
+ * - `complete`: every row of that table is in this file.
+ * - `incomplete`: the read failed part-way; the rows already written are kept.
+ * - `unavailable`: the table could not be read at all; `[]` is not evidence.
+ * - `not_attempted`: skipped because an earlier section failed first.
+ * - `not_enabled`: the capability behind the table is off in this deployment,
+ *   so the account holds no rows there.
+ * - `derived_from_progress`: computed from `progress`, never stored as rows.
+ */
+type ExportSectionStatus =
+  | "complete"
+  | "incomplete"
+  | "unavailable"
+  | "not_attempted"
+  | "not_enabled"
+  | "derived_from_progress";
+
+interface ExportSection {
+  readonly name: string;
+  readonly status: ExportSectionStatus;
+  readonly error?: string;
 }
 
-async function fetchAssessmentPage(
-  client: SupabaseClient,
-  table: AssessmentTable,
-  userId: string,
-  timestampColumn: "started_at" | "answered_at",
-  from: number,
-  expectedCount: number | null,
-): Promise<AssessmentPage> {
-  const { data, error, count } = await client
-    .from(table)
-    .select("*", { count: "exact" })
-    .eq("user_id", userId)
-    .order(timestampColumn, { ascending: true })
-    .order("id", { ascending: true })
-    .range(from, from + EXPORT_PAGE_SIZE - 1);
-
-  if (error) throw error;
-  if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0) {
-    throw new Error(`Invalid ${table} export count`);
-  }
-  if (expectedCount !== null && count !== expectedCount) {
-    throw new Error(`Changed ${table} export count`);
-  }
-
-  const rows = data ?? [];
-  if (
-    !Array.isArray(rows) ||
-    rows.some((row) => typeof row !== "object" || row === null)
-  ) {
-    throw new Error(`Invalid ${table} export page`);
-  }
-  if (rows.length > EXPORT_PAGE_SIZE || from + rows.length > count) {
-    throw new Error(`Oversized ${table} export page`);
-  }
-  if (rows.length === 0 && from < count) {
-    throw new Error(`Incomplete ${table} export`);
-  }
-
-  return {
-    rows: rows as Record<string, unknown>[],
-    expectedCount: count,
-  };
-}
-
-async function* streamAssessmentRows(
-  client: SupabaseClient,
-  table: AssessmentTable,
-  userId: string,
-  timestampColumn: "started_at" | "answered_at",
-  firstPage: AssessmentPage,
-): AsyncGenerator<string, void, undefined> {
-  let offset = 0;
-  let page = firstPage;
-  let wroteRow = false;
-
-  while (offset < page.expectedCount) {
-    for (const row of page.rows) {
-      const serialized = JSON.stringify(row);
-      if (serialized === undefined) {
-        throw new Error(`Invalid ${table} export row`);
-      }
-      yield `${wroteRow ? "," : ""}\n    ${serialized}`;
-      wroteRow = true;
-    }
-
-    offset += page.rows.length;
-    if (offset < page.expectedCount) {
-      page = await fetchAssessmentPage(
-        client,
-        table,
-        userId,
-        timestampColumn,
-        offset,
-        page.expectedCount,
-      );
-    }
-  }
-}
+const SECTION_STATUSES_WITHOUT_MISSING_DATA: readonly ExportSectionStatus[] = [
+  "complete",
+  "not_enabled",
+  "derived_from_progress",
+];
 
 function serializeJsonValue(value: unknown): string {
   const serialized = JSON.stringify(value);
@@ -249,11 +230,11 @@ function buildExportPrefix({
   ].join("\n");
 }
 
-function reportStreamFailure(error: unknown): void {
+function reportStreamFailure(error: unknown, step: string): void {
   try {
     reportApiError({
       route: "/api/account/export",
-      step: "assessment-read",
+      step,
       error,
     });
   } catch {
@@ -261,49 +242,141 @@ function reportStreamFailure(error: unknown): void {
   }
 }
 
+function serializeSections(sections: readonly ExportSection[]): string {
+  return [
+    "[",
+    sections
+      .map((section) => `    ${serializeJsonValue(section)}`)
+      .join(",\n"),
+    "  ]",
+  ].join("\n");
+}
+
+/**
+ * Stream one owned table as JSON array members and report how it went.
+ *
+ * `firstPage` is supplied for tables whose first page was already read before
+ * the response started, so a total failure there could still answer with a
+ * clean HTTP error. Pass `null` for a table that must never abort the export:
+ * its first read happens here, and a failure becomes a marked section instead
+ * of a lost export of everything else.
+ */
+async function* streamOwnedSection(
+  client: SupabaseClient,
+  source: OwnedRowsSource,
+  userId: string,
+  firstPage: OwnedRowsPage | null,
+): AsyncGenerator<string, ExportSection, undefined> {
+  let wroteRow = false;
+  try {
+    const page =
+      firstPage ?? (await fetchOwnedRowsPage(client, source, userId, 0, null));
+    for await (const fragment of streamOwnedRowFragments(
+      client,
+      source,
+      userId,
+      page,
+    )) {
+      wroteRow = true;
+      yield fragment;
+    }
+    return { name: source.table, status: "complete" };
+  } catch (error) {
+    reportStreamFailure(error, source.reportStep);
+    return {
+      name: source.table,
+      status: wroteRow ? "incomplete" : "unavailable",
+      error: `${source.table}_read_failed`,
+    };
+  }
+}
+
 async function* generateExportBody({
   prefix,
   serviceClient,
+  documentsClient,
   userId,
   firstRunsPage,
   firstAnswersPage,
 }: {
   readonly prefix: string;
   readonly serviceClient: SupabaseClient;
+  /** Cookie-bound RLS client, or null when the hosted tool is not enabled. */
+  readonly documentsClient: SupabaseClient | null;
   readonly userId: string;
-  readonly firstRunsPage: AssessmentPage;
-  readonly firstAnswersPage: AssessmentPage;
+  readonly firstRunsPage: OwnedRowsPage;
+  readonly firstAnswersPage: OwnedRowsPage;
 }): AsyncGenerator<string, void, undefined> {
   yield prefix;
 
-  let phase: AssessmentTable = "assessment_runs";
-  try {
-    yield* streamAssessmentRows(
+  // The progress read finished before the response started and answers 500 on
+  // failure, so it is always complete by the time this document exists.
+  let sections: readonly ExportSection[] = [
+    { name: "user_course_progress", status: "complete" },
+  ];
+
+  const runs = yield* streamOwnedSection(
+    serviceClient,
+    ASSESSMENT_RUNS,
+    userId,
+    firstRunsPage,
+  );
+  sections = [...sections, runs];
+
+  yield '\n  ],\n  "assessment_answers": [';
+  // A failed table stops the remaining reads: the export is already known to
+  // be incomplete, and each skipped section says so rather than closing as an
+  // empty array that reads like "nothing stored".
+  let answers: ExportSection = {
+    name: ASSESSMENT_ANSWERS.table,
+    status: "not_attempted",
+    error: "earlier_section_failed",
+  };
+  if (runs.status === "complete") {
+    answers = yield* streamOwnedSection(
       serviceClient,
-      "assessment_runs",
+      ASSESSMENT_ANSWERS,
       userId,
-      "started_at",
-      firstRunsPage,
-    );
-    phase = "assessment_answers";
-    yield '\n  ],\n  "assessment_answers": [';
-    yield* streamAssessmentRows(
-      serviceClient,
-      "assessment_answers",
-      userId,
-      "answered_at",
       firstAnswersPage,
     );
-    yield '\n  ],\n  "certificates": [],\n  "export_complete": true\n}\n';
-  } catch (error) {
-    reportStreamFailure(error);
-    if (phase === "assessment_runs") {
-      yield '\n  ],\n  "assessment_answers": [],';
-    } else {
-      yield "\n  ],";
-    }
-    yield '\n  "certificates": [],\n  "export_error": "export_failed",\n  "export_complete": false\n}\n';
   }
+  sections = [...sections, answers];
+
+  // Hosted cv-engine documents are read through the cookie-bound client, so
+  // row-level security decides ownership for a table this project does not
+  // own. A missing or renamed column can then only fail the read, never widen
+  // it. The table lives outside this project's migrations, so a read failure
+  // marks its section and leaves the rest of the export intact.
+  yield '\n  ],\n  "documents": [';
+  let documents: ExportSection = { name: CV_ENGINE_DOCUMENTS.table, status: "not_enabled" };
+  if (documentsClient && answers.status !== "complete") {
+    documents = {
+      name: CV_ENGINE_DOCUMENTS.table,
+      status: "not_attempted",
+      error: "earlier_section_failed",
+    };
+  } else if (documentsClient) {
+    documents = yield* streamOwnedSection(
+      documentsClient,
+      CV_ENGINE_DOCUMENTS,
+      userId,
+      null,
+    );
+  }
+  sections = [
+    ...sections,
+    documents,
+    { name: "certificates", status: "derived_from_progress" },
+  ];
+
+  const complete = sections.every((section) =>
+    SECTION_STATUSES_WITHOUT_MISSING_DATA.includes(section.status),
+  );
+  yield `\n  ],\n  "certificates": [],\n  "sections": ${serializeSections(sections)},\n`;
+  if (!complete) {
+    yield '  "export_error": "export_failed",\n';
+  }
+  yield `  "export_complete": ${complete}\n}\n`;
 }
 
 function createJsonStream(
@@ -420,22 +493,8 @@ async function exportBoundAccount(
   let firstAnswersPage;
   try {
     [firstRunsPage, firstAnswersPage] = await Promise.all([
-      fetchAssessmentPage(
-        serviceClient,
-        "assessment_runs",
-        user.id,
-        "started_at",
-        0,
-        null,
-      ),
-      fetchAssessmentPage(
-        serviceClient,
-        "assessment_answers",
-        user.id,
-        "answered_at",
-        0,
-        null,
-      ),
+      fetchOwnedRowsPage(serviceClient, ASSESSMENT_RUNS, user.id, 0, null),
+      fetchOwnedRowsPage(serviceClient, ASSESSMENT_ANSWERS, user.id, 0, null),
     ]);
   } catch (error) {
     reportApiError({
@@ -471,6 +530,7 @@ async function exportBoundAccount(
   const body = generateExportBody({
     prefix,
     serviceClient,
+    documentsClient: isCvEngineHostedReady() ? supabase : null,
     userId: user.id,
     firstRunsPage,
     firstAnswersPage,

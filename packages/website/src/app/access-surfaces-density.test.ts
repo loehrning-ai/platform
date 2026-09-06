@@ -2,8 +2,21 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
+// The account page is a shell around its regions now, so the flat-density,
+// no-decorative-lift and 12px-minimum rules have to see the region components
+// and the one client island too. Watching only the shell would leave almost
+// all of the account markup uncovered.
 const SURFACES = [
   "konto/page.tsx",
+  "konto/import-progress-island.tsx",
+  "konto/sections/weiterlernen.tsx",
+  "konto/sections/meine-kurse.tsx",
+  "konto/sections/course-card.tsx",
+  "konto/sections/werkzeuge.tsx",
+  "konto/sections/deine-ki.tsx",
+  "konto/sections/teilnahmebestaetigungen.tsx",
+  "konto/sections/verwalten.tsx",
+  "konto/sections/copy-value-button.tsx",
   "login/page.tsx",
   "login/login-form.tsx",
   "feedback/page.tsx",

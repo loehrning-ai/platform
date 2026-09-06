@@ -152,6 +152,8 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
     name.startsWith("AI_NATIVE_PRACTICE_") ||
+    name.startsWith("CV_ENGINE_") ||
+    name === "MCP_SERVER_ENABLED" ||
     name === "NEXT_PUBLIC_SITE_URL" ||
     name === "NEXT_PUBLIC_APP_URL" ||
     name === "VERCEL" ||
@@ -216,10 +218,14 @@ const SUPABASE_MAGIC_LINK_VARIABLES = [
 const SUPABASE_GOOGLE_OAUTH_VARIABLES = [
   "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
 ];
+const SUPABASE_GITHUB_OAUTH_VARIABLES = [
+  "SUPABASE_GITHUB_OAUTH_CONFIRMED_AT",
+];
 const SUPABASE_PROVIDER_VARIABLES = [
   ...SUPABASE_ACCOUNT_VARIABLES,
   ...SUPABASE_MAGIC_LINK_VARIABLES,
   ...SUPABASE_GOOGLE_OAUTH_VARIABLES,
+  ...SUPABASE_GITHUB_OAUTH_VARIABLES,
 ];
 const accountSupabaseConfigured = SUPABASE_ACCOUNT_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
@@ -228,6 +234,9 @@ const magicLinkConfigured = SUPABASE_MAGIC_LINK_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
 );
 const googleOAuthConfigured = SUPABASE_GOOGLE_OAUTH_VARIABLES.some(
+  hasNonEmptyEnvironmentValue,
+);
+const githubOAuthConfigured = SUPABASE_GITHUB_OAUTH_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
 );
 const configuredSupabaseVariables = SUPABASE_PROVIDER_VARIABLES.filter(
@@ -267,6 +276,11 @@ if (magicLinkConfigured && !accountSupabaseConfigured) {
 if (googleOAuthConfigured && !accountSupabaseConfigured) {
   markError(
     "Google OAuth is attested without Supabase Auth. Remove SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT or provide the complete account configuration.",
+  );
+}
+if (githubOAuthConfigured && !accountSupabaseConfigured) {
+  markError(
+    "GitHub OAuth is attested without Supabase Auth. Remove SUPABASE_GITHUB_OAUTH_CONFIRMED_AT or provide the complete account configuration.",
   );
 }
 
@@ -426,7 +440,8 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
     process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT ||
-    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT
+    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT ||
+    process.env.SUPABASE_GITHUB_OAUTH_CONFIRMED_AT
   ) {
     markError(
       "The live-auth-e2e build accepts only the public URL, publishable key, and public Turnstile test site key; privileged, deployment, region, DPA, and anon-alias variables must be absent.",
@@ -495,6 +510,12 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     requireAttestation(
       "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
       "Supabase Google OAuth",
+    );
+  }
+  if (githubOAuthConfigured) {
+    requireAttestation(
+      "SUPABASE_GITHUB_OAUTH_CONFIRMED_AT",
+      "Supabase GitHub OAuth",
     );
   }
 } else if (liveAuthE2EProfile) {
@@ -849,6 +870,57 @@ if (
 ) {
   markError(
     "Course terminal policy, budget, or image metadata is present while COURSE_TERMINAL_ENABLED is not true. Remove the orphaned values or explicitly enable the terminal.",
+  );
+}
+
+// Account-connected tools. The hosted cv-engine and the platform's own MCP
+// server are separate opt-in capabilities layered on the learning account.
+// Each stays off unless its whole group is present: an origin the deployer
+// actually controls, a dated confirmation that the deployment was reviewed and
+// reached, and the account backend that stores the documents, grants, and
+// audit trail. Runtime readiness mirrors these groups in
+// src/lib/provider-readiness.ts, so a half-configured tool is never advertised.
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+const cvEngineHostedUrl = process.env.CV_ENGINE_HOSTED_URL;
+const cvEngineHostedAttestation = process.env.CV_ENGINE_HOSTED_CONFIRMED_AT;
+
+if (cvEngineHostedUrl) {
+  const cvEngineOrigin = validatedHttpsOrigin(
+    "CV_ENGINE_HOSTED_URL",
+    cvEngineHostedUrl,
+  );
+  if (cvEngineOrigin) {
+    const { hostname, port } = new URL(cvEngineOrigin);
+    if (port || !HOSTED_TOOL_HOSTNAME_PATTERN.test(hostname)) {
+      markError(
+        "CV_ENGINE_HOSTED_URL must be an exact loehrning.ai HTTPS origin on the default port, such as https://cv.loehrning.ai. Third-party hosts require a code-reviewed allowlist.",
+      );
+    }
+  }
+  if (!supabaseConfigured) {
+    markError(
+      "CV_ENGINE_HOSTED_URL requires the complete Supabase configuration because the hosted tool keeps learner documents inside the account boundary.",
+    );
+  }
+  requireAttestation("CV_ENGINE_HOSTED_CONFIRMED_AT", "Hosted cv-engine");
+} else if (cvEngineHostedAttestation) {
+  markError(
+    "CV_ENGINE_HOSTED_CONFIRMED_AT is present while CV_ENGINE_HOSTED_URL is absent. Remove the orphaned attestation or configure the hosted cv-engine origin.",
+  );
+}
+
+const mcpServerEnabled = process.env.MCP_SERVER_ENABLED;
+if (
+  mcpServerEnabled &&
+  mcpServerEnabled !== "true" &&
+  mcpServerEnabled !== "false"
+) {
+  markError("MCP_SERVER_ENABLED must be exactly true or false when set.");
+}
+if (mcpServerEnabled === "true" && !supabaseConfigured) {
+  markError(
+    "MCP_SERVER_ENABLED=true requires the complete Supabase configuration because agent grants, tokens, and the audit trail live in the account backend.",
   );
 }
 

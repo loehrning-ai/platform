@@ -31,6 +31,7 @@ const SAFE_ROUTES = new Set([
   "/api/buecher/[slug]/download.pdf",
   "/api/feedback",
   "/api/progress",
+  "/api/progress/import",
   "/auth/logout",
   "/konto",
 ]);

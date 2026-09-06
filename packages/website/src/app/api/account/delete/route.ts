@@ -13,6 +13,7 @@ import {
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
 import { hasRecentSessionAuthentication } from "./recent-authentication";
+import { runPreDeleteSteps } from "./pre-delete";
 
 // Account deletion is irreversible and rare: 3 attempts per client per 24h.
 // Uses the durable, cross-region limiter (Supabase RPC with in-memory
@@ -293,6 +294,30 @@ export async function DELETE(request: Request) {
       error,
     });
     return privateJson({ error: "admin_client_unavailable" }, { status: 503 });
+  }
+
+  // The pre-delete window. Every step that must touch account-owned data
+  // while the account still exists runs here, before the session revocation
+  // below and before the authoritative deleteUser() call further down. That
+  // call removes the only owner reference the platform has, so work that
+  // misses this window can never be repeated: new work belongs in
+  // PRE_DELETE_STEPS (see ./pre-delete.ts), never after the deletion.
+  // A failing step is fail-closed on purpose - the account, its sessions and
+  // all of its rows stay exactly as they were, and the caller may retry.
+  const preDelete = await runPreDeleteSteps({ adminClient, userId });
+  if (!preDelete.ok) {
+    reportApiError({
+      route: "/api/account/delete",
+      step: "account-delete",
+      error: new Error(
+        `Pre-delete step failed: ${preDelete.failedStep}`,
+        { cause: preDelete.error },
+      ),
+    });
+    return privateJson(
+      { error: "pre_delete_incomplete" },
+      { status: 503 },
+    );
   }
 
   // Best-effort revoke every refresh session before deleting the identity.

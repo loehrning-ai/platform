@@ -11,6 +11,7 @@ const KEYS = [
   "SUPABASE_REGION",
   "SUPABASE_DPA_CONFIRMED_AT",
   "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
+  "SUPABASE_GITHUB_OAUTH_CONFIRMED_AT",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
@@ -33,6 +34,9 @@ const KEYS = [
   "COURSE_TERMINAL_DAILY_RUN_BUDGET",
   "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
   "COURSE_TERMINAL_SANDBOX_IMAGE",
+  "CV_ENGINE_HOSTED_URL",
+  "CV_ENGINE_HOSTED_CONFIRMED_AT",
+  "MCP_SERVER_ENABLED",
   "VERCEL",
   "VERCEL_DPA_CONFIRMED_AT",
   "VERCEL_OIDC_TOKEN",
@@ -69,6 +73,7 @@ describe("getRuntimeFeatures", () => {
       account: false,
       magicLink: false,
       google: false,
+      github: false,
       turnstileSiteKey: null,
       feedback: false,
       supabase: false,
@@ -81,6 +86,8 @@ describe("getRuntimeFeatures", () => {
       geminiRetentionDays: null,
       practiceModels: [],
       courseTerminal: false,
+      cvEngineHosted: false,
+      agentAccess: false,
       vercelHosting: false,
       vercelTelemetry: false,
     });
@@ -249,5 +256,36 @@ describe("getRuntimeFeatures", () => {
 
     process.env.VERCEL_OIDC_TOKEN = "";
     expect(getRuntimeFeatures().courseTerminal).toBe(false);
+  });
+
+  it("reports the account-connected capabilities only behind their own gates", () => {
+    process.env.SUPABASE_GITHUB_OAUTH_CONFIRMED_AT = "2026-08-08";
+    process.env.CV_ENGINE_HOSTED_URL = "https://cv.loehrning.ai";
+    process.env.CV_ENGINE_HOSTED_CONFIRMED_AT = "2026-08-20";
+    process.env.MCP_SERVER_ENABLED = "true";
+    const withoutAccount = getRuntimeFeatures();
+    expect(withoutAccount.github).toBe(false);
+    expect(withoutAccount.cvEngineHosted).toBe(false);
+    expect(withoutAccount.agentAccess).toBe(false);
+
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
+    process.env.SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env[SERVICE_CREDENTIAL_ENV_KEY] = "fake-service-key";
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+    process.env.SUPABASE_REGION = "eu-central-1";
+    process.env.SUPABASE_DPA_CONFIRMED_AT = "2026-07-01";
+    const withAccount = getRuntimeFeatures();
+    expect(withAccount.github).toBe(true);
+    expect(withAccount.cvEngineHosted).toBe(true);
+    expect(withAccount.agentAccess).toBe(true);
+    expect(withAccount.google).toBe(false);
+
+    process.env.CV_ENGINE_HOSTED_URL = "https://cv.example.com";
+    process.env.MCP_SERVER_ENABLED = "1";
+    const rejected = getRuntimeFeatures();
+    expect(rejected.cvEngineHosted).toBe(false);
+    expect(rejected.agentAccess).toBe(false);
+    expect(rejected.github).toBe(true);
   });
 });

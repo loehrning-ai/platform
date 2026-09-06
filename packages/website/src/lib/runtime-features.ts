@@ -4,7 +4,10 @@ import {
   geminiRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountRuntimeReady,
+  isAgentAccessReady,
   isCourseTerminalRuntimeReady,
+  isCvEngineHostedReady,
+  isGithubOAuthRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
   isPracticeModelRuntimeReady,
@@ -15,6 +18,7 @@ export interface RuntimeFeatures {
   readonly account: boolean;
   readonly magicLink: boolean;
   readonly google: boolean;
+  readonly github: boolean;
   readonly turnstileSiteKey: string | null;
   readonly feedback: boolean;
   readonly supabase: boolean;
@@ -30,6 +34,8 @@ export interface RuntimeFeatures {
     | "google/gemini-2.5-flash-lite"
   )[];
   readonly courseTerminal: boolean;
+  readonly cvEngineHosted: boolean;
+  readonly agentAccess: boolean;
   readonly vercelHosting: boolean;
   readonly vercelTelemetry: boolean;
 }
@@ -56,6 +62,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const accountReady = isAccountRuntimeReady();
   const magicLinkReady = isMagicLinkRuntimeReady();
   const googleReady = isGoogleOAuthRuntimeReady();
+  const githubReady = isGithubOAuthRuntimeReady();
   const anthropicReady = isPracticeModelRuntimeReady(
     "anthropic/claude-haiku-4.5",
   );
@@ -71,6 +78,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     account: accountReady,
     magicLink: magicLinkReady,
     google: googleReady,
+    github: githubReady,
     turnstileSiteKey: magicLinkReady ? turnstileSiteKey() : null,
     feedback:
       serviceSupabase &&
@@ -87,6 +95,8 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     geminiRetentionDays: geminiRetention,
     practiceModels,
     courseTerminal: isCourseTerminalRuntimeReady(),
+    cvEngineHosted: isCvEngineHostedReady(),
+    agentAccess: isAgentAccessReady(),
     vercelHosting,
     vercelTelemetry:
       vercelHosting && process.env.VERCEL_TELEMETRY_ENABLED === "true",
