@@ -234,3 +234,61 @@ export function isCourseTerminalRuntimeReady(): boolean {
       hasCompleteSupabaseRuntimeConfig(),
   );
 }
+
+const HOSTED_TOOL_ORIGIN_MAX_LENGTH = 2048;
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+
+/**
+ * Exact HTTPS origin of the hosted cv-engine deployment.
+ *
+ * The value is an origin, never a URL with a path, query, fragment, port, or
+ * credentials: account surfaces link learners to it and a one-time sign-in
+ * token is handed to whatever it resolves to, so an attacker-supplied or
+ * half-migrated value must not become a trusted destination. Only the
+ * project's own apex or a subdomain of loehrning.ai is accepted; anything else
+ * returns null and the hosted capability stays off.
+ */
+export function cvEngineHostedOrigin(): string | null {
+  const value = process.env.CV_ENGINE_HOSTED_URL;
+  if (
+    !value ||
+    value !== value.trim() ||
+    value.length > HOSTED_TOOL_ORIGIN_MAX_LENGTH
+  ) {
+    return null;
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return null;
+  }
+  if (
+    parsed.protocol !== "https:" ||
+    parsed.port !== "" ||
+    parsed.username !== "" ||
+    parsed.password !== "" ||
+    parsed.search !== "" ||
+    parsed.hash !== "" ||
+    (parsed.pathname !== "/" && parsed.pathname !== "") ||
+    !HOSTED_TOOL_HOSTNAME_PATTERN.test(parsed.hostname)
+  ) {
+    return null;
+  }
+  return parsed.origin;
+}
+
+/**
+ * The hosted cv-engine keeps learner documents inside the same EU account
+ * boundary as the rest of the platform, so it stays off until that boundary
+ * exists, its origin is a verified loehrning.ai HTTPS origin, and a dated
+ * confirmation records that the deployment was actually reviewed and reached.
+ */
+export function isCvEngineHostedReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      cvEngineHostedOrigin() !== null &&
+      isPastOrPresentIsoDate(process.env.CV_ENGINE_HOSTED_CONFIRMED_AT),
+  );
+}

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { detachCvEngineAccountArtifacts } from "@/lib/cv-engine/account-deletion";
+import { CvEngineSchemaProbeError } from "@/lib/cv-engine/errors";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { tryCreateServiceClient } from "@/lib/supabase/server";
 import {
   hasJsonContentType,
   readBoundedJson,
@@ -293,6 +296,54 @@ export async function DELETE(request: Request) {
       error,
     });
     return privateJson({ error: "admin_client_unavailable" }, { status: 503 });
+  }
+
+  // The hosted resume tool keeps its documents, its rendered PDF bookkeeping
+  // and its pending artefact cleanup in this same project, all cascading off
+  // auth.users. Deleting the identity first would take those rows with it and
+  // leave the rendered files behind unqueued and unreferenced, so the tool's
+  // own deletion transition runs first whenever its schema is present here.
+  // When it is not present there is nothing to coordinate and this is a no-op;
+  // when it is present and refuses, nothing is deleted at all.
+  //
+  // The transition is idempotent, so a deletion that fails after it ran and is
+  // retried finds an account already in transition and converges rather than
+  // stranding the learner between the two systems.
+  const cvEngineSchemaClient = tryCreateServiceClient();
+  if (!cvEngineSchemaClient) {
+    // Reaching this point means SUPABASE_URL or the service-role key is absent
+    // while the admin client was still constructible from the public URL. The
+    // presence of the tool's schema is then unknowable, and an unknowable
+    // answer must not become an uncoordinated deletion.
+    reportApiError({
+      route: "/api/account/delete",
+      step: "supabase-write",
+      error: new CvEngineSchemaProbeError(),
+    });
+    return privateJson(
+      { error: "cv_engine_cleanup_unavailable" },
+      { status: 503 },
+    );
+  }
+  const cvEngineOutcome = await detachCvEngineAccountArtifacts({
+    serviceClient: cvEngineSchemaClient,
+    // The learner's own verified session: the transition takes no arguments
+    // and reads auth.uid(), so only this client can identify the account.
+    ownerClient: authClient,
+  });
+  if (cvEngineOutcome.status === "failed") {
+    reportApiError({
+      route: "/api/account/delete",
+      step: "supabase-write",
+      error: cvEngineOutcome.error,
+      ...(cvEngineOutcome.providerCode
+        ? { extra: { code: cvEngineOutcome.providerCode } }
+        : {}),
+    });
+    return privateJson(
+      { error: "cv_engine_cleanup_unavailable" },
+      { status: 503 },
+    );
   }
 
   // Best-effort revoke every refresh session before deleting the identity.

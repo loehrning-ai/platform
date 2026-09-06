@@ -32,6 +32,15 @@ const {
   mockAuthServerClient: vi.fn<() => Promise<unknown>>(async () => null),
   mockServiceClient: vi.fn<() => unknown>(() => ({
     id: "service-client",
+    // Default: a project where the resume tool's migrations were never
+    // replayed, so its compatibility probe does not exist.
+    rpc: vi.fn(async () => ({
+      data: null,
+      error: {
+        code: "PGRST202",
+        message: "Could not find the function in the schema cache",
+      },
+    })),
   })),
   mockResetCourseProgressRow: vi.fn(),
   mockAdminClient: vi.fn<() => unknown>(() => {
@@ -108,6 +117,58 @@ function validDeleteAuthClient(claims = validClaims()) {
         error: null,
       })),
       signOut: vi.fn(async () => ({ error: null })),
+    },
+    // The learner's own session is what calls cv-engine's deletion
+    // transition: it takes no arguments and reads auth.uid(). The signature is
+    // spelled out because the caller reads an unknown envelope, so individual
+    // cases below have to be able to queue a refusal or a malformed row.
+    rpc: vi.fn<
+      (
+        fn: string,
+        args?: Record<string, unknown>,
+      ) => Promise<{ data: unknown; error: unknown }>
+    >(async () => ({
+      data: { status: "requested", requested_at: null, artifacts: [] },
+      error: null,
+    })),
+  };
+}
+
+const CV_ENGINE_DETACH_RPC = "request_account_deletion_with_artifact_detach";
+const CV_ENGINE_PROBE_RPC = "release_schema_contract";
+
+/** A shared project that does not carry the resume tool's schema. */
+function cvEngineAbsentServiceClient() {
+  return {
+    id: "service-client",
+    rpc: vi.fn(async () => ({
+      data: null,
+      error: {
+        code: "PGRST202",
+        message: "Could not find the function in the schema cache",
+      },
+    })),
+  };
+}
+
+/** A shared project that does carry it, with the transition callable or not. */
+function cvEngineServiceClient(executeOk: unknown = true) {
+  return {
+    id: "service-client",
+    rpc: vi.fn(async () => ({
+      data: [{ authenticated_rpc_execute_ok: executeOk }],
+      error: null,
+    })),
+  };
+}
+
+function workingAdminClient(deleteUser: ReturnType<typeof vi.fn>) {
+  return {
+    auth: {
+      admin: {
+        signOut: vi.fn(async () => ({ error: null })),
+        deleteUser,
+      },
     },
   };
 }
@@ -230,7 +291,7 @@ describe("account routes fail closed without a valid session", () => {
     mockAuthServerClient.mockReset();
     mockAuthServerClient.mockResolvedValue(validDeleteAuthClient());
     mockServiceClient.mockReset();
-    mockServiceClient.mockReturnValue({ id: "service-client" });
+    mockServiceClient.mockReturnValue(cvEngineAbsentServiceClient());
     mockResetCourseProgressRow.mockReset();
     mockResetCourseProgressRow.mockResolvedValue({
       ok: true,
@@ -541,6 +602,137 @@ describe("account routes fail closed without a valid session", () => {
       deleteUser.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
     );
     expect(localSignOut).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("DELETE proceeds untouched when the resume tool's schema is absent", async () => {
+    const authClient = validDeleteAuthClient();
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    const serviceClient = cvEngineAbsentServiceClient();
+    mockServiceClient.mockReturnValue(serviceClient);
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ deleted: true, ownerId: "user-1" });
+    expect(serviceClient.rpc).toHaveBeenCalledWith(CV_ENGINE_PROBE_RPC);
+    expect(authClient.rpc).not.toHaveBeenCalled();
+    expect(deleteUser).toHaveBeenCalledWith("user-1");
+  });
+
+  it("DELETE runs the resume tool's deletion transition before deleting the identity", async () => {
+    const authClient = validDeleteAuthClient();
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    mockServiceClient.mockReturnValue(cvEngineServiceClient(true));
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ deleted: true, ownerId: "user-1" });
+    // The transition takes no arguments and derives its owner from auth.uid(),
+    // so it has to run on the learner's own verified session.
+    expect(authClient.rpc).toHaveBeenCalledWith(CV_ENGINE_DETACH_RPC, {});
+    expect(authClient.rpc.mock.invocationCallOrder[0]).toBeLessThan(
+      deleteUser.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+    );
+  });
+
+  it("DELETE refuses with 503 and deletes nothing when the transition fails", async () => {
+    const authClient = validDeleteAuthClient();
+    authClient.rpc.mockResolvedValueOnce({
+      data: null,
+      error: {
+        code: "55000",
+        message: "account deletion is already being processed",
+      },
+    });
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    mockServiceClient.mockReturnValue(cvEngineServiceClient(true));
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      error: "cv_engine_cleanup_unavailable",
+    });
+    expect(res.headers.get("cache-control")).toBe("private, no-store");
+    expect(deleteUser).not.toHaveBeenCalled();
+    expect(mockedReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/account/delete",
+        step: "supabase-write",
+        error: expect.objectContaining({
+          name: "CvEngineDetachFailedError",
+        }),
+      }),
+    );
+  });
+
+  it("DELETE refuses with 503 when the transition returns unusable evidence", async () => {
+    const authClient = validDeleteAuthClient();
+    authClient.rpc.mockResolvedValueOnce({
+      data: { status: "denied", artifacts: [] },
+      error: null,
+    });
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    mockServiceClient.mockReturnValue(cvEngineServiceClient(true));
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      error: "cv_engine_cleanup_unavailable",
+    });
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it("DELETE refuses with 503 when the schema is present without a callable transition", async () => {
+    const authClient = validDeleteAuthClient();
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    mockServiceClient.mockReturnValue(cvEngineServiceClient(false));
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      error: "cv_engine_cleanup_unavailable",
+    });
+    expect(authClient.rpc).not.toHaveBeenCalled();
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it("DELETE refuses with 503 when the shared project cannot be reached at all", async () => {
+    const authClient = validDeleteAuthClient();
+    mockAuthServerClient.mockResolvedValueOnce(authClient);
+    mockServiceClient.mockReturnValue(null);
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce(workingAdminClient(deleteUser));
+
+    const res = await DELETE(deleteReq());
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      error: "cv_engine_cleanup_unavailable",
+    });
+    expect(deleteUser).not.toHaveBeenCalled();
+    expect(mockedReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/account/delete",
+        step: "supabase-write",
+        error: expect.objectContaining({
+          name: "CvEngineSchemaProbeError",
+        }),
+      }),
+    );
   });
 
   it("DELETE continues to the authoritative user deletion when global session revocation returns an error", async () => {
@@ -1176,8 +1368,11 @@ describe("account routes fail closed without a valid session", () => {
       resetCourse: "ki-fuehrerschein",
       resetAt: "2026-07-29T00:00:00.000Z",
     });
+    // Still the service client, not the cookie-bound one. The stub now also
+    // carries an rpc() for the delete route's schema probe, so the identity is
+    // asserted by its marker rather than by exact object equality.
     expect(mockResetCourseProgressRow).toHaveBeenCalledWith(
-      { id: "service-client" },
+      expect.objectContaining({ id: "service-client" }),
       "user-1",
       "ki-fuehrerschein",
     );

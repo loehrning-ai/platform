@@ -152,6 +152,7 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
     name.startsWith("AI_NATIVE_PRACTICE_") ||
+    name.startsWith("CV_ENGINE_") ||
     name === "NEXT_PUBLIC_SITE_URL" ||
     name === "NEXT_PUBLIC_APP_URL" ||
     name === "VERCEL" ||
@@ -849,6 +850,43 @@ if (
 ) {
   markError(
     "Course terminal policy, budget, or image metadata is present while COURSE_TERMINAL_ENABLED is not true. Remove the orphaned values or explicitly enable the terminal.",
+  );
+}
+
+// Hosted cv-engine. The resume editor runs outside this project, on a host we
+// operate, and the account page hands it a one-time sign-in token. It stays off
+// unless its whole group is present: an origin the deployer actually controls,
+// a dated confirmation that the deployment was reviewed and reached, and the
+// account backend that stores the documents. Runtime readiness mirrors this
+// group in src/lib/provider-readiness.ts, so a half-configured tool is never
+// advertised and never receives a token.
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+const cvEngineHostedUrl = process.env.CV_ENGINE_HOSTED_URL;
+const cvEngineHostedAttestation = process.env.CV_ENGINE_HOSTED_CONFIRMED_AT;
+
+if (cvEngineHostedUrl) {
+  const cvEngineOrigin = validatedHttpsOrigin(
+    "CV_ENGINE_HOSTED_URL",
+    cvEngineHostedUrl,
+  );
+  if (cvEngineOrigin) {
+    const { hostname, port } = new URL(cvEngineOrigin);
+    if (port || !HOSTED_TOOL_HOSTNAME_PATTERN.test(hostname)) {
+      markError(
+        "CV_ENGINE_HOSTED_URL must be an exact loehrning.ai HTTPS origin on the default port, such as https://cv.loehrning.ai. Third-party hosts require a code-reviewed allowlist.",
+      );
+    }
+  }
+  if (!supabaseConfigured) {
+    markError(
+      "CV_ENGINE_HOSTED_URL requires the complete Supabase configuration because the hosted tool keeps learner documents inside the account boundary.",
+    );
+  }
+  requireAttestation("CV_ENGINE_HOSTED_CONFIRMED_AT", "Hosted cv-engine");
+} else if (cvEngineHostedAttestation) {
+  markError(
+    "CV_ENGINE_HOSTED_CONFIRMED_AT is present while CV_ENGINE_HOSTED_URL is absent. Remove the orphaned attestation or configure the hosted cv-engine origin.",
   );
 }
 

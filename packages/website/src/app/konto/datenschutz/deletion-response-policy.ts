@@ -10,6 +10,13 @@ const DEFINITE_DELETE_FAILURES: Readonly<Record<string, number>> = {
   rate_limit_exceeded: 429,
   rate_limit_unavailable: 503,
   admin_client_unavailable: 503,
+  // The connected resume editor refused its own pre-delete cleanup
+  // (src/app/api/account/delete/route.ts). That answer is returned before
+  // any session is revoked and before deleteUser(), so the account
+  // provably still exists and a later retry is exactly right. Without
+  // this entry the page would read it as an indeterminate deletion and
+  // tell the learner not to try again, which is the opposite of the truth.
+  cv_engine_cleanup_unavailable: 503,
   delete_failed: 500,
 };
 

@@ -1,5 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
+import {
+  readFirstCvEngineDocumentPage,
+  streamCvEngineDocumentRows,
+  type CvEngineDocumentPage,
+} from "@/lib/cv-engine/documents";
 import { isLocale, localizeHref, type Locale } from "@/lib/i18n/locale";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { reportApiError } from "@/lib/observability/api-error";
@@ -211,6 +216,31 @@ async function* streamAssessmentRows(
   }
 }
 
+/**
+ * Serializes the resume tool's documents into the same array formatting the
+ * assessment tables use. The rows themselves are read under the learner's own
+ * session; this only turns them into JSON text.
+ */
+async function* streamCvEngineDocumentJson(
+  client: SupabaseClient,
+  userId: string,
+  firstPage: CvEngineDocumentPage,
+): AsyncGenerator<string, void, undefined> {
+  let wroteRow = false;
+  for await (const row of streamCvEngineDocumentRows(
+    client,
+    userId,
+    firstPage,
+  )) {
+    const serialized = JSON.stringify(row);
+    if (serialized === undefined) {
+      throw new Error("Invalid cv-engine document export row");
+    }
+    yield `${wroteRow ? "," : ""}\n    ${serialized}`;
+    wroteRow = true;
+  }
+}
+
 function serializeJsonValue(value: unknown): string {
   const serialized = JSON.stringify(value);
   if (serialized === undefined) {
@@ -261,22 +291,35 @@ function reportStreamFailure(error: unknown): void {
   }
 }
 
+type ExportPhase = AssessmentTable | "cv_engine_documents";
+
 async function* generateExportBody({
   prefix,
   serviceClient,
+  ownerClient,
   userId,
   firstRunsPage,
   firstAnswersPage,
+  firstCvEngineDocumentPage,
 }: {
   readonly prefix: string;
   readonly serviceClient: SupabaseClient;
+  readonly ownerClient: SupabaseClient;
   readonly userId: string;
   readonly firstRunsPage: AssessmentPage;
   readonly firstAnswersPage: AssessmentPage;
+  /** null when the resume tool's schema is not present in this project. */
+  readonly firstCvEngineDocumentPage: CvEngineDocumentPage | null;
 }): AsyncGenerator<string, void, undefined> {
   yield prefix;
 
-  let phase: AssessmentTable = "assessment_runs";
+  // An empty documents array means "no documents". This flag separates that
+  // from "this project does not host the resume tool at all", so the file
+  // never implies data was checked for where there was nothing to check.
+  const cvEngineAvailable = firstCvEngineDocumentPage !== null;
+  const cvEngineTail = `\n  "cv_engine_documents_available": ${cvEngineAvailable},`;
+
+  let phase: ExportPhase = "assessment_runs";
   try {
     yield* streamAssessmentRows(
       serviceClient,
@@ -294,15 +337,26 @@ async function* generateExportBody({
       "answered_at",
       firstAnswersPage,
     );
-    yield '\n  ],\n  "certificates": [],\n  "export_complete": true\n}\n';
+    phase = "cv_engine_documents";
+    yield '\n  ],\n  "cv_engine_documents": [';
+    if (firstCvEngineDocumentPage) {
+      yield* streamCvEngineDocumentJson(
+        ownerClient,
+        userId,
+        firstCvEngineDocumentPage,
+      );
+    }
+    yield `\n  ],${cvEngineTail}\n  "certificates": [],\n  "export_complete": true\n}\n`;
   } catch (error) {
     reportStreamFailure(error);
     if (phase === "assessment_runs") {
-      yield '\n  ],\n  "assessment_answers": [],';
+      yield '\n  ],\n  "assessment_answers": [],\n  "cv_engine_documents": [],';
+    } else if (phase === "assessment_answers") {
+      yield '\n  ],\n  "cv_engine_documents": [],';
     } else {
       yield "\n  ],";
     }
-    yield '\n  "certificates": [],\n  "export_error": "export_failed",\n  "export_complete": false\n}\n';
+    yield `${cvEngineTail}\n  "certificates": [],\n  "export_error": "export_failed",\n  "export_complete": false\n}\n`;
   }
 }
 
@@ -446,6 +500,27 @@ async function exportBoundAccount(
     return jsonError("export_failed", 500);
   }
 
+  // Documents written in the hosted resume tool live in this same project and
+  // are the learner's personal data, so a complete export has to carry them.
+  // They are read with the learner's own session, never the service role. A
+  // project without the tool's schema simply has no such store; a store that
+  // exists and cannot be read is a failure, exactly like the tables above.
+  const cvEngineDocuments = await readFirstCvEngineDocumentPage(
+    supabase,
+    user.id,
+  );
+  if (cvEngineDocuments.status === "failed") {
+    reportApiError({
+      route: "/api/account/export",
+      step: "supabase-read",
+      error: cvEngineDocuments.error,
+      ...(cvEngineDocuments.providerCode
+        ? { extra: { code: cvEngineDocuments.providerCode } }
+        : {}),
+    });
+    return jsonError("export_failed", 500);
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   const filename = `loehrning-export-${today}.json`;
   let prefix;
@@ -471,9 +546,12 @@ async function exportBoundAccount(
   const body = generateExportBody({
     prefix,
     serviceClient,
+    ownerClient: supabase,
     userId: user.id,
     firstRunsPage,
     firstAnswersPage,
+    firstCvEngineDocumentPage:
+      cvEngineDocuments.status === "ready" ? cvEngineDocuments.firstPage : null,
   });
 
   return new Response(createJsonStream(body), {

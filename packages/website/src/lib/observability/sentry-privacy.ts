@@ -72,6 +72,7 @@ const SAFE_ROUTES = new Set([
   "/api/progress",
   "/auth/logout",
   "/konto",
+  "/konto/werkzeuge/cv-engine/oeffnen",
 ]);
 const SAFE_STEPS = new Set([
   "unknown",
@@ -79,6 +80,7 @@ const SAFE_STEPS = new Set([
   "assessment-read",
   "auth-clear-session",
   "auth-create-client",
+  "auth-generate-link",
   "auth-get-session",
   "auth-get-user",
   "auth-revoke-sessions",

@@ -122,6 +122,30 @@ function queryResult(
   return builder;
 }
 
+/** PostgREST's answer in a project without the resume tool's schema. */
+const CV_ENGINE_TABLE_ABSENT = {
+  code: "PGRST205",
+  message: "Could not find the table 'public.documents' in the schema cache",
+};
+
+/**
+ * The cookie-bound client the export reads the learner's own rows with. Its
+ * only table is the resume tool's `documents`; progress comes from a mocked
+ * store. The default answer is the one a project without that tool gives.
+ */
+function cookieClient(
+  documentsQuery: ReturnType<typeof queryResult> = queryResult(
+    [],
+    CV_ENGINE_TABLE_ABSENT,
+  ),
+) {
+  return {
+    id: "cookie-client",
+    from: vi.fn(() => documentsQuery),
+    documentsQuery,
+  };
+}
+
 const EMPTY_PROGRESS = {
   schemaVersion: 3,
   courses: {},
@@ -139,7 +163,7 @@ beforeEach(() => {
     user: { id: "user-1", email: "learner@example.test" },
   });
   mockCreateAuthServerClient.mockReset();
-  mockCreateAuthServerClient.mockResolvedValue({ id: "cookie-client" });
+  mockCreateAuthServerClient.mockResolvedValue(cookieClient());
   mockFetchProgress.mockReset();
   mockFetchProgress.mockResolvedValue({
     ok: true,
@@ -292,6 +316,124 @@ describe("GET /api/account/export", () => {
     ]);
     expect(runsQuery.range).toHaveBeenCalledWith(0, 999);
     expect(answersQuery.range).toHaveBeenCalledWith(0, 999);
+  });
+
+  it("includes the learner's resume documents, read under their own session", async () => {
+    const documents = [
+      {
+        id: "doc-1",
+        owner_id: "user-1",
+        type: "cv",
+        name: "Lebenslauf",
+        yaml_blob: "name: Lernende Person\n",
+        deleted_at: null,
+      },
+      {
+        id: "doc-2",
+        owner_id: "user-1",
+        type: "cover_letter",
+        name: "Anschreiben",
+        yaml_blob: "greeting: Guten Tag\n",
+        // Hidden in the tool, still the learner's data and still exported.
+        deleted_at: "2026-09-01T09:00:00.000Z",
+      },
+    ];
+    const documentsQuery = queryResult(documents);
+    const authClient = cookieClient(documentsQuery);
+    mockCreateAuthServerClient.mockResolvedValue(authClient);
+    const serviceFrom = vi.fn(() => queryResult([]));
+    mockTryCreateServiceClient.mockReturnValue({ from: serviceFrom });
+
+    const response = await GET(exportRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.cv_engine_documents).toEqual(documents);
+    expect(payload.cv_engine_documents_available).toBe(true);
+    expect(payload.export_complete).toBe(true);
+    // The cookie-bound client is what reads them, so the tool's own row level
+    // security policy is what decides which rows come back.
+    expect(authClient.from).toHaveBeenCalledWith("documents");
+    expect(documentsQuery.select).toHaveBeenCalledWith("*", {
+      count: "exact",
+    });
+    expect(documentsQuery.eq).toHaveBeenCalledWith("owner_id", "user-1");
+    expect(documentsQuery.order.mock.calls).toEqual([
+      ["created_at", { ascending: true }],
+      ["id", { ascending: true }],
+    ]);
+    expect(documentsQuery.range).toHaveBeenCalledWith(0, 199);
+    expect(serviceFrom).not.toHaveBeenCalledWith("documents");
+  });
+
+  it("marks the resume store as absent rather than implying an empty one", async () => {
+    mockTryCreateServiceClient.mockReturnValue({
+      from: vi.fn(() => queryResult([])),
+    });
+
+    const response = await GET(exportRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.cv_engine_documents).toEqual([]);
+    expect(payload.cv_engine_documents_available).toBe(false);
+    expect(payload.export_complete).toBe(true);
+  });
+
+  it("fails the whole export when a present resume store cannot be read", async () => {
+    mockCreateAuthServerClient.mockResolvedValue(
+      cookieClient(
+        queryResult([], {
+          code: "42501",
+          message: "permission denied for table documents",
+        }),
+      ),
+    );
+    mockTryCreateServiceClient.mockReturnValue({
+      from: vi.fn(() => queryResult([])),
+    });
+
+    const response = await GET(exportRequest());
+
+    expect(response.status).toBe(500);
+    expect(await response.json()).toEqual({ error: "export_failed" });
+    expect(mockedReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/account/export",
+        step: "supabase-read",
+        error: expect.objectContaining({
+          name: "CvEngineDocumentReadError",
+        }),
+      }),
+    );
+  });
+
+  it("closes the file as incomplete when a documents page fails mid-stream", async () => {
+    const documents = Array.from({ length: 250 }, (_unused, index) => ({
+      id: `doc-${String(index).padStart(4, "0")}`,
+      owner_id: "user-1",
+      yaml_blob: "name: Lernende Person\n",
+    }));
+    const documentsQuery = queryResult(documents);
+    documentsQuery.rangeErrors.set(200, {
+      code: "57014",
+      message: "canceling statement due to statement timeout",
+    });
+    mockCreateAuthServerClient.mockResolvedValue(cookieClient(documentsQuery));
+    mockTryCreateServiceClient.mockReturnValue({
+      from: vi.fn(() => queryResult([])),
+    });
+
+    const response = await GET(exportRequest());
+    const serialized = await response.text();
+    const payload = JSON.parse(serialized);
+
+    expect(response.status).toBe(200);
+    expect(payload.cv_engine_documents).toHaveLength(200);
+    expect(payload.cv_engine_documents_available).toBe(true);
+    expect(payload.export_error).toBe("export_failed");
+    expect(payload.export_complete).toBe(false);
+    expect(serialized).toMatch(/"export_complete": false\n}\n$/);
   });
 
   it("paginates by actual rows returned when the project cap is below the requested range", async () => {

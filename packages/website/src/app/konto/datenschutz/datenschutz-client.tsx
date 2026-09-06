@@ -539,8 +539,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen und dem Exportzeitpunkt. Prüfe in der Datei, dass",
-                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, and the export time. Check that",
+                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen, deinen Dokumenten aus dem Lebenslauf-Editor und dem Exportzeitpunkt. Prüfe in der Datei, dass",
+                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, your resume editor documents, and the export time. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
