@@ -8,6 +8,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const lifecycle = vi.hoisted(() => ({ runtimeRenders: 0 }));
 
+// This file covers the client boundary, not the route gate: hold the pathname
+// on a progress route so the gate always opens. The route set itself lives in
+// src/components/auth/user-progress-sync-gate.test.tsx.
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/ai-native",
+}));
+
 vi.mock("next/dynamic", () => ({
   default: () =>
     function UserProgressSyncRuntimeMock() {
