@@ -335,11 +335,12 @@ const HOSTED_TOOL_HOSTNAME_PATTERN =
 /**
  * Exact HTTPS origin of the hosted cv-engine deployment.
  *
- * The value is an origin, never a URL with a path, query, fragment, or
- * credentials: account surfaces link learners to it and probe it, so an
- * attacker-supplied or half-migrated value must not become a trusted
- * destination. Only the project's own apex or a subdomain of loehrning.ai is
- * accepted; anything else returns null and the hosted capability stays off.
+ * The value is an origin, never a URL with a path, query, fragment, port, or
+ * credentials: account surfaces link learners to it and a one-time sign-in
+ * token is handed to whatever it resolves to, so an attacker-supplied or
+ * half-migrated value must not become a trusted destination. Only the
+ * project's own apex or a subdomain of loehrning.ai is accepted; anything else
+ * returns null and the hosted capability stays off.
  */
 export function cvEngineHostedOrigin(): string | null {
   const value = process.env.CV_ENGINE_HOSTED_URL;
