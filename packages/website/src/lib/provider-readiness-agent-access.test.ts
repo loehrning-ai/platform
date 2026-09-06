@@ -38,25 +38,33 @@ function configureAccountRuntime(): void {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("isAgentAccessReady", () => {
-  it("needs the explicit switch and the durable limiter backend", () => {
+  it("needs the explicit switch and the complete EU account runtime", () => {
     expect(isAgentAccessReady()).toBe(false);
 
     vi.stubEnv("MCP_SERVER_ENABLED", "true");
     expect(isAgentAccessReady()).toBe(false);
 
+    // The limiter backend alone is not enough: the authenticated tools hand an
+    // external client a scoped view of one learner's account, so the EU region
+    // and the DPA attestation the account itself requires are required here.
     configureSupabaseRuntime();
+    expect(isAgentAccessReady()).toBe(false);
+
+    configureAccountRuntime();
     expect(isAgentAccessReady()).toBe(true);
 
     for (const missing of [
       "SUPABASE_SERVICE_ROLE_KEY",
       "RATE_LIMIT_HMAC_SECRET",
       "SUPABASE_URL",
+      "SUPABASE_REGION",
+      "SUPABASE_DPA_CONFIRMED_AT",
     ]) {
       const previous = process.env[missing];
       vi.stubEnv(missing, "");
       expect(isAgentAccessReady()).toBe(false);
       vi.stubEnv(missing, previous ?? "");
-      configureSupabaseRuntime();
+      configureAccountRuntime();
     }
   });
 
@@ -198,7 +206,7 @@ describe("cvEngineHostedOrigin", () => {
 });
 
 describe("isCvEngineHostedReady", () => {
-  it("needs the origin, the attestation and the Supabase runtime", () => {
+  it("needs the origin, the attestation and the complete EU account runtime", () => {
     expect(isCvEngineHostedReady()).toBe(false);
 
     vi.stubEnv("CV_ENGINE_HOSTED_URL", "https://cv.loehrning.ai");
@@ -207,7 +215,12 @@ describe("isCvEngineHostedReady", () => {
     vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "2026-08-01");
     expect(isCvEngineHostedReady()).toBe(false);
 
+    // A one-time sign-in token is handed to this origin, so the account
+    // boundary (EU region, DPA date) is required, not only the Supabase keys.
     configureSupabaseRuntime();
+    expect(isCvEngineHostedReady()).toBe(false);
+
+    configureAccountRuntime();
     expect(isCvEngineHostedReady()).toBe(true);
 
     vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "");

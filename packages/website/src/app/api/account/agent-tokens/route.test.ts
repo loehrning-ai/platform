@@ -126,6 +126,10 @@ function enableAgentAccess(): void {
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
   vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
   vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
+  // The route gates on the complete EU account runtime, not only the
+  // limiter backend: a token hands an external client one learner's account.
+  vi.stubEnv("SUPABASE_REGION", "eu-central-1");
+  vi.stubEnv("SUPABASE_DPA_CONFIRMED_AT", "2026-07-01");
 }
 
 function opNamed(call: TableCall, name: string): QueryOp | undefined {

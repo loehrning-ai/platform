@@ -31,6 +31,11 @@ const mockLookupPersonalAccessToken = vi.fn<
   (token: string, now: Date) => Promise<PersonalTokenLookup>
 >(async () => ({ ok: false, reason: "unknown" }));
 
+// api-error.ts imports @sentry/nextjs at module scope, and loading that in
+// the test runtime is not possible; every test that reaches it replaces it.
+vi.mock("@/lib/observability/api-error", () => ({
+  reportApiError: vi.fn(),
+}));
 vi.mock("@/lib/provider-readiness", () => ({
   isAgentAccessReady: () => mockIsAgentAccessReady(),
   isOAuthServerReady: () => mockIsOAuthServerReady(),

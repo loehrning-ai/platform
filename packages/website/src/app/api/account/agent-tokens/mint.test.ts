@@ -8,7 +8,13 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// api-error.ts imports @sentry/nextjs at module scope, and loading that in
+// the test runtime is not possible; every test that reaches it replaces it.
+vi.mock("@/lib/observability/api-error", () => ({
+  reportApiError: vi.fn(),
+}));
 import {
   hashPersonalAccessToken,
   isPersonalAccessToken,

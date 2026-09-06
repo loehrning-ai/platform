@@ -244,15 +244,16 @@ export function isCourseTerminalRuntimeReady(): boolean {
 /**
  * Public MCP server at /api/mcp.
  *
- * Requires the explicit switch plus the complete Supabase runtime, because
- * every tool call passes the durable fail-closed limiter. An unmetered public
+ * Requires the explicit switch plus the complete EU account runtime: every
+ * tool call passes the durable fail-closed limiter, and the authenticated
+ * tools hand an external client a scoped view of one learner's account, so the
+ * grants and the audit trail need the same boundary the account itself has. An unmetered public
  * JSON-RPC surface is not shippable, so a missing limiter backend disables
  * the server instead of silently degrading to a per-worker in-memory counter.
  */
 export function isAgentAccessReady(): boolean {
   return Boolean(
-    process.env.MCP_SERVER_ENABLED === "true" &&
-      hasCompleteSupabaseRuntimeConfig(),
+    process.env.MCP_SERVER_ENABLED === "true" && isAccountRuntimeReady(),
   );
 }
 
@@ -379,8 +380,8 @@ export function cvEngineHostedOrigin(): string | null {
  */
 export function isCvEngineHostedReady(): boolean {
   return Boolean(
-    cvEngineHostedOrigin() &&
-      isPastOrPresentIsoDate(process.env.CV_ENGINE_HOSTED_CONFIRMED_AT) &&
-      hasCompleteSupabaseRuntimeConfig(),
+    isAccountRuntimeReady() &&
+      cvEngineHostedOrigin() !== null &&
+      isPastOrPresentIsoDate(process.env.CV_ENGINE_HOSTED_CONFIRMED_AT),
   );
 }
