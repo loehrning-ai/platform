@@ -15,7 +15,7 @@ const CHILD_SHUTDOWN_BUDGET_MS = 5_000;
 // Keep each serialized native-WebKit process at or below the 32-test lifetime
 // enforced by the orchestration contract. Opt-in visual-capture aids are not
 // part of this mandatory inventory.
-export const MOBILE_WEBKIT_SHARD_COUNT = 23;
+export const MOBILE_WEBKIT_SHARD_COUNT = 24;
 
 const ARTIFACT_DIRECTORIES = [
   ["PLAYWRIGHT_OUTPUT_DIR", "test-results"],

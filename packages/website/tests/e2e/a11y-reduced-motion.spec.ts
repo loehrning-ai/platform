@@ -4,6 +4,7 @@ import {
   formatBrowserErrors,
   meaningfulBrowserErrors,
 } from "./fixtures/console";
+import { revealSweepDeadline, sweepReveals } from "./fixtures/settle";
 
 /**
  * prefers-reduced-motion content-visibility guard (regression coverage).
@@ -78,30 +79,24 @@ function stuckReveals(page: Page, rootSelector?: string): Promise<string[]> {
   }, rootSelector);
 }
 
-/** Step the page top->bottom so every whileInView IntersectionObserver fires. */
-async function fireAllReveals(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    // Bounded: requestAnimationFrame does not fire on a backgrounded or
-    // occluded page, so an unraced frame wait parks this evaluate until the
-    // test budget runs out. See tests/e2e/fixtures/settle.ts.
-    const frame = () =>
-      new Promise<void>((r) => {
-        let settled = false;
-        const done = () => {
-          if (settled) return;
-          settled = true;
-          r();
-        };
-        requestAnimationFrame(() => requestAnimationFrame(done));
-        setTimeout(done, 250);
-      });
-    const step = Math.max(200, Math.floor(window.innerHeight * 0.8));
-    for (let y = 0; y <= document.body.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await frame();
-    }
-    window.scrollTo(0, document.body.scrollHeight);
-    await frame();
+/**
+ * Step the page top->bottom so every whileInView IntersectionObserver fires.
+ *
+ * The walk lives in the driver, not in the page: this spec's own copy awaited
+ * a `requestAnimationFrame` pair per step, which a backgrounded or occluded
+ * Chromium never services, and its fallback timer is clamped to ~1Hz there. It
+ * also had no step cap at all. Measured on the chapter route: 11.0s per call
+ * under that clamp, against 0.36s on a page that is painting - and this spec
+ * calls it twice, which is how it reported `page.evaluate: Test timeout of
+ * 60000ms exceeded` at this line. sweepReveals bounds the whole thing with
+ * Node timers.
+ */
+async function fireAllReveals(page: Page, deadline: number): Promise<void> {
+  await sweepReveals(page, {
+    label: "fireAllReveals",
+    // Preserved from the in-page version: it left the viewport at the bottom.
+    endAt: "bottom",
+    deadline,
   });
 }
 
@@ -291,8 +286,9 @@ async function expectReducedMotionHonored(
   // Under heavy machine load the Framer intersection callbacks settle slowly,
   // so fire twice and give the poll a generous window before failing (a real
   // stuck reveal stays stuck across both sweeps; a slow one clears).
-  await fireAllReveals(page);
-  await fireAllReveals(page);
+  const revealDeadline = revealSweepDeadline();
+  await fireAllReveals(page, revealDeadline);
+  await fireAllReveals(page, revealDeadline);
   await expect
     .poll(() => stuckReveals(page), {
       timeout: 15_000,

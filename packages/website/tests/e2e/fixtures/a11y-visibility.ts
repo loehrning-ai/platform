@@ -1,4 +1,5 @@
 import { expect, type Page } from "@playwright/test";
+import { revealSweepDeadline, sweepReveals } from "./settle";
 
 /**
  * Axe excludes opacity-zero content from several rules. Drive every
@@ -11,34 +12,18 @@ export async function exposeAllAuditedContent(page: Page): Promise<void> {
       ".js-reveal{opacity:1!important;transform:none!important;visibility:visible!important}",
   });
 
+  // Two sweeps, sharing ONE wall-clock budget owned by the driver. The second
+  // catches an entrance whose animation only started during the first. Both
+  // together measure 28ms on the reader chapter and 100ms on the tallest route
+  // audited anywhere (22,324px), against 22s and >90s for the in-page sweeps
+  // they replace once Chromium throttles an occluded renderer. See
+  // sweepReveals for the measurement and the failure it explains.
+  const deadline = revealSweepDeadline();
   for (let sweep = 0; sweep < 2; sweep += 1) {
-    await page.evaluate(async () => {
-      // Bounded: requestAnimationFrame does not fire on a backgrounded or
-      // occluded page, and this loop runs up to 1000 times. See settle.ts.
-      const frame = () =>
-        new Promise<void>((resolve) => {
-          let settled = false;
-          const done = () => {
-            if (settled) return;
-            settled = true;
-            resolve();
-          };
-          requestAnimationFrame(() => requestAnimationFrame(done));
-          setTimeout(done, 250);
-        });
-      const step = Math.max(200, Math.floor(window.innerHeight * 0.8));
-      let position = 0;
-      let steps = 0;
-      while (position <= document.documentElement.scrollHeight && steps < 1_000) {
-        window.scrollTo(0, position);
-        await frame();
-        position += step;
-        steps += 1;
-      }
-      window.scrollTo(0, document.documentElement.scrollHeight);
-      await frame();
-      window.scrollTo(0, 0);
-      await frame();
+    await sweepReveals(page, {
+      label: `exposeAllAuditedContent sweep ${sweep + 1}/2`,
+      endAt: "top",
+      deadline,
     });
   }
 
