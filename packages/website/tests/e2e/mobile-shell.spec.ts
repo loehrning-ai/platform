@@ -1,5 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
 import { settleFontsAndFrame } from "./fixtures/settle";
+import {
+  collectBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Mobile companion shell: bottom tab bar (regression coverage).
@@ -427,7 +431,15 @@ test.describe("mobile shell: reader focus mode", () => {
   test("removes the tab bar for both documented forms of the attribute", async ({
     page,
   }) => {
+    const errors = collectBrowserErrors(page);
     await page.goto("/", { waitUntil: "domcontentloaded" });
+    // This test mutates server-owned markup. Wait until React has claimed it,
+    // or hydration recovery can remove the synthetic marker being asserted.
+    await expect(
+      page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]'),
+    ).toBeAttached();
+    const main = page.getByRole("main");
+    await expect(main).toBeVisible();
     await expect(page.locator(TAB_BAR)).toBeVisible();
 
     // Form one: the root element carries the attribute.
@@ -442,18 +454,20 @@ test.describe("mobile shell: reader focus mode", () => {
     await expect(page.locator(TAB_BAR)).toBeVisible();
 
     // Form two: a reader route marks the wrapper it owns inside <main>.
-    await page.evaluate(() => {
-      const main = document.querySelector("main");
+    await main.evaluate((element) => {
       const marker = document.createElement("div");
       marker.setAttribute("data-reader", "focus");
       marker.setAttribute("data-test-reader-marker", "true");
-      main?.appendChild(marker);
+      element.appendChild(marker);
     });
+    const marker = main.locator('[data-test-reader-marker="true"]');
+    await expect(marker).toBeAttached();
     await expect(page.locator(TAB_BAR)).toBeHidden();
+    await expect(marker).toBeAttached();
 
-    await page.evaluate(() => {
-      document.querySelector("[data-test-reader-marker]")?.remove();
-    });
+    await marker.evaluate((element) => element.remove());
+    await expect(marker).toHaveCount(0);
     await expect(page.locator(TAB_BAR)).toBeVisible();
+    expect(meaningfulBrowserErrors(errors)).toEqual([]);
   });
 });
