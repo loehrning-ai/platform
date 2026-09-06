@@ -47,6 +47,52 @@ describe("account, login, and feedback visual contract", () => {
     expect(source("feedback/feedback-form.tsx")).toContain("min-h-12");
   });
 
+  it("puts the sign-in card before its explanation below lg only", () => {
+    const login = source("login/page.tsx");
+
+    // The card leads on phones through visual order alone: the DOM keeps the
+    // value panel first for readers, and the desktop grid puts the argument
+    // left of the form. The rewritten page expresses that as a pair of order
+    // utilities rather than a single order-first, so both halves are pinned.
+    expect(login).toContain(
+      '<div className="order-1 min-w-0 lg:order-2">{loginForm}</div>',
+    );
+    expect(login).toContain('<div className="order-2 min-w-0 lg:order-1">');
+    expect(login).toContain(
+      "lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)]",
+    );
+  });
+
+  it("turns the account section navigation into a swipeable tab strip below lg", () => {
+    const konto = source("konto/page.tsx");
+    const strip =
+      konto.match(/data-konto-tabs\s+className="([^"]+)"/)?.[1] ?? "";
+
+    // Proximity, not mandatory: measured at 390px the five tabs are 109 to
+    // 233px wide, so several share the viewport and there is no page for a
+    // mandatory strip to enforce - it would only jerk to a tab edge on every
+    // small drag. Measured: the strip is 52px tall and reaches its own scroll
+    // end at 320 and 390px, and from lg it wraps with no scroll container.
+    expect(strip).toContain("snap-x snap-proximity");
+    expect(strip).toContain("overflow-x-auto");
+    expect(strip).toContain("[scrollbar-width:none]");
+    expect(strip).toContain("lg:flex-wrap");
+    expect(strip).toContain("lg:overflow-visible");
+    expect(konto).toContain("data-konto-tab={item.key}");
+    // The strip stays in flow. The site header is already fixed, so a second
+    // pinned bar would stack under it; only the strip's own classes are
+    // checked, because the comment above the nav says the word itself.
+    expect(strip).not.toContain("sticky");
+    // Desktop wrapping is handed back intact: the tabs only refuse to wrap
+    // while they are one scrolling row.
+    const tab =
+      konto.match(/data-konto-tab=\{item\.key\}\s+className="([^"]+)"/)?.[1] ??
+      "";
+    expect(tab).toContain("whitespace-nowrap");
+    expect(tab).toContain("lg:whitespace-normal");
+    expect(tab).toContain("min-h-11");
+  });
+
   it("keeps legacy export truth while removing XP presentation", () => {
     const loginCopy = readFileSync(
       join(__dirname, "login/login-copy.ts"),

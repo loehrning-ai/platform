@@ -30,4 +30,20 @@ describe("no-script accessibility fallback", () => {
     );
     expect(NO_SCRIPT_FALLBACK_CSS).not.toContain("@media(max-width:63.999rem)");
   });
+
+  it("removes companion-shell controls that cannot work without scripting", () => {
+    expect(NO_SCRIPT_FALLBACK_CSS).toContain(
+      ".js-shell-only{display:none!important}",
+    );
+  });
+
+  it("keeps the mobile companion shell operable without scripting", () => {
+    // The sheet applies at every width, so any rule that mentions the tab bar
+    // would also apply on desktop, where the bar does not exist. The tab bar is
+    // links and CSS: it needs no fallback, and its reserved band on <body> must
+    // survive, so nothing here may reset a bottom offset either.
+    expect(NO_SCRIPT_FALLBACK_CSS).not.toMatch(/tab-?bar/i);
+    expect(NO_SCRIPT_FALLBACK_CSS).not.toContain("padding-bottom");
+    expect(NO_SCRIPT_FALLBACK_CSS).not.toContain("@media");
+  });
 });

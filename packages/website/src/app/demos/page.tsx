@@ -138,13 +138,17 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
     <div className="min-h-[100svh] overflow-x-clip">
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
+      {/* The cover is written phone-first: every base value is the compact
+          companion value so the filter console lands closer to the first
+          viewport at 390px, and each `sm:`/`lg:` variant restores the reviewed
+          desktop geometry unchanged. */}
       <header
-        className="border-b border-border px-4 py-6 sm:px-6 sm:py-8 md:px-10"
+        className="border-b border-border px-3 py-4 sm:px-6 sm:py-8 md:px-10"
         data-demo-atlas-hero
       >
         <div className="mx-auto max-w-7xl border border-foreground/70 bg-background">
           <div className="grid lg:grid-cols-[minmax(0,1.55fr)_minmax(18rem,0.45fr)]">
-            <div className="min-w-0 p-5 sm:p-7 lg:border-r lg:border-foreground/20 lg:p-9">
+            <div className="min-w-0 p-4 sm:p-7 lg:border-r lg:border-foreground/20 lg:p-9">
               <div className="flex items-center gap-3">
                 <div
                   className="h-[3px] w-12 bg-brand-orange"
@@ -154,29 +158,29 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
                   {copy.catalog.kicker}
                 </p>
               </div>
-              <h1 className="mt-4 max-w-5xl text-balance text-[clamp(2.45rem,5.5vw,5.5rem)] font-bold leading-[0.9] tracking-[-0.055em] text-foreground">
+              <h1 className="mt-3 max-w-5xl text-balance text-[2.15rem] font-bold leading-[0.9] tracking-[-0.055em] text-foreground sm:mt-4 sm:text-[clamp(2.45rem,5.5vw,5.5rem)]">
                 {copy.catalog.headingLead}{" "}
                 <span className="text-brand-orange">
                   {copy.catalog.headingAccent}
                 </span>
               </h1>
-              <p className="mt-5 max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+              <p className="mt-3 max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-5 sm:text-base">
                 {copy.catalog.introduction}
               </p>
             </div>
 
             <aside
-              className="bg-foreground p-5 text-background sm:p-6"
+              className="bg-foreground p-4 text-background sm:p-6"
               aria-label={copy.catalog.scopeLabel}
             >
               <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-kupfer-light">
                 {copy.catalog.scopeLabel}
               </p>
-              <ol className="mt-4 border-t border-background/25">
+              <ol className="mt-3 border-t border-background/25 sm:mt-4">
                 {copy.catalog.scopeItems.map((item, index) => (
                   <li
                     key={item}
-                    className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 border-b border-background/20 py-3 text-sm leading-5 text-background/80"
+                    className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 border-b border-background/20 py-2 text-sm leading-5 text-background/80 sm:py-3"
                   >
                     <span className="font-mono text-xs font-bold text-kupfer-light tabular-nums">
                       0{index + 1}
@@ -195,12 +199,15 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
             {copy.catalog.stats.map((stat, index) => (
               <div
                 key={stat.label}
-                className={`flex min-w-0 items-center justify-between gap-4 border-t-2 px-3 py-3 sm:block sm:px-5 ${STAT_TONES[index % STAT_TONES.length]}`}
+                className={`flex min-w-0 items-center justify-between gap-4 border-t-2 px-3 py-2 sm:block sm:px-5 sm:py-3 ${STAT_TONES[index % STAT_TONES.length]}`}
               >
                 <dt className="text-pretty font-mono text-xs uppercase leading-4 tracking-[0.08em] text-muted-foreground">
                   {stat.label}
                 </dt>
-                <dd className="mt-1 text-2xl font-bold tracking-[-0.04em] text-foreground sm:text-3xl">
+                {/* The value sits beside its label on phones, so the top
+                    margin that separates the two in the stacked desktop cell
+                    would only pad the row taller. */}
+                <dd className="text-xl font-bold tracking-[-0.04em] text-foreground sm:mt-1 sm:text-3xl">
                   {stat.value}
                 </dd>
               </div>

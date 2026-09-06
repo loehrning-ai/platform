@@ -34,7 +34,10 @@ export function WorkshopsContent({ workshops, locale }: Props) {
 
   return (
     <>
-      <section className="relative isolate overflow-hidden border-b border-border bg-paper py-10 sm:py-14">
+      {/* Phone-first geometry throughout: base values are the compact
+          companion values, and every `sm:`/`md:`/`lg:` variant restores the
+          reviewed desktop layout unchanged. */}
+      <section className="relative isolate overflow-hidden border-b border-border bg-paper py-6 sm:py-14">
         <span
           className="pointer-events-none absolute -right-10 top-12 h-28 w-80 rotate-3 bg-brand-sky/60"
           aria-hidden="true"
@@ -44,21 +47,21 @@ export function WorkshopsContent({ workshops, locale }: Props) {
           aria-hidden="true"
         />
         <div
-          className="relative mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-10"
+          className="relative mx-auto grid max-w-6xl gap-5 px-4 sm:gap-8 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-10"
           data-workshop-editorial-spread
         >
-          <header className="relative min-w-0 py-3 lg:col-span-8 lg:py-8">
+          <header className="relative min-w-0 py-1 sm:py-3 lg:col-span-8 lg:py-8">
             <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               <span className="h-3 w-3 bg-brand-teal" aria-hidden="true" />
               {copy.kicker}
             </p>
-            <h1 className="relative mt-5 max-w-[15ch] text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground">
+            <h1 className="relative mt-4 max-w-[15ch] text-[2.25rem] font-bold leading-[0.9] tracking-[-0.06em] text-foreground sm:mt-5 sm:text-[clamp(2.65rem,6vw,5.75rem)]">
               {copy.headingLead}{" "}
               <HighlightedText colorVar="--color-brand-sky">
                 {copy.headingSecond}
               </HighlightedText>
             </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
               {copy.introduction(workshops.length)}
             </p>
           </header>
@@ -71,16 +74,18 @@ export function WorkshopsContent({ workshops, locale }: Props) {
               className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-acid/75"
               aria-hidden="true"
             />
-            <div className="relative bg-paper p-5 shadow-card ring-1 ring-foreground/30 sm:p-6">
+            <div className="relative bg-paper p-4 shadow-card ring-1 ring-foreground/30 sm:p-6">
               <div className="flex items-baseline justify-between gap-4 border-b border-foreground pb-4">
                 <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {copy.available}
                 </span>
-                <strong className="text-4xl font-bold leading-none tracking-[-0.07em] text-foreground">
+                <strong className="text-3xl font-bold leading-none tracking-[-0.07em] text-foreground sm:text-4xl">
                   {String(workshops.length).padStart(2, "0")}
                 </strong>
               </div>
-              <div className="mt-5 space-y-2" aria-hidden="true">
+              {/* Decorative step bars: hidden on phones, where the 124px they
+                  cost buys nothing the count above does not already say. */}
+              <div className="mt-5 hidden space-y-2 sm:block" aria-hidden="true">
                 {["01", "02", "03"].map((step, index) => (
                   <span
                     key={step}
@@ -96,7 +101,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
                   </span>
                 ))}
               </div>
-              <p className="mt-5 text-sm font-semibold text-foreground">
+              <p className="mt-3 text-sm font-semibold text-foreground sm:mt-5">
                 {copy.proofOutput}
               </p>
             </div>
@@ -105,11 +110,11 @@ export function WorkshopsContent({ workshops, locale }: Props) {
       </section>
 
       <section
-        className="py-10 sm:py-12"
+        className="py-6 sm:py-12"
         aria-labelledby="workshop-list-heading"
       >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <header className="mb-8 grid gap-3 border-b border-border pb-4 sm:grid-cols-[minmax(12rem,0.48fr)_minmax(0,1fr)] sm:items-end sm:gap-8">
+          <header className="mb-5 grid gap-3 border-b border-border pb-4 sm:mb-8 sm:grid-cols-[minmax(12rem,0.48fr)_minmax(0,1fr)] sm:items-end sm:gap-8">
             <h2
               id="workshop-list-heading"
               className="text-2xl font-bold tracking-[-0.035em] sm:text-3xl"
@@ -129,7 +134,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
               {copy.empty}
             </p>
           ) : (
-            <ol className="grid gap-10 sm:gap-12">
+            <ol className="grid gap-6 sm:gap-12">
               {workshops.map((workshop, index) => (
                 <li key={workshop.slug} className="min-w-0">
                   <WorkshopRow
@@ -177,7 +182,7 @@ function WorkshopRow({
         <span className="absolute left-3 top-3 z-10 bg-paper px-2 py-1 font-mono text-xs font-bold text-foreground ring-1 ring-foreground/30">
           {pad(position)}
         </span>
-        <div className="relative mt-5 bg-paper p-2 shadow-card ring-1 ring-foreground/30 transition-transform duration-300 group-hover:-rotate-1 motion-reduce:transition-none">
+        <div className="relative mt-4 bg-paper p-2 shadow-card ring-1 ring-foreground/30 transition-transform duration-300 group-hover:-rotate-1 motion-reduce:transition-none sm:mt-5">
           <Image
             src={`/workshops/${workshop.slug}/card-preview.webp`}
             alt=""
@@ -196,8 +201,13 @@ function WorkshopRow({
         </p>
       </div>
 
-      <div className="flex min-w-0 flex-col p-5 sm:p-7">
-        <div className="flex items-center gap-3">
+      {/* On a phone the decision comes first: kicker, title, then the link
+          into the workshop, with the summary and facts after it. That is pure
+          `order` on this flex column (the link is the only control here, so
+          focus order still follows the screen), and from md the reviewed
+          reading order returns. */}
+      <div className="flex min-w-0 flex-col p-4 sm:p-7">
+        <div className="order-first flex items-center gap-3 md:order-none">
           <span className="h-3 w-3 bg-brand-cobalt" aria-hidden="true" />
           <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
             {copy.decision}
@@ -205,16 +215,16 @@ function WorkshopRow({
         </div>
         <h3
           data-workshop-decision
-          className="mt-4 max-w-[20ch] text-3xl font-bold leading-[1.02] tracking-[-0.04em] text-foreground sm:text-4xl"
+          className="order-first mt-3 max-w-[20ch] text-2xl font-bold leading-[1.02] tracking-[-0.04em] text-foreground sm:mt-4 sm:text-4xl md:order-none"
         >
           {workshop.decisionLab.title}
         </h3>
 
-        <p className="mt-5 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-4 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-sm leading-relaxed text-muted-foreground sm:mt-5">
           {workshop.summary}
         </p>
 
-        <dl className="mt-6 flex flex-wrap gap-x-6 gap-y-4 border-y border-border py-4 text-sm text-muted-foreground">
+        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-3 border-y border-border py-3 text-sm text-muted-foreground sm:mt-6 sm:gap-y-4 sm:py-4">
           <div className="min-w-[7rem] flex-1">
             <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
               {copy.duration}
@@ -241,7 +251,7 @@ function WorkshopRow({
           </div>
         </dl>
 
-        <div className="mt-5 flex items-baseline gap-3">
+        <div className="mt-4 flex items-baseline gap-3 sm:mt-5">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
             {copy.proofTarget}
           </p>
@@ -258,7 +268,7 @@ function WorkshopRow({
 
         <Link
           href={localizeHref(`/workshops/${workshop.slug}`, locale)}
-          className="mt-6 inline-flex min-h-11 items-center justify-between gap-2 self-start bg-brand-orange px-4 py-2 text-sm font-bold text-white ring-1 ring-foreground/20 transition-colors hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+          className="-order-1 mt-4 inline-flex min-h-11 items-center justify-between gap-2 self-start bg-brand-orange px-4 py-2 text-sm font-bold text-white ring-1 ring-foreground/20 transition-colors hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange sm:mt-6 md:order-none"
         >
           {copy.openWorkshop}
           <span className="sr-only">: {workshop.title}</span>

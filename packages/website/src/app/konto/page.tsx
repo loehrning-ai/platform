@@ -137,18 +137,36 @@ export default async function KontoPage({
   // Both region labels are the regions' own headings rather than a second
   // string in account-copy.ts, so a nav entry can never name a heading the
   // learner does not find on arrival.
-  const sectionLinks: readonly { href: string; label: string }[] = [
-    { href: `#${KONTO_SECTION_IDS.weiterlernen}`, label: copy.continueHeading },
+  // `key` names each destination for the `data-konto-tab` hook on its link,
+  // which the swipeable tab strip below lg uses to settle on a region.
+  const sectionLinks: readonly {
+    readonly key: string;
+    readonly href: string;
+    readonly label: string;
+  }[] = [
+    {
+      key: "weiterlernen",
+      href: `#${KONTO_SECTION_IDS.weiterlernen}`,
+      label: copy.continueHeading,
+    },
     ...(progressUnavailable
       ? []
-      : [{ href: `#${KONTO_SECTION_IDS.kurse}`, label: copy.coursesHeading }]),
+      : [
+          {
+            key: "kurse",
+            href: `#${KONTO_SECTION_IDS.kurse}`,
+            label: copy.coursesHeading,
+          },
+        ]),
     {
+      key: "werkzeuge",
       href: `#${WERKZEUGE_SECTION_ID}`,
       label: WERKZEUGE_COPY[locale].heading,
     },
     ...(isAgentAccessReady()
       ? [
           {
+            key: "deine-ki",
             href: `#${DEINE_KI_SECTION_ID}`,
             label: AGENT_ACCESS_COPY[locale].heading,
           },
@@ -158,11 +176,16 @@ export default async function KontoPage({
       ? []
       : [
           {
+            key: "nachweise",
             href: `#${KONTO_SECTION_IDS.nachweise}`,
             label: copy.recordsHeading,
           },
         ]),
-    { href: `#${KONTO_SECTION_IDS.verwalten}`, label: copy.sectionSettings },
+    {
+      key: "verwalten",
+      href: `#${KONTO_SECTION_IDS.verwalten}`,
+      label: copy.sectionSettings,
+    },
   ];
 
   return (
@@ -204,17 +227,32 @@ export default async function KontoPage({
         <nav
           aria-label={copy.sectionNavigationLabel}
           data-konto-section-nav
-          className="mt-6 flex flex-wrap items-center gap-x-1 gap-y-1 border-y border-border py-1"
+          className="mt-6 border-y border-border"
         >
-          {sectionLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="inline-flex min-h-11 items-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {/* Below lg the links form one swipeable tab strip: every section
+              stays reachable in a single 44px row that scrolls and settles by
+              touch or by moving focus, and `data-konto-tab` names each
+              destination for the account workbench to hook into. The strip
+              keeps 4px of padding all round so the focus ring is not clipped
+              by the scroll box. Snapping is `proximity`, not `mandatory`:
+              three to five tabs share the viewport at 390px, so there is no
+              page to enforce, and mandatory would jerk the strip to a tab
+              edge on every small drag. From lg the links wrap as before. */}
+          <div
+            data-konto-tabs
+            className="flex snap-x snap-proximity items-center gap-x-1 overflow-x-auto overscroll-x-contain scroll-px-1 px-1 py-1 [scrollbar-width:none] lg:flex-wrap lg:gap-y-1 lg:overflow-visible lg:px-0"
+          >
+            {sectionLinks.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                data-konto-tab={item.key}
+                className="inline-flex min-h-11 shrink-0 snap-start items-center whitespace-nowrap px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange lg:shrink lg:whitespace-normal"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
         {/* A stopped or exhausted background sync leaves the record below

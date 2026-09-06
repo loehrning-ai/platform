@@ -7,8 +7,10 @@ import type {
   ChapterNeighbours,
   BookChapterMeta,
 } from "@/lib/book-reader-content";
+import { ReaderFocusBar } from "@/components/learning/reader-focus-bar";
 import { renderChapterMarkdownHtml } from "./chapter-markdown";
 import { ChapterReaderClient, ChapterTocLinks } from "./chapter-reader-client";
+import { ChapterTocSheet } from "./chapter-toc-sheet";
 
 interface ChapterReaderProps {
   readonly book: Book;
@@ -44,6 +46,12 @@ const READER_COPY = {
     pdfUnavailable:
       "Der Reader ist die verlässliche Lesefassung. Für dieses Buch gibt es derzeit keine PDF-Fassung.",
     allChapters: "Alle Kapitel",
+    // Reader bar below lg. The visible strip shows the bare fraction; this is
+    // the sentence assistive technology reads instead.
+    barPosition: (chapter: number, total: number) =>
+      `Kapitel ${chapter} von ${total}`,
+    tocSheet: "Inhalt",
+    overviewShort: "Übersicht",
   },
   en: {
     breadcrumbAria: "Breadcrumb",
@@ -68,6 +76,10 @@ const READER_COPY = {
     pdfUnavailable:
       "The reader is the maintained reading edition. No PDF edition is currently available for this book.",
     allChapters: "All chapters",
+    barPosition: (chapter: number, total: number) =>
+      `Chapter ${chapter} of ${total}`,
+    tocSheet: "Contents",
+    overviewShort: "Overview",
   },
 } as const;
 
@@ -112,8 +124,33 @@ export function ChapterReader({
     />
   );
 
+  const bookHref = localizeHref(`/buecher/${book.id}`, locale);
+  const nextChapterHref = neighbours.next
+    ? localizeHref(`/buecher/${book.id}/${neighbours.next.slug}`, locale)
+    : null;
+  const tocFooter = (
+    <div className="mt-4 border-t border-border pt-3">
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        {book.pdfPath ? copy.pdfAvailable : copy.pdfUnavailable}
+      </p>
+      <Link
+        href={bookHref}
+        className="mt-2 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange"
+      >
+        {copy.allChapters}
+      </Link>
+    </div>
+  );
+
+  // Reader focus mode (docs/experience-system.md, "Reader focus mode"): the
+  // attribute sits on the wrapper this route owns inside <main>, rendered on
+  // the server, so the mobile tab bar is absent from the first paint and
+  // nothing toggles after hydration.
   return (
-    <div className="mx-auto min-w-0 max-w-6xl px-4 pb-12 pt-5 sm:px-6 sm:pt-7">
+    <div
+      data-reader="focus"
+      className="mx-auto min-w-0 max-w-6xl px-4 pb-12 pt-5 sm:px-6 sm:pt-7"
+    >
       <nav
         aria-label={copy.breadcrumbAria}
         className="no-print mb-4 flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
@@ -186,7 +223,7 @@ export function ChapterReader({
               </Link>
             ) : (
               <Link
-                href={localizeHref(`/buecher/${book.id}`, locale)}
+                href={bookHref}
                 className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start text-sm text-muted-foreground hover:text-brand-orange"
               >
                 <ArrowLeft size={14} aria-hidden="true" />
@@ -201,12 +238,9 @@ export function ChapterReader({
               ← → {copy.keyboardHint}
             </span>
 
-            {neighbours.next ? (
+            {neighbours.next && nextChapterHref ? (
               <Link
-                href={localizeHref(
-                  `/buecher/${book.id}/${neighbours.next.slug}`,
-                  locale,
-                )}
+                href={nextChapterHref}
                 className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end border border-border/50 bg-card/20 px-3 py-2 text-right text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
                 aria-label={copy.nextChapter(neighbours.next.title)}
               >
@@ -218,7 +252,7 @@ export function ChapterReader({
               </Link>
             ) : (
               <Link
-                href={localizeHref(`/buecher/${book.id}`, locale)}
+                href={bookHref}
                 className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end text-right text-sm text-muted-foreground hover:text-brand-orange"
               >
                 <span className="break-words">{copy.chapterOverview}</span>
@@ -255,7 +289,7 @@ export function ChapterReader({
                 {book.pdfPath ? copy.pdfAvailable : copy.pdfUnavailable}
               </p>
               <Link
-                href={localizeHref(`/buecher/${book.id}`, locale)}
+                href={bookHref}
                 className="mt-2 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange"
               >
                 {copy.allChapters}
@@ -264,6 +298,39 @@ export function ChapterReader({
           </div>
         </div>
       </div>
+
+      {/* Compact reader bar below lg: position, the contents as a sheet, and
+          the next chapter. The desktop sidebar above stays the TOC at lg; this
+          is the same list rendered once more for the phone, the way the site
+          navigation renders twice. */}
+      <ReaderFocusBar
+        position={`${chapterNumber} / ${allChapters.length}`}
+        positionLabel={copy.barPosition(chapterNumber, allChapters.length)}
+        action={
+          neighbours.next && nextChapterHref
+            ? {
+                kind: "link",
+                label: copy.nextShort,
+                href: nextChapterHref,
+                ariaLabel: `${copy.nextShort}: ${neighbours.next.title}`,
+              }
+            : {
+                kind: "link",
+                label: copy.overviewShort,
+                href: bookHref,
+                ariaLabel: copy.chapterOverview,
+              }
+        }
+      >
+        <ChapterTocSheet
+          summaryLabel={copy.tocSheet}
+          heading={copy.tocHeading}
+          navLabel={copy.tocRegion}
+          headings={chapter.headings}
+        >
+          {tocFooter}
+        </ChapterTocSheet>
+      </ReaderFocusBar>
       {/* Keep the only reader runtime boundary after all server-owned markup.
           A hostless client boundary before the grid could advance React's
           hydration cursor into the grid during concurrent streamed retries. */}

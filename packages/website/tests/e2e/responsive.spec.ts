@@ -4,7 +4,7 @@ import { settleFontsAndFrame } from "./fixtures/settle";
 /**
  * Responsive / mobile matrix (regression coverage). Codifies responsive-layout hardening's manual
  * responsive work as executable assertions across the app's key routes, plus the
- * regression coverage book-reader table fix. Four guards:
+ * regression coverage book-reader table fix. Five guards:
  *
  *   1. No horizontal overflow at 320/360/390/768/1024/1440 on the highest-traffic
  *      routes, incl. one real chapter reader.
@@ -15,6 +15,10 @@ import { settleFontsAndFrame } from "./fixtures/settle";
  *   4. Book-reader GFM tables stay inside `overflow-x-auto` wrappers
  *      (chapter-reader.tsx table override) instead of clipping the page, and
  *      the in-chapter TOC stays hidden below `lg`.
+ *   5. Below `lg` the header is the compact companion bar: flush with the top
+ *      edge of the viewport, exactly `--nav-h-compact` tall, and that is the
+ *      offset `<main>` reserves, so content begins directly beneath it. From
+ *      `lg` the inset studio pill returns and `--nav-h` reserves it instead.
  *
  * Assertions target GEOMETRY, roles and structural anchors (data-section, the
  * hamburger's aria-label, the wrapper class, the TOC landmark), never prose, so a
@@ -42,11 +46,94 @@ const KEY_ROUTES = [
 ] as const;
 
 // Nav breakpoint (nav.tsx): the desktop cluster is `hidden ... lg:flex` and the
-// hamburger toggle is `... lg:hidden`, so widths below Tailwind's `lg` (1024px)
-// show the hamburger and hide the desktop Lernen dropdown. The Lernen trigger is
-// uniquely addressable by its aria-controls; the hamburger by its aria-label.
+// compact companion cluster is `... lg:hidden`, so widths below Tailwind's `lg`
+// (1024px) show the hamburger and hide the desktop Lernen dropdown. The Lernen
+// trigger is uniquely addressable by its aria-controls; the hamburger by its
+// aria-label. That label stays hard-coded German: these tests load unprefixed
+// routes, whose interface is German, so a locale-agnostic pattern here would
+// stop proving that the default interface is the one being measured.
 const LERNEN_TRIGGER = 'button[aria-controls="lernen-nav-menu"]';
 const HAMBURGER_NAME = /Menü öffnen/i;
+const NAV_ROW = "[data-nav-header-row]";
+
+// Tailwind's stock `lg`, in CSS pixels. globals.css overrides no breakpoint and
+// tailwind.config.ts is dead code, so 64rem at the 16px root size is 1024.
+const LG_BREAKPOINT = 1024;
+
+/**
+ * Set the width the MEDIA QUERY sees, not the window width.
+ *
+ * A desktop browser reserves a classic scrollbar inside the window, so
+ * `setViewportSize({ width: 1024 })` leaves the media-query width near 1009 and
+ * a boundary assertion would quietly measure the wrong side of `lg`. Mobile
+ * emulation overlays its scrollbar and needs no correction, so the difference
+ * is measured rather than assumed, and re-measured until it converges.
+ */
+async function setCssViewportWidth(
+  page: Page,
+  cssWidth: number,
+  height = 900,
+): Promise<void> {
+  let windowWidth = cssWidth;
+  const readCssWidth = () =>
+    page.evaluate(() => document.documentElement.clientWidth);
+
+  // Two passes is the expected cost: measure the gutter, then correct for it.
+  // The extra attempts absorb a scrollbar that appears with the new height.
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    await page.setViewportSize({ width: windowWidth, height });
+    const measured = await readCssWidth();
+    if (measured === cssWidth) return;
+    windowWidth += cssWidth - measured;
+  }
+  expect(
+    await readCssWidth(),
+    `CSS viewport could not be settled at ${cssWidth}px`,
+  ).toBe(cssWidth);
+}
+
+/**
+ * One measurement pass over the shell. The two shell offsets are read back from
+ * a probe element sized by the tokens themselves, so this spec never restates
+ * the pixel figures the tokens own.
+ */
+async function readShellGeometry(page: Page) {
+  return page.evaluate((rowSelector) => {
+    const row = document.querySelector(rowSelector);
+    const main = document.getElementById("main-content");
+    if (!row) throw new Error("nav header row missing");
+    if (!main) throw new Error("#main-content missing");
+
+    const probe = document.createElement("div");
+    probe.setAttribute("aria-hidden", "true");
+    probe.style.position = "absolute";
+    probe.style.visibility = "hidden";
+    probe.style.pointerEvents = "none";
+    probe.style.top = "0";
+    probe.style.left = "0";
+    probe.style.width = "0";
+    document.body.append(probe);
+    const tokenPx = (value: string) => {
+      probe.style.height = value;
+      return probe.getBoundingClientRect().height;
+    };
+    const compactToken = tokenPx("var(--nav-h-compact)");
+    const desktopToken = tokenPx("var(--nav-h)");
+    probe.remove();
+
+    const rect = row.getBoundingClientRect();
+    return {
+      compactToken,
+      desktopToken,
+      barTop: rect.top,
+      barBottom: rect.bottom,
+      barWidth: rect.width,
+      cornerRadius: getComputedStyle(row).borderTopLeftRadius,
+      mainOffset: Number.parseFloat(getComputedStyle(main).paddingTop),
+      cssViewportWidth: document.documentElement.clientWidth,
+    };
+  }, NAV_ROW);
+}
 
 // Table chapter: the route and title are sourced from the public catalog rather
 // than an unpublished manuscript. Copy may wrap to fit; containment must remain
@@ -183,6 +270,92 @@ test.describe("responsive: navigation hamburger breakpoint", () => {
     await expect(
       page.getByRole("button", { name: HAMBURGER_NAME }),
     ).toBeHidden();
+  });
+
+  // The handover width itself. 1023 CSS px is still the companion shell, 1024
+  // is already the desktop cluster, and neither side is inferred from a window
+  // size a platform scrollbar could shift by ~15px.
+  test(`@${LG_BREAKPOINT - 1} and @${LG_BREAKPOINT}: the two shells hand over exactly at lg`, async ({
+    page,
+  }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    await setCssViewportWidth(page, LG_BREAKPOINT - 1);
+    await expect(
+      page.getByRole("button", { name: HAMBURGER_NAME }),
+    ).toBeVisible();
+    await expect(page.locator(LERNEN_TRIGGER)).toBeHidden();
+
+    await setCssViewportWidth(page, LG_BREAKPOINT);
+    await expect(page.locator(LERNEN_TRIGGER)).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: HAMBURGER_NAME }),
+    ).toBeHidden();
+  });
+});
+
+test.describe("responsive: compact companion top bar", () => {
+  test("is flush and exactly --nav-h-compact below lg, an inset pill from lg", async ({
+    page,
+  }) => {
+    // Six measured widths on one loaded page. Nothing here depends on lazy
+    // content or on the webfont, so no settle walk is needed; the bar's height
+    // is a token and the offsets are computed styles.
+    test.setTimeout(60_000);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.locator(NAV_ROW).waitFor({ state: "visible" });
+
+    for (const cssWidth of [320, 390, 768, LG_BREAKPOINT - 1] as const) {
+      await setCssViewportWidth(page, cssWidth);
+      const shell = await readShellGeometry(page);
+
+      expect(shell.barTop, `bar is not flush at ${cssWidth}px`).toBeCloseTo(
+        0,
+        0,
+      );
+      expect(
+        shell.barBottom,
+        `bar is ${shell.barBottom}px tall at ${cssWidth}px, expected --nav-h-compact (${shell.compactToken}px)`,
+      ).toBeCloseTo(shell.compactToken, 0);
+      expect(
+        shell.mainOffset,
+        `content starts at ${shell.mainOffset}px at ${cssWidth}px, expected the compact band`,
+      ).toBeCloseTo(shell.compactToken, 0);
+      expect(
+        shell.barWidth,
+        `bar is not full bleed at ${cssWidth}px`,
+      ).toBeCloseTo(shell.cssViewportWidth, 0);
+      expect(
+        shell.cornerRadius,
+        `a flush bar must not keep the pill rounding at ${cssWidth}px`,
+      ).toBe("0px");
+    }
+
+    for (const cssWidth of [LG_BREAKPOINT, 1440] as const) {
+      await setCssViewportWidth(page, cssWidth);
+      const shell = await readShellGeometry(page);
+
+      expect(
+        shell.barTop,
+        `the studio pill lost its outer inset at ${cssWidth}px`,
+      ).toBeGreaterThan(0);
+      expect(
+        shell.mainOffset,
+        `content starts at ${shell.mainOffset}px at ${cssWidth}px, expected --nav-h (${shell.desktopToken}px)`,
+      ).toBeCloseTo(shell.desktopToken, 0);
+      expect(
+        shell.barBottom,
+        `the pill overlaps the content offset at ${cssWidth}px`,
+      ).toBeLessThanOrEqual(shell.mainOffset + 0.5);
+      expect(
+        shell.barWidth,
+        `the pill runs edge to edge at ${cssWidth}px`,
+      ).toBeLessThan(shell.cssViewportWidth);
+      expect(
+        shell.cornerRadius,
+        `the pill lost its rounding at ${cssWidth}px`,
+      ).not.toBe("0px");
+    }
   });
 });
 

@@ -39,6 +39,81 @@ Course distinction comes from the task, instrument, diagram motif, and dataset. 
 - Section spacing uses 8, 12, 16, 24, 32, or 48px. Larger gaps require a deliberate scene change.
 - The first meaningful action on a learning route starts without scrolling at 390 × 844 and 1440 × 900.
 
+## Mobile Companion Shell
+
+Below `lg` (1024px) the site runs as a companion app. At `lg` and above the desktop layout is unchanged. The shell is server-rendered markup plus CSS: no client hook decides layout, nothing flips at hydration, and content is not duplicated into a second DOM tree. Navigation is the only component that renders twice, once as the desktop cluster and once as the compact bar.
+
+### Reserved geometry
+
+Four `globals.css` `@theme` tokens own the shell's geometry. Nothing inside the shell restates these numbers.
+
+| Token             | Value                                     | Meaning                                                                                                     |
+| ----------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `--nav-h`         | 64px                                      | Desktop offset: the 48px floating header pill plus the 8px inset above it and the 8px breathing gap below.    |
+| `--nav-h-compact` | 48px                                      | Everything the compact top bar occupies below `lg`, outer inset included. Content begins directly beneath it. |
+| `--tabbar-h`      | 56px                                      | The tab bar row, device insets excluded.                                                                     |
+| `--tabbar-band-h` | `--tabbar-h` plus `--safe-area-bottom`    | The whole band the tab bar covers on screen.                                                                 |
+
+`--safe-area-top`, `--safe-area-right`, `--safe-area-bottom` and `--safe-area-left` wrap `env(safe-area-inset-*)` with a `0px` fallback so every `calc()` stays valid where a browser reports no insets. `.pt-safe`, `.pb-safe` and `.px-safe` apply them. A fixed shell surface pads itself with the inset instead of shrinking, so its touch targets keep full height above the home indicator.
+
+`<main>` reserves the top band: `--nav-h-compact`, and `--nav-h` from `lg`. The bottom band is reserved on `<body>`, not on `<main>`. The footer is a sibling of `<main>`, so padding `<main>` would open a dead gap above the footer and still leave the tab bar covering the footer's last row; padding `<body>` puts the reserved space at the end of the scrollable document, which is the only place a fixed bar needs it. This is a recorded deviation from "the bottom padding goes on main", and it is why `#main-content` remains the only selector the no-script sheet resets.
+
+The root layout declares `width=device-width, initial-scale=1, viewport-fit=cover`. `viewport-fit=cover` is what makes `env(safe-area-inset-*)` report real values; without it every inset is zero. Zoom stays unrestricted: no `maximum-scale`, no `user-scalable=no`.
+
+### What the shell does below lg
+
+- The top bar is compact: wordmark, language switch, menu button, `--nav-h-compact` tall in total. The existing menu dialog and its focus trap are kept as they are.
+- A bottom tab bar carries exactly four destinations: Start (`/`), Kurse (`/kurse`), Werkzeuge (`/open-source`), Konto (`/konto`). Every destination is a pure function of the locale, which middleware derives from the request path. Nothing in the bar reads the auth cookie or any other request state, and that is a cache contract: the bar sits in the root layout, so it is part of every public document, and `src/proxy.ts` caches those for an hour in the shared cache without `Vary: Cookie`. A cookie-dependent destination would let one cached entry serve either audience the other's variant, and adding `Vary: Cookie` to every public document to compensate would give up that cacheability. The signed-in tools workbench stays one tap away on the Konto tab.
+- The active tab is taken from the request path and marked with `aria-current="page"`. A server component is the intended implementation. A client island is acceptable only where the path cannot reach a server component, and it must then render identical markup on the server and add nothing beyond the link list and the pathname hook.
+- Every internal href stays locale prefixed through `localizeHref`, and every label comes from `GLOBAL_NAVIGATION_COPY`.
+- The first decision on a route comes before its explanation, and long stacks of identical cards become horizontal rails with scroll snap and `content-visibility: auto`. Rails keep a visible edge and stay reachable by keyboard.
+- The footer collapses into a `<details>` disclosure whose legal links stay visible. It opens and closes without JavaScript.
+
+### Landmarks and accessible names
+
+- `<main>` is rendered by `app/layout.tsx` alone. The shell adds none.
+- The site navigation keeps its `mainNavigation` label: "Hauptnavigation" and "Main navigation".
+- The tab bar is a second `<nav>` and carries its own distinct accessible name, `quickNavigation`: "Schnellnavigation" and "Quick navigation". The distinction is load-bearing, because `getByRole("navigation", { name })` is a single-match query and axe reports landmarks that cannot be told apart.
+- Each tab shows a visible text label of at least 12px. An icon may accompany the label and is `aria-hidden`. Icon-only tabs are not used.
+- The skip link keeps targeting `#main-content` and stays above every shell surface.
+- Keyboard focus stays out from under the tab bar (WCAG 2.4.11 Focus Not Obscured). The change that introduces the bar also reserves `scroll-padding-bottom` for `--tabbar-band-h` below `lg`, the way `html` already reserves `scroll-padding-top` for the fixed header.
+- Stacking order: focused skip link `z-[100]`, reader drawers `z-[70]`, top bar and its dialog `z-50`, tab bar `z-40`, content below that.
+
+### Reader focus mode
+
+Focus mode is server rendered and never client state, so the tab bar never appears and then vanishes. The two long-form reader shells, the course lesson shell and the book chapter reader, mark it in the first response with `data-reader="focus"` on the outermost wrapper the route owns inside `<main>`, and the shell reacts through `body:has([data-reader="focus"])`. If the request path later reaches the root layout, the same attribute may sit on the root element and `:root[data-reader="focus"]` becomes an equivalent second form of the selector. Nothing toggles the attribute after hydration.
+
+The workshop routes are marketing detail pages rather than reader shells, so they set no attribute and keep the tab bar.
+
+In focus mode:
+
+- the tab bar is absent;
+- a compact sticky reader bar of the same `--tabbar-h` height takes the band, so exchanging one for the other shifts no layout;
+- that bar is never absent. Focus mode takes the tab bar away, so a reader shell that entered it and rendered no bar would leave the phone with no bottom navigation at all;
+- that bar states course position, for example "3 von 12", plus the next action. A shell that is generic over course structures owns the band without owning the position - the lesson shell is handed an opaque navigation slot and cannot derive a lesson index from it - and then states an action alone rather than inventing a position. It does not draw a second continuous scroll thread: the enforcement list below bans route-specific fixed duplicates of the global progress indicator;
+- the site nav may collapse on scroll down and return on scroll up through CSS scroll-driven animation where the browser supports it, and stays static everywhere else. No scroll listener is added for this.
+
+### Without JavaScript
+
+The compact bar hides its menu button (`js-mobile-nav-toggle`) and the complete static link list (`no-js-mobile-nav`) takes over, as it did before the shell existed. The top bar drops out of fixed positioning (`no-js-primary-nav`) and `#main-content` loses its top offset.
+
+The tab bar deliberately has no rule in `src/lib/a11y/no-script.ts`. It is four links and CSS, it needs no scripting, and it stays fixed, which makes it the persistent navigation once the top bar goes static. The reserved bottom band therefore stays reserved. The sheet is one flat rule list injected inside `<noscript>` and stays free of media queries: a rule there applies at every width, so forcing the tab bar visible would also show it on desktop. A shell control that genuinely needs scripting carries `js-shell-only` and is removed rather than left inert.
+
+### Not allowed
+
+- A second `<main>`, or a second `<nav>` without its own accessible name.
+- An interactive target below 44 by 44px, or a UI label below 12px, including tab labels and the footer summary.
+- `transition: all`, an infinite or decorative animation, more than one moving region at a time, or a second fixed progress indicator.
+- Layout that depends on JavaScript, state that changes at hydration, or a bar that hides itself from a scroll listener.
+- Reader focus mode with an empty band: removing the tab bar without rendering the reader bar that replaces it.
+- A destination or a label in the tab bar that varies by cookie or by any other request state the public cache does not vary on.
+- `100vh` for shell heights. Use `100svh` or `100dvh`, and read device insets only through the safe-area tokens.
+- `maximum-scale` or `user-scalable=no` in the viewport.
+- Dropping a destination or a fact on mobile that the desktop layout still shows. The shell reorders, collapses into disclosure, and moves rows into rails; it does not shorten the site.
+- Hard-coded 48px or 56px offsets anywhere in the shell. Use the tokens.
+
+Printing needs no shell rules: the print stylesheet already hides every `nav` and the footer.
+
 ## Interaction Grammar
 
 Every learning instrument follows three visible beats:

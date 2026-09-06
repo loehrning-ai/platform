@@ -3,6 +3,8 @@ import type { Locale } from "./locale";
 export interface GlobalNavigationCopy {
   readonly skipToContent: string;
   readonly mainNavigation: string;
+  /** Accessible name of the mobile companion tab bar, the second nav landmark. */
+  readonly quickNavigation: string;
   readonly openMenu: string;
   readonly closeMenu: string;
   readonly home: string;
@@ -23,6 +25,14 @@ export interface GlobalNavigationCopy {
   readonly blog: string;
   readonly aboutTim: string;
   readonly openSource: string;
+  /**
+   * Tab-bar labels. Short by contract: each one has a quarter of a 320px
+   * viewport, which `home` ("Startseite") and `allCourses` ("Alle Kurse")
+   * do not fit. `account` is the fourth tab label and is shared.
+   */
+  readonly start: string;
+  readonly courses: string;
+  readonly tools: string;
   readonly account: string;
   readonly login: string;
   readonly githubOrganisation: string;
@@ -34,6 +44,7 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
   de: {
     skipToContent: "Zum Inhalt springen",
     mainNavigation: "Hauptnavigation",
+    quickNavigation: "Schnellnavigation",
     openMenu: "Menü öffnen",
     closeMenu: "Menü schließen",
     home: "Startseite",
@@ -54,6 +65,9 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     blog: "Blog",
     aboutTim: "Über mich",
     openSource: "Open Source",
+    start: "Start",
+    courses: "Kurse",
+    tools: "Werkzeuge",
     account: "Konto",
     login: "Login",
     githubOrganisation: "loehrning-ai auf GitHub",
@@ -61,6 +75,7 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
   en: {
     skipToContent: "Skip to content",
     mainNavigation: "Primary navigation",
+    quickNavigation: "Quick navigation",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     home: "Home",
@@ -81,6 +96,9 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     blog: "Blog",
     aboutTim: "About me",
     openSource: "Open Source",
+    start: "Home",
+    courses: "Courses",
+    tools: "Tools",
     account: "Account",
     login: "Login",
     githubOrganisation: "loehrning-ai on GitHub",

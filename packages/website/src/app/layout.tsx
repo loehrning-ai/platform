@@ -10,6 +10,7 @@ import { LearningOwnerBoundary } from "@/components/progress/learning-owner-boun
 import { UserProgressSync } from "@/components/auth/user-progress-sync";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { MobileTabBar } from "@/components/mobile-tab-bar";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { LocaleProvider } from "@/components/i18n/locale-context";
 import { NO_SCRIPT_FALLBACK_CSS } from "@/lib/a11y/no-script";
@@ -82,6 +83,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // The companion shell below lg paints to the physical edges of the display
+  // and reads the device insets back through env(safe-area-inset-*), which
+  // report zero unless the viewport covers the whole screen. Zoom stays
+  // unrestricted: no maximumScale, no userScalable.
+  viewportFit: "cover",
   themeColor: "#f7f1e7",
 };
 
@@ -115,7 +123,7 @@ export default async function RootLayout({
       data-scroll-behavior="smooth"
       className={geistMono.variable}
     >
-      <body className="min-h-[100svh] bg-background text-foreground antialiased font-sans">
+      <body className="min-h-[100svh] bg-background pb-[var(--tabbar-band-h)] text-foreground antialiased font-sans lg:pb-0">
         <JsonLd data={SITE_GRAPH} id="site-jsonld" />
         <a
           href="#main-content"
@@ -140,8 +148,17 @@ export default async function RootLayout({
         </LocaleProvider>
         {/* App Router children remain entirely server-owned here. Passing this
             streamed subtree through a root client provider can make a retry
-            resume with React's hydration cursor inside the next server host. */}
-        <main id="main-content" className="relative pt-16">
+            resume with React's hydration cursor inside the next server host.
+
+            The top band comes from tokens rather than a hard-coded offset: the
+            compact companion bar below lg, the 64px header from lg. The tab
+            bar's band is reserved on <body> instead, because the footer is a
+            sibling of <main> and a fixed bar only needs that space at the end
+            of the scrollable document. */}
+        <main
+          id="main-content"
+          className="relative pt-[var(--nav-h-compact)] lg:pt-[var(--nav-h)]"
+        >
           <LocaleProvider locale={locale}>
             <LearningOwnerBoundary />
           </LocaleProvider>
@@ -150,6 +167,13 @@ export default async function RootLayout({
         <ScrollToTop />
         <HydrationMarker />
         <Footer />
+        {/* The companion shell's second navigation landmark, below lg only.
+            DOM order is load-bearing twice over: it must follow <Nav />, so
+            the first navigation landmark stays the site nav that
+            a11y-structure.spec.ts resolves with .first(), and it must come
+            last so tab order matches its position at the bottom edge. The
+            band it covers is already reserved on <body>. */}
+        <MobileTabBar />
         <UserProgressSync />
         {vercelTelemetryEnabled ? (
           <>

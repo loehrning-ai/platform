@@ -11,18 +11,24 @@
   display: none !important;
 }
 
-/* Horizontal section dock — sticky directly below the site Nav (64px).
+/* Horizontal section dock — sticky directly below the site Nav.
    Includes a "Zurück" back-link and the article's anchor items. */
 .railbar {
-  /* Pin to the fixed site-nav height so no strip of article content bleeds
-     between the nav and the railbar while scrolling. */
+  /* Pin to the header height so no strip of article content bleeds between
+     the nav and the railbar while scrolling. Below lg that header is the 48px
+     compact companion bar, from lg it is the 64px desktop band. */
   position: sticky;
-  top: var(--nav-h);
+  top: var(--nav-h-compact);
   z-index: 45;
   background: var(--kalkweiss);
   border-bottom: 1px solid var(--leinen);
   overflow-x: auto;
   scrollbar-width: none;
+}
+@media (min-width: 64rem) {
+  .railbar {
+    top: var(--nav-h);
+  }
 }
 .railbar::-webkit-scrollbar {
   display: none;

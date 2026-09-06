@@ -52,9 +52,14 @@ export default async function KursePage() {
   return (
     <>
       <JsonLd data={createCoursesGraph(locale)} id="kurse-hub-jsonld" />
-      <div className="mx-auto max-w-[1180px] px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
-        <header className="grid gap-4 border-b border-border pb-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.65fr)] lg:items-end">
-          <h1 className="max-w-[820px] text-[38px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[48px] md:text-[56px]">
+      {/* Below lg this hub reads as a companion screen: the title band has to
+          leave room for the level chips and the first atlas decision inside
+          390x844. Every base value here is the phone value, and each
+          `sm:`/`lg:` variant restores the reviewed desktop geometry byte for
+          byte, so the 1440 baseline does not move. */}
+      <div className="mx-auto max-w-[1180px] px-4 pb-8 pt-5 sm:px-6 sm:pt-10 lg:pb-12">
+        <header className="grid gap-3 border-b border-border pb-4 sm:gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.65fr)] lg:items-end lg:pb-6">
+          <h1 className="max-w-[820px] text-[30px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[48px] md:text-[56px]">
             {copy.headingLead}
             <br />
             <span className="text-brand-orange">{copy.headingAccent}</span>
@@ -73,11 +78,11 @@ export default async function KursePage() {
           </p>
         </header>
 
-        <section className="mt-6" data-learning-gallery>
+        <section className="mt-4 sm:mt-6" data-learning-gallery>
           <LearningAtlas locale={locale} />
         </section>
 
-        <aside className="mt-10 border border-border border-t-[3px] border-t-brand-orange bg-kupfer-mist">
+        <aside className="mt-8 border border-border border-t-[3px] border-t-brand-orange bg-kupfer-mist lg:mt-10">
           <details className="group">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-left marker:content-none sm:px-5 [&::-webkit-details-marker]:hidden">
               <span>

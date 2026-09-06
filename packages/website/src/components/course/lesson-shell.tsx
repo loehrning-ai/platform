@@ -11,6 +11,10 @@ import {
 import { m } from "framer-motion";
 import { Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { MotionProvider } from "@/components/motion-provider";
+import {
+  ReaderFocusBar,
+  type ReaderFocusBarAction,
+} from "@/components/learning/reader-focus-bar";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 import {
   hasSharedInertOwner,
@@ -23,6 +27,21 @@ export const LESSON_SHELL_SIDEBAR_STORAGE_KEY =
   "loehrning:lesson-shell:sidebar:v1";
 
 export type LessonShellContentMode = "reading" | "stage" | "workspace";
+
+/**
+ * What a course reader adds to the compact reader bar below lg: where the
+ * learner is in the course and how to continue. The shell owns the bar itself,
+ * its geometry and its fallback control; this is the enrichment only a course
+ * reader can supply, because only it knows the lesson order and the next step.
+ */
+export interface LessonShellReaderBar {
+  /** Visible position, for example "Lektion 3 von 12". */
+  readonly position: string;
+  /** Spoken position when the visible text is a bare fraction. */
+  readonly positionLabel?: string;
+  /** The next action. Omitted at the end of a block. */
+  readonly next?: ReaderFocusBarAction;
+}
 
 const CONTENT_WIDTH_CLASS: Record<LessonShellContentMode, string> = {
   reading: "max-w-3xl",
@@ -133,6 +152,18 @@ export interface LessonShellProps {
   readonly expandNavLabel?: string;
   /** Produces unique ID namespaces when the same sidebar renders twice. */
   readonly renderSidebar?: (instance: "desktop" | "mobile") => ReactNode;
+  /**
+   * Enriches the compact reader bar below lg with the lesson position and the
+   * next step. Optional because the shell cannot derive either value: the
+   * sidebar it is handed is an opaque ReactNode, there is no lesson context
+   * above it, and course readers disagree on whether "next" is a route or an
+   * in-page state change. A course reader that knows both should pass them.
+   *
+   * It is NOT the switch that decides whether the bar exists. Focus mode below
+   * removes the mobile tab bar, so the bar is rendered either way and the band
+   * the document reserves is never left empty - see the render site.
+   */
+  readonly readerBar?: LessonShellReaderBar;
 }
 
 export function LessonShell({
@@ -148,6 +179,7 @@ export function LessonShell({
   collapseNavLabel = "Seitenleiste einklappen",
   expandNavLabel = "Seitenleiste ausklappen",
   renderSidebar,
+  readerBar,
 }: LessonShellProps) {
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const previousNavOpenRef = useRef(navOpen);
@@ -264,11 +296,16 @@ export function LessonShell({
     return acquireLessonDrawerScrollLock();
   }, [navOpen]);
 
+  // Reader focus mode (docs/experience-system.md, "Reader focus mode"): the
+  // attribute is static markup on the wrapper this shell owns inside <main>,
+  // so it is in the first response, never toggles, and the mobile tab bar
+  // (`body:has([data-reader="focus"])`) is absent from the first paint on.
   return (
     <div
       className="flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip bg-background"
       data-lesson-shell
       data-content-mode={contentMode}
+      data-reader="focus"
     >
       {/* Desktop sidebar */}
       <aside
@@ -350,7 +387,13 @@ export function LessonShell({
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-foreground bg-background pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-3 pt-[max(0.75rem,env(safe-area-inset-top))] lg:hidden"
+              // The drawer reaches three display edges, so it pads itself with
+              // the shell's safe-area tokens rather than reading env() here.
+              // Same computed inset, one definition point: the tokens carry the
+              // 0px fallback that keeps every max() valid, and overriding one on
+              // :root moves every fixed shell surface together, which is how the
+              // mobile shell suite drives an inset the emulator will not report.
+              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-foreground bg-background pb-[max(1rem,var(--safe-area-bottom))] pl-[max(1rem,var(--safe-area-left))] pr-3 pt-[max(0.75rem,var(--safe-area-top))] lg:hidden"
             >
               <div className="mb-3 flex min-h-14 items-center justify-between gap-3 border-b border-foreground pb-2">
                 <span className="min-w-0 break-words border-l-2 border-brand-orange pl-3 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
@@ -375,9 +418,12 @@ export function LessonShell({
 
       {/* Main content */}
       <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 py-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
+        {/* Sticks under the compact top bar plus the 3rem block sub-header row
+            that course routes place directly beneath it. The offset is derived
+            from the shell token, never restated as pixels. */}
         <div
           data-lesson-shell-mobile-toolbar
-          className="sticky top-28 z-40 -mx-4 mb-4 flex min-h-14 min-w-0 items-center justify-between gap-3 overflow-hidden border-y border-foreground bg-card px-4 sm:-mx-5 sm:px-5 lg:hidden"
+          className="sticky top-[calc(var(--nav-h-compact)+3rem)] z-40 -mx-4 mb-4 flex min-h-14 min-w-0 items-center justify-between gap-3 overflow-hidden border-y border-foreground bg-card px-4 sm:-mx-5 sm:px-5 lg:hidden"
         >
           <span className="min-w-0 break-words border-l-2 border-brand-orange pl-3 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
             {navLabel}
@@ -410,6 +456,35 @@ export function LessonShell({
           {children}
         </div>
       </div>
+
+      {/* Compact reader bar below lg. A sibling of the drawer, so the drawer's
+          inert sweep covers it like the rest of the page.
+
+          It is rendered unconditionally, and that is the whole point of it:
+          `data-reader="focus"` above removes the mobile tab bar below lg, so a
+          shell that rendered no bar here would take the phone's only bottom
+          navigation away and put nothing back. The chapter reader is the
+          precedent - it renders its bar unconditionally too.
+
+          The bar's fallback action is the one thing the shell genuinely owns:
+          the lesson list in its own drawer, the counterpart of the chapter
+          reader's contents sheet. It is named `navLabel` rather than
+          `openNavLabel`, because the sticky toolbar above already owns that
+          name and two controls sharing one accessible name would make every
+          name-based query against this shell ambiguous. Like any scripted
+          control it carries `js-shell-only` and is removed without
+          JavaScript, where the drawer cannot open anyway. */}
+      <ReaderFocusBar
+        position={readerBar?.position}
+        positionLabel={readerBar?.positionLabel}
+        action={
+          readerBar?.next ?? {
+            kind: "button",
+            label: navLabel,
+            onSelect: () => onNavOpenChange(true),
+          }
+        }
+      />
     </div>
   );
 }
