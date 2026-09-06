@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   isLearningOwnerRoute,
+  isProgressRuntimeRoute,
   isProgressUiRoute,
 } from "./learning-route-policy";
 
@@ -64,5 +65,70 @@ describe("isProgressUiRoute", () => {
     "/en/kurse/open-source/data-infrastructure/verifizierung",
   ])("does not block the read-only public route %s", (pathname) => {
     expect(isLearningOwnerRoute(pathname)).toBe(false);
+  });
+});
+
+describe("isProgressRuntimeRoute", () => {
+  it.each([
+    "/ai-native",
+    "/ai-native/verifizierung",
+    "/buecher/ki-landschaft",
+    "/eu-ai-act-kurs/kurs",
+    "/ki-fuehrerschein",
+    "/ki-und-gesellschaft/kurs/quiz",
+    "/kurse",
+    "/kurse/open-source",
+    "/kurse/open-source/codex/verifizierung",
+    "/konto",
+    "/konto/datenschutz",
+    "/en/kurse/open-source/codex/kurs",
+    "/en/konto",
+  ])("reconciles account and progress state on %s", (pathname) => {
+    expect(isProgressRuntimeRoute(pathname)).toBe(true);
+  });
+
+  it.each([
+    "/",
+    "/blog/eu-ai-act-grundlagen",
+    "/datenschutz",
+    "/demos/prompt-scanner",
+    "/impressum",
+    "/ki-check",
+    "/login",
+    "/ueber-mich",
+    "/workshops",
+    "/en/impressum",
+  ])("requests no reconciliation runtime on %s", (pathname) => {
+    expect(isProgressRuntimeRoute(pathname)).toBe(false);
+  });
+
+  it("stays the widest of the three predicates", () => {
+    // The runtime affects every ledger surface and both account pages, so
+    // neither narrower predicate may claim a route it does not cover.
+    for (const pathname of [
+      "/ai-native",
+      "/buecher",
+      "/eu-ai-act-kurs/kurs",
+      "/ki-fuehrerschein/kurs",
+      "/ki-und-gesellschaft",
+      "/konto",
+      "/konto/datenschutz",
+      "/kurse",
+      "/kurse/open-source/claude/kurs/zertifikat",
+      "/en/kurse/open-source/data-science",
+    ]) {
+      if (isProgressUiRoute(pathname) || isLearningOwnerRoute(pathname)) {
+        expect(isProgressRuntimeRoute(pathname)).toBe(true);
+      }
+    }
+    expect(isProgressUiRoute("/konto")).toBe(false);
+    expect(isLearningOwnerRoute("/kurse")).toBe(false);
+    expect(isProgressRuntimeRoute("/konto")).toBe(true);
+    expect(isProgressRuntimeRoute("/kurse")).toBe(true);
+  });
+
+  it("rejects an unparseable pathname", () => {
+    expect(isProgressRuntimeRoute("//evil.example/konto")).toBe(false);
+    expect(isProgressRuntimeRoute("konto")).toBe(false);
   });
 });
