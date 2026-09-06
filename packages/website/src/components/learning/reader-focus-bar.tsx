@@ -67,10 +67,23 @@ export interface ReaderFocusBarProps {
 }
 
 const ACTION_CLASS_NAME =
-  "inline-flex min-h-11 min-w-11 max-w-[60%] shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
-function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }) {
+function ReaderFocusAction({
+  action,
+  reserveContextSpace,
+}: {
+  readonly action: ReaderFocusBarAction;
+  readonly reserveContextSpace: boolean;
+}) {
   const arrow = <ArrowRight aria-hidden="true" className="size-4 shrink-0" />;
+  // Reserve room for real position/contents controls, not an empty leading cell.
+  // Long labels wrap within their allocation rather than hiding the action.
+  const actionClassName = cn(
+    ACTION_CLASS_NAME,
+    reserveContextSpace ? "max-w-[60%]" : "max-w-full",
+  );
+  const labelClassName = "min-w-0 whitespace-normal [overflow-wrap:anywhere]";
 
   if (action.kind === "link") {
     return (
@@ -78,9 +91,9 @@ function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }
         href={action.href}
         aria-label={action.ariaLabel}
         data-reader-focus-action
-        className={ACTION_CLASS_NAME}
+        className={actionClassName}
       >
-        <span className="min-w-0 truncate">{action.label}</span>
+        <span className={labelClassName}>{action.label}</span>
         {arrow}
       </Link>
     );
@@ -94,9 +107,9 @@ function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }
       onClick={action.onSelect}
       aria-label={action.ariaLabel}
       data-reader-focus-action
-      className={cn(ACTION_CLASS_NAME, "js-shell-only")}
+      className={cn(actionClassName, "js-shell-only")}
     >
-      <span className="min-w-0 truncate">{action.label}</span>
+      <span className={labelClassName}>{action.label}</span>
       {arrow}
     </button>
   );
@@ -108,6 +121,7 @@ export function ReaderFocusBar({
   children,
   action,
 }: ReaderFocusBarProps) {
+  const reserveContextSpace = position !== undefined || children != null;
   return (
     <div
       data-reader-focus-bar
@@ -115,13 +129,14 @@ export function ReaderFocusBar({
     >
       <div
         data-reader-focus-bar-row
-        className="flex h-[var(--tabbar-h)] min-w-0 items-center gap-2 px-3 sm:px-4"
+        className="flex h-[var(--tabbar-h)] min-w-0 items-center justify-end gap-2 px-3 sm:px-4"
       >
         {position === undefined ? (
-          // The same flexible leading cell, so a bar without a position has
-          // the identical row geometry and trailing action position as one
-          // with it.
-          <span aria-hidden="true" className="min-w-0 flex-1" />
+          // Controls without a position still align to the trailing edge. A
+          // standalone action needs no empty flex item or its extra gap.
+          reserveContextSpace || !action ? (
+            <span aria-hidden="true" className="min-w-0 flex-1" />
+          ) : null
         ) : (
           <p
             data-reader-focus-position
@@ -138,7 +153,12 @@ export function ReaderFocusBar({
           </p>
         )}
         {children}
-        {action ? <ReaderFocusAction action={action} /> : null}
+        {action ? (
+          <ReaderFocusAction
+            action={action}
+            reserveContextSpace={reserveContextSpace}
+          />
+        ) : null}
       </div>
     </div>
   );

@@ -104,6 +104,46 @@ describe("<ReaderFocusBar>", () => {
     expect(order).toEqual(["position", "Inhalt", "Weiter"]);
   });
 
+  it("lets a standalone navigation action use the available row without truncating its label", () => {
+    render(
+      <ReaderFocusBar
+        action={{ kind: "button", label: "Kapitelnavigation", onSelect: vi.fn() }}
+      />,
+    );
+
+    const action = screen.getByRole("button", { name: "Kapitelnavigation" });
+    expect(action).toHaveClass("max-w-full", "min-h-11");
+    expect(action).not.toHaveClass("max-w-[60%]");
+    const row = document.querySelector("[data-reader-focus-bar-row]");
+    expect(row).toHaveClass("justify-end");
+    expect(row?.children).toHaveLength(1);
+    expect(screen.getByText("Kapitelnavigation")).toHaveClass(
+      "whitespace-normal",
+      "[overflow-wrap:anywhere]",
+    );
+    expect(screen.getByText("Kapitelnavigation")).not.toHaveClass("truncate");
+  });
+
+  it("reserves room for contents controls while retaining the full link label", () => {
+    render(
+      <ReaderFocusBar
+        action={{ kind: "link", label: "Zur Kursübersicht", href: "/kurse" }}
+      >
+        <button type="button">Inhalt</button>
+      </ReaderFocusBar>,
+    );
+
+    const action = screen.getByRole("link", { name: "Zur Kursübersicht" });
+    expect(action).toHaveClass("max-w-[60%]", "min-h-11");
+    expect(action).not.toHaveClass("max-w-full");
+    expect(screen.getByText("Zur Kursübersicht")).toHaveClass(
+      "whitespace-normal",
+      "[overflow-wrap:anywhere]",
+    );
+    expect(screen.getByText("Zur Kursübersicht")).not.toHaveClass("truncate");
+    expect(screen.getByRole("button", { name: "Inhalt" })).toBeVisible();
+  });
+
   it("draws no second progress thread and uses only bounded motion", () => {
     const source = readFileSync(join(__dirname, "reader-focus-bar.tsx"), "utf8");
 

@@ -18,6 +18,7 @@ import {
  */
 
 const ROUTE = "/kurse";
+const CLAUDE_START = "/kurse/open-source/claude/kurs/mental-model";
 
 // Native course tracks (h3 card headings) - source of truth: lib/courses/catalog.ts.
 const NATIVE_TRACKS = [
@@ -77,37 +78,46 @@ test.describe("/kurse hub", () => {
     await expect(allCourses.getByRole("progressbar")).toHaveCount(0);
   });
 
-  test("primary CTA links to the course track, which login-gates an anonymous visitor", async ({
+  test("primary CTA discloses an open course and reaches its public lesson", async ({
     page,
   }) => {
-    // "load" so the Next <Link> is hydrated before the click; clicking mid-
-    // hydration cancels the client navigation and the URL stays on /kurse.
-    await page.goto(ROUTE, { waitUntil: "load" });
+    await page.addInitScript(() => localStorage.clear());
+    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
-    // Fresh visitor → one explicit next proof, href = startHref of the track.
-    const startCta = page.getByTestId("next-proof").getByRole("link", {
-      name: /Nachweis beginnen.*KI-Führerschein/i,
+    // Provider-free cold start offers one disclosed open task. Direct gated
+    // route protection is covered separately in route-ki-fuehrerschein.spec.ts.
+    const proof = page.getByTestId("next-proof");
+    await expect(
+      proof.getByRole("heading", { name: "Claude Course", exact: true }),
+    ).toBeVisible();
+    await expect(
+      proof.getByText("Offener Einstieg ohne Lernkonto", { exact: true }),
+    ).toBeVisible();
+    await expect(proof.getByRole("link")).toHaveCount(1);
+    await expect(
+      proof.locator("[data-open-course-alternative]"),
+    ).toHaveCount(0);
+    const startCta = proof.getByRole("link", {
+      name: /^Nachweis beginnen\s*:\s*Claude Course$/,
     });
     await expect(startCta).toBeVisible();
-    await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
+    await expect(startCta).toHaveAttribute("href", CLAUDE_START);
 
-    // KI-Führerschein's /kurs* is login-gated (exception to policy D1 — see
-    // src/lib/crawl/contract.ts PROTECTED_PATHS), so an anonymous click is
-    // redirected to /login with next= pointing back at the hub.
     await startCta.click();
-    await page.waitForURL(/\/login/);
-    const url = new URL(page.url());
-    expect(
-      url.pathname,
-      "CTA must land on /login for an anonymous visitor",
-    ).toBe("/login");
-    expect(url.searchParams.get("next")).toBe("/ki-fuehrerschein/kurs");
-    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === CLAUDE_START && url.search === "" && url.hash === "",
+    );
+    await expect(page.locator('[data-lesson-mission="claude"]')).toBeVisible();
   });
 
-  test("learning goals reorder the path and expose one matching next proof", async ({
+  test("learning goals retain their course and disclose its available actions", async ({
     page,
   }) => {
+    await page.addInitScript(() => localStorage.clear());
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     // The goal buttons are server-rendered but inert until React attaches
@@ -120,26 +130,77 @@ test.describe("/kurse hub", () => {
 
     const goals = page.getByRole("group", { name: "Lernziel auswählen" });
     await expect(goals).toBeVisible();
+    await expect(goals.getByRole("button")).toHaveCount(4);
 
     const decisions = [
-      ["Sicher starten", "start", "/ki-fuehrerschein/kurs"],
-      ["Folgen beurteilen", "judge", "/ki-und-gesellschaft/kurs"],
-      ["Mit KI bauen", "build", "/ai-native/kurs/modul_1"],
-      [
-        "Daten entscheiden",
-        "data",
-        "/kurse/open-source/data-engineering-fundamentals/home",
-      ],
+      {
+        label: "Sicher starten",
+        goal: "start",
+        course: "KI-Führerschein",
+        href: "/ki-fuehrerschein",
+        alternative: { course: "Claude Course", href: CLAUDE_START },
+      },
+      {
+        label: "Folgen beurteilen",
+        goal: "judge",
+        course: "KI und Gesellschaft",
+        href: "/ki-und-gesellschaft",
+        alternative: {
+          course: "Data Science Fundamentals",
+          href: "/kurse/open-source/data-science",
+        },
+      },
+      {
+        label: "Mit KI bauen",
+        goal: "build",
+        course: "AI-Native Arbeitskurs",
+        href: "/ai-native",
+        alternative: { course: "Claude Course", href: CLAUDE_START },
+      },
+      {
+        label: "Daten entscheiden",
+        goal: "data",
+        course: "Data Engineering Fundamentals",
+        href: "/kurse/open-source/data-engineering-fundamentals/home",
+        alternative: null,
+      },
     ] as const;
 
-    for (const [label, goal, href] of decisions) {
+    const proof = page.getByTestId("next-proof");
+    for (const { label, goal, course, href, alternative } of decisions) {
       const button = goals.getByRole("button", { name: label });
       await button.click();
       await expect(button).toHaveAttribute("aria-pressed", "true");
+      await expect(goals.locator('[aria-pressed="true"]')).toHaveCount(1);
       await expect(page).toHaveURL(new RegExp(`[?&]goal=${goal}(?:&|$)`));
       await expect(
-        page.getByTestId("next-proof").getByRole("link"),
-      ).toHaveAttribute("href", href);
+        proof.getByRole("heading", { name: course, exact: true }),
+      ).toBeVisible();
+
+      // One primary action remains strict even when a separate open alternative
+      // is valid. Never turn a selected unavailable course into another course.
+      const primary = proof.locator("a:not([data-open-course-alternative])");
+      const actionLabel = alternative
+        ? "Hier nicht verfügbar · Kursübersicht"
+        : "Nachweis beginnen";
+      await expect(primary).toHaveCount(1);
+      await expect(primary).toBeVisible();
+      await expect(primary).toHaveAttribute("href", href);
+      await expect(primary.locator("span").first()).toHaveText(actionLabel);
+      await expect(primary).toHaveAccessibleName(
+        new RegExp(`^${actionLabel}\\s*:\\s*${course}$`),
+      );
+
+      const openAlternative = proof.locator("[data-open-course-alternative]");
+      await expect(proof.getByRole("link")).toHaveCount(alternative ? 2 : 1);
+      await expect(openAlternative).toHaveCount(alternative ? 1 : 0);
+      if (alternative) {
+        await expect(openAlternative).toBeVisible();
+        await expect(openAlternative).toHaveAccessibleName(
+          `Offene Alternative ohne Lernkonto: ${alternative.course}`,
+        );
+        await expect(openAlternative).toHaveAttribute("href", alternative.href);
+      }
     }
   });
 });
