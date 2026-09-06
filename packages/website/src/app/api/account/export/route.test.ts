@@ -128,6 +128,30 @@ function queryResult(
   return builder;
 }
 
+/** PostgREST's answer in a project without the resume tool's schema. */
+const CV_ENGINE_TABLE_ABSENT = {
+  code: "PGRST205",
+  message: "Could not find the table 'public.documents' in the schema cache",
+};
+
+/**
+ * The cookie-bound client the export reads the learner's own rows with. Its
+ * only table is the resume tool's `documents`; progress comes from a mocked
+ * store. The default answer is the one a project without that tool gives.
+ */
+function cookieClient(
+  documentsQuery: ReturnType<typeof queryResult> = queryResult(
+    [],
+    CV_ENGINE_TABLE_ABSENT,
+  ),
+) {
+  return {
+    id: "cookie-client",
+    from: vi.fn(() => documentsQuery),
+    documentsQuery,
+  };
+}
+
 const EMPTY_PROGRESS = {
   schemaVersion: 3,
   courses: {},
@@ -145,7 +169,7 @@ beforeEach(() => {
     user: { id: "user-1", email: "learner@example.test" },
   });
   mockCreateAuthServerClient.mockReset();
-  mockCreateAuthServerClient.mockResolvedValue({ id: "cookie-client" });
+  mockCreateAuthServerClient.mockResolvedValue(cookieClient());
   mockFetchProgress.mockReset();
   mockFetchProgress.mockResolvedValue({
     ok: true,
@@ -322,6 +346,10 @@ describe("GET /api/account/export", () => {
     expect(runsQuery.range).toHaveBeenCalledWith(0, 999);
     expect(answersQuery.range).toHaveBeenCalledWith(0, 999);
   });
+
+
+
+
 
   it("paginates by actual rows returned when the project cap is below the requested range", async () => {
     const runs = Array.from({ length: 1_003 }, (_, index) => ({

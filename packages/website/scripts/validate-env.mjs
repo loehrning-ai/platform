@@ -971,13 +971,13 @@ if (byoChatEnabled !== "true" && (accountLlmKek || byoChatModelAllowlist)) {
   );
 }
 
-// Account-connected tools. The hosted cv-engine and the platform's own MCP
-// server are separate opt-in capabilities layered on the learning account.
-// Each stays off unless its whole group is present: an origin the deployer
-// actually controls, a dated confirmation that the deployment was reviewed and
-// reached, and the account backend that stores the documents, grants, and
-// audit trail. Runtime readiness mirrors these groups in
-// src/lib/provider-readiness.ts, so a half-configured tool is never advertised.
+// Hosted cv-engine. The resume editor runs outside this project, on a host we
+// operate, and the account page hands it a one-time sign-in token. It stays off
+// unless its whole group is present: an origin the deployer actually controls,
+// a dated confirmation that the deployment was reviewed and reached, and the
+// account backend that stores the documents. Runtime readiness mirrors this
+// group in src/lib/provider-readiness.ts, so a half-configured tool is never
+// advertised and never receives a token.
 const HOSTED_TOOL_HOSTNAME_PATTERN =
   /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
 const cvEngineHostedUrl = process.env.CV_ENGINE_HOSTED_URL;

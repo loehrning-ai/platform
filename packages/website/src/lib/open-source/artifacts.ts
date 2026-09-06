@@ -204,6 +204,7 @@ export const SOFTWARE_ARTIFACT_DELIVERY_MODES = [
   "source-only",
   "internal-route",
   "external-service",
+  "hosted-service",
 ] as const;
 
 export type SoftwareArtifactDeliveryMode =
@@ -220,6 +221,17 @@ export type SoftwareArtifactDelivery =
     }
   | {
       readonly delivery: "external-service";
+      readonly launchHref: string;
+    }
+  /**
+   * An instance of the published source that loehrning.ai runs itself. It is
+   * separated from `external-service` because the label must not call the
+   * operator's own machine a third-party service, and because the validator
+   * below keeps the launch target on a loehrning.ai subdomain: a mode that
+   * says "we run this" may never point at somebody else's server.
+   */
+  | {
+      readonly delivery: "hosted-service";
       readonly launchHref: string;
     };
 
@@ -355,6 +367,32 @@ function assertHttpsHref(id: string, field: string, value: unknown): URL {
     artifactError(id, field, "must use HTTPS without embedded credentials");
   }
   return parsed;
+}
+
+/**
+ * Every host that a `hosted-service` launch target may use. The suffix is
+ * checked against the parsed hostname, so a lookalike such as
+ * `loehrning.ai.example.com` never matches, and the apex is excluded because
+ * the platform's own routes are `internal-route`, not a hosted instance.
+ */
+const HOSTED_SERVICE_HOST_SUFFIX = ".loehrning.ai";
+
+function assertHostedServiceHref(
+  id: string,
+  field: string,
+  value: unknown,
+): void {
+  const parsed = assertHttpsHref(id, field, value);
+  if (
+    !parsed.hostname.endsWith(HOSTED_SERVICE_HOST_SUFFIX) ||
+    parsed.hostname.length <= HOSTED_SERVICE_HOST_SUFFIX.length
+  ) {
+    artifactError(
+      id,
+      field,
+      `must be an HTTPS URL on a subdomain of ${HOSTED_SERVICE_HOST_SUFFIX.slice(1)}`,
+    );
+  }
 }
 
 function assertPublicHref(id: string, field: string, value: unknown): void {
@@ -533,6 +571,9 @@ function assertSoftwareArtifactDelivery(
       return;
     case "external-service":
       assertHttpsHref(id, "launchHref", launchHref);
+      return;
+    case "hosted-service":
+      assertHostedServiceHref(id, "launchHref", launchHref);
       return;
   }
 }
@@ -1293,9 +1334,25 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     sizeBytes: 1066,
     licenseId: "MIT",
   },
-  // Source only: there is no hosted instance and none is planned. A hosted
-  // editor would receive the CV of whoever opened it, which the delivery
-  // contract and the honesty guardrail both rule out.
+  // Source only, deliberately, and a build-time constant rather than an
+  // environment read: the sitemap, `llms.txt` and the knowledge-graph endpoint
+  // must be identical in every environment, so this registry may never depend
+  // on a variable. A `hosted-service` entry here is a public promise that a
+  // machine answers, and none does yet.
+  //
+  // Flipping this to `delivery: "hosted-service"` plus
+  // `launchHref: "https://cv.loehrning.ai"` requires all four of these to be
+  // true first, verified by hand, not assumed:
+  //
+  // - `cv.loehrning.ai` resolves in public DNS;
+  // - that host answers over TLS with the pinned cv-engine revision;
+  // - `CV_ENGINE_HOSTED_URL` is set in Vercel preview and production;
+  // - `CV_ENGINE_HOSTED_CONFIRMED_AT` records the date it was reached.
+  //
+  // The same commit has to rewrite `guide.statusNote` and `guide.dataFlow`
+  // below and their English twins in display-copy.ts, because both currently
+  // tell the reader the tool runs on their own machine, and the hub eyebrow in
+  // display-copy.ts, which promises a tool you run yourself.
   delivery: "source-only",
   guide: {
     status: "experimental",

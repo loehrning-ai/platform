@@ -182,6 +182,16 @@ The source-publication choice and the runnable-delivery choice are separate:
   credential-free HTTPS `launchHref`. Review ownership, redirects,
   availability, privacy, telemetry, cookies, and failure behavior. The launch
   target must not receive learner data automatically.
+- Hosted by us: set `delivery: "hosted-service"` and use one public
+  credential-free HTTPS `launchHref` on a subdomain of `loehrning.ai`. The
+  validator rejects the bare apex, a lookalike host, and anything that is not
+  HTTPS, because this mode claims "we run this" and must never resolve to
+  somebody else's server. The launch is a link, never an embed, so the Content
+  Security Policy is unchanged. Unlike `external-service`, this mode does
+  transmit whatever the reader puts into the hosted instance, so the guide's
+  `dataFlow` must name the machine, its region, the data store, and the key
+  handling instead of leaving the reader to guess, and `statusNote` must keep
+  the self-run path visible next to the hosted one.
 
 Do not embed an external tool, add wildcard Content Security Policy origins,
 or make an optional hosted runtime necessary for reading the guide. A tool

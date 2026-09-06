@@ -112,6 +112,15 @@ const ACCOUNT_CAPABILITY_VARIABLES = [
   "MCP_SERVER_ENABLED",
 ];
 
+// The hosted cv-engine gate exists in three registries at once: the
+// child-process policy (or a verification build keeps an ambient value), the
+// provider-free defaults (or the capability survives a provider-free run),
+// and .env.example (or a deployer never learns the variable exists).
+const HOSTED_TOOL_VARIABLES = [
+  "CV_ENGINE_HOSTED_URL",
+  "CV_ENGINE_HOSTED_CONFIRMED_AT",
+];
+
 function runValidateEnv(overrides) {
   const env = { ...process.env };
   for (const key of CONTROLLED_KEYS) {
@@ -1279,6 +1288,93 @@ function main() {
     0,
     `production account config with magic link must pass\n${combined(prodAccountWithMagicLink)}`,
   );
+
+  // M. The hosted cv-engine is a paired gate: an origin the deployer controls
+  //    plus a dated review, both required, and neither meaningful without the
+  //    account backend that stores the documents.
+  const hostedCvEngine = runValidateEnv(
+    completeSupabase({
+      CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
+      CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+    }),
+  );
+  assert.equal(
+    hostedCvEngine.status,
+    0,
+    `a loehrning.ai origin with a past attestation must pass\n${combined(hostedCvEngine)}`,
+  );
+
+  for (const rejectedOrigin of [
+    "https://cv.loehrning.ai.example.com",
+    "https://cv.loehrning.ai:8443",
+    "http://cv.loehrning.ai",
+    "https://cv.loehrning.ai/app",
+  ]) {
+    const foreignHost = runValidateEnv(
+      completeSupabase({
+        CV_ENGINE_HOSTED_URL: rejectedOrigin,
+        CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+      }),
+    );
+    assert.equal(
+      foreignHost.status,
+      1,
+      `${rejectedOrigin} must not become a token destination\n${combined(foreignHost)}`,
+    );
+    assert.match(combined(foreignHost), /CV_ENGINE_HOSTED_URL/);
+  }
+
+  for (const attestation of ["", "not-a-date", "2999-01-01"]) {
+    const unreviewedHost = runValidateEnv(
+      completeSupabase({
+        CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
+        ...(attestation ? { CV_ENGINE_HOSTED_CONFIRMED_AT: attestation } : {}),
+      }),
+    );
+    assert.equal(unreviewedHost.status, 1, combined(unreviewedHost));
+    assert.match(combined(unreviewedHost), /CV_ENGINE_HOSTED_CONFIRMED_AT/);
+  }
+
+  const orphanedHostedAttestation = runValidateEnv(
+    completeSupabase({ CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20" }),
+  );
+  assert.equal(
+    orphanedHostedAttestation.status,
+    1,
+    combined(orphanedHostedAttestation),
+  );
+  assert.match(
+    combined(orphanedHostedAttestation),
+    /CV_ENGINE_HOSTED_CONFIRMED_AT is present while CV_ENGINE_HOSTED_URL is absent/,
+  );
+
+  const hostedWithoutAccounts = runValidateEnv({
+    CI: "true",
+    CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
+    CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+  });
+  assert.equal(hostedWithoutAccounts.status, 1, combined(hostedWithoutAccounts));
+  assert.match(
+    combined(hostedWithoutAccounts),
+    /requires the complete Supabase configuration/,
+  );
+
+  const exampleEnvironment = readFileSync(
+    join(here, "..", "..", ".env.example"),
+    "utf8",
+  );
+  for (const name of HOSTED_TOOL_VARIABLES) {
+    assert.ok(
+      APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes(name),
+      `${name} must be classified by the child-process environment policy`,
+    );
+    assert.equal(
+      PROVIDER_FREE_APPLICATION_ENVIRONMENT[name],
+      "",
+      `${name} must be cleared by the provider-free environment`,
+    );
+    assert.match(exampleEnvironment, new RegExp(`^${name}=$`, "m"));
+  }
 
   const deploymentDocs = readFileSync(
     join(here, "..", "..", "docs", "deployment.md"),

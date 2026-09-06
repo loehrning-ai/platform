@@ -192,6 +192,7 @@ const SECTION_STATUSES_WITHOUT_MISSING_DATA: readonly ExportSectionStatus[] = [
   "derived_from_progress",
 ];
 
+
 function serializeJsonValue(value: unknown): string {
   const serialized = JSON.stringify(value);
   if (serialized === undefined) {
@@ -504,6 +505,7 @@ async function exportBoundAccount(
     });
     return jsonError("export_failed", 500);
   }
+
 
   const today = new Date().toISOString().slice(0, 10);
   const filename = `loehrning-export-${today}.json`;

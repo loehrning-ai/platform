@@ -164,6 +164,15 @@ async function expectSharedDetailContract(
   const launch = page.getByRole("link", { name: /^Öffnen/ });
   if (expectedLaunchHref) {
     await expect(launch).toHaveAttribute("href", expectedLaunchHref);
+    if (expectedLaunchHref.startsWith("https://")) {
+      // A hosted or external launch target leaves this origin. It opens in a
+      // new tab and must never hand the target an opener reference, so the
+      // detail page stays the reader's anchor. The request context is
+      // deliberately not sent to that host: the browser gate never depends on
+      // a third machine being reachable.
+      await expect(launch).toHaveAttribute("target", "_blank");
+      await expect(launch).toHaveAttribute("rel", "noopener noreferrer");
+    }
     await expectResolvableInternalHref(
       request,
       expectedLaunchHref,
@@ -171,6 +180,14 @@ async function expectSharedDetailContract(
     );
   } else {
     await expect(launch).toHaveCount(0);
+  }
+
+  if (artifact.kind !== "video") {
+    // The guide's data-flow paragraph is the honesty surface for a hosted
+    // instance: it must be readable on the page, not only in the registry.
+    await expect(
+      page.getByText(artifact.guide.dataFlow, { exact: true }),
+    ).toBeVisible();
   }
 }
 
@@ -326,6 +343,12 @@ test.describe("/open-source hub", () => {
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
     await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
+    // The hub premise names both ways of running a listed tool. A hosted
+    // instance may be added to the registry, but it may never quietly replace
+    // "you can run this yourself" as the promise on the page.
+    await expect(
+      page.getByText(OPEN_SOURCE_PAGE_COPY.de.eyebrow, { exact: true }),
+    ).toBeVisible();
 
     // The hub leads with product proof and keeps provenance available on demand.
     await expect(
@@ -362,6 +385,14 @@ test.describe("/open-source hub", () => {
         ),
       }),
     ).toHaveAttribute("href", firstArtifact.source.revisionHref);
+    // Registry-driven: whoever runs the instance, and where, is a published
+    // fact on the card, not something the reader has to open a detail page for.
+    await expect(
+      firstArtifactRow.getByText(
+        OPEN_SOURCE_PAGE_COPY.de.showcase.delivery[firstArtifact.delivery],
+        { exact: true },
+      ),
+    ).toBeVisible();
     await firstArtifactRow
       .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
         exact: true,
@@ -503,6 +534,19 @@ test("English open-source hub and one detail per published kind use localized pu
       level: 2,
       name: OPEN_SOURCE_PAGE_COPY.en.showcase.heading,
     }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(OPEN_SOURCE_PAGE_COPY.en.eyebrow, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByText(
+        OPEN_SOURCE_PAGE_COPY.en.showcase.delivery[
+          OPEN_SOURCE_TOOL_ARTIFACTS[0].delivery
+        ],
+        { exact: true },
+      )
+      .first(),
   ).toBeVisible();
 
   for (const registryArtifact of ENGLISH_DETAIL_REPRESENTATIVES) {

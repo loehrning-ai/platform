@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { cvEngineDetachStep } from "./cv-engine-detach-step";
 
 /**
  * Work that must finish while the account still exists.
@@ -21,14 +22,41 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * - be idempotent, because the route can be retried after a failed attempt;
  * - resolve when its work is durably done, and reject otherwise. A rejection
  *   keeps the account, its sessions, and all of its rows exactly as they were;
- * - use the service-role admin client it is handed, never a cookie-bound one:
- *   the session is revoked moments later and may already be unusable.
+ * - prefer the service-role admin client it is handed. The owner client is
+ *   valid during the window and is the right client for a transition that
+ *   reads `auth.uid()`, but it must not be relied on for anything scheduled
+ *   after the window, because the session is revoked moments later.
  */
 export interface PreDeleteContext {
   /** Service-role client; the only client guaranteed to outlive the session. */
   readonly adminClient: SupabaseClient;
+  /**
+   * The learner's own cookie-bound client. Valid for the whole window, because
+   * the route revokes sessions only after every step has resolved; a step that
+   * calls a transition which identifies the account through `auth.uid()` has
+   * no other way to bind that call to the learner.
+   */
+  readonly ownerClient: SupabaseClient;
   /** Owner id taken from the verified session, never from the request body. */
   readonly userId: string;
+}
+
+/**
+ * A step failure that carries the provider's own error code, when there is
+ * one, so the route can report it as a searchable field rather than only as a
+ * message. `cause` holds the underlying error unchanged.
+ */
+export class PreDeleteStepError extends Error {
+  readonly providerCode: string | undefined;
+
+  constructor(
+    message: string,
+    options: { readonly cause?: unknown; readonly providerCode?: string } = {},
+  ) {
+    super(message, { cause: options.cause });
+    this.name = "PreDeleteStepError";
+    this.providerCode = options.providerCode;
+  }
 }
 
 export interface PreDeleteStep {
@@ -40,12 +68,12 @@ export interface PreDeleteStep {
 /**
  * The ordered pre-delete steps.
  *
- * Empty today: everything the account currently stores either lives in
+ * Everything else the account stores either lives in
  * `public.user_course_progress` and the assessment tables, which cascade from
  * `auth.users`, or is derived from those rows. A capability that stores
  * account-owned data outside that cascade adds its step here.
  */
-export const PRE_DELETE_STEPS: readonly PreDeleteStep[] = [];
+export const PRE_DELETE_STEPS: readonly PreDeleteStep[] = [cvEngineDetachStep];
 
 export type PreDeleteResult =
   | { readonly ok: true; readonly completedSteps: readonly string[] }

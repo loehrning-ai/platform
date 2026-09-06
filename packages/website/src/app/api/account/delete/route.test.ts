@@ -52,7 +52,10 @@ vi.mock("@/lib/security/rate-limit", () => ({
     async (namespace: string) => `${namespace}:ip-hmac`,
   ),
 }));
-vi.mock("./pre-delete", () => ({
+vi.mock("./pre-delete", async (importOriginal) => ({
+  // The route narrows a step failure with `instanceof PreDeleteStepError`, so
+  // the real class has to stay; only the runner is replaced.
+  ...(await importOriginal<Record<string, unknown>>()),
   runPreDeleteSteps: (context: unknown) => mockRunPreDeleteSteps(context),
 }));
 
@@ -147,6 +150,7 @@ describe("DELETE /api/account/delete pre-delete ordering", () => {
     expect(await response.json()).toEqual({ deleted: true, ownerId: "user-1" });
     expect(mockRunPreDeleteSteps).toHaveBeenCalledWith({
       adminClient,
+      ownerClient: authClient,
       userId: "user-1",
     });
 

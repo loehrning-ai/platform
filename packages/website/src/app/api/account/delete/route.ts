@@ -13,7 +13,7 @@ import {
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
 import { hasRecentSessionAuthentication } from "./recent-authentication";
-import { runPreDeleteSteps } from "./pre-delete";
+import { PreDeleteStepError, runPreDeleteSteps } from "./pre-delete";
 
 // Account deletion is irreversible and rare: 3 attempts per client per 24h.
 // Uses the durable, cross-region limiter (Supabase RPC with in-memory
@@ -304,7 +304,11 @@ export async function DELETE(request: Request) {
   // PRE_DELETE_STEPS (see ./pre-delete.ts), never after the deletion.
   // A failing step is fail-closed on purpose - the account, its sessions and
   // all of its rows stay exactly as they were, and the caller may retry.
-  const preDelete = await runPreDeleteSteps({ adminClient, userId });
+  const preDelete = await runPreDeleteSteps({
+    adminClient,
+    ownerClient: authClient,
+    userId,
+  });
   if (!preDelete.ok) {
     reportApiError({
       route: "/api/account/delete",
@@ -313,6 +317,10 @@ export async function DELETE(request: Request) {
         `Pre-delete step failed: ${preDelete.failedStep}`,
         { cause: preDelete.error },
       ),
+      ...(preDelete.error instanceof PreDeleteStepError &&
+      preDelete.error.providerCode
+        ? { extra: { code: preDelete.error.providerCode } }
+        : {}),
     });
     return privateJson(
       { error: "pre_delete_incomplete" },

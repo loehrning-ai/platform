@@ -16,6 +16,7 @@ import {
 
 const context: PreDeleteContext = {
   adminClient: { id: "admin-client" } as unknown as SupabaseClient,
+  ownerClient: { id: "owner-client" } as unknown as SupabaseClient,
   userId: "user-1",
 };
 
@@ -103,7 +104,7 @@ describe("runPreDeleteSteps", () => {
     ) as unknown as SupabaseClient;
 
     await expect(
-      runPreDeleteSteps({ adminClient, userId: "user-1" }, []),
+      runPreDeleteSteps({ adminClient, ownerClient: adminClient, userId: "user-1" }, []),
     ).resolves.toEqual({ ok: true, completedSteps: [] });
   });
 
