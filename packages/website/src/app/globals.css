@@ -213,6 +213,21 @@
     }
   }
 
+  /* Below lg the page scrolls in one step. A smooth scroll is a moving region
+     under the thumb: a tap dispatched while it glides can press one control and
+     release over another, and WebKit then fires no click at all. Measured on
+     CI, mobile WebKit only: the KI-Check answer that never advanced and the
+     operator course continuation that never navigated. `scroll-behavior:
+     smooth` turns every programmatic scroll into that animation,
+     `scrollIntoView({ behavior: "auto" })` included, because the spec reads
+     "auto" as "use the CSS scroll-behavior", not "jump". Above lg the
+     reviewed desktop anchor scrolling is unchanged. */
+  @media (width < 64rem) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
