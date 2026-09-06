@@ -1292,16 +1292,16 @@ function main() {
   // M. The hosted cv-engine is a paired gate: an origin the deployer controls
   //    plus a dated review, both required, and neither meaningful without the
   //    account backend that stores the documents.
-  const hostedCvEngine = runValidateEnv(
+  const pairedHostedCvEngine = runValidateEnv(
     completeSupabase({
       CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
       CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
     }),
   );
   assert.equal(
-    hostedCvEngine.status,
+    pairedHostedCvEngine.status,
     0,
-    `a loehrning.ai origin with a past attestation must pass\n${combined(hostedCvEngine)}`,
+    `a loehrning.ai origin with a past attestation must pass\n${combined(pairedHostedCvEngine)}`,
   );
 
   for (const rejectedOrigin of [
@@ -1335,16 +1335,16 @@ function main() {
     assert.match(combined(unreviewedHost), /CV_ENGINE_HOSTED_CONFIRMED_AT/);
   }
 
-  const orphanedHostedAttestation = runValidateEnv(
+  const orphanedPairedHostedAttestation = runValidateEnv(
     completeSupabase({ CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20" }),
   );
   assert.equal(
-    orphanedHostedAttestation.status,
+    orphanedPairedHostedAttestation.status,
     1,
-    combined(orphanedHostedAttestation),
+    combined(orphanedPairedHostedAttestation),
   );
   assert.match(
-    combined(orphanedHostedAttestation),
+    combined(orphanedPairedHostedAttestation),
     /CV_ENGINE_HOSTED_CONFIRMED_AT is present while CV_ENGINE_HOSTED_URL is absent/,
   );
 
