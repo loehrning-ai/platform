@@ -19,7 +19,7 @@ Both values measure a modelled overlap between tasks and technical capabilities.
 
 ## What an organization can infer from this
 
-These US numbers are not a German statistic. Anyone who presents them as one has not read the source. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
+These US numbers are not a German statistic. Anyone who presents them as one overstates the source. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
 
 So do not look at products first. Look at tasks:
 
@@ -30,7 +30,7 @@ So do not look at products first. Look at tasks:
 - document decisions
 - summarize recurring status information
 
-Feasible does not mean permitted, and it certainly does not mean sensible. Data quality, the cost of errors, human oversight, data protection, security, worker participation, and domain accountability decide that.
+Feasible does not mean permitted, and it certainly does not mean sensible. Data quality, the consequences of errors, human oversight, data protection, security, worker participation, and domain accountability decide that.
 
 ## The two inventories
 

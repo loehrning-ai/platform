@@ -41,8 +41,8 @@ export default function Ch09Causal() {
           drowning deaths at once. A positive aggregate association appears,
           with no ice-cream effect anywhere in it. Inside the three constructed
           temperature bands the association shrinks. Real data need a causal
-          model, measurement checks, and uncertainty. Stratification alone
-          proves no confounding was removed.
+          model, measurement checks, and uncertainty. Stratification alone is
+          no proof that all confounding is gone.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -104,7 +104,7 @@ export default function Ch09Causal() {
           independent of unobserved causes of Y (exogeneity). With heterogeneous
           effects the estimand rests on monotonicity as well. You argue these
           assumptions from design and domain knowledge. The first stage settles
-          none of them.
+          relevance at most.
         </p>
         <InstrumentalVariable />
       </section>

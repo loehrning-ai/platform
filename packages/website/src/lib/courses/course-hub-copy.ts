@@ -16,7 +16,7 @@ export const COURSE_HUB_COPY = {
     accessKicker: "§ Warum kostenlos",
     accessHeading: "Alles kostenlos. Vier Reader brauchen trotzdem ein Konto.",
     accessBody:
-      "Die Kursseiten sind öffentlich, kein Kurs kostet Geld. Die vier Reader des Grundlagenpfads brauchen ein Lernkonto, weil Fortschritt und Abschlussstatus zwischen deinen Geräten synchronisiert werden; Technikkurse, Workshops und Buch-Reader laufen ohne Konto. Downloads regelt jede Ressource selbst, das PDF des veröffentlichten Lernbuchs benötigt ein Konto. Die Teilnahmebestätigung stellt loehrning.ai selbst aus. Akkreditiert ist sie nicht.",
+      "Die Kursseiten sind öffentlich, kein Kurs kostet Geld. Die vier Reader des Grundlagenpfads brauchen ein Lernkonto, weil Fortschritt und Abschlussstatus zwischen deinen Geräten synchronisiert werden; Technikkurse, Workshops und Buch-Reader laufen ohne Konto. Downloads regelt jede Ressource selbst, das PDF des veröffentlichten Lernbuchs benötigt ein Konto. Teilnahmebestätigung und Lernnachweis stellt loehrning.ai selbst aus. Akkreditiert sind sie nicht.",
     aboutMe: "Über mich",
     aiCheck: "KI-Check",
   },

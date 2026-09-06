@@ -77,7 +77,7 @@ Possible metrics:
 - availability and recovery time
 - share of users trained and actually capable
 
-Targets such as "80 percent adoption" or "150 percent ROI" hold nowhere. Targets follow risk, baseline, and process value.
+Blanket targets such as "80 percent adoption" or "150 percent ROI" hold nowhere. Targets follow risk, baseline, and process value.
 
 ## Plan funding only from a current funding decision
 

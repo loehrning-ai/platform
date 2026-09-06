@@ -522,7 +522,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "No lecture on neural networks, no legal text, no programming course. A policy describes approvals as a combination of purpose, feature, data and configuration, plus review duties, incident reporting and ownership.",
+    "explanation": "No lecture on neural networks, no legal text, no programming course. A policy describes approvals as a combination of purpose, feature, data and configuration, plus review duties, incident reporting, ownership and review triggers.",
     "version": 1,
     "active": true
   },

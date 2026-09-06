@@ -2,7 +2,7 @@
   "moduleId": "modul_4",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2026-12-06",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -58,7 +58,7 @@
           "id": "modul_4_lesson_1_section_4",
           "title": "First flow + n8n.cloud fallback",
           "readTimeMinutes": 3,
-          "content": "**Hello world: webhook-to-review text**\n\n1. **Trigger:** Webhook node via the protected HTTPS test URL, method POST\n2. **Action:** Prepare review text\n   - Subject: \"New webhook message\"\n   - Body: `{{ $json.message }}` (dynamic)\n3. **Save** + **Test** with synthetic data\n\nResult: visible review text in the test run, no automatic sending.\n\n**Managed fallback:**\n- The provider takes over parts of operations, patching, and availability.\n- Contract, DPA/AVV, region, subprocessors, access, logging, export, and deletion you still check for your organization.\n- The sandbox patterns in module 4 also run managed.\n\n**Self-hosted or managed is more than a pricing question:**\n- Check data flow and access control\n- Assess operational effort and responsiveness\n- Clarify contracts, logging, exit, and recovery",
+          "content": "**Hello world: webhook-to-review text**\n\n1. **Trigger:** Webhook node via the protected HTTPS test URL, method POST\n2. **Action:** Prepare review text\n   - Subject: \"New webhook message\"\n   - Body: `{{ $json.message }}` (dynamic)\n3. **Save** + **Test** with synthetic data\n\nResult: visible review text in the test run, no automatic sending.\n\n**Managed fallback:**\n- The provider takes over parts of operations, patching, and availability.\n- Contract, DPA/AVV, region, subprocessors, access, logging, export, and deletion you still check for your organization.\n- The sandbox patterns in module 4 generally also run managed.\n\n**Self-hosted or managed is more than a pricing question:**\n- Check data flow and access control\n- Assess operational effort and responsiveness\n- Clarify contracts, logging, exit, and recovery",
           "keyTakeaway": "Choose managed or self-hosted based on data flow, contract, security controls, operational expertise, costs, and exit."
         }
       ],

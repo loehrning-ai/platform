@@ -106,7 +106,7 @@
         },
         {
           "id": "deepfake-2-1-q3",
-          "questionText": "Since when has Article 50 of the AI Regulation applied?",
+          "questionText": "Since when has Article 50 of the AI Regulation generally applied?",
           "answerOptions": [
             {
               "id": "a",
@@ -156,7 +156,7 @@
           "id": "deepfake-2-2-s1",
           "title": "Tools for provenance, not for truth",
           "readTimeMinutes": 2,
-          "content": "No tool tells you whether an image is true. Three tool classes tell you where it came from:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) splits videos into keyframes, triggers reverse searches and shows available metadata. A research tool. Whether a video is true, it does not decide.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance proves no manipulation. Where it exists, check validity and issuer.\n\nAnd before you upload: confidential, intimate or personal content does not go to a third party unchecked. Check data protection, terms of use and local alternatives first.",
+          "content": "No tool tells you whether an image is true. Three tool classes tell you where it came from:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) splits videos into keyframes, triggers reverse searches and shows available metadata. A research tool. Whether a video is true, it does not decide.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance does not prove manipulation. Where it exists, check validity and issuer.\n\nAnd before you upload: confidential, intimate or personal content does not go to a third party unchecked. Check data protection, terms of use and local alternatives first.",
           "keyTakeaway": "Reverse search, keyframes and provenance data give signals. None of these tools decides authenticity or meaning alone."
         },
         {

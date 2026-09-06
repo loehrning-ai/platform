@@ -83,7 +83,7 @@ export const allBooks: readonly Book[] = [
     ],
     sourceOwner: "editorial:books",
     lastReviewed: "2026-09-05",
-    nextReview: "2026-12-05",
+    nextReview: "2026-12-06",
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
@@ -128,7 +128,7 @@ export const allBooks: readonly Book[] = [
     ],
     sourceOwner: "editorial:books",
     lastReviewed: "2026-09-05",
-    nextReview: "2026-12-05",
+    nextReview: "2026-12-06",
     sourceInputs: [
       "KI-Führerschein lesson content",
       "European Commission AI literacy guidance",
@@ -173,7 +173,7 @@ export const allBooks: readonly Book[] = [
     ],
     sourceOwner: "editorial:books",
     lastReviewed: "2026-09-05",
-    nextReview: "2026-12-05",
+    nextReview: "2026-12-06",
     sourceInputs: [
       "AI-Native course content",
       "Tool-selection editorial notes",

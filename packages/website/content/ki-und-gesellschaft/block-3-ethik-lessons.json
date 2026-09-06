@@ -2,7 +2,7 @@
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-08",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
   "triggerEvents": ["major-conceptual-update"],
@@ -17,7 +17,7 @@
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -143,7 +143,7 @@
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [
@@ -164,7 +164,7 @@
           "id": "ethik-3-2-s2",
           "title": "Ebene 2: Unternehmen",
           "readTimeMinutes": 2,
-          "content": "\"Wer hat das freigegeben?\" Wenn im Unternehmen niemand diese Frage beantworten kann, ist diese Ebene gescheitert. Jeder Einsatz braucht einen benannten Zweck, eine zuständige Rolle, Freigabekriterien und einen dokumentierten Eskalationsweg.\n\nSoweit die Hochrisiko-Vorschriften anwendbar sind, muss ein System nach Art. 12 technisch eine automatische Protokollierung ermöglichen. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 in der Regel mindestens sechs Monate auf, sofern anderes Unions- oder nationales Recht keine andere Frist vorsieht. Welche Informationen dann tatsächlich vorliegen, hängt vom System und vom Zugriff des Betreibers ab.\n\nEin internes Prüfungsgremium kann helfen. Als „Ethikrat“ vorgeschrieben ist es pauschal nicht, und ein Gremium ohne Kompetenz, Entscheidungsbefugnis, dokumentierte Freigabe und ein Verfahren für Vorfälle ist Dekoration. Art. 87 verweist für Meldungen von Verstößen gegen die KI-Verordnung und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937; Anwendungsbereich und nationales Recht bleiben zu prüfen.",
+          "content": "\"Wer hat das freigegeben?\" Wenn im Unternehmen niemand diese Frage beantworten kann, ist diese Ebene gescheitert. Jeder Einsatz braucht einen benannten Zweck, eine zuständige Rolle, Freigabekriterien und einen dokumentierten Eskalationsweg.\n\nSoweit die Hochrisiko-Vorschriften anwendbar sind, muss ein System nach Art. 12 technisch eine automatische Protokollierung ermöglichen. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 grundsätzlich mindestens sechs Monate auf, sofern anderes Unions- oder nationales Recht keine andere Frist vorsieht. Welche Informationen dann tatsächlich vorliegen, hängt vom System und vom Zugriff des Betreibers ab.\n\nEin internes Prüfungsgremium kann helfen. Als „Ethikrat“ vorgeschrieben ist es pauschal nicht, und ein Gremium ohne Kompetenz, Entscheidungsbefugnis, dokumentierte Freigabe und ein Verfahren für Vorfälle ist Dekoration. Art. 87 verweist für Meldungen von Verstößen gegen die KI-Verordnung und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937; Anwendungsbereich und nationales Recht bleiben zu prüfen.",
           "keyTakeaway": "Protokollierungspflicht, Aufbewahrung und interne Freigabe sind drei getrennte Anforderungen. Ob sie für ein System gelten, hängt von Systemkategorie, Rolle und Anwendungsdatum ab."
         },
         {
@@ -187,7 +187,7 @@
             },
             {
               "id": "b",
-              "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, in der Regel mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts",
+              "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, grundsätzlich mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts",
               "isCorrect": true
             },
             {
@@ -201,7 +201,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Soweit die Vorschriften anwendbar sind, verlangt Art. 12 die technische Möglichkeit automatischer Protokollierung. Art. 26 Abs. 6 verlangt vom Betreiber in der Regel, die Logs unter seiner Kontrolle mindestens sechs Monate aufzubewahren, sofern anderes Recht keine andere Frist vorsieht."
+          "explanation": "Soweit die Vorschriften anwendbar sind, verlangt Art. 12 die technische Möglichkeit automatischer Protokollierung. Art. 26 Abs. 6 verlangt vom Betreiber grundsätzlich, die Logs unter seiner Kontrolle mindestens sechs Monate aufzubewahren, sofern anderes Recht keine andere Frist vorsieht."
         },
         {
           "id": "ethik-3-2-q2",
@@ -268,7 +268,7 @@
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
-      "nextReview": "2027-03-05",
+      "nextReview": "2027-03-08",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
       "keyConcepts": [

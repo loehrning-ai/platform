@@ -99,8 +99,8 @@ export default function Ch09CausalDe() {
           muss X beeinflussen (Relevanz), darf Y ausschließlich über X
           beeinflussen (Exklusion) und muss von unbeobachteten Ursachen von Y
           unabhängig sein (Exogenität). Bei heterogenen Effekten kommt Monotonie
-          dazu. Diese Annahmen stammen aus Design und Fachwissen, nicht aus der
-          ersten Stufe.
+          dazu. Diese Annahmen stammen aus Design und Fachwissen, nicht allein
+          aus der ersten Stufe.
         </p>
         <InstrumentalVariable />
       </section>
