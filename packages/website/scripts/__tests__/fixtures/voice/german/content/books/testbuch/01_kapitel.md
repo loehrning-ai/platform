@@ -1,6 +1,6 @@
 # Kapitel eins
 
-Darüber hinaus gilt: Das Inventar lebt.
+Darüber hinaus gilt: Das Inventar lebt. Werbung per E-Mail erfordert grundsätzlich eine Einwilligung.
 
 - Eins
 - Zwei

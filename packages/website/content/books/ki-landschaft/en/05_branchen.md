@@ -16,7 +16,7 @@ What follows are four invented learning cases. They evidence no adoption, no pro
 
 **Measurement:** Field accuracy by document type, incorrect tax coding, exceptions, review time, and correction rate.
 
-**Controls:** Respect professional secrets and client data, check processor arrangements and transfers, post no entry without approval by the tax adviser, keep the audit trail complete.
+**Controls:** Respect professional secrets and client data, check processor arrangements and transfers, post no entry automatically without professional approval, keep the audit trail complete.
 
 ## Hospitality: draft answers to standard inquiries
 
@@ -44,4 +44,4 @@ What follows are four invented learning cases. They evidence no adoption, no pro
 6. Keep the pilot small and document the results.
 7. Expand only once quality and protection gates have passed.
 
-Sector knowledge helps you with the cost of errors and the controls you need. It does not replace measuring your own process.
+Sector knowledge helps you with the consequences of errors and the controls you need. It does not replace measuring your own process.

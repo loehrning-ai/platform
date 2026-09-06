@@ -19,7 +19,7 @@ Beide Werte messen eine modellierte Überschneidung von Aufgaben und technischen
 
 ## Was du daraus ableiten darfst
 
-Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche ausgibt, hat die Quelle nicht gelesen. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
+Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche ausgibt, überdehnt die Quelle. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
 
 Schau also nicht zuerst auf Produkte. Schau auf Aufgaben:
 

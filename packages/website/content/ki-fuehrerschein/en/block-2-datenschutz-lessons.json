@@ -2,7 +2,7 @@
   "blockId": "block_2",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-08",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": ["eu-ai-act-amendment", "commission-qa-update"],
@@ -25,7 +25,7 @@
           "id": "block_2_lesson_1_section_1",
           "title": "Check product and operation together",
           "readTimeMinutes": 3,
-          "content": "Where does your prompt land? Not the brand decides it. Product edition, contract, configuration, workflow do. Six fields:\n\n| Review field | Concrete questions |\n|---|---|\n| **Roles** | Who is the controller, processor, or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata, and logs leave which system? In which regions are they stored or processed? |\n| **Provider use** | Are inputs or outputs used for model development, quality review, or abuse monitoring? Which settings and contractual commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions, and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs, and backups retained? How do access, deletion, and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups, and configurations does the approval cover? |\n\nCloud or local, free or paid, consumer or enterprise: sales categories, not protection classes. A local system sends telemetry, loads extensions, reaches the network. An enterprise contract does not cover every function and data class. Read the current contract and product documentation at procurement and after material changes.",
+          "content": "Where does your prompt land? Not the brand decides it. Product edition, contract, configuration, workflow do. Six fields:\n\n| Review field | Concrete questions |\n|---|---|\n| **Roles** | Who is the controller, processor, or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata, and logs leave which system? In which regions are they stored or processed? |\n| **Provider use** | Are inputs or outputs used for model development, quality review, or abuse monitoring? Which settings and contractual commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions, and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs, and backups retained? How do access, deletion, and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups, and configurations does the approval cover? |\n\nCloud or local, free or paid, consumer or enterprise: sales categories, not protection classes. A local system can send telemetry, load extensions, reach the network. An enterprise contract does not cover every function and data class. Read the current contract and product documentation at procurement and after material changes.",
           "keyTakeaway": "Roles, data flows, provider use, access, retention, approved purpose. That is your check. Product category and brand name check nothing."
         },
         {
@@ -111,7 +111,7 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Four levels, an example",
           "readTimeMinutes": 3,
-          "content": "Your organization sets which data may go into which system. Not this course. The four levels here are an example, no mapping to product names.\n\n**Level 1: Public**\nWhat is already published: approved website copy, the product catalogue. You still check copyright, licences, embedded personal data and the tool approval. Public does not mean free to use.\n\n**Level 2: Internal**\nWhat is not meant to leave the building. Project plans, meeting records. They belong only in a workflow approved for this purpose and data class.\n\n**Level 3: Confidential**\nWhat needs more protection in business, contractual or data protection terms: unpublished figures, customer lists, supplier terms. You need a concrete approval, plus reviewed contracts, configuration, permissions and retention. A legal basis or data protection impact assessment can come on top.\n\n**Level 4: Restricted**\nWhat can do serious damage when lost or mishandled. Health data, payroll data, application documents, inventions before filing. General assistants are blocked by default. Processing only in an expressly approved, tightly scoped system and workflow. Passwords, API keys and other credentials belong in no prompt, whatever the level.\n\nYour organization may name the levels differently and draw the lines elsewhere. Fine. What counts is the published policy, not the brand name.",
+          "content": "Your organization sets which data may go into which system. Not this course. The four levels here are an example, no mapping to product names.\n\n**Level 1: Public**\nWhat is already published: approved website copy, the product catalogue. You still check copyright, licences, embedded personal data, integrity and the tool approval. Public does not mean free to use.\n\n**Level 2: Internal**\nWhat is not meant to leave the building. Project plans, meeting records. They belong only in a workflow approved for this purpose and data class.\n\n**Level 3: Confidential**\nWhat needs more protection in business, contractual or data protection terms: unpublished figures, customer lists, supplier terms. You need a concrete approval, plus reviewed contracts, configuration, permissions and retention. A legal basis or data protection impact assessment can come on top.\n\n**Level 4: Restricted**\nWhat can do serious damage when lost or mishandled. Health data, payroll data, application documents, inventions before filing. General assistants are blocked by default. Processing only in an expressly approved, tightly scoped system and workflow. Passwords, API keys and other credentials belong in no prompt, whatever the level.\n\nYour organization may name the levels differently and draw the lines elsewhere. Fine. What counts is the published policy, not the brand name.",
           "keyTakeaway": "Your organization sets data class and tool approval. You check purpose, rights, contract, configuration and permissions; a product name grants nothing."
         },
         {
@@ -148,7 +148,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Names and email addresses can be personal data. Whether processing is permitted follows from purpose, legal basis, internal classification, contract, configuration and minimization. Not from the product name. Not from the price tier."
+          "explanation": "Names and email addresses can be personal data. Whether processing is permitted follows from purpose, legal basis, internal classification, contract, configuration and minimization, and depending on the case from more. Not from the product name. Not from the price tier."
         },
         {
           "id": "block_2_lesson_2_q2",

@@ -11,7 +11,10 @@ import {
 } from "../content-prose.mjs";
 import {
   VOICE_PHRASE_RULES,
+  VOICE_RULE_IDS,
+  VOICE_STRICT_RULES,
   VOICE_TERM_RULES,
+  severityFor,
   validateVoiceConfig,
 } from "../content-voice-rules.mjs";
 
@@ -61,7 +64,7 @@ const GERMAN_EXPECTATIONS = [
   ["VOICE-FILLER", "de-filler-grundlegend"],
   ["VOICE-FILLER", "de-filler-eigentlich"],
   ["VOICE-FILLER", "de-filler-im-prinzip"],
-  ["VOICE-FILLER", "de-filler-grundsaetzlich"],
+  ["VOICE-AMBIGUOUS", "de-ambiguous-grundsaetzlich"],
   ["VOICE-FILLER", "de-filler-quasi"],
   ["VOICE-FILLER", "de-filler-sozusagen"],
   ["VOICE-FILLER", "de-filler-halt"],
@@ -247,7 +250,7 @@ test("strict scope turns the strict rules into errors and leaves the advisory ru
   for (const rule of ["VOICE-OPENER", "VOICE-FILLER", "VOICE-HEDGE", "VOICE-TRANSITION", "VOICE-CLAIM", "VOICE-COUNT-COURSE", "VOICE-COUNT-LESSON", "VOICE-FORM"]) {
     assert.ok(errorRules.has(rule), `${rule} should be an error in strict scope`);
   }
-  for (const rule of ["VOICE-TERM", "VOICE-PARAGRAPH", "VOICE-CLOSER", "VOICE-LISTS"]) {
+  for (const rule of ["VOICE-AMBIGUOUS", "VOICE-TERM", "VOICE-PARAGRAPH", "VOICE-CLOSER", "VOICE-LISTS"]) {
     assert.ok(!errorRules.has(rule), `${rule} stays a warning`);
     assert.ok(strict.warnings.some((f) => f.rule === rule && f.relFile === GERMAN_JSON));
   }
@@ -256,6 +259,39 @@ test("strict scope turns the strict rules into errors and leaves the advisory ru
     "the chapter outside the strict prefix keeps warnings",
   );
   assert.equal(relaxed.all.length, strict.all.length, "scope changes severity, never the set of findings");
+});
+
+test("grundsaetzlich is ambiguous, not filler: a warning in and out of strict scope, never an error", () => {
+  const word = "grunds\u00e4tzlich";
+  assert.ok(VOICE_RULE_IDS.includes("VOICE-AMBIGUOUS"), "the rule id is known to the allowlist");
+  assert.ok(!VOICE_STRICT_RULES.has("VOICE-AMBIGUOUS"), "the strict scope never promotes the rule");
+  const matching = VOICE_PHRASE_RULES.filter((entry) => entry.pattern.test(word));
+  assert.equal(matching.length, 1, "exactly one phrase rule matches the word");
+  assert.equal(matching[0].category, "ambiguous", "and it is neither a filler rule nor any other error-producing rule");
+
+  const relaxed = lint("german");
+  const hits = byPhrase(relaxed.all, "de-ambiguous-grundsaetzlich");
+  assert.deepEqual(
+    hits.map((f) => [f.relFile, f.rule]),
+    [[GERMAN_MD, "VOICE-AMBIGUOUS"], [GERMAN_JSON, "VOICE-AMBIGUOUS"]],
+    "the normative sentence in the chapter and the casual one in the lesson get the same finding",
+  );
+  assert.ok(relaxed.all.every((f) => !(f.rule === "VOICE-FILLER" && f.message.includes(word))), "no VOICE-FILLER finding names the word");
+  for (const hit of hits) {
+    assert.match(hit.message, /keep it in a normative sentence/);
+    assert.match(hit.message, /cut it in a casual sentence/);
+  }
+
+  const strict = lint("german", { strict: ["content/ki-fuehrerschein/", "content/books/testbuch/"] });
+  assert.ok(strict.errors.length > 0, "the strict scope is in force for both files");
+  assert.equal(byRule(strict.errors, "VOICE-AMBIGUOUS").length, 0, "strict scope does not promote the rule");
+  assert.deepEqual(
+    byPhrase(strict.warnings, "de-ambiguous-grundsaetzlich").map((f) => f.relFile),
+    [GERMAN_MD, GERMAN_JSON],
+    "both findings stay warnings",
+  );
+  assert.equal(severityFor({ rule: "VOICE-AMBIGUOUS", relFile: GERMAN_JSON }, ["content/ki-fuehrerschein/"]), "warn");
+  assert.equal(severityFor({ rule: "VOICE-FILLER", relFile: GERMAN_JSON }, ["content/ki-fuehrerschein/"]), "error", "the other filler words keep their strict severity");
 });
 
 test("an allowlist entry without a reason is rejected", () => {

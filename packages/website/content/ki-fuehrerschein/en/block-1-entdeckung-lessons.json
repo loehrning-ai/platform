@@ -2,7 +2,7 @@
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-08",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
   "triggerEvents": ["major-conceptual-update"],

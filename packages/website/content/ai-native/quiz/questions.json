@@ -295,7 +295,7 @@
       { "id": "c", "text": "Ein Synonym für Endkunde ohne jede Pflicht.", "isCorrect": false },
       { "id": "d", "text": "Eine Behörde, die KI verbietet.", "isCorrect": false }
     ],
-    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist in der Regel Betreiber.",
+    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist grundsätzlich Betreiber.",
     "version": 1,
     "active": true
   },
