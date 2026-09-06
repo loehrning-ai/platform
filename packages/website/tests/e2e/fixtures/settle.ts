@@ -184,6 +184,7 @@ export async function capped<T>(
   work: Promise<T>,
   label: string,
   page?: Page,
+  budgetMs: number = DRIVER_BUDGET_MS,
 ): Promise<T> {
   // Keep a late rejection from surfacing as an unhandled rejection once the
   // race below has already moved on.
@@ -191,7 +192,7 @@ export async function capped<T>(
   const outcome = await Promise.race([
     work.then(() => "settled" as const),
     new Promise<"timeout">((resolve) =>
-      setTimeout(() => resolve("timeout"), DRIVER_BUDGET_MS),
+      setTimeout(() => resolve("timeout"), budgetMs),
     ),
   ]);
   if (outcome === "timeout") {
@@ -214,9 +215,217 @@ export async function capped<T>(
         ])
       : "not captured";
     throw new Error(
-      `${label}: the page stopped settling within ${DRIVER_BUDGET_MS}ms; ` +
+      `${label}: the page stopped settling within ${budgetMs}ms; ` +
         `progress=${JSON.stringify(progress)}`,
     );
   }
   return work;
+}
+
+/**
+ * Total wall-clock budget for a whole reveal sweep, spent by the DRIVER.
+ *
+ * Sized off the worst case the loop below can actually reach: every one of
+ * MAX_REVEAL_STEPS steps finding an unrevealed element in range and paying the
+ * settle, i.e. 80 x 120ms = 9.6s. Real pages are nowhere near that - the
+ * reader chapter that wedged CI is 4,444px / 11 steps with nothing pending and
+ * measures ~20ms, and a synthetic page with four IntersectionObserver
+ * entrances over 8,284px measures 894ms. So this is a ceiling on pathology,
+ * not a schedule, and it cannot truncate one of today's pages.
+ *
+ * `exposeAllAuditedContent` sweeps twice against ONE of these budgets, so the
+ * whole helper is capped here even in the worst case, well inside its 45s test.
+ */
+const REVEAL_SWEEP_BUDGET_MS = 10_000;
+/**
+ * Driver-side pause after a step that still has an unrevealed element in
+ * range, so the renderer gets a chance to produce the frame in which
+ * IntersectionObserver samples it. A Node timer, deliberately: the page's own
+ * timers are the thing that stops being trustworthy.
+ */
+const REVEAL_STEP_SETTLE_MS = 120;
+/**
+ * Per-call cap on one synchronous in-page scroll+probe. Nothing inside that
+ * call awaits, so a healthy renderer answers in single-digit milliseconds;
+ * ten seconds means the main thread is not running tasks at all.
+ */
+const REVEAL_CALL_BUDGET_MS = 10_000;
+/**
+ * 80 steps of 0.8 viewports is ~42,000px at the 390x664 mobile viewport. The
+ * tallest route any caller audits is /blog/eu-ai-act-grundlagen at 22,324px
+ * (43 steps), so this is close to double the real maximum. A page that ever
+ * outgrows it stops the walk early rather than looping, and whatever is left
+ * hidden below is reported by the caller's verification poll.
+ */
+const MAX_REVEAL_STEPS = 80;
+
+export interface RevealSweepReport {
+  /** Scroll steps actually taken. */
+  steps: number;
+  /** Steps that found an unrevealed element in range and paused for it. */
+  settles: number;
+  /** Document height as last reported by the page. */
+  scrollHeight: number;
+  /** Wall-clock cost of the sweep, driver side. */
+  elapsedMs: number;
+  /** True when the elapsed budget, not the document, ended the walk. */
+  truncated: boolean;
+}
+
+/**
+ * Walk the document top-to-bottom to fire every IntersectionObserver-backed
+ * entrance, with the loop OUTSIDE the page.
+ *
+ * The in-page version this replaces awaited a `requestAnimationFrame` pair per
+ * step with a 250ms `setTimeout` fallback, and was bounded by step count only.
+ * Chromium stops servicing rAF on a backgrounded or occluded renderer and
+ * clamps its timers to ~1Hz, which turns every 250ms fallback into a full
+ * second: measured at 1,003ms per step, so the reader chapter's 11 waits cost
+ * 11.0s per sweep and the helper's two sweeps cost 22s. On a contended CI
+ * shard it was worse still - one sweep had not finished after 44.5s, which is
+ * how a 45s test reported `page.evaluate: Test timeout` with no other symptom.
+ * A step cap cannot fix that: the page needs ten steps and the cap was 1,000.
+ *
+ * So the sweep is bounded by TIME instead, and the clocks are all the
+ * driver's. Every in-page call here is synchronous - it scrolls and measures,
+ * it never awaits - so it cannot park on a signal the renderer has stopped
+ * producing, and each one is `capped` besides, which turns a genuinely wedged
+ * renderer into a legible failure in ten seconds instead of an unattributable
+ * test timeout. The only waits are Node timers, which no page can throttle.
+ *
+ * Truncating on the elapsed budget is safe here in a way it is NOT safe in
+ * `settleWholePage` (see MAX_SCROLL_STEPS): every caller of this sweep follows
+ * it with a poll that FAILS if anything is still hidden, so a short sweep
+ * costs a legible assertion failure, never a false pass.
+ */
+export async function sweepReveals(
+  page: Page,
+  {
+    label = "sweepReveals",
+    endAt = "top",
+    deadline = Date.now() + REVEAL_SWEEP_BUDGET_MS,
+  }: {
+    label?: string;
+    endAt?: "top" | "bottom";
+    deadline?: number;
+  } = {},
+): Promise<RevealSweepReport> {
+  const startedAt = Date.now();
+
+  // Scroll to `top`, then report the document height and whether anything in
+  // range is still invisible. Same predicate the callers' verification polls
+  // use, so "nothing pending" means the sweep has nothing left to drive.
+  const stepAt = (top: number, step: number) =>
+    capped(
+      page.evaluate((scrollTop: number) => {
+        // Explicitly instant. `html` carries `scroll-behavior: smooth` outside
+        // reduced motion, and a smooth scroll is advanced by the same frame
+        // loop that stops on an occluded page - so the plain two-argument
+        // scrollTo the old sweep used could leave the viewport behind.
+        window.scrollTo({ top: scrollTop, left: 0, behavior: "instant" });
+
+        const viewport = window.innerHeight;
+        const effectiveOpacity = (element: Element): number => {
+          let opacity = 1;
+          let current: Element | null = element;
+          while (current) {
+            opacity *= Number.parseFloat(
+              getComputedStyle(current).opacity || "1",
+            );
+            if (current === document.body) break;
+            current = current.parentElement;
+          }
+          return opacity;
+        };
+
+        let pending = 0;
+        const candidates = document.querySelectorAll<HTMLElement>(
+          'h1,h2,h3,h4,h5,h6,p,a,button,label,li,article,section,main,[style*="opacity"]',
+        );
+        for (const candidate of candidates) {
+          const rect = candidate.getBoundingClientRect();
+          // Cheap geometry test first; the opacity walk is the expensive part.
+          if (rect.width < 2 || rect.height < 2) continue;
+          // One viewport above to one below: the band an entrance fires in.
+          if (rect.bottom < -viewport || rect.top > viewport * 2) continue;
+          if (
+            candidate.closest("svg") ||
+            candidate.closest('[aria-hidden="true"]') ||
+            candidate.closest("[hidden]")
+          ) {
+            continue;
+          }
+          if (effectiveOpacity(candidate) < 0.05) pending += 1;
+        }
+
+        return {
+          scrollHeight: document.documentElement.scrollHeight,
+          pending,
+        };
+      }, top),
+      `${label}: scroll step ${step} to y=${top}`,
+      undefined,
+      REVEAL_CALL_BUDGET_MS,
+    );
+
+  const first = await stepAt(0, 0);
+  let scrollHeight = first.scrollHeight;
+  let pending = first.pending;
+  let steps = 1;
+  let settles = 0;
+  let truncated = false;
+
+  // Reveals mount lazily, so the step is recomputed from the live viewport
+  // exactly once, the way the in-page loop did.
+  const viewportHeight = await capped(
+    page.evaluate(() => window.innerHeight),
+    `${label}: viewport height`,
+    undefined,
+    REVEAL_CALL_BUDGET_MS,
+  );
+  const step = Math.max(200, Math.floor(viewportHeight * 0.8));
+
+  for (let top = step; top <= scrollHeight; top += step) {
+    if (steps >= MAX_REVEAL_STEPS) break;
+    if (Date.now() >= deadline) {
+      truncated = true;
+      break;
+    }
+    if (pending > 0) {
+      settles += 1;
+      await page.waitForTimeout(REVEAL_STEP_SETTLE_MS);
+    }
+    const state = await stepAt(top, steps);
+    scrollHeight = state.scrollHeight;
+    pending = state.pending;
+    steps += 1;
+  }
+
+  if (pending > 0) {
+    settles += 1;
+    await page.waitForTimeout(REVEAL_STEP_SETTLE_MS);
+  }
+  const bottom = await stepAt(scrollHeight, steps);
+  steps += 1;
+  if (bottom.pending > 0) {
+    settles += 1;
+    await page.waitForTimeout(REVEAL_STEP_SETTLE_MS);
+  }
+  if (endAt === "top") {
+    await stepAt(0, steps);
+    steps += 1;
+  }
+
+  return {
+    steps,
+    settles,
+    scrollHeight,
+    elapsedMs: Date.now() - startedAt,
+    truncated,
+  };
+}
+
+/** Budget one whole reveal sweep, shared by callers that sweep more than once. */
+export function revealSweepDeadline(): number {
+  return Date.now() + REVEAL_SWEEP_BUDGET_MS;
 }
