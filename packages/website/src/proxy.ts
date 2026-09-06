@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   buildContentSecurityPolicy,
   createCspNonce,
+  cspDispositionOf,
   isSharedCacheable,
   NONCE_CSP_HEADER,
   NONCE_REQUEST_HEADER,
@@ -71,27 +72,49 @@ function issuesNonce(route: CrawlRoute): boolean {
 }
 
 /**
+ * The cache policy the proxy will publish on a continued document, decided
+ * from the contract and the request alone so it is known before anything
+ * per-request is minted. Null means the route handler owns the final policy
+ * (public APIs, non-GET requests); `isSharedCacheable` treats null as shared,
+ * so no nonce is minted for those either.
+ */
+function continuationCacheControl(
+  args: Readonly<{
+    method: string;
+    pathname: string;
+    route: CrawlRoute;
+    protectedPath: boolean;
+    authAwarePublicPath: boolean;
+  }>,
+): string | null {
+  const { method, pathname, route, protectedPath, authAwarePublicPath } = args;
+  // Protected documents render per session and /login and /auth/* render per
+  // cookie. Neither may ever be stored by a shared cache.
+  if (protectedPath || authAwarePublicPath) return "private, no-store";
+  if (route.auth === "route-level") return cacheHeaderFor(route);
+  // Middleware owns cache policy for public documents and machine files.
+  // Public APIs own their final response policy in the route handler; a
+  // continuation header here could otherwise mark personalized POST data or
+  // a live health response as publicly cacheable before it is handled.
+  if ((method === "GET" || method === "HEAD") && !pathname.startsWith("/api/")) {
+    return cacheHeaderFor(route);
+  }
+  return null;
+}
+
+/**
  * Publish the nonce policy on a response Next will render a document for.
  *
- * Fail closed: an ENFORCED nonce policy may only ride a response that a shared
- * cache must not store. A report-only policy grants no capability at all, so it
- * is safe on cacheable documents and is what this stage emits; if the policy is
- * ever enforced, this guard withholds it from cacheable responses instead of
- * shipping a nonce every reader of the cached document would hold.
- *
- * The final Cache-Control is only known here, after the branch that sets it, so
- * the request header was already forwarded. A withheld response header leaves
- * inert nonce attributes in the document and the nonce-free baseline from
- * next.config.ts in force: the page still works, it simply is not hardened.
+ * The mint decision in `proxy` already guarantees a nonce exists only for a
+ * response a shared cache must not store. This guard keeps that invariant
+ * even if a branch below ever changes the cache policy after minting, in
+ * either disposition: a withheld header leaves the nonce-free baseline from
+ * next.config.ts in force, so the page still works, it simply is not
+ * hardened.
  */
 function applyNoncePolicy(response: NextResponse, policy: string | null): void {
   if (!policy) return;
-  if (
-    NONCE_CSP_HEADER === "Content-Security-Policy" &&
-    isSharedCacheable(response.headers.get("Cache-Control"))
-  ) {
-    return;
-  }
+  if (isSharedCacheable(response.headers.get("Cache-Control"))) return;
   response.headers.set(NONCE_CSP_HEADER, policy);
 }
 
@@ -220,9 +243,34 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   requestHeaders.delete("content-security-policy-report-only");
   requestHeaders.delete(NONCE_REQUEST_HEADER);
 
-  const nonce = issuesNonce(route) ? createCspNonce() : null;
+  const protectedPath = isProtectedPlatformPath(pathname);
+  const routeLevelAuth = route.auth === "route-level";
+  const authAwarePublicPath =
+    pathname === "/login" || pathname.startsWith("/auth/");
+
+  // Cache policy first, nonce second. A nonce minted for a shared-cacheable
+  // document would reach Next through the request header and be rendered
+  // into HTML a CDN keeps for an hour: a fixed nonce every reader of that
+  // copy would hold. So for a document a shared cache may store, no nonce
+  // and no nonce policy exist at all, in either disposition.
+  const cacheControl = continuationCacheControl({
+    method: request.method,
+    pathname,
+    route,
+    protectedPath,
+    authAwarePublicPath,
+  });
+  const nonce =
+    issuesNonce(route) && !isSharedCacheable(cacheControl)
+      ? createCspNonce()
+      : null;
   const noncePolicy = nonce
-    ? buildContentSecurityPolicy(CSP_ENVIRONMENT, CSP_SUPABASE_ORIGIN, nonce)
+    ? buildContentSecurityPolicy(
+        CSP_ENVIRONMENT,
+        CSP_SUPABASE_ORIGIN,
+        nonce,
+        cspDispositionOf(NONCE_CSP_HEADER),
+      )
     : null;
   if (nonce && noncePolicy) {
     requestHeaders.set(NONCE_CSP_HEADER, noncePolicy);
@@ -230,28 +278,15 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   }
   const continuation = localeContinuation(requestHeaders);
 
-  const protectedPath = isProtectedPlatformPath(pathname);
-  const routeLevelAuth = route.auth === "route-level";
-  const authAwarePublicPath =
-    pathname === "/login" || pathname.startsWith("/auth/");
   if (!protectedPath && !authAwarePublicPath) {
     const response = continuation;
     if (route.xRobotsTag)
       response.headers.set("X-Robots-Tag", route.xRobotsTag);
     applyLocaleIndexing(response, locale, pathname);
-    if (routeLevelAuth) {
-      response.headers.set("Cache-Control", cacheHeaderFor(route));
-      mergeVaryHeader(response.headers, "Cookie");
-    } else if (
-      (request.method === "GET" || request.method === "HEAD") &&
-      !pathname.startsWith("/api/")
-    ) {
-      // Middleware owns cache policy for public documents and machine files.
-      // Public APIs own their final response policy in the route handler; a
-      // continuation header here could otherwise mark personalized POST data
-      // or a live health response as publicly cacheable before it is handled.
-      response.headers.set("Cache-Control", cacheHeaderFor(route));
+    if (cacheControl !== null) {
+      response.headers.set("Cache-Control", cacheControl);
     }
+    if (routeLevelAuth) mergeVaryHeader(response.headers, "Cookie");
     applyNoncePolicy(response, noncePolicy);
     return response;
   }
@@ -279,6 +314,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   if (!protectedPath) {
     response.headers.set("X-Robots-Tag", NOINDEX_HEADER);
+    // Decided above: an auth-aware document renders per cookie, so it is
+    // never shared-cacheable, which is also what lets it carry a nonce.
+    if (cacheControl !== null) {
+      response.headers.set("Cache-Control", cacheControl);
+    }
     applyLocaleIndexing(response, locale, pathname);
     applyNoncePolicy(response, noncePolicy);
     return response;

@@ -79,6 +79,10 @@ const PUBLIC_NOINDEX_PATHS = [
   "/auth/logout",
   "/feedback",
   "/api/feedback",
+  // Browsers POST Content-Security-Policy violation reports here on their
+  // own, with no session, so the route is public like /api/feedback and
+  // must never fall into the protected /api/* default.
+  "/api/csp-report",
   "/api/ai-native/grade-exercise",
   "/api/demos/:slug/briefing.pdf",
   // The 4 native certified courses' verification routes stay public-noindex

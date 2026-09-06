@@ -136,6 +136,7 @@ _None._
 | `/auth/logout` | Public utility page; crawlable so crawlers can see noindex. |
 | `/feedback` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/feedback` | Public utility page; crawlable so crawlers can see noindex. |
+| `/api/csp-report` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/ai-native/grade-exercise` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/demos/:slug/briefing.pdf` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-fuehrerschein/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |

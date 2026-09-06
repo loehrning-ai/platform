@@ -68,6 +68,7 @@ const SAFE_ROUTES = new Set([
   "/api/ai-native/practice",
   "/api/course-workspace/terminal",
   "/api/buecher/[slug]/download.pdf",
+  "/api/csp-report",
   "/api/feedback",
   "/api/progress",
   "/auth/logout",

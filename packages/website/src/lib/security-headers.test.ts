@@ -5,6 +5,10 @@ import {
   buildContentSecurityPolicy,
   buildSecurityHeaders,
   createCspNonce,
+  CSP_REPORT_GROUP,
+  CSP_REPORT_PATH,
+  CSP_REPORTING_ENDPOINTS,
+  cspDispositionOf,
   isCspNonce,
   isSharedCacheable,
   NONCE_CSP_HEADER,
@@ -425,11 +429,138 @@ describe("content security policy nonce", () => {
     // Enforcing requires the component <style> refactor, the noscript
     // stylesheet, and a Turnstile nonce, all of which live outside this file.
     expect(NONCE_CSP_HEADER).toBe("Content-Security-Policy-Report-Only");
+    expect(cspDispositionOf(NONCE_CSP_HEADER)).toBe("report");
+    expect(cspDispositionOf("Content-Security-Policy")).toBe("enforce");
     expect(NONCE_REQUEST_HEADER).toBe("x-nonce");
     // While report-only, the enforced baseline must stay permissive so no
     // document can break on a policy nothing has verified in a browser yet.
     expect(
       directive(buildContentSecurityPolicy(production, null), "script-src"),
     ).toContain("'unsafe-inline'");
+  });
+});
+
+describe("report-only canary", () => {
+  const nonce = "AbCdEfGhIjKlMnOpQrStUv";
+
+  // The exact string next.config.ts shipped as the enforced policy before the
+  // canary grew a reporting destination. Pinned byte for byte: the report-only
+  // work must not move the enforced baseline at all.
+  const ENFORCED_PRODUCTION_POLICY =
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests";
+
+  it("leaves the enforced policy byte-identical", () => {
+    expect(buildContentSecurityPolicy(production, null)).toBe(
+      ENFORCED_PRODUCTION_POLICY,
+    );
+    expect(buildContentSecurityPolicy(production, null, null, "enforce")).toBe(
+      ENFORCED_PRODUCTION_POLICY,
+    );
+    expect(
+      buildSecurityHeaders(production, null).find(
+        ({ key }) => key === "Content-Security-Policy",
+      )?.value,
+    ).toBe(ENFORCED_PRODUCTION_POLICY);
+  });
+
+  it("omits the directives browsers ignore in a report-only policy", () => {
+    // WebKit and Chromium each log an error-level console message for every
+    // directive they ignore in report-only mode; both of these can only be
+    // enforced, so a report-only variant carrying them is a defect.
+    const reported = buildContentSecurityPolicy(production, null, nonce, "report");
+
+    expect(reported).not.toContain("frame-ancestors");
+    expect(reported).not.toContain("upgrade-insecure-requests");
+    // They stay with the enforced variant, where they work.
+    const enforced = buildContentSecurityPolicy(production, null, nonce, "enforce");
+    expect(enforced).toContain("frame-ancestors 'none'");
+    expect(enforced).toContain("upgrade-insecure-requests");
+  });
+
+  it("names the reporting destination on both channels", () => {
+    // WebKit complains, in the console, about a report-only policy with no
+    // destination. report-uri serves WebKit; report-to names the Reporting
+    // API group Chromium delivers on.
+    const reported = buildContentSecurityPolicy(production, null, nonce, "report");
+
+    expect(directive(reported, "report-uri")).toBe("report-uri /api/csp-report");
+    expect(directive(reported, "report-to")).toBe("report-to csp-canary");
+    expect(CSP_REPORT_PATH).toBe("/api/csp-report");
+    expect(CSP_REPORT_GROUP).toBe("csp-canary");
+    // The enforced variant reports nothing, exactly as the baseline does.
+    expect(buildContentSecurityPolicy(production, null, nonce)).not.toContain(
+      "report-",
+    );
+  });
+
+  it("differs from the enforced nonce policy only where report-only mode demands", () => {
+    const environment = {
+      ...production,
+      NEXT_PUBLIC_SENTRY_DSN: "https://012345abcdef@o123.ingest.sentry.io/456",
+      VERCEL: "1",
+      VERCEL_TELEMETRY_ENABLED: "true",
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "configured",
+    } satisfies SecurityHeaderEnvironment;
+    const origin = "https://project-ref.supabase.co";
+    const enforced = buildContentSecurityPolicy(environment, origin, nonce);
+    const reported = buildContentSecurityPolicy(environment, origin, nonce, "report");
+
+    // Measurement is only trustworthy if the reported policy is the enforced
+    // one minus the two directives report-only mode cannot carry, plus the
+    // two reporting directives, and nothing else.
+    const enforcedNames = directiveNames(enforced);
+    expect(directiveNames(reported)).toEqual([
+      ...enforcedNames.filter(
+        (name) => name !== "frame-ancestors" && name !== "upgrade-insecure-requests",
+      ),
+      "report-uri",
+      "report-to",
+    ]);
+    const enforcedDirectives = new Set(enforced.split("; "));
+    for (const entry of reported.split("; ")) {
+      if (entry.startsWith("report-")) continue;
+      expect(enforcedDirectives.has(entry), entry).toBe(true);
+    }
+  });
+
+  it("keeps the report-only variant readable by Next's nonce extractor", () => {
+    const generated = createCspNonce();
+    expect(generated).not.toBeNull();
+
+    const reported = buildContentSecurityPolicy(production, null, generated, "report");
+    expect(nextScriptNonceFromHeader(reported)).toBe(generated);
+    expect(directive(reported, "script-src")).toBe(
+      `script-src 'self' 'nonce-${generated}' 'strict-dynamic'`,
+    );
+  });
+
+  it("falls back to the nonce-free shape for a malformed nonce in report-only mode too", () => {
+    const reported = buildContentSecurityPolicy(
+      production,
+      null,
+      "abcdefghijklmnop'; script-src *",
+      "report",
+    );
+
+    expect(reported).not.toContain("script-src *");
+    expect(directive(reported, "script-src")).toBe(
+      "script-src 'self' 'unsafe-inline'",
+    );
+    expect(nextScriptNonceFromHeader(reported)).toBeUndefined();
+  });
+
+  it("ships a correctly quoted Reporting-Endpoints header for the report-to group", () => {
+    const headers = buildSecurityHeaders(production, null);
+    const reportingEndpoints = headers.find(
+      ({ key }) => key === "Reporting-Endpoints",
+    )?.value;
+
+    expect(reportingEndpoints).toBe('csp-canary="/api/csp-report"');
+    expect(reportingEndpoints).toBe(CSP_REPORTING_ENDPOINTS);
+    // A Structured Field dictionary: bare key, quoted string value, and the
+    // key is the exact group the report-only policy's report-to names.
+    expect(reportingEndpoints).toMatch(/^[a-z][a-z0-9_.*-]*="[^"\\\s]+"$/);
+    expect(reportingEndpoints?.split("=")[0]).toBe(CSP_REPORT_GROUP);
+    expect(reportingEndpoints).toContain(`"${CSP_REPORT_PATH}"`);
   });
 });

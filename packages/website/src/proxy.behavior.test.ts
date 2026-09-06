@@ -251,6 +251,7 @@ describe("public cache contract", () => {
 
   it.each([
     ["POST", "/api/feedback"],
+    ["POST", "/api/csp-report"],
     ["POST", "/api/ai-native/grade-exercise"],
     ["GET", "/api/health"],
   ])(
@@ -526,7 +527,9 @@ function passThroughAuth(user: { id: string } | null) {
 
 describe("content security policy nonce", () => {
   it("forwards a per-request nonce policy and publishes the same policy", async () => {
-    const response = await proxy(new NextRequest("http://localhost/"));
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const response = await proxy(new NextRequest("http://localhost/login"));
 
     const forwarded = forwardedRequestHeader(
       response,
@@ -536,6 +539,7 @@ describe("content security policy nonce", () => {
     // document, so the published policy must be the identical string.
     expect(forwarded).toBeTruthy();
     expect(response.headers.get(NONCE_CSP_HEADER)).toBe(forwarded);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
 
     const nonce = nonceOf(forwarded);
     expect(nonce).toBeTruthy();
@@ -548,12 +552,29 @@ describe("content security policy nonce", () => {
     );
   });
 
+  it("publishes the report-only variant, with a destination and without enforce-only directives", async () => {
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const response = await proxy(new NextRequest("http://localhost/login"));
+    const policy = response.headers.get(NONCE_CSP_HEADER) ?? "";
+
+    // WebKit logs an error for each directive it ignores in report-only mode
+    // and another when the policy names no destination; Chromium logs the
+    // upgrade-insecure-requests one as well.
+    expect(policy).not.toContain("frame-ancestors");
+    expect(policy).not.toContain("upgrade-insecure-requests");
+    expect(directive(policy, "report-uri")).toBe("report-uri /api/csp-report");
+    expect(directive(policy, "report-to")).toBe("report-to csp-canary");
+  });
+
   it("never lets a client choose the nonce Next stamps", async () => {
     // Before this guard, proxy.ts copied every inbound header, so a request
     // carrying Content-Security-Policy reached Next and made it stamp an
     // attacker-chosen nonce into every script tag on the page.
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
     const response = await proxy(
-      new NextRequest("http://localhost/", {
+      new NextRequest("http://localhost/login", {
         headers: {
           "content-security-policy": "script-src 'nonce-ATTACKERNONCEAAAAAAAA'",
           "content-security-policy-report-only":
@@ -586,12 +607,36 @@ describe("content security policy nonce", () => {
     expect(response.headers.get(NONCE_CSP_HEADER)).not.toContain("ATTACKER");
   });
 
+  it("strips a client-supplied nonce even from a document that mints none", async () => {
+    const response = await proxy(
+      new NextRequest("http://localhost/kurse", {
+        headers: {
+          "content-security-policy": "script-src 'nonce-ATTACKERNONCEAAAAAAAA'",
+          "content-security-policy-report-only":
+            "script-src 'nonce-ATTACKERNONCEBBBBBBBB'",
+          "x-nonce": "ATTACKERNONCECCCCCCCC",
+        },
+      }),
+    );
+
+    for (const key of [
+      "content-security-policy",
+      "content-security-policy-report-only",
+      NONCE_REQUEST_HEADER,
+    ]) {
+      expect(forwardedRequestHeader(response, key), key).toBeNull();
+    }
+    expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+  });
+
   it("issues a fresh nonce per request", async () => {
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
     const nonces = await Promise.all(
       Array.from({ length: 8 }, async () =>
         nonceOf(
           forwardedRequestHeader(
-            await proxy(new NextRequest("http://localhost/kurse")),
+            await proxy(new NextRequest("http://localhost/login")),
             "content-security-policy-report-only",
           ),
         ),
@@ -602,25 +647,45 @@ describe("content security policy nonce", () => {
     expect(new Set(nonces).size).toBe(nonces.length);
   });
 
-  it.each([
-    ["/", "public, max-age=3600, s-maxage=3600"],
-    ["/en", "public, max-age=3600, s-maxage=3600"],
-    ["/login", null],
-  ])(
-    "reports rather than enforces on the shared-cacheable document %s",
-    async (path, cacheControl) => {
+  it.each(["/", "/en", "/kurse", "/buecher/ki-landschaft/01-einleitung"])(
+    "mints no nonce for the shared-cacheable document %s",
+    async (path) => {
+      const response = await proxy(new NextRequest(`http://localhost${path}`));
+
+      expect(response.headers.get("cache-control")).toBe(
+        "public, max-age=3600, s-maxage=3600",
+      );
+      expect(isSharedCacheable(response.headers.get("cache-control"))).toBe(
+        true,
+      );
+      // A nonce minted here would reach Next through the request header and
+      // be rendered into HTML a CDN keeps for an hour, a fixed nonce every
+      // reader of that copy would hold. So neither the policy nor the nonce
+      // exists for this document, in either disposition.
+      expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+      expect(response.headers.get("content-security-policy")).toBeNull();
+      expect(
+        forwardedRequestHeader(response, "content-security-policy-report-only"),
+      ).toBeNull();
+      expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeNull();
+      expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(["/login", "/auth/callback", "/auth/logout"])(
+    "keeps the auth-aware %s out of shared caches and mints its nonce",
+    async (path) => {
       mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
 
       const response = await proxy(new NextRequest(`http://localhost${path}`));
 
-      expect(response.headers.get("cache-control")).toBe(cacheControl);
-      // A nonce inside a document a shared cache may store is a fixed nonce.
-      // Report-only carries no capability, so it is safe here; an enforced
-      // policy would not be.
-      expect(isSharedCacheable(response.headers.get("cache-control"))).toBe(
-        true,
+      // Decided before minting: a document that renders per cookie is never
+      // shared-cacheable, which is exactly what lets it carry a nonce.
+      expect(response.headers.get("cache-control")).toBe("private, no-store");
+      expect(nonceOf(response.headers.get(NONCE_CSP_HEADER))).toBe(
+        forwardedRequestHeader(response, NONCE_REQUEST_HEADER),
       );
-      expect(response.headers.get(NONCE_CSP_HEADER)).toBeTruthy();
+      expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeTruthy();
     },
   );
 
@@ -642,37 +707,75 @@ describe("content security policy nonce", () => {
     expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeNull();
   });
 
-  it.each([
+  const NONCE_MATRIX = [
     "/",
     "/en",
     "/kurse",
+    "/buecher/ki-landschaft/01-einleitung",
+    "/en/kurse",
     "/login",
+    "/auth/callback",
     "/konto",
+    "/ki-fuehrerschein/kurs",
     "/api/progress",
+    "/api/feedback",
+    "/api/csp-report",
+    "/api/buecher/ki-landschaft/download.pdf",
+    "/api/health",
     "/robots.txt",
     "/favicon.ico",
-    "/api/feedback",
-  ])(
-    "never enforces a nonce policy on a shared-cacheable response for %s",
-    async (path) => {
-      // The invariant that survives the flip to enforcement: whatever else
-      // changes, an enforced nonce may only ride a response a shared cache must
-      // not store.
-      mockRefreshAuthSession.mockImplementation(
-        passThroughAuth({ id: "user-1" }),
-      );
+  ] as const;
 
-      const response = await proxy(new NextRequest(`http://localhost${path}`));
-      const enforced = response.headers.get("content-security-policy");
+  describe.each([
+    ["signed out", null],
+    ["signed in", { id: "user-1" }],
+  ] as const)("%s", (_label, user) => {
+    it.each(NONCE_MATRIX)(
+      "never both mints a nonce and allows shared caching for %s",
+      async (path) => {
+        // The invariant that survives the flip to enforcement: whatever else
+        // changes, a nonce may only exist for a response a shared cache must
+        // not store, because a cached nonce is a fixed nonce. The request
+        // header side matters as much as the response side: a nonce forwarded
+        // to Next is rendered into the document whether or not a policy
+        // header accompanies it.
+        mockRefreshAuthSession.mockImplementation(passThroughAuth(user));
 
-      if (enforced && nonceOf(enforced)) {
-        expect(isSharedCacheable(response.headers.get("cache-control"))).toBe(
-          false,
+        const response = await proxy(new NextRequest(`http://localhost${path}`));
+        const minted =
+          forwardedRequestHeader(response, NONCE_REQUEST_HEADER) !== null ||
+          forwardedRequestHeader(response, "content-security-policy") !== null ||
+          forwardedRequestHeader(
+            response,
+            "content-security-policy-report-only",
+          ) !== null ||
+          nonceOf(response.headers.get("content-security-policy")) !== null ||
+          nonceOf(
+            response.headers.get("content-security-policy-report-only"),
+          ) !== null;
+        const cacheable = isSharedCacheable(
+          response.headers.get("cache-control"),
         );
-      }
-      expect(response.headers.get("content-security-policy")).toBeNull();
-    },
-  );
+
+        expect(minted && cacheable, `${path}: minted=${minted} cacheable=${cacheable}`).toBe(false);
+        // While the canary is report-only, no enforced nonce policy exists at all.
+        expect(response.headers.get("content-security-policy")).toBeNull();
+      },
+    );
+  });
+
+  it("mints for a private document and for a shared-cacheable one does not, under the same rule", async () => {
+    // Guards the matrix above against being vacuous: both sides of the
+    // invariant occur.
+    mockRefreshAuthSession.mockImplementation(passThroughAuth({ id: "user-1" }));
+    const konto = await proxy(new NextRequest("http://localhost/konto"));
+    const home = await proxy(new NextRequest("http://localhost/"));
+
+    expect(forwardedRequestHeader(konto, NONCE_REQUEST_HEADER)).toBeTruthy();
+    expect(isSharedCacheable(konto.headers.get("cache-control"))).toBe(false);
+    expect(forwardedRequestHeader(home, NONCE_REQUEST_HEADER)).toBeNull();
+    expect(isSharedCacheable(home.headers.get("cache-control"))).toBe(true);
+  });
 
   it("keeps the nonce on an authenticated private document", async () => {
     mockRefreshAuthSession.mockImplementation(

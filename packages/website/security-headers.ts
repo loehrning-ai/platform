@@ -50,6 +50,42 @@ export const NONCE_CSP_HEADER:
   "Content-Security-Policy" | "Content-Security-Policy-Report-Only" =
   "Content-Security-Policy-Report-Only";
 
+/** How a browser treats a policy: enforce it, or only report against it. */
+export type CspDisposition = "enforce" | "report";
+
+/**
+ * The disposition a header name carries. A report-only policy cannot carry
+ * the directives browsers only enforce and needs a reporting destination to
+ * do anything at all, so the builder must know which variant it is producing.
+ * Derived from the header name at the call site, so flipping NONCE_CSP_HEADER
+ * flips the variant with it and the two can never disagree.
+ */
+export function cspDispositionOf(
+  header: typeof NONCE_CSP_HEADER,
+): CspDisposition {
+  return header === "Content-Security-Policy" ? "enforce" : "report";
+}
+
+/**
+ * Where a browser delivers a violation report. Both reporting directives of
+ * the report-only policy point here: `report-uri` is the CSP2 channel WebKit
+ * uses, `report-to` names the Reporting API group Chromium uses. Same-origin
+ * and fixed, so the policy never interpolates anything a request supplied.
+ */
+export const CSP_REPORT_PATH = "/api/csp-report";
+
+/** The Reporting API group `report-to` names. */
+export const CSP_REPORT_GROUP = "csp-canary";
+
+/**
+ * The `Reporting-Endpoints` value that defines that group. A Structured Field
+ * dictionary: the group is a bare key, the URL a quoted string, and the URL is
+ * resolved against the response it arrives on, so it stays relative. Shipped
+ * on every response so the group resolves for any document the proxy attaches
+ * the report-only policy to.
+ */
+export const CSP_REPORTING_ENDPOINTS = `${CSP_REPORT_GROUP}="${CSP_REPORT_PATH}"`;
+
 /**
  * A nonce inside a document a shared cache may store is a fixed nonce: every
  * reader of the cached response holds a value that authorizes an injected
@@ -141,13 +177,21 @@ export function sentryOriginFromDsn(value: string | undefined): string | null {
  * from `script-src`. An absent or malformed nonce falls back to the nonce-free
  * policy rather than emitting a policy that references a value no script
  * carries.
+ *
+ * The report-only disposition differs from the enforced one in exactly two
+ * ways, both dictated by how browsers treat a report-only policy: it omits
+ * the directives that exist only to be enforced, and it names the reporting
+ * destination. The default disposition is enforce, so the nonce-free baseline
+ * next.config.ts builds with two arguments is untouched.
  */
 export function buildContentSecurityPolicy(
   environment: SecurityHeaderEnvironment,
   supabaseOrigin: string | null,
   nonce: string | null = null,
+  disposition: CspDisposition = "enforce",
 ): string {
   const trustedNonce = nonce !== null && isCspNonce(nonce) ? nonce : null;
+  const reportOnly = disposition === "report";
   const isDevelopment = environment.NODE_ENV === "development";
   const localVerificationOrigin =
     environment.LOEHRNING_LOCAL_VERIFICATION_ORIGIN;
@@ -235,10 +279,22 @@ export function buildContentSecurityPolicy(
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'none'",
-    ...(isDevelopment || isLoopbackHttpVerification
+    // frame-ancestors and upgrade-insecure-requests can only be enforced;
+    // there is nothing to report. Browsers ignore both in a report-only
+    // policy, and WebKit and Chromium each log an error-level console message
+    // per ignored directive, so the report-only variant omits them. Both stay
+    // in the enforced policy, where they work.
+    ...(reportOnly ? [] : ["frame-ancestors 'none'"]),
+    ...(reportOnly || isDevelopment || isLoopbackHttpVerification
       ? []
       : ["upgrade-insecure-requests"]),
+    // A report-only policy without a destination is inert, and WebKit says so
+    // in the console. report-uri is the CSP2 channel WebKit delivers on;
+    // report-to names the Reporting API group Chromium delivers on, defined by
+    // the Reporting-Endpoints header buildSecurityHeaders ships alongside.
+    ...(reportOnly
+      ? [`report-uri ${CSP_REPORT_PATH}`, `report-to ${CSP_REPORT_GROUP}`]
+      : []),
   ].join("; ");
 }
 
@@ -250,6 +306,13 @@ export function buildSecurityHeaders(
     {
       key: "Content-Security-Policy",
       value: buildContentSecurityPolicy(environment, supabaseOrigin),
+    },
+    {
+      // Defines the group the report-only policy's `report-to` names. It is
+      // static, so it rides the same build-time header set as the enforced
+      // policy instead of being re-emitted per request by the proxy.
+      key: "Reporting-Endpoints",
+      value: CSP_REPORTING_ENDPOINTS,
     },
     {
       key: "Strict-Transport-Security",
