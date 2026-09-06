@@ -33,6 +33,7 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
+import type { CourseAccessBySlug } from "@/lib/courses/access";
 import {
   CourseLedgerRow,
   courseAction,
@@ -93,6 +94,11 @@ const ATLAS_COPY = {
     start: "Nachweis beginnen",
     continue: "Nachweis fortsetzen",
     viewRecord: "Nachweis ansehen",
+    accountRequired: "Lernkonto nötig",
+    unavailable: "Hier nicht verfügbar",
+    unavailableAction: "Hier nicht verfügbar · Kursübersicht",
+    openAlternative: "Offene Alternative ohne Lernkonto",
+    openRecommendation: "Offener Einstieg ohne Lernkonto",
     pathCourse: "Teil des gewählten Pfads",
     goals: LEARNING_GOALS.de,
     proofs: {
@@ -144,6 +150,11 @@ const ATLAS_COPY = {
     start: "Start this proof",
     continue: "Continue this proof",
     viewRecord: "View record",
+    accountRequired: "Account required",
+    unavailable: "Unavailable here",
+    unavailableAction: "Unavailable here · Course overview",
+    openAlternative: "Open alternative without an account",
+    openRecommendation: "Open starting point without an account",
     pathCourse: "Part of the selected path",
     goals: LEARNING_GOALS.en,
     proofs: {
@@ -192,6 +203,11 @@ const ATLAS_COPY = {
       readonly start: string;
       readonly continue: string;
       readonly viewRecord: string;
+      readonly accountRequired: string;
+      readonly unavailable: string;
+      readonly unavailableAction: string;
+      readonly openAlternative: string;
+      readonly openRecommendation: string;
       readonly pathCourse: string;
       readonly goals: readonly LearningGoal[];
       readonly proofs: Readonly<Record<string, string>>;
@@ -216,11 +232,19 @@ function readStat(
   };
 }
 
-export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
+export function LearningAtlas({
+  locale = "de",
+  access,
+}: {
+  readonly locale?: Locale;
+  readonly access: CourseAccessBySlug;
+}) {
   const copy = ATLAS_COPY[locale];
   const sections = courseSections(locale);
   const courses = localizeCatalog(ALL_COURSE_CATALOG, locale);
-  const [goalId, setGoalId] = useState<GoalId>("start");
+  // Null keeps the default recommendation distinct from an explicit choice
+  // of "start"; only an unchosen, unstarted path may receive an open fallback.
+  const [goalId, setGoalId] = useState<GoalId | null>(null);
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("alle");
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
   const levelLabels = COURSE_LEVEL_LABELS_BY_LOCALE[locale];
@@ -229,7 +253,9 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
     const requestedGoal = new URL(window.location.href).searchParams.get(
       "goal",
     );
-    if (isGoalId(requestedGoal)) setGoalId(requestedGoal);
+    if (isGoalId(requestedGoal)) {
+      setGoalId(requestedGoal);
+    }
 
     return subscribe((progress) => {
       const next: Record<string, CourseStat> = {};
@@ -247,15 +273,52 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
     const course = coursesBySlug.get(slug);
     return course && isLiveCourse(course) ? [course] : [];
   });
-  const nextCourse =
+  const pathNextCourse =
     pathCourses.find((course) => !(stats[course.slug]?.certified ?? false)) ??
     pathCourses.at(-1);
+  const openDefault =
+    goalId === null &&
+    !Object.values(stats).some((stat) => stat.started || stat.certified) &&
+    pathNextCourse &&
+    access[pathNextCourse.slug] === "unavailable"
+      ? courses.find(
+          (course) => isLiveCourse(course) && access[course.slug] === "open",
+        )
+      : undefined;
+  const nextCourse =
+    openDefault && isLiveCourse(openDefault) ? openDefault : pathNextCourse;
   const nextStat = nextCourse
     ? (stats[nextCourse.slug] ?? defaultStat(nextCourse))
     : null;
   const nextAction =
     nextCourse && nextStat
-      ? courseAction(nextCourse, nextStat, locale, copy)
+      ? courseAction(
+          nextCourse,
+          nextStat,
+          locale,
+          copy,
+          access[nextCourse.slug] ?? "unavailable",
+        )
+      : null;
+  // An explicit goal still names its own next course. An unavailable reader
+  // opens that course's public context; the open task is a separate choice,
+  // never a silent replacement of the learner's path or progress.
+  const openAlternative =
+    nextCourse && access[nextCourse.slug] === "unavailable"
+      ? (pathCourses.find((course) => access[course.slug] === "open") ??
+        courses.find(
+          (course) => isLiveCourse(course) && access[course.slug] === "open",
+        ))
+      : undefined;
+  const alternativeAction =
+    openAlternative && isLiveCourse(openAlternative)
+      ? courseAction(
+          openAlternative,
+          stats[openAlternative.slug] ?? defaultStat(openAlternative),
+          locale,
+          copy,
+          "open",
+        )
       : null;
   const selectedSlugs: ReadonlySet<string> = new Set<string>(goal.courseSlugs);
   const visibleCourseCount = courses.filter((course) =>
@@ -454,12 +517,14 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                 {nextCourse && nextStat && nextAction ? (
                   <>
                     <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-                      {copy.nextProof}{" "}
-                      <span className="text-muted-foreground">
-                        · {goal.courseSlugs.indexOf(nextCourse.slug) + 1}/
-                        {goal.courseSlugs.length}
-                        <span className="sr-only"> {copy.pathPosition}</span>
-                      </span>
+                      {openDefault ? copy.openRecommendation : copy.nextProof}{" "}
+                      {goal.courseSlugs.includes(nextCourse.slug) ? (
+                        <span className="text-muted-foreground">
+                          · {goal.courseSlugs.indexOf(nextCourse.slug) + 1}/
+                          {goal.courseSlugs.length}
+                          <span className="sr-only"> {copy.pathPosition}</span>
+                        </span>
+                      ) : null}
                     </p>
                     <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
                       {nextCourse.title}
@@ -483,6 +548,16 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                         aria-hidden="true"
                       />
                     </Link>
+                    {openAlternative && alternativeAction ? (
+                      <Link
+                        href={alternativeAction.href}
+                        prefetch={false}
+                        data-open-course-alternative
+                        className="mt-2 inline-flex min-h-11 max-w-full items-center text-sm font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:decoration-foreground"
+                      >
+                        {copy.openAlternative}: {openAlternative.title}
+                      </Link>
+                    ) : null}
                   </>
                 ) : null}
               </div>
@@ -595,6 +670,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                     stat={stats[course.slug]}
                     locale={locale}
                     copy={copy}
+                    access={access[course.slug] ?? "unavailable"}
                   />
                 ))}
               </ol>

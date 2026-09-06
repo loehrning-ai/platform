@@ -37,8 +37,8 @@ const CHAPTER_URL = "/buecher/ki-landschaft/01_eisberg";
  *
  * The open-source course routes are reachable in that server and render the
  * same `LessonShell` with the same mobile toolbar, so the shell assertions run
- * against one of those. Nothing block-specific is lost, because a block route
- * cannot be reached here at all.
+ * against one of those. Block-specific header flow is covered in the server
+ * component test; actual protected block geometry is not proven by this tier.
  */
 const LESSON_URL = "/kurse/open-source/claude/kurs/mental-model";
 const TAB_BAR = "[data-mobile-tab-bar]";
@@ -48,8 +48,8 @@ const SHEET_PANEL = "[data-chapter-toc-sheet-panel]";
 const LESSON_TOOLBAR = "[data-lesson-shell-mobile-toolbar]";
 /** `--tabbar-h` in globals.css: 3.5rem. */
 const TAB_BAR_HEIGHT = 56;
-/** `--nav-h-compact` (3rem) plus the 3rem block sub-header row. */
-const LESSON_TOOLBAR_TOP = 96;
+/** Technical readers have no sticky course subheader below lg. */
+const LESSON_TOOLBAR_TOP = 48;
 const MIN_TARGET = 44;
 
 async function openAt(page: Page, url: string, width: number): Promise<void> {
@@ -182,7 +182,9 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     page,
   }) => {
     await openAt(page, CHAPTER_URL, 390);
-    const next = page.locator(READER_BAR).getByRole("link", { name: /^Weiter/ });
+    const next = page
+      .locator(READER_BAR)
+      .getByRole("link", { name: /^Weiter/ });
 
     await expect(next).toBeVisible();
     await expectTargetSize(next, "next chapter action");
@@ -219,9 +221,52 @@ test.describe("reader focus mode: lesson shell below lg", () => {
     expect(offset.position).toBe("sticky");
     expect(
       Math.round(Number.parseFloat(offset.top)),
-      "toolbar offset derives from --nav-h-compact plus the sub-header row",
+      "toolbar touches the real compact header without an invented subheader",
     ).toBe(LESSON_TOOLBAR_TOP);
   });
+
+  for (const width of [390, 768]) {
+    test(`the ${width}px toolbar occupies only the real compact-header band`, async ({
+      page,
+    }, testInfo) => {
+      await openAt(page, LESSON_URL, width);
+      await page.evaluate(() =>
+        window.scrollTo({ top: 500, behavior: "instant" }),
+      );
+      const toolbar = page.locator(LESSON_TOOLBAR);
+      await expect(toolbar).toBeVisible();
+      await expect
+        .poll(async () =>
+          toolbar.evaluate((element) =>
+            Math.round(element.getBoundingClientRect().top),
+          ),
+        )
+        .toBe(LESSON_TOOLBAR_TOP);
+      const geometry = await toolbar.evaluate((element) => ({
+        height: element.getBoundingClientRect().height,
+        top: element.getBoundingClientRect().top,
+        headerBottom: document
+          .querySelector("[data-nav-header-row]")
+          ?.getBoundingClientRect().bottom,
+      }));
+      expect(Math.round(geometry.height)).toBe(48);
+      expect(geometry.headerBottom).toBeDefined();
+      expect(
+        Math.abs(geometry.top - geometry.headerBottom!),
+      ).toBeLessThanOrEqual(1);
+      await page.screenshot({
+        path: testInfo.outputPath(`reader-toolbar-${width}.png`),
+      });
+      await testInfo.attach(`reader-toolbar-${width}`, {
+        path: testInfo.outputPath(`reader-toolbar-${width}.png`),
+        contentType: "image/png",
+      });
+      await testInfo.attach("reader-toolbar-geometry", {
+        body: JSON.stringify({ route: LESSON_URL, width, ...geometry }),
+        contentType: "application/json",
+      });
+    });
+  }
 
   test("fills the band it took from the tab bar, with a control that opens the lesson list", async ({
     page,
@@ -250,12 +295,32 @@ test.describe("reader focus mode: lesson shell below lg", () => {
     await expect(action).toBeVisible();
     await expectTargetSize(action, "lesson bar action");
 
-    await action.click();
+    await expect(bar.locator("[data-reader-focus-position]")).toContainText(
+      "1 / 12",
+    );
+    await expect(action).toHaveText("Aufgabe öffnen");
+    const navigation = bar.locator("[data-reader-focus-navigation]");
+    await expectTargetSize(navigation, "lesson navigation remains available");
+    await navigation.click();
     await expect(page.getByRole("dialog")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(navigation).toBeFocused();
   });
 });
 
 test.describe("reader focus mode: desktop unchanged", () => {
+  for (const width of [1024, 1280]) {
+    test(`the ${width}px lesson uses desktop navigation without mobile chrome`, async ({
+      page,
+    }) => {
+      await openAt(page, LESSON_URL, width);
+      await expect(page.locator(LESSON_TOOLBAR)).toBeHidden();
+      await expect(page.locator(READER_BAR)).toBeHidden();
+      await expect(
+        page.getByRole("complementary", { name: "Lektionsnavigation" }),
+      ).toBeVisible();
+    });
+  }
   test("at 1280 the reader bar is absent and the sidebar TOC remains", async ({
     page,
   }) => {

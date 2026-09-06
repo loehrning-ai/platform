@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -55,6 +56,17 @@ export function DsReaderShell({
     currentIndex >= 0 && currentIndex < chapters.length - 1
       ? chapters[currentIndex + 1]
       : null;
+  const reader = useLessonReaderBar({
+    courseSlug: "data-science", lessonId: activeId,
+    ordinal: chapters.filter((chapter) => chapter.id !== "home")
+      .findIndex((chapter) => chapter.id === activeId) + 1,
+    total: chapters.filter((chapter) => chapter.id !== "home").length, locale,
+    next: {
+      kind: "link", href: dsChapterHref(next?.id ?? "home", locale),
+      label: next ? (locale === "de" ? "Weiter" : "Next") :
+        (locale === "de" ? "Zum Kurs" : "Course hub"),
+    },
+  });
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -75,6 +87,8 @@ export function DsReaderShell({
   return (
     <div className={`ds-v8-scope ${DS_FONT_VARIABLES}`}>
       <LessonShell
+        readerBar={activeId === "home" ? undefined : reader.bar}
+        contentRef={reader.contentRef}
         navOpen={navOpen}
         onNavOpenChange={setNavOpen}
         navLabel={copy.navLabel}

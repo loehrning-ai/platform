@@ -33,6 +33,7 @@ import {
   setUnknownLearningOwner,
 } from "@/lib/progress/browser-learning-storage";
 import { LessonMissionControl } from "./lesson-mission-control";
+import { LESSON_MISSION_OPEN_TASK_EVENT } from "./focus-mission-target";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -63,6 +64,13 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
+  if (!HTMLElement.prototype.scrollIntoView) {
+    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+      configurable: true,
+      writable: true,
+      value: () => undefined,
+    });
+  }
   if (
     typeof window.localStorage === "undefined" ||
     typeof window.localStorage.setItem !== "function"
@@ -72,6 +80,10 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+  vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(
+    () => undefined,
+  );
+  vi.spyOn(window, "scrollBy").mockImplementation(() => undefined);
   window.localStorage.clear();
   activateAnonymousLearningOwner();
 });
@@ -161,6 +173,13 @@ async function renderAtRetrieval() {
   fireEvent.click(
     screen.getByRole("button", { name: /feature-availability audit/i }),
   );
+  expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
+  const repeatedEvidence = screen.getByRole("button", {
+    name: /feature-availability audit/i,
+  });
+  repeatedEvidence.focus();
+  fireEvent.click(repeatedEvidence);
+  expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
   fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
 
   const privateScratch = "private-scratch-value-must-not-persist";
@@ -173,12 +192,112 @@ async function renderAtRetrieval() {
       name: /remove the leaking feature, re-split by time/i,
     }),
   );
+  expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
   fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
 
   return { props, view, privateScratch };
 }
 
 describe("LessonMissionControl", () => {
+  it("reopens persisted collapsed missions through a controlled task request", async () => {
+    const { props, view } = await renderAtRetrieval();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Collapse signal circuit" }),
+    );
+    await waitFor(() =>
+      expect(
+        JSON.parse(
+          window.localStorage.getItem(
+            getLessonMissionStorageKey(courseSlug, lessonId),
+          ) ?? "{}",
+        ).collapsed,
+      ).toBe(true),
+    );
+    view.unmount();
+    render(
+      <LessonMissionControl
+        {...props}
+        executionReceipt={expectedExecutionReceipt}
+        executionRevision={1}
+      />,
+    );
+    const expand = await screen.findByRole("button", {
+      name: "Expand signal circuit",
+    });
+    expect(expand).toHaveAttribute("aria-expanded", "false");
+    const mission = document.querySelector<HTMLElement>(
+      "[data-lesson-mission]",
+    )!;
+    act(() => mission.dispatchEvent(new Event(LESSON_MISSION_OPEN_TASK_EVENT)));
+    expect(
+      screen.getByRole("heading", { name: "Rule from memory" }),
+    ).toHaveFocus();
+    expect(mission).toHaveAttribute("data-mission-collapsed", "false");
+    expect(mission).toHaveAttribute("data-mission-complete", "false");
+    expect(props.onMissionComplete).not.toHaveBeenCalled();
+  });
+
+  it("focuses the public prerequisite on an unresolved-owner task request without saving state", () => {
+    setUnknownLearningOwner();
+    render(<LessonMissionControl {...missionProps()} />);
+    const mission = document.querySelector<HTMLElement>(
+      "[data-lesson-mission]",
+    )!;
+    act(() => mission.dispatchEvent(new Event(LESSON_MISSION_OPEN_TASK_EVENT)));
+    expect(
+      screen.getByText("Activate local learning before starting this mission."),
+    ).toHaveFocus();
+    expect(
+      window.localStorage.getItem(
+        getLessonMissionStorageKey(courseSlug, lessonId),
+      ),
+    ).toBeNull();
+  });
+
+  it("does not steal focus during hydration, owner changes or receipt synchronization", async () => {
+    const props = missionProps();
+    render(<button type="button">Outside mission</button>);
+    const outside = screen.getByRole("button", { name: "Outside mission" });
+    outside.focus();
+    const view = render(<LessonMissionControl {...props} />);
+    await screen.findByRole("button", { name: /Commit prediction/ });
+    expect(outside).toHaveFocus();
+    act(() => setUnknownLearningOwner());
+    act(() => activateAnonymousLearningOwner());
+    view.rerender(
+      <LessonMissionControl
+        {...props}
+        executionReceipt={expectedExecutionReceipt}
+        executionRevision={1}
+      />,
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole("radio", { name: /Target leakage/ }),
+      ).toBeEnabled(),
+    );
+    expect(outside).toHaveFocus();
+    expect(HTMLElement.prototype.scrollIntoView).not.toHaveBeenCalled();
+  });
+
+  it("returns deliberate reset and repeated answer actions to stable focus targets", async () => {
+    await renderAtRetrieval();
+    const reset = screen.getByRole("button", { name: "Reset lesson mission" });
+    reset.focus();
+    fireEvent.click(reset);
+    const heading = screen.getByRole("heading", {
+      name: profile.predictionPrompt.en,
+    });
+    expect(heading).toHaveFocus();
+    reset.focus();
+    fireEvent.click(reset);
+    expect(heading).toHaveFocus();
+    expect(HTMLElement.prototype.scrollIntoView).toHaveBeenLastCalledWith({
+      block: "center",
+      behavior: "instant",
+    });
+  });
+
   it("rejects a mission saved before the current course reset boundary", async () => {
     const key = getLessonMissionStorageKey(courseSlug, lessonId);
     window.localStorage.setItem(
@@ -478,7 +597,11 @@ describe("LessonMissionControl", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Commit recall and open options" }),
     );
+    expect(
+      screen.getByRole("heading", { name: profile.retrieval.prompt.en }),
+    ).toHaveFocus();
     fireEvent.click(screen.getByRole("button", { name: /final holdout/i }));
+    expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
     fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
 
     fireEvent.click(
@@ -487,6 +610,11 @@ describe("LessonMissionControl", () => {
       }),
     );
     expect(await screen.findByText("Lesson loop closed")).toBeInTheDocument();
+    const completedFeedback = screen.getByRole("status", {
+      name: "Lesson loop closed",
+    });
+    expect(completedFeedback).toHaveFocus();
+    expect(completedFeedback).toHaveTextContent(profile.transfer.rationale.en);
     await waitFor(() =>
       expect(props.onMissionComplete).toHaveBeenCalledTimes(1),
     );
@@ -549,6 +677,9 @@ describe("LessonMissionControl", () => {
       ).toBeDisabled();
     }
     expect(screen.getByText("Misconception detected")).toBeInTheDocument();
+    expect(
+      screen.getByRole("status", { name: "Misconception detected" }),
+    ).toHaveFocus();
     const expectedRepair = profile.retrieval.repairByChoiceId?.[wrongChoice.id];
     if (!expectedRepair)
       throw new Error("Expected authored misconception repair");
@@ -582,6 +713,9 @@ describe("LessonMissionControl", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Begin repair retrieval" }),
     );
+    expect(
+      screen.getByRole("heading", { name: "Rule from memory" }),
+    ).toHaveFocus();
     expect(
       screen.queryByRole("button", {
         name: new RegExp(correctChoice.label.en, "i"),

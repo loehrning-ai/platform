@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { focusMissionTarget } from "../focus-mission-target";
 
 import {
   DEFAULT_PRACTICE_MODEL_ID,
@@ -31,7 +32,12 @@ type RunState = "idle" | "loading" | "success" | "error";
 type PromptVariant = "workflow" | "grounding" | "operator";
 type ComparisonDecision = "" | "a-stronger" | "b-stronger" | "equivalent";
 type ClaimEvidenceSource =
-  "" | "source-a" | "source-b" | "source-c" | "conflict" | "gap";
+  | ""
+  | "source-a"
+  | "source-b"
+  | "source-c"
+  | "conflict"
+  | "gap";
 type RedlineDecision = "" | "retain" | "qualify" | "remove";
 type ClaimReview = Readonly<{
   source: ClaimEvidenceSource;
@@ -552,6 +558,7 @@ export default function PromptLab({
     useState(initialDegradedCompletion);
   const [localLearningCompleted, setLocalLearningCompleted] =
     useState(initialLocalLearning);
+  const localLearningResultRef = useRef<HTMLDivElement>(null);
   const restoredModel = initialFields.providerModel;
   const [selectedModel, setSelectedModel] = useState<PracticeModelId>(
     typeof restoredModel === "string" &&
@@ -1332,6 +1339,9 @@ export default function PromptLab({
 
   function runLocalLearningCheck() {
     if (!canRunLocalLearning || localLearningCompleted) return;
+    // Move before the activated button becomes disabled. The result container
+    // survives this update, including in WebKit where disabling drops focus.
+    focusMissionTarget(localLearningResultRef.current);
     setDegradedCompletionAcknowledged(false);
     setLocalLearningCompleted(true);
     setVerified(false);
@@ -1694,7 +1704,18 @@ export default function PromptLab({
                   </p>
                 )}
                 {localLearningAvailable ? (
-                  <div className="mt-4 border border-amber-300/50 bg-amber-300/10 p-3">
+                  <div
+                    ref={localLearningResultRef}
+                    tabIndex={-1}
+                    role={localLearningCompleted ? "status" : undefined}
+                    aria-label={
+                      localLearningCompleted
+                        ? copy.localLearningComplete
+                        : copy.localLearningTitle
+                    }
+                    data-local-learning-feedback
+                    className="mt-4 border border-amber-300/50 bg-amber-300/10 p-3 outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2"
+                  >
                     <p className="font-mono text-xs font-black uppercase tracking-wide text-amber-200">
                       {copy.localLearningTitle}
                     </p>

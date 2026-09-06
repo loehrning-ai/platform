@@ -7,6 +7,7 @@ import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
 import { demosForCourse } from "@/lib/demos";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
+import type { CourseAccess } from "@/lib/courses/access";
 
 /**
  * One row of the /kurse ledger. The atlas owns goal, level and progress
@@ -32,6 +33,9 @@ export interface LedgerRowCopy {
   readonly continue: string;
   readonly viewRecord: string;
   readonly pathCourse: string;
+  readonly accountRequired: string;
+  readonly unavailable: string;
+  readonly unavailableAction: string;
 }
 
 // Cover-art wash per row, cycling across all ten courses -- kept light (10%)
@@ -79,22 +83,28 @@ export function courseAction(
   stat: CourseStat,
   locale: Locale,
   copy: LedgerRowCopy,
+  access: CourseAccess,
 ): { readonly href: string; readonly label: string } {
-  if (stat.certified) {
+  if (access === "unavailable") {
     return {
-      href: localizeHref(stat.resumeHref, locale),
-      label: copy.viewRecord,
+      href: localizeHref(course.href, locale),
+      label: copy.unavailableAction,
     };
   }
-  if (stat.started) {
-    return {
-      href: localizeHref(stat.resumeHref, locale),
-      label: copy.continue,
-    };
-  }
+  const label = stat.certified
+    ? copy.viewRecord
+    : stat.started
+      ? copy.continue
+      : copy.start;
   return {
-    href: localizeHref(course.startHref, locale),
-    label: copy.start,
+    href: localizeHref(
+      stat.certified || stat.started ? stat.resumeHref : course.startHref,
+      locale,
+    ),
+    label:
+      access === "account-required"
+        ? `${label} · ${copy.accountRequired}`
+        : label,
   };
 }
 
@@ -122,6 +132,7 @@ export function CourseLedgerRow({
   stat,
   locale,
   copy,
+  access,
 }: {
   readonly course: Course;
   readonly index: number;
@@ -134,13 +145,16 @@ export function CourseLedgerRow({
   readonly stat?: CourseStat;
   readonly locale: Locale;
   readonly copy: LedgerRowCopy;
+  readonly access: CourseAccess;
 }) {
   const galleryCopy = COURSE_GALLERY_COPY[locale];
   const levelLabel = COURSE_LEVEL_LABELS_BY_LOCALE[locale][course.level];
   const live = isLiveCourse(course);
   const liveStat = live ? (stat ?? defaultStat(course)) : null;
   const action =
-    live && liveStat ? courseAction(course, liveStat, locale, copy) : null;
+    live && liveStat
+      ? courseAction(course, liveStat, locale, copy, access)
+      : null;
   const sourceHref = course.sourceHref;
   const sourceCommitHref = course.sourceCommitHref;
   const sourceCommit = course.sourceCommit;
@@ -163,6 +177,7 @@ export function CourseLedgerRow({
       )}
       data-course-slug={course.slug}
       data-course-level={course.level}
+      data-course-access={access}
       data-in-path={inPath ? "true" : "false"}
       data-course-status={
         !live
@@ -243,6 +258,16 @@ export function CourseLedgerRow({
           <p className="mt-1 max-w-[68ch] text-sm leading-snug text-muted-foreground">
             {course.tagline}
           </p>
+          {live && access !== "open" ? (
+            <p
+              data-course-access-label
+              className="mt-1 text-xs font-semibold text-foreground"
+            >
+              {access === "account-required"
+                ? copy.accountRequired
+                : copy.unavailable}
+            </p>
+          ) : null}
           {courseDemo ? (
             <Link
               href={localizeHref(

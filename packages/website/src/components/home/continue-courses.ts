@@ -3,6 +3,7 @@ import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import type { CourseSlug } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
+import { getCourseAccess, type CourseAccess } from "@/lib/courses/access";
 
 /**
  * The course facts the "continue" card needs, resolved on the server.
@@ -22,6 +23,9 @@ export interface ContinueCourse {
   /** Locale-specific human duration, shown before a course is started. */
   readonly duration: string;
   readonly totalLessons: number;
+  readonly access: CourseAccess;
+  /** Public context for a course whose reader is unavailable here. */
+  readonly overviewHref: string;
   /**
    * Reader entry for a started course, already locale-prefixed. This is the
    * catalog's own `continueHref`: the course-level entry that discovery
@@ -35,6 +39,7 @@ export interface ContinueCourse {
 
 export function homeContinueCourses(
   locale: Locale,
+  access = getCourseAccess(),
 ): readonly ContinueCourse[] {
   return COURSE_CATALOG.map((course) => {
     const localized = localizeCatalogCourse(course, locale);
@@ -43,6 +48,8 @@ export function homeContinueCourses(
       title: localized.title,
       duration: localized.duration ?? course.duration,
       totalLessons: course.totalLessons,
+      access: access[course.slug] ?? "unavailable",
+      overviewHref: localizeHref(course.href, locale),
       continueHref: localizeHref(course.continueHref, locale),
       startHref: localizeHref(course.startHref, locale),
     };

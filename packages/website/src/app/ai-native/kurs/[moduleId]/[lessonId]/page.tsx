@@ -110,7 +110,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
   );
 
   return (
-    <AiNativeLessonPageShell lessons={navigationItems} locale={locale}>
+    <AiNativeLessonPageShell lessons={navigationItems} locale={locale} lessonId={lesson.id}>
       <div className="min-w-0 py-10 md:py-12">
         <div className="mx-auto max-w-[880px]">
           {/* Breadcrumb */}

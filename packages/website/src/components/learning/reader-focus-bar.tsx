@@ -39,6 +39,8 @@ export type ReaderFocusBarAction =
       readonly kind: "button";
       readonly label: string;
       readonly onSelect: () => void;
+      /** Accessible detail for a compact visible action. */
+      readonly ariaLabel?: string;
     };
 
 export interface ReaderFocusBarProps {
@@ -65,7 +67,7 @@ export interface ReaderFocusBarProps {
 }
 
 const ACTION_CLASS_NAME =
-  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 min-w-11 max-w-[60%] shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }) {
   const arrow = <ArrowRight aria-hidden="true" className="size-4 shrink-0" />;
@@ -78,7 +80,7 @@ function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }
         data-reader-focus-action
         className={ACTION_CLASS_NAME}
       >
-        {action.label}
+        <span className="min-w-0 truncate">{action.label}</span>
         {arrow}
       </Link>
     );
@@ -90,10 +92,11 @@ function ReaderFocusAction({ action }: { readonly action: ReaderFocusBarAction }
     <button
       type="button"
       onClick={action.onSelect}
+      aria-label={action.ariaLabel}
       data-reader-focus-action
       className={cn(ACTION_CLASS_NAME, "js-shell-only")}
     >
-      {action.label}
+      <span className="min-w-0 truncate">{action.label}</span>
       {arrow}
     </button>
   );

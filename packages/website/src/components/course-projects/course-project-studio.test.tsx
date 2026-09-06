@@ -257,6 +257,10 @@ function seedDraftWithCompletedMissions(
 
 beforeEach(() => {
   vi.clearAllMocks();
+  // JSDOM has no layout scrolling; mission transitions now deliberately focus
+  // and reveal their result. Real viewport geometry is checked in Playwright.
+  HTMLElement.prototype.scrollIntoView = vi.fn();
+  window.scrollBy = vi.fn();
   window.localStorage.clear();
   activateAnonymousLearningOwner();
   mockedGetExerciseResult.mockReturnValue(undefined);

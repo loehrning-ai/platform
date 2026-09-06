@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { getCourseAccess } from "@/lib/courses/access";
 import { cleanup, render, screen } from "@testing-library/react";
 import type { CatalogCourse } from "@/lib/courses/catalog";
 
@@ -68,7 +69,7 @@ afterEach(cleanup);
 
 describe("LearningAtlas native-status contract", () => {
   it("keeps a newly native course in the internal ledger with real progress", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const row = container.querySelector<HTMLElement>(
       `[data-course-slug="${FLIPPED_SLUG}"]`,
     );

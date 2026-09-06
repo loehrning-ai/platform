@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -33,9 +34,9 @@ export function DefChapterLayoutClient({
   const copy = getDataEngineeringFundamentalsCourseCopy(locale).reader;
 
   const currentId = isDefChapterId(params.chapterId) ? params.chapterId : null;
-  const currentIndex = currentId
-    ? chapters.findIndex((chapter) => chapter.id === currentId)
-    : -1;
+  const currentIndex = chapters.findIndex(
+    (chapter) => chapter.id === (currentId ?? "home"),
+  );
   const missionChapter = chapters.find(
     (chapter) => chapter.id === (currentId ?? "home"),
   );
@@ -51,6 +52,19 @@ export function DefChapterLayoutClient({
     currentIndex >= 0 && currentIndex < chapters.length - 1
       ? chapters[currentIndex + 1]
       : null;
+  const reader = useLessonReaderBar({
+    courseSlug: "data-engineering-fundamentals", lessonId: projectLessonId,
+    ordinal: chapters.findIndex((chapter) => chapter.id === projectLessonId) + 1,
+    total: chapters.length, locale,
+    next: {
+      kind: "link",
+      href: next ? technicalCourseHref("data-engineering-fundamentals", locale, {
+        kind: "chapter", chapterId: next.id,
+      }) : technicalCourseHref("data-engineering-fundamentals", locale, { kind: "landing" }),
+      label: next ? (locale === "de" ? "Weiter" : "Next") :
+        (locale === "de" ? "Zum Kurs" : "Course hub"),
+    },
+  });
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -99,6 +113,8 @@ export function DefChapterLayoutClient({
   return (
     <div className="de-course min-w-0">
       <LessonShell
+        readerBar={reader.bar}
+        contentRef={reader.contentRef}
         navOpen={navOpen}
         onNavOpenChange={setNavOpen}
         navLabel={copy.navLabel}
