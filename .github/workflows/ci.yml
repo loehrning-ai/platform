@@ -326,9 +326,12 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Find changed learner-facing files
         id: changes
+        # The script lives in packages/website, so it needs --cwd. The
+        # redirects stay at the workspace root, because the comment step reads
+        # voice-report.md from there.
         run: |
           git fetch --no-tags origin main
-          bun run content:voice-report -- --changed-since origin/main --list > changed-learner-files.txt
+          bun run --cwd packages/website content:voice-report -- --changed-since origin/main --list > changed-learner-files.txt
           if [ -s changed-learner-files.txt ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
             cat changed-learner-files.txt
@@ -340,9 +343,9 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         run: |
           {
-            bun run content:voice-report -- --markdown --baseline origin/main
+            bun run --cwd packages/website content:voice-report -- --markdown --baseline origin/main
             echo
-            bun run content:voice-report -- --markdown --baseline origin/main --changed-since origin/main --verbose
+            bun run --cwd packages/website content:voice-report -- --markdown --baseline origin/main --changed-since origin/main --verbose
           } > voice-report.md
           cat voice-report.md
       - name: Upsert the pull-request comment
