@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import createBundleAnalyzer from "@next/bundle-analyzer";
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";

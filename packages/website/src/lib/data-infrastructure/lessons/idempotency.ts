@@ -70,7 +70,7 @@ const lesson: DataInfraLesson = {
       title: "Schema evolution",
       readTimeMinutes: 2,
       content:
-        "Schema registries expose **backward**, **forward**, and **full** compatibility modes. What each one means depends on the serialization format, transitive setting, subject strategy, and registry implementation. A syntactically compatible schema still breaks business logic.\n\nSelect compatibility from deployment order, replay requirements, retention, and consumer diversity. Test old data with new readers, and new data with the old readers you must support. A strict mode blocks some incompatible registrations. It cannot populate new historical fields, validate semantics, or coordinate a downstream rollout.",
+        "Schema registries expose **backward**, **forward**, and **full** compatibility modes. What each one means depends on the serialization format, transitive setting, subject strategy, and registry implementation. A syntactically compatible schema can still break business logic.\n\nSelect compatibility from deployment order, replay requirements, retention, and consumer diversity. Test old data with new readers, and new data with the old readers you must support. A strict mode blocks some incompatible registrations. It cannot populate new historical fields, validate semantics, or coordinate a downstream rollout.",
     },
     {
       id: "s6",

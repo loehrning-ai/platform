@@ -2,7 +2,7 @@
   "moduleId": "modul_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -83,7 +83,7 @@
           "id": "modul_1_lesson_1_section_2",
           "title": "When the blank document is the wrong starting point",
           "readTimeMinutes": 2,
-          "content": "A blank document hands you every decision and every sentence to write. A Claude draft moves the starting point from writing to briefing and review.\n\nSo why do so many still start at zero? Three reasons, none of them stupid:\n- Habit: routines drilled in over years\n- Control: you know exactly what went into the text\n- Professional identity: for a controller, writing is part of the job\n\nOne question per task: does the brief cut effort without weakening accuracy or tone?",
+          "content": "A blank document hands you every decision and every sentence to write. A Claude draft moves the starting point from writing to briefing and review.\n\nSo why do so many still start at zero? Three reasons, none of them stupid:\n- Habit: routines drilled in over years\n- Control: you know exactly what went into the text\n- Professional identity: writing can be a core part of your role\n\nOne question per task: does the brief cut effort without weakening accuracy or tone?",
           "keyTakeaway": "Measured quality and working time decide the starting point. Not habit."
         },
         {
@@ -225,7 +225,7 @@
           "id": "modul_1_lesson_2_section_2",
           "title": "Orchestrating instead of executing",
           "readTimeMinutes": 3,
-          "content": "Executing means every production step is yours. Typing, formatting, calculating, carrying data from tool to tool.\n\nOrchestrating means you **describe the result you need**, give the system the permitted inputs and check what comes back. You correct the errors. The final action is yours.\n\nClaude produces output from instructions and context. Nothing more. It understands no intent, verifies no fact on its own, carries no responsibility. So you fix the brief, the permitted data and the review criteria up front.\n\nHand over bounded, reviewable production steps. Decisions, accountability and sensitive actions stay with a person.",
+          "content": "Executing means every production step is yours. Typing, formatting, calculating, carrying data from tool to tool.\n\nOrchestrating means you **describe the result you need**, give the system the permitted inputs and check what comes back. You correct the errors. The final action is yours.\n\nClaude produces output from instructions and context. Nothing more. It understands no intent, does not verify every fact on its own, carries no responsibility. So you fix the brief, the permitted data and the review criteria up front.\n\nHand over bounded, reviewable production steps. Decisions, accountability and sensitive actions stay with a person.",
           "keyTakeaway": "You specify and check. The routine goes to the system."
         },
         {
@@ -591,7 +591,7 @@
                         "id": "a",
                         "label": "Spend three hours polishing the wording before management review.",
                         "correct": false,
-                        "explanation": "The policy decision needs care. The wording does not. Separate the two."
+                        "explanation": "The policy decision needs care. The typing does not. Separate the two."
                       },
                       {
                         "id": "b",

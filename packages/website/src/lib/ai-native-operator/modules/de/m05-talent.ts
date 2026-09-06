@@ -75,7 +75,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Ein vierstufiges Kompetenzraster",
         readTimeMinutes: 6,
         content:
-          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft das Ergebnis. Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsam genutzte Abläufe. Stufe 4 setzt Rollen- oder Organisationsstandards und trägt die Betriebsverantwortung. Passe die Stufen an die echte Arbeit an; Beförderungskriterien sind sie nicht.",
+          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft das Ergebnis. Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsam genutzte Abläufe. Stufe 4 setzt Rollen- oder Organisationsstandards und trägt die Betriebsverantwortung. Passe die Stufen an die echte Arbeit an; allgemeingültige Beförderungskriterien sind sie nicht.",
       },
       {
         id: "s2",

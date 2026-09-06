@@ -77,7 +77,7 @@ Mögliche Kennzahlen:
 - Verfügbarkeit und Wiederherstellungszeit
 - Anteil geschulter und tatsächlich befähigter Nutzer
 
-Zielwerte wie „80 Prozent Nutzung“ oder „150 Prozent ROI“ gelten nirgends. Ziele folgen Risiko, Ausgangslage und Prozesswert.
+Pauschale Zielwerte wie „80 Prozent Nutzung“ oder „150 Prozent ROI“ gelten nirgends. Ziele folgen Risiko, Ausgangslage und Prozesswert.
 
 ## Förderung nur aus aktuellem Bescheid planen
 

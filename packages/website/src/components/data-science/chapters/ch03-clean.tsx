@@ -121,8 +121,8 @@ export default function Ch03Clean() {
           that is not available at the defined prediction time. The tells:
           features recorded after the target event, transformations fitted on
           held-out data, a metric that moves under a time-aware or group-aware
-          split. A strong metric proves no leakage, and an ordinary one rules
-          none out.
+          split. A strong metric does not prove leakage, and an ordinary one
+          does not rule it out.
         </p>
         <p className="prose">
           Three forms recur. <strong>Target leakage</strong>, where a feature

@@ -42,9 +42,9 @@ export default function Ch12Capstone() {
           cases per fraud case.
         </h2>
         <p className="prose">
-          The public Credit Card Fraud dataset is built for studying severe
-          class imbalance, anonymized inputs, and evaluation choices. A baseline
-          that calls every transaction legitimate hits about{" "}
+          The public Credit Card Fraud dataset is a standard case for studying
+          severe class imbalance, anonymized inputs, and evaluation choices. A
+          baseline that calls every transaction legitimate hits about{" "}
           <strong>99.83% accuracy</strong> and catches no fraud at all. Accuracy
           alone hides the failure. PR-AUC summarizes ranking quality under
           imbalance, and the operating threshold still needs costs, capacity,

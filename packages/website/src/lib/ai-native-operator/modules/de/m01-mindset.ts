@@ -181,7 +181,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Fehlerkosten systematisch bewerten",
         readTimeMinutes: 6,
         content:
-          "Drei Fragen: Wie wahrscheinlich ist ein Fehler, was kostet er, sieht die Prüferin ihn? Ein umkehrbarer interner Entwurf braucht eine kurze Durchsicht. Eine Sicherheitsänderung, eine Kundenentscheidung, eine Kennzahl für den Controller oder eine Offenlegung verlangt Quellenprüfung, Tests, ein zweites Augenpaar oder den Verzicht aufs Modell. Der Prüfaufwand wächst mit dem Restrisiko.",
+          "Drei Fragen: Wie wahrscheinlich ist ein Fehler, was kostet er, sieht die Prüferin ihn? Ein umkehrbarer interner Entwurf braucht vielleicht nur eine kurze Durchsicht. Eine Sicherheitsänderung, eine Kundenentscheidung, eine Finanzkennzahl oder eine Offenlegung kann Quellenprüfung, Tests, ein zweites Augenpaar oder den Verzicht aufs Modell verlangen. Der Prüfaufwand wächst mit dem Restrisiko.",
       },
       {
         id: "s3",
