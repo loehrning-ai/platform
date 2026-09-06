@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  AI_RETRIEVAL_AGENTS,
+  AI_TRAINING_CRAWLERS,
   CRAWL_CONTRACT,
   getCrawlRoute,
   isProtectedRoute,
@@ -298,5 +300,160 @@ describe("crawl contract", () => {
   it("does not contain duplicate route patterns", () => {
     const patterns = CRAWL_CONTRACT.map((entry) => entry.pattern);
     expect(new Set(patterns).size).toBe(patterns.length);
+  });
+
+  it("classifies the agent access endpoints, catalogs, and metadata as public machine surfaces", () => {
+    for (const path of [
+      "/api/mcp",
+      "/api/courses.json",
+      "/api/workshops.json",
+      "/.well-known/oauth-protected-resource",
+      "/.well-known/oauth-protected-resource/api/mcp",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe(path);
+      expect(entry.routeClass, path).toBe("public-machine");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.robots, path).toBe("allow");
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(entry.cache, path).toBe("public-short");
+      expect(entry.xRobotsTag, path).toBeUndefined();
+      expect(isPublicRoute(path), path).toBe(true);
+      expect(isProtectedRoute(path), path).toBe(false);
+    }
+  });
+
+  it("classifies exactly the skill documents as public machine surfaces", () => {
+    const served = getCrawlRoute("/skills/loehrning-plattform/SKILL.md");
+    expect(served.pattern).toBe("/skills/:name/SKILL.md");
+    expect(served.routeClass).toBe("public-machine");
+    expect(served.auth).toBe("public");
+    expect(served.robots).toBe("allow");
+    expect(served.includeInSitemap).toBe(false);
+    expect(served.xRobotsTag).toBeUndefined();
+
+    // A sibling path is not a skill document and must not inherit the class:
+    // it reaches the fail-closed default, whose pattern echoes the path.
+    for (const path of [
+      "/skills",
+      "/skills/loehrning-plattform",
+      "/skills/loehrning-plattform/README.md",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe(path);
+      expect(entry.routeClass, path).toBe("public-noindex");
+    }
+  });
+
+  it("keeps the OAuth consent page and its decision route protected in both locales", () => {
+    for (const path of [
+      "/oauth/consent",
+      "/en/oauth/consent",
+      "/oauth/consent/entscheidung",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("protected");
+      expect(entry.auth, path).toBe("protected");
+      expect(entry.robots, path).toBe("disallow");
+      expect(entry.cache, path).toBe("private-no-store");
+      expect(entry.xRobotsTag, path).toContain("noindex");
+      expect(isProtectedRoute(path), path).toBe(true);
+    }
+    expect(getCrawlRoute("/en/oauth/consent")).toBe(
+      getCrawlRoute("/oauth/consent"),
+    );
+  });
+
+  it("keeps the agent account page and routes behind the existing protected wildcards", () => {
+    for (const path of [
+      "/konto/ki",
+      "/en/konto/ki",
+      "/api/account/agent-tokens",
+      "/api/account/llm-key",
+      "/api/account/chat",
+      "/api/account/oauth-grants",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("protected");
+      expect(entry.auth, path).toBe("protected");
+      expect(entry.cache, path).toBe("private-no-store");
+      expect(entry.xRobotsTag, path).toContain("noindex");
+    }
+  });
+
+  it("aligns robots and the sitemap with the agent access classes", () => {
+    const allow = robotsAllowPaths();
+    const disallow = robotsDisallowPaths();
+    for (const path of [
+      "/api/mcp",
+      "/api/courses.json",
+      "/api/workshops.json",
+      "/.well-known/oauth-protected-resource",
+      "/.well-known/oauth-protected-resource/api/mcp",
+      "/skills/",
+    ]) {
+      expect(allow, path).toContain(path);
+      expect(disallow, path).not.toContain(path);
+    }
+    for (const path of [
+      "/oauth/consent",
+      "/en/oauth/consent",
+      "/oauth/consent/",
+      "/en/oauth/consent/",
+      "/konto/",
+      "/api/account/",
+    ]) {
+      expect(disallow, path).toContain(path);
+      expect(allow, path).not.toContain(path);
+    }
+    // No route-matcher literal may ever ship in robots.txt.
+    for (const path of [...allow, ...disallow]) {
+      expect(path, path).not.toContain(":");
+    }
+    const sitemap = sitemapStaticPaths();
+    for (const path of [
+      "/api/mcp",
+      "/api/courses.json",
+      "/api/workshops.json",
+      "/.well-known/oauth-protected-resource",
+      "/oauth/consent",
+      "/konto",
+    ]) {
+      expect(sitemap, path).not.toContain(path);
+    }
+  });
+
+  it("records the AI agent policy: retrieval agents allowed, training crawlers blocked", () => {
+    for (const agent of [
+      "Claude-User",
+      "Claude-SearchBot",
+      "ChatGPT-User",
+      "OAI-SearchBot",
+      "PerplexityBot",
+      "Perplexity-User",
+    ]) {
+      expect(AI_RETRIEVAL_AGENTS, agent).toContain(agent);
+    }
+    for (const crawler of [
+      "ClaudeBot",
+      "anthropic-ai",
+      "GPTBot",
+      "CCBot",
+      "Bytespider",
+      "Google-Extended",
+      "Applebot-Extended",
+    ]) {
+      expect(AI_TRAINING_CRAWLERS, crawler).toContain(crawler);
+    }
+    // The two decisions are independent, so no agent may sit in both lists,
+    // and neither list may repeat a name.
+    const retrieval = new Set<string>(AI_RETRIEVAL_AGENTS);
+    for (const crawler of AI_TRAINING_CRAWLERS) {
+      expect(retrieval.has(crawler), crawler).toBe(false);
+    }
+    expect(retrieval.size).toBe(AI_RETRIEVAL_AGENTS.length);
+    expect(new Set(AI_TRAINING_CRAWLERS).size).toBe(
+      AI_TRAINING_CRAWLERS.length,
+    );
   });
 });

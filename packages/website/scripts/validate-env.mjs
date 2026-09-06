@@ -37,11 +37,19 @@ const ERROR = (msg) => console.error(`[validate-env] ERROR: ${msg}`);
 const INFO = (msg) => console.log(`[validate-env] ${msg}`);
 const MAX_ORIGIN_LENGTH = 2048;
 const SIDE_EFFECT_CREDENTIALS = [
+  // ACCOUNT_LLM_KEK decrypts stored student provider keys, so possessing it is
+  // equivalent to possessing every key it protects.
+  "ACCOUNT_LLM_KEK",
   "ANTHROPIC_API_KEY",
   "GEMINI_API_KEY",
   "SENTRY_AUTH_TOKEN",
   "SUPABASE_SERVICE_ROLE_KEY",
 ];
+// Canonical shape of the account key-encryption key. Mirrors
+// isValidAccountLlmKek in src/lib/provider-readiness.ts; both must agree.
+const ACCOUNT_LLM_KEK_PATTERN = /^kek1_[a-f0-9]{64}$/;
+const BYO_CHAT_MODEL_PATTERN = /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/;
+const BYO_CHAT_MODEL_LIMIT = 8;
 
 let hasError = false;
 
@@ -151,6 +159,10 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("GEMINI_") ||
     name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
+    name === "ACCOUNT_LLM_KEK" ||
+    name.startsWith("BYO_CHAT_") ||
+    name.startsWith("CV_ENGINE_") ||
+    name.startsWith("MCP_SERVER_") ||
     name.startsWith("AI_NATIVE_PRACTICE_") ||
     name === "NEXT_PUBLIC_SITE_URL" ||
     name === "NEXT_PUBLIC_APP_URL" ||
@@ -216,10 +228,14 @@ const SUPABASE_MAGIC_LINK_VARIABLES = [
 const SUPABASE_GOOGLE_OAUTH_VARIABLES = [
   "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
 ];
+const SUPABASE_OAUTH_SERVER_VARIABLES = [
+  "SUPABASE_OAUTH_SERVER_CONFIRMED_AT",
+];
 const SUPABASE_PROVIDER_VARIABLES = [
   ...SUPABASE_ACCOUNT_VARIABLES,
   ...SUPABASE_MAGIC_LINK_VARIABLES,
   ...SUPABASE_GOOGLE_OAUTH_VARIABLES,
+  ...SUPABASE_OAUTH_SERVER_VARIABLES,
 ];
 const accountSupabaseConfigured = SUPABASE_ACCOUNT_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
@@ -228,6 +244,9 @@ const magicLinkConfigured = SUPABASE_MAGIC_LINK_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
 );
 const googleOAuthConfigured = SUPABASE_GOOGLE_OAUTH_VARIABLES.some(
+  hasNonEmptyEnvironmentValue,
+);
+const oauthServerConfigured = SUPABASE_OAUTH_SERVER_VARIABLES.some(
   hasNonEmptyEnvironmentValue,
 );
 const configuredSupabaseVariables = SUPABASE_PROVIDER_VARIABLES.filter(
@@ -426,7 +445,8 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
     process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT ||
-    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT
+    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT ||
+    process.env.SUPABASE_OAUTH_SERVER_CONFIRMED_AT
   ) {
     markError(
       "The live-auth-e2e build accepts only the public URL, publishable key, and public Turnstile test site key; privileged, deployment, region, DPA, and anon-alias variables must be absent.",
@@ -497,6 +517,12 @@ if (supabaseConfigured && liveAuthE2EProfile) {
       "Supabase Google OAuth",
     );
   }
+  if (oauthServerConfigured) {
+    requireAttestation(
+      "SUPABASE_OAUTH_SERVER_CONFIRMED_AT",
+      "Supabase OAuth 2.1 Server",
+    );
+  }
 } else if (liveAuthE2EProfile) {
   markError(
     "The live-auth-e2e build requires NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, and NEXT_PUBLIC_TURNSTILE_SITE_KEY.",
@@ -505,6 +531,11 @@ if (supabaseConfigured && liveAuthE2EProfile) {
   if (rateLimitHmacSecret) {
     markError(
       "RATE_LIMIT_HMAC_SECRET is present while Supabase is disabled. Remove the orphaned limiter secret or configure the complete protected account backend.",
+    );
+  }
+  if (oauthServerConfigured) {
+    markError(
+      "SUPABASE_OAUTH_SERVER_CONFIRMED_AT is present while Supabase is disabled. Remove the orphaned attestation or configure the complete account backend the OAuth server issues tokens for.",
     );
   }
   WARN(
@@ -849,6 +880,103 @@ if (
 ) {
   markError(
     "Course terminal policy, budget, or image metadata is present while COURSE_TERMINAL_ENABLED is not true. Remove the orphaned values or explicitly enable the terminal.",
+  );
+}
+
+// Agent access. The public MCP server, the account chat on a student's own
+// provider key, and hosted cv-engine document access are three independent
+// off-by-default capabilities. Each one is either fully disabled or fully
+// configured; a half-configured capability fails the build instead of shipping
+// a surface that cannot answer.
+const mcpServerEnabled = process.env.MCP_SERVER_ENABLED;
+if (
+  mcpServerEnabled &&
+  mcpServerEnabled !== "true" &&
+  mcpServerEnabled !== "false"
+) {
+  markError("MCP_SERVER_ENABLED must be exactly true or false when set.");
+}
+if (mcpServerEnabled === "true" && !supabaseConfigured) {
+  markError(
+    "MCP_SERVER_ENABLED=true requires the complete Supabase configuration; every agent tool call passes the durable fail-closed rate limiter.",
+  );
+}
+
+const byoChatEnabled = process.env.BYO_CHAT_ENABLED;
+const accountLlmKek = process.env.ACCOUNT_LLM_KEK;
+const byoChatModelAllowlist = process.env.BYO_CHAT_MODEL_ALLOWLIST;
+if (byoChatEnabled && byoChatEnabled !== "true" && byoChatEnabled !== "false") {
+  markError("BYO_CHAT_ENABLED must be exactly true or false when set.");
+}
+if (accountLlmKek && !ACCOUNT_LLM_KEK_PATTERN.test(accountLlmKek)) {
+  markError(
+    "ACCOUNT_LLM_KEK must be the literal prefix kek1_ followed by 64 lowercase hexadecimal characters generated from 32 random bytes.",
+  );
+}
+if (byoChatEnabled === "true") {
+  if (!supabaseConfigured) {
+    markError(
+      "BYO_CHAT_ENABLED=true requires the complete Supabase configuration; the encrypted account key is stored there.",
+    );
+  }
+  if (!accountLlmKek) {
+    markError(
+      "BYO_CHAT_ENABLED=true requires ACCOUNT_LLM_KEK. Without the key-encryption key no stored account key can be read or written.",
+    );
+  }
+  const allowlistValues = byoChatModelAllowlist
+    ? byoChatModelAllowlist.split(",")
+    : [];
+  const allowlistIsValid =
+    allowlistValues.length > 0 &&
+    allowlistValues.length <= BYO_CHAT_MODEL_LIMIT &&
+    new Set(allowlistValues).size === allowlistValues.length &&
+    allowlistValues.every(
+      (value) =>
+        value === value.trim() &&
+        value.length > 0 &&
+        value.length <= 64 &&
+        BYO_CHAT_MODEL_PATTERN.test(value),
+    );
+  if (!allowlistIsValid) {
+    markError(
+      `BYO_CHAT_ENABLED=true requires BYO_CHAT_MODEL_ALLOWLIST as a comma-separated list of 1 to ${BYO_CHAT_MODEL_LIMIT} unique lowercase model identifiers such as claude-haiku-4.5.`,
+    );
+  }
+}
+if (byoChatEnabled !== "true" && (accountLlmKek || byoChatModelAllowlist)) {
+  markError(
+    "ACCOUNT_LLM_KEK or BYO_CHAT_MODEL_ALLOWLIST is present while BYO_CHAT_ENABLED is not true. Remove the orphaned values or explicitly enable the account chat.",
+  );
+}
+
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+const cvEngineHostedUrl = process.env.CV_ENGINE_HOSTED_URL;
+const cvEngineHostedAttestation = process.env.CV_ENGINE_HOSTED_CONFIRMED_AT;
+
+if (cvEngineHostedUrl) {
+  const cvEngineOrigin = validatedHttpsOrigin(
+    "CV_ENGINE_HOSTED_URL",
+    cvEngineHostedUrl,
+  );
+  if (cvEngineOrigin) {
+    const { hostname, port } = new URL(cvEngineOrigin);
+    if (port || !HOSTED_TOOL_HOSTNAME_PATTERN.test(hostname)) {
+      markError(
+        "CV_ENGINE_HOSTED_URL must be an exact loehrning.ai HTTPS origin on the default port, such as https://cv.loehrning.ai. Third-party hosts require a code-reviewed allowlist.",
+      );
+    }
+  }
+  if (!supabaseConfigured) {
+    markError(
+      "CV_ENGINE_HOSTED_URL requires the complete Supabase configuration because the hosted tool keeps learner documents inside the account boundary.",
+    );
+  }
+  requireAttestation("CV_ENGINE_HOSTED_CONFIRMED_AT", "Hosted cv-engine");
+} else if (cvEngineHostedAttestation) {
+  markError(
+    "CV_ENGINE_HOSTED_CONFIRMED_AT is present while CV_ENGINE_HOSTED_URL is absent. Remove the orphaned attestation or configure the hosted cv-engine origin.",
   );
 }
 

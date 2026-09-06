@@ -1,8 +1,72 @@
 import { describe, it, expect } from "vitest";
+import {
+  AI_RETRIEVAL_AGENTS,
+  AI_TRAINING_CRAWLERS,
+} from "@/lib/crawl/contract";
 import robots from "../robots";
+
+type RobotsRule = {
+  userAgent: string;
+  allow?: string | string[];
+  disallow?: string | string[];
+};
+
+function ruleFor(rules: readonly RobotsRule[], userAgent: string) {
+  const found = rules.find((rule) => rule.userAgent === userAgent);
+  expect(found, userAgent).toBeDefined();
+  const allow = Array.isArray(found?.allow) ? found.allow : [found?.allow];
+  const disallow = Array.isArray(found?.disallow)
+    ? found.disallow
+    : [found?.disallow];
+  return { allow, disallow };
+}
 
 describe("robots()", () => {
   const result = robots();
+
+  it("renders exactly the crawl contract's recorded AI agent decision", () => {
+    const rules = result.rules as RobotsRule[];
+    expect(rules.map((rule) => rule.userAgent)).toEqual([
+      "*",
+      ...AI_RETRIEVAL_AGENTS,
+      ...AI_TRAINING_CRAWLERS,
+    ]);
+    expect(AI_RETRIEVAL_AGENTS).toContain("Claude-User");
+    expect(AI_TRAINING_CRAWLERS).toContain("ClaudeBot");
+    expect(AI_TRAINING_CRAWLERS).toContain("anthropic-ai");
+    expect(AI_TRAINING_CRAWLERS).toContain("GPTBot");
+  });
+
+  it("opens the agent access surfaces to every retrieval agent exactly as to everyone else", () => {
+    const rules = result.rules as RobotsRule[];
+    const wildcard = ruleFor(rules, "*");
+    for (const userAgent of ["*", ...AI_RETRIEVAL_AGENTS]) {
+      const { allow, disallow } = ruleFor(rules, userAgent);
+      for (const path of [
+        "/api/mcp",
+        "/api/courses.json",
+        "/api/workshops.json",
+        "/.well-known/oauth-protected-resource",
+        "/.well-known/oauth-protected-resource/api/mcp",
+        "/skills/",
+      ]) {
+        expect(allow, `${userAgent} allow ${path}`).toContain(path);
+        expect(disallow, `${userAgent} disallow ${path}`).not.toContain(path);
+      }
+      for (const path of [
+        "/oauth/consent",
+        "/en/oauth/consent",
+        "/konto/",
+        "/api/account/",
+      ]) {
+        expect(disallow, `${userAgent} disallow ${path}`).toContain(path);
+      }
+      // A retrieval agent is a person's client, so it sees the public site
+      // and nothing more: the same two lists as the wildcard rule.
+      expect(allow, userAgent).toEqual(wildcard.allow);
+      expect(disallow, userAgent).toEqual(wildcard.disallow);
+    }
+  });
 
   it("declares the sitemap location", () => {
     expect(result.sitemap).toBe("https://loehrning.ai/sitemap.xml");

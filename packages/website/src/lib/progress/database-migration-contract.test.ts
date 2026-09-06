@@ -29,6 +29,9 @@ describe("production database migration contract", () => {
       "20260728235900_close_retention_and_legacy_data_gaps.sql",
       "20260730010000_retire_unkeyed_rate_limit_identifiers.sql",
       "20260813000000_add_usage_budget_counter.sql",
+      "20260905120000_add_agent_access_tokens.sql",
+      "20260905120100_add_agent_access_events.sql",
+      "20260905120200_add_account_llm_keys.sql",
     ]);
   });
 
@@ -316,6 +319,334 @@ describe("production database migration contract", () => {
     );
     expect(sql).not.toMatch(
       /\b(raw_prompt|user_id|ip_address|command_text|response_body)\b/,
+    );
+  });
+
+  it("stores agent access tokens as a digest the browser role can never read", () => {
+    const sql = migration("20260905120000_add_agent_access_tokens.sql");
+    const createBlock = sql.slice(
+      sql.indexOf("create table if not exists public.agent_access_tokens"),
+      sql.indexOf("create index if not exists agent_access_tokens_"),
+    );
+
+    expect(createBlock).not.toHaveLength(0);
+    expect(
+      [
+        ...createBlock.matchAll(
+          /^ {2}([a-z_]+) (?:uuid|text|boolean|integer|timestamptz)/gm,
+        ),
+      ].map(([, column]) => column),
+    ).toEqual([
+      "id",
+      "user_id",
+      "name",
+      "prefix",
+      "token_hash",
+      "created_at",
+      "last_used_at",
+      "revoked_at",
+    ]);
+
+    // The digest column accepts exactly one shape. A clear token, a JWT, or a
+    // base64 blob cannot satisfy it, so a mint-route mistake fails at the
+    // INSERT instead of persisting a usable credential.
+    expect(createBlock).toContain("check (token_hash ~ '^[0-9a-f]{64}$')");
+    expect(createBlock).toContain("unique (token_hash)");
+    expect(createBlock).toContain(
+      "check (prefix ~ '^lat_[a-za-z0-9_-]{4,32}$')",
+    );
+    expect(createBlock).toContain("check (char_length(name) between 1 and 64)");
+    expect(createBlock).toContain(
+      "user_id uuid not null references auth.users(id) on delete cascade",
+    );
+
+    expect(sql).toContain(
+      "alter table public.agent_access_tokens enable row level security",
+    );
+
+    // Same authorization contract as public.user_course_progress: owner-scoped
+    // reads for the browser role, statement-constant uid, writes service-role
+    // only.
+    const calls = sql.match(/auth\.uid\(\)/g) ?? [];
+    const wrapped = sql.match(/\(select auth\.uid\(\)\)/g) ?? [];
+    expect(calls).not.toHaveLength(0);
+    expect(wrapped).toHaveLength(calls.length);
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(\(select auth\.uid\(\)\)/g)].map(
+          ([, role]) => role,
+        ),
+      ),
+    ).toEqual(new Set(["authenticated"]));
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(true\)/g)].map(([, role]) => role),
+      ),
+    ).toEqual(new Set(["service_role"]));
+    expect(sql).toMatch(/for select\n {2}to authenticated/);
+    expect(sql).not.toMatch(/for (insert|update|delete|all)\n {2}to authenticated/);
+
+    // Column-level grant: the owner lists their own tokens, but no browser
+    // result set can ever contain the verifier value.
+    const browserGrant =
+      /grant select \(([^)]*)\) on table public\.agent_access_tokens to authenticated/.exec(
+        sql,
+      );
+    expect(browserGrant).not.toBeNull();
+    const grantedColumns = (browserGrant?.[1] ?? "")
+      .split(",")
+      .map((column) => column.trim())
+      .filter((column) => column.length > 0);
+    expect(grantedColumns).not.toContain("token_hash");
+    expect(new Set(grantedColumns)).toEqual(
+      new Set([
+        "id",
+        "user_id",
+        "name",
+        "prefix",
+        "created_at",
+        "last_used_at",
+        "revoked_at",
+      ]),
+    );
+    expect(sql).not.toMatch(
+      /grant select on table public\.agent_access_tokens/,
+    );
+    expect(sql).toContain(
+      "revoke all on table public.agent_access_tokens\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant all on table public.agent_access_tokens to service_role",
+    );
+    expect(sql).not.toMatch(
+      /grant [^;]*\b(insert|update|delete)\b[^;]*to (anon|authenticated)/,
+    );
+  });
+
+  it("keeps the agent audit trail free of arguments and results and prunes it after 30 days", () => {
+    const sql = migration("20260905120100_add_agent_access_events.sql");
+    const createBlock = sql.slice(
+      sql.indexOf("create table if not exists public.agent_access_events"),
+      sql.indexOf("create index if not exists agent_access_events_"),
+    );
+
+    expect(createBlock).not.toHaveLength(0);
+    expect(
+      [
+        ...createBlock.matchAll(
+          /^ {2}([a-z_]+) (?:uuid|text|boolean|integer|timestamptz)/gm,
+        ),
+      ].map(([, column]) => column),
+    ).toEqual([
+      "id",
+      "user_id",
+      "client",
+      "tool",
+      "ok",
+      "duration_ms",
+      "created_at",
+    ]);
+
+    // The point of the table: who ran what, not what was said. A column that
+    // could hold caller text, provider output, or a credential must never be
+    // added here.
+    expect(createBlock).not.toMatch(
+      /\b(arguments|payload|result|response|prompt|query|input|output|content|message|token|ip_address|user_agent)\b/,
+    );
+    expect(createBlock).toContain(
+      "user_id uuid not null references auth.users(id) on delete cascade",
+    );
+    expect(createBlock).toContain(
+      "check (char_length(client) between 1 and 96)",
+    );
+    expect(createBlock).toContain("check (char_length(tool) between 1 and 64)");
+    expect(createBlock).toContain(
+      "check (duration_ms between 0 and 600000)",
+    );
+
+    expect(sql).toContain(
+      "alter table public.agent_access_events enable row level security",
+    );
+    const calls = sql.match(/auth\.uid\(\)/g) ?? [];
+    const wrapped = sql.match(/\(select auth\.uid\(\)\)/g) ?? [];
+    expect(calls).not.toHaveLength(0);
+    expect(wrapped).toHaveLength(calls.length);
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(\(select auth\.uid\(\)\)/g)].map(
+          ([, role]) => role,
+        ),
+      ),
+    ).toEqual(new Set(["authenticated"]));
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(true\)/g)].map(([, role]) => role),
+      ),
+    ).toEqual(new Set(["service_role"]));
+
+    // An audit trail the audited party can write is not an audit trail.
+    expect(sql).toContain(
+      "grant select on table public.agent_access_events to authenticated",
+    );
+    expect(sql).toContain(
+      "revoke all on table public.agent_access_events\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant all on table public.agent_access_events to service_role",
+    );
+    expect(sql).not.toMatch(
+      /grant [^;]*\b(insert|update|delete)\b[^;]*to (anon|authenticated)/,
+    );
+
+    // Retention: same function shape and privilege contract as
+    // public.prune_beta_feedback(), scheduled so it cannot depend on someone
+    // remembering to create the job.
+    expect(sql).toContain(
+      "create or replace function public.prune_agent_access_events()",
+    );
+    expect(sql).toContain("security invoker");
+    expect(sql).toContain("set search_path = ''");
+    expect(sql).toContain("delete from public.agent_access_events");
+    expect(sql).toContain("where created_at < now() - interval '30 days'");
+    expect(sql).toContain(
+      "revoke execute on function public.prune_agent_access_events()\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant execute on function public.prune_agent_access_events() to service_role",
+    );
+    expect(sql).toContain("'agent-access-events-retention-daily'");
+    expect(sql).toContain("select public.prune_agent_access_events()");
+    expect(sql).toContain(
+      "to_regprocedure('public.prune_agent_access_events()') is null",
+    );
+
+    // The job has to be documented where an operator looks, exactly like the
+    // feedback job: a scheduled deletion nobody knows about is a deletion
+    // nobody can verify, and a second hand-made job would double-run it.
+    const readme = readFileSync(resolve(REPOSITORY_ROOT, "README.md"), "utf8");
+    const environmentExample = readFileSync(
+      resolve(process.cwd(), ".env.example"),
+      "utf8",
+    );
+    expect(readme).toContain("`agent-access-events-retention-daily`");
+    expect(readme).toContain("`41 3 * * *`");
+    expect(environmentExample).toContain(
+      "migration-created agent-access-events-retention-daily job",
+    );
+    expect(environmentExample).toContain("Do not create a second job manually");
+
+    // Two daily retention jobs must not land on the same minute.
+    const legacy = migration(
+      "20260728235900_close_retention_and_legacy_data_gaps.sql",
+    );
+    const feedbackSchedule =
+      /cron\.schedule\(\s*'beta-feedback-retention-daily',\s*'([^']+)'/.exec(
+        legacy,
+      )?.[1];
+    const eventsSchedule =
+      /cron\.schedule\(\s*'agent-access-events-retention-daily',\s*'([^']+)'/.exec(
+        sql,
+      )?.[1];
+    expect(feedbackSchedule).toBeDefined();
+    expect(eventsSchedule).toMatch(/^\d{1,2} \d{1,2} \* \* \*$/);
+    expect(eventsSchedule).not.toEqual(feedbackSchedule);
+  });
+
+  it("lets the owner read the hint of a stored provider key and never the sealed bytes", () => {
+    const sql = migration("20260905120200_add_account_llm_keys.sql");
+    const createBlock = sql.slice(
+      sql.indexOf("create table if not exists public.account_llm_keys"),
+      sql.indexOf(
+        "alter table public.account_llm_keys enable row level security",
+      ),
+    );
+
+    expect(createBlock).not.toHaveLength(0);
+    expect(
+      [
+        ...createBlock.matchAll(
+          /^ {2}([a-z_]+) (?:uuid|text|boolean|integer|timestamptz)/gm,
+        ),
+      ].map(([, column]) => column),
+    ).toEqual([
+      "user_id",
+      "provider",
+      "ciphertext",
+      "iv",
+      "hint",
+      "created_at",
+      "validated_at",
+    ]);
+
+    // One key per account and provider, and the row dies with the account.
+    expect(createBlock).toContain("primary key (user_id, provider)");
+    expect(createBlock).toContain(
+      "user_id uuid not null references auth.users(id) on delete cascade",
+    );
+
+    // Column shapes the writer in src/lib/llm-keys/envelope.ts produces. A
+    // clear key, a JWT, or an empty string cannot satisfy them, so a sealing
+    // mistake fails at the INSERT instead of persisting a readable credential.
+    expect(createBlock).toContain("check (provider in ('anthropic'))");
+    expect(createBlock).toContain(
+      "check (ciphertext ~ '^[a-za-z0-9_-]{32,1024}$')",
+    );
+    expect(createBlock).toContain("check (iv ~ '^[a-za-z0-9_-]{16}$')");
+    expect(createBlock).toContain("check (hint ~ '^[a-za-z0-9_-]{4}$')");
+
+    expect(sql).toContain(
+      "alter table public.account_llm_keys enable row level security",
+    );
+
+    // Same authorization contract as the other owner-scoped tables:
+    // statement-constant uid, owner-scoped reads, service-role writes.
+    const calls = sql.match(/auth\.uid\(\)/g) ?? [];
+    const wrapped = sql.match(/\(select auth\.uid\(\)\)/g) ?? [];
+    expect(calls).not.toHaveLength(0);
+    expect(wrapped).toHaveLength(calls.length);
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(\(select auth\.uid\(\)\)/g)].map(
+          ([, role]) => role,
+        ),
+      ),
+    ).toEqual(new Set(["authenticated"]));
+    expect(
+      new Set(
+        [...sql.matchAll(/to (\w+)\s+using \(true\)/g)].map(([, role]) => role),
+      ),
+    ).toEqual(new Set(["service_role"]));
+    expect(sql).toMatch(/for select\n {2}to authenticated/);
+    expect(sql).not.toMatch(
+      /for (insert|update|delete|all)\n {2}to authenticated/,
+    );
+
+    // The whole point of the table: the owner sees which key is stored, never
+    // the key. Sealed bytes stay outside every browser-reachable result set,
+    // so a future policy mistake cannot hand them to a client.
+    const browserGrant =
+      /grant select \(([^)]*)\) on table public\.account_llm_keys to authenticated/.exec(
+        sql,
+      );
+    expect(browserGrant).not.toBeNull();
+    const grantedColumns = (browserGrant?.[1] ?? "")
+      .split(",")
+      .map((column) => column.trim())
+      .filter((column) => column.length > 0);
+    expect(grantedColumns).not.toContain("ciphertext");
+    expect(grantedColumns).not.toContain("iv");
+    expect(new Set(grantedColumns)).toEqual(
+      new Set(["user_id", "provider", "hint", "created_at", "validated_at"]),
+    );
+    expect(sql).not.toMatch(/grant select on table public\.account_llm_keys/);
+    expect(sql).toContain(
+      "revoke all on table public.account_llm_keys\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant all on table public.account_llm_keys to service_role",
+    );
+    expect(sql).not.toMatch(
+      /grant [^;]*\b(insert|update|delete)\b[^;]*to (anon|authenticated)/,
     );
   });
 });

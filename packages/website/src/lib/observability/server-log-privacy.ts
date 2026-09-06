@@ -22,17 +22,24 @@ const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SAFE_ROUTES = new Set([
   "unknown",
+  "/api/account/agent-tokens",
+  "/api/account/chat",
   "/api/account/delete",
   "/api/account/export",
+  "/api/account/llm-key",
+  "/api/account/oauth-grants",
   "/api/account/reset-progress",
   "/api/ai-native/grade-exercise",
   "/api/ai-native/practice",
   "/api/course-workspace/terminal",
   "/api/buecher/[slug]/download.pdf",
   "/api/feedback",
+  "/api/mcp",
   "/api/progress",
   "/auth/logout",
   "/konto",
+  "/oauth/consent",
+  "/oauth/consent/entscheidung",
 ]);
 const SAFE_STEPS = new Set([
   "unknown",
@@ -46,6 +53,7 @@ const SAFE_STEPS = new Set([
   "auth-sign-out",
   "auth-verify-session",
   "llm-call",
+  "oauth-revoke-grant",
   "pdf-generate",
   "rate-limit",
   "sandbox-run",
