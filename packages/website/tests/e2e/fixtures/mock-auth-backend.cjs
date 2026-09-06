@@ -91,6 +91,7 @@ if (SUPABASE_URL && PUBLISHABLE_KEY && typeof globalThis.fetch === "function") {
   function handle(url, init) {
     const headers = new Headers((init && init.headers) || undefined);
     const pathname = url.pathname;
+    const method = ((init && init.method) || "GET").toUpperCase();
 
     if (headers.get("apikey") !== PUBLISHABLE_KEY) return unauthorized();
 
@@ -129,9 +130,39 @@ if (SUPABASE_URL && PUBLISHABLE_KEY && typeof globalThis.fetch === "function") {
     // with no stored rows) is the state the catalog assertions expect.
     if (pathname === "/rest/v1/user_course_progress") return json([]);
 
+    // /konto/ki reads these three during SSR, each through the caller's own
+    // cookie-bound client. Every one of them distinguishes "no rows" from "the
+    // read failed", and only the first renders an empty state: a 404 here
+    // would put all three regions into their outage text and make the page
+    // untestable. An empty array is therefore the answer for a mocked account
+    // that has never connected an agent, mirroring user_course_progress above.
+    //
+    // Note what this does NOT mock: the service-role writes behind minting a
+    // token, storing a key, or revoking either. Those need a service role key
+    // that no auth-tier build carries, so they fail closed in this tier by
+    // design and belong to the credentialed live tier.
+    if (
+      (method === "GET" || method === "HEAD") &&
+      (pathname === "/rest/v1/agent_access_events" ||
+        pathname === "/rest/v1/agent_access_tokens" ||
+        pathname === "/rest/v1/account_llm_keys")
+    ) {
+      // postgrest-js turns an empty array into `null` for a maybeSingle()
+      // read, which is exactly "no key stored" for account_llm_keys.
+      return json([]);
+    }
+
+    // The OAuth 2.1 server's per-user grant list. Only reached when the OAuth
+    // server is attested, which no auth-tier build is, so this exists to keep
+    // the mock honest rather than to serve a current assertion.
+    if (pathname === "/auth/v1/user/oauth/grants") {
+      if (method === "DELETE") return new Response(null, { status: 204 });
+      if (method === "GET") return json([]);
+    }
+
     // Anything else on this origin is an unexpected server call. Surface it
     // loudly rather than letting a silent 404 look like a product bug.
-    console.warn(`[mock-auth-backend] unhandled ${init && init.method ? init.method : "GET"} ${pathname}`);
+    console.warn(`[mock-auth-backend] unhandled ${method} ${pathname}`);
     return json({ code: 404, msg: `mock-auth-backend: unhandled ${pathname}` }, 404);
   }
 

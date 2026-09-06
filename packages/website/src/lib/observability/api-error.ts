@@ -33,8 +33,12 @@ const SAFE_EXTRA_KEYS = new Set([
 ]);
 const SAFE_ROUTES = new Set([
   "unknown",
+  "/api/account/agent-tokens",
+  "/api/account/chat",
   "/api/account/delete",
   "/api/account/export",
+  "/api/account/llm-key",
+  "/api/account/oauth-grants",
   "/api/account/reset-progress",
   "/api/ai-native/grade-exercise",
   "/api/ai-native/practice",
@@ -42,10 +46,13 @@ const SAFE_ROUTES = new Set([
   "/api/buecher/[slug]/download.pdf",
   "/api/csp-report",
   "/api/feedback",
+  "/api/mcp",
   "/api/progress",
   "/api/progress/import",
   "/auth/logout",
   "/konto",
+  "/oauth/consent",
+  "/oauth/consent/entscheidung",
 ]);
 const SAFE_STEPS = new Set([
   "unknown",
@@ -59,6 +66,7 @@ const SAFE_STEPS = new Set([
   "auth-sign-out",
   "auth-verify-session",
   "llm-call",
+  "oauth-revoke-grant",
   "pdf-generate",
   "rate-limit",
   "sandbox-run",

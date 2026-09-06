@@ -18,6 +18,11 @@ describe("platform route access model", () => {
       "/eu-ai-act-kurs/verifizierung",
       "/ai-native/verifizierung",
       "/api/books.json",
+      "/api/courses.json",
+      "/api/workshops.json",
+      "/api/mcp",
+      "/skills/loehrning-plattform/SKILL.md",
+      "/.well-known/oauth-protected-resource",
       "/api/health",
       "/api/ai-native/grade-exercise",
       "/imported-courses/screenshots/codex.jpg",
@@ -103,11 +108,18 @@ describe("platform route access model", () => {
     for (const path of [
       "/konto",
       "/konto/datenschutz",
+      "/konto/ki",
       "/api/progress",
       "/api/progress/sync",
       "/api/ai-native/grade",
       "/api/ai-native/practice",
       "/api/demos/example/future-write",
+      "/api/account/agent-tokens",
+      "/api/account/llm-key",
+      "/api/account/chat",
+      "/api/account/oauth-grants",
+      "/oauth/consent",
+      "/oauth/consent/entscheidung",
     ]) {
       expect(isProtectedPlatformPath(path), path).toBe(true);
     }

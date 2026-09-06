@@ -21,6 +21,16 @@ const nextConfig: NextConfig = {
   // build output and ignores standalone. It was unused here and broke monorepo
   // page-data collection in this monorepo. Re-add only for Docker self-hosting.
   outputFileTracingRoot: join(__dirname, "../../"),
+  // The agent endpoint is the only dynamic function that reads book chapters
+  // off disk at request time: get_book_chapter and the book:// resources go
+  // through loadBookChapter, which resolves against process.cwd(). Every other
+  // reader of content/books is statically generated, so the tracer treats
+  // those files as build inputs and would not ship them into this function.
+  // Without this declaration the tool degrades honestly (body_available: false
+  // plus the reader URL) rather than serving the chapter text.
+  outputFileTracingIncludes: {
+    "/api/mcp": ["./content/books/**"],
+  },
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.
   poweredByHeader: false,

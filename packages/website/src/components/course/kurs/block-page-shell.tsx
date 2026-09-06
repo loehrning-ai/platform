@@ -10,6 +10,9 @@ import {
   getBlockFreshness,
 } from "@/lib/course/data";
 import { LessonLayout } from "@/components/course/kurs/lesson-layout";
+import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
+import { hasLessonBodies } from "@/lib/mcp/catalog";
+import { lessonUri } from "@/lib/mcp/uris";
 import { SITE_URL } from "@/lib/seo/json-ld";
 import type { BlockId, CourseSlug } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
@@ -111,6 +114,20 @@ export function BlockPageShell({
           </span>
         </div>
       </header>
+
+      <OpenWithYourAiRegion
+        kind="lesson"
+        contextTitle={`${config.title}: ${block.title}`}
+        resources={
+          hasLessonBodies(courseSlug)
+            ? block.lessons.map((lesson) => ({
+                uri: lessonUri(courseSlug, lesson.id, locale),
+                title: lesson.title,
+              }))
+            : []
+        }
+        locale={locale}
+      />
 
       {/* Two-Column Lesson Layout */}
       <div>

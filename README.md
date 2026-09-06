@@ -113,6 +113,8 @@ Verify that the exact `beta-feedback-retention-daily` job exists, runs `select p
 
 Anthropic activation requires `AI_NATIVE_PRACTICE_ENABLED=true`, its API key, the complete Supabase quota backend, a verified DPA date, and `ANTHROPIC_RETENTION_DAYS` matching the accepted API contract. Never infer this value from a marketing page or provider default.
 
+Agent access (`MCP_SERVER_ENABLED=true`) adds a second daily retention job. Migration `20260905120100_add_agent_access_events.sql` creates the canonical `agent-access-events-retention-daily` job, which runs `select public.prune_agent_access_events()` at `41 3 * * *` and deletes agent audit rows older than 30 days. Do not create a second retention job manually, and do not move it onto the same minute as `beta-feedback-retention-daily`. The audit table stores only account, client label, tool name, outcome and duration; it never stores an argument, a result, a prompt or a token.
+
 ## Repository layout
 
 ```text

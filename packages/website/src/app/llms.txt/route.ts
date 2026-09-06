@@ -1,4 +1,11 @@
 import type { NextRequest } from "next/server";
+import { existsSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import {
+  isSkillName,
+  SKILL_DOCUMENT_FILENAME,
+  skillsContentRoot,
+} from "@/app/skills/_lib/registry";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { SITE_CONTENT_DATE } from "@/lib/content-freshness";
 import { STAND_DATE } from "@/lib/content-meta";
@@ -130,6 +137,44 @@ function openSourceSections(): string {
     .join("\n\n");
 }
 
+/**
+ * Skill names from the content directory, the same source the skills route
+ * serves from, filtered by the registry's own name rule so this list and the
+ * served collection cannot disagree. Read synchronously because this handler
+ * is synchronous by contract: its callers read the body without awaiting the
+ * handler itself. Only a document that exists is listed; a missing directory
+ * means an empty collection, any other filesystem fault fails the build.
+ */
+function skillNames(): readonly string[] {
+  const root = skillsContentRoot();
+  let entries;
+  try {
+    entries = readdirSync(root, { withFileTypes: true });
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException | null)?.code;
+    if (code === "ENOENT" || code === "ENOTDIR") return [];
+    throw error;
+  }
+  return entries
+    .filter(
+      (entry) =>
+        entry.isDirectory() &&
+        isSkillName(entry.name) &&
+        existsSync(join(root, entry.name, SKILL_DOCUMENT_FILENAME)),
+    )
+    .map((entry) => entry.name)
+    .sort();
+}
+
+function skillLines(): string {
+  return skillNames()
+    .map(
+      (name) =>
+        `- Agenten-Skill ${name} / Agent skill ${name}: ${SITE_ORIGIN}/skills/${name}/${SKILL_DOCUMENT_FILENAME}`,
+    )
+    .join("\n");
+}
+
 function englishIndex(): string {
   return PUBLIC_PAGES.filter((page) =>
     contentLocalesForPath(page.path).includes("en"),
@@ -188,7 +233,20 @@ When the learning account is fully configured, it can store progress, quiz state
 ${publicPageLines}
 - Sitemap: ${SITE_ORIGIN}/sitemap.xml
 - Öffentlicher Buchkatalog / Public book catalog: ${SITE_ORIGIN}/api/books.json
+- Öffentlicher Kurskatalog / Public course catalog: ${SITE_ORIGIN}/api/courses.json
+- Öffentlicher Workshopkatalog / Public workshop catalog: ${SITE_ORIGIN}/api/workshops.json
 - Öffentlicher Wissensgraph / Public knowledge graph: ${SITE_ORIGIN}/api/knowledge-graph.json
+
+## Agenten-Zugang / Agent access
+
+Ein eigener Assistent (Claude Desktop, Claude Code, Codex oder ein anderer MCP-Client) liest die öffentlichen Inhalte über den MCP-Endpunkt: Kurse, Lektionen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche im Inhalt und Wissensgraph, alles nur lesend. Lernstand und nächster Schritt sind erst nach einer OAuth-Freigabe oder mit einem persönlichen Zugriffstoken aus dem Konto lesbar; der Endpunkt schreibt nie. Ist der Endpunkt in einer Umgebung nicht aktiviert, bleiben diese Datei und die JSON-Kataloge die maschinenlesbaren Quellen.
+
+A learner's own assistant (Claude Desktop, Claude Code, Codex or another MCP client) reads the public content through the MCP endpoint: courses, lessons, workshops with their materials, book chapters, open-source tools, content search and the knowledge graph, all read-only. Progress and the next step become readable only after an OAuth grant or with a personal access token from the account; the endpoint never writes. When the endpoint is not enabled in a deployment, this file and the JSON catalogs remain the machine-readable sources.
+
+- MCP-Endpunkt (Streamable HTTP, GET zeigt die Einrichtung) / MCP endpoint (Streamable HTTP, GET shows the setup guide): ${SITE_ORIGIN}/api/mcp
+- OAuth-Ressourcenmetadaten des Endpunkts (RFC 9728) / Protected resource metadata for the endpoint (RFC 9728): ${SITE_ORIGIN}/.well-known/oauth-protected-resource/api/mcp
+- OAuth-Ressourcenmetadaten der Website / Site-level protected resource metadata: ${SITE_ORIGIN}/.well-known/oauth-protected-resource
+${skillLines()}
 
 ## Reviewed English index
 

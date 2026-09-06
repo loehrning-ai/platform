@@ -69,6 +69,11 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/ueber-mich",
   "/neuigkeiten",
   "/hilfe",
+  // The agent-access help page: how a person connects Claude Desktop, Claude
+  // Code or Codex to the endpoint, mints a personal access token, and uses
+  // the account chat. Public help content a person searches for, so it is
+  // indexable and belongs in the sitemap like every other /hilfe page.
+  "/hilfe/eigene-ki",
   "/impressum",
   "/datenschutz",
 ] as const;
@@ -224,6 +229,38 @@ const PUBLIC_MACHINE_PATHS = [
   "/api/knowledge-graph.json",
   "/schema/knowledge-graph/v1",
   "/api/health",
+  // Agent access. The MCP endpoint (POST is the Streamable HTTP transport,
+  // GET is a human explainer), the two JSON catalogs that publish the same
+  // registries the MCP tools read, the two RFC 9728 protected-resource
+  // documents an agent client fetches after a 401, and the skills collection.
+  // All of them are crawlable and none of them belongs in the sitemap: they
+  // are documents for a machine, not pages a person searches for.
+  //
+  // The cache class lands differently per path, because src/proxy.ts splits
+  // ownership: it stamps cacheHeaderFor() on a public GET document but leaves
+  // every "/api/" path to its handler. So the JSON-RPC endpoint and the two
+  // catalogs keep the policy their route sets (a POST answer is never marked
+  // cacheable), while the two metadata documents inherit this class from the
+  // proxy. public-short is the honest class for them either way: public,
+  // unpersonalized documents that change only on a deployment. None of these
+  // may be public-static, because a client that held a metadata document for
+  // a year would keep probing a flow we had already retired.
+  //
+  // The endpoint and the metadata documents fail closed behind
+  // isAgentAccessReady(); the catalogs and the skills serve content that
+  // already ships on public pages, so they carry no readiness gate. The GET
+  // explainer on the endpoint sets its own noindex header in the handler:
+  // robots may fetch it, but a setup page is not worth an index entry, and
+  // that is a handler concern rather than a route class.
+  "/api/mcp",
+  "/api/courses.json",
+  "/api/workshops.json",
+  "/.well-known/oauth-protected-resource",
+  "/.well-known/oauth-protected-resource/api/mcp",
+  // Exact document pattern on purpose: /skills/<name>/SKILL.md is the only
+  // route under /skills, so a sibling path falls through to the fail-closed
+  // default instead of inheriting the machine class.
+  "/skills/:name/SKILL.md",
 ] as const;
 
 const PUBLIC_ASSET_PATHS = [
@@ -263,13 +300,26 @@ const OG_IMAGE_ASSET_PATHS = [
 
 const PROTECTED_PATHS = [
   "/konto",
+  // Also covers /konto/ki, the account page for agent access: personal
+  // access tokens, granted OAuth clients, the agent audit trail and the chat
+  // on the learner's own provider key.
   "/konto/:path*",
+  // Also covers the agent-access account routes /api/account/agent-tokens,
+  // /api/account/llm-key, /api/account/chat and /api/account/oauth-grants.
   "/api/account/:path*",
   "/api/progress",
   "/api/progress/:path*",
   "/api/ai-native/:path*",
   "/api/course-workspace/:path*",
   "/api/demos/:path*",
+  // OAuth consent for the agent endpoint (the Supabase OAuth server's
+  // authorization path) and its POST decision route below it. Both require a
+  // signed-in learner. The proxy redirects a signed-out visitor to /login
+  // with the whole query string carried in `next`, so the authorization id
+  // survives the round trip, and stamps private, no-store plus Vary: Cookie
+  // on the signed-in answer. The /en mirror resolves through the same entry.
+  "/oauth/consent",
+  "/oauth/consent/:path*",
   // The 4 native certified courses' lesson content requires login (unlike
   // every other course, which stays optional-account per policy D1 — see
   // src/lib/auth/routes.test.ts). Each course's "/kurs/:path*" wildcard also
@@ -667,6 +717,55 @@ export function sitemapStaticPaths(): readonly string[] {
     .filter((entry) => entry.includeInSitemap && !entry.pattern.includes(":"))
     .map((entry) => entry.pattern);
 }
+
+// ─── AI agent policy (recorded decision) ────────────────────
+//
+// robots.txt names two kinds of AI traffic and treats them differently on
+// purpose. src/app/robots.ts renders these lists; the decision lives here
+// because it is part of the crawl contract, not of the file format.
+//
+// AI_RETRIEVAL_AGENTS act for a person. Claude-User, ChatGPT-User and
+// Perplexity-User fetch a page because someone asked their assistant to read
+// it; Claude-SearchBot, OAI-SearchBot and PerplexityBot index public pages so
+// an answer can cite them. They get the same allow and disallow lists as every
+// other crawler: a public page is readable, a protected or noindex path stays
+// closed for them too.
+//
+// Claude-User is allowed by decision, not by omission. The platform publishes
+// llms.txt, the JSON catalogs, the skills collection and an MCP endpoint so a
+// learner's own assistant can work with the content, and a user-initiated
+// fetch is that same use through a browser-shaped client. Blocking it would
+// close the front door of a surface the platform opens deliberately, and it
+// would change nothing for training crawlers, which identify themselves
+// separately.
+//
+// AI_TRAINING_CRAWLERS are blocked from the whole site: ClaudeBot and
+// anthropic-ai (Anthropic), GPTBot (OpenAI), CCBot (Common Crawl), Bytespider
+// (ByteDance), Google-Extended and Applebot-Extended. They collect pages to
+// build training corpora rather than to answer a person's request. The
+// platform does not volunteer its content for that, and robots.txt is the
+// only signal a well-behaved corpus crawler honours, so the block is recorded
+// here rather than left to a default. The two decisions are independent:
+// allowing a person's assistant to read a page grants nothing to a corpus
+// crawler, and the training block does not touch the assistant.
+export const AI_RETRIEVAL_AGENTS = [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Claude-User",
+  "Claude-SearchBot",
+] as const;
+
+export const AI_TRAINING_CRAWLERS = [
+  "GPTBot",
+  "CCBot",
+  "Bytespider",
+  "Google-Extended",
+  "Applebot-Extended",
+  "ClaudeBot",
+  "anthropic-ai",
+] as const;
 
 export function robotsAllowPaths(): readonly string[] {
   return Array.from(

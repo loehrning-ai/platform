@@ -86,6 +86,19 @@ const CONTROLLED_KEYS = [
   "CV_ENGINE_HOSTED_CONFIRMED_AT",
   "MCP_SERVER_ENABLED",
   "VERCEL_OIDC_TOKEN",
+  // The agent-access group. `environment-policy.mjs` injects a provider-free
+  // default for each of these, and `run-provider-free.mjs` therefore puts them
+  // in the environment of every gate that runs through it, this test included.
+  // The live-auth-e2e profile forbids any privileged or provider variable, so
+  // an unstripped default makes the profile's own fixture fail on variables the
+  // fixture never set.
+  "MCP_SERVER_ENABLED",
+  "SUPABASE_OAUTH_SERVER_CONFIRMED_AT",
+  "BYO_CHAT_ENABLED",
+  "ACCOUNT_LLM_KEK",
+  "BYO_CHAT_MODEL_ALLOWLIST",
+  "CV_ENGINE_HOSTED_URL",
+  "CV_ENGINE_HOSTED_CONFIRMED_AT",
 ];
 
 // Every variable this slice adds must exist in all three registries at once:
