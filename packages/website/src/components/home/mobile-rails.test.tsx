@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MobileRails } from "./mobile-rails";
+import { HOME_COPY } from "./home-copy";
 import { books } from "@/lib/books";
 import { getDemosForLocale } from "@/lib/demos-localization";
 
@@ -35,7 +36,7 @@ describe("MobileRails", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows six applied examples plus one route to all of them", () => {
+  it("shows six applied examples", () => {
     const { container } = render(<MobileRails />);
     const demoTiles = container.querySelectorAll(
       '[data-home-rail-tile="demo"]',
@@ -47,9 +48,6 @@ describe("MobileRails", () => {
       expect(demoTiles[index]).toHaveAttribute("href", `/demos/${demo.slug}`);
       expect(demoTiles[index]).toHaveTextContent(demo.title);
     }
-    expect(
-      screen.getByRole("link", { name: /Alle Praxisbeispiele/ }),
-    ).toHaveAttribute("href", "/demos");
   });
 
   it("lists only publicly routed books, never a title on editorial hold", () => {
@@ -65,9 +63,25 @@ describe("MobileRails", () => {
       expect(bookTiles[index]).toHaveTextContent(`${book.chapters} Kapitel`);
     }
     expect(container.innerHTML).not.toContain("ki-arbeitsalltag");
-    expect(
-      screen.getByRole("link", { name: /Alle Lernbücher/ }),
-    ).toHaveAttribute("href", "/buecher");
+  });
+
+  // The Ressourcen board renders /demos and /buecher as cards at every width,
+  // directly below these rails. An "all" tile here would put both destinations
+  // in the document twice: visible together on a phone, and a second hidden
+  // link set on desktop, where the first match a query resolves is the hidden
+  // one. docs/experience-system.md: content is not duplicated into a second
+  // DOM tree.
+  it("never restates a destination the Ressourcen board already owns", () => {
+    const { container } = render(<MobileRails />);
+    const boardHrefs = new Set<string>(
+      HOME_COPY.de.workflow.resources.map((resource) => resource.href),
+    );
+
+    for (const href of railLinks(container).map((link) =>
+      link.getAttribute("href"),
+    )) {
+      expect(boardHrefs.has(href ?? "")).toBe(false);
+    }
   });
 
   it("scroll-snaps horizontally and skips the work while off-screen", () => {

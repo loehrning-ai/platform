@@ -66,7 +66,7 @@ The root layout declares `width=device-width, initial-scale=1, viewport-fit=cove
 - A bottom tab bar carries exactly four destinations: Start (`/`), Kurse (`/kurse`), Werkzeuge (`/open-source`), Konto (`/konto`). Every destination is a pure function of the locale, which middleware derives from the request path. Nothing in the bar reads the auth cookie or any other request state, and that is a cache contract: the bar sits in the root layout, so it is part of every public document, and `src/proxy.ts` caches those for an hour in the shared cache without `Vary: Cookie`. A cookie-dependent destination would let one cached entry serve either audience the other's variant, and adding `Vary: Cookie` to every public document to compensate would give up that cacheability. The signed-in tools workbench stays one tap away on the Konto tab.
 - The active tab is taken from the request path and marked with `aria-current="page"`. A server component is the intended implementation. A client island is acceptable only where the path cannot reach a server component, and it must then render identical markup on the server and add nothing beyond the link list and the pathname hook.
 - Every internal href stays locale prefixed through `localizeHref`, and every label comes from `GLOBAL_NAVIGATION_COPY`.
-- The first decision on a route comes before its explanation, and long stacks of identical cards become horizontal rails with scroll snap and `content-visibility: auto`. Rails keep a visible edge and stay reachable by keyboard.
+- The first decision on a route comes before its explanation, and long stacks of identical cards become horizontal rails with scroll snap and `content-visibility: auto`. Rails keep a visible edge and stay reachable by keyboard. A rail lists items; it does not close with a tile for the subject's own landing page when a section that renders at every width already links there, because that would be the same destination twice in one document.
 - The footer collapses into a `<details>` disclosure whose legal links stay visible. It opens and closes without JavaScript.
 
 ### Landmarks and accessible names
@@ -110,6 +110,7 @@ The tab bar deliberately has no rule in `src/lib/a11y/no-script.ts`. It is four 
 - `100vh` for shell heights. Use `100svh` or `100dvh`, and read device insets only through the safe-area tokens.
 - `maximum-scale` or `user-scalable=no` in the viewport.
 - Dropping a destination or a fact on mobile that the desktop layout still shows. The shell reorders, collapses into disclosure, and moves rows into rails; it does not shorten the site.
+- The mirror of that: a second link set for a destination the page already renders at this width. Below `lg` the learner sees it twice; on desktop it is a hidden duplicate that a `.first()` query resolves before the real one.
 - Hard-coded 48px or 56px offsets anywhere in the shell. Use the tokens.
 
 Printing needs no shell rules: the print stylesheet already hides every `nav` and the footer.
