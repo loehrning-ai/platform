@@ -50,7 +50,7 @@ Pseudonymisierung mindert das Risiko: "Kunde A, mittelständisches Unternehmen i
 
 **Brauchst du einen Auftragsverarbeitungsvertrag (AVV)?**
 
-Kurze Antwort: Zuerst die Rollen bestimmen. Verarbeitet der Anbieter personenbezogene Daten in deinem Auftrag, greifen die Anforderungen aus Art. 28 DSGVO. Rechtsgrundlage, Transparenz, Drittlandtransfer, Sicherheit und gegebenenfalls eine Folgenabschätzung bleiben davon unberührt und werden einzeln geprüft.
+Kurze Antwort: Zuerst die Rollen bestimmen. Verarbeitet der Anbieter personenbezogene Daten in deinem Auftrag, greifen grundsätzlich die Anforderungen aus Art. 28 DSGVO. Rechtsgrundlage, Transparenz, Drittlandtransfer, Sicherheit und gegebenenfalls eine Folgenabschätzung bleiben davon unberührt und werden einzeln geprüft.
 
 OpenAI und Anthropic veröffentlichen Vertragsunterlagen für bestimmte kommerzielle Produkte. Anthropic bindet nach eigener Dokumentation ein DPA mit Standardvertragsklauseln in seine Commercial Terms ein. Prüfe immer die tatsächlich verwendete Produktstufe, das Datum der Bedingungen, Rollen, Unterauftragnehmer, Transfers und mögliche Opt-ins. Ein abgelegtes DPA macht deinen Prozess nicht zulässig.
 
@@ -132,7 +132,7 @@ Für dich als Freelancer bedeutet das zwei Dinge:
 
 **Erstens:** Du liest gerade dieses Buch. Damit bist du weiter als die meisten Selbstständigen. Das ist kein Marketingspruch, das ist Empirie.
 
-**Zweitens:** Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein. Du kannst solche Maßnahmen unterstützen. Weder du selbst noch ein einzelner Kurs noch eine Teilnahmebestätigung sind automatisch der gesetzliche Nachweis für die Organisation.
+**Zweitens:** Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein. Du kannst solche Maßnahmen unterstützen. Weder du selbst noch ein einzelner Kurs noch ein Zertifikat sind automatisch der gesetzliche Nachweis für die Organisation.
 
 ### Compliance als echtes Geschäftsargument
 

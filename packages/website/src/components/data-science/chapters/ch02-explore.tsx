@@ -89,17 +89,17 @@ export default function Ch02Explore() {
       <p className="prose">
         A correlation matrix shows the linear relationships across every
         feature pair at once. Which features move together, which are
-        independent, which are proxies for one underlying cause. That drives
-        feature selection, where collinear features add noise, and it drives
-        domain understanding, where a high income-satisfaction correlation
-        points at a mechanism worth investigating.
+        independent, which might be proxies for one underlying cause. That
+        drives feature selection, where collinear features add noise, and it
+        drives domain understanding, where a high income-satisfaction
+        correlation points at a mechanism worth investigating.
       </p>
       <p className="prose">
         The <strong>noise slider</strong> adds seeded independent noise to this
         constructed linear relationship, and Pearson r drifts toward 0. That is
         attenuation under a classical measurement-error setup. Other error
-        mechanisms bias correlation in other directions, and disattenuation
-        needs reliability estimates you can defend.
+        mechanisms can bias correlation differently, and disattenuation needs
+        reliability estimates you can defend.
       </p>
       <CorrelationMatrix />
       <AntiPatterns

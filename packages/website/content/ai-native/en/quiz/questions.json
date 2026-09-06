@@ -115,7 +115,7 @@
       { "id": "c", "text": "Connectors require no authorisation.", "isCorrect": false },
       { "id": "d", "text": "Through OAuth, which grants defined access without sharing the account password.", "isCorrect": true }
     ],
-    "explanation": "OAuth grants scoped access without handing the connected application the account password. Keep the grant to the scopes you need; the provider can normally revoke it.",
+    "explanation": "OAuth grants scoped access without handing the connected application the account password. Keep the grant to the scopes you need; you can normally revoke it at the provider.",
     "version": 1,
     "active": true
   },

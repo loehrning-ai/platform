@@ -21,7 +21,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Activity is diagnostic, not proof of value",
         readTimeMinutes: 9,
         content:
-          "Someone reports a productivity gain. What would make you believe it? Licenses, active users, model calls, tokens, and feature use reveal reach, load, cost, and support needs. None shows the intervention improved the work. Keep adoption, operational, and outcome measures apart from guardrails, so one never passes for another.",
+          "Someone reports a productivity gain. What would make you believe it? Licenses, active users, model calls, tokens, and feature use reveal reach, load, cost, and support needs. None shows the intervention improved the work. Keep adoption measures, operational measures, outcome measures, and guardrails apart, so one never passes for another.",
       },
       {
         id: "s2",

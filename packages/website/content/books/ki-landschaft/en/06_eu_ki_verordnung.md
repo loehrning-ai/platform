@@ -43,7 +43,7 @@ General training often falls short for a risky use case. The other way round, no
 
 ### Art. 5
 
-Art. 5 prohibits precisely defined practices, among them certain manipulative or exploitative systems, certain social scoring, certain biometric categorization, as a rule emotion recognition in workplaces and educational institutions, and further cases described there. Read the wording together with its exceptions. A list of buzzwords will not do.
+Art. 5 prohibits precisely defined practices, among them certain manipulative or exploitative systems, certain social scoring, certain biometric categorization, in principle emotion recognition in workplaces and educational institutions, and further cases described there. Read the wording together with its exceptions. A list of buzzwords will not do.
 
 ### Art. 6 with Annexes I and III
 
@@ -53,7 +53,7 @@ Provider and deployer obligations differ. Deployers of high-risk systems check A
 
 ### Art. 50
 
-Art. 50 forces nobody to label every AI text. The obligations come in tiers.
+Art. 50 forces nobody to label every AI text. The obligations differ by actor and system.
 
 - Providers of certain interactive systems inform people that they are interacting with AI, unless this is obvious.
 - Providers of generative systems ensure machine-readable marking of certain outputs.

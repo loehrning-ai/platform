@@ -2,7 +2,7 @@
   "moduleId": "modul_2",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -407,14 +407,14 @@
           "id": "modul_2_lesson_3_section_1",
           "title": "The SOP nobody reads",
           "readTimeMinutes": 2,
-          "content": "When did you last read a standard operating procedure? An SOP helps only if someone finds and applies it. Under time pressure, everyone skips the long document.\n\nA Skill brings the instruction to where the work happens. Type `/angebot-draft` and the maintained procedure for an internal quotation draft runs.\n\nThe Skill replaces neither the SOP owner nor the approvals. It makes the current instruction run the same way every time.",
+          "content": "When did you last read a standard operating procedure? An SOP helps only if someone finds and applies it. Under time pressure, almost everyone skips the long document.\n\nA Skill brings the instruction to where the work happens. Type `/angebot-draft` and the maintained procedure for an internal quotation draft runs.\n\nThe Skill replaces neither the SOP owner nor the approvals and review evidence. It makes the current instruction run the same way every time.",
           "keyTakeaway": "A Skill makes maintained instructions executable within a defined workflow."
         },
         {
           "id": "modul_2_lesson_3_section_2",
           "title": "What a Skill is",
           "readTimeMinutes": 3,
-          "content": "A Skill is a **named, reusable instruction package with tool access and hooks**, invoked for a defined task.\n\nIn the course example:\n- it lives in `.claude/skills/skill-name/`\n- it includes `SKILL.md`, `PROMPT.md` and `EXAMPLES.md`\n- it is invoked as `/skill-name` in the supported client\n\nThe exact directory and file contract is client-specific. Check it against the current product documentation before you build on it.\n\n**Three useful categories:**\n1. **Output Skills:** produce a draft, such as `/angebot-draft` or `/wochenbericht-auto`\n2. **Analysis Skills:** structure input, such as `/meeting-summary-de` or `/invoice-parse`\n3. **Check Skills:** compare an artifact with a rule, such as `/gdpr-audit` or `/eu-ai-act-classify`\n\nThe course materials include examples of all three.",
+          "content": "A Skill is a **named, reusable instruction package with optional tool access and hooks**, invoked for a defined task.\n\nIn the course example:\n- it lives in `.claude/skills/skill-name/`\n- it includes `SKILL.md`, `PROMPT.md` and `EXAMPLES.md`\n- it is invoked as `/skill-name` in the supported client\n\nThe exact directory and file contract is client-specific. Check it against the current product documentation before you build on it.\n\n**Three useful categories:**\n1. **Output Skills:** produce a draft, such as `/angebot-draft` or `/wochenbericht-auto`\n2. **Analysis Skills:** structure input, such as `/meeting-summary-de` or `/invoice-parse`\n3. **Check Skills:** compare an artifact with a rule, such as `/gdpr-audit` or `/eu-ai-act-classify`\n\nThe course materials include examples of all three.",
           "keyTakeaway": "Skills package instructions, tools and checks behind a named command."
         },
         {
@@ -530,7 +530,7 @@
           "id": "modul_2_lesson_4_section_3",
           "title": "MCP as a tool interface",
           "readTimeMinutes": 3,
-          "content": "**MCP means Model Context Protocol.** It defines how a compatible AI client finds and calls external tools and reads exposed resources.\n\nAn MCP server offers two things:\n- **Tools:** functions such as `read_file`, `update_record` or `send_message`\n- **Resources:** files or data that a client may read\n\nWhere no packaged plugin exists, an MCP server can still deliver the integration.\n\n**Example server categories for learning:**\n- `filesystem`: local files\n- `postgresql`: database access\n- `playwright`: browser automation\n\nIn production every server needs settled permissions, secret handling, logging, least privilege, revocation and human approval for consequential writes.",
+          "content": "**MCP means Model Context Protocol.** It defines how a compatible AI client finds and calls external tools and reads exposed resources.\n\nAn MCP server offers, among other things:\n- **Tools:** functions such as `read_file`, `update_record` or `send_message`\n- **Resources:** files or data that a client may read\n\nWhere no packaged plugin exists, an MCP server can still deliver the integration.\n\n**Example server categories for learning:**\n- `filesystem`: local files\n- `postgresql`: database access\n- `playwright`: browser automation\n\nIn production every server needs settled permissions, secret handling, logging, least privilege, revocation and human approval for consequential writes.",
           "keyTakeaway": "MCP is the interface for tools and resources. Every server gets its own security review."
         },
         {

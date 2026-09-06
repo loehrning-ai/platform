@@ -2,7 +2,7 @@
   "moduleId": "modul_3",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -695,7 +695,7 @@
           "title": "A capture criterion",
           "readTimeMinutes": 3,
           "content": "An article comes in when it touches an active Project, supplies reference material you need again, or is a documented source that is hard to replace.\n\nIt stays out as a duplicate, without a foreseeable use, or when it only repeats unsupported claims.\n\nThe test before saving: \"I will use this source for [Project or Area] to answer [specific question].\" If you cannot make that sentence hold, close the tab.\n\n**Exercise:** No more than three existing tabs. Store source, capture date and intended use, review the generated fields and process the notes in the next scheduled inbox session.",
-          "keyTakeaway": "No concrete use and no traceable metadata means nothing gets stored."
+          "keyTakeaway": "Without a concrete use and traceable metadata, nothing gets stored."
         }
       ],
       "quiz": [

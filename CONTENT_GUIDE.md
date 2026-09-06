@@ -5,6 +5,7 @@
 - Vary the rhythm: short and long sentences, paragraphs of five sentences or fewer, lists that do not all have three items.
 - Keep one form of address per course: Du everywhere except the EU AI Act course (Sie); English addresses the reader as "you".
 - The completion document is a "Teilnahmebestätigung" ("certificate of participation"); "Zertifikat" and "Lernnachweis" stay out of prose.
+- Terms of art in legal text keep their legal meaning: "grundsätzlich" in a normative sentence states a rule that statutory exceptions qualify, so it stays there and goes only where it means "basically"; the lint reports it as a VOICE-AMBIGUOUS warning, never an error.
 - `bun run content:lint` enforces these rules (strict scope in `packages/website/scripts/content-lint.voice-scope.json`); `bun run content:voice-report` measures them per file.
 - Separate observed facts, interpretation, examples, and recommendations.
 - Cite primary sources for legal, regulatory, scientific, and product claims.

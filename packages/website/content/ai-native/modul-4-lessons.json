@@ -2,7 +2,7 @@
   "moduleId": "modul_4",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2026-12-06",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -58,7 +58,7 @@
           "id": "modul_4_lesson_1_section_4",
           "title": "Erster Flow + n8n.cloud-Fallback",
           "readTimeMinutes": 3,
-          "content": "**Hello-World: Webhook-to-Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, kein automatischer Versand.\n\n**Managed Fallback:**\n- Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit.\n- Vertrag, DPA/AVV, Region, Unterauftragsverarbeiter, Zugriffe, Logging, Export und Löschung prüfst du trotzdem für deine Organisation.\n- Die Sandbox-Muster in Modul 4 laufen auch managed.\n\n**Self-hosted oder managed ist keine Preisfrage allein:**\n- Datenfluss und Zugriffskontrolle prüfen\n- Betriebsaufwand und Reaktionsfähigkeit bewerten\n- Verträge, Protokollierung, Exit und Wiederherstellung klären",
+          "content": "**Hello-World: Webhook-to-Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, kein automatischer Versand.\n\n**Managed Fallback:**\n- Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit.\n- Vertrag, DPA/AVV, Region, Unterauftragsverarbeiter, Zugriffe, Logging, Export und Löschung prüfst du trotzdem für deine Organisation.\n- Die Sandbox-Muster in Modul 4 laufen grundsätzlich auch managed.\n\n**Self-hosted oder managed ist keine Preisfrage allein:**\n- Datenfluss und Zugriffskontrolle prüfen\n- Betriebsaufwand und Reaktionsfähigkeit bewerten\n- Verträge, Protokollierung, Exit und Wiederherstellung klären",
           "keyTakeaway": "Wähle managed oder self-hosted anhand von Datenfluss, Vertrag, Sicherheitskontrollen, Betriebskompetenz, Kosten und Exit."
         }
       ],
@@ -84,7 +84,7 @@
             },
             {
               "id": "d",
-            "text": "Managed-Dienste sind immer unzulässig",
+            "text": "Managed-Dienste sind grundsätzlich unzulässig",
               "isCorrect": false
             }
           ],
@@ -927,7 +927,7 @@
                         "id": "b",
                         "label": "Annex III Hochrisiko: Sicherheitskritisch",
                         "correct": true,
-                    "explanation": "Der beschriebene Zweck fällt in der Regel unter Anhang III Nr. 2. Zusätzliche sektorale Sicherheitsregeln sind separat zu prüfen."
+                    "explanation": "Der beschriebene Zweck fällt grundsätzlich unter Anhang III Nr. 2. Zusätzliche sektorale Sicherheitsregeln sind separat zu prüfen."
                       },
                       {
                         "id": "c",
@@ -987,7 +987,7 @@
                         "id": "b",
                         "label": "Annex III Hochrisiko: biometrische Identifikation",
                         "correct": true,
-                    "explanation": "Der beschriebene Fernidentifikationszweck fällt in der Regel unter Anhang III Nr. 1 lit. a. Biometrische Daten nach Art. 9 DSGVO und Mitbestimmung sind anhand des konkreten Einsatzes gesondert zu prüfen."
+                    "explanation": "Der beschriebene Fernidentifikationszweck fällt grundsätzlich unter Anhang III Nr. 1 lit. a. Biometrische Daten nach Art. 9 DSGVO und Mitbestimmung sind anhand des konkreten Einsatzes gesondert zu prüfen."
                       },
                       {
                         "id": "c",
@@ -1021,7 +1021,7 @@
           "id": "modul_4_lesson_6_section_2",
           "title": "Annex III: die Hochrisiko-Kategorien",
           "readTimeMinutes": 3,
-          "content": "Anhang III gliedert Hochrisiko-Anwendungsfälle in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\n**Prüfung:**\n1. vorgesehenen Zweck und tatsächliche Nutzung dokumentieren;\n2. passenden Anhang-III-Unterpunkt im Wortlaut prüfen;\n3. Art. 6 Abs. 3 und 4 prüfen; Profiling natürlicher Personen ist besonders behandelt;\n4. Rolle und Anwendungsdatum bestimmen;\n5. andere Pflichten getrennt prüfen.\n\n**Beispiele:**\n\n| Anwendungsfall | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| System zum Sichten oder Filtern von Bewerbungen | in der Regel Anhang III Nr. 4 lit. a; Art. 6 Abs. 3 prüfen |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | in der Regel Anhang III Nr. 5 lit. b |\n| FAQ-Chatbot | nicht allein Anhang III; Transparenz nach Art. 50 kann greifen |",
+          "content": "Anhang III gliedert Hochrisiko-Anwendungsfälle in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\n**Prüfung:**\n1. vorgesehenen Zweck und tatsächliche Nutzung dokumentieren;\n2. passenden Anhang-III-Unterpunkt im Wortlaut prüfen;\n3. Art. 6 Abs. 3 und 4 prüfen; Profiling natürlicher Personen ist besonders behandelt;\n4. Rolle und Anwendungsdatum bestimmen;\n5. andere Pflichten getrennt prüfen.\n\n**Beispiele:**\n\n| Anwendungsfall | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| System zum Sichten oder Filtern von Bewerbungen | grundsätzlich Anhang III Nr. 4 lit. a; Art. 6 Abs. 3 prüfen |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | grundsätzlich Anhang III Nr. 5 lit. b |\n| FAQ-Chatbot | nicht allein Anhang III; Transparenz nach Art. 50 kann greifen |",
           "keyTakeaway": "Acht Bereiche mit engen Unterpunkten. Immer vorgesehenen Zweck, Art. 6 Abs. 3 und 4, Rolle, Anwendungsdatum und Parallelpflichten prüfen."
         },
         {
@@ -1035,7 +1035,7 @@
           "id": "modul_4_lesson_6_section_4",
           "title": "Beispiele durchgespielt",
           "readTimeMinutes": 3,
-          "content": "**Beispiel 1: E-Mail-Triage als Review-Entwurf.** Kein in Anhang III genannter Zweck im beschriebenen Einsatz. Art. 4, Datenschutz, Geheimhaltung, Sicherheit und fachliche Freigabe bleiben.\n\n**Beispiel 2: System filtert Bewerbungen für eine Auswahlliste.** In der Regel Anhang III Nr. 4 lit. a. Art. 6 Abs. 3, Betreiberpflichten, Datenschutz und Mitbestimmung prüfen. Eine FRIA folgt bei einem privaten Arbeitgeber nicht allein aus diesem HR-Zweck.\n\n**Beispiel 3: generischer FAQ-Chatbot.** Nicht allein Anhang III. Art. 50 Abs. 1 kann eine Information über die KI-Interaktion verlangen, sofern dies nicht offensichtlich ist; Datenschutz und Verbraucherrecht bleiben je nach Einsatz.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Hochrisiko-Systeme und den 2. August 2028 für produktintegrierte Anhang-I-Systeme. Prüfe vor Einsatz den aktuellen konsolidierten Rechtsstand.\n\n**Übung:** Dokumentiere drei Anwendungsfälle mit System, Zweck, Rolle, Klassifizierungsbegründung, Anwendungsdatum und offenen Prüfpunkten.",
+          "content": "**Beispiel 1: E-Mail-Triage als Review-Entwurf.** Kein in Anhang III genannter Zweck im beschriebenen Einsatz. Art. 4, Datenschutz, Geheimhaltung, Sicherheit und fachliche Freigabe bleiben.\n\n**Beispiel 2: System filtert Bewerbungen für eine Auswahlliste.** Grundsätzlich Anhang III Nr. 4 lit. a. Art. 6 Abs. 3, Betreiberpflichten, Datenschutz und Mitbestimmung prüfen. Eine FRIA folgt bei einem privaten Arbeitgeber nicht allein aus diesem HR-Zweck.\n\n**Beispiel 3: generischer FAQ-Chatbot.** Nicht allein Anhang III. Art. 50 Abs. 1 kann eine Information über die KI-Interaktion verlangen, sofern dies nicht offensichtlich ist; Datenschutz und Verbraucherrecht bleiben je nach Einsatz.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Hochrisiko-Systeme und den 2. August 2028 für produktintegrierte Anhang-I-Systeme. Prüfe vor Einsatz den aktuellen konsolidierten Rechtsstand.\n\n**Übung:** Dokumentiere drei Anwendungsfälle mit System, Zweck, Rolle, Klassifizierungsbegründung, Anwendungsdatum und offenen Prüfpunkten.",
           "keyTakeaway": "Nicht-Hochrisiko bedeutet nicht pflichtenfrei. Begründe jede Einordnung und prüfe Rolle, Datum und Parallelrecht."
         }
       ],

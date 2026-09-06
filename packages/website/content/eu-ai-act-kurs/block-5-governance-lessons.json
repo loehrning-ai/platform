@@ -2,7 +2,7 @@
   "blockId": "block_5",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-02-13",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -43,7 +43,7 @@
           "id": "block_5_lesson_1_section_3",
           "title": "Sektorale Aufsicht: Wer zusätzlich zuständig bleibt",
           "readTimeMinutes": 1,
-          "content": "Die BNetzA ist die Auffangbehörde, nicht die einzige. Art. 74 ordnet die Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu; Datenschutz- und anderes Fachrecht behalten eigene Zuständigkeiten.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist in der Regel auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die Marktüberwachung folgt in der Regel dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Die dort bezeichneten Datenschutz- oder anderen Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA die Auffangrolle zu. Die Zuständigkeitsnorm prüfen Sie vor der Nutzung.\n\n**Praxis:** Notieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Bis die Zuständigkeiten konsolidiert sind, bleibt dieses Mapping eine zu bestätigende Rechtsfrage.",
+          "content": "Die BNetzA ist die Auffangbehörde, nicht die einzige. Art. 74 ordnet die Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu; Datenschutz- und anderes Fachrecht behalten eigene Zuständigkeiten.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Die dort bezeichneten Datenschutz- oder anderen Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA die Auffangrolle zu. Die Zuständigkeitsnorm prüfen Sie vor der Nutzung.\n\n**Praxis:** Notieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Bis die Zuständigkeiten konsolidiert sind, bleibt dieses Mapping eine zu bestätigende Rechtsfrage.",
           "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben im Spiel. Die Auffangrolle der BNetzA folgt aus dem KI-MIG, in Kraft seit dem 29. Juli 2026."
         }
       ],
@@ -157,7 +157,7 @@
           "id": "block_5_lesson_2_section_2",
           "title": "KMU-Regel: der niedrigere Wert gilt",
           "readTimeMinutes": 1,
-          "content": "Großunternehmen zahlen den **höheren** der beiden Werte, absoluter Betrag oder Prozentsatz. Für KMU einschließlich Start-ups dreht Art. 99 Abs. 6 das um: Es gilt der **niedrigere** Wert.\n\nDas wird oft übersehen und ist für den Mittelstand entscheidend. Ein 20-Millionen-Betrieb bekommt für eine verbotene Praktik höchstens 1,4 Mio Euro (7 Prozent), nicht 35 Mio Euro.\n\nWürfeln darf die Behörde nicht. Art. 99 Abs. 7 zwingt sie, **10 Faktoren** zu berücksichtigen, darunter Schwere, Anzahl der Betroffenen, Vorsatz oder Fahrlässigkeit, Unternehmensgröße, Kooperationsbereitschaft und, ausdrücklich, **technische und organisatorische Maßnahmen** (Art. 99 Abs. 7 lit. g).\n\nWer dokumentierte KI-Governance vorweist (Schulungen nach Art. 4, Risikoregister, Vorfall-Prozess), bekommt im Ernstfall **strukturell weniger** Bußgeld als jemand ohne.",
+          "content": "Für Großunternehmen gilt der **höhere** der beiden Werte, absoluter Betrag oder Prozentsatz. Für KMU einschließlich Start-ups dreht Art. 99 Abs. 6 das um: Es gilt der **niedrigere** Wert.\n\nDas wird oft übersehen und ist für den Mittelstand entscheidend. Ein 20-Millionen-Betrieb bekommt für eine verbotene Praktik höchstens 1,4 Mio Euro (7 Prozent), nicht 35 Mio Euro.\n\nWürfeln darf die Behörde nicht. Art. 99 Abs. 7 zwingt sie, **10 Faktoren** zu berücksichtigen, darunter Schwere, Anzahl der Betroffenen, Vorsatz oder Fahrlässigkeit, Unternehmensgröße, Kooperationsbereitschaft und, ausdrücklich, **technische und organisatorische Maßnahmen** (Art. 99 Abs. 7 lit. g).\n\nWer dokumentierte KI-Governance vorweist (Schulungen nach Art. 4, Risikoregister, Vorfall-Prozess), bekommt im Ernstfall **strukturell weniger** Bußgeld als jemand ohne.",
           "keyTakeaway": "KMU-Regel (Art. 99 Abs. 6): niedrigerer Wert gilt. 10 Bemessungsfaktoren (Art. 99 Abs. 7) berücksichtigen dokumentierte technische und organisatorische Maßnahmen."
         },
         {
