@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { getCourseAccess } from "@/lib/courses/access";
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -8,6 +10,7 @@ import {
 } from "@testing-library/react";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import type { UnifiedProgress } from "@/lib/progress/types";
+import { renderToString } from "react-dom/server";
 
 const storeMock = vi.hoisted(() => ({
   progressState: {
@@ -51,8 +54,104 @@ afterEach(() => {
 });
 
 describe("LearningAtlas", () => {
+  it.each(["de", "en"] as const)("offers an open cold-start task in provider-free %s", (locale) => {
+    render(<LearningAtlas locale={locale} access={getCourseAccess(false)} />);
+    const next = screen.getByTestId("next-proof");
+    expect(within(next).getAllByRole("link")).toHaveLength(1);
+    expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(next).toHaveTextContent(locale === "de" ? "Offener Einstieg ohne Lernkonto" : "Open starting point without an account");
+    expect(next.textContent).not.toContain("0/4");
+  });
+
+  it.each(["de", "en"] as const)("preserves an explicit unavailable goal and target in %s", (locale) => {
+    const prefix = locale === "en" ? "/en" : "";
+    const url = `${prefix}/kurse?goal=build&thread=retained#selected-learning-path`;
+    window.history.replaceState({}, "", url);
+    const { container } = render(<LearningAtlas locale={locale} access={getCourseAccess(false)} />);
+    const next = screen.getByTestId("next-proof");
+    const links = within(next).getAllByRole("link");
+    expect(links[0]).toHaveAttribute("href", `${prefix}/ai-native`);
+    expect(links[0]).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
+    expect(links[1]).toHaveAttribute("data-open-course-alternative");
+    expect(links[1]).toHaveAttribute("href", `${prefix}/kurse/open-source/claude/kurs/mental-model`);
+    expect(links[1]).toHaveTextContent(locale === "de" ? "Offene Alternative ohne Lernkonto" : "Open alternative without an account");
+    expect(window.location.pathname + window.location.search + window.location.hash).toBe(url);
+    expect(container.querySelector('[data-learning-goal="build"]')).toHaveAttribute("aria-pressed", "true");
+    const row = container.querySelector('[data-course-slug="ai-native"]');
+    expect(row).toHaveAttribute("data-course-access", "unavailable");
+    expect(row?.querySelector("[data-course-access-label]")).not.toHaveClass("sr-only");
+    expect(row?.querySelector("[data-course-action] a")).toHaveAttribute("href", `${prefix}/ai-native`);
+  });
+
+  it("honors a selected goal even when the learner explicitly chooses the default", () => {
+    render(<LearningAtlas access={getCourseAccess(false)} />);
+    fireEvent.click(screen.getByRole("button", { name: "Sicher starten" }));
+    const links = within(screen.getByTestId("next-proof")).getAllByRole("link");
+    expect(links[0]).toHaveAttribute("href", "/ki-fuehrerschein");
+    expect(links[1]).toHaveAttribute("data-open-course-alternative");
+    expect(window.location.search).toBe("?goal=start");
+  });
+
+  it.each([
+    ["start", "/ki-fuehrerschein"],
+    ["judge", "/ki-und-gesellschaft"],
+    ["build", "/ai-native"],
+    ["data", "/kurse/open-source/data-engineering-fundamentals/home"],
+  ] as const)("retains the provider-free %s goal in both locales", (goal, href) => {
+    for (const locale of ["de", "en"] as const) {
+      const prefix = locale === "en" ? "/en" : "";
+      window.history.replaceState({}, "", `${prefix}/kurse?goal=${goal}`);
+      const { container, unmount } = render(
+        <LearningAtlas locale={locale} access={getCourseAccess(false)} />,
+      );
+      expect(within(screen.getByTestId("next-proof")).getAllByRole("link")[0]).toHaveAttribute("href", prefix + href);
+      expect(container.querySelector(`[data-learning-goal="${goal}"]`)).toHaveAttribute("aria-pressed", "true");
+      expect(window.location.search).toBe(`?goal=${goal}`);
+      unmount();
+    }
+  });
+
+  it("keeps an unavailable course selected by real progress instead of replacing it", () => {
+    storeMock.getCompletedLessonsCount.mockImplementation((slug) => slug === "ki-und-gesellschaft" ? 3 : 0);
+    storeMock.isCertificateEligible.mockImplementation((slug) => slug === "ki-fuehrerschein");
+    render(<LearningAtlas access={getCourseAccess(false)} />);
+    const links = within(screen.getByTestId("next-proof")).getAllByRole("link");
+    expect(links[0]).toHaveAttribute("href", "/ki-und-gesellschaft");
+    expect(links[0]).toHaveTextContent("KI und Gesellschaft");
+  });
+
+  it("drops a prior progress recommendation when the subscribed owner snapshot resets", () => {
+    storeMock.getCompletedLessonsCount.mockImplementation((slug) => slug === "ki-und-gesellschaft" ? 3 : 0);
+    storeMock.isCertificateEligible.mockImplementation((slug) => slug === "ki-fuehrerschein");
+    render(<LearningAtlas access={getCourseAccess(false)} />);
+    expect(within(screen.getByTestId("next-proof")).getAllByRole("link")[0]).toHaveAttribute("href", "/ki-und-gesellschaft");
+    act(() => {
+      storeMock.getCompletedLessonsCount.mockReturnValue(0);
+      storeMock.isCertificateEligible.mockReturnValue(false);
+      storeMock.subscribe.mock.calls.at(-1)?.[0](storeMock.progressState.current);
+    });
+    expect(within(screen.getByTestId("next-proof")).getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+  });
+
+  it("states the account requirement on configured English actions before the click", () => {
+    const { container } = render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);
+    const action = within(screen.getByTestId("next-proof")).getByRole("link");
+    expect(action).toHaveTextContent("Account required");
+    expect(action).toHaveAttribute("href", "/en/ki-fuehrerschein/kurs");
+    expect(container.querySelector('[data-course-slug="ki-fuehrerschein"] [data-course-access-label]')).toHaveTextContent("Account required");
+  });
+
+  it("keeps server-rendered discovery independent of browser auth cookies", () => {
+    const access = getCourseAccess(true);
+    document.cookie = "access-test-owner=anonymous; path=/";
+    const anonymous = renderToString(<LearningAtlas access={access} />);
+    document.cookie = "access-test-owner=account; path=/";
+    expect(renderToString(<LearningAtlas access={access} />)).toBe(anonymous);
+    document.cookie = "access-test-owner=; Max-Age=0; path=/";
+  });
+
   it("starts with a semantic goal decision and one explicit next proof", () => {
-    render(<LearningAtlas />);
+    render(<LearningAtlas access={getCourseAccess(true)} />);
 
     const goals = screen.getByRole("group", {
       name: "Lernziel auswählen",
@@ -68,7 +167,7 @@ describe("LearningAtlas", () => {
 
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis beginnen: KI-Führerschein",
+        name: "Nachweis beginnen · Lernkonto nötig: KI-Führerschein",
       }),
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
@@ -99,7 +198,7 @@ describe("LearningAtlas", () => {
   });
 
   it("preserves every catalog course, overview route, start route, and MIT source attribution", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     for (const course of COURSE_CATALOG) {
       const row = container.querySelector<HTMLElement>(
@@ -173,7 +272,7 @@ describe("LearningAtlas", () => {
   });
 
   it("shows the declared relationship between foundation and technical courses", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const foundation = document.getElementById("lernpfad") as HTMLElement;
     const technical = document.getElementById("tiefer-gehen") as HTMLElement;
 
@@ -195,7 +294,7 @@ describe("LearningAtlas", () => {
   });
 
   it("changes the path with semantic buttons and persists the goal in the URL", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     fireEvent.click(screen.getByRole("button", { name: "Mit KI bauen" }));
 
     expect(window.location.search).toBe("?goal=build");
@@ -213,7 +312,7 @@ describe("LearningAtlas", () => {
     }
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis beginnen: AI-Native Arbeitskurs",
+        name: "Nachweis beginnen · Lernkonto nötig: AI-Native Arbeitskurs",
       }),
     ).toHaveAttribute("href", "/ai-native/kurs/modul_1");
     expect(
@@ -226,7 +325,7 @@ describe("LearningAtlas", () => {
 
   it("restores a safe goal query and localizes every route in English", () => {
     window.history.replaceState({}, "", "/en/kurse?goal=data");
-    const { container } = render(<LearningAtlas locale="en" />);
+    const { container } = render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);
 
     expect(
       screen.getByRole("button", { name: "Decide with data" }),
@@ -259,11 +358,11 @@ describe("LearningAtlas", () => {
       (slug) => slug === "ki-fuehrerschein",
     );
 
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis fortsetzen: KI und Gesellschaft",
+        name: "Nachweis fortsetzen · Lernkonto nötig: KI und Gesellschaft",
       }),
     ).toBeInTheDocument();
     expect(
@@ -297,7 +396,7 @@ describe("LearningAtlas", () => {
   });
 
   it("links a course to its demo only where a demo actually exists", () => {
-    const { container } = render(<LearningAtlas locale="de" />);
+    const { container } = render(<LearningAtlas locale="de" access={getCourseAccess(true)} />);
 
     // Twelve demos cover three of the ten courses. The other seven rows must
     // omit the teaser rather than borrow a demo from an unrelated course.
@@ -325,7 +424,7 @@ describe("LearningAtlas", () => {
 
 describe("LearningAtlas phone ledger", () => {
   it("offers level chips that narrow the ledger below lg and leave the desktop ledger complete", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     const chips = screen.getByRole("group", { name: "Kursstufe wählen" });
     const buttons = within(chips).getAllByRole("button");
@@ -406,7 +505,7 @@ describe("LearningAtlas phone ledger", () => {
   });
 
   it("states level and duration on every row and keeps the plate out of the accessibility tree", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
       const row = container.querySelector<HTMLElement>(
@@ -438,7 +537,7 @@ describe("LearningAtlas phone ledger", () => {
   });
 
   it("keeps the full repository path and commit in the attribution's accessible name", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const codex = container.querySelector<HTMLElement>(
       '[data-course-slug="codex"]',
     ) as HTMLElement;
@@ -461,7 +560,7 @@ describe("LearningAtlas phone ledger", () => {
   });
 
   it("renders the goal decision as joined 44px segments below lg and the 56px tiles from lg", () => {
-    render(<LearningAtlas />);
+    render(<LearningAtlas access={getCourseAccess(true)} />);
     const goals = screen.getByRole("group", { name: "Lernziel auswählen" });
     expect(goals).toHaveClass("grid-cols-2", "lg:grid-cols-4");
 
@@ -482,7 +581,7 @@ describe("LearningAtlas phone ledger", () => {
 
   it("localizes the level chips in English", () => {
     window.history.replaceState({}, "", "/en/kurse");
-    render(<LearningAtlas locale="en" />);
+    render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);
 
     const chips = screen.getByRole("group", { name: "Choose a course level" });
     expect(
@@ -496,7 +595,7 @@ describe("LearningAtlas phone ledger", () => {
   });
 
   it("puts the row action inside the tinted rail below lg and keeps its wording addressable", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
       const row = container.querySelector<HTMLElement>(
@@ -536,7 +635,7 @@ describe("LearningAtlas phone ledger", () => {
     const ledger = screen.getByRole("region", { name: "Alle Kurse" });
     expect(
       within(ledger).getByRole("link", {
-        name: "Nachweis beginnen: KI-Führerschein",
+        name: "Nachweis beginnen · Lernkonto nötig: KI-Führerschein",
       }),
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
@@ -547,7 +646,7 @@ describe("LearningAtlas phone ledger", () => {
   });
 
   it("keeps the path marker and the ledger intro in the accessibility tree when the phone drops their lines", () => {
-    const { container } = render(<LearningAtlas />);
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     // Selected goal "start" — its courses carry the marker, others do not.
     const marked = Array.from(

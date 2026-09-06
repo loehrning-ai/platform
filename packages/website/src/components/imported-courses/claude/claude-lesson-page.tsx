@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -12,6 +13,7 @@ import {
 import { ClaudeLessonReader } from "./claude-lesson-reader";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
 import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 
 interface ClaudeLessonPageProps {
   readonly lesson: ClaudeLesson;
@@ -32,6 +34,16 @@ export function ClaudeLessonPage({
   locale,
 }: ClaudeLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const reader = useLessonReaderBar({
+    courseSlug: "claude", lessonId: lesson.id, ordinal: lesson.number,
+    total: totalLessons, locale,
+    next: {
+      kind: "link",
+      href: nextHref ?? localizeHref("/kurse/open-source/claude/kurs/quiz", locale),
+      label: nextHref ? (locale === "de" ? "Weiter" : "Next") :
+        (locale === "de" ? "Zur Prüfung" : "Assessment"),
+    },
+  });
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     "claude",
     lesson.id,
@@ -39,6 +51,8 @@ export function ClaudeLessonPage({
 
   return (
     <LessonShell
+      readerBar={reader.bar}
+      contentRef={reader.contentRef}
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={locale === "de" ? "Lektionsnavigation" : "Lesson navigation"}

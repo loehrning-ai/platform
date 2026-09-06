@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -39,6 +40,18 @@ export function AiNativeOperatorLessonPage({
   next,
 }: AiNativeOperatorLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const reader = useLessonReaderBar({
+    courseSlug: "ai-native-operator", lessonId: lesson.id,
+    ordinal: navItems.findIndex((item) => item.moduleId === lesson.moduleId &&
+      item.lessonNumber === lesson.lessonNumber) + 1,
+    total: navItems.length, locale,
+    next: {
+      kind: "link", href: next.href,
+      label: next.kind === "final-assessment" ?
+        (locale === "de" ? "Zur Prüfung" : "Assessment") :
+        (locale === "de" ? "Weiter" : "Next"),
+    },
+  });
   const copy = getAiNativeOperatorCourseCopy(locale).lesson;
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     "ai-native-operator",
@@ -47,6 +60,8 @@ export function AiNativeOperatorLessonPage({
 
   return (
     <LessonShell
+      readerBar={reader.bar}
+      contentRef={reader.contentRef}
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={copy.navLabel}

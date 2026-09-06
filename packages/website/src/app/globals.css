@@ -146,6 +146,7 @@
      Companion Shell". */
   --nav-h-compact: 3rem;
   --tabbar-h: 3.5rem;
+  --lesson-toolbar-h: 3rem;
 
   /* Safe-area insets carry an explicit 0px fallback so every calc() that uses
      them stays valid where a browser reports no insets. env() resolves at the
@@ -204,6 +205,10 @@
     html {
       scroll-behavior: auto;
       scroll-padding-bottom: var(--tabbar-band-h);
+    }
+
+    html:has([data-lesson-shell]) {
+      scroll-padding-top: calc(var(--nav-h-compact) + var(--lesson-toolbar-h) + 1rem);
     }
   }
 

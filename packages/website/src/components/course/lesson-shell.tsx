@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type ReactNode,
+  type Ref,
 } from "react";
 import { m } from "framer-motion";
 import { Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
@@ -39,7 +40,7 @@ export interface LessonShellReaderBar {
   readonly position: string;
   /** Spoken position when the visible text is a bare fraction. */
   readonly positionLabel?: string;
-  /** The next action. Omitted at the end of a block. */
+  /** The current task, next lesson, or the real terminal assessment/hub. */
   readonly next?: ReaderFocusBarAction;
 }
 
@@ -164,6 +165,8 @@ export interface LessonShellProps {
    * the document reserves is never left empty - see the render site.
    */
   readonly readerBar?: LessonShellReaderBar;
+  /** Allows the course-owned reader action to focus its own opaque content. */
+  readonly contentRef?: Ref<HTMLDivElement>;
 }
 
 export function LessonShell({
@@ -180,8 +183,10 @@ export function LessonShell({
   expandNavLabel = "Seitenleiste ausklappen",
   renderSidebar,
   readerBar,
+  contentRef,
 }: LessonShellProps) {
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
+  const lastNavOpenerRef = useRef<HTMLButtonElement>(null);
   const previousNavOpenRef = useRef(navOpen);
   const closeNav = useCallback(() => onNavOpenChange(false), [onNavOpenChange]);
   const drawerRef = useFocusTrap<HTMLElement>(navOpen, closeNav, {
@@ -239,7 +244,7 @@ export function LessonShell({
     let attempts = 0;
     const restore = () => {
       if (cancelled) return;
-      const toggle = toggleButtonRef.current;
+      const toggle = lastNavOpenerRef.current ?? toggleButtonRef.current;
       if (toggle?.isConnected && !toggle.closest("[inert]")) {
         toggle.focus();
       }
@@ -417,13 +422,12 @@ export function LessonShell({
       )}
 
       {/* Main content */}
-      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 py-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
-        {/* Sticks under the compact top bar plus the 3rem block sub-header row
-            that course routes place directly beneath it. The offset is derived
-            from the shell token, never restated as pixels. */}
+      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 pb-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
+        {/* No subheader is assumed. A caller with an occupied sticky band may
+            supply the inherited token; ordinary technical readers reserve zero. */}
         <div
           data-lesson-shell-mobile-toolbar
-          className="sticky top-[calc(var(--nav-h-compact)+3rem)] z-40 -mx-4 mb-4 flex min-h-14 min-w-0 items-center justify-between gap-3 overflow-hidden border-y border-foreground bg-card px-4 sm:-mx-5 sm:px-5 lg:hidden"
+          className="sticky top-[calc(var(--nav-h-compact)+var(--lesson-subheader-h,0px))] z-40 -mx-4 mb-4 flex h-[var(--lesson-toolbar-h)] min-w-0 items-center justify-between gap-3 overflow-hidden border-y border-foreground bg-card px-4 sm:-mx-5 sm:px-5 lg:hidden"
         >
           <span className="min-w-0 break-words border-l-2 border-brand-orange pl-3 font-mono text-xs font-bold uppercase leading-tight tracking-[0.08em] text-foreground">
             {navLabel}
@@ -431,7 +435,10 @@ export function LessonShell({
           <button
             ref={toggleButtonRef}
             type="button"
-            onClick={() => onNavOpenChange(true)}
+            onClick={(event) => {
+              lastNavOpenerRef.current = event.currentTarget;
+              onNavOpenChange(true);
+            }}
             tabIndex={navOpen ? -1 : undefined}
             aria-hidden={navOpen || undefined}
             aria-expanded={navOpen}
@@ -445,6 +452,7 @@ export function LessonShell({
           </button>
         </div>
         <div
+          ref={contentRef}
           data-lesson-shell-content
           data-content-mode={contentMode}
           data-lesson-stage
@@ -484,7 +492,24 @@ export function LessonShell({
             onSelect: () => onNavOpenChange(true),
           }
         }
-      />
+      >
+        {readerBar?.next ? (
+          <button
+            type="button"
+            data-reader-focus-navigation
+            aria-label={navLabel}
+            aria-expanded={navOpen}
+            aria-controls={navId}
+            onClick={(event) => {
+              lastNavOpenerRef.current = event.currentTarget;
+              onNavOpenChange(true);
+            }}
+            className="js-shell-only inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          >
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          </button>
+        ) : null}
+      </ReaderFocusBar>
     </div>
   );
 }

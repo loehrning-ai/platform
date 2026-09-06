@@ -154,7 +154,7 @@ vi.mock("./lesson-content", async () => {
 });
 
 import { LessonLayout } from "./lesson-layout";
-import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
+import { CANONICAL_SECTION_IDS, lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
 import {
   isLessonCompleted,
   markLessonCompleted,
@@ -401,6 +401,36 @@ describe("<LessonLayout>", () => {
     expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "auto" });
   });
 
+  it("the reader action advances a completed lesson through the bounded hash without completing the next lesson", () => {
+    const first = mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" });
+    const second = mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" });
+    const { container } = renderLayout([first, second]);
+    const action = () => container.querySelector<HTMLElement>("[data-reader-focus-action]")!;
+    const persistFixturePrerequisites = (lessonId: string) => act(() => {
+      for (const sectionId of CANONICAL_SECTION_IDS["ki-fuehrerschein"][lessonId]) {
+        markSectionRead("ki-fuehrerschein", lessonId, sectionId);
+      }
+      saveLessonQuizScore("ki-fuehrerschein", lessonId, 1, 1);
+    });
+
+    expect(action()).toHaveTextContent("Aufgabe öffnen");
+    persistFixturePrerequisites(first.id);
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(action()).toHaveTextContent("Weiter");
+    fireEvent.click(action());
+
+    expect(window.location.hash).toBe("#lesson=block_1_lesson_2");
+    expect(screen.getByTestId("active-title")).toHaveTextContent("Zweite Lektion");
+    expect(action()).toHaveTextContent("Aufgabe öffnen");
+    expect(isLessonCompleted("ki-fuehrerschein", second.id)).toBe(false);
+    expect(container.querySelector("[data-reader-focus-position]")).toHaveTextContent("2 / 2");
+
+    persistFixturePrerequisites(second.id);
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(action()).toHaveTextContent("Zum Kurs");
+    expect(action()).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
+  });
+
   it("rejects completion writes until persisted section and quiz evidence exist", () => {
     const section: LessonSection = {
       id: "block_1_lesson_1_section_1",
@@ -438,6 +468,7 @@ describe("<LessonLayout>", () => {
     expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
       false,
     );
+    expect(document.querySelector("[data-reader-focus-action]")).toHaveTextContent("Aufgabe öffnen");
 
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
@@ -465,6 +496,7 @@ describe("<LessonLayout>", () => {
     expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
       "complete",
     );
+    expect(document.querySelector("[data-reader-focus-action]")).toHaveTextContent("Zum Kurs");
   });
 
   it("invalidates foundation-course writes when ownership becomes unresolved", () => {

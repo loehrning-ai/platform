@@ -3,6 +3,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -45,6 +46,10 @@ import type {
 import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 import { LessonMissionFrame } from "./lesson-mission-frame";
+import {
+  focusMissionTarget,
+  LESSON_MISSION_OPEN_TASK_EVENT,
+} from "./focus-mission-target";
 
 const STEP_IDS = [
   "predict",
@@ -369,6 +374,7 @@ interface ChoiceProbeProps {
   readonly correctCopy: string;
   readonly incorrectCopy: string;
   readonly feedback?: string;
+  readonly completion?: { readonly title: string; readonly detail: string };
   readonly locked?: boolean;
   readonly headingRef?: Ref<HTMLHeadingElement>;
   readonly headingLevel: 2 | 3;
@@ -382,6 +388,7 @@ function ChoiceProbe({
   correctCopy,
   incorrectCopy,
   feedback,
+  completion,
   locked = false,
   headingRef,
   headingLevel,
@@ -390,6 +397,15 @@ function ChoiceProbe({
   const answered = selectedId !== null;
   const correct = selectedId === probe.correctId;
   const Heading = headingLevel === 2 ? "h2" : "h3";
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  const pendingChoiceRef = useRef<string | null>(null);
+
+  useLayoutEffect(() => {
+    if (pendingChoiceRef.current === null) return;
+    const pending = pendingChoiceRef.current;
+    pendingChoiceRef.current = null;
+    if (pending === selectedId) focusMissionTarget(feedbackRef.current);
+  });
 
   return (
     <div>
@@ -416,7 +432,14 @@ function ChoiceProbe({
               disabled={locked}
               aria-disabled={locked}
               aria-pressed={selected}
-              onClick={() => onSelect(entry.id)}
+              onClick={() => {
+                pendingChoiceRef.current = entry.id;
+                onSelect(entry.id);
+                if (entry.id === selectedId) {
+                  pendingChoiceRef.current = null;
+                  focusMissionTarget(feedbackRef.current);
+                }
+              }}
               className={cn(
                 "min-h-14 min-w-0 border-2 p-4 text-left outline-none transition-[border-color,background-color,color,transform] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 selected
@@ -442,9 +465,15 @@ function ChoiceProbe({
       </div>
       {answered ? (
         <div
+          ref={feedbackRef}
+          tabIndex={-1}
           role="status"
+          aria-label={
+            completion?.title ?? (correct ? correctCopy : incorrectCopy)
+          }
+          data-mission-feedback
           className={cn(
-            "mt-5 border-l-4 p-4 text-sm leading-relaxed",
+            "mt-5 border-l-4 p-4 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2",
             correct
               ? "border-risk-green bg-risk-green/10 text-foreground"
               : "border-brand-orange bg-brand-orange/10 text-foreground",
@@ -452,6 +481,12 @@ function ChoiceProbe({
         >
           <p className="font-black">{correct ? correctCopy : incorrectCopy}</p>
           <p className="mt-1">{feedback ?? probe.rationale[locale]}</p>
+          {completion ? (
+            <div className="mt-4 border-t border-current/20 pt-4">
+              <p className="font-black">{completion.title}</p>
+              <p className="mt-1 text-muted-foreground">{completion.detail}</p>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
@@ -488,12 +523,14 @@ export function LessonMissionControl({
   const headingId = useId();
   const signalId = useId();
   const signalRef = useRef<HTMLDivElement>(null);
+  const missionRef = useRef<HTMLElement>(null);
+  const noticeRef = useRef<HTMLParagraphElement>(null);
   const panelHeadingRef = useRef<HTMLHeadingElement>(null);
   const revisionBaselineRef = useRef<number | null>(null);
   const executionBaselineRef = useRef<number | null>(null);
   const executionReceiptRef = useRef(executionReceipt);
   executionReceiptRef.current = executionReceipt;
-  const pendingFocusRef = useRef<"signal" | "panel" | null>(null);
+  const pendingFocusRef = useRef<"signal" | "panel" | "notice" | null>(null);
   const completionReportedRef = useRef<string | null>(null);
   const retrievalScheduleSignatureRef = useRef<string | null>(null);
   const durablyCompletedStateRef = useRef<string | null>(null);
@@ -703,15 +740,46 @@ export function LessonMissionControl({
   ]);
 
   useEffect(() => {
+    const element = missionRef.current;
+    if (!element) return;
+    const openTask = () => {
+      if (
+        !ownerReady ||
+        loadedStorageKey !== storageKey ||
+        getLearningOwnerContext().generation !== ownerGeneration
+      ) {
+        // This is the current public prerequisite notice, never another
+        // owner's restored mission. No state is read or written here.
+        focusMissionTarget(noticeRef.current);
+        return;
+      }
+      pendingFocusRef.current = projectStageUnlocked ? "panel" : "notice";
+      setState((current) => ({ ...current, collapsed: false }));
+    };
+    element.addEventListener(LESSON_MISSION_OPEN_TASK_EVENT, openTask);
+    return () =>
+      element.removeEventListener(LESSON_MISSION_OPEN_TASK_EVENT, openTask);
+  }, [
+    loadedStorageKey,
+    ownerGeneration,
+    ownerReady,
+    projectStageUnlocked,
+    storageKey,
+  ]);
+
+  useLayoutEffect(() => {
     const pendingFocus = pendingFocusRef.current;
+    if (pendingFocus === null) return;
+    pendingFocusRef.current = null;
+    if (!ownerReady) return;
     if (pendingFocus === "signal" && state.revealed) {
-      pendingFocusRef.current = null;
-      signalRef.current?.focus();
+      focusMissionTarget(signalRef.current);
     } else if (pendingFocus === "panel") {
-      pendingFocusRef.current = null;
-      panelHeadingRef.current?.focus();
+      focusMissionTarget(panelHeadingRef.current);
+    } else if (pendingFocus === "notice") {
+      focusMissionTarget(noticeRef.current);
     }
-  }, [activePanel, state.revealed]);
+  });
 
   const displayState =
     ownerReady && loadedStorageKey === storageKey
@@ -803,12 +871,18 @@ export function LessonMissionControl({
   }
 
   function continueTo(step: number): void {
+    if (!controlsEnabled) return;
+    const nextPanel = Math.min(STEP_IDS.length - 1, step);
+    if (nextPanel === activePanel) {
+      focusMissionTarget(panelHeadingRef.current);
+      return;
+    }
     if (activePanel === 5) {
       setRetrievalRecall("");
       setRetrievalRecallCommitted(false);
     }
     pendingFocusRef.current = "panel";
-    setActivePanel(Math.min(STEP_IDS.length - 1, step));
+    setActivePanel(nextPanel);
   }
 
   function revealPrediction(): void {
@@ -833,6 +907,7 @@ export function LessonMissionControl({
     if (!controlsEnabled || !retrievalRecallReady || !retrievalNeedsAttempt) {
       return;
     }
+    pendingFocusRef.current = "panel";
     updateState((current) => ({
       ...current,
       retrievalId: null,
@@ -880,6 +955,8 @@ export function LessonMissionControl({
   }
 
   function beginRetrievalRepair(): void {
+    if (!controlsEnabled) return;
+    pendingFocusRef.current = "panel";
     setRetrievalRecall("");
     setRetrievalRecallCommitted(false);
     setRetrievalDue(true);
@@ -904,7 +981,7 @@ export function LessonMissionControl({
     revisionBaselineRef.current = null;
     executionBaselineRef.current = executionRevision;
     completionReportedRef.current = null;
-    pendingFocusRef.current = null;
+    pendingFocusRef.current = "panel";
     setActivePanel(0);
     setScratch("");
     setRetrievalRecall("");
@@ -937,9 +1014,12 @@ export function LessonMissionControl({
   // so without a break they are silently cut off.
   return (
     <section
+      ref={missionRef}
       id="lesson-mission-control"
       data-lesson-mission={courseSlug}
       data-lesson-id={lessonId}
+      data-mission-complete={allComplete ? "true" : "false"}
+      data-mission-collapsed={displayState.collapsed ? "true" : "false"}
       data-keyboard-shortcuts="ignore"
       aria-labelledby={headingId}
       className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[5px_5px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
@@ -1058,9 +1138,7 @@ export function LessonMissionControl({
                       aria-disabled={!available}
                       onClick={() => {
                         if (available) {
-                          setActivePanel(
-                            getBeatTargetStep(beat, stepCompletion),
-                          );
+                          continueTo(getBeatTargetStep(beat, stepCompletion));
                         }
                       }}
                       aria-current={selected ? "step" : undefined}
@@ -1115,6 +1193,8 @@ export function LessonMissionControl({
             </p>
             {!controlsEnabled ? (
               <p
+                ref={noticeRef}
+                tabIndex={-1}
                 role="status"
                 className="mt-3 border-l-4 border-brand-orange bg-brand-orange/10 p-4 text-sm font-bold leading-relaxed"
               >
@@ -1122,7 +1202,10 @@ export function LessonMissionControl({
               </p>
             ) : null}
 
-            <div className="mt-3 min-w-0 border-t-2 border-foreground pt-4">
+            <div
+              data-mission-current-panel
+              className="mt-3 min-w-0 border-t-2 border-foreground pt-4"
+            >
               {displayActivePanel === 0 ? (
                 <div>
                   <StepHeading
@@ -1307,6 +1390,7 @@ export function LessonMissionControl({
                     probe={profile.evidence}
                     locale={locale}
                     selectedId={displayState.evidenceId}
+                    locked={!controlsEnabled}
                     correctCopy={copy.correct}
                     incorrectCopy={copy.incorrect}
                     onSelect={(evidenceId) => {
@@ -1397,7 +1481,9 @@ export function LessonMissionControl({
                             ? retrievalMisconception?.repair[locale]
                             : undefined
                         }
-                        locked={displayState.retrievalId !== null}
+                        locked={
+                          !controlsEnabled || displayState.retrievalId !== null
+                        }
                         onSelect={commitRetrievalChoice}
                       />
                       {displayState.retrievalId !== null ? (
@@ -1476,6 +1562,7 @@ export function LessonMissionControl({
                     probe={profile.revision}
                     locale={locale}
                     selectedId={displayState.revisionId}
+                    locked={!controlsEnabled}
                     correctCopy={copy.correct}
                     incorrectCopy={copy.incorrect}
                     onSelect={(revisionId) =>
@@ -1527,8 +1614,17 @@ export function LessonMissionControl({
                     probe={profile.transfer}
                     locale={locale}
                     selectedId={displayState.transferId}
+                    locked={!controlsEnabled}
                     correctCopy={copy.correct}
                     incorrectCopy={copy.incorrect}
+                    completion={
+                      allComplete
+                        ? {
+                            title: copy.complete,
+                            detail: `${completedBeatCount}/${BEATS.length} ${copy.progress}. ${copy.localBoundary}`,
+                          }
+                        : undefined
+                    }
                     onSelect={(transferId) =>
                       updateState((current) => ({
                         ...current,
@@ -1536,18 +1632,6 @@ export function LessonMissionControl({
                       }))
                     }
                   />
-                  {allComplete ? (
-                    <div
-                      role="status"
-                      className="mt-5 border-2 border-risk-green bg-risk-green/10 p-5"
-                    >
-                      <p className="font-black">{copy.complete}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                        {completedBeatCount}/{BEATS.length} {copy.progress}.{" "}
-                        {copy.localBoundary}
-                      </p>
-                    </div>
-                  ) : null}
                 </div>
               ) : null}
             </div>

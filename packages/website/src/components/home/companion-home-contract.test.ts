@@ -151,6 +151,24 @@ describe("companion home: the continue island stays small", () => {
     expect(source).not.toContain('"use client"');
     expect(source).toContain('from "@/lib/courses/catalog"');
     expect(source).toContain("localizeHref");
+    expect(source).toContain("getCourseAccess()");
+  });
+
+  it("keeps readiness modules out of the home and atlas client graph", () => {
+    for (const file of [
+      "continue-card.tsx",
+      "continue-slot.tsx",
+      "../../app/kurse/learning-atlas.tsx",
+      "../../app/kurse/course-ledger-row.tsx",
+    ]) {
+      const source = read(file);
+      expect(source).not.toMatch(/from "@\/lib\/(?:runtime-features|provider-readiness|auth\/routes)"/);
+      for (const line of source.split("\n")) {
+        if (line.includes('from "@/lib/courses/access"')) {
+          expect(line.trimStart()).toMatch(/^import type /);
+        }
+      }
+    }
   });
 
   it("defers the card and reserves its seat before it arrives", () => {

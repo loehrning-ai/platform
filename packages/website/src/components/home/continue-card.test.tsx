@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { getCourseAccess } from "@/lib/courses/access";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import type { CourseSlug } from "@/lib/course/types";
 import type { UnifiedCourseSlice } from "@/lib/progress/types";
 import { homeContinueCourses } from "./continue-courses";
@@ -10,6 +11,7 @@ const storeMock = vi.hoisted(() => ({
   completed: new Map<string, number>(),
   certified: new Set<string>(),
   slices: new Map<string, { lessons: string[]; lastActivity: string }>(),
+  listeners: new Set<() => void>(),
 }));
 
 function slice(slug: string): UnifiedCourseSlice {
@@ -30,8 +32,9 @@ vi.mock("@/lib/progress/store", () => ({
   isCertificateEligible: (slug: string) => storeMock.certified.has(slug),
   getCourseSlice: (slug: string) => slice(slug),
   subscribe: (listener: () => void) => {
+    storeMock.listeners.add(listener);
     listener();
-    return () => {};
+    return () => { storeMock.listeners.delete(listener); };
   },
 }));
 
@@ -43,8 +46,9 @@ function progress(
   started: boolean,
   certified: boolean,
   lastActivity = FRESH,
+  available = true,
 ) {
-  return { slug, completed, started, certified, lastActivity };
+  return { slug, completed, started, certified, lastActivity, available };
 }
 
 /** Mark a course started with N completed lessons at a given timestamp. */
@@ -61,6 +65,7 @@ afterEach(() => {
   storeMock.completed.clear();
   storeMock.certified.clear();
   storeMock.slices.clear();
+  storeMock.listeners.clear();
 });
 
 describe("pickContinueTarget", () => {
@@ -124,6 +129,23 @@ describe("pickContinueTarget", () => {
     ).toEqual({ slug: "a", completed: 0, mode: "start" });
   });
 
+  it("skips an unavailable course only for a new recommendation", () => {
+    expect(pickContinueTarget([
+      progress("gated", 0, false, false, FRESH, false),
+      progress("open", 0, false, false),
+    ])).toEqual({ slug: "open", completed: 0, mode: "start" });
+    expect(pickContinueTarget([
+      progress("gated", 2, true, false, FRESH, false),
+      progress("open", 0, false, false),
+    ])).toEqual({ slug: "gated", completed: 2, mode: "resume" });
+  });
+
+  it("keeps an unavailable-only catalog in start mode without inventing progress", () => {
+    expect(pickContinueTarget([
+      progress("gated", 0, false, false, FRESH, false),
+    ])).toEqual({ slug: "gated", completed: 0, mode: "start" });
+  });
+
   it("falls back to the last course touched once every course is finished", () => {
     expect(
       pickContinueTarget([
@@ -135,8 +157,8 @@ describe("pickContinueTarget", () => {
 });
 
 describe("ContinueCard", () => {
-  const courses = homeContinueCourses("de");
-  const englishCourses = homeContinueCourses("en");
+  const courses = homeContinueCourses("de", getCourseAccess(true));
+  const englishCourses = homeContinueCourses("en", getCourseAccess(true));
 
   it("offers the first step, with its duration, to a browser with no progress", () => {
     render(<ContinueCard courses={courses} />);
@@ -147,6 +169,29 @@ describe("ContinueCard", () => {
     expect(link).toHaveTextContent("Erster Schritt");
     expect(link).toHaveTextContent("KI-Führerschein");
     expect(link).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(link).toHaveTextContent("Lernkonto nötig");
+    expect(link).toHaveAttribute("data-home-course-access", "account-required");
+    expect(link.querySelector("[data-home-access-label]")).toHaveClass("shrink-0");
+    expect(link.querySelector("[data-home-access-label]")).not.toHaveClass("truncate");
+  });
+
+  it.each(["de", "en"] as const)("offers an open first task in provider-free %s", (locale) => {
+    render(<ContinueCard locale={locale} courses={homeContinueCourses(locale, getCourseAccess(false))} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(link).toHaveAttribute("data-home-course-access", "open");
+    expect(link).toHaveTextContent(locale === "de" ? "Ohne Lernkonto" : "No account needed");
+  });
+
+  it.each(["de", "en"] as const)("preserves unavailable returning progress and its overview in %s", (locale) => {
+    seed("eu-ai-act-kurs", 5, FRESH);
+    render(<ContinueCard locale={locale} courses={homeContinueCourses(locale, getCourseAccess(false))} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/eu-ai-act-kurs`);
+    expect(link).toHaveAttribute("data-home-continue-card", "resume");
+    expect(link).toHaveAttribute("data-home-course-access", "unavailable");
+    expect(link).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
+    expect(link).toHaveTextContent(locale === "de" ? "5 von 24 Lektionen" : "5 of 24 lessons");
   });
 
   it("resumes the last course touched and states its lesson count", () => {
@@ -174,7 +219,21 @@ describe("ContinueCard", () => {
     expect(link).toHaveTextContent("Continue with");
     expect(link).toHaveTextContent("AI and Society");
     expect(link).toHaveTextContent("3 of 9 lessons");
+    expect(link).toHaveTextContent("Account required");
     expect(link).toHaveAttribute("href", "/en/ki-und-gesellschaft/kurs");
+  });
+
+  it("clears the previous owner recommendation when the store publishes an empty snapshot", () => {
+    seed("eu-ai-act-kurs", 5, FRESH);
+    render(<ContinueCard courses={homeContinueCourses("de", getCourseAccess(false))} />);
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/eu-ai-act-kurs");
+    act(() => {
+      storeMock.completed.clear();
+      storeMock.slices.clear();
+      for (const listener of storeMock.listeners) listener();
+    });
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+    expect(screen.getByRole("link")).not.toHaveTextContent("5 von 24");
   });
 
   it("prints no German copy on the English surface", () => {
@@ -204,7 +263,7 @@ describe("ContinueCard", () => {
 
 describe("homeContinueCourses", () => {
   it("carries every catalog course with locale-prefixed reader entries", () => {
-    const list = homeContinueCourses("en");
+    const list = homeContinueCourses("en", getCourseAccess(true));
 
     expect(list.length).toBeGreaterThanOrEqual(4);
     for (const course of list) {
@@ -216,8 +275,8 @@ describe("homeContinueCourses", () => {
   });
 
   it("localizes titles and durations", () => {
-    const de = homeContinueCourses("de");
-    const en = homeContinueCourses("en");
+    const de = homeContinueCourses("de", getCourseAccess(true));
+    const en = homeContinueCourses("en", getCourseAccess(true));
     const slug = "ki-fuehrerschein" as CourseSlug;
 
     expect(de.find((c) => c.slug === slug)?.title).toBe("KI-Führerschein");

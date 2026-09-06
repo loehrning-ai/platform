@@ -5,7 +5,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getCourseProjectConfig } from "@/lib/course-projects/configs";
 import {
@@ -22,6 +22,15 @@ import {
 } from "@/lib/course-projects/types";
 
 import PromptLab from "./prompt-lab";
+
+beforeEach(() => {
+  Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+    configurable: true,
+    writable: true,
+    value: vi.fn(),
+  });
+  vi.spyOn(window, "scrollBy").mockImplementation(() => undefined);
+});
 
 function renderLab(overrides: Partial<CourseProjectEngineProps> = {}) {
   const onVerified = vi.fn();
@@ -515,6 +524,9 @@ describe("PromptLab", () => {
     expect(onExecutionReceipt).toHaveBeenCalledTimes(1);
     expect(onExecutionReceipt).toHaveBeenCalledWith(localReceipt);
     expect(localRun).toBeDisabled();
+    expect(
+      screen.getByRole("status", { name: /Local learning run complete/ }),
+    ).toHaveFocus();
     await waitFor(() =>
       expect(onArtifactChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -530,7 +542,8 @@ describe("PromptLab", () => {
     );
 
     const artifact = onArtifactChange.mock.calls.at(-1)?.[0] as
-      CourseProjectArtifactState | undefined;
+      | CourseProjectArtifactState
+      | undefined;
     expect(artifact).toBeDefined();
     expect(
       hasValidCourseProjectArtifact(

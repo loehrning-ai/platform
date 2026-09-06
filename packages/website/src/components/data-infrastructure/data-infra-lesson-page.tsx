@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -16,6 +17,7 @@ import type {
 } from "@/lib/data-infrastructure/types";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
 import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 
 interface DataInfraLessonPageProps {
   readonly locale: Locale;
@@ -38,6 +40,16 @@ export function DataInfraLessonPage({
   nextHref,
 }: DataInfraLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const reader = useLessonReaderBar({
+    courseSlug: "data-infrastructure", lessonId: lesson.id, ordinal: lesson.number,
+    total: totalLessons, locale,
+    next: {
+      kind: "link",
+      href: nextHref ?? localizeHref("/kurse/open-source/data-infrastructure/kurs", locale),
+      label: nextHref ? (locale === "de" ? "Weiter" : "Next") :
+        (locale === "de" ? "Zum Kurs" : "Course hub"),
+    },
+  });
   const copy = getDataInfraCourseCopy(locale).reader;
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     "data-infrastructure",
@@ -46,6 +58,8 @@ export function DataInfraLessonPage({
 
   return (
     <LessonShell
+      readerBar={reader.bar}
+      contentRef={reader.contentRef}
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={copy.navLabel}

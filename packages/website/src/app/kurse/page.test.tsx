@@ -2,14 +2,27 @@ import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const localeState = vi.hoisted(() => ({ value: "de" as "de" | "en" }));
+const runtime = vi.hoisted(() => ({ account: false }));
+
+vi.mock("@/lib/runtime-features", () => ({
+  getRuntimeFeatures: () => ({ account: runtime.account }),
+}));
 
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: vi.fn(() => Promise.resolve(localeState.value)),
 }));
 
 vi.mock("./learning-atlas", () => ({
-  LearningAtlas: ({ locale }: { readonly locale: "de" | "en" }) => (
-    <div data-testid="learning-atlas" data-locale={locale} />
+  LearningAtlas: ({ locale, access }: {
+    readonly locale: "de" | "en";
+    readonly access: Readonly<Record<string, string>>;
+  }) => (
+    <div
+      data-testid="learning-atlas"
+      data-locale={locale}
+      data-foundation-access={access["ki-fuehrerschein"]}
+      data-public-access={access.claude}
+    />
   ),
 }));
 
@@ -18,6 +31,7 @@ import KursePage from "./page";
 describe("course hub introduction", () => {
   beforeEach(() => {
     localeState.value = "de";
+    runtime.account = false;
   });
 
   it("puts the diagnostic and learning atlas in the first route section", async () => {
@@ -67,5 +81,15 @@ describe("course hub introduction", () => {
       "data-locale",
       "en",
     );
+  });
+
+  it.each([false, true])("passes public access facts from server readiness %s", async (ready) => {
+    runtime.account = ready;
+    render(await KursePage());
+    expect(screen.getByTestId("learning-atlas")).toHaveAttribute(
+      "data-foundation-access",
+      ready ? "account-required" : "unavailable",
+    );
+    expect(screen.getByTestId("learning-atlas")).toHaveAttribute("data-public-access", "open");
   });
 });

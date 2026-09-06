@@ -83,6 +83,11 @@ export const HOME_COPY = {
     companion: {
       resumeEyebrow: "Weiter bei",
       startEyebrow: "Erster Schritt",
+      access: {
+        open: "Ohne Lernkonto",
+        "account-required": "Lernkonto nötig",
+        unavailable: "Hier nicht verfügbar",
+      },
       lessonsDone: (done: number, total: number) =>
         `${done} von ${total} Lektionen`,
       demosEyebrow: "Ausprobieren",
@@ -205,6 +210,11 @@ export const HOME_COPY = {
     companion: {
       resumeEyebrow: "Continue with",
       startEyebrow: "First step",
+      access: {
+        open: "No account needed",
+        "account-required": "Account required",
+        unavailable: "Unavailable here",
+      },
       lessonsDone: (done: number, total: number) =>
         `${done} of ${total} lessons`,
       demosEyebrow: "Try it",

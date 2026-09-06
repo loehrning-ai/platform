@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { getCourseAccess } from "@/lib/courses/access";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import type { UnifiedCourseSlice } from "@/lib/progress/types";
@@ -22,8 +23,8 @@ vi.mock("@/lib/progress/store", () => ({
 
 const { ContinueSlot } = await import("./continue-slot");
 const { homeContinueCourses } = await import("./continue-courses");
-const COURSES = homeContinueCourses("de");
-const ENGLISH_COURSES = homeContinueCourses("en");
+const COURSES = homeContinueCourses("de", getCourseAccess(true));
+const ENGLISH_COURSES = homeContinueCourses("en", getCourseAccess(true));
 
 afterEach(cleanup);
 

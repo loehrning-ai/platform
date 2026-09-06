@@ -6,6 +6,7 @@ import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { LearningAtlas } from "./learning-atlas";
+import { getCourseAccess } from "@/lib/courses/access";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -79,7 +80,7 @@ export default async function KursePage() {
         </header>
 
         <section className="mt-4 sm:mt-6" data-learning-gallery>
-          <LearningAtlas locale={locale} />
+          <LearningAtlas locale={locale} access={getCourseAccess()} />
         </section>
 
         <aside className="mt-8 border border-border border-t-[3px] border-t-brand-orange bg-kupfer-mist lg:mt-10">

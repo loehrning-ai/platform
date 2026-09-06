@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -13,6 +14,7 @@ import { CodexLessonReader } from "./codex-lesson-reader";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import type { CodexLesson, CodexTrack } from "@/lib/codex/types";
 import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 
 interface CodexLessonPageProps {
   readonly locale: Locale;
@@ -35,6 +37,16 @@ export function CodexLessonPage({
   nextHref,
 }: CodexLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const reader = useLessonReaderBar({
+    courseSlug: "codex", lessonId: lesson.id, ordinal: lesson.number,
+    total: totalLessons, locale,
+    next: {
+      kind: "link",
+      href: nextHref ?? localizeHref("/kurse/open-source/codex/kurs", locale),
+      label: nextHref ? (locale === "de" ? "Weiter" : "Next") :
+        (locale === "de" ? "Zum Kurs" : "Course hub"),
+    },
+  });
   const copy = getCodexCourseCopy(locale).reader;
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     "codex",
@@ -43,6 +55,8 @@ export function CodexLessonPage({
 
   return (
     <LessonShell
+      readerBar={reader.bar}
+      contentRef={reader.contentRef}
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={copy.navLabel}

@@ -77,6 +77,11 @@ export function BlockPageShell({
   const config = getCourseConfig(courseSlug, locale);
   const copy = getCourseReaderCopy(locale);
   const blocks = getBlocks(courseSlug, locale);
+  const blockIndex = blocks.findIndex((item) => item.id === block.id);
+  const nextBlock = blocks[blockIndex + 1];
+  const followingHref = nextBlock
+    ? `${config.coursePath}/${nextBlock.id}#lesson=${encodeURIComponent(nextBlock.lessons[0].id)}`
+    : `${config.coursePath}/quiz`;
   const totalDuration = block.lessons.reduce(
     (sum, l) => sum + l.durationMinutes,
     0,
@@ -89,11 +94,9 @@ export function BlockPageShell({
 
   return (
     <div className="min-h-[100svh] bg-background">
-      {/* Sub-header below the site nav. The offset is the shell's header token
-          pair, not a hard-coded 64px: below lg the companion bar is 48px tall,
-          and a fixed 64px would leave a 16px strip of article content sliding
-          through the gap. */}
-      <header className="sticky top-[var(--nav-h-compact)] z-40 w-full border-b border-border bg-background lg:top-[var(--nav-h)]">
+      {/* On phones this context stays in document flow; the lesson toolbar is
+          the only sticky course band. Desktop keeps its existing subheader. */}
+      <header className="relative z-40 w-full border-b border-border bg-background lg:sticky lg:top-[var(--nav-h)]">
         <div className="mx-auto grid min-h-14 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-12 sm:min-h-0 sm:px-6 sm:py-0">
           <Link
             href={localizeHref(config.coursePath, locale)}
@@ -140,6 +143,12 @@ export function BlockPageShell({
           blockTitle={block.title}
           freshnessMeta={freshnessMeta}
           locale={locale}
+          lessonOffset={blocks.slice(0, blockIndex).reduce((sum, item) => sum + item.lessons.length, 0)}
+          courseLessonCount={blocks.reduce((sum, item) => sum + item.lessons.length, 0)}
+          followingHref={localizeHref(followingHref, locale)}
+          followingLabel={nextBlock
+            ? (locale === "de" ? "Nächster Block" : "Next block")
+            : (locale === "de" ? "Zur Prüfung" : "Assessment")}
         />
       </div>
     </div>

@@ -4,6 +4,7 @@ import { Fragment, useState, useCallback, useEffect } from "react";
 import { LessonSidebar } from "./lesson-sidebar";
 import { LessonContent } from "./lesson-content";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { useLessonReaderBar } from "@/components/course/use-lesson-reader-bar";
 import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
@@ -23,6 +24,7 @@ import { FreshnessBadge } from "@/components/ui/freshness-badge";
 import { MotionProvider } from "@/components/motion-provider";
 import type { BlockFreshness } from "@/lib/course/data";
 import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 import { getCourseReaderCopy } from "./course-ui-copy";
 import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
 import {
@@ -38,6 +40,10 @@ interface LessonLayoutProps {
   readonly blockTitle: string;
   readonly freshnessMeta?: BlockFreshness | null;
   readonly locale?: Locale;
+  readonly lessonOffset?: number;
+  readonly courseLessonCount?: number;
+  readonly followingHref?: string;
+  readonly followingLabel?: string;
 }
 
 export function LessonLayout({
@@ -45,6 +51,10 @@ export function LessonLayout({
   lessons,
   freshnessMeta,
   locale = "de",
+  lessonOffset = 0,
+  courseLessonCount = lessons.length,
+  followingHref,
+  followingLabel,
 }: LessonLayoutProps) {
   const copy = getCourseReaderCopy(locale);
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
@@ -214,6 +224,18 @@ export function LessonLayout({
     }
   }, [activateLesson, hasNextLesson, lessons, activeLessonIndex]);
 
+  const reader = useLessonReaderBar({
+    courseSlug, lessonId: activeLessonId,
+    ordinal: lessonOffset + activeLessonIndex + 1, total: courseLessonCount, locale,
+    next: hasNextLesson ? {
+      kind: "button", label: locale === "de" ? "Weiter" : "Next",
+      onSelect: handleNextLesson,
+    } : {
+      kind: "link", href: followingHref ?? localizeHref(`/${courseSlug}/kurs`, locale),
+      label: followingLabel ?? (locale === "de" ? "Zum Kurs" : "Course hub"),
+    },
+  });
+
   if (!activeLesson) return null;
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     courseSlug,
@@ -233,6 +255,8 @@ export function LessonLayout({
   return (
     <MotionProvider>
       <LessonShell
+        readerBar={reader.bar}
+        contentRef={reader.contentRef}
         navOpen={sidebarOpen}
         onNavOpenChange={setSidebarOpen}
         navLabel={copy.shell.navigation}

@@ -35,6 +35,8 @@ export interface ContinueCourseProgress {
   readonly completed: number;
   readonly started: boolean;
   readonly certified: boolean;
+  /** Only new recommendations skip an unavailable reader. */
+  readonly available: boolean;
   /** ISO stamp the store writes on every per-course write. */
   readonly lastActivity: string;
 }
@@ -51,7 +53,7 @@ export interface ContinueTarget {
  *   1. the started, unfinished course touched most recently — the real "where
  *      you left off". The store stamps `lastActivity` on every per-course
  *      write, so this is a recorded fact rather than an inference;
- *   2. otherwise the first course this browser has not started;
+ *   2. otherwise the first available course this browser has not started;
  *   3. otherwise the most recently touched course, when every started course
  *      is already finished.
  */
@@ -66,16 +68,17 @@ export function pickContinueTarget(
     return { slug: latest.slug, completed: latest.completed, mode: "resume" };
   }
 
-  const unstarted = courses.find((course) => !course.started);
+  const unstarted = courses.find((course) => !course.started && course.available);
   if (unstarted) {
     return { slug: unstarted.slug, completed: 0, mode: "start" };
   }
 
-  const fallback = mostRecent(courses) ?? courses[0];
+  const fallback =
+    mostRecent(courses.filter((course) => course.started)) ?? courses[0];
   return {
     slug: fallback.slug,
     completed: fallback.completed,
-    mode: "resume",
+    mode: fallback.started ? "resume" : "start",
   };
 }
 
@@ -109,6 +112,7 @@ function readCourseProgress(course: ContinueCourse): ContinueCourseProgress {
       slice.workshopQuiz.completedAt !== null ||
       slice.capstoneSubmitted,
     certified: isCertificateEligible(course.slug),
+    available: course.access !== "unavailable",
     lastActivity: slice.lastActivity,
   };
 }
@@ -126,7 +130,10 @@ export function ContinueCard({
   // subscribe() delivers the current snapshot immediately and again on every
   // local write or cross-tab change, so the card needs no separate read.
   useEffect(
-    () => subscribe(() => setTarget(pickContinueTarget(courses.map(readCourseProgress)))),
+    () =>
+      subscribe(() =>
+        setTarget(pickContinueTarget(courses.map(readCourseProgress))),
+      ),
     [courses],
   );
 
@@ -136,12 +143,19 @@ export function ContinueCard({
   if (!course) return null;
 
   const resuming = target.mode === "resume";
+  const href =
+    course.access === "unavailable"
+      ? course.overviewHref
+      : resuming
+        ? course.continueHref
+        : course.startHref;
 
   return (
     <Link
-      href={resuming ? course.continueHref : course.startHref}
+      href={href}
       prefetch={false}
       data-home-continue-card={target.mode}
+      data-home-course-access={course.access}
       className="flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-foreground/10 bg-brand-acid/60 px-4 shadow-card outline-none transition-[border-color,box-shadow] duration-200 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span className="min-w-0 flex-1">
@@ -151,10 +165,16 @@ export function ContinueCard({
         <span className="mt-0.5 block truncate text-base font-bold tracking-[-0.02em] text-foreground">
           {course.title}
         </span>
-        <span className="block truncate text-xs leading-snug text-muted-foreground">
-          {resuming
-            ? copy.lessonsDone(target.completed, course.totalLessons)
-            : course.duration}
+        <span className="flex min-w-0 gap-1 text-xs leading-snug text-muted-foreground">
+          <span data-home-access-label className="shrink-0">
+            {copy.access[course.access]}
+          </span>
+          <span aria-hidden="true">·</span>
+          <span className="min-w-0 truncate">
+            {resuming
+              ? copy.lessonsDone(target.completed, course.totalLessons)
+              : course.duration}
+          </span>
         </span>
       </span>
       <span

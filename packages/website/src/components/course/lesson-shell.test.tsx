@@ -206,12 +206,10 @@ describe("<LessonShell>", () => {
     const mobileToolbar = document.querySelector(
       "[data-lesson-shell-mobile-toolbar]",
     ) as HTMLElement;
-    // The offset is the compact top bar token plus the 3rem block sub-header
-    // row beneath it, no longer the 64px desktop header the old `top-28`
-    // (4rem + 3rem) assumed below lg.
+    // A structure-agnostic shell cannot assume the caller has a subheader.
     expect(mobileToolbar).toHaveClass(
       "sticky",
-      "top-[calc(var(--nav-h-compact)+3rem)]",
+      "top-[calc(var(--nav-h-compact)+var(--lesson-subheader-h,0px))]",
       "lg:hidden",
     );
     expect(mobileToolbar).not.toHaveClass("top-28");
@@ -538,7 +536,7 @@ describe("<LessonShell> reader focus mode", () => {
     ).toBeVisible();
   });
 
-  it("lets a course reader's next action replace the fallback control", () => {
+  it("keeps navigation secondary when a reader supplies its next action", () => {
     render(
       <Harness
         navLabel="Testnavigation"
@@ -552,8 +550,8 @@ describe("<LessonShell> reader focus mode", () => {
     const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
     expect(within(bar!).getByRole("link", { name: "Weiter" })).toBeVisible();
     expect(
-      within(bar!).queryByRole("button", { name: "Testnavigation" }),
-    ).toBeNull();
+      within(bar!).getByRole("button", { name: "Testnavigation" }),
+    ).toHaveAttribute("data-reader-focus-navigation");
   });
 
   it("renders the compact reader bar with position and a scripted next action", () => {
