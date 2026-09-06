@@ -43,6 +43,7 @@ const SAFE_ROUTES = new Set([
   "/api/csp-report",
   "/api/feedback",
   "/api/progress",
+  "/api/progress/import",
   "/auth/logout",
   "/konto",
 ]);

@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Loader2, Mail, Send } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 import { sanitizeNextPath } from "@/lib/auth/routes";
 import type { Locale } from "@/lib/i18n/locale";
@@ -10,13 +11,14 @@ import {
   TurnstileWidget,
   type TurnstileWidgetHandle,
 } from "./turnstile-widget";
-import { LOGIN_COPY } from "./login-copy";
+import { LOGIN_COPY, type LoginUnavailableReason } from "./login-copy";
 
 export function LoginForm({
   next,
   accountReady,
   magicLinkReady,
   googleReady,
+  githubReady = false,
   turnstileSiteKey,
   locale = "de",
   unavailableReason = "disabled",
@@ -25,14 +27,20 @@ export function LoginForm({
   readonly accountReady: boolean;
   readonly magicLinkReady: boolean;
   readonly googleReady: boolean;
+  /** Optional third provider; absent unless its own confirmation is dated. */
+  readonly githubReady?: boolean;
   readonly turnstileSiteKey: string | null;
   readonly locale?: Locale;
-  readonly unavailableReason?:
-    "disabled" | "outage" | "configuration" | "methods";
+  readonly unavailableReason?: LoginUnavailableReason;
 }) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<
-    "idle" | "sending-otp" | "redirecting-google" | "sent" | "error"
+    | "idle"
+    | "sending-otp"
+    | "redirecting-google"
+    | "redirecting-github"
+    | "sent"
+    | "error"
   >("idle");
   const [message, setMessage] = useState("");
   const [lastSentAt, setLastSentAt] = useState<number | null>(null);
@@ -45,8 +53,10 @@ export function LoginForm({
     accountReady && magicLinkReady && turnstileSiteKey,
   );
   const googleAvailable = accountReady && googleReady;
+  const githubAvailable = accountReady && githubReady;
+  const oauthAvailable = googleAvailable || githubAvailable;
   const supabase = useMemo(() => {
-    if (!accountReady || (!magicLinkAvailable && !googleAvailable)) {
+    if (!accountReady || (!magicLinkAvailable && !oauthAvailable)) {
       return null;
     }
     try {
@@ -56,16 +66,25 @@ export function LoginForm({
       // configuration is invalid. Keep provider details out of render errors.
       return null;
     }
-  }, [accountReady, googleAvailable, magicLinkAvailable]);
+  }, [accountReady, magicLinkAvailable, oauthAvailable]);
   const cleanNext = sanitizeNextPath(next);
-  const busy = state === "sending-otp" || state === "redirecting-google";
+  const busy =
+    state === "sending-otp" ||
+    state === "redirecting-google" ||
+    state === "redirecting-github";
   const copy = LOGIN_COPY[locale].form;
 
-  if (!magicLinkAvailable && !googleAvailable) {
+  if (!magicLinkAvailable && !oauthAvailable) {
+    // No provider passed verification, so no control is rendered at all: a
+    // disabled form would still read as an offer. The page above carries the
+    // machine state and the next step; this card only names the method surface
+    // so the sign-in boundary stays visible where a learner looks for it.
     return (
       <section
         aria-labelledby="login-form-title"
-        className="min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-card p-4 sm:p-5"
+        data-login-method-state="unavailable"
+        data-login-unavailable-reason={unavailableReason}
+        className="min-w-0 border border-border bg-card p-4 sm:p-5"
       >
         <h2
           id="login-form-title"
@@ -73,9 +92,12 @@ export function LoginForm({
         >
           {copy.title}
         </h2>
+        <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">
+          {copy.unavailableInstruction}
+        </p>
         <p
           role="note"
-          className="mt-3 break-words font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+          className="mt-3 break-words border-t border-border pt-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
         >
           {copy.unavailable[unavailableReason]}
         </p>
@@ -135,24 +157,33 @@ export function LoginForm({
     }
   }
 
-  async function startGoogleSignIn() {
-    if (busy || !supabase || !googleAvailable) return;
-    setState("redirecting-google");
+  /**
+   * One redirect path for every OAuth provider. Each provider keeps its own
+   * pending state and its own generic failure message, so a broken GitHub
+   * console never reports itself as a Google problem.
+   */
+  async function startOAuthSignIn(provider: "google" | "github") {
+    const enabled = provider === "google" ? googleAvailable : githubAvailable;
+    if (busy || !supabase || !enabled) return;
+    const failure = provider === "google" ? copy.googleError : copy.githubError;
+    setState(
+      provider === "google" ? "redirecting-google" : "redirecting-github",
+    );
     setMessage("");
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider,
         options: {
           redirectTo: callbackRedirectTo(),
         },
       });
       if (error) {
         setState("error");
-        setMessage(copy.googleError);
+        setMessage(failure);
       }
     } catch {
       setState("error");
-      setMessage(copy.googleError);
+      setMessage(failure);
     }
   }
 
@@ -160,17 +191,18 @@ export function LoginForm({
     <form
       onSubmit={submit}
       aria-labelledby="login-form-title"
+      data-login-method-state="available"
       className="min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-card p-4 sm:p-5"
     >
-      <div className="mb-4 border-b border-border pb-4">
+      <div className="mb-5 border-b border-border pb-4">
         <h2
           id="login-form-title"
           className="text-xl font-bold tracking-[-0.025em] text-foreground sm:text-2xl"
         >
           {copy.title}
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {magicLinkAvailable || googleAvailable
+        <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">
+          {magicLinkAvailable || oauthAvailable
             ? copy.availableInstruction
             : copy.unavailableInstruction}
         </p>
@@ -178,7 +210,7 @@ export function LoginForm({
       {googleAvailable ? (
         <button
           type="button"
-          onClick={startGoogleSignIn}
+          onClick={() => startOAuthSignIn("google")}
           disabled={!supabase || busy}
           aria-busy={state === "redirecting-google"}
           data-google-brand-button="light"
@@ -211,8 +243,28 @@ export function LoginForm({
           ) : null}
         </button>
       ) : null}
-      {googleAvailable && magicLinkAvailable ? (
-        <div className="my-4 flex items-center gap-3" aria-hidden="true">
+      {githubAvailable ? (
+        <button
+          type="button"
+          onClick={() => startOAuthSignIn("github")}
+          disabled={!supabase || busy}
+          aria-busy={state === "redirecting-github"}
+          data-login-provider="github"
+          className={`${googleAvailable ? "mt-3 " : ""}relative inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[4px] border border-border bg-background px-12 text-[14px] font-medium leading-5 text-foreground hover:border-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:opacity-70`}
+        >
+          <Github size={18} aria-hidden="true" className="absolute left-3" />
+          {state === "redirecting-github" ? copy.githubPending : copy.github}
+          {state === "redirecting-github" ? (
+            <Loader2
+              size={14}
+              className="absolute right-3 animate-spin"
+              aria-hidden="true"
+            />
+          ) : null}
+        </button>
+      ) : null}
+      {oauthAvailable && magicLinkAvailable ? (
+        <div className="my-5 flex items-center gap-3" aria-hidden="true">
           <span className="h-px flex-1 bg-border" />
           <span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.emailSeparator}
@@ -230,7 +282,7 @@ export function LoginForm({
           </label>
           <p
             id="login-email-hint"
-            className="mt-2 text-sm leading-relaxed text-muted-foreground"
+            className="mt-2 break-words text-sm leading-relaxed text-muted-foreground"
           >
             {copy.emailHint}
           </p>
@@ -285,7 +337,7 @@ export function LoginForm({
           ) : null}
         </>
       ) : null}
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-5 break-words border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
         {accountReady ? copy.accountReadyNote : copy.accountUnavailableNote}
       </p>
       {message ? (
@@ -305,7 +357,7 @@ export function LoginForm({
       {!supabase ? (
         <p
           role="note"
-          className="mt-4 border border-border bg-background p-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+          className="mt-4 break-words border border-border bg-background p-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
         >
           {copy.unavailable[unavailableReason]}
         </p>

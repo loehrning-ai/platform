@@ -12,6 +12,10 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  APPLICATION_PROVIDER_ENVIRONMENT_KEYS,
+  PROVIDER_FREE_APPLICATION_ENVIRONMENT,
+} from "../../../../scripts/environment-policy.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const validateEnvScript = join(here, "..", "validate-env.mjs");
@@ -48,6 +52,7 @@ const CONTROLLED_KEYS = [
   "SUPABASE_REGION",
   "SUPABASE_DPA_CONFIRMED_AT",
   "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
+  "SUPABASE_GITHUB_OAUTH_CONFIRMED_AT",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
@@ -77,7 +82,21 @@ const CONTROLLED_KEYS = [
   "COURSE_TERMINAL_DAILY_RUN_BUDGET",
   "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
   "COURSE_TERMINAL_SANDBOX_IMAGE",
+  "CV_ENGINE_HOSTED_URL",
+  "CV_ENGINE_HOSTED_CONFIRMED_AT",
+  "MCP_SERVER_ENABLED",
   "VERCEL_OIDC_TOKEN",
+];
+
+// Every variable this slice adds must exist in all three registries at once:
+// the child-process policy (or it is stripped from verification builds), the
+// provider-free defaults (or a capability can survive a provider-free run),
+// and .env.example (or a deployer never learns it exists).
+const ACCOUNT_CAPABILITY_VARIABLES = [
+  "SUPABASE_GITHUB_OAUTH_CONFIRMED_AT",
+  "CV_ENGINE_HOSTED_URL",
+  "CV_ENGINE_HOSTED_CONFIRMED_AT",
+  "MCP_SERVER_ENABLED",
 ];
 
 function runValidateEnv(overrides) {
@@ -526,6 +545,189 @@ function main() {
       /SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT/,
     );
   }
+
+  // G2. GitHub is a second optional sign-in method with the Google shape: no
+  //     Turnstile requirement, a mandatory past-or-present attestation, and no
+  //     standalone existence without the account backend.
+  const githubOnlySignIn = runValidateEnv(
+    completeSupabase({
+      SUPABASE_GITHUB_OAUTH_CONFIRMED_AT: "2026-08-08",
+    }),
+  );
+  assert.equal(
+    githubOnlySignIn.status,
+    0,
+    `GitHub OAuth attestation must not require Turnstile\n${combined(githubOnlySignIn)}`,
+  );
+
+  for (const githubAttestation of ["not-a-date", "2999-01-01"]) {
+    const invalidGithubOAuth = runValidateEnv(
+      completeSupabase({
+        SUPABASE_GITHUB_OAUTH_CONFIRMED_AT: githubAttestation,
+      }),
+    );
+    assert.equal(invalidGithubOAuth.status, 1, combined(invalidGithubOAuth));
+    assert.match(
+      combined(invalidGithubOAuth),
+      /SUPABASE_GITHUB_OAUTH_CONFIRMED_AT/,
+    );
+  }
+
+  const orphanedGithubOAuth = runValidateEnv({
+    CI: "true",
+    SUPABASE_GITHUB_OAUTH_CONFIRMED_AT: "2026-08-08",
+  });
+  assert.equal(orphanedGithubOAuth.status, 1, combined(orphanedGithubOAuth));
+  assert.match(
+    combined(orphanedGithubOAuth),
+    /GitHub OAuth is attested without Supabase Auth/,
+  );
+
+  // G3. The hosted cv-engine keeps learner documents inside the account
+  //     boundary, so its origin must be a loehrning.ai HTTPS origin, its dated
+  //     confirmation is mandatory, and neither half stands on its own.
+  const hostedCvEngine = runValidateEnv(
+    completeSupabase({
+      CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
+      CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+    }),
+  );
+  assert.equal(
+    hostedCvEngine.status,
+    0,
+    `complete hosted cv-engine configuration must pass\n${combined(hostedCvEngine)}`,
+  );
+
+  for (const rejectedOrigin of [
+    "http://cv.loehrning.ai",
+    "https://cv.loehrning.ai:8443",
+    "https://cv.example.com",
+    "https://evil-loehrning.ai",
+    "https://loehrning.ai.attacker.test",
+  ]) {
+    const foreignHost = runValidateEnv(
+      completeSupabase({
+        CV_ENGINE_HOSTED_URL: rejectedOrigin,
+        CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+      }),
+    );
+    assert.equal(
+      foreignHost.status,
+      1,
+      `${rejectedOrigin} must not be accepted as a hosted tool origin\n${combined(foreignHost)}`,
+    );
+    assert.match(combined(foreignHost), /CV_ENGINE_HOSTED_URL/);
+  }
+
+  for (const malformedOrigin of [
+    "https://cv.loehrning.ai/app",
+    "https://cv.loehrning.ai?document=1",
+    " https://cv.loehrning.ai",
+    "cv.loehrning.ai",
+  ]) {
+    const malformedHosted = runValidateEnv(
+      completeSupabase({
+        CV_ENGINE_HOSTED_URL: malformedOrigin,
+        CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+      }),
+    );
+    assert.equal(
+      malformedHosted.status,
+      1,
+      `${malformedOrigin} must not be accepted as a hosted tool origin\n${combined(malformedHosted)}`,
+    );
+    assert.match(combined(malformedHosted), /CV_ENGINE_HOSTED_URL/);
+  }
+
+  const hostedCvEngineWithoutAttestation = runValidateEnv(
+    completeSupabase({ CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai" }),
+  );
+  assert.equal(
+    hostedCvEngineWithoutAttestation.status,
+    1,
+    combined(hostedCvEngineWithoutAttestation),
+  );
+  assert.match(
+    combined(hostedCvEngineWithoutAttestation),
+    /CV_ENGINE_HOSTED_CONFIRMED_AT/,
+  );
+
+  const orphanedHostedAttestation = runValidateEnv(
+    completeSupabase({ CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20" }),
+  );
+  assert.equal(
+    orphanedHostedAttestation.status,
+    1,
+    combined(orphanedHostedAttestation),
+  );
+  assert.match(
+    combined(orphanedHostedAttestation),
+    /orphaned attestation or configure the hosted cv-engine origin/,
+  );
+
+  const hostedCvEngineWithoutAccount = runValidateEnv({
+    CI: "true",
+    CV_ENGINE_HOSTED_URL: "https://cv.loehrning.ai",
+    CV_ENGINE_HOSTED_CONFIRMED_AT: "2026-08-20",
+  });
+  assert.equal(
+    hostedCvEngineWithoutAccount.status,
+    1,
+    combined(hostedCvEngineWithoutAccount),
+  );
+  assert.match(
+    combined(hostedCvEngineWithoutAccount),
+    /CV_ENGINE_HOSTED_URL requires the complete Supabase configuration/,
+  );
+
+  // G4. Agent access over MCP is a strict boolean opt-in that cannot exist
+  //     without the account backend holding its grants and audit trail.
+  const agentAccess = runValidateEnv(
+    completeSupabase({ MCP_SERVER_ENABLED: "true" }),
+  );
+  assert.equal(
+    agentAccess.status,
+    0,
+    `enabled agent access with a complete account backend must pass\n${combined(agentAccess)}`,
+  );
+
+  for (const malformedFlag of ["TRUE", "1", "yes", " true"]) {
+    const malformedAgentFlag = runValidateEnv(
+      completeSupabase({ MCP_SERVER_ENABLED: malformedFlag }),
+    );
+    assert.equal(
+      malformedAgentFlag.status,
+      1,
+      `MCP_SERVER_ENABLED=${malformedFlag} must fail\n${combined(malformedAgentFlag)}`,
+    );
+    assert.match(
+      combined(malformedAgentFlag),
+      /MCP_SERVER_ENABLED must be exactly true or false/,
+    );
+  }
+
+  const agentAccessWithoutAccount = runValidateEnv({
+    CI: "true",
+    MCP_SERVER_ENABLED: "true",
+  });
+  assert.equal(
+    agentAccessWithoutAccount.status,
+    1,
+    combined(agentAccessWithoutAccount),
+  );
+  assert.match(
+    combined(agentAccessWithoutAccount),
+    /MCP_SERVER_ENABLED=true requires the complete Supabase configuration/,
+  );
+
+  const disabledAgentAccess = runValidateEnv(
+    completeSupabase({ MCP_SERVER_ENABLED: "false" }),
+  );
+  assert.equal(
+    disabledAgentAccess.status,
+    0,
+    `an explicitly disabled MCP server must pass\n${combined(disabledAgentAccess)}`,
+  );
 
   for (const malformedOrigin of [
     " https://aaaaaaaaaaaa.supabase.co",
@@ -1075,6 +1277,39 @@ function main() {
   assert.match(deploymentDocs, /`SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT`/);
   assert.match(deploymentDocs, /one-time quota reset/i);
   assert.doesNotMatch(deploymentDocs, /budget attestation vars/i);
+
+  // Registry lockstep. A variable that reaches only one of these three files is
+  // silently stripped from every verification and deployment build, so the
+  // capability behind it can never turn on and the failure is invisible.
+  const environmentExample = readFileSync(
+    join(here, "..", "..", ".env.example"),
+    "utf8",
+  );
+  const validateEnvSource = readFileSync(validateEnvScript, "utf8");
+  for (const name of ACCOUNT_CAPABILITY_VARIABLES) {
+    assert.ok(
+      APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes(name),
+      `${name} must be classified in APPLICATION_PROVIDER_ENVIRONMENT_KEYS`,
+    );
+    assert.ok(
+      Object.hasOwn(PROVIDER_FREE_APPLICATION_ENVIRONMENT, name),
+      `${name} must be cleared by PROVIDER_FREE_APPLICATION_ENVIRONMENT`,
+    );
+    assert.match(
+      environmentExample,
+      new RegExp(`^${name}=`, "m"),
+      `${name} must be documented in .env.example`,
+    );
+    assert.ok(
+      validateEnvSource.includes(name),
+      `${name} must be validated by validate-env.mjs`,
+    );
+  }
+  assert.equal(
+    PROVIDER_FREE_APPLICATION_ENVIRONMENT.MCP_SERVER_ENABLED,
+    "false",
+    "provider-free verification must pin agent access to an explicit off value",
+  );
 
   console.log("validate-env gate test: ALL ASSERTIONS PASSED");
 }

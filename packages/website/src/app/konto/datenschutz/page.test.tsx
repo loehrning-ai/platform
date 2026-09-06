@@ -109,6 +109,7 @@ describe("DatenschutzPage course-reset list", () => {
     ["rate_limit_exceeded", 429],
     ["rate_limit_unavailable", 503],
     ["admin_client_unavailable", 503],
+    ["pre_delete_incomplete", 503],
     ["delete_failed", 500],
   ] as const)(
     "classifies only the exact definite deletion failure contract for %s",

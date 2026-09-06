@@ -277,6 +277,11 @@ describe("KontoPage course resume integration", () => {
     // carries it at the top of the page. Its accessible name must stay
     // distinct from the privacy landmark, because that one is queried by name
     // as a single match (below, and in the authed e2e suite).
+    //
+    // Copy lock updated: the account page is a sequence of regions now, so the
+    // nav anchors "Konto verwalten" on this page instead of pointing straight
+    // at /konto/datenschutz. That route stays one click away from inside the
+    // region, asserted below and in the authed e2e suite.
     const state = progress({
       "eu-ai-act-kurs": courseSlice(
         "eu-ai-act-kurs",
@@ -292,9 +297,17 @@ describe("KontoPage course resume integration", () => {
       name: "Kontobereiche",
     });
     expect(
-      within(sectionNav).getByRole("link", { name: "Konto verwalten" }),
-    ).toHaveAttribute("href", "/konto/datenschutz");
-    // Anchors only point at headings that actually rendered.
+      within(sectionNav)
+        .getAllByRole("link")
+        .map((link) => link.getAttribute("href")),
+    ).toEqual([
+      "#konto-weiterlernen",
+      "#konto-meine-kurse",
+      "#konto-werkzeuge",
+      "#konto-nachweise",
+      "#konto-verwalten",
+    ]);
+    // Anchors only point at regions that actually rendered.
     for (const link of within(sectionNav).getAllByRole("link")) {
       const href = link.getAttribute("href") ?? "";
       if (!href.startsWith("#")) continue;
@@ -303,6 +316,9 @@ describe("KontoPage course resume integration", () => {
         `${href} must resolve to a rendered section`,
       ).not.toBeNull();
     }
+    expect(
+      screen.getByRole("link", { name: "Datenschutz und Datenverwaltung" }),
+    ).toHaveAttribute("href", "/konto/datenschutz");
     // Still exactly one privacy landmark, so the single-match query holds.
     expect(screen.getAllByRole("navigation", { name: "Kontodatenschutz" })).toHaveLength(1);
   });
@@ -318,13 +334,27 @@ describe("KontoPage course resume integration", () => {
     const sectionNav = screen.getByRole("navigation", {
       name: "Kontobereiche",
     });
-    // Linking to headings that never rendered would strand the learner.
+    // Linking to regions that never rendered would strand the learner.
     expect(
-      within(sectionNav).queryByRole("link", { name: "Weitere Kurse" }),
+      within(sectionNav).queryByRole("link", { name: "Meine Kurse" }),
     ).toBeNull();
+    expect(
+      within(sectionNav).queryByRole("link", { name: "Teilnahmebestätigungen" }),
+    ).toBeNull();
+    expect(
+      within(sectionNav).getByRole("link", { name: "Weiterlernen" }),
+    ).toBeInTheDocument();
     expect(
       within(sectionNav).getByRole("link", { name: "Konto verwalten" }),
     ).toBeInTheDocument();
+    // Reference material and the data controls do not depend on the record, so
+    // an unreadable record must not take them off the page with it.
+    expect(
+      screen.getByRole("link", { name: /Lernbücher/ }),
+    ).toHaveAttribute("href", "/buecher");
+    expect(
+      screen.getByRole("link", { name: "Datenschutz und Datenverwaltung" }),
+    ).toHaveAttribute("href", "/konto/datenschutz");
   });
 
   it("renders an outage instead of signing the learner out when auth itself fails", async () => {
@@ -489,6 +519,19 @@ describe("KontoPage catalog", () => {
     expect(combined).toHaveAttribute("href", "/konto?level=fortg");
   });
 
+  it("keeps the whole catalog on one fetch of the account record", async () => {
+    // Every region reads props derived from this single call. A second call
+    // would mean a region started fetching for itself, which is the waterfall
+    // the decomposition exists to prevent.
+    render(await kontoPage());
+
+    expect(mocks.fetchUnifiedProgressForUser).toHaveBeenCalledTimes(1);
+    expect(mocks.fetchUnifiedProgressForUser).toHaveBeenCalledWith(
+      AUTH_CLIENT,
+      USER.id,
+    );
+  });
+
   it("shows the no-match state when a filter empties the available list", async () => {
     const state = progress(
       Object.fromEntries(
@@ -511,5 +554,132 @@ describe("KontoPage catalog", () => {
     expect(
       screen.getByText("Kein Kurs entspricht diesem Filter."),
     ).toBeInTheDocument();
+  });
+});
+
+describe("KontoPage account regions", () => {
+  it("renders the account regions in the published order", async () => {
+    const state = progress({
+      codex: courseSlice(
+        "codex",
+        CANONICAL_LESSON_IDS.codex.length,
+        "2026-07-29T11:00:00.000Z",
+      ),
+    });
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    const { container } = render(await kontoPage());
+
+    expect(
+      Array.from(container.querySelectorAll('section[id^="konto-"]')).map(
+        (section) => section.id,
+      ),
+    ).toEqual([
+      "konto-weiterlernen",
+      "konto-meine-kurse",
+      "konto-werkzeuge",
+      "konto-nachweise",
+      "konto-verwalten",
+    ]);
+    expect(
+      screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent),
+    ).toEqual([
+      "Weiterlernen",
+      "Meine Kurse",
+      "Weitere Kurse",
+      "Werkzeuge",
+      "Teilnahmebestätigungen",
+      "Konto verwalten",
+    ]);
+  });
+
+  it("keeps the tool and AI regions fail-closed while their capabilities are off", async () => {
+    // The two regions are not symmetrical, and the difference is deliberate.
+    //
+    // Deine KI renders nothing at all: an endpoint panel would advertise a
+    // connection a deployment without agent access cannot honour.
+    //
+    // Werkzeuge has something true to say either way, so it renders its
+    // source-only card: the repository and the self-host guide that
+    // /open-source already publishes, and nothing else. What it must never
+    // carry while the hosted tool is off is the handoff form, a document
+    // count, or any claim about a hosted instance, so those are asserted
+    // absent here rather than the whole region.
+    const { container } = render(await kontoPage());
+
+    expect(container.querySelector("#konto-deine-ki")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Deine KI" })).toBeNull();
+
+    const tools = container.querySelector("#konto-werkzeuge") as HTMLElement;
+    expect(tools).not.toBeNull();
+    expect(tools.getAttribute("data-konto-werkzeuge")).toBe("source-only");
+    expect(
+      within(tools).getByRole("heading", { level: 2, name: "Werkzeuge" }),
+    ).toBeInTheDocument();
+    expect(tools.querySelector("form")).toBeNull();
+    expect(within(tools).queryByRole("button", { name: /Öffnen/ })).toBeNull();
+    expect(within(tools).queryByText(/Dokument/)).toBeNull();
+  });
+
+  it("lists an earned record with the course's own record noun and certificate link", async () => {
+    const state = progress({
+      codex: courseSlice(
+        "codex",
+        CANONICAL_LESSON_IDS.codex.length,
+        "2026-07-29T11:00:00.000Z",
+      ),
+    });
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    const { container } = render(await kontoPage());
+
+    const records = container.querySelector("#konto-nachweise") as HTMLElement;
+    expect(records).not.toBeNull();
+    expect(
+      within(records).getByRole("link", {
+        name: /Codex-Kurs Teilnahmebestätigung öffnen/,
+      }),
+    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/zertifikat");
+    // The unearned courses stay out of the record list.
+    expect(
+      within(records).queryByRole("link", { name: /KI-Führerschein/ }),
+    ).toBeNull();
+  });
+
+  it("states plainly that no record has been earned yet", async () => {
+    const { container } = render(await kontoPage());
+
+    const records = container.querySelector("#konto-nachweise") as HTMLElement;
+    expect(
+      within(records).getByText(
+        "Noch kein Kurs abgeschlossen. Die erste Bestätigung erscheint hier, sobald du einen Kurs beendest.",
+      ),
+    ).toBeInTheDocument();
+    expect(within(records).queryAllByRole("link")).toHaveLength(0);
+  });
+
+  it("names the record region and its boundary in English too", async () => {
+    mocks.getRequestLocale.mockResolvedValue("en");
+    const state = progress({
+      codex: courseSlice(
+        "codex",
+        CANONICAL_LESSON_IDS.codex.length,
+        "2026-07-29T11:00:00.000Z",
+      ),
+    });
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
+
+    const { container } = render(await kontoPage());
+
+    expect(
+      screen.getByRole("heading", { name: "Certificates of participation" }),
+    ).toBeVisible();
+    const records = container.querySelector("#konto-nachweise") as HTMLElement;
+    expect(
+      within(records).getByRole("link", {
+        name: /Codex Course Open certificate of participation/,
+      }),
+    ).toHaveAttribute("href", "/en/kurse/open-source/codex/kurs/zertifikat");
+    expect(document.body).not.toHaveTextContent(/\bXP\b|streak|badge/i);
   });
 });

@@ -69,6 +69,34 @@ partial configuration and fails instead of surviving as stale release state.
   [Sign in with Google branding guidelines](https://developers.google.com/identity/branding-guidelines)
   during Google app verification; the attestation does not substitute for that
   external review.
+- GitHub login is the third optional sign-in group and mirrors the Google one:
+  it additionally requires the server-only, non-secret
+  `SUPABASE_GITHUB_OAUTH_CONFIRMED_AT` attestation set to a past-or-present
+  `YYYY-MM-DD`, on top of the complete account configuration. Keep the OAuth
+  app's client ID and client secret exclusively in the GitHub and Supabase
+  provider consoles. In GitHub, register the exact Supabase Auth callback shown
+  by the project; in Supabase, enable the GitHub provider and allow-list each
+  exact application callback. Complete a real GitHub sign-in in the target
+  environment before dating the attestation. The application calls
+  `signInWithOAuth` with provider `github` and a sanitized application
+  callback, requests no additional scopes, and hides the control entirely while
+  the attestation is absent. An attestation without the account configuration
+  fails the build.
+- The hosted cv-engine is an optional account-connected tool, off unless its
+  whole group is present: `CV_ENGINE_HOSTED_URL` as an exact `loehrning.ai`
+  HTTPS origin on the default port and with no path, query, fragment, or
+  credentials (such as `https://cv.loehrning.ai`), the past-or-present
+  `CV_ENGINE_HOSTED_CONFIRMED_AT` review marker, and the complete Supabase
+  group, because the tool keeps learner documents inside the account boundary.
+  A third-party host requires a code-reviewed allowlist, and an orphaned
+  attestation without the origin fails the build. While the group is
+  incomplete, `/konto` offers the tool as source code and a self-host guide
+  only, reads no documents, and the session handoff answers 404.
+- The platform's own MCP server is a separate opt-in: `MCP_SERVER_ENABLED` must
+  be exactly `true` or `false` when set, and `true` additionally requires the
+  complete Supabase group, because agent grants, tokens, and the audit trail
+  live in the account backend. While it is off or absent, the account page
+  shows no connection panel and the endpoint advertises nothing.
 - With zero
   Supabase vars the site builds and runs with auth cleanly disabled.
   `NEXT_PUBLIC_*` values are inlined at build time and feed the CSP, so

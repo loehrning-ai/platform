@@ -16,6 +16,7 @@ export interface AccountPageCopy {
   readonly outcomesCovered: string;
   readonly lastSynchronized: string;
   readonly noSavedProgress: string;
+  readonly continueHeading: string;
   readonly continueLabel: string;
   readonly resume: string;
   readonly start: string;
@@ -40,6 +41,10 @@ export interface AccountPageCopy {
   ) => string;
   readonly progressAria: (title: string) => string;
   readonly viewRecord: string;
+  readonly recordsHeading: string;
+  readonly recordsIntro: string;
+  readonly recordsEmpty: string;
+  readonly recordOpen: (record: string) => string;
   readonly outcomesHeading: string;
   readonly outcomeCount: (covered: number, total: number) => string;
   readonly outcomeSource: (course: string) => string;
@@ -86,6 +91,7 @@ export const ACCOUNT_COPY = {
     outcomesCovered: "Lernergebnisse behandelt",
     lastSynchronized: "Zuletzt synchronisiert",
     noSavedProgress: "noch kein gespeicherter Lernstand",
+    continueHeading: "Weiterlernen",
     continueLabel: "Weiter lernen",
     resume: "Weiterlernen",
     start: "Starten",
@@ -109,6 +115,12 @@ export const ACCOUNT_COPY = {
       `${done}/${total} Lektionen · ${percent}%`,
     progressAria: (title) => `Fortschritt ${title}`,
     viewRecord: "Nachweis ansehen",
+    recordsHeading: "Teilnahmebestätigungen",
+    recordsIntro:
+      "Ein abgeschlossener Kurs erzeugt eine Teilnahmebestätigung mit Prüfcode. Sie belegt die Teilnahme, keine akkreditierte Qualifikation.",
+    recordsEmpty:
+      "Noch kein Kurs abgeschlossen. Die erste Bestätigung erscheint hier, sobald du einen Kurs beendest.",
+    recordOpen: (record) => `${record} öffnen`,
     outcomesHeading: "Behandelte Lernergebnisse",
     outcomeCount: (covered, total) => `${covered} von ${total} behandelt`,
     outcomeSource: (course) => `behandelt in ${course}`,
@@ -164,6 +176,7 @@ export const ACCOUNT_COPY = {
     outcomesCovered: "Course outcomes covered",
     lastSynchronized: "Last synchronised",
     noSavedProgress: "no saved learning record",
+    continueHeading: "Keep learning",
     continueLabel: "Continue learning",
     resume: "Continue",
     start: "Start",
@@ -187,6 +200,12 @@ export const ACCOUNT_COPY = {
       `${done}/${total} lessons · ${percent}%`,
     progressAria: (title) => `Progress in ${title}`,
     viewRecord: "View record",
+    recordsHeading: "Certificates of participation",
+    recordsIntro:
+      "A completed course produces a certificate of participation with a verification code. It documents participation, not an accredited qualification.",
+    recordsEmpty:
+      "No completed course yet. The first certificate of participation appears here as soon as you finish a course.",
+    recordOpen: (record) => `Open ${record.toLowerCase()}`,
     outcomesHeading: "Covered course outcomes",
     outcomeCount: (covered, total) => `${covered} of ${total} covered`,
     outcomeSource: (course) => `covered in ${course}`,

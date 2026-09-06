@@ -59,6 +59,12 @@ describe("completion-evidence surface contract", () => {
       "components/course/kurs/workshop-quiz-page.tsx",
       "app/kurse/learning-atlas.tsx",
       "app/konto/page.tsx",
+      // The account page's per-course derivation moved into these two, so the
+      // rule has to follow the code: the record list and the continuation card
+      // are built here, from completedCanonicalLessonCount and
+      // isCourseRecordEarned rather than raw completion bits.
+      "app/konto/sections/account-data.ts",
+      "app/konto/sections/teilnahmebestaetigungen.tsx",
     ]) {
       expect(source(relativePath), relativePath).not.toMatch(
         /\.lessons\[[^\]]+\]\?*\.completed/,
