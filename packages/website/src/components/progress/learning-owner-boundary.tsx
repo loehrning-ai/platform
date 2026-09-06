@@ -36,11 +36,12 @@ const LearningOwnerBoundaryRuntime = dynamic(
 
 /**
  * Only the pure, dependency-free route gate stays in the initial client graph
- * on every route. The ownership runtime, the progress store, and the browser
- * learning storage behind it live in a learning-only async chunk that is
- * requested on learning-owner routes alone. The store fails closed on its own
- * while the owner is unknown, so the runtime arriving one chunk after
- * hydration cannot let an unattributed write through.
+ * on every route. The ownership runtime is requested on learning-owner routes
+ * alone. The progress store and the browser learning storage behind it are a
+ * separate async chunk shared with the root layout's reconciliation gate, which
+ * requests it on the wider progress-route set and on no route outside it. The
+ * store fails closed on its own while the owner is unknown, so the runtime
+ * arriving one chunk after hydration cannot let an unattributed write through.
  *
  * It deliberately does not own the streamed page children. Wrapping those
  * children in a client host element creates a hydration race when a deferred
