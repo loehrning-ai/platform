@@ -26,6 +26,7 @@ type FooterGroupKey = "courses" | "practice" | "blog" | "about";
 interface FooterCopy {
   readonly sectionLabel: string;
   readonly navigationLabel: string;
+  readonly disclosureLabel: string;
   readonly groups: Readonly<Record<FooterGroupKey, string>>;
   readonly links: Readonly<Record<FooterLinkKey, string>>;
   readonly legalNavigationLabel: string;
@@ -41,6 +42,7 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
   de: {
     sectionLabel: "Freie Lernplattform",
     navigationLabel: "Navigation in der Fußzeile",
+    disclosureLabel: "Alle Bereiche",
     groups: {
       courses: "Kurse",
       practice: "Praxis",
@@ -74,6 +76,7 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
   en: {
     sectionLabel: "Free learning platform",
     navigationLabel: "Footer navigation",
+    disclosureLabel: "All sections",
     groups: {
       courses: "Courses",
       practice: "Practice",
@@ -159,6 +162,25 @@ const INTERNAL_LINK_CLASS =
 const EXTERNAL_LINK_CLASS =
   "inline-flex min-h-11 items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm font-medium text-muted-foreground outline-none transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-card hover:text-foreground focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none";
 
+// Below lg the four link columns are eleven 44px targets stacked two abreast,
+// roughly 350px of footer before the legal row even starts, so they live
+// inside a native <details>. The element owns its open state, which means the
+// disclosure works with scripting disabled and nothing flips at hydration.
+//
+// From lg the same markup has to render as the plain column grid it was
+// before, down to the pixel. ::details-content is the only handle CSS has on a
+// closed <details> (the old `details:not([open]) > *` override reveals nothing
+// in any current engine), so the desktop rule lifts the user-agent
+// content-visibility on that pseudo-element and lets the grid lay out
+// normally. The summary is hidden only where that pseudo-element is actually
+// supported: an engine without it keeps a working summary at every width
+// instead of a column grid nothing can open.
+const GROUP_DISCLOSURE_CLASS =
+  "group min-w-0 lg:[&::details-content]:[block-size:auto] lg:[&::details-content]:[content-visibility:visible]";
+
+const GROUP_SUMMARY_CLASS =
+  "flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 border-t border-border py-2 text-sm font-medium text-foreground outline-none transition-colors duration-150 hover:text-brand-orange focus-visible:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none [&::-webkit-details-marker]:hidden lg:supports-[selector(::details-content)]:hidden";
+
 export async function Footer() {
   const locale = await getRequestLocale();
   const copy = FOOTER_COPY[locale];
@@ -227,31 +249,45 @@ export async function Footer() {
           </div>
 
           <nav aria-label={copy.navigationLabel} className="min-w-0">
-            <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-4 md:gap-x-6">
-              {FOOTER_GROUPS.map((group) => (
-                <section
-                  key={group.id}
-                  className="min-w-0 border-t border-border pt-3"
+            <details
+              data-testid="footer-group-disclosure"
+              className={GROUP_DISCLOSURE_CLASS}
+            >
+              <summary className={GROUP_SUMMARY_CLASS}>
+                <span>{copy.disclosureLabel}</span>
+                <span
+                  aria-hidden="true"
+                  className="shrink-0 font-ui-mono text-base leading-none transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
                 >
-                  <h2 className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-                    {copy.groups[group.id]}
-                  </h2>
-                  <ul className="mt-1">
-                    {group.links.map((link) => (
-                      <li key={link.href} className="min-w-0">
-                        <Link
-                          href={localizeHref(link.href, locale)}
-                          prefetch={false}
-                          className={INTERNAL_LINK_CLASS}
-                        >
-                          {copy.links[link.key]}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
-            </div>
+                  +
+                </span>
+              </summary>
+              <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6 pt-4 md:grid-cols-4 md:gap-x-6 lg:pt-0">
+                {FOOTER_GROUPS.map((group) => (
+                  <section
+                    key={group.id}
+                    className="min-w-0 border-t border-border pt-3"
+                  >
+                    <h2 className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                      {copy.groups[group.id]}
+                    </h2>
+                    <ul className="mt-1">
+                      {group.links.map((link) => (
+                        <li key={link.href} className="min-w-0">
+                          <Link
+                            href={localizeHref(link.href, locale)}
+                            prefetch={false}
+                            className={INTERNAL_LINK_CLASS}
+                          >
+                            {copy.links[link.key]}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </details>
           </nav>
         </div>
 

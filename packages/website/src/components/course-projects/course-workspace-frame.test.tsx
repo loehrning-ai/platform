@@ -359,6 +359,10 @@ describe("CourseWorkspaceFrame", () => {
     });
     const panes = screen.getByLabelText("Project workspace").parentElement;
     expect(panes).toHaveClass("overflow-y-auto", "lg:overflow-hidden");
+    // Full screen sits on the display edge and reads device insets only
+    // through the shell's safe-area tokens, never through env() directly.
+    expect(frame).toHaveClass("pt-safe", "pb-safe", "px-safe");
+    expect(frame?.className).not.toContain("env(");
     expect(screen.getByText("Escape exits full screen")).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: "Escape" });

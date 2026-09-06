@@ -133,7 +133,16 @@ export default async function LoginPage({
             </section>
             {!loginAvailable ? <div className="mt-5">{loginForm}</div> : null}
           </div>
-          {loginAvailable ? loginForm : null}
+          {/* Below lg the sign-in card leads and the explanation follows: a
+              visitor who opens this page on a phone came to sign in. Only the
+              visual order flips, through `order-first`; the DOM keeps the
+              heading first for readers and the desktop grid is untouched. The
+              explanation column carries no controls (its one possible link
+              sits inside the callback alert), so focus order still matches
+              what is on screen. */}
+          {loginAvailable ? (
+            <div className="order-first min-w-0 lg:order-none">{loginForm}</div>
+          ) : null}
         </div>
       </div>
     </section>

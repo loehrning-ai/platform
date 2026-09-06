@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, ExternalLink } from "lucide-react";
-import { Github } from "@/components/icons/brand";
+import { ArrowRight, Check } from "lucide-react";
 import {
   ALL_COURSE_CATALOG,
   type CatalogCourse,
-  type ImportedCourse,
+  type CourseLevel,
 } from "@/lib/courses/catalog";
-import { localizeCatalog } from "@/lib/courses/catalog-copy";
+import {
+  COURSE_LEVEL_LABELS_BY_LOCALE,
+  localizeCatalog,
+} from "@/lib/courses/catalog-copy";
 import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
-import { demosForCourse } from "@/lib/demos";
 import { courseGroupFor, courseSections } from "@/lib/courses/tracks";
 import {
   getCompletedLessonsCount,
@@ -32,29 +33,37 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
-
-interface CourseStat {
-  readonly completed: number;
-  readonly certified: boolean;
-  readonly started: boolean;
-  readonly resumeHref: string;
-}
-
-type Course = CatalogCourse | ImportedCourse;
+import {
+  CourseLedgerRow,
+  courseAction,
+  defaultStat,
+  isLiveCourse,
+  type Course,
+  type CourseStat,
+} from "./course-ledger-row";
 
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
 
-// Cover-art wash per row, cycling across all ten courses -- kept light (10%)
-// since ten consecutive tinted rows read as noisy at higher opacity, unlike
-// the four-card home-page spine.
-const ROW_TONES = [
-  "bg-brand-acid/10",
-  "bg-brand-sky/10",
-  "bg-brand-pink/10",
-  "bg-brand-peach/10",
-  "bg-brand-teal/10",
-  "bg-brand-cobalt/10",
-] as const;
+/**
+ * Level filter for the phone ledger. "alle" is the default on both the server
+ * and the first client render, so the ten rows are complete without
+ * JavaScript and hydration never flips the list. Selecting a level hides the
+ * non-matching rows BELOW lg only (`hidden lg:list-item`): the desktop ledger
+ * is a reviewed, complete document and stays complete at every width, while
+ * the phone gets the short list it can actually read.
+ */
+type LevelFilter = CourseLevel | "alle";
+
+const LEVEL_FILTERS: readonly LevelFilter[] = [
+  "alle",
+  "einstieg",
+  "mittel",
+  "fortg",
+];
+
+function matchesLevel(course: Course, level: LevelFilter): boolean {
+  return level === "alle" || course.level === level;
+}
 
 const ATLAS_COPY = {
   de: {
@@ -72,6 +81,10 @@ const ATLAS_COPY = {
     allCourses: "Alle Kurse",
     allCoursesIntro:
       "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
+    levelLabel: "Kursstufe wählen",
+    allLevels: "Alle",
+    levelCount: (visible: number, total: number) =>
+      `${visible} von ${total} Kursen`,
     viewProgress: "Fortschritt in deinem Konto ansehen",
     tryDemo: (count: number) =>
       count > 1 ? `${count} Praxisbeispiele testen` : "Praxisbeispiel testen",
@@ -119,6 +132,10 @@ const ATLAS_COPY = {
     allCourses: "All courses",
     allCoursesIntro:
       "The path is a recommendation. Every course remains directly accessible.",
+    levelLabel: "Choose a course level",
+    allLevels: "All",
+    levelCount: (visible: number, total: number) =>
+      `${visible} of ${total} courses`,
     viewProgress: "View your progress in your account",
     tryDemo: (count: number) =>
       count > 1 ? `Try ${count} applied examples` : "Try the applied example",
@@ -165,6 +182,9 @@ const ATLAS_COPY = {
       readonly queued: string;
       readonly allCourses: string;
       readonly allCoursesIntro: string;
+      readonly levelLabel: string;
+      readonly allLevels: string;
+      readonly levelCount: (visible: number, total: number) => string;
       readonly viewProgress: string;
       readonly tryDemo: (count: number) => string;
       readonly sourceCode: string;
@@ -183,10 +203,6 @@ function isGoalId(value: string | null): value is GoalId {
   return value !== null && GOAL_IDS.includes(value as GoalId);
 }
 
-function isLiveCourse(course: Course): course is CatalogCourse {
-  return course.nativeStatus === "live";
-}
-
 function readStat(
   course: CatalogCourse,
   progress?: UnifiedProgress,
@@ -200,230 +216,14 @@ function readStat(
   };
 }
 
-function defaultStat(course: CatalogCourse): CourseStat {
-  return {
-    completed: 0,
-    certified: false,
-    started: false,
-    resumeHref: course.startHref,
-  };
-}
-
-function courseAction(
-  course: CatalogCourse,
-  stat: CourseStat,
-  locale: Locale,
-  copy: (typeof ATLAS_COPY)[Locale],
-): { readonly href: string; readonly label: string } {
-  if (stat.certified) {
-    return {
-      href: localizeHref(stat.resumeHref, locale),
-      label: copy.viewRecord,
-    };
-  }
-  if (stat.started) {
-    return {
-      href: localizeHref(stat.resumeHref, locale),
-      label: copy.continue,
-    };
-  }
-  return {
-    href: localizeHref(course.startHref, locale),
-    label: copy.start,
-  };
-}
-
-function sourceRepository(sourceHref: string): string {
-  try {
-    return new URL(sourceHref).pathname
-      .split("/")
-      .filter(Boolean)
-      .slice(0, 2)
-      .join("/");
-  } catch {
-    return sourceHref;
-  }
-}
-
-function CourseLedgerRow({
-  course,
-  index,
-  inPath,
-  stat,
-  locale,
-}: {
-  readonly course: Course;
-  readonly index: number;
-  readonly inPath: boolean;
-  readonly stat?: CourseStat;
-  readonly locale: Locale;
-}) {
-  const copy = ATLAS_COPY[locale];
-  const galleryCopy = COURSE_GALLERY_COPY[locale];
-  const live = isLiveCourse(course);
-  const liveStat = live ? (stat ?? defaultStat(course)) : null;
-  const action =
-    live && liveStat ? courseAction(course, liveStat, locale, copy) : null;
-  const sourceHref = course.sourceHref;
-  const sourceCommitHref = course.sourceCommitHref;
-  const sourceCommit = course.sourceCommit;
-  const tone = ROW_TONES[index % ROW_TONES.length];
-  // Seven of the ten courses have no demo. Rather than substituting one from
-  // another course, those rows simply omit the teaser.
-  const courseDemos = live ? demosForCourse(course.slug) : [];
-  const courseDemo = courseDemos[0];
-  const demoCount = courseDemos.length;
-
-  return (
-    <li
-      className={cn(
-        "border border-border",
-        tone,
-        inPath && "border-l-[3px] border-l-brand-orange",
-      )}
-      data-course-slug={course.slug}
-      data-in-path={inPath ? "true" : "false"}
-      data-course-status={
-        !live
-          ? "external"
-          : liveStat?.certified
-            ? "complete"
-            : liveStat?.started
-              ? "started"
-              : "open"
-      }
-    >
-      {/* No cover thumbnail. The course artwork is a wide illustration; at the
-          ~56px this dense ledger row allows it crops to unreadable mush, and
-          the six imported courses have only site screenshots, which read as
-          grey noise at that size. The art earns its space where it renders
-          large, on the home cards and the account catalog. */}
-      <div className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 p-3 sm:p-4 lg:grid-cols-[3rem_minmax(0,1fr)_minmax(180px,220px)_auto] lg:items-center">
-        <span
-          className={cn(
-            "flex h-8 w-8 items-center justify-center self-start border font-mono text-xs font-bold tabular-nums",
-            liveStat?.certified || inPath
-              ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-              : "border-border bg-background text-muted-foreground",
-          )}
-          aria-hidden="true"
-        >
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <div className="min-w-0">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-            <h4 className="min-w-0 text-[17px] font-bold leading-tight tracking-[-0.02em] text-foreground">
-              <Link
-                href={localizeHref(course.href, locale)}
-                className="inline-flex min-h-11 items-center underline decoration-transparent underline-offset-4 transition-[text-decoration-color,color] duration-150 hover:decoration-brand-orange focus-visible:decoration-brand-orange motion-reduce:transition-none"
-              >
-                {course.title}
-              </Link>
-            </h4>
-            {inPath ? (
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-                {copy.pathCourse}
-              </span>
-            ) : null}
-          </div>
-          <p className="mt-1 max-w-[68ch] text-sm leading-snug text-muted-foreground">
-            {course.tagline}
-          </p>
-          {courseDemo ? (
-            <Link
-              href={localizeHref(
-                `/demos/${courseDemo.slug}?source=gallery`,
-                locale,
-              )}
-              prefetch={false}
-              className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              {copy.tryDemo(demoCount)}
-              <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            </Link>
-          ) : null}
-          {/* Attribution for the imported MIT courses. This is the only place
-              the repository and pinned commit are rendered as page content
-              anywhere on the site: every other reference is machine-readable
-              (the knowledge-graph endpoint and the course-discovery metadata),
-              and the technical landing pages render none. It therefore stays
-              visible on the row itself rather than behind a disclosure. */}
-          {sourceHref ? (
-            <p
-              data-course-source
-              className="mt-1 flex flex-wrap items-center gap-x-2 font-mono text-xs text-muted-foreground"
-            >
-              <a
-                href={sourceHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-1.5 underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-              >
-                <Github className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                {sourceRepository(sourceHref)}
-                <span className="sr-only">
-                  : {copy.sourceCode}, {course.title}
-                </span>
-              </a>
-              {sourceCommitHref && sourceCommit ? (
-                <a
-                  href={sourceCommitHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-                >
-                  {copy.sourceCommit} #{sourceCommit.slice(0, 7)}
-                </a>
-              ) : null}
-            </p>
-          ) : null}
-        </div>
-        <div className="col-span-2 min-w-0 lg:col-span-1">
-          <span className="inline-flex min-h-11 w-full items-center border border-border bg-background px-3 font-mono text-xs text-muted-foreground">
-            {course.duration}
-          </span>
-        </div>
-        <div
-          className="col-span-2 flex min-w-0 lg:col-span-1 lg:justify-self-end"
-          data-course-action
-        >
-          {live && action ? (
-            <Link
-              href={action.href}
-              prefetch={false}
-              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-brand-orange bg-paper px-4 py-2 text-sm font-bold text-foreground transition-[background-color,border-color] duration-150 hover:bg-kupfer-mist focus-visible:bg-kupfer-mist motion-reduce:transition-none lg:w-auto"
-            >
-              <span className="break-words">{action.label}</span>
-              <span className="sr-only">: {course.title}</span>
-              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-            </Link>
-          ) : course.launchHref ? (
-            <a
-              href={course.launchHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border border-brand-orange bg-paper px-4 py-2 text-sm font-bold text-foreground transition-colors duration-150 hover:bg-kupfer-mist focus-visible:bg-kupfer-mist motion-reduce:transition-none lg:w-auto"
-            >
-              <span className="break-words">{galleryCopy.openCourse}</span>
-              <span className="sr-only">
-                : {course.title}, {galleryCopy.externalNewTab}
-              </span>
-              <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
-            </a>
-          ) : null}
-        </div>
-      </div>
-
-    </li>
-  );
-}
-
 export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = ATLAS_COPY[locale];
   const sections = courseSections(locale);
   const courses = localizeCatalog(ALL_COURSE_CATALOG, locale);
   const [goalId, setGoalId] = useState<GoalId>("start");
+  const [levelFilter, setLevelFilter] = useState<LevelFilter>("alle");
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
+  const levelLabels = COURSE_LEVEL_LABELS_BY_LOCALE[locale];
 
   useEffect(() => {
     const requestedGoal = new URL(window.location.href).searchParams.get(
@@ -458,6 +258,9 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
       ? courseAction(nextCourse, nextStat, locale, copy)
       : null;
   const selectedSlugs: ReadonlySet<string> = new Set<string>(goal.courseSlugs);
+  const visibleCourseCount = courses.filter((course) =>
+    matchesLevel(course, levelFilter),
+  ).length;
   const groups = [
     {
       id: "lernpfad",
@@ -509,8 +312,13 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
             {copy.intro}
           </p>
 
+          {/* Below lg the four goals form one segmented control: two joined
+              rows of 44px segments that share their hairlines, all four
+              visible at once so the decision is complete without scrolling.
+              The ordinal is desktop-only so every label fits on one line at
+              390px. From lg the reviewed 56px tiles return. */}
           <div
-            className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4"
+            className="mt-4 grid grid-cols-2 lg:grid-cols-4 lg:gap-2"
             role="group"
             aria-label={copy.goalLabel}
           >
@@ -525,15 +333,17 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                   onClick={() => selectGoal(candidate.id)}
                   data-learning-goal={candidate.id}
                   className={cn(
-                    "relative grid min-h-14 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-2 overflow-hidden border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none",
+                    "relative flex min-h-11 min-w-0 items-center gap-2 overflow-hidden border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none lg:grid lg:min-h-14 lg:grid-cols-[1.75rem_minmax(0,1fr)]",
+                    goalIndex % 2 === 1 && "-ml-px lg:ml-0",
+                    goalIndex >= 2 && "-mt-px lg:mt-0",
                     selected
-                      ? "border-brand-orange bg-kupfer-mist text-foreground"
-                      : "border-border bg-background text-foreground hover:border-brand-orange focus-visible:border-brand-orange",
+                      ? "z-[1] border-brand-orange bg-kupfer-mist text-foreground"
+                      : "border-border bg-background text-foreground hover:z-[1] hover:border-brand-orange focus-visible:z-[1] focus-visible:border-brand-orange",
                   )}
                 >
                   <span
                     className={cn(
-                      "font-mono text-xs tabular-nums",
+                      "hidden font-mono text-xs tabular-nums lg:block",
                       selected ? "text-brand-orange" : "text-muted-foreground",
                     )}
                     aria-hidden="true"
@@ -591,7 +401,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                       href={localizeHref(course.href, locale)}
                       aria-current={isNext ? "step" : undefined}
                       className={cn(
-                        "relative grid min-h-14 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-3 border border-transparent px-2 py-2 text-sm transition-[background-color,border-color] duration-150 hover:border-border hover:bg-card-hover focus-visible:border-brand-orange focus-visible:bg-card-hover motion-reduce:transition-none",
+                        "relative grid min-h-11 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-3 border border-transparent px-2 py-2 text-sm transition-[background-color,border-color] duration-150 hover:border-border hover:bg-card-hover focus-visible:border-brand-orange focus-visible:bg-card-hover motion-reduce:transition-none lg:min-h-14",
                         isNext && "border-brand-orange bg-kupfer-mist",
                       )}
                     >
@@ -681,7 +491,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
         </div>
       </section>
 
-      <section aria-labelledby="all-courses-heading" className="mt-10">
+      <section aria-labelledby="all-courses-heading" className="mt-8 lg:mt-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
           {courses.length.toString().padStart(2, "0")} · {copy.allCourses}
         </p>
@@ -692,7 +502,12 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
           {copy.allCourses}
         </h2>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <p className="text-sm text-muted-foreground">
+          {/* The same treatment the atlas intro above already gets: this
+              sentence is orientation, not a decision, and below sm it costs
+              two printed lines and pushes the progress link onto a third
+              directly above the level chips. It stays in the accessibility
+              tree and returns as visible text from sm. */}
+          <p className="sr-only text-sm text-muted-foreground sm:not-sr-only">
             {copy.allCoursesIntro}
           </p>
           <Link
@@ -705,13 +520,58 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
           </Link>
         </div>
 
-        <div className="mt-5 space-y-8">
+        {/* Level chips, phone only. They stick under the compact top bar while
+            the ledger scrolls, so the list can be narrowed from anywhere in it.
+            "alle" is the server default and hydration never flips a row. The
+            bar carries js-shell-only: four inert buttons without scripting
+            would be worse than the complete list that reader already has. */}
+        <div
+          data-course-level-filter
+          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 -mx-4 mt-4 border-b border-border bg-background px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden"
+        >
+          <div
+            role="group"
+            aria-label={copy.levelLabel}
+            className="flex gap-2 overflow-x-auto [scrollbar-width:none]"
+          >
+            {LEVEL_FILTERS.map((level) => {
+              const selected = level === levelFilter;
+              return (
+                <button
+                  key={level}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setLevelFilter(level)}
+                  data-course-level-chip={level}
+                  className={cn(
+                    "inline-flex min-h-11 shrink-0 items-center border px-3 text-xs font-bold transition-[border-color,background-color] duration-150 motion-reduce:transition-none",
+                    selected
+                      ? "border-brand-orange bg-kupfer-mist text-foreground"
+                      : "border-border bg-background text-foreground hover:border-brand-orange focus-visible:border-brand-orange",
+                  )}
+                >
+                  {level === "alle" ? copy.allLevels : levelLabels[level]}
+                </button>
+              );
+            })}
+          </div>
+          <p aria-live="polite" className="sr-only">
+            {copy.levelCount(visibleCourseCount, courses.length)}
+          </p>
+        </div>
+
+        <div className="mt-4 space-y-6 lg:mt-5 lg:space-y-8">
           {groups.map((group) => (
             <section
               key={group.id}
               id={group.id}
               aria-labelledby={`${group.id}-heading`}
-              className="scroll-mt-24"
+              className={cn(
+                "scroll-mt-24",
+                !group.courses.some((course) =>
+                  matchesLevel(course, levelFilter),
+                ) && "hidden lg:block",
+              )}
             >
               <div className="flex flex-wrap items-end justify-between gap-2 border-b border-foreground pb-2">
                 <h3
@@ -731,8 +591,10 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
                     course={course}
                     index={index}
                     inPath={selectedSlugs.has(course.slug)}
+                    visible={matchesLevel(course, levelFilter)}
                     stat={stats[course.slug]}
                     locale={locale}
+                    copy={copy}
                   />
                 ))}
               </ol>
@@ -744,7 +606,7 @@ export function LearningAtlas({ locale = "de" }: { readonly locale?: Locale }) {
           {COURSE_GALLERY_COPY[locale].workshopLead}{" "}
           <Link
             href={localizeHref("/workshops", locale)}
-            className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+            className="inline-flex min-h-11 items-center font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
           >
             /workshops
           </Link>

@@ -1,9 +1,12 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Book } from "@/lib/books";
-import type { LoadedChapter } from "@/lib/book-reader-content";
+import type {
+  BookChapterMeta,
+  LoadedChapter,
+} from "@/lib/book-reader-content";
 
 const readerClientMocks = vi.hoisted(() => ({
   runtime: vi.fn(),
@@ -106,7 +109,11 @@ describe("ChapterReader locale-aware server shell", () => {
       article.compareDocumentPosition(runtime) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-    expect(screen.getByTestId("toc-links")).toBeVisible();
+    // The contents list renders twice: the desktop sidebar at lg and the
+    // sheet in the compact reader bar below it.
+    const tocLists = screen.getAllByTestId("toc-links");
+    expect(tocLists).toHaveLength(2);
+    expect(tocLists[0]).toBeVisible();
     expect(screen.getByRole("link", { name: "Course" })).toHaveAttribute(
       "href",
       "/en/eu-ai-act-kurs",
@@ -124,7 +131,11 @@ describe("ChapterReader locale-aware server shell", () => {
       "/en/buecher",
     );
     expect(screen.getByRole("link", { name: "Books" })).toHaveClass("min-h-11");
-    expect(screen.getByText("Chapter 1 of 1")).toBeVisible();
+    // The chapter header states the position; the reader bar repeats the same
+    // sentence for assistive technology, so scope the copy lock to the header.
+    const header = screen.getByRole("heading", { level: 1 }).closest("header");
+    expect(header).not.toBeNull();
+    expect(within(header!).getByText("Chapter 1 of 1")).toBeVisible();
     expect(screen.getByText("Reading time: approx. 1 minute")).toBeVisible();
     expect(
       screen.getByRole("link", {
@@ -171,5 +182,121 @@ describe("ChapterReader locale-aware server shell", () => {
     expect(source).toContain("no-print");
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/shadow-|motion-safe|animate-|transition-all/);
+    // Reader focus mode is static markup on the wrapper this route owns.
+    expect(source).toContain('data-reader="focus"');
+  });
+});
+
+const NEXT_CHAPTER: BookChapterMeta = {
+  slug: "02_methodik",
+  title: "Method",
+  sourceFile: "02_methodik.md",
+};
+
+describe("ChapterReader focus mode and compact reader bar", () => {
+  it("marks the route wrapper as reader focus mode in the server markup", () => {
+    render(
+      <ChapterReader
+        book={BOOK}
+        chapter={CHAPTER}
+        neighbours={{ prev: null, next: null }}
+        allChapters={[CHAPTER.meta]}
+        locale="de"
+        bookTitle="KI im deutschen Mittelstand"
+        relatedResourceLabel="EU AI Act Kurs öffnen"
+      />,
+    );
+
+    const wrapper = document.querySelector('[data-reader="focus"]');
+    expect(wrapper).not.toBeNull();
+    expect(document.querySelectorAll('[data-reader="focus"]')).toHaveLength(1);
+    expect(wrapper).toContainElement(
+      screen.getByRole("article", { name: "The iceberg problem" }),
+    );
+    // The desktop TOC region keeps its landmark and stays hidden below lg.
+    expect(
+      screen.getByRole("complementary", { name: "Kapitelinhalt" })
+        .parentElement,
+    ).toHaveClass("hidden", "lg:block");
+  });
+
+  it("states the position, offers the contents sheet and falls back to the overview on the last chapter", () => {
+    render(
+      <ChapterReader
+        book={BOOK}
+        chapter={CHAPTER}
+        neighbours={{ prev: null, next: null }}
+        allChapters={[CHAPTER.meta]}
+        locale="en"
+        bookTitle="AI in German SMEs"
+        relatedResourceLabel="Open the EU AI Act course"
+      />,
+    );
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(bar).not.toBeNull();
+    expect(bar).toHaveClass("fixed", "bottom-0", "lg:hidden", "no-print");
+    expect(within(bar!).getByText("1 / 1")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+    expect(within(bar!).getByText("Chapter 1 of 1")).toHaveClass("sr-only");
+
+    const sheet = bar!.querySelector<HTMLDetailsElement>(
+      "[data-chapter-toc-sheet]",
+    );
+    expect(sheet).not.toBeNull();
+    expect(sheet!.open).toBe(false);
+    expect(sheet!.querySelector("summary")).toHaveTextContent("Contents");
+    expect(within(sheet!).getByText("In this chapter")).toBeInTheDocument();
+    expect(
+      within(sheet!).getByRole("navigation", { name: "Chapter contents" }),
+    ).toContainElement(within(sheet!).getByTestId("toc-links"));
+    expect(
+      within(sheet!).getByRole("link", { name: "All chapters" }),
+    ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(
+      within(sheet!).getByText(
+        "The reader is the maintained reading edition. Signed-in users can find the German PDF on the book overview.",
+      ),
+    ).toBeInTheDocument();
+
+    const overview = within(bar!).getByRole("link", {
+      name: "Chapter overview",
+    });
+    expect(overview).toHaveTextContent("Overview");
+    expect(overview).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(overview).toHaveClass("min-h-11");
+  });
+
+  it("links the bar's next action to the following chapter under a name that starts with the label", () => {
+    render(
+      <ChapterReader
+        book={BOOK}
+        chapter={CHAPTER}
+        neighbours={{ prev: null, next: NEXT_CHAPTER }}
+        allChapters={[CHAPTER.meta, NEXT_CHAPTER]}
+        locale="de"
+        bookTitle="KI im deutschen Mittelstand"
+        relatedResourceLabel="EU AI Act Kurs öffnen"
+      />,
+    );
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(within(bar!).getByText("1 / 2")).toBeInTheDocument();
+    expect(within(bar!).getByText("Kapitel 1 von 2")).toHaveClass("sr-only");
+    expect(bar!.querySelector("summary")).toHaveTextContent("Inhalt");
+
+    const next = within(bar!).getByRole("link", { name: "Weiter: Method" });
+    expect(next).toHaveTextContent("Weiter");
+    expect(next).toHaveAttribute("href", "/buecher/ki-landschaft/02_methodik");
+    expect(
+      within(bar!).queryByRole("link", { name: "Kapitelübersicht" }),
+    ).toBeNull();
+
+    // The chapter navigation keeps its own, richer next link untouched.
+    expect(
+      screen.getByRole("link", { name: "Nächstes Kapitel: Method" }),
+    ).toHaveAttribute("href", "/buecher/ki-landschaft/02_methodik");
   });
 });

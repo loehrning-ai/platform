@@ -157,11 +157,67 @@ describe("<Nav />", () => {
     expect(trigger.className).toContain("min-h-11");
     expect(trigger.className).toContain("border-brand-orange");
     const row = document.querySelector("[data-nav-header-row]");
+    // Copy lock updated: the studio pill is now the desktop treatment only.
+    // Below lg the same row is the flush companion bar, so its rounding and
+    // its shadow are lg-scoped while the translucent surface stays global.
     expect(row).toHaveClass(
-      "rounded-2xl",
+      "lg:rounded-2xl",
       "bg-background/85",
-      "shadow-card",
+      "lg:shadow-card",
       "backdrop-blur-xl",
+    );
+  });
+
+  it("is a flush --nav-h-compact band below lg and the studio pill from lg", () => {
+    renderGerman();
+    const nav = document.querySelector("nav.no-js-primary-nav");
+    const row = document.querySelector("[data-nav-header-row]");
+
+    // Below lg the bar occupies exactly the offset <main> reserves, so it may
+    // carry no outer inset of its own: content begins directly beneath it.
+    expect(nav).toHaveClass("w-full", "lg:px-3", "lg:pt-2");
+    expect(nav).not.toHaveClass("px-2");
+    expect(nav).not.toHaveClass("pt-2");
+
+    // The height comes from the token, never from a repeated pixel figure.
+    expect(row).toHaveClass("h-[var(--nav-h-compact)]", "border-b");
+    expect(row).not.toHaveClass("rounded-2xl");
+    expect(row).not.toHaveClass("shadow-card");
+    expect(row).toHaveClass(
+      "lg:h-12",
+      "lg:rounded-2xl",
+      "lg:border-x",
+      "lg:border-t",
+    );
+  });
+
+  it("carries only the wordmark, the language switch and the menu button below lg", () => {
+    const { container } = renderGerman();
+    const row = container.querySelector("[data-nav-header-row]");
+    const compact = container.querySelector<HTMLElement>(".js-compact-nav");
+    expect(compact).not.toBeNull();
+
+    // Brand link, desktop cluster, compact cluster. A fourth control in the
+    // row would not fit the compact band at 320px.
+    expect(row?.children).toHaveLength(3);
+    expect(compact?.children).toHaveLength(2);
+    expect(
+      within(compact as HTMLElement).getByRole("group", { name: "Sprache" }),
+    ).toBeInTheDocument();
+    expect(
+      within(compact as HTMLElement).getByRole("button", {
+        name: "Menü öffnen",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("derives the mobile dialog ceiling from the compact bar token", () => {
+    renderGerman();
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const scroller = dialog.querySelector("div");
+    expect(scroller?.className).toContain(
+      "max-h-[calc(100dvh-var(--nav-h-compact)-1rem)]",
     );
   });
 
@@ -238,6 +294,21 @@ describe("<Nav />", () => {
     expect(container.querySelector("main")).toHaveAttribute("inert");
     expect(container.querySelector("footer")).toHaveAttribute("inert");
     expect(container.querySelector("[data-nav-header-row]")).toHaveAttribute(
+      "inert",
+    );
+  });
+
+  it("removes the companion tab bar from the accessibility tree with it", () => {
+    const { container } = renderGerman(
+      <>
+        <Nav />
+        <main>Inhalt</main>
+        <nav data-mobile-tab-bar="true" aria-label="Schnellnavigation" />
+      </>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+
+    expect(container.querySelector("[data-mobile-tab-bar]")).toHaveAttribute(
       "inert",
     );
   });

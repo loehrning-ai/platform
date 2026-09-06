@@ -95,7 +95,7 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
             artifact.license.licenseId ?? artifact.license.sourcePath;
 
           return (
-            <li key={artifact.id} className="py-6">
+            <li key={artifact.id} className="py-4 sm:py-6">
               <div className="relative isolate">
                 <span
                   aria-hidden="true"
@@ -129,7 +129,7 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       </p>
                       <h3
                         id={titleId}
-                        className="mt-3 text-balance text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+                        className="mt-3 text-balance text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
                         translate="no"
                       >
                         {artifact.title}
@@ -160,7 +160,7 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       </p>
 
                       <dl
-                        className="mt-5 grid grid-cols-2 border-l border-t border-foreground text-sm sm:grid-cols-4"
+                        className="mt-4 grid grid-cols-2 border-l border-t border-foreground text-sm sm:mt-5 sm:grid-cols-4"
                         data-open-source-fact-rail
                       >
                         {[
@@ -250,8 +250,11 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       data-open-source-preview-sheet
                     >
                       <div className="overflow-hidden border border-foreground bg-background shadow-[7px_7px_0_var(--color-brand-acid,#dfff69)]">
+                        {/* The 18rem floor exists for the wide desktop column;
+                            on a phone the poster fills its own 16:9 box, so a
+                            taller floor would only add letterboxing. */}
                         {artifact.kind === "video" ? (
-                          <div className="relative aspect-video min-h-[18rem]">
+                          <div className="relative aspect-video min-h-[11rem] sm:min-h-[18rem]">
                             <Image
                               src={artifact.posterSrc}
                               alt={artifact.posterAlt}

@@ -142,24 +142,27 @@ export default async function OpenSourcePage() {
   return (
     <>
       <JsonLd data={graph} id="open-source-jsonld" />
-      <section className="py-6 sm:py-8">
+      {/* Phone-first geometry: base values are the compact companion values
+          (a tighter cover and a shorter image fan), and the `sm:`/`md:`
+          variants restore the reviewed desktop layout unchanged. */}
+      <section className="py-4 sm:py-8">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <header
             className="relative grid overflow-hidden border border-foreground md:grid-cols-[minmax(0,0.88fr)_minmax(20rem,1.12fr)]"
             data-open-source-risograph-hero
             style={{ background: "var(--color-paper, #f8f3e8)" }}
           >
-            <div className="relative z-10 flex min-w-0 flex-col justify-between p-5 sm:p-7 md:min-h-[25rem] md:p-8">
+            <div className="relative z-10 flex min-w-0 flex-col justify-between p-4 sm:p-7 md:min-h-[25rem] md:p-8">
               <div>
                 <div className="h-[3px] w-16 bg-brand-orange" />
                 <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
                   {copy.eyebrow}
                 </p>
-                <h1 className="mt-3 max-w-3xl text-balance text-[clamp(2.65rem,6vw,5.3rem)] font-bold leading-[0.9] tracking-[-0.055em] text-foreground">
+                <h1 className="mt-3 max-w-3xl text-balance text-[2.25rem] font-bold leading-[0.9] tracking-[-0.055em] text-foreground sm:text-[clamp(2.65rem,6vw,5.3rem)]">
                   {copy.title}
                 </h1>
               </div>
-              <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
                 {copy.introduction}
               </p>
             </div>
@@ -168,7 +171,7 @@ export default async function OpenSourcePage() {
               <figure
                 role="img"
                 aria-label={`${copy.showcase.previewGroup}: ${leadArtifact.title}`}
-                className="relative min-h-[22rem] overflow-hidden border-t border-foreground md:min-h-[25rem] md:border-l md:border-t-0"
+                className="relative min-h-[17rem] overflow-hidden border-t border-foreground sm:min-h-[22rem] md:min-h-[25rem] md:border-l md:border-t-0"
                 data-open-source-image-fan
                 style={{
                   background: "var(--color-brand-peach, #ffc19e)",
@@ -184,7 +187,7 @@ export default async function OpenSourcePage() {
                 <span className="absolute left-4 top-4 z-40 border border-foreground bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground sm:left-6 sm:top-6">
                   {copy.showcase.entryCount(OPEN_SOURCE_ARTIFACTS.length)}
                 </span>
-                <div className="absolute inset-8 sm:inset-10">
+                <div className="absolute inset-6 sm:inset-10">
                   {heroFrames.map((frame, index) => (
                     <span
                       key={frame.src}
@@ -214,11 +217,11 @@ export default async function OpenSourcePage() {
 
           <section
             id="lizenzmodell"
-            className="mt-6 grid gap-4 border border-foreground p-5 md:grid-cols-[minmax(14rem,0.5fr)_minmax(0,1.5fr)] md:items-start md:p-6"
+            className="mt-6 grid gap-4 border border-foreground p-4 sm:p-5 md:grid-cols-[minmax(14rem,0.5fr)_minmax(0,1.5fr)] md:items-start md:p-6"
             style={{ background: "var(--color-brand-sky, #bfe3ff)" }}
             data-open-source-license-sheet
           >
-            <h2 className="text-balance text-2xl font-bold tracking-[-0.03em] text-foreground">
+            <h2 className="text-balance text-xl font-bold tracking-[-0.03em] text-foreground sm:text-2xl">
               {copy.footnoteTitle}
             </h2>
             <div className="max-w-3xl">

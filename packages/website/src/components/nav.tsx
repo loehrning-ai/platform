@@ -273,9 +273,14 @@ export function Nav() {
       }
       return;
     }
+    // Every landmark outside the dialog leaves the accessibility tree, the
+    // companion shell's own fixed surfaces included. The bottom tab bar is a
+    // second navigation landmark that the dialog covers rather than replaces,
+    // so it is neutralised through its `data-mobile-tab-bar` hook. The query
+    // simply finds nothing on a route that renders no tab bar.
     const toInert = Array.from(
       document.querySelectorAll<HTMLElement>(
-        "main, footer, [data-nav-header-row], .no-js-mobile-nav",
+        "main, footer, [data-nav-header-row], .no-js-mobile-nav, [data-mobile-tab-bar]",
       ),
     );
     for (const el of toInert) {
@@ -526,13 +531,18 @@ export function Nav() {
   }
 
   return (
+    // Two shells, one markup tree. Below lg the bar is flush with the top edge
+    // of the viewport and exactly --nav-h-compact tall, which is the offset
+    // <main> reserves, so page content begins directly under it. The outer
+    // inset, the rounded pill, its shadow and the full border frame return at
+    // lg, where --nav-h reserves that pill, its inset and a breathing gap.
     <nav
       aria-label={copy.mainNavigation}
-      className="no-js-primary-nav fixed top-0 z-50 w-full px-2 pt-2 text-foreground sm:px-3"
+      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-12 max-w-6xl items-center justify-between rounded-2xl border border-border/60 bg-background/85 px-3 shadow-card backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5"
+        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background/85 px-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:shadow-card"
       >
         <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
@@ -591,7 +601,10 @@ export function Nav() {
           <AuthStatus />
         </div>
 
-        {/* Keep the locale control visible in the top bar on small screens.
+        {/* The compact bar carries three controls and no fourth: the brand
+            link above, the locale control, and the menu button that opens the
+            complete navigation. Everything else lives inside that dialog, so
+            the row stays inside 320px and every target keeps its 44px.
             The no-script stylesheet also exposes this compact group on wide
             screens while hiding its inert menu button. */}
         <div className="js-compact-nav flex items-center gap-1 lg:hidden">
@@ -619,7 +632,7 @@ export function Nav() {
           It remains hidden during normal operation and replaces the
           interactive desktop/mobile controls through the layout's
           <noscript> stylesheet. */}
-      <div className="no-js-mobile-nav mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 py-4 shadow-card sm:px-6 lg:hidden">
+      <div className="no-js-mobile-nav mx-2 mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 py-4 shadow-card sm:mx-3 sm:px-6 lg:mx-0 lg:hidden">
         <div className="grid gap-4 sm:grid-cols-2">
           <NoScriptMobileGroup
             label={copy.learning}
@@ -681,9 +694,12 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="mt-2 overscroll-contain rounded-2xl border border-border/70 bg-paper shadow-card-hover lg:hidden"
+            className="mx-2 mt-2 overscroll-contain rounded-2xl border border-border/70 bg-paper shadow-card-hover sm:mx-3 lg:hidden"
           >
-            <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
+            {/* The sheet hangs 8px under the compact bar, so its own ceiling is
+                that bar plus the same gap again at the foot of the screen.
+                Derived from the token, never from a repeated pixel figure. */}
+            <div className="flex max-h-[calc(100dvh-var(--nav-h-compact)-1rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between gap-3">
                 <button
                   type="button"

@@ -277,18 +277,38 @@ export default async function KontoPage({
   // Only offer anchors to sections that actually render. When the progress
   // region is replaced by the outage alert, the catalog headings do not exist,
   // so linking to them would strand the learner mid-page.
-  const sectionLinks: readonly { href: string; label: string }[] = [
+  // `key` names each destination for the `data-konto-tab` hook on its link.
+  const sectionLinks: readonly {
+    readonly key: string;
+    readonly href: string;
+    readonly label: string;
+  }[] = [
     ...(progressUnavailable
       ? []
       : [
           ...(myCourses.length > 0
-            ? [{ href: "#konto-meine-kurse", label: copy.coursesHeading }]
+            ? [
+                {
+                  key: "meine-kurse",
+                  href: "#konto-meine-kurse",
+                  label: copy.coursesHeading,
+                },
+              ]
             : []),
-          { href: "#konto-katalog", label: copy.availableCoursesHeading },
-          { href: "#outcomes-heading", label: copy.outcomesHeading },
+          {
+            key: "katalog",
+            href: "#konto-katalog",
+            label: copy.availableCoursesHeading,
+          },
+          {
+            key: "lernergebnisse",
+            href: "#outcomes-heading",
+            label: copy.outcomesHeading,
+          },
         ]),
-    { href: "#konto-material", label: copy.deepenHeading },
+    { key: "material", href: "#konto-material", label: copy.deepenHeading },
     {
+      key: "verwalten",
       href: localizeHref("/konto/datenschutz", locale),
       label: copy.sectionSettings,
     },
@@ -339,17 +359,32 @@ export default async function KontoPage({
         <nav
           aria-label={copy.sectionNavigationLabel}
           data-konto-section-nav
-          className="mt-6 flex flex-wrap items-center gap-x-1 gap-y-1 border-y border-border py-1"
+          className="mt-6 border-y border-border"
         >
-          {sectionLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="inline-flex min-h-11 items-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {/* Below lg the links form one swipeable tab strip: every section
+              stays reachable in a single 44px row that scrolls and settles by
+              touch or by moving focus, and `data-konto-tab` names each
+              destination for the account workbench to hook into. The strip
+              keeps 4px of padding all round so the focus ring is not clipped
+              by the scroll box. Snapping is `proximity`, not `mandatory`:
+              three to five tabs share the viewport at 390px, so there is no
+              page to enforce, and mandatory would jerk the strip to a tab
+              edge on every small drag. From lg the links wrap as before. */}
+          <div
+            data-konto-tabs
+            className="flex snap-x snap-proximity items-center gap-x-1 overflow-x-auto overscroll-x-contain scroll-px-1 px-1 py-1 [scrollbar-width:none] lg:flex-wrap lg:gap-y-1 lg:overflow-visible lg:px-0"
+          >
+            {sectionLinks.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                data-konto-tab={item.key}
+                className="inline-flex min-h-11 shrink-0 snap-start items-center whitespace-nowrap px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange lg:shrink lg:whitespace-normal"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
 
         <ProgressSyncNotice locale={locale} />
@@ -365,7 +400,9 @@ export default async function KontoPage({
                 : copy.unavailableTitle}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {authUnavailable ? copy.authUnavailableBody : copy.unavailableBody}
+              {authUnavailable
+                ? copy.authUnavailableBody
+                : copy.unavailableBody}
             </p>
           </div>
         ) : (
@@ -491,10 +528,7 @@ export default async function KontoPage({
                     {copy.levelFilterLabel}
                   </span>
                   <Link
-                    href={localizeHref(
-                      kontoHref({ sort: activeSort }),
-                      locale,
-                    )}
+                    href={localizeHref(kontoHref({ sort: activeSort }), locale)}
                     className={`inline-flex min-h-11 items-center px-2.5 font-mono text-xs font-bold uppercase tracking-[0.08em] ${
                       activeLevel
                         ? "text-muted-foreground hover:text-foreground"

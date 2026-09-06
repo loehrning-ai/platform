@@ -655,7 +655,11 @@ export function CourseWorkspaceFrame({
       data-layout={splitActive ? "docked" : "stacked"}
       className={
         fullscreen
-          ? "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pt-[env(safe-area-inset-top)] shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
+          ? // Full screen sits on the physical display edge, so it pads itself
+            // with the shell's safe-area tokens (pt-safe, pb-safe, px-safe)
+            // rather than reading env() directly, like every other fixed
+            // shell surface.
+            "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pt-safe pb-safe px-safe shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
           : "relative my-10 min-w-0 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-foreground)] [overflow-wrap:anywhere]"
       }
     >

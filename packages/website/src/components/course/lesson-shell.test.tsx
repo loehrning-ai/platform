@@ -83,6 +83,7 @@ import {
   LESSON_SHELL_SIDEBAR_STORAGE_KEY,
   LessonShell,
   type LessonShellContentMode,
+  type LessonShellReaderBar,
 } from "./lesson-shell";
 import {
   LEARNING_OWNER_INERT_ATTRIBUTE,
@@ -108,11 +109,13 @@ function Harness({
   contentMode,
   collapseNavLabel,
   expandNavLabel,
+  readerBar,
 }: {
   readonly navLabel?: string;
   readonly contentMode?: LessonShellContentMode;
   readonly collapseNavLabel?: string;
   readonly expandNavLabel?: string;
+  readonly readerBar?: LessonShellReaderBar;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -123,6 +126,7 @@ function Harness({
       contentMode={contentMode}
       collapseNavLabel={collapseNavLabel}
       expandNavLabel={expandNavLabel}
+      readerBar={readerBar}
       sidebar={
         <nav aria-label="Fake nav">
           <button type="button">Item A</button>
@@ -202,7 +206,15 @@ describe("<LessonShell>", () => {
     const mobileToolbar = document.querySelector(
       "[data-lesson-shell-mobile-toolbar]",
     ) as HTMLElement;
-    expect(mobileToolbar).toHaveClass("sticky", "top-28", "lg:hidden");
+    // The offset is the compact top bar token plus the 3rem block sub-header
+    // row beneath it, no longer the 64px desktop header the old `top-28`
+    // (4rem + 3rem) assumed below lg.
+    expect(mobileToolbar).toHaveClass(
+      "sticky",
+      "top-[calc(var(--nav-h-compact)+3rem)]",
+      "lg:hidden",
+    );
+    expect(mobileToolbar).not.toHaveClass("top-28");
     expect(within(mobileToolbar).getByText("Testnavigation")).toBeVisible();
     expect(mobileToolbar).toHaveClass("border-foreground", "bg-card");
     expect(
@@ -286,6 +298,8 @@ describe("<LessonShell>", () => {
 
     expect(markup).toContain('data-collapsed="false"');
     expect(markup).toContain("Server navigation");
+    // Reader focus mode is in the first response, not something hydration adds.
+    expect(markup).toContain('data-reader="focus"');
   });
 
   it("uses the stage width by default and supports reading and workspace modes", () => {
@@ -472,5 +486,137 @@ describe("<LessonShell>", () => {
     expect(opened).toHaveAttribute("aria-expanded", "true");
     const dialog = screen.getByRole("dialog");
     expect(dialog.id).toBe(opened.getAttribute("aria-controls"));
+  });
+});
+
+describe("<LessonShell> reader focus mode", () => {
+  it("marks the wrapper it owns as reader focus mode from the first render", () => {
+    render(<Harness />);
+
+    const shell = document.querySelector("[data-lesson-shell]");
+    expect(shell).toHaveAttribute("data-reader", "focus");
+    // The attribute is static markup on the shell root, so the mobile tab bar
+    // (`body:has([data-reader="focus"])`) is absent without any client state.
+    expect(document.querySelectorAll('[data-reader="focus"]')).toHaveLength(1);
+  });
+
+  it("still fills the band with a bar when no course reader supplies one", () => {
+    // Focus mode above removes the mobile tab bar below lg. If this shell
+    // rendered a bar only for a caller that passes `readerBar`, every course
+    // lesson would lose the phone's bottom navigation and get nothing back -
+    // and no test would notice, because the ones that pass the prop supply it
+    // themselves. This is that missing assertion.
+    render(<Harness />);
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(bar).not.toBeNull();
+    // Nothing invented: with no course reader there is no position to state.
+    expect(bar!.querySelector("[data-reader-focus-position]")).toBeNull();
+
+    // The fallback action is the one control the shell itself owns.
+    const lessonList = within(bar!).getByRole("button", {
+      name: "Testnavigation",
+    });
+    expect(lessonList).toHaveClass("min-h-11", "js-shell-only");
+
+    // It opens the lesson drawer, and its name stays distinct from the sticky
+    // toolbar's opener so neither query becomes ambiguous.
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(lessonList);
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("names the fallback control in the caller's locale", () => {
+    // The shell holds no locale of its own; `navLabel` is already localized by
+    // every consumer, which is why the fallback borrows it instead of adding a
+    // German default that would ship to /en lesson routes.
+    render(<Harness navLabel="Lesson navigation" />);
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(
+      within(bar!).getByRole("button", { name: "Lesson navigation" }),
+    ).toBeVisible();
+  });
+
+  it("lets a course reader's next action replace the fallback control", () => {
+    render(
+      <Harness
+        navLabel="Testnavigation"
+        readerBar={{
+          position: "Lektion 2 von 5",
+          next: { kind: "link", label: "Weiter", href: "/kurs/03" },
+        }}
+      />,
+    );
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(within(bar!).getByRole("link", { name: "Weiter" })).toBeVisible();
+    expect(
+      within(bar!).queryByRole("button", { name: "Testnavigation" }),
+    ).toBeNull();
+  });
+
+  it("renders the compact reader bar with position and a scripted next action", () => {
+    const onSelect = vi.fn();
+    render(
+      <Harness
+        readerBar={{
+          position: "Lektion 2 von 5",
+          next: { kind: "button", label: "Weiter", onSelect },
+        }}
+      />,
+    );
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(bar).not.toBeNull();
+    expect(bar).toHaveClass("fixed", "bottom-0", "z-40", "lg:hidden");
+    expect(within(bar!).getByText("Lektion 2 von 5")).toBeVisible();
+
+    const next = within(bar!).getByRole("button", { name: "Weiter" });
+    expect(next).toHaveClass("min-h-11", "js-shell-only");
+    fireEvent.click(next);
+    expect(onSelect).toHaveBeenCalledTimes(1);
+
+    // The bar is the last thing in the shell, so it follows the content in
+    // reading and tab order.
+    const shell = document.querySelector("[data-lesson-shell]");
+    expect(shell?.lastElementChild).toBe(bar);
+  });
+
+  it("renders a link next action for readers whose lessons are routes", () => {
+    render(
+      <Harness
+        readerBar={{
+          position: "3 / 12",
+          positionLabel: "Kapitel 3 von 12",
+          next: { kind: "link", label: "Weiter", href: "/kurs/04" },
+        }}
+      />,
+    );
+
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    const next = within(bar!).getByRole("link", { name: "Weiter" });
+    expect(next).toHaveAttribute("href", "/kurs/04");
+    expect(next).not.toHaveClass("js-shell-only");
+    expect(within(bar!).getByText("Kapitel 3 von 12")).toHaveClass("sr-only");
+  });
+
+  it("locks the reader bar while the drawer is open, like the rest of the page", () => {
+    render(
+      <Harness
+        readerBar={{
+          position: "Lektion 2 von 5",
+          next: { kind: "button", label: "Weiter", onSelect: () => undefined },
+        }}
+      />,
+    );
+    const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
+    expect(bar).not.toHaveAttribute("inert");
+
+    fireEvent.click(screen.getByRole("button", { name: "Navigation öffnen" }));
+    expect(bar).toHaveAttribute("inert");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(bar).not.toHaveAttribute("inert");
   });
 });
