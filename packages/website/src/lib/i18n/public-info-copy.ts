@@ -225,7 +225,7 @@ export const HELP_COPY = {
       signIn: "Wie melde ich mich an?",
       devices: "Kann ich auf mehreren Geräten lernen?",
       quiz: "Wie funktionieren Quiz und Neuversuche?",
-      records: "Was bedeutet die Teilnahmebestätigung?",
+      records: "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
       simulations: "Was ist ein Praxisbeispiel oder eine Sandbox?",
       books: "Bücher: Was kann ich lesen oder herunterladen?",
       data: "Wie lösche ich mein Konto oder exportiere meine Daten?",
@@ -240,7 +240,7 @@ export const HELP_COPY = {
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten. Die Teilnahmebestätigung bleibt selbst ausgestellt und ist nicht servergeprüft.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten. Teilnahmebestätigung und Lernnachweis bleiben selbst ausgestellt und sind nicht servergeprüft.",
       accountUnavailable:
         "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Solange keine Anmeldemethode vollständig freigeschaltet ist, sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
@@ -259,11 +259,11 @@ export const HELP_COPY = {
         "Ja. Bei einem angemeldeten Lernkonto wird der Kursfortschritt synchronisiert. Ohne Anmeldung verwaltet jedes Gerät einen eigenen lokalen Stand.",
       devicesLocal:
         "Ja, aber jedes Gerät verwaltet einen eigenen lokalen Stand. Eine geräteübergreifende Synchronisierung ist aktuell nicht verfügbar.",
-      quiz: "Quizze kannst du wiederholen, Zeitdruck gibt es keinen. Nach dem Absenden siehst du Ergebnis und Erklärung. Was als Kursabschluss zählt, hängt vom Kurs ab: ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder die letzte abgeschlossene Lektion.",
+      quiz: "Quizze kannst du wiederholen, Zeitdruck gibt es keinen. Nach dem Absenden siehst du Ergebnis und Erklärung. Was als Kursabschluss zählt, hängt vom Kurs ab: ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen.",
       recordsBeforeLimits:
-        "Sie hält fest, dass du einen Kurs auf dieser Plattform abgeschlossen hast. Je nach Kurs steht dahinter ein Quiz, eine eingereichte Aufgabe oder die letzte Lektion. loehrning.ai stellt sie selbst aus. ",
+        "Sie halten fest, dass du einen Kurs auf dieser Plattform abgeschlossen hast. Je nach Kurs steht dahinter ein Quiz, eine eingereichte Aufgabe oder der Abschluss aller Lektionen. loehrning.ai stellt sie selbst aus. ",
       recordsLimitsLink:
-        "Sie ist nicht servergeprüft und belegt für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
+        "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
       recordsAfterLimits: "",
       simulations:
         "Ein Praxisbeispiel läuft mit synthetischen Daten und simulierten Abläufen. Es verschickt keine echte E-Mail, ruft keine produktive Drittanbieter-API auf und verarbeitet keine echten Kundendaten. Es erklärt ein Konzept. Ein produktives System ist es nicht.",
@@ -287,7 +287,7 @@ export const HELP_COPY = {
         "Das serverseitige Feedback-Formular ist deaktiviert. Fehler und Rückmeldungen gehen per E-Mail an tim@loehrning.ai.",
       limitsBeforeLink: "Bekannte Einschränkungen: ",
       limitsLink:
-        "Die Teilnahmebestätigung ist selbst ausgestellt, Praxisbeispiele sind simuliert, Inhalte gelten für den ausgewiesenen Prüfstand, und Fortschritt kann nur lokal gespeichert sein",
+        "Teilnahmebestätigung und Lernnachweis sind selbst ausgestellt, Praxisbeispiele sind simuliert, Inhalte gelten für den ausgewiesenen Prüfstand, und Fortschritt kann nur lokal gespeichert sein",
       limitsAfterLink:
         ". Die konkrete Grenze steht auf der jeweiligen Kurs- oder Ressourcenseite.",
     },
@@ -365,9 +365,9 @@ export const HELP_COPY = {
         "Yes, but each device keeps its own local state. Cross-device synchronization is not currently available.",
       quiz: "Quizzes can be repeated and have no time limit. After submission, the page shows the result and an explanation. Depending on the course, completion means passing a final quiz, submitting a final task, or completing every lesson.",
       recordsBeforeLimits:
-        "It records that you completed a course here. Depending on the course, a quiz, a submitted task, or the last lesson stands behind it. ",
+        "It records that you completed a course here. Depending on the course, a quiz, a submitted task, or the full set of lessons stands behind it. ",
       recordsLimitsLink:
-        "They are not server-verified and do not by themselves establish compliance with Article 4 of the EU AI Act.",
+        "It is not server-verified and does not by itself establish compliance with Article 4 of the EU AI Act.",
       recordsAfterLimits: "",
       simulations:
         "Interactive examples use synthetic data and simulated processes. They do not send real email, call production third-party APIs, or process real customer data. They explain a concept; they are not production systems.",
@@ -417,7 +417,7 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Selbst ausgestellte Abschlussdokumente",
         description:
-          "Die Teilnahmebestätigung entsteht in deinem Browser. Keine serverseitige Prüfung, keine digitale Signatur, keine externe Zertifizierungsstelle. Für sich allein belegt sie nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
+          "Teilnahmebestätigung und Lernnachweis entstehen in deinem Browser. Keine serverseitige Prüfung, keine digitale Signatur, keine externe Zertifizierungsstelle. Für sich allein belegen sie nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
         mitigation:
           "Behandle das Dokument als persönliche Lernaufzeichnung. Artikel 4 verlangt Maßnahmen zur Förderung von KI-Kompetenz, abhängig von Kenntnissen, Erfahrung, Bildung, Nutzungskontext und betroffenen Personen. Ein garantiertes individuelles Kompetenzniveau verlangt er nicht. Welche Maßnahmen und Nachweise gelten, legt jede Organisation selbst fest und lässt es rechtlich prüfen.",
       },
@@ -467,7 +467,7 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Self-issued completion documents",
         description:
-          "The certificate of participation is created in your browser. No server-side check, no digital signature, no external certification body. On its own it does not establish that an organisation complies with Article 4 of the EU AI Act.",
+          "Certificates of participation and learning records are created in your browser. No server-side check, no digital signature, no external certification body. On their own they do not establish that an organisation complies with Article 4 of the EU AI Act.",
         mitigation:
           "Treat the document as a personal learning record. Article 4 requires measures that support AI literacy while taking knowledge, experience, education, use context, and affected persons into account; it does not require a guaranteed individual level of AI literacy. Organisations must define and legally review their own measures and evidence.",
       },

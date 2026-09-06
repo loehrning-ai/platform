@@ -89,7 +89,7 @@ Der Trick bleibt derselbe. Du definierst Umfang und Preis, nicht Stunden. "Websi
 
 Der Fachkräftemangel ist nicht dein Problem. Er ist dein Geschäftsmodell. Wenn Unternehmen keine Mitarbeiter finden, buchen sie Freelancer.
 
-Und Freelancer, die mit KI skalieren, nehmen mehr Aufträge an als andere. Du bist dann nicht "ein Freelancer". Du bist ein Freelancer mit einem digitalen Team.
+Und Freelancer, die mit KI skalieren, können mehr Aufträge annehmen als andere. Du bist dann nicht "ein Freelancer". Du bist ein Freelancer mit einem digitalen Team.
 
 ### Dein digitaler Zwilling: Science-Fiction oder 2029?
 

@@ -15,7 +15,7 @@ const lesson = localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Begrenzte Review-Schleife",
-      content: `Ein Design-Review braucht eine Reihenfolge. Welche, entscheidet die Aufgabe. Nutze diese Schleife, und gib der größten Unsicherheit die meiste Zeit.
+      content: `Ein Design-Review braucht eine Reihenfolge. Welche, entscheidet die Aufgabe. Nutze diese Schleife, und gib der größten Unsicherheit und dem größten Risiko die meiste Zeit.
 
 1. **Klären.** Consumer, Entscheidungen, Spitzenlast beim Schreiben und Lesen, Freshness, Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Kosten festnageln. Offene Annahmen aufschreiben.
 2. **Rahmen setzen.** Nur die Grenzen zeichnen, die die Aufgabe braucht. Hauptgefahren nennen und den Lesevertrag definieren, bevor ein Produktname fällt.

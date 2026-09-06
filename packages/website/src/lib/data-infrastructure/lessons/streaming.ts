@@ -158,7 +158,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          "A session window groups events for a key while consecutive event-time gaps stay within the configured threshold. Closure and later merging follow watermark and late-data behavior. A fixed tumbling boundary splits one behavioral session in half.",
+          "A session window groups events for a key while consecutive event-time gaps stay within the configured threshold. Closure and later merging follow watermark and late-data behavior. A fixed tumbling boundary splits one behavioral session in two.",
       },
     },
     {

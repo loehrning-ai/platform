@@ -2,7 +2,7 @@
   "moduleId": "modul_2",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -407,7 +407,7 @@
           "id": "modul_2_lesson_3_section_1",
           "title": "Die SOP, die niemand liest",
           "readTimeMinutes": 2,
-          "content": "Wann hast du zuletzt eine Standardarbeitsanweisung gelesen? Eine SOP nützt nur, wenn jemand sie findet und anwendet. Unter Zeitdruck überspringt jeder das lange Dokument.\n\nEin Skill holt die Anweisung dorthin, wo gearbeitet wird. `/angebot-draft` eintippen, und das gepflegte Verfahren für einen internen Angebotsentwurf läuft.\n\nDen SOP-Verantwortlichen ersetzt der Skill nicht, Freigaben und Prüfbelege auch nicht. Er sorgt nur dafür, dass die aktuelle Anweisung jedes Mal gleich läuft.",
+          "content": "Wann hast du zuletzt eine Standardarbeitsanweisung gelesen? Eine SOP nützt nur, wenn jemand sie findet und anwendet. Unter Zeitdruck überspringt fast jeder das lange Dokument.\n\nEin Skill holt die Anweisung dorthin, wo gearbeitet wird. `/angebot-draft` eintippen, und das gepflegte Verfahren für einen internen Angebotsentwurf läuft.\n\nDen SOP-Verantwortlichen ersetzt der Skill nicht, Freigaben und Prüfbelege auch nicht. Er sorgt nur dafür, dass die aktuelle Anweisung jedes Mal gleich läuft.",
           "keyTakeaway": "Ein Skill macht gepflegte Anweisungen innerhalb eines definierten Ablaufs ausführbar."
         },
         {
@@ -530,7 +530,7 @@
           "id": "modul_2_lesson_4_section_3",
           "title": "MCP als Werkzeugschnittstelle",
           "readTimeMinutes": 3,
-          "content": "**MCP heißt Model Context Protocol.** Es legt fest, wie ein kompatibler KI-Client externe Tools findet und aufruft und bereitgestellte Ressourcen liest.\n\nEin MCP-Server bietet zwei Dinge an:\n- **Tools:** Funktionen wie `read_file`, `update_record` oder `send_message`\n- **Ressourcen:** Dateien oder Daten, die ein Client lesen darf\n\nFehlt für eine Integration das Paket, kann ein MCP-Server sie trotzdem liefern.\n\n**Beispiele für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nProduktiv braucht jeder Server geklärte Berechtigungen, Secret-Handhabung, Protokollierung, Least Privilege, Widerruf und eine menschliche Freigabe für folgenreiche Schreibaktionen.",
+          "content": "**MCP heißt Model Context Protocol.** Es legt fest, wie ein kompatibler KI-Client externe Tools findet und aufruft und bereitgestellte Ressourcen liest.\n\nEin MCP-Server bietet unter anderem an:\n- **Tools:** Funktionen wie `read_file`, `update_record` oder `send_message`\n- **Ressourcen:** Dateien oder Daten, die ein Client lesen darf\n\nFehlt für eine Integration das Paket, kann ein MCP-Server sie trotzdem liefern.\n\n**Beispiele für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nProduktiv braucht jeder Server geklärte Berechtigungen, Secret-Handhabung, Protokollierung, Least Privilege, Widerruf und eine menschliche Freigabe für folgenreiche Schreibaktionen.",
           "keyTakeaway": "MCP ist die Schnittstelle für Tools und Ressourcen. Jeder Server bekommt seine eigene Sicherheitsprüfung."
         },
         {

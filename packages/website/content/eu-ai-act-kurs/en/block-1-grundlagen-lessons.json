@@ -2,7 +2,7 @@
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "legal",
   "riskClass": "legal",
   "triggerEvents": [
@@ -159,7 +159,7 @@
           "title": "Where the role flips",
           "readTimeMinutes": 2,
           "content": "**Case 1 (deployer):** A machinery builder buys a predictive-maintenance model from a startup and fits it into his own plant. He uses the system, he does not retrain it. Role: deployer.\n\n**Case 2 (provider):** The same machinery builder trains the model further on his own sensor data and sells the plant, model included, under his own trademark. Further training is a substantial modification (Article 3(23)). The role flips: provider, with the full conformity-assessment duty where the system is high-risk (Article 25).\n\n**Case 3 (deployer):** The HR lead uses Personio with AI matching switched on to shortlist applicants. Personio is the provider. The employer is the deployer, with obligations of its own, because applicant matching is a high-risk use case (Annex III, point 4).\n\n**Case 4 (importer):** An HR consultant sells a US applicant-screening bot through her website to German clients. The US provider has no EU establishment, so she is the importer.\n\nWhat does that mean for you? White-label an AI system, change it substantially, or sell it under your own trademark, and you are the provider. With everything that comes with it (Article 25).",
-          "keyTakeaway": "Further training, or selling under your own trademark, turns a deployer into a provider (Article 3(23), Article 25). The compliance work grows sharply."
+          "keyTakeaway": "Further training, or distribution under your own trademark, can turn a deployer into a provider (Article 3(23), Article 25). The compliance work grows sharply."
         },
         {
           "id": "block_1_lesson_2_section_3",

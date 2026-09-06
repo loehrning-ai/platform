@@ -141,7 +141,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Folgenreiche Oberflächen eindeutig halten",
         readTimeMinutes: 7,
         content:
-          "Zahlung, rechtliche Zustimmung, Kontowiederherstellung, Berechtigungsänderung, Löschen: dafür gibt es feste, geprüfte Abläufe. Eine generative Oberfläche darf erklären und vorbereiten. Die letzte Handlung und der Bestätigungszustand bleiben vorhersehbar und prüfbar.",
+          "Zahlung, rechtliche Zustimmung, Kontowiederherstellung, Berechtigungsänderung, zerstörerische Aktionen und andere folgenreiche Schritte: dafür gibt es feste, geprüfte Abläufe. Eine generative Oberfläche darf erklären und vorbereiten. Die letzte Handlung und der Bestätigungszustand müssen vorhersehbar und prüfbar bleiben.",
       },
     ],
     callout: {
@@ -312,7 +312,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "d",
-            text: "Überall, auch bei Löschaktionen und Berechtigungsänderungen.",
+            text: "Überall, auch bei zerstörerischen Aktionen und Berechtigungsänderungen.",
             isCorrect: false,
           },
         ],

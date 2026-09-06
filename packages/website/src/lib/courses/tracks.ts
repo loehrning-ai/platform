@@ -389,7 +389,7 @@ export const COURSE_SECTIONS: Readonly<
     title: "Grundlagenpfad",
     eyebrow: "4 Kurse · DE + EN · fester Ablauf",
     blurb:
-      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte gibt es auf Deutsch und Englisch. Fortschritt, Umfang und Abschlussbedingung stehen an jedem Kurs. Die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
+      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte gibt es auf Deutsch und Englisch. Fortschritt, Umfang und Abschlussbedingung stehen an jedem Kurs. Teilnahmebestätigung und Lernnachweis werden von loehrning.ai selbst ausgestellt.",
   },
   deeper: {
     title: "Technikkurse",

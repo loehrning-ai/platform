@@ -141,7 +141,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Keep consequential surfaces deterministic",
         readTimeMinutes: 7,
         content:
-          "Payments, legal acceptance, account recovery, permission changes, destructive actions. Those get fixed, reviewed flows. A generative interface can explain or prepare, but the final action and its confirmation state stay predictable and testable.",
+          "Payments, legal acceptance, account recovery, permission changes, destructive actions, and other consequential steps. Those get fixed, reviewed flows. A generative interface can explain or prepare, but the final action and its confirmation state should remain predictable and testable.",
       },
     ],
     callout: {

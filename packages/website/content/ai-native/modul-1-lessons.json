@@ -2,7 +2,7 @@
   "moduleId": "modul_1",
   "owner": "tim@loehrning.ai",
   "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-05",
+  "nextReview": "2027-03-07",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
   "triggerEvents": [
@@ -83,7 +83,7 @@
           "id": "modul_1_lesson_1_section_2",
           "title": "Wann ein leeres Dokument der falsche Startpunkt ist",
           "readTimeMinutes": 2,
-          "content": "Das leere Dokument gibt dir alle Kontrolle und verlangt dafür jeden Satz von dir. Ein Claude-Entwurf verschiebt den Startpunkt vom Schreiben zu Briefing und Prüfung.\n\nWarum fangen trotzdem so viele bei null an? Drei Gründe, keiner davon dumm:\n- Gewohnheit: über Jahre eingeübte Abläufe\n- Kontrolle: du weißt genau, was im Text steht\n- Berufsverständnis: für die Controllerin ist Schreiben ein Kernstück der Rolle\n\nDie Frage pro Aufgabe: Senkt der Brief den Aufwand, ohne Faktentreue oder Ton zu verschlechtern? Nur dann lohnt er sich.",
+          "content": "Das leere Dokument gibt dir alle Kontrolle und verlangt dafür jeden Satz von dir. Ein Claude-Entwurf verschiebt den Startpunkt vom Schreiben zu Briefing und Prüfung.\n\nWarum fangen trotzdem so viele bei null an? Drei Gründe, keiner davon dumm:\n- Gewohnheit: über Jahre eingeübte Abläufe\n- Kontrolle: du weißt genau, was im Text steht\n- Berufsverständnis: Schreiben kann ein Kernstück deiner Rolle sein\n\nDie Frage pro Aufgabe: Senkt der Brief den Aufwand, ohne Faktentreue oder Ton zu verschlechtern? Nur dann lohnt er sich.",
           "keyTakeaway": "Gemessene Qualität und Arbeitszeit entscheiden über den Startpunkt. Nicht die Gewohnheit."
         },
         {

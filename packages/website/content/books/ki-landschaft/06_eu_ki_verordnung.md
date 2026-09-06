@@ -1,6 +1,6 @@
 # EU-KI-Verordnung: Rollen und Pflichten präzise prüfen
 
-Die Verordnung (EU) 2024/1689 gilt seit 1. August 2024 und wird gestaffelt anwendbar. Geprüft wurde dieses Kapitel am 9. August 2026; es berücksichtigt die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744. Für eine echte Entscheidung liest du den [aktuellen Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [offiziellen EU-Zeitplan](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai), nicht dieses Kapitel.
+Die Verordnung (EU) 2024/1689 ist seit 1. August 2024 in Kraft und wird gestaffelt anwendbar. Geprüft wurde dieses Kapitel am 9. August 2026; es berücksichtigt die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744. Für eine echte Entscheidung liest du den [aktuellen Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [offiziellen EU-Zeitplan](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai), nicht dieses Kapitel.
 
 ## Erst System, Zweck und Rolle klären
 
@@ -43,7 +43,7 @@ Für einen riskanten Use Case reicht eine Allgemeinschulung oft nicht. Umgekehrt
 
 ### Art. 5
 
-Art. 5 verbietet genau definierte Praktiken, darunter bestimmte manipulative oder ausnutzende Systeme, bestimmtes Social Scoring, bestimmte biometrische Kategorisierung, in der Regel Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen sowie weitere dort beschriebene Fälle. Lies den Wortlaut samt Ausnahmen. Eine Schlagwortliste reicht nicht.
+Art. 5 verbietet genau definierte Praktiken, darunter bestimmte manipulative oder ausnutzende Systeme, bestimmtes Social Scoring, bestimmte biometrische Kategorisierung, grundsätzlich Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen sowie weitere dort beschriebene Fälle. Lies den Wortlaut samt Ausnahmen. Eine Schlagwortliste reicht nicht.
 
 ### Art. 6 mit Anhang I und III
 
@@ -53,7 +53,7 @@ Anbieter- und Betreiberpflichten unterscheiden sich. Betreiber von Hochrisiko-Sy
 
 ### Art. 50
 
-Art. 50 zwingt niemanden, jeden KI-Text zu kennzeichnen. Die Pflichten sind gestaffelt.
+Art. 50 zwingt niemanden, jeden KI-Text zu kennzeichnen. Die Pflichten unterscheiden sich nach Akteur und System.
 
 - Anbieter bestimmter interaktiver Systeme informieren über die Interaktion mit KI, sofern dies nicht offensichtlich ist.
 - Anbieter generativer Systeme sorgen für maschinenlesbare Markierung bestimmter Ausgaben.
