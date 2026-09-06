@@ -1,18 +1,18 @@
 # Die KRAFT-Methode: Prompting, das funktioniert
 
-Du stellst einen neuen Mitarbeiter ein. Erster Tag. Du sagst: "Mach mal was." Ohne Briefing, ohne Kontext, ohne Ziel.
+Du stellst einen neuen Mitarbeiter ein. Sein erster Tag. Du sagst: "Mach mal was." Ohne Briefing, ohne Kontext, ohne Ziel.
 
 Was bekommst du? Irgendwas. Und dann beschwerst du dich, dass er nichts taugt.
 
-Genau dieses Muster tritt bei unklar formulierten KI-Aufträgen häufig auf.
+Bei unklar formulierten KI-Aufträgen passiert genau das.
 
 "Schreib mir einen Text" ist kein Prompt. Es ist eine Zumutung, für dich und für die KI.
 
-Ein besseres Briefing löst nicht jedes Qualitätsproblem, macht Ziel, Kontext und Prüfkriterien aber sichtbar.
+Ein besseres Briefing löst nicht jedes Qualitätsproblem. Es macht Ziel, Kontext und Prüfkriterien sichtbar, und das ist der halbe Weg.
 
 ## Warum der Prompt alles entscheidet
 
-Hier ist ein fiktiver Vergleich. Dieselbe Aufgabe, zwei Prompts. Die Beispielausgaben illustrieren einen möglichen Unterschied; sie sind kein reproduzierbarer Leistungsnachweis.
+Hier ist ein fiktiver Vergleich. Dieselbe Aufgabe, zwei Prompts. Die Beispielausgaben zeigen einen möglichen Unterschied, keinen reproduzierbaren Leistungsnachweis.
 
 **Prompt A:**
 ```
@@ -45,7 +45,7 @@ Ton: Professionell aber persönlich. Nicht werblich. Keine Buzzwords.
 
 > *"40 Teilnehmende. 90 Minuten. Eine Frage stand im Mittelpunkt.*
 >
-> *Beim Fachvortrag über KI im Mittelstand löste eine Frage die längste Diskussion aus: 'Wo liegen eigentlich unsere Daten?'*
+> *Beim Fachvortrag über KI im Mittelstand löste eine Frage die längste Diskussion aus: 'Wo liegen unsere Daten?'*
 >
 > *3 Dinge, die ich mitgenommen habe:*
 > *→ 32 von 40 Teilnehmenden gaben private, aber keine berufliche Nutzung an*
@@ -54,9 +54,9 @@ Ton: Professionell aber persönlich. Nicht werblich. Keine Buzzwords.
 >
 > *Wenn du vor derselben Frage stehst: Schreib mir eine Nachricht. Ich teile gerne, was funktioniert hat."*
 
-Der zweite Entwurf ist konkreter und leichter anhand der Vorgaben zu prüfen. Vor einer Veröffentlichung müssen alle Zahlen, Aussagen und der persönliche Ton kontrolliert werden.
+Der zweite Entwurf ist konkreter und lässt sich an den Vorgaben prüfen. Vor dem Veröffentlichen kontrollierst du trotzdem jede Zahl, jede Aussage und den Ton.
 
-Der zusätzliche Kontext kann die Ausgabe verbessern. Ob und wie stark, zeigt nur ein Vergleich mit definierten Kriterien und mehreren Testläufen.
+Mehr Kontext kann die Ausgabe verbessern. Ob und wie stark, zeigt nur ein Vergleich mit festen Kriterien und mehreren Testläufen.
 
 Das ist kein Trick. Das ist ein System. Und das System heißt KRAFT.
 
@@ -73,7 +73,7 @@ Die KI weiß nichts über dich. Sie weiß nicht, ob du Fliesenleger bist oder Un
 **Schlecht:** "Schreib ein Angebot."
 **Besser:** "Ich bin freiberuflicher Webentwickler und erstelle ein Angebot für einen Zahnarzt, der eine neue Website braucht. Budget: ca. 5.000 EUR."
 
-Relevanter Kontext erhöht häufig die Chance auf eine brauchbare Antwort. Zu viel, widersprüchlicher oder sensibler Kontext kann die Qualität und Sicherheit dagegen verschlechtern.
+Relevanter Kontext erhöht häufig die Chance auf eine brauchbare Antwort. Zu viel Kontext, widersprüchlicher oder sensibler, kann Qualität und Sicherheit verschlechtern.
 
 ### R, Rolle
 
@@ -83,33 +83,33 @@ Relevanter Kontext erhöht häufig die Chance auf eine brauchbare Antwort. Zu vi
 
 Warum funktioniert das? Weil das Modell unterschiedliche "Stimmen" gelernt hat. Ein Text, den die KI als "erfahrener Texter" schreibt, klingt anders als einer, den sie als "Kundenservice-Mitarbeiter" schreibt. Die Rolle aktiviert das richtige Wissenscluster.
 
-Auch ein gutes menschliches Briefing enthält Kontext, Aufgabe, Format und Abnahmekriterien. Für KI-Aufträge ist dieselbe Disziplin hilfreich.
+Ein gutes Briefing an einen Menschen enthält Kontext, Aufgabe, Format und Abnahmekriterien. Für KI-Aufträge gilt dieselbe Disziplin.
 
 ### A, Aufgabe
 
 *Was genau soll die KI tun?*
 
-Nicht "schreib was." Sondern: "Formuliere ein Angebot mit Einleitung, Leistungsbeschreibung, Zeitrahmen, Preis und nächsten Schritten."
+Nicht "schreib was", sondern "Formuliere ein Angebot mit Einleitung, Leistungsbeschreibung, Zeitrahmen, Preis und nächsten Schritten."
 
-Die Aufgabe muss spezifisch sein. Messbar, wenn möglich. "Schreibe einen Text" ist keine Aufgabe. "Schreibe einen Blogartikel mit 800 Wörtern, der 3 Vorteile von X für Y erklärt", das ist eine Aufgabe.
+Die Aufgabe muss spezifisch sein, messbar, wenn es geht. "Schreibe einen Text" ist keine Aufgabe. "Schreibe einen Blogartikel mit 800 Wörtern, der 3 Vorteile von X für Y erklärt", das ist eine.
 
 ### F, Format
 
 *Wie soll das Ergebnis aussehen?*
 
-Tabelle. E-Mail. Stichpunkte. Fließtext. 200 Wörter. Markdown. Nummerierte Liste. Eine Seite. Drei Absätze.
+Tabelle, E-Mail, Stichpunkte, Fließtext, 200 Wörter, Markdown, nummerierte Liste, eine Seite, drei Absätze.
 
-Das Format bestimmst du. Wenn du es nicht angibst, entscheidet die KI, und ihre Standardwahl ist selten deine.
+Das Format bestimmst du. Gibst du keins an, entscheidet die KI, und ihre Standardwahl ist selten deine.
 
-Eine brauchbare Analogie ist eine Bestellung im Restaurant: „Bring mir Essen" lässt wesentliche Anforderungen offen. Eine konkrete Bestellung grenzt das gewünschte Ergebnis ein. Genauso funktioniert ein präziseres KI-Briefing.
+Denk an eine Bestellung im Restaurant. „Bring mir Essen" lässt alles Wesentliche offen. Eine konkrete Bestellung grenzt das Ergebnis ein, und ein präzises KI-Briefing tut genau dasselbe.
 
 ### T, Ton
 
 *Wie soll es klingen?*
 
-Professionell. Locker. Überzeugend. Sachlich. Freundlich-bestimmt. Umgangssprachlich. Akademisch. Wie ein Kollegengespräch. Wie ein Bewerbungsschreiben.
+Professionell, locker, überzeugend, sachlich, freundlich-bestimmt, umgangssprachlich, akademisch. Wie ein Kollegengespräch. Oder wie ein Bewerbungsschreiben.
 
-Der Ton ist das, was die meisten vergessen. Der Unterschied zwischen "klingt nach Roboter" und "klingt nach mir."
+Den Ton vergessen die meisten. Er ist der Unterschied zwischen "klingt nach Roboter" und "klingt nach mir."
 
 **Profi-Tipp:** Gib der KI ein Beispiel deines eigenen Schreibstils mit. "Hier ist eine E-Mail, die ich geschrieben habe. Übernimm meinen Ton." Das funktioniert besser als jede Beschreibung.
 
@@ -153,7 +153,7 @@ KRAFT ist die Basis. Jetzt kommen die Techniken, die aus guten Ergebnissen sehr 
 
 Füge einen Satz zu deinem Prompt hinzu: "Denke Schritt für Schritt nach, bevor du antwortest."
 
-Klingt banal. Aber es verändert die Qualität massiv. Warum? Weil das Modell gezwungen wird, seine Antwort zu strukturieren, bevor es losplappert. Bei komplexen Aufgaben, Strategien, Analysen, Entscheidungen, ist das der Unterschied zwischen einer oberflächlichen und einer durchdachten Antwort.
+Klingt banal, verändert die Qualität aber massiv. Der Grund: Das Modell muss seine Antwort strukturieren, bevor es losplappert. Bei Strategien, Analysen und Entscheidungen ist das der Unterschied zwischen einer oberflächlichen und einer durchdachten Antwort.
 
 Wann nutzen: Bei allem, was Nachdenken erfordert. Nicht bei "Übersetze diesen Satz."
 
@@ -174,11 +174,11 @@ Format: E-Mail mit Betreffzeile. Gleiche Länge wie meine Beispiele.
 Ton: Wie in meinen Beispielen, analysiere den Ton und übernimm ihn.
 ```
 
-Das funktioniert für alles: Angebote, Social-Media-Posts, Blogartikel, Kundenkommunikation. Je mehr Beispiele du gibst, desto genauer trifft die KI deinen Stil.
+Das funktioniert für Angebote, Social-Media-Posts, Blogartikel, Kundenkommunikation. Je mehr Beispiele du gibst, desto genauer trifft die KI deinen Stil.
 
 ### Iteration: Die beste Antwort ist nie die erste
 
-Die erste Antwort ist der Rohentwurf. Nicht das Endergebnis. Iterieren ist die eigentliche Arbeit, und genau der Schritt, den die meisten Nutzer überspringen.
+Die erste Antwort ist der Rohentwurf. Nicht das Endergebnis. Iterieren ist die Arbeit, und genau der Schritt, den die meisten überspringen.
 
 So geht's:
 1. KRAFT-Prompt → Erster Entwurf
@@ -190,7 +190,7 @@ Iteriere, bis die definierten Prüfkriterien erfüllt sind. Anzahl der Runden un
 
 ### Mega-Prompts: Für die großen Aufgaben
 
-Manchmal brauchst du mehr als einen Absatz. Eine Content-Strategie. Einen Businessplan. Ein Pitch-Deck. Dafür gibt es Mega-Prompts: lange, detaillierte Anweisungen, die der KI genug Kontext für eine komplexe Aufgabe geben.
+Manchmal brauchst du mehr als einen Absatz. Eine Content-Strategie, einen Businessplan, ein Pitch-Deck. Dafür gibt es Mega-Prompts, also lange und detaillierte Anweisungen, die der KI genug Kontext für eine komplexe Aufgabe geben.
 
 Der Trick: Strukturiere den Mega-Prompt in Abschnitte. Nicht als Fließtext, sondern mit klaren Überschriften. Die KI versteht Struktur besser als Prosa.
 
@@ -198,9 +198,9 @@ Der Trick: Strukturiere den Mega-Prompt in Abschnitte. Nicht als Fließtext, son
 
 Chain-of-Thought sagt der KI: "Denk Schritt für Schritt." Tree-of-Thoughts sagt: "Denk in mehrere Richtungen gleichzeitig."
 
-Der Unterschied? Chain-of-Thought folgt einem Pfad. Tree-of-Thoughts erkundet mehrere Pfade, bewertet jeden, verwirft die schlechten und wählt den besten. Wie ein Schachspieler, der drei Züge vorausdenkt statt nur einen.
+Wo liegt der Unterschied? Chain-of-Thought folgt einem Pfad. Tree-of-Thoughts erkundet mehrere, bewertet jeden, verwirft die schlechten und wählt den besten. Wie eine Schachspielerin, die drei Züge vorausdenkt statt einen.
 
-Wann nutzen: Bei Entscheidungen mit mehreren Optionen. Pricing-Strategie. Standortwahl. Geschäftsmodell-Vergleich. Alles, wo "es kommt drauf an" die ehrliche Antwort ist.
+Wann nutzen: Bei Entscheidungen mit mehreren Optionen. Pricing-Strategie, Standortwahl, Geschäftsmodell-Vergleich. Alles, wo "es kommt drauf an" die ehrliche Antwort ist.
 
 **Beispiel: Pricing-Strategie mit Tree-of-Thoughts**
 
@@ -220,7 +220,7 @@ Format: Tabelle + Empfehlung in max. 300 Wörtern.
 Ton: Direkt, analytisch, keine Beschönigung.
 ```
 
-Die Anweisung erzeugt mehrere Optionen, eine Vergleichstabelle und eine begründete Empfehlung. Das macht Annahmen sichtbarer, garantiert aber keine bessere Entscheidung. Prüfe Zahlen und Bewertungslogik unabhängig.
+Die Anweisung erzeugt mehrere Optionen, eine Vergleichstabelle und eine begründete Empfehlung. Das macht Annahmen sichtbar, garantiert aber keine bessere Entscheidung. Prüfe Zahlen und Bewertungslogik unabhängig nach.
 
 ### ReAct: Denken + Handeln in einem Kreislauf
 
@@ -252,11 +252,11 @@ Ton: Sachlich, selbstkritisch. Lieber "ich bin nicht sicher" als
 eine erfundene Zahl.
 ```
 
-Warum das funktioniert: Du zwingst die KI, zwischen "was ich weiß" und "was ich rate" zu unterscheiden. Das reduziert Halluzinationen bei Recherche-Aufgaben erheblich.
+Warum das funktioniert: Du zwingst die KI, zwischen "was ich weiß" und "was ich rate" zu trennen. Das reduziert Halluzinationen bei Recherche-Aufgaben erheblich.
 
 ### Prompt Chaining: Die Aufgabe in Schritte zerlegen
 
-Statt einem riesigen Prompt zerlegst du die Aufgabe in eine Kette. Jeder Output füttert den nächsten Input. Wie eine Produktionsstraße: Station 1 liefert an Station 2, Station 2 an Station 3.
+Statt eines riesigen Prompts zerlegst du die Aufgabe in eine Kette. Jeder Output füttert den nächsten Input. Wie eine Produktionsstraße, in der Station 1 an Station 2 liefert und Station 2 an Station 3.
 
 Das ist die zuverlässigste Methode für komplexe Aufgaben, weil du nach jedem Schritt prüfen und korrigieren kannst.
 
@@ -299,11 +299,11 @@ Format: Max. 1 Seite. Nummerierte Leistungspositionen.
 Ton: Professionell, verbindlich, wertschätzend.
 ```
 
-Die dreistufige Kette trennt Recherche, Analyse und Angebot. Dadurch kannst du Quellen, Annahmen und Zahlen an jeder Station prüfen. Ob sie schneller oder besser ist als ein einzelner Prompt, misst du mit deinen Aufgaben.
+Die dreistufige Kette trennt Recherche, Analyse und Angebot. So prüfst du Quellen, Annahmen und Zahlen an jeder Station. Ob sie schneller oder besser ist als ein einzelner Prompt, misst du an deinen eigenen Aufgaben.
 
 ### System Prompts: Dein permanentes Betriebssystem
 
-Erinnerst du dich an die Custom Instructions aus Kapitel 2? Das ist dein System Prompt, ein permanentes Briefing, das bei jeder Konversation gilt. Einmal einrichten, immer wirksam.
+Erinnerst du dich an die Custom Instructions aus Kapitel 2? Das ist dein System Prompt, ein permanentes Briefing für jede Konversation. Einmal einrichten, immer wirksam.
 
 Der Unterschied zum normalen Prompt: System Prompts definieren die Grundregeln. Normale Prompts definieren die spezifische Aufgabe. Beides zusammen ist das, was Profis von Anfängern unterscheidet.
 
@@ -311,7 +311,7 @@ Der Unterschied zum normalen Prompt: System Prompts definieren die Grundregeln. 
 
 Bei **ChatGPT:** Einstellungen > Personalization > Custom Instructions. Du bekommst zwei Felder: "What would you like ChatGPT to know about you?" (dein Kontext) und "How would you like ChatGPT to respond?" (deine Regeln).
 
-Bei **Claude:** Profil > User preferences. Oder: Erstelle ein "Project" in Claude und hinterlege dort permanente Anweisungen. Vorteil: Du kannst verschiedene Projekte für verschiedene Kunden oder Aufgaben anlegen, jedes mit eigenen System Prompts.
+Bei **Claude:** Profil > User preferences. Oder du legst ein "Project" an und hinterlegst dort permanente Anweisungen. Der Vorteil: ein Projekt pro Kunde oder Aufgabe, jedes mit eigenen System Prompts.
 
 **Vorlage für einen Freelancer-System-Prompt:**
 ```
@@ -335,7 +335,7 @@ Zusammen: System Prompt + KRAFT-Prompt = konsistent gute Ergebnisse. Der System 
 
 ### Negativ-Prompting: Sag, was du NICHT willst
 
-Mein Geheimtipp. Sag der KI, was sie nicht tun soll. Wie bei Mitarbeitern, "mach es nicht zu lang" wirkt oft besser als "mach es kurz."
+Mein Geheimtipp: Sag der KI, was sie nicht tun soll. Wie bei Mitarbeitern wirkt "mach es nicht zu lang" oft besser als "mach es kurz."
 
 Beispiele:
 - "Verwende NICHT: Buzzwords, Superlative, Passiv."
@@ -344,13 +344,13 @@ Beispiele:
 - "Nicht mehr als 200 Wörter."
 - "Keine Aufzählung mit mehr als 5 Punkten."
 
-Funktioniert besonders gut bei Texten, weil KI in generische Muster fällt. Sagst du ihr, welche Muster du nicht willst, bleibt ihr nur der Weg zur Originalität.
+Bei Texten wirkt das am stärksten, weil KI in generische Muster fällt. Nimmst du ihr die Muster weg, bleibt ihr nur der Weg zur Originalität.
 
 **Profi-Tipp:** Negativ-Prompting gehört in den System Prompt. Was die KI NIE tun soll, gehört dauerhaft hinterlegt. Was sie in der konkreten Aufgabe tun soll, in den KRAFT-Prompt. Doppelte Absicherung gegen "In der heutigen Zeit", "ganzheitlich", "vielfältig".
 
 ## Prompt-Templates nach Aufgabe
 
-Hier sind 10 Kategorien mit fertigen Templates. Alle im KRAFT-Format. Alle mit [PLATZHALTERN]. Kopieren, anpassen, einsetzen.
+10 Kategorien mit fertigen Templates. Alle im KRAFT-Format, alle mit [PLATZHALTERN]. Kopieren, anpassen, einsetzen.
 
 | # | Kategorie | Wann nutzen |
 |---|-----------|-------------|
@@ -440,25 +440,25 @@ Ton: Wie im Original, nur besser.
 
 Die folgenden Muster sind eine redaktionelle Checkliste, keine statistische Auswertung von Workshops oder Kundensitzungen.
 
-**Fehler 1: Zu vage.** "Schreib was über Marketing." → Was für Marketing? Für wen? In welcher Branche? In welchem Format? Die KI kann nicht Gedanken lesen. Gib ihr KRAFT.
+**Fehler 1: Zu vage.** "Schreib was über Marketing." → Welches Marketing, für wen, in welcher Branche, in welchem Format? Die KI liest keine Gedanken. Gib ihr KRAFT.
 
-**Fehler 2: Zu lang.** Drei Seiten Prompt mit jeder Nuance, die dir einfällt. Das Resultat: Die KI verliert den Faden und priorisiert die falschen Teile. Sweet Spot: 50-200 Wörter für den Prompt.
+**Fehler 2: Zu lang.** Drei Seiten Prompt mit jeder Nuance, die dir einfällt. Die KI verliert den Faden und priorisiert die falschen Teile. Sweet Spot: 50-200 Wörter.
 
 **Fehler 3: Keine Rolle.** Ohne Rolle schreibt die KI wie ein Generalist. Mit Rolle schreibt sie wie ein Spezialist. "Du bist ein Steuerberater für Freelancer" → völlig andere Antwort als "Du bist ein Marketingexperte."
 
 **Fehler 4: Kein Format.** Du willst eine E-Mail und bekommst einen Essay. Du willst Stichpunkte und bekommst Fließtext. Sag der KI, wie das Ergebnis aussehen soll.
 
-**Fehler 5: Die erste Antwort akzeptieren.** Behandle sie als Rohentwurf. Iteriere anhand konkreter Kriterien und dokumentiere die notwendige Nacharbeit.
+**Fehler 5: Die erste Antwort akzeptieren.** Behandle sie als Rohentwurf. Iteriere anhand konkreter Kriterien und schreib auf, wie viel Nacharbeit nötig war.
 
 **Fehler 6: Vertrauliche Daten im Prompt.** Kundennamen, Finanzdaten, Vertragsdetails. Verwende vollständig fiktive Daten oder eine belastbar anonymisierte Beschreibung wie „Kunde A, mittelständisches Unternehmen im Maschinenbau". Mehr dazu in Kapitel 8.
 
-**Fehler 7: Output nicht prüfen.** Die KI halluziniert. Sie erfindet Zahlen, Quellen, Gesetze. Jede Zahl prüfen. Jedes Zitat verifizieren. Jede Gesetzesreferenz nachschlagen. Keine Ausnahme.
+**Fehler 7: Output nicht prüfen.** Die KI halluziniert. Sie erfindet Zahlen, Quellen, Gesetze. Jede Zahl prüfen, jedes Zitat verifizieren, jede Gesetzesreferenz nachschlagen. Ohne eine einzige Ausnahme.
 
-**Fehler 8: Falsche Erwartungen.** KI kann einen Entwurf liefern. Qualität und notwendige Nacharbeit variieren. Deine fachliche Prüfung entscheidet, ob der Entwurf verwendbar ist.
+**Fehler 8: Falsche Erwartungen.** KI liefert einen Entwurf. Qualität und Nacharbeit schwanken. Ob der Entwurf verwendbar ist, entscheidet deine fachliche Prüfung.
 
-**Fehler 9: Immer das gleiche Tool.** ChatGPT für alles. Wie einen Hammer für alles. Claude ist besser für lange Texte. Perplexity für Recherche mit Quellen. Gemini für Google-Daten. Wähle das richtige Werkzeug (Kapitel 2).
+**Fehler 9: Immer das gleiche Tool.** ChatGPT für alles, wie ein Hammer für alles. Claude ist besser für lange Texte, Perplexity für Recherche mit Quellen, Gemini für Google-Daten. Wähle das richtige Werkzeug (Kapitel 2).
 
-**Fehler 10: Prompts nicht speichern.** Ein Prompt funktioniert in einem Test gut. Eine Woche später: „Wie war der nochmal?" Speichere getestete Prompts zusammen mit Modell, Datum, Eingabe, Bewertung und bekannten Grenzen. Die Prompt-Bibliothek in Kapitel 13 ist ein Startpunkt.
+**Fehler 10: Prompts nicht speichern.** Ein Prompt funktioniert im Test gut. Eine Woche später: „Wie war der nochmal?" Speichere getestete Prompts mit Modell, Datum, Eingabe, Bewertung und bekannten Grenzen. Die Prompt-Bibliothek in Kapitel 13 ist ein Startpunkt.
 
 ---
 
@@ -512,7 +512,7 @@ Du hörst den Refrain: "In zwei Jahren versteht KI dich von alleine. Prompting i
 
 Prompt Engineering stirbt nicht, es wird professioneller. 2022 war es drauflostippen und hoffen. 2026 ist es eine Disziplin mit Versionierung und Metriken.
 
-Für dich heißt das: KRAFT bleibt relevant, weil gute Briefings immer relevant bleiben, ob für Menschen oder Maschinen. Ein Mitarbeiter, der besser wird, braucht nicht weniger Briefing. Er braucht besseres Briefing. Genauso mit KI.
+Für dich heißt das: KRAFT bleibt relevant, weil gute Briefings relevant bleiben, ob für Menschen oder Maschinen. Ein Mitarbeiter, der besser wird, braucht nicht weniger Briefing. Er braucht besseres. Genauso ist es mit KI.
 
 > **Messblatt statt Zeitversprechen**
 >

@@ -16,36 +16,38 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Zwei Uhren",
-      content: `Streaming-Jobs behandeln Eingabe als *unbegrenzt*: Die Berechnung hat kein natürliches Dateiende. Das System muss definieren, wann Zwischenergebnisse ausgegeben, korrigiert oder für einen Consumer als ausreichend final betrachtet werden.
+      content: `Ein Streaming-Job bekommt nie ein Dateiende. Die Eingabe ist *unbegrenzt*, also legt das System fest, wann es ein Zwischenergebnis ausgibt, korrigiert oder für einen Consumer final genug nennt.
 
-Zwei Zeitstempel sind relevant. **Ereigniszeit** beschreibt, wann ein Ereignis laut Quelle stattfand. **Verarbeitungszeit** beschreibt, wann ein Operator es beobachtete. Geräte puffern, Netze wiederholen, Queues sammeln Lag und Uhren sind ungenau. Verwende Ereigniszeit, wenn die Fachregel den Entstehungszeitpunkt betrifft und der Quellzeitstempel vertrauenswürdig ist. Verwende Verarbeitungszeit, wenn die Anforderung Ankunft oder Systembehandlung betrifft. Keine ist eine universelle Vorgabe.`,
+Dabei laufen zwei Uhren. **Ereigniszeit** sagt, wann ein Ereignis laut Quelle passiert ist. **Verarbeitungszeit** sagt, wann ein Operator es gesehen hat. Geräte puffern, Netze wiederholen, Queues sammeln Lag, Uhren gehen falsch.
+
+Nimm Ereigniszeit, wenn die Fachregel am Entstehungszeitpunkt hängt und der Quellzeitstempel etwas taugt. Nimm Verarbeitungszeit, wenn die Anforderung Ankunft oder Systembehandlung meint. Vorgabe ist keine von beiden.`,
     },
     {
       id: "s2",
       title: "Kafkas Kernmodell",
-      content: `Fünf Konzepte definieren das Kernmodell:
+      content: `Fünf Begriffe tragen das Kernmodell.
 
 - **Topic**, eine benannte Folge von Datensätzen, aufgeteilt in Partitionen.
 - **Partition**, ein geordnetes Log. Kafka definiert Ordnung innerhalb einer Partition, nicht über ein Topic hinweg.
 - **Producer**, schreibt Datensätze und wählt eine Partition explizit, über einen konfigurierten Partitioner oder über Client-Verhalten für Datensätze mit oder ohne Schlüssel.
-- **Consumer Group**, koordiniert Consumer so, dass ein Gruppenmitglied jeweils eine Partition besitzt. Aktive Parallelität für dieses Topic ist durch die Partitionen begrenzt.
-- **Offset**, eine Datensatzposition innerhalb einer Partition. Eine Gruppe speichert commitete Offsets; Replay ist nur möglich, solange benötigte Datensätze aufbewahrt und kompatibel bleiben.
+- **Consumer Group**, koordiniert Consumer so, dass ein Gruppenmitglied jeweils eine Partition besitzt. Die Partitionen begrenzen damit die aktive Parallelität für dieses Topic.
+- **Offset**, eine Datensatzposition innerhalb einer Partition. Eine Gruppe speichert commitete Offsets; Replay geht nur, solange die benötigten Datensätze aufbewahrt und kompatibel bleiben.
 
-Stabiler Schlüssel, stabiler Partitioner und unveränderte Partitionszahl können Datensätze eines Schlüssels in einer Partition halten. Eine Erhöhung der Partitionszahl kann spätere Datensätze anders zuordnen, sodass lokale Schlüsselhistorie mehrere Partitionen umfasst. Wähle die Zahl aus gemessenem Durchsatz, Limits je Partition, Ordnung, Wiederherstellung und Betriebsaufwand statt einer festen Sicherheitszahl.`,
+Bleiben Schlüssel, Partitioner und Partitionszahl stabil, bleiben die Datensätze eines Schlüssels in einer Partition. Erhöhst du sie, landen spätere Datensätze anders, und die Historie eines Schlüssels verteilt sich über Partitionen. Wähle die Zahl aus gemessenem Durchsatz, Limits je Partition, Ordnung, Wiederherstellung und Betriebsaufwand, nicht aus einer festen Sicherheitszahl.`,
     },
     {
       id: "s3",
       title: "Ereigniszeit oder Verarbeitungszeit",
-      content: `Betrachte eine Zählung je Minute. Trifft ein Ereignis später als sein Quellzeitstempel ein, ordnet eine Ereigniszeitaggregation es dem Quellfenster zu; eine Verarbeitungszeitaggregation ordnet es nach Ankunft ein. Die richtige Regel folgt der Produktdefinition.
+      content: `Zählung je Minute. Ein Ereignis trifft später ein, als sein Quellzeitstempel sagt. Die Ereigniszeitaggregation steckt es ins Quellfenster, die Verarbeitungszeitaggregation ordnet es nach Ankunft ein. Welche Regel richtig ist, entscheidet die Produktdefinition.
 
-Eine **Watermark** ist das Fortschrittssignal der Engine für Ereigniszeit. Sie zeigt gewöhnlich gemäß einer konfigurierten oder erzeugten Regel an, dass das System wesentlich frühere Zeitstempel nicht erwartet. Sie beweist nicht, dass jedes frühere Ereignis angekommen ist. Nach Überschreiten einer Fenstergrenze kann eine Engine Ausgabe auslösen und spätere Ereignisse je API und Konfiguration verwerfen, halten, weiterleiten oder Ergebnisse korrigieren.`,
+Eine **Watermark** ist das Fortschrittssignal der Engine für Ereigniszeit. Sie behauptet nach einer konfigurierten oder erzeugten Regel, dass wesentlich frühere Zeitstempel nicht mehr kommen. Ein Vollständigkeitsbeweis ist sie nicht. Überschreitet sie eine Fenstergrenze, kann die Engine ausgeben und spätere Ereignisse je API und Konfiguration verwerfen, halten, weiterleiten oder das Ergebnis korrigieren.`,
     },
     {
       id: "s4",
       title: "Watermark-Darstellung",
-      content: `Die Darstellung verwendet eine feste synthetische Verspätungsschwelle. Sie zeigt, wie eine Schwelle die Klassifikation als pünktlich oder verspätet verändert; sie ist keine Produktionsempfehlung.
+      content: `Die Darstellung verwendet eine feste synthetische Verspätungsschwelle. Sie zeigt, wie eine Schwelle die Klassifikation als pünktlich oder verspätet kippt; eine Produktionsempfehlung ist sie nicht.
 
-Wähle die Watermark-Regel aus beobachteter Verzögerungsverteilung, inaktiven Partitionen, Uhrenqualität, Quellverhalten, erlaubter Zustandsgröße, Korrektursemantik und Consumer-SLO. Ein Perzentil kann informieren; akzeptierter Verlust oder Korrektur bleibt eine Produktentscheidung und muss nach Deployment gemessen werden.`,
+Die Watermark-Regel folgt aus beobachteter Verzögerungsverteilung, inaktiven Partitionen, Uhrenqualität, Quellverhalten, erlaubter Zustandsgröße, Korrektursemantik und Consumer-SLO. Ein Perzentil kann informieren. Wie viel Verlust oder Korrektur akzeptabel ist, entscheidet das Produkt; gemessen wird nach dem Deployment.`,
     },
     {
       id: "s5",
@@ -60,20 +62,20 @@ Wähle die Watermark-Regel aus beobachteter Verzögerungsverteilung, inaktiven P
     {
       id: "s5b",
       title: "Zustellgarantien",
-      content: `Zustell- und Verarbeitungsaussagen müssen Grenze, Fehlermodell und sichtbaren Zustand benennen:
+      content: `Zustell- und Verarbeitungsaussagen brauchen drei Angaben: Grenze, Fehlermodell, sichtbarer Zustand.
 
 - **At-most-once.** Ein Fehler kann einen Effekt auslassen, während das Protokoll innerhalb seines Umfangs die Wiederholung bestätigter Arbeit vermeidet.
-- **At-least-once.** Das System wiederholt Arbeit nach unklaren Fehlern. Derselbe logische Datensatz kann deshalb mehrmals wirken, wenn der Consumer Duplikateffekte nicht kontrolliert. „Kein Verlust“ hängt weiterhin von Quelldauerhaftigkeit, Aufbewahrung, Bestätigungen und benannten Fehlern ab.
-- **Exactly-once.** Ein begrenztes System lässt die commitete Ausgabe so erscheinen, als hätte jede Eingabe einmal gewirkt. Transaktionen, Checkpoints, wiedereinspielbare Quellen, idempotente Ziele oder koordinierte Offsets können dies umsetzen. Externe APIs und sämtliche vor- oder nachgelagerten Systeme sind nicht automatisch eingeschlossen.
+- **At-least-once.** Das System wiederholt Arbeit nach unklaren Fehlern. Derselbe logische Datensatz kann deshalb mehrmals wirken, solange der Consumer Duplikateffekte nicht kontrolliert. „Kein Verlust“ hängt weiterhin an Quelldauerhaftigkeit, Aufbewahrung, Bestätigungen und benannten Fehlern.
+- **Exactly-once.** Ein begrenztes System lässt die commitete Ausgabe so erscheinen, als hätte jede Eingabe einmal gewirkt. Transaktionen, Checkpoints, wiedereinspielbare Quellen, idempotente Ziele oder koordinierte Offsets setzen das um. Externe APIs und die Systeme davor und danach gehören nicht automatisch dazu.
 
-Kafka-Transaktionen können Ausgabe und konsumierte Offsets für einen Kafka-zu-Kafka-Read-Process-Write-Pfad atomar veröffentlichen, wenn Producer, Consumer, Isolation und Broker-Konfiguration teilnehmen. Flink dokumentiert End-to-End-Exactly-once mit wiedereinspielbaren Quellen und transaktionalen oder idempotenten Zielen. Zähle in jedem Entwurf alle Seiteneffekte auf und prüfe Wiederherstellung durch Fehlerinjektion.`,
+Kafka-Transaktionen können Ausgabe und konsumierte Offsets für einen Kafka-zu-Kafka-Read-Process-Write-Pfad atomar veröffentlichen, wenn Producer, Consumer, Isolation und Broker-Konfiguration mitspielen. Flink dokumentiert End-to-End-Exactly-once mit wiedereinspielbaren Quellen und transaktionalen oder idempotenten Zielen. Zähl in jedem Entwurf alle Seiteneffekte auf und prüfe die Wiederherstellung mit Fehlerinjektion.`,
       keyTakeaway:
         "Eine Verarbeitungsgarantie gilt nur für benannte Quelle, Zustand, Ziel, Konfiguration und Fehlermodell.",
     },
     {
       id: "s5c",
       title: "Streaming Engine auswählen",
-      content: `Fähigkeiten und Vorgaben von Engines ändern sich. Vergleiche konkrete Version und Connectoren anhand einer reproduzierbaren Last:
+      content: `Fähigkeiten und Vorgaben von Engines ändern sich. Vergleiche konkrete Version und Connectoren an einer reproduzierbaren Last:
 
 | Entscheidung | Evidenz |
 |---|---|
@@ -84,31 +86,31 @@ Kafka-Transaktionen können Ausgabe und konsumierte Offsets für einen Kafka-zu-
 | Latenz und Durchsatz | Gemessene Perzentile unter Normalbetrieb, Backpressure, Checkpoints und Wiederherstellung |
 | Betrieb | Deployment, Upgrades, Savepoints/Checkpoints, Observability, Kosten und Zuständigkeit |
 
-Aktuelle offizielle Dokumentation unterscheidet bei Spark Structured Streaming den standardmäßigen Micro-Batch-Modus und eine separate kontinuierliche Verarbeitung mit verschiedenen Garantien; Flink trennt ebenfalls Zustandsgarantien von End-to-End-Zielgarantien. Reduziere kein Produkt auf feste Latenzbereiche oder ein einziges „Exactly-once“-Etikett.`,
+Die aktuelle offizielle Dokumentation trennt bei Spark Structured Streaming den standardmäßigen Micro-Batch-Modus von einer separaten kontinuierlichen Verarbeitung mit anderen Garantien; Flink trennt Zustandsgarantien von End-to-End-Zielgarantien. Reduziere kein Produkt auf feste Latenzbereiche oder ein „Exactly-once“-Etikett.`,
     },
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Drei Fragen zum gelesenen Abschnitt.",
+      content: "Drei Fragen zu Partitionen, Watermarks und Fenstern.",
     },
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- **Ereignis- oder Verarbeitungszeit aus Fachregel und Zeitstempelqualität wählen.** Verzögerte, doppelte und ungeordnete Eingabe testen.
-- **Eine Watermark ist eine Ereigniszeit-Fortschrittsregel, kein Vollständigkeitsbeweis.** Korrektur, Aufbewahrung und Consumer-Verhalten für verspätete Daten definieren.
-- **Zustellgarantien begrenzen.** Quell-Replay, Zustand, Ziel, Konfiguration und Fehlermodell benennen; jeden externen Seiteneffekt testen.
-- **Engines anhand aktueller versionierter Fähigkeiten und gemessener Last wählen.** Produktnamen implizieren weder Latenz noch Verarbeitungsgarantien.
-- **Kafka-Partitionen begrenzen aktive Consumer einer Gruppe für dieses Topic.** Eine Erhöhung kann spätere Schlüsseldatensätze neu zuordnen; Migration und Ordnung planen.`,
+      content: `- **Ereignis- oder Verarbeitungszeit folgt aus Fachregel und Zeitstempelqualität.** Teste verzögerte, doppelte und ungeordnete Eingabe.
+- **Eine Watermark ist eine Ereigniszeit-Fortschrittsregel, kein Vollständigkeitsbeweis.** Definiere Korrektur, Aufbewahrung und Consumer-Verhalten für verspätete Daten.
+- **Grenze jede Zustellgarantie ein.** Benenne Quell-Replay, Zustand, Ziel, Konfiguration und Fehlermodell; teste jeden Seiteneffekt.
+- **Engines wählst du an aktuellen versionierten Fähigkeiten und gemessener Last.** Produktnamen sagen weder Latenz noch Verarbeitungsgarantien zu.
+- **Kafka-Partitionen begrenzen die aktiven Consumer einer Gruppe für dieses Topic.** Eine Erhöhung kann spätere Schlüsseldatensätze neu zuordnen; plane Migration und Ordnung.`,
     },
     {
       id: "s8",
       title: "Begriffe",
       content: `- **Kompaktiertes Topic**, ein Kafka-Topic, dessen Hintergrundkompaktierung mindestens den neuesten Wert je Schlüssel gemäß Segment-, Tombstone- und Aufbewahrungsregeln behält. Alte Datensätze verschwinden nicht sofort.
-- **ISR**, nach Broker-Regeln In-Sync Replicas. Producer-Bestätigungen, Replikation, Leader Election und angenommene Fehler bestimmen gemeinsam die Dauerhaftigkeit.
+- **ISR**, nach Broker-Regeln In-Sync Replicas. Producer-Bestätigungen, Replikation, Leader Election und angenommene Fehler bestimmen zusammen die Dauerhaftigkeit.
 - **At-most-once**, eine begrenzte Regel, die nach unklarem Fehler Effekte auslassen und Replay innerhalb ihres Umfangs vermeiden kann.
-- **At-least-once**, Wiederholungen können Effekte wiederholen; Idempotenz benötigt stabile Vorgangsidentität und eine Zielregel.
+- **At-least-once**, Wiederholungen können Effekte wiederholen; Idempotenz braucht stabile Vorgangsidentität und eine Zielregel.
 - **Exactly-once**, eine begrenzte Eigenschaft commiteter Ausgabe mit beteiligter Quelle, Verarbeitungszustand, Ziel und Konfiguration.
-- **Backpressure**, nachgelagerte Kapazitätsgrenzen pflanzen sich je Broker und Topologie fort oder sammeln sich an; Lag, Puffer, Checkpoints und Quelldrosselung überwachen.
+- **Backpressure**, nachgelagerte Kapazitätsgrenzen pflanzen sich je Broker und Topologie fort oder stauen sich; überwache Lag, Puffer, Checkpoints und Quelldrosselung.
 - **Zulässige Verspätung**, eine Engine-spezifische Regel für Zustandsaufbewahrung und Annahme oder Korrektur von Ergebnissen nach Fortschritt der Ereigniszeit.`,
     },
   ],
@@ -126,7 +128,7 @@ Aktuelle offizielle Dokumentation unterscheidet bei Spark Structured Streaming d
         "Das Team sollte Kinesis verwenden.",
       ],
       explanation:
-        "Innerhalb einer Consumer Group besitzt jeweils ein Mitglied eine Partition. Vier Partitionen erlauben deshalb höchstens vier aktive Besitzer für dieses Topic. Die Partitionszahl kann später erhöht werden, doch eine Standard-Schlüsselzuordnung kann sich für folgende Datensätze ändern. Wähle und migriere sie anhand gemessenen Durchsatzes, Ordnung, Wiederherstellung, Broker-Limits und Betriebsaufwand.",
+        "Innerhalb einer Consumer Group besitzt jeweils ein Mitglied eine Partition. Vier Partitionen erlauben also höchstens vier aktive Besitzer für dieses Topic. Erhöhen lässt sich die Zahl später, doch eine Standard-Schlüsselzuordnung kann sich für folgende Datensätze verschieben. Wähle und migriere sie an gemessenem Durchsatz, Ordnung, Wiederherstellung, Broker-Limits und Betriebsaufwand.",
     },
     {
       kind: "quiz",
@@ -141,7 +143,7 @@ Aktuelle offizielle Dokumentation unterscheidet bei Spark Structured Streaming d
         "Es löst eine Neuberechnung aller Fenster aus.",
       ],
       explanation:
-        "Die Zeitstempel legen nahe, dass das Ereignis hinter der genannten Watermark-Regel liegt. Das Ergebnis hängt dennoch von Watermark-Erzeugung, inaktiven Partitionen, Zustandsaufbewahrung und Late-Data-Verhalten der Engine ab. Der Entwurf muss festlegen, ob nachgelagerte Ausgabe final, korrigierbar oder durch Korrekturen ergänzt ist.",
+        "Die Zeitstempel legen nahe, dass das Ereignis hinter der genannten Watermark-Regel liegt. Das Ergebnis hängt trotzdem an Watermark-Erzeugung, inaktiven Partitionen, Zustandsaufbewahrung und Late-Data-Verhalten der Engine. Der Entwurf legt fest, ob die nachgelagerte Ausgabe final, korrigierbar oder durch Korrekturen ergänzt ist.",
     },
     {
       kind: "quiz",
@@ -156,7 +158,7 @@ Aktuelle offizielle Dokumentation unterscheidet bei Spark Structured Streaming d
         "Global mit einem manuellen Trigger.",
       ],
       explanation:
-        "Session-Fenster sind je Schlüssel, etwa je Person, definiert. Die Engine hält ein Fenster offen, solange weitere Ereignisse innerhalb der Lücke eintreffen. Es schließt, sobald Watermark - last_event > gap gilt. Ein Tumbling-Fenster kann das nicht abbilden: Eine 32-minütige Sitzung über einer festen Fenstergrenze würde als zwei Sitzungen erscheinen.",
+        "Session-Fenster gelten je Schlüssel, etwa je Person. Die Engine hält ein Fenster offen, solange weitere Ereignisse innerhalb der Lücke eintreffen. Es schließt, sobald Watermark - last_event > gap gilt. Ein Tumbling-Fenster kann das nicht abbilden: Eine 32-minütige Sitzung über einer Fenstergrenze erscheint als zwei Sitzungen.",
     },
     {
       kind: "flashcards",
@@ -166,37 +168,37 @@ Aktuelle offizielle Dokumentation unterscheidet bei Spark Structured Streaming d
         {
           term: "Kompaktiertes Topic",
           q: "Was bezeichnet der Begriff?",
-          a: "Hintergrundkompaktierung behält gemäß Segment- und Tombstone-Regeln mindestens den neuesten Wert je Schlüssel. Sie kann den Wiederaufbau von Schlüsselzustand unterstützen, ist aber keine sofortige oder vollständig eingeschränkte Tabelle.",
+          a: "Hintergrundkompaktierung behält nach Segment- und Tombstone-Regeln mindestens den neuesten Wert je Schlüssel. Sie kann den Wiederaufbau von Schlüsselzustand tragen, ist aber keine sofortige oder vollständig eingeschränkte Tabelle.",
         },
         {
           term: "ISR",
           q: "Was sind In-Sync Replicas?",
-          a: "Replikate, die nach den Broker-Regeln als synchron gelten. Producer-Bestätigungen, min.insync.replicas, Replikationsfaktor, Leader Election und angenommene Fehler bestimmen gemeinsam die Haltbarkeit.",
+          a: "Replikate, die nach den Broker-Regeln als synchron gelten. Producer-Bestätigungen, min.insync.replicas, Replikationsfaktor, Leader Election und angenommene Fehler bestimmen zusammen die Haltbarkeit.",
         },
         {
           term: "At-most-once",
           q: "Wie wird es erreicht und wann ist es vertretbar?",
-          a: "Wird die Position vor dem Effekt bestätigt, kann ein Absturz diesen Effekt auslassen. Das ist nur vertretbar, wenn das definierte Verlustrisiko ausdrücklich akzeptiert und unabhängig überwacht wird.",
+          a: "Wird die Position vor dem Effekt bestätigt, kann ein Absturz diesen Effekt auslassen. Vertretbar ist das nur, wenn jemand das definierte Verlustrisiko ausdrücklich akzeptiert und unabhängig überwacht.",
         },
         {
           term: "At-least-once",
           q: "Wie wird es erreicht?",
-          a: "Wird die Position nach einem Effekt bestätigt, kann Arbeit bei einem Fehler zwischen beiden Schritten wiederholt werden. Doppelte Effekte benötigen eine stabile Identität und passende Zielsemantik; Haltbarkeit und Aufbewahrung der Quelle bleiben relevant.",
+          a: "Wird die Position nach einem Effekt bestätigt, kann Arbeit bei einem Fehler zwischen beiden Schritten erneut laufen. Doppelte Effekte brauchen eine stabile Identität und passende Zielsemantik; Haltbarkeit und Aufbewahrung der Quelle bleiben relevant.",
         },
         {
           term: "Exactly-once",
           q: "Wie setzt Kafka es um?",
-          a: "Für einen Kafka-zu-Kafka-Pfad aus Lesen, Verarbeiten und Schreiben können Transaktionen Ausgabe und konsumierte Offsets atomar veröffentlichen, wenn Producer und Read-committed-Consumer teilnehmen. Externe Ziele benötigen eine eigene transaktionale oder idempotente Integration.",
+          a: "Für einen Kafka-zu-Kafka-Pfad aus Lesen, Verarbeiten und Schreiben können Transaktionen Ausgabe und konsumierte Offsets atomar veröffentlichen, wenn Producer und Read-committed-Consumer mitspielen. Externe Ziele brauchen ihre eigene transaktionale oder idempotente Integration.",
         },
         {
           term: "Backpressure",
           q: "Was geschieht bei einem langsamen Consumer?",
-          a: "Ein langsamer Consumer kann Lag und Druck auf die Broker-Aufbewahrung erhöhen. In einer Verarbeitungstopologie können nachgelagerte Grenzen Puffer füllen und sich bis zu den Quellen fortsetzen. Überwache den gesamten Pfad, statt ein unbeeinflusstes Bauteil anzunehmen.",
+          a: "Ein langsamer Consumer treibt Lag und Druck auf die Broker-Aufbewahrung. In einer Verarbeitungstopologie füllen nachgelagerte Grenzen die Puffer und wandern bis zu den Quellen zurück. Überwache den ganzen Pfad, statt ein Bauteil für unbeeinflusst zu halten.",
         },
         {
           term: "Zulässige Verspätung",
           q: "Was steuert diese Fenstereinstellung?",
-          a: "Eine Engine-spezifische Regel dafür, wie lange Zustand verfügbar bleibt und was verspätete Ereignisse tun dürfen, nachdem der Ereigniszeitfortschritt ein Fenster überschritten hat. Nachgelagerte Consumer müssen ausgegebene Korrekturen unterstützen.",
+          a: "Eine Engine-spezifische Regel dafür, wie lange Zustand verfügbar bleibt und was verspätete Ereignisse noch dürfen, nachdem der Ereigniszeitfortschritt ein Fenster überschritten hat. Nachgelagerte Consumer müssen ausgegebene Korrekturen verkraften.",
         },
       ],
     },

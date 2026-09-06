@@ -1,10 +1,10 @@
 # AVV, DSGVO, Shadow AI: Was du wissen musst
 
-Datenschutz ist längst nicht mehr reine IT-Sache. Sobald du KI nutzt, ist es auch dein Thema.
+Datenschutz war mal Sache der IT. Seit du KI nutzt, sitzt du mit am Tisch.
 
 Du musst kein Jurist werden. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 von Anbietern und Betreibern kontextgerechte Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem Auftrag handelnder Personen unterstützen. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
 
-Hier die vier wichtigsten Regeln, vereinfacht.
+Vier Regeln, vereinfacht.
 
 ## Regel 1: DSGVO (Datenschutz-Grundverordnung)
 
@@ -22,7 +22,7 @@ Hier die vier wichtigsten Regeln, vereinfacht.
 
 ## Regel 2: AVV (Auftragsverarbeitungsvertrag)
 
-**Was:** Ein Vertrag zwischen deinem Unternehmen und einem Datenverarbeiter, Rechtsgrundlage Art. 28 DSGVO. OpenAI nennt das DPA (Data Processing Addendum). Anthropic ebenso.
+**Was:** Ein Vertrag zwischen deinem Unternehmen und einem Datenverarbeiter, Rechtsgrundlage Art. 28 DSGVO. OpenAI nennt das DPA (Data Processing Addendum), Anthropic ebenso.
 
 **Der Deal:**
 
@@ -51,13 +51,13 @@ Der AVV-Status ist meist in der IT-Policy oder bei Compliance bekannt. Du musst 
 
 ## Regel 3: Shadow AI
 
-**Was:** KI-Tools, die Mitarbeitende ohne IT-Freigabe nutzen.
+**Was:** KI-Tools, die Kolleginnen und Kollegen ohne IT-Freigabe nutzen.
 
 **Typisches Szenario:**
 
 „Ich finde ein cooles Tool, `DataAnalyzerAI.com`. Ich lade meine Kundenliste hoch. Das Tool analysiert die Daten. Drei Monate später stellt die IT beim Audit fest, dass Kundendaten bei einem unbekannten Anbieter in den USA liegen."
 
-Das ist Shadow AI, und es ist eines der größten Governance-Risiken aktuell. Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025).
+Das ist Shadow AI, aktuell eines der größten Governance-Risiken. Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025).
 
 **Warum das ein Problem ist:**
 
@@ -66,7 +66,7 @@ Das ist Shadow AI, und es ist eines der größten Governance-Risiken aktuell. Et
 - Er nutzt sie eventuell für Modelltraining.
 - Niemand im Unternehmen weiß, dass es passiert ist.
 
-**Regel:** Nur KI-Tools nutzen, die IT oder Compliance freigegeben hat. Neues Tool entdeckt? Kurze Mail an IT mit dem Link, zwei Minuten Arbeit, spart potenziell ein Bußgeld.
+**Regel:** Nur KI-Tools nutzen, die IT oder Compliance freigegeben hat. Neues Tool entdeckt? Kurze Mail an die IT mit dem Link. Zwei Minuten Arbeit, die potenziell ein Bußgeld sparen.
 
 > **Achtung:** Shadow AI ist fast nie böser Wille. Leute wollen produktiv sein. Die Lösung heißt nicht Verbot, sondern eine klare Liste freigegebener Tools plus ein kurzer Weg, neue vorzuschlagen.
 
@@ -109,7 +109,7 @@ Nicht du allein. Aber du bist ein Glied der Kette:
 - **Geschäftsführung, Datenschutzbeauftragte, CISO** setzen Richtlinien und AVV-Prozesse auf.
 - **Du** bist verantwortlich, diese Richtlinien einzuhalten, und bei Unsicherheit zu fragen, statt zu raten.
 
-Wenn dein Unternehmen schludert: Sprich mit Compliance oder dem Datenschutzbeauftragten. Beide haben ein Eigeninteresse an sauberer Dokumentation.
+Schludert dein Unternehmen, sprich mit Compliance oder dem Datenschutzbeauftragten. Beide haben ein Eigeninteresse an sauberer Dokumentation.
 
 ## Konsequenz-Beispiel
 

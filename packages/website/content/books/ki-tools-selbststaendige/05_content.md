@@ -1,6 +1,6 @@
 # Content-Erstellung: Blog, Social, Newsletter
 
-Jeder Berater sagt dir: Du musst Content machen. LinkedIn. Blog. Newsletter. Am besten täglich.
+Jeder Berater sagt dir: Du musst Content machen. LinkedIn, Blog, Newsletter, am besten täglich.
 
 Und dann sitzt du abends um 22 Uhr vor dem Laptop und starrst auf ein leeres Dokument.
 
@@ -8,13 +8,13 @@ Ich kenne das. Bei meiner eigenen Beratung wollte ich "regelmäßig" posten. Reg
 
 Seit ich KI nutze, sind es 3 Posts pro Woche. Nicht weil ich mehr Zeit habe. Sondern weil die erste Version jetzt 5 Minuten dauert statt 45.
 
-Die Qualität? Besser als vorher. Weil ich die gesparte Zeit für das verwende, was KI nicht kann: Meinung, Erfahrung, meine Stimme.
+Und die Qualität? Besser, weil die gesparte Zeit in das fließt, was KI nicht kann. Meinung, Erfahrung, meine Stimme.
 
 ## Content-Strategie mit KI entwickeln
 
 Bevor du produzierst, brauchst du einen Plan. Ohne Redaktionsplan postest du "irgendwann mal", also nie.
 
-Ein Redaktionsplan ist wie ein Trainingsplan. Du brauchst keine Motivation, wenn du weißt, was dran ist. Du schlägst auf, machst, hakt ab. Kein Grübeln, kein "Worüber schreibe ich heute?", kein leeres Dokument.
+Ein Redaktionsplan ist wie ein Trainingsplan. Motivation brauchst du keine, wenn du weißt, was dran ist. Du schlägst auf, machst, hakst ab. Kein Grübeln, kein "Worüber schreibe ich heute?", kein leeres Dokument.
 
 KI kann dir einen Redaktionsplan für 3 Monate erstellen. In 10 Minuten.
 
@@ -34,9 +34,9 @@ KI kann dir einen Redaktionsplan für 3 Monate erstellen. In 10 Minuten.
 > Ton: Strategisch, umsetzbar, keine Marketing-Theorie.
 > ```
 
-Das Ergebnis: 12 Wochen Content, sauber geplant, mit Themen, die deine Zielgruppe interessieren. Natürlich musst du den Plan prüfen und anpassen. Die KI kennt deine Branche allgemein, du kennst sie spezifisch. Streich, was nicht passt. Ergänze, was fehlt. Aber die Grundstruktur steht in 10 Minuten. Manuell: ein halber Tag.
+Heraus kommen 12 Wochen Content, sauber geplant, mit Themen, die deine Zielgruppe interessieren. Prüfen musst du ihn trotzdem. Die KI kennt deine Branche allgemein, du kennst sie im Detail, also streich, was nicht passt, und ergänze, was fehlt. Die Grundstruktur steht nach 10 Minuten. Von Hand: ein halber Tag.
 
-Am Anfang habe ich planlos gepostet, was mir gerade einfiel. Mal über KI-Tools, mal über Mittelstands-Strategie, mal über persönliche Learnings. Kein Muster. Keine Wiedererkennbarkeit. Die Reichweite: mäßig.
+Am Anfang habe ich planlos gepostet, was mir gerade einfiel. Mal über KI-Tools, mal über Mittelstands-Strategie, mal über persönliche Learnings. Kein Muster, keine Wiedererkennbarkeit, mäßige Reichweite.
 
 Seit ich mit Themen-Clustern arbeite, hat sich mein LinkedIn-Engagement spürbar verbessert, mehr Kommentare, mehr Nachrichten, mehr Erstgespräche. Keine Verdreifachung über Nacht. Aber ein klarer Aufwärtstrend über drei Monate. Weil mein Publikum weiß, was es bekommt.
 
@@ -44,7 +44,7 @@ Seit ich mit Themen-Clustern arbeite, hat sich mein LinkedIn-Engagement spürbar
 
 ## Blogartikel schreiben
 
-Ein Blogartikel, der auf Google gefunden wird, bringt dir Kunden. Nicht heute. Nicht morgen. Aber in drei Monaten, in sechs Monaten, in einem Jahr. Bloggen ist Investition in Sichtbarkeit, die sich kumuliert.
+Ein Blogartikel, der auf Google gefunden wird, bringt dir Kunden. Nicht heute, nicht morgen, aber in drei Monaten, in sechs Monaten, in einem Jahr. Bloggen ist eine Investition in Sichtbarkeit, die sich aufaddiert.
 
 Das Problem: Ein guter Blogartikel dauert 3 Stunden. Recherche, Outline, Schreiben, Überarbeiten, SEO-Optimierung. Wer hat die als Freelancer?
 
@@ -61,7 +61,7 @@ Mit KI: 45 Minuten. Hier ist der Workflow:
 | 7 | Meta-Description + Titel | KI | 2 Min. |
 | | **Gesamt** | | **40 Min.** |
 
-Der Schlüssel liegt in Schritt 5: Du überarbeitest. Nicht die KI. Deine Expertise, deine Beispiele, deine Stimme müssen rein. Wenn dein Blog klingt wie jeder andere KI-Blog, dieselben Phrasen, dieselbe Struktur, dieselbe seelenlose Perfektion, dann hast du etwas falsch gemacht.
+Der Schlüssel liegt in Schritt 5: Du überarbeitest, nicht die KI. Deine Expertise, deine Beispiele, deine Stimme müssen rein. Klingt dein Blog wie jeder andere KI-Blog, dieselben Phrasen, dieselbe Struktur, dieselbe seelenlose Perfektion, hast du etwas falsch gemacht.
 
 Google bewertet Inhalte nach Nützlichkeit, nicht nach Herkunft. Ein kurzer Text mit echter Erfahrung schlägt 2.000 Wörter austauschbaren KI-Text.
 
@@ -82,7 +82,7 @@ Die KI schreibt den Rohtext. Du machst ihn zu deinem Text.
 > Ton: Fachlich aber zugänglich, wie ein Kollege der erklärt.
 > ```
 
-Ich teste jeden Blogartikel so: Ich lese den KI-Entwurf und frage mich, "Könnte das jeder geschrieben haben?" Wenn ja, überarbeite ich, bis etwas drin steht, das nur ich weiß. Eine Geschichte aus einem Kundenprojekt. Eine Meinung, die kontrovers ist. Eine Zahl aus eigener Erfahrung. Das sind die 15 Minuten Überarbeitung, die den Unterschied machen.
+Ich teste jeden Blogartikel so: Ich lese den KI-Entwurf und frage mich, "Könnte das jeder geschrieben haben?" Wenn ja, überarbeite ich, bis etwas drin steht, das nur ich weiß. Eine Geschichte aus einem Kundenprojekt, eine kontroverse Meinung, eine Zahl aus eigener Erfahrung. Das sind die 15 Minuten Überarbeitung, die den Unterschied machen.
 
 ## Social Media: LinkedIn, Instagram, X
 
@@ -90,7 +90,7 @@ Drei Posts pro Woche. 15-25 Minuten pro Post. Das ist das Ziel.
 
 **LinkedIn** ist für B2B-Selbstständige der wichtigste Kanal. Hier holen wir das meiste raus.
 
-LinkedIn-Leser erkennen generische KI-Posts sofort. Der Algorithmus belohnt Interaktion, die solche Posts nicht bekommen. Copy-Paste aus ChatGPT funktioniert nicht. Jeder Post braucht deinen persönlichen Dreh, eine eigene Meinung, eine echte Geschichte, ein konkretes Beispiel aus deiner Arbeit.
+Generische KI-Posts erkennt deine Leserschaft sofort. Der Algorithmus belohnt Interaktion, und die bleibt bei solchen Posts aus. Copy-Paste funktioniert nicht. Jeder Post braucht deinen persönlichen Dreh, eine eigene Meinung, eine echte Geschichte, ein konkretes Beispiel aus deiner Arbeit.
 
 Was die meisten übersehen: Kommentieren ist 2026 wichtiger als Posten. Ein durchdachter Kommentar unter einem Post mit 10.000 Views bringt dir mehr Sichtbarkeit als ein eigener Post mit 200 Views. Nutze KI für Kommentar-Ideen, aber formuliere sie selbst.
 
@@ -111,9 +111,9 @@ Für jede Formel: KRAFT-Prompt anpassen, KI-Entwurf generieren, persönlichen Dr
 
 Meine LinkedIn-Posts sind 50 Prozent ich, 50 Prozent KI. Die KI liefert die Struktur. Ich liefere die Meinung. Ohne Meinung ist ein Post nur Rauschen.
 
-**Content-Batching:** Nimm dir einen Vormittag pro Monat. 3 Stunden. Erstelle mit KI die Entwürfe für 12-15 Posts. Überarbeite alle am Stück. Plane sie mit einem Scheduling-Tool vor. Fertig. 3 Stunden Arbeit für einen Monat Sichtbarkeit.
+**Content-Batching:** Nimm dir einen Vormittag pro Monat, 3 Stunden. Erstelle mit KI die Entwürfe für 12-15 Posts, überarbeite alle am Stück. Plane sie mit einem Scheduling-Tool vor. Das war es, 3 Stunden Arbeit für einen Monat Sichtbarkeit.
 
-**Instagram** funktioniert für visuelle Berufe, Designer, Fotografen, Handwerker. Die KI hilft bei Captions, Story-Texten und Reel-Scripts. Für B2B-Berater und IT-Freelancer: LinkedIn reicht. Konzentrier dich.
+**Instagram** funktioniert für visuelle Berufe, für die Fotografin, den Designer, den Handwerksmeister. Die KI hilft bei Captions, Story-Texten und Reel-Scripts. Für B2B-Berater und IT-Freelancer reicht LinkedIn. Konzentrier dich darauf.
 
 ## Newsletter, die gelesen werden
 
@@ -145,11 +145,11 @@ Die Lösung: Content-Recycling.
 > Nicht wie ein Marketing-Newsletter.
 > ```
 
-Der Newsletter muss sich anfühlen wie eine persönliche Nachricht. Nicht wie eine Werbemail. Kein "Liebe Newsletter-Abonnenten." Sondern "Hey, diese Woche habe ich über drei Dinge nachgedacht..." Persönlich, kurz, wertvoll.
+Der Newsletter muss sich anfühlen wie eine persönliche Nachricht, nicht wie eine Werbemail. Kein "Liebe Newsletter-Abonnenten." Sondern "Hey, diese Woche habe ich über drei Dinge nachgedacht..." Persönlich, kurz, brauchbar.
 
 ## SEO ohne Agentur
 
-Suchmaschinenoptimierung klingt nach etwas, das eine Agentur für 2.000 Euro im Monat macht. Für die meisten Selbstständigen reicht eine einfache Strategie, die du mit KI selbst umsetzen kannst.
+Suchmaschinenoptimierung klingt nach etwas, das eine Agentur für 2.000 Euro im Monat macht. Für die meisten Selbstständigen reicht eine einfache Strategie, die du mit KI selbst fährst.
 
 **Schritt 1: Keywords finden.**
 
@@ -169,7 +169,7 @@ Ton: Datengetrieben, praxisnah.
 **Schritt 3: Meta-Descriptions generieren.** Für jede Seite deiner Website:
 "Schreibe eine Meta-Description für [SEITE]. Max. 155 Zeichen. Keyword: [KEYWORD]. Muss zum Klicken verleiten."
 
-**Schritt 4: Warten.** SEO braucht Zeit. Drei bis sechs Monate, bis du Ergebnisse siehst. Aber wenn sie kommen, sind sie nachhaltig. Ein guter Blogartikel bringt dir Monate oder Jahre lang Besucher, ohne dass du einen Cent für Werbung ausgibst.
+**Schritt 4: Warten.** SEO braucht Zeit, drei bis sechs Monate, bis du Ergebnisse siehst. Wenn sie kommen, bleiben sie. Ein guter Blogartikel bringt dir Monate oder Jahre lang Besucher, ohne dass du einen Cent für Werbung ausgibst.
 
 > **Praxisprojekt 5: Content für einen Monat in 60 Minuten**
 >

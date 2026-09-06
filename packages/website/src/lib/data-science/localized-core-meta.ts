@@ -146,36 +146,36 @@ const GERMAN_META: Readonly<
   },
   fund: {
     title: "Grundlagen",
-    subtitle: "Stichprobe, Grundgesamtheit und Arbeitszyklus",
+    subtitle: "Stichprobe gegen Grundgesamtheit, dann der Zyklus",
   },
   explore: {
     title: "Exploration",
-    subtitle: "Verteilungen, Ausreißer und Korrelationen",
+    subtitle: "Verteilungen · Ausreißer · Korrelation",
   },
   clean: {
     title: "Datenbereinigung",
-    subtitle: "Fehlwerte, Skalierung und Leakage",
+    subtitle: "Fehlwerte · Skalierung · Leakage",
   },
   feature: {
     title: "Merkmale",
-    subtitle: "Kodierung, Interaktionen und Auswahl",
+    subtitle: "Kodierung · Interaktionen · Auswahl",
   },
   model: { title: "Modellierung", subtitle: "Bias und Varianz" },
   eval: {
     title: "Evaluation",
-    subtitle: "Konfusionsmatrix, Schwellenwert und ROC/PR",
+    subtitle: "Konfusionsmatrix · Schwellenwert · ROC/PR",
   },
-  interp: { title: "Interpretation", subtitle: "SHAP und Merkmalswichtigkeit" },
-  exp: { title: "Experimente", subtitle: "A/B-Tests, Power und MDE" },
+  interp: { title: "Interpretation", subtitle: "SHAP · Merkmalswichtigkeit" },
+  exp: { title: "Experimente", subtitle: "A/B · Power · MDE" },
   causal: {
     title: "Kausalität",
-    subtitle: "DAGs, Confounder und Backdoor-Pfade",
+    subtitle: "DAGs · Confounder · Backdoor-Pfade",
   },
   peek: {
     title: "Peeking und CUPED",
     subtitle: "Stoppen, Multiplizität und Kovariatenanpassung",
   },
-  deploy: { title: "Betrieb", subtitle: "Drift, Monitoring und Retraining" },
+  deploy: { title: "Betrieb", subtitle: "Drift · Monitoring · Retraining" },
   cap: {
     title: "Abschlussprojekt",
     subtitle: "Vom Datenaudit bis zur Deployment-Prüfung",

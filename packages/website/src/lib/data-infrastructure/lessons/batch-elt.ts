@@ -31,28 +31,28 @@ const lesson: DataInfraLesson = {
       title: "Shape of batch",
       readTimeMinutes: 2,
       content:
-        "A batch pipeline takes a bounded input set, applies a transformation, and publishes a bounded output. It may run on a schedule, from an event, or on demand.\n\nChoose batch when the freshness objective, source interface, and recovery model tolerate bounded runs. Choose streaming when consumers need incremental results or continuous state updates and the added operational model is justified. In either case, define input boundaries, dependencies, publication, retries, and evidence of completeness.",
+        "One property defines batch: the input set is bounded. The pipeline takes that input, applies a transformation, and publishes a bounded output. It may run on a schedule, from an event, or on demand.\n\nPick batch when the freshness objective, source interface, and recovery model tolerate bounded runs. Pick streaming when consumers need incremental results or continuous state updates and the added operational model earns its keep. Either way, define input boundaries, dependencies, publication, retries, and evidence of completeness.",
     },
     {
       id: "s2",
       title: "ETL vs ELT",
       readTimeMinutes: 3,
       content:
-        "**ETL** transforms before loading into the target system. **ELT** lands data before transforming it in the target platform. Both remain valid.\n\nELT can improve replayability when the landed input is immutable, complete, retained, and accessible under suitable controls. It can also put transformations close to analytical compute and expose them to SQL-based tooling. Those benefits are not automatic: raw retention costs money, source deletions and schema changes complicate replay, and sensitive data may not be permitted in the target.\n\nETL can enforce minimization, redaction, format conversion, or aggregation before crossing a security boundary. It can also reduce target load. Choose the boundary from data classification, source limits, retention, required reprocessing, governance, and measured cost, not from a historical winner narrative.",
+        "**ETL** transforms before loading into the target system. **ELT** lands data before transforming it in the target platform. Both are still valid.\n\nELT improves replayability when the landed input is immutable, complete, retained, and accessible under suitable controls. It also puts transformations next to analytical compute and opens them to SQL-based tooling. None of that is automatic. Raw retention costs money, source deletions and schema changes complicate replay, and sensitive data may not be permitted in the target at all.\n\nETL enforces minimization, redaction, format conversion, or aggregation before data crosses a security boundary. It also lowers target load. Choose the boundary from data classification, source limits, retention, required reprocessing, governance, and measured cost. Not from a story about which one won.",
     },
     {
       id: "s3",
       title: "dbt materializations",
       readTimeMinutes: 3,
       content:
-        "dbt is one tool for managing transformations and their dependencies. In a SQL model, `{{ ref('upstream_model') }}` declares an upstream relation and contributes to the DAG. Materializations determine how a model is represented; exact SQL and supported strategies depend on the adapter.\n\n- **view**, creates a view. Storage is limited to metadata, while query work is deferred to readers.\n- **table**, builds a physical relation. Replacement behavior, atomicity, and grants vary by adapter and configuration.\n- **incremental**, processes a selected subset after the initial build. A `unique_key` can enable update/merge behavior for supporting strategies, but it does not by itself make source selection correct.\n- **ephemeral**, inlines SQL into downstream models as a CTE and creates no standalone relation.\n\nA naive `created_at > max(created_at)` filter misses late arrivals and later updates to older records. A safer design uses a source change token or reprocesses an overlap window, then deduplicates deterministically:\n\n```sql\n-- Adapter-specific interval syntax; validate for the target warehouse.\n{{ config(materialized='incremental', unique_key='order_id') }}\n\nselect order_id, user_id, amount_usd, status, created_at, updated_at\nfrom {{ ref('stg_orders') }}\n{% if is_incremental() %}\n  where updated_at >= (\n    select max(updated_at) - interval '2 day' from {{ this }}\n  )\n{% endif %}\n```\n\nThis is still a pattern, not a production guarantee. Define null handling, duplicate source keys, deletion capture, lookback size, transaction boundary, and reconciliation before calling the model replay-safe.",
+        "dbt is one tool for managing transformations and their dependencies. In a SQL model, `{{ ref('upstream_model') }}` declares an upstream relation and contributes to the DAG. Materializations decide how a model is represented; exact SQL and supported strategies depend on the adapter.\n\n- **view**, creates a view. Storage stays at metadata level, while query work moves to readers.\n- **table**, builds a physical relation. Replacement behavior, atomicity, and grants vary by adapter and configuration.\n- **incremental**, processes a selected subset after the initial build. A `unique_key` can enable update/merge behavior for supporting strategies. It does not make your source selection correct.\n- **ephemeral**, inlines SQL into downstream models as a CTE and creates no standalone relation.\n\nA naive `created_at > max(created_at)` filter misses late arrivals and later updates to older records. A safer design uses a source change token or reprocesses an overlap window, then deduplicates deterministically:\n\n```sql\n-- Adapter-specific interval syntax; validate for the target warehouse.\n{{ config(materialized='incremental', unique_key='order_id') }}\n\nselect order_id, user_id, amount_usd, status, created_at, updated_at\nfrom {{ ref('stg_orders') }}\n{% if is_incremental() %}\n  where updated_at >= (\n    select max(updated_at) - interval '2 day' from {{ this }}\n  )\n{% endif %}\n```\n\nStill a pattern, not a production guarantee. Define null handling, duplicate source keys, deletion capture, lookback size, transaction boundary, and reconciliation before you call the model replay-safe.",
     },
     {
       id: "s3b",
       title: "Incremental / SCD",
       readTimeMinutes: 3,
       content:
-        "Two common strategies apply incremental changes:\n\n- **MERGE (upsert).** Match source and target on a declared key, then update or insert. Replay safety requires unique and deterministic source rows, stable merge logic, correct deletion handling, and an atomic target commit. Adapter implementations can scan different amounts of target data.\n- **Insert-overwrite (partition replacement).** Recompute a complete target partition or window and replace it. Replay safety requires complete, deterministic input for that boundary and an engine operation that publishes the replacement atomically.\n\nMeasure both against update distribution, partition alignment, target size, concurrency, and engine behavior.\n\n**Slowly Changing Dimensions (SCD).**\n\n- **Type 1**, overwrite the modeled attribute. It represents current state and intentionally does not retain the prior modeled value.\n- **Type 2**, close one effective-dated version and insert another. It supports as-of joins when boundaries, late changes, and corrections are handled correctly, at the cost of more rows and more complex joins.\n\nUse Type 2 only for attributes whose historical state is required. The cost depends on change frequency, row width, indexing, and query pattern; it is not a fixed multiplier.",
+        "Two common strategies apply incremental changes:\n\n- **MERGE (upsert).** Match source and target on a declared key, then update or insert. Replay safety needs unique and deterministic source rows, stable merge logic, correct deletion handling, and an atomic target commit. Adapter implementations scan different amounts of target data.\n- **Insert-overwrite (partition replacement).** Recompute a complete target partition or window and replace it. Replay safety needs complete, deterministic input for that boundary and an engine operation that publishes the replacement atomically.\n\nMeasure both against update distribution, partition alignment, target size, concurrency, and engine behavior.\n\n**Slowly Changing Dimensions (SCD).**\n\n- **Type 1**, overwrite the modeled attribute. It carries current state and deliberately drops the prior modeled value.\n- **Type 2**, close one effective-dated version and insert another. It supports as-of joins when boundaries, late changes, and corrections are handled correctly, and it costs more rows and harder joins.\n\nUse Type 2 only for attributes whose historical state someone actually needs. The cost follows change frequency, row width, indexing, and query pattern. It is not a fixed multiplier.",
       keyTakeaway:
         "Choose SCD Type 1 for current-state attributes and Type 2 where a defined consumer needs effective-dated history; neither is a course-wide default.",
     },
@@ -61,34 +61,34 @@ const lesson: DataInfraLesson = {
       title: "DAG, backfill, retry",
       readTimeMinutes: 2,
       content:
-        "The diagram uses a deterministic synthetic 30-day workload with 1, 4, and 10 workers. Days `06`, `14`, and `22` receive fixed retry penalties. It illustrates scheduling and diminishing parallel benefit; it is not a runtime estimate or benchmark.\n\nA replayable batch job accepts an explicit input window and publishes deterministic output for the same input version. `MERGE`, partition replacement, or a transaction can support that goal, but external side effects, nondeterministic functions, late input, duplicates, and concurrent live writes still need explicit handling and reconciliation.",
+        "The diagram uses a deterministic synthetic 30-day workload with 1, 4, and 10 workers. Days `06`, `14`, and `22` carry fixed retry penalties. It illustrates scheduling and diminishing parallel benefit. It is neither a runtime estimate nor a benchmark.\n\nA replayable batch job accepts an explicit input window and publishes deterministic output for the same input version. `MERGE`, partition replacement, or a transaction can support that goal. External side effects, nondeterministic functions, late input, duplicates, and concurrent live writes still need explicit handling and reconciliation.",
     },
     {
       id: "s5",
       title: "Orchestrators",
       readTimeMinutes: 2,
       content:
-        "Airflow, Dagster, Prefect, and other orchestrators expose different abstractions and deployment models. Product capabilities change, so compare current versions against a requirements list:\n\n- dependency and event semantics;\n- retry, timeout, cancellation, and backfill behavior;\n- concurrency and resource controls;\n- secret handling and execution isolation;\n- logs, metrics, lineage, and ownership;\n- deployment, upgrade, and failure recovery;\n- integration with the team's existing runtime.\n\nThe orchestrator schedules work; it does not make the underlying job deterministic, atomic, or complete.",
+        "Airflow, Dagster, Prefect, and other orchestrators expose different abstractions and deployment models. Product capabilities change, so compare current versions against a requirements list:\n\n- dependency and event semantics;\n- retry, timeout, cancellation, and backfill behavior;\n- concurrency and resource controls;\n- secret handling and execution isolation;\n- logs, metrics, lineage, and ownership;\n- deployment, upgrade, and failure recovery;\n- integration with the team's existing runtime.\n\nThe orchestrator schedules work. It does not make the underlying job deterministic, atomic, or complete.",
     },
     {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on what you just read.",
+      content: "Two questions on retries and replay.",
     },
     {
       id: "s7",
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- **ELT supports replay only when landed input is complete, immutable enough for the purpose, retained, and governed.** ETL can be required at a security or minimization boundary.\n- **Design for retry and backfill.** Explicit windows, deterministic source versions, atomic publication, idempotent external effects, and reconciliation are separate requirements.\n- **Choose materialization from read cost, build cost, freshness, atomicity, and adapter behavior.** Names alone do not prove those properties.\n- **SCD Type 1 versus Type 2 is a history requirement.** Use versioning only where as-of analysis needs it and define late corrections.\n- **MERGE versus partition replacement depends on keys, partition alignment, concurrency, and engine implementation.** Test the actual plan and failure behavior.",
+        "- **ELT supports replay only when landed input is complete, immutable enough for the purpose, retained, and governed.** ETL can be mandatory at a security or minimization boundary.\n- **Design for retry and backfill.** Explicit windows, deterministic source versions, atomic publication, idempotent external effects, and reconciliation are separate requirements.\n- **Choose materialization from read cost, build cost, freshness, atomicity, and adapter behavior.** The name proves none of those properties.\n- **SCD Type 1 versus Type 2 is a history requirement.** Version only where as-of analysis needs it, and define late corrections.\n- **MERGE versus partition replacement depends on keys, partition alignment, concurrency, and engine implementation.** Test the actual plan and the failure behavior.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Idempotent**, repeating an operation with the same identity and input has no additional intended effect. Scope the claim to the state and side effects included.\n- **Incremental model**, a materialization that processes a selected subset after an initial build. Selection and merge strategy are separate design choices.\n- **SLA / freshness**, the contract or objective between source change and usable target data. Tool-specific configuration must be checked against current documentation.\n- **Lineage**, recorded relationships between jobs, datasets, and fields. Automatic extraction is incomplete when dependencies are dynamic or external.\n- **SCD Type 1**, replaces a modeled attribute and omits prior modeled values.\n- **SCD Type 2**, records effective-dated versions for as-of analysis.\n- **MERGE vs insert-overwrite**, keyed change application versus replacement of a complete boundary; both need deterministic input and atomic publication to support replay.\n- **Sensor**, an orchestrator mechanism that waits or defers until an external condition is observed; polling and event semantics vary by implementation.",
+        "- **Idempotent**, repeating an operation with the same identity and input has no additional intended effect. Scope the claim to the state and side effects it covers.\n- **Incremental model**, a materialization that processes a selected subset after an initial build. Selection and merge strategy are separate design choices.\n- **SLA / freshness**, the contract or objective between source change and usable target data. Check tool-specific configuration against current documentation.\n- **Lineage**, recorded relationships between jobs, datasets, and fields. Automatic extraction misses dynamic or external dependencies.\n- **SCD Type 1**, replaces a modeled attribute and drops prior modeled values.\n- **SCD Type 2**, records effective-dated versions for as-of analysis.\n- **MERGE vs insert-overwrite**, keyed change application versus replacement of a complete boundary; both need deterministic input and atomic publication to support replay.\n- **Sensor**, an orchestrator mechanism that waits or defers until an external condition is observed; polling and event semantics vary by implementation.",
     },
   ],
   widgets: [
@@ -110,7 +110,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          "Plain `INSERT` appends the same rows during a retry. A deterministic `MERGE` keyed by `order_id`, or atomic replacement of a complete window, can avoid duplicate target effects. Source duplicates, deletions, nondeterministic values, and partial external side effects still require tests.",
+          "Plain `INSERT` appends the same rows on every retry. A deterministic `MERGE` keyed by `order_id`, or atomic replacement of a complete window, avoids duplicate target effects. Source duplicates, deletions, nondeterministic values, and partial external side effects still need tests.",
       },
     },
     {
@@ -131,7 +131,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          "A retained landing zone can decouple transformation replay from source availability. It is useful only if input is complete, versioned enough for the requirement, retained, authorized, and compatible with corrected logic. Reprocessing still consumes compute and can require downstream reconciliation.",
+          "A retained landing zone decouples transformation replay from source availability. That holds only if the input is complete, versioned enough for the requirement, retained, authorized, and compatible with corrected logic. Reprocessing still burns compute and can force downstream reconciliation.",
       },
     },
     {
@@ -146,12 +146,12 @@ const lesson: DataInfraLesson = {
           {
             term: "Idempotent",
             q: "What boundary must be named?",
-            a: "State which output and external side effects remain unchanged when the same operation identity and input are repeated. A database write can be idempotent while a notification or API call is not.",
+            a: "State which output and external side effects stay unchanged when the same operation identity and input are repeated. A database write can be idempotent while a notification or API call is not.",
           },
           {
             term: "Incremental model",
             q: "How does dbt do it?",
-            a: "Use {% if is_incremental() %} to select a bounded change set, then configure an adapter-supported strategy. A max-timestamp filter can miss late updates; use a change token or overlap plus deterministic deduplication. unique_key behavior depends on the strategy and adapter.",
+            a: "Use {% if is_incremental() %} to select a bounded change set, then configure an adapter-supported strategy. A max-timestamp filter misses late updates; use a change token or overlap plus deterministic deduplication. unique_key behavior depends on the strategy and adapter.",
           },
           {
             term: "SLA / freshness",
@@ -161,22 +161,22 @@ const lesson: DataInfraLesson = {
           {
             term: "Lineage",
             q: "Why does it matter?",
-            a: "Lineage narrows which upstream datasets and jobs could affect an output. Automatically derived graphs can miss dynamic SQL, external APIs, and semantic changes, so ownership and run evidence remain necessary.",
+            a: "Lineage narrows which upstream datasets and jobs could affect an output. Derived graphs miss dynamic SQL, external APIs, and semantic changes, so ownership and run evidence stay necessary.",
           },
           {
             term: "SCD Type 1",
             q: "When to use it?",
-            a: "Overwrite the row in place when an attribute changes. No history. Use when historical values don't matter for reporting (e.g. correcting a typo, updating a phone number). Simple and cheap.",
+            a: "Overwrite the row in place when an attribute changes. No history. Use it when historical values don't matter for reporting (e.g. correcting a typo, updating a phone number). Simple and cheap.",
           },
           {
             term: "SCD Type 2",
             q: "When to use it?",
-            a: 'Close the old row (set valid_to + is_current=false) and insert a new row when an attribute changes. Full history preserved. Use when fact tables need to join to dimension-as-of-event-date (e.g. "what region was this customer in when they bought?"). Expensive: one row per version.',
+            a: 'Close the old row (set valid_to + is_current=false) and insert a new row when an attribute changes. Full history preserved. Use it when fact tables must join to dimension-as-of-event-date (e.g. "what region was this customer in when they bought?"). Expensive: one row per version.',
           },
           {
             term: "MERGE vs insert-overwrite",
             q: "Which is idempotent?",
-            a: "Either can support replay when the input and logic are deterministic and publication is atomic. MERGE also needs unique source rows and stable match logic; replacement needs a complete partition boundary. Cost depends on the engine and layout.",
+            a: "Either supports replay when the input and logic are deterministic and publication is atomic. MERGE also needs unique source rows and stable match logic; replacement needs a complete partition boundary. Cost follows the engine and the layout.",
           },
           {
             term: "Sensor",

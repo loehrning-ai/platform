@@ -137,7 +137,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Reading",
       minutes: (minutes) => `${minutes} min`,
       quizIntro:
-        "Choose the best answer for each question. Answers are stored only with this browser's course progress.",
+        "One best answer per question. Your answers stay in this browser's course progress, nowhere else.",
       quickCheck: "Knowledge check",
       check: "Check",
       answerOptions: "Answer options",
@@ -159,9 +159,9 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
         "Twenty-two questions from the nine module checks. Pass mark: 70 percent. Time limit: 28 minutes.",
     },
     certificateMetadata: {
-      title: "Course completion record: AI-Native Operator",
+      title: "Certificate of participation: AI-Native Operator",
       description:
-        "Download a locally generated course completion record. It is not server-verified, externally assessed, or accredited.",
+        "Download a locally generated certificate of participation. It is not server-verified, externally assessed, or accredited.",
     },
     verificationMetadata: {
       title: "Read course-record data: AI-Native Operator",
@@ -253,7 +253,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Lektüre",
       minutes: (minutes) => `${minutes} Min.`,
       quizIntro:
-        "Wählen Sie zu jeder Frage die beste Antwort. Antworten werden nur mit dem Kursfortschritt dieses Browsers gespeichert.",
+        "Wähle zu jeder Frage die beste Antwort. Die Antworten liegen nur im Kursfortschritt dieses Browsers.",
       quickCheck: "Wissensprüfung",
       check: "Prüfen",
       answerOptions: "Antwortmöglichkeiten",
@@ -277,12 +277,12 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
     certificateMetadata: {
       title: "Teilnahmebestätigung: AI-Native Operator",
       description:
-        "Laden Sie eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht servergeprüft, nicht fremdbewertet und nicht akkreditiert.",
+        "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht servergeprüft, nicht fremdbewertet und nicht akkreditiert.",
     },
     verificationMetadata: {
       title: "Teilnahmedaten lesen: AI-Native Operator",
       description:
-        "Lesen Sie die Teilnahmedaten aus einem QR-Link. Die Daten sind keine kryptografische Signatur oder serverseitige Prüfung.",
+        "Lies die Teilnahmedaten aus einem QR-Link. Sie sind keine kryptografische Signatur und keine serverseitige Prüfung.",
     },
     boundaries: {
       course: {

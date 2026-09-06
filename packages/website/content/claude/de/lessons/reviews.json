@@ -5,7 +5,7 @@
   "subtitle": "Ein systematischer Reviewer für klar abgegrenzte Prüfaufgaben.",
   "durationMinutes": 9,
   "trackId": "advanced",
-  "hook": "Claude kann Diffs und die behauptete Änderungsabsicht vergleichen.",
+  "hook": "Claude kann einen Diff gegen die behauptete Absicht halten.",
   "keyConcepts": [
     "Prompt-Vorlage für Reviews",
     "Schweregrad-Kennzeichnung",
@@ -17,7 +17,7 @@
       "id": "why-it-works",
       "title": "Welche Prüfaufgaben sich eignen",
       "readTimeMinutes": 2,
-      "content": "Ein Modell kann einen bereitgestellten Diff auf mögliche Fehler, Konventionsverstöße und fehlende Tests untersuchen. Dateien, Aufrufer, Laufzeitverhalten oder Repository-Regeln, die weder beigefügt noch über Tools erreichbar sind, bleiben außerhalb der Prüfung.\n\nStelle Änderungsziel, relevanten Umgebungscode, Projektkonventionen und Schweregrade bereit. Fordere für jeden Befund Datei und Zeile, einen konkreten Fehlerpfad sowie die Trennung von Beleg und Unsicherheit.\n\nModellverhalten ändert sich zwischen Versionen. Halte ein Review-Eval-Set vor und führe es nach Änderungen an Modell, Prompt oder Tool-Zugriff erneut aus."
+      "content": "Was kann ein Reviewer prüfen, der nur den Diff sieht? Mögliche Fehler, Konventionsverstöße, fehlende Tests. Dateien, Aufrufer, Laufzeitverhalten und Repository-Regeln, die weder beigefügt noch über Tools erreichbar sind, bleiben außen vor.\n\nGib Änderungsziel, relevanten Umgebungscode, Projektkonventionen und Schweregrade mit. Verlange für jeden Befund Datei und Zeile, einen konkreten Fehlerpfad und eine saubere Trennung von Beleg und Vermutung.\n\nModellverhalten ändert sich von Version zu Version. Ein Review-Eval-Set läuft deshalb nach jeder Änderung an Modell, Prompt oder Tool-Zugriff erneut."
     },
     {
       "id": "review-template",
@@ -29,7 +29,7 @@
       "id": "when-it-earns-its-keep",
       "title": "Drei geeignete Einsatzsituationen",
       "readTimeMinutes": 2,
-      "content": "- **Vor dem Review.** Führe einen fokussierten Durchlauf über den Diff aus, verifiziere jeden Befund und starte die relevanten Checks.\n- **Bei großen Änderungen.** Erzeuge eine vorläufige Karte geänderten Verhaltens und betroffener Aufrufpfade; vergleiche sie mit Codesuche und Tests.\n- **Repository-weit.** Ermittle Aufrufer zuerst mit Repository-Tools und analysiere anschließend die konkreten Ergebnisse auf Kompatibilitätsrisiken."
+      "content": "- **Vor dem Review.** Ein fokussierter Durchlauf über den Diff, jeden Befund verifizieren, die relevanten Checks starten.\n- **Bei großen Änderungen.** Lass eine vorläufige Karte des geänderten Verhaltens und der betroffenen Aufrufpfade erzeugen, dann gegen Codesuche und Tests halten.\n- **Repository-weit.** Erst die Aufrufer mit Repository-Tools ermitteln, dann die konkreten Treffer auf Kompatibilitätsrisiken analysieren."
     }
   ],
   "widgets": [
@@ -41,7 +41,7 @@
         "lessonId": "reviews",
         "cpId": "review",
         "title": "Diff überprüfen",
-        "hint": "Füge einen kleinen Diff ein. Bitte um ein Review auf Staff-Level unter Verwendung der obigen Vorlage.",
+        "hint": "Füge einen kleinen Diff ein und fordere mit der Vorlage oben ein Review auf Staff-Level an.",
         "placeholder": "Du überprüfst einen PR als Staff Engineer…\n\nDIFF:\n<Diff einfügen>"
       }
     },
@@ -60,7 +60,7 @@
           "Zweimal mit unterschiedlicher Formulierung fragen."
         ],
         "correct": 1,
-        "explanation": "Prompts steuern den Fokus. Weise den Reviewer an, was zu priorisieren und was zu ignorieren ist.",
+        "explanation": "Prompts steuern den Fokus. Sag dem Reviewer, was zählt und was er ignorieren soll.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

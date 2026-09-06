@@ -100,7 +100,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Core fundamentals: <span class='accent'>storage, formats, engines.</span>"
-        hook="Query cost starts with data layout, metadata, and the engine that reads the files. This chapter traces those layers before comparing execution models."
+        hook="Query cost starts with data layout, metadata, and the engine that reads the files. Change the engine alone and the layout still bills you."
         meta={[
           { k: "Covers", v: '<span class="chip">Lakehouse</span><span class="chip">Row vs columnar</span><span class="chip">Parquet</span><span class="chip">Iceberg</span>' },
           { k: "Engines", v: "Presto · Spark · Trino · Snowflake" },
@@ -112,13 +112,13 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.1">Decoupling storage from compute</SectionLabel>
         <h2 className="h2">Why storage and compute are separated.</h2>
         <p className="prose">
-          A decade ago, a warehouse was a box. Oracle, Teradata, Vertica: one appliance owned both the disks and the query engine. You bought them
-          together, you scaled them together, and if you wanted to try a new engine you migrated terabytes first.
+          A decade ago a warehouse was a box. Oracle, Teradata, Vertica: one appliance owned the disks and the query engine. You bought them
+          together. You scaled them together. Wanting a different engine meant migrating terabytes first.
         </p>
         <p className="prose">
-          A <b>lakehouse</b> architecture can place data in shared object storage such as S3, GCS, or Azure Blob, commonly as columnar files such
-          as Parquet or ORC. Engines that support the chosen formats, table metadata, and access controls can read those files. Compute and
-          storage then scale through separate controls.
+          A <b>lakehouse</b> puts data in shared object storage such as S3, GCS, or Azure Blob, usually as columnar files such
+          as Parquet or ORC. Any engine that understands the format, the table metadata, and the access rules reads the same files. Compute and
+          storage scale separately from then on.
         </p>
         <LakehouseDiagram />
       </section>
@@ -127,9 +127,9 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.2">The layers</SectionLabel>
         <h2 className="h2">Seven layers, one query.</h2>
         <p className="prose">
-          The course reference path separates a warehouse query into seven diagnostic layers. The stack, bottom-up: <b>physical storage</b> (SSD blob tier), <b>blob</b> (S3),<b> file format</b>{" "}
+          The course splits a warehouse query into seven diagnostic layers. Bottom-up: <b>physical storage</b> (SSD blob tier), <b>blob</b> (S3),<b> file format</b>{" "}
           (Parquet · ORC · Avro), <b>table abstraction</b> (namespaces → tables → partitions),<b> catalog</b> (Glue Catalog), <b>query engine</b>{" "}
-          (Presto · Spark), <b>application</b> (Hex · dashboards). Knowing the layer means knowing the failure mode.
+          (Presto · Spark), <b>application</b> (Hex · dashboards).
         </p>
         <LayerCake />
       </section>
@@ -138,9 +138,9 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.3">A byte&apos;s journey</SectionLabel>
         <h2 className="h2">From SELECT to flash tier, and back.</h2>
         <p className="prose">
-          Let&apos;s make storage tangible. Here&apos;s a single byte: the value of <code>user_email</code> for one row - traced through every stop
-          from the SQL statement to the physical bytes on disk. Cold and warm caches have wildly different latency profiles; metastore and blob
-          lookups can add substantial work to a cold run. The simulator uses illustrative inputs rather than vendor benchmarks.
+          One byte makes the storage path concrete: the value of <code>user_email</code> in a single row. The simulator follows it from the SQL
+          statement down to the physical bytes on disk. Cold and warm caches behave nothing alike, and on a cold run metastore and blob
+          lookups add real work. The numbers shown are illustrative, not vendor benchmarks.
         </p>
         <ByteTrace />
       </section>
@@ -149,18 +149,18 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.4">Row vs columnar, visualized</SectionLabel>
         <h2 className="h2">Why analytics loves columns.</h2>
         <p className="prose">
-          In a row layout, a record&apos;s fields are stored together. That layout supports point reads well, but an analytical query over one column
-          may read unrelated fields unless the storage engine has another access path.
+          In a row layout, a record&apos;s fields sit together. Point reads love that. An analytical query over one column drags every other field
+          along unless the storage engine offers another access path.
         </p>
         <p className="prose">
-          In a columnar layout, values of <code>revenue</code> are stored in column chunks. When the format and connector support projection
-          pushdown, the engine reads the requested chunks instead of every field. The actual reduction depends on the selected columns, file
-          layout, and query plan.
+          In a columnar layout, the values of <code>revenue</code> live in their own chunks. If format and connector support projection
+          pushdown, the engine fetches those chunks and skips the rest. How much that saves depends on the selected columns, the file
+          layout, and the query plan.
         </p>
         <Scanner />
         <p className="prose" style={{ marginTop: 24 }}>
           Columnar storage can compress efficiently because adjacent values often share a type and distribution. Compression depends on the data,
-          encoding, codec, and row-group size; measure the result on representative files.
+          encoding, codec, and row-group size. Measure the result on representative files.
         </p>
       </section>
 
@@ -168,7 +168,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.5">The file-format spectrum</SectionLabel>
         <h2 className="h2">From CSV to Iceberg.</h2>
         <p className="prose">
-          There&apos;s a layered vocabulary worth getting right. <b>File format</b> is how bytes sit on disk.<b> Table format</b> is a catalog of
+          <b>File format</b> is how bytes sit on disk.<b> Table format</b> is a catalog of
           files that makes them behave like a table: transactional, evolvable, time-travelable.
         </p>
         <FormatSpectrum />
@@ -182,10 +182,10 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.6">How a query becomes work</SectionLabel>
         <h2 className="h2">Five transformations between your text and your bytes.</h2>
         <p className="prose">
-          New hires think SQL &quot;just runs.&quot; In fact a coordinator takes your statement through a pipeline: parser builds an <b>AST</b>,
+          SQL does not just run. A coordinator walks the statement through a chain: parser builds an <b>AST</b>,
           analyzer resolves names against the catalog, planner emits a<b> logical</b> tree of relational operators, then a <b>physical</b> plan
-          with exchange types and worker counts, and finally a <b>task graph</b> of stages dispatched across the cluster. Plan and runtime detail
-          exposed by <code>EXPLAIN</code> or <code>EXPLAIN ANALYZE</code> depends on the engine.
+          with exchange types and worker counts, and finally a <b>task graph</b> of stages dispatched across the cluster. What
+          <code>EXPLAIN</code> or <code>EXPLAIN ANALYZE</code> shows depends on the engine.
         </p>
         <SqlDecoderStage />
       </section>
@@ -194,9 +194,9 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.7">The engine ecosystem</SectionLabel>
         <h2 className="h2">Pick the engine for the query, not the other way round.</h2>
         <p className="prose">
-          Decoupled storage means you can run <em>different</em> engines against the <em>same</em> bytes depending on what you&apos;re doing.
-          Interactive queries and long transformations place different demands on startup time, memory, spill, retries, and concurrency. Compare
-          those requirements against the engine&apos;s configured behavior.
+          Decoupled storage means <em>different</em> engines can read the <em>same</em> bytes.
+          Interactive queries and long transformations demand very different things from startup time, memory, spill, retries, and concurrency. Compare
+          those demands against what your engine is configured to do.
         </p>
         <EngineCards />
       </section>
@@ -205,9 +205,9 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.8">Connectors: same SQL, different physics</SectionLabel>
         <h2 className="h2">The connector chooses the physics.</h2>
         <p className="prose">
-          Trino (the open-source MPP query engine, originally PrestoSQL) ships a pluggable connector interface: the same SQL statement can compile
-          down to distributed object-store reads, local storage access, or coordinator metadata. The same query text can therefore use different
-          I/O paths. Inspect the connector plan, cache state, and data placement before comparing latency.
+          Trino, the open-source MPP query engine originally called PrestoSQL, ships a pluggable connector interface. The same SQL statement can compile
+          down to distributed object-store reads, local storage access, or coordinator metadata. Identical query text, different
+          I/O paths. Check the connector plan, the cache state, and the data placement before you compare latency.
         </p>
         <ConnectorSwitcher />
       </section>

@@ -1,52 +1,52 @@
 # Outlook: robust principles for volatile technology
 
-Models, prices, providers, and product features change quickly. Sound decisions therefore do not depend on a single model forecast.
+Models, prices, providers, and product features change fast. Your review principles do not. A good decision never hangs on a single model forecast.
 
 ## What remains stable
 
 ### Domain knowledge
 
-Domain experts understand a process's exceptions, consequences, and quality criteria. This knowledge must be translated into test cases, rubrics, oversight, and escalation. Model output does not replace professional accountability.
+Domain experts know their process, its exceptions, consequences, and quality criteria. That knowledge belongs in test cases, rubrics, oversight, and escalation. Model output replaces no professional accountability.
 
 ### Data quality
 
-Unclear provenance, outdated content, missing rights, and systematic gaps are not automatically resolved by a more capable model.
+Unclear provenance, outdated content, missing rights, and systematic gaps do not disappear because the model grew.
 
 ### Reproducible tests
 
-A benchmark or demonstration does not show whether a system works in the organization's own process. Versioned test cases and predefined criteria remain necessary.
+A benchmark or a demonstration does not show whether a system works in your process. Versioned test cases and criteria set in advance stay necessary.
 
 ### Control and exit
 
-Organizations need permissions, logs, fallback, recovery, deletion, and the ability to switch. This applies to both cloud and local systems.
+You need permissions, logs, fallback, recovery, deletion, and a way out either way. In the cloud as much as locally.
 
 ## Three developments to monitor
 
 ### Systems that can take action
 
-Systems are increasingly able to call tools and perform multi-step tasks. This increases risks involving permissions, error propagation, and incidents. Limit permissions, transactions, runtime, and data access. Require confirmation before irreversible actions.
+Systems call tools and carry out multi-step tasks. Permission risk, error propagation, and incident risk grow with them. Limit rights, transactions, runtime, and data access. Irreversible actions get confirmed first.
 
 ### Multimodal processing
 
-Text, images, audio, and video can be processed together. This expands both use cases and data risks. An image can contain faces, locations, health data, trade secrets, or copyrighted material even when the task itself appears harmless.
+Text, image, audio, and video can be processed together. That widens the use cases and the data risks. An image can hold faces, locations, health data, trade secrets, or copyrighted material, even when the task looks harmless.
 
 ### Local and hybrid processing
 
-Smaller models can run on controlled devices. Local does not automatically mean secure or legally compliant: model provenance, application, network, extensions, telemetry, synchronization, backups, device encryption, and deletion still require assessment. A rented GPU instance is remote hosting, not local processing.
+Smaller models can run on controlled devices. Local does not automatically mean secure or lawful: model provenance, application, network, extensions, telemetry, synchronization, backups, device encryption, and deletion still need checking. A rented GPU instance is remote hosting, not local processing.
 
 ## Scenarios instead of predictions
 
-Plan for at least three scenarios:
+Plan at least three scenarios:
 
-- **Capabilities improve quickly:** Testing and approval processes must assess new models promptly but under control.
-- **Improvement levels off:** The business case must work with today's capabilities.
-- **Providers or rules change:** Data export, an alternative runtime, and a documented exit prevent operations from stalling.
+- **Capabilities improve fast:** test and approval processes must judge new models quickly, under control.
+- **Improvement levels off:** the business case must carry with today's capabilities.
+- **Providers or rules change:** data export, an alternative runtime, and a documented exit prevent a standstill.
 
-A strategy that works only under a particular AGI forecast is not robust.
+A strategy that works only under one AGI forecast is no strategy you can lean on.
 
 ## The next concrete step
 
-Open a blank inventory and document for one process:
+Open an empty inventory and document, for one process:
 
 - data source and owner
 - purpose and subsequent action
@@ -56,4 +56,4 @@ Open a blank inventory and document for one process:
 - measurable error types
 - fallback and stop criterion
 
-This is not a company ranking. It is the basis for an auditable decision.
+This is not a company ranking. It is the ground under a decision you can defend.

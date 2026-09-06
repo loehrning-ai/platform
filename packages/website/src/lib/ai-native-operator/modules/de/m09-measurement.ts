@@ -9,9 +9,9 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Nutzung von Ergebnismessung trennen",
     subtitle:
-      "Aktivitätsdaten für den Betrieb nutzen, den Wert jedoch mit vorher festgelegten Ergebnissen, Kosten und Schutzgrößen bewerten.",
+      "Aktivitätsdaten steuern den Betrieb. Den Wert belegen vorher festgelegte Ergebnisse, Kosten und Schutzgrößen.",
     objective:
-      "Aktivitätsdaten für den Betrieb nutzen, den Wert jedoch mit vorher festgelegten Ergebnissen, Kosten und Schutzgrößen bewerten.",
+      "Aktivitätsdaten steuern den Betrieb. Den Wert belegen vorher festgelegte Ergebnisse, Kosten und Schutzgrößen.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
@@ -21,14 +21,14 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Aktivität ist Diagnose und kein Wertbeleg",
         readTimeMinutes: 9,
         content:
-          "Lizenzen, aktive Personen, Modellaufrufe, Datenvolumen und Funktionsnutzung können Reichweite, Last, Kosten und Unterstützungsbedarf zeigen. Sie zeigen nicht, ob die Maßnahme die Arbeit verbessert hat. Trennen Sie Nutzungsgrößen, Betriebsgrößen, Ergebnisgrößen und Schutzgrößen, damit keine Kategorie als eine andere ausgegeben wird.",
+          "Lizenzen, aktive Personen, Modellaufrufe, Datenvolumen und Funktionsnutzung zeigen Reichweite, Last, Kosten und Unterstützungsbedarf. Ob die Arbeit besser geworden ist, zeigen sie nicht. Halte Nutzungsgrößen, Betriebsgrößen, Ergebnisgrößen und Schutzgrößen getrennt, damit keine Kategorie als eine andere verkauft wird.",
       },
       {
         id: "s2",
         title: "Ein ausgewogenes Messgrößenset festlegen",
         readTimeMinutes: 9,
         content:
-          "Beginnen Sie mit dem erwarteten Wirkmechanismus: Welches Verhalten ändert sich und welches Ergebnis sollte daraus folgen? Wählen Sie wenige rollenbezogene Ergebnisse und ergänzen Sie Qualitäts-, Risiko-, Gleichbehandlungs- und Kostenschutzgrößen. Definieren Sie Grundgesamtheit, Berechnung, Quelle, Zuständigkeit, Prüfrhythmus und Entscheidungsschwelle, bevor Sie Ergebnisse betrachten.",
+          "Fang beim erwarteten Wirkmechanismus an: Welches Verhalten ändert sich, welches Ergebnis folgt daraus? Wähle wenige rollenbezogene Ergebnisse und stell ihnen Qualitäts-, Risiko-, Gleichbehandlungs- und Kostenschutzgrößen zur Seite. Grundgesamtheit, Berechnung, Quelle, Zuständigkeit, Prüfrhythmus und Entscheidungsschwelle stehen fest, bevor du die ersten Zahlen siehst.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -42,7 +42,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Messgrößenset",
           scenario:
-            "Nennen Sie für einen Ablauf den erwarteten Wirkmechanismus, das wichtigste Ergebnis, Qualitäts- und Risikoschutzgrößen, Kostenmaß, Grundgesamtheit, Datenquelle, Zuständigkeit, Prüfrhythmus und Entscheidungsschwelle.",
+            "Nenne für einen Ablauf den erwarteten Wirkmechanismus, das wichtigste Ergebnis, Qualitäts- und Risikoschutzgrößen, Kostenmaß, Grundgesamtheit, Datenquelle, Zuständigkeit, Prüfrhythmus und Entscheidungsschwelle.",
           rows: 4,
         },
       },
@@ -68,14 +68,14 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Den Ausgangszeitraum aus den Daten ableiten",
         readTimeMinutes: 7,
         content:
-          "Der notwendige Beobachtungszeitraum hängt von Ereignishäufigkeit, Streuung, Saisonalität und der für die Entscheidung erkennbaren Änderungsgröße ab. Frieren Sie Messdefinition, Grundgesamtheit, Ausschlüsse und Datenqualitätsprüfungen vor der Einführung ein. Dokumentieren Sie Unsicherheit, statt einen einzelnen historischen Mittelwert als exakt zu behandeln.",
+          "Wie lange du beobachten musst, hängt an Ereignishäufigkeit, Streuung, Saisonalität und der Änderungsgröße, die für die Entscheidung erkennbar sein muss. Messdefinition, Grundgesamtheit, Ausschlüsse und Datenqualitätsprüfungen frierst du vor der Einführung ein. Und die Unsicherheit gehört dokumentiert. Ein historischer Mittelwert ist nicht exakt.",
       },
       {
         id: "s2",
         title: "Einen belastbaren Vergleich aufbauen",
         readTimeMinutes: 7,
         content:
-          "Ein Vorher-nachher-Vergleich kann durch Änderungen bei Personal, Nachfrage, Richtlinien, Produkt oder Markt verzerrt werden. Nutzen Sie nach Möglichkeit ein zufälliges, gestaffeltes, abgeglichenes oder unterbrochenes Zeitreihendesign. Erfassen Sie parallele Änderungen und Grenzen der Auslegung. Wenn der Vergleich keine Ursachenaussage trägt, berichten Sie nur einen Zusammenhang.",
+          "Ein Vorher-nachher-Vergleich verzerrt, sobald sich Personal, Nachfrage, Richtlinien, Produkt oder Markt mitbewegen. Nutze wo möglich ein zufälliges, gestaffeltes, abgeglichenes oder unterbrochenes Zeitreihendesign. Halte parallele Änderungen und die Grenzen der Auslegung fest. Trägt der Vergleich keine Ursachenaussage, berichte einen Zusammenhang.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -88,7 +88,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "measurement/2",
           cpId: "exercise",
           scenario:
-            "Wählen Sie eine Einführung. Definieren Sie Messgröße, Grundgesamtheit, Ausschlüsse, Ausgangszeitraum, Prüfungen auf Streuung und Saisonalität, Vergleichsgruppe oder -design, parallele Änderungen und die stärkste durch die Belege tragbare Aussage.",
+            "Nimm eine Einführung. Lege Messgröße, Grundgesamtheit, Ausschlüsse, Ausgangszeitraum, Prüfungen auf Streuung und Saisonalität, Vergleichsgruppe oder -design, parallele Änderungen und die stärkste Aussage fest, die die Belege tragen.",
           rows: 3,
         },
       },
@@ -114,14 +114,14 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Den Rhythmus aus dem Entscheidungszyklus ableiten",
         readTimeMinutes: 10,
         content:
-          "Die Prüfhäufigkeit sollte dazu passen, wie schnell Belege entstehen, wie oft die Maßnahme geändert werden kann und welche Kosten eine späte Korrektur verursacht. Legen Sie Beteiligte, Entscheidungsrechte, erforderliche Belege und Abgabetermine fest. Die Prüfung dient Entscheidungen und nicht der Aufzählung von Aktivitäten oder einer Produktvorführung.",
+          "Die Prüfhäufigkeit folgt daraus, wie schnell Belege entstehen, wie oft sich die Maßnahme ändern lässt und was eine späte Korrektur kostet. Leg Beteiligte, Entscheidungsrechte, nötige Belege und Abgabetermine fest. Die Prüfung trifft Entscheidungen. Sie zählt keine Aktivitäten auf und ist keine Produktvorführung.",
       },
       {
         id: "s2",
         title: "Ein einheitliches Belegpaket verwenden",
         readTimeMinutes: 10,
         content:
-          "Zeigen Sie Hypothese, Maßnahme, Ausgangslage und Vergleich, Ergebnisse mit Unsicherheit, Schutzgrößen und Störungen, Betriebskosten, Grenzen und Entscheidungsvorschlag. Dokumentieren Sie Fortsetzung, Änderung, Pause oder Beendigung, benennen Sie die Zuständigkeit und die Bedingung für die nächste Prüfung. Bewahren Sie das Ergebnis auf, damit spätere Teams die Belege wiederverwenden können.",
+          "Zeig Hypothese, Maßnahme, Ausgangslage und Vergleich, Ergebnisse mit Unsicherheit, Schutzgrößen und Störungen, Betriebskosten, Grenzen und Entscheidungsvorschlag. Halte fest, ob fortgesetzt, geändert, pausiert oder beendet wird, wer dafür geradesteht und woran die nächste Prüfung hängt. Das Ergebnis bleibt erhalten, damit spätere Teams die Belege wiederverwenden.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -135,7 +135,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Belegpaket für die Prüfung",
           scenario:
-            "Entwerfen Sie fünf Abschnitte für die nächste Prüfung. Jeder Abschnitt soll die gezeigten Belege und die damit unterstützte Entscheidung nennen.",
+            "Entwirf fünf Abschnitte für die nächste Prüfung. Jeder Abschnitt nennt die gezeigten Belege und die Entscheidung, die sie stützen.",
           placeholders: [
             "1. Hypothese und Maßnahme",
             "2. Ausgangslage, Vergleich und Unsicherheit",
@@ -153,9 +153,9 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Wissensprüfung und Abschlussaufgabe zu Modul 9",
-    subtitle: "Prüfen Sie die Messpraktiken dieses Moduls.",
-    objective: "Prüfen Sie die Messpraktiken dieses Moduls.",
+    title: "Modul 9, Wissensprüfung und Abschlussaufgabe",
+    subtitle: "Drei Fragen zu den Messpraktiken.",
+    objective: "Drei Fragen zu den Messpraktiken.",
     durationMinutes: 15,
     keyConcepts: [],
     quiz: [
@@ -186,7 +186,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine bezifferte Verbesserung braucht eine stabile Definition, eine belastbare Ausgangslage und einen glaubwürdigen Vergleich sowie eine Betrachtung anderer möglicher Erklärungen. Modellanbieter, Umsetzungspartner und Lizenzzahl belegen nicht, dass die Maßnahme das berichtete Ergebnis verursacht hat.",
+          "Eine bezifferte Verbesserung braucht eine stabile Definition, eine belastbare Ausgangslage, einen glaubwürdigen Vergleich und einen Blick auf andere mögliche Erklärungen. Modellanbieter, Umsetzungspartner und Lizenzzahl belegen nicht, dass die Maßnahme dieses Ergebnis verursacht hat.",
       },
       {
         id: "ano-measurement-q2",
@@ -215,7 +215,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Nutzung und Stimmung können den Betrieb erklären, belegen aber keinen Wert. Stärkere Belege verbinden vorher festgelegte Ergebnisse und Schutzgrößen mit einem glaubwürdigen Vergleich und weisen Kosten, Unsicherheit sowie alternative Erklärungen aus.",
+          "Nutzung und Stimmung erklären den Betrieb, nicht den Wert. Stärkere Belege verbinden vorher festgelegte Ergebnisse und Schutzgrößen mit einem glaubwürdigen Vergleich und weisen Kosten, Unsicherheit und alternative Erklärungen aus.",
       },
       {
         id: "ano-measurement-q3",
@@ -243,7 +243,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Die Prüfung soll entscheiden, ob eine Maßnahme fortgesetzt, verändert, pausiert oder beendet wird. Ein einheitliches Belegpaket, eine benannte Entscheidungsverantwortung und eine klare nächste Bedingung machen das Ergebnis prüfbar und wiederverwendbar.",
+          "Die Prüfung entscheidet, ob eine Maßnahme fortgesetzt, verändert, pausiert oder beendet wird. Ein einheitliches Belegpaket, eine benannte Entscheidungsverantwortung und eine klare nächste Bedingung machen das Ergebnis prüfbar und wiederverwendbar.",
       },
     ],
     sections: [],

@@ -37,7 +37,7 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Discover: <span class='accent'>find ownership, contract, and lineage.</span>"
-        hook="The course uses a fictional command palette, a DatasetSpec metadata file, and a lineage graph to practice common discovery tasks. These interfaces are reference designs, not industry standards."
+        hook="A fictional command palette, a DatasetSpec metadata file, and a lineage graph carry the discovery practice here. These interfaces are reference designs, not industry standards."
         meta={[
           { k: "Glossary", v: "palette + wut" },
           { k: "Metadata", v: "DatasetSpec" },
@@ -58,20 +58,13 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
 
       <section className="section">
         <SectionLabel n="7.2">The metadata file</SectionLabel>
-        <p className="prose">
-          In this reference design, each dataset has a versioned <b>DatasetSpec</b> beside its pipeline code. Integrations can read its
-          descriptions, owner, status, and actor annotations. The file is a declared contract; verify that the catalog and lineage ingestion are
-          current before relying on them.
-        </p>
+        <p className="prose">In this reference design every dataset carries a versioned <b>DatasetSpec</b> next to its pipeline code, and integrations read its descriptions, owner, status, and actor annotations from there. The file is a declared contract. Check that catalog and lineage ingestion are current before you lean on either.</p>
         <CodeBlock title="dim_users.spec.yaml · dataset metadata" lang="YAML" html={DATASETSPEC_YAML} />
       </section>
 
       <section className="section">
         <SectionLabel n="7.3">Lineage as a camera</SectionLabel>
-        <p className="prose">
-          A lineage graph can show emitted upstream and downstream edges, including column-level relationships when the integrations provide
-          them. It may be incomplete. Combine the graph with owners, source code, catalog search, and runtime evidence before estimating impact.
-        </p>
+        <p className="prose">A lineage graph shows the emitted upstream and downstream edges, column-level relationships included when the integrations provide them. It is also incomplete. Pair it with owners, source code, catalog search, and runtime evidence before you estimate impact.</p>
         <LineageCamera />
       </section>
 

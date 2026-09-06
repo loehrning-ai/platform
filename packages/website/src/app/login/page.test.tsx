@@ -80,12 +80,16 @@ describe("login locale surface", () => {
     [
       "de",
       "Login | Freie Lernplattform",
-      "Optionales Lernkonto für Kursfortschritt, Lernnachweise und Zertifikate auf loehrning.ai.",
+      // Copy lock updated: the German platform issues two completion documents
+      // (Teilnahmebestätigung, and a Lernnachweis for ki-und-gesellschaft), so the
+      // login description names both instead of only the first.
+      "Optionales Lernkonto für Kursfortschritt, Teilnahmebestätigungen und Lernnachweise auf loehrning.ai.",
     ],
     [
       "en",
       "Login | Open learning platform",
-      "Optional learning account for course progress, learning records, and certificates on loehrning.ai.",
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      "Optional learning account for course progress and certificates of participation on loehrning.ai.",
     ],
   ] as const)("uses precise %s noindex metadata", async (locale, title, description) => {
     mocks.getRequestLocale.mockResolvedValue(locale);

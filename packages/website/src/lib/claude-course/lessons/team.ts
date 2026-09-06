@@ -26,28 +26,28 @@ const lesson: ClaudeLesson = {
       title: "Why share",
       readTimeMinutes: 1,
       content:
-        "A prompt used by one person often contains hidden context: local paths, team names, unstated source access, or an output format understood only by its author. Sharing the text alone does not make the workflow reusable.\n\nTreat recurring prompts as maintained artifacts. Record the task, required inputs, supported model or tool assumptions, expected output, owner, and evaluation cases.",
+        "You drop your best prompt in the team channel. Nothing happens. A prompt written by one person carries hidden context: local paths, team names, unstated source access, an output format only its author reads. The text alone is not the workflow.\n\nTreat recurring prompts as maintained artifacts. Record the task, required inputs, model and tool assumptions, expected output, owner, and evaluation cases.",
     },
     {
       id: "three-artifacts",
       title: "Three team artifacts worth maintaining",
       readTimeMinutes: 2,
       content:
-        "- **01 · Prompt library.** A repo or Gdoc with named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** Checked into the repo. Reviewed like code. Updated when conventions drift.\n- **03 · Eval set.** A handful of realistic examples, input plus expected flavor of output. Use it to check a prompt change didn't regress.",
+        "- **01 · Prompt library.** A repo or Gdoc with named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** Checked into the repo. Reviewed like code. Updated when conventions drift.\n- **03 · Eval set.** A handful of realistic examples, input plus the expected flavor of output. Run it to catch a regression.",
     },
     {
       id: "sharing-well",
       title: "How to share a prompt well",
       readTimeMinutes: 2,
       content:
-        "Before publishing a prompt:\n\n- **Parameterize local details.** Replace hardcoded project names and paths with named inputs such as `<PROJECT>`.\n- **State scope and prerequisites.** Explain when to use it, which sources it needs, and which actions it may take.\n- **Provide a reviewed example.** Mark it as illustrative and remove sensitive data.\n- **Document known failures.** Link each material failure to an evaluation case or operational control.",
+        "Four checks before you publish.\n\n- **Parameterize local details.** Replace hardcoded project names and paths with named inputs such as `<PROJECT>`.\n- **State scope and prerequisites.** Explain when to use it, which sources it needs, and which actions it may take.\n- **Provide a reviewed example.** Mark it illustrative and strip sensitive data.\n- **Document known failures.** Link each material failure to an evaluation case or operational control.",
     },
     {
       id: "rituals",
       title: "Rituals that compound",
       readTimeMinutes: 1,
       content:
-        "Use a short, recurring review to examine one workflow, its evidence, and one failure case. Promote it to the shared library only after another teammate can run it from the documentation and reproduce the intended result.",
+        "Run a short recurring review over one workflow, its evidence, and one failure case. It joins the shared library only after a teammate runs it from the documentation alone and reproduces the result.",
     },
   ],
   widgets: [

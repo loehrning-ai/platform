@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein Produktname belegt weder die technische Funktionsweise noch die rechtliche Einordnung einer konkreten Version. Das Inventar erfasst die Funktion und verweist auf Herstellerunterlagen und die verantwortliche Bewertung.",
+    "explanation": "Der Produktname sagt weder, wie die Version technisch arbeitet, noch, wie sie rechtlich einzuordnen ist. Ins Inventar kommt die Funktion, dazu der Verweis auf die Herstellerunterlagen und auf die Stelle, die bewertet.",
     "version": 1,
     "active": true
   },
@@ -57,7 +57,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Auch privat hängt die Eignung von Inhalt, Rechten, Datenkontrollen, Aufbewahrung und Bedingungen ab. Preis und Marke sind keine Sicherheitsklassen; Zugangsdaten gehören nie in Prompts.",
+    "explanation": "Privat gelten dieselben Fragen: Inhalt, Rechte, Datenkontrollen, Aufbewahrung, Bedingungen. Preis und Marke sind keine Sicherheitsklassen. Und Zugangsdaten gehören in keinen Prompt.",
     "version": 2,
     "active": true
   },
@@ -88,7 +88,7 @@
         "isCorrect": true
       }
     ],
-    "explanation": "KI-gestützte Funktionen können in Alltagsprodukten eingebettet sein. Aus drei Produktnamen folgt aber nicht automatisch die Zahl eigenständiger KI-Systeme. Funktion und Version müssen erfasst und geprüft werden.",
+    "explanation": "Drei Produktnamen, und trotzdem weißt du noch nicht, wie viele eigenständige KI-Systeme dahinterstehen. KI-gestützte Funktionen stecken oft eingebettet in Alltagsprodukten. Erfasst werden Funktion und Version, geprüft wird danach.",
     "version": 1,
     "active": true
   },
@@ -119,7 +119,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein belastbares Inventar unterstützt Risikobewertung, Verantwortungszuordnung und Freigaben. Es ist ein Governance-Baustein; ob und in welcher Form es rechtlich erforderlich ist, hängt vom konkreten System und der Rolle der Organisation ab.",
+    "explanation": "Ohne Inventar keine Risikobewertung, keine Zuständigkeit, keine Freigabe, die hält. Es ist ein Governance-Baustein. Ob und in welcher Form es rechtlich verlangt ist, hängt vom konkreten System und von der Rolle der Organisation ab.",
     "version": 1,
     "active": true
   },
@@ -146,11 +146,11 @@
       },
       {
         "id": "d",
-        "text": "Digital gespeicherte Daten dürfen grundsätzlich nicht verarbeitet werden.",
+        "text": "Digital gespeicherte Daten dürfen überhaupt nicht verarbeitet werden.",
         "isCorrect": false
       }
     ],
-    "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Ein AVV allein macht die Verarbeitung nicht zulässig; erforderlich sind unter anderem Zweck, Rechtsgrundlage, Datenminimierung, Vertrag, Konfiguration und betriebliche Freigabe.",
+    "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Ein AVV allein macht die Verarbeitung nicht zulässig. Dazu gehören Zweck, Rechtsgrundlage, Datenminimierung, Vertrag, Konfiguration und die betriebliche Freigabe, und je nach Fall mehr.",
     "version": 1,
     "active": true
   },
@@ -181,7 +181,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Eine Freigabe gilt für eine konkrete Kombination aus Zweck, Daten, Funktion und Konfiguration. Vertrag, Berechtigungen, Aufbewahrung, Region und weitere Pflichten müssen dazu passen; kein Markenname ersetzt diese Prüfung.",
+    "explanation": "Eine Freigabe gilt für eine konkrete Kombination: Zweck, Daten, Funktion, Konfiguration. Vertrag, Berechtigungen, Aufbewahrung, Region und weitere Pflichten müssen dazu passen. \"Enterprise\" im Produktnamen prüft nichts. Ein lokaler Rechner auch nicht.",
     "version": 1,
     "active": true
   },
@@ -212,7 +212,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Bei nicht freigegebenen Verbraucherangeboten fehlen dem Betrieb meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Die Nutzung mit personenbezogenen Firmendaten kann deshalb unzulässig sein; die konkrete Bewertung hängt von Zweck, Rechtsgrundlage, Vertrag und Konfiguration ab.",
+    "explanation": "Dem Betrieb fehlen bei nicht freigegebenen Verbraucherangeboten meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Mit personenbezogenen Firmendaten kann die Nutzung deshalb unzulässig sein. Wie es konkret aussieht, hängt von Zweck, Rechtsgrundlage, Vertrag und Konfiguration ab.",
     "version": 1,
     "active": true
   },
@@ -239,11 +239,11 @@
       },
       {
         "id": "d",
-        "text": "Lieferantendaten dürfen grundsätzlich in kein KI-Tool eingegeben werden.",
+        "text": "Lieferantendaten dürfen nie in ein KI-Tool eingegeben werden.",
         "isCorrect": false
       }
     ],
-    "explanation": "Firmennamen können öffentlich sein, Ansprechpartner personenbezogene Daten und Konditionen Geschäftsgeheimnisse oder vertraglich geschützt. Ob die Verarbeitung zulässig ist, entscheidet die konkrete Zweck-, Daten- und Systemfreigabe.",
+    "explanation": "Eine Liste, drei Datenarten. Der Firmenname kann öffentlich sein. Der Ansprechpartner kann personenbezogene Daten bedeuten. Die Konditionen können Geschäftsgeheimnis oder vertraglich geschützt sein. Ob die Verarbeitung zulässig ist, entscheidet die konkrete Freigabe von Zweck, Daten und System.",
     "version": 1,
     "active": true
   },
@@ -274,7 +274,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Klare Eingaben und Grenzen machen eine Ausgabe leichter prüfbar. Eine Rollenbeschreibung ist optional, und auch ein präziser Prompt garantiert weder Richtigkeit noch Vollständigkeit.",
+    "explanation": "Klare Eingaben und klare Grenzen machen die Ausgabe prüfbar. Die Rollenbeschreibung ist optional, und auch der präziseste Prompt garantiert weder Richtigkeit noch Vollständigkeit.",
     "version": 1,
     "active": true
   },
@@ -305,7 +305,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Professionelle Sprache belegt keine sachliche Richtigkeit oder Befugnis. Die Kontrolle richtet sich nach Auswirkung und umfasst Primärquellen, fehlende Angaben, Zusagen, Daten und den vorgesehenen Empfängerkreis.",
+    "explanation": "Professionell klingen kann jeder Entwurf. Belegt ist damit nichts, befugt bist du damit auch nicht. Die Kontrolle richtet sich nach der Auswirkung: Primärquellen, fehlende Angaben, Zusagen, Daten, vorgesehener Empfängerkreis. Ein zweites KI-Tool ist keine Prüfung.",
     "version": 1,
     "active": true
   },
@@ -336,7 +336,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Die Einschränkung macht unbelegte Ergänzungen sichtbar und begrenzt Zusagen. Sie ersetzt weder die Freigabe der Eingabedaten noch die fachliche Prüfung der Ausgabe.",
+    "explanation": "Die Einschränkung macht sichtbar, was der Assistent dazuerfunden hat, und hält Zusagen klein. Die Freigabe der Eingabedaten ersetzt sie nicht. Die fachliche Prüfung der Ausgabe auch nicht.",
     "version": 1,
     "active": true
   },
@@ -367,7 +367,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Modelle können Angaben ergänzen, die nicht in der Quelle stehen. Eine engere Anweisung reduziert dieses Risiko, verhindert es aber nicht; der Quellenabgleich bleibt erforderlich.",
+    "explanation": "Modelle ergänzen manchmal, was in der Quelle nicht steht. Eine engere Anweisung macht das seltener, aber nicht unmöglich. Der Quellenabgleich bleibt. Ein Fragezeichen an alle senden ist kein Abgleich.",
     "version": 1,
     "active": true
   },
@@ -398,7 +398,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Sprachmodelle erzeugen Tokenfolgen; sie führen nicht automatisch eine belastbare Faktenprüfung durch. Deshalb müssen entscheidungsrelevante Aussagen auf geeignete Quellen zurückgeführt werden.",
+    "explanation": "Ein Sprachmodell erzeugt Tokenfolgen. Eine Faktenprüfung läuft dabei nicht automatisch mit. Deshalb führst du jede Aussage, an der eine Entscheidung hängt, auf eine geeignete Quelle zurück.",
     "version": 1,
     "active": true
   },
@@ -429,7 +429,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein Modell kann Quellenangaben oder Zahlen erzeugen, die nicht belegt sind. Rufe die angegebene Primärquelle auf, prüfe Definition, Zeitraum und Rechenweg. Ein zweites Modell ist keine unabhängige Quelle.",
+    "explanation": "Zahl, Prozentwert, Quellenangabe: alles kann erzeugt sein, ohne dass es die Studie gibt. Du rufst die genannte Primärquelle auf und prüfst Definition, Zeitraum und Rechenweg. ChatGPT zu fragen ist keine zweite Quelle, es ist dieselbe Fehlerquelle noch einmal.",
     "version": 1,
     "active": true
   },
@@ -460,7 +460,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Rechtliche, medizinische und beschäftigungsbezogene Entscheidungen können erhebliche Folgen haben. Sie brauchen qualifizierte Verantwortung, geeignete Quellen und je nach Fall besondere Rechts-, Dokumentations- und Aufsichtskontrollen.",
+    "explanation": "Newsletter, Übersetzung, Agenda: da reicht die einfache Ausgabeprüfung. Rechtliche, medizinische und beschäftigungsbezogene Entscheidungen können erhebliche Folgen haben. Dafür braucht es qualifizierte Verantwortung, geeignete Quellen und je nach Fall besondere Rechts-, Dokumentations- und Aufsichtskontrollen.",
     "version": 1,
     "active": true
   },
@@ -491,7 +491,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Die Zusammenfassung widerspricht deiner Erinnerung und ist kein Primärbeleg. Prüfe die zugelassene Quelle und lasse das Protokoll durch die zuständigen Beteiligten bestätigen.",
+    "explanation": "Zwei Aussagen widersprechen sich: deine Erinnerung und die Zusammenfassung. Keine von beiden ist ein Primärbeleg. Du prüfst die zugelassene Quelle, Transkript oder bestätigte Notizen, und lässt das Protokoll von den zuständigen Beteiligten bestätigen. Bis dahin bleibt der Termin offen.",
     "version": 1,
     "active": true
   },
@@ -522,7 +522,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Eine Freigabe muss die konkrete Kombination aus Zweck, Funktion, Daten und Konfiguration beschreiben. Die Richtlinie braucht außerdem Prüfpflichten, Vorfallsmeldung, Zuständigkeiten und Review-Auslöser.",
+    "explanation": "Keine Vorlesung über neuronale Netze, kein Gesetzestext, kein Programmierkurs. Eine Richtlinie beschreibt Freigaben als konkrete Kombination aus Zweck, Funktion, Daten und Konfiguration. Dazu kommen Prüfpflichten, Vorfallsmeldung, Zuständigkeiten und Review-Auslöser.",
     "version": 1,
     "active": true
   },
@@ -553,7 +553,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar. In der durch Verordnung (EU) 2026/1744 geänderten Fassung geht es um Maßnahmen zur Unterstützung der Entwicklung von KI-Kompetenz unter Berücksichtigung technischer Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffenen Personen oder Personengruppen; ein fixes Zertifikat ist nicht vorgeschrieben.",
+    "explanation": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar. In der durch Verordnung (EU) 2026/1744 geänderten Fassung geht es um Maßnahmen, die die Entwicklung von KI-Kompetenz unterstützen, unter Berücksichtigung von technischen Kenntnissen, Erfahrung, Aus- und Fortbildung, Einsatzkontext und den betroffenen Personen oder Personengruppen. Kein Informatikabschluss, kein IT-Monopol, kein externes Jahresaudit, und auch keine vorgeschriebene Bescheinigung.",
     "version": 1,
     "active": true
   },
@@ -584,7 +584,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Beschäftigte melden den Fall ohne Verzögerung über den internen Kanal und verändern Belege nicht eigenmächtig. Der Verantwortliche prüft, ob eine Datenschutzverletzung und ein meldepflichtiges Risiko vorliegen; interne Vier- oder 24-Stunden-Stufen sind organisationsspezifisch, nicht gesetzlich vorgegeben.",
+    "explanation": "Melden, sofort, über den internen Kanal. Belege bleiben, wie sie sind. Ob eine Datenschutzverletzung vorliegt und ob sie meldepflichtig ist, prüft der Verantwortliche. Interne Vier- oder 24-Stunden-Stufen sind Sache der Organisation, das Gesetz gibt sie nicht vor.",
     "version": 1,
     "active": true
   },
@@ -615,7 +615,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein neues Produkt oder eine neue Funktion ist ein Review-Auslöser. Die Organisation bewertet den konkreten Arbeitsablauf und dokumentiert die Entscheidung vor einer Nutzung mit realen Daten.",
+    "explanation": "Ein neues Produkt ist ein Review-Auslöser. Eine neue Funktion auch. Die Organisation bewertet den konkreten Arbeitsablauf und dokumentiert die Entscheidung, bevor echte Daten hineingehen. Nicht danach.",
     "version": 1,
     "active": true
   }

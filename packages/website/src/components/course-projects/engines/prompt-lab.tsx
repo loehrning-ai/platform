@@ -648,7 +648,7 @@ export default function PromptLab({
           localLearningTitle:
             "Lokaler synthetischer Lernlauf · kein Modellaufruf",
           localLearningNotice:
-            "Prüft nur die sichtbaren, synthetischen Prompt-Struktur- und Kontrollsignale. Erzeugt keine Antwort und keine Provider-, Projekt- oder Zertifikatsevidenz.",
+            "Prüft nur die sichtbaren, synthetischen Prompt-Struktur- und Kontrollsignale. Erzeugt keine Antwort und keine Evidenz für Provider, Projekt oder Teilnahmebestätigung.",
           runLocalLearning: "Lokalen Lernlauf ausführen",
           localLearningComplete:
             "Lokaler Lernlauf abgeschlossen · nur RUN-Lernsignal",
@@ -659,7 +659,7 @@ export default function PromptLab({
           evidenceStructure: "Ziel, Kontext und Grenzen sind erkennbar",
           evidenceRunSuccess: "Echter Providerlauf erfolgreich",
           evidenceRunDegraded:
-            "Richtlinien-Stopp protokolliert · keine Projekt- oder Zertifikatsverifizierung",
+            "Richtlinien-Stopp protokolliert · keine Verifizierung für Projekt oder Teilnahmebestätigung",
           evidenceRunPending:
             "Echte Provider-Evidenz oder Richtlinien-Stopp fehlt",
           ready: "Die Prompt-Evidenz ist vollständig.",

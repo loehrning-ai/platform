@@ -9,9 +9,9 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Choose synchronous and asynchronous coordination",
     subtitle:
-      "Route routine updates through written records and reserve meetings for work that needs live interaction.",
+      "Route routine updates into written records. Save meetings for work that needs people live.",
     objective:
-      "Route routine updates through written records and reserve meetings for work that needs live interaction.",
+      "Route routine updates into written records. Save meetings for work that needs people live.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Classify the purpose first",
         readTimeMinutes: 5,
         content:
-          "A status update, a decision, and a sensitive discussion require different forms of coordination. Routine facts can usually be recorded asynchronously. Contested decisions, incidents, relationship work, and ambiguous issues often need a live conversation. Classify the purpose before choosing the format.",
+          "Monday, 09:30. Eleven people on a call, reading out what is already in the tracker. A status update, a decision, and a sensitive discussion are three different jobs. Routine facts go in writing; contested decisions, incidents, relationship work, and ambiguity often need a live conversation. Classify the purpose before picking the format.",
       },
       {
         id: "s2",
         title: "Make written updates usable",
         readTimeMinutes: 5,
         content:
-          "Use a consistent update format: current state, evidence or source links, blockers, owner, timestamp, and decisions needed. A model can group and summarize the entries, but its summary is a routing aid, not the record. Readers must be able to inspect the underlying updates because summaries can omit or distort details.",
+          "Use one update format: current state, evidence or source links, blockers, owner, timestamp, decisions needed. A model can group and summarize the entries. That summary is a routing aid, never the record. Readers must be able to open the underlying updates, because a summary omits and distorts.",
       },
       {
         id: "s3",
         title: "Document the live decision",
         readTimeMinutes: 4,
         content:
-          "When a live meeting is justified, define the decision owner and the required input in advance. Record the decision, reasoning, dissent, actions, and owners afterward. Separate time for informal contact when the team needs it; do not depend on a status meeting to provide it accidentally.",
+          "When a live meeting is justified, name the decision owner and the required input beforehand. Afterwards record the decision, reasoning, dissent, actions, and owners. Give informal contact its own time when the team needs it, rather than hoping a status meeting supplies it by accident.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +49,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Meeting audit",
           scenario:
-            "List five recurring meetings. For each one, record its purpose, required input, expected output, and decision owner. Mark whether it belongs in a written update, a live meeting, or both.",
+            "List five recurring meetings. For each, record the purpose, required input, expected output, and decision owner. Mark whether it belongs in a written update, a live meeting, or both.",
           rows: 5,
         },
       },
@@ -75,14 +75,14 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Write the brief before the draft",
         readTimeMinutes: 6,
         content:
-          "A useful brief states who will read the document, what decision or outcome it supports, which sources are authoritative, which constraints apply, and who owns the result. The brief reduces ambiguity for both a human writer and a drafting model. It also gives reviewers a stable basis for judging the draft.",
+          "A useful brief states who reads the document, what decision it supports, which sources are authoritative, which constraints apply, and who owns the result. That removes ambiguity for a human writer and for a drafting model alike. It also gives reviewers a stable basis for judging what comes back.",
       },
       {
         id: "s2",
         title: "Treat generated text as an unverified draft",
         readTimeMinutes: 6,
         content:
-          "Generated prose is not evidence. Verify citations, figures, names, policy statements, and sensitive claims against their sources. Preserve document versions and identify the human approver. The tool may accelerate drafting, but the named owner remains accountable for accuracy, disclosure, and release.",
+          "Generated prose is not evidence. Check citations, figures, names, policy statements, and sensitive claims against their sources. Keep the document versions and name the human approver. The tool speeds up drafting. The named owner stays accountable for accuracy, disclosure, and release.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -95,7 +95,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "operations/2",
           cpId: "exercise",
           scenario:
-            "Choose one document due this week. Write a brief with its audience, required outcome, approved sources, constraints, owner, and review criteria.",
+            "Take one document due this week. Write its brief: audience, required outcome, approved sources, constraints, owner, review criteria.",
           rows: 4,
         },
       },
@@ -121,21 +121,21 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Define the triage record",
         readTimeMinutes: 6,
         content:
-          "For each ticket, record category, severity, proposed owner, confidence, and supporting evidence. Limit automatic actions to documented rules. Preserve the original request and link any related tickets or operational context so that a reviewer can reconstruct the route.",
+          "For each ticket, record category, severity, proposed owner, confidence, and supporting evidence. Automatic actions stay inside documented rules. Keep the original request, and link related tickets or operational context so a reviewer can reconstruct the route.",
       },
       {
         id: "s2",
         title: "Set risk-based review rules",
         readTimeMinutes: 6,
         content:
-          "Escalate uncertain, conflicting, novel, high-impact, or policy-required cases. Thresholds should reflect the cost of a wrong route rather than an assumed automation rate. Review a risk-based sample of other cases as well; confidence scores alone do not demonstrate correctness or reveal systematic errors.",
+          "Escalate the uncertain, conflicting, novel, high-impact, and policy-required cases. Set thresholds from the cost of a wrong route, not from a target automation rate. Sample the rest on a risk-based basis too. A confidence score demonstrates neither correctness nor the absence of systematic error.",
       },
       {
         id: "s3",
         title: "Close the correction loop",
         readTimeMinutes: 5,
         content:
-          "Assign owners for reviewing escalations, correcting the route, updating rules or examples, and communicating with affected users. Keep an audit trail of inputs, outputs, overrides, and final outcomes. Monitor error patterns and suspend automatic actions when the control no longer performs as intended.",
+          "Name owners for reviewing escalations, correcting the route, updating rules or examples, and talking to affected users. Keep an audit trail of inputs, outputs, overrides, and final outcomes. Watch the error patterns. Suspend the automatic actions when the control stops performing.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -162,8 +162,8 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Module 4 knowledge check",
-    subtitle: "Check the operating controls from this module.",
-    objective: "Check the operating controls from this module.",
+    subtitle: "Two questions on coordination and controlled triage.",
+    objective: "Two questions on coordination and controlled triage.",
     durationMinutes: 7,
     keyConcepts: [],
     quiz: [
@@ -194,7 +194,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Routine facts belong in an inspectable written record. A summary can help route attention but does not replace the source material. Live time remains appropriate when people must resolve a contested decision, incident, sensitive issue, or material ambiguity.",
+          "Routine facts belong in an inspectable written record. A summary routes attention. It does not replace the source material. Live time still earns its place when people must resolve a contested decision, an incident, a sensitive issue, or a material ambiguity.",
       },
       {
         id: "ano-operations-q2",
@@ -223,7 +223,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Review rules should reflect error cost and policy obligations. Uncertainty is one signal, not the only one. A risk-based sample can expose systematic errors in cases the system classified with high confidence.",
+          "Review rules follow error cost and policy obligations. Uncertainty is one signal, not the only one. A risk-based sample exposes systematic errors in the cases the system classified with high confidence.",
       },
     ],
     sections: [],

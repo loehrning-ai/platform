@@ -263,7 +263,8 @@ describe("VerificationPage", () => {
       expect(screen.getByText("QR data read")).toBeInTheDocument(),
     );
     expect(
-      screen.getByText("Course Completion Record: Everyday AI Literacy"),
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      screen.getByText("Certificate of Participation: Everyday AI Literacy"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Back to Everyday AI Literacy" }),

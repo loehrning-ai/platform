@@ -1,34 +1,34 @@
 # Ausblick: robuste Prinzipien für volatile Technik
 
-Modelle, Preise, Anbieter und Produktfunktionen ändern sich schnell. Gute Entscheidungen beruhen deshalb nicht auf einer einzelnen Modellprognose.
+Modelle, Preise, Anbieter und Produktfunktionen ändern sich schnell. Deine Prüfprinzipien nicht. Eine gute Entscheidung hängt nie an einer einzelnen Modellprognose.
 
 ## Was stabil bleibt
 
 ### Domänenwissen
 
-Fachleute kennen Ausnahmen, Folgen und Qualitätskriterien eines Prozesses. Dieses Wissen muss in Testfälle, Rubriken, Aufsicht und Eskalation übersetzt werden. Ein Modelloutput ersetzt keine Fachverantwortung.
+Fachleute kennen die Ausnahmen, Folgen und Qualitätskriterien ihres Prozesses. Dieses Wissen gehört in Testfälle, Rubriken, Aufsicht und Eskalation. Ein Modelloutput ersetzt keine Fachverantwortung.
 
 ### Datenqualität
 
-Unklare Herkunft, veraltete Inhalte, fehlende Rechte und systematische Lücken werden durch ein leistungsfähigeres Modell nicht automatisch behoben.
+Unklare Herkunft, veraltete Inhalte, fehlende Rechte und systematische Lücken verschwinden nicht durch ein größeres Modell.
 
 ### Reproduzierbare Tests
 
-Ein Benchmark oder eine Demo beantwortet nicht, ob ein System im eigenen Prozess funktioniert. Versionierte Testfälle und vorab definierte Kriterien bleiben notwendig.
+Ein Benchmark oder eine Vorführung zeigt nicht, ob ein System in deinem Prozess funktioniert. Versionierte Testfälle und vorab definierte Kriterien bleiben nötig.
 
 ### Kontrolle und Exit
 
-Organisationen brauchen Rechte, Logs, Fallback, Wiederherstellung, Löschung und eine Wechselmöglichkeit. Das gilt für Cloud- und lokale Systeme.
+Rechte, Logs, Fallback, Wiederherstellung, Löschung und Wechselmöglichkeit brauchst du so oder so. In der Cloud wie lokal.
 
 ## Drei Entwicklungen beobachten
 
 ### Handlungsfähige Systeme
 
-Systeme können zunehmend Werkzeuge aufrufen und mehrstufige Aufgaben ausführen. Damit wachsen Berechtigungs-, Fehlerfortpflanzungs- und Vorfallrisiken. Begrenze Rechte, Transaktionen, Laufzeit und Datenzugriff. Verlange Bestätigung vor irreversiblen Handlungen.
+Systeme rufen Werkzeuge auf und führen mehrstufige Aufgaben aus. Damit wachsen Berechtigungs-, Fehlerfortpflanzungs- und Vorfallrisiken. Begrenze Rechte, Transaktionen, Laufzeit und Datenzugriff. Vor irreversiblen Handlungen wird bestätigt.
 
 ### Multimodale Verarbeitung
 
-Text, Bild, Audio und Video können gemeinsam verarbeitet werden. Das erweitert Use Cases und Datenrisiken. Ein Bild kann Gesichter, Standorte, Gesundheitsdaten, Betriebsgeheimnisse oder urheberrechtlich geschützte Inhalte enthalten, auch wenn die eigentliche Aufgabe harmlos wirkt.
+Text, Bild, Audio und Video können gemeinsam verarbeitet werden. Das erweitert Use Cases und Datenrisiken. Ein Bild kann Gesichter, Standorte, Gesundheitsdaten, Betriebsgeheimnisse oder urheberrechtlich geschützte Inhalte enthalten, auch wenn die Aufgabe selbst harmlos wirkt.
 
 ### Lokale und hybride Verarbeitung
 
@@ -56,4 +56,4 @@ Eine Strategie, die nur bei einer bestimmten AGI-Prognose funktioniert, ist kein
 - messbare Fehlerarten
 - Fallback und Stopkriterium
 
-Das ist kein Unternehmensranking. Es ist die Grundlage für eine prüfbare Entscheidung.
+Das ist kein Unternehmensranking. Das ist die Grundlage für eine prüfbare Entscheidung.

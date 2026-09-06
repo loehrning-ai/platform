@@ -1,6 +1,6 @@
 # Readiness at a glance: an evidence-based self-assessment
 
-Readiness is not a ranking among companies. It describes which prerequisites for a specific use case are evidenced and which are missing.
+Forget the rank. Readiness says which prerequisites for one concrete use case are evidenced and which are missing.
 
 ## Twelve review questions
 
@@ -8,7 +8,7 @@ Answer each question with **unknown**, **partially evidenced**, or **evidenced**
 
 ### Purpose and success
 
-1. Is the specific process documented, including its input, output, and subsequent action?
+1. Is the process documented, including its input, output, and subsequent action?
 2. Is there a baseline measurement and a verifiable success criterion?
 3. Are error types, error costs, and stop criteria defined?
 
@@ -16,7 +16,7 @@ Answer each question with **unknown**, **partially evidenced**, or **evidenced**
 
 4. Are data provenance, data class, legal basis, and permitted use clear?
 5. Are access, retention, deletion, and possible transfers documented?
-6. Has the data been assessed for sufficiency and representativeness in relation to the purpose?
+6. Has anyone checked whether the data is sufficient and representative for the purpose?
 
 ### Technology and operations
 
@@ -26,18 +26,18 @@ Answer each question with **unknown**, **partially evidenced**, or **evidenced**
 
 ### People and governance
 
-10. Are domain review, human oversight, and escalation assigned to people with real authority?
-11. Are users adequately qualified for the task, the system's limitations, and its risks?
+10. Are domain review, human oversight, and escalation staffed by people with real authority?
+11. Are users qualified for the task, the system's limits, and its risks?
 12. Are the role, risk classification, and applicable legal obligations documented with reasons?
 
 ## Turn answers into actions
 
-No calculation turns these answers into an objective 0-to-100 truth. Prioritize instead:
+No formula multiplies these answers into an objective 0-to-100 truth. Prioritize instead:
 
-1. **Blockers:** an unclear legal basis, prohibited data, missing approval, or consequences of errors that cannot be controlled
+1. **Blockers:** an unclear legal basis, prohibited data, missing approval, or consequences of errors nobody can control
 2. **Control gaps:** missing permissions, oversight, logs, deletion, recovery, or escalation
 3. **Effectiveness gaps:** no baseline, unsuitable test cases, or unclear quality criteria
-4. **Optimization:** convenience, speed, or cost after protection and effectiveness gates have passed
+4. **Optimization:** convenience, speed, or cost once the protection and effectiveness gates have passed
 
 ## Four working states
 
@@ -48,7 +48,7 @@ No calculation turns these answers into an objective 0-to-100 truth. Prioritize 
 | Ready for a pilot | Test data, rubric, oversight, and stop criteria are in place | Run a limited pilot |
 | Ready for operation | Controls, monitoring, incidents, fallback, and review have been tested | Monitor and reassess when events require it |
 
-These states apply per use case. An organization can be ready to operate an internal writing assistant while its automated applicant selection is not yet inventoried.
+The states apply per use case, not per company. Your internal writing assistant can be ready for operation while your automated applicant screening is not even inventoried.
 
 ## What does not count as evidence
 
@@ -59,4 +59,4 @@ These states apply per use case. An organization can be ready to operate an inte
 - an ISO certification without mapping it to the specific system
 - a list of technical website signals
 
-Readiness appears in current, testable controls in the real process.
+Readiness shows up in current, testable controls on the real process.

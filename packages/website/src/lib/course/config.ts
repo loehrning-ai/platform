@@ -74,7 +74,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
 export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_FUEHRERSCHEIN_CONFIG, "en", {
     title: "Everyday AI Literacy",
-    certificateTitle: "Course Completion Record: Everyday AI Literacy",
+    certificateTitle: "Certificate of Participation: Everyday AI Literacy",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record is not an accredited qualification.",
     certificateModules: [
@@ -89,9 +89,9 @@ export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
     quizPassMessage: "You passed the Everyday AI Literacy workshop quiz.",
     certificateFileStem: "Everyday-AI-Literacy",
     recordNoun: {
-      label: "Course Completion Record",
-      possessive: "Your course completion record",
-      demonstrative: "This course completion record",
+      label: "Certificate of Participation",
+      possessive: "Your certificate of participation",
+      demonstrative: "This certificate of participation",
     },
   });
 
@@ -132,7 +132,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
 export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(EU_AI_ACT_KURS_CONFIG, "en", {
     title: "EU AI Act Course",
-    certificateTitle: "Course Completion Record: EU AI Act",
+    certificateTitle: "Certificate of Participation: EU AI Act",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms completion of this course only; it is not an accredited qualification, legal advice, or evidence of regulatory compliance.",
     certificateModules: [
@@ -148,9 +148,9 @@ export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
     quizPassMessage: "You passed the EU AI Act Course workshop quiz.",
     certificateFileStem: "EU-AI-Act-Course",
     recordNoun: {
-      label: "Course Completion Record",
-      possessive: "Your course completion record",
-      demonstrative: "This course completion record",
+      label: "Certificate of Participation",
+      possessive: "Your certificate of participation",
+      demonstrative: "This certificate of participation",
     },
   });
 
@@ -199,7 +199,7 @@ export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
   "en",
   {
     title: "AI-Native Workflow Course",
-    certificateTitle: "Course Completion Record: AI-Native Workflow Course",
+    certificateTitle: "Certificate of Participation: AI-Native Workflow Course",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms course completion only; it is not an accredited qualification or an external assessment.",
     certificateModules: [
@@ -213,9 +213,9 @@ export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
     quizPassMessage: "You passed the AI-Native Workflow Course workshop quiz.",
     certificateFileStem: "AI-Native-Workflow-Course",
     recordNoun: {
-      label: "Course Completion Record",
-      possessive: "Your course completion record",
-      demonstrative: "This course completion record",
+      label: "Certificate of Participation",
+      possessive: "Your certificate of participation",
+      demonstrative: "This certificate of participation",
     },
   },
 );
@@ -250,7 +250,7 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
 export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_UND_GESELLSCHAFT_CONFIG, "en", {
     title: "AI and Society",
-    certificateTitle: "Course Completion Record: AI and Society",
+    certificateTitle: "Certificate of Participation: AI and Society",
     certificateSubtitle: "Work · Deepfakes · Bias and ethics",
     certificateModules: [
       "AI and work",
@@ -262,9 +262,9 @@ export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
     quizPassMessage: "You passed the AI and Society workshop quiz.",
     certificateFileStem: "AI-and-Society-course-record",
     recordNoun: {
-      label: "Course Completion Record",
-      possessive: "Your course completion record",
-      demonstrative: "This course completion record",
+      label: "Certificate of Participation",
+      possessive: "Your certificate of participation",
+      demonstrative: "This certificate of participation",
     },
   });
 
@@ -310,7 +310,7 @@ export const CLAUDE_CONFIG: CourseConfig & { readonly slug: "claude" } = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Claude Course",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
   certificateModules: [
     "Foundations: mental model, prompt anatomy, context windows",
     "Workflows: CLAUDE.md, iteration, Google Docs",
@@ -318,14 +318,14 @@ export const CLAUDE_CONFIG: CourseConfig & { readonly slug: "claude" } = {
     "Team and rigor: sharing prompts, evals, safety",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: prompting Claude effectively",
+    "Personal certificate of participation: prompting Claude effectively",
   quizPassMessage:
     "Congratulations! You passed the Claude Course workshop quiz.",
   certificateFileStem: "Claude-Course",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Certificate of Participation",
+    possessive: "Your certificate of participation",
+    demonstrative: "This certificate of participation",
   },
 };
 

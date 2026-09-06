@@ -1,18 +1,18 @@
 # KI nach Branche: dein individueller Fahrplan
 
-Bisher war alles allgemein. Jetzt wird es persönlich.
+Ein IT-Berater hat andere Probleme als eine Yogalehrerin. Ein Handwerksmeister braucht andere Prompts als eine Grafikdesignerin. Ein Coach arbeitet anders als ein Webentwickler.
 
-"KI für Freelancer" klingt gut, aber ein IT-Berater hat andere Probleme als eine Yogalehrerin. Ein Handwerkermeister braucht andere Prompts als eine Grafikdesignerin. Ein Coach arbeitet anders als ein Webentwickler.
+"KI für Freelancer" klingt gut und bringt dich keinen Schritt weiter. Bisher war alles allgemein. Jetzt wird es persönlich.
 
-Dieses Kapitel hat 7 Branchen. Finde deine. Wenn du genau dazwischen liegst, lies beide. Die KRAFT-Prompts sind in jeder Branche sofort einsetzbar. Die Workflows bauen auf den Kapiteln 3 bis 7 auf.
+7 Branchen liegen vor dir. Finde deine. Wenn du genau dazwischen liegst, lies beide. Die KRAFT-Prompts sind in jeder Branche sofort einsetzbar, die Workflows bauen auf den Kapiteln 3 bis 7 auf.
 
 ## Berater und Consultants
 
-**Fiktives Ausgangsszenario:** Ein Beratungsalltag enthält E-Mails, Terminvorbereitung, Workshop, Konzept, Angebot und Kommunikation. Die tatsächliche Dauer jedes Schritts musst du selbst erfassen.
+**Fiktives Ausgangsszenario:** Ein Beratungstag besteht aus E-Mails, Terminvorbereitung, Workshop, Konzept, Angebot und Kommunikation. Wie lange jeder Schritt bei dir dauert, misst du selbst.
 
-**Testszenario mit KI:** Nutze KI nur für klar abgegrenzte Entwürfe und vergleiche Bearbeitungszeit, Nacharbeit und Fehler mit dem Ausgangsszenario. Ein früherer Feierabend ist ein mögliches Ziel, kein versprochenes Ergebnis.
+**Testszenario mit KI:** Setze KI nur für klar abgegrenzte Entwürfe ein und vergleiche Bearbeitungszeit, Nacharbeit und Fehler mit dem Ausgangsszenario. Ein früherer Feierabend ist ein mögliches Ziel, kein versprochenes Ergebnis.
 
-**Fiktives Pilotdesign:** Plane einen Workshop einmal mit und einmal ohne KI-Unterstützung. Nutze dieselben Anforderungen und bewerte Zeit, Quellenqualität, fachliche Korrekturen und Teilnehmerfeedback. Erst eigene Messwerte zeigen, ob der KI-Entwurf den Ablauf verbessert.
+**Fiktives Pilotdesign:** Plane einen Workshop einmal mit und einmal ohne KI-Unterstützung. Gleiche Anforderungen, dann bewertest du Zeit, Quellenqualität, fachliche Korrekturen und Teilnehmerfeedback. Erst deine eigenen Messwerte zeigen, ob der KI-Entwurf den Ablauf besser macht.
 
 **Die 3 wichtigsten KI-Workflows:**
 
@@ -46,17 +46,17 @@ Nach jedem Termin: Entwurf für Zusammenfassung, Action Items und nächsten Term
 
 **4. Service-Pakete statt Stundensatz**
 
-KI kann helfen, Beratungsleistungen zu strukturieren. Preise bleiben eine unternehmerische Entscheidung auf Basis von Aufwand, Risiko, Markt, Haftung und nachweisbarem Nutzen:
+KI hilft dir, Beratungsleistungen zu strukturieren. Der Preis bleibt deine unternehmerische Entscheidung, gebaut aus Aufwand, Risiko, Markt, Haftung und nachweisbarem Nutzen:
 
 - **Readiness-Analyse:** Umfang, Datenquellen, Ergebnis und Grenzen festlegen.
 - **Compliance-Unterstützung:** Fachliche Zuständigkeit und Abgrenzung zu Rechtsberatung ausdrücklich dokumentieren.
 - **Strategie-Workshop:** Vorbereitung, Moderation, Nachbereitung und freigegebene Arbeitsergebnisse definieren.
 
-Definiere Umfang, Annahmen, Ausschlüsse und Preis transparent. Ein gemessener Zeitgewinn erhöht den Gewinn nicht automatisch; zusätzliche Prüfung, Akquise, Leerlauf und Haftungsrisiko gehören in die Rechnung.
+Definiere Umfang, Annahmen, Ausschlüsse und Preis transparent. Ein gemessener Zeitgewinn erhöht deinen Gewinn nicht automatisch; zusätzliche Prüfung, Akquise, Leerlauf und Haftungsrisiko gehören in dieselbe Rechnung.
 
 **5. IHK als Akquise-Kanal**
 
-Industrie- und Handelskammern sowie andere Fachverbände veröffentlichen eigene Veranstaltungsprogramme und Bewerbungswege. Prüfe aktuelle Themen und Bedingungen direkt bei der zuständigen Organisation. Ein Vortrag garantiert weder Publikum noch Folgegeschäft. KI kann einen Strukturentwurf vorbereiten:
+Industrie- und Handelskammern sowie andere Fachverbände veröffentlichen eigene Veranstaltungsprogramme und Bewerbungswege. Prüfe aktuelle Themen und Bedingungen direkt bei der zuständigen Organisation. Ein Vortrag garantiert weder Publikum noch Folgegeschäft. Die Struktur entwirft KI vorab:
 
 ```
 Kontext: Ich bin [BERATER] und halte einen 45-Minuten-Vortrag
@@ -76,9 +76,9 @@ Ton: Kompetent, nahbar, kein Verkaufsdruck.
 
 ## Kreative, Texter, Designer, Fotografen
 
-KI kann keine kreative Vision ersetzen. Aber sie kann dir die Arbeit abnehmen, die deine kreative Vision blockiert.
+KI ersetzt keine kreative Vision. Aber sie nimmt dir die Arbeit ab, die deine kreative Vision blockiert.
 
-Du wirst nicht für Angebote bezahlt. Nicht für Briefing-Rückfragen. Nicht für Instagram-Captions. Du wirst für die kreative Arbeit bezahlt, und die passiert zwischen 10 und 16 Uhr. Alles andere frisst den Rest. Genau da setzt KI an.
+Du wirst nicht für Angebote bezahlt, nicht für Briefing-Rückfragen, nicht für Instagram-Captions. Bezahlt wirst du für die kreative Arbeit, und die passiert zwischen 10 und 16 Uhr. Alles andere frisst den Rest. Genau da setzt KI an.
 
 **Briefing-Erweiterung.** Kunden-Briefings sind oft dünn. "Wir brauchen ein modernes Logo." Ende. Keine Zielgruppe, keine Farbpräferenzen, kein Zeitplan. Statt dreimal nachzufragen, lässt du KI das Briefing analysieren und die richtigen Rückfragen generieren, bevor du anfängst zu arbeiten. Ein KRAFT-Prompt dafür:
 
@@ -104,7 +104,7 @@ Format: Je 50-80 Wörter. Emotional, nicht technisch.
 Ton: [TON DES KUNDEN, z.B. minimalistisch, hochwertig].
 ```
 
-**Social-Media-Content für dein eigenes Portfolio.** KI kann Entwürfe für mehrere Kanäle erzeugen. Miss die gesamte Zeit für Rechteprüfung, Faktenprüfung, Überarbeitung und Veröffentlichung.
+**Social-Media-Content für dein eigenes Portfolio.** KI erzeugt dir Entwürfe für mehrere Kanäle. Miss die gesamte Zeit für Rechteprüfung, Faktenprüfung, Überarbeitung und Veröffentlichung.
 
 ```
 Kontext: Ich bin [KREATIVER BERUF]. Ich habe gerade folgendes
@@ -118,15 +118,15 @@ LinkedIn: max. 200 Wörter + Hook in der ersten Zeile.
 Ton: Authentisch, stolz ohne anzugeben, einladend.
 ```
 
-**Angebote und Nachkalkulation.** Kreative hassen Angebote schreiben. Verständlich, du willst gestalten, nicht kalkulieren. Aber ein gutes Angebot ist der Unterschied zwischen "Danke, wir melden uns" und einem unterschriebenen Vertrag. Gib KI deine Leistungen, Stundensätze und den Projektumfang. Sie formuliert. Du prüfst die Zahlen.
+**Angebote und Nachkalkulation.** Kreative hassen Angebote schreiben. Verständlich, du willst gestalten, nicht kalkulieren. Aber ein gutes Angebot ist der Unterschied zwischen "Danke, wir melden uns" und einem unterschriebenen Vertrag. Gib KI deine Leistungen, Stundensätze und den Projektumfang. Sie formuliert, du prüfst die Zahlen.
 
 **Tool-Tipp für Kreative:** Neuroflash ist ein Beispiel für ein auf deutschsprachiges Marketing ausgerichtetes Textwerkzeug. Prüfe vor dem Einsatz die aktuelle Produktfunktion, Preise, Vertragsrolle, DPA/AVV, Hosting-Option, Unterauftragnehmer und Datenkontrollen. Herkunft oder Marketingaussagen allein belegen keine DSGVO-Konformität. Details zur Auswahlmethodik stehen in Kapitel 12.
 
 **Achtung: KI-Erkennung wird ein Thema.** Content-Plattformen und Auftraggeber setzen zunehmend KI-Erkennungstools ein. Wenn du Texte für Kunden schreibst und diese als "KI-generiert" erkannt werden, hast du ein Glaubwürdigkeitsproblem. Die Lösung: Nutze KI für den Entwurf, aber schreibe den Text aktiv um. Dein Stil, deine Wortwahl, deine Perspektive. Das ist nicht nur ethisch richtig, es ist auch der Grund, warum dein Kunde dich bezahlt statt selbst ChatGPT zu öffnen.
 
-**Menschliche Verantwortung als Differenzierungsmerkmal.** Lege offen, wofür du KI einsetzt, soweit Vertrag, Plattform oder Kunde das verlangen. Behaupte keine „100 Prozent menschliche" Umsetzung, wenn KI am Ergebnis beteiligt war. Urheber-, Marken-, Persönlichkeits- und Nutzungsrechte müssen unabhängig geprüft werden.
+**Menschliche Verantwortung als Differenzierungsmerkmal.** Lege offen, wofür du KI einsetzt, soweit Vertrag, Plattform oder Kunde das verlangen. Behaupte keine „100 Prozent menschliche" Umsetzung, wenn KI am Ergebnis beteiligt war. Urheber-, Marken-, Persönlichkeits- und Nutzungsrechte prüfst du davon unabhängig.
 
-KI kann Varianten generieren, Moodboards beschreiben, Farbpaletten vorschlagen, die Idee, die dein Werk einzigartig macht, kommt von dir. Wenn du anfängst, KI für die kreative Arbeit selbst zu nutzen statt für alles drumherum, verlierst du genau das, wofür Kunden dich buchen. Midjourney und DALL-E sind gut für Konzeptvisualisierungen. Nicht für Endprodukte.
+KI generiert Varianten, beschreibt Moodboards, schlägt Farbpaletten vor. Die Idee, die dein Werk einzigartig macht, kommt von dir. Wenn du anfängst, KI für die kreative Arbeit selbst zu nutzen statt für alles drumherum, verlierst du genau das, wofür Kunden dich buchen. Midjourney und DALL-E sind gut für Konzeptvisualisierungen. Nicht für Endprodukte.
 
 ## IT-Freelancer und Entwickler
 
@@ -134,7 +134,7 @@ Du weißt wahrscheinlich mehr über KI als die meisten Leser dieses Buches. GitH
 
 **1. Kundenkommunikation übersetzen**
 
-Fang nicht beim Code an, fang beim Kunden an. Der Klassiker: Der Kunde fragt "Wie lange dauert das?" und meint "Warum dauert das so lange?" KI hilft dir, technische Sachverhalte in Kundensprache zu übersetzen.
+Fang nicht beim Code an, fang beim Kunden an. Der Klassiker: Der Kunde fragt "Wie lange dauert das?" und meint "Warum dauert das so lange?" KI übersetzt dir technische Sachverhalte in Kundensprache.
 
 ```
 Kontext: Mein Kunde [ANONYMISIERT] fragt, warum [TECHNISCHES PROBLEM]
@@ -183,7 +183,7 @@ Warum das für IT-Freelancer relevant ist: Standardisierte Tool-Schnittstellen k
 
 Die nächste Stufe nach Automatisierung: KI-Agenten, die 5-15 Schritte autonom ausführen. "Prüfe den Posteingang, kategorisiere neue Anfragen, erstelle Entwürfe, sende mir eine Zusammenfassung." Ein Prompt, mehrere Ergebnisse.
 
-Für IT-Freelancer kann "Agentic Workflow Development" ein Dienstleistungsangebot sein. Die Nachfrage und der Reifegrad unterscheiden sich je nach Branche. Belege Bedarf, Haftungsgrenze, Review-Schritte und Betriebskosten im konkreten Kundenprojekt.
+Für IT-Freelancer kann "Agentic Workflow Development" ein Dienstleistungsangebot sein. Nachfrage und Reifegrad unterscheiden sich je nach Branche. Belege Bedarf, Haftungsgrenze, Review-Schritte und Betriebskosten im konkreten Kundenprojekt.
 
 **Wie du kalkulierst:** Zerlege die Leistung in Discovery, Daten- und Berechtigungsmodell, Prototyp, Tests, Sicherheitsprüfung, Dokumentation und Betrieb. Schätze je Paket Aufwand, Risiko und Fremdkosten. Vergleiche das mit aktuellen regionalen Marktangeboten und deinem nachweisbaren Erfahrungsniveau. Veröffentliche keine starre Preisrange als Marktgesetz; Anforderungen und Haftung unterscheiden sich erheblich.
 
@@ -193,15 +193,15 @@ Blinder Verlass auf KI-generierten Code ist gefährlich. KI-Code kann plausible 
 
 Fiktives Szenario: Freitagabend liegen drei Angebote, die Nachkalkulation für „Beispielprojekt Beta" und ein Fortbildungsnachweis offen. Die Namen und Zahlen in diesem Abschnitt sind reine Übungsdaten.
 
-Viele Handwerksbetriebe kombinieren weiterhin Papier, Tabellen und Branchensoftware. Der konkrete Digitalisierungsstand variiert stark nach Gewerk und Betriebsgröße. Prüfe bei Verbänden und im Betrieb selbst, welcher Prozess tatsächlich Zeit kostet, statt aus Finanzierungs- oder Kundenzahlen einzelner Anbieter einen allgemeinen Bedarf abzuleiten.
+Viele Handwerksbetriebe kombinieren weiterhin Papier, Tabellen und Branchensoftware. Der Digitalisierungsstand unterscheidet sich stark nach Gewerk und Betriebsgröße. Frag bei Verbänden und im Betrieb nach, welcher Prozess tatsächlich Zeit kostet, statt aus Finanzierungs- oder Kundenzahlen einzelner Anbieter einen allgemeinen Bedarf abzuleiten.
 
-Der Büroanteil lässt sich nicht seriös für jeden Betrieb pauschalisieren. Miss deshalb eine Woche lang Angebotsarbeit, Dokumentation, Terminabstimmung und Nachkalkulation. Diese eigene Zeitaufnahme bestimmt, wo Automatisierung sinnvoll ist.
+Den Büroanteil kann niemand seriös für jeden Betrieb pauschalisieren. Miss deshalb eine Woche lang Angebotsarbeit, Dokumentation, Terminabstimmung und Nachkalkulation. Diese eigene Zeitaufnahme bestimmt, wo Automatisierung sinnvoll ist.
 
-KI ändert nichts an deiner Arbeit auf der Baustelle. Ein Prompt verlegt keine Fliesen. Kein Chatbot zieht Kabel. Potenzial liegt in den gemessenen, wiederkehrenden Büroaufgaben.
+An deiner Arbeit auf der Baustelle ändert KI nichts. Ein Prompt verlegt keine Fliesen. Kein Chatbot zieht Kabel. Potenzial liegt in den gemessenen, wiederkehrenden Büroaufgaben.
 
 **Wer die KI wirklich nutzt.** Reden wir ehrlich: Der Elektriker auf der Baustelle hat keine Zeit für ChatGPT. Um 6:30 Uhr geht es los, um 17 Uhr ist er fertig, dann fährt er zum nächsten Kunden. Die Person, die KI im Handwerksbetrieb wirklich nutzt, ist meistens jemand anderes.
 
-Deine Partnerin im Büro. Deine Assistentin. Die Meisterfrau, die abends die Angebote schreibt. Die Person, die deine Stichworte in professionelle E-Mails verwandelt, die Nachkalkulationen pflegt und die Terminplanung jongliert. Sie ist die KI-Nutzerin Nummer eins im Handwerk, und dieses Kapitel ist auch für sie geschrieben.
+Deine Partnerin im Büro, deine Assistentin, die Meisterfrau, die abends die Angebote schreibt. Die Person, die deine Stichworte in professionelle E-Mails verwandelt, die Nachkalkulationen pflegt und die Terminplanung jongliert. Sie ist die KI-Nutzerin Nummer eins im Handwerk, und dieses Kapitel ist auch für sie geschrieben.
 
 **1. Baustellen-Dokumentation: Fotos werden Bericht.**
 
@@ -227,7 +227,7 @@ Ob der Ablauf Zeit spart, zeigt ein Vergleich aus Dokumentation, Prüfung und Ko
 
 Der Elektriker kalkuliert einen Auftrag mit 4.800 Euro. Material: 2.100. Arbeitszeit: 16 Stunden. Fahrt: 3 Anfahrten. Am Ende? Material: 2.640 Euro, weil der Verteilerkasten nicht gepasst hat. Arbeitszeit: 22 Stunden, weil die alten Leitungen nicht dokumentiert waren. Fahrt: 5 Anfahrten.
 
-Eine Nachkalkulation zeigt Abweichungen zwischen Plan und Ist. KI kann die Darstellung vorbereiten; die Zahlen, Kostenarten und Rechenlogik müssen aus freigegebenen Betriebsdaten stammen und unabhängig geprüft werden:
+Eine Nachkalkulation zeigt Abweichungen zwischen Plan und Ist. KI bereitet die Darstellung vor; die Zahlen, Kostenarten und Rechenlogik stammen aus freigegebenen Betriebsdaten und werden unabhängig geprüft:
 
 ```
 Kontext: Ich bin Elektromeister. Auftrag: Komplette Elektroinstallation
@@ -287,11 +287,11 @@ Ton: Freundlich, professionell, wie ein Innungsbetrieb.
 
 **5. Fortbildungsnachweise und Innungsdokumentation**
 
-Die Handwerkskammer will den Nachweis zur Fortbildung. Die Innung fragt nach dem Qualitätsmanagement-Bericht. KI kann beides schneller strukturieren als du denkst, Stichworte rein, formatierter Bericht raus.
+Die Handwerkskammer will den Nachweis zur Fortbildung. Die Innung fragt nach dem Qualitätsmanagement-Bericht. KI strukturiert beides schneller, als du denkst, Stichworte rein, formatierter Bericht raus.
 
 **6. Kundenbewertungen professionell beantworten**
 
-Bewertungen können öffentlich sichtbar und personenbezogen sein. KI kann einen neutralen Antwortentwurf erstellen. Entferne personenbezogene oder vertrauliche Details und prüfe die Antwort vor Veröffentlichung. Behaupte keine Tatsachen, die du nicht belegen kannst.
+Bewertungen können öffentlich sichtbar und personenbezogen sein. KI erstellt einen neutralen Antwortentwurf. Entferne personenbezogene oder vertrauliche Details und prüfe die Antwort vor Veröffentlichung. Behaupte keine Tatsachen, die du nicht belegen kannst.
 
 **Tool-Auswahl:** Vergleiche aktuelle Funktionen, Preise, Verträge, Datenflüsse und Exportmöglichkeiten. Für Buchhaltung und Angebote gelten andere Anforderungen als für unverbindliche Textentwürfe. Ein einzelnes Werkzeug deckt nicht automatisch alle Zwecke sicher ab.
 
@@ -301,7 +301,7 @@ Bewertungen können öffentlich sichtbar und personenbezogen sein. KI kann einen
 
 Vertrauliche Preise und Kalkulationen gehören nur in einen dafür freigegebenen Ablauf. Für allgemeine Textentwürfe reichen Platzhalter oder fiktive Zahlen.
 
-Passe die Prompts mit fiktiven Fällen an dein Gewerk an. Führe danach einen begrenzten Test durch und dokumentiere Zeit, Fehler, Nacharbeit und Nutzen. Leite erst aus diesen Messwerten eine Entscheidung ab.
+Passe die Prompts mit fiktiven Fällen an dein Gewerk an. Führe danach einen begrenzten Test durch und dokumentiere Zeit, Fehler, Nacharbeit und Nutzen. Erst diese Messwerte tragen deine Entscheidung.
 
 ## Coaches, Therapeuten, Trainer
 
@@ -309,7 +309,7 @@ Bei Coaching, Therapie und Training unterscheiden sich zulässige Anwendungsfäl
 
 > **Rechtlicher Hinweis:** Übertrage keine realen Klienten-, Therapie- oder Gesundheitsdaten in einen nicht ausdrücklich freigegebenen KI-Ablauf. Ein Platzhalter entfernt das Re-Identifizierungsrisiko nicht automatisch. Nutze für Übungen vollständig erfundene Fälle und prüfe Rechtsgrundlage, Vertrag, Technik und Berufsrecht. Details in Kapitel 8.
 
-Sitzungsnotizen, Therapieverläufe oder persönliche Coachingprotokolle gehören nicht in einen ungeprüften KI-Dienst. Auch lokale Software ist nicht automatisch sicher: Betriebssystem, Backups, Plugins, Logs, Netzwerkzugriffe und Zugriffsrechte zählen zum Datenfluss. Für sensible Workflows sind eine dokumentierte Rechtsgrundlage, technische Schutzmaßnahmen, Datenschutz-Folgenprüfung soweit erforderlich und berufsrechtliche Freigabe notwendig.
+Sitzungsnotizen, Therapieverläufe oder persönliche Coachingprotokolle gehören nicht in einen ungeprüften KI-Dienst. Auch lokale Software ist nicht automatisch sicher. Betriebssystem, Backups, Plugins, Logs, Netzwerkzugriffe und Zugriffsrechte zählen zum Datenfluss. Für sensible Workflows sind eine dokumentierte Rechtsgrundlage, technische Schutzmaßnahmen, Datenschutz-Folgenprüfung soweit erforderlich und berufsrechtliche Freigabe notwendig.
 
 Mit dieser Grenze im Kopf, hier die Workflows, die dir den Verwaltungsteil abnehmen.
 
@@ -327,7 +327,7 @@ Ton: Einfühlsam, motivierend, nicht belehrend.
 
 **Dokumentationsstruktur entwerfen.** Erstelle mit vollständig fiktiven Daten eine leere Vorlage für Themen, Fortschritt, nächste Schritte und fachlich erforderliche Pflichtfelder. Übertrage keine echten Sitzungsnotizen in einen nicht freigegebenen Dienst. Ob und wie eine Vorlage später genutzt werden darf, entscheidet der geprüfte Praxisprozess.
 
-**Kursplanung und Seminarstruktur.** KI kann einen Seminarplan mit Zeitblöcken, Methoden, Materialien und Lernzielen entwerfen. Prüfe Didaktik, Barrierefreiheit und fachliche Richtigkeit.
+**Kursplanung und Seminarstruktur.** KI entwirft dir einen Seminarplan mit Zeitblöcken, Methoden, Materialien und Lernzielen. Prüfe Didaktik, Barrierefreiheit und fachliche Richtigkeit.
 
 ```
 Kontext: Ich bin [TRAINER/COACH] und plane ein Tagesseminar zum
@@ -341,9 +341,9 @@ Format: Tabelle mit: Uhrzeit, Thema, Methode, Material, Lernziel.
 Ton: Didaktisch durchdacht, praxisorientiert.
 ```
 
-**Gruppenübungen und Reflexionsfragen generieren.** KI kann Varianten vorschlagen. Beurteile jede Übung nach Lernziel, Zielgruppe, möglicher Belastung, Zeitbedarf und fachlicher Eignung. Verwende keine erfundenen Erfahrungswerte als Begründung.
+**Gruppenübungen und Reflexionsfragen generieren.** KI schlägt Varianten vor. Beurteile jede Übung nach Lernziel, Zielgruppe, möglicher Belastung, Zeitbedarf und fachlicher Eignung. Verwende keine erfundenen Erfahrungswerte als Begründung.
 
-**Workshop-Marketing.** Der Prozess in 3 Schritten: Erstens, du definierst Zielgruppe, Thema und Kanal. Zweitens, KI schreibt den Werbetext, Landing Page, E-Mail oder LinkedIn-Post. Drittens, du liest ihn laut vor. Klingt er nach dir? Dann posten. Klingt er nach Werbeagentur? Dann anpassen. So sieht der KRAFT-Prompt dafür aus:
+**Workshop-Marketing.** Der Prozess hat 3 Schritte. Erstens, du definierst Zielgruppe, Thema und Kanal. Zweitens, KI schreibt den Werbetext, Landing Page, E-Mail oder LinkedIn-Post. Drittens, du liest ihn laut vor. Klingt er nach dir, geht er raus. Klingt er nach Werbeagentur, schreibst du um. So sieht der KRAFT-Prompt dafür aus:
 
 ```
 Kontext: Ich biete einen [ONLINE/OFFLINE]-Workshop an: [THEMA].
@@ -360,9 +360,9 @@ Ton: Einladend, empathisch, nicht reißerisch.
 
 Ein Exposé dauert 45 Minuten. Macht 14 Exposés diese Woche. Die Fotos sind fertig, der Grundriss liegt vor, jedes Mal fehlt nur der Text. Und jedes Mal greifst du zu denselben Wörtern.
 
-Denn das ist der eigentliche Zeitfresser im Maklergeschäft: nicht die Besichtigung, nicht das Verhandeln. Die Texterei. "Lichtdurchflutete Räume." "Ruhige Lage." "Ideal für Paare und Singles." Du schreibst sie hin, weil sie funktionieren, und merkst gleichzeitig, dass sie nach jedem zweiten Inserat auf ImmoScout klingen.
+Der größte Zeitfresser im Maklergeschäft ist nicht die Besichtigung, nicht das Verhandeln. Es ist die Texterei. "Lichtdurchflutete Räume." "Ruhige Lage." "Ideal für Paare und Singles." Du schreibst sie hin, weil sie funktionieren, und merkst gleichzeitig, dass sie nach jedem zweiten Inserat auf ImmoScout klingen.
 
-KI kann Varianten für einen Exposé-Entwurf liefern. Sie garantiert weder Qualität noch Verkauf und darf keine Merkmale erfinden.
+KI liefert dir Varianten für einen Exposé-Entwurf. Sie garantiert weder Qualität noch Verkauf und darf keine Merkmale erfinden.
 
 **1. Exposé-Texte, die auffallen**
 
@@ -383,13 +383,13 @@ wie "lichtdurchflutet" oder "ideal gelegen."
 
 **2. Marktpreiseinschätzung vorbereiten**
 
-Du brauchst eine Einschätzung für das Erstgespräch mit dem Eigentümer? KI kann dir keinen Marktwert berechnen, das kann nur ein Gutachter oder deine Erfahrung. Aber sie kann dir helfen, die Argumente zu strukturieren:
+Du brauchst eine Einschätzung für das Erstgespräch mit dem Eigentümer? Einen Marktwert berechnet dir KI nicht, das kann nur ein Gutachter oder deine Erfahrung. Beim Strukturieren der Argumente hilft sie dir sehr wohl:
 
 "Ich brauche eine Marktpreisargumentation für [IMMOBILIENTYP] in [STADTTEIL]. Vergleichsobjekte: [2-3 REFERENZEN MIT QM-PREIS]. Stärken: [AUFZÄHLEN]. Schwächen: [AUFZÄHLEN]. Erstelle eine Tabelle: Faktor | Einfluss auf Preis | Begründung."
 
 **3. Kundenanfragen beantworten**
 
-Bei wiederkehrenden Fragen kann KI Antwortentwürfe aus bestätigten Objektdaten vorbereiten. Zeitbedarf und Anfragezahl variieren; Aussagen zu Ausstattung oder Regeln müssen aus der freigegebenen Quelle stammen:
+Bei wiederkehrenden Fragen bereitet KI Antwortentwürfe aus bestätigten Objektdaten vor. Zeitbedarf und Anfragezahl variieren; Aussagen zu Ausstattung oder Regeln müssen aus der freigegebenen Quelle stammen:
 
 ```
 Kontext: Ich bin Immobilienmaklerin. Ein Interessent fragt:
@@ -412,13 +412,13 @@ Ton: Professionell, einladend, nicht verkäuferisch.
 
 Die Physiotherapeutin hat 8 Patienten am Tag. Zwischen den Terminen: Dokumentation. Nach dem letzten Termin: Dokumentation. Am Wochenende: Praxis-Marketing, weil die Webseite seit 2019 nicht aktualisiert wurde.
 
-Dieses Kapitel ist für Physiotherapeuten, Heilpraktiker, Zahnarztpraxen, Logopäden und Ergotherapeuten. Nicht für Ärzte, die haben andere regulatorische Anforderungen. Hier geht es um die Solo-Praxis oder Kleinpraxis, in der eine Person alles macht.
+Gemeint sind Physiotherapeuten, Heilpraktiker, Zahnarztpraxen, Logopäden und Ergotherapeuten. Nicht Ärzte, die haben andere regulatorische Anforderungen. Es geht um die Solo-Praxis oder Kleinpraxis, in der eine Person alles macht.
 
 > **Rechtlicher Hinweis:** DSGVO Art. 9 behandelt Gesundheitsdaten als besondere Kategorie. Keine Patientennamen, keine Diagnosen, keine Behandlungsverläufe in ChatGPT, Claude oder andere Cloud-KI-Tools, auch nicht mit DPA. Für jede Aufgabe mit Patientenbezug: Anonymisiere konsequent oder nutze lokale KI (Ollama, LM Studio). Details in Kapitel 8.
 
 **1. Patienteninformationen erstellen**
 
-Deine Patienten fragen immer dasselbe: "Was soll ich zu Hause machen?" "Wie oft?" "Worauf muss ich achten?" KI erstellt Informationsblätter, die du einmal erstellst und immer wieder ausgibst:
+Deine Patienten fragen immer dasselbe. "Was soll ich zu Hause machen?" "Wie oft?" "Worauf muss ich achten?" KI erstellt Informationsblätter, die du einmal erstellst und immer wieder ausgibst:
 
 ```
 Kontext: Ich bin Physiotherapeutin und behandle häufig Patienten
@@ -439,7 +439,7 @@ ohne Erklärung.
 
 **2. Praxis-Marketing: Sichtbar werden**
 
-Kleine Praxen haben oft begrenzte Zeit für Kommunikation. Ob lokale Suche ein relevanter Akquisekanal ist, lässt sich über eigene Anfragequellen und aktuelle Plattformdaten prüfen. KI kann Entwürfe vorbereiten, ersetzt aber weder fachliche Freigabe noch berufsrechtliche Prüfung:
+Kleine Praxen haben oft begrenzte Zeit für Kommunikation. Ob lokale Suche für dich ein relevanter Akquisekanal ist, zeigen deine eigenen Anfragequellen und aktuelle Plattformdaten. KI bereitet Entwürfe vor, ersetzt aber weder fachliche Freigabe noch berufsrechtliche Prüfung:
 
 ```
 Kontext: Ich betreibe eine Physiotherapie-Praxis in [STADT].
@@ -456,7 +456,7 @@ Ton: Kompetent, nahbar, nicht klinisch.
 
 **3. Terminmanagement und Ausfallgebühren**
 
-KI kann Entwürfe für Terminerinnerungen und Kommunikation zu Ausfallregeln vorbereiten. Rechtsgrundlage, Einwilligung, Kanal, Vertragsregel und konkrete Gebühr müssen von der Praxis geprüft werden:
+KI bereitet Entwürfe für Terminerinnerungen und Kommunikation zu Ausfallregeln vor. Rechtsgrundlage, Einwilligung, Kanal, Vertragsregel und konkrete Gebühr prüft die Praxis:
 
 "Schreibe eine freundliche SMS-Erinnerung für einen Physiotherapie-Termin morgen um [UHRZEIT]. Max. 160 Zeichen. Und: Schreibe eine professionelle, empathische E-Mail für eine Ausfallgebühr nach einem nicht abgesagten Termin."
 
@@ -471,7 +471,7 @@ KI kann Entwürfe für Terminerinnerungen und Kommunikation zu Ausfallregeln vor
 > 1. Wähle deine Branche (oder die nächstliegende).
 > 2. Identifiziere deine 3 größten Zeitfresser außerhalb der Kernarbeit. Nicht raten, eine Woche tracken, wenn du unsicher bist.
 > 3. Erstelle für jeden einen KRAFT-Prompt.
-> 4. Teste alle 3 heute. Nicht morgen.
+> 4. Teste alle 3 heute, nicht morgen.
 > 5. Speichere die Prompts, die funktionieren, lösche den Rest.
 >
 > Danach hast du einen ersten Entwurf für dein Branchen-Playbook. Test und fachliche Freigabe folgen.

@@ -1,22 +1,22 @@
 # Quick start: prepare a safe learning pilot
 
-The first step is not a broad rollout. It is a limited pilot with approved data, clear professional review, and a baseline measurement.
+The first step is not a rollout for everyone. It is a limited pilot with approved data, one domain expert who checks the output, and a measurement taken beforehand.
 
 ## 1. Select one process
 
-Choose a recurring information task in which a person reviews the result before it is used. Suitable examples include drafting, classification, or structured extraction. As a starting point, avoid decisions that have a major impact on people, safety functions, and tasks without a reliable means of review.
+Take a recurring information task whose result a person checks before use. Drafts, classification, structured extraction. Unsuitable for a start are decisions with heavy impact on people, safety functions, and anything you cannot reliably check.
 
-Document:
+Document.
 
 - the input and expected result
 - the accountable domain expert
-- current processing time and error types
+- today's processing time and error types
 - the data class and permitted test data
 - the subsequent action after the output
 
 ## 2. Approve the environment and data
 
-Assess the specific product variant, not just the brand:
+Check the specific product variant, not just the brand:
 
 - the contract, roles, and DPA/AVV where applicable
 - use for training and retention
@@ -24,61 +24,61 @@ Assess the specific product variant, not just the brand:
 - identities, access, logs, and deletion
 - integrations, extensions, and exports
 
-Start with synthetic data. Real data should follow only once purpose, legal basis, confidentiality, and technical approval have been established.
+Start with synthetic data. Real data follows only once purpose, legal basis, confidentiality, and technical approval are settled.
 
 ## 3. Define a rubric before testing
 
-Example for a draft summary:
+Example for a draft summary.
 
 - all required points are included
-- no fabricated statements
-- figures and names agree with the source
+- no invented statements
+- figures and names match the source
 - uncertainties are marked
 - the format is usable
-- professional correction time can be measured
+- the correction time of the domain expert can be measured
 
-Set stop criteria before the result is known.
+Set the stop criteria before you know the result.
 
 ## 4. Use representative test cases
 
-Test normal, difficult, and deliberately faulty inputs. Record the model or system version, settings, and prompt. One successful case is not an effectiveness test.
+Test normal, difficult, and deliberately broken inputs. Record the model or system version, the settings, and the prompt. One successful case is no effectiveness test.
 
 ## 5. Treat output only as a draft
 
-The domain expert checks the source against the output. That person must be able to correct, reject, and escalate. A "human in the loop" is effective only if adequate time, competence, information, and authority are available.
+The domain expert checks source against output. Correcting, rejecting, and escalating must be allowed. A "human in the loop" works only with time, competence, information, and authority.
 
 ## 6. Calculate with your own figures
 
 Measure at least:
 
 - processing and review time before and after
-- error rate for each defined error type
+- error rate per defined error type
 - share of rejected outputs
 - actual variable and fixed costs
 - incidents and complaints
 
-Economic benefit follows from your measurements, not from static license prices, invented time savings, or a general ROI figure.
+Economic benefit comes out of your measurements, not out of static license prices, invented hours saved, or a general ROI figure.
 
 ## 7. Decide
 
-- **Stop:** A protection or quality gate was not passed.
-- **Revise:** A controllable gap requires a new test.
-- **Continue within limits:** Gates were passed and scope remains defined.
-- **Expand:** Only after another review of risk, capacity, and controls.
+- **Stop:** a protection or quality gate was not passed.
+- **Revise:** a controllable gap, retested.
+- **Continue within limits:** gates passed, scope stays defined.
+- **Expand:** only after another check on risk, capacity, and controls.
 
 ## Five robust prompt patterns
 
 ### Source-bound draft
 
-> Use only the approved source text. Mark missing information as `UNKLAR`. Do not invent anything. Cite the relevant source passage after each point.
+> Use only the approved source text. Mark missing information as `UNCLEAR`. Invent nothing. Cite the relevant source passage after each point.
 
 ### Structured extraction
 
-> Extract only the defined fields as valid JSON. Use `null` when a value is not clearly supported. Do not add any other keys.
+> Extract only the defined fields as valid JSON. Use `null` when a value is not clearly supported. Add no other keys.
 
 ### Cross-check
 
-> Compare the draft with the source. List contradictions, unsupported statements, omitted required points, and uncertain figures. Do not make the approval decision yourself.
+> Compare the draft with the source. List contradictions, unsupported statements, omitted required points, and uncertain figures. Do not decide on approval yourself.
 
 ### Process documentation
 
@@ -86,6 +86,6 @@ Economic benefit follows from your measurements, not from static license prices,
 
 ### Test cases
 
-> Generate only synthetic test cases for the specified error classes. Do not use real people, companies, addresses, or credentials.
+> Generate only synthetic test cases for the specified error classes. Use no real people, companies, addresses, or credentials.
 
-The quick start ends with an evidence-based pilot decision, not with a tool purchase.
+The quick start ends with an evidenced pilot decision, not with a tool purchase.

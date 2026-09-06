@@ -29,20 +29,20 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Codex is a **task-oriented coding agent**. It can work locally in the CLI or IDE and in dedicated cloud environments. The interface and permission model differ by surface, but the working loop is similar:\n\n1. It receives your request plus the context available in the current session and repository.\n2. It operates within configured filesystem, command, approval, and network boundaries.\n3. It examines the relevant code and determines a sequence of changes.\n4. It edits files, runs available checks, reads their output, and revises when needed.\n5. It returns a summary and a **diff** or patch for review. A cloud task can also open a pull request when that workflow is configured.\n\nThis is delegation with inspection points. Local sessions can be interactive; cloud tasks can continue in the background. In both cases, the result still requires review against the task and repository evidence.",
+            "You write one sentence. Codex reads the repository, edits files, runs the checks it can find, and hands back a diff. That is a **task-oriented coding agent**. It works locally in the CLI or IDE and in dedicated cloud environments. Interface and permission model differ by surface, the loop underneath does not:\n\n1. It receives your request plus the context available in the current session and repository.\n2. It operates within configured filesystem, command, approval, and network boundaries.\n3. It examines the relevant code and determines a sequence of changes.\n4. It edits files, runs available checks, reads their output, and revises when needed.\n5. It returns a summary and a **diff** or patch for review. A cloud task can also open a pull request when that workflow is configured.\n\nDelegation with inspection points. Local sessions can be interactive, cloud tasks can continue in the background. Either way the result still needs review against the task and the repository evidence.",
         },
         {
           kind: "pull-quote",
-          text: 'Think "bounded engineering task with review" rather than "autocomplete at the cursor."',
+          text: 'A bounded engineering task with review. Not "autocomplete at the cursor."',
         },
         {
           kind: "prose",
           markdown:
-            "This framing makes common failures easier to diagnose. An ambiguous request permits several valid interpretations. Missing acceptance criteria make completion subjective. Unavailable tests leave correctness unverified. The next lessons turn those gaps into explicit task inputs.\n\nTreat the active context as a **workboard**: the request, relevant code, instructions, command results, and prior turns that the current surface exposes. Do not assume that all context transfers to a new session. Put durable repository guidance in `AGENTS.md`, keep verification commands executable, and restate task-specific constraints in the request.",
+            "Why insist on the framing? It makes failures addressable. An ambiguous request permits several valid interpretations, missing acceptance criteria make done a matter of taste, and unavailable tests leave correctness unverified. The next lessons turn each gap into an explicit task input.\n\nThe active context is a **workboard**: the request, relevant code, instructions, command results, and the prior turns the current surface exposes. Nothing guarantees a new session inherits it. So durable repository guidance goes in `AGENTS.md`, verification commands stay executable, and task-specific constraints get restated in the request. Every time.",
         },
       ],
       keyTakeaway:
-        "Codex can inspect, edit, and test within configured boundaries; the output is a reviewable change, not proof that the task is correct.",
+        "Codex inspects, edits, and tests inside configured boundaries. The output is a reviewable change, not proof the task is correct.",
     },
     {
       id: "s2",
@@ -52,7 +52,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A Codex run depends on three inputs. Naming them makes failures easier to diagnose.",
+            "Three inputs decide a Codex run. Name them and the failures stop being mysterious.",
         },
         {
           kind: "card-grid",
@@ -60,7 +60,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "01 · the task",
               title: "What you're asking for",
-              body: "Goal, constraints, acceptance criteria, out-of-scope. This is the entire situational brief. If a requirement isn't here, it doesn't exist to Codex.",
+              body: "Goal, constraints, acceptance criteria, out-of-scope. The whole brief. A requirement that is not written here does not exist to Codex.",
             },
             {
               eyebrow: "02 · the repo",
@@ -77,7 +77,7 @@ const lesson: CodexLesson = {
         {
           kind: "callout",
           title: "The contract rule.",
-          body: "An ambiguous task permits scope drift. Missing repository guidance makes local conventions harder to infer. Unavailable checks leave changes unverified. Each technique in this course makes one of those inputs more explicit.",
+          body: "An ambiguous task permits scope drift. Missing repository guidance leaves local conventions to guesswork. Unavailable checks leave changes unverified. Every technique in this course sharpens one of those three inputs.",
         },
       ],
     },
@@ -89,7 +89,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Words are cheap. Here\'s a condensed replay of what Codex does when you give it the task *"add rate limiting to the /login endpoint"*. This is the real shape of a run: plan, probe, try, test, revise.',
+            'Words are cheap. Here is a condensed replay of one task, *"add rate limiting to the /login endpoint"*. Plan, probe, try, test, revise. That is the shape of a run.',
         },
       ],
       keyTakeaway:
@@ -113,8 +113,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown:
-            "These three failure modes are common and can be checked directly.",
+          markdown: "Three patterns keep coming back. Each one is checkable.",
         },
         {
           kind: "card-grid",
@@ -146,7 +145,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Here are three questions about Codex. Your answer doesn't matter, this is a self-check. Read each, say the answer out loud, then flip the card.",
+            "Read the question, say your answer out loud, then flip the card. Self-check, not a grade.",
         },
       ],
     },

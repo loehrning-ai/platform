@@ -5,7 +5,7 @@
   "subtitle": "Projektbezogene Anweisungen, die Claude Code automatisch lädt.",
   "durationMinutes": 9,
   "trackId": "workflows",
-  "hook": "Dokumentiere wiederkehrende Projektregeln an einer festen Stelle.",
+  "hook": "Regeln, die du wiederholt erklärst, gehören in eine Datei.",
   "keyConcepts": [
     "CLAUDE.md-Hierarchie",
     "Lazy-geladene Unterordner-Dateien",
@@ -18,19 +18,19 @@
       "id": "what-it-is",
       "title": "Was es ist",
       "readTimeMinutes": 2,
-      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei für Claude Code. Eine Projektdatei kann unter `./CLAUDE.md` oder `./.claude/CLAUDE.md` liegen; Benutzer-, Managed-, lokale und verschachtelte Dateien haben unterschiedliche Geltungsbereiche.\n\nClaude Code lädt anwendbare Anweisungen in den Gesprächskontext. Diese Anweisungen beeinflussen das Modellverhalten, sind aber keine erzwungene Konfiguration. Nutze Berechtigungen, Hooks, Sandbox und CI für Regeln, die technisch gelten müssen.\n\n> Halte gemeinsame Projektanweisungen konkret, prüfbar und versioniert."
+      "content": "Wie oft hast du Claude Code denselben Testbefehl erklärt? Dafür gibt es `CLAUDE.md`, eine Markdown-Anweisungsdatei. Die Projektdatei liegt unter `./CLAUDE.md` oder `./.claude/CLAUDE.md`. Benutzer-, Managed-, lokale und verschachtelte Dateien haben eigene Geltungsbereiche.\n\nClaude Code lädt die passenden Anweisungen in den Gesprächskontext. Die beeinflussen das Verhalten, erzwingen aber nichts. Was technisch gelten muss, gehört in Berechtigungen, Hooks, Sandbox und CI.\n\n> Halte gemeinsame Projektanweisungen konkret, prüfbar und versioniert."
     },
     {
       "id": "hierarchy",
       "title": "Wie die Hierarchie tatsächlich geladen wird",
       "readTimeMinutes": 2,
-      "content": "Claude Code entdeckt Anweisungsdateien nach Geltungsbereich und Verzeichnis. Eine vereinfachte Projektansicht:\n\n```\n~/.claude/CLAUDE.md              # Benutzeranweisungen für alle Projekte\n<repo>/CLAUDE.md                 # Gemeinsame Projektanweisungen\n<repo>/.claude/CLAUDE.md         # Alternative Projektposition\n<repo>/CLAUDE.local.md           # Persönlich und projektspezifisch; gitignore\n\n# Beim Lesen von Dateien in diesen Ordnern entdeckt:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nAnwendbare Dateien werden im Kontext kombiniert. Lokalere Anweisungen stehen später, aber Widersprüche haben keine verlässliche Vorrangregel; entferne sie. Mit `/memory` prüfst du die tatsächlich geladenen Dateien. Für pfadspezifische Regeln eignet sich `.claude/rules/` mit `paths`-Frontmatter."
+      "content": "Claude Code findet Anweisungsdateien nach Geltungsbereich und Verzeichnis. Vereinfacht sieht ein Projekt so aus.\n\n```\n~/.claude/CLAUDE.md              # Benutzeranweisungen für alle Projekte\n<repo>/CLAUDE.md                 # Gemeinsame Projektanweisungen\n<repo>/.claude/CLAUDE.md         # Alternative Projektposition\n<repo>/CLAUDE.local.md           # Persönlich und projektspezifisch; gitignore\n\n# Beim Lesen von Dateien in diesen Ordnern entdeckt:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nAlle passenden Dateien landen zusammen im Kontext. Lokalere Anweisungen stehen weiter hinten, eine verlässliche Vorrangregel bei Widersprüchen gibt es nicht. Entferne sie. `/memory` zeigt, was geladen wurde. Pfadspezifische Regeln gehören in `.claude/rules/` mit `paths`-Frontmatter."
     },
     {
       "id": "keep-in-leave-out",
       "title": "Was hineingehört",
       "readTimeMinutes": 2,
-      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Überprüfbare Entwicklungskonventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Bereitstellungsdokumentation\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten oder personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Veraltete Historie ohne Auswirkung auf die aktuelle Arbeit\n- Lange Abläufe, die in eine gepflegte Anleitung oder Dokumentation gehören\n\nCLAUDE.md belegt Kontext; längere Dateien können die Befolgung einzelner Anweisungen verschlechtern. Anthropics aktuelle Anleitung empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, laden sie aber beim Start ebenfalls in den Kontext. Sperre sensible Pfade mit Berechtigungsregeln statt mit bloßen Textanweisungen."
+      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Prüfbare Konventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Deployment-Doku\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten oder personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Alte Historie ohne Bezug zur aktuellen Arbeit\n- Lange Abläufe, die in eine gepflegte Anleitung gehören\n\nJede Zeile in CLAUDE.md kostet Kontext. Je länger die Datei, desto eher geht eine einzelne Anweisung unter. Anthropics aktuelle Anleitung empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, landen beim Start aber genauso im Kontext. Sensible Pfade sperrst du mit Berechtigungsregeln, nicht mit Text."
     },
     {
       "id": "template",
@@ -42,7 +42,7 @@
       "id": "auto-memory",
       "title": "Auto-Memory als ergänzende Funktion",
       "readTimeMinutes": 2,
-      "content": "Claude-Code-Versionen mit Auto-Memory-Unterstützung können projektspezifische Notizen in lokale Markdown-Dateien schreiben. Die Funktion ist konfigurierbar, speichert nicht in jeder Sitzung etwas und ist nicht als verlässliche Erinnerung zu behandeln.\n\nDie Mechanismen haben unterschiedliche Eigentümer:\n\n- **CLAUDE.md:** von Menschen gepflegte Anweisungen für gemeinsame, überprüfte Projektregeln.\n- **Auto-Memory:** lokal ausgewählte Notizen, die auf derselben Maschine von Worktrees desselben Repositorys geteilt werden.\n\nMit `/memory` kannst du Notizen prüfen, bearbeiten, deaktivieren oder löschen. Speichere in keinem der beiden Mechanismen Geheimnisse."
+      "content": "Claude-Code-Versionen mit Auto-Memory können projektspezifische Notizen in lokale Markdown-Dateien schreiben. Konfigurierbar, und sie speichert nicht in jeder Sitzung etwas. Als verlässliches Gedächtnis taugt sie nicht.\n\nZwei Mechanismen, zwei Eigentümer.\n\n- **CLAUDE.md:** von Menschen gepflegt, für gemeinsame, geprüfte Projektregeln.\n- **Auto-Memory:** lokal ausgewählte Notizen, geteilt zwischen Worktrees desselben Repositorys auf derselben Maschine.\n\nMit `/memory` prüfst, bearbeitest, deaktivierst oder löschst du Notizen. Geheimnisse gehören in keinen der beiden."
     }
   ],
   "widgets": [
@@ -70,7 +70,7 @@
           "Ein Changelog dessen, was dein Team im letzten Quartal ausgeliefert hat."
         ],
         "correct": 2,
-        "explanation": "CLAUDE.md liefert projektbezogene Anweisungen. Halte die Datei kurz und konkret: Konventionen, Befehle und Antimuster. Speichere dort keine Geheimnisse.",
+        "explanation": "CLAUDE.md liefert projektbezogene Anweisungen. Kurz und konkret, also Konventionen, Befehle und Antimuster. Geheimnisse gehören nicht hinein.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -95,7 +95,7 @@
           "Zufällig, basierend auf der Dateigröße."
         ],
         "correct": 1,
-        "explanation": "Verschachtelte CLAUDE.md-Dateien werden entdeckt, wenn Claude Code Dateien im jeweiligen Verzeichnis liest. Mit `/memory` prüfst du das tatsächliche Laden.",
+        "explanation": "Verschachtelte CLAUDE.md-Dateien werden entdeckt, wenn Claude Code Dateien im jeweiligen Verzeichnis liest. Ob sie wirklich geladen sind, zeigt `/memory`.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

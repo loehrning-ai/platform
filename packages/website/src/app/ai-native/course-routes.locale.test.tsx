@@ -210,7 +210,8 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       alternates: { canonical: null },
     });
     expect(await generateCertificateMetadata()).toMatchObject({
-      title: "Course completion record: AI-Native Workflow Course",
+      // Copy lock updated: the English completion document is named a "certificate of participation" platform-wide.
+      title: "Certificate of participation: AI-Native Workflow Course",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

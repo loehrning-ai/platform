@@ -2,10 +2,10 @@
   "id": "anatomy",
   "number": 2,
   "title": "Anatomie eines effektiven Prompts",
-  "subtitle": "Eine praktische Checkliste für Kontext, Aufgabe, Vorgaben, Beispiele und Ausgabeformat.",
+  "subtitle": "Die Checkliste für Kontext, Aufgabe, Vorgaben, Beispiele und Ausgabeformat.",
   "durationMinutes": 12,
   "trackId": "foundations",
-  "hook": "Effektive Prompts sind klar gegliedert.",
+  "hook": "Gute Prompts sind gegliedert wie ein Ticket.",
   "keyConcepts": [
     "Rolle, Kontext, Aufgabe, Einschränkungen, Beispiele, Format",
     "XML-Tags",
@@ -19,25 +19,25 @@
       "id": "contracts-not-incantations",
       "title": "Prompts sind Verträge, keine Beschwörungen",
       "readTimeMinutes": 2,
-      "content": "Behandle einen Prompt als Spezifikation. Benenne die Aufgabe, liefere relevanten Kontext, definiere Vorgaben und beschreibe eine prüfbare Ausgabe. Ergänze Rolle oder Beispiel nur, wenn sie benötigte Information liefern.\n\nDie sechsteilige Struktur dieses Kurses ist eine Checkliste, keine vorgeschriebene Syntax oder universelle Reihenfolge. Kurze Aufgaben benötigen oft nur eine direkte Anweisung. Komplexe, wiederkehrende Aufgaben profitieren von klaren Abschnitten und Prüfkriterien.\n\n> Formuliere Anforderungen, die ein Review oder Test prüfen kann."
+      "content": "Ein Prompt ist eine Spezifikation. Kein Zauberspruch. Nenn die Aufgabe, gib den Kontext, setz die Vorgaben, beschreib eine prüfbare Ausgabe. Rolle und Beispiel kommen nur dazu, wenn sie Information tragen, die sonst fehlt.\n\nDie sechs Teile unten sind eine Checkliste, keine Syntax, keine Pflichtreihenfolge. Für eine kurze Aufgabe reicht ein direkter Satz. Komplexe, wiederkehrende Aufgaben brauchen klare Abschnitte und Prüfkriterien.\n\n> Schreib Anforderungen, die ein Review oder ein Test prüfen kann."
     },
     {
       "id": "six-parts",
       "title": "Die sechs Teile",
       "readTimeMinutes": 4,
-      "content": "- **01 · Rolle: Welche Perspektive ist relevant?** Nutze sie für Fachgebiet, Zielgruppe oder Prüfnorm, nicht als Beleg für Expertise.\n  ```\n  Prüfe den Text als technische Redaktion für interne Dokumentation.\n  ```\n- **02 · Kontext: Von welchen Fakten hängt die Aufgabe ab?** Liefere Zielgruppe und freigegebene Quellen. Entferne Geheimnisse und irrelevante Daten.\n  ```\n  Zielgruppe: SREs. Release-Takt: wöchentlich. Geplante Auth-Migration: Q2.\n  ```\n- **03 · Aufgabe: Welche Handlung ist gefordert?** Nutze ein direktes Verb und nummeriere mehrere Ergebnisse.\n  ```\n  Entwirf ein Rollout-Dokument mit Übersicht, Risiken und On-Call-Runbook.\n  ```\n- **04 · Vorgaben: Was muss die Ausgabe erfüllen?** Formuliere Länge, Ausschlüsse und Pflichtangaben als prüfbare Regeln.\n  ```\n  Höchstens 600 Wörter. Keine Marketingsprache. Kill-Switch-Verfahren aufnehmen.\n  ```\n- **05 · Beispiele: Wie sieht ein akzeptiertes Ergebnis aus?** Ein geprüftes Ein-/Ausgabebeispiel kann Ton oder Struktur klären. Prüfe Repräsentativität und Freigabe.\n- **06 · Format: Wie wird das Ergebnis weiterverwendet?** Fordere Markdown, JSON, Tabelle oder Schema an und validiere maschinenlesbare Ausgaben.\n\nDiese Reihenfolge ist eine lesbare Anordnung. Ändere sie, wenn modellbezogene Dokumentation und Evals für deinen Anwendungsfall etwas anderes zeigen."
+      "content": "- **01 · Rolle: Welche Perspektive zählt?** Fachgebiet, Zielgruppe oder Prüfnorm. Als Beleg für Expertise taugt eine Rolle nicht.\n  ```\n  Prüfe den Text als technische Redaktion für interne Dokumentation.\n  ```\n- **02 · Kontext: An welchen Fakten hängt die Aufgabe?** Zielgruppe und freigegebene Quellen rein. Geheimnisse und Ballast raus.\n  ```\n  Zielgruppe: SREs. Release-Takt: wöchentlich. Geplante Auth-Migration: Q2.\n  ```\n- **03 · Aufgabe: Was soll passieren?** Ein direktes Verb. Mehrere Ergebnisse bekommen Nummern.\n  ```\n  Entwirf ein Rollout-Dokument mit Übersicht, Risiken und On-Call-Runbook.\n  ```\n- **04 · Vorgaben: Was muss die Ausgabe erfüllen?** Länge, Ausschlüsse und Pflichtangaben als Regeln, die ein Test prüfen kann.\n  ```\n  Höchstens 600 Wörter. Keine Marketingsprache. Kill-Switch-Verfahren aufnehmen.\n  ```\n- **05 · Beispiele: Wie sieht ein akzeptiertes Ergebnis aus?** Ein geprüftes Ein-/Ausgabepaar klärt Ton und Struktur schneller als jede Beschreibung. Repräsentativ und freigegeben muss es sein.\n- **06 · Format: Wer oder was liest das Ergebnis?** Markdown, JSON, Tabelle oder Schema. Maschinenlesbare Ausgaben werden validiert, nicht angeschaut.\n\nDie Reihenfolge ist eine lesbare Anordnung, mehr nicht. Zeigen Modelldokumentation und deine Evals etwas anderes, ändere sie."
     },
     {
       "id": "xml-tags",
       "title": "XML-Tags als Strukturhilfe",
       "readTimeMinutes": 2,
-      "content": "Anthropic dokumentiert XML-Tags als eine Möglichkeit, Anweisungen, Kontext, Beispiele und variable Eingaben zu trennen. Tags sind besonders nützlich, wenn ein Prompt mehrere Inhaltstypen mischt; sie ersetzen keine klaren Anforderungen oder Evals.\n\n```\n<context>\nWir migrieren den Auth-Dienst in Q2 von Cookies zu OAuth 2.1.\nZielgruppe: SREs im Infrastrukturteam.\n</context>\n<task>\nEntwirf ein Rollout-Dokument mit Übersicht, Risiken, On-Call-Runbook und Rollback-Plan.\n</task>\n<constraints>\n- Höchstens 600 Wörter.\n- Keine Marketingsprache.\n- Kill-Switch-Verfahren nennen.\n</constraints>\n<format>\nMarkdown mit H2-Abschnitten und Codeblöcken für Shell-Befehle.\n</format>\n```\n\nNutze konsistente, beschreibende Namen. Verschachtele Tags nur bei echter Hierarchie und teste den Prompt mit repräsentativen Eingaben."
+      "content": "Anthropic dokumentiert XML-Tags als Trennlinie zwischen Anweisungen, Kontext, Beispielen und variablen Eingaben. Nützlich werden sie, sobald ein Prompt mehrere Inhaltstypen mischt. Klare Anforderungen oder Evals ersetzen sie nicht.\n\n```\n<context>\nWir migrieren den Auth-Dienst in Q2 von Cookies zu OAuth 2.1.\nZielgruppe: SREs im Infrastrukturteam.\n</context>\n<task>\nEntwirf ein Rollout-Dokument mit Übersicht, Risiken, On-Call-Runbook und Rollback-Plan.\n</task>\n<constraints>\n- Höchstens 600 Wörter.\n- Keine Marketingsprache.\n- Kill-Switch-Verfahren nennen.\n</constraints>\n<format>\nMarkdown mit H2-Abschnitten und Codeblöcken für Shell-Befehle.\n</format>\n```\n\nKonsistente, sprechende Namen. Verschachteln nur bei echter Hierarchie. Und dann testen, mit repräsentativen Eingaben."
     },
     {
       "id": "pro-moves",
       "title": "Drei Techniken aus der Dokumentation",
       "readTimeMinutes": 2,
-      "content": "- **Nutze unterstützte Reasoning-Steuerung.** Wenn Modell und API erweitertes Denken unterstützen, konfiguriere es über die dokumentierte Schnittstelle. Fordere Ergebnis und Belege an, nicht private Chain-of-Thought-Texte.\n- **Nutze unterstützte Ausgabeformate.** Bevorzuge strukturierte Ausgaben oder ein explizites Schema. Claude 4.6 und neuer unterstützen kein Assistant-Prefilling; prüfe die API-Dokumentation des gewählten Modells, bevor du dieses Muster verwendest.\n- **Definiere fehlende Belege.** Lege die genaue Antwort bei unzureichenden Informationen fest. Das verringert den Druck zu raten, stellt Faktentreue aber nicht sicher; teste und prüfe das Ergebnis."
+      "content": "- **Reasoning über die Schnittstelle steuern.** Unterstützen Modell und API erweitertes Denken, konfiguriere es über die dokumentierte Schnittstelle. Fordere Ergebnis und Belege an, keine privaten Chain-of-Thought-Texte.\n- **Unterstützte Ausgabeformate nutzen.** Bevorzuge strukturierte Ausgaben oder ein explizites Schema. Claude 4.6 und neuer unterstützen kein Assistant-Prefilling. Prüfe die API-Dokumentation deines Modells, bevor du auf dieses Muster setzt.\n- **Den Fall „keine Belege“ definieren.** Lege fest, was bei unzureichender Information genau zurückkommt. Das senkt den Druck zu raten. Faktentreue sichert es nicht, also testen und prüfen."
     }
   ],
   "widgets": [

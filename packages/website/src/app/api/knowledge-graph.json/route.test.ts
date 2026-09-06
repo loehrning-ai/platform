@@ -63,8 +63,10 @@ describe("knowledge-graph locale representations", () => {
       pageLanguage: "en-GB",
       title: "AI Fundamentals",
     });
+    // Copy lock updated: the English summary now leads with what the model
+    // does and where it fails, rather than naming the topic.
     expect(course?.localizedPages.en.summary).toMatch(
-      /how generative AI works/i,
+      /how generative AI answers, where it fails/i,
     );
   });
 

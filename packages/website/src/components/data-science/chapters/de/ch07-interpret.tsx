@@ -17,7 +17,7 @@ export default function Ch07InterpretDe() {
       <Hero
         eyebrow="Kapitel 07 · Interpretation"
         title="Erklärungsverfahren beantworten <em>bestimmte Fragen.</em>"
-        hook="Prädiktive Güte und Erklärung beantworten verschiedene Fragen. SHAP, LIME und Permutationswichtigkeit beschreiben ausgewählte Aspekte des Modellverhaltens unter benannten Referenzdaten und Methodenannahmen."
+        hook="Ein Modell, das gut vorhersagt, hat damit noch nichts erklärt. SHAP, LIME und Permutationswichtigkeit beschreiben jeweils einen Ausschnitt des Modellverhaltens, und zwar nur unter benannten Referenzdaten und Methodenannahmen."
         meta={[
           { k: "Lesezeit", v: "10 min" },
           { k: "Inhalt", v: "SHAP · LIME · Permutation" },
@@ -31,12 +31,12 @@ export default function Ch07InterpretDe() {
         </SectionLabel>
         <h2 className="h2">SHAP: Spieltheorie für ML.</h2>
         <p className="prose">
-          SHAP (SHapley Additive exPlanations) definiert additive
-          Merkmalsattributionen über Shapley-Werte und eine gewählte
-          Hintergrundverteilung. Das Ergebnis erklärt das Modell relativ zu
-          dieser Referenz; korrelierte Merkmale, bedingte oder interventionelle
-          Annahmen und Approximation verändern die Zuweisung. Das lokale Panel
-          ist ein handgebautes additives Lehrmodell, keine Ausgabe eines
+          SHAP (SHapley Additive exPlanations) verteilt eine Vorhersage additiv
+          auf Merkmale, über Shapley-Werte und eine gewählte
+          Hintergrundverteilung. Erklärt wird das Modell immer relativ zu dieser
+          Referenz; korrelierte Merkmale, bedingte oder interventionelle
+          Annahmen und Approximation verschieben die Zuweisung. Das Panel hier
+          ist ein handgebautes additives Lehrmodell, nicht die Ausgabe eines
           angepassten SHAP-Explainers.
         </p>
         <SHAPWaterfallSim />
@@ -68,14 +68,13 @@ export default function Ch07InterpretDe() {
         </SectionLabel>
         <h2 className="h2">Eine Spalte zerstören. Den Schaden messen.</h2>
         <p className="prose">
-          Permutationswichtigkeit trennt ein Merkmal vom Ziel, indem seine
-          Spalte zufällig gemischt wird. Das Modell läuft weiter, doch dieses
-          Merkmal ist nun permutiert. Die Metrikänderung schätzt die
-          Abhängigkeit des Modells von diesem Merkmal unter der
-          Evaluationsverteilung. Korrelierte oder ersetzbare Prädiktoren können
-          einander verdecken; das Ergebnis hängt von Metrik, Datensatz,
-          Gruppierung und Permutationsschema ab. Das Verfahren ist
-          modellunabhängig, aber nicht annahmenfrei.
+          Misch eine Spalte durch und das Merkmal verliert seinen Bezug zum
+          Ziel. Das Modell rechnet weiter, nur eben ohne diese Information, und
+          der Metrikverlust schätzt, wie stark es unter der
+          Evaluationsverteilung daran hing. Korrelierte oder ersetzbare
+          Prädiktoren decken einander dabei; das Ergebnis hängt an Metrik,
+          Datensatz, Gruppierung und Permutationsschema. Modellunabhängig heißt
+          nicht annahmenfrei.
         </p>
         <PermutationImportance />
       </section>
@@ -87,13 +86,14 @@ export default function Ch07InterpretDe() {
           <em>eine konkrete Person</em> falsch sein.
         </h2>
         <p className="prose">
-          Ein Merkmal kann global hoch eingestuft sein und eine einzelne
-          Vorhersage kaum verändern; umgekehrt gilt dasselbe. Ein Datenpunkt
-          vergleicht seinen lokalen SHAP-Beitrag mit der globalen Wichtigkeit.
+          Ein Merkmal kann global weit oben stehen und für eine einzelne
+          Vorhersage fast nichts tun. Umgekehrt genauso. Der Datenpunkt hier
+          stellt seinen lokalen SHAP-Beitrag neben die globale Wichtigkeit.
           Individuelle Attribution, Untergruppenleistung, Kalibrierung und
-          Fairness-Metriken sind unterschiedliche Evidenz. Anwendbare Governance
-          kann mehrere davon verlangen; eine lokale Erklärung allein belegt
-          weder Fairness noch regulatorische Konformität.
+          Fairness-Metriken sind vier verschiedene Arten von Evidenz, und
+          anwendbare Governance verlangt oft mehrere davon. Eine lokale
+          Erklärung allein belegt weder Fairness noch regulatorische
+          Konformität.
         </p>
         <GlobalVsLocal />
       </section>
@@ -103,9 +103,9 @@ export default function Ch07InterpretDe() {
           title="Fehlmuster"
           items={[
             "<b>Merkmalswichtigkeit als Kausalität lesen.</b> Ein hoher SHAP-Wert bedeutet, dass das Modell ein Merkmal <em>verwendet</em>, nicht dass eine Änderung des Merkmals das Ergebnis verändert; siehe Kapitel 09.",
-            "<b>Für Einzelentscheidungen nur globaler Wichtigkeit vertrauen.</b> Globale Rangfolgen können den Treiber einer einzelnen Vorhersage vollständig falsch darstellen.",
-            "<b>Den LIME-Radius zu groß wählen.</b> Dann deckt die lineare Approximation nichtlineare Bereiche ab und führt in die Irre.",
-            "<b>Auf Trainingsdaten permutieren.</b> Evaluationsdaten verwenden, die den Einsatz abbilden; Trainingsrückgänge vermischen Abhängigkeit und Overfitting.",
+            "<b>Einzelentscheidungen mit globaler Wichtigkeit begründen.</b> Eine globale Rangfolge kann den Treiber einer einzelnen Vorhersage vollständig verfehlen.",
+            "<b>Den LIME-Radius zu groß wählen.</b> Dann spannt sich die lineare Approximation über nichtlineare Bereiche und erzählt Unsinn.",
+            "<b>Auf Trainingsdaten permutieren.</b> Nimm Evaluationsdaten, die den Einsatz abbilden; Trainingsrückgänge vermischen Abhängigkeit mit Overfitting.",
           ]}
         />
         <BestPractices
@@ -123,7 +123,7 @@ export default function Ch07InterpretDe() {
         title="Kernaussagen"
         items={[
           "<b>Erklärungsbedarf vor dem Deployment definieren.</b> Zielgruppe, Entscheidung, Ausgabeskala, Referenzdaten und akzeptable Grenzen festlegen.",
-          "<b>Erklärung an die Frage anpassen.</b> Additive Attribution, Abhängigkeit auf Evaluationsdaten und lokale Ersatzmodellgüte sind verschiedene Größen.",
+          "<b>Pass die Erklärung an die Frage an.</b> Additive Attribution, Abhängigkeit auf Evaluationsdaten und lokale Ersatzmodellgüte sind drei verschiedene Größen.",
           "<b>Korrelation ≠ Mechanismus.</b> Merkmalswichtigkeit ist kein kausaler Einfluss; siehe Kapitel 09.",
           "<b>Globale, gruppenbezogene und individuelle Evidenz unterscheiden.</b> Jede für die Entscheidung erforderliche Ebene prüfen und Fairness nicht aus einem Attributionsdiagramm ableiten.",
         ]}

@@ -17,7 +17,7 @@ export default function Ch10PeekingDe() {
       <Hero
         eyebrow="Kapitel 10 · Peeking und Integrität von Experimenten"
         title='Wie <em>p-Werte</em> <span class="accent">täuschen.</span>'
-        hook="Peeking, Mehrfachvergleiche, optionales Stoppen und Kovariatenanpassung: Ungeplante Analysen verändern Fehlerraten. Jede Korrektur benötigt klar benannte Annahmen."
+        hook="Ungeplante Analysen verschieben Fehlerraten. Peeking, Mehrfachvergleiche, optionales Stoppen und Kovariatenanpassung gehören dazu. Jede Korrektur bringt eigene Annahmen mit, und die gehören benannt."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           { k: "Inhalt", v: "Peeking · CUPED · Power · MC" },
@@ -28,17 +28,16 @@ export default function Ch10PeekingDe() {
       <section className="section">
         <SectionLabel n="10.1">Peeking und optionales Stoppen</SectionLabel>
         <h2 className="h2">
-          Wiederholte unkorrigierte Zwischenanalysen können die
-          Falsch-Positiv-Rate erhöhen.
+          Unkorrigierte Zwischenanalysen können die Falsch-Positiv-Rate
+          hochtreiben.
         </h2>
         <p className="prose">
-          Wird ein Test für eine feste Stichprobe wiederholt geprüft und beim
-          ersten p&lt;0.05 beendet, kontrolliert der nominelle Grenzwert von 5%
-          den Fehler 1. Art für das gesamte Experiment nicht mehr. Die
-          tatsächliche Rate hängt von Prüfplan, maximaler Stichprobe,
-          Ergebnismodell und Abhängigkeit der Prüfungen ab. Der Simulator
-          schätzt genau eine konfigurierte Versuchsanordnung, keine allgemeine
-          Peeking-Rate.
+          Wer einen Test für eine feste Stichprobe wiederholt prüft und beim
+          ersten p&lt;0.05 abbricht, hat den nominellen Grenzwert von 5% für das
+          Gesamtexperiment verloren. Wie weit, hängt an Prüfplan, maximaler
+          Stichprobe, Ergebnismodell und Abhängigkeit der Prüfungen. Der
+          Simulator schätzt genau eine konfigurierte Versuchsanordnung und keine
+          allgemeine Peeking-Rate.
         </p>
         <PeekingSimulator />
         <AntiPatterns
@@ -67,16 +66,16 @@ export default function Ch10PeekingDe() {
         </h2>
         <p className="prose">
           Die Family-Wise Error Rate (FWER) für <em>n</em> unabhängige Tests bei
-          α = 0.05 lautet 1 − (1 − 0.05)ⁿ. Für n = 20 ergibt das etwa 64%. Diese
-          Formel setzt unabhängige Tests und gültige Null-p-Werte voraus;
-          Abhängigkeiten verändern die Family-Wise Error Rate.
+          α = 0.05 lautet 1 − (1 − 0.05)ⁿ. Für n = 20 sind das etwa 64%. Die
+          Formel unterstellt unabhängige Tests und gültige Null-p-Werte; mit
+          Abhängigkeiten verschiebt sich die Family-Wise Error Rate.
         </p>
         <MultipleTesting />
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<strong>Jede grüne Metrik ohne FWER-Korrektur berichten:</strong> Das macht aus Rauschen eine Erfolgsmeldung.",
-            "<strong>Nachträglich Segmente durchsuchen:</strong> 20 Segmente zu schneiden, bis eines gut aussieht, entspricht 20 Tests.",
+            "<strong>Jede grüne Metrik ohne FWER-Korrektur berichten:</strong> So wird aus Rauschen eine Erfolgsmeldung.",
+            "<strong>Nachträglich Segmente durchsuchen:</strong> Wer 20 Segmente schneidet, bis eines gut aussieht, hat 20 Tests gemacht.",
           ]}
         />
         <BestPractices
@@ -96,13 +95,13 @@ export default function Ch10PeekingDe() {
           senken.
         </h2>
         <p className="prose">
-          CUPED (Controlled-experiment Using Pre-Experiment Data) nutzt eine
+          CUPED (Controlled-experiment Using Pre-Experiment Data) nimmt eine
           Kovariate X aus dem Vorzeitraum, die mit dem Ergebnis Y korreliert,
-          und konstruiert eine bereinigte Metrik Ŷ. Bei randomisierter
+          und baut daraus eine bereinigte Metrik Ŷ. Bei randomisierter
           Zuweisung, einer echten Vorbehandlungsvariable und korrekt geschätzter
-          Anpassung kann dies die Varianz des Schätzers senken. Die
-          Punktschätzung kann sich in einer endlichen Stichprobe verändern; der
-          Nutzen hängt von Vorhersagekraft und Umsetzung ab.
+          Anpassung sinkt die Varianz des Schätzers. Die Punktschätzung kann
+          sich in einer endlichen Stichprobe trotzdem verschieben, und wie viel
+          das bringt, hängt an Vorhersagekraft und Umsetzung.
         </p>
         <CUPEDExplainer />
         <BestPractices
@@ -123,12 +122,12 @@ export default function Ch10PeekingDe() {
         </h2>
         <p className="prose">
           Power = P(H₀ verwerfen | H₁ gilt). Eine Studie mit zu geringer Power
-          übersieht einen echten Effekt und belegt dennoch einen
-          Experimentplatz. Der minimal nachweisbare Effekt (MDE) bestimmt die
-          Planung: In üblichen Näherungen für zwei Gruppen vervierfacht eine
-          halbierte MDE ungefähr die erforderliche Stichprobe, wenn Varianz, α,
-          Power und Zuteilung gleich bleiben. Power <em>vor</em> der Erhebung
-          berechnen und das verwendete Modell benennen.
+          übersieht einen echten Effekt und belegt trotzdem einen
+          Experimentplatz. Den Ausschlag gibt der minimal nachweisbare Effekt
+          (MDE). In üblichen Näherungen für zwei Gruppen vervierfacht eine
+          halbierte MDE ungefähr die erforderliche Stichprobe, sofern Varianz,
+          α, Power und Zuteilung gleich bleiben. Rechne die Power <em>vor</em>{" "}
+          der Erhebung und nenn das Modell, mit dem du gerechnet hast.
         </p>
         <PowerCalculator />
         <AntiPatterns
@@ -153,10 +152,10 @@ export default function Ch10PeekingDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Ungeplantes Stoppen verändert den Test.</b> Den festen Plan einhalten oder ein für Zwischenanalysen entworfenes sequenzielles Verfahren verwenden.",
+          "<b>Ungeplantes Stoppen verändert den Test.</b> Halt den festen Plan ein, oder nimm gleich ein sequenzielles Verfahren, das für Zwischenanalysen gebaut ist.",
           "<b>Multiplizität benötigt ein Fehlerziel.</b> Bonferroni kontrolliert die Family-Wise Error Rate; BH zielt unter benannten Bedingungen auf die False Discovery Rate.",
           "<b>CUPED ist bedingt, nicht automatisch.</b> Zeitpunkt, Unabhängigkeit von der Zuweisung, Vorhersagekraft und Standardfehler prüfen; rohe und bereinigte Ergebnisse berichten.",
-          "<b>Power ist eine Designrechnung.</b> Effekt, Varianz, Zuteilung, α, Test, Ausfälle und Multiplizität angeben.",
+          "<b>Power ist eine Designrechnung.</b> Gib Effekt, Varianz, Zuteilung, α, Test, Ausfälle und Multiplizität an.",
           "<b>Vorabregistrierung trennt Bestätigung von Exploration.</b> Primärmetrik, Analyse, Stoppregel und Ausschlüsse vor Sichtung der Ergebnisse festhalten.",
         ]}
       />

@@ -19,7 +19,7 @@ const lesson: ClaudeLesson = {
   subtitle: "What enters a request, how it is tokenized, and what to verify.",
   durationMinutes: 10,
   trackId: "foundations",
-  hook: "Context is finite. Relevance, source quality, and placement all matter.",
+  hook: "Context is finite. Relevance, source quality, and placement decide the answer.",
   keyConcepts: [
     "Context engineering",
     "Semantic space",
@@ -34,42 +34,42 @@ const lesson: ClaudeLesson = {
       title: "Context is the product",
       readTimeMinutes: 3,
       content:
-        "Context engineering means selecting and organizing the information available to a model for a task: instructions, source documents, examples, prior messages, and tool results. Clear wording still matters, but wording cannot supply a missing private fact or repair an unreliable source.\n\nTwo technical ideas help:\n\n**Semantic representations.** Models represent tokens through high-dimensional numerical states. Related terms can have related representations, but a two-dimensional map is only an illustration, not a view into a Claude request.\n\n**Finite context.** Each model and product has a documented context limit. Long inputs can still fail because relevant material is hard to locate, sources conflict, or output consumes part of the available budget. Test with the model and input distribution you will use.",
+        "More context is not better context. Context engineering means choosing and arranging what a model can see for a task: instructions, source documents, examples, prior messages, and tool results. Clear wording still matters. It cannot supply a fact you never pasted or repair an unreliable source.\n\nTwo technical ideas matter.\n\n**Semantic representations.** Models represent tokens as high-dimensional numerical states. Related terms can land in related places, but a two-dimensional map is an illustration, never a view into a Claude request.\n\n**Finite context.** Every model and product documents a context limit. Long inputs still fail when the relevant material is hard to locate, sources conflict, or the output eats part of the budget. Test with the model and input distribution you will use.",
     },
     {
       id: "meaning-in-space",
       title: "Meaning lives in space",
       readTimeMinutes: 1,
       content:
-        'The exercise below is a local, rule-based illustration. It assigns words to predefined topic groups; it does not call Claude or calculate model embeddings.\n\n> **Why it matters.** Terms such as "concise" and "exhaustive" imply different output requirements. Convert those terms into testable limits when consistency matters.',
+        'The exercise below is a local, rule-based illustration. It assigns words to predefined topic groups. It does not call Claude and it computes no embeddings.\n\n> **Why it matters.** Terms such as "concise" and "exhaustive" imply different output requirements. Turn those terms into testable limits when consistency matters.',
     },
     {
       id: "window-as-budget",
       title: "The window is a budget: spend it well",
       readTimeMinutes: 2,
       content:
-        'A request\'s context can include system and product instructions, user messages, documents, prior turns, and tool results. The response also uses tokens, so input and output share the model\'s available budget.\n\nThree practical controls:\n\n1. **Separate documents from the question.** Anthropic\'s long-context guidance places source documents before the query for multi-document tasks. Validate that arrangement with your own evaluations.\n2. **Label each source.** Tags such as `<document index="1" source="…">` preserve source boundaries and make citation formats easier to specify.\n3. **State the evidence rule beside the task.** Define whether the model may use general knowledge, which sources are authoritative, and what to return when support is missing.\n\nDo not submit a large document set without a retrieval or relevance strategy. More text can add conflicts and distract from the material needed for the question.',
+        'A request carries system and product instructions, user messages, documents, prior turns, and tool results. The response spends tokens too, so input and output share the model\'s budget.\n\nThree controls matter.\n\n1. **Separate documents from the question.** Anthropic\'s long-context guidance puts source documents before the query for multi-document tasks. Validate that arrangement with your own evaluations.\n2. **Label each source.** Tags such as `<document index="1" source="…">` preserve source boundaries and make citation formats easier to specify.\n3. **State the evidence rule beside the task.** Define whether the model may use general knowledge, which sources are authoritative, and what to return when support is missing.\n\nNever submit a large document set without a retrieval or relevance strategy. More text adds more conflicts and buries the passage the question needs.',
     },
     {
       id: "long-context-template",
       title: "The long-context template",
       readTimeMinutes: 2,
       content:
-        'Use a structure like this when an answer must be based on supplied documents.\n\n```\n<documents>\n  <document index="1" source="rollout-plan.md">\n  [full text of doc 1]\n  </document>\n  <document index="2" source="oncall-guide.md">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn\'t there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat\'s our rollback procedure if the forced cutover fails?\n</question>\n```\n\nThe structure distinguishes sources, rules, and the question. Citations make claims inspectable, but they still need verification against the cited passage.',
+        'Use a structure like this when an answer must come from the supplied documents.\n\n```\n<documents>\n  <document index="1" source="rollout-plan.md">\n  [full text of doc 1]\n  </document>\n  <document index="2" source="oncall-guide.md">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn\'t there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat\'s our rollback procedure if the forced cutover fails?\n</question>\n```\n\nThe structure separates sources, rules, and the question. Citations make claims inspectable. They still need checking against the cited passage.',
     },
     {
       id: "tokens-briefly",
       title: "Tokens, briefly",
       readTimeMinutes: 1,
       content:
-        "Claude API inputs are tokenized before inference. Token counts depend on the selected model, language, punctuation, and content type, so word-to-token formulas are planning estimates rather than guarantees.\n\nUse Anthropic's token-counting endpoint or the tooling for the selected product when context fit or cost matters.",
+        "Claude API inputs are tokenized before inference. Token counts shift with the selected model, language, punctuation, and content type, so word-to-token formulas are planning estimates, not guarantees.\n\nUse Anthropic's token-counting endpoint, or the tooling for the selected product, when context fit or cost matters.",
     },
     {
       id: "too-big-docs",
       title: "When your docs are too big",
       readTimeMinutes: 1,
       content:
-        "When the source set is larger than the useful context budget, choose a workflow that preserves traceability:\n\n1. **Retrieve, then answer.** Select relevant passages and retain source identifiers. Measure retrieval recall on known questions.\n2. **Stage the task.** Separate extraction, classification, drafting, and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File search, database queries, or web retrieval can fetch current evidence. Restrict permissions and record which sources were used.\n\nA summary is a derived source and can omit details. Keep links to the original passages and verify critical claims there.",
+        "When the source set outgrows the useful context budget, pick a workflow that keeps traceability.\n\n1. **Retrieve, then answer.** Select the relevant passages and keep their source identifiers. Measure retrieval recall on known questions.\n2. **Stage the task.** Split extraction, classification, drafting, and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File search, database queries, or web retrieval fetch current evidence. Restrict permissions and record which sources were used.\n\nA summary is a derived source and it drops detail. Keep links to the original passages and verify critical claims there.",
     },
   ],
   widgets: [

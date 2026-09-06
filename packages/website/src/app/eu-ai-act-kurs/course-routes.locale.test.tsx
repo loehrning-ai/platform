@@ -85,7 +85,8 @@ describe("EU AI Act locale propagation across the course lifecycle", () => {
       alternates: { canonical: null },
     });
     expect(await generateCertificateMetadata()).toMatchObject({
-      title: "Course completion record: EU AI Act Course",
+      // Copy lock updated: the English completion document is named a "certificate of participation" platform-wide.
+      title: "Certificate of participation: EU AI Act Course",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

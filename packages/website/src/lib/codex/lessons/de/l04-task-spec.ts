@@ -25,14 +25,14 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Shape, not steps", "Ergebnis statt Einzelschritte"],
     [
       prose(0, 0),
-      '`AGENTS.md` beschreibt dauerhafte Projektregeln. Die **Aufgabenspezifikation** beschreibt die aktuelle Änderung. Ein Einzeiler wie "Pagination zum Benutzer-Endpunkt hinzufügen" lässt Entscheidungen zu Verhalten, Grenzen, Verifikation und angrenzendem Code offen. Codex muss jedes ausgelassene Feld auslegen.\n\n### Endzustand vor Implementierungsweg beschreiben\n\nBenenne beobachtbares Verhalten, stabil zu haltende Schnittstellen, erforderliche Prüfungen und nicht zu ändernde Bereiche. Schrittfolgen sind sinnvoll, wenn eine vorgeschriebene Reihenfolge selbst Teil der Einschränkung ist, etwa bei einer geordneten Migration. Sonst sind Ergebnis und Grenze meist wichtiger als eine vermutete Bearbeitungsfolge.\n\n"GET /users unterstützt ?page=N mit 20 Einträgen pro Seite und behält das bestehende Antwortschema" definiert ein prüfbares Ergebnis. Die folgenden vier Felder trennen die Entscheidungen:',
+      '`AGENTS.md` regelt das Dauerhafte. Die **Aufgabenspezifikation** regelt die aktuelle Änderung. "Pagination zum Benutzer-Endpunkt hinzufügen" als Einzeiler lässt Verhalten, Grenzen, Verifikation und angrenzenden Code offen. Jedes Feld, das du weglässt, füllt Codex selbst.\n\n### Erst der Endzustand, dann der Weg\n\nNenne das beobachtbare Verhalten, die Schnittstellen, die stabil bleiben, die Prüfungen, die bestehen müssen, und die Bereiche, die niemand anfasst. Schrittfolgen lohnen sich, wenn die Reihenfolge selbst eine Einschränkung ist, etwa bei einer geordneten Migration. Sonst zählen Ergebnis und Grenze meist mehr als eine geratene Bearbeitungsfolge.\n\n"GET /users unterstützt ?page=N mit 20 Einträgen pro Seite und behält das bestehende Antwortschema" ist ein prüfbares Ergebnis. Vier Felder trennen die Entscheidungen:',
     ],
     ["The four parts", "Die vier Bestandteile"],
     ["01 · goal", "01 · Ziel"],
-    ["What outcome are we after?", "Welches Verhalten soll entstehen?"],
+    ["What outcome are we after?", "Welches Ergebnis wollen wir?"],
     [
       'One sentence. The user-facing, behavioral change you want, not the implementation steps. "Users should be able to paginate through /users, 20 per page." Not "write a pagination function." Describe the shape, not the steps.',
-      'Ein Satz zum beobachtbaren Verhalten, nicht zu Implementierungsschritten: "GET /users liefert seitenweise 20 Einträge." Nicht: "Schreibe eine Pagination-Funktion."',
+      'Ein Satz. Das sichtbare Verhalten, nicht die Implementierungsschritte. "GET /users liefert seitenweise 20 Einträge." Nicht: "Schreibe eine Pagination-Funktion."',
     ],
     ["02 · constraints", "02 · Einschränkungen"],
     [
@@ -41,13 +41,13 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       'The non-negotiables. "Don\'t change the response schema." "Must work with existing query params." "No new dependencies." These close off whole branches of bad design.',
-      'Nicht verhandelbare Bedingungen wie "Antwortschema nicht ändern", "bestehende Query-Parameter unterstützen" oder "keine neue Abhängigkeit" schließen ungeeignete Lösungswege aus.',
+      'Das Nichtverhandelbare. "Antwortschema nicht ändern." "Bestehende Query-Parameter müssen weiter funktionieren." "Keine neue Abhängigkeit." Jede davon sperrt ganze Zweige schlechten Designs.',
     ],
     ["03 · acceptance", "03 · Akzeptanz"],
-    ["How will we know it's done?", "Wodurch ist die Fertigstellung belegt?"],
+    ["How will we know it's done?", "Woran erkennen wir fertig?"],
     [
       'The evidence required before acceptance. "A new test covers page 1, page 2, and out-of-range. make test passes. No new deprecation warnings." Name commands and observable results, then inspect their output.',
-      "Vor der Annahme erforderliche Nachweise: Ein neuer Test deckt Seite 1, Seite 2 und Werte außerhalb des Bereichs ab; `make test` besteht; es gibt keine neuen Deprecation-Warnungen. Benenne Befehle und beobachtbare Ergebnisse und prüfe anschließend ihre Ausgabe.",
+      "Der Nachweis, den die Annahme braucht. Ein neuer Test deckt Seite 1, Seite 2 und Werte außerhalb des Bereichs ab; `make test` besteht; keine neuen Deprecation-Warnungen. Nenne Befehle und beobachtbare Ergebnisse, dann lies ihre Ausgabe.",
     ],
     ["04 · out of scope", "04 · Nicht Bestandteil"],
     [
@@ -56,21 +56,21 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       'The negative space. "Do not modify auth." "Do not refactor the query builder." These exclusions give the implementer and reviewer a shared scope boundary.',
-      'Explizite Grenzen wie "Authentifizierung nicht ändern" oder "Query Builder nicht refaktorisieren" verhindern sachfremde Erweiterungen des Diffs.',
+      'Der Negativraum der Aufgabe. "Auth nicht ändern." "Query Builder nicht refaktorisieren." Diese Ausschlüsse geben Implementierung und Review dieselbe Umfangsgrenze.',
     ],
     ["Build one", "Eine Spezifikation zusammenstellen"],
     [
       'Select the fields that make "add pagination to /users" reviewable. The assembled version shows which decisions are explicit and which remain open.',
-      'Wähle die Felder, die den Auftrag "Pagination zu /users hinzufügen" prüfbar machen. Die zusammengesetzte Fassung zeigt, welche Entscheidungen feststehen und welche offen bleiben.',
+      'Wähle die Felder, die "Pagination zu /users hinzufügen" prüfbar machen. Die zusammengesetzte Fassung zeigt, was entschieden ist und was offen bleibt.',
     ],
     ["Three quality tiers", "Drei Qualitätsstufen"],
     [
-      "These specifications describe the same feature with different levels of precision. Compare the decisions a reviewer can verify in each version.",
-      "Diese Spezifikationen beschreiben dieselbe Funktion mit unterschiedlicher Präzision. Vergleiche, welche Entscheidungen sich in jeder Fassung prüfen lassen.",
+      "The same feature at different levels of precision. Count the decisions a reviewer can actually verify in each one.",
+      "Dieselbe Funktion, drei Präzisionsstufen. Vergleiche, welche Entscheidungen eine Reviewerin in jeder Fassung prüfen kann.",
     ],
     [
-      '### Anatomy of the precise version\n\nEach field closes a distinct implementation or review question:\n\n- **"20 per page"** defines the default page size.\n- **"?page=N query parameter"** selects page-based offset pagination instead of a cursor contract.\n- **"Keep the existing response schema; add a pagination field"** defines the compatibility boundary.\n- **"make test must pass"** names an executable check; its log still needs inspection.\n- **"Do not change the filtering logic"** excludes an adjacent refactor.\n\nThe specification does not prescribe a guessed edit sequence. It defines observable behavior, interface constraints, evidence, and excluded scope. Add ordered implementation steps only when sequence is itself a requirement, such as a migration or rollout dependency.',
-      '### Aufbau der präzisen Fassung\n\nJedes Feld klärt eine eigene Umsetzungs- oder Review-Frage:\n\n- **"20 pro Seite"** legt die Standardgröße fest.\n- **"Query-Parameter ?page=N"** wählt seitenbasierte Offset-Pagination statt eines Cursor-Vertrags.\n- **"Bestehendes Antwortschema behalten; Feld pagination ergänzen"** definiert die Kompatibilitätsgrenze.\n- **"make test muss bestehen"** benennt eine ausführbare Prüfung; ihr Protokoll muss weiterhin gelesen werden.\n- **"Filterlogik nicht ändern"** schließt ein angrenzendes Refactoring aus.\n\nDie Spezifikation schreibt keine vermutete Bearbeitungsfolge vor. Sie definiert beobachtbares Verhalten, Schnittstellengrenzen, Nachweise und ausgeschlossenen Umfang. Geordnete Umsetzungsschritte gehören nur dann hinein, wenn die Reihenfolge selbst eine Anforderung ist, etwa bei einer Migration oder Rollout-Abhängigkeit.',
+      '### Anatomy of the precise version\n\nEach field closes a distinct implementation or review question:\n\n- **"20 per page"** defines the default page size.\n- **"?page=N query parameter"** selects page-based offset pagination instead of a cursor contract.\n- **"Keep the existing response schema; add a pagination field"** defines the compatibility boundary.\n- **"make test must pass"** names an executable check; its log still needs inspection.\n- **"Do not change the filtering logic"** excludes an adjacent refactor.\n\nNo guessed edit sequence anywhere in it. Observable behavior, interface constraints, evidence, excluded scope. Add ordered steps only when the sequence is itself a requirement, a migration or a rollout dependency.',
+      '### Aufbau der präzisen Fassung\n\nJedes Feld schließt eine eigene Umsetzungs- oder Review-Frage:\n\n- **"20 pro Seite"** legt die Standardgröße fest.\n- **"Query-Parameter ?page=N"** wählt seitenbasierte Offset-Pagination statt eines Cursor-Vertrags.\n- **"Bestehendes Antwortschema behalten; Feld pagination ergänzen"** zieht die Kompatibilitätsgrenze.\n- **"make test muss bestehen"** nennt eine ausführbare Prüfung; das Protokoll liest trotzdem jemand.\n- **"Filterlogik nicht ändern"** sperrt ein angrenzendes Refactoring.\n\nKeine geratene Bearbeitungsfolge. Die Spezifikation definiert beobachtbares Verhalten, Schnittstellengrenzen, Nachweise und ausgeschlossenen Umfang. Geordnete Umsetzungsschritte gehören nur hinein, wenn die Reihenfolge selbst eine Anforderung ist, etwa bei einer Migration oder Rollout-Abhängigkeit.',
     ],
     [
       "Two questions on writing task specs.",
@@ -82,7 +82,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Select each field that contributes an explicit implementation or review decision.",
-      "Wähle jedes Feld, das eine ausdrückliche Implementierungs- oder Review-Entscheidung enthält.",
+      "Wähle jedes Feld, das eine Implementierungs- oder Review-Entscheidung festlegt.",
     ],
     [
       "Users can page through /users, 20 per page, via ?page=N.",
@@ -119,7 +119,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["make lint passes.", "`make lint` besteht."],
     [
       "Adjacent work explicitly excluded from this change.",
-      "Liste der ausgeschlossenen Änderungen.",
+      "Angrenzende Arbeit, die ausdrücklich draußen bleibt.",
     ],
     ["Don't change filtering logic.", "Filterlogik nicht ändern."],
     ["Don't touch /users/:id.", "/users/:id nicht ändern."],
@@ -131,7 +131,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "A total-count field, only if explicitly accepted into scope.",
-      "Ein Feld mit der Gesamtzahl nur dann ergänzen, wenn es ausdrücklich in den Umfang aufgenommen wurde.",
+      "Ein Feld mit der Gesamtzahl, nur wenn es ausdrücklich in den Umfang kommt.",
     ],
     ["Unverifiable preference", "Nicht prüfbare Präferenz"],
     [
@@ -155,7 +155,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "A goal and tests without constraints can still permit a response-schema change or an unrelated filter refactor. The four-part version gives review an explicit contract.",
-      "Die mittlere Fassung enthält Ziel und Akzeptanz, aber keine Einschränkungen oder Umfangsgrenze. Die Pagination kann funktionieren, während der Filter Builder unnötig geändert wird. Der Review muss dann zwei getrennte Anliegen entwirren.",
+      "Ziel und Tests ohne Einschränkungen lassen eine Schemaänderung oder ein fremdes Filter-Refactoring durch. Die Reviewerin muss dann zwei Anliegen entwirren. Die Fassung mit vier Feldern gibt ihr einen expliziten Vertrag.",
     ],
     [
       "A task has a clear goal and acceptance criteria but no excluded scope. What review risk remains?",
@@ -167,7 +167,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Adjacent cleanup can be treated as part of the task, leaving the reviewer without a stated boundary for rejecting it.",
-      "Der Agent kann angrenzenden Code ohne Auftrag refaktorisieren und dadurch den Review erschweren.",
+      "Angrenzendes Aufräumen gilt als Teil der Aufgabe, und der Reviewerin fehlt eine genannte Grenze, um es abzulehnen.",
     ],
     [
       "Codex will refuse to work without explicit scope.",
@@ -179,7 +179,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Without an explicit boundary, adjacent cleanup can be interpreted as necessary work. An out-of-scope section lets both Codex and the reviewer compare the diff with a stated limit.",
-      'Ohne ausdrückliche Grenze kann angrenzende Bereinigung als notwendige Arbeit ausgelegt werden. Ein Abschnitt "Nicht Bestandteil" erlaubt Codex und Review den Vergleich des Diffs mit einer genannten Grenze.',
+      'Ohne ausdrückliche Grenze gilt angrenzendes Aufräumen schnell als notwendige Arbeit. Ein Abschnitt "Nicht Bestandteil" gibt Codex und Reviewerin dieselbe Linie, an der sie den Diff messen.',
     ],
     [
       "Which is the better acceptance criterion?",
@@ -197,7 +197,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ['"Don\'t break anything."', '"Nichts darf kaputtgehen."'],
     [
       "The concrete criterion defines inputs, outputs, and a command the implementer and reviewer can run. A passing log is evidence for those cases, not proof of every relevant behavior. The next lesson shows how to strengthen that evidence with reviewed tests.",
-      "Das konkrete Kriterium definiert Eingaben, Ausgaben und einen ausführbaren Befehl. Ein erfolgreiches Protokoll belegt diese Fälle, aber nicht jedes relevante Verhalten. Die nächste Lektion ergänzt geprüfte Tests als weiteren Nachweis.",
+      "Das konkrete Kriterium nennt Eingaben, Ausgaben und einen Befehl, den Implementierung und Review ausführen können. Ein grünes Protokoll belegt diese Fälle, nicht jedes relevante Verhalten. Die nächste Lektion stärkt den Nachweis mit geprüften Tests.",
     ],
   ],
 });

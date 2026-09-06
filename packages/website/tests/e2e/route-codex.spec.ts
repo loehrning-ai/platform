@@ -248,7 +248,8 @@ test.describe("Codex Course golden path", () => {
     ).toBeVisible();
 
     const finalLessonCertificate = page.getByRole("link", {
-      name: "Open Certificate of Completion",
+      // Copy lock updated: English UI copy names completion documents "certificate of participation".
+      name: "Open Certificate of Participation",
     });
     await expect(finalLessonCertificate).toHaveAttribute("href", CERT_ROUTE);
     await finalLessonCertificate.click();
@@ -258,7 +259,7 @@ test.describe("Codex Course golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("link", {
-        name: "Open Certificate of Completion",
+        name: "Open Certificate of Participation",
       }),
     ).toHaveAttribute("href", CERT_ROUTE);
   });

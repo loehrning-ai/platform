@@ -11,58 +11,58 @@
     {
       "weekOffset": 0,
       "role": "HR-Leitung eines Maschinenbauers mit 80 Beschäftigten",
-      "scenario": "Der CFO benötigt innerhalb von drei Tagen einen Gehaltsvergleich mit fünf Wettbewerbern. Du hast öffentliche Quellen wie Unternehmensberichte, Stellenanzeigen und von Beschäftigten gemeldete Gehaltsdaten, zwei Stunden für die erste Analyse und keine Datenanalyse-Unterstützung. Wie erstellst du einen nachvollziehbaren Entwurf?",
+      "scenario": "Der CFO will in drei Tagen einen Gehaltsvergleich mit fünf Wettbewerbern. Du hast öffentliche Quellen wie Unternehmensberichte, Stellenanzeigen und von Beschäftigten gemeldete Gehaltsdaten, zwei Stunden für die erste Analyse und keine Datenanalyse-Hilfe. Wie kommst du zu einem nachvollziehbaren Entwurf?",
       "stack": ["Claude", "Obsidian", "öffentliche Gehaltsquellen"],
       "timeBudget": "2 Stunden",
-      "modelSolution": "1. Briefing mit Rolle, Unternehmen, Region und fünfspaltigem Output definieren: Wettbewerber, Rolle und Level, gemeldete Gehaltsspanne, Quelle und Vertrauensniveau. 2. Pro Wettbewerber einen kleinen, dokumentierten Satz öffentlicher Datensätze sammeln. Nutzungsbedingungen beachten und Schätzungen nicht als Abrechnungsdaten darstellen. 3. Das Modell Spannen extrahieren und fehlende oder unsichere Werte markieren lassen. 4. Die drei prüfkritischsten Aussagen bestimmen. 5. Diese Aussagen in den Originalquellen verifizieren, Stichprobenbegrenzungen dokumentieren und die geprüfte Tabelle bereitstellen.",
+      "modelSolution": "1. Schreib das Briefing mit Rolle, Unternehmen, Region und fünf Ausgabespalten (Wettbewerber, Rolle und Level, gemeldete Gehaltsspanne, Quelle, Vertrauensniveau). 2. Sammle pro Wettbewerber einen kleinen, dokumentierten Satz öffentlicher Datensätze. Halte die Nutzungsbedingungen ein und gib Schätzungen nie als Abrechnungsdaten aus. 3. Lass das Modell Spannen extrahieren und fehlende oder unsichere Werte markieren. 4. Bestimme die drei prüfkritischsten Aussagen. 5. Verifiziere sie in den Originalquellen, dokumentiere die Stichprobengrenzen und liefere die geprüfte Tabelle.",
       "rubric": [
         "Das Briefing nennt Rolle, Kontext und Ausgabeformat",
-        "Benannte öffentliche Quellen ersetzen eine undefinierte Websuche",
+        "Benannte öffentliche Quellen statt einer undefinierten Websuche",
         "Stichprobengrößen und Quellenbegrenzungen sind dokumentiert",
         "Unsichere Werte tragen ein ausdrückliches Vertrauenslabel",
-        "Vor der Abgabe findet eine kritische Prüfung statt",
-        "Das Ausgabeformat entspricht dem Tabellenbedarf des CFO",
-        "Das Zwei-Stunden-Limit gilt für eine begrenzte Erstanalyse, nicht für eine vollständige Vergütungsstudie"
+        "Vor der Abgabe wird kritisch geprüft",
+        "Das Ausgabeformat passt zur Tabelle, die der CFO braucht",
+        "Das Zwei-Stunden-Limit deckt eine begrenzte Erstanalyse, keine vollständige Vergütungsstudie"
       ]
     },
     {
       "weekOffset": 1,
       "role": "Vertriebsleitung eines Handwerksbetriebs mit 45 Beschäftigten",
-      "scenario": "Im System liegen 230 offene Angebote, einige davon seit 90 Tagen. Es ist unklar, welche Chancen noch aktiv sind. Die manuelle Prüfung wird auf drei Tage geschätzt. Wie erstellst du in zwei Stunden eine Review-Warteschlange?",
+      "scenario": "Im System liegen 230 offene Angebote, manche seit 90 Tagen. Welche Chancen noch aktiv sind, weiß niemand. Alles von Hand zu prüfen würde geschätzt drei Tage dauern. Wie baust du in zwei Stunden eine Review-Warteschlange?",
       "stack": ["Claude Code", "CSV-Export", "E-Mail-Templates"],
       "timeBudget": "2 Stunden",
-      "modelSolution": "1. Nur die für die Triage erforderlichen Felder exportieren: Kundenreferenz, Wert, letzte Aktivität und Status. Personenbezogene Daten nach dem freigegebenen Verfahren behandeln. 2. Review-Klassen wie HOT, WARM, COLD und DEAD mit ausdrücklichen Alters- und Wertschwellen definieren. 3. Follow-up-Entwürfe zur menschlichen Freigabe erstellen; nicht automatisch senden. 4. Datensätze mit höchster Priorität persönlichen Anrufen zuordnen und die übrigen in Review-Warteschlangen stellen. Nicht allein aufgrund einer Modellbewertung archivieren. 5. Die Regeln wöchentlich mit den tatsächlichen Ergebnissen vergleichen.",
+      "modelSolution": "1. Exportiere nur, was die Triage braucht, also Kundenreferenz, Wert, letzte Aktivität und Status. Personenbezogene Daten laufen nach dem freigegebenen Verfahren. 2. Definiere Review-Klassen wie HOT, WARM, COLD und DEAD mit expliziten Alters- und Wertschwellen. 3. Lass Follow-up-Entwürfe schreiben, die ein Mensch freigibt; nichts geht automatisch raus. 4. Die wichtigsten Datensätze bekommen einen persönlichen Anruf, der Rest landet in Review-Warteschlangen. Archiviert wird nie allein wegen einer Modellbewertung. 5. Vergleiche die Regeln wöchentlich mit den tatsächlichen Ergebnissen.",
       "rubric": [
-        "Daten werden aus dem Quellsystem exportiert statt neu eingegeben",
-        "Triage-Klassen verwenden ausdrückliche, prüfbare Schwellenwerte",
+        "Die Daten werden exportiert, nicht neu eingetippt",
+        "Triage-Klassen haben klar benannte, prüfbare Schwellenwerte",
         "Jede Klasse hat einen passenden Entwurf in klarer Geschäftssprache",
-        "Follow-up mit hohem Wert bleibt menschlich geprüft",
-        "Das Zwei-Stunden-Limit umfasst Triage-Aufbau und Entwürfe",
-        "Ein wiederkehrender Review ersetzt eine einmalige Bereinigung",
-        "Kundendaten werden nur über einen freigegebenen Datenschutz- und Zugriffspfad verarbeitet"
+        "Follow-ups mit hohem Wert prüft ein Mensch",
+        "Zwei Stunden decken Triage-Aufbau und Entwürfe",
+        "Ein wiederkehrender Review statt einer einmaligen Bereinigung",
+        "Kundendaten laufen nur über einen freigegebenen Datenschutz- und Zugriffspfad"
       ]
     },
     {
       "weekOffset": 2,
       "role": "Controlling eines Logistikunternehmens mit 120 Beschäftigten",
-      "scenario": "Das Monatsreporting umfasst acht Kennzahlen, vier Abteilungen und zwölf Kommentarzeilen. Der aktuelle Ablauf dauert sechs Stunden. Ein Kollege ist abwesend, und du hast 90 Minuten. Wie erstellst du einen prüfbaren Entwurf?",
+      "scenario": "Das Monatsreporting hat acht Kennzahlen, vier Abteilungen und zwölf Kommentarzeilen und dauert bisher sechs Stunden. Heute fehlt ein Kollege, und du hast 90 Minuten. Wie kommst du zu einem prüfbaren Entwurf?",
       "stack": ["Claude + Notebook", "Excel", "letzte 3 Reports"],
       "timeBudget": "90 Minuten",
-      "modelSolution": "1. Einen kontrollierten Arbeitsbereich anlegen und die letzten drei Reports als Struktur- und Stilreferenz hinzufügen. 2. Die aktuellen Rohzahlen in einer validierten Tabelle bereitstellen. 3. Dieselbe Struktur, ausdrückliche Abweichungsberechnungen und Kommentare anfordern, die Fakten von Hypothesen trennen. 4. Jede berichtete Zahl in Excel neu berechnen und die referenzierte Quellzelle prüfen. 5. Zwei oder drei wesentliche Abweichungen untersuchen und mehrere mögliche Erklärungen dokumentieren, statt eine unbelegte Ursache auszuwählen. 6. Das geprüfte Dokument im erforderlichen Format exportieren.",
+      "modelSolution": "1. Leg einen kontrollierten Arbeitsbereich an, mit den letzten drei Reports als Struktur- und Stilreferenz. 2. Leg die aktuellen Rohzahlen als validierte Tabelle vor. 3. Fordere dieselbe Struktur an, ausgewiesene Abweichungsberechnungen und Kommentare, die Fakten von Hypothesen trennen. 4. Rechne jede berichtete Zahl in Excel nach und prüfe die referenzierte Quellzelle. 5. Untersuche zwei oder drei wesentliche Abweichungen und dokumentiere mehrere mögliche Erklärungen statt einer unbelegten Ursache. 6. Exportiere das geprüfte Dokument im geforderten Format.",
       "rubric": [
         "Frühere Reports liefern Struktur- und Stilreferenzen",
         "Jede Zahl wird unabhängig vom generierten Text geprüft",
-        "Abweichungsregeln stehen vor der Entwurfserstellung fest",
+        "Abweichungsregeln stehen vor dem Entwurf fest",
         "Mögliche Erklärungen sind als Hypothesen gekennzeichnet",
-        "Verifikation erhält mehr Zeit als sprachliche Anpassungen",
-        "Das Endformat entspricht dem Reporting-Prozess der Geschäftsführung",
-        "Arbeitsbereich und Prüfungen können im nächsten Monat wiederverwendet werden"
+        "Verifikation bekommt mehr Zeit als sprachlicher Feinschliff",
+        "Das Endformat passt in den Reporting-Prozess der Geschäftsführung",
+        "Arbeitsbereich und Prüfungen lassen sich nächsten Monat wiederverwenden"
       ]
     },
     {
       "weekOffset": 3,
       "role": "Geschäftsführungsassistenz eines Softwareunternehmens mit 200 Beschäftigten",
-      "scenario": "Eine Führungskraft reist morgen früh zu einem Investorentermin. Bis heute Abend benötigst du ein achtseitiges Briefing zu drei Wettbewerbern: öffentliche Finanzdaten, Produktpositionierung, Management, aktuelle Mitteilungen und eine belegte Risikoeinschätzung.",
+      "scenario": "Morgen früh reist eine Führungskraft zum Investorentermin. Bis heute Abend brauchst du ein achtseitiges Briefing zu drei Wettbewerbern mit öffentlichen Finanzdaten, Produktpositionierung, Management, aktuellen Mitteilungen und einer belegten Risikoeinschätzung.",
       "stack": [
         "Claude",
         "Unternehmensregister",
@@ -70,29 +70,29 @@
         "Nachrichtenquellen"
       ],
       "timeBudget": "4 Stunden",
-      "modelSolution": "1. Die achtseitige Struktur vor der Recherche festlegen: eine Seite Zusammenfassung, je zwei Seiten pro Wettbewerber und eine Vergleichsseite. 2. Für jeden Wettbewerber dieselben Quellenkategorien parallel sammeln, einschließlich Veröffentlichungsdatum und Direktlink. 3. Einen Entwurf anhand des Templates erstellen und jede unsichere Aussage markieren lassen. 4. Finanzzahlen und Zitate in den Originaldokumenten prüfen. 5. Die Wettbewerber anhand von Finanzkraft, Umsetzungstempo, Team und Produkt vergleichen und jede Bewertung belegen. 6. Das geprüfte Briefing und eine einseitige Besprechungsreferenz exportieren.",
+      "modelSolution": "1. Leg vor der Recherche die acht Seiten fest, also eine Seite Zusammenfassung, je zwei pro Wettbewerber und eine Vergleichsseite. 2. Sammle für jeden Wettbewerber parallel dieselben Quellenkategorien, mit Veröffentlichungsdatum und Direktlink. 3. Lass einen Entwurf nach dem Template schreiben und jede unsichere Aussage markieren. 4. Prüfe Finanzzahlen und Zitate in den Originaldokumenten. 5. Vergleiche die Wettbewerber nach Finanzkraft, Umsetzungstempo, Team und Produkt und belege jede Bewertung. 6. Exportiere das geprüfte Briefing und eine einseitige Besprechungsreferenz.",
       "rubric": [
-        "Die Struktur steht vor Beginn des Entwurfs fest",
+        "Die Struktur steht fest, bevor der Entwurf beginnt",
         "Jeder Wettbewerber wird nach demselben Quellenplan recherchiert",
         "Der Text folgt einem freigegebenen internen Beispiel statt allgemeiner Beratungssprache",
         "Finanzzahlen und Zitate werden an der Quelle geprüft",
         "Die Vergleichsmatrix trennt Belege von Bewertung",
-        "Die Lieferobjekte sind Briefing und knappe Besprechungsreferenz",
+        "Geliefert werden Briefing und knappe Besprechungsreferenz",
         "Der Vier-Stunden-Plan begrenzt den Umfang und reserviert Zeit für Verifikation"
       ]
     },
     {
       "weekOffset": 4,
       "role": "IT-Leitung eines Familienbetriebs mit 60 Beschäftigten",
-      "scenario": "Die Geschäftsleitung fragt, wo KI sinnvoll eingesetzt werden könnte. Du sollst in der nächsten Woche ein erstes Konzept vorlegen. Das Budget ist offen, die Zeit begrenzt und es gibt noch keine etablierte KI-Praxis. Wo beginnst du?",
+      "scenario": "Die Geschäftsleitung fragt, wo KI sinnvoll wäre. Nächste Woche sollst du ein erstes Konzept vorlegen. Budget offen, Zeit knapp, eine etablierte KI-Praxis gibt es noch nicht. Wo fängst du an?",
       "stack": ["Claude", "Mitarbeiter-Umfrage", "Prozess-Mapping"],
       "timeBudget": "5 Stunden (verteilt auf 3 Tage)",
-      "modelSolution": "1. Tag 1: Eine breite, branchenspezifische Liste möglicher Anwendungsfälle erstellen und alle Kandidaten ohne klaren Prozessverantwortlichen oder Datenpfad aussortieren. 2. Tag 2: Acht Personen aus unterschiedlichen Funktionen fünf kurze Fragen zu wiederkehrender Arbeit und Fehlerstellen stellen. Die Antworten mit dem Modell clustern und jedes Cluster gegen die Originalantworten prüfen. 3. Tag 3: Die verbleibenden Fälle nach Aufwand, Zahl betroffener Beschäftigter, Datensensitivität, Betriebsrisiko und Zeit bis zu belastbaren Erkenntnissen vergleichen. 4. Zwei Kandidaten mit Annahmen, Ausschlüssen, erforderlichen Kontrollen und nächstem Validierungsschritt vorlegen. Nutzenschätzungen als Bandbreite aus benannten Eingaben darstellen, nicht als versprochenes Ergebnis.",
+      "modelSolution": "1. Tag 1: Erstelle eine breite, branchenspezifische Liste möglicher Anwendungsfälle und streich alle Kandidaten ohne klaren Prozessverantwortlichen oder Datenpfad. 2. Tag 2: Stell acht Personen aus verschiedenen Funktionen fünf kurze Fragen zu wiederkehrender Arbeit und Fehlerstellen. Lass die Antworten vom Modell clustern und prüfe jedes Cluster gegen die Originalantworten. 3. Tag 3: Vergleiche die verbliebenen Fälle nach Aufwand, Zahl betroffener Beschäftigter, Datensensitivität, Betriebsrisiko und Zeit bis zu belastbaren Erkenntnissen. 4. Leg zwei Kandidaten vor, mit Annahmen, Ausschlüssen, nötigen Kontrollen und nächstem Validierungsschritt. Der Nutzen ist eine Bandbreite aus benannten Eingaben, kein versprochenes Ergebnis.",
       "rubric": [
-        "Externe Anwendungsfallrecherche wird mit Aussagen von Beschäftigten verbunden",
-        "Das Modell unterstützt Clustering und Struktur, nicht die abschließende Entscheidung",
-        "Aufwand, Reichweite, Risiko und Zeit bis zum Nachweis sind ausdrückliche Kriterien",
-        "Die Geschäftsleitung erhält zwei priorisierte Kandidaten statt einer langen Liste",
+        "Externe Anwendungsfallrecherche und Aussagen von Beschäftigten kommen zusammen",
+        "Das Modell hilft beim Clustern und Strukturieren, entscheidet aber nicht",
+        "Aufwand, Reichweite, Risiko und Zeit bis zum Nachweis sind benannte Kriterien",
+        "Die Geschäftsleitung bekommt zwei priorisierte Kandidaten, keine lange Liste",
         "Der Output passt auf eine Entscheidungsseite",
         "Jeder Kandidat hat einen konkreten Validierungsschritt und eine zuständige Person",
         "Die Arbeit ist auf drei Tage verteilt, damit Quellen geprüft werden können"
@@ -101,32 +101,32 @@
     {
       "weekOffset": 5,
       "role": "Marketingleitung eines B2B-Softwareunternehmens mit 30 Beschäftigten",
-      "scenario": "Plane einen LinkedIn-Kalender für das dritte Quartal mit drei Beiträgen pro Woche über 13 Wochen zum Thema KI-gestützte Teams. Es gibt kein Agenturbudget, und du bist allein für die Arbeit zuständig.",
+      "scenario": "Du planst den LinkedIn-Kalender fürs dritte Quartal, drei Beiträge pro Woche über 13 Wochen zum Thema KI-gestützte Teams. Agenturbudget gibt es nicht, und außer dir macht das niemand.",
       "stack": ["Claude", "LinkedIn Analytics", "Buffer"],
       "timeBudget": "1 Tag für den Quartalsplan plus 30 Minuten pro Woche für Entwürfe",
-      "modelSolution": "1. Die letzten 30 Beiträge und verfügbaren Leistungsdaten analysieren, um drei wiederholbare Formate zu bestimmen. Aus kleinen Stichproben keine Kausalität ableiten. 2. Themenkandidaten für eine deutsche B2B-Zielgruppe erzeugen und 39 relevante, nicht doppelte Themen auswählen. 3. Vor Hook oder Handlungsaufforderung für jedes Thema einen sachlichen Ansatz und den erforderlichen Beleg festlegen. 4. Einen Quartalskalender mit verantwortlicher Person, Quellenstatus und Review-Datum anlegen. 5. Wöchentlich drei Entwürfe erstellen und auf Faktentreue sowie Unternehmenssprache redigieren. 6. Die Leistung monatlich prüfen und dokumentieren, was geändert wurde.",
+      "modelSolution": "1. Analysiere die letzten 30 Beiträge und vorhandene Leistungsdaten und leite drei wiederholbare Formate ab. Aus kleinen Stichproben folgt keine Kausalität. 2. Lass Themenkandidaten für eine deutsche B2B-Zielgruppe erzeugen und wähle 39 relevante Themen ohne Doppelungen. 3. Leg pro Thema erst den sachlichen Ansatz und den nötigen Beleg fest, dann Hook oder Handlungsaufforderung. 4. Der Quartalskalender nennt verantwortliche Person, Quellenstatus und Review-Datum. 5. Erstelle wöchentlich drei Entwürfe, redigiert auf Faktentreue und Unternehmenssprache. 6. Prüfe die Leistung monatlich und halte fest, was du geändert hast.",
       "rubric": [
-        "Frühere Beiträge informieren den Stil, ohne kopiert zu werden",
-        "Leistungsdaten informieren die Auswahl und ihre Grenzen sind dokumentiert",
+        "Frühere Beiträge prägen den Stil, ohne kopiert zu werden",
+        "Leistungsdaten fließen in die Auswahl ein, ihre Grenzen sind dokumentiert",
         "Der Kalender enthält genau 39 Themen für drei Beiträge in 13 Wochen",
         "Vor jedem Entwurf stehen ein Ansatz und ein Belegerfordernis",
-        "Das wöchentliche 30-Minuten-Ziel gilt für Entwürfe; Review-Zeit wird separat eingeplant",
+        "Die 30 Minuten pro Woche gelten für Entwürfe, Review-Zeit planst du separat",
         "Ein monatlicher Review erzeugt eine dokumentierte Feedbackschleife",
-        "Die Sprache ist präzise und für eine deutsche B2B-Zielgruppe geeignet"
+        "Die Sprache ist präzise und passt zu einer deutschen B2B-Zielgruppe"
       ]
     },
     {
       "weekOffset": 6,
       "role": "Produktmanagement eines Start-ups mit 15 Beschäftigten",
-      "scenario": "Kunden haben drei konkurrierende Funktionen angefragt, im nächsten Sprint ist aber nur Kapazität für eine vorhanden. Wie triffst und dokumentierst du die Entscheidung?",
+      "scenario": "Kunden haben drei konkurrierende Funktionen angefragt, der nächste Sprint hat Platz für eine. Wie entscheidest du, und wie dokumentierst du die Entscheidung?",
       "stack": ["Claude", "Kunden-Interviews (3)", "Usage-Daten"],
       "timeBudget": "3 Stunden",
-      "modelSolution": "1. Jede Anfrage mit Kundenkontext und relevanten Produktnutzungsdaten dokumentieren. 2. Pro Funktion Nutzerproblem, betroffene Segmente und vorhandene Ersatzlösungen festhalten. 3. Eine RICE-Tabelle mit ausdrücklichen Definitionen für Reichweite, Wirkung, Vertrauen und Aufwand anlegen. Das Modell erst nach Prüfung der Eingaben rechnen lassen. 4. Für jede Schätzung mit geringer Evidenz eine kleine Recherchehandlung bestimmen, die sie wesentlich verbessern kann. 5. Entscheidung, Annahmen und verworfene Alternativen dokumentieren. 6. Nach der Veröffentlichung tatsächliche Nutzung und Ergebnisse mit den Schätzungen vergleichen.",
+      "modelSolution": "1. Dokumentiere jede Anfrage mit Kundenkontext und Produktnutzungsdaten. 2. Halte pro Funktion Nutzerproblem, betroffene Segmente und vorhandene Ersatzlösungen fest. 3. Leg eine RICE-Tabelle an und definiere Reichweite, Wirkung, Vertrauen und Aufwand schriftlich. Rechnen darf das Modell erst nach Prüfung der Eingaben. 4. Bestimme für jede Schätzung mit dünner Evidenz eine kleine Recherche, die sie deutlich verbessern kann. 5. Dokumentiere Entscheidung, Annahmen und verworfene Alternativen. 6. Vergleiche nach der Veröffentlichung tatsächliche Nutzung und Ergebnisse mit den Schätzungen.",
       "rubric": [
         "Ein definiertes Verfahren ersetzt eine undokumentierte Präferenz",
         "Produktnutzungsdaten fließen ein",
-        "Vertrauen ist ausdrücklich und an Belege gebunden",
-        "Annahmen mit geringer Evidenz erhalten eine Recherchehandlung",
+        "Vertrauen ist benannt und an Belege gebunden",
+        "Annahmen mit dünner Evidenz bekommen eine Recherche",
         "Entscheidung und verworfene Alternativen sind dokumentiert",
         "Ein Messpunkt nach der Veröffentlichung ist definiert",
         "Das Modell strukturiert und rechnet; die verantwortliche Person entscheidet"
@@ -135,40 +135,40 @@
     {
       "weekOffset": 7,
       "role": "Compliance-Verantwortung in einem mittelständischen Finanzunternehmen",
-      "scenario": "Die Geschäftsleitung will einen KI-Chatassistenten in der Kundenberatung einsetzen. Innerhalb von zwei Wochen musst du begründen, ob der vorgeschlagene Einsatz unter welchen Bedingungen fortgesetzt werden kann. DSGVO, EU AI Act und sektorale Vorgaben können parallel gelten.",
+      "scenario": "Die Geschäftsleitung will einen KI-Chatassistenten in der Kundenberatung. In zwei Wochen musst du begründen, ob und unter welchen Bedingungen das Vorhaben weitergehen kann. DSGVO, EU AI Act und sektorale Vorgaben können gleichzeitig gelten.",
       "stack": [
         "Claude",
         "Text des EU AI Act",
         "DSFA-Vorlage der Organisation"
       ],
       "timeBudget": "8 Stunden (verteilt über 2 Wochen)",
-      "modelSolution": "1. Vorgeschlagenes System, Nutzerweg, Entscheidungsfolgen, Datenkategorien, Modellanbieter und menschliche Rolle definieren. 2. Jeden Rechtsrahmen getrennt anhand von Primärquellen prüfen: DSGVO-Rechtsgrundlage, Datenminimierung und DSFA; Rolle und Risikoklassifizierung nach EU AI Act; einschlägige Finanzaufsichtsanforderungen. 3. Eine nachvollziehbare Liste von Anforderungen, Nachweisen und offenen Fragen erstellen. 4. Qualifizierte Rechts- und Compliance-Verantwortliche prüfen die Analyse. 5. Eine Entscheidungsmatrix mit erlaubtem Umfang, ausgeschlossenen Nutzungen, erforderlichen Verträgen, Kontrollen, Tests und Schulungen erstellen. 6. Empfehlung und Bedingungen dokumentieren; Modelloutput nicht als Rechtsberatung behandeln.",
+      "modelSolution": "1. Beschreib das vorgeschlagene System, Nutzerweg, Entscheidungsfolgen, Datenkategorien, Modellanbieter und menschliche Rolle. 2. Prüfe jeden Rechtsrahmen getrennt anhand von Primärquellen: DSGVO-Rechtsgrundlage, Datenminimierung und DSFA; Rolle und Risikoklassifizierung nach EU AI Act; einschlägige Finanzaufsichtsanforderungen. 3. Erstelle eine nachvollziehbare Liste aus Anforderungen, Nachweisen und offenen Fragen. 4. Qualifizierte Rechts- und Compliance-Verantwortliche prüfen die Analyse. 5. Baue eine Entscheidungsmatrix mit erlaubtem Umfang, ausgeschlossenen Nutzungen, nötigen Verträgen, Kontrollen, Tests und Schulungen. 6. Dokumentiere Empfehlung und Bedingungen; Modelloutput ist keine Rechtsberatung.",
       "rubric": [
         "Die Analyse behandelt DSGVO, EU AI Act und einschlägige sektorale Regeln getrennt",
         "Primärquellen stützen die Zusammenfassung",
-        "Qualifizierter rechtlicher oder Compliance-Review ist verpflichtend",
+        "Ein qualifizierter Rechts- oder Compliance-Review ist Pflicht",
         "Die Entscheidungsmatrix trennt erlaubten Umfang, Ausschlüsse und Bedingungen",
-        "Erforderliche Nachweise wie Verträge, Bewertungen und Schulungsaufzeichnungen sind benannt",
-        "Die Geschäftsleitung erhält eine bedingte Empfehlung statt einer binären Modellantwort",
+        "Nötige Nachweise wie Verträge, Bewertungen und Schulungsaufzeichnungen sind benannt",
+        "Die Geschäftsleitung bekommt eine bedingte Empfehlung, keine binäre Modellantwort",
         "Risikoklassifizierung und Bewertungsentscheidungen sind für spätere Prüfung dokumentiert"
       ]
     },
     {
       "weekOffset": 8,
       "role": "HR-Leitung eines Industrieunternehmens mit 500 Beschäftigten",
-      "scenario": "Für fünf offene Stellen gehen innerhalb von zehn Tagen 370 Bewerbungen ein. Das Team prüft derzeit 20 pro Tag und benötigt bis Freitag einen rechtmäßigen Triage-Prozess. Wie reduzierst du Verwaltungsarbeit, ohne Beschäftigungsentscheidungen an ein Modell zu delegieren?",
+      "scenario": "370 Bewerbungen in zehn Tagen auf fünf offene Stellen. Das Team schafft 20 pro Tag und braucht bis Freitag einen rechtmäßigen Triage-Prozess. Wie reduzierst du die Verwaltungsarbeit, ohne Beschäftigungsentscheidungen an ein Modell abzugeben?",
       "stack": [
         "Claude",
         "Anforderungsprofile",
         "freigegebene Kontrollen für personenbezogene Daten"
       ],
       "timeBudget": "3 Stunden",
-      "modelSolution": "1. Für jede Stelle legen die Einstellungsverantwortlichen vor der Modellnutzung messbare Anforderungen, Belegregeln und verbotene Proxy-Kriterien fest. 2. Rechtsgrundlage, Aufbewahrung, Zugriffsrechte, Anbietervertrag, einschlägige EU-AI-Act-Klassifizierung und erforderliche Folgenabschätzungen prüfen. 3. KI nur für freigegebene administrative Unterstützung verwenden, etwa zum Extrahieren von Belegen in eine Review-Tabelle. Bewerbungen nicht automatisch bewerten oder ablehnen. 4. Recruiter prüfen die Quellbewerbung und treffen jede Entscheidung. 5. Extraktionsfehler und ungleiche Auswirkungen einschließlich Grenzfällen testen. 6. Audit-Trail führen und erforderliche Information sowie Rechteprozesse für Bewerbende bereitstellen.",
+      "modelSolution": "1. Bevor ein Modell ins Spiel kommt, legen die Einstellungsverantwortlichen pro Stelle messbare Anforderungen, Belegregeln und verbotene Proxy-Kriterien fest. 2. Prüfe Rechtsgrundlage, Aufbewahrung, Zugriffsrechte, Anbietervertrag, einschlägige EU-AI-Act-Klassifizierung und nötige Folgenabschätzungen. 3. Nutze KI nur für freigegebene Verwaltungsarbeit, etwa um Belege in eine Review-Tabelle zu ziehen. Bewerbungen werden nicht automatisch bewertet oder abgelehnt. 4. Recruiter prüfen die Quellbewerbung und entscheiden jeden Fall. 5. Teste Extraktionsfehler und ungleiche Auswirkungen inklusive Grenzfällen. 6. Führe einen Audit-Trail und gib Bewerbenden die nötigen Informationen und Rechteprozesse.",
       "rubric": [
         "Stellenbezogene Kriterien und verbotene Proxy-Merkmale stehen vor der Verarbeitung fest",
         "Rechtsgrundlage, EU-AI-Act-Klassifizierung und Pflichten zu Folgenabschätzungen sind geprüft",
-        "Das Modell bewertet oder verwirft Bewerbungen nicht autonom",
-        "Ein Recruiter prüft die Quellbelege und entscheidet jeden Ausgang",
+        "Das Modell bewertet oder verwirft keine Bewerbung eigenständig",
+        "Ein Recruiter prüft die Quellbelege und entscheidet jeden Fall",
         "Genauigkeits- und Bias-Tests enthalten dokumentierte Grenzfälle",
         "Aufbewahrung, Zugriffe und Rechteprozesse für Bewerbende sind dokumentiert",
         "Der Output ist eine Review-Tabelle mit Quellenverweisen, kein unerklärter Score"
@@ -177,36 +177,36 @@
     {
       "weekOffset": 9,
       "role": "Sales Engineering eines B2B-Softwareunternehmens",
-      "scenario": "Ein Unternehmenskunde verlangt innerhalb von zehn Tagen einen technischen Proof of Concept mit eurem System und Zugriff auf seine Datenbank. Vergleichbare Arbeit dauert normalerweise sechs Wochen. Nimmst du an, und mit welchem Umfang und welchen Kontrollen?",
+      "scenario": "Ein Unternehmenskunde will in zehn Tagen einen technischen Proof of Concept mit eurem System und Zugriff auf seine Datenbank. Sonst dauert so etwas sechs Wochen. Sagst du zu, und wenn ja, mit welchem Umfang und welchen Kontrollen?",
       "stack": [
         "Claude Code",
         "API-Spezifikation",
         "bestehende Proof-of-Concept-Templates"
       ],
       "timeBudget": "10 Tage",
-      "modelSolution": "1. Tag 1: Das interne Repository nach vergleichbaren Proof-of-Concept-Arbeiten durchsuchen und wiederverwendbare Komponenten mit Lizenz, zuständiger Person und Teststatus erfassen. 2. Tag 1 und 2: Fünf beobachtbare User Stories, Datenzugriffsgrenze, Abnahmekriterien und ausdrückliche Ausschlüsse vereinbaren. 3. Tag 3 bis 7: In einer isolierten Umgebung umsetzen und testen; generierten Code und Abhängigkeiten prüfen. 4. Tag 8: Interner Sicherheits- und Betriebsreview zu Authentifizierung, Audit-Logs, Rate Limits, Secrets und Rückbau. 5. Tag 9: Vorführung und Fehlerpfad proben. 6. Tag 10: Vereinbarten Umfang demonstrieren und dokumentieren, was für Produktion noch erforderlich ist.",
+      "modelSolution": "1. Tag 1: Durchsuche das interne Repository nach vergleichbaren Proof-of-Concept-Arbeiten und erfasse wiederverwendbare Komponenten mit Lizenz, zuständiger Person und Teststatus. 2. Tag 1 und 2: Vereinbare fünf beobachtbare User Stories, Datenzugriffsgrenze, Abnahmekriterien und explizite Ausschlüsse. 3. Tag 3 bis 7: Umsetzung und Tests in einer isolierten Umgebung; prüfe generierten Code und Abhängigkeiten. 4. Tag 8: Interner Sicherheits- und Betriebsreview zu Authentifizierung, Audit-Logs, Rate Limits, Secrets und Rückbau. 5. Tag 9: Probe Vorführung und Fehlerpfad. 6. Tag 10: Zeig den vereinbarten Umfang und dokumentiere, was für Produktion noch fehlt.",
       "rubric": [
         "Bestehende Komponenten werden auf Wiederverwendung geprüft statt vorausgesetzt",
         "Der Umfang ist auf fünf beobachtbare User Stories begrenzt",
-        "Generierter Code und Tests erhalten menschlichen Review",
+        "Generierten Code und Tests prüft ein Mensch",
         "Authentifizierung, Audit-Logging, Rate Limits, Secrets und Rückbau werden geprüft",
-        "Vor dem Kundentermin findet ein interner Probelauf statt",
-        "Der Proof of Concept ist ausdrücklich von einer Produktivzusage getrennt",
+        "Vor dem Kundentermin gibt es einen internen Probelauf",
+        "Der Proof of Concept ist klar von einer Produktivzusage getrennt",
         "Der Zehn-Tage-Plan nennt Verantwortliche, Review-Gates und Ausschlüsse"
       ]
     },
     {
       "weekOffset": 10,
       "role": "Office-Management einer Anwaltskanzlei mit 40 Beschäftigten",
-      "scenario": "Die Kanzlei erhält täglich 120 Mandanten-E-Mails: 40 Prozent betreffen bestehende Mandate, 30 Prozent Termine, 20 Prozent neue Anfragen und 10 Prozent Spam oder Vertrieb. Zwei Personen können das Volumen nicht bewältigen. Wie reduzierst du den Bearbeitungsaufwand, ohne vertrauliche Informationen offenzulegen oder ungeprüfte rechtliche Kommunikation zu versenden?",
+      "scenario": "120 Mandanten-E-Mails am Tag: 40 Prozent zu bestehenden Mandaten, 30 Prozent Termine, 20 Prozent neue Anfragen, 10 Prozent Spam oder Vertrieb. Zwei Personen kommen dagegen nicht an. Wie senkst du den Bearbeitungsaufwand, ohne Vertrauliches offenzulegen oder ungeprüfte rechtliche Kommunikation zu verschicken?",
       "stack": ["lokales Sprachmodell", "n8n", "Outlook"],
       "timeBudget": "1 Woche Setup + kontinuierliche Verbesserung",
-      "modelSolution": "1. Vor der Modellwahl Anforderungen aus Vertraulichkeit, Berufsgeheimnis, Aufbewahrung und Zugriff abbilden. Lokale Ausführung kann Transfers reduzieren, belegt aber allein keine Konformität. 2. Einen isolierten n8n-Workflow bauen, der Beispiel- oder freigegebene Nachrichten in vier Warteschlangen klassifiziert. 3. Termin- und Eingangsbestätigungen nur als Entwürfe erstellen und vor Versand durch befugte Beschäftigte freigeben lassen. 4. Nachrichten zu bestehenden Mandaten und unklare Fälle ohne generierten Rechtsrat an das zuständige Team leiten. 5. Spam-Behandlung während der Erprobung reversibel halten. 6. Klassifikationsfehler wöchentlich prüfen und zuerst den festen Testsatz aktualisieren. 7. Bewertung, Anbieter- und Auftragsverarbeitungsrollen, Arbeitsanweisung und Informationspflichten mit qualifizierter Rechtsprüfung dokumentieren.",
+      "modelSolution": "1. Kläre vor der Modellwahl, was Vertraulichkeit, Berufsgeheimnis, Aufbewahrung und Zugriff verlangen. Lokale Ausführung kann Transfers reduzieren, belegt aber allein keine Konformität. 2. Baue einen isolierten n8n-Workflow, der Beispiel- oder freigegebene Nachrichten in vier Warteschlangen klassifiziert. 3. Termin- und Eingangsbestätigungen entstehen nur als Entwürfe; befugte Beschäftigte geben sie vor dem Versand frei. 4. Nachrichten zu bestehenden Mandaten und unklare Fälle gehen ohne generierten Rechtsrat an das zuständige Team. 5. Halte die Spam-Behandlung während der Erprobung reversibel. 6. Prüfe Klassifikationsfehler wöchentlich und aktualisiere zuerst den festen Testsatz. 7. Dokumentiere Bewertung, Anbieter- und Auftragsverarbeitungsrollen, Arbeitsanweisung und Informationspflichten, qualifiziert rechtlich geprüft.",
       "rubric": [
         "Die Architektur folgt Vertraulichkeits- und Berufsgeheimnisanforderungen",
         "Klassifikation unterstützt Routing und trifft keine rechtlichen Entscheidungen",
-        "Templates erfordern vor dem Versand die Freigabe einer befugten Person",
-        "Unklare Nachrichten und bestehende Mandate haben einen ausdrücklichen Review-Pfad",
+        "Templates gehen erst nach Freigabe durch eine befugte Person raus",
+        "Unklare Nachrichten und bestehende Mandate haben einen festen Review-Pfad",
         "Ein wöchentlicher Fehlerreview aktualisiert einen festen Testsatz",
         "Rechtliche Bewertung und Datenschutzkontrollen sind dokumentiert",
         "Informationspflichten gegenüber Mandanten werden mit qualifizierter Rechtsberatung geprüft"
@@ -215,18 +215,18 @@
     {
       "weekOffset": 11,
       "role": "Geschäftsführung einer Agentur mit 25 Beschäftigten",
-      "scenario": "Die Planung für 2027 umfasst 200 Tabellenzeilen zu Zielen, Budget und Teamwachstum. Der bisherige Ablauf dauerte zwei Wochen. Du setzt ein Zwei-Tage-Ziel, ohne die Review-Standards zu senken. Wie begrenzt du die Arbeit?",
+      "scenario": "Die Planung für 2027 füllt 200 Tabellenzeilen zu Zielen, Budget und Teamwachstum. Bisher hat das zwei Wochen gedauert. Du willst es in zwei Tagen schaffen, ohne die Review-Standards zu senken. Wie schneidest du die Arbeit zu?",
       "stack": ["Claude", "letzte 3 Jahresplanungen", "Q4-Zahlen"],
       "timeBudget": "2 Tage",
-      "modelSolution": "1. Tag 1 vormittags: Die letzten drei Pläne mit den tatsächlichen Ergebnissen vergleichen und Kategorien mit wiederkehrenden Prognosefehlern bestimmen. 2. Tag 1 nachmittags: Annahmen für 2027 mit Quelle, verantwortlicher Person und Vertrauensniveau erfassen; Basis-, Negativ- und Positivszenario erstellen. 3. Tag 2 vormittags: Funktionsverantwortliche die Annahmen prüfen lassen und offene Risiken dokumentieren. Das Modell kann die Diskussion strukturieren, aber Geschäftsannahmen nicht validieren. 4. Tag 2 nachmittags: Kontrollierte Arbeitsmappe und einseitige Zusammenfassung pro Szenario fertigstellen. 5. Quartalsweise Soll-Ist-Prüfungen terminieren. Das Zwei-Tage-Ziel ist ein begrenztes Prozessziel, keine Garantie gleichwertiger Qualität.",
+      "modelSolution": "1. Tag 1 vormittags: Vergleiche die letzten drei Pläne mit den tatsächlichen Ergebnissen und finde Kategorien mit wiederkehrenden Prognosefehlern. 2. Tag 1 nachmittags: Erfasse Annahmen für 2027 mit Quelle, verantwortlicher Person und Vertrauensniveau; baue Basis-, Negativ- und Positivszenario. 3. Tag 2 vormittags: Funktionsverantwortliche prüfen die Annahmen, offene Risiken werden dokumentiert. Das Modell kann die Diskussion strukturieren, aber Geschäftsannahmen nicht validieren. 4. Tag 2 nachmittags: Stell kontrollierte Arbeitsmappe und einseitige Zusammenfassung pro Szenario fertig. 5. Terminiere quartalsweise Soll-Ist-Prüfungen. Zwei Tage sind ein begrenztes Prozessziel, keine Garantie gleichwertiger Qualität.",
       "rubric": [
-        "Frühere Plan-Ist-Abweichungen informieren die Kalibrierung",
+        "Frühere Plan-Ist-Abweichungen fließen in die Kalibrierung ein",
         "Basis-, Negativ- und Positivszenario verwenden benannte Annahmen",
         "Funktionsverantwortliche prüfen die Annahmen kritisch",
         "Jedes Szenario hat eine einseitige Entscheidungszusammenfassung",
         "Quartalsreviews vergleichen tatsächliche Ergebnisse mit dem Plan",
         "Das Modell strukturiert die Analyse; die Geschäftsführung bleibt verantwortlich",
-        "Das Zwei-Tage-Ziel bewahrt ausdrückliche Prüf- und Freigabegates"
+        "Das Zwei-Tage-Ziel behält feste Prüf- und Freigabegates"
       ]
     }
   ]

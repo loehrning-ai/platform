@@ -29,7 +29,7 @@ export const CODEX_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Codex Course",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
   certificateModules: [
     "Fundamentals: mental model, the sandbox contract, AGENTS.md",
     "Task craft: task specs, scoping, acceptance criteria",
@@ -37,13 +37,13 @@ export const CODEX_CONFIG = {
     "Advanced: parallelism, reusable patterns, a reviewable workflow",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: working effectively with Codex",
+    "Personal certificate of participation: working effectively with Codex",
   quizPassMessage: "Codex Course completed.",
   certificateFileStem: "Codex-Course",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Certificate of Participation",
+    possessive: "Your certificate of participation",
+    demonstrative: "This certificate of participation",
   },
 } satisfies CourseConfig;
 
@@ -54,7 +54,7 @@ export const CODEX_CONFIG_DE = createLocalizedTechnicalCourseConfig(
     title: "Codex-Kurs",
     certificateTitle: "Teilnahmebestätigung: Codex-Kurs",
     certificateSubtitle:
-      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
     certificateModules: [
       "Grundlagen: Arbeitsmodell, Sandbox-Rahmen und AGENTS.md",
       "Auftragsgestaltung: Spezifikation, Umfang und Akzeptanzkriterien",
@@ -62,7 +62,7 @@ export const CODEX_CONFIG_DE = createLocalizedTechnicalCourseConfig(
       "Fortgeschritten: parallele Arbeit, wiederverwendbare Muster und prüfbarer Ablauf",
     ],
     certificateReferenceLabel:
-      "Persönlicher Abschlussnachweis: kontrolliert mit Codex arbeiten",
+      "Persönliche Teilnahmebestätigung: kontrolliert mit Codex arbeiten",
     quizPassMessage: "Der Codex-Kurs ist abgeschlossen.",
     certificateFileStem: "Codex-Kurs",
     recordNoun: {

@@ -13,7 +13,7 @@ export default function Ch05ModelDe() {
       <Hero
         eyebrow="Kapitel 05 · Modellierung"
         title="Der Zielkonflikt zwischen <em>Bias und Varianz.</em>"
-        hook="Modellflexibilität verändert Approximationsfehler, Schätzvarianz, Rechenaufwand und Interpretierbarkeit. <strong>Ein zur Bereitstellung passendes Validierungsdesign vergleicht diese Zielkonflikte.</strong>"
+        hook="Mehr Flexibilität senkt den Approximationsfehler, hebt die Schätzvarianz und kostet Rechenzeit und Interpretierbarkeit. <strong>Welcher Tausch sich lohnt, entscheidet ein Validierungsdesign passend zur Bereitstellung.</strong>"
         meta={[
           { k: "Lesezeit", v: "9 min" },
           { k: "Inhalt", v: "Anpassen · Kreuzvalidieren · Abstimmen" },
@@ -28,11 +28,11 @@ export default function Ch05ModelDe() {
           <em>Streuung der Modellkurven beobachten.</em>
         </h2>
         <p className="prose">
-          In diesem festen Polynomgenerator erzeugen niedrige Grade ähnliche,
-          aber systematisch falsch spezifizierte Kurven. Höhere Grade passen die
-          Stichprobenpunkte enger an und variieren stärker zwischen
-          initialisierten Ziehungen. Für andere Modelle, Regularisierung, Daten
-          oder Verluste muss dieser Verlauf nicht monoton gelten.
+          In diesem festen Polynomgenerator liefern niedrige Grade ähnliche
+          Kurven, die systematisch danebenliegen. Höhere Grade legen sich enger
+          an die Stichprobenpunkte und springen zwischen Ziehungen stärker. Bei
+          anderen Modellen, Daten oder Verlusten muss der Verlauf nicht monoton
+          sein.
         </p>
         <BiasVarianceSim />
       </section>
@@ -68,18 +68,18 @@ export default function Ch05ModelDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Auf dem Testsatz abstimmen.</b> Das ist Overfitting mit zusätzlichem Zeitaufwand.",
-          "<b>Ranglistenwerte verfolgen.</b> Eine AUC-Differenz von 0.01 ist ohne Unsicherheit über Folds, Leakage-Prüfung und unberührte Bestätigung keine Entscheidungsgrundlage.",
-          "<b>Architekturen nach Ruf auswählen.</b> Lineare, baumbasierte und neuronale Kandidaten unter denselben Daten-, Rechen-, Latenz-, Kalibrierungs- und Interpretierbarkeitsanforderungen vergleichen.",
+          "<b>Auf dem Testsatz abstimmen.</b> Overfitting mit zusätzlichem Zeitaufwand.",
+          "<b>Ranglistenwerten hinterherlaufen.</b> Eine AUC-Differenz von 0.01 entscheidet nichts ohne Unsicherheit über Folds, Leakage-Prüfung und unberührte Bestätigung.",
+          "<b>Architekturen nach Ruf wählen.</b> Vergleich lineare, baumbasierte und neuronale Kandidaten unter denselben Anforderungen an Daten, Rechenzeit, Latenz, Kalibrierung, Interpretierbarkeit.",
         ]}
       />
 
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Das Ziel ist Generalisierung.</b> Evaluationsdaten von der Anpassung trennen und die Aufteilung an künftige Entitäten, Gruppen oder Zeit anpassen.",
-          "<b>Resampling quantifiziert Split-Empfindlichkeit.</b> Kreuzvalidierung hilft nur bei passender Fold-Struktur; gruppierte, zeitliche oder verschachtelte Designs können erforderlich sein.",
-          "<b>Bias² + Varianz + Rauschen ist eine Zerlegung für quadratischen Fehler.</b> Sie ist eine Lehrperspektive unter einem festgelegten Datengenerierungsprozess, keine Formel für jede Metrik.",
+          "<b>Das Ziel ist Generalisierung.</b> Halt Evaluationsdaten von der Anpassung fern und schneid die Aufteilung auf künftige Entitäten, Gruppen oder Zeit.",
+          "<b>Resampling beziffert Split-Empfindlichkeit.</b> Kreuzvalidierung hilft nur bei passender Fold-Struktur; gruppierte, zeitliche oder verschachtelte Designs sind oft nötig.",
+          "<b>Bias² + Varianz + Rauschen ist eine Zerlegung für quadratischen Fehler.</b> Eine Lehrperspektive unter festgelegtem Datengenerierungsprozess, keine Formel für jede Metrik.",
         ]}
       />
     </DataScienceLocaleProvider>

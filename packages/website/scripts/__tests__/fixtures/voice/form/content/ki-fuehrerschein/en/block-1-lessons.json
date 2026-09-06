@@ -1,0 +1,15 @@
+{
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "English twin",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Address",
+          "content": "You check your inventory every week. The German words Sie and du appear here only as vocabulary: Ihre Daten means your data."
+        }
+      ]
+    }
+  ]
+}

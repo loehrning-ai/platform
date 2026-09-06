@@ -6,17 +6,17 @@ Aber es hilft zu wissen, dass man regelmäßig tanken muss, nicht auf Eis beschl
 
 Genauso ist es mit KI. Du brauchst kein Informatikstudium. Aber wenn du verstehst, warum ChatGPT manchmal überzeugend lügt, wirst du nie wieder blind einer KI-Antwort vertrauen.
 
-Dieses Grundverständnis kann Fehlentscheidungen und unnötige Ausgaben vermeiden.
+Dieses bisschen Verständnis spart dir Fehlentscheidungen und unnötige Ausgaben.
 
 ## ChatGPT, Claude, Gemini: was ist was?
 
-Die kurze Version: Alle drei sind große Sprachmodelle. Sie wurden auf Milliarden von Texten trainiert, Bücher, Websites, Foren, Wikipedia. Und sie tun im Kern nur eins: das nächste Wort vorhersagen.
+Die kurze Version: Alle drei sind große Sprachmodelle. Trainiert auf Milliarden von Texten, Bücher, Websites, Foren, Wikipedia. Und im Kern tun sie nur eins, sie sagen das nächste Wort voraus.
 
-Das klingt unspektakulär. Ist es auch. Dass dabei etwas Brauchbares rauskommt, ist das eigentliche Wunder. Es erklärt auch, warum KI manchmal Unsinn schreibt, dazu gleich mehr.
+Das klingt unspektakulär. Ist es auch. Erstaunlich ist nur, dass dabei etwas Brauchbares herauskommt. Und es erklärt, warum KI manchmal Unsinn schreibt, dazu gleich mehr.
 
-Für dich als Selbstständige/r reicht das als technisches Verständnis. Wenn du tiefer einsteigen willst: Mein Buch "KI verstehen" (Löhrning Verlag) erklärt die Mechanik dahinter. Hier geht es um Anwendung.
+Als technisches Verständnis reicht dir das. Wenn du tiefer einsteigen willst, erklärt mein Buch "KI verstehen" (Löhrning Verlag) die Mechanik dahinter. Hier geht es um Anwendung.
 
-ChatGPT, Claude und Gemini gehören zu den verbreiteten Angeboten. Funktionsumfang, Modellzugang, Nutzungslimits und Preise ändern sich häufig und unterscheiden sich nach Land, Steuerstatus und Vertrag. Prüfe deshalb vor einer Entscheidung immer die aktuelle Produkt- und Preisseite des Anbieters.
+ChatGPT, Claude und Gemini gehören zu den verbreiteten Angeboten. Funktionsumfang, Modellzugang, Nutzungslimits und Preise ändern sich häufig und unterscheiden sich nach Land, Steuerstatus und Vertrag. Prüfe deshalb vor jeder Entscheidung die aktuelle Produkt- und Preisseite des Anbieters.
 
 | | ChatGPT (OpenAI) | Claude (Anthropic) | Gemini (Google) |
 |---|---|---|---|
@@ -25,19 +25,19 @@ ChatGPT, Claude und Gemini gehören zu den verbreiteten Angeboten. Funktionsumfa
 | **Datenschutz** | Hängt von Produkt, Konto, Vertrag und Einstellungen ab | Hängt von Produkt, Konto, Vertrag und Einstellungen ab | Hängt von Produkt, Konto, Vertrag und Einstellungen ab |
 | **Für wen** | Allgemeine Aufgaben und Werkzeuge | Text- und Dokumentaufgaben | Bestehende Google-Arbeitsabläufe |
 
-Es gibt kein allgemein bestes Tool. Vergleiche zwei oder drei Angebote mit derselben anonymisierten Aufgabe und bewerte Qualität, Bedienbarkeit, Datenverarbeitung und Gesamtkosten für deinen konkreten Fall.
+Es gibt kein allgemein bestes Tool. Gib zwei oder drei Angeboten dieselbe anonymisierte Aufgabe und bewerte Qualität, Bedienbarkeit, Datenverarbeitung und Gesamtkosten für deinen konkreten Fall.
 
-Zwei weitere, die du kennen solltest:
+Drei weitere, die du kennen solltest:
 
 **Perplexity:** eine KI-gestützte Suchoberfläche mit Quellenlinks. Quellenangaben sind ein Ausgangspunkt, kein Wahrheitsbeweis. Öffne die Primärquelle und prüfe, ob sie die Antwort tatsächlich trägt.
 
-**Mistral:** ein europäischer Anbieter mit gehosteten und teilweise selbst betreibbaren Modellen. Der Sitz eines Anbieters oder ein EU-Rechenzentrum beweist allein keine DSGVO-Konformität. Prüfe Produktvariante, Vertragsrolle, Auftragsverarbeitung, Unterauftragnehmer, Speicherorte, Löschfristen und Datenkontrollen.
+**Mistral:** ein europäischer Anbieter mit gehosteten und teilweise selbst betreibbaren Modellen. Ein Firmensitz in Europa beweist für sich keine DSGVO-Konformität, ein EU-Rechenzentrum auch nicht. Prüfe Produktvariante, Vertragsrolle, Auftragsverarbeitung, Unterauftragnehmer, Speicherorte, Löschfristen und Datenkontrollen.
 
-**Aleph Alpha:** ein deutscher Anbieter mit Enterprise- und Souveränitätsfokus. Auch hier gilt: Produkt- und Vertragsdetails entscheiden. Marketingbegriffe wie „souverän" ersetzen keine Prüfung der konkreten Datenflüsse.
+**Aleph Alpha:** ein deutscher Anbieter mit Enterprise- und Souveränitätsfokus. Auch hier entscheiden Produkt- und Vertragsdetails. Marketingbegriffe wie „souverän" ersetzen keine Prüfung der konkreten Datenflüsse.
 
 ### Offene Modelle: eine zusätzliche Betriebsoption
 
-Offene oder offen gewichtete Modelle können lokal oder auf eigener Infrastruktur betrieben werden. „Offen" kann sich auf Gewichte, Quellcode oder Lizenz beziehen; diese Begriffe sind nicht austauschbar. Prüfe für jedes Modell die aktuelle Lizenz, Hardwareanforderungen, Sicherheitsupdates und Eignung für den Zweck.
+Offene oder offen gewichtete Modelle laufen lokal oder auf eigener Infrastruktur. „Offen" kann sich auf Gewichte, Quellcode oder Lizenz beziehen, und diese drei sind nicht austauschbar. Prüfe für jedes Modell die aktuelle Lizenz, Hardwareanforderungen, Sicherheitsupdates und Eignung für den Zweck.
 
 | Auswahlfrage | Was du prüfst |
 |--------|-------------|
@@ -66,7 +66,7 @@ ollama pull llama3.2
 ollama run llama3.2
 ```
 
-Das Modell-Tag ist nur ein Beispiel und kann veraltet sein. Wähle ein aktuell angebotenes, für deine Hardware geeignetes Modell aus der offiziellen Bibliothek. Nach dem Download läuft die Inferenz lokal; sichere trotzdem Gerät und Gesamtworkflow.
+Das Modell-Tag ist nur ein Beispiel und kann veraltet sein. Wähle ein aktuell angebotenes, für deine Hardware geeignetes Modell aus der offiziellen Bibliothek. Nach dem Download läuft die Inferenz lokal. Sichere trotzdem Gerät und Gesamtworkflow.
 
 **Welches Modell für welchen Zweck?**
 
@@ -83,21 +83,22 @@ Qualität und Hardwarebedarf unterscheiden sich nach Modell und Aufgabe. Teste m
 
 ### Was kostet dich KI wirklich?
 
-Bevor du mehrere Abos kombinierst, rechne mit den aktuellen Preisen und deiner tatsächlichen Nutzung.
+Bevor du Abos stapelst, rechne mit den aktuellen Preisen und deiner tatsächlichen Nutzung.
 
 **Szenario 1: Test ohne zusätzliches Bezahlabo**
-- Aktuell verfügbaren kostenlosen Tarif und/oder lokales Modell prüfen
-- Geeignet für einen begrenzten, nicht vertraulichen Vergleich
-- Nicht kostenfrei im Vollsinn: Hardware, Strom, Einrichtung, Wartung und Arbeitszeit berücksichtigen
+- Aktuell verfügbaren kostenlosen Tarif und/oder lokales Modell prüfen, geeignet für einen begrenzten, nicht vertraulichen Vergleich
+- Nicht kostenfrei im Vollsinn, denn Hardware, Strom, Einrichtung, Wartung und Arbeitszeit zählen mit
 
 **Szenario 2: Ein bezahlter Dienst plus lokale Tests**
 - Ein Bezahl-Abo + ein lokal getestetes Modell
 - Geeignet, wenn der zusätzliche Funktionsumfang in deinen Messungen einen Nutzen zeigt
-- Kosten und Zeitgewinn mit einer vierwöchigen Testphase messen
+- Eine vierwöchige Testphase ansetzen
+- Kosten und Zeitgewinn darin messen
 
 **Szenario 3: Mehrere Spezialwerkzeuge**
 - Mehrere Dienste nur bei klar getrennten, regelmäßig genutzten Aufgaben
-- Für jeden Dienst Nutzung, Qualitätsgewinn und Gesamtkosten einzeln dokumentieren
+- Für jeden Dienst Nutzung und Qualitätsgewinn dokumentieren
+- Gesamtkosten je Dienst einzeln erfassen
 - Ungenutzte oder doppelte Abos kündigen
 
 **Szenario 4: API statt Oberfläche**
@@ -135,23 +136,23 @@ Eine API kann bei planbarem Volumen günstiger oder teurer als ein Abo sein. Ver
 
 ## Kostenlos vs. bezahlt: wann sich ein Tarif lohnt
 
-Die kostenlose Version von ChatGPT reicht zum Ausprobieren. Du kannst Texte schreiben lassen, Fragen stellen, einfache Aufgaben erledigen. Aber du stößt schnell an Grenzen: langsamere Antworten, ältere Modelle, weniger Funktionen, strengere Nutzungslimits.
+Die kostenlose Version von ChatGPT reicht zum Ausprobieren. Texte schreiben lassen, Fragen stellen, einfache Aufgaben erledigen, das geht alles. Und dann stößt du an Grenzen. Langsamere Antworten, ältere Modelle, weniger Funktionen, strengere Nutzungslimits.
 
 Bezahlversionen können höhere Limits oder zusätzliche Funktionen bieten. Der konkrete Umfang hängt vom aktuellen Tarif ab.
 
 Lohnt sich das?
 
-Rechne mit Messwerten: Erfasse über vier Wochen Bearbeitungszeit, Nacharbeit und Fehler für dieselben Aufgabentypen. Ein fiktives Rechenbeispiel: 2 tatsächlich frei werdende Stunden × 75 EUR interner Bewertungsansatz = 150 EUR potenzieller Gegenwert. Das ist weder Umsatz noch Ersparnis, solange die Zeit nicht sinnvoll genutzt oder ein realer Aufwand vermieden wird. Ziehe Tarif, Einrichtung, Prüfung und Korrekturen ab.
+Rechne mit Messwerten. Erfasse über vier Wochen Bearbeitungszeit, Nacharbeit und Fehler für dieselben Aufgabentypen. Ein fiktives Rechenbeispiel: 2 tatsächlich frei werdende Stunden × 75 EUR interner Bewertungsansatz = 150 EUR potenzieller Gegenwert. Das ist weder Umsatz noch Ersparnis, solange die Zeit nicht sinnvoll genutzt oder ein realer Aufwand vermieden wird. Ziehe Tarif, Einrichtung, Prüfung und Korrekturen ab.
 
-Starte mit einem kostenlosen oder zeitlich begrenzten Test und vorher definierten Aufgaben. Wechsle erst dann in einen Bezahlvertrag, wenn eigene Messwerte den zusätzlichen Nutzen zeigen.
+Fang mit einem kostenlosen oder zeitlich begrenzten Test an, mit vorher definierten Aufgaben. In einen Bezahlvertrag wechselst du erst, wenn eigene Messwerte den zusätzlichen Nutzen zeigen.
 
 Nicht beide gleichzeitig. Starte mit einem. Ich würde mit ChatGPT anfangen, weil das Ökosystem am größten ist. Wenn du vor allem Texte schreibst: Claude. Entscheide nach einer Woche, ob du das zweite Tool dazunimmst.
 
-Die API-Nutzung, KI direkt in deine eigenen Tools einbauen, ist erst ab Kapitel 10 relevant. Für jetzt: Browser öffnen, einloggen, loslegen.
+Die API-Nutzung, also KI direkt in deine eigenen Tools einbauen, wird erst ab Kapitel 10 relevant. Für jetzt reicht es, den Browser zu öffnen und dich einzuloggen.
 
 ## Account einrichten und absichern
 
-Plane genug Zeit ein, um Konto, Datenkontrollen und Arbeitsregeln sorgfältig einzurichten. Menüs und Optionen können sich ändern.
+Nimm dir genug Zeit für Konto, Datenkontrollen und Arbeitsregeln. Menüs und Optionen ändern sich, also verlass dich nicht auf Screenshots aus dem Internet.
 
 **Schritt 1: Account erstellen**
 
@@ -161,13 +162,13 @@ Geh auf chat.openai.com (ChatGPT) oder claude.ai (Claude). E-Mail-Adresse, Passw
 
 Bei ChatGPT: Einstellungen → Data Controls → "Improve the model for everyone" ausschalten. Damit verhinderst du, dass deine Chats zum Training verwendet werden.
 
-Bei Claude: Die Standardeinstellung ist bereits datenschutzfreundlicher, Chats werden nicht für Training verwendet, solange du nicht explizit zustimmst.
+Bei Claude ist die Standardeinstellung datenschutzfreundlicher: Chats werden nicht für Training verwendet, solange du nicht explizit zustimmst.
 
-Bei beiden: Überlege, ob du die Chat-Historie brauchst. Für die Arbeit kann sie praktisch sein. Speicher- und Verarbeitungsorte hängen jedoch vom konkreten Produkt, Konto, Vertrag und den aktuellen Anbieterbedingungen ab. Gib keine vertraulichen oder fremden personenbezogenen Daten ein, bevor diese Punkte geprüft sind. Mehr dazu in Kapitel 8.
+Bei beiden: Überlege, ob du die Chat-Historie brauchst. Für die Arbeit kann sie praktisch sein. Speicher- und Verarbeitungsorte hängen aber vom konkreten Produkt, Konto, Vertrag und den aktuellen Anbieterbedingungen ab. Gib keine vertraulichen oder fremden personenbezogenen Daten ein, bevor du diese Punkte geprüft hast. Mehr dazu in Kapitel 8.
 
 **Schritt 3: Custom Instructions einrichten**
 
-Das ist der Schritt, den die wenigsten machen, den die wenigsten nutzen. Custom Instructions sind ein permanentes Briefing, das bei jeder Konversation gilt. Dein Betriebssystem für die KI. Einmal einrichten, immer wirksam.
+Das ist der Schritt, den fast niemand macht. Custom Instructions sind ein permanentes Briefing, das bei jeder Konversation gilt. Dein Betriebssystem für die KI. Einmal einrichten, immer wirksam.
 
 > **Deine Custom-Instructions-Vorlage (zum Kopieren)**
 >
@@ -192,13 +193,13 @@ Das ist der Schritt, den die wenigsten machen, den die wenigsten nutzen. Custom 
 
 ## Was KI nicht kann, und wo du aufpassen musst
 
-Jetzt wird es ernst. Dieser Abschnitt ist kein Pflichtprogramm, das du überspringen solltest. Er ist der Abschnitt, der dich vor teuren Fehlern bewahrt.
+Jetzt wird es ernst. Diesen Abschnitt überspringst du besser nicht. Er ist der, der dich vor teuren Fehlern bewahrt.
 
 **Halluzinationen: Wenn KI überzeugend lügt**
 
 ChatGPT erfindet Dinge. Zahlen, Zitate, Quellen, Studien, Gesetze, Paragrafen. Nicht aus Bosheit, das Modell hat kein Konzept von Wahrheit. Es berechnet die statistisch wahrscheinlichste Antwort. Und manchmal ist die wahrscheinlichste Antwort falsch.
 
-Ein Beispiel: Du fragst "Wie hoch ist der Freibetrag für Kleinunternehmer in Deutschland?" und bekommst eine Zahl. Die Zahl klingt plausibel. Sie könnte stimmen. Sie könnte aber auch von 2019 sein. Oder komplett erfunden.
+Ein Beispiel: Du fragst "Wie hoch ist der Freibetrag für Kleinunternehmer in Deutschland?" und bekommst eine Zahl. Die klingt plausibel und könnte stimmen. Sie könnte aber auch von 2019 sein. Oder komplett erfunden.
 
 Regel Nummer eins: Zahlen, Zitate und Fakten immer prüfen.
 
@@ -208,13 +209,13 @@ Das ist nicht optional. Das ist die Bedienungsanleitung.
 
 **Aktualität: Die KI lebt in der Vergangenheit**
 
-Jedes Sprachmodell hat einen Wissens-Cutoff, einen Zeitpunkt, nach dem es keine neuen Informationen hat. ChatGPT weiß nicht, was letzte Woche im Bundesanzeiger stand. Claude kennt die neuesten Steueränderungen nicht. Wenn du aktuelle Informationen brauchst, Gesetze, Preise, Fristen, prüfe immer gegen die originale Quelle.
+Jedes Sprachmodell hat einen Wissens-Cutoff, einen Zeitpunkt, nach dem es nichts Neues mehr gelernt hat. ChatGPT weiß nicht, was letzte Woche im Bundesanzeiger stand. Claude kennt die neuesten Steueränderungen nicht. Brauchst du aktuelle Informationen, Gesetze, Preise, Fristen, prüfe gegen die originale Quelle.
 
 Für zeitlose Aufgaben, Texte schreiben, Strukturen erstellen, Ideen brainstormen, ist das kein Problem. Für alles mit Datum: Vorsicht.
 
 **Vertraulichkeit: Was rein geht, bleibt nicht bei dir**
 
-Eingaben in einen Cloud-Dienst werden auf Systemen des Anbieters verarbeitet. Region, Speicherfristen, Trainingsnutzung und Unterauftragnehmer hängen vom konkreten Produkt, Konto, Vertrag und den aktuellen Einstellungen ab. Prüfe diese Punkte vor der Nutzung statt von einem pauschalen Serverstandort auszugehen.
+Was du in einen Cloud-Dienst tippst, wird auf Systemen des Anbieters verarbeitet. Region, Speicherfristen, Trainingsnutzung und Unterauftragnehmer hängen vom konkreten Produkt, Konto, Vertrag und den aktuellen Einstellungen ab. Prüfe das vor der Nutzung, statt von einem pauschalen Serverstandort auszugehen.
 
 > **Checkliste: 5 Dinge, die du NIEMALS in ChatGPT eingeben solltest**
 >
@@ -226,17 +227,17 @@ Eingaben in einen Cloud-Dienst werden auf Systemen des Anbieters verarbeitet. Re
 
 > **Achtung reglementierte Berufe:** Wenn du Rechtsanwalt, Steuerberater, Arzt oder Psychotherapeut bist, gelten zusätzlich §203 StGB (Verletzung von Privatgeheimnissen) und berufsrechtliche Verschwiegenheitspflichten. Die Eingabe mandantenbezogener oder patientenbezogener Daten in KI-Tools kann eine Straftat darstellen. Lass deine KI-Nutzung von deiner Kammer oder einem Fachanwalt prüfen.
 
-Warum das ernst ist: Es gibt spezialisierte Legal-AI-Unternehmen wie Noxtua, die existieren, weil Anwaltskanzleien keine Mandantendaten in US-Clouds schicken dürfen. Was für deren Kunden gilt, gilt auch für dich als Freiberufler mit Schweigepflicht.
+Warum das ernst ist: Spezialisierte Legal-AI-Unternehmen wie Noxtua existieren, weil Anwaltskanzleien keine Mandantendaten in US-Clouds schicken dürfen. Was für deren Kunden gilt, gilt auch für dich als Freiberufler mit Schweigepflicht.
 
 "Aber Tim, dann kann ich ja gar nichts Vertrauliches mit KI machen?"
 
-Für manche Aufgaben reicht eine wirksame Anonymisierung oder ein vollständig fiktiver Datensatz. „Kunde A, mittelständisches Unternehmen im Maschinenbau" ist ein besserer Ausgangspunkt als ein echter Firmenname. Prüfe, ob Kombinationen von Details trotzdem eine Person oder Organisation erkennbar machen. In Kapitel 8 gehen wir tiefer in die DSGVO-Thematik.
+Für manche Aufgaben reicht eine wirksame Anonymisierung oder ein vollständig fiktiver Datensatz. „Kunde A, mittelständisches Unternehmen im Maschinenbau" ist ein besserer Ausgangspunkt als ein echter Firmenname. Prüfe trotzdem, ob die Kombination der Details eine Person oder Organisation erkennbar macht. In Kapitel 8 gehen wir tiefer in die DSGVO-Thematik.
 
-Für produktive Nutzung braucht jede KI-Ausgabe eine dem Risiko angemessene Prüfung. Verantwortliche, Prüfkriterien und Freigabeschritte müssen vorab feststehen.
+Produktiv genutzt braucht jede KI-Ausgabe eine dem Risiko angemessene Prüfung. Wer prüft, wonach und wer freigibt, steht vorher fest.
 
-Prüfung ist Teil der Bearbeitungszeit. Wie lange Gegenlesen und Quellenprüfung dauern, hängt von Umfang und Risiko ab. Miss den Gesamtprozess; bei kritischen Aufgaben kann die Prüfung länger dauern als der Entwurf.
+Prüfung ist Teil der Bearbeitungszeit. Wie lange Gegenlesen und Quellenprüfung dauern, hängt von Umfang und Risiko ab. Miss den Gesamtprozess. Bei kritischen Aufgaben kann die Prüfung länger dauern als der Entwurf.
 
-Jetzt hast du die Grundlagen. Du weißt, welche Tools es gibt, was sie kosten, wie du sie einrichtest und wo die Grenzen liegen.
+Werkzeug steht, Konto steht, Grenzen kennst du. Was jetzt noch fehlt, ist die Anweisung.
 
 > **Praxisprojekt 2: KI-Angebote vergleichen und absichern**
 >

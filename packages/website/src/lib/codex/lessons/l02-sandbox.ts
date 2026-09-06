@@ -32,11 +32,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Codex has two execution models that must not be conflated.\n\n- **Local CLI and IDE sessions** run commands on your machine inside the configured OS-enforced sandbox. The common workspace-write configuration limits writes to the active workspace and keeps network access off unless enabled. The approval policy is a separate control that determines when Codex must ask before an action crosses the configured boundary.\n- **Cloud tasks** run in a dedicated OpenAI-managed container. Codex checks out the selected repository and commit, runs the environment setup, performs the task, and returns a summary and diff. Setup can use network access and setup-only secrets; those secrets are removed before the agent phase. Agent-phase network access is disabled by default and can be enabled per environment.\n\nFilesystem access, network access, and approvals are configuration choices. Inspect the active settings instead of inferring them from the Codex product name.",
+            "Two execution models, and they are not interchangeable.\n\n- **Local CLI and IDE sessions** run commands on your machine inside the configured OS-enforced sandbox. The common workspace-write configuration limits writes to the active workspace and keeps network access off unless enabled. The approval policy is a separate control that determines when Codex must ask before an action crosses the configured boundary.\n- **Cloud tasks** run in a dedicated OpenAI-managed container. Codex checks out the selected repository and commit, runs the environment setup, performs the task, and returns a summary and diff. Setup can use network access and setup-only secrets; those secrets are removed before the agent phase. Agent-phase network access is disabled by default and can be enabled per environment.\n\nFilesystem access, network access and approvals are configuration, not properties of the product. Read the active settings before you assume.",
         },
         {
           kind: "pull-quote",
-          text: "A task is executable only when its required files, commands, dependencies, credentials, and network destinations fit the active environment policy.",
+          text: "A task is executable only when its files, commands, dependencies, credentials and network destinations fit the active environment policy.",
         },
       ],
     },
@@ -48,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three checks prevent most environment-related ambiguity.\n\n**Make dependencies reproducible.** A cloud setup script can install project runtimes, packages, and fixtures before the agent phase. A local session uses the tools available on the machine and permitted by its sandbox. Document the exact setup and verification commands in the repository.\n\n**Declare network requirements.** A cloud agent phase cannot reach an external API unless network access is enabled for that environment and the destination is allowed. Local network access also depends on sandbox configuration. Prefer a versioned fixture when live data is not required.\n\n**Separate code changes from external-state verification.** Access to staging or production is a security decision, not a convenience. Use scoped credentials and explicit authorization when external validation is required; otherwise keep the coding task isolated and perform the external check through the normal release process.",
+            "Three checks kill most environment surprises.\n\n**Make dependencies reproducible.** A cloud setup script installs project runtimes, packages and fixtures before the agent phase. A local session gets whatever the machine has and the sandbox permits. Write the exact setup and verification commands into the repository.\n\n**Declare network requirements.** A cloud agent phase reaches no external API unless network access is enabled for that environment and the destination is allowed. Local network access depends on the sandbox too. When live data is not required, take the versioned fixture.\n\n**Separate code changes from external-state verification.** Access to staging or production is a security decision, not a convenience. Where external validation is genuinely required, use scoped credentials and explicit authorization. Otherwise keep the coding task isolated and check externally through the normal release process.",
         },
       ],
     },
@@ -60,7 +60,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A cloud environment combines a base image with repository-specific setup and policy. Review these inputs before assigning a task:",
+            "A cloud environment is a base image plus your setup and your policy. Read these inputs before you assign a task.",
         },
         {
           kind: "card-grid",
@@ -97,7 +97,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The task asks for a call to a Stripe test endpoint, but the configured environment cannot resolve the destination. The useful response is to report that boundary and use a reviewed fixture when it represents the required behavior.",
+            "The task asks for a call to a Stripe test endpoint. The configured environment cannot resolve the destination. Report the boundary, then use a reviewed fixture where it represents the required behavior.",
         },
       ],
     },
@@ -109,7 +109,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A cloud task returns changes from its dedicated checkout. A local session changes the selected working tree or worktree. In either case, Git structure determines how easily the result can be inspected and integrated.\n\n- **Give concurrent tasks separate working trees or cloud environments.** Separate branches prevent shared file state, but overlapping diffs can still conflict when merged.\n- **Keep each change coherent.** Scope by one reviewable behavior and its tests, not by an arbitrary line or file limit.\n- **Start from an intentional base commit.** Record which revision the task uses and refresh it when upstream changes affect the same area.\n- **Re-run trusted checks outside the task when risk warrants it.** Agent-produced logs show what ran in that environment; CI and reviewer-run checks provide independent evidence.",
+            "A cloud task returns changes from its dedicated checkout. A local session changes the working tree you selected. Either way, Git structure decides how easily anyone can inspect and integrate the result.\n\n- **Give concurrent tasks separate working trees or cloud environments.** Separate branches prevent shared file state, but overlapping diffs can still conflict when merged.\n- **Keep each change coherent.** Scope by one reviewable behavior and its tests, not by an arbitrary line or file limit.\n- **Start from an intentional base commit.** Record which revision the task uses and refresh it when upstream changes affect the same area.\n- **Re-run trusted checks outside the task when risk warrants it.** Agent-produced logs show what ran in that environment; CI and reviewer-run checks provide independent evidence.",
         },
         {
           kind: "callout",
@@ -126,7 +126,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Before starting a task, record the environment assumptions that affect execution and review.",
+            "Record the environment assumptions before the task starts. They decide execution and review.",
         },
         {
           kind: "card-grid",

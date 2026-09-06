@@ -24,7 +24,7 @@ const lesson: ClaudeLesson = {
       title: "Agents vs. chat",
       readTimeMinutes: 2,
       content:
-        "Anthropic distinguishes workflows from agents. A workflow follows code-defined paths; an agent lets a model select actions and tools based on intermediate results. Both can use model calls, retrieval, and tools.\n\nA basic agent loop sends the current goal and state to a model, validates a requested tool call, executes it within policy, returns the result, and checks a stopping condition. Production systems may add parallel work, queues, approvals, retries, and state persistence.\n\n> Tool access creates authority. Bound that authority in code and infrastructure.",
+        "An agent is not a smarter chat. Anthropic distinguishes workflows from agents. A workflow follows code-defined paths; an agent lets a model pick actions and tools from intermediate results. Both use model calls, retrieval, and tools.\n\nA basic agent loop sends the current goal and state to a model, validates a requested tool call, runs it within policy, returns the result, and checks a stopping condition. Production systems add parallel work, queues, approvals, retries, and state persistence.\n\n> Tool access creates authority. Bound that authority in code and infrastructure.",
     },
     {
       id: "the-loop-explicit",
@@ -38,14 +38,14 @@ const lesson: ClaudeLesson = {
       title: "The four guardrails",
       readTimeMinutes: 3,
       content:
-        "- **01 · Scope.** Expose only required tools, resources, and network destinations. Use separate read and write permissions.\n- **02 · Limits.** Set appropriate bounds for steps, tokens, time, cost, retries, and concurrency. The relevant limits depend on the system.\n- **03 · Approval and policy.** Enforce approval for consequential actions such as deletion, deployment, payment, or external messaging. Product defaults and permission modes vary; inspect the active configuration.\n- **04 · Verification.** Check outcomes with deterministic tools where possible: schemas, linters, type checks, tests, screenshots, and read-after-write confirmation.\n\nVerification does not make an agent correct by itself. It makes defined failures observable. Include negative tests and check that the verifier measures the intended outcome rather than a proxy.",
+        "- **01 · Scope.** Expose only required tools, resources, and network destinations. Separate read and write permissions.\n- **02 · Limits.** Bound steps, tokens, time, cost, retries, and concurrency. Which limits bite depends on the system.\n- **03 · Approval and policy.** Require approval for consequential actions such as deletion, deployment, payment, or external messaging. Product defaults and permission modes vary, so inspect the active configuration.\n- **04 · Verification.** Check outcomes with deterministic tools wherever you can, using schemas, linters, type checks, tests, screenshots, and read-after-write confirmation.\n\nVerification does not make an agent correct. It makes defined failures visible. Add negative tests, and check the verifier measures the outcome you care about, not a proxy.",
     },
     {
       id: "when-to-use",
       title: "When to reach for an agent",
       readTimeMinutes: 2,
       content:
-        "**Agent fit:** a multi-step task where later actions depend on tool results, the environment supplies verifiable feedback, and the added latency and cost are justified.\n\n**Prefer a workflow or single call:** a fixed sequence, a one-shot transformation, or a task without a defensible stopping condition. Start with the least complex architecture that meets the evaluated requirement.",
+        "**Agent fit:** a multi-step task where later actions depend on tool results, the environment gives verifiable feedback, and the latency and cost are justified.\n\n**Prefer a workflow or single call:** a fixed sequence, a one-shot transformation, or a task without a defensible stopping condition. Start with the least complex architecture that clears the evaluated requirement.",
     },
   ],
   widgets: [

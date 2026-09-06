@@ -1,6 +1,6 @@
 # Reifegrad im Überblick: eine evidenzbasierte Selbstprüfung
 
-Reifegrad ist kein Rang unter Unternehmen. Er beschreibt, welche Voraussetzungen für einen konkreten Use Case belegt sind und welche fehlen.
+Vergiss den Rang. Reifegrad sagt, welche Voraussetzungen für einen konkreten Use Case belegt sind und welche fehlen.
 
 ## Zwölf Prüffragen
 
@@ -8,15 +8,15 @@ Beantworte jede Frage mit **unbekannt**, **teilweise belegt** oder **belegt**. V
 
 ### Zweck und Erfolg
 
-1. Ist der konkrete Prozess mit Eingang, Ausgang und Folgehandlung dokumentiert?
+1. Ist der Prozess mit Eingang, Ausgang und Folgehandlung dokumentiert?
 2. Gibt es eine Ausgangsmessung und ein prüfbares Erfolgskriterium?
-3. Sind Fehlerarten, Fehlerkosten und Abbruchkriterien festgelegt?
+3. Stehen Fehlerarten, Fehlerkosten und Abbruchkriterien fest?
 
 ### Daten und Rechte
 
 4. Sind Datenherkunft, Datenklasse, Rechtsgrundlage und erlaubte Nutzung geklärt?
 5. Sind Zugriff, Aufbewahrung, Löschung und mögliche Transfers dokumentiert?
-6. Ist geprüft, ob die Daten für den Zweck ausreichend und repräsentativ sind?
+6. Ist geprüft, ob die Daten für den Zweck reichen und repräsentativ sind?
 
 ### Technik und Betrieb
 
@@ -27,12 +27,12 @@ Beantworte jede Frage mit **unbekannt**, **teilweise belegt** oder **belegt**. V
 ### Menschen und Governance
 
 10. Sind fachliche Prüfung, menschliche Aufsicht und Eskalation mit echter Befugnis besetzt?
-11. Sind Nutzer für Aufgabe, Systemgrenzen und Risiken angemessen qualifiziert?
+11. Sind Nutzer für Aufgabe, Systemgrenzen und Risiken qualifiziert?
 12. Sind Rolle, Risikoklassifizierung und einschlägige rechtliche Pflichten begründet dokumentiert?
 
 ## Aus Antworten werden Maßnahmen
 
-Keine Multiplikation erzeugt aus diesen Antworten eine objektive 0-bis-100-Wahrheit. Priorisiere stattdessen:
+Aus diesen Antworten lässt sich keine objektive 0-bis-100-Wahrheit multiplizieren. Priorisiere stattdessen:
 
 1. **Stopper:** ungeklärte Rechtsgrundlage, verbotene Daten, fehlende Freigabe, nicht beherrschbare Fehlerfolge
 2. **Kontrolllücken:** fehlende Rechte, Aufsicht, Logs, Löschung, Wiederherstellung oder Eskalation
@@ -48,13 +48,13 @@ Keine Multiplikation erzeugt aus diesen Antworten eine objektive 0-bis-100-Wahrh
 | Pilotfähig | Testdaten, Rubrik, Aufsicht und Stopkriterien stehen | begrenzten Pilot durchführen |
 | Betriebsfähig | Kontrollen, Monitoring, Vorfälle, Fallback und Review sind getestet | überwachen und ereignisbasiert neu bewerten |
 
-Diese Zustände gelten pro Use Case. Eine Organisation kann bei einem internen Schreibassistenten betriebsfähig und bei automatisierter Bewerberauswahl noch nicht inventarisiert sein.
+Die Zustände gelten pro Use Case, nicht pro Firma. Beim internen Schreibassistenten kann dein Betrieb betriebsfähig sein, bei automatisierter Bewerberauswahl nicht einmal inventarisiert.
 
 ## Was nicht als Nachweis reicht
 
 - ein Anbieterlogo
 - ein abgeschlossenes allgemeines KI-Training
-- ein erfolgreicher Demo-Prompt
+- ein gelungener Prompt in der Vorführung
 - ein DPA/AVV ohne Rollen- und Datenflussprüfung
 - eine ISO-Zertifizierung ohne Zuordnung zum konkreten System
 - eine Liste technischer Website-Signale

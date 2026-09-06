@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
         : `Read certificate data: ${bundle.config.title}`,
     description:
       locale === "de"
-        ? "Liest die im QR-Code enthaltenen Zertifikatdaten. Die Daten sind nicht servergeprüft und nicht kryptografisch signiert."
+        ? "Liest die Zertifikatdaten aus dem QR-Code der Teilnahmebestätigung. Nicht servergeprüft, nicht kryptografisch signiert."
         : "Reads certificate data encoded in the QR code. The data is not server-verified or cryptographically signed.",
     availableContentLocales: ["de", "en"],
   });

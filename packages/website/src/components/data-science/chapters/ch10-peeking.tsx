@@ -22,7 +22,7 @@ export default function Ch10Peeking() {
       <Hero
         eyebrow="Chapter 10 · Peeking & Experimental Integrity"
         title='How <em>p-values</em> <span class="accent">lie.</span>'
-        hook="Peeking, multiple comparisons, optional stopping, and covariate adjustment. Learn how unplanned analysis changes error rates and which assumptions each correction needs."
+        hook="Peeking, multiple comparisons, optional stopping, covariate adjustment. Unplanned analysis moves your error rates, and every correction carries its own assumptions."
         meta={[
           { k: "Read", v: "12 min" },
           { k: "Focus", v: "Peeking · CUPED · Power · MC" },
@@ -36,18 +36,18 @@ export default function Ch10Peeking() {
           Repeated unadjusted looks can inflate the false-positive rate.
         </h2>
         <p className="prose">
-          Suppose a fixed-sample A/B test is checked repeatedly and stopped at
-          the first p&lt;0.05. The nominal 5% threshold no longer controls the
-          experiment-wide Type-I error. The actual rate depends on the look
-          schedule, maximum sample size, outcome model, and dependence between
-          looks. The simulator estimates one explicitly configured design; it is
-          not a universal peeking rate.
+          Check a fixed-sample A/B test repeatedly, stop at the first
+          p&lt;0.05. The nominal 5% threshold now controls nothing at the
+          experiment level. The real rate follows the look schedule, maximum
+          sample size, outcome model, and dependence between looks. The
+          simulator estimates one configured design. It is no universal peeking
+          rate.
         </p>
         <PeekingSimulator />
         <AntiPatterns
           items={[
             "<strong>Continuous monitoring with fixed-sample α:</strong> checking repeatedly and stopping at the first p&lt;0.05 invalidates the fixed-sample error calibration.",
-            '<strong>"It was significant yesterday"</strong>, the p-value is a random variable; a single dip below threshold is not a discovery.',
+            '<strong>"It was significant yesterday"</strong>, the p-value is a random variable. One dip below the threshold is no discovery.',
             "<strong>HARKing (Hypothesising After Results are Known):</strong> a pattern discovered after looking at the data is exploratory and needs confirmation on new data.",
           ]}
         />
@@ -68,8 +68,8 @@ export default function Ch10Peeking() {
         </h2>
         <p className="prose">
           The family-wise error rate (FWER) for <em>n</em> independent tests at
-          α = 0.05 is 1 − (1 − 0.05)ⁿ. At n = 20 that is about 64%. This formula
-          assumes independent tests with valid null p-values; dependence changes
+          α = 0.05 is 1 − (1 − 0.05)ⁿ. At n = 20 that is about 64%. The formula
+          assumes independent tests with valid null p-values. Dependence moves
           the family-wise rate.
         </p>
         <MultipleTesting />
@@ -94,13 +94,13 @@ export default function Ch10Peeking() {
           Pre-period information can reduce variance when the assumptions hold.
         </h2>
         <p className="prose">
-          CUPED (Controlled-experiment Using Pre-Experiment Data) uses a
-          pre-period covariate X correlated with the outcome Y to construct an
-          adjusted metric Ŷ. With randomized assignment, a genuinely
-          pre-treatment covariate, and a correctly estimated adjustment, this
-          can reduce estimator variance. The finite-sample point estimate can
-          move, and the benefit depends on predictive correlation and
-          implementation details.
+          CUPED (Controlled-experiment Using Pre-Experiment Data) takes a
+          pre-period covariate X correlated with the outcome Y and builds an
+          adjusted metric Ŷ. Given randomized assignment, a genuinely
+          pre-treatment covariate, and a correctly estimated adjustment, that
+          reduces estimator variance. The finite-sample point estimate still
+          moves, and the size of the gain follows the predictive correlation and
+          the implementation.
         </p>
         <CUPEDExplainer />
         <BestPractices
@@ -108,7 +108,7 @@ export default function Ch10Peeking() {
             "<strong>Use covariates measured before assignment.</strong> Post-treatment variables can absorb part of the treatment effect and bias the comparison.",
             "Candidate covariates include a prior value of the outcome or stable pre-period behavior measured consistently for both groups.",
             "Estimate θ with a procedure compatible with the randomization and standard-error calculation; cross-fitting can help when the adjustment model is flexible.",
-            "Report raw and adjusted estimates. A weak or unstable covariate can provide little precision gain, and implementation errors can make the result worse.",
+            "Report raw and adjusted estimates. A weak or unstable covariate buys little precision, and an implementation error makes the result worse.",
           ]}
         />
       </section>
@@ -117,12 +117,12 @@ export default function Ch10Peeking() {
         <SectionLabel n="10.4">Statistical Power</SectionLabel>
         <h2 className="h2">Underpowered tests waste time and money.</h2>
         <p className="prose">
-          Power = P(reject H₀ | H₁ true). An underpowered study will miss a real
-          effect and waste the experiment slot. The minimum detectable effect
-          (MDE) drives everything: halving the MDE roughly quadruples the
-          required sample size in common two-arm approximations when variance,
-          α, power, and allocation stay fixed. Calculate power <em>before</em>{" "}
-          collection and state the model behind the calculation.
+          Power = P(reject H₀ | H₁ true). An underpowered study misses a real
+          effect and burns the experiment slot. The minimum detectable effect
+          (MDE) drives the rest: halve the MDE and the required sample size
+          roughly quadruples in common two-arm approximations, with variance, α,
+          power, and allocation fixed. Calculate power <em>before</em>{" "}
+          collection, and say which model the calculation came from.
         </p>
         <PowerCalculator />
         <AntiPatterns
@@ -144,11 +144,11 @@ export default function Ch10Peeking() {
 
       <Takeaway
         items={[
-          "<b>Unplanned stopping changes the test.</b> Use the fixed plan or a sequential method designed for interim looks.",
+          "<b>Unplanned stopping changes the test.</b> Stick to the fixed plan, or use a sequential method built for interim looks.",
           "<b>Multiplicity requires an error target.</b> Bonferroni controls family-wise error; BH targets false discovery rate under stated conditions.",
-          "<b>CUPED is conditional, not automatic.</b> Verify timing, assignment independence, predictive value, and standard errors; report raw and adjusted results.",
+          "<b>CUPED is conditional, not automatic.</b> Verify timing, assignment independence, predictive value, and standard errors, then report raw and adjusted results.",
           "<b>Power is a design calculation.</b> State the effect, variance, allocation, α, test, attrition, and multiplicity assumptions.",
-          "<b>Pre-registration separates confirmation from exploration.</b> Record the primary metric, analysis, stopping rule, and exclusions before outcomes are inspected.",
+          "<b>Pre-registration separates confirmation from exploration.</b> Record the primary metric, analysis, stopping rule, and exclusions before anyone looks at outcomes.",
         ]}
       />
     </>

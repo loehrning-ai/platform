@@ -20,8 +20,7 @@ const STAGES: readonly StageCard[] = [
     n: "01",
     title: "Grundlagen",
     tag: "Stichprobe und Grundgesamtheit",
-    blurb:
-      "Erzeuge Stichproben und beobachte, wie ihre Mittelwerte konvergieren.",
+    blurb: "Zieh Stichproben und sieh zu, wie ihre Mittelwerte zusammenrücken.",
     hue: "#5B3EE8",
   },
   {
@@ -104,7 +103,7 @@ const STAGES: readonly StageCard[] = [
     title: "Betrieb",
     tag: "Modelle in Produktion",
     blurb:
-      "Überwache Drift und trainiere bei einem Signal statt nach Kalender.",
+      "Überwache Drift. Trainiere auf ein Signal hin, nicht nach Kalender.",
     hue: "#1FAF7E",
   },
   {
@@ -112,8 +111,7 @@ const STAGES: readonly StageCard[] = [
     n: "12",
     title: "Abschlussprojekt",
     tag: "der vollständige Zyklus",
-    blurb:
-      "Setze den Ablauf Ende zu Ende um: Rauschen → Entscheidung → Feedback.",
+    blurb: "Einmal ganz durch: Rauschen → Entscheidung → Feedback.",
     hue: "#E8318F",
   },
 ];
@@ -189,10 +187,9 @@ export default function ChOverviewDe() {
             <span className="accent">aus Daten Entscheidungen abzuleiten.</span>
           </h1>
           <p className="ov-hero-hook">
-            Zwölf Kapitel bilden einen zusammenhängenden Arbeitszyklus. Jedes
-            Kapitel beginnt mit
-            <strong> einer veränderbaren Simulation</strong> und leitet daraus
-            Begriffe, Verfahren und Grenzen ab.
+            Zwölf Kapitel, ein Arbeitszyklus. Jedes Kapitel beginnt mit
+            <strong> einer Simulation, an der du drehst</strong>, und erklärt
+            Begriffe, Verfahren und Grenzen daran.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -298,7 +295,7 @@ export default function ChOverviewDe() {
           </h2>
           <p className="ov-lede">
             Die Simulationen zeigen das <em>Verhalten</em> dieser Werkzeuge. Die
-            Konzepte lassen sich auf andere technische Stacks übertragen.
+            Konzepte tragen auch auf anderen Stacks.
           </p>
         </div>
         <div className="ov-tools">

@@ -28,7 +28,7 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Infrastructure",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
   certificateModules: [
     "Foundations: mental model, CAP/PACELC, modeling",
     "Storage: row vs columnar, Parquet internals, the lakehouse, partitioning",
@@ -36,13 +36,13 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
     "Operations: idempotency, backfills, observability, and a system-design review",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: Data Infrastructure course topics",
+    "Personal certificate of participation: Data Infrastructure course topics",
   quizPassMessage: "Data Infrastructure course completed.",
   certificateFileStem: "Data-Infrastructure",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Certificate of Participation",
+    possessive: "Your certificate of participation",
+    demonstrative: "This certificate of participation",
   },
 } satisfies CourseConfig;
 
@@ -51,7 +51,7 @@ export const DATA_INFRASTRUCTURE_CONFIG_DE =
     title: "Data Infrastructure",
     certificateTitle: "Teilnahmebestätigung: Data Infrastructure",
     certificateSubtitle:
-      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
     certificateModules: [
       "Grundlagen: Gesamtmodell, CAP und PACELC sowie Datenmodellierung",
       "Speicherung: Zeilen- und Spaltenformate, Parquet, Lakehouse und Partitionierung",
@@ -59,7 +59,7 @@ export const DATA_INFRASTRUCTURE_CONFIG_DE =
       "Betrieb: Idempotenz, Backfills, Datenqualität und Systemdesign-Interview",
     ],
     certificateReferenceLabel:
-      "Persönlicher Abschlussnachweis: Themen des Kurses Data Infrastructure",
+      "Persönliche Teilnahmebestätigung: Themen des Kurses Data Infrastructure",
     quizPassMessage: "Der Kurs Data Infrastructure ist abgeschlossen.",
     certificateFileStem: "Data-Infrastructure",
     recordNoun: {

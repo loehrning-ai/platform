@@ -17,22 +17,22 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Die drei Kennzahlen",
-      content: `Infrastrukturmetriken zeigen, ob Jobs und Dienste laufen. Datenzuverlässigkeit benötigt zusätzlich Signale mit Bezug zur Nutzung:
+      content: `Infrastrukturmetriken beantworten eine Frage: Läuft der Job? Ob die Daten darin stimmen, beantwortet keine davon. Datenzuverlässigkeit braucht drei eigene Signale mit Bezug zur Nutzung.
 
-- **Freshness.** Wie weit die verfügbaren Daten hinter der relevanten Fachzeit liegen. Ein geeignetes SLI kann die letzte akzeptierte Ereigniszeit mit der aktuellen Zeit vergleichen. Die Definition muss erwartete Quellaktivität, leere Zeiträume und verspätete Ereignisse berücksichtigen.
-- **Vollständigkeit.** Ob erwartete Datensätze oder Aggregate eingetroffen sind. Zeilenzahlen können im Vergleich mit einer passenden Basis als Näherungswert dienen; sie beweisen nicht, dass jedes Ereignis angekommen ist.
-- **Genauigkeit.** Ob Werte Schema-, Bereichs-, Beziehungs- und Fachregeln erfüllen. Genauigkeit ist fachabhängig und benötigt meist explizite Prüfungen.
+- **Freshness.** Wie weit die verfügbaren Daten hinter der relevanten Fachzeit liegen. Ein brauchbares SLI vergleicht die letzte akzeptierte Ereigniszeit mit der aktuellen Zeit. Die Definition muss erwartete Quellaktivität, leere Zeiträume und verspätete Ereignisse aushalten.
+- **Vollständigkeit.** Ob erwartete Datensätze oder Aggregate eingetroffen sind. Zeilenzahlen taugen im Vergleich mit einer passenden Basis als Näherungswert; sie beweisen nicht, dass jedes Ereignis ankam.
+- **Genauigkeit.** Ob Werte Schema-, Bereichs-, Beziehungs- und Fachregeln erfüllen. Genauigkeit ist fachabhängig und braucht meist explizite Prüfungen.
 
-Eine gestoppte Pipeline erscheint häufig zuerst als Freshness-Fehler. Ein Transformationsfehler kann Freshness gesund lassen und zugleich Vollständigkeit oder Genauigkeit beschädigen. CPU- und Job-Erfolgsdiagramme unterscheiden diese Fälle nicht.`,
+Eine gestoppte Pipeline zeigt sich meist zuerst als Freshness-Fehler. Ein Transformationsfehler lässt Freshness gesund aussehen und beschädigt zugleich Vollständigkeit oder Genauigkeit. CPU- und Job-Erfolgsdiagramme trennen diese Fälle nicht.`,
       keyTakeaway:
         "Freshness, Vollständigkeit und Genauigkeit werden getrennt gemessen; ein erfolgreicher Job kann dennoch falsche Daten veröffentlichen.",
     },
     {
       id: "s2",
       title: "Zuverlässigkeitsmodell",
-      content: `Das Modell unten zeigt, wie drei Fehlertypen die verfügbaren Signale beeinflussen. Seine Werte sind feste Beispiele und keine Produktionsschwellen. Ein grünes Dashboard bedeutet nur, dass die gemessenen Bedingungen innerhalb ihrer konfigurierten Grenzen liegen.
+      content: `Das Modell unten zeigt, wie drei Fehlertypen die verfügbaren Signale verschieben. Seine Werte sind feste Beispiele, keine Produktionsschwellen. Ein grünes Dashboard sagt nur, dass die gemessenen Bedingungen innerhalb ihrer konfigurierten Grenzen liegen.
 
-Leite jedes SLO aus einem Nutzerbedarf, einem Messfenster, einem erlaubten Fehlerbudget und der Folge einer Verfehlung ab. Ein Finanzabschluss und ein exploratives Dashboard benötigen beispielsweise unterschiedliche Definitionen für Freshness und Vollständigkeit. Prüfe Schwellenwerte gegen historisches Verhalten, bevor sie Bereitschaftsdienst auslösen.`,
+Jedes SLO folgt aus einem Nutzerbedarf, einem Messfenster, einem erlaubten Fehlerbudget und der Folge einer Verfehlung. Ein Finanzabschluss und ein exploratives Dashboard brauchen andere Definitionen für Freshness und Vollständigkeit. Prüfe Schwellenwerte gegen historisches Verhalten, bevor sie den Bereitschaftsdienst wecken.`,
     },
     {
       id: "s3",
@@ -44,7 +44,7 @@ Leite jedes SLO aus einem Nutzerbedarf, einem Messfenster, einem erlaubten Fehle
 | Anomalie / Volumen | unerwartete Änderungen von Anzahl oder Verteilung | Benötigt eine repräsentative Basis und Prüfung von Fehlalarmen |
 | Reconciliation | Abweichungen zwischen unabhängig berechneten Summen oder Datensatzmengen | Starke Evidenz für eine definierte Invariante, scannt oder verbindet aber oft viele Daten |
 
-Wähle Prüfungen anhand von Geschäftsrisiko und Ausführungskosten. Prüfe Schnittstellen früh, werte große Datensätze begründet stichprobenartig oder inkrementell aus und reserviere teure Reconciliation für wichtige Invarianten. Keine Familie beweist allgemeine End-to-End-Korrektheit.`,
+Wähle Prüfungen an Geschäftsrisiko und Ausführungskosten. Prüfe Schnittstellen früh, werte große Datensätze begründet stichprobenartig oder inkrementell aus und heb teure Reconciliation für wichtige Invarianten auf. Keine Familie beweist allgemeine End-to-End-Korrektheit.`,
     },
     {
       id: "s4",
@@ -71,28 +71,28 @@ models:
           compare_model: ref('stg_orders')  # reconciliation
 \`\`\`
 
-Generische und singuläre dbt-Datentests sind Abfragen, deren Ergebniszeilen eine verletzte Annahme darstellen. Wann und wo sie laufen, hängt von Befehlen, Auswahlregeln, Adapter und CI-Konfiguration des Projekts ab. Das Beispiel prüft sinnvolle Invarianten. \`equal_rowcount\` gilt aber nur, wenn beide Modelle dieselbe Granularität und denselben Filterumfang haben. Behandle Tests als ausführbare Verträge mit Zuständigkeit, Schweregrad, Ausführungsrhythmus und dokumentierter Reaktion.`,
+Generische und singuläre dbt-Datentests sind Abfragen, deren Ergebniszeilen eine verletzte Annahme darstellen. Wann und wo sie laufen, hängt an Befehlen, Auswahlregeln, Adapter und CI-Konfiguration des Projekts. Das Beispiel prüft sinnvolle Invarianten. \`equal_rowcount\` gilt aber nur, wenn beide Modelle dieselbe Granularität und denselben Filterumfang haben. Behandle Tests als ausführbare Verträge mit Zuständigkeit, Schweregrad, Ausführungsrhythmus und dokumentierter Reaktion.`,
     },
     {
       id: "s5",
       title: "Deklarierte und gelernte Prüfungen",
-      content: `Deklarierte Prüfungen kodieren bekannte Invarianten: Ein Schlüssel ist eindeutig, ein Betrag nicht negativ oder eine Reconciliation-Abweichung bleibt innerhalb einer dokumentierten Toleranz. Sie sind prüfbar und deterministisch, erkennen aber nur zuvor festgelegte Bedingungen. Frameworks wie dbt-Datentests oder Great Expectations können solche Prüfungen ausführen. Unterstützte Datenquellen, Orchestrierung und Berichte hängen von Version und Integration ab.
+      content: `Deklarierte Prüfungen kodieren bekannte Invarianten. Ein Schlüssel ist eindeutig, ein Betrag nicht negativ, eine Reconciliation-Abweichung bleibt innerhalb einer dokumentierten Toleranz. Sie sind prüfbar und deterministisch, erkennen aber nur zuvor festgelegte Bedingungen. Frameworks wie dbt-Datentests oder Great Expectations führen solche Prüfungen aus. Unterstützte Datenquellen, Orchestrierung und Berichte hängen an Version und Integration.
 
-Gelernte Prüfungen schätzen erwartete Bereiche aus historischen Anzahlen, Nullraten oder Werteverteilungen. Sie können unbekannte Änderungen sichtbar machen. Saisonalität, Produkteinführungen, Ausfälle und dünne Daten erzeugen jedoch Fehlalarme. Kommerzielle und offene Observability-Produkte setzen unterschiedliche Varianten um.
+Gelernte Prüfungen schätzen erwartete Bereiche aus historischen Anzahlen, Nullraten oder Werteverteilungen. Sie machen unbekannte Änderungen sichtbar. Saisonalität, Produkteinführungen, Ausfälle und dünne Daten erzeugen dabei Fehlalarme. Kommerzielle und offene Observability-Produkte setzen unterschiedliche Varianten um.
 
-Wähle die Abdeckung aus Anforderungen statt Produktkategorien:
+Die Abdeckung folgt aus Anforderungen, nicht aus Produktkategorien:
 
 - deklarierte Prüfungen für Verträge und Fachinvarianten;
 - gelernte Prüfungen dort, wo historisches Verhalten aussagekräftig ist und jemand den Detektor justiert;
 - festgelegte Profiling-Datasets, weil Stichproben und Diagnosen sensible Daten enthalten können;
 - Bewertung von Alarmpräzision, Warehouse-Kosten, Zugriffskontrollen, Aufbewahrung, Lineage-Abdeckung und Exportierbarkeit mit repräsentativen Daten.
 
-Beide Methoden können sich ergänzen. Keine ist auf jeder Ebene zwingend.`,
+Beide Methoden ergänzen einander. Zwingend ist keine auf jeder Ebene.`,
     },
     {
       id: "s6",
       title: "Lineage und Alarme",
-      content: `Eine Anomalie in \`fact_orders.amount_usd\` bezeichnet ein Symptom. Lineage kann die Untersuchung eingrenzen, indem deklarierte oder beobachtete Abhängigkeiten zwischen Jobs und Datasets sichtbar werden. Sie beweist nicht, welche Änderung den Fehler verursacht hat; unvollständige Instrumentierung kann wichtige Pfade auslassen.
+      content: `Eine Anomalie in \`fact_orders.amount_usd\` ist ein Symptom. Lineage grenzt die Untersuchung ein, indem sie deklarierte oder beobachtete Abhängigkeiten zwischen Jobs und Datasets zeigt. Welche Änderung den Fehler verursacht hat, beweist sie nicht; unvollständige Instrumentierung lässt wichtige Pfade aus.
 
 Ein praktikabler Ablauf:
 
@@ -101,26 +101,26 @@ Ein praktikabler Ablauf:
 3. Lineage, letzte Deployments, Quellzustand und Stichproben-Reconciliation als Evidenz verwenden.
 4. Den Alarm erst dann an das verantwortliche Team leiten, wenn die Evidenz die fehlerhafte Grenze zeigt; sonst an den zuständigen Triage-Pfad.
 
-OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterbare Facets. Integrationen und ausgegebene Details unterscheiden sich nach Werkzeug und Version. Prüfe die tatsächlichen Ereignisse, bevor Routing oder Auswirkungsanalyse davon abhängen. Schütze Lineage-Metadaten als Betriebsinformationen: Namen, Query-Facets und Fehlerdetails können interne Strukturen oder sensible Werte offenlegen.`,
+OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterbare Facets. Integrationen und ausgegebene Details unterscheiden sich nach Werkzeug und Version. Prüfe die tatsächlichen Ereignisse, bevor Routing oder Auswirkungsanalyse davon abhängen. Und schütze Lineage-Metadaten wie Betriebsinformationen: Namen, Query-Facets und Fehlerdetails legen interne Strukturen oder sensible Werte offen.`,
       keyTakeaway:
         "Lineage liefert Evidenz für die Untersuchung. Ein Alarm geht an das Team der nachweislich fehlerhaften Grenze, nicht pauschal an das nächstgelegene vorgelagerte System.",
     },
     {
       id: "s7",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zum gelesenen Abschnitt.",
+      content: "Zwei Fragen zu stillen Fehlern und Alarmen.",
     },
     {
       id: "s8",
       title: "Begriffe",
       content: `- **SLI / SLO / SLA**, ein SLI ist ein gemessenes Zuverlässigkeitssignal, ein SLO dessen Ziel in einem Zeitfenster und ein SLA eine Dienstvereinbarung mit möglichen Folgen.
-- **Freshness**, die Verzögerung zwischen den für einen Consumer verfügbaren Daten und der von ihnen dargestellten Fachzeit; die Formel hängt vom Quellverhalten ab.
-- **Vollständigkeits-Näherungswert**, ein messbares Signal wie Anzahl, Abdeckungsquote oder Reconciliation-Abweichung; es beweist nicht die Ankunft jedes Datensatzes.
-- **Anomalieerkennung**, vergleicht Beobachtungen mit einem erwarteten Bereich und benötigt Verwaltung von Fehlalarmen und Drift.
+- **Freshness**, die Verzögerung zwischen den für einen Consumer verfügbaren Daten und der von ihnen dargestellten Fachzeit; die Formel hängt am Quellverhalten.
+- **Vollständigkeits-Näherungswert**, ein messbares Signal wie Anzahl, Abdeckungsquote oder Reconciliation-Abweichung; es beweist die Ankunft keines einzelnen Datensatzes.
+- **Anomalieerkennung**, vergleicht Beobachtungen mit einem erwarteten Bereich und braucht Verwaltung von Fehlalarmen und Drift.
 - **Datenvertrag**, eine versionierte Vereinbarung über Struktur, Semantik, Qualitätsziele, Zuständigkeit und Kompatibilität.
 - **Deklarierte Prüfung**, eine explizite Invariante, die gegen Daten ausgewertet wird.
 - **Gelernte Prüfung**, ein aus historischen Beobachtungen abgeleiteter erwarteter Bereich.
-- **OpenLineage**, ein erweiterbares Ereignismodell für Job-, Lauf- und Dataset-Metadaten; die Abdeckung hängt von der Instrumentierung ab.`,
+- **OpenLineage**, ein erweiterbares Ereignismodell für Job-, Lauf- und Dataset-Metadaten; die Abdeckung hängt an der Instrumentierung.`,
     },
   ],
   widgets: [
@@ -137,7 +137,7 @@ OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterba
         "Eine Netzwerkpartition.",
       ],
       explanation:
-        "Erfolgreiche Jobs und normale Latenz validieren das Ergebnis nicht. Ein Enum-Wechsel, ein abweichendes Join-Schlüsselformat oder eine Einheitenumrechnung kann die Ausgabe ändern, ohne die Pipeline scheitern zu lassen. Ergänze eine Reconciliation, die Granularität und Bilanzregeln abbildet, und führe sie in einem durch Risiko und Kosten begründeten Rhythmus aus.",
+        "Erfolgreiche Jobs und normale Latenz validieren das Ergebnis nicht. Ein Enum-Wechsel, ein abweichendes Join-Schlüsselformat oder eine Einheitenumrechnung verändert die Ausgabe, ohne die Pipeline scheitern zu lassen. Ergänze eine Reconciliation, die Granularität und Bilanzregeln abbildet, und lass sie in einem durch Risiko und Kosten begründeten Rhythmus laufen.",
     },
     {
       kind: "quiz",
@@ -152,7 +152,7 @@ OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterba
         "Alle Teams gleichzeitig.",
       ],
       explanation:
-        "Die Evidenz setzt die erste beobachtete Lücke an die CDC-Grenze. Deren Team untersucht deshalb Connector und Quellzustand. Lineage grenzt die Suche ein; sie beweist nicht, ob Connector, Zugangsdaten, Quelldatenbank oder Instrumentierung die Lücke verursacht haben.",
+        "Die Evidenz setzt die erste beobachtete Lücke an die CDC-Grenze. Deren Team untersucht also Connector und Quellzustand. Lineage grenzt die Suche ein; ob Connector, Zugangsdaten, Quelldatenbank oder Instrumentierung die Lücke verursacht haben, beweist sie nicht.",
     },
     {
       kind: "flashcards",
@@ -167,7 +167,7 @@ OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterba
         {
           term: "Freshness",
           q: "Wie wird sie berechnet?",
-          a: "Messe die Verzögerung zwischen verfügbaren Daten und der dargestellten Fachzeit. Die Formel muss erwartete Quellaktivität, verspätete Ereignisse und leere Zeiträume berücksichtigen.",
+          a: "Miss die Verzögerung zwischen verfügbaren Daten und der dargestellten Fachzeit. Die Formel muss erwartete Quellaktivität, verspätete Ereignisse und leere Zeiträume aushalten.",
         },
         {
           term: "Volumen / Zeilenzahl",
@@ -187,17 +187,17 @@ OpenLineage definiert ein Ereignismodell für Jobläufe, Datasets und erweiterba
         {
           term: "Great Expectations",
           q: "Deklarierte oder gelernte Regeln?",
-          a: "Ein Framework für deklarierte Expectations und Validierungsabläufe. Unterstützte Datenquellen, Aktionen und Berichte hängen von Version und Integration ab.",
+          a: "Ein Framework für deklarierte Expectations und Validierungsabläufe. Unterstützte Datenquellen, Aktionen und Berichte hängen an Version und Integration.",
         },
         {
           term: "Monte Carlo",
           q: "Deklarierte oder gelernte Regeln?",
-          a: "Ein kommerzielles Observability-Produkt mit gelerntem Monitoring. Bewerte Detektorverhalten, Abdeckung, Zugriffskontrollen, Kosten, Aufbewahrung und Exportierbarkeit gegen die Anforderungen.",
+          a: "Ein kommerzielles Observability-Produkt mit gelerntem Monitoring. Bewerte Detektorverhalten, Abdeckung, Zugriffskontrollen, Kosten, Aufbewahrung und Exportierbarkeit gegen deine Anforderungen.",
         },
         {
           term: "OpenLineage",
           q: "Was bezeichnet der Name?",
-          a: "Ein erweiterbares Ereignismodell für Jobläufe, Datasets und Metadaten-Facets. Die tatsächliche Lineage-Abdeckung hängt von ausgebender Integration und Konfiguration ab.",
+          a: "Ein erweiterbares Ereignismodell für Jobläufe, Datasets und Metadaten-Facets. Die tatsächliche Lineage-Abdeckung hängt an ausgebender Integration und Konfiguration.",
         },
       ],
     },

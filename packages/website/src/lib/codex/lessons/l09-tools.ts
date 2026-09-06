@@ -16,7 +16,7 @@ const lesson: CodexLesson = {
   durationMinutes: 11,
   trackId: "in-the-loop",
   hook: "Choose by operating requirements.",
-  keyConcepts: ["Tool landscape", "MCP", "Task-shape fit", "IDE integration"],
+  keyConcepts: ["Tool choice", "MCP", "Task-shape fit", "IDE integration"],
   quiz: [],
   sections: buildSections([
     {
@@ -27,7 +27,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Coding tools combine several interaction models: inline completion, editor chat, terminal agents, IDE agents, and background tasks that return a diff or pull request. Product capabilities change, and several tools now span more than one category.\n\nChoose from operational requirements rather than a static vendor ranking. Check what repository context the tool can read, where commands execute, which writes require approval, whether network access is enabled, how model and data policies are configured, and how the result reaches review.\n\nThe relevant unit is the workflow and its controls, not the product label alone.",
+            "Inline completion, editor chat, terminal agents, IDE agents, background tasks that return a diff or pull request. Most products now span more than one of these, and the capabilities move.\n\nChoose from operating requirements, not a vendor ranking. Check what repository context the tool reads, where commands execute, which writes need approval, whether network access is enabled, how model and data policies are configured, and how the result reaches review.\n\nThe unit that matters is the workflow and its controls. Not the product label.",
         },
       ],
     },
@@ -81,7 +81,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Match the workflow to the task and control boundary:\n\n- **Small, local edit with a known implementation** → use direct editing or inline completion when delegation overhead adds no value.\n- **Unfamiliar codebase** → begin with a read-oriented interactive workflow that can cite files and call paths before allowing edits.\n- **Well-specified background task** → use a dedicated environment, explicit checks, and a diff or pull-request review gate.\n- **Terminal-centered workflow** → use a CLI agent that can run the repository's existing commands inside the required sandbox and approval policy.\n- **Provider, residency, or offline constraint** → evaluate the complete model endpoint, telemetry, credential, and network path. A local client does not by itself make a workflow offline.\n\nRecheck product documentation when the decision affects security or procurement; these capabilities change.",
+            "Match the workflow to the task and the control boundary.\n\n- **Small, local edit with a known implementation** → use direct editing or inline completion when delegation overhead adds no value.\n- **Unfamiliar codebase** → begin with a read-oriented interactive workflow that can cite files and call paths before allowing edits.\n- **Well-specified background task** → use a dedicated environment, explicit checks, and a diff or pull-request review gate.\n- **Terminal-centered workflow** → use a CLI agent that can run the repository's existing commands inside the required sandbox and approval policy.\n- **Provider, residency, or offline constraint** → evaluate the complete model endpoint, telemetry, credential, and network path. A local client does not by itself make a workflow offline.\n\nSecurity or procurement decision? Read the current product documentation. These capabilities change.",
         },
       ],
     },
@@ -93,7 +93,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "MCP stands for Model Context Protocol. It standardizes how a client discovers and calls tools, resources, and prompts exposed by an MCP server.\n\nMCP does not itself grant access. The server, transport, credentials, client policy, and user approvals determine what a tool can read or change. A database or GitHub integration should expose the narrowest useful operations and separate read actions from consequential writes.\n\nConceptually:\n\n```\n# 1. Configure a reviewed MCP server in the client.\n# 2. The server advertises named capabilities with input schemas.\n# 3. The client may call an allowed capability when the task requires it.\n# 4. Authentication, authorization, logging, and approval still apply.\n```\n\nMCP can replace manual copy-and-paste steps with structured calls, but it also expands the agent's trust boundary. Treat every configured server as an integration that requires ownership, least privilege, and auditability.",
+            "MCP stands for Model Context Protocol. It standardizes how a client discovers and calls tools, resources, and prompts exposed by an MCP server.\n\nMCP does not itself grant access. The server, transport, credentials, client policy, and user approvals determine what a tool can read or change. A database or GitHub integration should expose the narrowest useful operations and separate read actions from consequential writes.\n\nConceptually:\n\n```\n# 1. Configure a reviewed MCP server in the client.\n# 2. The server advertises named capabilities with input schemas.\n# 3. The client may call an allowed capability when the task requires it.\n# 4. Authentication, authorization, logging, and approval still apply.\n```\n\nMCP replaces manual copy-and-paste with structured calls. It also widens the agent's trust boundary. Treat every configured server as an integration that needs an owner, least privilege and an audit trail.",
         },
       ],
     },
@@ -105,7 +105,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Editor and terminal workflows can share the same repository controls:\n\n- **Review the diff:** inspect changed files, tests, deletions, and generated artifacts in the normal Git review surface.\n- **Run repository checks:** use the documented lint, type, test, and build commands rather than tool-specific claims of success.\n- **Limit context deliberately:** provide the files and logs required for the task; do not broaden repository or secret access for convenience.\n- **Isolate concurrent work:** separate branches or worktrees reduce file conflicts, but shared dependencies and generated state can still conflict.\n\nIntegration should preserve the project's review and security gates instead of bypassing them.",
+            "Editor and terminal workflows can share the same repository controls:\n\n- **Review the diff:** inspect changed files, tests, deletions, and generated artifacts in the normal Git review surface.\n- **Run repository checks:** use the documented lint, type, test, and build commands rather than tool-specific claims of success.\n- **Limit context deliberately:** provide the files and logs required for the task; do not broaden repository or secret access for convenience.\n- **Isolate concurrent work:** separate branches or worktrees reduce file conflicts, but shared dependencies and generated state can still conflict.\n\nIntegration preserves the project's review and security gates. It does not route around them.",
         },
       ],
     },
@@ -130,7 +130,7 @@ const lesson: CodexLesson = {
         goodLabel: "Right-sized",
         bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: create a background environment and a separate pull request for an edit that can be reviewed directly in place.\n\nCost: additional environment and review state without a corresponding reduction in risk.",
         good: "Task: add a missing JSDoc comment to one function.\n\nApproach: edit or generate the comment beside the function, inspect it against the implementation, and include it in the existing change.\n\nCost: no separate execution environment or review object.",
-        note: "Delegated tasks add environment, context, and review overhead. Use that separation when it improves isolation, verification, or parallelism; otherwise keep the change in the current workflow.",
+        note: "Delegated tasks add environment, context and review overhead. Take that separation when it buys isolation, verification or parallelism. Otherwise keep the change where you are.",
       },
     },
     {

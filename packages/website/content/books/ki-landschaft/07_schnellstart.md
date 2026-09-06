@@ -1,12 +1,12 @@
 # Schnellstart: einen sicheren Lernpilot vorbereiten
 
-Der erste Schritt ist kein breiter Rollout. Es ist ein begrenzter Pilot mit freigegebenen Daten, klarer Fachprüfung und einer Ausgangsmessung.
+Der erste Schritt ist kein Rollout für alle. Es ist ein begrenzter Pilot mit freigegebenen Daten, einer prüfenden Fachperson und einer Messung von vorher.
 
 ## 1. Einen Prozess auswählen
 
-Wähle eine wiederkehrende Informationsaufgabe, bei der ein Mensch das Ergebnis vor Verwendung prüft. Geeignet sind zum Beispiel Entwürfe, Klassifizierung oder strukturierte Extraktion. Vermeide als Einstieg Entscheidungen mit hoher Wirkung auf Menschen, Sicherheitsfunktionen und Aufgaben ohne verlässliche Prüfmöglichkeit.
+Nimm eine wiederkehrende Informationsaufgabe, deren Ergebnis ein Mensch vor der Verwendung prüft. Entwürfe, Klassifizierung, strukturierte Extraktion. Für den Einstieg ungeeignet sind Entscheidungen mit hoher Wirkung auf Menschen, Sicherheitsfunktionen und alles ohne verlässliche Prüfmöglichkeit.
 
-Dokumentiere:
+Dokumentiere.
 
 - Eingang und erwartetes Ergebnis
 - verantwortliche Fachperson
@@ -28,7 +28,7 @@ Beginne mit synthetischen Daten. Reale Daten folgen erst, wenn Zweck, Rechtsgrun
 
 ## 3. Eine Rubrik vor dem Test festlegen
 
-Beispiel für einen Zusammenfassungsentwurf:
+Beispiel für einen Zusammenfassungsentwurf.
 
 - alle Pflichtpunkte enthalten
 - keine erfundenen Aussagen
@@ -37,15 +37,15 @@ Beispiel für einen Zusammenfassungsentwurf:
 - Format ist nutzbar
 - fachliche Korrekturzeit ist messbar
 
-Lege Stopkriterien fest, bevor das Ergebnis bekannt ist.
+Leg die Stopkriterien fest, bevor du das Ergebnis kennst.
 
 ## 4. Repräsentative Testfälle verwenden
 
-Teste normale, schwierige und absichtlich fehlerhafte Eingaben. Halte Modell- oder Systemversion, Einstellungen und Prompt fest. Ein erfolgreicher Einzelfall ist keine Wirksamkeitsprüfung.
+Teste normale, schwierige und absichtlich kaputte Eingaben. Halte Modell- oder Systemversion, Einstellungen und Prompt fest. Ein gelungener Einzelfall ist keine Wirksamkeitsprüfung.
 
 ## 5. Output nur als Entwurf behandeln
 
-Die Fachperson prüft Quelle gegen Output. Sie muss korrigieren, verwerfen und eskalieren können. „Mensch in der Schleife“ ist nur wirksam, wenn Zeit, Kompetenz, Informationen und Befugnis vorhanden sind.
+Die Fachperson prüft Quelle gegen Output. Korrigieren, verwerfen und eskalieren muss sie dürfen. „Mensch in der Schleife“ wirkt nur mit Zeit, Kompetenz, Informationen und Befugnis.
 
 ## 6. Mit eigenen Werten rechnen
 
@@ -88,4 +88,4 @@ Wirtschaftlicher Nutzen ergibt sich aus deinen Messungen, nicht aus statischen L
 
 > Erzeuge ausschließlich synthetische Testfälle für die genannten Fehlerklassen. Verwende keine realen Personen, Unternehmen, Adressen oder Zugangsdaten.
 
-Der Schnellstart endet mit einem belegten Pilotentscheid, nicht mit einem Toolkauf.
+Am Ende des Schnellstarts steht ein belegter Pilotentscheid, kein Toolkauf.

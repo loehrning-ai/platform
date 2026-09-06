@@ -1,0 +1,15 @@
+{
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "Systeme mit vertraulichem Einschub",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Anrede",
+          "content": "Prüfen Sie Ihre Systeme jede Woche. Dann prüfst du dein Inventar noch einmal."
+        }
+      ]
+    }
+  ]
+}

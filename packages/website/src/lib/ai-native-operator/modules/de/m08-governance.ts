@@ -18,17 +18,17 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     sections: [
       {
         id: "s1",
-        title: "Das eingesetzte System statt nur das Modell erfassen",
+        title: "Nicht das Modell zählt, sondern der Einsatz",
         readTimeMinutes: 9,
         content:
-          "Ein Modellname allein beschreibt das Betriebsrisiko nicht. Erfassen Sie jeden Einsatz mit Geschäftszweck, verantwortlicher Person, Anbieter und Version, Betriebsort, Datenklassen, verbundenen Werkzeugen, Nutzergruppen, Risikostufe und Lebenszyklusstatus. Beziehen Sie extern betriebene Funktionen und eingebettete Anbieterfunktionen ein, wenn sie Daten oder Entscheidungen beeinflussen.",
+          "Ein Modellname beschreibt kein Betriebsrisiko. Erfasse jeden Einsatz mit Geschäftszweck, verantwortlicher Person, Anbieter und Version, Betriebsort, Datenklassen, verbundenen Werkzeugen, Nutzergruppen, Risikostufe und Lebenszyklusstatus. Extern betriebene Funktionen und eingebettete Anbieterfunktionen gehören dazu, sobald sie Daten oder Entscheidungen beeinflussen.",
       },
       {
         id: "s2",
         title: "Das Register an Lebenszyklusereignisse binden",
         readTimeMinutes: 9,
         content:
-          "Erstellen oder aktualisieren Sie den Eintrag bei Aufnahme, Freigabe, Veröffentlichung, wesentlicher Änderung, regelmäßiger Prüfung, Störungsbearbeitung und Stilllegung. Speichern Sie Evaluationsbelege, Freigabebedingungen, letzte und nächste Prüfung sowie offene Feststellungen. Benennen Sie eine Verantwortung für Vollständigkeit und ein Verfahren zum Auffinden nicht registrierter Systeme.",
+          "Der Eintrag entsteht oder ändert sich bei Aufnahme, Freigabe, Veröffentlichung, wesentlicher Änderung, regelmäßiger Prüfung, Störungsbearbeitung und Stilllegung. Speichere Evaluationsbelege, Freigabebedingungen, letzte und nächste Prüfung sowie offene Feststellungen. Eine Person verantwortet die Vollständigkeit. Und ein Verfahren findet die Systeme, die niemand eingetragen hat.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -41,7 +41,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/1",
           cpId: "exercise",
           scenario:
-            "Wählen Sie ein eingesetztes modellgestütztes System. Erfassen Sie Zweck, Zuständigkeit, Anbieter und Version, Betriebsort, Datenklassen, Werkzeuge, Nutzergruppen, Risikostufe, Freigaben, Evaluationsbelege, Prüftermin und Bedingung für die Stilllegung. Markieren Sie jedes unbekannte Feld.",
+            "Nimm ein eingesetztes modellgestütztes System. Erfasse Zweck, Zuständigkeit, Anbieter und Version, Betriebsort, Datenklassen, Werkzeuge, Nutzergruppen, Risikostufe, Freigaben, Evaluationsbelege, Prüftermin und Stilllegungsbedingung. Markiere jedes Feld, das du nicht füllen kannst.",
           rows: 3,
         },
       },
@@ -67,14 +67,14 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Eine änderungsspezifische Freigabekontrolle festlegen",
         readTimeMinutes: 12,
         content:
-          "Änderungen an Modell, Anbieter, Anweisung, Abruf, Werkzeug, Richtlinie oder Weiterleitung können das Verhalten verändern. Ordnen Sie die Änderung ein, wählen Sie repräsentative Qualitäts- und Sicherheitsevaluationen, setzen Sie Annahmeschwellen und benennen Sie erforderliche menschliche Prüfungen. Automatisieren Sie wiederholbare Kontrollen und bewahren Sie das Ergebnis mit der veröffentlichten Version auf.",
+          "Modell, Anbieter, Anweisung, Abruf, Werkzeug, Richtlinie, Weiterleitung: jede Änderung daran kann das Verhalten verschieben. Ordne die Änderung ein, wähle repräsentative Qualitäts- und Sicherheitsevaluationen, setze Annahmeschwellen und benenne die nötigen menschlichen Prüfungen. Wiederholbare Kontrollen laufen automatisch, und ihr Ergebnis bleibt bei der veröffentlichten Version.",
       },
       {
         id: "s2",
         title: "Die Einführung nach der Freigabe kontrollieren",
         readTimeMinutes: 12,
         content:
-          "Evaluationen vor der Veröffentlichung können nicht jede Bedingung im Betrieb abdecken. Nutzen Sie nach Möglichkeit eine gestufte Einführung, beobachten Sie festgelegte Ergebnis- und Schutzsignale und bereiten Sie Kriterien für Rücknahme oder Eindämmung vor. Dokumentieren Sie einen Notfallweg mit begrenzter Befugnis, klarer Befristung, nachträglicher Prüfung und ergänzenden Tests.",
+          "Keine Evaluation vor der Veröffentlichung deckt jede Bedingung im Betrieb ab. Nutze wo möglich eine gestufte Einführung, beobachte festgelegte Ergebnis- und Schutzsignale und halte Kriterien für Rücknahme oder Eindämmung bereit. Der Notfallweg steht schriftlich fest: begrenzte Befugnis, klare Befristung, nachträgliche Prüfung, ergänzende Tests.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -87,7 +87,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/2",
           cpId: "exercise",
           scenario:
-            "Definieren Sie für einen eingesetzten Ablauf Änderungsklassen, erforderliche Evaluationen, Annahmeschwellen, Freigaben, gestufte Einführung, Schutzsignale im Betrieb, Rücknahmekriterien und den Datensatz für Notfalländerungen.",
+            "Lege für einen eingesetzten Ablauf Änderungsklassen, nötige Evaluationen, Annahmeschwellen, Freigaben, gestufte Einführung, Schutzsignale im Betrieb, Rücknahmekriterien und den Datensatz für Notfalländerungen fest.",
           rows: 4,
         },
       },
@@ -113,14 +113,14 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Ausführenden Dienst, vertretene Person und Befugnis trennen",
         readTimeMinutes: 10,
         content:
-          "Wenn ein Agent handelt, sollte das System den ausführenden Dienst, die vertretene Person oder den vertretenen Dienst und die erlaubende Berechtigung benennen. Geben Sie jedem produktiven Dienst eine eigene Identität. Verwenden Sie geringste Rechte, kurzlebige Zugangsdaten, begrenzte Ressourcen und Aktionen sowie ausdrücklichen Widerruf statt gemeinsamer Geheimnisse oder weitreichender Dienstkonten.",
+          "Handelt ein Agent, benennt das System den ausführenden Dienst, die vertretene Person oder den vertretenen Dienst und die erlaubende Berechtigung. Jeder produktive Dienst bekommt eine eigene Identität. Dazu geringste Rechte, kurzlebige Zugangsdaten, begrenzte Ressourcen und Aktionen und ein ausdrücklicher Widerruf. Keine gemeinsamen Geheimnisse, keine weitreichenden Dienstkonten.",
       },
       {
         id: "s2",
         title: "Genügend Belege zur Rekonstruktion erfassen",
         readTimeMinutes: 10,
         content:
-          "Ein Prüfereignis sollte eine eindeutige Ereigniskennung, Zeitstempel, Dienstidentität, vertretene Person oder vertretenen Dienst, Handlung, Ressource, Berechtigungsentscheidung, Richtlinienversion, Ergebnis und Verknüpfungskennungen enthalten. Schützen Sie Integrität und Zugriff des Protokolls. Speichern Sie Verweise oder geschwärzte Werte statt unnötiger Geheimnisse und personenbezogener Daten.",
+          "Ein Prüfereignis trägt eine eindeutige Ereigniskennung, Zeitstempel, Dienstidentität, vertretene Person oder vertretenen Dienst, Handlung, Ressource, Berechtigungsentscheidung, Richtlinienversion, Ergebnis und Verknüpfungskennungen. Schütze Integrität und Zugriff des Protokolls. Statt unnötiger Geheimnisse und personenbezogener Daten stehen dort Verweise oder geschwärzte Werte.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -133,7 +133,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/3",
           cpId: "exercise",
           scenario:
-            "Wählen Sie eine folgenreiche schreibende oder löschende Handlung. Bestimmen Sie Dienstidentität, vertretene Person oder vertretenen Dienst, Umfang der Zugangsdaten, Berechtigungsbeleg, Protokollfelder, Aufbewahrung, Protokollzugriff, Widerrufsweg und Störungsverantwortung.",
+            "Nimm eine folgenreiche schreibende oder löschende Handlung. Bestimme Dienstidentität, vertretene Person oder vertretenen Dienst, Umfang der Zugangsdaten, Berechtigungsbeleg, Protokollfelder, Aufbewahrung, Protokollzugriff, Widerrufsweg und Störungsverantwortung.",
           rows: 3,
         },
       },
@@ -145,16 +145,16 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Wissensprüfung zu Modul 8",
-    subtitle: "Prüfen Sie die Steuerungskontrollen dieses Moduls.",
-    objective: "Prüfen Sie die Steuerungskontrollen dieses Moduls.",
+    title: "Modul 8, Wissensprüfung",
+    subtitle: "Zwei Fragen zu den Steuerungskontrollen.",
+    objective: "Zwei Fragen zu den Steuerungskontrollen.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-governance-q1",
         questionText:
-          "Das Sicherheitsteam fragt, welche eingesetzten Systeme personenbezogene Kundendaten nutzen. Eine vollständige Antwort fehlt. Welche Korrekturkontrolle ist vorrangig?",
+          "Das Sicherheitsteam fragt, welche eingesetzten Systeme personenbezogene Kundendaten nutzen. Niemand kann es vollständig beantworten. Welche Korrekturkontrolle kommt zuerst?",
         answerOptions: [
           {
             id: "a",
@@ -178,7 +178,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Die unmittelbare Lücke ist ein fehlendes gepflegtes Verzeichnis. Ein Register verbindet jeden Einsatz mit Zuständigkeit, Datenklassen, Anbieter und Version, Werkzeugen, Kontrollen, Freigaben und Lebenszyklusstatus. Weitere Schutzmaßnahmen bleiben notwendig, ersetzen diesen Datensatz aber nicht.",
+          "Die Lücke ist ein fehlendes gepflegtes Verzeichnis. Ein Register verbindet jeden Einsatz mit Zuständigkeit, Datenklassen, Anbieter und Version, Werkzeugen, Kontrollen, Freigaben und Lebenszyklusstatus. Andere Schutzmaßnahmen bleiben nötig, ersetzen diesen Datensatz aber nicht.",
       },
       {
         id: "ano-governance-q2",
@@ -207,7 +207,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Ein geschützter Ereignisdatensatz verbindet ausführenden Dienst, vertretene Identität, Befugnis, Handlung, Ressource und Ergebnis zum Zeitpunkt des Ereignisses. Anzeigenamen und spätere Erinnerung können diese Kette nicht verlässlich belegen.",
+          "Ein geschützter Ereignisdatensatz verbindet ausführenden Dienst, vertretene Identität, Befugnis, Handlung, Ressource und Ergebnis zum Zeitpunkt des Ereignisses. Anzeigenamen und spätere Erinnerung belegen diese Kette nicht.",
       },
     ],
     sections: [],

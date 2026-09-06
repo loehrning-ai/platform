@@ -1,10 +1,10 @@
 # Method: assess AI readiness without spurious precision
 
-A number can appear objective even when it rests on incomplete assumptions. Publicly visible features of a website do not reliably show how well internal data, processes, skills, or controls work. This chapter therefore does not use a proprietary company score.
+A number looks like a fact. Even when nobody has checked the assumptions behind it. Website features visible from outside say nothing about internal data, processes, skills, and controls. So there is no proprietary company score here.
 
 ## Start with the research question
 
-State a specific question before collecting evidence:
+Every survey begins with one question.
 
 - Which systems are in use?
 - Which process should improve?
@@ -12,25 +12,25 @@ State a specific question before collecting evidence:
 - Which errors would be tolerable?
 - Which legal and organizational controls apply?
 
-Without a research question, an inventory quickly becomes a collection of irrelevant technical features.
+Without it, you collect technical features that answer nothing.
 
 ## Five areas of evidence
 
 ### 1. Process and purpose
 
-Document the process owner, users, affected people, input data, output, subsequent action, volume, and known errors. Distinguish a product's intended purpose from its actual internal use.
+Document the process owner, users, affected people, input data, output, subsequent action, volume, and known errors. And keep them apart. The provider's intended purpose is not your actual use.
 
 ### 2. Data
 
-Check provenance, legal basis, quality, currency, access, retention, deletion, and gaps in representativeness. "We have a lot of data" says nothing about whether it is suitable.
+Check provenance, legal basis, quality, currency, access, retention, deletion, and gaps in representativeness. "We have a lot of data" says nothing about whether it fits.
 
 ### 3. Technology and security
 
-Record the system version, integrations, data flows, identity and access model, encryption, secrets, logging, monitoring, updates, backups, recovery, and exit plan.
+Record the system version, integrations, data flows, identity and access model, encryption, secrets, logging, monitoring, updates, backups, recovery, and exit path. Anyone who first looks for the exit while switching providers does not have one.
 
 ### 4. People and governance
 
-Approval, domain review, human oversight, escalation, training, backup arrangements, and accountability must be clear. A tool does not replace responsibility.
+Approval, domain review, human oversight, escalation, training, cover arrangements, and accountability need names, not checkboxes. A tool does not replace responsibility.
 
 ### 5. Law and impact
 
@@ -38,13 +38,13 @@ Check roles and obligations under the AI Act, GDPR, trade secret protection, cop
 
 ## A traceable assessment method
 
-Use three states for each review area:
+Three states per review area:
 
 - **unknown:** no reliable information
 - **partially evidenced:** information exists but is incomplete or untested
 - **evidenced:** a current source, an accountable person, and evidence of review are available
 
-The result is a list of gaps, not a competitive score. An unknown answer is not zero points. It is a specific research task.
+Out comes a list of gaps, not a competitive score. Unknown is not zero. It is a research task with a name on it.
 
 ## Source hierarchy
 
@@ -56,11 +56,11 @@ Prefer:
 4. reproducible research with a clear population and method
 5. secondary reporting only as a starting point
 
-Record a review date and a trigger for reassessment for volatile information.
+Volatile information gets a review date and a trigger for reassessment.
 
 ## Disclose limitations
 
-Every assessment should state at least:
+Every assessment names at least these points.
 
 - population and sampling method
 - observation period
@@ -69,4 +69,4 @@ Every assessment should state at least:
 - possible misclassifications
 - the difference between an observed feature and an inference
 
-An accessible website does not demonstrate internal data readiness. A cloud domain does not demonstrate AI Act compliance. A survey does not demonstrate technical effectiveness. Methodological honesty starts with these limitations.
+A reachable website proves no internal data readiness. A cloud domain proves no AI Act compliance. A survey proves no technical effectiveness. Honest method starts here.

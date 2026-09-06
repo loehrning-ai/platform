@@ -31,7 +31,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "This capstone follows one change from request through deployment. At each stage, identify the decision owner, required repository evidence, execution boundary, and review gate.\n\nThe alternatives are plausible shortcuts. Evaluate them by the risks they leave unowned rather than memorizing one tool sequence.",
+            "One change, from a chat message to a deployed endpoint. At each stage, name the decision owner, the repository evidence, the execution boundary and the review gate.\n\nThe alternatives look like reasonable shortcuts. Judge them by the risk they leave unowned.",
         },
         {
           kind: "pull-quote",
@@ -47,7 +47,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A repeatable workflow reduces hidden assumptions. Adapt the phases to the change, but retain explicit ownership from request through post-deployment verification:",
+            "A repeatable workflow leaves fewer hidden assumptions. Adapt the phases to the change and keep ownership explicit from request through post-deployment verification.",
         },
         {
           kind: "card-grid",
@@ -87,7 +87,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The amount of ceremony should follow risk and reversibility. A small local change may need a brief task and one check; an authentication, data, payment, or migration change needs explicit security and rollout evidence. Do not omit a gate merely because the implementation is short.",
+            "Ceremony follows risk and reversibility. A small local change needs a brief task and one check. An authentication, data, payment or migration change needs explicit security and rollout evidence. A short implementation is not a reason to skip a gate.",
         },
       ],
     },
@@ -112,7 +112,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "You have decomposed it. The first task is: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery are separate follow-on tasks.\n\nYou are about to write the spec. Which of these is the strongest opener?",
+            "You have decomposed it. First task: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery become separate follow-on tasks.\n\nNow the spec. Which opener is strongest?",
         },
       ],
     },
@@ -124,7 +124,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The implementation returns a diff and reports passing checks. Review the actual changes:",
+            "The implementation returns a diff and reports passing checks. Read what actually changed.",
         },
       ],
     },
@@ -148,7 +148,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The revised tests cover selection and serialization, the full diff has been reviewed, and trusted checks pass. Before moving to the scheduler task, preserve any durable decision that the next task depends on.",
+            "The revised tests cover selection and serialization. The full diff has been reviewed and trusted checks pass. Before the scheduler task, preserve any durable decision the next task depends on.",
         },
       ],
     },
@@ -160,7 +160,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Use three operating rules after the course:\n\n1. **Separate facts from hypotheses.** Keep file references, exact command results, and verified constraints. Discard unsupported explanations.\n2. **Restart on a false premise.** Use targeted revision for local defects; write a new task when the goal, architecture, or scope must change.\n3. **Bound work by review capacity.** Do not launch more concurrent tasks than the team can inspect, integrate, and verify at the required risk level.\n\nThe output of a coding agent remains a proposed change. The accountable human owns acceptance, merge, deployment, and incident response.",
+            "Three operating rules to take with you.\n\n1. **Separate facts from hypotheses.** Keep file references, exact command results, and verified constraints. Discard unsupported explanations.\n2. **Restart on a false premise.** Use targeted revision for local defects; write a new task when the goal, architecture, or scope must change.\n3. **Bound work by review capacity.** Do not launch more concurrent tasks than the team can inspect, integrate, and verify at the required risk level.\n\nThe output of a coding agent remains a proposed change. The accountable human owns acceptance, merge, deployment, and incident response.",
         },
       ],
     },

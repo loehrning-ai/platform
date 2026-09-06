@@ -18,7 +18,7 @@ export default function Ch06Evaluate() {
       <Hero
         eyebrow="Chapter 06 · Evaluate"
         title='Pick the metric <em>before</em> <span class="accent">you pick the model.</span>'
-        hook="Metric and threshold choices encode error costs, class prevalence, calibration needs, and operating capacity. Use the synthetic score distribution to inspect those tradeoffs."
+        hook="Metric and threshold encode error costs, class prevalence, calibration needs, and review capacity. Use the synthetic score distribution to see those tradeoffs."
         meta={[
           { k: "Read", v: "8 min" },
           { k: "Focus", v: "Confusion · ROC · PR" },
@@ -32,10 +32,10 @@ export default function Ch06Evaluate() {
           Four cells. <em>One thousand decisions.</em>
         </h2>
         <p className="prose">
-          At one threshold, binary predictions form TP, FP, FN, and TN counts.
-          Precision, recall, specificity, and F1 derive from that matrix.
-          ROC-AUC and PR-AUC summarize performance across thresholds; log loss
-          and calibration use the probability scores directly.
+          One threshold turns scores into TP, FP, FN, and TN counts. Precision,
+          recall, specificity, and F1 all fall out of that matrix. ROC-AUC and
+          PR-AUC summarize across thresholds; log loss and calibration read the
+          probability scores directly.
         </p>
         <ThresholdSim />
       </section>
@@ -44,18 +44,17 @@ export default function Ch06Evaluate() {
         <SectionLabel n="06.2">Picking the right metric</SectionLabel>
         <ul className="prose" style={{ paddingLeft: 20 }}>
           <li>
-            <strong>Fraud or screening:</strong> if missed cases dominate,
-            require high recall while constraining review load and harm from
-            false positives.
+            <strong>Fraud or screening:</strong> when missed cases dominate,
+            demand high recall and cap review load and harm from false positives.
           </li>
           <li>
-            <strong>Spam filtering:</strong> if flagging legitimate mail is
-            costly, constrain the false-positive rate or require precision at
-            the operating threshold.
+            <strong>Spam filtering:</strong> when flagging legitimate mail is
+            costly, cap the false-positive rate or demand precision at the
+            operating threshold.
           </li>
           <li>
-            <strong>Balanced classes:</strong> prevalence alone does not select
-            a metric; choose from ranking, probability accuracy, calibration,
+            <strong>Balanced classes:</strong> prevalence alone selects no
+            metric. Choose between ranking, probability accuracy, calibration,
             and decision cost.
           </li>
           <li>
@@ -67,8 +66,8 @@ export default function Ch06Evaluate() {
         <AntiPatterns
           items={[
             "<b>Reporting accuracy alone on rare events.</b> At a 0.1% event rate, predicting every case as negative yields 99.9% accuracy while detecting no events.",
-            "<b>Mixing training and decision objectives without checking them.</b> A model optimized for log loss can still be thresholded for a cost target, but both calibration and operating metrics need validation.",
-            "<b>Default τ=0.5.</b> Threshold should reflect your business cost ratio, not library defaults.",
+            "<b>Mixing training and decision objectives without checking them.</b> A model optimized for log loss can still be thresholded for a cost target, but calibration and operating metrics both need validating.",
+            "<b>Default τ=0.5.</b> The threshold belongs to your cost ratio, not a library default.",
           ]}
         />
       </section>

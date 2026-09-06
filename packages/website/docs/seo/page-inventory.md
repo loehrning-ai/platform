@@ -11,7 +11,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
   `src/lib/demos.ts`,
   `src/lib/blog-metadata.ts`, `src/lib/courses/catalog.ts`,
   `src/lib/open-source/artifacts.ts`).
-- Generated from the canonical content date: 2026-08-30. Owner of every page: Tim Löhr.
+- Generated from the canonical content date: 2026-09-05. Owner of every page: Tim Löhr.
 - This is a mechanically generated publication inventory, not a fabricated
   keyword, schema, or internal-link audit. It includes only values proved by
   the crawl contract, source files, and typed content catalogs. Generation
@@ -23,31 +23,31 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
-| https://loehrning.ai | src/app/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/ai-native-operator | src/app/kurse/open-source/ai-native-operator/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/ai-native | src/app/ai-native/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/ki-und-gesellschaft | src/app/ki-und-gesellschaft/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/blog | src/app/blog/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/buecher | src/app/buecher/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/demos | src/app/demos/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
-| https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-08-30 | yes | Tim Löhr |
+| https://loehrning.ai | src/app/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/ai-native-operator | src/app/kurse/open-source/ai-native-operator/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/ai-native | src/app/ai-native/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/ki-und-gesellschaft | src/app/ki-und-gesellschaft/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/blog | src/app/blog/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/buecher | src/app/buecher/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/demos | src/app/demos/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 
 ### Blog posts (1)
 
@@ -59,39 +59,39 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft | KI im deutschen Mittelstand | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-08-09 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft | KI im deutschen Mittelstand | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-09-05 | Tim Löhr |
 
 ### Buchkapitel (10)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft/01_eisberg | Das Eisberg-Problem | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/01_eisberg.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/02_methodik | Methodik ohne Scheingenauigkeit | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/02_methodik.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/03_reifegrad_ueberblick | Evidenzbasierte Selbstprüfung | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/03_reifegrad_ueberblick.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/04_bundesland | Regionale Rahmenbedingungen | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/04_bundesland.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/05_branchen | Branchenmuster als Hypothesen | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/05_branchen.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/06_eu_ki_verordnung | EU-KI-Verordnung und Artikel 4 | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/06_eu_ki_verordnung.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/07_schnellstart | Schnellstart in sieben Schritten | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/07_schnellstart.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/08_fahrplan | Fahrplan für die nächsten Monate | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/08_fahrplan.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/09_ausblick | Ausblick | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/09_ausblick.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/10_anhang | Anhang | Eine lesbare Einführung in KI-Reife: warum Datenfundament wichtiger ist als Tool-Auswahl, wie Teams ihren Aus… | content/books/ki-landschaft/10_anhang.md | catalog lastReviewed 2026-08-09 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/01_eisberg | Das Eisberg-Problem | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/01_eisberg.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/02_methodik | Methodik ohne Scheingenauigkeit | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/02_methodik.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/03_reifegrad_ueberblick | Evidenzbasierte Selbstprüfung | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/03_reifegrad_ueberblick.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/04_bundesland | Regionale Rahmenbedingungen | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/04_bundesland.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/05_branchen | Branchenmuster als Hypothesen | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/05_branchen.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/06_eu_ki_verordnung | EU-KI-Verordnung und Artikel 4 | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/06_eu_ki_verordnung.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/07_schnellstart | Schnellstart in sieben Schritten | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/07_schnellstart.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/08_fahrplan | Fahrplan für die nächsten Monate | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/08_fahrplan.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/09_ausblick | Ausblick | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/09_ausblick.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/10_anhang | Anhang | Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohn… | content/books/ki-landschaft/10_anhang.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
 
 ### Demo-Detailseiten (12)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/excel | Claude in Excel. | Analyst markiert einen Beispielbereich: Das Praxisbeispiel zeigt, wie Formelvorschläge, Pivot-Entwurf und For… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/word | Claude in Word. | Briefing eingeben: Das Praxisbeispiel zeigt einen strukturierten Entwurf mit anschließender Stil-, Quellen-,… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/outbound-workflow | Signale im CRM. | Pipeline nimmt fiktive Beispielkontakte, markiert belegte Signale und erstellt einen Nachrichtentwurf, der vo… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/agent-pipeline | Agent-Pipeline. | Scout recherchiert, Analyst synthetisiert, Kritiker red-teamt, Redakteur formuliert. Redaktion statt Generali… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/n8n-supply-chain | n8n Supply-Chain. | Ein Lieferverzug läuft als simulierte Prozesskette durch Bestand, Kundenentwurf, Eskalation und manuelle Frei… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/rag-vertragsassistent | Vertrags-Assistent. | Beispielklauseln werden per Keyword-Suche gefunden, zitiert und mit einer Unsicherheitsnotiz versehen. Das Pr… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/rechnung-zu-sap | Rechnung zu SAP. | Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten. | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/prompt-scanner | Prompt-Scanner. | Regeln markieren PII, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Treffer sind Hinwei… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/cost-drift-observability | Cost & Drift. | Seed-Szenarien zeigen Kosten, Fehler und Drift-Indikatoren. Die Werte sind Lernannahmen, keine gemessene Prod… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/fine-tune-playground | Fine-Tuning-Playground. | Dieselbe Frage, zwei Beispielantworten: Baseline und domänennahe Antwort. Das Praxisbeispiel zeigt auch, wann… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Welche Annahmen machen einen KI-Use-Case plausibel? Das Praxisbeispiel legt Formel und Unsicherheitsband offe… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
-| https://loehrning.ai/demos/llm-observability | LLM-Qualitätsmessung. | Wie misst man, ob ein LLM-System besser oder schlechter wird? Das Praxisbeispiel zeigt Eval-Metriken, Drift-E… | src/lib/demos.ts | canonical content date 2026-08-30 | Tim Löhr |
+| https://loehrning.ai/demos/excel | Claude in Excel. | Analyst markiert einen Beispielbereich: Das Praxisbeispiel zeigt, wie Formelvorschläge, Pivot-Entwurf und For… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/word | Claude in Word. | Briefing eingeben: Das Praxisbeispiel zeigt einen strukturierten Entwurf mit anschließender Stil-, Quellen-,… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/outbound-workflow | Signale im CRM. | Pipeline nimmt fiktive Beispielkontakte, markiert belegte Signale und erstellt einen Nachrichtentwurf, der vo… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/agent-pipeline | Agent-Pipeline. | Scout recherchiert, Analyst synthetisiert, Kritiker red-teamt, Redakteur formuliert. Redaktion statt Generali… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/n8n-supply-chain | n8n Supply-Chain. | Ein Lieferverzug läuft als simulierte Prozesskette durch Bestand, Kundenentwurf, Eskalation und manuelle Frei… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/rag-vertragsassistent | Vertrags-Assistent. | Beispielklauseln werden per Keyword-Suche gefunden, zitiert und mit einer Unsicherheitsnotiz versehen. Das Pr… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/rechnung-zu-sap | Rechnung zu SAP. | Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten. | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/prompt-scanner | Prompt-Scanner. | Regeln markieren PII, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Treffer sind Hinwei… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/cost-drift-observability | Cost & Drift. | Seed-Szenarien zeigen Kosten, Fehler und Drift-Indikatoren. Die Werte sind Lernannahmen, keine gemessene Prod… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/fine-tune-playground | Fine-Tuning-Playground. | Dieselbe Frage, zwei Beispielantworten: Baseline und domänennahe Antwort. Das Praxisbeispiel zeigt auch, wann… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Welche Annahmen machen einen KI-Use-Case plausibel? Das Praxisbeispiel legt Formel und Unsicherheitsband offe… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/demos/llm-observability | LLM-Qualitätsmessung. | Wie misst man, ob ein LLM-System besser oder schlechter wird? Das Praxisbeispiel zeigt Eval-Metriken, Drift-E… | src/lib/demos.ts | canonical content date 2026-09-05 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 

@@ -42,7 +42,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Science Fundamentals: interaktiver Kurs",
       description:
-        "Zwölf interaktive Kapitel zum vollständigen Data-Science-Zyklus: Exploration, Merkmale, Evaluation, Experimente, Kausalität und Produktionsbetrieb.",
+        "Zwölf interaktive Kapitel entlang des Data-Science-Zyklus: Exploration, Merkmale, Evaluation, Experimente, Kausalität, Produktionsbetrieb.",
     },
     reader: {
       navLabel: "Kapitelnavigation",
@@ -54,27 +54,27 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     },
     breadcrumbs: ["Start", "Kurse", "Data Science Fundamentals"],
     jsonLdDescription:
-      "Zwölf interaktive Kapitel zum vollständigen Data-Science-Zyklus, von Exploration und Feature Engineering bis zu Kausalität, Drift und Produktionsbetrieb.",
+      "Zwölf interaktive Kapitel entlang des Data-Science-Zyklus, von Exploration und Feature Engineering bis zu Kausalität, Drift und Produktionsbetrieb.",
     certificateMetadata: {
       title: "Teilnahmebestätigung: Data Science Fundamentals",
       description:
-        "Lokale Teilnahmebestätigung für den abgeschlossenen Kurs Data Science Fundamentals herunterladen.",
+        "Die lokal erzeugte Teilnahmebestätigung für den abgeschlossenen Kurs Data Science Fundamentals herunterladen.",
     },
     verificationMetadata: {
       title: "Teilnahmebestätigungsdaten lesen: Data Science Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Die Daten sind nicht servergeprüft und nicht kryptografisch signiert.",
+        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Science / Fehler",
       title: "Das Kapitel konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Der gespeicherte Lernstand wurde nicht verändert.",
+      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Dein gespeicherter Lernstand bleibt unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Kapitel nicht gefunden",
-      body: "Die angeforderte Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht enthält alle zwölf gültigen Kapitel.",
+      body: "Diese Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht listet alle zwölf gültigen Kapitel.",
       back: "Alle Kapitel anzeigen",
     },
   },
@@ -82,7 +82,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Science Fundamentals: interactive course",
       description:
-        "Twelve interactive chapters covering the complete data science loop: exploration, features, evaluation, experiments, causality, and production operations.",
+        "Twelve interactive chapters along the data science loop: exploration, features, evaluation, experiments, causality, and production operations.",
     },
     reader: {
       navLabel: "Chapter navigation",
@@ -96,7 +96,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     jsonLdDescription:
       "Twelve interactive chapters covering the complete data science loop, from exploration and feature engineering to causality, drift, and production operations.",
     certificateMetadata: {
-      title: "Certificate of completion: Data Science Fundamentals",
+      title: "Certificate of participation: Data Science Fundamentals",
       description:
         "Download the locally generated completion record for Data Science Fundamentals.",
     },
@@ -108,13 +108,13 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     error: {
       eyebrow: "Data Science / error",
       title: "The chapter could not load",
-      body: "The course view failed in this browser session. Stored learning progress was not changed.",
+      body: "The course view failed in this browser session. Your saved progress is unchanged.",
       retry: "Reload",
       back: "Back to course overview",
     },
     notFound: {
       title: "Chapter not found",
-      body: "The requested chapter ID does not belong to this course. The course overview lists all twelve valid chapters.",
+      body: "This chapter ID does not belong to this course. The overview lists all twelve valid chapters.",
       back: "View all chapters",
     },
   },

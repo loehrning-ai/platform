@@ -32,11 +32,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "No universal file count, line count, or duration defines a suitable Codex task. Scope by **cohesion and evidence** instead. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies that can be named before implementation;\n- has a diff that a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior; and\n- can be reverted without also removing unrelated work.\n\nSplit the task when parts can be implemented, verified, deployed, or rolled back independently. Keep coupled changes together when separating them would create an invalid intermediate state.",
+            "File counts, line counts and time limits are the wrong instrument. Scope by **cohesion and evidence** instead. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies that can be named before implementation;\n- has a diff that a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior; and\n- can be reverted without also removing unrelated work.\n\nSplit the task when parts can be implemented, verified, deployed, or rolled back independently. Keep coupled changes together when separating them would create an invalid intermediate state.",
         },
         {
           kind: "pull-quote",
-          text: "A planning ticket may describe an initiative. An implementation task should describe one coherent, reviewable change.",
+          text: "A planning ticket describes an initiative. An implementation task describes one coherent, reviewable change.",
         },
       ],
     },
@@ -48,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three decomposition patterns cover many broad changes. Choose the one that preserves valid intermediate states and clear ownership:",
+            "Three decomposition patterns cover many broad changes. Pick the one that keeps intermediate states valid and ownership clear.",
         },
         {
           kind: "card-grid",
@@ -80,7 +80,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A central rule is: **change only what the current task requires.** Record independent defects or cleanup opportunities without implementing them in the same diff.\n\nAmbiguous boundaries can mix a requested behavior with unrelated refactoring, dependency changes, or test rewrites. The resulting diff represents several decisions, so reviewers cannot accept, reject, or revert them independently.\n\nThis is *scope creep*. Detect it by comparing the changed files and behaviors with the task's goal, constraints, and exclusions. Do not infer scope from whether the additional code appears useful.",
+            "**Change only what the current task requires.** That is the rule. Record independent defects and cleanup opportunities without implementing them in the same diff.\n\nAmbiguous boundaries mix the requested behavior with unrelated refactoring, dependency changes and test rewrites. The diff then carries several decisions, and nobody can accept, reject or revert them separately.\n\nThat is *scope creep*. Catch it by comparing changed files and behaviors against the task's goal, constraints and exclusions. Usefulness of the extra code is not the test.",
         },
         {
           kind: "card-grid",
@@ -100,7 +100,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'State the boundary directly: *"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them."* This instruction makes extra work visible during review, but it does not replace a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```',
+            'Say the boundary out loud. *"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them."* That makes extra work visible in review without replacing a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```',
         },
       ],
     },
@@ -112,7 +112,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Words such as "also," "while there," and "as needed" often hide a second decision. Name that decision and decide whether it belongs in the same change.',
+            'The words "also," "while there," and "as needed" hide a second decision. Name it, then decide whether it belongs in this change.',
         },
       ],
     },
@@ -124,7 +124,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "This example combines schema, query, endpoint, audit, and migration work. The replay shows how failures become difficult to attribute when those concerns share one task.",
+            "Schema, query, endpoint, audit and migration work in one task. Watch how hard it becomes to attribute a failure.",
         },
       ],
     },

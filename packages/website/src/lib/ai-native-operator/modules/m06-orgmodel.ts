@@ -9,9 +9,9 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Design teams around accountable outcomes",
     subtitle:
-      "Set team shape from the work, service obligations, dependencies, skills, and risk rather than a universal size rule.",
+      "Set team shape from the work, service obligations, dependencies, skills, and risk. Not from a universal size rule.",
     objective:
-      "Set team shape from the work, service obligations, dependencies, skills, and risk rather than a universal size rule.",
+      "Set team shape from the work, service obligations, dependencies, skills, and risk. Not from a universal size rule.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Start with the operating boundary",
         readTimeMinutes: 7,
         content:
-          "Define the outcome a team owns, the users it serves, its service levels, dependencies, decision rights, and control duties. Then identify the workload and skills needed to meet that boundary. Clear ownership can reduce handoffs, but team size still depends on demand, coverage, complexity, and risk.",
+          "Team size is not a philosophy. Define the outcome a team owns, the users it serves, its service levels, dependencies, decision rights, and control duties. Then work out the workload and skills that boundary needs. Clear ownership cuts handoffs. Size still follows demand, coverage, complexity, and risk.",
       },
       {
         id: "s2",
         title: "Evaluate capacity options explicitly",
         readTimeMinutes: 7,
         content:
-          "A capacity request should show current workload, bottlenecks, service impact, control constraints, and options already assessed. Options may include process changes, scope changes, better tooling, automation, training, or additional people. The evidence supports a decision; it does not create a rule that every team must automate before hiring.",
+          "A capacity request shows the current workload, the bottlenecks, the service impact, the control constraints, and the options already assessed. Process changes, scope changes, better tooling, automation, training, more people. The evidence supports one decision. It does not create a rule that every team automates before it hires.",
       },
       {
         id: "s3",
         title: "Adjust the design from operating evidence",
         readTimeMinutes: 6,
         content:
-          "Larger or differently composed teams may be necessary for regulated work, specialist decisions, physical operations, incident coverage, accessibility, or sustained demand. Track workload, quality, incidents, queue age, and staff load after a change. Expand, split, or recombine the team when those signals show the boundary is not working.",
+          "Regulated work, specialist decisions, physical operations, incident coverage, accessibility, or sustained demand may need a larger or differently composed team. Track workload, quality, incidents, queue age, and staff load after a change. Expand, split, or recombine when those signals say the boundary is not working.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -75,14 +75,14 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Broad ownership needs defined limits",
         readTimeMinutes: 9,
         content:
-          "A generalist can coordinate work across several domains and use tools to retrieve context, draft artifacts, or perform bounded analysis. That can reduce handoffs, but a model does not create professional expertise or accountability. Define which decisions the generalist may make and which require specialist ownership or review.",
+          "A generalist can coordinate across several domains and use tools to retrieve context, draft artifacts, or run bounded analysis. That cuts handoffs. It does not manufacture professional expertise, and it does not manufacture accountability. Define which decisions the generalist may take, and which need specialist ownership or review.",
       },
       {
         id: "s2",
         title: "Set specialist checkpoints by risk",
         readTimeMinutes: 9,
         content:
-          "Specialists may own high-consequence domain decisions, review selected work, investigate novel cases, and convert recurring guidance into standards or evaluation criteria. Choose the engagement model from error cost, novelty, regulation, and reversibility. Monitor whether the checkpoint prevents harm without creating an avoidable queue.",
+          "Specialists own high-consequence domain decisions, review selected work, investigate novel cases, and turn recurring guidance into standards or evaluation criteria. Pick the engagement model from error cost, novelty, regulation, and reversibility. Then watch whether the checkpoint prevents harm without an avoidable queue.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -121,14 +121,14 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Map every approval to a purpose",
         readTimeMinutes: 7,
         content:
-          "For each approval, record the decision right, risk addressed, evidence required, and accountable role. Remove steps that repeat the same judgment without adding information or control. Keep approvals required by consequence, regulation, independent oversight, or separation of duties.",
+          "For each approval, record the decision right, the risk addressed, the evidence required, and the accountable role. Cut the steps that repeat a judgment without adding information or control. Keep the approvals that consequence, regulation, independent oversight, or separation of duties requires.",
       },
       {
         id: "s2",
         title: "Use decision briefs as untrusted aids",
         readTimeMinutes: 7,
         content:
-          "A model can assemble a brief containing source-linked facts, options, assumptions, risks, and open questions. Approvers must be able to inspect the sources and correct omissions. The brief does not decide how many approvers are required, and it does not transfer accountability from the humans who hold the decision rights.",
+          "A model can assemble a brief of source-linked facts, options, assumptions, risks, and open questions. Approvers must be able to open the sources and correct omissions. The brief decides nothing about how many approvers are needed, and it moves no accountability away from the people holding the decision rights.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -154,8 +154,8 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Module 6 knowledge check",
-    subtitle: "Check the organizational controls from this module.",
-    objective: "Check the organizational controls from this module.",
+    subtitle: "Two questions on capacity and specialist authority.",
+    objective: "Two questions on capacity and specialist authority.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
@@ -186,7 +186,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A capacity decision needs evidence about demand, service impact, bottlenecks, risk, and feasible options. Automation may be one option, but neither budget availability nor proof of prior automation is a sufficient rule for approving or rejecting people.",
+          "A capacity decision needs evidence on demand, service impact, bottlenecks, risk, and feasible options. Automation is one of them. Neither an available budget nor proof of prior automation is a sufficient rule for approving or rejecting people.",
       },
       {
         id: "ano-orgmodel-q2",
@@ -215,7 +215,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Specialists are most valuable where error cost, novelty, or regulation requires deep judgment. They may own the decision, review bounded work, handle novel cases, and make recurring guidance reusable. Their role follows the risk, not a universal advisor-only model.",
+          "Specialists earn their place where error cost, novelty, or regulation demands deep judgment. They may own the decision, review bounded work, handle novel cases, and make recurring guidance reusable. Their role follows the risk, not a universal advisor-only model.",
       },
     ],
     sections: [],

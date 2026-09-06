@@ -25,28 +25,28 @@ const lesson: ClaudeLesson = {
       title: "The loop",
       readTimeMinutes: 1,
       content:
-        "A single output cannot show whether a prompt is reliable. Run the prompt on representative inputs, label the failures, change one relevant variable, and compare the results against the same criteria.\n\nModel updates and sampling can also change outputs. Record the model, settings, prompt version, and test inputs when reproducibility matters.\n\n> Iterate against evidence, not one preferred response.",
+        "One good output tells you nothing about the next one. Run the prompt on representative inputs, label the failures, change one variable, and compare results against the same criteria.\n\nModel updates and sampling move outputs too. Record the model, settings, prompt version, and test inputs when reproducibility matters.\n\n> Iterate against evidence, not one response you liked.",
     },
     {
       id: "three-turn-loop",
       title: "The three-turn loop",
       readTimeMinutes: 2,
       content:
-        '- **Turn 1 · establish a baseline.** Run a reasonable prompt on a small test set. Record which requirements pass or fail.\n- **Turn 2 · correct one failure.** Name a testable change: "Remove the first paragraph" or "Start with one status sentence." Keep unrelated variables stable.\n- **Turn 3 · retain the tested version.** Store the complete prompt with its use case, model assumptions, and evaluation cases. Re-run the set after later edits or model changes.\n\nA model can draft a reusable prompt from an accepted output, but that reverse-engineered prompt is only a candidate. Review it and test it on inputs other than the example it came from.',
+        '- **Turn 1 · establish a baseline.** Run a reasonable prompt on a small test set. Record which requirements pass or fail.\n- **Turn 2 · correct one failure.** Name a testable change, such as "Remove the first paragraph" or "Start with one status sentence." Keep unrelated variables stable.\n- **Turn 3 · retain the tested version.** Store the complete prompt with its use case, model assumptions, and evaluation cases. Re-run the set after later edits or model changes.\n\nA model can draft a reusable prompt from an output you accepted. That reverse-engineered prompt is a candidate, nothing more. Review it and test it on inputs it has never seen.',
     },
     {
       id: "show-dont-tell",
       title: "Show, don't tell",
       readTimeMinutes: 2,
       content:
-        'Examples can make an ambiguous requirement observable. Instead of "use a professional tone," provide a short, approved reference and identify the properties to preserve. For structured work, include representative input-output pairs and edge cases.\n\nExamples can also cause overfitting or copy unwanted details. Remove confidential information, vary the examples, and evaluate on held-out cases.',
+        'An example makes an ambiguous requirement observable. Instead of "use a professional tone," supply a short approved reference and name the properties to preserve. For structured work, include representative input-output pairs and edge cases.\n\nExamples also overfit and drag unwanted details along. Strip confidential information, vary the examples, and evaluate on held-out cases.',
     },
     {
       id: "turn-2-vocabulary",
       title: "What to say in turn 2",
       readTimeMinutes: 2,
       content:
-        'Corrections work best when a reviewer can determine whether the output followed them.\n\n**Testable:** "Remove the first paragraph." · "Use the sentence length and terminology from this approved example." · "Start each bullet with a verb." · "Assume the reader knows X; omit its definition."\n\n**Not testable:** "Make it better." · "Less AI-sounding." · "Sharper." · "You know what I mean."',
+        'Write corrections a reviewer can check against the output.\n\n**Testable:** "Remove the first paragraph." · "Use the sentence length and terminology from this approved example." · "Start each bullet with a verb." · "Assume the reader knows X; omit its definition."\n\n**Not testable:** "Make it better." · "Less AI-sounding." · "Sharper." · "You know what I mean."',
     },
   ],
   widgets: [
@@ -59,7 +59,7 @@ const lesson: ClaudeLesson = {
         strong:
           "Cut the opening paragraph. Start with the status in one sentence, then three bullets in the voice of the attached example. No closing pleasantries.",
         takeaway:
-          "The stronger correction names an actionable, testable change and cites a concrete reference. Its result can be checked against the source facts and attached example.",
+          "The stronger correction names one actionable, testable change and points at a concrete reference. Its result can be checked against the source facts and attached example.",
       },
     },
     {
@@ -92,7 +92,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "The instruction identifies an exact edit that can be checked. The other options do not define acceptance criteria.",
+          "Only that instruction names an exact edit a reviewer can check. The other three are mood, not acceptance criteria.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

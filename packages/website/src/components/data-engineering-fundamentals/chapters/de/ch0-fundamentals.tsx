@@ -92,7 +92,7 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Grundlagen: <span class='accent'>Speicher, Formate und Engines.</span>"
-        hook="Abfragekosten beginnen bei Datenlayout, Metadaten und der Engine, die die Dateien liest. Dieses Kapitel verfolgt diese Schichten und vergleicht anschließend Ausführungsmodelle."
+        hook="Abfragekosten entstehen im Datenlayout, in den Metadaten und in der Engine, die die Dateien liest. Wer nur die Engine tauscht, zahlt für das Layout darunter weiter."
         meta={[
           { k: "Inhalt", v: '<span class="chip">Lakehouse</span><span class="chip">Zeilen- und Spaltenlayout</span><span class="chip">Parquet</span><span class="chip">Iceberg</span>' },
           { k: "Engines", v: "Presto · Spark · Trino · Snowflake" },
@@ -102,9 +102,9 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
 
       <section className="section">
         <SectionLabel n="0.1">Speicher und Rechenleistung entkoppeln</SectionLabel>
-        <h2 className="h2">Der grundlegende Wechsel hinter modernen Warehouses.</h2>
-        <p className="prose">Vor einem Jahrzehnt war ein Warehouse eine Appliance. Oracle, Teradata und Vertica besaßen sowohl die Festplatten als auch die Abfrage-Engine. Beides wurde gemeinsam gekauft und skaliert. Der Wechsel der Engine erforderte zuerst die Migration von Terabytes an Daten.</p>
-        <p className="prose">In einer <b>Lakehouse</b>-Architektur können Daten in einem gemeinsamen Object Store wie S3, GCS oder Azure Blob liegen, häufig als Parquet- oder ORC-Dateien. Engines mit Unterstützung für Format, Tabellenmetadaten und Zugriffsregeln können diese Dateien lesen. Rechenleistung und Speicher erhalten dadurch getrennte Skalierungsmechanismen.</p>
+        <h2 className="h2">Der Wechsel, der jedes moderne Warehouse erklärt.</h2>
+        <p className="prose">Vor einem Jahrzehnt war ein Warehouse eine Appliance. Oracle, Teradata und Vertica besaßen die Festplatten und die Abfrage-Engine gleich mit. Gekauft und skaliert wurde beides zusammen. Wer die Engine wechseln wollte, migrierte zuerst Terabytes an Daten.</p>
+        <p className="prose">In einer <b>Lakehouse</b>-Architektur liegen die Daten in einem gemeinsamen Object Store wie S3, GCS oder Azure Blob, häufig als Parquet- oder ORC-Dateien. Jede Engine, die Format, Tabellenmetadaten und Zugriffsregeln versteht, liest dieselben Dateien. Rechenleistung und Speicher skalieren ab da getrennt.</p>
         <LakehouseDiagramDe />
       </section>
 
@@ -124,9 +124,9 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
 
       <section className="section">
         <SectionLabel n="0.4">Zeilen- und Spaltenlayout im Vergleich</SectionLabel>
-        <h2 className="h2">Warum Analysen spaltenorientierte Daten benötigen.</h2>
-        <p className="prose">In einem Zeilenlayout liegen alle Felder eines Datensatzes zusammen. Das unterstützt Punktabfragen, während eine Analyse einer einzelnen Spalte ohne zusätzlichen Zugriffspfad auch nicht benötigte Felder liest.</p>
-        <p className="prose">Im Spaltenlayout liegen die Werte von <code>revenue</code> in Spaltenblöcken. Wenn Format und Konnektor Projection Pushdown unterstützen, liest die Engine die angeforderten Blöcke statt aller Felder. Die tatsächliche Einsparung hängt von Spaltenauswahl, Dateilayout und Abfrageplan ab.</p>
+        <h2 className="h2">Warum Analysen spaltenorientierte Daten brauchen.</h2>
+        <p className="prose">In einem Zeilenlayout liegen alle Felder eines Datensatzes beieinander. Für Punktabfragen ist das ideal. Eine Analyse über eine einzelne Spalte schleppt ohne zusätzlichen Zugriffspfad jedes andere Feld mit.</p>
+        <p className="prose">Im Spaltenlayout stehen die Werte von <code>revenue</code> in eigenen Blöcken. Unterstützen Format und Konnektor Projection Pushdown, holt die Engine nur diese Blöcke. Wie viel das spart, entscheiden Spaltenauswahl, Dateilayout und Abfrageplan.</p>
         <Scanner />
         <p className="prose" style={{ marginTop: 24 }}>Spaltenorientierte Daten können sich effizient komprimieren lassen, weil benachbarte Werte oft Typ und Verteilung teilen. Das Ergebnis hängt von Daten, Encoding, Codec und Row-Group-Größe ab und muss an repräsentativen Dateien gemessen werden.</p>
       </section>
@@ -149,7 +149,7 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
       <section className="section">
         <SectionLabel n="0.7">Das Ökosystem der Engines</SectionLabel>
         <h2 className="h2">Die Engine nach der Abfrage wählen.</h2>
-        <p className="prose">Interaktive Abfragen und lange Transformationen stellen unterschiedliche Anforderungen an Startzeit, Arbeitsspeicher, Spill, Wiederholungen und Parallelität. Diese Anforderungen müssen mit dem konfigurierten Verhalten der Engine verglichen werden.</p>
+        <p className="prose">Interaktive Abfragen und lange Transformationen verlangen völlig verschiedene Dinge von Startzeit, Arbeitsspeicher, Spill, Wiederholungen und Parallelität. Vergleich diese Anforderungen mit dem, was deine Engine tatsächlich konfiguriert tut.</p>
         <EngineCardsDe />
       </section>
 
@@ -164,12 +164,12 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
         title="Fehlmuster"
         items={[
           "<b>Einen Data Lake wie eine relationale Datenbank behandeln.</b> <code>UPDATE one_row WHERE id = ...</code> auf rohem Parquet schreibt eine vollständige Datei neu. Ein Tabellenformat wie Iceberg oder Delta für Änderungen auf Zeilenebene verwenden oder Aktualisierungen bündeln.",
-          "<b>Das Small-Files-Problem ignorieren.</b> Viele kleine Dateien können Aufwand für Auflistung, Footer-Zugriffe und Task-Planung erzeugen. Zielgrößen festlegen und anhand von Messwerten kompaktieren.",
+          "<b>Das Small-Files-Problem aussitzen.</b> Viele kleine Dateien kosten Auflistung, Footer-Zugriffe und Task-Planung. Leg Zielgrößen fest und kompaktiere nach Messwerten.",
           "<b>Rohes CSV als analytische Tabelle verwenden.</b> Typen validieren und bei selektiven analytischen Zugriffen eine typisierte spaltenorientierte Darstellung schreiben.",
           "<b><code>SELECT *</code> auf einer Faktentabelle mit 300 Spalten.</b> Damit entfällt der Vorteil des Spaltenlayouts. Nur benötigte Spalten abfragen.",
           "<b>Trino und PrestoDB gleichsetzen.</b> Trino, früher PrestoSQL, und PrestoDB trennten sich um 2020. Funktionsnamen, Konnektorverhalten und Optimierer-Vorgaben unterscheiden sich inzwischen deutlich. Vor der Übernahme von Dokumentation die tatsächlich betriebene Engine prüfen.",
           "<b>Den Ausführungsplan ignorieren.</b> Vor Änderungen an SQL oder Cluster-Einstellungen den Plan und die Laufzeitstatistiken der Engine prüfen.",
-          "<b>Eine Engine nur nach ihrem Ruf auswählen.</b> Start, Scan, Speicher, Spill, Wiederholung und Parallelität für die konkrete Last messen.",
+          "<b>Eine Engine nach ihrem Ruf wählen.</b> Miss Start, Scan, Speicher, Spill, Wiederholung und Parallelität an deiner konkreten Last.",
         ]}
       />
       <Takeaway
@@ -177,7 +177,7 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
         items={[
           "<b>Ein Warehouse besteht aus sieben Schichten.</b> Die Schicht bestimmt die Fehlerart. Ein ausgefallener Metastore ist nicht dasselbe wie eine langsame SSD-Schicht.",
           "<b>SQL → AST → logisch → physisch → Stages → Tasks.</b> Die von der Engine bereitgestellten Plan- und Laufzeitdetails zur Prüfung verwenden.",
-          "<b>Der Konnektor bestimmt den Zugriffspfad.</b> Gleiches SQL kann unterschiedliche Speicher-, Metadaten- und Cache-Schichten erreichen.",
+          "<b>Der Konnektor bestimmt den Zugriffspfad.</b> Dasselbe SQL landet je nach Konnektor auf anderen Speicher-, Metadaten- und Cache-Schichten.",
           "Spaltenformate machen Analysen zu Operationen, die <b>den Großteil des Datenträgers überspringen</b>. Tabellenformate ergänzen ACID und Time Travel.",
           "Vor der Optimierung den Plan lesen. Zuerst nach Partitions- und Indexspalten filtern. <code>SELECT *</code> vermeiden.",
         ]}

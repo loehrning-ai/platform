@@ -20,7 +20,7 @@ const lesson: ClaudeLesson = {
       title: "Why it works",
       readTimeMinutes: 2,
       content:
-        "A model can analyze a supplied diff for candidate defects, convention violations, and missing tests. It cannot inspect files, callers, runtime behavior, or repository rules that were not included or made available through tools.\n\nProvide the author's stated goal, relevant surrounding code, project conventions, and a severity definition. Require each finding to cite a file and line, explain the failure path, and distinguish evidence from uncertainty.\n\nModel behavior changes across versions. Keep a review eval set and rerun it when the model, prompt, or tool access changes.",
+        "What can a human reviewer see that a pasted diff cannot? Everything around it. A model analyzes the supplied diff for candidate defects, convention violations, and missing tests. It cannot inspect files, callers, runtime behavior, or repository rules it never received.\n\nGive the author's stated goal, surrounding code, project conventions, and a severity definition. Require every finding to cite file and line, explain the failure path, and separate evidence from guesswork.\n\nModel behavior shifts across versions. Keep a review eval set and rerun it when model, prompt, or tool access changes.",
     },
     {
       id: "review-template",
@@ -34,7 +34,7 @@ const lesson: ClaudeLesson = {
       title: "Three times it earns its keep",
       readTimeMinutes: 2,
       content:
-        "- **Before review.** Run a focused pass over your diff, then verify each finding and run the relevant checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths; compare it with code search and tests.\n- **Across the repository.** Use repository tools to enumerate callers first, then analyze the concrete results for compatibility risks.",
+        "- **Before review.** Run a focused pass over your diff, verify each finding, run the checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths; compare it with code search and tests.\n- **Across the repository.** Enumerate callers with repository tools first, then analyze the concrete results for compatibility risks.",
     },
   ],
   widgets: [

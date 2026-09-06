@@ -7,11 +7,11 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "Synchrone und asynchrone Abstimmung gezielt wählen",
+    title: "Wann eine Besprechung sich lohnt",
     subtitle:
-      "Routineberichte schriftlich erfassen und Besprechungen für Aufgaben reservieren, die direkten Austausch erfordern.",
+      "Routineberichte gehören ins Dokument, Besprechungen den Fragen, die echten Austausch brauchen.",
     objective:
-      "Routineberichte schriftlich erfassen und Besprechungen für Aufgaben reservieren, die direkten Austausch erfordern.",
+      "Routineberichte gehören ins Dokument, Besprechungen den Fragen, die echten Austausch brauchen.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Zuerst den Zweck einordnen",
         readTimeMinutes: 5,
         content:
-          "Ein Statusbericht, eine Entscheidung und ein sensibles Gespräch brauchen unterschiedliche Formen der Abstimmung. Routinedaten lassen sich meist asynchron dokumentieren. Strittige Entscheidungen, Störungen, Beziehungsthemen und unklare Sachverhalte erfordern häufig ein direktes Gespräch. Ordnen Sie zuerst den Zweck ein und wählen Sie danach das Format.",
+          "Montagmorgen, Statusrunde: jemand liest vor, was längst im Ticketsystem steht. Ein Statusbericht, eine Entscheidung und ein heikles Gespräch brauchen verschiedene Formen der Abstimmung. Routinedaten dokumentierst du schriftlich. Strittige Entscheidungen, Störungen, Beziehungsthemen und unklare Sachverhalte brauchen ein direktes Gespräch. Erst den Zweck einordnen, dann das Format wählen.",
       },
       {
         id: "s2",
         title: "Schriftliche Berichte nutzbar machen",
         readTimeMinutes: 5,
         content:
-          "Verwenden Sie ein einheitliches Format: aktueller Stand, Belege oder Quellenverweise, Hindernisse, zuständige Person, Zeitstempel und offene Entscheidungen. Ein Modell kann die Einträge gruppieren und zusammenfassen. Die Zusammenfassung dient jedoch nur zur Lenkung der Aufmerksamkeit und ist nicht die maßgebliche Dokumentation. Die zugrunde liegenden Einträge müssen prüfbar bleiben, weil Zusammenfassungen Einzelheiten auslassen oder verzerren können.",
+          "Ein Format für alle: aktueller Stand, Belege oder Quellenverweise, Hindernisse, zuständige Person, Zeitstempel, offene Entscheidungen. Ein Modell kann die Einträge gruppieren und zusammenfassen. Die Zusammenfassung lenkt Aufmerksamkeit, sie ist nicht die maßgebliche Dokumentation. Die Einträge darunter bleiben prüfbar, weil jede Zusammenfassung Einzelheiten auslässt oder verzerrt.",
       },
       {
         id: "s3",
         title: "Ergebnisse direkter Abstimmung dokumentieren",
         readTimeMinutes: 4,
         content:
-          "Wenn eine Besprechung begründet ist, legen Sie die Entscheidungsverantwortung und die benötigten Informationen vorher fest. Dokumentieren Sie anschließend Entscheidung, Begründung, abweichende Positionen, Maßnahmen und Zuständigkeiten. Planen Sie gesonderte Zeit für informellen Austausch ein, wenn das Team sie benötigt. Eine Statusbesprechung sollte diese Funktion nicht zufällig übernehmen.",
+          "Ist die Besprechung begründet, legst du vorher fest, wer die Entscheidungsverantwortung trägt und welche Informationen dafür vorliegen müssen. Danach hältst du Entscheidung, Begründung, abweichende Positionen, Maßnahmen und Zuständigkeiten fest. Braucht das Team informellen Austausch, plane ihn getrennt ein. Sonst übernimmt die Statusrunde diese Rolle nebenbei und taugt für keins von beidem.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +49,7 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Besprechungen prüfen",
           scenario:
-            "Listen Sie fünf wiederkehrende Besprechungen auf. Erfassen Sie jeweils Zweck, benötigte Informationen, erwartetes Ergebnis und Entscheidungsverantwortung. Kennzeichnen Sie, ob der Vorgang schriftlich, in einer direkten Besprechung oder in beiden Formen stattfinden soll.",
+            "Liste fünf wiederkehrende Besprechungen auf. Notiere je Zweck, benötigte Informationen, erwartetes Ergebnis und Entscheidungsverantwortung. Markiere, ob der Vorgang schriftlich läuft, in einer direkten Besprechung oder in beidem.",
           rows: 5,
         },
       },
@@ -61,11 +61,11 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Dokumente aus klaren Aufträgen entwerfen",
+    title: "Kein Entwurf ohne Auftrag",
     subtitle:
-      "Zielgruppe, Zweck, Beleggrundlage, Einschränkungen und Zuständigkeit für den Entwurf festlegen.",
+      "Zielgruppe, Zweck, Beleggrundlage, Einschränkungen und Zuständigkeit vor dem ersten Satz festlegen.",
     objective:
-      "Zielgruppe, Zweck, Beleggrundlage, Einschränkungen und Zuständigkeit für den Entwurf festlegen.",
+      "Zielgruppe, Zweck, Beleggrundlage, Einschränkungen und Zuständigkeit vor dem ersten Satz festlegen.",
     durationMinutes: 12,
     keyConcepts: [],
     quiz: [],
@@ -75,14 +75,14 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Den Auftrag vor dem Entwurf schreiben",
         readTimeMinutes: 6,
         content:
-          "Ein brauchbarer Auftrag nennt die Zielgruppe, die unterstützte Entscheidung oder das gewünschte Ergebnis, die maßgeblichen Quellen, geltende Einschränkungen und die verantwortliche Person. Er verringert Unklarheit für menschliche Verfasser ebenso wie für ein textgenerierendes Modell. Zugleich gibt er der Prüfung eine feste Grundlage.",
+          "Ein brauchbarer Auftrag nennt die Zielgruppe, die unterstützte Entscheidung oder das gewünschte Ergebnis, die maßgeblichen Quellen, geltende Einschränkungen und die verantwortliche Person. Das nimmt menschlichen Verfassern und einem Modell dieselbe Unklarheit ab. Und die Prüfung bekommt einen festen Bezugspunkt.",
       },
       {
         id: "s2",
-        title: "Erzeugten Text als ungeprüften Entwurf behandeln",
+        title: "Erzeugten Text als Entwurf behandeln",
         readTimeMinutes: 6,
         content:
-          "Erzeugter Text ist kein Beleg. Prüfen Sie Quellenangaben, Zahlen, Namen, Aussagen zu Richtlinien und sensible Behauptungen anhand der Originalquellen. Bewahren Sie Dokumentversionen auf und benennen Sie die menschliche Freigabeverantwortung. Das Werkzeug kann den Entwurf beschleunigen; die benannte Person bleibt für Richtigkeit, Kennzeichnung und Veröffentlichung verantwortlich.",
+          "Erzeugter Text ist kein Beleg. Prüfe Quellenangaben, Zahlen, Namen, Aussagen zu Richtlinien und heikle Behauptungen an den Originalquellen. Bewahre Dokumentversionen auf und benenne die Freigabeverantwortung. Das Werkzeug beschleunigt den Entwurf; für Richtigkeit, Kennzeichnung und Veröffentlichung steht die benannte Person gerade.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -95,7 +95,7 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "operations/2",
           cpId: "exercise",
           scenario:
-            "Wählen Sie ein Dokument, das diese Woche fällig ist. Schreiben Sie einen Auftrag mit Zielgruppe, gewünschtem Ergebnis, zugelassenen Quellen, Einschränkungen, Zuständigkeit und Prüfkriterien.",
+            "Nimm ein Dokument, das diese Woche fällig ist. Schreib den Auftrag dazu: Zielgruppe, gewünschtes Ergebnis, zugelassene Quellen, Einschränkungen, Zuständigkeit, Prüfkriterien.",
           rows: 4,
         },
       },
@@ -121,21 +121,21 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Den Sichtungsdatensatz festlegen",
         readTimeMinutes: 6,
         content:
-          "Erfassen Sie für jedes Ticket Kategorie, Schweregrad, vorgeschlagene Zuständigkeit, Konfidenz und zugehörige Belege. Begrenzen Sie automatische Aktionen auf dokumentierte Regeln. Bewahren Sie die ursprüngliche Anfrage auf und verknüpfen Sie verwandte Tickets oder betriebliche Zusammenhänge, damit die Weiterleitung nachvollziehbar bleibt.",
+          "Jedes Ticket bekommt Kategorie, Schweregrad, vorgeschlagene Zuständigkeit, Konfidenz und die zugehörigen Belege. Automatische Aktionen laufen nur nach dokumentierten Regeln. Die ursprüngliche Anfrage bleibt erhalten, verwandte Tickets und betriebliche Zusammenhänge werden verknüpft. Sonst lässt sich später nicht nachvollziehen, warum ein Ticket dort landete, wo es landete.",
       },
       {
         id: "s2",
         title: "Risikobasierte Prüfregeln festlegen",
         readTimeMinutes: 6,
         content:
-          "Eskalieren Sie unsichere, widersprüchliche, neuartige, folgenreiche oder nach Richtlinie prüfpflichtige Fälle. Schwellenwerte sollten sich an den Kosten einer falschen Weiterleitung orientieren und nicht an einer angenommenen Automatisierungsquote. Prüfen Sie zusätzlich eine risikobasierte Stichprobe anderer Fälle. Konfidenzwerte allein belegen weder Richtigkeit noch das Fehlen systematischer Fehler.",
+          "Eskaliere unsichere, widersprüchliche, neuartige, folgenreiche und nach Richtlinie prüfpflichtige Fälle. Die Schwellenwerte richten sich nach den Kosten einer falschen Weiterleitung, nicht nach einer Wunschquote für Automatisierung. Dazu prüfst du eine risikobasierte Stichprobe der übrigen Fälle. Ein hoher Konfidenzwert belegt weder Richtigkeit noch die Abwesenheit systematischer Fehler.",
       },
       {
         id: "s3",
         title: "Den Korrekturkreislauf schließen",
         readTimeMinutes: 5,
         content:
-          "Benennen Sie Zuständigkeiten für die Prüfung von Eskalationen, die Korrektur der Weiterleitung, die Pflege von Regeln oder Beispielen und die Kommunikation mit betroffenen Personen. Führen Sie ein Prüfprotokoll über Eingaben, Ausgaben, Übersteuerungen und Endergebnisse. Beobachten Sie Fehlermuster und setzen Sie automatische Aktionen aus, wenn die Kontrolle nicht mehr wie vorgesehen funktioniert.",
+          "Benenne, wer Eskalationen prüft, wer die Weiterleitung korrigiert, wer Regeln und Beispiele pflegt und wer mit betroffenen Personen spricht. Führe ein Prüfprotokoll über Eingaben, Ausgaben, Übersteuerungen und Endergebnisse. Beobachte die Fehlermuster. Und wenn die Kontrolle nicht mehr greift, setzt du die automatischen Aktionen aus.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -149,7 +149,7 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Ablauf der Ticket-Sichtung",
           scenario:
-            "Skizzieren Sie einen Ablauf zur Ticket-Sichtung. Legen Sie Eingaben, Klassifizierungsfelder, Belegquellen, automatische Aktionen, Eskalationsregeln, Prüfstichprobe und Korrekturverantwortung fest.",
+            "Skizziere einen Ablauf zur Ticket-Sichtung: Eingaben, Klassifizierungsfelder, Belegquellen, automatische Aktionen, Eskalationsregeln, Prüfstichprobe, Korrekturverantwortung.",
           rows: 5,
         },
       },
@@ -161,30 +161,30 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Wissensprüfung zu Modul 4",
-    subtitle: "Prüfen Sie die betrieblichen Kontrollen dieses Moduls.",
-    objective: "Prüfen Sie die betrieblichen Kontrollen dieses Moduls.",
+    title: "Modul 4, Wissensprüfung",
+    subtitle: "Zwei Fragen zu den Kontrollen dieses Moduls.",
+    objective: "Zwei Fragen zu den Kontrollen dieses Moduls.",
     durationMinutes: 7,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-operations-q1",
         questionText:
-          "Eine wöchentliche Statusbesprechung wiederholt überwiegend bereits schriftlich vorliegende Informationen. Welche Reaktion ist am besten?",
+          "Eine wöchentliche Statusrunde wiederholt überwiegend, was schon schriftlich vorliegt. Welche Reaktion ist die beste?",
         answerOptions: [
           {
             id: "a",
-            text: "Die Besprechung beibehalten und kürzer ansetzen.",
+            text: "Die Besprechung behalten und kürzer ansetzen.",
             isCorrect: false,
           },
           {
             id: "b",
-            text: "Routineberichte in eine strukturierte schriftliche Dokumentation verlagern, Zusammenfassungen zur Lenkung nutzen und direkte Zeit für Entscheidungen oder Unklarheiten reservieren.",
+            text: "Routineberichte in eine strukturierte schriftliche Dokumentation verlagern, Zusammenfassungen zur Lenkung nutzen, direkte Zeit für Entscheidungen und Unklarheiten reservieren.",
             isCorrect: true,
           },
           {
             id: "c",
-            text: "Das Format beibehalten und die Tagesordnung verlängern.",
+            text: "Das Format behalten und die Tagesordnung verlängern.",
             isCorrect: false,
           },
           {
@@ -194,12 +194,12 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Routinedaten gehören in eine prüfbare schriftliche Dokumentation. Eine Zusammenfassung kann Aufmerksamkeit lenken, ersetzt aber nicht das Ausgangsmaterial. Besprechungszeit bleibt angemessen, wenn eine strittige Entscheidung, eine Störung, ein sensibles Thema oder eine wesentliche Unklarheit geklärt werden muss.",
+          "Routinedaten gehören in eine prüfbare schriftliche Dokumentation. Eine Zusammenfassung lenkt Aufmerksamkeit, sie ersetzt das Ausgangsmaterial nicht. Besprechungszeit bleibt richtig, wenn eine strittige Entscheidung, eine Störung, ein heikles Thema oder eine echte Unklarheit im Raum steht.",
       },
       {
         id: "ano-operations-q2",
         questionText:
-          "Welche Tickets sollte ein kontrolliertes Sichtungssystem zur menschlichen Prüfung weitergeben?",
+          "Welche Tickets gibt ein kontrolliertes Sichtungssystem zur menschlichen Prüfung weiter?",
         answerOptions: [
           {
             id: "a",
@@ -223,7 +223,7 @@ export const OPERATIONS_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Prüfregeln sollten sich an Fehlerkosten und Richtlinienpflichten orientieren. Unsicherheit ist ein Signal, aber nicht das einzige. Eine risikobasierte Stichprobe kann systematische Fehler in Fällen aufdecken, die das System mit hoher Konfidenz eingestuft hat.",
+          "Prüfregeln folgen den Fehlerkosten und den Richtlinienpflichten. Unsicherheit ist ein Signal, aber nicht das einzige. Eine risikobasierte Stichprobe deckt systematische Fehler in genau den Fällen auf, die das System mit hoher Konfidenz eingestuft hat.",
       },
     ],
     sections: [],

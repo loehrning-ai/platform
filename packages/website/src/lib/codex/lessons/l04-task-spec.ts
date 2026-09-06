@@ -34,7 +34,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            '`AGENTS.md` describes durable project rules. The **task spec** describes the current change. A one-line request such as "add pagination to the users endpoint" leaves choices about behavior, constraints, verification, and adjacent code. Codex must infer any field you omit.\n\n### Describe the end state before the implementation path\n\nState the observable behavior, interfaces that must remain stable, checks that must pass, and areas that must not change. Step-by-step instructions are useful when a required sequence is itself part of the constraint, such as an ordered migration. Otherwise, outcome and boundary usually matter more than a guessed edit sequence.\n\nFor example, "GET /users supports ?page=N with 20 items per page while retaining the existing response schema" defines a reviewable result. The four fields below separate the decisions:',
+            '"Add pagination to the users endpoint." One line, and every part of it hides a decision. Behavior, constraints, verification, adjacent code. Codex infers whichever field you omit. `AGENTS.md` holds the durable project rules. The **task spec** holds this change.\n\n### Describe the end state before the implementation path\n\nState the observable behavior, the interfaces that must stay stable, the checks that must pass, the areas that must not change. Step-by-step instructions earn their place when the sequence is itself the constraint, an ordered migration for instance. Otherwise outcome and boundary beat a guessed edit sequence.\n\n"GET /users supports ?page=N with 20 items per page while retaining the existing response schema" is a reviewable result. Four fields separate the decisions below.',
         },
       ],
     },
@@ -90,12 +90,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "These specifications describe the same feature with different levels of precision. Compare the decisions a reviewer can verify in each version.",
+            "The same feature at different levels of precision. Count the decisions a reviewer can actually verify in each one.",
         },
         {
           kind: "prose",
           markdown:
-            '### Anatomy of the precise version\n\nEach field closes a distinct implementation or review question:\n\n- **"20 per page"** defines the default page size.\n- **"?page=N query parameter"** selects page-based offset pagination instead of a cursor contract.\n- **"Keep the existing response schema; add a pagination field"** defines the compatibility boundary.\n- **"make test must pass"** names an executable check; its log still needs inspection.\n- **"Do not change the filtering logic"** excludes an adjacent refactor.\n\nThe specification does not prescribe a guessed edit sequence. It defines observable behavior, interface constraints, evidence, and excluded scope. Add ordered implementation steps only when sequence is itself a requirement, such as a migration or rollout dependency.',
+            '### Anatomy of the precise version\n\nEach field closes a distinct implementation or review question:\n\n- **"20 per page"** defines the default page size.\n- **"?page=N query parameter"** selects page-based offset pagination instead of a cursor contract.\n- **"Keep the existing response schema; add a pagination field"** defines the compatibility boundary.\n- **"make test must pass"** names an executable check; its log still needs inspection.\n- **"Do not change the filtering logic"** excludes an adjacent refactor.\n\nNo guessed edit sequence anywhere in it. Observable behavior, interface constraints, evidence, excluded scope. Add ordered steps only when the sequence is itself a requirement, a migration or a rollout dependency.',
         },
       ],
     },

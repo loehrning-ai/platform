@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Any named service would be unsupported without telemetry. Supply measured data or a read-only metrics tool, then verify the answer against that source.",
+    "explanation": "Without telemetry, any named service is a guess. Supply measured data or a read-only metrics tool, then check the answer against it.",
     "version": 1,
     "active": true
   },
@@ -53,7 +53,7 @@
       },
       { "id": "d", "text": "Only if you paid extra.", "isCorrect": false }
     ],
-    "explanation": "Persistence is a product feature. Surfaces can supply Projects, CLAUDE.md, or auto-memory; inspect the current product controls instead of assuming cross-chat recall.",
+    "explanation": "Persistence is a product feature. Projects, CLAUDE.md, or auto-memory can supply it; inspect the active product controls instead of assuming cross-chat recall.",
     "version": 1,
     "active": true
   },
@@ -80,7 +80,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The model generates a response conditioned on the current input and context. Correctness still depends on evidence and verification.",
+    "explanation": "The model continues from the current input and context. Whether it is right still depends on evidence and verification.",
     "version": 1,
     "active": true
   },
@@ -196,7 +196,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Claude Code loads applicable CLAUDE.md instructions into the conversation context. Keep them concise and specific, do not store secrets there, and use technical controls for enforced policy.",
+    "explanation": "Claude Code loads applicable CLAUDE.md instructions into the conversation context. Keep them short and specific, keep secrets out, and use technical controls wherever policy has to hold.",
     "version": 1,
     "active": true
   },
@@ -242,7 +242,7 @@
       },
       { "id": "d", "text": "\"Try again.\"", "isCorrect": false }
     ],
-    "explanation": "The instruction identifies an exact edit that can be checked. The other options do not define acceptance criteria.",
+    "explanation": "Only that instruction names an exact edit a reviewer can check. The other three are mood, not acceptance criteria.",
     "version": 1,
     "active": true
   },
@@ -450,7 +450,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Controlled removal can isolate conflicts. Repeat the same trials because one variable model output does not prove causality.",
+    "explanation": "Controlled removal isolates the conflict. Repeat the same trials, because one variable model output proves nothing about cause.",
     "version": 1,
     "active": true
   },

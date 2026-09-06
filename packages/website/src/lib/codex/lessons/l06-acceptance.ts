@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Before implementation, state how the result will be evaluated. Use observable examples, commands, tests, and structural constraints. If no relevant check can be named, either the behavior is still ambiguous or the verification path is missing.\n\nAcceptance criteria guide implementation and review. Codex can run available checks and revise from their output, but a green result is not self-validating: the reviewer must confirm that the checks cover the requirement, ran in the intended environment, and were not weakened to obtain a pass.",
+            "How will you know it is done? Answer before implementation, with observable examples, commands, tests, structural constraints. Cannot name a single relevant check? Then the behavior is still ambiguous or the verification path is missing.\n\nAcceptance criteria steer implementation and review. Codex runs the available checks and revises from their output. Green is not self-validating. Someone still has to confirm that the checks cover the requirement, ran in the intended environment, and were not weakened to earn the pass.",
         },
         {
           kind: "pull-quote",
@@ -75,12 +75,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Tests can make acceptance criteria executable. Three patterns are useful:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make that file pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: "Given these requirements, write failing tests in tests/api/test_users.py. Do not implement." Review whether the tests capture the intent. Task B: "Make the reviewed tests pass."\n\n**Request both in one change.** Ask Codex to write tests for the new behavior, compare them with the goal, and then implement. Review the tests independently from the production code; generated tests can encode the same misunderstanding as the implementation.',
+            'Tests make acceptance criteria executable. Three patterns worth knowing.\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make that file pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: "Given these requirements, write failing tests in tests/api/test_users.py. Do not implement." Review whether the tests capture the intent. Task B: "Make the reviewed tests pass."\n\n**Request both in one change.** Ask Codex to write tests for the new behavior, compare them with the goal, then implement. Review the tests apart from the production code. Generated tests can encode the same misunderstanding as the implementation.',
         },
         {
           kind: "callout",
           title: "What tests contribute:",
-          body: "Tests make selected examples executable and repeatable. They clarify inputs, outputs, and edge cases, but they cover only what their assertions and environment exercise. Review test design separately from implementation.",
+          body: "Tests make selected examples executable and repeatable. They pin inputs, outputs and edge cases. They cover nothing their assertions and environment do not exercise. Review test design separately from implementation.",
         },
       ],
     },
@@ -92,7 +92,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "After the reported checks pass, verify that the criteria represent the intended behavior. A green suite can coexist with an incomplete requirement, an invalid test double, or an untested integration path. Review these four failure shapes before merge:",
+            "The checks pass. Now verify that the criteria represent the intended behavior. A green suite lives happily alongside an incomplete requirement, an invalid test double or an untested integration path. Four failure shapes to review before merge.",
         },
         {
           kind: "card-grid",
@@ -122,12 +122,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "When a foreseeable invalid implementation could pass the positive examples, add a *negative constraint*. It should describe a real performance, security, compatibility, or scope boundary rather than dictate an arbitrary internal detail. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
+            "When a foreseeable wrong implementation could still pass the positive examples, add a *negative constraint*. It names a real performance, security, compatibility or scope boundary. It does not dictate an arbitrary internal detail. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
         },
         {
           kind: "callout",
           title: "The evaluation heuristic:",
-          body: 'Ask: "Which incorrect implementations could still pass these checks?" Add the highest-risk missing example or constraint, then retain human review for behavior the automated checks do not cover.',
+          body: "Ask which incorrect implementations could still pass these checks. Add the highest-risk missing example or constraint. Keep human review for the behavior the automated checks do not cover.",
         },
       ],
     },
@@ -139,7 +139,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Compare criteria for executability, relevance, and coverage. Select the items that provide useful evidence for this rate-limit change.",
+            "Judge each criterion on executability, relevance and coverage. Keep the ones that give real evidence for this rate-limit change.",
         },
       ],
     },

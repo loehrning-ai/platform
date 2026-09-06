@@ -6,7 +6,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["What Codex Actually Is", "Was Codex tatsächlich ist"],
     [
       canonical.subtitle,
-      "Ein auftragsorientierter Coding-Agent, der ein Repository untersuchen, Dateien ändern, Prüfungen ausführen und Änderungen zur Kontrolle vorlegen kann.",
+      "Ein auftragsorientierter Coding-Agent. Untersucht ein Repository, ändert Dateien, führt Prüfungen aus und legt dir die Änderung zum Review vor.",
     ],
     ["Agent, not assistant.", "Agent statt Assistent."],
     ["Autonomous agent", "Autonomer Agent"],
@@ -19,95 +19,92 @@ export default localizeCodexLessonToGerman(canonical, {
       canonical.sections[0].blocks[0]?.kind === "prose"
         ? canonical.sections[0].blocks[0].markdown
         : "",
-      "Codex ist ein **auftragsorientierter Coding-Agent**. Er kann lokal in CLI oder IDE sowie in dedizierten Cloud-Umgebungen arbeiten. Oberfläche und Berechtigungsmodell unterscheiden sich, der Arbeitsablauf ist ähnlich:\n\n1. Codex erhält den Auftrag und den Kontext, der in der aktuellen Sitzung und im Repository verfügbar ist.\n2. Der Agent arbeitet innerhalb konfigurierter Grenzen für Dateisystem, Befehle, Freigaben und Netzwerk.\n3. Er untersucht den relevanten Code und legt eine Folge von Änderungen fest.\n4. Er ändert Dateien, führt verfügbare Prüfungen aus, liest deren Ausgabe und überarbeitet den Stand bei Bedarf.\n5. Er liefert eine Zusammenfassung sowie ein **Diff** oder einen Patch zur Prüfung. Ein Cloud-Auftrag kann bei entsprechender Konfiguration auch einen Pull Request öffnen.\n\nDas ist Delegation mit Prüfpunkten. Lokale Sitzungen können interaktiv sein; Cloud-Aufträge können im Hintergrund weiterlaufen. In beiden Fällen muss das Ergebnis gegen Auftrag und Repository-Nachweise geprüft werden.",
+      "Codex ist ein **auftragsorientierter Coding-Agent**. Er läuft lokal in CLI oder IDE oder in einer dedizierten Cloud-Umgebung. Bedienung und Berechtigungsmodell unterscheiden sich, der Ablauf dahinter ist überall derselbe:\n\n1. Codex bekommt den Auftrag plus den Kontext, den Sitzung und Repository gerade hergeben.\n2. Er arbeitet innerhalb der konfigurierten Grenzen für Dateisystem, Befehle, Freigaben und Netzwerk.\n3. Er liest den relevanten Code und legt eine Folge von Änderungen fest.\n4. Er ändert Dateien, führt die verfügbaren Prüfungen aus, liest deren Ausgabe und bessert nach.\n5. Er liefert eine Zusammenfassung und ein **Diff** oder einen Patch zur Prüfung. Ein Cloud-Auftrag kann, passend konfiguriert, auch einen Pull Request öffnen.\n\nDas ist Delegation mit Prüfpunkten. Lokal kannst du eingreifen, in der Cloud läuft der Auftrag im Hintergrund weiter. Gelesen wird das Ergebnis in beiden Fällen gegen Auftrag und Repository-Nachweise.",
     ],
     [
       canonical.sections[0].blocks[1]?.kind === "pull-quote"
         ? canonical.sections[0].blocks[1].text
         : "",
-      "Denke an einen abgegrenzten Entwicklungsauftrag mit Prüfung, nicht an Autovervollständigung am Cursor.",
+      "Ein abgegrenzter Entwicklungsauftrag mit Review, keine Autovervollständigung am Cursor.",
     ],
     [
       canonical.sections[0].blocks[2]?.kind === "prose"
         ? canonical.sections[0].blocks[2].markdown
         : "",
-      "Dieses Modell macht häufige Fehler leichter diagnostizierbar. Ein mehrdeutiger Auftrag erlaubt mehrere plausible Auslegungen. Fehlende Akzeptanzkriterien machen den Abschluss subjektiv. Nicht verfügbare Tests lassen Korrektheit ungeprüft. Die nächsten Lektionen machen diese Lücken zu ausdrücklichen Auftragseingaben.\n\nBehandle den aktiven Kontext als **Arbeitstafel** aus Auftrag, relevantem Code, Anweisungen, Befehlsausgaben und den vorherigen Beiträgen, welche die aktuelle Oberfläche bereitstellt. Gehe nicht davon aus, dass sämtlicher Kontext in eine neue Sitzung übernommen wird. Dauerhafte Repository-Regeln gehören in `AGENTS.md`, Prüfkommandos müssen ausführbar bleiben und auftragsspezifische Grenzen gehören in den aktuellen Auftrag.",
+      "Warum dieses Modell? Weil es Fehler adressierbar macht. Ein mehrdeutiger Auftrag lässt Codex eine Auslegung wählen. Ohne Akzeptanzkriterien wird fertig zur Geschmacksfrage, ohne laufende Tests bleibt Korrektheit eine Behauptung. Die nächsten Lektionen machen aus diesen Lücken ausdrückliche Auftragseingaben.\n\nDer aktive Kontext ist eine **Arbeitstafel** aus Auftrag, relevantem Code, Anweisungen, Befehlsausgaben und den bisherigen Beiträgen, soweit die aktuelle Oberfläche sie mitgibt. Rechne nicht damit, dass eine neue Sitzung diese Tafel übernimmt. Dauerhafte Repository-Regeln gehören deshalb in `AGENTS.md`, und Prüfkommandos müssen ausführbar bleiben. Auftragsspezifische Grenzen stehen im Auftrag selbst, jedes Mal.",
     ],
     [
-      "Codex can inspect, edit, and test within configured boundaries; the output is a reviewable change, not proof that the task is correct.",
-      "Codex kann innerhalb konfigurierter Grenzen untersuchen, ändern und testen. Das Ergebnis ist eine prüfbare Änderung, kein Beweis für die Korrektheit des Auftrags.",
+      "Codex inspects, edits, and tests inside configured boundaries. The output is a reviewable change, not proof the task is correct.",
+      "Codex untersucht, ändert und testet innerhalb konfigurierter Grenzen. Heraus kommt eine prüfbare Änderung, kein Beweis für die Korrektheit.",
     ],
     [
       "The three things in the contract",
       "Die drei Bestandteile des Auftragsrahmens",
     ],
     [
-      "A Codex run depends on three inputs. Naming them makes failures easier to diagnose.",
-      "Ein Codex-Lauf hängt von drei Eingaben ab. Ihre Benennung erleichtert die Fehlerdiagnose.",
+      "Three inputs decide a Codex run. Name them and the failures stop being mysterious.",
+      "Drei Eingaben bestimmen einen Codex-Lauf. Wer sie benennt, findet Fehler schneller.",
     ],
     ["01 · the task", "01 · die Aufgabe"],
-    ["What you're asking for", "Was erreicht werden soll"],
+    ["What you're asking for", "Was du verlangst"],
     [
-      "Goal, constraints, acceptance criteria, out-of-scope. This is the entire situational brief. If a requirement isn't here, it doesn't exist to Codex.",
-      "Ziel, Einschränkungen, Akzeptanzkriterien und ausgeschlossener Umfang bilden den Arbeitsauftrag. Eine nicht genannte Anforderung kann Codex nicht zuverlässig berücksichtigen.",
+      "Goal, constraints, acceptance criteria, out-of-scope. The whole brief. A requirement that is not written here does not exist to Codex.",
+      "Ziel, Einschränkungen, Akzeptanzkriterien, ausgeschlossener Umfang. Das ist die ganze Lagebeschreibung. Was hier nicht steht, existiert für Codex nicht.",
     ],
     ["02 · the repo", "02 · das Repository"],
     ["What the agent can see", "Was der Agent sehen kann"],
     [
       "The files available in the selected repository or working directory, including tests, AGENTS.md instructions, and documented check commands.",
-      "Die Dateien im ausgewählten Repository oder Arbeitsverzeichnis, darunter Tests, Anweisungen aus AGENTS.md und dokumentierte Prüfkommandos.",
+      "Die Dateien im gewählten Repository oder Arbeitsverzeichnis, samt Tests, AGENTS.md und dokumentierten Prüfkommandos.",
     ],
     ["03 · the sandbox", "03 · die Sandbox"],
-    ["What the agent can do", "Was der Agent ausführen kann"],
+    ["What the agent can do", "Was der Agent tun darf"],
     [
       "The configured filesystem, command, approval, and network permissions. Local and cloud environments can expose different capabilities.",
-      "Die konfigurierten Berechtigungen für Dateisystem, Befehle, Freigaben und Netzwerk. Lokale und Cloud-Umgebungen können unterschiedliche Fähigkeiten bereitstellen.",
+      "Die konfigurierten Berechtigungen für Dateisystem, Befehle, Freigaben und Netzwerk. Lokal und Cloud können hier unterschiedlich ausgestattet sein.",
     ],
     ["The contract rule.", "Die Grundregel."],
     [
-      "An ambiguous task permits scope drift. Missing repository guidance makes local conventions harder to infer. Unavailable checks leave changes unverified. Each technique in this course makes one of those inputs more explicit.",
-      "Ein mehrdeutiger Auftrag erlaubt Umfangsabweichungen. Fehlende Repository-Regeln erschweren das Ableiten lokaler Konventionen. Nicht verfügbare Prüfungen lassen Änderungen unverifiziert. Jede Technik im Kurs macht eine dieser Eingaben genauer.",
+      "An ambiguous task permits scope drift. Missing repository guidance leaves local conventions to guesswork. Unavailable checks leave changes unverified. Every technique in this course sharpens one of those three inputs.",
+      "Ein vager Auftrag lädt zum Ausufern ein, fehlende Repository-Regeln zwingen Codex zum Ableiten aus dem Code, und ohne laufende Prüfungen bleibt jede Änderung unverifiziert. Jede Technik im Kurs schärft eine dieser Eingaben.",
     ],
-    ["A real session, replayed", "Ein Lauf in gekürzter Wiedergabe"],
+    ["A real session, replayed", "Ein Lauf, gekürzt"],
     [
-      'Words are cheap. Here\'s a condensed replay of what Codex does when you give it the task *"add rate limiting to the /login endpoint"*. This is the real shape of a run: plan, probe, try, test, revise.',
-      'Die folgende gekürzte Wiedergabe zeigt einen Lauf für den Auftrag *"Rate Limiting zum Endpunkt /login hinzufügen"*: planen, untersuchen, ändern, testen und überarbeiten.',
+      'Words are cheap. Here is a condensed replay of one task, *"add rate limiting to the /login endpoint"*. Plan, probe, try, test, revise. That is the shape of a run.',
+      'Genug Theorie. So sieht ein gekürzter Lauf für den Auftrag *"Rate Limiting zum Endpunkt /login hinzufügen"* aus. Planen, untersuchen, ändern, testen, überarbeiten.',
     ],
     [
       "A run can include planning, inspection, edits, checks, revision, and a final diff.",
-      "Ein Lauf kann Planung, Untersuchung, Änderungen, Prüfungen, Überarbeitung und ein abschließendes Diff umfassen.",
+      "Planen, Untersuchen, Ändern, Prüfen, Nachbessern und ein abschließendes Diff können in einem einzigen Lauf stecken.",
     ],
+    ["Two questions on what you just read.", "Zwei Fragen zum Gelesenen."],
+    ["Three failure modes, named", "Drei Fehlermuster mit Namen"],
     [
-      "Two questions on what you just read.",
-      "Zwei Fragen zum gelesenen Abschnitt.",
-    ],
-    ["Three failure modes, named", "Drei benannte Fehlermuster"],
-    [
-      "These three failure modes are common and can be checked directly.",
-      "Diese drei Fehlermuster treten häufig auf und lassen sich direkt prüfen.",
+      "Three patterns keep coming back. Each one is checkable.",
+      "Drei Muster, die immer wiederkommen. Alle direkt prüfbar.",
     ],
     ["mode 01", "Muster 01"],
     ["Vague spec", "Unklare Spezifikation"],
     [
       "The agent interprets an ambiguous goal, picks the most plausible interpretation, and commits to it. PR arrives solving the wrong problem. Fix: tighten goal and acceptance criteria.",
-      "Der Agent legt ein mehrdeutiges Ziel selbst aus und arbeitet nach dieser Auslegung. Der Pull Request löst dann möglicherweise das falsche Problem. Korrektur: Ziel und Akzeptanzkriterien präzisieren.",
+      "Der Agent wählt die plausibelste Auslegung des mehrdeutigen Ziels und zieht sie durch. Der Pull Request löst das falsche Problem. Korrektur: Ziel und Akzeptanzkriterien nachschärfen.",
     ],
     ["mode 02", "Muster 02"],
     ["No conventions", "Fehlende Konventionen"],
     [
       "Without repository guidance, Codex must infer conventions from code and configuration. Fix: document non-obvious rules and exact check commands in the repository.",
-      "Ohne Repository-Regeln muss Codex Konventionen aus Code und Konfiguration ableiten. Korrektur: nicht offensichtliche Regeln und genaue Prüfkommandos im Repository dokumentieren.",
+      "Ohne Repository-Regeln leitet Codex Konventionen aus Code und Konfiguration ab. Korrektur: nicht offensichtliche Regeln und exakte Prüfkommandos ins Repository schreiben.",
     ],
     ["mode 03", "Muster 03"],
     ["Broken feedback loop", "Defekte Rückkopplung"],
     [
       "Required checks are unavailable or undocumented, so the returned result lacks verification evidence. Fix: make the relevant commands reproducible and inspect their output.",
-      "Erforderliche Prüfungen sind nicht verfügbar oder nicht dokumentiert; dem Ergebnis fehlt daher Verifikationsnachweis. Korrektur: relevante Befehle reproduzierbar machen und ihre Ausgabe prüfen.",
+      "Die nötigen Prüfungen fehlen oder sind nirgends dokumentiert, das Ergebnis kommt ohne Nachweis zurück. Korrektur: relevante Befehle reproduzierbar machen, Ausgabe lesen.",
     ],
     ["Self-check cards", "Karten zur Selbstprüfung"],
     [
-      "Here are three questions about Codex. Your answer doesn't matter, this is a self-check. Read each, say the answer out loud, then flip the card.",
-      "Beantworte die folgenden Fragen zunächst selbst und drehe danach die jeweilige Karte um.",
+      "Read the question, say your answer out loud, then flip the card. Self-check, not a grade.",
+      "Lies die Frage, antworte laut, dreh die Karte um. Selbstprüfung, keine Note.",
     ],
     [
       'Session replay: "add rate limiting to /login"',
@@ -155,15 +152,15 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       'You open a Codex task: "refactor our auth module." No other detail. The agent returns a PR that rewrites your user model and breaks three downstream services. What went wrong?',
-      'Du erstellst den Codex-Auftrag "Refaktorisiere unser Auth-Modul" ohne weitere Angaben. Der Agent verändert das Benutzermodell und beeinträchtigt drei nachgelagerte Dienste. Was war der Fehler?',
+      'Codex-Auftrag: "Refaktorisiere unser Auth-Modul." Sonst nichts. Zurück kommt ein Pull Request, der das Benutzermodell umschreibt und drei nachgelagerte Dienste lahmlegt. Was ist schiefgelaufen?',
     ],
     [
       "Codex has a bug and shouldn't be used for auth.",
-      "Codex hat einen Fehler und darf nicht für Authentifizierung eingesetzt werden.",
+      "Codex hat einen Bug und gehört nicht an Auth-Code.",
     ],
     [
       'The task was ambiguous, "refactor auth" spans a huge scope and the agent picked an aggressive interpretation.',
-      'Die Aufgabe war mehrdeutig. "Auth refaktorieren" umfasst einen großen Bereich, den der Agent weit ausgelegt hat.',
+      'Der Auftrag war mehrdeutig. "Auth refaktorieren" deckt einen riesigen Bereich ab, und der Agent hat die aggressive Auslegung gewählt.',
     ],
     [
       "The sandbox didn't have the downstream services available.",
@@ -171,42 +168,42 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "You needed to give it write access to prod.",
-      "Dem Agenten fehlte Schreibzugriff auf die Produktionsumgebung.",
+      "Du hättest ihm Schreibzugriff auf Prod geben müssen.",
     ],
     [
       'The request does not define the intended boundary between the auth module and the user model. Narrow it: "Extract token validation from api/auth.py into a standalone module. Keep the public interface unchanged. Do not modify User or Session."',
-      'Der Auftrag definiert die beabsichtigte Grenze zwischen Auth-Modul und Benutzermodell nicht. Präzisierung: "Extrahiere die Token-Validierung aus api/auth.py in ein eigenständiges Modul. Die öffentliche Schnittstelle bleibt unverändert. User und Session nicht ändern."',
+      'Der Auftrag sagt nicht, wo Auth-Modul aufhört und Benutzermodell anfängt. Enger: "Extrahiere die Token-Validierung aus api/auth.py in ein eigenständiges Modul. Die öffentliche Schnittstelle bleibt unverändert. User und Session nicht ändern."',
     ],
     [
       "What context should you assume will be available in a new Codex session?",
-      "Welchen Kontext solltest du in einer neuen Codex-Sitzung als verfügbar voraussetzen?",
+      "Mit welchem Kontext darfst du in einer neuen Codex-Sitzung rechnen?",
     ],
     [
       "The complete history of every earlier session on that repository.",
-      "Den vollständigen Verlauf aller früheren Sitzungen zu diesem Repository.",
+      "Mit dem vollständigen Verlauf aller früheren Sitzungen zu diesem Repository.",
     ],
     [
       "Only context the current surface loads or you provide; keep durable project rules in versioned instructions and configuration.",
-      "Nur den Kontext, den die aktuelle Oberfläche lädt oder den du bereitstellst. Dauerhafte Projektregeln gehören in versionierte Anweisungen und Konfiguration.",
+      "Nur mit dem, was die aktuelle Oberfläche lädt oder du selbst mitgibst. Dauerhafte Projektregeln gehören in versionierte Anweisungen und Konfiguration.",
     ],
     [
       "Only the most recent pull-request description.",
-      "Nur die Beschreibung des letzten Pull Requests.",
+      "Nur mit der Beschreibung des letzten Pull Requests.",
     ],
     [
       "All local terminal output from previous runs.",
-      "Sämtliche lokalen Terminalausgaben früherer Läufe.",
+      "Mit sämtlichen lokalen Terminalausgaben früherer Läufe.",
     ],
     [
       "Session history and environment behavior vary by Codex surface and configuration. Versioned instructions, tests, and setup files are the reliable place for project rules; task-specific constraints still belong in the current request.",
-      "Sitzungsverlauf und Umgebungsverhalten unterscheiden sich je nach Codex-Oberfläche und Konfiguration. Versionierte Anweisungen, Tests und Einrichtungsdateien sind der verlässliche Ort für Projektregeln. Auftragsspezifische Grenzen gehören weiterhin in den aktuellen Auftrag.",
+      "Was eine Sitzung an Verlauf mitbekommt, hängt von Oberfläche und Konfiguration ab. Verlässlich sind versionierte Anweisungen, Tests und Setup-Dateien. Auftragsspezifische Grenzen schreibst du jedes Mal in den Auftrag.",
     ],
     ["One exercise before you move on", "Eine Übung vor der nächsten Lektion"],
     ["Mental model", "Mentales Modell"],
     ["What is Codex, in one sentence?", "Was ist Codex in einem Satz?"],
     [
       "A task-oriented coding agent that can inspect and change a repository, run available checks, and return a diff or pull request for review.",
-      "Ein auftragsorientierter Coding-Agent, der ein Repository untersuchen und ändern, verfügbare Prüfungen ausführen und ein Diff oder einen Pull Request zur Kontrolle liefern kann.",
+      "Ein auftragsorientierter Coding-Agent, der ein Repository untersucht und ändert, die verfügbaren Prüfungen ausführt und ein Diff oder einen Pull Request zum Review liefert.",
     ],
     ["Contract", "Auftragsrahmen"],
     [
@@ -215,43 +212,43 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "The task, the repository context available to the session, and the environment permissions and tools.",
-      "Der Auftrag, der für die Sitzung verfügbare Repository-Kontext sowie die Berechtigungen und Werkzeuge der Umgebung.",
+      "Der Auftrag, der Repository-Kontext, den die Sitzung sieht, und die Berechtigungen und Werkzeuge der Umgebung.",
     ],
     ["Failure modes", "Fehlermuster"],
     [
       "Name the three classic ways agentic coding runs fail.",
-      "Nenne drei typische Ursachen für gescheiterte agentische Entwicklungsaufträge.",
+      "Nenne die drei klassischen Arten, auf die agentische Coding-Läufe scheitern.",
     ],
     [
       "Vague spec (ambiguous goal), no conventions (no AGENTS.md / CLAUDE.md), and broken feedback loop (tests don't run). Each maps to one part of the contract.",
-      "Unklare Spezifikation, fehlende Konventionen und eine defekte Rückkopplung durch nicht ausführbare Tests. Jede Ursache betrifft einen Bestandteil des Auftragsrahmens.",
+      "Unklare Spezifikation, fehlende Konventionen, defekte Rückkopplung durch Tests, die nicht laufen. Jedes Muster trifft einen Bestandteil des Auftragsrahmens.",
     ],
     ["Persistence", "Dauerhafter Kontext"],
     [
       'How does an agentic coding tool "remember" things between runs?',
-      "Wie bleiben Informationen zwischen getrennten Agentenläufen verfügbar?",
+      'Wie "erinnert" sich ein Coding-Agent zwischen zwei Läufen an etwas?',
     ],
     [
       "Do not assume prior context transfers. Store durable rules in versioned instructions, tests, documentation, and environment configuration; restate task-specific constraints.",
-      "Gehe nicht davon aus, dass vorheriger Kontext übertragen wird. Speichere dauerhafte Regeln in versionierten Anweisungen, Tests, Dokumentation und Umgebungskonfiguration; wiederhole auftragsspezifische Grenzen.",
+      "Verlass dich nicht darauf. Dauerhafte Regeln gehören in versionierte Anweisungen, Tests, Dokumentation und Umgebungskonfiguration; auftragsspezifische Grenzen wiederholst du im Auftrag.",
     ],
     ["The shift", "Der Wechsel"],
     [
       "How is an autonomous coding agent different from autocomplete tools like Copilot?",
-      "Wie unterscheidet sich ein autonomer Entwicklungsagent von Autovervollständigung?",
+      "Was unterscheidet einen autonomen Coding-Agenten von Autovervollständigung wie Copilot?",
     ],
     [
       "Autocomplete proposes code at the cursor. A coding agent can inspect multiple files, run tools, and carry a bounded task through to a reviewable diff; some agent surfaces are interactive and others run in the background.",
-      "Autovervollständigung schlägt Code am Cursor vor. Ein Coding-Agent kann mehrere Dateien untersuchen, Werkzeuge ausführen und einen abgegrenzten Auftrag bis zu einem prüfbaren Diff bearbeiten. Manche Agentenoberflächen sind interaktiv, andere laufen im Hintergrund.",
+      "Autovervollständigung schlägt Code am Cursor vor. Ein Coding-Agent liest mehrere Dateien, führt Werkzeuge aus und trägt einen abgegrenzten Auftrag bis zum prüfbaren Diff. Manche Oberflächen sind interaktiv, andere laufen im Hintergrund.",
     ],
     ["The blackboard", "Die Tafel"],
     [
       "What mental model helps explain why context matters so much in agentic coding?",
-      "Welches Modell erklärt die Bedeutung des Kontexts bei agentischer Entwicklung?",
+      "Welches Bild erklärt, warum Kontext bei agentischer Entwicklung so viel zählt?",
     ],
     [
       "Treat active context as a workboard assembled from the current request, repository, instructions, tool results, and available conversation history. Put durable rules in versioned files.",
-      "Behandle den aktiven Kontext als Arbeitstafel aus aktuellem Auftrag, Repository, Anweisungen, Werkzeugergebnissen und verfügbarem Gesprächsverlauf. Dauerhafte Regeln gehören in versionierte Dateien.",
+      "Die Arbeitstafel, auf der nur steht, was aktueller Auftrag, Repository, Anweisungen, Werkzeugergebnisse und verfügbarer Gesprächsverlauf hergeben. Dauerhafte Regeln gehören in versionierte Dateien.",
     ],
   ],
   preserve: [

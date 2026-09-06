@@ -329,7 +329,8 @@ describe("<WorkshopQuizPage>", () => {
     expect(screen.getByText("1/1 correct")).toBeInTheDocument();
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Completion",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation".
+        name: "Download Certificate of Participation",
       }),
     ).toBeInTheDocument();
     expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 1, true);
@@ -355,7 +356,8 @@ describe("<WorkshopQuizPage>", () => {
     expect(screen.queryByText("100%")).not.toBeInTheDocument();
     expect(
       screen.queryByRole("link", {
-        name: "Download Certificate of Completion",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation".
+        name: "Download Certificate of Participation",
       }),
     ).not.toBeInTheDocument();
 
@@ -364,7 +366,7 @@ describe("<WorkshopQuizPage>", () => {
     expect(await screen.findByText("100%")).toBeInTheDocument();
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Completion",
+        name: "Download Certificate of Participation",
       }),
     ).toBeInTheDocument();
   });

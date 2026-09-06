@@ -28,7 +28,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Apply the repository's normal review standard to Codex output. Do not lower the bar because the diff is well formatted, includes tests, or reports successful commands. Those properties make review easier; they do not establish correctness.\n\nStart from the requested behavior and trust boundaries. Then inspect the complete repository diff, including staged, unstaged, untracked, generated, configuration, and dependency changes. Read test code and command logs to determine what was actually exercised.\n\nUse a repeatable checklist so the review covers scope, behavior, failure handling, security, operations, and rollback rather than relying on surface plausibility.",
+            "Same review standard as for any other pull request. A tidy diff, tests included, green command logs. None of that lowers the bar. Those properties make review easier and establish nothing about correctness.\n\nStart from the requested behavior and trust boundaries. Then inspect the complete repository diff, including staged, unstaged, untracked, generated, configuration, and dependency changes. Read test code and command logs to determine what was actually exercised.\n\nWork from a repeatable checklist. Scope, behavior, failure handling, security, operations, rollback. Surface plausibility is not a review.",
         },
         {
           kind: "pull-quote",
@@ -44,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Use these six checks as a baseline and add domain-specific review for the affected system. Stop early when the task or scope is wrong; later checks cannot repair a mismatched change.",
+            "Six checks as a baseline, plus whatever the affected system demands on top. Stop early when the task or scope is wrong. No later check repairs a mismatched change.",
         },
         {
           kind: "card-grid",
@@ -91,7 +91,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'This example asks for a rate limiter on `/login`, but the test replaces the limiter decision with a mock. Identify which behavior the test actually covers.\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch("api.auth.limiter.is_allowed")\n    mock_limiter.return_value = False\n\n    response = client.post("/login", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nThis test verifies that the endpoint maps a denied limiter result to status 429. It does **not** verify counting, the threshold, key selection, storage, or reset behavior. Keep it if that mapping matters, but add a test through the real limiter boundary.\n\n```\n# exercises the configured limiter behavior\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post("/login", json={...})\n        assert response.status_code == 401  # bad credentials, request allowed\n\n    response = client.post("/login", json={...})\n    assert response.status_code == 429  # request blocked\n```',
+            'The task asked for a rate limiter on `/login`. The test mocks the limiter decision away. Work out what it actually covers.\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch("api.auth.limiter.is_allowed")\n    mock_limiter.return_value = False\n\n    response = client.post("/login", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nIt verifies one thing. The endpoint maps a denied limiter result to status 429. It does **not** verify counting, the threshold, key selection, storage or reset behavior. Keep it if that mapping matters, and add a test through the real limiter boundary.\n\n```\n# exercises the configured limiter behavior\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post("/login", json={...})\n        assert response.status_code == 401  # bad credentials, request allowed\n\n    response = client.post("/login", json={...})\n    assert response.status_code == 429  # request blocked\n```',
         },
       ],
     },
@@ -157,7 +157,7 @@ const lesson: CodexLesson = {
           // regex scans the raw .ts source for and would otherwise flag as
           // a leaked address.
           markdown:
-            'This before-and-after shows why functional output is insufficient. The request was "add a `/debug/user` endpoint," but it omitted authorization, input handling, and response-field constraints.\n\n```\n# insecure version\n\n' +
+            'Working output is not the same as safe output. The request said "add a `/debug/user` endpoint" and said nothing about authorization, input handling or response fields.\n\n```\n# insecure version\n\n' +
             '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version, same feature, secure\n\n' +
             '@app.route("/debug/user")\n' +
             '@require_admin                         # explicit authorization\ndef debug_user():\n    try:\n        user_id = int(request.args["id"])\n    except (KeyError, ValueError):\n        return jsonify({"error": "invalid id"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({"error": "not found"}), 404\n    return jsonify(user.to_safe_dict())  # explicit field allowlist\n```',

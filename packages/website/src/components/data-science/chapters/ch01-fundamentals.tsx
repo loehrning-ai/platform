@@ -18,7 +18,7 @@ export default function Ch01Fundamentals() {
       <Hero
         eyebrow="Chapter 01 · Fundamentals"
         title='The data scientist <em>turns noise</em> <span class="accent">into decisions.</span>'
-        hook="Before any model, any SQL, any dashboard, there are three ideas. <strong>Sample vs population.</strong> <strong>Signal vs noise.</strong> <strong>Correlation vs causation.</strong> Get these and half the field clicks into place."
+        hook="Before any model, any SQL query, any dashboard, three distinctions come first. <strong>Sample vs population.</strong> <strong>Signal vs noise.</strong> <strong>Correlation vs causation.</strong> Get those three and the rest falls into place."
         meta={[
           { k: "Read", v: "7 min" },
           { k: "Focus", v: "CLT · sampling · the DS loop" },
@@ -29,31 +29,30 @@ export default function Ch01Fundamentals() {
       <section className="section">
         <SectionLabel n="01.1">Sample vs population</SectionLabel>
         <h2 className="h2">
-          A sample is evidence about a population, not the population itself.
+          A sample is evidence about a population. It is not the population.
         </h2>
         <p className="prose">
-          Consider a hypothetical service with <strong>44 million users</strong>{" "}
-          and an A/B test containing <strong>180,000</strong> eligible
-          observations. A reported 2.3% retention difference estimates a
-          population quantity from that sample. Its meaning depends on
-          assignment, missing data, measurement, sampling, and statistical
-          uncertainty.
+          A hypothetical service with <strong>44 million users</strong>, and
+          inside it an A/B test with <strong>180,000</strong> eligible
+          observations. The reported 2.3% retention difference estimates a
+          quantity of the population. What it means depends on assignment,
+          missing data, measurement, sampling, and uncertainty.
         </p>
         <p className="prose">
-          Data science often works from <code>samples</code> while making claims
-          about <code>populations</code> or future cases. Confidence intervals,
-          tests, validation, and experimental design quantify different parts of
-          that uncertainty; none repairs a biased sample or an invalid
+          Data science computes on <code>samples</code> and talks about{" "}
+          <code>populations</code> or future cases. Confidence intervals, tests,
+          validation, and experimental design quantify different parts of that
+          uncertainty. None of them repairs a biased sample or an invalid
           measurement.
         </p>
         <GaltonSim />
         <p className="prose" style={{ marginTop: 22 }}>
-          Move <code>n</code> from 2 to 100. In this independent,
-          finite-variance generator, the standard error of the mean scales with{" "}
-          <code>1/√n</code> and the sampling distribution approaches a normal
-          shape as n grows. The central limit theorem has conditions; heavy
-          tails, dependence, small samples, and changing populations can make
-          the approximation poor.
+          Push <code>n</code> from 2 to 100. In this independent,
+          finite-variance generator the standard error of the mean scales with{" "}
+          <code>1/√n</code>, and the sampling distribution approaches a normal
+          shape as n grows. The central limit theorem has conditions.
+          Dependence, heavy tails, small samples, and shifting populations
+          degrade the approximation.
         </p>
       </section>
 
@@ -63,10 +62,10 @@ export default function Ch01Fundamentals() {
           Six recurring stages. <em>The order depends on the problem.</em>
         </h2>
         <p className="prose">
-          A useful working loop is
+          The working loop reads
           <strong> Data → Explore → Clean → Feature → Model → Evaluate</strong>,
-          then back around. Each chapter covers one stage, plus the meta-skills
-          on top, experimentation, causal reasoning, deployment.
+          then starts over. Experiments, causal reasoning, and operations come
+          later.
         </p>
         <div className="loop-mini">
           {["Data", "Explore", "Clean", "Feature", "Model", "Evaluate"].map(
@@ -82,18 +81,18 @@ export default function Ch01Fundamentals() {
         </div>
         <AntiPatterns
           items={[
-            "<b>Fitting before looking.</b> Running <code>model.fit()</code> on a dataset you haven't <em>plotted</em> is how you ship a model that learned the index column.",
+            "<b>Fitting before looking.</b> Run <code>model.fit()</code> on a dataset you never <em>plotted</em> and you ship a model that learned the index column.",
             "<b>Optimizing a number nobody asked for.</b> Great accuracy on the wrong metric is worse than decent accuracy on the right one.",
-            '<b>Confusing correlation with causation.</b> "Users who see feature X retain better" does not mean feature X causes retention. It may just mean engaged users see X.',
+            '<b>Confusing correlation with causation.</b> "Users who see feature X retain better" does not mean X causes retention.',
           ]}
         />
       </section>
 
       <Takeaway
         items={[
-          "<b>State the target population.</b> Report how sampling, assignment, missingness, and measurement limit the estimate.",
-          "<b>The CLT has conditions.</b> For many independent finite-variance settings, sample means become approximately normal as n grows; verify whether that approximation fits.",
-          "<b>Use the loop as a control system.</b> Explore, validate, and monitor at the points where new data or transformations can invalidate prior evidence.",
+          "<b>Name the target population.</b> And how sampling, assignment, missingness, and measurement limit the estimate.",
+          "<b>The CLT has conditions.</b> In many independent, finite-variance settings sample means become approximately normal as n grows. Check that the approximation fits.",
+          "<b>Use the loop as a control system.</b> Explore, validate, and monitor where new data or transformations can invalidate old evidence.",
         ]}
       />
     </>

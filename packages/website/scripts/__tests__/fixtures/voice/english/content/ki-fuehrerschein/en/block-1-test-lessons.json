@@ -1,0 +1,63 @@
+{
+  "blockId": "block_fixture",
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "Build the inventory",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Openers",
+          "content": "In today's office, AI is everywhere. In an increasingly connected workplace, the inventory matters. In this lesson you will learn how an inventory grows. Whether you are a manager or a clerk, the list is the same.\n\nLet's dive in. Let's explore the inbox first."
+        },
+        {
+          "id": "s2",
+          "title": "Filler",
+          "content": "We delve into every tool. A robust filter helps, and a robust list helps more. A comprehensive, holistic, seamless, cutting-edge, best-in-class inventory is a game-changer. The tool landscape shifts, and the vendor landscape shifts faster."
+        },
+        {
+          "id": "s3",
+          "title": "Hedges",
+          "content": "It is important to note that inventories change. It's worth noting that versions change. It should be noted that vendors rename products."
+        },
+        {
+          "id": "s4",
+          "title": "Transitions",
+          "content": "Furthermore, spreadsheets count. Moreover, chat tools count. As mentioned above, the spam filter counts, and as you already know, translation counts. To sum up, everything counts."
+        },
+        {
+          "id": "s5",
+          "title": "Claims and counters",
+          "content": "Experts agree that a disruptive tool changes the office. Teams leverage the inventory to empower staff and unlock the potential of synergy. Imagine a mailbox that sorts itself.\n\nThe inventory is not only a list but also a tool, and not only a tool but also a ritual. It serves both managers and clerks, both offices and workshops, both today and tomorrow. A certificate is not a certificate of participation."
+        },
+        {
+          "id": "s6",
+          "title": "Structure",
+          "content": "First the filter counts. Second the mail counts. Third the chat counts. Fourth the sheet counts. Fifth the translation counts. Sixth the camera counts.\n\n- Filter\n- Mail\n- Chat\n\n- Sheet\n- Translation\n- Camera\n\n- Map\n- Photo\n- Dictation\n\nIn conclusion, everything counts and the inventory grows."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "q1",
+          "questionText": "What belongs in the inventory?",
+          "answerOptions": [
+            { "id": "a", "text": "Furthermore, nothing counts.", "isCorrect": false },
+            { "id": "b", "text": "Every function counts.", "isCorrect": true }
+          ],
+          "explanation": "The inventory records every function, not just product names."
+        }
+      ]
+    },
+    {
+      "id": "lesson-2",
+      "title": "Maintain the inventory",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Maintenance",
+          "content": "Imagine the list is done. Then maintenance begins."
+        }
+      ]
+    }
+  ]
+}

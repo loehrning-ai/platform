@@ -1,8 +1,8 @@
 # Die vier Stufen der Datenklassifizierung im Detail
 
-Im letzten Kapitel ging es um den Reflex: Public, Internal, Confidential, Restricted, von harmlos nach gefährlich. Dieses Kapitel ist dein Nachschlagewerk dazu.
+Public, Internal, Confidential, Restricted. Der Reflex aus Kapitel 3, hier in der Langfassung.
 
-Pro Stufe bekommst du: Definition, Beispiele, KI-Regel, ein gutes und ein schlechtes Beispiel. Schlag nach, wenn du im Grenzfall unsicher bist. Einmal richtig gelernt, für immer anwendbar.
+Pro Stufe bekommst du Definition, Beispiele, KI-Regel und je ein gutes und ein schlechtes Beispiel. Schlag nach, wenn dir ein Grenzfall auf dem Schreibtisch liegt. Einmal richtig gelernt, für immer anwendbar.
 
 ## Stufe 1: Public
 
@@ -25,7 +25,7 @@ Okay. Keine firmeninternen Infos drin.
 
 ## Stufe 2: Internal
 
-**Definition:** Infos, die jeder Mitarbeitende kennen darf und sollte, aber extern nichts zu suchen haben.
+**Definition:** Infos, die jeder im Haus kennen darf und sollte, die extern aber nichts zu suchen haben.
 
 **Beispiele:**
 
@@ -41,7 +41,7 @@ Okay. Keine firmeninternen Infos drin.
 
 > „Unsere IT-Policy sagt, dass Mitarbeitende ihre Notebooks verschlüsseln müssen. Schreib eine Erinnerungs-Mail für mein Team."
 
-Grenzfall. Frag dich: Ist es okay, dass OpenAI unsere Policy sieht und daraus womöglich Trainingsdaten macht? Ohne AVV lautet die Antwort: eher nein.
+Grenzfall. Frag dich, ob OpenAI unsere Policy sehen und daraus womöglich Trainingsdaten machen darf. Ohne AVV lautet die Antwort: eher nein.
 
 ## Stufe 3: Confidential
 
@@ -114,13 +114,13 @@ Unsicher, welche Stufe? Frag dich der Reihe nach:
 
 ## Dein Unternehmen kann abweichen
 
-Die vier Stufen sind Standard nach ISO 27001 und in den meisten großen Unternehmen üblich. Dein Arbeitgeber kann aber:
+Die vier Stufen sind Standard nach ISO 27001 und in den meisten großen Unternehmen üblich. Dein Arbeitgeber darf trotzdem abweichen. Er kann:
 
 - Confidential in „Confidential" und „Highly Confidential" aufteilen
 - Die Stufen anders nennen (Level 1 bis 4, oder Rot/Gelb/Grün)
 - Zusätzliche Regeln haben („Kundennamen sind bei uns immer Confidential, egal was")
 
-> **Tipp:** Frag deine IT- oder Compliance-Abteilung nach der aktuellen Klassifizierungs-Tabelle. Die existiert in 95 Prozent der Unternehmen ab 50 Mitarbeitenden, du musst sie nur finden.
+> **Tipp:** Frag deine IT- oder Compliance-Abteilung nach der aktuellen Klassifizierungs-Tabelle. Die existiert in 95 Prozent der Unternehmen ab 50 Mitarbeitenden. Du musst sie nur finden.
 
 ## Checkliste
 

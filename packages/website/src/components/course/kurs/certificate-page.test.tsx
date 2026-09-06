@@ -161,7 +161,8 @@ describe("<CertificatePage>", () => {
     });
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Download Certificate of Completion",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation".
+        name: "Download Certificate of Participation",
       }),
     );
     await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));
@@ -178,7 +179,7 @@ describe("<CertificatePage>", () => {
     expect(createObjectUrl).not.toHaveBeenCalled();
     expect(click).not.toHaveBeenCalled();
     expect(
-      screen.queryByText("Your certificate of completion has been downloaded."),
+      screen.queryByText("Your certificate of participation has been downloaded."),
     ).not.toBeInTheDocument();
   });
 
@@ -196,7 +197,8 @@ describe("<CertificatePage>", () => {
     });
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Download Certificate of Completion",
+        // Copy lock updated: English UI copy names completion documents "certificate of participation".
+        name: "Download Certificate of Participation",
       }),
     );
     await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));

@@ -4,13 +4,13 @@ Niemand wird Freelancer, weil er Rechnungen schreiben will.
 
 Und trotzdem sitzt jeder Selbstständige in Deutschland am Monatsende vor Lexware Office oder, Gott bewahre, einer Excel-Tabelle und tippt Rechnungspositionen ein.
 
-Die gute Nachricht: KI kann dir die Rechnungstexte schreiben, Angebote formulieren, Mahnungen verfassen und deine Steuervorbereitung beschleunigen. Die schlechte Nachricht: KI kann keine Steuererklärung machen. Dafür brauchst du immer noch deinen Steuerberater. Oder viel Selbstvertrauen und ein bisschen Leichtsinn.
+KI schreibt dir die Rechnungstexte, formuliert Angebote, verfasst Mahnungen und beschleunigt die Steuervorbereitung. Was sie nicht kann: deine Steuererklärung. Dafür brauchst du immer noch deinen Steuerberater. Oder viel Selbstvertrauen und ein bisschen Leichtsinn.
 
-Dieses Kapitel zeigt dir, wo KI im Finanzkram hilft, und wo du besser die Finger davon lässt.
+Manches im Finanzkram nimmt KI dir ab. An anderes lässt du sie besser nicht ran.
 
 ## Angebote schreiben, die sitzen
 
-Wir hatten das Thema kurz in Kapitel 4. Hier gehen wir tiefer.
+Kapitel 4 hat das Thema angerissen. Jetzt gehen wir tiefer.
 
 Ein gutes Angebot hat zwei Eigenschaften: Es ist professionell und es verkauft. Die meisten Freelancer-Angebote sind weder noch. Sie sind funktional, Leistungsbeschreibung, Preis, fertig. Kein Bezug zum Kunden. Keine Begründung für den Preis. Kein Gefühl von "Ich verstehe dein Problem."
 
@@ -33,7 +33,7 @@ Mein erstes Angebot als Selbstständiger hat 4 Stunden gedauert. Ein dreiseitige
 > Ton: Verbindlich, wertschätzend, selbstbewusst beim Preis.
 > ```
 
-**Preisargumentation** ist der Teil, bei dem die meisten Freelancer schwach werden. "Ist das zu teuer? Soll ich weniger nehmen?" KI kann dir helfen zu formulieren, was der Kunde konkret gewinnt, statt wie viel Aufwand du hattest.
+**Preisargumentation** ist der Teil, bei dem die meisten Freelancer schwach werden. "Ist das zu teuer? Soll ich weniger nehmen?" KI formuliert dir, was der Kunde konkret gewinnt, statt wie viel Aufwand du hattest.
 
 ```
 Kontext: Mein Angebot für [LEISTUNG] kostet [BETRAG] EUR.
@@ -46,7 +46,7 @@ Format: 3 Argumente, je max. 2 Sätze.
 Ton: Selbstbewusst, nicht defensiv.
 ```
 
-"Mein Tagessatz ist 1.200 Euro" klingt teuer. "Die Analyse spart Ihnen 3 Monate Fehlentwicklung und 40.000 Euro Budget" klingt günstig. Dieselbe Leistung. Andere Perspektive. KI hilft dir, diese Perspektive zu finden.
+"Mein Tagessatz ist 1.200 Euro" klingt teuer. "Die Analyse spart Ihnen 3 Monate Fehlentwicklung und 40.000 Euro Budget" klingt günstig. Dieselbe Leistung, andere Perspektive. KI hilft dir, diese Perspektive zu finden.
 
 ## Rechnungen und Mahnungen
 
@@ -68,7 +68,7 @@ Format: 3-5 Zeilen. Professionell, detailliert, nicht aufgebläht.
 Ton: Sachlich, wertschätzend.
 ```
 
-**E-Rechnungspflicht ab 2025 (Wachstumschancengesetz, §14 UStG):** Seit 1. Januar 2025 müssen alle B2B-Unternehmen in Deutschland E-Rechnungen empfangen können. Ab 2027 müssen Unternehmen mit über 800.000 EUR Vorjahresumsatz auch E-Rechnungen versenden. Für die meisten Freelancer bedeutet das: Dein Rechnungstool muss das Format XRechnung oder ZUGFeRD unterstützen. Lexware Office, sevDesk und FastBill können das. Wenn du noch mit Word-Vorlagen arbeitest: Jetzt ist der Zeitpunkt zum Wechseln.
+**E-Rechnungspflicht ab 2025 (Wachstumschancengesetz, §14 UStG):** Seit 1. Januar 2025 müssen alle B2B-Unternehmen in Deutschland E-Rechnungen empfangen können. Ab 2027 müssen Unternehmen mit über 800.000 EUR Vorjahresumsatz auch E-Rechnungen versenden. Für dich heißt das: Dein Rechnungstool muss XRechnung oder ZUGFeRD unterstützen. Lexware Office, sevDesk und FastBill können das. Wenn du noch mit Word-Vorlagen arbeitest, ist jetzt der Zeitpunkt zum Wechseln.
 
 > **Kostenfalle: E-Rechnungs-Versand bei Lexware Office**
 >
@@ -116,7 +116,7 @@ Wie das aussieht, wenn du eine echte Liste reinwirfst (ChatGPT Plus, Februar 202
 > | Netflix | 13 EUR | Privat | Nicht absetzbar |
 > | Bahnticket Kundentermin | 67 EUR | Betriebsausgabe | Voll absetzbar, Reisezweck dokumentieren |
 
-Drei Sekunden statt drei Minuten Sortieren. Die Bewirtungs- und Abschreibungs-Hinweise prüfst du trotzdem gegen, das ist genau die Stelle, wo dein Steuerberater zahlt.
+Drei Sekunden statt drei Minuten Sortieren. Die Bewirtungs- und Abschreibungs-Hinweise prüfst du trotzdem gegen, das ist genau die Stelle, wo dein Steuerberater sein Geld verdient.
 
 **Geschäftsreisen:** "Erstelle eine Reisekostenabrechnung für folgende Geschäftsreise: [DETAILS]. Pauschalen für Verpflegungsmehraufwand: [Aktuelle Pauschalen HIER EINFÜGEN, siehe bundesfinanzministerium.de]." LLMs kennen die aktuellen Verpflegungspauschalen nicht zuverlässig. Die Sätze ändern sich. Trag sie selbst ein.
 
@@ -126,7 +126,7 @@ Drei Sekunden statt drei Minuten Sortieren. Die Bewirtungs- und Abschreibungs-Hi
 
 "Hier sind meine Einnahmen und Ausgaben der letzten 3 Monate: [DATEN]. Erstelle eine Übersicht mit monatlichem Gewinn, kumuliertem Gewinn und Umsatzsteuer-Voranmeldungsbetrag."
 
-Alles Startpunkte. Alles mit Prüfpflicht. Kontrolliere. Immer.
+Alles Startpunkte. Alles mit Prüfpflicht. Kontrollier jede Zahl, bevor sie das Haus verlässt.
 
 ## Steuervorbereitung: weniger Panik im Januar
 
@@ -149,13 +149,13 @@ Format: Checkliste mit Kategorien. Max. 300 Wörter.
 Ton: Strukturiert, verständlich, keine Fachsprache.
 ```
 
-**Die KI-Kosten als Betriebsausgabe:** ChatGPT Plus, Claude Pro, Perplexity, alles absetzbar. Wie dein Office-Abo oder dein Handyvertrag. Wenn du die Tools beruflich nutzt: Betriebsausgabe. Beleg aufheben. Fertig.
+**Die KI-Kosten als Betriebsausgabe:** ChatGPT Plus, Claude Pro, Perplexity, alles absetzbar. Wie dein Office-Abo oder dein Handyvertrag. Wenn du die Tools beruflich nutzt: Betriebsausgabe. Beleg aufheben, fertig.
 
 Bei gemischter Nutzung (beruflich + privat): Den beruflichen Anteil schätzen und dokumentieren. 80 Prozent beruflich? 80 Prozent absetzbar. Mehr dazu in Kapitel 8.
 
 ## E-Rechnungspflicht 2025: was du wissen musst
 
-Die Kurzfassung:
+Der Fahrplan in drei Zeilen:
 
 | Was | Wann | Für wen |
 |-----|------|---------|
@@ -165,7 +165,7 @@ Die Kurzfassung:
 
 **Was bedeutet das für dich?**
 
-Wenn dein Jahresumsatz unter 800.000 EUR liegt (und das trifft auf die meisten Freelancer zu): Du musst E-Rechnungen empfangen können. Versenden kannst du noch bis 2028 mit PDF oder Papier.
+Wenn dein Jahresumsatz unter 800.000 EUR liegt, und das trifft auf die meisten Freelancer zu, musst du E-Rechnungen empfangen können. Versenden kannst du noch bis 2028 mit PDF oder Papier.
 
 **Was musst du tun?**
 
@@ -196,4 +196,4 @@ Noch ein Wort zur Rechtssicherheit: GoBD (Grundsätze zur ordnungsmäßigen Füh
 > | +112 EUR/Woche | 750 EUR/Woche |
 > | Toolkosten: +8 EUR/Mo (Lexware Office) | Gesamt: 48 EUR/Mo |
 
-Geld geregelt. Und der Teil, den die meisten ignorieren, bis es zu spät ist?
+Das Geld ist geregelt. Und der Teil, den die meisten ignorieren, bis es zu spät ist?

@@ -1,0 +1,15 @@
+{
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "Konsequenter Du-Kurs",
+      "sections": [
+        {
+          "id": "s1",
+          "title": "Anrede",
+          "content": "Du prüfst dein Inventar jede Woche. Sie haben es gebaut, du hast es geprüft: Sie ist die Kollegin, die es gebaut hat."
+        }
+      ]
+    }
+  ]
+}

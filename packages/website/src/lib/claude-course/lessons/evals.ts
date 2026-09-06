@@ -28,7 +28,7 @@ const lesson: ClaudeLesson = {
       title: "Why evals",
       readTimeMinutes: 1,
       content:
-        "A prompt change can improve one example and regress another. An evaluation defines inputs, success criteria, and grading logic so versions can be compared under the same conditions.\n\nStart with a small representative set, including common cases, edge cases, and known failures. Expand it from production evidence. Because model output varies, use repeated trials when the decision depends on pass rates rather than deterministic checks.\n\n> Record the model, settings, prompt version, inputs, outputs, and grades.",
+        "Two prompts, same task. Which one ships? A prompt change can improve one example and regress another. An evaluation defines inputs, success criteria, and grading logic so versions compare under the same conditions.\n\nStart with a small representative set: common cases, edge cases, known failures. Grow it from production evidence. Model output varies, so use repeated trials when the decision rests on pass rates rather than deterministic checks.\n\n> Record the model, settings, prompt version, inputs, outputs, and grades.",
     },
     {
       id: "mvp-eval",
@@ -42,14 +42,14 @@ const lesson: ClaudeLesson = {
       title: "Debugging a broken prompt",
       readTimeMinutes: 2,
       content:
-        "When a prompt regresses, first reproduce the failure with a fixed input, model, settings, and tool state. Then simplify or disable prompt sections to isolate conflicting instructions. Reintroduce one section at a time and rerun the same cases.\n\nThis resembles delta debugging, but model variance means a single pass is not proof of causality. Repeat trials and inspect the transcripts before assigning the cause.",
+        "When a prompt regresses, reproduce the failure first with a fixed input, model, settings, and tool state. Then simplify or disable prompt sections until the conflict shows. Reintroduce one section at a time and rerun the same cases.\n\nThis is delta debugging with a caveat. Model variance means one pass proves nothing about cause. Repeat trials and read the transcripts before naming a cause.",
     },
     {
       id: "llm-as-judge",
       title: "Judging quality with a second model",
       readTimeMinutes: 2,
       content:
-        "A model-based grader can apply a rubric to open-ended output, but it introduces its own errors and preferences. Calibrate it against human-reviewed examples, randomize presentation order for pairwise comparisons, retain grader justification, and track disagreement.\n\nUse deterministic graders for properties such as schema, required fields, citations, and executable tests. Combine graders only when each measures a defined requirement.",
+        "A model-based grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it against human-reviewed examples, randomize presentation order for pairwise comparisons, keep the grader justification, and track disagreement.\n\nUse deterministic graders for properties such as schema, required fields, citations, and executable tests. Combine graders only when each measures a defined requirement.",
     },
   ],
   widgets: [
@@ -101,7 +101,7 @@ const lesson: ClaudeLesson = {
             output:
               "I can't generate sample data with emails as that could be confused with a real person. Could you clarify your use case?",
             correct: "verweigerung",
-            why: "The request is entirely benign, sample and synthetic data. This is a classic over-cautious refusal.",
+            why: "The request is benign, sample and synthetic data. A classic over-cautious refusal.",
           },
           {
             id: "c3",

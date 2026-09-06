@@ -6,11 +6,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Acceptance Criteria", "Akzeptanzkriterien"],
     [
       "Define observable behavior, executable checks, and review evidence before implementation begins.",
-      "Definiere beobachtbares Verhalten, ausführbare Prüfungen und Review-Nachweise vor Beginn der Implementierung.",
+      "Verhalten, Prüfungen und Nachweise stehen fest, bevor Codex die erste Zeile ändert.",
     ],
     [
       "Define the evidence required for acceptance.",
-      "Definiere die für die Annahme erforderlichen Nachweise.",
+      "Lege fest, welcher Nachweis zur Annahme reicht.",
     ],
     ["Acceptance criteria", "Akzeptanzkriterien"],
     ["Tests-first", "Tests zuerst"],
@@ -18,64 +18,64 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Negative constraints", "Negative Einschränkungen"],
     ["A stopping condition", "Eine Abbruchbedingung"],
     [
-      "Before implementation, state how the result will be evaluated. Use observable examples, commands, tests, and structural constraints. If no relevant check can be named, either the behavior is still ambiguous or the verification path is missing.\n\nAcceptance criteria guide implementation and review. Codex can run available checks and revise from their output, but a green result is not self-validating: the reviewer must confirm that the checks cover the requirement, ran in the intended environment, and were not weakened to obtain a pass.",
-      "Lege vor der Implementierung fest, wie das Ergebnis bewertet wird: mit beobachtbaren Beispielen, Befehlen, Tests und strukturellen Grenzen. Lässt sich keine relevante Prüfung benennen, ist entweder das Verhalten unklar oder der Verifikationsweg fehlt.\n\nAkzeptanzkriterien führen Implementierung und Review. Codex kann verfügbare Prüfungen ausführen und anhand ihrer Ausgabe überarbeiten. Ein grünes Ergebnis bestätigt sich jedoch nicht selbst: Das Review muss Abdeckung, Ausführungsumgebung und unveränderte Prüfbedingungen kontrollieren.",
+      "How will you know it is done? Answer before implementation, with observable examples, commands, tests, structural constraints. Cannot name a single relevant check? Then the behavior is still ambiguous or the verification path is missing.\n\nAcceptance criteria steer implementation and review. Codex runs the available checks and revises from their output. Green is not self-validating. Someone still has to confirm that the checks cover the requirement, ran in the intended environment, and were not weakened to earn the pass.",
+      "Bevor Codex die erste Zeile ändert, steht fest, wie das Ergebnis bewertet wird: beobachtbare Beispiele, Befehle, Tests, strukturelle Grenzen. Fällt dir keine relevante Prüfung ein, ist das Verhalten noch unklar oder der Verifikationsweg fehlt.\n\nAkzeptanzkriterien führen Implementierung und Review. Codex kann verfügbare Prüfungen ausführen und anhand ihrer Ausgabe nachbessern. Ein grünes Ergebnis bestätigt sich trotzdem nicht selbst. Die Reviewerin prüft, ob die Checks die Anforderung abdecken, in der gemeinten Umgebung liefen und nicht abgeschwächt wurden, um grün zu werden.",
     ],
     [
       "Acceptance criteria define required evidence. They do not transfer the acceptance decision to the tool that produced the change.",
-      "Akzeptanzkriterien definieren erforderliche Nachweise. Die Annahmeentscheidung bleibt beim Review.",
+      "Akzeptanzkriterien definieren den Nachweis. Die Annahme bleibt beim Review.",
     ],
     ["The three flavors", "Drei Arten"],
     ["01 · executable", "01 · ausführbar"],
     ["Tests that must pass", "Tests, die bestehen müssen"],
     [
       '"pytest tests/api/test_users.py::test_pagination must pass." This is directly executable and produces an unambiguous pass/fail result.',
-      '"pytest tests/api/test_users.py::test_pagination muss bestehen." Das Kriterium ist direkt ausführbar und liefert ein eindeutiges Bestanden- oder Fehlgeschlagen-Ergebnis.',
+      '"pytest tests/api/test_users.py::test_pagination muss bestehen." Direkt ausführbar, mit eindeutigem Ergebnis: grün oder rot.',
     ],
     ["02 · observable", "02 · beobachtbar"],
     ["Commands with known outputs", "Befehle mit erwarteter Ausgabe"],
     [
       '"curl /health returns {"ok": true} with status 200." Not a test file, but a verifiable signal the agent can check.',
-      '"curl /health liefert {"ok": true} mit Status 200." Das ist kein Testfall im Repository, aber ein konkret prüfbares Signal.',
+      '"curl /health liefert {"ok": true} mit Status 200." Kein Testfall, aber ein Signal, das der Agent prüfen kann.',
     ],
     ["03 · structural", "03 · strukturell"],
     ["Shape of the patch", "Struktur des Patches"],
     [
       '"New files live in src/auth/. No changes outside that directory." The final diff can be compared with this boundary by both Codex and the reviewer.',
-      '"Neue Dateien liegen unter src/auth/. Außerhalb dieses Verzeichnisses gibt es keine Änderungen." Diese Eigenschaft lässt sich anhand des Diffs prüfen.',
+      '"Neue Dateien liegen unter src/auth/. Außerhalb ändert sich nichts." Codex und Reviewerin können den fertigen Diff an dieser Grenze messen.',
     ],
     ["Tests-first workflow", "Arbeitsablauf mit Tests zuerst"],
     [
-      'Tests can make acceptance criteria executable. Three patterns are useful:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make that file pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: "Given these requirements, write failing tests in tests/api/test_users.py. Do not implement." Review whether the tests capture the intent. Task B: "Make the reviewed tests pass."\n\n**Request both in one change.** Ask Codex to write tests for the new behavior, compare them with the goal, and then implement. Review the tests independently from the production code; generated tests can encode the same misunderstanding as the implementation.',
-      'Tests können Akzeptanzkriterien ausführbar machen. Drei Muster sind nützlich:\n\n**Tests selbst schreiben.** Versioniere fehlschlagende Tests für das erforderliche Verhalten und beauftrage Codex anschließend, die Datei zum Bestehen zu bringen, ohne die Assertions abzuschwächen.\n\n**Testentwurf und Implementierung trennen.** Auftrag A: "Schreibe auf Grundlage dieser Anforderungen fehlschlagende Tests in tests/api/test_users.py. Nicht implementieren." Prüfe, ob die Tests die Absicht abbilden. Auftrag B: "Bringe die geprüften Tests zum Bestehen."\n\n**Beides in einer Änderung anfordern.** Codex schreibt Tests für das neue Verhalten, vergleicht sie mit dem Ziel und implementiert danach. Prüfe Tests unabhängig vom Produktionscode; generierte Tests können dasselbe Missverständnis wie die Implementierung enthalten.',
+      'Tests make acceptance criteria executable. Three patterns worth knowing.\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make that file pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: "Given these requirements, write failing tests in tests/api/test_users.py. Do not implement." Review whether the tests capture the intent. Task B: "Make the reviewed tests pass."\n\n**Request both in one change.** Ask Codex to write tests for the new behavior, compare them with the goal, then implement. Review the tests apart from the production code. Generated tests can encode the same misunderstanding as the implementation.',
+      'Tests machen Akzeptanzkriterien ausführbar. Drei Muster taugen dafür:\n\n**Tests selbst schreiben.** Committe fehlschlagende Tests für das verlangte Verhalten. Dann soll Codex die Datei grün bekommen, ohne die Assertions abzuschwächen.\n\n**Testentwurf und Implementierung trennen.** Auftrag A: "Schreibe auf Grundlage dieser Anforderungen fehlschlagende Tests in tests/api/test_users.py. Nicht implementieren." Prüfe, ob die Tests die Absicht treffen. Auftrag B: "Bringe die geprüften Tests zum Bestehen."\n\n**Beides in einer Änderung.** Codex schreibt Tests für das neue Verhalten, vergleicht sie mit dem Ziel und implementiert dann. Lies die Tests getrennt vom Produktionscode. Generierte Tests können dasselbe Missverständnis enthalten wie die Implementierung.',
     ],
     ["What tests contribute:", "Was Tests beitragen:"],
     [
-      "Tests make selected examples executable and repeatable. They clarify inputs, outputs, and edge cases, but they cover only what their assertions and environment exercise. Review test design separately from implementation.",
-      "Tests machen ausgewählte Beispiele ausführbar und wiederholbar. Sie klären Eingaben, Ausgaben und Randfälle, decken aber nur ab, was Assertions und Umgebung tatsächlich ausüben. Prüfe Testentwurf und Implementierung getrennt.",
+      "Tests make selected examples executable and repeatable. They pin inputs, outputs and edge cases. They cover nothing their assertions and environment do not exercise. Review test design separately from implementation.",
+      "Tests machen ausgewählte Beispiele ausführbar und wiederholbar. Sie klären Eingaben, Ausgaben und Randfälle. Abgedeckt ist nur, was Assertions und Umgebung ausüben. Testentwurf und Implementierung prüfst du getrennt.",
     ],
     ["Accept or reject?", "Annehmen oder ablehnen?"],
     [
-      "After the reported checks pass, verify that the criteria represent the intended behavior. A green suite can coexist with an incomplete requirement, an invalid test double, or an untested integration path. Review these four failure shapes before merge:",
-      "Prüfe nach bestandenen gemeldeten Checks, ob die Kriterien das beabsichtigte Verhalten abbilden. Eine grüne Testsuite kann mit einer unvollständigen Anforderung, einem ungültigen Test-Dummy oder einem ungeprüften Integrationspfad zusammenfallen. Prüfe vor dem Merge diese vier Fehlerformen:",
+      "The checks pass. Now verify that the criteria represent the intended behavior. A green suite lives happily alongside an incomplete requirement, an invalid test double or an untested integration path. Four failure shapes to review before merge.",
+      "Die gemeldeten Checks sind grün. Jetzt prüfst du, ob die Kriterien das gemeinte Verhalten abbilden. Eine grüne Suite verträgt sich mit unvollständiger Anforderung, ungültigem Test-Double oder ungeprüftem Integrationspfad. Vier Fehlerformen vor dem Merge:",
     ],
     ["pattern 01", "Muster 01"],
     ["Test overfitting", "Überanpassung an Tests"],
     [
       "The implementation satisfies the named examples but not the general rule. Add representative boundaries and inspect whether production code special-cases fixture values or test-only paths.",
-      "Die Implementierung erfüllt die genannten Beispiele, aber nicht die allgemeine Regel. Ergänze repräsentative Grenzfälle und prüfe, ob der Produktionscode Fixture-Werte oder reine Testpfade speziell behandelt.",
+      "Die Implementierung besteht die genannten Beispiele, nicht die allgemeine Regel. Ergänze repräsentative Grenzfälle und such im Produktionscode nach Sonderbehandlung von Fixture-Werten oder reinen Testpfaden.",
     ],
     ["pattern 02", "Muster 02"],
     ["Adjacent problem solving", "Benachbartes Problem gelöst"],
     [
       "The checks are executable but omit a required interface or constraint. Compare passing output with the original user and system behavior, not only with the new assertions.",
-      "Die Checks sind ausführbar, lassen aber eine erforderliche Schnittstelle oder Grenze aus. Vergleiche die bestandene Ausgabe mit dem ursprünglichen Nutzer- und Systemverhalten, nicht nur mit den neuen Assertions.",
+      "Die Checks laufen, lassen aber eine geforderte Schnittstelle oder Grenze aus. Vergleiche die grüne Ausgabe mit dem ursprünglichen Nutzer- und Systemverhalten, nicht nur mit den neuen Assertions.",
     ],
     ["pattern 03", "Muster 03"],
     ["Hidden regression", "Verdeckte Regression"],
     [
       "New and existing tests pass, but an uncovered behavior changed. Inspect deletions and call sites, then use integration, end-to-end, or manual checks appropriate to the affected risk.",
-      "Neue und bestehende Tests bestehen, aber ein nicht abgedecktes Verhalten hat sich geändert. Prüfe Löschungen und Aufrufer und nutze dem Risiko entsprechende Integrations-, End-to-End- oder manuelle Prüfungen.",
+      "Neue und alte Tests sind grün, ein nicht abgedecktes Verhalten hat sich trotzdem geändert. Lies Löschungen und Aufrufer, dann Integrations-, End-to-End- oder manuelle Prüfungen, je nach Risiko.",
     ],
     ["pattern 04", "Muster 04"],
     [
@@ -84,21 +84,21 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "A library call can be valid in isolation but incompatible with repository configuration, concurrency, lifecycle, or deployment assumptions. Verify the integration contract and current library documentation.",
-      "Ein Bibliotheksaufruf kann isoliert gültig, aber mit Repository-Konfiguration, Nebenläufigkeit, Lebenszyklus oder Deployment-Annahmen unvereinbar sein. Prüfe Integrationsvertrag und aktuelle Bibliotheksdokumentation.",
+      "Ein Bibliotheksaufruf kann für sich gültig sein und trotzdem mit Repository-Konfiguration, Nebenläufigkeit, Lebenszyklus oder Deployment-Annahmen kollidieren. Prüfe Integrationsvertrag und aktuelle Bibliotheksdokumentation.",
     ],
     [
-      "When a foreseeable invalid implementation could pass the positive examples, add a *negative constraint*. It should describe a real performance, security, compatibility, or scope boundary rather than dictate an arbitrary internal detail. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
-      "Wenn eine vorhersehbar falsche Implementierung die positiven Beispiele bestehen könnte, ergänze eine *negative Einschränkung*. Sie muss eine reale Leistungs-, Sicherheits-, Kompatibilitäts- oder Umfangsgrenze beschreiben.\n\n```\n# unvollständig: nennt nur einen Befehl\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n\n# ausdrückliche Nachweise und Grenzen\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n- pytest tests/api besteht; Befehlsausgabe beifügen\n- Query-Count-Nachweis zeigt, dass Pagination nicht sämtliche Zeilen lädt\n- Änderungen außerhalb von api/users.py und seinen Tests vorher begründen\n```",
+      "When a foreseeable wrong implementation could still pass the positive examples, add a *negative constraint*. It names a real performance, security, compatibility or scope boundary. It does not dictate an arbitrary internal detail. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
+      "Könnte eine absehbar falsche Implementierung die positiven Beispiele bestehen, ergänze eine *negative Einschränkung*. Sie beschreibt eine echte Leistungs-, Sicherheits-, Kompatibilitäts- oder Umfangsgrenze, kein internes Detail.\n\n```\n# unvollständig: nennt nur einen Befehl\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n\n# ausdrückliche Nachweise und Grenzen\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n- pytest tests/api besteht; Befehlsausgabe beifügen\n- Query-Count-Nachweis zeigt, dass Pagination nicht sämtliche Zeilen lädt\n- Änderungen außerhalb von api/users.py und seinen Tests vorher begründen\n```",
     ],
     ["The evaluation heuristic:", "Prüfheuristik:"],
     [
-      'Ask: "Which incorrect implementations could still pass these checks?" Add the highest-risk missing example or constraint, then retain human review for behavior the automated checks do not cover.',
-      'Frage: "Welche falschen Implementierungen könnten diese Prüfungen dennoch bestehen?" Ergänze das risikoreichste fehlende Beispiel oder die entsprechende Grenze und behalte menschliches Review für nicht automatisierte Bereiche bei.',
+      "Ask which incorrect implementations could still pass these checks. Add the highest-risk missing example or constraint. Keep human review for the behavior the automated checks do not cover.",
+      'Frag dich: "Welche falsche Implementierung käme durch diese Prüfungen?" Ergänze das riskanteste fehlende Beispiel oder die fehlende Grenze. Was die Automatik nicht abdeckt, liest ein Mensch.',
     ],
     ["Build one", "Kriterien zusammenstellen"],
     [
-      "Compare criteria for executability, relevance, and coverage. Select the items that provide useful evidence for this rate-limit change.",
-      "Vergleiche Kriterien nach Ausführbarkeit, Relevanz und Abdeckung. Wähle jene Punkte, die brauchbare Nachweise für diese Rate-Limit-Änderung liefern.",
+      "Judge each criterion on executability, relevance and coverage. Keep the ones that give real evidence for this rate-limit change.",
+      "Vergleiche die Kriterien nach Ausführbarkeit, Relevanz und Abdeckung. Wähle, was für diese Rate-Limit-Änderung brauchbaren Nachweis liefert.",
     ],
     [
       "Two questions on acceptance criteria.",
@@ -110,7 +110,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Each row is a potential acceptance criterion. Toggle on the ones that are actually useful.",
-      "Jede Zeile ist ein mögliches Akzeptanzkriterium. Aktiviere nur konkrete und relevante Prüfungen.",
+      "Jede Zeile ist ein mögliches Akzeptanzkriterium. Schalte nur ein, was wirklich Nachweis liefert.",
     ],
     [
       "Limit /login to 5 attempts per IP per minute.",
@@ -122,7 +122,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Real test. Covers the limit boundary and reset window.",
-      "Konkreter Test für Grenzwert und Rücksetzfenster.",
+      "Echter Test, der Grenzwert und Rücksetzfenster abdeckt.",
     ],
     [
       "Executable: full suite still passes",
@@ -157,7 +157,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Nur api/auth.py und neue Dateien in api/limits/ ändern sich.",
     ],
     ['"It should feel right."', '"Es soll sich richtig anfühlen."'],
-    ["Not checkable. Drop it.", "Nicht prüfbar; entfernen."],
+    ["Not checkable. Drop it.", "Nicht prüfbar, raus damit."],
     ["Unverifiable acceptance.", "Nicht prüfbare Akzeptanz."],
     [
       "Document the limit in API docs",
@@ -165,7 +165,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Reasonable, but belongs in a separate task.",
-      "Sachlich sinnvoll; je nach Umfang Teil dieses oder eines separaten Auftrags.",
+      "Sinnvoll, aber ein eigener Auftrag.",
     ],
     ["docs/api/auth.md updated.", "docs/api/auth.md ist aktualisiert."],
     [
@@ -190,11 +190,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "An executable command produces repeatable evidence and can guide revision. The reviewer must still confirm that the command ran successfully and that its tests cover the requested behavior.",
-      "Ein ausführbarer Befehl erzeugt wiederholbaren Nachweis und kann die Überarbeitung leiten. Das Review muss weiterhin erfolgreiche Ausführung und Abdeckung des verlangten Verhaltens bestätigen.",
+      "Ein ausführbarer Befehl liefert wiederholbaren Nachweis und lenkt die Nachbesserung. Ob er wirklich durchlief und ob seine Tests das verlangte Verhalten abdecken, bestätigt trotzdem die Reviewerin.",
     ],
     [
       'For a difficult new feature, you are not sure how to define "done." Which step makes the acceptance boundary testable first?',
-      'Bei einer schwierigen neuen Funktion ist unklar, wie "fertig" definiert wird. Welcher Schritt macht die Akzeptanzgrenze zuerst prüfbar?',
+      'Schwierige neue Funktion, und du weißt nicht, was "fertig" heißt. Welcher Schritt macht die Akzeptanzgrenze zuerst prüfbar?',
     ],
     [
       "Ship the task with vague criteria and iterate.",
@@ -206,15 +206,15 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Skip acceptance criteria entirely.",
-      "Akzeptanzkriterien vollständig weglassen.",
+      "Akzeptanzkriterien ganz weglassen.",
     ],
     [
       "Write a long prose description and hope.",
-      "Eine lange Prosabeschreibung schreiben und auf das richtige Ergebnis hoffen.",
+      "Eine lange Prosabeschreibung schreiben und hoffen.",
     ],
     [
       "Separate test design from implementation when the behavior needs clarification. Review the proposed tests against the requirement and confirm they fail for the intended reason before authorizing implementation. Passing those tests later remains one part of the final review.",
-      "Trenne Testentwurf und Umsetzung, wenn das Verhalten noch geklärt werden muss. Prüfe die vorgeschlagenen Tests gegen die Anforderung und bestätige vor der Umsetzung, dass sie aus dem beabsichtigten Grund fehlschlagen. Späteres Bestehen dieser Tests bleibt ein Teil des abschließenden Reviews.",
+      "Trenne Testentwurf und Umsetzung, wenn das Verhalten noch unklar ist. Lies die vorgeschlagenen Tests gegen die Anforderung und stell sicher, dass sie aus dem richtigen Grund fehlschlagen, bevor jemand implementiert. Dass sie später grün werden, ist nur ein Teil des Reviews.",
     ],
   ],
   preserve: [

@@ -15,7 +15,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Speicherung: <span class='accent'>Ein fehlerhafter Tag</span> verfälscht alle Folgetage."
-        hook="Viele Tabellen sind ein Abbild des Vortags. <strong>Kumulative Tabellen</strong> enthalten die gesamte bisherige Entwicklung: Der Zustand von gestern wird fortgeschrieben und mit den heutigen Änderungen zusammengeführt. Das Muster ist kompakt, aber empfindlich. Ein fehlerhafter Tag bleibt in allen Folgetagen enthalten, bis ein Backfill ihn ersetzt."
+        hook="Viele Tabellen zeigen nur den Vortag. <strong>Kumulative Tabellen</strong> tragen die ganze bisherige Entwicklung mit: Der Zustand von gestern wird fortgeschrieben und mit den heutigen Änderungen zusammengeführt. Kompakt und empfindlich zugleich. Ein fehlerhafter Tag steckt in jedem Folgetag, bis ein Backfill ihn ersetzt."
         meta={[
           { k: "Muster", v: "zustandsfortschreibend" },
           { k: "Engine", v: "Spark (FULL OUTER JOIN)" },
@@ -26,14 +26,14 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
       <section className="section">
         <SectionLabel n="3.1">Das Muster</SectionLabel>
         <h2 className="h2">Gestern + heute = heutiger kumulativer Zustand.</h2>
-        <p className="prose">Dieses additive Kursbeispiel verbindet die vorherige Partition und die heutigen Änderungen mit einem <code>FULL OUTER JOIN</code> und verwendet anschließend <code>COALESCE</code>. Dadurch bleiben Schlüssel von beiden Seiten erhalten. Andere kumulative Modelle benötigen eventuell Merge-Regeln, Löschungen oder Gültigkeitsintervalle.</p>
+        <p className="prose">Das additive Kursbeispiel verbindet die vorherige Partition und die heutigen Änderungen mit einem <code>FULL OUTER JOIN</code> und schickt <code>COALESCE</code> hinterher. So überleben Schlüssel von beiden Seiten. Andere kumulative Modelle brauchen zusätzlich Merge-Regeln, Löschungen oder Gültigkeitsintervalle.</p>
         <p className="prose">Die Fortschreibung erzeugt den Nutzen: Der kumulative Wert von Tag 7 besteht aus Tag 6 plus heute; Tag 6 enthält bereits Tag 5 und dessen Änderungen. Dieselbe Eigenschaft überträgt Fehler. Ein Fehler an Tag 3 bleibt in jedem Folgetag, bis er erkannt und rückwirkend neu berechnet wird.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="3.2">Die Woche prüfen</SectionLabel>
         <h2 className="h2">Fehler an Tag 3. Erkannt an Tag 4. Backfill an Tag 5.</h2>
-        <p className="prose">Gehe die Tage im Simulator durch. An Tag 3 halbiert eine Einheitenverwechslung die Punkte aller Nutzer. Bis Tag 5 ist die Abweichung in jeder Aggregation enthalten. Mit <em>Korrigieren und neu berechnen</em> werden die fehlerhaften Tage mit der korrigierten Logik erneut verarbeitet.</p>
+        <p className="prose">Klick dich im Simulator durch die Tage. An Tag 3 halbiert eine Einheitenverwechslung die Punkte aller Nutzer. Bis Tag 5 steckt die Abweichung in jeder Aggregation. <em>Korrigieren und neu berechnen</em> verarbeitet die fehlerhaften Tage mit der korrigierten Logik erneut.</p>
         <CumulativeSim />
       </section>
 
@@ -46,7 +46,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
         title="Fehlmuster"
         items={[
           "<b>In diesem additiven Muster einen Left Join verwenden.</b> Schlüssel, die erstmals in der heutigen Änderung erscheinen, würden fehlen. Fälle mit neuen, bestehenden und fehlenden Schlüsseln testen.",
-          "<b>Eine Korrektur ohne Neuberechnung abhängiger Partitionen veröffentlichen.</b> Das früheste betroffene Datum ermitteln und den nachgelagerten Bereich neu aufbauen.",
+          "<b>Eine Korrektur ohne Neuberechnung abhängiger Partitionen veröffentlichen.</b> Such das früheste betroffene Datum und bau den Bereich dahinter neu auf.",
           "<b>Die Wanduhr in einem Backfill lesen.</b> Logische Partition und weitere Laufparameter explizit übergeben, damit dieselbe Eingabe denselben Quellenbereich wählt.",
           "<b>Unvollständigen Zustand veröffentlichen.</b> Die vom Tabellenformat unterstützte atomare Replace-, Merge- oder Snapshot-Operation verwenden.",
         ]}

@@ -2,7 +2,7 @@
 
 Du stellst einen neuen Mitarbeiter ein. Erster Tag. Du sagst: "Mach mal was."
 
-Er liefert. Irgendetwas. Nicht das, was du wolltest. Nicht mal in der Nähe.
+Er liefert dann auch. Irgendetwas. Nicht das, was du wolltest, nicht mal in der Nähe.
 
 Genau so nutzen 90 Prozent der Leute ChatGPT.
 
@@ -10,7 +10,7 @@ Genau so nutzen 90 Prozent der Leute ChatGPT.
 
 **Prompt A:** "Schreib mir einen LinkedIn-Post."
 
-Output: Generisch. Roboterhaft. Jeder Satz klingt wie aus dem Lehrbuch. Floskeln, Buzzwords, austauschbar. Kein Mensch würde das lesen, geschweige denn liken.
+Output: generisch und roboterhaft. Jeder Satz klingt wie aus dem Lehrbuch, Floskeln, Buzzwords, austauschbar. Kein Mensch würde das lesen, geschweige denn liken.
 
 **Prompt B:**
 
@@ -33,19 +33,19 @@ Output: „40 Geschäftsführer, 90 Minuten, und eine Frage, die keiner beantwor
 
 ## Die KRAFT-Methode
 
-Fünf Buchstaben. In dieser Reihenfolge. Jeder davon macht den Output besser.
+Fünf Buchstaben, in dieser Reihenfolge. Jeder davon macht den Output besser.
 
-**K, Kontext:** Wer bist du? Was ist die Situation? Welche Hintergrundinformation braucht die KI, um deine Aufgabe überhaupt zu verstehen? Je konkreter, desto besser. Nicht „ich arbeite im Marketing", sondern „ich verantworte B2B-Leadgenerierung für einen Maschinenbauer mit 80 Mitarbeitenden, Zielregion DACH."
+**K, Kontext:** Wer bist du? Was ist die Situation? Was muss die KI wissen, um deine Aufgabe überhaupt zu verstehen? Je konkreter, desto besser. Nicht „ich arbeite im Marketing", sondern „ich verantworte B2B-Leadgenerierung für einen Maschinenbauer mit 80 Mitarbeitenden, Zielregion DACH."
 
-**R, Rolle:** Welche Expertise soll die KI einnehmen? „Du bist erfahrener Texter" produziert anderen Output als „Du bist Datenschutz-Berater mit 15 Jahren Erfahrung in der Industrie." Die Rolle stellt den Stil, die Fachsprache und die Perspektive auf die Aufgabe scharf.
+**R, Rolle:** Welche Expertise soll die KI einnehmen? „Du bist erfahrener Texter" produziert anderen Output als „Du bist Datenschutz-Berater mit 15 Jahren Erfahrung in der Industrie." Die Rolle stellt Stil, Fachsprache und Perspektive scharf.
 
 **A, Aufgabe:** Was genau soll passieren? Ein Verb, ein Objekt, ein Ziel. Nicht „Schreib was über KI", sondern „Fasse die drei Kernaussagen des folgenden Papers in einem Blogpost für Nicht-Techniker zusammen."
 
 **F, Format:** Wie soll das Ergebnis aussehen? E-Mail, Aufzählung, Tabelle, Code-Block, 100 Wörter oder 500, mit Überschriften oder ohne. Ohne Format-Angabe bekommst du einen Essay, wo du eine Mail wolltest.
 
-**T, Ton:** Wie soll es klingen? Sachlich, locker, empathisch, knapp, formal. Der Ton entscheidet, ob der Empfänger die Antwort liest, oder löscht.
+**T, Ton:** Wie soll es klingen? Sachlich, locker, empathisch, knapp, formal. Der Ton entscheidet, ob der Empfänger die Antwort liest oder löscht.
 
-Nicht jeder Prompt braucht alle fünf Elemente. „Übersetze diesen Satz" braucht kein KRAFT. „Schreib ein Angebot für einen Neukunden" schon. Sobald die Aufgabe Tragweite hat, gehst du einmal K → R → A → F → T durch.
+Nicht jeder Prompt braucht alle fünf. „Übersetze diesen Satz" braucht kein KRAFT. „Schreib ein Angebot für einen Neukunden" schon. Sobald die Aufgabe Tragweite hat, gehst du einmal K → R → A → F → T durch.
 
 ## Die Restaurant-Analogie
 
@@ -81,7 +81,7 @@ Ton: Verständnisvoll aber sachlich. Biete eine Lösung an,
 mache keine Zusagen ohne Rücksprache mit dem Vertrieb.
 ```
 
-Beachte den letzten Satz: "keine Zusagen ohne Rücksprache." Das ist die kritische Leitplanke. KI liebt es, Rabatte, Express-Versand und Erstattungen anzubieten. Ohne deine Genehmigung.
+Der letzte Satz ist die kritische Leitplanke: "keine Zusagen ohne Rücksprache." KI liebt es, Rabatte, Express-Versand und Erstattungen anzubieten. Ohne deine Genehmigung.
 
 ## Drei weitere KRAFT-Prompts
 
@@ -112,9 +112,9 @@ Vier Situationen, vier Vorlagen. Kopiere, passe an, nutze.
 > Rolle: Erfahrener Vertriebstexter im B2B.
 > Aufgabe: Schreibe den Begleittext zum Angebot, keinen Preis, nur Rahmen, Nutzen, Nächste Schritte.
 > Format: 180-220 Wörter. Anrede, drei kurze Absätze, Schlussformel. Keine Aufzählungen.
-> Ton: Vertrauensvoll, verbindlich, ohne Floskeln. Keine „innovativen Lösungen", keine „ganzheitlichen Ansätze".
+> Ton: Vertrauensvoll, verbindlich, ohne Floskeln. Keine „innovativen Lösungen", keine „maßgeschneiderten Ansätze".
 
-Bisher alles Büro und Schreibtisch. Aber KRAFT funktioniert genauso im Kreativen. Wenn du Kampagnen briefst, Web-Texte umschreibst oder ein Konzept aufsetzt, brauchst du dieselbe Struktur. Sonst liefert die KI bunte Floskeln statt eines Konzepts, das du dem Kunden zeigen kannst.
+Bisher alles Büro und Schreibtisch. KRAFT funktioniert genauso im Kreativen. Wenn du Kampagnen briefst, Web-Texte umschreibst oder ein Konzept aufsetzt, brauchst du dieselbe Struktur. Sonst liefert die KI bunte Floskeln statt eines Konzepts, das du dem Kunden zeigen kannst.
 
 **Kampagnenkonzept aus einem Briefing:**
 
@@ -131,7 +131,7 @@ Web-Copy umschreiben geht nach demselben Muster. Du gibst der KI deinen alten Te
 
 > **Achtung:** Lass dir bei Bildern und Claims nie etwas „erfinden", das es nicht gibt. KI behauptet gern Auszeichnungen, Testsiege oder Bio-Siegel. Prüf jede Aussage, bevor sie auf ein Plakat kommt.
 
-Sechs Prompts, sechs Szenarien. Du siehst das Muster: Immer Kontext → Rolle → Aufgabe → Format → Ton. Immer konkret.
+Sechs Prompts, sechs Szenarien, ein Muster: Kontext → Rolle → Aufgabe → Format → Ton. Und immer konkret.
 
 ## Fortgeschrittene Techniken
 

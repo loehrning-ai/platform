@@ -13,7 +13,7 @@ export default function Ch08ExperimentDe() {
       <Hero
         eyebrow="Kapitel 08 · Experimente"
         title='Das Experiment <em>vor</em> der Datenerhebung planen. <span class="accent">Danach gemäß</span> diesem Plan auswerten.'
-        hook="Zuweisung, Estimand, Primärmetrik, kleinsten relevanten Effekt, Analyse und Stoppregel festlegen, bevor Ergebnisdaten vorliegen."
+        hook="Zuweisung, Estimand, Primärmetrik, kleinster relevanter Effekt, Analyse, Stoppregel. Alles steht fest, bevor die erste Ergebniszeile existiert."
         meta={[
           { k: "Lesezeit", v: "9 min" },
           { k: "Inhalt", v: "Power · KI · MDE" },
@@ -29,12 +29,12 @@ export default function Ch08ExperimentDe() {
           Den Test simulieren, <em>bevor</em> er beginnt.
         </h2>
         <p className="prose">
-          Verändere den datenerzeugenden Lift zwischen null und +2
-          Prozentpunkten und vergleiche die Zwischenschätzungen. Dies ist ein
-          einzelner synthetischer Bernoulli-Verlauf: Sein Intervall kann null
-          mehrfach kreuzen. Eine Kreuzung bei einer Zwischenanalyse ist keine
-          gültige Stoppregel. Die Übung zeigt Stichprobenvariabilität, nicht das
-          Ergebnis eines geplanten Produktionstests.
+          Schieb den datenerzeugenden Lift zwischen null und +2 Prozentpunkten
+          und vergleich die Zwischenschätzungen. Das ist ein einzelner
+          synthetischer Bernoulli-Verlauf, dessen Intervall die Null mehrfach
+          kreuzen kann. Eine solche Kreuzung ist keine gültige Stoppregel. Die
+          Übung zeigt Stichprobenvariabilität, nicht das Ergebnis eines
+          geplanten Produktionstests.
         </p>
         <ABSim />
       </section>
@@ -66,7 +66,7 @@ export default function Ch08ExperimentDe() {
           title="Fehlmuster"
           items={[
             "<b>Unkorrigiertes optionales Stoppen.</b> Einen p-Wert für einen festen Endzeitpunkt wiederholt prüfen und beim ersten Grenzübertritt stoppen verändert die Fehlerrate; das Ausmaß hängt von Prüfplan und Stoppregel ab. Siehe Kapitel 10.",
-            "<b>HARKing.</b> Hypothesen erst nach Kenntnis der Ergebnisse formulieren und Daten schneiden, bis etwas auffällt.",
+            "<b>HARKing.</b> Die Hypothese entsteht nach den Ergebnissen, und die Daten werden geschnitten, bis etwas auffällt.",
             "<b>Mehrfachvergleiche ohne Korrektur.</b> Bei 20 unabhängigen, unter der Nullhypothese gültigen p-Werten mit α=0.05 beträgt die Wahrscheinlichkeit für mindestens ein falsch-positives Ergebnis 1 − 0.95²⁰ ≈ 64%. Abhängigkeit verändert diese Rechnung.",
           ]}
         />
@@ -76,7 +76,7 @@ export default function Ch08ExperimentDe() {
         title="Kernaussagen"
         items={[
           "<b>Die Stichprobengröße skaliert häufig näherungsweise mit 1 / Effekt².</b> Bei unveränderter Varianz, Zuweisung, α und Power benötigt ein halbierter Zieleffekt etwa die vierfache Stichprobe.",
-          "<b>Intervalle und p-Werte fassen dasselbe Modell unterschiedlich zusammen.</b> Effektgröße und Unsicherheit berichten; beide reparieren kein schwaches Design.",
+          "<b>Intervalle und p-Werte fassen dasselbe Modell unterschiedlich zusammen.</b> Berichte Effektgröße und Unsicherheit. Ein schwaches Design reparieren beide nicht.",
           '<b>Aussagen auf den ausgeschlossenen Bereich begrenzen.</b> "Kein Effekt nachgewiesen" bedeutet nicht "kein Effekt"; das Intervall mit dem vorab festgelegten relevanten Bereich vergleichen.',
         ]}
       />

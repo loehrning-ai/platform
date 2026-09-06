@@ -46,13 +46,12 @@ export function ChOverview() {
           Trace a <em>data pipeline</em> from source to serving.
         </h1>
         <p className="ov2-sub">
-          Learn the system rather than a list of products.{" "}
+          The system is what matters, not the tool list.{" "}
           <b>
             12 chapters · 17 interactive simulations · one capstone with
             controlled failure cases.
           </b>{" "}
-          Each chapter connects an engineering decision to its downstream
-          effect.
+          Every chapter ties one engineering decision to its downstream damage.
         </p>
         <div className="ov2-cta">
           <Link
@@ -88,8 +87,8 @@ export function ChOverview() {
             simulated data row.
           </h2>
           <p className="ov2-lede">
-            Select a stage to inspect its contract, then open the corresponding
-            chapter. The capstone combines all ten stages in one scenario.
+            Pick a stage, read its contract, open its chapter. The capstone runs
+            all ten stages in a single scenario.
           </p>
         </div>
         <PipelineBar

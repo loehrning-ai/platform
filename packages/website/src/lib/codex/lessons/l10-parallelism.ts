@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Multiple coding tasks can run concurrently, but execution capacity does not create independent work. Every task still consumes review capacity and may interact through shared files, schemas, APIs, generated artifacts, dependencies, or deployment state.\n\nParallelize only after identifying those dependencies. Separate working trees prevent concurrent processes from editing the same checkout; they do not prevent semantic conflicts when branches are merged.",
+            "Execution capacity is cheap. Independent work is not. Every task still consumes review capacity, and tasks interact through shared files, schemas, APIs, generated artifacts, dependencies and deployment state.\n\nParallelize only after identifying those dependencies. Separate working trees prevent concurrent processes from editing the same checkout. They do not prevent semantic conflicts when branches are merged.",
         },
         {
           kind: "pull-quote",
@@ -48,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Two local sessions in one working directory share file state. A write from one session can change what the other reads or tests.\n\n**Git worktrees** provide separate working directories backed by the same repository object database. Each worktree normally uses its own branch.\n\n```\n# Create worktrees on distinct branches\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Start the configured coding tool from each worktree.\n# Verify the path and branch before editing.\n\n# Remove a worktree after its changes are integrated or preserved\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees isolate uncommitted file state. They still share Git metadata and may share external state such as dependency caches, databases, ports, and generated files outside the worktree. Branches can also conflict at merge time when their diffs overlap semantically.",
+            "Two local sessions in one working directory share file state. A write from one changes what the other reads and tests.\n\n**Git worktrees** provide separate working directories backed by the same repository object database. Each worktree normally uses its own branch.\n\n```\n# Create worktrees on distinct branches\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Start the configured coding tool from each worktree.\n# Verify the path and branch before editing.\n\n# Remove a worktree after its changes are integrated or preserved\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees isolate uncommitted file state. They still share Git metadata and may share dependency caches, databases, ports and generated files outside the worktree. Branches still conflict at merge time when their diffs overlap semantically.",
         },
       ],
     },
@@ -60,7 +60,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "These decomposition patterns can expose independent work, provided shared contracts and side effects are checked first:",
+            "Three patterns that expose independent work, once you have checked the shared contracts and side effects.",
         },
         {
           kind: "card-grid",
@@ -85,7 +85,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "For each proposed task, list expected files, interfaces, generated outputs, services, ports, and data stores. Overlap does not always prohibit concurrency, but it requires an integration order and explicit conflict ownership.",
+            "For each proposed task, list expected files, interfaces, generated outputs, services, ports and data stores. Overlap does not always rule out concurrency. It does demand an integration order and a named conflict owner.",
         },
       ],
     },
@@ -97,7 +97,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Avoid parallel tasks that each say "refactor shared helpers as needed." The phrase leaves ownership of the same dependency open to every task and makes merge behavior unpredictable.',
+            'Parallel tasks that each say "refactor shared helpers as needed." Every one of them owns the same dependency, and the merge behavior becomes unpredictable.',
         },
         {
           kind: "callout",
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Before launching concurrent tasks, classify each one:\n\n- **Independent:** no shared code, contract, generated state, or external side effect is expected. Parallel execution is reasonable, subject to review capacity.\n- **Sequentially dependent:** a task requires another task's accepted output. Run and review the dependency first.\n- **Conflict-prone:** tasks modify a shared file, interface, schema, fixture, or service. Restructure, assign ownership, or serialize them.\n\nDisjoint expected file lists are useful evidence, not proof of independence. Integration tests and merge review still need to evaluate semantic overlap.",
+            "Before launching concurrent tasks, classify each one:\n\n- **Independent:** no shared code, contract, generated state, or external side effect is expected. Parallel execution is reasonable, subject to review capacity.\n- **Sequentially dependent:** a task requires another task's accepted output. Run and review the dependency first.\n- **Conflict-prone:** tasks modify a shared file, interface, schema, fixture, or service. Restructure, assign ownership, or serialize them.\n\nDisjoint file lists are evidence, not proof of independence. Integration tests and merge review still have to judge semantic overlap.",
         },
         {
           kind: "callout",
@@ -131,7 +131,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Parallel execution needs explicit human ownership:\n\n- Assign a reviewer who understands each affected feature area and trust boundary.\n- Record the base revision, dependency order, and integration owner for every task.\n- Limit active tasks to the team's ability to review diffs and verification evidence without delaying security or release checks.\n- Keep product, architecture, and risk decisions with accountable humans; delegate implementation only after those decisions are stated.\n\nThere is no universal concurrency target. Use queue age, review complexity, overlap, and deployment risk to decide when to start another task.",
+            "Parallel execution needs explicit human ownership:\n\n- Assign a reviewer who understands each affected feature area and trust boundary.\n- Record the base revision, dependency order, and integration owner for every task.\n- Limit active tasks to the team's ability to review diffs and verification evidence without delaying security or release checks.\n- Keep product, architecture, and risk decisions with accountable humans; delegate implementation only after those decisions are stated.\n\nNo universal concurrency target exists. Queue age, review complexity, overlap and deployment risk decide when the next task starts.",
         },
       ],
     },

@@ -2,10 +2,10 @@
   "id": "safety",
   "number": 12,
   "title": "Datenverarbeitung und Prompt-Injection",
-  "subtitle": "Vor der Nutzung Datenrichtlinie, Zugriffskontrollen und mehrschichtige Abwehr anwenden.",
+  "subtitle": "Erst Datenrichtlinie, Zugriffskontrollen und mehrschichtige Abwehr, dann einfügen.",
   "durationMinutes": 8,
   "trackId": "team",
-  "hook": "Prüfe Inhalte und Berechtigungen vor dem Einfügen.",
+  "hook": "Erst Richtlinie prüfen, dann einfügen.",
   "keyConcepts": [
     "Gesperrte Datenklassen",
     "Datenminimierung",
@@ -17,25 +17,25 @@
       "id": "the-rule",
       "title": "Grundannahme",
       "readTimeMinutes": 1,
-      "content": "Leite Datenverarbeitung nicht aus der Oberfläche ab. Prüfe vor einer Eingabe Klassifizierungsrichtlinie, freigegebenes Produkt und Konto, Aufbewahrung, Trainingsbedingungen, Region, Zugriffskontrollen und Incident-Prozess. Diese Bedingungen unterscheiden sich nach Deployment und Vertrag.\n\nErzwinge Grenzen technisch: sensible Pfade sperren, Tools und Netzwerkzugriff beschränken, Eingaben minimieren, autorisierte Aktionen protokollieren und folgenreiche Ausgaben prüfen."
+      "content": "Die Oberfläche sagt dir nicht, was mit deinen Daten passiert. Das steht in Klassifizierungsrichtlinie, Produkt- und Kontofreigabe, Aufbewahrung, Trainingsbedingungen, Region, Zugriffskontrollen und Incident-Prozess. Das alles hängt an Deployment und Vertrag, nicht am Eingabefeld.\n\nGrenzen werden technisch erzwungen: sensible Pfade sperren, Tools und Netzwerkzugriff beschränken, Eingaben minimieren, autorisierte Aktionen protokollieren, folgenreiche Ausgaben prüfen."
     },
     {
       "id": "never-paste",
       "title": "Ohne explizite Freigabe blockieren",
       "readTimeMinutes": 1,
-      "content": "Blockiere ohne explizit freigegebenen Ablauf:\n\n- Geheimnisse wie API-Schlüssel, Tokens, Passwörter und Session-Cookies.\n- Personen-, Kunden-, Gesundheits-, Finanz- oder Authentifizierungsdaten über das genehmigte Minimum hinaus.\n- Vertrauliche Produkt-, Sicherheits-, Rechts-, Personal- oder Finanzinformationen.\n- Daten mit vertraglichen, regulatorischen, Export- oder Residenzbeschränkungen.\n- Jede nach Organisationsrichtlinie verbotene Klassifizierung.\n\nGelangt ein Geheimnis in ein nicht autorisiertes System, folge dem Incident-Prozess und rotiere oder widerrufe es. Das Löschen des Chats reicht nicht aus."
+      "content": "Ohne explizit freigegebenen Ablauf bleibt das draußen.\n\n- Geheimnisse wie API-Schlüssel, Tokens, Passwörter und Session-Cookies.\n- Personen-, Kunden-, Gesundheits-, Finanz- oder Authentifizierungsdaten über das genehmigte Minimum hinaus.\n- Vertrauliche Produkt-, Sicherheits-, Rechts-, Personal- oder Finanzinformationen.\n- Daten mit vertraglichen, regulatorischen, Export- oder Residenzbeschränkungen.\n- Alles, was die Organisationsrichtlinie verbietet.\n\nIst ein Geheimnis in einem nicht autorisierten System gelandet, greift der Incident-Prozess: rotieren oder widerrufen. Den Chat zu löschen reicht nicht."
     },
     {
       "id": "usually-fine",
       "title": "Nach Prüfung meist vertretbar",
       "readTimeMinutes": 1,
-      "content": "Je nach Richtlinie und Lizenzbedingungen können weniger riskant sein:\n\n- Öffentliche Dokumentation und Standards.\n- Interner Code nach Entfernung von Geheimnissen, personenbezogenen Daten und vertraulichen Kennungen.\n- Synthetische Beispiele ohne Rückbezug auf Personen oder Kunden.\n- Dokumente, die für Konto und Verarbeitungsregion freigegeben sind.\n\nMinimiere vor der Übermittlung. Ersetze Kennungen durch stabile Platzhalter wie `<CUSTOMER_ID>` und prüfe, ob die Transformation die für die Aufgabe nötigen Informationen erhält."
+      "content": "Weniger riskant, je nach Richtlinie und Lizenzbedingungen.\n\n- Öffentliche Dokumentation und Standards.\n- Interner Code, sobald Geheimnisse, personenbezogene Daten und vertrauliche Kennungen raus sind.\n- Synthetische Beispiele ohne Rückbezug auf Personen oder Kunden.\n- Dokumente, die für Konto und Verarbeitungsregion freigegeben sind.\n\nMinimiere, bevor du sendest. Kennungen werden stabile Platzhalter wie `<CUSTOMER_ID>`. Und prüfe, ob nach der Transformation noch drinsteht, was die Aufgabe braucht."
     },
     {
       "id": "prompt-injection",
       "title": "Prompt-Injection in Kurzform",
       "readTimeMinutes": 2,
-      "content": "Webseiten, externe Nachrichten, hochgeladene Dokumente und Tool-Ergebnisse sind nicht vertrauenswürdige Eingaben. Solche Eingaben können Text enthalten, der das Modell umleiten oder Tool-Aufrufe auslösen soll. Abgrenzung und eine „nur Daten“-Anweisung helfen bei der Einordnung, sind aber keine Sicherheitsgrenze.\n\nNutze mehrere Schichten: Inhalte isolieren, Tools und Ziele allowlisten, Argumente validieren, folgenreiche Aktionen freigeben lassen, Ausgaben vor Wiederverwendung bereinigen und bekannte Injection-Payloads testen. Halte Geheimnisse möglichst außerhalb des Modellkontexts."
+      "content": "Webseiten, externe Nachrichten, hochgeladene Dokumente und Tool-Ergebnisse sind Eingaben, denen du nicht vertraust. Jede kann Text enthalten, der das Modell umleiten oder Tool-Aufrufe auslösen soll. Abgrenzung und eine „nur Daten“-Anweisung helfen bei der Einordnung. Eine Sicherheitsgrenze sind sie nicht.\n\nDeshalb mehrere Schichten: Inhalte isolieren, Tools und Ziele allowlisten, Argumente validieren, folgenreiche Aktionen freigeben lassen, Ausgaben vor Wiederverwendung bereinigen, bekannte Injection-Payloads testen. Geheimnisse bleiben möglichst außerhalb des Modellkontexts."
     }
   ],
   "widgets": [
@@ -166,7 +166,7 @@
           "Claude nicht mehr zur Zusammenfassung verwenden."
         ],
         "correct": 1,
-        "explanation": "Prompt-Injection erfordert mehrschichtige Kontrollen. Eine Anweisung zum Ignorieren eingebetteten Textes ist nützlicher Kontext, erzwingt aber keine Tool- oder Datengrenze.",
+        "explanation": "Prompt-Injection braucht mehrere Schichten. Die Anweisung, eingebetteten Text zu ignorieren, ist nützlicher Kontext. Eine Tool- oder Datengrenze erzwingt sie nicht.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

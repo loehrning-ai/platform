@@ -1,20 +1,22 @@
 # Die 3-Schritt-Prüfung als Gewohnheit
 
-60 Sekunden. Jedes Mal. Ohne Ausnahme.
+60 Sekunden, jedes Mal, ohne Ausnahme.
 
 Wie der Schulterblick vor dem Spurwechsel. Am Anfang bewusst. Nach zwei Wochen automatisch.
 
-Drei Fragen, die in dieser Reihenfolge laufen: **Sachlich korrekt? Vollständig? Angemessen?** In der KI-Führerschein-Sprache auch bekannt als **Plausibilität / Quellencheck / Entscheidungsrelevanz**, gleiche Logik, andere Bezeichnung. Nutze den Namen, der dir besser im Kopf bleibt.
+Drei Fragen, immer in dieser Reihenfolge. **Sachlich korrekt? Vollständig? Angemessen?**
+
+In der KI-Führerschein-Sprache heißen sie **Plausibilität / Quellencheck / Entscheidungsrelevanz**, gleiche Logik, andere Bezeichnung. Nutze den Namen, der dir besser im Kopf bleibt.
 
 ## Schritt 1: Sachlich korrekt?
 
-Der häufigste Fehler. Der teuerste.
+Der häufigste und teuerste Fehler.
 
 Prüfe:
 
-- **Zahlen:** Umsatz, Datum, Prozentsatz? Öffne die Primärquelle. Nicht die KI fragen, ob die Zahl stimmt, sie wird sagen "Ja."
+- **Zahlen:** Umsatz, Datum, Prozentsatz? Öffne die Primärquelle. Frag nicht die KI, ob die Zahl stimmt, sie wird "Ja" sagen.
 - **Zitate:** Google den exakten Wortlaut in Anführungszeichen. Existiert die Quelle? Stimmt der Wortlaut? ChatGPT erfindet Professoren, Institute und Fachverbände mit beeindruckender Detailtreue.
-- **Personen und Organisationen:** Existiert der Experte? Der Verband? Der "Bundesverband für Intelligente Fertigung" klingt seriös, es gibt ihn nicht.
+- **Personen und Organisationen:** Gibt es den Experten, gibt es den Verband? Der "Bundesverband für Intelligente Fertigung" klingt seriös, es gibt ihn nicht.
 - **Rechtliche Verweise:** EUR-Lex für EU-Verordnungen. Gesetze-im-Internet.de für deutsches Recht. Akzeptiere nie einen Artikelverweis ungeprüft.
 
 **Faustregel:** Je plausibler die Behauptung, desto sorgfältiger prüfst du. Offensichtliche Fehler fallen auf. Subtile, plausible Fehler kosten dich.
@@ -36,31 +38,29 @@ Beispiel: Die KI fasst den EU AI Act korrekt zusammen, Hochrisiko-Anforderungen,
 
 Auch wenn der Inhalt stimmt, der Ton kann falsch sein.
 
-Prüfe:
-
 - **Passt der Ton zum Empfänger?** Vorstandsmail ist nicht Kundenmail.
 - **Gibt es unangemessene Formulierungen?** KI reproduziert Bias aus den Trainingsdaten.
 - **Diskriminierungsfreie Sprache?** Achte auf geschlechtsspezifische Formulierungen, Altersannahmen, kulturelle Stereotype.
 
 ## Ein konkretes Beispiel
 
-Du hast eine Kundenreklamation mit Copilot beantwortet (Kapitel 6). Bevor du auf "Senden" klickst:
+Du hast eine Kundenreklamation mit Copilot beantwortet (Kapitel 6). Jetzt der Schulterblick.
 
-**Schritt 1, Sachlich:** Stimmt die Bestellnummer? Das Lieferdatum? Hat Copilot ein Datum erfunden, das nicht in der Original-E-Mail steht?
+**Schritt 1, Sachlich:** Stimmen Bestellnummer und Lieferdatum? Hat Copilot ein Datum erfunden, das nicht in der Original-E-Mail steht?
 
 **Schritt 2, Vollständig:** Geht die Antwort auf alle Punkte des Kunden ein? Oder nur auf den offensichtlichsten?
 
 **Schritt 3, Angemessen:** Passt der Ton für eine vierjährige Kundenbeziehung? Nicht zu distanziert. Nicht zu kumpelhaft.
 
-60 Sekunden. Drei Fragen. Dann senden.
+60 Sekunden, drei Fragen, dann senden.
 
 ## Wenn du dich selbst erwischst
 
-Ich habe auch schon Halluzinationen nicht gemerkt. Einmal zitierte Claude mir ein Paper, das es tatsächlich gab, aber mit völlig anderem Inhalt als behauptet. Titel stimmte. Autor stimmte. Jahr stimmte. Die Aussage, die Claude dem Paper zuschrieb, war frei erfunden.
+Ich habe auch schon Halluzinationen nicht gemerkt. Einmal zitierte Claude mir ein Paper, das es tatsächlich gab, aber mit völlig anderem Inhalt als behauptet. Titel stimmte, Autor stimmte, Jahr stimmte. Die Aussage, die Claude dem Paper zuschrieb, war frei erfunden.
 
 Hätte ich die PDF nicht aufgemacht, hätte ich das in einen Blogpost übernommen. Mit meinem Namen darunter.
 
-Das ist nicht „Tim war nachlässig". Das ist: Die Halluzination war so gut getarnt, dass sie selbst bei Schritt 1 durchgerutscht wäre. Gerettet hat mich Schritt 2, die Quelle öffnen und nachlesen. Nicht glauben. Aufmachen.
+Das ist nicht „Tim war nachlässig". Die Halluzination war so gut getarnt, dass sie selbst bei Schritt 1 durchgerutscht wäre. Gerettet hat mich Schritt 2, die Quelle öffnen und nachlesen. Nicht glauben, aufmachen.
 
 Wenn dir selbst das passiert: nicht peinlich sein. Notieren, was durchgekommen ist und warum. Nächstes Mal fängst du es.
 
@@ -68,7 +68,7 @@ Wenn dir selbst das passiert: nicht peinlich sein. Notieren, was durchgekommen i
 
 Du lässt dir ein Angebot schreiben. Copilot liefert fünf Positionen, jede mit Stückpreis, Menge, Gesamtsumme.
 
-Prüfst du jeden Preis? Ja. Weil ein Preisfehler in einem Angebot, das rausgeht, direkt Umsatz kostet. Entweder du zahlst die Differenz, oder du musst peinlich nachbessern und verlierst Vertrauen. Beides teurer als die zwei Minuten Prüfung.
+Prüfst du jeden Preis? Jeden einzelnen. Ein Preisfehler in einem Angebot, das rausgeht, kostet direkt Umsatz. Entweder du zahlst die Differenz, oder du musst peinlich nachbessern und verlierst Vertrauen. Beides teurer als die zwei Minuten Prüfung.
 
 Gleiche Logik bei Vertragsklauseln, Lieferterminen, Zertifikats-Nummern, Compliance-Verweisen. Alles, wofür du am Ende den Kopf hinhältst, wird geprüft.
 
@@ -78,7 +78,7 @@ Bei einer internen Recherche für einen Kollegen: lockerer. Wenn Copilot dort ma
 
 Wenn ein LLM einen Fehler gemacht hat, wird es den Fehler meistens wiederholen. Es hat kein Konzept von "wahr", nur Wahrscheinlichkeiten. Wenn die wahrscheinlichste Antwort falsch ist, bleibt sie falsch.
 
-Frag eine zweite Quelle. Google. Die Firmenwebsite. Einen Kollegen. Nie dieselbe KI.
+Frag eine zweite Quelle. Google, die Firmenwebsite, einen Kollegen. Nie dieselbe KI.
 
 ## Die Verifikation bremst dich nicht
 

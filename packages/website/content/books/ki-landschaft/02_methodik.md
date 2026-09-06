@@ -1,50 +1,50 @@
 # Methodik: KI-Bereitschaft ohne Scheingenauigkeit prüfen
 
-Eine Zahl wirkt objektiv, auch wenn sie auf unvollständigen Annahmen beruht. Öffentlich sichtbare Merkmale einer Website zeigen nicht zuverlässig, wie gut interne Daten, Prozesse, Kompetenzen oder Kontrollen funktionieren. Dieses Kapitel verwendet deshalb keinen proprietären Firmenscore.
+Eine Zahl sieht aus wie ein Fakt. Auch wenn niemand die Annahmen dahinter geprüft hat. Von außen sichtbare Website-Merkmale sagen nichts über interne Daten, Prozesse, Kompetenzen und Kontrollen. Deshalb steht hier kein proprietärer Firmenscore.
 
 ## Untersuchungsfrage zuerst
 
-Formuliere vor jeder Erhebung eine konkrete Frage:
+Vor jeder Erhebung steht eine Frage.
 
 - Welche Systeme werden eingesetzt?
-- Welcher Prozess soll verbessert werden?
-- Welche Daten werden dafür benötigt?
+- Welcher Prozess soll besser werden?
+- Welche Daten braucht er dafür?
 - Welche Fehler wären tolerierbar?
 - Welche rechtlichen und organisatorischen Kontrollen greifen?
 
-Ohne Untersuchungsfrage wird ein Inventar schnell zur Sammlung irrelevanter Technikmerkmale.
+Fehlt sie, sammelst du irrelevante Technikmerkmale.
 
 ## Fünf Evidenzbereiche
 
 ### 1. Prozess und Zweck
 
-Dokumentiere Prozessinhaber, Nutzer, Betroffene, Eingangsdaten, Ergebnis, Folgehandlung, Volumen und bekannte Fehler. Trenne den vorgesehenen Zweck eines Produkts vom tatsächlichen internen Einsatz.
+Dokumentiere Prozessinhaber, Nutzer, Betroffene, Eingangsdaten, Ergebnis, Folgehandlung, Volumen und bekannte Fehler. Und trenne sauber: Der vorgesehene Zweck des Anbieters ist nicht dein tatsächlicher Einsatz.
 
 ### 2. Daten
 
-Prüfe Herkunft, Rechtsgrundlage, Qualität, Aktualität, Zugriff, Aufbewahrung, Löschung und repräsentative Lücken. „Wir haben viele Daten“ ist keine Aussage über Eignung.
+Prüfe Herkunft, Rechtsgrundlage, Qualität, Aktualität, Zugriff, Aufbewahrung, Löschung und repräsentative Lücken. „Wir haben viele Daten“ sagt nichts über Eignung.
 
 ### 3. Technik und Sicherheit
 
-Erfasse Systemversion, Integrationen, Datenflüsse, Identitäts- und Rechtekonzept, Verschlüsselung, Secrets, Logging, Monitoring, Updates, Backups, Wiederherstellung und Exit.
+Erfasse Systemversion, Integrationen, Datenflüsse, Identitäts- und Rechtekonzept, Verschlüsselung, Secrets, Logging, Monitoring, Updates, Backups, Wiederherstellung und Exit. Wer den Exit erst beim Anbieterwechsel sucht, hat keinen.
 
 ### 4. Menschen und Governance
 
-Klar sein müssen Freigabe, Fachprüfung, menschliche Aufsicht, Eskalation, Schulung, Vertretung und Verantwortung. Ein Tool ersetzt keine Zuständigkeit.
+Freigabe, Fachprüfung, menschliche Aufsicht, Eskalation, Schulung, Vertretung und Verantwortung brauchen Namen, keine Kästchen. Ein Tool ersetzt keine Zuständigkeit.
 
 ### 5. Recht und Wirkung
 
-Prüfe Rollen und Pflichten nach AI Act, DSGVO, Geheimnisschutz, Urheberrecht, Arbeitsrecht, Gleichbehandlung und sektorspezifischem Recht. Nicht jede Pflicht gilt für jeden Use Case.
+Prüfe Rollen und Pflichten nach AI Act, DSGVO, Geheimnisschutz, Urheberrecht, Arbeitsrecht, Gleichbehandlung und sektorspezifischem Recht. Nicht jede Pflicht trifft jeden Use Case.
 
 ## Eine nachvollziehbare Bewertungslogik
 
-Verwende je Prüffeld drei Zustände:
+Je Prüffeld drei Zustände:
 
 - **unbekannt:** keine belastbare Information
 - **teilweise belegt:** Information vorhanden, aber unvollständig oder nicht getestet
 - **belegt:** aktuelle Quelle, verantwortliche Person und Prüfnachweis vorhanden
 
-Das Ergebnis ist eine Gap-Liste, kein Wettbewerbsscore. Eine unbekannte Antwort ist kein Nullpunkt, sondern ein konkreter Rechercheauftrag.
+Heraus kommt eine Gap-Liste, kein Wettbewerbsscore. „Unbekannt“ ist kein Nullpunkt, sondern ein Rechercheauftrag.
 
 ## Quellenhierarchie
 
@@ -56,11 +56,11 @@ Bevorzuge:
 4. reproduzierbare Forschung mit klarer Population und Methode
 5. Sekundärberichte nur als Einstieg
 
-Führe für volatile Angaben ein Prüfdatum und einen Auslöser zur erneuten Prüfung.
+Volatile Angaben bekommen ein Prüfdatum und einen Auslöser für die Neuprüfung.
 
 ## Grenzen offenlegen
 
-Jede Bewertung nennt mindestens:
+Jede Bewertung nennt mindestens diese Punkte.
 
 - Population und Auswahlverfahren
 - Beobachtungszeitraum
@@ -69,4 +69,4 @@ Jede Bewertung nennt mindestens:
 - mögliche Fehlklassifikationen
 - Unterschied zwischen beobachtetem Merkmal und Schlussfolgerung
 
-Aus einer erreichbaren Website folgt keine interne Datenreife. Aus einer Cloud-Domain folgt keine AI-Act-Konformität. Aus einer Umfrage folgt keine technische Wirksamkeit. Methodische Ehrlichkeit beginnt mit diesen Grenzen.
+Aus einer erreichbaren Website folgt keine interne Datenreife. Aus einer Cloud-Domain folgt keine AI-Act-Konformität. Aus einer Umfrage folgt keine technische Wirksamkeit. Ehrliche Methodik fängt hier an.
