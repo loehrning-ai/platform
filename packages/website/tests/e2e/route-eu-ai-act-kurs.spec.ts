@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * /eu-ai-act-kurs smoke + funnel (regression coverage wave 2). The landing
@@ -20,25 +25,11 @@ const CURRICULUM_HEADING =
   "Sechs Blöcke, eine durchgehende Klassifikationslogik.";
 const START_CTA = "Kurs mit Lernkonto starten";
 
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("/eu-ai-act-kurs landing", () => {
   test("loads without login, shows the h1, and logs no console error", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(LANDING, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${LANDING}`).toBe(200);
@@ -48,10 +39,11 @@ test.describe("/eu-ai-act-kurs landing", () => {
     await expect(h1).toBeVisible();
     await expect(h1).toHaveText(LANDING_HEADING);
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${LANDING}\n${noise.join("\n")}`).toEqual(
-      [],
-    );
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${LANDING}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("shows the curriculum section and a funnel CTA into the hub", async ({

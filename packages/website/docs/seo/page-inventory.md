@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (25)
+### Static pages (26)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -46,6 +46,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 | https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 | https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
+| https://loehrning.ai/hilfe/eigene-ki | src/app/hilfe/eigene-ki/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 | https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 | https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-09-05 | yes | Tim Löhr |
 
@@ -136,6 +137,7 @@ _None._
 | `/auth/logout` | Public utility page; crawlable so crawlers can see noindex. |
 | `/feedback` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/feedback` | Public utility page; crawlable so crawlers can see noindex. |
+| `/api/csp-report` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/ai-native/grade-exercise` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/demos/:slug/briefing.pdf` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-fuehrerschein/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
@@ -168,6 +170,12 @@ _None._
 | `/api/knowledge-graph.json` | Public machine-readable surface. |
 | `/schema/knowledge-graph/v1` | Public machine-readable surface. |
 | `/api/health` | Public machine-readable surface. |
+| `/api/mcp` | Public machine-readable surface. |
+| `/api/courses.json` | Public machine-readable surface. |
+| `/api/workshops.json` | Public machine-readable surface. |
+| `/.well-known/oauth-protected-resource` | Public machine-readable surface. |
+| `/.well-known/oauth-protected-resource/api/mcp` | Public machine-readable surface. |
+| `/skills/:name/SKILL.md` | Public machine-readable surface. |
 
 ## Asset patterns (public-assets)
 
@@ -212,6 +220,8 @@ _None._
 | `/api/ai-native/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/course-workspace/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/demos/:path*` | Private account, state, or provider-backed API surface. |
+| `/oauth/consent` | Private account, state, or provider-backed API surface. |
+| `/oauth/consent/:path*` | Private account, state, or provider-backed API surface. |
 | `/ki-fuehrerschein/kurs` | Private account, state, or provider-backed API surface. |
 | `/ki-fuehrerschein/kurs/:path*` | Private account, state, or provider-backed API surface. |
 | `/eu-ai-act-kurs/kurs` | Private account, state, or provider-backed API surface. |

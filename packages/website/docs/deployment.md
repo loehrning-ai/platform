@@ -69,6 +69,34 @@ partial configuration and fails instead of surviving as stale release state.
   [Sign in with Google branding guidelines](https://developers.google.com/identity/branding-guidelines)
   during Google app verification; the attestation does not substitute for that
   external review.
+- GitHub login is the third optional sign-in group and mirrors the Google one:
+  it additionally requires the server-only, non-secret
+  `SUPABASE_GITHUB_OAUTH_CONFIRMED_AT` attestation set to a past-or-present
+  `YYYY-MM-DD`, on top of the complete account configuration. Keep the OAuth
+  app's client ID and client secret exclusively in the GitHub and Supabase
+  provider consoles. In GitHub, register the exact Supabase Auth callback shown
+  by the project; in Supabase, enable the GitHub provider and allow-list each
+  exact application callback. Complete a real GitHub sign-in in the target
+  environment before dating the attestation. The application calls
+  `signInWithOAuth` with provider `github` and a sanitized application
+  callback, requests no additional scopes, and hides the control entirely while
+  the attestation is absent. An attestation without the account configuration
+  fails the build.
+- The hosted cv-engine is an optional account-connected tool, off unless its
+  whole group is present: `CV_ENGINE_HOSTED_URL` as an exact `loehrning.ai`
+  HTTPS origin on the default port and with no path, query, fragment, or
+  credentials (such as `https://cv.loehrning.ai`), the past-or-present
+  `CV_ENGINE_HOSTED_CONFIRMED_AT` review marker, and the complete Supabase
+  group, because the tool keeps learner documents inside the account boundary.
+  A third-party host requires a code-reviewed allowlist, and an orphaned
+  attestation without the origin fails the build. While the group is
+  incomplete, `/konto` offers the tool as source code and a self-host guide
+  only, reads no documents, and the session handoff answers 404.
+- The platform's own MCP server is a separate opt-in: `MCP_SERVER_ENABLED` must
+  be exactly `true` or `false` when set, and `true` additionally requires the
+  complete Supabase group, because agent grants, tokens, and the audit trail
+  live in the account backend. While it is off or absent, the account page
+  shows no connection panel and the endpoint advertises nothing.
 - With zero
   Supabase vars the site builds and runs with auth cleanly disabled.
   `NEXT_PUBLIC_*` values are inlined at build time and feed the CSP, so
@@ -148,6 +176,54 @@ Add `loehrning.ai` in the Vercel Domains tab and follow its DNS instructions
 `www.loehrning.ai` to redirect to the apex. The canonical origin
 `https://loehrning.ai` is hardcoded in `src/lib/seo/entity.ts` and used by
 metadata, sitemap, robots and JSON-LD; no env var controls it.
+
+## Hosted tool subdomain
+
+One tool is designed to run outside this Vercel project: the resume editor at
+`https://cv.loehrning.ai`, on a container host we operate in the EU. It is not
+provisioned yet. That name has no DNS record, nothing answers on it, and the
+platform side is off, so every surface still describes cv-engine as a tool you
+run yourself. It is not a Vercel domain and must not be added in the Vercel
+Domains tab; its A record belongs in the DNS zone at the registrar, pointing at
+that host. `docs/hosted-tools.md` is the operator runbook: what runs where, the
+provisioning checklist, the two database gates that have to pass before DNS
+exists, what is logged, how each secret is rotated, and the running cost.
+
+Two server-only variables gate the platform side, and they are required
+together:
+
+- `CV_ENGINE_HOSTED_URL` is the exact HTTPS origin of the hosted deployment. It
+  is accepted only on a `loehrning.ai` host with no path, port, query, fragment
+  or credentials, because a one-time sign-in token is handed to whatever it
+  resolves to. Anything else is rejected and the capability stays off.
+- `CV_ENGINE_HOSTED_CONFIRMED_AT` is a `YYYY-MM-DD` date, today or earlier. It
+  records that someone actually reached the deployment and reviewed it.
+
+Both belong in Vercel preview and production, and both sit behind the complete
+Supabase account group: without accounts there is nobody to hand a session to.
+With either one absent or malformed the readiness predicate returns false and
+the handoff route answers 404. Both are unset, so it does today. There is also
+no Werkzeuge card yet: the route exists, the account surface that will POST to
+it does not. Removing the two variables is therefore the whole rollback for the
+account side, one deploy and no code change.
+
+`/open-source` is a separate decision and separate work. It lists cv-engine as
+`delivery: "source-only"`, a build-time constant in
+`src/lib/open-source/artifacts.ts` rather than an environment read, so the
+sitemap, `llms.txt` and the knowledge-graph endpoint stay identical across
+environments. Setting the two variables does not change that page, and must
+not: switching it to `hosted-service` is a code commit, and only once
+`cv.loehrning.ai` resolves and answers over TLS. The comment above that
+constant lists the preconditions and the copy that has to change with it.
+
+The platform's auth cookies stay host scoped. `AUTH_COOKIE_OPTIONS` in
+`src/lib/supabase/config.ts` sets no `domain`, so the session cookie is issued
+for `loehrning.ai` alone and the subdomain never receives it; a single-use token
+is the only thing that crosses the host boundary. Do not widen that cookie to
+`.loehrning.ai` to make a subdomain feel integrated. `httpOnly` is false because
+the browser client reads the token, so a wider domain would hand a live,
+script-readable platform session to every current and future `*.loehrning.ai`
+host. `docs/hosted-tools.md` carries the full argument and the alternative.
 
 ## Pre-deploy verification
 

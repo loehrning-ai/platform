@@ -10,6 +10,9 @@ import {
   getBlockFreshness,
 } from "@/lib/course/data";
 import { LessonLayout } from "@/components/course/kurs/lesson-layout";
+import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
+import { hasLessonBodies } from "@/lib/mcp/catalog";
+import { lessonUri } from "@/lib/mcp/uris";
 import { SITE_URL } from "@/lib/seo/json-ld";
 import type { BlockId, CourseSlug } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
@@ -86,8 +89,11 @@ export function BlockPageShell({
 
   return (
     <div className="min-h-[100svh] bg-background">
-      {/* Sub-header below site nav */}
-      <header className="sticky top-16 z-40 w-full border-b border-border bg-background">
+      {/* Sub-header below the site nav. The offset is the shell's header token
+          pair, not a hard-coded 64px: below lg the companion bar is 48px tall,
+          and a fixed 64px would leave a 16px strip of article content sliding
+          through the gap. */}
+      <header className="sticky top-[var(--nav-h-compact)] z-40 w-full border-b border-border bg-background lg:top-[var(--nav-h)]">
         <div className="mx-auto grid min-h-14 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-12 sm:min-h-0 sm:px-6 sm:py-0">
           <Link
             href={localizeHref(config.coursePath, locale)}
@@ -111,6 +117,20 @@ export function BlockPageShell({
           </span>
         </div>
       </header>
+
+      <OpenWithYourAiRegion
+        kind="lesson"
+        contextTitle={`${config.title}: ${block.title}`}
+        resources={
+          hasLessonBodies(courseSlug)
+            ? block.lessons.map((lesson) => ({
+                uri: lessonUri(courseSlug, lesson.id, locale),
+                title: lesson.title,
+              }))
+            : []
+        }
+        locale={locale}
+      />
 
       {/* Two-Column Lesson Layout */}
       <div>

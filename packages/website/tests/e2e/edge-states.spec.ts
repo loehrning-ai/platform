@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Edge / error / empty / loading-state coverage (regression coverage). Guards the
@@ -24,68 +29,9 @@ import { test, expect, type Page } from "@playwright/test";
 
 // Applied only where no network failure is deliberately induced. Tests that
 // intentionally abort a fetch do not install this strict console-error check.
-type CapturedBrowserError =
-  | {
-      readonly source: "console";
-      readonly text: string;
-      readonly location: {
-        readonly url: string;
-        readonly lineNumber: number;
-        readonly columnNumber: number;
-      };
-    }
-  | {
-      readonly source: "pageerror";
-      readonly text: string;
-    };
-
-function collectConsoleErrors(page: Page): CapturedBrowserError[] {
-  const errors: CapturedBrowserError[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") {
-      const location = msg.location();
-      errors.push({
-        source: "console",
-        text: msg.text(),
-        location: {
-          url: location.url,
-          lineNumber: location.lineNumber,
-          columnNumber: location.columnNumber,
-        },
-      });
-    }
-  });
-  page.on("pageerror", (err) => {
-    errors.push({ source: "pageerror", text: err.message });
-  });
-  return errors;
-}
-
-const CHROMIUM_DOCUMENT_404_ERROR =
-  "Failed to load resource: the server responded with a status of 404 (Not Found)";
-
-function meaningfulErrors(
-  errors: readonly CapturedBrowserError[],
-  {
-    browserName,
-    expectedDocumentUrl,
-  }: {
-    readonly browserName: string;
-    readonly expectedDocumentUrl: string;
-  },
-): CapturedBrowserError[] {
-  return errors.filter(
-    (error) =>
-      !(
-        browserName === "chromium" &&
-        error.source === "console" &&
-        error.text === CHROMIUM_DOCUMENT_404_ERROR &&
-        error.location.url === expectedDocumentUrl &&
-        error.location.lineNumber === 0 &&
-        error.location.columnNumber === 0
-      ),
-  );
-}
+// The one tolerated message, Chromium's own console error for a document that
+// deliberately 404s, lives in the shared allowlist as
+// "chromium-expected-document-404" and only applies to the URL passed below.
 
 const FEEDBACK = "/feedback";
 
@@ -98,9 +44,8 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
 
   test("navigating to an unknown path returns 404 and the not-found UI", async ({
     page,
-    browserName,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(UNKNOWN, { waitUntil: "domcontentloaded" });
 
     // App Router serves not-found.tsx with a real 404 status for unmatched paths.
@@ -122,13 +67,12 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
       page.getByRole("link", { name: "Zur Startseite" }),
     ).toHaveAttribute("href", "/");
 
-    const noise = meaningfulErrors(errors, {
-      browserName,
+    const noise = meaningfulBrowserErrors(errors, {
       expectedDocumentUrl: page.url(),
     });
     expect(
       noise,
-      `browser errors on ${UNKNOWN}\n${JSON.stringify(noise, null, 2)}`,
+      `browser errors on ${UNKNOWN}\n${formatBrowserErrors(noise)}`,
     ).toEqual([]);
   });
 

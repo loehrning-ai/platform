@@ -322,3 +322,254 @@ describe("LearningAtlas", () => {
     expect(single).toHaveTextContent("Praxisbeispiel testen");
   });
 });
+
+describe("LearningAtlas phone ledger", () => {
+  it("offers level chips that narrow the ledger below lg and leave the desktop ledger complete", () => {
+    const { container } = render(<LearningAtlas />);
+
+    const chips = screen.getByRole("group", { name: "Kursstufe wählen" });
+    const buttons = within(chips).getAllByRole("button");
+    expect(buttons.map((button) => button.textContent)).toEqual([
+      "Alle",
+      "Einstieg",
+      "Mittel",
+      "Fortgeschritten",
+    ]);
+    expect(
+      buttons.every((button) => button.className.includes("min-h-11")),
+    ).toBe(true);
+    expect(within(chips).getByRole("button", { name: "Alle" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    // The bar sticks under the compact top bar, exists below lg only, and
+    // leaves the no-script document rather than standing there inert.
+    const bar = chips.closest("[data-course-level-filter]");
+    expect(bar).toHaveClass(
+      "sticky",
+      "top-[var(--nav-h-compact)]",
+      "lg:hidden",
+      "js-shell-only",
+    );
+
+    const rows = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-course-slug]"),
+    );
+    expect(rows).toHaveLength(10);
+    for (const row of rows) {
+      expect(row).not.toHaveClass("hidden");
+      expect(row.dataset.courseLevel).toMatch(/^(?:einstieg|mittel|fortg)$/);
+    }
+    expect(screen.getByText("10 von 10 Kursen")).toHaveAttribute(
+      "aria-live",
+      "polite",
+    );
+
+    fireEvent.click(within(chips).getByRole("button", { name: "Einstieg" }));
+
+    expect(
+      within(chips).getByRole("button", { name: "Einstieg" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(within(chips).getByRole("button", { name: "Alle" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    for (const row of rows) {
+      if (row.dataset.courseLevel === "einstieg") {
+        expect(row, row.dataset.courseSlug).not.toHaveClass("hidden");
+      } else {
+        // Hidden on the phone only: the desktop ledger stays complete.
+        expect(row, row.dataset.courseSlug).toHaveClass(
+          "hidden",
+          "lg:list-item",
+        );
+      }
+    }
+    expect(
+      rows.filter((row) => !row.classList.contains("hidden")),
+    ).toHaveLength(2);
+    // A group with no matching course leaves the phone list with its rows.
+    expect(document.getElementById("tiefer-gehen")).toHaveClass(
+      "hidden",
+      "lg:block",
+    );
+    expect(document.getElementById("lernpfad")).not.toHaveClass("hidden");
+    expect(screen.getByText("2 von 10 Kursen")).toBeInTheDocument();
+    // The level is a phone view state, never a shareable URL state: only the
+    // goal writes to the address bar.
+    expect(window.location.search).toBe("");
+
+    fireEvent.click(within(chips).getByRole("button", { name: "Alle" }));
+    for (const row of rows) expect(row).not.toHaveClass("hidden");
+    expect(document.getElementById("tiefer-gehen")).not.toHaveClass("hidden");
+  });
+
+  it("states level and duration on every row and keeps the plate out of the accessibility tree", () => {
+    const { container } = render(<LearningAtlas />);
+
+    for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
+      const row = container.querySelector<HTMLElement>(
+        `[data-course-slug="${course.slug}"]`,
+      );
+      const eyebrow = row?.querySelector<HTMLElement>(
+        "[data-course-level-label]",
+      );
+      expect(eyebrow, course.slug).not.toBeNull();
+      expect(eyebrow).toHaveClass("lg:hidden");
+      expect(eyebrow).toHaveTextContent(course.duration);
+      expect(eyebrow).toHaveTextContent(
+        { einstieg: "Einstieg", mittel: "Mittel", fortg: "Fortgeschritten" }[
+          course.level
+        ],
+      );
+
+      // The plate is a styling column only. It carries no aria-hidden of its
+      // own, so the row's first hidden element is still the number badge.
+      const plate = row?.querySelector<HTMLElement>("[data-course-plate]");
+      expect(plate, course.slug).not.toBeNull();
+      expect(plate).not.toHaveAttribute("aria-hidden");
+      expect(plate).toHaveClass("lg:bg-transparent");
+      expect(plate?.firstElementChild).toHaveAttribute("aria-hidden", "true");
+      expect(row?.querySelector("[aria-hidden='true']")).toBe(
+        plate?.firstElementChild,
+      );
+    }
+  });
+
+  it("keeps the full repository path and commit in the attribution's accessible name", () => {
+    const { container } = render(<LearningAtlas />);
+    const codex = container.querySelector<HTMLElement>(
+      '[data-course-slug="codex"]',
+    ) as HTMLElement;
+
+    const repository = within(codex).getByRole("link", {
+      name: "Mavengence/interactive-courses: Quellcode, Codex-Kurs",
+    });
+    expect(repository).toHaveAttribute(
+      "href",
+      expect.stringContaining("github.com/Mavengence/interactive-courses"),
+    );
+    // Below lg only the repository name is printed; the owner returns at lg.
+    const owner = repository.querySelector(".sr-only.lg\\:not-sr-only");
+    expect(owner).toHaveTextContent("Mavengence/");
+
+    const commit = within(codex).getByRole("link", { name: "Commit #0e5dfd3" });
+    expect(commit.querySelector(".sr-only.lg\\:not-sr-only")).toHaveTextContent(
+      "Commit",
+    );
+  });
+
+  it("renders the goal decision as joined 44px segments below lg and the 56px tiles from lg", () => {
+    render(<LearningAtlas />);
+    const goals = screen.getByRole("group", { name: "Lernziel auswählen" });
+    expect(goals).toHaveClass("grid-cols-2", "lg:grid-cols-4");
+
+    const buttons = within(goals).getAllByRole("button");
+    expect(buttons).toHaveLength(4);
+    for (const button of buttons) {
+      expect(button.className).toContain("min-h-11");
+      expect(button.className).toContain("lg:min-h-14");
+    }
+    // Shared hairlines: the right column and the second row overlap by 1px
+    // below lg and get their gap back from lg.
+    expect(buttons[1]).toHaveClass("-ml-px", "lg:ml-0");
+    expect(buttons[2]).toHaveClass("-mt-px", "lg:mt-0");
+    expect(buttons[3]).toHaveClass("-ml-px", "-mt-px");
+    expect(buttons[0]).not.toHaveClass("-ml-px");
+    expect(buttons[0]).not.toHaveClass("-mt-px");
+  });
+
+  it("localizes the level chips in English", () => {
+    window.history.replaceState({}, "", "/en/kurse");
+    render(<LearningAtlas locale="en" />);
+
+    const chips = screen.getByRole("group", { name: "Choose a course level" });
+    expect(
+      within(chips)
+        .getAllByRole("button")
+        .map((button) => button.textContent),
+    ).toEqual(["All", "Entry", "Intermediate", "Advanced"]);
+
+    fireEvent.click(within(chips).getByRole("button", { name: "Advanced" }));
+    expect(screen.getByText("3 of 10 courses")).toBeInTheDocument();
+  });
+
+  it("puts the row action inside the tinted rail below lg and keeps its wording addressable", () => {
+    const { container } = render(<LearningAtlas />);
+
+    for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
+      const row = container.querySelector<HTMLElement>(
+        `[data-course-slug="${course.slug}"]`,
+      );
+      const plate = row?.querySelector<HTMLElement>("[data-course-plate]");
+      const actionCell = row?.querySelector<HTMLElement>(
+        "[data-course-action]",
+      );
+      expect(actionCell, course.slug).not.toBeNull();
+
+      // Both rail cells carry the row's own plate tone, which is what makes
+      // them read as one strip, and both drop it at lg so the reviewed
+      // four-column row keeps its flat wash.
+      const tone = [...(plate?.classList ?? [])].find((name) =>
+        name.startsWith("bg-brand-"),
+      );
+      expect(tone, `${course.slug} plate tone`).toBeDefined();
+      expect(actionCell).toHaveClass(tone as string, "lg:bg-transparent");
+      expect(plate).toHaveClass("lg:bg-transparent");
+
+      // The rail is two cells, so neither spans rows; the copy column does.
+      expect(plate?.className).not.toContain("row-span");
+      expect(actionCell?.className).not.toContain("row-span");
+
+      const action = actionCell?.querySelector<HTMLElement>("a");
+      expect(action, `${course.slug} action`).not.toBeNull();
+      // 44x44 outright below lg, the labelled button from lg.
+      expect(action).toHaveClass("h-11", "w-11", "lg:h-auto", "lg:w-auto");
+      expect(action?.className).toContain("lg:min-h-11");
+      const label = action?.querySelector(".sr-only.lg\\:not-sr-only");
+      expect(label, `${course.slug} action label`).not.toBeNull();
+      expect(label?.textContent?.trim().length).toBeGreaterThan(0);
+    }
+
+    // The accessible name is unchanged by the icon-only phone treatment.
+    const ledger = screen.getByRole("region", { name: "Alle Kurse" });
+    expect(
+      within(ledger).getByRole("link", {
+        name: "Nachweis beginnen: KI-Führerschein",
+      }),
+    ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
+    expect(
+      within(ledger).getByRole("link", {
+        name: "Nachweis beginnen: Codex-Kurs",
+      }),
+    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/L01");
+  });
+
+  it("keeps the path marker and the ledger intro in the accessibility tree when the phone drops their lines", () => {
+    const { container } = render(<LearningAtlas />);
+
+    // Selected goal "start" — its courses carry the marker, others do not.
+    const marked = Array.from(
+      container.querySelectorAll<HTMLElement>('[data-in-path="true"]'),
+    );
+    expect(marked.length).toBeGreaterThan(0);
+    for (const row of marked) {
+      const marker = within(row).getByText("Teil des gewählten Pfads");
+      expect(marker, row.dataset.courseSlug).toHaveClass(
+        "sr-only",
+        "lg:not-sr-only",
+      );
+      // The orange left edge and the orange badge still state membership.
+      expect(row).toHaveClass("border-l-brand-orange");
+    }
+    expect(
+      container.querySelector('[data-in-path="false"]'),
+    ).not.toHaveTextContent("Teil des gewählten Pfads");
+
+    const intro = screen.getByText(
+      "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
+    );
+    expect(intro).toHaveClass("sr-only", "sm:not-sr-only");
+  });
+});

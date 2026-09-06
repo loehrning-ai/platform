@@ -169,6 +169,22 @@ export function isGoogleOAuthRuntimeReady(): boolean {
 }
 
 /**
+ * GitHub is an additional optional sign-in method with the same shape as
+ * Google: the client ID and secret live in the GitHub and Supabase provider
+ * consoles, and this application only carries the dated confirmation that the
+ * provider is enabled, every callback is allow-listed, and a real sign-in has
+ * completed in this deployment.
+ */
+export function isGithubOAuthRuntimeReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      isPastOrPresentIsoDate(
+        process.env.SUPABASE_GITHUB_OAUTH_CONFIRMED_AT,
+      ),
+  );
+}
+
+/**
  * One fail-closed runtime boundary for every route that can transmit learner
  * text to Anthropic. The build validator provides detailed diagnostics; this
  * predicate prevents local or future route code from bypassing those gates.
@@ -234,3 +250,156 @@ export function isCourseTerminalRuntimeReady(): boolean {
       hasCompleteSupabaseRuntimeConfig(),
   );
 }
+
+// ─── Agent access: MCP server, OAuth server, BYO-key chat, hosted cv-engine ──
+//
+// Four independent capabilities that all fail closed. Each one is off until
+// every marker it needs is present, so a half-configured deployment renders
+// nothing rather than advertising a surface that cannot answer.
+
+/**
+ * Public MCP server at /api/mcp.
+ *
+ * Requires the explicit switch plus the complete EU account runtime: every
+ * tool call passes the durable fail-closed limiter, and the authenticated
+ * tools hand an external client a scoped view of one learner's account, so the
+ * grants and the audit trail need the same boundary the account itself has. An unmetered public
+ * JSON-RPC surface is not shippable, so a missing limiter backend disables
+ * the server instead of silently degrading to a per-worker in-memory counter.
+ */
+export function isAgentAccessReady(): boolean {
+  return Boolean(
+    process.env.MCP_SERVER_ENABLED === "true" && isAccountRuntimeReady(),
+  );
+}
+
+/**
+ * Supabase OAuth 2.1 Server (Authentication > OAuth Server).
+ *
+ * Enabling it is a dashboard action that nothing in this repository can
+ * observe, so a dated attestation is the only evidence accepted before the
+ * platform advertises an authorization server to agent clients.
+ */
+export function isOAuthServerReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      isPastOrPresentIsoDate(process.env.SUPABASE_OAUTH_SERVER_CONFIRMED_AT),
+  );
+}
+
+/**
+ * Key-encryption key for stored account provider keys: the literal prefix
+ * `kek1_` followed by 64 lowercase hexadecimal characters (32 random bytes).
+ * The prefix makes an accidentally pasted API key, JWT, or base64 blob fail
+ * the check instead of being accepted as key material.
+ *
+ * Generate once per environment:
+ *   printf 'kek1_%s\n' "$(openssl rand -hex 32)"
+ */
+const ACCOUNT_LLM_KEK_PATTERN = /^kek1_[a-f0-9]{64}$/;
+
+export function isValidAccountLlmKek(value: string | undefined): boolean {
+  return typeof value === "string" && ACCOUNT_LLM_KEK_PATTERN.test(value);
+}
+
+const BYO_CHAT_MODEL_PATTERN = /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/;
+const BYO_CHAT_MODEL_MAX_LENGTH = 64;
+const BYO_CHAT_MODEL_LIMIT = 8;
+
+/**
+ * Exact server-side model allowlist for the account chat. Missing, empty,
+ * duplicated, oversized, or malformed configuration authorizes no model, so a
+ * typo can never widen what a stored student key is allowed to reach.
+ */
+export function byoChatAllowedModels(): readonly string[] {
+  const raw = process.env.BYO_CHAT_MODEL_ALLOWLIST;
+  if (!raw) return [];
+  const values = raw.split(",");
+  if (
+    values.length > BYO_CHAT_MODEL_LIMIT ||
+    new Set(values).size !== values.length ||
+    values.some(
+      (value) =>
+        value !== value.trim() ||
+        value.length === 0 ||
+        value.length > BYO_CHAT_MODEL_MAX_LENGTH ||
+        !BYO_CHAT_MODEL_PATTERN.test(value),
+    )
+  ) {
+    return [];
+  }
+  return values;
+}
+
+/**
+ * Account chat on the student's own provider key. Needs the switch, a valid
+ * key-encryption key, at least one allow-listed model, and the complete
+ * account runtime the encrypted key is stored in.
+ */
+export function isByoChatReady(): boolean {
+  return Boolean(
+    process.env.BYO_CHAT_ENABLED === "true" &&
+      isValidAccountLlmKek(process.env.ACCOUNT_LLM_KEK) &&
+      byoChatAllowedModels().length > 0 &&
+      isAccountRuntimeReady(),
+  );
+}
+
+const HOSTED_TOOL_ORIGIN_MAX_LENGTH = 2048;
+const HOSTED_TOOL_HOSTNAME_PATTERN =
+  /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)*loehrning\.ai$/u;
+
+/**
+ * Exact HTTPS origin of the hosted cv-engine deployment.
+ *
+ * The value is an origin, never a URL with a path, query, fragment, port, or
+ * credentials: account surfaces link learners to it and a one-time sign-in
+ * token is handed to whatever it resolves to, so an attacker-supplied or
+ * half-migrated value must not become a trusted destination. Only the
+ * project's own apex or a subdomain of loehrning.ai is accepted; anything else
+ * returns null and the hosted capability stays off.
+ */
+export function cvEngineHostedOrigin(): string | null {
+  const value = process.env.CV_ENGINE_HOSTED_URL;
+  if (
+    !value ||
+    value !== value.trim() ||
+    value.length > HOSTED_TOOL_ORIGIN_MAX_LENGTH
+  ) {
+    return null;
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return null;
+  }
+  if (
+    parsed.protocol !== "https:" ||
+    parsed.port !== "" ||
+    parsed.username !== "" ||
+    parsed.password !== "" ||
+    parsed.search !== "" ||
+    parsed.hash !== "" ||
+    (parsed.pathname !== "/" && parsed.pathname !== "") ||
+    !HOSTED_TOOL_HOSTNAME_PATTERN.test(parsed.hostname)
+  ) {
+    return null;
+  }
+  return parsed.origin;
+}
+
+/**
+ * The hosted cv-engine keeps learner documents inside the same EU account
+ * boundary as the rest of the platform, so it stays off until that boundary
+ * exists, its origin is a verified loehrning.ai HTTPS origin, and a dated
+ * confirmation records that the deployment was actually reviewed and reached.
+ */
+export function isCvEngineHostedReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      cvEngineHostedOrigin() !== null &&
+      isPastOrPresentIsoDate(process.env.CV_ENGINE_HOSTED_CONFIRMED_AT),
+  );
+}
+

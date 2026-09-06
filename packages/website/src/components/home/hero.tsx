@@ -125,7 +125,7 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       ref={sectionRef}
       data-section="hero"
-      className="berlin-grain berlin-hero relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
+      className="berlin-grain berlin-hero relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:pb-5 max-lg:pt-4 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
     >
       <span
         aria-hidden="true"
@@ -138,9 +138,19 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
       <RegisterMark className="bottom-4 left-3 hidden lg:block" />
       <RegisterMark className="bottom-4 right-3 hidden lg:block" />
 
-      {/* The globe is the hero's only animated signal. */}
+      {/* The globe is the hero's only animated signal.
+
+          The headline size lives here rather than in an inline style because
+          it has two reviewed values: one line on the companion shell, the
+          three-line lockup from lg. The lg value is byte-identical to the one
+          this element carried inline. The short-viewport padding override is
+          scoped to lg too; below it the utilities above own the geometry. */}
       <style>{`
-        @media (max-height: 680px) {
+        [data-section="hero"] h1 { font-size: clamp(2rem, 8.6vw, 2.75rem); }
+        @media (min-width: 64rem) {
+          [data-section="hero"] h1 { font-size: clamp(2.25rem, min(8.4vw, 12.5svh), 8rem); }
+        }
+        @media (min-width: 64rem) and (max-height: 680px) {
           [data-section="hero"] { padding-top: 4.5rem !important; padding-bottom: 1.25rem !important; }
         }
       `}</style>
@@ -151,31 +161,39 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
             <h1
               aria-label={copy.headline.join(" ")}
               className="font-bold leading-[0.94] text-foreground"
-              style={{
-                fontSize: "clamp(2.25rem, min(8.4vw, 12.5svh), 8rem)",
-                letterSpacing: "0",
-              }}
+              style={{ letterSpacing: "0" }}
             >
-              {copy.headline.map((line, index) => (
-                <span key={line}>
-                  <span
-                    className={
-                      "drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
-                      headlineColors[index]
-                    }
-                  >
-                    {line}
+              {/* Companion shell: one line, printed as a single text node so
+                  the lockup below stays the only place where an element's
+                  text is exactly one headline part. The whole promise remains
+                  this heading's accessible name at every width, and the
+                  paragraph underneath carries the rest of it in view. */}
+              <span className="drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] lg:hidden">
+                {copy.headline.slice(0, 2).join(" ")}
+              </span>
+              {/* From lg: the reviewed three-line lockup, unchanged. */}
+              <span className="hidden lg:inline">
+                {copy.headline.map((line, index) => (
+                  <span key={line}>
+                    <span
+                      className={
+                        "drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
+                        headlineColors[index]
+                      }
+                    >
+                      {line}
+                    </span>
+                    {index < copy.headline.length - 1 ? <br /> : null}
                   </span>
-                  {index < copy.headline.length - 1 ? <br /> : null}
-                </span>
-              ))}
+                ))}
+              </span>
             </h1>
 
-            <p className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card">
+            <p className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card max-lg:mt-4 max-lg:py-2.5 max-lg:text-base">
               {copy.introduction}
             </p>
 
-            <div className="mt-7">
+            <div className="mt-7 max-lg:mt-5">
               <BrandButton
                 href={localizeHref("/kurse", locale)}
                 variant="primary"
@@ -242,8 +260,13 @@ function HeroSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
         ) : null}
       </div>
 
-      {/* Three direct uses of the platform in one compact register. */}
-      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3 md:mt-8 lg:mt-10">
+      {/* Three direct uses of the platform in one compact register.
+
+          Hidden below lg: Lernen, Prüfen and Anwenden point at the same three
+          destinations the companion shell already gives a rail and a tab, so on
+          a phone this register spent a third of the first screen repeating
+          them. Visibility only; the register itself is unchanged. */}
+      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 gap-2 max-lg:hidden sm:grid-cols-3 sm:gap-3 md:mt-8 lg:mt-10">
         {copy.pillars.map((pillar, index) => {
           const href = pillar.href;
           const entry = (

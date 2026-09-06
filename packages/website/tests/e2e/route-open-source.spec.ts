@@ -5,6 +5,11 @@ import {
   type Page,
 } from "@playwright/test";
 import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
+import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
   OPEN_SOURCE_TOOL_ARTIFACTS,
   OPEN_SOURCE_VIDEO_ARTIFACTS,
@@ -54,36 +59,6 @@ const STATUS_LABELS = {
   maintenance: "Wartungsmodus",
   archived: "Archiviert",
 } as const;
-
-function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
-  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
-    message,
-  );
-}
-
-// Production smoke tests treat every browser error as a defect. The sole
-// exception is WebKit's exact navigation-aborted Next RSC prefetch page error,
-// which is also isolated in the blog and workshop route contracts.
-function collectConsoleErrors(page: Page, browserName: string): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => {
-    if (
-      browserName === "webkit" &&
-      isExpectedWebKitRscPrefetchCancellation(err.message)
-    ) {
-      return;
-    }
-    errors.push(err.message);
-  });
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 async function expectStoredAsset(
   request: APIRequestContext,
@@ -189,6 +164,15 @@ async function expectSharedDetailContract(
   const launch = page.getByRole("link", { name: /^Öffnen/ });
   if (expectedLaunchHref) {
     await expect(launch).toHaveAttribute("href", expectedLaunchHref);
+    if (expectedLaunchHref.startsWith("https://")) {
+      // A hosted or external launch target leaves this origin. It opens in a
+      // new tab and must never hand the target an opener reference, so the
+      // detail page stays the reader's anchor. The request context is
+      // deliberately not sent to that host: the browser gate never depends on
+      // a third machine being reachable.
+      await expect(launch).toHaveAttribute("target", "_blank");
+      await expect(launch).toHaveAttribute("rel", "noopener noreferrer");
+    }
     await expectResolvableInternalHref(
       request,
       expectedLaunchHref,
@@ -196,6 +180,14 @@ async function expectSharedDetailContract(
     );
   } else {
     await expect(launch).toHaveCount(0);
+  }
+
+  if (artifact.kind !== "video") {
+    // The guide's data-flow paragraph is the honesty surface for a hosted
+    // instance: it must be readable on the page, not only in the registry.
+    await expect(
+      page.getByText(artifact.guide.dataFlow, { exact: true }),
+    ).toBeVisible();
   }
 }
 
@@ -340,10 +332,9 @@ async function expectSoftwareGuide(
 
 test.describe("/open-source hub", () => {
   test("loads, shows the h1, renders to the bottom, and logs no console error", async ({
-    browserName,
     page,
   }) => {
-    const errors = collectConsoleErrors(page, browserName);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
@@ -352,6 +343,12 @@ test.describe("/open-source hub", () => {
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
     await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
+    // The hub premise names both ways of running a listed tool. A hosted
+    // instance may be added to the registry, but it may never quietly replace
+    // "you can run this yourself" as the promise on the page.
+    await expect(
+      page.getByText(OPEN_SOURCE_PAGE_COPY.de.eyebrow, { exact: true }),
+    ).toBeVisible();
 
     // The hub leads with product proof and keeps provenance available on demand.
     await expect(
@@ -388,6 +385,14 @@ test.describe("/open-source hub", () => {
         ),
       }),
     ).toHaveAttribute("href", firstArtifact.source.revisionHref);
+    // Registry-driven: whoever runs the instance, and where, is a published
+    // fact on the card, not something the reader has to open a detail page for.
+    await expect(
+      firstArtifactRow.getByText(
+        OPEN_SOURCE_PAGE_COPY.de.showcase.delivery[firstArtifact.delivery],
+        { exact: true },
+      ),
+    ).toBeVisible();
     await firstArtifactRow
       .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
         exact: true,
@@ -406,10 +411,11 @@ test.describe("/open-source hub", () => {
       }),
     ).toBeVisible();
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
-      [],
-    );
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("keeps the lead preview and primary actions inside the reviewed desktop viewport", async ({
@@ -507,11 +513,10 @@ test.describe("/open-source hub", () => {
 });
 
 test("English open-source hub and one detail per published kind use localized public contracts", async ({
-  browserName,
   page,
 }) => {
   test.setTimeout(90_000);
-  const errors = collectConsoleErrors(page, browserName);
+  const errors = collectBrowserErrors(page);
   const hubResponse = await page.goto("/en/open-source", {
     waitUntil: "domcontentloaded",
   });
@@ -529,6 +534,19 @@ test("English open-source hub and one detail per published kind use localized pu
       level: 2,
       name: OPEN_SOURCE_PAGE_COPY.en.showcase.heading,
     }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(OPEN_SOURCE_PAGE_COPY.en.eyebrow, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByText(
+        OPEN_SOURCE_PAGE_COPY.en.showcase.delivery[
+          OPEN_SOURCE_TOOL_ARTIFACTS[0].delivery
+        ],
+        { exact: true },
+      )
+      .first(),
   ).toBeVisible();
 
   for (const registryArtifact of ENGLISH_DETAIL_REPRESENTATIVES) {
@@ -566,7 +584,7 @@ test("English open-source hub and one detail per published kind use localized pu
     );
   }
 
-  expect(meaningfulErrors(errors)).toEqual([]);
+  expect(meaningfulBrowserErrors(errors)).toEqual([]);
 });
 
 test.describe("/open-source mobile", () => {

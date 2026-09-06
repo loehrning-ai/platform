@@ -290,13 +290,15 @@ describe("PromptLab", () => {
     expect(
       screen.getByText("google · google/gemini-2.5-flash-lite"),
     ).toBeInTheDocument();
-    expect(onArtifactChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        fields: expect.objectContaining({
-          providerEvidence: "success",
-          providerModel: "google/gemini-2.5-flash-lite",
+    await waitFor(() =>
+      expect(onArtifactChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            providerEvidence: "success",
+            providerModel: "google/gemini-2.5-flash-lite",
+          }),
         }),
-      }),
+      ),
     );
   });
 

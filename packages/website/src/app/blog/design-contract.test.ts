@@ -24,7 +24,17 @@ describe("blog editorial design contract", () => {
   });
 
   it("keeps article navigation and simulator controls on 44px targets", () => {
-    expect(styles.post).toMatch(/\.railbar\s*\{[^}]*top:\s*var\(--nav-h\)/s);
+    // The railbar pins to the companion shell's header token pair rather than
+    // to one fixed offset, so it stays flush under the 48px compact bar below
+    // lg and under the 64px band from lg. Both halves are asserted, which is
+    // stricter than the single rule this replaced: dropping either one lets
+    // article content bleed through the gap again.
+    expect(styles.post).toMatch(
+      /\.railbar\s*\{[^}]*top:\s*var\(--nav-h-compact\)/s,
+    );
+    expect(styles.post).toMatch(
+      /@media\s*\(min-width:\s*64rem\)\s*\{\s*\.railbar\s*\{[^}]*top:\s*var\(--nav-h\)/s,
+    );
 
     for (const selector of [
       ".railbar__back",

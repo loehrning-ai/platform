@@ -9,7 +9,11 @@ import {
   isAccountRuntimeReady,
   isAnthropicRuntimeReady,
   isCourseTerminalRuntimeReady,
+  cvEngineHostedOrigin,
+  isAgentAccessReady,
+  isCvEngineHostedReady,
   isGeminiRuntimeReady,
+  isGithubOAuthRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
   isPracticeModelRuntimeReady,
@@ -290,5 +294,120 @@ describe("provider runtime readiness", () => {
       "1x00000000000000000000AA",
     );
     expect(turnstileSiteKey()).toBeNull();
+  });
+
+  it("keeps GitHub OAuth independent from Google and from the account boundary", () => {
+    configureAccountRuntime();
+    expect(isGithubOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv("SUPABASE_GITHUB_OAUTH_CONFIRMED_AT", "2026-08-08");
+    expect(isGithubOAuthRuntimeReady()).toBe(true);
+    expect(isGoogleOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv("SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT", "2026-08-08");
+    vi.stubEnv("SUPABASE_GITHUB_OAUTH_CONFIRMED_AT", "");
+    expect(isGithubOAuthRuntimeReady()).toBe(false);
+    expect(isGoogleOAuthRuntimeReady()).toBe(true);
+
+    vi.stubEnv("SUPABASE_GITHUB_OAUTH_CONFIRMED_AT", "2999-01-01");
+    expect(isGithubOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv("SUPABASE_GITHUB_OAUTH_CONFIRMED_AT", "2026-08-08");
+    for (const missing of [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_REGION",
+      "SUPABASE_DPA_CONFIRMED_AT",
+      "RATE_LIMIT_HMAC_SECRET",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(isGithubOAuthRuntimeReady(), missing).toBe(false);
+      configureAccountRuntime();
+      vi.stubEnv("SUPABASE_GITHUB_OAUTH_CONFIRMED_AT", "2026-08-08");
+    }
+  });
+
+  it("accepts only an exact loehrning.ai HTTPS origin for the hosted cv-engine", () => {
+    configureAccountRuntime();
+    for (const [value, origin] of [
+      ["https://cv.loehrning.ai", "https://cv.loehrning.ai"],
+      ["https://cv.loehrning.ai/", "https://cv.loehrning.ai"],
+      ["https://CV.LOEHRNING.AI", "https://cv.loehrning.ai"],
+      ["https://loehrning.ai", "https://loehrning.ai"],
+    ] as const) {
+      vi.stubEnv("CV_ENGINE_HOSTED_URL", value);
+      expect(cvEngineHostedOrigin(), value).toBe(origin);
+    }
+
+    for (const rejected of [
+      "",
+      "http://cv.loehrning.ai",
+      "https://cv.loehrning.ai:8443",
+      "https://cv.loehrning.ai/app",
+      "https://cv.loehrning.ai?document=1",
+      "https://cv.loehrning.ai#top",
+      "https://operator:secret@cv.loehrning.ai",
+      "https://cv.example.com",
+      "https://evil-loehrning.ai",
+      "https://loehrning.ai.attacker.test",
+      " https://cv.loehrning.ai",
+      "cv.loehrning.ai",
+      `https://${"a".repeat(2100)}.loehrning.ai`,
+    ]) {
+      vi.stubEnv("CV_ENGINE_HOSTED_URL", rejected);
+      expect(cvEngineHostedOrigin(), rejected).toBeNull();
+      expect(isCvEngineHostedReady(), rejected).toBe(false);
+    }
+  });
+
+  it("keeps the hosted cv-engine off until its origin, date, and account boundary exist", () => {
+    configureAccountRuntime();
+    vi.stubEnv("CV_ENGINE_HOSTED_URL", "https://cv.loehrning.ai");
+    expect(isCvEngineHostedReady()).toBe(false);
+
+    vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "2026-08-20");
+    expect(isCvEngineHostedReady()).toBe(true);
+
+    vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "2999-01-01");
+    expect(isCvEngineHostedReady()).toBe(false);
+
+    vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "2026-08-20");
+    for (const missing of [
+      "CV_ENGINE_HOSTED_URL",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_REGION",
+      "SUPABASE_DPA_CONFIRMED_AT",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(isCvEngineHostedReady(), missing).toBe(false);
+      configureAccountRuntime();
+      vi.stubEnv("CV_ENGINE_HOSTED_URL", "https://cv.loehrning.ai");
+      vi.stubEnv("CV_ENGINE_HOSTED_CONFIRMED_AT", "2026-08-20");
+    }
+  });
+
+  it("keeps agent access off without an explicit flag and the account backend", () => {
+    configureAccountRuntime();
+    expect(isAgentAccessReady()).toBe(false);
+
+    vi.stubEnv("MCP_SERVER_ENABLED", "true");
+    expect(isAgentAccessReady()).toBe(true);
+
+    for (const flag of ["", "false", "TRUE", "1", "yes", " true"]) {
+      vi.stubEnv("MCP_SERVER_ENABLED", flag);
+      expect(isAgentAccessReady(), flag).toBe(false);
+    }
+
+    vi.stubEnv("MCP_SERVER_ENABLED", "true");
+    for (const missing of [
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "SUPABASE_REGION",
+      "SUPABASE_DPA_CONFIRMED_AT",
+      "RATE_LIMIT_HMAC_SECRET",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(isAgentAccessReady(), missing).toBe(false);
+      configureAccountRuntime();
+      vi.stubEnv("MCP_SERVER_ENABLED", "true");
+    }
   });
 });

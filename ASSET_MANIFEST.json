@@ -7,7 +7,7 @@
       "path": "packages/website/public/apple-touch-icon.png",
       "sizeBytes": 708,
       "sha256": "ff76630583ce573bc5ae953ecb33d40f6a4eb2fa141fafb3f3e133b8ec922d16",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -16,7 +16,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/LICENSE.txt",
       "sizeBytes": 1066,
       "sha256": "36beaa24d27fc788e411a7fd7cc93d752878e6c51240a8abcc1156ff1451c5bd",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/LICENSE",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
@@ -25,7 +25,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
       "sizeBytes": 344513,
       "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
@@ -35,7 +35,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.png",
       "sizeBytes": 581785,
       "sha256": "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/form-experience.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
@@ -45,7 +45,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.png",
       "sizeBytes": 644467,
       "sha256": "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/theme-picker.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
@@ -55,7 +55,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
       "sizeBytes": 690749,
       "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
@@ -65,7 +65,7 @@
       "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
       "sizeBytes": 132292,
       "sha256": "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/preview-card.webp",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
@@ -75,7 +75,7 @@
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
       "sizeBytes": 401757,
       "sha256": "e89ea724f9c8adf0f53930869b2709121f1079b82725e65f386a8cdc83903bfb",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -84,7 +84,7 @@
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-2.png",
       "sizeBytes": 59384,
       "sha256": "26520a076bb00122253d1410e75a6d7d773be159e023dcdede2cc7a0eab3d080",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -93,7 +93,7 @@
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-3.png",
       "sizeBytes": 86818,
       "sha256": "e1248a373c0b8b7d9576d0472faacd2e17e093e92e0f584289fb1d9f04d03d3b",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -102,7 +102,7 @@
       "path": "packages/website/public/book-covers/ki-landschaft-2026-1.png",
       "sizeBytes": 427289,
       "sha256": "7ae71f17b749988a8b49ec16e30787ca1f21f37d9668fbdf06b4fcd42208d6a1",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -111,7 +111,7 @@
       "path": "packages/website/public/book-covers/ki-landschaft-2026-2.png",
       "sizeBytes": 61718,
       "sha256": "ab4f4bfcf31f85d2a6674a38446a70955472d7f351dc95b777259553445bd621",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -120,7 +120,7 @@
       "path": "packages/website/public/book-covers/ki-landschaft-2026-3.png",
       "sizeBytes": 77683,
       "sha256": "358cf7e5cce481e9995bc55190824f10fb1a23001fcc591319dfe27a8e47a235",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -129,7 +129,7 @@
       "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-1.png",
       "sizeBytes": 476986,
       "sha256": "dacfdbd6f5088357d1f079d74f3bb36ce986c5c14013cd6398a55155984de58d",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -138,7 +138,7 @@
       "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-2.png",
       "sizeBytes": 53015,
       "sha256": "88a79b99da1cbed8a277755f8d42a3b13989ac9f9ed24027551912bc40d82ec7",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -147,7 +147,7 @@
       "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-3.png",
       "sizeBytes": 65721,
       "sha256": "36c74ea8df27a7ed48c80796111530087c174a1ea71bb1a2cae813d0426a1845",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -156,7 +156,7 @@
       "path": "packages/website/public/course-covers/ai-native-cover-v2.webp",
       "sizeBytes": 66776,
       "sha256": "b7dad0c964f0dedc0aa4f62ed737d7d9d80380b11f1f03c43892b0dba028df68",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -165,7 +165,7 @@
       "path": "packages/website/public/course-covers/ai-native-cover-v3.webp",
       "sizeBytes": 70250,
       "sha256": "1aaee90eefed3c00feda568b4973434f74870cc9684dc35ecbf812a89d7ec2ac",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -174,7 +174,7 @@
       "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v2.webp",
       "sizeBytes": 57516,
       "sha256": "fdd8c36ea22b6ec80a44ae66e1e2d130566a742f1367c9591857413bc0521352",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -183,7 +183,7 @@
       "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v3.webp",
       "sizeBytes": 63068,
       "sha256": "0fe285d79b73d9aa20e1a164c08126c84507c3397955708278f4f4d43ee08c5f",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -192,7 +192,7 @@
       "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v2.webp",
       "sizeBytes": 62804,
       "sha256": "56fa80a887f73700853a390b154ee9cbca8827f4e4dbfbe879903afc175c5a78",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -201,7 +201,7 @@
       "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v3.webp",
       "sizeBytes": 77396,
       "sha256": "5b0b946261b63d424bd7c7511abade48d685f6db914ed28c2d6a25252a8fa376",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -210,7 +210,7 @@
       "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v2.webp",
       "sizeBytes": 78916,
       "sha256": "619d83f8877f8bd1f5d4b70e0e8c7cdb12740ef12ed81a3457ba9ced2deeff40",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -219,7 +219,7 @@
       "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v3.webp",
       "sizeBytes": 108434,
       "sha256": "7b304dc46d11a998201f731ed29ac90710cda823124452eba8b436757d820840",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -228,7 +228,7 @@
       "path": "packages/website/public/favicon-16x16.png",
       "sizeBytes": 221,
       "sha256": "97532161d0a5db008c4fa674f3e02b1a7eb67d364b3d9d30eb344484ce05e1ab",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -237,7 +237,7 @@
       "path": "packages/website/public/favicon-32x32.png",
       "sizeBytes": 246,
       "sha256": "03e92a40107626d250cecc50aee9a7cd2f17bf585e2fd6428d6bf25230b9eb91",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -246,7 +246,7 @@
       "path": "packages/website/public/favicon.ico",
       "sizeBytes": 1614,
       "sha256": "5f273c8678f86b1bb1c0fa8295f77a4c9bebf41e8d2a173793dfd3468955ef9f",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -264,7 +264,7 @@
       "path": "packages/website/public/icon-192-maskable.png",
       "sizeBytes": 804,
       "sha256": "6d1249e75984a37b97cf58b273cf529f079d07f277a07a57987bee9807ca8f9c",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -273,7 +273,7 @@
       "path": "packages/website/public/icon-192.png",
       "sizeBytes": 635,
       "sha256": "6f14224d8343d843b38fdab64514a5697043e0c4acd55cb15445af62ddec0b51",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -282,7 +282,7 @@
       "path": "packages/website/public/icon-512-maskable.png",
       "sizeBytes": 2214,
       "sha256": "4bc840f999f0e00e2d153bbdc8edfc2069951b93bbedc229b12a0ffa8e3465d1",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -291,7 +291,7 @@
       "path": "packages/website/public/icon-512.png",
       "sizeBytes": 2083,
       "sha256": "037e7e10d17924e650e16520607f65e57da69282d3224d2924a6d63909de3a6a",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -300,7 +300,7 @@
       "path": "packages/website/public/imported-courses/licenses/codex-MIT-LICENSE.txt",
       "sizeBytes": 1068,
       "sha256": "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
@@ -309,7 +309,7 @@
       "path": "packages/website/public/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
       "sizeBytes": 1079,
       "sha256": "7cd9f643d6d743ff0600dda3da55383162723a0d5e874c5b73a3501c5e5b75e0",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
@@ -318,7 +318,7 @@
       "path": "packages/website/public/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
       "sizeBytes": 1066,
       "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
@@ -327,7 +327,7 @@
       "path": "packages/website/public/imported-courses/screenshots/ai-native-operator.jpg",
       "sizeBytes": 220018,
       "sha256": "316f9b6a2a1aa2ea25ed27da113ed30028597fe0fb15416c52bad8fadbbdedf5",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -336,7 +336,7 @@
       "path": "packages/website/public/imported-courses/screenshots/claude.jpg",
       "sizeBytes": 232845,
       "sha256": "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -345,7 +345,7 @@
       "path": "packages/website/public/imported-courses/screenshots/codex.jpg",
       "sizeBytes": 269791,
       "sha256": "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -354,7 +354,7 @@
       "path": "packages/website/public/imported-courses/screenshots/data-engineering-fundamentals.jpg",
       "sizeBytes": 310689,
       "sha256": "fa3df8661bdc942b1bb712480e85767e30ff43e5612e73b2f12ccc85d9db8f60",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -363,7 +363,7 @@
       "path": "packages/website/public/imported-courses/screenshots/data-infrastructure.jpg",
       "sizeBytes": 311055,
       "sha256": "17bf2d0b0c371df8a1deedee4230c94aa058a7efda828400e96999ffaca42258",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -372,7 +372,7 @@
       "path": "packages/website/public/imported-courses/screenshots/data-science.jpg",
       "sizeBytes": 326305,
       "sha256": "3b687b55058b216e4a2a91b1f202327460d5302295aee48c4b9d0c9e06d1b3ce",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -381,7 +381,7 @@
       "path": "packages/website/public/imported-courses/social-previews/data-engineering-fundamentals.png",
       "sizeBytes": 61263,
       "sha256": "517bb5816c53554943affefed22a82596a2ceb4042f2b2b8c4938d583010e15d",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -390,7 +390,7 @@
       "path": "packages/website/public/imported-courses/social-previews/data-engineering-fundamentals.svg",
       "sizeBytes": 5825,
       "sha256": "5e1b2466d2d349e3fabd32320fd196c9f1e6bbfd07190ec5784927300902dfa3",
-      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
@@ -399,7 +399,7 @@
       "path": "packages/website/public/logo-square-512.png",
       "sizeBytes": 2083,
       "sha256": "037e7e10d17924e650e16520607f65e57da69282d3224d2924a6d63909de3a6a",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -408,7 +408,7 @@
       "path": "packages/website/public/logo-white.svg",
       "sizeBytes": 5400,
       "sha256": "dcb2fed3b5b9840145f6b1794eca9478c07e0a0b93e8ec5dac7107f21132d7be",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -417,7 +417,7 @@
       "path": "packages/website/public/logo.svg",
       "sizeBytes": 4645,
       "sha256": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset package v5.3, lockup-horizontal.svg",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -426,7 +426,7 @@
       "path": "packages/website/public/og-image.png",
       "sizeBytes": 47915,
       "sha256": "02a3e7bb310ece64183fa491f70c170c5829ea83797f7774043fec349a67dbec",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -444,7 +444,7 @@
       "path": "packages/website/public/ueber-mich/logos/fau.svg",
       "sizeBytes": 27204,
       "sha256": "2e534069d3cc643db75c4ff469c1921dd7ff7d78efa13895f7d3adbcc5aabfa6",
-      "owner": "Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)",
+      "owner": "Friedrich-Alexander-Universit\u00e4t Erlangen-N\u00fcrnberg (FAU)",
       "source": "https://commons.wikimedia.org/wiki/File:Friedrich-Alexander-Universit%C3%A4t_Erlangen-N%C3%BCrnberg_Logo_07.2022.svg -- sourced from FAU's own official corporate-design style guide, published 2022-07-14",
       "license": "LicenseRef-Third-Party-Trademark",
       "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
@@ -459,20 +459,11 @@
       "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
     },
     {
-      "path": "packages/website/public/ueber-mich/logos/red-bull.svg",
-      "sizeBytes": 18759,
-      "sha256": "917b1074fb78614927110990d2d5add3b7745911124e72c29b9cde2b12b23f4b",
-      "owner": "Red Bull GmbH",
-      "source": "Existing local business-site employer-mark asset; file header identifies SVG Repo but exact upstream URL is not recorded. The profile renders only its two-bulls silhouette.",
-      "license": "LicenseRef-Third-Party-Trademark",
-      "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
-    },
-    {
       "path": "packages/website/public/ueber-mich/tim-loehr.jpg",
       "sizeBytes": 127871,
       "sha256": "bc40fd98819953ddfff54cec26ad4ef6d8564ed4c8c574873e4b59268aff1ddb",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Porträtfoto, loehrning.ai",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Portr\u00e4tfoto, loehrning.ai",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no standalone reuse rights granted"
     },
@@ -480,7 +471,7 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/favicon.svg",
       "sizeBytes": 375,
       "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -540,7 +531,7 @@
       "sizeBytes": 3405,
       "sha256": "4c967c04f0c1f69cc0ff6b8f306f091c389a5edfda010065cf961f36d16f44cb",
       "owner": "Meta Platforms, Inc. (Marke)",
-      "source": "Wikimedia Commons, „Meta Platforms Inc. logo.svg“ — unterhalb der Schöpfungshöhe; Markenrechte von Meta Platforms, Inc. bleiben bestehen",
+      "source": "Wikimedia Commons, \u201eMeta Platforms Inc. logo.svg\u201c \u2014 unterhalb der Sch\u00f6pfungsh\u00f6he; Markenrechte von Meta Platforms, Inc. bleiben bestehen",
       "license": "LicenseRef-Trademark-Meta",
       "redistribution": "Nur als Arbeitgeber-Kennzeichnung auf der Referentenfolie, in kleiner Darstellung; keine Co-Branding- oder Markennutzungsrechte"
     },
@@ -548,8 +539,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p01.png",
       "sizeBytes": 679806,
       "sha256": "00c5678f3b2f7fc33baf8d756c276092c6a9f9c70a34fecc3975acf02759bb0e",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -557,8 +548,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p02.png",
       "sizeBytes": 179036,
       "sha256": "b44c3ca41f9d8201fe7ad22c7bbaa9bc150e39e89416197f1f8577c41fb1e70c",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -566,8 +557,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p03.png",
       "sizeBytes": 269721,
       "sha256": "d9d11aa945c8b9c67e72793d153b407126f2ad5e3389d31c91eeee4cc7359b2d",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -575,8 +566,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p04.png",
       "sizeBytes": 231739,
       "sha256": "ae1848e3a6b2d82f9dc4bea47b1125eb012722bc4135d973d0eb964e92ef90f9",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -584,8 +575,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p05.png",
       "sizeBytes": 300920,
       "sha256": "7f45eaeb0451b7759f9da98251aec5dc96a0be529ad13c87aadbeaad36e33e08",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -593,8 +584,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p06.png",
       "sizeBytes": 200979,
       "sha256": "a648f0999a68581b19f222489fc401ce8b49b1d78163f85fcbede621a36fb821",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -602,8 +593,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p07.png",
       "sizeBytes": 260522,
       "sha256": "3432bd45a076f003897230ba118092a34658c7457c5e2e057d1d43e52aee4744",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -611,8 +602,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p08.png",
       "sizeBytes": 409371,
       "sha256": "793444d85bbfa7357ebe3c1b2ca6d2d82c2f043ffb90b18f11a258e80432a94b",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -620,8 +611,8 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/tim-loehr.jpg",
       "sizeBytes": 112101,
       "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
-      "owner": "Tim Löhr",
-      "source": "Porträtfoto Tim Löhr, vom Autor bereitgestellt — Referentenfolie des Workshops",
+      "owner": "Tim L\u00f6hr",
+      "source": "Portr\u00e4tfoto Tim L\u00f6hr, vom Autor bereitgestellt \u2014 Referentenfolie des Workshops",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     },
@@ -629,7 +620,7 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/card-preview.webp",
       "sizeBytes": 21642,
       "sha256": "f17ba49a97ac700fd7bcf0768bbcc6bca0b0f8fcdca4bb7be58e2f271eeb8752",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Decks (slides.html)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -638,16 +629,16 @@
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
       "sizeBytes": 58969,
       "sha256": "90901a8226d9aefe01d88a76b6349ac06da66584041dd72c334c4536a85e2ed6",
-      "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai — Text-only Teilnehmer-Kit (CSV-Übungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Frei herunterladbar für Workshop-Teilnehmende und Website-Besucher"
+      "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/card-preview.webp",
       "sizeBytes": 30258,
       "sha256": "c2df35d9f5845163203b3f47f6d60c29f1da11e0968dd6139765f6aa99295ac0",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
@@ -809,7 +800,7 @@
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
       "sizeBytes": 162627,
       "sha256": "df3cc2ca819487e71775f4de8fd9407fc693648573dba6ccf4e0c79cda43c948",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -818,7 +809,7 @@
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
       "sizeBytes": 458555,
       "sha256": "b2f3bcf33d10cc6c82fd7b0096cdb3622b4afdc9efd9e5a54403e2eb2844e4ae",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -827,7 +818,7 @@
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/legal-desktop.png",
       "sizeBytes": 109979,
       "sha256": "768d36d7706a6b04679bfd83bfef8cb6b8a72b592c5a798df4ad2dbab205fb6d",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
@@ -836,7 +827,7 @@
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
       "sizeBytes": 277050,
       "sha256": "9f65ebecd06a7f6c53d9e20ac703c6139784d12f0554e973c3a0516d66248a91",
-      "owner": "Tim Löhr",
+      "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"

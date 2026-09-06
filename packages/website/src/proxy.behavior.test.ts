@@ -1,6 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  isSharedCacheable,
+  NONCE_CSP_HEADER,
+  NONCE_REQUEST_HEADER,
+} from "../security-headers";
+
+function directive(policy: string, name: string): string {
+  const match = policy
+    .split("; ")
+    .find(
+      (candidate) => candidate.startsWith(`${name} `) || candidate === name,
+    );
+  if (!match) throw new Error(`Missing CSP directive: ${name}`);
+  return match;
+}
 
 const mockRefreshAuthSession = vi.fn();
 const mockReportApiError = vi.fn();
@@ -236,6 +251,7 @@ describe("public cache contract", () => {
 
   it.each([
     ["POST", "/api/feedback"],
+    ["POST", "/api/csp-report"],
     ["POST", "/api/ai-native/grade-exercise"],
     ["GET", "/api/health"],
   ])(
@@ -478,5 +494,313 @@ describe("locale routing and authentication boundaries", () => {
       "noindex, nofollow, noarchive",
     );
     expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+  });
+});
+
+function forwardedRequestHeader(
+  response: NextResponse,
+  key: string,
+): string | null {
+  return response.headers.get(`x-middleware-request-${key}`);
+}
+
+function forwardedHeaderKeys(response: NextResponse): string[] {
+  return (response.headers.get("x-middleware-override-headers") ?? "")
+    .split(",")
+    .map((key) => key.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function nonceOf(policy: string | null): string | null {
+  const match = policy?.match(/'nonce-([A-Za-z0-9+/_-]+={0,2})'/);
+  return match ? match[1] : null;
+}
+
+/** Mirror the real refresh, which returns the continuation it was handed. */
+function passThroughAuth(user: { id: string } | null) {
+  return async (
+    _request: NextRequest,
+    _headers: Headers,
+    response: NextResponse,
+  ) => ({ configured: true, response, user, error: null });
+}
+
+describe("content security policy nonce", () => {
+  it("forwards a per-request nonce policy and publishes the same policy", async () => {
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const response = await proxy(new NextRequest("http://localhost/login"));
+
+    const forwarded = forwardedRequestHeader(
+      response,
+      "content-security-policy-report-only",
+    );
+    // Next reads the request header to decide which nonce to stamp into the
+    // document, so the published policy must be the identical string.
+    expect(forwarded).toBeTruthy();
+    expect(response.headers.get(NONCE_CSP_HEADER)).toBe(forwarded);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+
+    const nonce = nonceOf(forwarded);
+    expect(nonce).toBeTruthy();
+    expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBe(nonce);
+    expect(directive(forwarded!, "script-src")).toBe(
+      `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    );
+    expect(directive(forwarded!, "script-src")).not.toContain(
+      "'unsafe-inline'",
+    );
+  });
+
+  it("publishes the report-only variant, with a destination and without enforce-only directives", async () => {
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const response = await proxy(new NextRequest("http://localhost/login"));
+    const policy = response.headers.get(NONCE_CSP_HEADER) ?? "";
+
+    // WebKit logs an error for each directive it ignores in report-only mode
+    // and another when the policy names no destination; Chromium logs the
+    // upgrade-insecure-requests one as well.
+    expect(policy).not.toContain("frame-ancestors");
+    expect(policy).not.toContain("upgrade-insecure-requests");
+    expect(directive(policy, "report-uri")).toBe("report-uri /api/csp-report");
+    expect(directive(policy, "report-to")).toBe("report-to csp-canary");
+  });
+
+  it("never lets a client choose the nonce Next stamps", async () => {
+    // Before this guard, proxy.ts copied every inbound header, so a request
+    // carrying Content-Security-Policy reached Next and made it stamp an
+    // attacker-chosen nonce into every script tag on the page.
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const response = await proxy(
+      new NextRequest("http://localhost/login", {
+        headers: {
+          "content-security-policy": "script-src 'nonce-ATTACKERNONCEAAAAAAAA'",
+          "content-security-policy-report-only":
+            "script-src 'nonce-ATTACKERNONCEBBBBBBBB'",
+          "x-nonce": "ATTACKERNONCECCCCCCCC",
+        },
+      }),
+    );
+
+    // The enforced request header is dropped outright: Next prefers it over the
+    // report-only one, so forwarding it would override the proxy's policy.
+    expect(forwardedHeaderKeys(response)).not.toContain(
+      "content-security-policy",
+    );
+    expect(
+      forwardedRequestHeader(response, "content-security-policy"),
+    ).toBeNull();
+
+    const forwarded = forwardedRequestHeader(
+      response,
+      "content-security-policy-report-only",
+    );
+    expect(forwarded).not.toContain("ATTACKER");
+    expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).not.toBe(
+      "ATTACKERNONCECCCCCCCC",
+    );
+    expect(nonceOf(forwarded)).toBe(
+      forwardedRequestHeader(response, NONCE_REQUEST_HEADER),
+    );
+    expect(response.headers.get(NONCE_CSP_HEADER)).not.toContain("ATTACKER");
+  });
+
+  it("strips a client-supplied nonce even from a document that mints none", async () => {
+    const response = await proxy(
+      new NextRequest("http://localhost/kurse", {
+        headers: {
+          "content-security-policy": "script-src 'nonce-ATTACKERNONCEAAAAAAAA'",
+          "content-security-policy-report-only":
+            "script-src 'nonce-ATTACKERNONCEBBBBBBBB'",
+          "x-nonce": "ATTACKERNONCECCCCCCCC",
+        },
+      }),
+    );
+
+    for (const key of [
+      "content-security-policy",
+      "content-security-policy-report-only",
+      NONCE_REQUEST_HEADER,
+    ]) {
+      expect(forwardedRequestHeader(response, key), key).toBeNull();
+    }
+    expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+  });
+
+  it("issues a fresh nonce per request", async () => {
+    mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+    const nonces = await Promise.all(
+      Array.from({ length: 8 }, async () =>
+        nonceOf(
+          forwardedRequestHeader(
+            await proxy(new NextRequest("http://localhost/login")),
+            "content-security-policy-report-only",
+          ),
+        ),
+      ),
+    );
+
+    expect(nonces.every(Boolean)).toBe(true);
+    expect(new Set(nonces).size).toBe(nonces.length);
+  });
+
+  it.each(["/", "/en", "/kurse", "/buecher/ki-landschaft/01-einleitung"])(
+    "mints no nonce for the shared-cacheable document %s",
+    async (path) => {
+      const response = await proxy(new NextRequest(`http://localhost${path}`));
+
+      expect(response.headers.get("cache-control")).toBe(
+        "public, max-age=3600, s-maxage=3600",
+      );
+      expect(isSharedCacheable(response.headers.get("cache-control"))).toBe(
+        true,
+      );
+      // A nonce minted here would reach Next through the request header and
+      // be rendered into HTML a CDN keeps for an hour, a fixed nonce every
+      // reader of that copy would hold. So neither the policy nor the nonce
+      // exists for this document, in either disposition.
+      expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+      expect(response.headers.get("content-security-policy")).toBeNull();
+      expect(
+        forwardedRequestHeader(response, "content-security-policy-report-only"),
+      ).toBeNull();
+      expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeNull();
+      expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+    },
+  );
+
+  it.each(["/login", "/auth/callback", "/auth/logout"])(
+    "keeps the auth-aware %s out of shared caches and mints its nonce",
+    async (path) => {
+      mockRefreshAuthSession.mockImplementation(passThroughAuth(null));
+
+      const response = await proxy(new NextRequest(`http://localhost${path}`));
+
+      // Decided before minting: a document that renders per cookie is never
+      // shared-cacheable, which is exactly what lets it carry a nonce.
+      expect(response.headers.get("cache-control")).toBe("private, no-store");
+      expect(nonceOf(response.headers.get(NONCE_CSP_HEADER))).toBe(
+        forwardedRequestHeader(response, NONCE_REQUEST_HEADER),
+      );
+      expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeTruthy();
+    },
+  );
+
+  it.each([
+    "/robots.txt",
+    "/sitemap.xml",
+    "/llms.txt",
+    "/api/knowledge-graph.json",
+    "/api/health",
+    "/favicon.ico",
+    "/og-image.png",
+  ])("issues no nonce for the script-free machine route %s", async (path) => {
+    const response = await proxy(new NextRequest(`http://localhost${path}`));
+
+    expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+    expect(
+      forwardedRequestHeader(response, "content-security-policy-report-only"),
+    ).toBeNull();
+    expect(forwardedRequestHeader(response, NONCE_REQUEST_HEADER)).toBeNull();
+  });
+
+  const NONCE_MATRIX = [
+    "/",
+    "/en",
+    "/kurse",
+    "/buecher/ki-landschaft/01-einleitung",
+    "/en/kurse",
+    "/login",
+    "/auth/callback",
+    "/konto",
+    "/ki-fuehrerschein/kurs",
+    "/api/progress",
+    "/api/feedback",
+    "/api/csp-report",
+    "/api/buecher/ki-landschaft/download.pdf",
+    "/api/health",
+    "/robots.txt",
+    "/favicon.ico",
+  ] as const;
+
+  describe.each([
+    ["signed out", null],
+    ["signed in", { id: "user-1" }],
+  ] as const)("%s", (_label, user) => {
+    it.each(NONCE_MATRIX)(
+      "never both mints a nonce and allows shared caching for %s",
+      async (path) => {
+        // The invariant that survives the flip to enforcement: whatever else
+        // changes, a nonce may only exist for a response a shared cache must
+        // not store, because a cached nonce is a fixed nonce. The request
+        // header side matters as much as the response side: a nonce forwarded
+        // to Next is rendered into the document whether or not a policy
+        // header accompanies it.
+        mockRefreshAuthSession.mockImplementation(passThroughAuth(user));
+
+        const response = await proxy(new NextRequest(`http://localhost${path}`));
+        const minted =
+          forwardedRequestHeader(response, NONCE_REQUEST_HEADER) !== null ||
+          forwardedRequestHeader(response, "content-security-policy") !== null ||
+          forwardedRequestHeader(
+            response,
+            "content-security-policy-report-only",
+          ) !== null ||
+          nonceOf(response.headers.get("content-security-policy")) !== null ||
+          nonceOf(
+            response.headers.get("content-security-policy-report-only"),
+          ) !== null;
+        const cacheable = isSharedCacheable(
+          response.headers.get("cache-control"),
+        );
+
+        expect(minted && cacheable, `${path}: minted=${minted} cacheable=${cacheable}`).toBe(false);
+        // While the canary is report-only, no enforced nonce policy exists at all.
+        expect(response.headers.get("content-security-policy")).toBeNull();
+      },
+    );
+  });
+
+  it("mints for a private document and for a shared-cacheable one does not, under the same rule", async () => {
+    // Guards the matrix above against being vacuous: both sides of the
+    // invariant occur.
+    mockRefreshAuthSession.mockImplementation(passThroughAuth({ id: "user-1" }));
+    const konto = await proxy(new NextRequest("http://localhost/konto"));
+    const home = await proxy(new NextRequest("http://localhost/"));
+
+    expect(forwardedRequestHeader(konto, NONCE_REQUEST_HEADER)).toBeTruthy();
+    expect(isSharedCacheable(konto.headers.get("cache-control"))).toBe(false);
+    expect(forwardedRequestHeader(home, NONCE_REQUEST_HEADER)).toBeNull();
+    expect(isSharedCacheable(home.headers.get("cache-control"))).toBe(true);
+  });
+
+  it("keeps the nonce on an authenticated private document", async () => {
+    mockRefreshAuthSession.mockImplementation(
+      passThroughAuth({ id: "user-1" }),
+    );
+
+    const response = await proxy(new NextRequest("http://localhost/konto"));
+
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(isSharedCacheable(response.headers.get("cache-control"))).toBe(
+      false,
+    );
+    expect(nonceOf(response.headers.get(NONCE_CSP_HEADER))).toBe(
+      forwardedRequestHeader(response, NONCE_REQUEST_HEADER),
+    );
+  });
+
+  it("leaves terminal responses without a nonce policy", async () => {
+    // Redirects and gone responses render no document, so there is nothing for
+    // a nonce to authorize.
+    for (const path of ["/de/kurse", "/blog/digify", "/en/%252fapi/progress"]) {
+      const response = await proxy(new NextRequest(`http://localhost${path}`));
+
+      expect(response.headers.get(NONCE_CSP_HEADER)).toBeNull();
+      expect(response.headers.get("content-security-policy")).toBeNull();
+    }
   });
 });

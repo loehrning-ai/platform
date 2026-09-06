@@ -25,7 +25,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
     "sm:col-span-1 lg:col-span-5",
     "sm:col-span-1 lg:col-span-5",
     "sm:col-span-1 lg:col-span-7",
-    "sm:col-span-2 lg:col-span-12",
+    "col-span-2 lg:col-span-12",
   ] as const;
   const resourceTones = [
     "bg-brand-sky/55",
@@ -45,7 +45,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 md:py-20 lg:py-24"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 max-lg:py-5 md:py-20 lg:py-24"
       data-testid="ressourcen-section"
     >
       <div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -54,21 +54,21 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
             <p className="overline border-l-[3px] border-brand-orange pl-3">
               {copy.overline}
             </p>
-            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground">
+            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground max-lg:mt-3 max-lg:text-2xl max-lg:tracking-[-0.03em]">
               {copy.headline}
             </h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground max-lg:hidden">
               {copy.introduction}
             </p>
           </header>
 
-          <p className="rounded-2xl border border-foreground/10 bg-brand-acid/65 px-5 py-4 font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground shadow-card lg:text-right">
+          <p className="rounded-2xl border border-foreground/10 bg-brand-acid/65 px-5 py-4 font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-foreground shadow-card max-lg:hidden lg:text-right">
             {copy.boardLabel}
           </p>
         </div>
 
         <ul
-          className="mt-8 grid auto-rows-fr gap-3 sm:grid-cols-2 sm:gap-4 lg:mt-10 lg:grid-cols-12"
+          className="mt-8 grid auto-rows-fr gap-3 max-lg:mt-5 max-lg:grid-cols-2 max-lg:gap-2 sm:grid-cols-2 sm:gap-4 lg:mt-10 lg:grid-cols-12"
           aria-label={copy.boardAriaLabel}
         >
           {copy.resources.map((resource, index) => {
@@ -77,7 +77,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
               <li key={resource.label} className={resourceSpans[index]}>
                 <Link
                   href={localizeHref(resource.href, locale)}
-                  className={`group relative grid h-full min-h-[10.5rem] min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${resourceTones[index] ?? resourceTones[0]} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-card motion-reduce:transform-none motion-reduce:transition-none md:p-5 lg:min-h-52 lg:rounded-[1.6rem] lg:p-6`}
+                  className={`group relative grid h-full min-h-[10.5rem] min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${resourceTones[index] ?? resourceTones[0]} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-card motion-reduce:transform-none motion-reduce:transition-none max-lg:min-h-[4.5rem] max-lg:rounded-2xl max-lg:p-3 md:p-5 lg:min-h-52 lg:rounded-[1.6rem] lg:p-6`}
                   data-home-resource-card
                 >
                   <span
@@ -86,29 +86,29 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                   />
                   <span className="relative flex items-start justify-between gap-6">
                     <span
-                      className={`flex size-12 items-center justify-center rounded-2xl border border-foreground/15 shadow-card ${iconTones[index] ?? iconTones[0]}`}
+                      className={`flex size-12 items-center justify-center rounded-2xl border border-foreground/15 shadow-card max-lg:size-8 max-lg:rounded-lg ${iconTones[index] ?? iconTones[0]}`}
                     >
                       <Icon size={22} strokeWidth={1.6} />
                     </span>
                     <span
-                      className={`font-ui-mono text-xs font-bold tabular-nums ${index === 3 ? "text-foreground" : "text-brand-orange"}`}
+                      className={`font-ui-mono text-xs font-bold tabular-nums max-lg:hidden ${index === 3 ? "text-foreground" : "text-brand-orange"}`}
                     >
                       R{String(index + 1).padStart(2, "0")}
                     </span>
                   </span>
-                  <span className="relative mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-4 self-end lg:mt-8 lg:gap-5">
+                  <span className="relative mt-6 grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-end gap-4 self-end max-lg:mt-1.5 max-lg:gap-2 lg:mt-8 lg:gap-5">
                     <span className="min-w-0">
-                      <span className="block text-xl font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange">
+                      <span className="block text-xl font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange max-lg:text-sm">
                         {resource.label}
                       </span>
-                      <span className="mt-2 block max-w-xl text-sm leading-relaxed text-muted-foreground">
+                      <span className="mt-2 block max-w-xl text-sm leading-relaxed text-muted-foreground max-lg:hidden">
                         {resource.body}
                       </span>
                     </span>
                     <ArrowRight
                       aria-hidden="true"
                       size={20}
-                      className="shrink-0 text-brand-orange transition-transform duration-150 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none"
+                      className="shrink-0 text-brand-orange transition-transform duration-150 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none max-lg:hidden"
                     />
                   </span>
                 </Link>
@@ -117,8 +117,8 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
           })}
         </ul>
 
-        <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-brand-cobalt bg-brand-cobalt p-4 shadow-card-hover sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6 md:py-5 lg:mt-7 lg:rounded-[1.6rem]">
-          <p className="max-w-2xl text-sm leading-relaxed text-white">
+        <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-brand-cobalt bg-brand-cobalt p-4 shadow-card-hover max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:rounded-2xl max-lg:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6 md:py-5 lg:mt-7 lg:rounded-[1.6rem]">
+          <p className="max-w-2xl text-sm leading-relaxed text-white max-lg:text-xs">
             {copy.accountBody}
           </p>
           <Link

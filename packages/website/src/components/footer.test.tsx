@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
@@ -198,5 +200,120 @@ describe("Footer semantics and stable public dates", () => {
     for (const link of document.querySelectorAll("a[href^='/']")) {
       expect(link).toHaveAttribute("data-prefetch", "false");
     }
+  });
+});
+
+describe("Footer link disclosure below lg", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
+  });
+
+  it("collapses the four link columns into a disclosure that starts closed", async () => {
+    await renderFooter("de");
+
+    const disclosure = screen.getByTestId("footer-group-disclosure");
+    expect(disclosure.tagName).toBe("DETAILS");
+    // Closed markup is what the first paint of a phone gets. An `open`
+    // attribute here would restore the roughly 350px column stack the
+    // disclosure exists to remove.
+    expect(disclosure).not.toHaveAttribute("open");
+
+    const summary = disclosure.querySelector("summary");
+    expect(summary).not.toBeNull();
+    expect(summary?.parentElement).toBe(disclosure);
+    expect(summary).toHaveTextContent("Alle Bereiche");
+    // The summary is the only way into the columns on a phone: 44px floor,
+    // and a label at 14px rather than anything below the 12px typography floor.
+    expect(summary?.className).toContain("min-h-11");
+    expect(summary?.className).toContain("text-sm");
+
+    const indicator = summary?.querySelector("[aria-hidden='true']");
+    expect(indicator).toHaveTextContent("+");
+  });
+
+  it("labels the disclosure in reviewed English copy", async () => {
+    await renderFooter("en");
+
+    const disclosure = screen.getByTestId("footer-group-disclosure");
+    expect(disclosure.querySelector("summary")).toHaveTextContent(
+      "All sections",
+    );
+  });
+
+  it("keeps every column destination inside the disclosure and the legal row outside it", async () => {
+    await renderFooter("de");
+
+    const disclosure = screen.getByTestId("footer-group-disclosure");
+    for (const name of [
+      "Alle Kurse",
+      "Grundlagenpfad",
+      "Technikkurse",
+      "Lernbücher",
+      "Workshops",
+      "Praxisbeispiele",
+      "Open Source",
+      "Blog",
+      "Über mich",
+      "Hilfe",
+      "Rückmeldung",
+    ]) {
+      expect(disclosure).toContainElement(screen.getByRole("link", { name }));
+    }
+    for (const heading of screen.getAllByRole("heading", { level: 2 })) {
+      expect(disclosure).toContainElement(heading);
+    }
+
+    // Legal reachability never depends on opening anything.
+    const legal = screen.getByRole("navigation", {
+      name: "Rechtliche Informationen",
+    });
+    expect(disclosure).not.toContainElement(legal);
+    for (const name of ["Impressum", "Datenschutz", "Lizenzrichtlinie"]) {
+      expect(disclosure).not.toContainElement(
+        screen.getByRole("link", { name }),
+      );
+    }
+    expect(disclosure).not.toContainElement(
+      screen.getByTestId("footer-copyright"),
+    );
+  });
+
+  it("hands the desktop grid back unchanged from lg", async () => {
+    await renderFooter("de");
+
+    const disclosure = screen.getByTestId("footer-group-disclosure");
+    // ::details-content is the only handle CSS has on a closed <details>.
+    // Lifting the user-agent content-visibility there is what makes the grid
+    // render at lg exactly as it did before the wrapper existed.
+    expect(disclosure.className).toContain(
+      "lg:[&::details-content]:[content-visibility:visible]",
+    );
+    expect(disclosure.className).toContain(
+      "lg:[&::details-content]:[block-size:auto]",
+    );
+
+    // The summary disappears at lg only where that same pseudo-element is
+    // supported. Without the @supports guard an older engine would hide the
+    // summary and leave the columns unreachable.
+    const summary = disclosure.querySelector("summary");
+    expect(summary?.className).toContain(
+      "lg:supports-[selector(::details-content)]:hidden",
+    );
+
+    const grid = disclosure.querySelector("summary + div");
+    expect(grid?.className).toContain("grid-cols-2");
+    expect(grid?.className).toContain("md:grid-cols-4");
+    // Open-state breathing room below lg only; desktop spacing is untouched.
+    expect(grid?.className).toContain("lg:pt-0");
+  });
+
+  it("opens and closes without any JavaScript in the footer", () => {
+    const source = readFileSync(join(__dirname, "footer.tsx"), "utf8");
+
+    expect(source).toMatch(/<details\b/);
+    expect(source).toMatch(/<summary\b/);
+    expect(source).not.toMatch(/["']use client["']/);
+    expect(source).not.toMatch(/\buseState\b|\buseEffect\b|\buseRef\b/);
+    expect(source).not.toMatch(/\son[A-Z][A-Za-z]*=/);
   });
 });

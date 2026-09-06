@@ -1,13 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 const OLD_BLOG_COPY =
   /(Ich hatte genug|Nicken im Meeting|Beratungslücke|harte Zahlen|Scan starten|Jetzt KI|Ergebnis per E-Mail|Verkaufsprospekt|höfliche Lüge|verdammt|schreiben Sie mir|verkauft sich besser)/i;
-
-function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
-  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
-    message,
-  );
-}
 
 async function expectNoOldBlogCopy(page: import("@playwright/test").Page) {
   const text = await page.locator("body").innerText();
@@ -152,7 +147,7 @@ for (const variant of LOCALES) {
       page.on("pageerror", (error) => {
         if (
           browserName === "webkit" &&
-          isExpectedWebKitRscPrefetchCancellation(error.message)
+          isWebKitRscPrefetchCancellation(error.message)
         ) {
           return;
         }

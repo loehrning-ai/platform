@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getWorkshopBySlug, getWorkshopSlugs } from "@/lib/workshops";
 import { WorkshopDetailContent } from "./workshop-detail-content";
+import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
+import { workshopUri } from "@/lib/mcp/uris";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -105,6 +107,17 @@ export default async function WorkshopDetailPage({ params }: Props) {
     <>
       <JsonLd data={jsonLd} id={`workshop-${workshop.slug}-jsonld`} />
       <WorkshopDetailContent workshop={workshop} locale={locale} />
+      <OpenWithYourAiRegion
+        kind="workshop"
+        contextTitle={workshop.title}
+        resources={[
+          {
+            uri: workshopUri(workshop.slug, locale),
+            title: workshop.title,
+          },
+        ]}
+        locale={locale}
+      />
     </>
   );
 }

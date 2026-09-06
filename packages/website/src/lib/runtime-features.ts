@@ -1,12 +1,18 @@
 import "server-only";
 import {
   anthropicRetentionDays,
+  byoChatAllowedModels,
   geminiRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountRuntimeReady,
+  isAgentAccessReady,
+  isByoChatReady,
   isCourseTerminalRuntimeReady,
+  isCvEngineHostedReady,
+  isGithubOAuthRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
+  isOAuthServerReady,
   isPracticeModelRuntimeReady,
   turnstileSiteKey,
 } from "@/lib/provider-readiness";
@@ -15,6 +21,7 @@ export interface RuntimeFeatures {
   readonly account: boolean;
   readonly magicLink: boolean;
   readonly google: boolean;
+  readonly github: boolean;
   readonly turnstileSiteKey: string | null;
   readonly feedback: boolean;
   readonly supabase: boolean;
@@ -30,6 +37,8 @@ export interface RuntimeFeatures {
     | "google/gemini-2.5-flash-lite"
   )[];
   readonly courseTerminal: boolean;
+  readonly cvEngineHosted: boolean;
+  readonly agentAccess: boolean;
   readonly vercelHosting: boolean;
   readonly vercelTelemetry: boolean;
 }
@@ -56,6 +65,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const accountReady = isAccountRuntimeReady();
   const magicLinkReady = isMagicLinkRuntimeReady();
   const googleReady = isGoogleOAuthRuntimeReady();
+  const githubReady = isGithubOAuthRuntimeReady();
   const anthropicReady = isPracticeModelRuntimeReady(
     "anthropic/claude-haiku-4.5",
   );
@@ -71,6 +81,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     account: accountReady,
     magicLink: magicLinkReady,
     google: googleReady,
+    github: githubReady,
     turnstileSiteKey: magicLinkReady ? turnstileSiteKey() : null,
     feedback:
       serviceSupabase &&
@@ -87,8 +98,43 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     geminiRetentionDays: geminiRetention,
     practiceModels,
     courseTerminal: isCourseTerminalRuntimeReady(),
+    cvEngineHosted: isCvEngineHostedReady(),
+    agentAccess: isAgentAccessReady(),
     vercelHosting,
     vercelTelemetry:
       vercelHosting && process.env.VERCEL_TELEMETRY_ENABLED === "true",
+  };
+}
+
+/**
+ * Agent-access capability truth: the public MCP server, the OAuth grant path,
+ * the account chat on a student's own key, and hosted cv-engine documents.
+ *
+ * Deliberately a second accessor rather than more fields on RuntimeFeatures.
+ * That object is the provider-disclosure surface the privacy notice renders
+ * from; these four are feature switches read by the agent routes and by the
+ * account pages, and they change on a different cadence.
+ */
+export interface AgentRuntimeFeatures {
+  /** Public MCP server at /api/mcp. */
+  readonly agentAccess: boolean;
+  /** Supabase OAuth 2.1 Server, the grant path for agent clients. */
+  readonly oauthServer: boolean;
+  /** Account chat running on a student's own provider key. */
+  readonly byoChat: boolean;
+  /** Models the account chat may select. Empty unless byoChat is true. */
+  readonly byoChatModels: readonly string[];
+  /** Hosted cv-engine document access. */
+  readonly cvEngineHosted: boolean;
+}
+
+export function getAgentRuntimeFeatures(): AgentRuntimeFeatures {
+  const byoChatReady = isByoChatReady();
+  return {
+    agentAccess: isAgentAccessReady(),
+    oauthServer: isOAuthServerReady(),
+    byoChat: byoChatReady,
+    byoChatModels: byoChatReady ? byoChatAllowedModels() : [],
+    cvEngineHosted: isCvEngineHostedReady(),
   };
 }

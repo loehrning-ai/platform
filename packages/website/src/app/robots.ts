@@ -1,25 +1,16 @@
 import type { MetadataRoute } from "next";
-import { SITE_ORIGIN, robotsAllowPaths, robotsDisallowPaths } from "@/lib/crawl/contract";
+import {
+  AI_RETRIEVAL_AGENTS,
+  AI_TRAINING_CRAWLERS,
+  SITE_ORIGIN,
+  robotsAllowPaths,
+  robotsDisallowPaths,
+} from "@/lib/crawl/contract";
 
-const AI_SEARCH_CRAWLERS = [
-  "OAI-SearchBot",
-  "ChatGPT-User",
-  "PerplexityBot",
-  "Perplexity-User",
-  "Claude-User",
-  "Claude-SearchBot",
-] as const;
-
-const AI_TRAINING_CRAWLERS = [
-  "GPTBot",
-  "CCBot",
-  "Bytespider",
-  "Google-Extended",
-  "Applebot-Extended",
-  "ClaudeBot",
-  "anthropic-ai",
-] as const;
-
+// This file only renders the crawl contract. Which paths are open, which AI
+// agents act for a person and are allowed on public paths (Claude-User among
+// them), and which crawlers collect training data and are blocked from the
+// whole site are all decided and explained in src/lib/crawl/contract.ts.
 export default function robots(): MetadataRoute.Robots {
   const allow = robotsAllowPaths();
   const disallow = robotsDisallowPaths();
@@ -31,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: [...allow],
         disallow: [...disallow],
       },
-      ...AI_SEARCH_CRAWLERS.map((userAgent) => ({
+      ...AI_RETRIEVAL_AGENTS.map((userAgent) => ({
         userAgent,
         allow: [...allow],
         disallow: [...disallow],

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 const WORKSHOP_ROUTES = [
   {
@@ -23,12 +24,6 @@ const WORKSHOP_ROUTES = [
 
 const GERMAN_INTERFACE_TOKENS =
   /(?:Für wen|Alle Workshops|Die offene Entscheidung|Einordnung|Kostenlos und ohne Anmeldung|Material zum Mitnehmen|Verfügbare Workshops)/;
-
-function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
-  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
-    message,
-  );
-}
 
 for (const width of [320, 390, 768, 1440] as const) {
   test(`workshop DE/EN pages are complete and contain their layout at ${width}px`, async ({
@@ -62,7 +57,7 @@ for (const width of [320, 390, 768, 1440] as const) {
         const onPageError = (error: Error) => {
           if (
             browserName === "webkit" &&
-            isExpectedWebKitRscPrefetchCancellation(error.message)
+            isWebKitRscPrefetchCancellation(error.message)
           ) {
             return;
           }

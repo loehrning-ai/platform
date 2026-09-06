@@ -80,6 +80,20 @@ export const HOME_COPY = {
         "Ein kostenloses Konto synchronisiert Fortschritt und Arbeitsbelege geräteübergreifend.",
       accountCta: "Zum Konto",
     },
+    companion: {
+      resumeEyebrow: "Weiter bei",
+      startEyebrow: "Erster Schritt",
+      lessonsDone: (done: number, total: number) =>
+        `${done} von ${total} Lektionen`,
+      demosEyebrow: "Ausprobieren",
+      demosTitle: "Praxisbeispiele",
+      demosRailLabel: "Praxisbeispiele zum Ausprobieren",
+      booksEyebrow: "Nachlesen",
+      booksTitle: "Lernbücher",
+      booksRailLabel: "Lernbücher der Plattform",
+      bookMeta: (chapters: number, minutes: number) =>
+        `${chapters} Kapitel · ${minutes} Min.`,
+    },
     credibility: {
       overline: "Betriebsprinzipien",
       headline: "Was hier nicht verhandelbar ist.",
@@ -187,6 +201,20 @@ export const HOME_COPY = {
       accountBody:
         "A free account synchronizes progress and work artifacts across devices.",
       accountCta: "Go to account",
+    },
+    companion: {
+      resumeEyebrow: "Continue with",
+      startEyebrow: "First step",
+      lessonsDone: (done: number, total: number) =>
+        `${done} of ${total} lessons`,
+      demosEyebrow: "Try it",
+      demosTitle: "Applied examples",
+      demosRailLabel: "Applied examples to try",
+      booksEyebrow: "Read up",
+      booksTitle: "Learning books",
+      booksRailLabel: "Learning books on this platform",
+      bookMeta: (chapters: number, minutes: number) =>
+        `${chapters} chapters · ${minutes} min`,
     },
     credibility: {
       overline: "Operating principles",

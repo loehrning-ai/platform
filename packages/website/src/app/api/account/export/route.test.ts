@@ -12,6 +12,7 @@ const {
   mockFetchProgress,
   mockTryCreateServiceClient,
   mockConsumeRateLimit,
+  mockIsCvEngineHostedReady,
 } = vi.hoisted(() => ({
   mockGetAuthenticatedUser: vi.fn(),
   mockCreateAuthServerClient: vi.fn(),
@@ -20,6 +21,7 @@ const {
   mockConsumeRateLimit: vi.fn(
     async (_input: RateLimitInput): Promise<boolean> => true,
   ),
+  mockIsCvEngineHostedReady: vi.fn((): boolean => false),
 }));
 
 vi.mock("@/lib/supabase/auth-server", () => ({
@@ -34,6 +36,10 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 vi.mock("@/lib/observability/api-error", () => ({
   reportApiError: vi.fn(),
+}));
+vi.mock("@/lib/provider-readiness", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/provider-readiness")>()),
+  isCvEngineHostedReady: () => mockIsCvEngineHostedReady(),
 }));
 vi.mock("@/lib/security/rate-limit", () => ({
   consumeRateLimit: (input: RateLimitInput) => mockConsumeRateLimit(input),
@@ -122,6 +128,30 @@ function queryResult(
   return builder;
 }
 
+/** PostgREST's answer in a project without the resume tool's schema. */
+const CV_ENGINE_TABLE_ABSENT = {
+  code: "PGRST205",
+  message: "Could not find the table 'public.documents' in the schema cache",
+};
+
+/**
+ * The cookie-bound client the export reads the learner's own rows with. Its
+ * only table is the resume tool's `documents`; progress comes from a mocked
+ * store. The default answer is the one a project without that tool gives.
+ */
+function cookieClient(
+  documentsQuery: ReturnType<typeof queryResult> = queryResult(
+    [],
+    CV_ENGINE_TABLE_ABSENT,
+  ),
+) {
+  return {
+    id: "cookie-client",
+    from: vi.fn(() => documentsQuery),
+    documentsQuery,
+  };
+}
+
 const EMPTY_PROGRESS = {
   schemaVersion: 3,
   courses: {},
@@ -139,7 +169,7 @@ beforeEach(() => {
     user: { id: "user-1", email: "learner@example.test" },
   });
   mockCreateAuthServerClient.mockReset();
-  mockCreateAuthServerClient.mockResolvedValue({ id: "cookie-client" });
+  mockCreateAuthServerClient.mockResolvedValue(cookieClient());
   mockFetchProgress.mockReset();
   mockFetchProgress.mockResolvedValue({
     ok: true,
@@ -153,8 +183,31 @@ beforeEach(() => {
   mockTryCreateServiceClient.mockReset();
   mockConsumeRateLimit.mockReset();
   mockConsumeRateLimit.mockResolvedValue(true);
+  mockIsCvEngineHostedReady.mockReset();
+  mockIsCvEngineHostedReady.mockReturnValue(false);
   mockedReportApiError.mockClear();
 });
+
+/** Section manifest entry for one exported table, by name. */
+function sectionNamed(
+  payload: { readonly sections?: unknown },
+  name: string,
+): Record<string, unknown> | undefined {
+  const sections = payload.sections;
+  if (!Array.isArray(sections)) return undefined;
+  return sections.find(
+    (section) =>
+      typeof section === "object" &&
+      section !== null &&
+      (section as { name?: unknown }).name === name,
+  ) as Record<string, unknown> | undefined;
+}
+
+function assessmentClient(runs: unknown, answers: unknown) {
+  return {
+    from: vi.fn((table: string) => (table === "assessment_runs" ? runs : answers)),
+  };
+}
 
 describe("GET /api/account/export", () => {
   it.each([
@@ -293,6 +346,10 @@ describe("GET /api/account/export", () => {
     expect(runsQuery.range).toHaveBeenCalledWith(0, 999);
     expect(answersQuery.range).toHaveBeenCalledWith(0, 999);
   });
+
+
+
+
 
   it("paginates by actual rows returned when the project cap is below the requested range", async () => {
     const runs = Array.from({ length: 1_003 }, (_, index) => ({
@@ -857,5 +914,201 @@ describe("POST /api/account/export", () => {
     expect(payload.assessment_answers).toHaveLength(1);
     expect(payload.export_complete).toBe(true);
     expect(mockConsumeRateLimit).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("GET /api/account/export section manifest", () => {
+  it("names every section of the exported document, including derived ones", async () => {
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(queryResult([]), queryResult([])),
+    );
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(
+      (payload.sections as { readonly name: string }[]).map(
+        (section) => section.name,
+      ),
+    ).toEqual([
+      "user_course_progress",
+      "assessment_runs",
+      "assessment_answers",
+      "documents",
+      "certificates",
+    ]);
+    expect(sectionNamed(payload, "user_course_progress")).toEqual({
+      name: "user_course_progress",
+      status: "complete",
+    });
+    expect(sectionNamed(payload, "certificates")).toEqual({
+      name: "certificates",
+      status: "derived_from_progress",
+    });
+    expect(payload.export_complete).toBe(true);
+  });
+
+  it("marks documents not_enabled and reads nothing when the hosted tool is off", async () => {
+    const cookieClient = { from: vi.fn() };
+    mockCreateAuthServerClient.mockResolvedValue(cookieClient);
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(queryResult([]), queryResult([])),
+    );
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.documents).toEqual([]);
+    expect(sectionNamed(payload, "documents")).toEqual({
+      name: "documents",
+      status: "not_enabled",
+    });
+    expect(payload.export_complete).toBe(true);
+    expect(cookieClient.from).not.toHaveBeenCalled();
+  });
+
+  it("exports hosted cv-engine documents through the row-level-security client", async () => {
+    mockIsCvEngineHostedReady.mockReturnValue(true);
+    const documents = [
+      {
+        id: "doc-1",
+        user_id: "user-1",
+        title: "Lebenslauf",
+        updated_at: "2026-09-01T10:00:00.000Z",
+      },
+    ];
+    const documentsQuery = queryResult(documents);
+    const cookieClient = { from: vi.fn(() => documentsQuery) };
+    mockCreateAuthServerClient.mockResolvedValue(cookieClient);
+    const serviceClient = assessmentClient(queryResult([]), queryResult([]));
+    mockTryCreateServiceClient.mockReturnValue(serviceClient);
+
+    const response = await GET(exportRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.documents).toEqual(documents);
+    expect(sectionNamed(payload, "documents")).toEqual({
+      name: "documents",
+      status: "complete",
+    });
+    expect(payload.export_complete).toBe(true);
+    expect(payload).not.toHaveProperty("export_error");
+    // The hosted tool owns this table, so row-level security decides
+    // ownership. The service-role client must never read it.
+    expect(serviceClient.from).not.toHaveBeenCalledWith("documents");
+    expect(cookieClient.from).toHaveBeenCalledWith("documents");
+    expect(documentsQuery.select).toHaveBeenCalledWith("*", { count: "exact" });
+    expect(documentsQuery.eq).toHaveBeenCalledWith("user_id", "user-1");
+    expect(documentsQuery.order.mock.calls).toEqual([
+      ["updated_at", { ascending: true }],
+      ["id", { ascending: true }],
+    ]);
+    expect(documentsQuery.range).toHaveBeenCalledWith(0, 999);
+  });
+
+  it("marks the documents section instead of dropping it when the hosted table cannot be read", async () => {
+    mockIsCvEngineHostedReady.mockReturnValue(true);
+    const readError = Object.assign(new Error("documents table missing"), {
+      code: "PGRST205",
+    });
+    const documentsQuery = queryResult([], readError);
+    mockCreateAuthServerClient.mockResolvedValue({
+      from: vi.fn(() => documentsQuery),
+    });
+    const runs = [{ id: "run-1", user_id: "user-1" }];
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(queryResult(runs), queryResult([])),
+    );
+
+    const response = await GET(exportRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    // A tool that is unreachable must not cost the learner every other table.
+    expect(payload.assessment_runs).toEqual(runs);
+    expect(payload.documents).toEqual([]);
+    expect(sectionNamed(payload, "documents")).toEqual({
+      name: "documents",
+      status: "unavailable",
+      error: "documents_read_failed",
+    });
+    expect(payload.export_error).toBe("export_failed");
+    expect(payload.export_complete).toBe(false);
+    expect(mockedReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockedReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/account/export",
+        step: "supabase-read",
+        error: readError,
+      }),
+    );
+  });
+
+  it("keeps the documents it reached when a later documents page fails", async () => {
+    mockIsCvEngineHostedReady.mockReturnValue(true);
+    const documents = Array.from({ length: 1_001 }, (_, index) => ({
+      id: `doc-${index}`,
+      user_id: "user-1",
+    }));
+    const documentsQuery = queryResult(documents);
+    documentsQuery.rangeErrors.set(
+      1_000,
+      new Error("second documents page failed"),
+    );
+    mockCreateAuthServerClient.mockResolvedValue({
+      from: vi.fn(() => documentsQuery),
+    });
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(queryResult([]), queryResult([])),
+    );
+
+    const response = await GET(exportRequest());
+    const serialized = await response.text();
+    const payload = JSON.parse(serialized);
+
+    expect(response.status).toBe(200);
+    expect(payload.documents).toHaveLength(1_000);
+    expect(sectionNamed(payload, "documents")).toEqual({
+      name: "documents",
+      status: "incomplete",
+      error: "documents_read_failed",
+    });
+    expect(payload.export_complete).toBe(false);
+    expect(serialized).toMatch(/"export_complete": false\n}\n$/);
+  });
+
+  it("marks every section left unread after an earlier table fails", async () => {
+    mockIsCvEngineHostedReady.mockReturnValue(true);
+    const cookieClient = { from: vi.fn() };
+    mockCreateAuthServerClient.mockResolvedValue(cookieClient);
+    const runsQuery = queryResult(
+      Array.from({ length: 1_001 }, (_, index) => ({ id: `run-${index}` })),
+    );
+    runsQuery.rangeErrors.set(1_000, new Error("second runs page failed"));
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(runsQuery, queryResult([{ id: "answer-1" }])),
+    );
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.assessment_runs).toHaveLength(1_000);
+    expect(sectionNamed(payload, "assessment_runs")).toEqual({
+      name: "assessment_runs",
+      status: "incomplete",
+      error: "assessment_runs_read_failed",
+    });
+    // An empty array is not evidence that the learner stored nothing.
+    expect(payload.assessment_answers).toEqual([]);
+    expect(sectionNamed(payload, "assessment_answers")).toEqual({
+      name: "assessment_answers",
+      status: "not_attempted",
+      error: "earlier_section_failed",
+    });
+    expect(sectionNamed(payload, "documents")).toEqual({
+      name: "documents",
+      status: "not_attempted",
+      error: "earlier_section_failed",
+    });
+    expect(payload.export_complete).toBe(false);
+    expect(cookieClient.from).not.toHaveBeenCalled();
   });
 });

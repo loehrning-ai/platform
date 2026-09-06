@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Book reader content fidelity (regression coverage). The open, login-free HTML
@@ -15,23 +20,9 @@ const CHAPTER = "03_reifegrad_ueberblick";
 const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
 const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung"; // manifest.json title
 
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("book chapter reader content fidelity", () => {
   test("loads without login and shows a real heading outline", async ({ page }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const res = await page.goto(CHAPTER_URL, { waitUntil: "domcontentloaded" });
 
     expect(res?.status(), `status for ${CHAPTER_URL}`).toBe(200);
@@ -47,8 +38,11 @@ test.describe("book chapter reader content fidelity", () => {
       await page.getByRole("heading", { level: 2 }).count(),
     ).toBeGreaterThanOrEqual(1);
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${CHAPTER_URL}\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${CHAPTER_URL}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("renders GFM tables as real, non-clipped <table> elements", async ({ page }) => {

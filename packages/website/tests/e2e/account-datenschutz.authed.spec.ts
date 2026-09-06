@@ -1,4 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Projects where the SERVER resolves a real session, so the signed-in DOM is
@@ -57,20 +62,6 @@ const UNIFIED_STORAGE_KEY = "loehrning-progress-v2";
 // SEEDED marker is gone still proves the client's removeItem() ran, without
 // depending on whether "/" reads the store first.
 const SEEDED_MARKER = "playwright-seeded-marker-4242";
-
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
 
 // Scope to one of the three <article> cards via its h2 (page.tsx lines 116-201).
 function sectionByHeading(page: Page, heading: string) {
@@ -147,7 +138,7 @@ test.describe("authenticated /konto/datenschutz round-trips (requires a live ses
   test("renders the DSGVO management page: h1, three sections, no console fault", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     // Re-navigate with the listener attached so a clean load is measured.
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
@@ -169,8 +160,11 @@ test.describe("authenticated /konto/datenschutz round-trips (requires a live ses
       page.getByRole("link", { name: /Zurück zum Konto/i }),
     ).toHaveAttribute("href", "/konto");
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("export (Art. 20) streams a date-stamped native download", async ({

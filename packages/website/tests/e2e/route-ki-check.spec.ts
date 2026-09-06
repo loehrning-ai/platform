@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 import { QUESTIONS } from "../../src/lib/ki-check/questions";
 import { computeResult } from "../../src/lib/ki-check/scoring";
 import { recommend } from "../../src/lib/ki-check/recommend";
@@ -23,24 +28,11 @@ const ANSWERS: Answer[] = QUESTIONS.map((q) => ({
 }));
 
 /** Collect real (non-noise) console + page errors from load onward. */
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("/ki-check", () => {
   test("smoke: loads 200 with an h1 and the first question, no console error", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const res = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status(), `status for ${ROUTE}`).toBe(200);
     expect(page.url(), "must not redirect to login").not.toContain("/login");
@@ -54,7 +46,10 @@ test.describe("/ki-check", () => {
       page.getByText(`Frage 1 von ${QUESTIONS.length}`),
     ).toBeVisible();
 
-    expect(meaningfulErrors(errors), `console errors on ${ROUTE}`).toEqual([]);
+    expect(
+      meaningfulBrowserErrors(errors),
+      `console errors on ${ROUTE}`,
+    ).toEqual([]);
   });
 
   test("interaction: answering every question reveals the recommended course", async ({

@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Book reader callout rendering (regression coverage).
@@ -30,24 +35,11 @@ const SHOWCASE_H1 = "Das Eisberg-Problem";
 // Five unlabelled example-prompt blockquotes under ### sub-headings.
 const FALLBACK = "/buecher/ki-landschaft/07_schnellstart";
 
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("book reader callouts", () => {
   test("chapter loads open, shows the manifest title, logs no console error", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const response = await page.goto(SHOWCASE, { waitUntil: "domcontentloaded" });
 
     expect(response?.status(), `status for ${SHOWCASE}`).toBe(200);
@@ -57,8 +49,11 @@ test.describe("book reader callouts", () => {
     await expect(title).toHaveAccessibleName(SHOWCASE_H1);
     await expect(title).toBeVisible();
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${SHOWCASE}\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(
+      noise,
+      `console errors on ${SHOWCASE}\n${formatBrowserErrors(noise)}`,
+    ).toEqual([]);
   });
 
   test("a Hinweis callout renders as a distinctly labelled, styled note", async ({

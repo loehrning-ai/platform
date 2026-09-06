@@ -10,6 +10,13 @@ const DEFINITE_DELETE_FAILURES: Readonly<Record<string, number>> = {
   rate_limit_exceeded: 429,
   rate_limit_unavailable: 503,
   admin_client_unavailable: 503,
+  // A pre-delete step refused before the account, its sessions or its cookie
+  // were touched (src/app/api/account/delete/route.ts). The control flow ends
+  // ahead of deleteUser(), so the account provably still exists and the
+  // learner may simply try again later. Without this entry that answer would
+  // be read as an indeterminate deletion and the page would tell them not to
+  // retry, which is the opposite of the truth.
+  pre_delete_incomplete: 503,
   delete_failed: 500,
 };
 

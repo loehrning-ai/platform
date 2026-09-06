@@ -50,7 +50,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="kurse"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 md:py-20 lg:py-24"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24"
       data-testid="kurse-section"
     >
       <div className="mx-auto max-w-6xl px-6 md:px-12">
@@ -59,15 +59,15 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
             <p className="overline border-l-[3px] border-brand-orange pl-3">
               {copy.overline}
             </p>
-            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground">
+            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground max-lg:mt-3 max-lg:text-2xl max-lg:tracking-[-0.03em]">
               {copy.headline[0]}{" "}
               <span className="text-muted-foreground">{copy.headline[1]}</span>
             </h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground max-lg:hidden">
               {copy.introduction}
             </p>
           </header>
-          <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 shadow-card sm:px-5 sm:py-4 lg:justify-end">
+          <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 shadow-card max-lg:hidden sm:px-5 sm:py-4 lg:justify-end">
             <span className="font-ui-mono text-2xl font-bold tabular-nums text-brand-orange sm:text-3xl">
               01–04
             </span>
@@ -78,7 +78,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
         </div>
 
         <ol
-          className="relative mt-8 grid gap-3 sm:gap-4 md:grid-cols-2 lg:mt-10 lg:grid-cols-12 lg:gap-6"
+          className="relative mt-8 grid gap-3 max-lg:mt-5 max-lg:gap-2 sm:gap-4 md:grid-cols-2 lg:mt-10 lg:grid-cols-12 lg:gap-6"
           data-testid="foundation-route"
           aria-label={copy.routeLabel}
         >
@@ -94,7 +94,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
               >
                 <Link
                   href={localizeHref(course.href, locale)}
-                  className={`group relative grid h-full min-w-0 grid-cols-[7rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 ${tone} shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-1 sm:rounded-[1.75rem]`}
+                  className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-1 sm:rounded-[1.75rem]`}
                   data-home-course-card
                 >
                   <span className="relative block">
@@ -109,7 +109,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                       />
                     ) : null}
                     <span
-                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] ${accent}`}
+                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] max-sm:left-2 max-sm:top-2 max-sm:size-8 max-sm:rounded-lg max-sm:text-xs max-sm:shadow-[2px_2px_0_var(--color-foreground)] ${accent}`}
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
@@ -118,19 +118,19 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                     </span>
                   </span>
 
-                  <span className="grid min-w-0 grid-cols-1 gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
+                  <span className="grid min-w-0 grid-cols-1 gap-3 p-4 max-sm:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
                     <span className="min-w-0">
-                      <span className="block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
+                      <span className="block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-brand-orange max-sm:leading-tight sm:tracking-[0.1em]">
                         {course.unitCount} {course.unitLabel} ·{" "}
                         {course.totalLessons} {copy.lessonLabel}
                       </span>
-                      <span className="mt-1 block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-muted-foreground sm:hidden">
+                      <span className="mt-1 block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-muted-foreground max-sm:mt-0.5 max-sm:normal-case max-sm:leading-tight sm:hidden">
                         {courseCopy.duration}
                       </span>
-                      <span className="mt-2 block text-lg font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange sm:text-xl">
+                      <span className="mt-2 block text-lg font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange max-sm:mt-0.5 max-sm:text-base sm:text-xl">
                         {courseCopy.title}
                       </span>
-                      <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-muted-foreground sm:mt-2">
+                      <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-muted-foreground max-sm:hidden sm:mt-2">
                         {courseCopy.tagline}
                       </span>
                     </span>
@@ -144,8 +144,8 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           })}
         </ol>
 
-        <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
-          <p className="text-sm leading-relaxed text-foreground">
+        <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
+          <p className="text-sm leading-relaxed text-foreground max-lg:text-xs">
             {copy.deeperSummary(TECHNICAL_COURSE_COUNT)}
           </p>
           <Link

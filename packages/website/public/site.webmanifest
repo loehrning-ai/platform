@@ -1,22 +1,26 @@
 {
+  "id": "/",
   "name": "loehrning.ai",
   "short_name": "loehrning",
   "description": "Offene KI- und Daten-Lernplattform mit Kursen, Büchern, Workshops, Demos und Quellmaterial auf Deutsch und Englisch.",
   "lang": "de",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f3f0e9",
-  "theme_color": "#f3f0e9",
+  "background_color": "#f7f1e7",
+  "theme_color": "#f7f1e7",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icon-192-maskable.png",

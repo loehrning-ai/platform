@@ -34,6 +34,7 @@
         "http://localhost:3000/ueber-mich",
         "http://localhost:3000/neuigkeiten",
         "http://localhost:3000/hilfe",
+        "http://localhost:3000/hilfe/eigene-ki",
         "http://localhost:3000/impressum",
         "http://localhost:3000/datenschutz"
       ],

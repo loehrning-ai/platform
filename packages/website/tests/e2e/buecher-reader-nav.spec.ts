@@ -1,4 +1,9 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
+import {
+  collectBrowserErrors,
+  formatBrowserErrors,
+  meaningfulBrowserErrors,
+} from "./fixtures/console";
 
 /**
  * Book chapter reader navigation (regression coverage). Drives the real
@@ -26,25 +31,11 @@ const LAST_PREV = { slug: "09_ausblick" } as const;
 const chapterPath = (slug: string) => `/buecher/${SLUG}/${slug}`;
 const chapterUrl = (slug: string) => new RegExp(`/buecher/${SLUG}/${slug}$`);
 
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
-  });
-  page.on("pageerror", (err) => errors.push(err.message));
-  return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
-}
-
 test.describe("book chapter reader navigation", () => {
   test("a mid-book chapter loads with its heading, position indicator and no console error", async ({
     page,
   }) => {
-    const errors = collectConsoleErrors(page);
+    const errors = collectBrowserErrors(page);
     const res = await page.goto(chapterPath(MID.slug), { waitUntil: "domcontentloaded" });
 
     expect(res?.status(), `status for ${chapterPath(MID.slug)}`).toBe(200);
@@ -54,8 +45,8 @@ test.describe("book chapter reader navigation", () => {
     // Third chapter -> "Kapitel 3 / <total>"; anchored so only the header <p> matches.
     await expect(page.getByText(/^Kapitel\s+3\s*\/\s*\d+$/)).toBeVisible();
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors\n${noise.join("\n")}`).toEqual([]);
+    const noise = meaningfulBrowserErrors(errors);
+    expect(noise, `console errors\n${formatBrowserErrors(noise)}`).toEqual([]);
   });
 
   test("prev / next carry the correct neighbour hrefs and the next link navigates", async ({

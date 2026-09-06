@@ -10,7 +10,9 @@ import {
   getChapterNeighbours,
 } from "@/lib/book-reader-content";
 import { ChapterReader } from "@/components/book-reader/chapter-reader";
+import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
+import { bookUri } from "@/lib/mcp/uris";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
   buildLocaleAlternates,
@@ -137,6 +139,17 @@ export default async function ChapterPage({ params }: Params) {
         locale={locale}
         bookTitle={display.title}
         relatedResourceLabel={display.relatedResourceLabel}
+      />
+      <OpenWithYourAiRegion
+        kind="chapter"
+        contextTitle={`${display.title}: ${loaded.meta.title}`}
+        resources={[
+          {
+            uri: bookUri(book.id, loaded.meta.slug, locale),
+            title: loaded.meta.title,
+          },
+        ]}
+        locale={locale}
       />
     </>
   );

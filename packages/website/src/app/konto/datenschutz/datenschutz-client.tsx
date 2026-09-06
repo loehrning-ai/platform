@@ -81,6 +81,34 @@ function unknownDeleteStatusMessage(locale: Locale): string {
   );
 }
 
+/**
+ * The message for a refusal whose control flow provably ended before the
+ * account was deleted. Every code reaching here passed
+ * `isDefiniteDeleteFailure`, so the account still exists and a retry is safe;
+ * only the two codes that need their own instruction get one.
+ */
+function definiteDeleteFailureMessage(
+  locale: Locale,
+  errorCode: unknown,
+  status: number,
+): string {
+  if (status === 403 && errorCode === "reauthentication_required") {
+    return localized(
+      locale,
+      "Sicherheitsprüfung erforderlich: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Die Kontolöschung ist danach 15 Minuten lang freigegeben.",
+      "Security check required: sign out and sign in again using an available sign-in method. Account deletion is then available for 15 minutes.",
+    );
+  }
+  if (status === 503 && errorCode === "pre_delete_incomplete") {
+    return localized(
+      locale,
+      "Ein Vorbereitungsschritt der Löschung ist fehlgeschlagen. Dein Konto, deine Anmeldung und alle Daten sind unverändert. Versuche die Löschung später erneut.",
+      "A preparation step of the deletion failed. Your account, your sign-in, and all data are unchanged. Try the deletion again later.",
+    );
+  }
+  return localized(locale, `Fehler ${status}`, `Error ${status}`);
+}
+
 export function DatenschutzClient({
   locale = "de",
 }: {
@@ -364,13 +392,7 @@ export function DatenschutzClient({
       }
       setDeleteState("error");
       setErrorMsg(
-        res.status === 403 && body?.error === "reauthentication_required"
-          ? localized(
-              locale,
-              "Sicherheitsprüfung erforderlich: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Die Kontolöschung ist danach 15 Minuten lang freigegeben.",
-              "Security check required: sign out and sign in again using an available sign-in method. Account deletion is then available for 15 minutes.",
-            )
-          : localized(locale, `Fehler ${res.status}`, `Error ${res.status}`),
+        definiteDeleteFailureMessage(locale, body?.error, res.status),
       );
       return;
     }
@@ -539,8 +561,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen und dem Exportzeitpunkt. Prüfe in der Datei, dass",
-                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, and the export time. Check that",
+                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen, deinen Dokumenten aus dem Lebenslauf-Editor und dem Exportzeitpunkt. Prüfe in der Datei, dass",
+                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, your resume editor documents, and the export time. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
@@ -549,7 +571,16 @@ export function DatenschutzClient({
               <code className="font-mono text-[0.9em] text-foreground">
                 true
               </code>
-              {localized(locale, " steht.", ".")}
+              {localized(locale, " steht.", ".")}{" "}
+              {localized(locale, "Die Liste unter", "The list under")}{" "}
+              <code className="mx-1 font-mono text-[0.9em] text-foreground">
+                sections
+              </code>{" "}
+              {localized(
+                locale,
+                "nennt jeden Datenbereich der Datei mit seinem Status, auch die Dokumente der Werkzeuge, sobald dieser Server sie betreibt. So verwechselst du einen leeren Bereich nicht mit einem, der nicht gelesen werden konnte.",
+                "names every data area in the file with its status, including the documents from the tools once this server hosts them. That way an empty area cannot be mistaken for one that could not be read.",
+              )}
             </p>
             <button
               type="button"

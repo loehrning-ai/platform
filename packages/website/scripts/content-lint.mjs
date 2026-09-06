@@ -1141,6 +1141,10 @@ const FRESHNESS_SURFACE_FILES = [
   "src/app/sitemap.ts",
   "src/app/llms.txt/route.ts",
   "src/app/api/knowledge-graph.json/route.ts",
+  // The shared envelope behind /api/courses.json and /api/workshops.json. The
+  // guard belongs on the envelope rather than on the two route files, because
+  // that is where the date is read; the routes receive it through the builder.
+  "src/lib/machine-surfaces/envelope.ts",
 ];
 const BLOG_MANIFEST_FILE = "src/lib/blog-metadata.ts";
 const ISO_DATE_PATTERN = /\d{4}-\d{2}-\d{2}/;
