@@ -195,8 +195,8 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: blob-${{ matrix.project }}-${{ matrix.shard }}
-          path: packages/website/blob-report/
-          if-no-files-found: ignore
+          path: packages/website/blob-report/${{ matrix.project }}-${{ matrix.shard }}/
+          if-no-files-found: error
           retention-days: 7
       - name: Upload failure artifacts
         if: failure()
@@ -289,14 +289,13 @@ jobs:
       - name: Merge into one HTML report
         working-directory: packages/website
         run: node scripts/run-playwright.mjs merge-reports --reporter=html all-blob-reports
-        continue-on-error: true
       - name: Upload merged report
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: browser-report
           path: packages/website/playwright-report/
-          if-no-files-found: ignore
+          if-no-files-found: error
           retention-days: 7
 
   # ---------------------------------------------------------------------------
@@ -400,6 +399,7 @@ jobs:
       - auth-scaffold
       - konto-dom-mocked
       - server-log-privacy
+      - merge-reports
     steps:
       - name: Report gate results
         run: |
@@ -410,7 +410,8 @@ jobs:
             "e2e.................. ${{ needs.e2e.result }}" \
             "auth-scaffold........ ${{ needs.auth-scaffold.result }}" \
             "konto-dom-mocked..... ${{ needs.konto-dom-mocked.result }}" \
-            "server-log-privacy... ${{ needs.server-log-privacy.result }}"
+            "server-log-privacy... ${{ needs.server-log-privacy.result }}" \
+            "merge-reports........ ${{ needs.merge-reports.result }}"
       - name: Fail if any gate did not succeed
         if: >-
           ${{ contains(needs.*.result, 'failure')
