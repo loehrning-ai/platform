@@ -56,6 +56,29 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/motion-safe|motion-reduce|animate-/);
     expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
     expect(source).not.toMatch(/shadow-/);
+    // Stays a Server Component; only the material link hydrates.
+    expect(source).not.toMatch(/^["']use client["']/m);
+  });
+
+  it("keeps each material's download or new-tab behaviour", () => {
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de");
+    expect(workshop).toBeDefined();
+    const { container } = render(
+      <WorkshopDetailContent workshop={workshop!} locale="de" />,
+    );
+
+    for (const material of workshop!.materials) {
+      const link = container.querySelector(`a[href="${material.href}"]`);
+      expect(link).not.toBeNull();
+      if (material.kind === "zip") {
+        expect(link).toHaveAttribute("download", `${workshop!.slug}-kit.zip`);
+        expect(link).not.toHaveAttribute("target");
+      } else {
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(link).not.toHaveAttribute("download");
+      }
+    }
   });
 
   it("preserves every German material exactly once with truthful language labels", () => {

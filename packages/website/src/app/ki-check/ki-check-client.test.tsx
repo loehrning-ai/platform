@@ -3,6 +3,15 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { KiCheckClient } from "./ki-check-client";
 import { KI_CHECK_CONTENT } from "@/lib/ki-check/localization";
 import { QUESTIONS } from "@/lib/ki-check/questions";
+import { trackKiCheck } from "@/lib/analytics/events";
+import {
+  ANALYTICS_COURSE_SLUGS,
+  ANALYTICS_KI_CHECK_STEPS,
+} from "@/lib/analytics/registry";
+
+vi.mock("@/lib/analytics/events", () => ({ trackKiCheck: vi.fn() }));
+
+const trackKiCheckMock = vi.mocked(trackKiCheck);
 
 /**
  * framer-motion is stubbed to plain elements so `m.*` and AnimatePresence render
@@ -60,7 +69,10 @@ vi.mock("framer-motion", async () => {
   };
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  trackKiCheckMock.mockClear();
+});
 
 /** Answer the current question with its first option, then advance. */
 function answerFirstAndAdvance(
@@ -253,5 +265,74 @@ describe("KiCheckClient", () => {
       "href",
       "/en/ki-fuehrerschein/kurs",
     );
+  });
+
+  describe("analytics", () => {
+    function completeRun() {
+      for (let i = 0; i < QUESTIONS.length; i += 1) {
+        answerFirstAndAdvance(QUESTIONS[i], i === QUESTIONS.length - 1);
+      }
+    }
+
+    it("counts the start once per mount, even across re-picks and restarts", () => {
+      render(<KiCheckClient />);
+      const radios = screen.getAllByRole("radio");
+      fireEvent.click(radios[0]);
+      fireEvent.click(radios[1]);
+      fireEvent.keyDown(radios[1], { key: "ArrowDown" });
+      completeRun();
+      fireEvent.click(
+        screen.getByRole("button", { name: /Check erneut starten/ }),
+      );
+      completeRun();
+
+      const started = trackKiCheckMock.mock.calls.filter(
+        ([step]) => step === "started",
+      );
+      expect(started).toEqual([["started"]]);
+      expect(
+        trackKiCheckMock.mock.calls.filter(([step]) => step === "completed"),
+      ).toEqual([["completed"], ["completed"]]);
+    });
+
+    it("sends only step labels and the recommended course slug, never answers", () => {
+      render(<KiCheckClient />);
+      completeRun();
+      for (const name of [/Kurs starten/, /Kursübersicht/]) {
+        const link = screen.getByRole("link", { name });
+        // Keep jsdom from attempting a navigation; the click still bubbles.
+        link.addEventListener("click", (event) => event.preventDefault());
+        fireEvent.click(link);
+      }
+
+      const steps = trackKiCheckMock.mock.calls.map(([step]) => step);
+      expect(steps).toEqual(["started", "completed", "cta_start", "cta_course"]);
+
+      const questionIds = new Set<string>(QUESTIONS.map((q) => q.id));
+      const optionTexts = new Set<string>(
+        QUESTIONS.flatMap((q) => q.options.map((o) => o.text)),
+      );
+      for (const call of trackKiCheckMock.mock.calls) {
+        expect(call.length).toBeLessThanOrEqual(2);
+        const [step, course] = call;
+        expect(ANALYTICS_KI_CHECK_STEPS).toContain(step);
+        if (step === "started" || step === "completed") {
+          expect(course).toBeUndefined();
+        } else {
+          expect(ANALYTICS_COURSE_SLUGS).toContain(course);
+        }
+        for (const arg of call) {
+          expect(typeof arg === "string" || arg === undefined).toBe(true);
+          if (typeof arg !== "string") continue;
+          expect(questionIds.has(arg)).toBe(false);
+          expect(optionTexts.has(arg)).toBe(false);
+        }
+      }
+    });
+
+    it("does not count anything before the first answer", () => {
+      render(<KiCheckClient />);
+      expect(trackKiCheckMock).not.toHaveBeenCalled();
+    });
   });
 });

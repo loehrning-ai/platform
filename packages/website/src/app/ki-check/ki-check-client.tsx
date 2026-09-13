@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { BrandButton } from "@/components/ui/brand-button";
+import { trackKiCheck } from "@/lib/analytics/events";
 import type { Locale } from "@/lib/i18n/locale";
 import { DIMENSION_ORDER } from "@/lib/ki-check/questions";
 import {
@@ -84,6 +85,9 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
   // AnimatePresence exit->enter swap: the new heading focuses the moment it
   // actually mounts, whether that is instant (tests) or after the exit (app).
   const pendingFocus = useRef(false);
+  // The start is counted once per document, not once per restart. Only the
+  // step label is sent; the answers never leave the browser.
+  const startTracked = useRef(false);
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
@@ -162,6 +166,10 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
   const recommendation = rawResult ? recommend(rawResult, locale) : null;
 
   function pick(optionIndex: number) {
+    if (!startTracked.current) {
+      startTracked.current = true;
+      trackKiCheck("started");
+    }
     setChoices((prev) => ({ ...prev, [question.id]: optionIndex }));
   }
 
@@ -191,6 +199,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
     pendingFocus.current = true;
     if (isLast) {
       setDone(true);
+      trackKiCheck("completed");
     } else {
       setIndex((i) => i + 1);
     }
@@ -375,7 +384,12 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                 {recommendation.reasoning}
               </p>
               <div className="mt-5 flex min-w-0 flex-wrap items-center gap-2">
-                <span data-primary-action>
+                {/* BrandButton's link branch takes no onClick; the link's click
+                    bubbles here. Only the derived course slug is sent. */}
+                <span
+                  data-primary-action
+                  onClick={() => trackKiCheck("cta_start", recommendation.slug)}
+                >
                   <BrandButton
                     href={recommendation.startHref}
                     prefetch={false}
@@ -385,13 +399,17 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </BrandButton>
                 </span>
-                <BrandButton
-                  href={recommendation.courseHref}
-                  variant="ghost"
-                  size="sm"
+                <span
+                  onClick={() => trackKiCheck("cta_course", recommendation.slug)}
                 >
-                  {ui.courseOverview}
-                </BrandButton>
+                  <BrandButton
+                    href={recommendation.courseHref}
+                    variant="ghost"
+                    size="sm"
+                  >
+                    {ui.courseOverview}
+                  </BrandButton>
+                </span>
               </div>
             </div>
           </div>

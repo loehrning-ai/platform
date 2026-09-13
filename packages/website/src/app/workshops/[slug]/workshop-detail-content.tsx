@@ -10,6 +10,7 @@ import type { Workshop } from "@/lib/workshops";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { WorkshopDecisionLab } from "./workshop-decision-lab";
+import { WorkshopMaterialLink } from "./workshop-material-link";
 
 interface Props {
   readonly workshop: Workshop;
@@ -125,13 +126,10 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             {workshop.materials.map((material, index) => {
               const Icon = MATERIAL_ICONS[material.kind];
               return (
-                <a
+                <WorkshopMaterialLink
                   key={material.href}
-                  href={material.href}
-                  hrefLang={material.language}
-                  {...(material.kind === "zip"
-                    ? { download: `${workshop.slug}-kit.zip` }
-                    : { target: "_blank", rel: "noopener noreferrer" })}
+                  workshopSlug={workshop.slug}
+                  material={material}
                   className="group grid min-h-16 gap-3 border-b border-border py-4 transition-colors hover:bg-background sm:grid-cols-[2rem_minmax(10rem,0.55fr)_minmax(0,1fr)_auto] sm:items-center sm:px-3"
                 >
                   <span className="font-mono text-xs font-bold tabular-nums text-brand-orange">
@@ -159,7 +157,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                       {materialLanguageLabel(locale, material.language)}
                     </span>
                   </p>
-                </a>
+                </WorkshopMaterialLink>
               );
             })}
           </div>
