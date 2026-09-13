@@ -293,16 +293,24 @@ describe("demo schema integrity (demo-library review )", () => {
 // ─── Behaviour tests (demo-library review ) ────────────────────────────────────
 
 describe("DemoCtaTarget and dead-code guards (demo-library review )", () => {
-  it("DemoCtaTarget does not include 'ki-check' (post-stage-1 regression guard)", async () => {
-    const analyticsPath = path.resolve(__dirname, "../lib/analytics.ts");
-    const src = fs.readFileSync(analyticsPath, "utf-8");
-    expect(src, "analytics.ts must not expose 'ki-check' as DemoCtaTarget").not.toContain('"ki-check"');
+  // The analytics module and every file of the analytics contract are guarded:
+  // neither 'ki-check' nor 'kontakt' may reappear as a CTA target or event value.
+  const ANALYTICS_SOURCES = [
+    "../lib/analytics.ts",
+    "../lib/analytics/registry.ts",
+    "../lib/analytics/dispatch.ts",
+    "../lib/analytics/events.ts",
+    "../lib/analytics/referrer-source.ts",
+  ] as const;
+
+  it.each(ANALYTICS_SOURCES)("%s does not include 'ki-check' (post-stage-1 regression guard)", (relativePath) => {
+    const src = fs.readFileSync(path.resolve(__dirname, relativePath), "utf-8");
+    expect(src, `${relativePath} must not expose 'ki-check' as DemoCtaTarget`).not.toContain('"ki-check"');
   });
 
-  it("DemoCtaTarget does not include 'kontakt' (post-stage-1 regression guard)", async () => {
-    const analyticsPath = path.resolve(__dirname, "../lib/analytics.ts");
-    const src = fs.readFileSync(analyticsPath, "utf-8");
-    expect(src, "analytics.ts must not expose 'kontakt' as DemoCtaTarget").not.toContain('"kontakt"');
+  it.each(ANALYTICS_SOURCES)("%s does not include 'kontakt' (post-stage-1 regression guard)", (relativePath) => {
+    const src = fs.readFileSync(path.resolve(__dirname, relativePath), "utf-8");
+    expect(src, `${relativePath} must not expose 'kontakt' as DemoCtaTarget`).not.toContain('"kontakt"');
   });
 
   it("process-demos.ts has been deleted (post-stage-1 regression guard)", () => {

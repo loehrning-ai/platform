@@ -1,7 +1,11 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
-import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
+import {
+  AUTH_COOKIE_OPTIONS,
+  boundAuthCookieOptions,
+  getSupabasePublicConfig,
+} from "./config";
 
 export async function createAuthServerClient(): Promise<SupabaseClient | null> {
   const config = getSupabasePublicConfig();
@@ -18,7 +22,7 @@ export async function createAuthServerClient(): Promise<SupabaseClient | null> {
       setAll(cookiesToSet) {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            cookieStore.set(name, value, boundAuthCookieOptions(options));
           });
         } catch {
           // Server Components cannot always write cookies. Middleware refreshes

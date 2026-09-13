@@ -1,5 +1,6 @@
 import type { AiRubricEntry, ExerciseKind } from "@/lib/ai-native/types";
 import { trackEvent } from "@/lib/ai-native/analytics";
+import { trackAiGradingFailure } from "@/lib/analytics/events";
 import {
   GRADE_ERROR_CODES,
   type GradeErrorCode,
@@ -12,6 +13,9 @@ import {
  *
  * Keeps fetch/error/analytics logic in ONE place so all three exercises
  * agree on what "AI unavailable" means.
+ *
+ * The product event for a fallback carries the reason and nothing else: no
+ * lesson, exercise, score or timing. Those stay in the dev-only debug channel.
  */
 
 export interface GradeWithAIArgs<UserInput> {
@@ -123,6 +127,7 @@ export async function gradeWithAI<UserInput>(
           reason,
         },
       });
+      trackAiGradingFailure(reason);
       return toFallback(args);
     }
 
@@ -147,6 +152,7 @@ export async function gradeWithAI<UserInput>(
           reason: "parse-error",
         },
       });
+      trackAiGradingFailure("parse-error");
       return toFallback(args);
     }
 
@@ -191,6 +197,7 @@ export async function gradeWithAI<UserInput>(
         reason,
       },
     });
+    trackAiGradingFailure(reason);
     return toFallback(args);
   }
 }

@@ -44,6 +44,9 @@ const SIDE_EFFECT_CREDENTIALS = [
   "GEMINI_API_KEY",
   "SENTRY_AUTH_TOKEN",
   "SUPABASE_SERVICE_ROLE_KEY",
+  // A Vercel access token carries team-wide authority even though the
+  // statistics page only reads aggregate Web Analytics numbers with it.
+  "VERCEL_ANALYTICS_API_TOKEN",
 ];
 // Canonical shape of the account key-encryption key. Mirrors
 // isValidAccountLlmKek in src/lib/provider-readiness.ts; both must agree.
@@ -160,6 +163,7 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
     name === "ACCOUNT_LLM_KEK" ||
+    name === "LOEHRNING_ADMIN_USER_ID" ||
     name.startsWith("BYO_CHAT_") ||
     name.startsWith("CV_ENGINE_") ||
     name.startsWith("MCP_SERVER_") ||
@@ -562,6 +566,76 @@ if (supabaseConfigured && liveAuthE2EProfile) {
   WARN(
     "Supabase is disabled. Login, cross-device sync, account management, and stored feedback are unavailable; public learning content remains available.",
   );
+}
+
+// Operator identity for the signed-in operating statistics page. The value is
+// the operator's own account id, compared server-side against the verified
+// session user; absence is a valid fully-off state and never an error. It is a
+// pseudonymous personal identifier, so it must never reach client JavaScript.
+// The NEXT_PUBLIC_ scan below only has teeth on a real Vercel build: `verify`
+// runs this script through run-provider-free.mjs, which reduces process.env to
+// the classified variable set before any NEXT_PUBLIC_ name could be planted.
+const ADMIN_USER_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const adminUserId = process.env.LOEHRNING_ADMIN_USER_ID;
+const adminUserIdValid = ADMIN_USER_ID_PATTERN.test(adminUserId ?? "");
+const supabaseAccountComplete =
+  !liveAuthE2EProfile &&
+  Boolean(
+    publicUrl &&
+      serverUrl &&
+      publicSupabaseKey &&
+      serviceSupabaseKey &&
+      rateLimitHmacSecret,
+  ) &&
+  /^eu(?:-|$)/i.test(process.env.SUPABASE_REGION ?? "") &&
+  isPastOrPresentIsoDate(process.env.SUPABASE_DPA_CONFIRMED_AT);
+
+if (adminUserId) {
+  if (!adminUserIdValid) {
+    markError(
+      "LOEHRNING_ADMIN_USER_ID must be the operator's account id as a lowercase canonical UUID. Email addresses, wildcards, padding, and uppercase values are rejected.",
+    );
+  }
+  if (!supabaseAccountComplete) {
+    markError(
+      "LOEHRNING_ADMIN_USER_ID is present while the Supabase account configuration is incomplete. Remove the orphaned admin identity or provide the complete account configuration; an admin surface that cannot read anything is not a valid state.",
+    );
+  }
+} else {
+  INFO(
+    "LOEHRNING_ADMIN_USER_ID is absent. The operating statistics page stays disabled.",
+  );
+}
+
+const vercelAnalyticsApiToken = process.env.VERCEL_ANALYTICS_API_TOKEN;
+const FORBIDDEN_PUBLIC_OPERATOR_VARIABLES = new Set([
+  "NEXT_PUBLIC_VERCEL_ANALYTICS_API_TOKEN",
+  "NEXT_PUBLIC_VERCEL_ANALYTICS_TEAM_ID",
+]);
+for (const name of Object.keys(process.env).sort()) {
+  if (!name.startsWith("NEXT_PUBLIC_")) continue;
+  const value = process.env[name];
+  if (/ADMIN/i.test(name) && value) {
+    markError(
+      `${name} is a public admin variable. Admin configuration is server-only and must never be inlined into client JavaScript.`,
+    );
+  }
+  if (adminUserId && value === adminUserId) {
+    markError(
+      `${name} carries the LOEHRNING_ADMIN_USER_ID value. Refusing to expose the operator identity in client JavaScript.`,
+    );
+  }
+  if (FORBIDDEN_PUBLIC_OPERATOR_VARIABLES.has(name) && value) {
+    markError(
+      `${name} is forbidden. The Vercel Web Analytics API credentials are server-only and must never use a NEXT_PUBLIC_ name.`,
+    );
+  }
+  if (vercelAnalyticsApiToken && value === vercelAnalyticsApiToken) {
+    markError(
+      `${name} carries the VERCEL_ANALYTICS_API_TOKEN value. Refusing to expose a privileged token in client JavaScript.`,
+    );
+  }
 }
 
 // Stored feedback is independent from accounts. It remains disabled until the
@@ -1011,11 +1085,17 @@ if (cvEngineHostedUrl) {
 // Vercel hosting is independent from optional analytics. Telemetry requires an
 // explicit opt-in plus a dated TDDDG assessment; being deployed on Vercel alone
 // must never silently activate measurement.
+//
+// The flag and its assessments are one atomic environment change. App-authored
+// product events are a second purpose next to pageviews and Speed Insights, so
+// they get a second dated artifact: the event stream can never silently ride on
+// an assessment that was written for pageviews alone.
 const vercelConfigured = process.env.VERCEL === "1";
 const vercelTelemetryEnabled = process.env.VERCEL_TELEMETRY_ENABLED === "true";
 const vercelDpaAttestation = process.env.VERCEL_DPA_CONFIRMED_AT;
 const vercelTelemetryAttestation =
   process.env.VERCEL_TDDDG_ASSESSMENT_AT;
+const vercelEventAttestation = process.env.VERCEL_EVENT_ASSESSMENT_AT;
 
 if (
   process.env.VERCEL_TELEMETRY_ENABLED &&
@@ -1036,6 +1116,11 @@ if (vercelTelemetryAttestation && !vercelTelemetryEnabled) {
     "VERCEL_TDDDG_ASSESSMENT_AT is present while VERCEL_TELEMETRY_ENABLED is not true. Remove the orphaned attestation or explicitly enable telemetry.",
   );
 }
+if (vercelEventAttestation && !vercelTelemetryEnabled) {
+  markError(
+    "VERCEL_EVENT_ASSESSMENT_AT is present while VERCEL_TELEMETRY_ENABLED is not true. Remove the orphaned attestation or explicitly enable telemetry.",
+  );
+}
 
 if (vercelConfigured) {
   requireAttestation("VERCEL_DPA_CONFIRMED_AT", "Vercel");
@@ -1048,8 +1133,68 @@ if (vercelTelemetryEnabled) {
   }
   requireAttestation(
     "VERCEL_TDDDG_ASSESSMENT_AT",
-    "Vercel Web Analytics and Speed Insights",
+    "Vercel Web Analytics pageviews and Speed Insights",
   );
+  requireAttestation(
+    "VERCEL_EVENT_ASSESSMENT_AT",
+    "Vercel Web Analytics app-authored product events",
+  );
+}
+
+// Server-side reader for aggregate Web Analytics numbers on the operating
+// statistics page. The token and team id are one all-or-nothing group, and the
+// group is meaningful only when the admin identity, the telemetry opt-in, and a
+// verified Vercel runtime all exist; anything else is an orphaned credential.
+// The runtime additionally needs the Vercel system variable VERCEL_PROJECT_ID,
+// which Vercel injects and which is therefore not validated here.
+const VERCEL_TEAM_ID_PATTERN = /^team_[A-Za-z0-9]{8,64}$/;
+// Vercel documents no token format. This is a shape check only: one printable
+// run without whitespace, so a pasted line break cannot corrupt the header.
+const VERCEL_ACCESS_TOKEN_SHAPE = /^[\x21-\x7e]{16,512}$/;
+const vercelAnalyticsTeamId = process.env.VERCEL_ANALYTICS_TEAM_ID;
+if (vercelAnalyticsApiToken || vercelAnalyticsTeamId) {
+  const missingAnalyticsReader = [
+    ["VERCEL_ANALYTICS_API_TOKEN", vercelAnalyticsApiToken],
+    ["VERCEL_ANALYTICS_TEAM_ID", vercelAnalyticsTeamId],
+  ]
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+  if (missingAnalyticsReader.length > 0) {
+    markError(
+      `The Vercel Web Analytics reader is partially configured. Missing: ${missingAnalyticsReader.join(", ")}. Remove the orphaned value or configure both.`,
+    );
+  }
+  if (
+    vercelAnalyticsApiToken &&
+    !VERCEL_ACCESS_TOKEN_SHAPE.test(vercelAnalyticsApiToken)
+  ) {
+    markError(
+      "VERCEL_ANALYTICS_API_TOKEN must be a single Vercel access token without whitespace.",
+    );
+  }
+  if (
+    vercelAnalyticsTeamId &&
+    !VERCEL_TEAM_ID_PATTERN.test(vercelAnalyticsTeamId)
+  ) {
+    markError(
+      "VERCEL_ANALYTICS_TEAM_ID must be a Vercel team id of the form team_ followed by 8-64 letters or digits.",
+    );
+  }
+  if (!adminUserIdValid) {
+    markError(
+      "VERCEL_ANALYTICS_API_TOKEN or VERCEL_ANALYTICS_TEAM_ID is present while LOEHRNING_ADMIN_USER_ID is not a valid operator id. Remove the orphaned analytics credential or configure the admin identity.",
+    );
+  }
+  if (!vercelTelemetryEnabled) {
+    markError(
+      "VERCEL_ANALYTICS_API_TOKEN or VERCEL_ANALYTICS_TEAM_ID is present while VERCEL_TELEMETRY_ENABLED is not true. Remove the orphaned analytics credential or explicitly enable telemetry.",
+    );
+  }
+  if (!vercelConfigured) {
+    markError(
+      "VERCEL_ANALYTICS_API_TOKEN or VERCEL_ANALYTICS_TEAM_ID is present while VERCEL=1 is absent. Remove the orphaned analytics credential outside a verified Vercel runtime.",
+    );
+  }
 }
 
 // Release/CI behavior.

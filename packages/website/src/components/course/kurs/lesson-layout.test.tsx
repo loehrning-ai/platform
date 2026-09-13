@@ -153,8 +153,33 @@ vi.mock("./lesson-content", async () => {
   };
 });
 
-import { LessonLayout } from "./lesson-layout";
-import { CANONICAL_SECTION_IDS, lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
+const usageEvents = vi.hoisted(() => ({
+  trackCourseStarted: vi.fn(),
+  trackLessonCompleted: vi.fn(),
+  trackLessonReached: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics/events", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/analytics/events")>()),
+  ...usageEvents,
+}));
+
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/progress")>();
+  return {
+    ...actual,
+    recordLessonCompletionEvidenceDurably: vi.fn(
+      actual.recordLessonCompletionEvidenceDurably,
+    ),
+  };
+});
+
+import { LessonLayout, __resetLessonUsageEventsForTests } from "./lesson-layout";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "@/lib/courses/completion";
 import {
   isLessonCompleted,
   markLessonCompleted,
@@ -162,7 +187,10 @@ import {
   resetProgress,
   saveLessonQuizScore,
 } from "@/lib/course/progress";
-import { isCheckpointDone } from "@/lib/progress";
+import {
+  isCheckpointDone,
+  recordLessonCompletionEvidenceDurably,
+} from "@/lib/progress";
 import { URL_STATE_CHANGE_EVENT } from "@/lib/navigation/url-state";
 import {
   __resetCacheForTests,
@@ -613,5 +641,191 @@ describe("<LessonLayout>", () => {
     expect(
       screen.getByRole("button", { name: "Navigation öffnen" }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("<LessonLayout> usage events", () => {
+  const COMPLETABLE_LESSONS: readonly Lesson[] = [
+    mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
+    mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" }),
+  ];
+  const READABLE_LESSONS: readonly Lesson[] = [
+    {
+      ...mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
+      sections: [
+        {
+          id: "block_1_lesson_1_section_1",
+          title: "Prüfabschnitt",
+          readTimeMinutes: 2,
+          content: "Prüfe den Fall.",
+        },
+      ],
+    },
+  ];
+
+  beforeEach(() => {
+    __resetLessonUsageEventsForTests();
+    usageEvents.trackCourseStarted.mockClear();
+    usageEvents.trackLessonCompleted.mockClear();
+    usageEvents.trackLessonReached.mockClear();
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockClear();
+  });
+
+  it("reports a reached block-course lesson once per position, only after progress resolves", () => {
+    activateUnknownProgress();
+    renderLayout(COMPLETABLE_LESSONS);
+    expect(usageEvents.trackLessonReached).not.toHaveBeenCalled();
+
+    act(() => {
+      activateAnonymousProgress();
+    });
+    expect(usageEvents.trackLessonReached.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l01"],
+    ]);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Lektion 2: Zweite Lektion" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
+    );
+    expect(usageEvents.trackLessonReached.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l01"],
+      ["ki-fuehrerschein", "l02"],
+    ]);
+  });
+
+  it("reports the fragment-restored lesson rather than the default first lesson", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2",
+    );
+    renderLayout(COMPLETABLE_LESSONS);
+
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Zweite Lektion",
+    );
+    expect(usageEvents.trackLessonReached.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l02"],
+    ]);
+  });
+
+  it("does not report a reached lesson for a statically routed course", () => {
+    const codexLessonId = CANONICAL_LESSON_IDS.codex[0];
+    render(
+      <LessonLayout
+        courseSlug="codex"
+        lessons={[mkLesson({ id: codexLessonId, number: 1, title: "Codex" })]}
+        blockTitle="Codex"
+      />,
+    );
+
+    expect(screen.getByTestId("progress-readiness")).toHaveTextContent(
+      "true:true:true",
+    );
+    expect(usageEvents.trackLessonReached).not.toHaveBeenCalled();
+  });
+
+  it("reports each persisted completion once and the course start once per document", () => {
+    vi.mocked(recordLessonCompletionEvidenceDurably)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true);
+    renderLayout(COMPLETABLE_LESSONS);
+
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Lektion 2: Zweite Lektion" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+
+    expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l01"],
+      ["ki-fuehrerschein", "l02"],
+    ]);
+    expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+      ["ki-fuehrerschein"],
+    ]);
+  });
+
+  it("reports nothing when the completion was not persisted", () => {
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(false);
+    renderLayout(COMPLETABLE_LESSONS);
+
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+
+    expect(recordLessonCompletionEvidenceDurably).toHaveBeenCalledTimes(1);
+    expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
+    expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
+  });
+
+  it("reports the course start from the first persisted section review only once", () => {
+    renderLayout(READABLE_LESSONS);
+
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+
+    expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+      ["ki-fuehrerschein"],
+    ]);
+    expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
+  });
+
+  it("does not report the start again on a later page load after a persisted section review", () => {
+    const first = renderLayout(READABLE_LESSONS);
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+    first.unmount();
+
+    // A reload starts a new document with an empty per-document dedupe.
+    __resetLessonUsageEventsForTests();
+    const laterLessons: readonly Lesson[] = [
+      {
+        ...READABLE_LESSONS[0]!,
+        sections: [
+          {
+            id: "block_1_lesson_1_section_2",
+            title: "Zweiter Prüfabschnitt",
+            readTimeMinutes: 2,
+            content: "Prüfe den nächsten Fall.",
+          },
+        ],
+      },
+    ];
+    renderLayout(laterLessons);
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+
+    expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+      ["ki-fuehrerschein"],
+    ]);
+  });
+
+  it("does not report a start on completion when a section read was persisted earlier", () => {
+    act(() => {
+      markSectionRead(
+        "ki-fuehrerschein",
+        "block_1_lesson_1",
+        "block_1_lesson_1_section_1",
+      );
+    });
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(true);
+    renderLayout(COMPLETABLE_LESSONS);
+
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+
+    expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l01"],
+    ]);
+    expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
+  });
+
+  it("does not report a section review while ownership is unresolved", () => {
+    renderLayout(READABLE_LESSONS);
+    act(() => {
+      activateUnknownProgress();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+
+    expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
   });
 });

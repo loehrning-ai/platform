@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -9,12 +9,21 @@ import { afterEach, describe, expect, it, vi } from "vitest";
  * pending or failure copy.
  */
 
-const { createBrowserClientMock, signInWithOAuthMock, signInWithOtpMock } =
-  vi.hoisted(() => ({
-    createBrowserClientMock: vi.fn(),
-    signInWithOAuthMock: vi.fn(),
-    signInWithOtpMock: vi.fn(),
-  }));
+const {
+  createBrowserClientMock,
+  signInWithOAuthMock,
+  signInWithOtpMock,
+  trackLoginFlowMock,
+} = vi.hoisted(() => ({
+  createBrowserClientMock: vi.fn(),
+  signInWithOAuthMock: vi.fn(),
+  signInWithOtpMock: vi.fn(),
+  trackLoginFlowMock: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackLoginFlow: trackLoginFlowMock,
+}));
 
 vi.mock("@/lib/supabase/browser", () => ({
   createBrowserSupabaseClient: createBrowserClientMock,
@@ -204,5 +213,101 @@ describe("<LoginForm> optional GitHub provider", () => {
     ).toBeNull();
     expect(screen.queryByText(/github-app-id|oauth-secret/i)).toBeNull();
     expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it("reports github started before the OAuth redirect, with no address in the payload", async () => {
+    signInWithOAuthMock.mockResolvedValue({ data: {}, error: null });
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOAuth: signInWithOAuthMock },
+    });
+
+    render(
+      <LoginForm
+        next="/konto"
+        accountReady
+        magicLinkReady={false}
+        googleReady={false}
+        githubReady
+        turnstileSiteKey={null}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Mit GitHub anmelden" }));
+
+    await screen.findByRole("button", { name: "GitHub wird geöffnet…" });
+    expect(trackLoginFlowMock.mock.calls).toEqual([["github", "started"]]);
+    expect(trackLoginFlowMock.mock.invocationCallOrder[0]).toBeLessThan(
+      signInWithOAuthMock.mock.invocationCallOrder[0] ?? 0,
+    );
+    expect(
+      trackLoginFlowMock.mock.calls.flat().some((value) =>
+        String(value).includes("@"),
+      ),
+    ).toBe(false);
+  });
+
+  it("names GitHub, not Google, in the notice of a GitHub-only runtime", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOAuth: signInWithOAuthMock },
+    });
+
+    const { container } = render(
+      <LoginForm
+        next="/konto"
+        accountReady
+        magicLinkReady={false}
+        googleReady={false}
+        githubReady
+        turnstileSiteKey={null}
+      />,
+    );
+
+    const notice = container.querySelector("[data-login-oauth-notice]");
+    expect(notice).toHaveAttribute("data-login-oauth-notice", "github");
+    expect(notice).toHaveTextContent(/GitHub-Kontokennung, deinen GitHub-Benutzernamen/);
+    expect(notice).not.toHaveTextContent(/Google/);
+    expect(
+      screen.getByRole("button", { name: "Mit GitHub anmelden" })
+        .nextElementSibling,
+    ).toBe(notice);
+    expect(
+      within(notice as HTMLElement).getByRole("link", {
+        name: "Datenschutzerklärung",
+      }),
+    ).toHaveAttribute("href", "/datenschutz");
+  });
+
+  it("covers both providers in one notice beneath both buttons", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: {
+        signInWithOAuth: signInWithOAuthMock,
+        signInWithOtp: signInWithOtpMock,
+      },
+    });
+
+    const { container } = render(
+      <LoginForm
+        next="/konto"
+        accountReady
+        magicLinkReady
+        googleReady
+        githubReady
+        turnstileSiteKey="1x00000000000000000000AA"
+        locale="en"
+      />,
+    );
+
+    const notices = container.querySelectorAll("[data-login-oauth-notice]");
+    expect(notices).toHaveLength(1);
+    const notice = notices[0] as HTMLElement;
+    expect(notice).toHaveAttribute("data-login-oauth-notice", "both");
+    expect(notice).toHaveTextContent(/sign in with Google or GitHub/);
+    expect(notice).toHaveTextContent(/with GitHub, your username is stored/);
+    expect(
+      screen.getByRole("button", { name: "Sign in with GitHub" })
+        .nextElementSibling,
+    ).toBe(notice);
+    expect(
+      within(notice).getByRole("link", { name: "privacy notice" }),
+    ).toHaveAttribute("href", "/en/datenschutz");
   });
 });

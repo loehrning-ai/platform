@@ -89,6 +89,16 @@ describe("consent copy", () => {
     }
   });
 
+  it("never promises a profile read no agent tool performs", () => {
+    expect(CONSENT_COPY.de.scopeLines.profile).toMatch(/keine Profildaten/);
+    expect(CONSENT_COPY.en.scopeLines.profile).toMatch(/no profile data/);
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(CONSENT_COPY[locale].scopeLines.profile).not.toMatch(
+        /kann deinen hinterlegten Namen|can read your stored name/,
+      );
+    }
+  });
+
   it("states the read-only platform boundary in both locales", () => {
     expect(CONSENT_COPY.de.platformAccess).toMatch(/Schreiben oder löschen/);
     expect(CONSENT_COPY.en.platformAccess).toMatch(/never write or delete/);

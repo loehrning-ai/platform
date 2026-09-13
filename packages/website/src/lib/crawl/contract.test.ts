@@ -381,6 +381,26 @@ describe("crawl contract", () => {
     }
   });
 
+  it("keeps the owner statistics page behind the protected /konto wildcard", () => {
+    for (const path of ["/konto/statistik", "/en/konto/statistik"]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe("/konto/:path*");
+      expect(entry.routeClass, path).toBe("protected");
+      expect(entry.auth, path).toBe("protected");
+      expect(isProtectedRoute(path), path).toBe(true);
+      // Never shared-cacheable: a CDN copy of this page would serve one
+      // visitor's render to another.
+      expect(entry.cache, path).toBe("private-no-store");
+      expect(entry.cache, path).not.toBe("public-static");
+      expect(entry.cache, path).not.toBe("public-short");
+      expect(entry.robots, path).toBe("disallow");
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(entry.xRobotsTag, path).toContain("noindex");
+    }
+    expect(sitemapStaticPaths()).not.toContain("/konto/statistik");
+    expect(robotsAllowPaths()).not.toContain("/konto/statistik");
+  });
+
   it("aligns robots and the sitemap with the agent access classes", () => {
     const allow = robotsAllowPaths();
     const disallow = robotsDisallowPaths();

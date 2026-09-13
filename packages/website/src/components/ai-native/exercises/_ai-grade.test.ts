@@ -1,10 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
+import { trackAiGradingFailure } from "@/lib/analytics/events";
 import { gradeWithAI } from "./_ai-grade";
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackAiGradingFailure: vi.fn(),
+}));
+
+const failureMock = vi.mocked(trackAiGradingFailure);
 
 describe("gradeWithAI — hybrid fallback helper", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    failureMock.mockClear();
   });
 
   const baseArgs = {
@@ -173,5 +181,89 @@ describe("gradeWithAI — hybrid fallback helper", () => {
 
     const result = await gradeWithAI(baseArgs);
     expect(result.score).toBe(1);
+  });
+
+  describe("product failure event", () => {
+    /** The event may carry the reason and nothing that points at a learner. */
+    function expectReasonOnly(expected: string): void {
+      expect(failureMock).toHaveBeenCalledTimes(1);
+      const call = failureMock.mock.calls[0] ?? [];
+      expect(call).toEqual([expected]);
+      for (const argument of call) {
+        expect(typeof argument).toBe("string");
+        expect(String(argument)).not.toContain(baseArgs.lessonId);
+        expect(String(argument)).not.toContain(baseArgs.exerciseId);
+        expect(String(argument)).not.toMatch(/\d/);
+      }
+    }
+
+    it("sends the coded reason for a non-ok response", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue(
+          new Response(
+            JSON.stringify({ code: "provider_not_configured", error: "x" }),
+            { status: 503 },
+          ),
+        ),
+      );
+
+      await gradeWithAI(baseArgs);
+
+      expectReasonOnly("provider-not-ready");
+    });
+
+    it("sends parse-error for a malformed success body", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve({ score: "not a number" }),
+        } as Response),
+      );
+
+      await gradeWithAI(baseArgs);
+
+      expectReasonOnly("parse-error");
+    });
+
+    it("sends network for a rejected request", async () => {
+      vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+
+      await gradeWithAI(baseArgs);
+
+      expectReasonOnly("network");
+    });
+
+    it("sends timeout for an aborted request", async () => {
+      const abort = new Error("aborted");
+      abort.name = "AbortError";
+      vi.stubGlobal("fetch", vi.fn().mockRejectedValue(abort));
+
+      await gradeWithAI(baseArgs);
+
+      expectReasonOnly("timeout");
+    });
+
+    it("sends nothing when AI grading succeeds", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          ok: true,
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              score: 0.8,
+              rubric: [{ id: "a", passed: true, rationale: "ok" }],
+              summary: "summary",
+            }),
+        } as Response),
+      );
+
+      await gradeWithAI(baseArgs);
+
+      expect(failureMock).not.toHaveBeenCalled();
+    });
   });
 });

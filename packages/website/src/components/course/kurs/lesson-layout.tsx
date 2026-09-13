@@ -11,6 +11,7 @@ import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoin
 import {
   markSectionRead,
   saveLessonQuizScore,
+  getAllProgress,
   getReadSectionIds,
   getLessonQuizScore,
 } from "@/lib/course/progress";
@@ -33,6 +34,66 @@ import {
 } from "@/components/course/owner-aware-progress";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
+import {
+  lessonOrdinal,
+  trackCourseStarted,
+  trackLessonCompleted,
+  trackLessonReached,
+} from "@/lib/analytics/events";
+import {
+  ANALYTICS_BLOCK_COURSE_SLUGS,
+  type AnalyticsBlockCourseSlug,
+} from "@/lib/analytics/registry";
+
+// Usage events are deduplicated per document. They are derived only from
+// explicit navigation and from successful writes, never from the progress
+// store: subscribe() replays current state to every subscriber and the
+// cross-tab listener re-emits it, which would report fake repeats.
+const reachedLessonKeys = new Set<string>();
+const startedCourseSlugs = new Set<string>();
+
+function isBlockCourse(
+  courseSlug: CourseSlug,
+): courseSlug is CourseSlug & AnalyticsBlockCourseSlug {
+  return (ANALYTICS_BLOCK_COURSE_SLUGS as readonly string[]).includes(
+    courseSlug,
+  );
+}
+
+function reportLessonReached(courseSlug: CourseSlug, lessonId: string): void {
+  if (!isBlockCourse(courseSlug)) return;
+  const ordinal = lessonOrdinal(courseSlug, lessonId);
+  if (ordinal === null) return;
+  const key = `${courseSlug}:${ordinal}`;
+  if (reachedLessonKeys.has(key)) return;
+  reachedLessonKeys.add(key);
+  trackLessonReached(courseSlug, ordinal);
+}
+
+/**
+ * True while the course holds none of the durable progress that reports a
+ * start: no evidence-backed completed lesson and no read section in any
+ * lesson. Read before the write, so a start reported on an earlier page load
+ * is not reported again once the per-document dedupe is empty.
+ */
+function isCourseUnstarted(courseSlug: CourseSlug): boolean {
+  if (getEvidenceBackedCompletedLessonIds(courseSlug).size > 0) return false;
+  return !Object.values(getAllProgress(courseSlug).lessons).some(
+    (lesson) => lesson.sectionsRead.length > 0,
+  );
+}
+
+function reportCourseStarted(courseSlug: CourseSlug): void {
+  if (startedCourseSlugs.has(courseSlug)) return;
+  startedCourseSlugs.add(courseSlug);
+  trackCourseStarted(courseSlug);
+}
+
+/** Clears the per-document usage-event deduplication between test cases. */
+export function __resetLessonUsageEventsForTests(): void {
+  reachedLessonKeys.clear();
+  startedCourseSlugs.clear();
+}
 
 interface LessonLayoutProps {
   readonly courseSlug: CourseSlug;
@@ -153,6 +214,14 @@ export function LessonLayout({
     loadedOwnerGeneration,
   );
 
+  // The active lesson changes through activateLesson and the #lesson= fragment
+  // sync; both land here, and nothing is reported before the learning owner
+  // and this lesson's progress have resolved.
+  useEffect(() => {
+    if (!readiness.interactionReady) return;
+    reportLessonReached(courseSlug, activeLessonId);
+  }, [readiness.interactionReady, courseSlug, activeLessonId]);
+
   const handleSelectLesson = useCallback(
     (lessonId: string) => {
       activateLesson(lessonId);
@@ -166,6 +235,7 @@ export function LessonLayout({
 
   const handleMarkSectionRead = useCallback(
     (sectionId: string) => {
+      const courseWasUnstarted = isCourseUnstarted(courseSlug);
       if (
         persistForActiveLearningOwner(
           () => markSectionRead(courseSlug, activeLessonId, sectionId),
@@ -173,6 +243,7 @@ export function LessonLayout({
         )
       ) {
         setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
+        if (courseWasUnstarted) reportCourseStarted(courseSlug);
       }
     },
     [courseSlug, activeLessonId],
@@ -190,12 +261,22 @@ export function LessonLayout({
       getLessonQuizScore(courseSlug, activeLessonId) !== null;
     if (!everySectionReviewed || !knowledgeCheckComplete) return;
 
+    // Read before the write so a repeat completion and a later lesson are
+    // told apart from the first durable progress in this course.
+    const courseWasUnstarted = isCourseUnstarted(courseSlug);
+    const completedBefore = getEvidenceBackedCompletedLessonIds(courseSlug);
+    const lessonWasCompleted = completedBefore.has(activeLessonId);
     const persisted = recordLessonCompletionEvidenceDurably(
       courseSlug,
       activeLessonId,
     );
     if (persisted) {
       setCompletedIds(new Set(getEvidenceBackedCompletedLessonIds(courseSlug)));
+      const ordinal = lessonOrdinal(courseSlug, activeLessonId);
+      if (!lessonWasCompleted && ordinal !== null) {
+        trackLessonCompleted(courseSlug, ordinal);
+      }
+      if (courseWasUnstarted) reportCourseStarted(courseSlug);
     }
   }, [courseSlug, activeLessonId, lessons]);
 

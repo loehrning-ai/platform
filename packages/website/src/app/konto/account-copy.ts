@@ -64,6 +64,10 @@ export interface AccountPageCopy {
   readonly privacyNavigationLabel: string;
   readonly privacyLink: string;
   readonly privacySummary: string;
+  readonly ownerStatisticsEyebrow: string;
+  readonly ownerStatisticsTitle: string;
+  readonly ownerStatisticsBody: string;
+  readonly ownerStatisticsAction: string;
 }
 
 export const ACCOUNT_COPY = {
@@ -151,6 +155,11 @@ export const ACCOUNT_COPY = {
     privacyNavigationLabel: "Kontodatenschutz",
     privacyLink: "Datenschutz und Datenverwaltung",
     privacySummary: "Export, Kursfortschritt zurücksetzen und Konto löschen.",
+    ownerStatisticsEyebrow: "Nur für das Betreiberkonto",
+    ownerStatisticsTitle: "Betriebsstatistik",
+    ownerStatisticsBody:
+      "Reichweite, Nutzungsereignisse und Kursverlauf der Plattform. Diese Karte sieht nur das Betreiberkonto.",
+    ownerStatisticsAction: "Statistik öffnen",
   },
   en: {
     metadata: {
@@ -237,5 +246,10 @@ export const ACCOUNT_COPY = {
     privacyLink: "Privacy and data controls",
     privacySummary:
       "Export data, reset course progress, and delete the account.",
+    ownerStatisticsEyebrow: "Operator account only",
+    ownerStatisticsTitle: "Operating statistics",
+    ownerStatisticsBody:
+      "Reach, usage events, and course progression across the platform. Only the operator account sees this card.",
+    ownerStatisticsAction: "Open statistics",
   },
 } as const satisfies Readonly<Record<Locale, AccountPageCopy>>;

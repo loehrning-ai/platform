@@ -41,7 +41,203 @@ function jsonError(message: string, status: number): Response {
 type BoundExportUser = {
   readonly id: string;
   readonly email?: string | null;
+  readonly email_confirmed_at?: string | null;
+  readonly app_metadata?: Readonly<Record<string, unknown>> | null;
+  readonly user_metadata?: Readonly<Record<string, unknown>> | null;
+  readonly identities?: readonly {
+    readonly id?: unknown;
+    readonly provider?: unknown;
+    readonly identity_data?: Readonly<Record<string, unknown>> | null;
+  }[] | null;
 };
+
+/**
+ * The identity data Supabase Auth stored when this account signed in.
+ *
+ * An Art. 15/20 export that lists the email address but not the provider
+ * account identifier, the verification status or the provider profile details
+ * would omit data this platform demonstrably holds. The fields are read off
+ * the user object the route has already verified, so no further store is
+ * queried. Every key is always present: a field that does not apply to this
+ * account is `null`, never absent, so a reader cannot mistake "not stored"
+ * for "not exported". The top-level fields describe the identity of the
+ * current sign-in method; `linked_identities` repeats the same fields for
+ * every linked sign-in provider identity, because each one is stored.
+ */
+interface ProviderIdentityDetails {
+  readonly provider: string | null;
+  readonly provider_account_id: string | null;
+  readonly username: string | null;
+  readonly name: string | null;
+  readonly picture_url: string | null;
+}
+
+interface SignInIdentity {
+  readonly provider: string | null;
+  readonly linked_providers: readonly string[];
+  readonly provider_account_id: string | null;
+  readonly username: string | null;
+  readonly email_verified: boolean;
+  readonly name: string | null;
+  readonly picture_url: string | null;
+  readonly linked_identities: readonly ProviderIdentityDetails[];
+}
+
+/** Top-level keys of `sign_in_identity`, in the order the export writes them. */
+const SIGN_IN_IDENTITY_KEYS = [
+  "provider",
+  "linked_providers",
+  "provider_account_id",
+  "username",
+  "email_verified",
+  "name",
+  "picture_url",
+  "linked_identities",
+] as const satisfies readonly (keyof SignInIdentity)[];
+
+/** Keys of each `linked_identities` entry, in the order the export writes them. */
+const PROVIDER_IDENTITY_KEYS = [
+  "provider",
+  "provider_account_id",
+  "username",
+  "name",
+  "picture_url",
+] as const satisfies readonly (keyof ProviderIdentityDetails)[];
+
+/**
+ * Sign-in providers whose identity carries a provider profile. Email and
+ * phone identities hold nothing beyond the account's own email or number.
+ */
+const PROFILE_PROVIDERS: ReadonlySet<string> = new Set(["google", "github"]);
+
+type ExportIdentity = NonNullable<BoundExportUser["identities"]>[number];
+
+function recordOrEmpty(value: unknown): Readonly<Record<string, unknown>> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as Readonly<Record<string, unknown>>)
+    : {};
+}
+
+function firstNonEmptyString(values: readonly unknown[]): string | null {
+  const found = values.find(
+    (value): value is string => typeof value === "string" && value.length > 0,
+  );
+  return found ?? null;
+}
+
+function isProfileIdentity(identity: unknown): identity is ExportIdentity {
+  return (
+    identity !== null &&
+    typeof identity === "object" &&
+    typeof (identity as ExportIdentity).provider === "string" &&
+    PROFILE_PROVIDERS.has((identity as ExportIdentity).provider as string)
+  );
+}
+
+/**
+ * Reads one provider's stored profile. `sources` are checked in order; GoTrue
+ * copies the provider profile into user_metadata at sign-in, so it is a
+ * stored copy of the same values and a fallback when the identity row is not
+ * part of the user object.
+ */
+function providerDetails(
+  provider: string | null,
+  identityId: unknown,
+  sources: readonly Readonly<Record<string, unknown>>[],
+): ProviderIdentityDetails {
+  const [primary = {}] = sources;
+  return {
+    provider,
+    provider_account_id: firstNonEmptyString([
+      primary.sub,
+      primary.provider_id,
+      identityId,
+      ...sources.slice(1).flatMap((source) => [source.provider_id, source.sub]),
+    ]),
+    username: firstNonEmptyString(
+      sources.flatMap((source) => [source.user_name, source.preferred_username]),
+    ),
+    name: firstNonEmptyString(
+      sources.flatMap((source) => [source.name, source.full_name]),
+    ),
+    picture_url: firstNonEmptyString(
+      sources.flatMap((source) => [source.picture, source.avatar_url]),
+    ),
+  };
+}
+
+const NO_PROVIDER_DETAILS: ProviderIdentityDetails = Object.freeze({
+  provider: null,
+  provider_account_id: null,
+  username: null,
+  name: null,
+  picture_url: null,
+});
+
+function readSignInIdentity(user: BoundExportUser): SignInIdentity {
+  const appMetadata = recordOrEmpty(user.app_metadata);
+  const userMetadata = recordOrEmpty(user.user_metadata);
+  const identities = Array.isArray(user.identities) ? user.identities : [];
+  const linkedProviders = Array.isArray(appMetadata.providers)
+    ? appMetadata.providers.filter(
+        (provider): provider is string =>
+          typeof provider === "string" && provider.length > 0,
+      )
+    : [];
+  const provider = firstNonEmptyString([appMetadata.provider]);
+  const profileIdentities = identities.filter(isProfileIdentity);
+  const currentIdentity =
+    profileIdentities.find((identity) => identity.provider === provider) ??
+    profileIdentities[0];
+  const fallbackProvider =
+    provider !== null && PROFILE_PROVIDERS.has(provider)
+      ? provider
+      : (linkedProviders.find((entry) => PROFILE_PROVIDERS.has(entry)) ?? null);
+
+  const current = currentIdentity
+    ? providerDetails(currentIdentity.provider as string, currentIdentity.id, [
+        recordOrEmpty(currentIdentity.identity_data),
+        userMetadata,
+      ])
+    : fallbackProvider !== null
+      ? providerDetails(fallbackProvider, undefined, [{}, userMetadata])
+      : NO_PROVIDER_DETAILS;
+  const currentData = recordOrEmpty(currentIdentity?.identity_data);
+
+  return {
+    provider,
+    linked_providers: linkedProviders,
+    provider_account_id: current.provider_account_id,
+    username: current.username,
+    email_verified:
+      firstNonEmptyString([user.email_confirmed_at]) !== null ||
+      currentData.email_verified === true,
+    name: current.name,
+    picture_url: current.picture_url,
+    linked_identities: profileIdentities.map((identity) =>
+      providerDetails(identity.provider as string, identity.id, [
+        recordOrEmpty(identity.identity_data),
+      ]),
+    ),
+  };
+}
+
+function serializeSignInIdentity(identity: SignInIdentity): string {
+  return serializeJsonValue(
+    Object.fromEntries(
+      SIGN_IN_IDENTITY_KEYS.map((key) => [
+        key,
+        key === "linked_identities"
+          ? identity.linked_identities.map((entry) =>
+              Object.fromEntries(
+                PROVIDER_IDENTITY_KEYS.map((field) => [field, entry[field]]),
+              ),
+            )
+          : identity[key],
+      ]),
+    ),
+  );
+}
 
 type BoundAuthResult =
   | { readonly ok: true; readonly user: BoundExportUser }
@@ -204,6 +400,7 @@ function serializeJsonValue(value: unknown): string {
 function buildExportPrefix({
   ownerId,
   email,
+  signInIdentity,
   exportedAt,
   progress,
   progressUpdatedAt,
@@ -212,6 +409,7 @@ function buildExportPrefix({
 }: {
   readonly ownerId: string;
   readonly email: string | null;
+  readonly signInIdentity: SignInIdentity;
   readonly exportedAt: string;
   readonly progress: unknown;
   readonly progressUpdatedAt: unknown;
@@ -222,6 +420,7 @@ function buildExportPrefix({
     "{",
     `  "owner_id": ${serializeJsonValue(ownerId)},`,
     `  "email": ${serializeJsonValue(email)},`,
+    `  "sign_in_identity": ${serializeSignInIdentity(signInIdentity)},`,
     `  "exported_at": ${serializeJsonValue(exportedAt)},`,
     `  "progress": ${serializeJsonValue(progress)},`,
     `  "progress_updated_at": ${serializeJsonValue(progressUpdatedAt)},`,
@@ -514,6 +713,7 @@ async function exportBoundAccount(
     prefix = buildExportPrefix({
       ownerId: user.id,
       email: user.email ?? null,
+      signInIdentity: readSignInIdentity(user),
       exportedAt: new Date().toISOString(),
       progress: fetched.result.progress,
       progressUpdatedAt: fetched.result.updatedAt,

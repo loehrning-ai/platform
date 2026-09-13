@@ -20,6 +20,8 @@ import { localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
 import { isAgentAccessReady } from "@/lib/provider-readiness";
+import { configuredAdminUserId } from "@/lib/auth/admin-config";
+import { requireAdminUser } from "@/lib/auth/admin-identity";
 import { ACCOUNT_COPY } from "./account-copy";
 import {
   KONTO_SECTION_IDS,
@@ -83,6 +85,16 @@ export default async function KontoPage({
   }
 
   const authUnavailable = Boolean(authError);
+  // The operator card is decided on the server. Every other account stops at
+  // one string comparison against the configured owner id, so it costs them
+  // no extra auth round-trip and nothing about the card reaches their HTML or
+  // router payload. The matching account then runs the real owner gate; a
+  // stale sign-in still shows the card, and the statistics page itself asks
+  // for a fresh sign-in.
+  const ownerCandidate =
+    !authUnavailable && user !== null && configuredAdminUserId() === user.id;
+  const ownerGate = ownerCandidate ? await requireAdminUser() : null;
+  const showOwnerStatistics = ownerGate === "admin" || ownerGate === "reauth";
   let progress: UnifiedProgress | null = null;
   let updatedAt: string | null = null;
   let progressUnavailable = authUnavailable;
@@ -218,6 +230,34 @@ export default async function KontoPage({
             </form>
           )}
         </div>
+
+        {showOwnerStatistics ? (
+          <div
+            data-testid="konto-owner-statistics"
+            className="mt-6 border border-border border-l-[3px] border-l-brand-orange bg-card"
+          >
+            <Link
+              href={localizeHref("/konto/statistik", locale)}
+              prefetch={false}
+              className="flex min-h-11 flex-col gap-1 px-4 py-3 hover:bg-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                {copy.ownerStatisticsEyebrow}
+              </span>
+              <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <span className="text-base font-semibold text-foreground">
+                  {copy.ownerStatisticsTitle}
+                </span>
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
+                  {copy.ownerStatisticsAction} <span aria-hidden="true">→</span>
+                </span>
+              </span>
+              <span className="text-sm leading-relaxed text-muted-foreground">
+                {copy.ownerStatisticsBody}
+              </span>
+            </Link>
+          </div>
+        ) : null}
 
         {/* Persistent account navigation over the regions below. Deliberately
             not sticky: the site nav is already `fixed top-0 z-50`, so a second

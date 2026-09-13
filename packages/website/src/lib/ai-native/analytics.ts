@@ -1,12 +1,13 @@
 /**
  * AI-Native arbeitskurs analytics — typed event emission layer.
  *
- * Wired as a lightweight stub that:
- *   - Logs to console in development (visible while debugging).
- *   - No-ops in production unless a real analytics transport is wired.
+ * Dev-only debug channel; there is no transport here and a third-party
+ * provider is foreclosed — product events go through src/lib/analytics.
  *
- * Post-v1, swap `trackEvent()` internals for PostHog (or any other provider)
- * without touching the call sites. Typed event shapes below are the contract.
+ *   - Logs to console in development (visible while debugging).
+ *   - No-ops everywhere else.
+ *
+ * Typed event shapes below are the contract for the dev debug panel.
  *
  * See: AI-native lesson system.
  */
@@ -21,20 +22,8 @@ export type AiNativeEvent =
       readonly props: ExerciseSubmitProps;
     }
   | {
-      readonly name: "ai_native_exercise_error_boundary";
-      readonly props: ExerciseErrorProps;
-    }
-  | {
       readonly name: "ai_native_module_complete";
       readonly props: ModuleCompleteProps;
-    }
-  | {
-      readonly name: "ai_native_challenge_reveal";
-      readonly props: ChallengeRevealProps;
-    }
-  | {
-      readonly name: "ai_native_demo_interaction_start";
-      readonly props: DemoInteractionProps;
     }
   | {
       readonly name: "ai_native_urlhash_import_success";
@@ -66,30 +55,10 @@ export interface ExerciseSubmitProps {
   readonly attempts: number;
 }
 
-export interface ExerciseErrorProps {
-  readonly moduleId: string;
-  readonly lessonId: string;
-  readonly exerciseId: string;
-  readonly kind: string;
-  readonly errorMessage: string;
-}
-
 export interface ModuleCompleteProps {
   readonly moduleId: string;
   readonly completedLessonCount: number;
   readonly totalLessonCount: number;
-}
-
-export interface ChallengeRevealProps {
-  readonly weekIso: string;
-  readonly revealType: "model_solution" | "rubric";
-}
-
-export interface DemoInteractionProps {
-  readonly demoId: string;
-  readonly location: "gallery" | "landing" | "lesson";
-  readonly moduleId?: string;
-  readonly lessonId?: string;
 }
 
 export interface UrlhashImportProps {
@@ -134,8 +103,8 @@ export function trackEvent(event: AiNativeEvent): void {
   // Graceful: during SSR there's no window; swallow.
   if (typeof window === "undefined") return;
 
-  // In production, route to PostHog / Plausible / whatever is wired.
-  // Today: no-op in prod, dev-console only.
+  // Dev-only debug channel; there is no transport here and a third-party
+  // provider is foreclosed — product events go through src/lib/analytics.
   if (process.env.NODE_ENV === "development") {
     // eslint-disable-next-line no-console
     console.info("[ai-native.analytics]", event.name, event.props);

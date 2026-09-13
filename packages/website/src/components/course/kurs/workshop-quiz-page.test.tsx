@@ -23,7 +23,23 @@ const quizMocks = vi.hoisted(() => ({
   progressListener: null as ((progress: unknown) => void) | null,
   reportBoundaryError: vi.fn(),
   saveResult: vi.fn(),
+  timeLimitMinutes: null as number | null,
+  trackCourseCompletion: vi.fn(),
 }));
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackCourseCompletion: quizMocks.trackCourseCompletion,
+}));
+
+vi.mock("@/lib/course/config", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/course/config")>();
+  return {
+    ...actual,
+    getWorkshopTimeLimitMinutes: (
+      ...args: Parameters<typeof actual.getWorkshopTimeLimitMinutes>
+    ) => quizMocks.timeLimitMinutes ?? actual.getWorkshopTimeLimitMinutes(...args),
+  };
+});
 
 vi.mock("@/lib/course/questions", () => ({
   loadWorkshopQuestions: quizMocks.loadQuestions,
@@ -98,7 +114,8 @@ vi.mock("framer-motion", async () => {
   };
 });
 
-import { WorkshopQuizPage } from "./workshop-quiz-page";
+import { isCourseFullyCompleted } from "@/lib/courses/completion";
+import { WorkshopQuizPage, examOutcomeStep } from "./workshop-quiz-page";
 
 const QUESTIONS: readonly QuizQuestion[] = [
   {
@@ -138,6 +155,8 @@ beforeEach(() => {
   quizMocks.progressListener = null;
   quizMocks.loadQuestions.mockResolvedValue(QUESTIONS);
   quizMocks.saveResult.mockReturnValue(true);
+  quizMocks.timeLimitMinutes = null;
+  vi.mocked(isCourseFullyCompleted).mockReturnValue(true);
 });
 
 afterEach(cleanup);
@@ -416,5 +435,104 @@ describe("<WorkshopQuizPage>", () => {
     expect(
       screen.getByRole("button", { name: "Ergebnis" }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("<WorkshopQuizPage> usage events", () => {
+  const reportedSteps = () =>
+    quizMocks.trackCourseCompletion.mock.calls.map(([course, step]) => {
+      expect(course).toBe("claude");
+      return step;
+    });
+
+  it("labels outcomes disjointly", () => {
+    expect(examOutcomeStep(true, false)).toBe("exam_passed");
+    expect(examOutcomeStep(true, true)).toBe("exam_passed");
+    expect(examOutcomeStep(false, false)).toBe("exam_failed");
+    expect(examOutcomeStep(false, true)).toBe("exam_timeout");
+  });
+
+  it("reports the start and a pass once the result is saved", async () => {
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Which answer is correct?",
+    });
+    expect(reportedSteps()).toEqual(["exam_started"]);
+
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Result" }));
+
+    await screen.findByText("100%");
+    expect(reportedSteps()).toEqual(["exam_started", "exam_passed"]);
+  });
+
+  it("reports a failed attempt without any score", async () => {
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Which answer is correct?",
+    });
+    fireEvent.click(screen.getByRole("radio", { name: /Incorrect option/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Result" }));
+
+    await screen.findByText("0%");
+    expect(reportedSteps()).toEqual(["exam_started", "exam_failed"]);
+    for (const call of quizMocks.trackCourseCompletion.mock.calls) {
+      expect(call).toHaveLength(2);
+    }
+  });
+
+  it("reports an outcome only after the result is durably saved, and only once", async () => {
+    quizMocks.saveResult.mockReturnValue(false);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Which answer is correct?",
+    });
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Result" }));
+    await screen.findByRole("heading", { name: "Result was not saved." });
+    expect(reportedSteps()).toEqual(["exam_started"]);
+
+    quizMocks.saveResult.mockReturnValue(true);
+    fireEvent.click(screen.getByRole("button", { name: "Retry saving" }));
+    await screen.findByText("100%");
+    expect(reportedSteps()).toEqual(["exam_started", "exam_passed"]);
+  });
+
+  it("reports a blocked exam when the course is not fully completed", async () => {
+    vi.mocked(isCourseFullyCompleted).mockReturnValue(false);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await waitFor(() => expect(reportedSteps()).toEqual(["exam_blocked"]));
+    expect(quizMocks.loadQuestions).not.toHaveBeenCalled();
+  });
+
+  it("reports an unavailable exam when the questions cannot load", async () => {
+    quizMocks.loadQuestions.mockRejectedValue(new Error("offline"));
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await waitFor(() => expect(reportedSteps()).toEqual(["exam_unavailable"]));
+  });
+
+  it("reports the timer auto-finish as a timeout and never as a failure", async () => {
+    quizMocks.timeLimitMinutes = 1 / 60;
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Which answer is correct?",
+    });
+
+    await waitFor(
+      () => expect(reportedSteps()).toEqual(["exam_started", "exam_timeout"]),
+      { timeout: 4000 },
+    );
+    expect(reportedSteps()).not.toContain("exam_failed");
+    expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 0, false);
   });
 });

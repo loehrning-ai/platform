@@ -10,6 +10,7 @@ import {
   isAnthropicRuntimeReady,
   isCourseTerminalRuntimeReady,
   cvEngineHostedOrigin,
+  isAdminAnalyticsReady,
   isAgentAccessReady,
   isCvEngineHostedReady,
   isGeminiRuntimeReady,
@@ -408,6 +409,32 @@ describe("provider runtime readiness", () => {
       expect(isAgentAccessReady(), missing).toBe(false);
       configureAccountRuntime();
       vi.stubEnv("MCP_SERVER_ENABLED", "true");
+    }
+  });
+
+  it("keeps the owner statistics off without a canonical owner id and the account boundary", () => {
+    const ownerId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    vi.stubEnv("LOEHRNING_ADMIN_USER_ID", ownerId);
+    expect(isAdminAnalyticsReady()).toBe(false);
+
+    configureAccountRuntime();
+    expect(isAdminAnalyticsReady()).toBe(true);
+
+    vi.stubEnv("SUPABASE_DPA_CONFIRMED_AT", "2999-01-01");
+    expect(isAdminAnalyticsReady()).toBe(false);
+    vi.stubEnv("SUPABASE_DPA_CONFIRMED_AT", "2026-07-01");
+
+    for (const invalid of [
+      "",
+      "   ",
+      "true",
+      "*",
+      "owner@example.com",
+      ownerId.toUpperCase(),
+      `${ownerId}0`,
+    ]) {
+      vi.stubEnv("LOEHRNING_ADMIN_USER_ID", invalid);
+      expect(isAdminAnalyticsReady(), invalid).toBe(false);
     }
   });
 });

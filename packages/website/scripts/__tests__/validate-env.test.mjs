@@ -43,6 +43,11 @@ const CONTROLLED_KEYS = [
   "VERCEL_DPA_CONFIRMED_AT",
   "VERCEL_TELEMETRY_ENABLED",
   "VERCEL_TDDDG_ASSESSMENT_AT",
+  "VERCEL_EVENT_ASSESSMENT_AT",
+  "VERCEL_ANALYTICS_API_TOKEN",
+  "VERCEL_ANALYTICS_TEAM_ID",
+  "VERCEL_PROJECT_ID",
+  "LOEHRNING_ADMIN_USER_ID",
   "NEXT_PUBLIC_SUPABASE_URL",
   "SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
@@ -121,6 +126,17 @@ const HOSTED_TOOL_VARIABLES = [
   "CV_ENGINE_HOSTED_CONFIRMED_AT",
 ];
 
+// The telemetry event attestation, the operator identity, and the aggregate
+// Web Analytics reader must sit in the same registries at once, or a
+// verification build keeps an ambient value or a deployer never learns the
+// variable exists.
+const OPERATOR_STATISTICS_VARIABLES = [
+  "LOEHRNING_ADMIN_USER_ID",
+  "VERCEL_ANALYTICS_API_TOKEN",
+  "VERCEL_ANALYTICS_TEAM_ID",
+  "VERCEL_EVENT_ASSESSMENT_AT",
+];
+
 function runValidateEnv(overrides) {
   const env = { ...process.env };
   for (const key of CONTROLLED_KEYS) {
@@ -150,6 +166,22 @@ const PRIVILEGED_KEY_FIXTURE = [
   "12345678",
 ].join("_");
 const RATE_LIMIT_HMAC_SECRET_FIXTURE = `rlh1_${"a".repeat(64)}`;
+// Synthetic identifiers assembled at runtime so no literal id or token shape
+// ever appears in the source tree.
+const ADMIN_USER_ID_FIXTURE = [
+  "a".repeat(8),
+  "b".repeat(4),
+  "4ccc",
+  "8ddd",
+  "e".repeat(12),
+].join("-");
+const VERCEL_ANALYTICS_TOKEN_FIXTURE = [
+  "fixture",
+  "vercel",
+  "analytics",
+  "token",
+].join("-");
+const VERCEL_TEAM_ID_FIXTURE = ["team", "Fixture0000"].join("_");
 
 function legacySupabaseJwt(role) {
   const encode = (value) =>
@@ -173,6 +205,29 @@ function completeSupabase(overrides = {}) {
     SUPABASE_DPA_CONFIRMED_AT: "2026-07-01",
     ...overrides,
   };
+}
+
+function enabledVercelTelemetry(overrides = {}) {
+  return {
+    CI: "true",
+    VERCEL: "1",
+    VERCEL_DPA_CONFIRMED_AT: "2026-07-01",
+    VERCEL_TELEMETRY_ENABLED: "true",
+    VERCEL_TDDDG_ASSESSMENT_AT: "2026-07-01",
+    VERCEL_EVENT_ASSESSMENT_AT: "2026-07-01",
+    ...overrides,
+  };
+}
+
+function completeAnalyticsReader(overrides = {}) {
+  return completeSupabase(
+    enabledVercelTelemetry({
+      LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE,
+      VERCEL_ANALYTICS_API_TOKEN: VERCEL_ANALYTICS_TOKEN_FIXTURE,
+      VERCEL_ANALYTICS_TEAM_ID: VERCEL_TEAM_ID_FIXTURE,
+      ...overrides,
+    }),
+  );
 }
 
 function completeMagicLinkSupabase(overrides = {}) {
@@ -384,6 +439,18 @@ function main() {
     [
       "VERCEL_TDDDG_ASSESSMENT_AT",
       { VERCEL_TDDDG_ASSESSMENT_AT: "2026-07-01" },
+    ],
+    [
+      "VERCEL_EVENT_ASSESSMENT_AT",
+      { VERCEL_EVENT_ASSESSMENT_AT: "2026-07-01" },
+    ],
+    [
+      "LOEHRNING_ADMIN_USER_ID",
+      { LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE },
+    ],
+    [
+      "VERCEL_ANALYTICS_TEAM_ID",
+      { VERCEL_ANALYTICS_TEAM_ID: VERCEL_TEAM_ID_FIXTURE },
     ],
   ]) {
     const orphanedProviderVariable = runValidateEnv({
@@ -924,6 +991,7 @@ function main() {
     VERCEL_DPA_CONFIRMED_AT: "2026-07-01",
     VERCEL_TELEMETRY_ENABLED: "true",
     VERCEL_TDDDG_ASSESSMENT_AT: "2026-07-01",
+    VERCEL_EVENT_ASSESSMENT_AT: "2026-07-01",
     NEXT_PUBLIC_SUPABASE_URL: "https://aaaaaaaaaaaa.supabase.co",
     SUPABASE_URL: "https://aaaaaaaaaaaa.supabase.co",
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: PUBLIC_KEY_FIXTURE,
@@ -1359,6 +1427,265 @@ function main() {
     /requires the complete Supabase configuration/,
   );
 
+  // Telemetry: pageviews/Speed Insights and product events are two dated
+  // artifacts behind one flag, and every half-state fails.
+  const completeTelemetry = runValidateEnv(enabledVercelTelemetry());
+  assert.equal(
+    completeTelemetry.status,
+    0,
+    `telemetry with both assessments must pass\n${combined(completeTelemetry)}`,
+  );
+
+  const telemetryWithoutEventAssessment = runValidateEnv(
+    enabledVercelTelemetry({ VERCEL_EVENT_ASSESSMENT_AT: "" }),
+  );
+  assert.equal(
+    telemetryWithoutEventAssessment.status,
+    1,
+    combined(telemetryWithoutEventAssessment),
+  );
+  assert.match(
+    combined(telemetryWithoutEventAssessment),
+    /Vercel Web Analytics app-authored product events is configured but VERCEL_EVENT_ASSESSMENT_AT is missing/,
+  );
+
+  const telemetryWithoutPageviewAssessment = runValidateEnv(
+    enabledVercelTelemetry({ VERCEL_TDDDG_ASSESSMENT_AT: "" }),
+  );
+  assert.equal(
+    telemetryWithoutPageviewAssessment.status,
+    1,
+    combined(telemetryWithoutPageviewAssessment),
+  );
+  assert.match(
+    combined(telemetryWithoutPageviewAssessment),
+    /Vercel Web Analytics pageviews and Speed Insights is configured but VERCEL_TDDDG_ASSESSMENT_AT is missing/,
+  );
+
+  for (const telemetryFlag of ["false", ""]) {
+    const orphanedEventAssessment = runValidateEnv({
+      CI: "true",
+      VERCEL_TELEMETRY_ENABLED: telemetryFlag,
+      VERCEL_EVENT_ASSESSMENT_AT: "2026-07-01",
+    });
+    assert.equal(
+      orphanedEventAssessment.status,
+      1,
+      combined(orphanedEventAssessment),
+    );
+    assert.match(
+      combined(orphanedEventAssessment),
+      /VERCEL_EVENT_ASSESSMENT_AT is present while VERCEL_TELEMETRY_ENABLED is not true/,
+    );
+  }
+
+  const futureEventAssessment = runValidateEnv(
+    enabledVercelTelemetry({ VERCEL_EVENT_ASSESSMENT_AT: "2999-01-01" }),
+  );
+  assert.equal(futureEventAssessment.status, 1, combined(futureEventAssessment));
+  assert.match(
+    combined(futureEventAssessment),
+    /VERCEL_EVENT_ASSESSMENT_AT is missing or is not a valid past-or-present/,
+  );
+
+  // Operator identity: absent is a valid off state; anything but a lowercase
+  // canonical UUID on a complete account backend fails.
+  const adminAbsent = runValidateEnv({ CI: "true" });
+  assert.equal(adminAbsent.status, 0, combined(adminAbsent));
+  assert.match(
+    combined(adminAbsent),
+    /LOEHRNING_ADMIN_USER_ID is absent\. The operating statistics page stays disabled/,
+  );
+
+  const adminConfigured = runValidateEnv(
+    completeSupabase({ LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE }),
+  );
+  assert.equal(
+    adminConfigured.status,
+    0,
+    `a canonical admin id with complete accounts must pass\n${combined(adminConfigured)}`,
+  );
+
+  for (const invalidAdminId of [
+    ADMIN_USER_ID_FIXTURE.toUpperCase(),
+    ` ${ADMIN_USER_ID_FIXTURE} `,
+    ["operator", "example.test"].join("@"),
+    "*",
+    "true",
+  ]) {
+    const invalidAdmin = runValidateEnv(
+      completeSupabase({ LOEHRNING_ADMIN_USER_ID: invalidAdminId }),
+    );
+    assert.equal(invalidAdmin.status, 1, combined(invalidAdmin));
+    assert.match(combined(invalidAdmin), /lowercase canonical UUID/);
+  }
+
+  const adminWithoutAccounts = runValidateEnv({
+    CI: "true",
+    LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE,
+  });
+  assert.equal(adminWithoutAccounts.status, 1, combined(adminWithoutAccounts));
+  assert.match(
+    combined(adminWithoutAccounts),
+    /Supabase account configuration is incomplete/,
+  );
+
+  const adminWithUnattestedAccounts = runValidateEnv(
+    completeSupabase({
+      LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE,
+      SUPABASE_DPA_CONFIRMED_AT: "",
+    }),
+  );
+  assert.equal(
+    adminWithUnattestedAccounts.status,
+    1,
+    combined(adminWithUnattestedAccounts),
+  );
+  assert.match(
+    combined(adminWithUnattestedAccounts),
+    /Supabase account configuration is incomplete/,
+  );
+
+  const publicAdminName = runValidateEnv({
+    CI: "true",
+    NEXT_PUBLIC_ADMIN_ANYTHING: "on",
+  });
+  assert.equal(publicAdminName.status, 1, combined(publicAdminName));
+  assert.match(
+    combined(publicAdminName),
+    /NEXT_PUBLIC_ADMIN_ANYTHING is a public admin variable/,
+  );
+
+  const publicAdminValue = runValidateEnv(
+    completeSupabase({
+      LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE,
+      NEXT_PUBLIC_OPERATOR_HINT: ADMIN_USER_ID_FIXTURE,
+    }),
+  );
+  assert.equal(publicAdminValue.status, 1, combined(publicAdminValue));
+  assert.match(
+    combined(publicAdminValue),
+    /NEXT_PUBLIC_OPERATOR_HINT carries the LOEHRNING_ADMIN_USER_ID value/,
+  );
+
+  const liveAuthWithAdmin = runValidateEnv({
+    LOEHRNING_VALIDATION_PROFILE: "live-auth-e2e",
+    E2E_AUTH_LIVE: "1",
+    LOEHRNING_ADMIN_USER_ID: ADMIN_USER_ID_FIXTURE,
+  });
+  assert.equal(liveAuthWithAdmin.status, 1, combined(liveAuthWithAdmin));
+  assert.match(
+    combined(liveAuthWithAdmin),
+    /live-auth-e2e validation profile forbids[^\n]*LOEHRNING_ADMIN_USER_ID/,
+  );
+
+  // Aggregate Web Analytics reader: an all-or-nothing, server-only credential
+  // group that exists only beside the admin identity and enabled telemetry.
+  const analyticsReader = runValidateEnv(completeAnalyticsReader());
+  assert.equal(
+    analyticsReader.status,
+    0,
+    `the complete analytics reader group must pass\n${combined(analyticsReader)}`,
+  );
+  assert.ok(
+    !combined(analyticsReader).includes(VERCEL_ANALYTICS_TOKEN_FIXTURE),
+    "validation output must never print the analytics token",
+  );
+
+  for (const [label, overrides, expected] of [
+    [
+      "token without team id",
+      { VERCEL_ANALYTICS_TEAM_ID: "" },
+      /partially configured\. Missing: VERCEL_ANALYTICS_TEAM_ID\./,
+    ],
+    [
+      "team id without token",
+      { VERCEL_ANALYTICS_API_TOKEN: "" },
+      /partially configured\. Missing: VERCEL_ANALYTICS_API_TOKEN\./,
+    ],
+    [
+      "malformed team id",
+      { VERCEL_ANALYTICS_TEAM_ID: "team_short" },
+      /team_ followed by 8-64 letters or digits/,
+    ],
+    [
+      "team id with a foreign prefix",
+      { VERCEL_ANALYTICS_TEAM_ID: "prj_Fixture0000" },
+      /team_ followed by 8-64 letters or digits/,
+    ],
+    [
+      "whitespace-bearing token",
+      {
+        VERCEL_ANALYTICS_API_TOKEN: `${VERCEL_ANALYTICS_TOKEN_FIXTURE}\n`,
+      },
+      /single Vercel access token without whitespace/,
+    ],
+    [
+      "missing admin identity",
+      { LOEHRNING_ADMIN_USER_ID: "" },
+      /LOEHRNING_ADMIN_USER_ID is not a valid operator id/,
+    ],
+    [
+      "invalid admin identity",
+      { LOEHRNING_ADMIN_USER_ID: "*" },
+      /LOEHRNING_ADMIN_USER_ID is not a valid operator id/,
+    ],
+    [
+      "telemetry disabled",
+      {
+        VERCEL_TELEMETRY_ENABLED: "false",
+        VERCEL_TDDDG_ASSESSMENT_AT: "",
+        VERCEL_EVENT_ASSESSMENT_AT: "",
+      },
+      /present while VERCEL_TELEMETRY_ENABLED is not true\. Remove the orphaned analytics credential/,
+    ],
+    [
+      "outside a Vercel runtime",
+      { VERCEL: "", VERCEL_DPA_CONFIRMED_AT: "" },
+      /present while VERCEL=1 is absent\. Remove the orphaned analytics credential/,
+    ],
+    [
+      "public token name",
+      {
+        NEXT_PUBLIC_VERCEL_ANALYTICS_API_TOKEN: VERCEL_ANALYTICS_TOKEN_FIXTURE,
+      },
+      /NEXT_PUBLIC_VERCEL_ANALYTICS_API_TOKEN is forbidden/,
+    ],
+    [
+      "public team id name",
+      { NEXT_PUBLIC_VERCEL_ANALYTICS_TEAM_ID: VERCEL_TEAM_ID_FIXTURE },
+      /NEXT_PUBLIC_VERCEL_ANALYTICS_TEAM_ID is forbidden/,
+    ],
+    [
+      "token copied into a public value",
+      { NEXT_PUBLIC_DIAGNOSTIC: VERCEL_ANALYTICS_TOKEN_FIXTURE },
+      /NEXT_PUBLIC_DIAGNOSTIC carries the VERCEL_ANALYTICS_API_TOKEN value/,
+    ],
+  ]) {
+    const brokenReader = runValidateEnv(completeAnalyticsReader(overrides));
+    assert.equal(brokenReader.status, 1, `${label}\n${combined(brokenReader)}`);
+    assert.match(combined(brokenReader), expected, label);
+    assert.ok(
+      !combined(brokenReader).includes(VERCEL_ANALYTICS_TOKEN_FIXTURE),
+      `${label}: validation output must never print the analytics token`,
+    );
+  }
+
+  // The token is a side-effect credential: an invalid local environment that
+  // carries it fails outside CI instead of continuing leniently.
+  const localOrphanedToken = runValidateEnv({
+    VERCEL_ANALYTICS_API_TOKEN: VERCEL_ANALYTICS_TOKEN_FIXTURE,
+  });
+  assert.equal(localOrphanedToken.status, 1, combined(localOrphanedToken));
+  assert.match(
+    combined(localOrphanedToken),
+    /credential-bearing local build[^\n]*VERCEL_ANALYTICS_API_TOKEN/,
+  );
+  assert.ok(
+    !combined(localOrphanedToken).includes(VERCEL_ANALYTICS_TOKEN_FIXTURE),
+    "the credential-bearing failure must name the variable, never its value",
+  );
+
   const exampleEnvironment = readFileSync(
     join(here, "..", "..", ".env.example"),
     "utf8",
@@ -1385,6 +1712,13 @@ function main() {
   assert.match(deploymentDocs, /`RATE_LIMIT_HMAC_SECRET`/);
   assert.match(deploymentDocs, /`SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT`/);
   assert.match(deploymentDocs, /one-time quota reset/i);
+  for (const name of [...OPERATOR_STATISTICS_VARIABLES, "VERCEL_PROJECT_ID"]) {
+    assert.match(
+      deploymentDocs,
+      new RegExp(`\`${name}\``),
+      `${name} must be documented in docs/deployment.md`,
+    );
+  }
   assert.doesNotMatch(deploymentDocs, /budget attestation vars/i);
 
   // Registry lockstep. A variable that reaches only one of these three files is
@@ -1414,6 +1748,33 @@ function main() {
       `${name} must be validated by validate-env.mjs`,
     );
   }
+  for (const name of OPERATOR_STATISTICS_VARIABLES) {
+    assert.ok(
+      APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes(name),
+      `${name} must be classified in APPLICATION_PROVIDER_ENVIRONMENT_KEYS`,
+    );
+    assert.equal(
+      PROVIDER_FREE_APPLICATION_ENVIRONMENT[name],
+      "",
+      `${name} must be cleared by PROVIDER_FREE_APPLICATION_ENVIRONMENT`,
+    );
+    assert.match(
+      environmentExample,
+      new RegExp(`^${name}=$`, "m"),
+      `${name} must be documented empty in .env.example`,
+    );
+    assert.ok(
+      validateEnvSource.includes(name),
+      `${name} must be validated by validate-env.mjs`,
+    );
+  }
+  // VERCEL_PROJECT_ID is a Vercel system variable: classified like VERCEL_URL,
+  // never blanked into a provider-free default and never set by a deployer.
+  assert.ok(APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes("VERCEL_PROJECT_ID"));
+  assert.ok(
+    !Object.hasOwn(PROVIDER_FREE_APPLICATION_ENVIRONMENT, "VERCEL_PROJECT_ID"),
+  );
+  assert.doesNotMatch(environmentExample, /^VERCEL_PROJECT_ID=/m);
   assert.equal(
     PROVIDER_FREE_APPLICATION_ENVIRONMENT.MCP_SERVER_ENABLED,
     "false",

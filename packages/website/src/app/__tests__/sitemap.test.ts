@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import sitemap from "../sitemap";
+import robots from "../robots";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
 import { getBookChapterList } from "@/lib/book-reader-content";
@@ -168,6 +169,7 @@ describe("sitemap()", () => {
     const urls = result.map((e) => e.url);
     for (const url of urls) {
       expect(url).not.toMatch(/\/admin/);
+      expect(url).not.toMatch(/\/konto\/statistik/);
       expect(url).not.toMatch(/\/api\//);
       expect(url).not.toMatch(/\/ki-fuehrerschein\/kurs/);
       expect(url).not.toMatch(/\/eu-ai-act-kurs\/kurs/);
@@ -179,6 +181,21 @@ describe("sitemap()", () => {
       expect(url).not.toMatch(/\/ki-transformation-check$/);
       expect(url).not.toMatch(/\/foerdermittel$/);
       expect(url).not.toMatch(/\/arbeitsweise$/);
+    }
+  });
+
+  it("never lists the owner statistics page in the sitemap or a robots line", () => {
+    for (const { url } of result) {
+      expect(url).not.toMatch(/statistik/);
+    }
+    const rules = robots().rules;
+    const lines = (Array.isArray(rules) ? rules : [rules]).flatMap((rule) => [
+      ...[rule.allow ?? []].flat(),
+      ...[rule.disallow ?? []].flat(),
+    ]);
+    expect(lines.length).toBeGreaterThan(0);
+    for (const line of lines) {
+      expect(line).not.toMatch(/statistik/);
     }
   });
 

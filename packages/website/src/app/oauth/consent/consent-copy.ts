@@ -105,7 +105,7 @@ const DE: ConsentPageCopy = {
     email:
       "Die App kann deine E-Mail-Adresse lesen und sehen, ob sie bestätigt ist.",
     profile:
-      "Die App kann deinen hinterlegten Namen und dein Profilbild lesen.",
+      "Die Agenten-Werkzeuge dieser Plattform geben keine Profildaten wie deinen Namen oder dein Profilbild heraus.",
     phone: "Die App kann deine hinterlegte Telefonnummer lesen.",
   },
   unknownScope: (scope) =>
@@ -165,7 +165,8 @@ const EN: ConsentPageCopy = {
       "The app receives your user ID as proof that you are signed in here.",
     email:
       "The app can read your email address and whether it has been confirmed.",
-    profile: "The app can read your stored name and profile picture.",
+    profile:
+      "The agent tools on this platform return no profile data such as your name or profile picture.",
     phone: "The app can read your stored phone number.",
   },
   unknownScope: (scope) =>

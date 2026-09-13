@@ -102,6 +102,17 @@ describe("buildProtectedResourceMetadata", () => {
     });
   });
 
+  it("advertises only the scopes an agent tool actually serves", () => {
+    // No tool reads a stored name or profile picture. Re-adding `profile`
+    // would publish a promise the resource does not keep, so it fails here.
+    expect(AGENT_SCOPES_SUPPORTED).toEqual(["openid", "email"]);
+    for (const target of ["agent-endpoint", "site"] as const) {
+      expect(
+        buildProtectedResourceMetadata(target)?.scopes_supported,
+      ).not.toContain("profile");
+    }
+  });
+
   it("describes the origin for a client that probes only the root", () => {
     const metadata = buildProtectedResourceMetadata("site");
 

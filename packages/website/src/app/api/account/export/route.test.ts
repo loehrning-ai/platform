@@ -1112,3 +1112,429 @@ describe("GET /api/account/export section manifest", () => {
     expect(cookieClient.from).not.toHaveBeenCalled();
   });
 });
+
+describe("GET /api/account/export sign-in identity", () => {
+  const GOOGLE_ACCOUNT_ID = "google-account-fixture-0001";
+  const GOOGLE_NAME = "Fixture Learner";
+  const GOOGLE_PICTURE = "https://images.example.test/fixture-avatar.png";
+
+  function googleLinkedUser() {
+    return {
+      id: "user-1",
+      email: "learner@example.test",
+      email_confirmed_at: "2026-09-01T10:00:00.000Z",
+      app_metadata: { provider: "google", providers: ["google"] },
+      user_metadata: {
+        sub: GOOGLE_ACCOUNT_ID,
+        name: GOOGLE_NAME,
+        full_name: GOOGLE_NAME,
+        picture: GOOGLE_PICTURE,
+        avatar_url: GOOGLE_PICTURE,
+        email_verified: true,
+      },
+      identities: [
+        {
+          id: GOOGLE_ACCOUNT_ID,
+          provider: "google",
+          identity_data: {
+            sub: GOOGLE_ACCOUNT_ID,
+            name: GOOGLE_NAME,
+            full_name: GOOGLE_NAME,
+            picture: GOOGLE_PICTURE,
+            avatar_url: GOOGLE_PICTURE,
+            email_verified: true,
+          },
+        },
+      ],
+    };
+  }
+
+  function emailOnlyUser() {
+    return {
+      id: "user-1",
+      email: "learner@example.test",
+      email_confirmed_at: "2026-09-01T10:00:00.000Z",
+      app_metadata: { provider: "email", providers: ["email"] },
+      user_metadata: {},
+      identities: [
+        {
+          id: "user-1",
+          provider: "email",
+          identity_data: { sub: "user-1", email: "learner@example.test" },
+        },
+      ],
+    };
+  }
+
+  function signIn(user: unknown) {
+    mockGetAuthenticatedUser.mockResolvedValue({ configured: true, user });
+  }
+
+  function readyStores() {
+    mockTryCreateServiceClient.mockReturnValue(
+      assessmentClient(queryResult([]), queryResult([])),
+    );
+  }
+
+  const IDENTITY_KEYS = [
+    "provider",
+    "linked_providers",
+    "provider_account_id",
+    "username",
+    "email_verified",
+    "name",
+    "picture_url",
+    "linked_identities",
+  ];
+
+  const GITHUB_ACCOUNT_ID = "5830001";
+  const GITHUB_USERNAME = "fixture-octo";
+  const GITHUB_NAME = "Fixture Octo";
+  const GITHUB_AVATAR = "https://avatars.example.test/u/5830001";
+
+  function githubIdentity() {
+    return {
+      id: GITHUB_ACCOUNT_ID,
+      provider: "github",
+      identity_data: {
+        iss: "https://api.github.com",
+        sub: GITHUB_ACCOUNT_ID,
+        provider_id: GITHUB_ACCOUNT_ID,
+        user_name: GITHUB_USERNAME,
+        preferred_username: GITHUB_USERNAME,
+        name: GITHUB_NAME,
+        full_name: GITHUB_NAME,
+        avatar_url: GITHUB_AVATAR,
+        email_verified: true,
+      },
+    };
+  }
+
+  function githubLinkedUser() {
+    return {
+      id: "user-1",
+      email: "learner@example.test",
+      email_confirmed_at: "2026-09-01T10:00:00.000Z",
+      app_metadata: { provider: "github", providers: ["github"] },
+      user_metadata: githubIdentity().identity_data,
+      identities: [githubIdentity()],
+    };
+  }
+
+  const GOOGLE_LINKED_IDENTITY = {
+    provider: "google",
+    provider_account_id: GOOGLE_ACCOUNT_ID,
+    username: null,
+    name: GOOGLE_NAME,
+    picture_url: GOOGLE_PICTURE,
+  };
+
+  const GITHUB_LINKED_IDENTITY = {
+    provider: "github",
+    provider_account_id: GITHUB_ACCOUNT_ID,
+    username: GITHUB_USERNAME,
+    name: GITHUB_NAME,
+    picture_url: GITHUB_AVATAR,
+  };
+
+  it("exports provider, account identifier, verification, name and picture for a Google-linked account", async () => {
+    signIn(googleLinkedUser());
+    readyStores();
+
+    const response = await GET(exportRequest());
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.sign_in_identity).toEqual({
+      provider: "google",
+      linked_providers: ["google"],
+      provider_account_id: GOOGLE_ACCOUNT_ID,
+      username: null,
+      email_verified: true,
+      name: GOOGLE_NAME,
+      picture_url: GOOGLE_PICTURE,
+      linked_identities: [GOOGLE_LINKED_IDENTITY],
+    });
+    expect(Object.keys(payload.sign_in_identity)).toEqual(IDENTITY_KEYS);
+    expect(payload.export_complete).toBe(true);
+  });
+
+  it("keeps the Google-specific fields present as null for an email-only account", async () => {
+    signIn(emailOnlyUser());
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(Object.keys(payload.sign_in_identity)).toEqual(IDENTITY_KEYS);
+    expect(payload.sign_in_identity).toEqual({
+      provider: "email",
+      linked_providers: ["email"],
+      provider_account_id: null,
+      username: null,
+      email_verified: true,
+      name: null,
+      picture_url: null,
+      linked_identities: [],
+    });
+  });
+
+  it("never attributes profile metadata to an account without a Google identity", async () => {
+    signIn({
+      ...emailOnlyUser(),
+      email_confirmed_at: undefined,
+      user_metadata: { name: GOOGLE_NAME, picture: GOOGLE_PICTURE },
+    });
+    readyStores();
+
+    const serialized = await (await GET(exportRequest())).text();
+    const payload = JSON.parse(serialized);
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: "email",
+      linked_providers: ["email"],
+      provider_account_id: null,
+      username: null,
+      email_verified: false,
+      name: null,
+      picture_url: null,
+      linked_identities: [],
+    });
+    expect(serialized).not.toContain(GOOGLE_NAME);
+    expect(serialized).not.toContain(GOOGLE_PICTURE);
+  });
+
+  it("falls back to the stored profile copy when the Google identity row is not on the user object", async () => {
+    const { identities: _identities, ...withoutIdentities } = googleLinkedUser();
+    signIn({ ...withoutIdentities, email_confirmed_at: null });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: "google",
+      linked_providers: ["google"],
+      provider_account_id: GOOGLE_ACCOUNT_ID,
+      username: null,
+      email_verified: false,
+      name: GOOGLE_NAME,
+      picture_url: GOOGLE_PICTURE,
+      linked_identities: [],
+    });
+  });
+
+  it("exports the account identifier, username, name and avatar for a GitHub-linked account", async () => {
+    signIn(githubLinkedUser());
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(Object.keys(payload.sign_in_identity)).toEqual(IDENTITY_KEYS);
+    expect(payload.sign_in_identity).toEqual({
+      provider: "github",
+      linked_providers: ["github"],
+      provider_account_id: GITHUB_ACCOUNT_ID,
+      username: GITHUB_USERNAME,
+      email_verified: true,
+      name: GITHUB_NAME,
+      picture_url: GITHUB_AVATAR,
+      linked_identities: [GITHUB_LINKED_IDENTITY],
+    });
+    expect(Object.keys(payload.sign_in_identity.linked_identities[0])).toEqual([
+      "provider",
+      "provider_account_id",
+      "username",
+      "name",
+      "picture_url",
+    ]);
+  });
+
+  it("describes the current sign-in method and lists every linked provider identity", async () => {
+    const google = googleLinkedUser();
+    signIn({
+      ...google,
+      app_metadata: { provider: "github", providers: ["google", "github"] },
+      user_metadata: githubIdentity().identity_data,
+      identities: [...google.identities, githubIdentity()],
+    });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: "github",
+      linked_providers: ["google", "github"],
+      provider_account_id: GITHUB_ACCOUNT_ID,
+      username: GITHUB_USERNAME,
+      email_verified: true,
+      name: GITHUB_NAME,
+      picture_url: GITHUB_AVATAR,
+      linked_identities: [GOOGLE_LINKED_IDENTITY, GITHUB_LINKED_IDENTITY],
+    });
+  });
+
+  it("uses the Google verification flag when no confirmation timestamp is stored", async () => {
+    signIn({ ...googleLinkedUser(), email_confirmed_at: undefined });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity.email_verified).toBe(true);
+  });
+
+  it("writes an all-null identity for a minimal user object without metadata", async () => {
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: null,
+      linked_providers: [],
+      provider_account_id: null,
+      username: null,
+      email_verified: false,
+      name: null,
+      picture_url: null,
+      linked_identities: [],
+    });
+  });
+
+  it("ignores malformed metadata shapes instead of exporting them", async () => {
+    signIn({
+      id: "user-1",
+      email: null,
+      email_confirmed_at: "",
+      app_metadata: { provider: 42, providers: ["google", 7, ""] },
+      user_metadata: ["not", "a", "record"],
+      identities: [
+        null,
+        { provider: "google", identity_data: { sub: 99, name: "" } },
+      ],
+    });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: null,
+      linked_providers: ["google"],
+      provider_account_id: null,
+      username: null,
+      email_verified: false,
+      name: null,
+      picture_url: null,
+      linked_identities: [
+        {
+          provider: "google",
+          provider_account_id: null,
+          username: null,
+          name: null,
+          picture_url: null,
+        },
+      ],
+    });
+  });
+
+  it("places the identity directly after the email address in the exported document", async () => {
+    signIn(googleLinkedUser());
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(Object.keys(payload).slice(0, 4)).toEqual([
+      "owner_id",
+      "email",
+      "sign_in_identity",
+      "exported_at",
+    ]);
+  });
+
+  it("exports the identity through the native form download as well", async () => {
+    signIn(googleLinkedUser());
+    readyStores();
+
+    const response = await POST(
+      exportPostRequest(
+        "expectedOwnerId=user-1&locale=en",
+        "application/x-www-form-urlencoded",
+      ),
+    );
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.sign_in_identity.provider_account_id).toBe(
+      GOOGLE_ACCOUNT_ID,
+    );
+    expect(mockConsumeRateLimit).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps the owner-mismatch refusal free of identity data", async () => {
+    signIn(googleLinkedUser());
+
+    const response = await GET(exportRequest("user-2"));
+    const body = await response.text();
+
+    expect(response.status).toBe(409);
+    expect(JSON.parse(body)).toEqual({ error: "account_owner_mismatch" });
+    for (const value of [GOOGLE_ACCOUNT_ID, GOOGLE_NAME, GOOGLE_PICTURE]) {
+      expect(body).not.toContain(value);
+    }
+    expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+    expect(mockFetchProgress).not.toHaveBeenCalled();
+  });
+
+  it("refuses a cross-origin form download before the identity is read", async () => {
+    signIn(googleLinkedUser());
+
+    const response = await POST(
+      exportPostRequest(
+        "expectedOwnerId=user-1",
+        "application/x-www-form-urlencoded",
+        { origin: "https://attacker.example", fetchSite: "cross-site" },
+      ),
+    );
+
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "cross_origin_request_rejected",
+    });
+    expect(mockGetAuthenticatedUser).not.toHaveBeenCalled();
+  });
+
+  it("withholds the identity once the export budget is exhausted", async () => {
+    signIn(googleLinkedUser());
+    mockConsumeRateLimit.mockResolvedValueOnce(false);
+
+    const response = await GET(exportRequest());
+    const body = await response.text();
+
+    expect(response.status).toBe(429);
+    expect(body).not.toContain(GOOGLE_ACCOUNT_ID);
+    expect(mockFetchProgress).not.toHaveBeenCalled();
+  });
+
+  it("never hands identity values to error reporting when a later section fails", async () => {
+    signIn(googleLinkedUser());
+    mockIsCvEngineHostedReady.mockReturnValue(true);
+    mockCreateAuthServerClient.mockResolvedValue({
+      from: vi.fn(() =>
+        queryResult([], new Error("documents table missing")),
+      ),
+    });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.export_complete).toBe(false);
+    expect(payload.sign_in_identity.name).toBe(GOOGLE_NAME);
+    expect(mockedReportApiError).toHaveBeenCalledTimes(1);
+    const reported = JSON.stringify(
+      mockedReportApiError.mock.calls.map(([input]) => ({
+        ...input,
+        error: String(input.error),
+      })),
+    );
+    for (const value of [GOOGLE_ACCOUNT_ID, GOOGLE_NAME, GOOGLE_PICTURE]) {
+      expect(reported).not.toContain(value);
+    }
+  });
+});

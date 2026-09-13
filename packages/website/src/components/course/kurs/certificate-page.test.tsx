@@ -24,6 +24,7 @@ const harness = vi.hoisted(() => ({
   progressListener: null as (() => void) | null,
   router: { push: vi.fn() },
   generatePdf: vi.fn(),
+  trackCourseCompletion: vi.fn(),
   eligible: true,
   quizPassed: true,
   capstoneSubmitted: false,
@@ -68,6 +69,10 @@ vi.mock("@/lib/progress/browser-learning-storage", () => ({
       harness.ownerListener = null;
     };
   },
+}));
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackCourseCompletion: harness.trackCourseCompletion,
 }));
 
 vi.mock("@/lib/pdf/certificate-pdf", () => ({
@@ -116,6 +121,7 @@ beforeEach(() => {
   harness.progressListener = null;
   harness.router.push.mockReset();
   harness.generatePdf.mockReset();
+  harness.trackCourseCompletion.mockReset();
   harness.eligible = true;
   harness.quizPassed = true;
   harness.capstoneSubmitted = false;
@@ -284,5 +290,50 @@ describe("<CertificatePage>", () => {
       expect.objectContaining({ completionMode: "quiz" }),
       expect.anything(),
     );
+  });
+});
+
+describe("<CertificatePage> usage events", () => {
+  it("reports a downloaded record after the file is handed to the browser, without the name", async () => {
+    harness.generatePdf.mockResolvedValue(
+      new Blob(["certificate"], { type: "application/pdf" }),
+    );
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:certificate");
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => {});
+
+    render(<CertificatePage courseSlug="claude" locale="en" />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
+      target: { value: "Distinctive Learner" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Download/u }));
+
+    await waitFor(() =>
+      expect(harness.trackCourseCompletion).toHaveBeenCalledTimes(1),
+    );
+    expect(click).toHaveBeenCalledTimes(1);
+    expect(harness.trackCourseCompletion).toHaveBeenCalledWith(
+      "claude",
+      "record_downloaded",
+    );
+    expect(JSON.stringify(harness.trackCourseCompletion.mock.calls)).not.toContain(
+      "Distinctive",
+    );
+  });
+
+  it("does not report a download when the PDF cannot be generated", async () => {
+    harness.generatePdf.mockRejectedValue(new Error("pdf failed"));
+
+    render(<CertificatePage courseSlug="claude" locale="en" />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
+      target: { value: "Learner Name" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Download/u }));
+
+    expect(
+      await screen.findByText(/The PDF could not be generated/u),
+    ).toBeInTheDocument();
+    expect(harness.trackCourseCompletion).not.toHaveBeenCalled();
   });
 });

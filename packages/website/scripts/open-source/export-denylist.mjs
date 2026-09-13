@@ -345,6 +345,12 @@ export const SECRET_VALUE_RULES = [
     re: envAssignmentPattern("SUPABASE_SERVICE_ROLE_KEY"),
   },
   {
+    id: "vercel-analytics-api-token",
+    label: "VERCEL_ANALYTICS_API_TOKEN assignment",
+    kind: "assignment-name",
+    re: envAssignmentPattern("VERCEL_ANALYTICS_API_TOKEN"),
+  },
+  {
     id: "rate-limit-hmac-secret",
     label: "RATE_LIMIT_HMAC_SECRET assignment",
     kind: "assignment-name",

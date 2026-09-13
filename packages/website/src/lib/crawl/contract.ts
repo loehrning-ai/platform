@@ -303,6 +303,10 @@ const PROTECTED_PATHS = [
   // Also covers /konto/ki, the account page for agent access: personal
   // access tokens, granted OAuth clients, the agent audit trail and the chat
   // on the learner's own provider key.
+  // Also covers /konto/statistik, the owner-only operating statistics. That
+  // page relies on this wildcard for its authentication pre-gate, its
+  // private/no-store headers and its sitemap and robots exclusion. Do not add
+  // a more specific entry for it: a narrower pattern could only weaken those.
   "/konto/:path*",
   // Also covers the agent-access account routes /api/account/agent-tokens,
   // /api/account/llm-key, /api/account/chat and /api/account/oauth-grants.

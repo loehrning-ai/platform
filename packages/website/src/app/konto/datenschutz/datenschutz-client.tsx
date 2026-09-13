@@ -561,8 +561,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen, deinen Dokumenten aus dem Lebenslauf-Editor und dem Exportzeitpunkt. Prüfe in der Datei, dass",
-                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, your resume editor documents, and the export time. Check that",
+                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen, deinen Dokumenten aus dem Lebenslauf-Editor und dem Exportzeitpunkt. Enthalten sind außerdem die bei der Anmeldung gespeicherten Identitätsdaten: das Anmeldeverfahren, die Kontokennung beim Anmeldedienst, der Bestätigungsstatus der E-Mail-Adresse sowie, bei Anmeldung mit Google oder GitHub, der hinterlegte Name und die Adresse des Profilbilds, bei GitHub zusätzlich der Benutzername. Diese Angaben stehen außerdem für jede verknüpfte Anmeldeidentität einzeln in der Datei. Prüfe in der Datei, dass",
+                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, your resume editor documents, and the export time. It also contains the identity data stored at sign-in: the sign-in method, the account identifier held by the sign-in service, the verification status of the email address and, where you signed in with Google or GitHub, the stored name and the address of the profile picture, and with GitHub the username as well. These details are also listed separately for each linked sign-in identity. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
@@ -752,8 +752,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm font-medium leading-relaxed text-foreground">
               {localized(
                 locale,
-                "Diese Aktion löscht dein Lernkonto, deine E-Mail-Adresse, den serverseitigen Kursfortschritt und historische Bewertungsversuche dauerhaft. Die Löschung ist unwiderruflich.",
-                "This action permanently deletes your learning account, email address, server-side course progress, and historical assessment attempts. Deletion cannot be reversed.",
+                "Diese Aktion löscht dein Lernkonto, deine E-Mail-Adresse, den serverseitigen Kursfortschritt und historische Bewertungsversuche dauerhaft. Dabei wird auch der bei der Anmeldung gespeicherte Identitätsdatensatz gelöscht, bei Anmeldung mit Google einschließlich Kontokennung, Name und Adresse des Profilbilds. Die Löschung ist unwiderruflich.",
+                "This action permanently deletes your learning account, email address, server-side course progress, and historical assessment attempts. The identity record stored at sign-in is deleted as well, including, where you signed in with Google, the account identifier, name and profile-picture address. Deletion cannot be reversed.",
               )}
             </p>
             <details className="mt-3 border border-border">

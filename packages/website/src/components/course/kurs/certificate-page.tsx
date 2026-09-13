@@ -31,6 +31,7 @@ import type { CourseSlug } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { MotionProvider } from "@/components/motion-provider";
+import { trackCourseCompletion } from "@/lib/analytics/events";
 
 /**
  * Shared certificate screen for every free course (shared course architecture,
@@ -217,6 +218,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
       // download in Firefox and cancel it.
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       setDownloaded(true);
+      // Only the course and the step leave the browser; the typed name does not.
+      trackCourseCompletion(courseSlug, "record_downloaded");
     } catch {
       if (!attemptIsCurrent()) return;
       setErrors({

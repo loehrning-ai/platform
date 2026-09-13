@@ -21,6 +21,8 @@ const mocks = vi.hoisted(() => ({
   reportApiError: vi.fn(),
   redirect: vi.fn(),
   getRequestLocale: vi.fn(),
+  configuredAdminUserId: vi.fn(),
+  requireAdminUser: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -38,6 +40,12 @@ vi.mock("@/lib/observability/api-error", () => ({
 }));
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: mocks.getRequestLocale,
+}));
+vi.mock("@/lib/auth/admin-config", () => ({
+  configuredAdminUserId: mocks.configuredAdminUserId,
+}));
+vi.mock("@/lib/auth/admin-identity", () => ({
+  requireAdminUser: mocks.requireAdminUser,
 }));
 
 import KontoPage, { generateMetadata } from "./page";
@@ -155,6 +163,8 @@ beforeEach(() => {
   mocks.createAuthServerClient.mockResolvedValue(AUTH_CLIENT);
   mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(null));
   mocks.getRequestLocale.mockResolvedValue("de");
+  mocks.configuredAdminUserId.mockReturnValue(null);
+  mocks.requireAdminUser.mockResolvedValue("denied");
   mocks.redirect.mockImplementation(() => {
     throw REDIRECT;
   });
@@ -681,5 +691,78 @@ describe("KontoPage account regions", () => {
       }),
     ).toHaveAttribute("href", "/en/kurse/open-source/codex/kurs/zertifikat");
     expect(document.body).not.toHaveTextContent(/\bXP\b|streak|badge/i);
+  });
+});
+
+describe("KontoPage operator statistics card", () => {
+  const CARD = "konto-owner-statistics";
+
+  it("renders no card and runs no owner gate when no owner id is configured", async () => {
+    render(await kontoPage());
+
+    expect(screen.queryByTestId(CARD)).toBeNull();
+    expect(mocks.requireAdminUser).not.toHaveBeenCalled();
+  });
+
+  it("gives every other signed-in account no card, no owner gate and no statistics address", async () => {
+    mocks.configuredAdminUserId.mockReturnValue("another-account");
+
+    render(await kontoPage());
+
+    expect(screen.queryByTestId(CARD)).toBeNull();
+    expect(mocks.requireAdminUser).not.toHaveBeenCalled();
+    expect(document.body.innerHTML).not.toContain("/konto/statistik");
+  });
+
+  it.each(["admin", "reauth"] as const)(
+    "links the owner account to the statistics page when the gate says %s",
+    async (state) => {
+      mocks.configuredAdminUserId.mockReturnValue(USER.id);
+      mocks.requireAdminUser.mockResolvedValue(state);
+
+      render(await kontoPage());
+
+      const card = screen.getByTestId(CARD);
+      const link = within(card).getByRole("link", { name: /Betriebsstatistik/ });
+      expect(link.getAttribute("href")).toBe("/konto/statistik");
+    },
+  );
+
+  it.each(["denied", "unavailable", "disabled", "signed-out"] as const)(
+    "hides the card when the owner gate returns %s",
+    async (state) => {
+      mocks.configuredAdminUserId.mockReturnValue(USER.id);
+      mocks.requireAdminUser.mockResolvedValue(state);
+
+      render(await kontoPage());
+
+      expect(screen.queryByTestId(CARD)).toBeNull();
+    },
+  );
+
+  it("does not consult the owner gate during an auth outage", async () => {
+    mocks.configuredAdminUserId.mockReturnValue(USER.id);
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: USER,
+      error: new Error("auth backend unavailable"),
+    });
+
+    render(await kontoPage());
+
+    expect(mocks.requireAdminUser).not.toHaveBeenCalled();
+    expect(screen.queryByTestId(CARD)).toBeNull();
+  });
+
+  it("localizes the card on the English account page", async () => {
+    mocks.getRequestLocale.mockResolvedValue("en");
+    mocks.configuredAdminUserId.mockReturnValue(USER.id);
+    mocks.requireAdminUser.mockResolvedValue("admin");
+
+    render(await kontoPage());
+
+    const card = screen.getByTestId(CARD);
+    const link = within(card).getByRole("link", { name: /Operating statistics/ });
+    expect(link.getAttribute("href")).toBe("/en/konto/statistik");
   });
 });

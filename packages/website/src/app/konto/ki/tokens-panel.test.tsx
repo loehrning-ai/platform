@@ -6,9 +6,16 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { trackAgentTokenSurface } from "@/lib/analytics/events";
 import type { AgentTokenView, RegionOutcome } from "./account-agent-data";
 import { AGENT_ACCOUNT_COPY } from "./ki-copy";
 import { TokensPanel } from "./tokens-panel";
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackAgentTokenSurface: vi.fn(),
+}));
+
+const surfaceMock = vi.mocked(trackAgentTokenSurface);
 
 const COPY = AGENT_ACCOUNT_COPY.de;
 
@@ -50,6 +57,7 @@ function jsonResponse(body: unknown, status = 200) {
 describe("personal access token panel", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    surfaceMock.mockClear();
   });
 
   afterEach(() => {
@@ -224,5 +232,148 @@ describe("personal access token panel", () => {
     ]) {
       expect(control.className).toContain("min-h-11");
     }
+  });
+});
+
+describe("personal access token panel product events", () => {
+  const MINT_RESPONSE = {
+    ok: true,
+    id: "minted-token-id",
+    token: "lat_" + "q".repeat(43),
+    name: "Mein privater Laptop",
+    prefix: "lat_qqqqqqqq",
+    createdAt: "2026-09-05T10:00:00.000Z",
+  };
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    surfaceMock.mockClear();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  function steps(): readonly unknown[][] {
+    return surfaceMock.mock.calls;
+  }
+
+  function submitName(value: string) {
+    fireEvent.change(screen.getByLabelText(COPY.tokenNameLabel), {
+      target: { value },
+    });
+    fireEvent.click(screen.getByRole("button", { name: COPY.tokenCreate }));
+  }
+
+  it("reports availability exactly once per view", () => {
+    const { rerender } = renderPanel(ok([TOKEN]));
+    rerender(
+      <TokensPanel
+        locale="en"
+        ownerId="owner-1"
+        initial={ok([TOKEN])}
+        agentAccessReady
+      />,
+    );
+
+    expect(steps()).toEqual([["available"]]);
+  });
+
+  it("does not report availability while the agent surface is off", () => {
+    renderPanel(ok([]), false);
+    expect(surfaceMock).not.toHaveBeenCalled();
+  });
+
+  it("reports a mint without the typed name or any returned value", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse(MINT_RESPONSE, 201)),
+    );
+    renderPanel(ok([]));
+
+    submitName("Mein privater Laptop");
+
+    await waitFor(() =>
+      expect(screen.getByText(COPY.tokenOnceTitle)).toBeInTheDocument(),
+    );
+    expect(steps()).toEqual([["available"], ["minted"]]);
+    const sent = JSON.stringify(steps());
+    for (const secret of [
+      MINT_RESPONSE.name,
+      MINT_RESPONSE.token,
+      MINT_RESPONSE.id,
+      MINT_RESPONSE.prefix,
+      MINT_RESPONSE.createdAt,
+      "owner-1",
+    ]) {
+      expect(sent).not.toContain(secret);
+    }
+  });
+
+  it("reports a failed mint for a non-ok response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse({ error: "token_limit", limit: 5 }, 409)),
+    );
+    renderPanel(ok([]));
+
+    submitName("Sechster");
+
+    await waitFor(() => expect(screen.getByRole("alert")).toBeInTheDocument());
+    expect(steps()).toEqual([["available"], ["failed"]]);
+  });
+
+  it("reports a failed mint when the request rejects", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("offline");
+      }),
+    );
+    renderPanel(ok([]));
+
+    submitName("Codex");
+
+    await waitFor(() =>
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        COPY.tokenUnknownError,
+      ),
+    );
+    expect(steps()).toEqual([["available"], ["failed"]]);
+  });
+
+  it("reports a revocation without the token id", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        jsonResponse({
+          ok: true,
+          id: TOKEN.id,
+          revokedAt: "2026-09-06T08:00:00.000Z",
+        }),
+      ),
+    );
+    renderPanel(ok([TOKEN]));
+
+    fireEvent.click(screen.getByRole("button", { name: COPY.tokenRevoke }));
+
+    await waitFor(() => expect(steps()).toEqual([["available"], ["revoked"]]));
+    const sent = JSON.stringify(steps());
+    expect(sent).not.toContain(TOKEN.id);
+    expect(sent).not.toContain(TOKEN.name);
+    expect(sent).not.toContain(TOKEN.prefix);
+  });
+
+  it("reports a failed revocation for a non-ok response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => jsonResponse({ error: "not_found" }, 404)),
+    );
+    renderPanel(ok([TOKEN]));
+
+    fireEvent.click(screen.getByRole("button", { name: COPY.tokenRevoke }));
+
+    await waitFor(() => expect(screen.getByRole("alert")).toBeInTheDocument());
+    expect(steps()).toEqual([["available"], ["failed"]]);
   });
 });

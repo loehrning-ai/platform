@@ -51,6 +51,22 @@ vi.mock("./login-form", () => ({
   ),
 }));
 
+vi.mock("./login-gate-signal", () => ({
+  LoginGateSignal: ({
+    reason,
+    loginAvailability,
+  }: {
+    readonly reason: string;
+    readonly loginAvailability: string;
+  }) => (
+    <span
+      data-testid="login-gate-signal"
+      data-reason={reason}
+      data-login-availability={loginAvailability}
+    />
+  ),
+}));
+
 import LoginPage, { generateMetadata } from "./page";
 
 const REDIRECT = new Error("NEXT_REDIRECT");
@@ -467,6 +483,102 @@ describe("login layout branches", () => {
     expect(within(rail).getByRole("link", { name: /^AI check/ })).toHaveAttribute(
       "href",
       "/en/ki-check",
+    );
+  });
+});
+
+describe("login gate signal", () => {
+  it("renders no signal when no reason is present", async () => {
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: null,
+      error: null,
+    });
+    mocks.getRuntimeFeatures.mockReturnValue({
+      account: true,
+      magicLink: true,
+      google: true,
+      github: false,
+      turnstileSiteKey: "1x00000000000000000000AA",
+    });
+
+    render(await LoginPage({ searchParams: Promise.resolve({}) }));
+
+    expect(screen.queryByTestId("login-gate-signal")).toBeNull();
+  });
+
+  it("renders the signal inside the single reason alert", async () => {
+    render(
+      await LoginPage({
+        searchParams: Promise.resolve({ reason: "abgelaufen" }),
+      }),
+    );
+
+    const signal = screen.getByTestId("login-gate-signal");
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    expect(screen.getByRole("alert")).toContainElement(signal);
+    expect(signal).toHaveAttribute("data-login-availability", "none");
+  });
+
+  it.each([
+    [{ magicLink: true, google: true, github: false }, "all"],
+    [{ magicLink: true, google: false, github: true }, "all"],
+    [{ magicLink: true, google: true, github: true }, "all"],
+    [{ magicLink: false, google: true, github: false }, "oauth_only"],
+    [{ magicLink: false, google: false, github: true }, "oauth_only"],
+    [{ magicLink: true, google: false, github: false }, "magic_only"],
+    [{ magicLink: false, google: false, github: false }, "none"],
+  ] as const)(
+    "reports %j as %s availability",
+    async (methods, expected) => {
+      mocks.getAuthenticatedUser.mockResolvedValue({
+        configured: true,
+        user: null,
+        error: null,
+      });
+      mocks.getRuntimeFeatures.mockReturnValue({
+        ...NO_RUNTIME,
+        account: true,
+        turnstileSiteKey: "1x00000000000000000000AA",
+        ...methods,
+      });
+
+      render(
+        await LoginPage({
+          searchParams: Promise.resolve({ reason: "kurs-login" }),
+        }),
+      );
+
+      expect(screen.getByTestId("login-gate-signal")).toHaveAttribute(
+        "data-login-availability",
+        expected,
+      );
+    },
+  );
+
+  it("reports none during an auth outage even when methods are configured", async () => {
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: null,
+      error: { message: "upstream refused" },
+    });
+    mocks.getRuntimeFeatures.mockReturnValue({
+      account: true,
+      magicLink: true,
+      google: true,
+      github: true,
+      turnstileSiteKey: "1x00000000000000000000AA",
+    });
+
+    render(
+      await LoginPage({
+        searchParams: Promise.resolve({ reason: "auth-unavailable" }),
+      }),
+    );
+
+    expect(screen.getByTestId("login-gate-signal")).toHaveAttribute(
+      "data-login-availability",
+      "none",
     );
   });
 });
