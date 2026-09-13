@@ -5,6 +5,7 @@ import {
   geminiRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountRuntimeReady,
+  isAdminAnalyticsReady,
   isAgentAccessReady,
   isByoChatReady,
   isCourseTerminalRuntimeReady,
@@ -39,6 +40,8 @@ export interface RuntimeFeatures {
   readonly courseTerminal: boolean;
   readonly cvEngineHosted: boolean;
   readonly agentAccess: boolean;
+  /** Owner-only operating statistics built from platform-wide head-counts. */
+  readonly adminAnalytics: boolean;
   readonly vercelHosting: boolean;
   readonly vercelTelemetry: boolean;
 }
@@ -100,6 +103,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     courseTerminal: isCourseTerminalRuntimeReady(),
     cvEngineHosted: isCvEngineHostedReady(),
     agentAccess: isAgentAccessReady(),
+    adminAnalytics: isAdminAnalyticsReady(),
     vercelHosting,
     vercelTelemetry:
       vercelHosting && process.env.VERCEL_TELEMETRY_ENABLED === "true",

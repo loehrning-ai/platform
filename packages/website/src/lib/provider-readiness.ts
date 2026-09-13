@@ -1,5 +1,6 @@
 import "server-only";
 import { isValidRateLimitHmacSecret } from "@/lib/security/rate-limit-secret.mjs";
+import { configuredAdminUserId } from "@/lib/auth/admin-identity";
 import {
   PRACTICE_MODEL_IDS,
   type PracticeModelId,
@@ -182,6 +183,16 @@ export function isGithubOAuthRuntimeReady(): boolean {
         process.env.SUPABASE_GITHUB_OAUTH_CONFIRMED_AT,
       ),
   );
+}
+
+/**
+ * Owner-only operating statistics at /konto/statistik. They read platform-wide
+ * head-counts through the service client, so they need the complete EU account
+ * runtime plus a valid configured owner account id. The id itself is parsed in
+ * exactly one place, the owner identity module.
+ */
+export function isAdminAnalyticsReady(): boolean {
+  return isAccountRuntimeReady() && configuredAdminUserId() !== null;
 }
 
 /**

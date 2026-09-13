@@ -1,4 +1,4 @@
-const RECENT_AUTH_MAX_AGE_SECONDS = 15 * 60;
+export const RECENT_AUTH_MAX_AGE_SECONDS = 15 * 60;
 const MAX_AUTH_CLOCK_SKEW_SECONDS = 60;
 const SESSION_ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -13,7 +13,9 @@ export function hasRecentSessionAuthentication(
   claims: Record<string, unknown>,
   userId: string,
   nowSeconds = Math.floor(Date.now() / 1000),
+  maxAgeSeconds = RECENT_AUTH_MAX_AGE_SECONDS,
 ): boolean {
+  if (!Number.isFinite(maxAgeSeconds) || maxAgeSeconds < 0) return false;
   const audience = claims.aud;
   const authenticatedAudience =
     audience === "authenticated" ||
@@ -47,7 +49,7 @@ export function hasRecentSessionAuthentication(
     const age = nowSeconds - timestamp;
     return (
       age >= -MAX_AUTH_CLOCK_SKEW_SECONDS &&
-      age <= RECENT_AUTH_MAX_AGE_SECONDS
+      age <= maxAgeSeconds
     );
   });
 }

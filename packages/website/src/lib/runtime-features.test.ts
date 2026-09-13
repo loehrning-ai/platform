@@ -42,6 +42,7 @@ const KEYS = [
   "VERCEL_OIDC_TOKEN",
   "VERCEL_TELEMETRY_ENABLED",
   "ANTHROPIC_DPA_CONFIRMED_AT",
+  "LOEHRNING_ADMIN_USER_ID",
 ] as const;
 
 const SERVICE_CREDENTIAL_ENV_KEY = "SUPABASE_SERVICE_ROLE_KEY";
@@ -88,6 +89,7 @@ describe("getRuntimeFeatures", () => {
       courseTerminal: false,
       cvEngineHosted: false,
       agentAccess: false,
+      adminAnalytics: false,
       vercelHosting: false,
       vercelTelemetry: false,
     });
@@ -287,5 +289,27 @@ describe("getRuntimeFeatures", () => {
     expect(rejected.cvEngineHosted).toBe(false);
     expect(rejected.agentAccess).toBe(false);
     expect(rejected.github).toBe(true);
+  });
+
+  it("reports the owner statistics only with a valid owner id and the complete account runtime", () => {
+    const ownerId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    process.env.LOEHRNING_ADMIN_USER_ID = ownerId;
+    expect(getRuntimeFeatures().adminAnalytics).toBe(false);
+
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
+    process.env.SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env[SERVICE_CREDENTIAL_ENV_KEY] = "fake-service-key";
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+    process.env.SUPABASE_REGION = "eu-central-1";
+    expect(getRuntimeFeatures().adminAnalytics).toBe(false);
+
+    process.env.SUPABASE_DPA_CONFIRMED_AT = "2026-07-01";
+    expect(getRuntimeFeatures().adminAnalytics).toBe(true);
+
+    for (const invalid of ["", "true", "*", ownerId.toUpperCase()]) {
+      process.env.LOEHRNING_ADMIN_USER_ID = invalid;
+      expect(getRuntimeFeatures().adminAnalytics, invalid).toBe(false);
+    }
   });
 });
