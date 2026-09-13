@@ -72,7 +72,7 @@ function GermanPrivacyContent() {
           Datenschutzerklärung
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Stand: 13. August 2026
+          Stand: 13. September 2026
         </p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -105,6 +105,10 @@ function GermanPrivacyContent() {
               Diese Plattform richtet sich an Personen ab 16 Jahren. Jüngere
               Personen sollten die Zustimmung eines Erziehungsberechtigten
               einholen.
+            </p>
+            <p className="mt-2">
+              Ein Datenschutzbeauftragter ist nicht bestellt; die
+              Voraussetzungen des § 38 BDSG liegen nicht vor.
             </p>
           </LegalSection>
 
@@ -179,7 +183,13 @@ function GermanPrivacyContent() {
               Kursfortschritt und Übungsentwürfe werden für die vom Nutzer
               angeforderte Lernfunktion im Browser über localStorage oder
               sessionStorage gespeichert. Bei aktivem Lernkonto können technisch
-              erforderliche Session-Cookies gesetzt werden.{" "}
+              erforderliche Cookies gesetzt werden. Das Anmelde-Cookie des
+              Lernkontos wird ausschließlich beim ausdrücklich angeforderten
+              Anmeldevorgang gesetzt, bleibt bis zur Abmeldung, längstens 30
+              Tage, auf dem Endgerät gespeichert und wird bei jedem Besuch
+              erneuert. Es dient allein dazu, die Anmeldung nicht bei jedem
+              Seitenaufruf wiederholen zu müssen, und wird weder für
+              Reichweitenmessung noch für Werbung verwendet.{" "}
               <a
                 href="https://www.gesetze-im-internet.de/ttdsg/__25.html"
                 rel="noreferrer"
@@ -224,15 +234,41 @@ function GermanPrivacyContent() {
               </p>
             ) : null}
             {features.vercelTelemetry ? (
-              <p className="mt-2">
-                Vercel Web Analytics und Speed Insights sind in dieser
-                Bereitstellung ausdrücklich aktiviert. Sie dienen der
-                Reichweitenmessung und technischen Beobachtung. Die
-                datenschutzrechtliche Rechtsgrundlage sowie die technische
-                Einordnung nach § 25 TDDDG wurden vor Aktivierung datiert
-                dokumentiert. Es findet kein Werbetracking durch diese Plattform
-                statt.
-              </p>
+              <>
+                <p className="mt-2">
+                  Vercel Web Analytics und Speed Insights sind in dieser
+                  Bereitstellung ausdrücklich aktiviert. Sie dienen der
+                  Reichweitenmessung und technischen Beobachtung. Die
+                  datenschutzrechtliche Rechtsgrundlage sowie die technische
+                  Einordnung nach § 25 TDDDG wurden vor Aktivierung datiert
+                  dokumentiert. Es findet kein Werbetracking durch diese
+                  Plattform statt.
+                </p>
+                <p className="mt-2">
+                  Zusätzlich übermittelt die Plattform eigene Nutzungsereignisse
+                  an Vercel Web Analytics. Ein Ereignis besteht aus einem Namen
+                  aus einer festen, im Quelltext veröffentlichten Liste und
+                  höchstens zwei kategorialen Werten aus geschlossenen
+                  Wertelisten, etwa einem Kurs-, Demo- oder Workshop-Kürzel,
+                  einer Lektionsnummer oder einer Ergebnisstufe wie „bestanden“
+                  oder „Zeit abgelaufen“. Nicht übertragen werden Kennungen,
+                  E-Mail-Adressen, ein Kontobezug, Freitexte, Quiz- oder
+                  Prüfungsantworten und Punktzahlen. Die Ereignisse werden weder
+                  zu einem Besuchs-, Sitzungs- oder Geräteprofil zusammengeführt
+                  noch mit einem Lernkonto verknüpft. Empfänger ist Vercel Inc.
+                  (USA) als Auftragsverarbeiter; es gelten der in Abschnitt 3
+                  genannte Auftragsverarbeitungsvertrag und die dort
+                  beschriebenen Garantien für die Drittlandübermittlung. Vercel
+                  Inc. ist unter dem EU-U.S. Data Privacy Framework zertifiziert
+                  (Durchführungsbeschluss (EU) 2023/1795). Rechtsgrundlage ist
+                  Art. 6 Abs. 1 lit. f DSGVO. Das eingesetzte Messskript
+                  speichert keine Informationen auf dem Endgerät und liest keine
+                  aus; § 25 Abs. 1 TDDDG ist für diese Ereignisse deshalb nicht
+                  einschlägig, und die Ausnahme des § 25 Abs. 2 Nr. 2 TDDDG wird
+                  dafür nicht in Anspruch genommen. Diese Einordnung wurde vor
+                  der Aktivierung gesondert und datiert dokumentiert.
+                </p>
+              </>
             ) : (
               <p className="mt-2">
                 Vercel Web Analytics und Speed Insights sind in dieser
@@ -440,19 +476,125 @@ function GermanPrivacyContent() {
                   </p>
                 ) : null}
                 {features.google ? (
+                  <>
+                    <p className="mt-2">
+                      Bei der Anmeldung mit Google leitet Supabase den Browser
+                      zu Google und anschließend an den freigegebenen
+                      Rücksprungpfad dieser Plattform weiter. Google verarbeitet
+                      den Anmeldevorgang als eigenständig Verantwortlicher; für
+                      Nutzerinnen und Nutzer im Europäischen Wirtschaftsraum ist
+                      dies nach den Angaben von Google die Google Ireland
+                      Limited, Gordon House, Barrow Street, Dublin 4, Irland.
+                      Eine gemeinsame Verantwortlichkeit nach Art. 26 DSGVO
+                      besteht nicht, und Google ist insoweit nicht
+                      Auftragsverarbeiter dieser Plattform. Die Plattform
+                      fordert keine zusätzlichen Google-Berechtigungen an und
+                      erhält insbesondere keinen Zugriff auf Google Drive,
+                      Kalender oder andere Google-Inhalte. Cloudflare Turnstile
+                      wird für diese Google-Anmeldung weder geladen noch als
+                      Parameter übermittelt. Die Provider- und
+                      Rücksprungkonfiguration ist vor Aktivierung datiert
+                      verifiziert worden.
+                    </p>
+                    <p className="mt-2">
+                      Nach einer erfolgreichen Anmeldung übermittelt Google die
+                      dem Google-Konto zugeordneten Profilangaben an Supabase;
+                      Quelle dieser Daten ist damit Google und nicht eine
+                      Eingabe auf dieser Plattform. Diese Angaben werden nicht
+                      nur für den Anmeldevorgang verarbeitet, sondern im
+                      Lernkonto dauerhaft gespeichert. Gespeichert werden die
+                      Google-Kontokennung (sub, provider_id), die Kennung der
+                      ausstellenden Google-Schnittstelle (iss), die
+                      E-Mail-Adresse und ihr Bestätigungsstatus (email,
+                      email_verified), der im Google-Konto hinterlegte Name
+                      (name, full_name) sowie die Adresse des im Google-Konto
+                      hinterlegten Profilbilds (picture, avatar_url). Die
+                      Authentifizierungskomponente legt zusätzlich das
+                      technische Feld phone_verified an; eine Telefonnummer wird
+                      weder angefordert noch gespeichert.
+                    </p>
+                    <p className="mt-2">
+                      Zweck der Speicherung sind die Einrichtung und Führung des
+                      Lernkontos, die eindeutige Wiedererkennung bei jeder
+                      weiteren Anmeldung und die Zuordnung des Kursfortschritts.
+                      Rechtsgrundlage für die Kontokennung, die Kennung der
+                      ausstellenden Schnittstelle, die E-Mail-Adresse und deren
+                      Bestätigungsstatus ist Art. 6 Abs. 1 lit. b DSGVO; ohne
+                      diese Angaben lässt sich das Lernkonto nicht
+                      bereitstellen. Name und Profilbildadresse sind für die
+                      Vertragserfüllung nicht erforderlich. Sie werden von der
+                      eingesetzten Authentifizierungskomponente technisch
+                      zwingend mitgeliefert: Der Google-Anmeldevorgang ist dort
+                      fest auf den Berechtigungsumfang „email“ und „profile“
+                      gelegt und lässt sich durch diese Plattform nicht weiter
+                      einschränken; ein nachträgliches Entfernen würde bei der
+                      nächsten Anmeldung wieder überschrieben. Rechtsgrundlage
+                      für die Speicherung dieser beiden Angaben ist daher Art. 6
+                      Abs. 1 lit. f DSGVO; das berechtigte Interesse liegt im
+                      unveränderten, störungsfreien Betrieb der
+                      Standardkonfiguration der Anmeldekomponente. Die Plattform
+                      zeigt Name und Profilbild nicht an und wertet sie nicht
+                      aus; das Laden externer Bilder ist durch die
+                      Content-Security-Policy dieser Website ausgeschlossen. Die
+                      Agenten-Schnittstelle dieser Plattform fordert den
+                      Berechtigungsumfang „profile“ nicht an und gibt Name und
+                      Profilbildadresse nicht an Drittanwendungen aus. Gegen
+                      diese auf Art. 6 Abs. 1 lit. f DSGVO gestützte Speicherung
+                      besteht das Widerspruchsrecht nach Art. 21 DSGVO.
+                    </p>
+                    <p className="mt-2">
+                      Die Google Ireland Limited ist in der Europäischen Union
+                      ansässig. Soweit Google Daten an die Google LLC in die
+                      Vereinigten Staaten übermittelt, stützt Google dies nach
+                      eigenen Angaben auf den Angemessenheitsbeschluss der
+                      Europäischen Kommission zum EU-U.S. Data Privacy Framework
+                      (Durchführungsbeschluss (EU) 2023/1795 vom 10. Juli 2023);
+                      die Google LLC ist unter diesem Rahmen zertifiziert.
+                    </p>
+                    <p className="mt-2">
+                      Die Google-Anmeldeidentität einschließlich der genannten
+                      Profilangaben wird gespeichert, solange das Lernkonto
+                      besteht; bei jeder erneuten Anmeldung mit Google wird sie
+                      durch die dann von Google gelieferten Werte ersetzt. Die
+                      Bereitstellung dieser Daten ist gesetzlich nicht
+                      vorgeschrieben; sie ist jedoch erforderlich, um ein
+                      Lernkonto über Google einzurichten, sodass ohne sie eine
+                      Anmeldung über Google nicht zustande kommt. Eine
+                      automatisierte Entscheidungsfindung einschließlich
+                      Profiling im Sinne des Art. 22 DSGVO findet nicht statt.
+                      Die Rechte nach Abschnitt 9 und das Beschwerderecht nach
+                      Abschnitt 11 gelten unverändert.
+                    </p>
+                  </>
+                ) : null}
+                {features.adminAnalytics ? (
                   <p className="mt-2">
-                    Bei der Anmeldung mit Google leitet Supabase den Browser zu
-                    Google und anschließend an den freigegebenen Rücksprungpfad
-                    dieser Plattform weiter. Dabei verarbeiten Google und
-                    Supabase die für die Anmeldung erforderlichen Verbindungs-,
-                    Konto- und Profildaten einschließlich der E-Mail-Adresse.
-                    Die Plattform fordert keine zusätzlichen
-                    Google-Berechtigungen an und erhält insbesondere keinen
-                    Zugriff auf Google Drive, Kalender oder andere
-                    Google-Inhalte. Cloudflare Turnstile wird für diese
-                    Google-Anmeldung weder geladen noch als Parameter
-                    übermittelt. Die Provider- und Rücksprungkonfiguration ist
-                    vor Aktivierung datiert verifiziert worden.
+                    Der Betreiber ruft im angemeldeten Bereich eine interne
+                    Betriebsstatistik ab. Sie besteht ausschließlich aus
+                    Anzahlen, die bei jedem Aufruf serverseitig aus den ohnehin
+                    im Lernkonto gespeicherten Daten berechnet und nicht
+                    gesondert gespeichert werden; ein eigener Statistikdatensatz
+                    entsteht nicht, und es besteht dafür keine gesonderte
+                    Aufbewahrungsfrist. In die Statistik fließen keine Namen,
+                    E-Mail-Adressen, Kennungen oder Freitexte und keine Angaben
+                    aus dem Anmeldedienst ein. Solange die Plattform nur sehr
+                    wenige Konten führt, sind solche Anzahlen trotz Aggregation
+                    nicht als anonym anzusehen; deshalb werden unterhalb einer
+                    festgelegten Mindestgröße keine Einzelwerte, sondern nur ein
+                    Hinweis auf eine zu geringe Datenmenge angezeigt.
+                    Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; das
+                    berechtigte Interesse liegt darin, Nutzung und Reichweite
+                    des eigenen Angebots beurteilen und den Betrieb planen zu
+                    können. Es werden dafür keine zusätzlichen Daten erhoben,
+                    keine Informationen auf dem Endgerät gespeichert oder
+                    ausgelesen und keine Daten an Dritte übermittelt. Gegen
+                    diese Verarbeitung besteht das Widerspruchsrecht nach Art.
+                    21 DSGVO. Zusätzlich zeigt die Betriebsstatistik
+                    zusammengefasste Reichweiten- und Nutzungsereigniszahlen aus
+                    Vercel Web Analytics (Abschnitt 5) an. Diese werden bei
+                    jedem Aufruf serverseitig beim Auftragsverarbeiter abgefragt
+                    und auf dieser Plattform nicht gespeichert; Einzelwerte
+                    unterhalb der Mindestgröße werden auch hier nicht angezeigt.
                   </p>
                 ) : null}
                 {!features.magicLink && !features.google ? (
@@ -523,6 +665,16 @@ function GermanPrivacyContent() {
                 Browserdaten: auf dem Endgerät, bis die Person sie oder die
                 Browserdaten löscht.
               </li>
+              {features.vercelTelemetry ? (
+                <li>
+                  Vercel Web Analytics und Speed Insights: Die Plattform selbst
+                  speichert für diesen Zweck nichts. Bei Vercel stehen die
+                  Auswertungen im Berichtszeitraum des gebuchten Tarifs zur
+                  Verfügung, derzeit zwölf Monate. Eine feste Löschfrist wird
+                  hier nicht zugesagt, weil der Auftragsverarbeiter sich eine
+                  längere Speicherung vorbehält.
+                </li>
+              ) : null}
               {features.account ? (
                 <>
                   <li>
@@ -530,6 +682,16 @@ function GermanPrivacyContent() {
                     Bewertungsversuche: bis zur Kontolöschung oder einer
                     berechtigten Löschanfrage.
                   </li>
+                  {features.google ? (
+                    <li>
+                      Google-Anmeldeidentität einschließlich der von Google
+                      übermittelten Profilangaben (Kontokennung, E-Mail-Adresse
+                      und Bestätigungsstatus, Name, Profilbildadresse): bis zur
+                      Kontolöschung oder einer berechtigten Löschanfrage. Bei
+                      jeder erneuten Anmeldung mit Google wird der Datensatz
+                      durch die dann von Google gelieferten Werte ersetzt.
+                    </li>
+                  ) : null}
                   <li>
                     Konto-Rate-Limits: Wirksamkeit höchstens eine Stunde, bei
                     Kontolöschungen 24 Stunden; physische Bereinigung spätestens

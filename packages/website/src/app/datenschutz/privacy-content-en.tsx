@@ -20,7 +20,7 @@ export function EnglishPrivacyContent({
           Privacy policy
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Last updated: 13 August 2026
+          Last updated: 13 September 2026
         </p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -52,6 +52,10 @@ export function EnglishPrivacyContent({
             <p className="mt-2">
               This platform is intended for people aged 16 or older. Younger
               people should obtain consent from a parent or legal guardian.
+            </p>
+            <p className="mt-2">
+              No data protection officer has been appointed; the conditions of
+              Section 38 BDSG are not met.
             </p>
           </LegalSection>
 
@@ -119,8 +123,13 @@ export function EnglishPrivacyContent({
             <p>
               Course progress and exercise drafts are stored in the browser
               using localStorage or sessionStorage for the learning function
-              requested by the user. Technically necessary session cookies may
-              be set when a learning account is active. Under{" "}
+              requested by the user. Technically necessary cookies may be set
+              when a learning account is active. The learning account&apos;s
+              sign-in cookie is set only during the sign-in you expressly
+              request, remains on the terminal device until you sign out and for
+              no longer than 30 days, and is renewed on each visit. It serves
+              solely to avoid repeating sign-in on every page view and is used
+              neither for audience measurement nor for advertising. Under{" "}
               <a
                 href="https://www.gesetze-im-internet.de/ttdsg/__25.html"
                 rel="noreferrer"
@@ -162,14 +171,38 @@ export function EnglishPrivacyContent({
               </p>
             ) : null}
             {features.vercelTelemetry ? (
-              <p className="mt-2">
-                Vercel Web Analytics and Speed Insights are explicitly enabled
-                in this deployment. They are used for audience measurement and
-                technical monitoring. The data-protection legal basis and the
-                technical assessment under Section 25 TDDDG were documented with
-                a date before activation. This platform does not perform
-                advertising tracking.
-              </p>
+              <>
+                <p className="mt-2">
+                  Vercel Web Analytics and Speed Insights are explicitly enabled
+                  in this deployment. They are used for audience measurement and
+                  technical monitoring. The data-protection legal basis and the
+                  technical assessment under Section 25 TDDDG were documented
+                  with a date before activation. This platform does not perform
+                  advertising tracking.
+                </p>
+                <p className="mt-2">
+                  The platform additionally sends its own usage events to Vercel
+                  Web Analytics. An event consists of a name from a fixed list
+                  published in the source code and at most two categorical
+                  values drawn from closed vocabularies, for example a course,
+                  demo or workshop identifier, a lesson number, or an outcome
+                  label such as &apos;passed&apos; or &apos;timed out&apos;.
+                  Identifiers, email addresses, any account reference, free
+                  text, quiz or exam answers and scores are not transmitted. The
+                  events are neither combined into a visit, session or device
+                  profile nor linked to a learning account. The recipient is
+                  Vercel Inc. (USA) acting as a processor; the data processing
+                  agreement and the third-country transfer safeguards described
+                  in section 3 apply. Vercel Inc. is certified under the EU-U.S.
+                  Data Privacy Framework (Implementing Decision (EU) 2023/1795).
+                  The legal basis is Article 6(1)(f) GDPR. The measurement
+                  script neither stores information on nor reads information
+                  from the terminal device, so Section 25(1) TDDDG is not
+                  engaged for these events and the exception in Section 25(2)(2)
+                  TDDDG is not relied upon for them. This assessment was
+                  documented separately and with a date before activation.
+                </p>
+              </>
             ) : (
               <p className="mt-2">
                 Vercel Web Analytics and Speed Insights are disabled in this
@@ -364,17 +397,120 @@ export function EnglishPrivacyContent({
                   </p>
                 ) : null}
                 {features.google ? (
+                  <>
+                    <p className="mt-2">
+                      For sign-in with Google, Supabase redirects the browser to
+                      Google and then to the approved callback path on this
+                      platform. Google processes the sign-in as an independent
+                      controller; for users in the European Economic Area this
+                      is, according to Google&apos;s own information, Google
+                      Ireland Limited, Gordon House, Barrow Street, Dublin 4,
+                      Ireland. There is no joint controllership within the
+                      meaning of Article 26 GDPR, and Google is not a processor
+                      of this platform for that processing. The platform
+                      requests no additional Google permissions and, in
+                      particular, receives no access to Google Drive, Calendar,
+                      or other Google content. Cloudflare Turnstile is neither
+                      loaded nor passed as a parameter for Google sign-in. The
+                      provider and callback configuration was verified and dated
+                      before activation.
+                    </p>
+                    <p className="mt-2">
+                      After a successful sign-in, Google transmits the profile
+                      details associated with the Google account to Supabase;
+                      the source of this data is therefore Google, not an entry
+                      made on this platform. These details are not only
+                      processed for the sign-in itself, they are stored
+                      permanently in the learning account. The stored fields are
+                      the Google account identifier (sub, provider_id), the
+                      identifier of the issuing Google endpoint (iss), the email
+                      address and its verification status (email,
+                      email_verified), the name held in the Google account
+                      (name, full_name), and the address of the profile picture
+                      held in the Google account (picture, avatar_url). The
+                      authentication component additionally creates the
+                      technical field phone_verified; no telephone number is
+                      requested or stored.
+                    </p>
+                    <p className="mt-2">
+                      The purpose of this storage is to create and operate the
+                      learning account, to recognise the account reliably on
+                      every subsequent sign-in, and to attribute course progress
+                      to it. The legal basis for the account identifier, the
+                      issuer identifier, the email address, and its verification
+                      status is Article 6(1)(b) GDPR; the learning account
+                      cannot be provided without them. The name and the
+                      profile-picture address are not necessary for performance
+                      of the contract. They are supplied unavoidably by the
+                      authentication component in use: its Google sign-in flow
+                      is fixed to the &quot;email&quot; and &quot;profile&quot;
+                      permission scope and cannot be narrowed further by this
+                      platform, and removing the fields afterwards would be
+                      overwritten at the next sign-in. The legal basis for
+                      storing these two fields is therefore Article 6(1)(f)
+                      GDPR; the legitimate interest is the unmodified,
+                      trouble-free operation of the authentication component in
+                      its standard configuration. The platform neither displays
+                      nor evaluates the name and profile picture; loading
+                      external images is ruled out by this website&apos;s
+                      Content Security Policy. This platform&apos;s agent
+                      interface does not request the &quot;profile&quot;
+                      permission scope and does not release the name or the
+                      profile-picture address to third-party applications. The
+                      right to object under Article 21 GDPR applies to this
+                      storage based on Article 6(1)(f) GDPR.
+                    </p>
+                    <p className="mt-2">
+                      Google Ireland Limited is established in the European
+                      Union. In so far as Google transfers data to Google LLC in
+                      the United States, Google states that it relies on the
+                      European Commission&apos;s adequacy decision on the
+                      EU-U.S. Data Privacy Framework (Implementing Decision (EU)
+                      2023/1795 of 10 July 2023); Google LLC is certified under
+                      that framework.
+                    </p>
+                    <p className="mt-2">
+                      The Google sign-in identity, including the profile details
+                      named above, is stored for as long as the learning account
+                      exists; at each subsequent sign-in with Google it is
+                      replaced by the values Google supplies at that time.
+                      Providing this data is not required by law; it is,
+                      however, required in order to create a learning account
+                      via Google, so that without it no sign-in via Google can
+                      take place. No automated decision-making, including
+                      profiling, within the meaning of Article 22 GDPR takes
+                      place. The rights set out in section 9 and the right to
+                      lodge a complaint under section 11 apply unchanged.
+                    </p>
+                  </>
+                ) : null}
+                {features.adminAnalytics ? (
                   <p className="mt-2">
-                    For sign-in with Google, Supabase redirects the browser to
-                    Google and then to the approved callback path on this
-                    platform. Google and Supabase process the connection,
-                    account, and profile data required for sign-in, including
-                    the email address. The platform requests no additional
-                    Google permissions and, in particular, receives no access to
-                    Google Drive, Calendar, or other Google content. Cloudflare
-                    Turnstile is neither loaded nor passed as a parameter for
-                    Google sign-in. The provider and callback configuration was
-                    verified and dated before activation.
+                    The operator views internal operating statistics in the
+                    signed-in area. They consist solely of counts that are
+                    computed server-side on each request from data already held
+                    in the learning account and are not stored separately; no
+                    separate statistics dataset is created and there is no
+                    separate retention period for one. No names, email
+                    addresses, identifiers, or free text, and no details from
+                    the sign-in service, enter these statistics. For as long as
+                    the platform holds only very few accounts, such counts
+                    cannot be regarded as anonymous even though they are
+                    aggregated; below a defined minimum size, therefore, no
+                    individual figures are shown, only a notice that there is
+                    insufficient data. The legal basis is Article 6(1)(f) GDPR;
+                    the legitimate interest is being able to assess the use and
+                    reach of the operator&apos;s own offering and to plan its
+                    operation. No additional data is collected for this purpose,
+                    no information is stored on or read from the terminal
+                    device, and no data is transmitted to third parties. The
+                    right to object under Article 21 GDPR applies to this
+                    processing. In addition, the operating statistics show
+                    aggregated reach and usage-event figures from Vercel Web
+                    Analytics (section 5). They are retrieved server-side from
+                    the processor on each request and are not stored on this
+                    platform; individual figures below the minimum size are not
+                    shown here either.
                   </p>
                 ) : null}
                 {!features.magicLink && !features.google ? (
@@ -445,12 +581,32 @@ export function EnglishPrivacyContent({
                 Browser data: on the terminal device until the user deletes it
                 or deletes the browser data.
               </li>
+              {features.vercelTelemetry ? (
+                <li>
+                  Vercel Web Analytics and Speed Insights: the platform itself
+                  stores nothing for this purpose. At Vercel the reports are
+                  available for the reporting window of the booked plan,
+                  currently twelve months. No fixed deletion date is promised
+                  here, because the processor reserves the right to retain the
+                  data for longer.
+                </li>
+              ) : null}
               {features.account ? (
                 <>
                   <li>
                     Learning account, course progress, and historical assessment
                     attempts: until account deletion or a valid erasure request.
                   </li>
+                  {features.google ? (
+                    <li>
+                      Google sign-in identity, including the profile details
+                      transmitted by Google (account identifier, email address
+                      and verification status, name, profile-picture address):
+                      until account deletion or a valid erasure request. At each
+                      subsequent sign-in with Google, the record is replaced by
+                      the values Google supplies at that time.
+                    </li>
+                  ) : null}
                   <li>
                     Account rate limits: effective for no more than one hour, or
                     24 hours for account deletions; physical cleanup no later
