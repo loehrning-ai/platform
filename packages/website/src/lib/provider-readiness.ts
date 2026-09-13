@@ -1,6 +1,6 @@
 import "server-only";
 import { isValidRateLimitHmacSecret } from "@/lib/security/rate-limit-secret.mjs";
-import { configuredAdminUserId } from "@/lib/auth/admin-identity";
+import { configuredAdminUserId } from "@/lib/auth/admin-config";
 import {
   PRACTICE_MODEL_IDS,
   type PracticeModelId,

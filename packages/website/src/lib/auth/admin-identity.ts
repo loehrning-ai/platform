@@ -1,6 +1,7 @@
 import "server-only";
 import { timingSafeEqual } from "node:crypto";
 import { cache } from "react";
+import { configuredAdminUserId } from "@/lib/auth/admin-config";
 import { hasRecentSessionAuthentication } from "@/app/api/account/delete/recent-authentication";
 import {
   createAuthServerClient,
@@ -23,9 +24,6 @@ import {
  *   enough for a page whose output describes the platform's learners.
  */
 
-const ADMIN_USER_ID_PATTERN =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-
 /**
  * How long after an interactive sign-in the owner may open the statistics.
  * One signed-in day keeps ordinary use possible without a fresh sign-in on
@@ -41,15 +39,7 @@ export type AdminGateState =
   | "unavailable"
   | "disabled";
 
-/**
- * The configured owner account id, or null unless the value is a lowercase
- * canonical UUID. Anything else (a flag, a wildcard, a contact address, an
- * uppercase UUID) leaves the surface disabled.
- */
-export function configuredAdminUserId(): string | null {
-  const value = process.env.LOEHRNING_ADMIN_USER_ID?.trim();
-  return value && ADMIN_USER_ID_PATTERN.test(value) ? value : null;
-}
+export { configuredAdminUserId };
 
 function matchesConfiguredId(userId: string, adminId: string): boolean {
   const actual = Buffer.from(userId, "utf8");
