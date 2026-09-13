@@ -34,7 +34,10 @@ jobs:
           # devDependency that never ships. extract-zip 2.0.1 is the latest
           # published version and @lhci/cli 0.15.1 is the latest release, so
           # no upgrade clears it. Drop this flag once either ships a fix.
-          bun audit --ignore=GHSA-jmr9-qjv8-65gv
+          # GHSA-7pqw-9j4j-h8q3 (extract-zip arbitrary file write through
+          # symlink entries) sits on the same package and path with no patched
+          # release either, so it carries the same scoped exception.
+          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate
