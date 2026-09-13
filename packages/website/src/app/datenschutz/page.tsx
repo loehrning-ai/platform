@@ -567,6 +567,77 @@ function GermanPrivacyContent() {
                     </p>
                   </>
                 ) : null}
+                {features.github ? (
+                  <>
+                    <p className="mt-2">
+                      Bei der Anmeldung mit GitHub leitet Supabase den Browser
+                      zu GitHub und anschließend an den freigegebenen
+                      Rücksprungpfad dieser Plattform weiter. GitHub verarbeitet
+                      den Anmeldevorgang als eigenständig Verantwortlicher; für
+                      Nutzerinnen und Nutzer im Europäischen Wirtschaftsraum ist
+                      dies nach den Angaben von GitHub die GitHub B.V., Prins
+                      Bernhardplein 200, 1097 JB Amsterdam, Niederlande. Eine
+                      gemeinsame Verantwortlichkeit nach Art. 26 DSGVO besteht
+                      nicht, und GitHub ist insoweit nicht Auftragsverarbeiter
+                      dieser Plattform. Die Plattform erhält keinen Zugriff auf
+                      Repositorys oder andere Inhalte des GitHub-Kontos.
+                      Cloudflare Turnstile wird für diese GitHub-Anmeldung weder
+                      geladen noch als Parameter übermittelt. Die Provider- und
+                      Rücksprungkonfiguration ist vor Aktivierung datiert
+                      verifiziert worden.
+                    </p>
+                    <p className="mt-2">
+                      Nach einer erfolgreichen Anmeldung übermittelt GitHub die
+                      dem GitHub-Konto zugeordneten Profilangaben an Supabase;
+                      Quelle dieser Daten ist damit GitHub und nicht eine
+                      Eingabe auf dieser Plattform. Diese Angaben werden im
+                      Lernkonto dauerhaft gespeichert. Gespeichert werden die
+                      GitHub-Kontokennung (sub, provider_id), die Kennung der
+                      ausstellenden GitHub-Schnittstelle (iss), der
+                      GitHub-Benutzername (user_name, preferred_username), die
+                      E-Mail-Adresse und ihr Bestätigungsstatus (email,
+                      email_verified), der im GitHub-Konto hinterlegte Name
+                      (name, full_name) sowie die Adresse des im GitHub-Konto
+                      hinterlegten Profilbilds (avatar_url).
+                    </p>
+                    <p className="mt-2">
+                      Zweck und Rechtsgrundlagen entsprechen der Anmeldung mit
+                      Google: Für die Kontokennung, die Kennung der ausstellenden
+                      Schnittstelle, die E-Mail-Adresse und deren
+                      Bestätigungsstatus ist Rechtsgrundlage Art. 6 Abs. 1 lit.
+                      b DSGVO; ohne diese Angaben lässt sich das Lernkonto nicht
+                      bereitstellen. Benutzername, Name und Profilbildadresse
+                      sind für die Vertragserfüllung nicht erforderlich; sie
+                      werden von der eingesetzten Authentifizierungskomponente
+                      technisch zwingend mit abgerufen und bei der nächsten
+                      Anmeldung erneut geschrieben. Rechtsgrundlage für ihre
+                      Speicherung ist Art. 6 Abs. 1 lit. f DSGVO; das berechtigte
+                      Interesse liegt im unveränderten, störungsfreien Betrieb
+                      der Standardkonfiguration der Anmeldekomponente. Die
+                      Plattform zeigt Benutzername, Name und Profilbild nicht an
+                      und wertet sie nicht aus. Gegen diese auf Art. 6 Abs. 1
+                      lit. f DSGVO gestützte Speicherung besteht das
+                      Widerspruchsrecht nach Art. 21 DSGVO.
+                    </p>
+                    <p className="mt-2">
+                      Soweit GitHub Daten an die GitHub, Inc. in die Vereinigten
+                      Staaten übermittelt, ist GitHub nach eigenen Angaben unter
+                      dem EU-U.S. Data Privacy Framework zertifiziert
+                      (Durchführungsbeschluss (EU) 2023/1795 vom 10. Juli 2023).
+                    </p>
+                    <p className="mt-2">
+                      Die GitHub-Anmeldeidentität einschließlich der genannten
+                      Profilangaben wird gespeichert, solange das Lernkonto
+                      besteht; bei jeder erneuten Anmeldung mit GitHub wird sie
+                      durch die dann von GitHub gelieferten Werte ersetzt. Die
+                      Bereitstellung dieser Daten ist gesetzlich nicht
+                      vorgeschrieben; sie ist jedoch erforderlich, um ein
+                      Lernkonto über GitHub einzurichten. Eine automatisierte
+                      Entscheidungsfindung einschließlich Profiling im Sinne des
+                      Art. 22 DSGVO findet nicht statt.
+                    </p>
+                  </>
+                ) : null}
                 {features.adminAnalytics ? (
                   <p className="mt-2">
                     Der Betreiber ruft im angemeldeten Bereich eine interne
@@ -597,11 +668,11 @@ function GermanPrivacyContent() {
                     unterhalb der Mindestgröße werden auch hier nicht angezeigt.
                   </p>
                 ) : null}
-                {!features.magicLink && !features.google ? (
+                {!features.magicLink && !features.google && !features.github ? (
                   <p className="mt-2">
                     Das Lernkonto-Backend ist aktiv, aber für neue Anmeldungen
-                    ist derzeit weder Magic-Link noch Google als vollständig
-                    verifizierte Anmeldemethode freigegeben.
+                    ist derzeit weder Magic-Link noch Google noch GitHub als
+                    vollständig verifizierte Anmeldemethode freigegeben.
                   </p>
                 ) : null}
                 <p className="mt-2">
@@ -690,6 +761,17 @@ function GermanPrivacyContent() {
                       Kontolöschung oder einer berechtigten Löschanfrage. Bei
                       jeder erneuten Anmeldung mit Google wird der Datensatz
                       durch die dann von Google gelieferten Werte ersetzt.
+                    </li>
+                  ) : null}
+                  {features.github ? (
+                    <li>
+                      GitHub-Anmeldeidentität einschließlich der von GitHub
+                      übermittelten Profilangaben (Kontokennung, Benutzername,
+                      E-Mail-Adresse und Bestätigungsstatus, Name,
+                      Profilbildadresse): bis zur Kontolöschung oder einer
+                      berechtigten Löschanfrage. Bei jeder erneuten Anmeldung
+                      mit GitHub wird der Datensatz durch die dann von GitHub
+                      gelieferten Werte ersetzt.
                     </li>
                   ) : null}
                   <li>

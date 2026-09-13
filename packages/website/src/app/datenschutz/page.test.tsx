@@ -100,7 +100,9 @@ describe("Datenschutz account-provider readiness copy", () => {
     render(await DatenschutzPage());
 
     const section = within(accountSection());
-    expect(section.getByText(/weder Magic-Link noch Google/)).toBeVisible();
+    expect(
+      section.getByText(/weder Magic-Link noch Google noch GitHub/),
+    ).toBeVisible();
     expect(section.queryByText(/Cloudflare Turnstile/)).toBeNull();
     expect(section.queryByText(/Anmeldung mit Google leitet/)).toBeNull();
   });
@@ -163,6 +165,7 @@ describe("Datenschutz account-provider readiness copy", () => {
     ).toBeVisible();
     expect(section.getByText(/Anmeldung mit Google leitet/)).toBeVisible();
     expect(section.queryByText(/weder Magic-Link noch Google/)).toBeNull();
+    expect(section.queryByText(/Anmeldung mit GitHub leitet/)).toBeNull();
   });
 
   it("renders the complete English legal surface without German interface copy", () => {
@@ -416,6 +419,76 @@ describe("Datenschutz sign-in identity, statistics and cookie disclosure", () =>
     render(<EnglishPrivacyContent features={runtime} />);
     expect(document.body.textContent).not.toMatch(
       /Google Ireland Limited|Google sign-in identity/,
+    );
+  });
+
+  it("renders the GitHub Art. 13 disclosure and retention in German when GitHub is ready", async () => {
+    Object.assign(runtime, { ...FULL_ACCOUNT, google: false, github: true });
+    render(await DatenschutzPage());
+
+    const section = accountSection();
+    for (const phrase of [
+      "Anmeldung mit GitHub leitet",
+      "GitHub B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, Niederlande",
+      "Art. 26 DSGVO",
+      "(user_name, preferred_username)",
+      "(avatar_url)",
+      "Art. 6 Abs. 1 lit. b DSGVO",
+      "Widerspruchsrecht nach Art. 21 DSGVO",
+      "EU-U.S. Data Privacy Framework",
+      "Art. 22 DSGVO",
+    ]) {
+      expect(section).toHaveTextContent(phrase);
+    }
+    expect(section).not.toHaveTextContent("weder Magic-Link noch Google");
+    expect(section).not.toHaveTextContent("Google Ireland Limited");
+
+    const retention = within(sectionByHeading("10. Aufbewahrungsfristen"));
+    expect(
+      retention.getByText(/^GitHub-Anmeldeidentität einschließlich/),
+    ).toHaveTextContent(
+      "bis zur Kontolöschung oder einer berechtigten Löschanfrage",
+    );
+  });
+
+  it("renders the GitHub Art. 13 disclosure and retention in English when GitHub is ready", () => {
+    Object.assign(runtime, { ...FULL_ACCOUNT, google: false, github: true });
+    render(<EnglishPrivacyContent features={runtime} />);
+
+    const section = sectionByHeading(
+      "8. Learning account and data storage (Supabase)",
+    );
+    for (const phrase of [
+      "For sign-in with GitHub, Supabase redirects",
+      "GitHub B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, the Netherlands",
+      "Article 26 GDPR",
+      "(user_name, preferred_username)",
+      "right to object under Article 21 GDPR",
+      "EU-U.S. Data Privacy Framework",
+      "Article 22 GDPR",
+    ]) {
+      expect(section).toHaveTextContent(phrase);
+    }
+    expect(section).not.toHaveTextContent("neither magic link");
+    expect(section).not.toHaveTextContent("none of magic link");
+
+    const retention = within(sectionByHeading("10. Retention periods"));
+    expect(
+      retention.getByText(/^GitHub sign-in identity, including/),
+    ).toHaveTextContent("until account deletion or a valid erasure request");
+  });
+
+  it("keeps the GitHub disclosure and identity retention behind the GitHub flag", async () => {
+    Object.assign(runtime, FULL_ACCOUNT);
+    const german = render(await DatenschutzPage());
+    expect(german.container.textContent).not.toMatch(
+      /GitHub B\.V\.|GitHub-Anmeldeidentität/,
+    );
+    german.unmount();
+
+    render(<EnglishPrivacyContent features={runtime} />);
+    expect(document.body.textContent).not.toMatch(
+      /GitHub B\.V\.|GitHub sign-in identity/,
     );
   });
 

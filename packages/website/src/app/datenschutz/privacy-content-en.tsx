@@ -484,6 +484,74 @@ export function EnglishPrivacyContent({
                     </p>
                   </>
                 ) : null}
+                {features.github ? (
+                  <>
+                    <p className="mt-2">
+                      For sign-in with GitHub, Supabase redirects the browser to
+                      GitHub and then to the approved callback path on this
+                      platform. GitHub processes the sign-in as an independent
+                      controller; for users in the European Economic Area this
+                      is, according to GitHub&apos;s own information, GitHub
+                      B.V., Prins Bernhardplein 200, 1097 JB Amsterdam, the
+                      Netherlands. There is no joint controllership within the
+                      meaning of Article 26 GDPR, and GitHub is not a processor
+                      of this platform for that processing. The platform
+                      receives no access to repositories or other content of the
+                      GitHub account. Cloudflare Turnstile is neither loaded nor
+                      passed as a parameter for GitHub sign-in. The provider and
+                      callback configuration was verified and dated before
+                      activation.
+                    </p>
+                    <p className="mt-2">
+                      After a successful sign-in, GitHub transmits the profile
+                      details associated with the GitHub account to Supabase;
+                      the source of this data is therefore GitHub, not an entry
+                      made on this platform. These details are stored
+                      permanently in the learning account. The stored fields are
+                      the GitHub account identifier (sub, provider_id), the
+                      identifier of the issuing GitHub endpoint (iss), the
+                      GitHub username (user_name, preferred_username), the email
+                      address and its verification status (email,
+                      email_verified), the name held in the GitHub account
+                      (name, full_name), and the address of the profile picture
+                      held in the GitHub account (avatar_url).
+                    </p>
+                    <p className="mt-2">
+                      Purpose and legal bases are the same as for sign-in with
+                      Google: the legal basis for the account identifier, the
+                      issuer identifier, the email address, and its verification
+                      status is Article 6(1)(b) GDPR; the learning account
+                      cannot be provided without them. The username, name, and
+                      profile-picture address are not necessary for performance
+                      of the contract; the authentication component in use
+                      retrieves them unavoidably and writes them again at the
+                      next sign-in. The legal basis for storing them is Article
+                      6(1)(f) GDPR; the legitimate interest is the unmodified,
+                      trouble-free operation of the authentication component in
+                      its standard configuration. The platform neither displays
+                      nor evaluates the username, name, or profile picture. The
+                      right to object under Article 21 GDPR applies to this
+                      storage based on Article 6(1)(f) GDPR.
+                    </p>
+                    <p className="mt-2">
+                      In so far as GitHub transfers data to GitHub, Inc. in the
+                      United States, GitHub states that it is certified under
+                      the EU-U.S. Data Privacy Framework (Implementing Decision
+                      (EU) 2023/1795 of 10 July 2023).
+                    </p>
+                    <p className="mt-2">
+                      The GitHub sign-in identity, including the profile details
+                      named above, is stored for as long as the learning account
+                      exists; at each subsequent sign-in with GitHub it is
+                      replaced by the values GitHub supplies at that time.
+                      Providing this data is not required by law; it is,
+                      however, required in order to create a learning account
+                      via GitHub. No automated decision-making, including
+                      profiling, within the meaning of Article 22 GDPR takes
+                      place.
+                    </p>
+                  </>
+                ) : null}
                 {features.adminAnalytics ? (
                   <p className="mt-2">
                     The operator views internal operating statistics in the
@@ -513,11 +581,11 @@ export function EnglishPrivacyContent({
                     shown here either.
                   </p>
                 ) : null}
-                {!features.magicLink && !features.google ? (
+                {!features.magicLink && !features.google && !features.github ? (
                   <p className="mt-2">
-                    The learning-account backend is active, but neither magic
-                    link nor Google is currently approved as a fully verified
-                    sign-in method for new sign-ins.
+                    The learning-account backend is active, but none of magic
+                    link, Google, or GitHub is currently approved as a fully
+                    verified sign-in method for new sign-ins.
                   </p>
                 ) : null}
                 <p className="mt-2">
@@ -605,6 +673,17 @@ export function EnglishPrivacyContent({
                       until account deletion or a valid erasure request. At each
                       subsequent sign-in with Google, the record is replaced by
                       the values Google supplies at that time.
+                    </li>
+                  ) : null}
+                  {features.github ? (
+                    <li>
+                      GitHub sign-in identity, including the profile details
+                      transmitted by GitHub (account identifier, username, email
+                      address and verification status, name, profile-picture
+                      address): until account deletion or a valid erasure
+                      request. At each subsequent sign-in with GitHub, the
+                      record is replaced by the values GitHub supplies at that
+                      time.
                     </li>
                   ) : null}
                   <li>
