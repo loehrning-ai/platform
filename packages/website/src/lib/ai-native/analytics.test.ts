@@ -1,12 +1,28 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  expectTypeOf,
+  it,
+  vi,
+} from "vitest";
 import {
   trackEvent,
   recordForDebug,
   getRecentEvents,
+  type AiNativeEvent,
 } from "./analytics";
 
 describe("ai-native analytics", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
     vi.restoreAllMocks();
   });
 
@@ -32,22 +48,65 @@ describe("ai-native analytics", () => {
     }
   });
 
-  it("logs to console in dev mode", () => {
+  it("logs to console.info in development", () => {
+    vi.stubEnv("NODE_ENV", "development");
     const spy = vi.spyOn(console, "info").mockImplementation(() => {});
+    const props = {
+      moduleId: "modul_1",
+      lessonId: "modul_1_lesson_1",
+      sectionId: "sec_1",
+      sectionIndex: 0,
+    };
+    trackEvent({ name: "ai_native_section_read", props });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(
+      "[ai-native.analytics]",
+      "ai_native_section_read",
+      props,
+    );
+  });
+
+  it.each(["production", "test"])("does not log when NODE_ENV is %s", (env) => {
+    vi.stubEnv("NODE_ENV", env);
+    const spies = (["info", "debug", "log", "warn"] as const).map((method) =>
+      vi.spyOn(console, method).mockImplementation(() => {}),
+    );
     trackEvent({
-      name: "ai_native_section_read",
+      name: "ai_native_module_complete",
       props: {
         moduleId: "modul_1",
-        lessonId: "modul_1_lesson_1",
-        sectionId: "sec_1",
-        sectionIndex: 0,
+        completedLessonCount: 1,
+        totalLessonCount: 2,
       },
     });
-    // NODE_ENV in vitest defaults to "test"; the branch is dev-only.
-    // If the test environment's NODE_ENV is production, the call is a no-op
-    // and the spy will never fire — that's also acceptable behavior.
-    // Just assert no throw.
-    spy.mockRestore();
+    for (const spy of spies) expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("carries no free-text field and no removed event in the union", () => {
+    type EventName = AiNativeEvent["name"];
+    type PropKey = AiNativeEvent extends infer E
+      ? E extends { readonly props: infer P }
+        ? keyof P
+        : never
+      : never;
+    expectTypeOf<Extract<PropKey, "errorMessage">>().toBeNever();
+    expectTypeOf<
+      Extract<
+        EventName,
+        | "ai_native_exercise_error_boundary"
+        | "ai_native_challenge_reveal"
+        | "ai_native_demo_interaction_start"
+      >
+    >().toBeNever();
+
+    const source = readFileSync(
+      join(process.cwd(), "src/lib/ai-native/analytics.ts"),
+      "utf8",
+    );
+    expect(source).not.toMatch(/errorMessage|posthog|plausible/i);
+    expect(source).not.toMatch(/ai_native_exercise_error_boundary/);
+    expect(source).not.toMatch(/ai_native_challenge_reveal/);
+    expect(source).not.toMatch(/ai_native_demo_interaction_start/);
   });
 
   it("records events for debug panel up to the ring limit", () => {

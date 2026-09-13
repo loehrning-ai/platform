@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { preload } from "react-dom";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { VercelTelemetry } from "@/components/analytics/vercel-telemetry";
 import { MotionProvider } from "@/components/motion-provider";
 import { HydrationMarker } from "@/components/hydration-marker";
 import { LearningOwnerBoundary } from "@/components/progress/learning-owner-boundary";
@@ -175,12 +174,9 @@ export default async function RootLayout({
             band it covers is already reserved on <body>. */}
         <MobileTabBar />
         <UserProgressSync />
-        {vercelTelemetryEnabled ? (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        ) : null}
+        {/* The wrapper strips query strings and fragments from every recorded
+            URL before either SDK sends it (src/lib/analytics/url-policy.ts). */}
+        {vercelTelemetryEnabled ? <VercelTelemetry /> : null}
       </body>
     </html>
   );
