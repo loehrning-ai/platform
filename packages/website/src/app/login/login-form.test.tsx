@@ -1,12 +1,27 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const { createBrowserClientMock, signInWithOtpMock, signInWithOAuthMock } =
-  vi.hoisted(() => ({
-    createBrowserClientMock: vi.fn(),
-    signInWithOtpMock: vi.fn(),
-    signInWithOAuthMock: vi.fn(),
-  }));
+const {
+  createBrowserClientMock,
+  signInWithOtpMock,
+  signInWithOAuthMock,
+  trackLoginFlowMock,
+} = vi.hoisted(() => ({
+  createBrowserClientMock: vi.fn(),
+  signInWithOtpMock: vi.fn(),
+  signInWithOAuthMock: vi.fn(),
+  trackLoginFlowMock: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics/events", () => ({
+  trackLoginFlow: trackLoginFlowMock,
+}));
 
 vi.mock("@/lib/supabase/browser", () => ({
   createBrowserSupabaseClient: createBrowserClientMock,
@@ -437,5 +452,218 @@ describe("<LoginForm>", () => {
         shouldCreateUser: true,
       },
     });
+  });
+});
+
+/** Every argument ever handed to the analytics helper, flattened to strings. */
+function trackedArguments(): string[] {
+  return trackLoginFlowMock.mock.calls.flat().map((value) => String(value));
+}
+
+async function sendMagicLink(address: string) {
+  fireEvent.change(screen.getByRole("textbox", { name: "E-Mail-Adresse" }), {
+    target: { value: address },
+  });
+  fireEvent.click(
+    screen.getByRole("button", { name: "Sicherheitsprüfung abschließen" }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Login-Link senden" }));
+}
+
+describe("<LoginForm> sign-in flow events", () => {
+  it("reports magic_link started before the provider call, then link_sent", async () => {
+    signInWithOtpMock.mockResolvedValue({ error: null });
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOtp: signInWithOtpMock },
+    });
+
+    render(<LoginForm next="/kurse" {...MAGIC_LINK_PROPS} />);
+    await sendMagicLink("learner@example.com");
+
+    expect(
+      await screen.findByText(
+        "Login-Link verschickt. Öffne die E-Mail in diesem Browser.",
+      ),
+    ).toBeVisible();
+    expect(trackLoginFlowMock.mock.calls).toEqual([
+      ["magic_link", "started"],
+      ["magic_link", "link_sent"],
+    ]);
+    expect(trackLoginFlowMock.mock.invocationCallOrder[0]).toBeLessThan(
+      signInWithOtpMock.mock.invocationCallOrder[0] ?? 0,
+    );
+    expect(trackedArguments().some((value) => value.includes("@"))).toBe(false);
+  });
+
+  it("reports link_failed on a provider error without inspecting the error", async () => {
+    signInWithOtpMock.mockResolvedValue({
+      error: { message: "learner@example.com rejected", code: "provider" },
+    });
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOtp: signInWithOtpMock },
+    });
+
+    render(<LoginForm next="/kurse" {...MAGIC_LINK_PROPS} />);
+    await sendMagicLink("learner@example.com");
+
+    expect(
+      await screen.findByText(/Der Login-Link konnte nicht verschickt werden/),
+    ).toBeVisible();
+    expect(trackLoginFlowMock.mock.calls).toEqual([
+      ["magic_link", "started"],
+      ["magic_link", "link_failed"],
+    ]);
+    expect(trackedArguments().join(" ")).not.toMatch(/@|rejected|provider/);
+  });
+
+  it("reports link_failed when the auth request throws", async () => {
+    signInWithOtpMock.mockRejectedValue(new Error("learner@example.com"));
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOtp: signInWithOtpMock },
+    });
+
+    render(<LoginForm next="/kurse" {...MAGIC_LINK_PROPS} />);
+    await sendMagicLink("learner@example.com");
+
+    expect(
+      await screen.findByText(
+        "Der Login-Link konnte nicht verschickt werden. Versuche es später erneut.",
+      ),
+    ).toBeVisible();
+    expect(trackLoginFlowMock.mock.calls).toEqual([
+      ["magic_link", "started"],
+      ["magic_link", "link_failed"],
+    ]);
+    expect(trackedArguments().some((value) => value.includes("@"))).toBe(false);
+  });
+
+  it("reports nothing when a resend is blocked or the security check is missing", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOtp: signInWithOtpMock },
+    });
+
+    render(<LoginForm next="/kurse" {...MAGIC_LINK_PROPS} />);
+    fireEvent.submit(
+      screen.getByRole("button", { name: "Login-Link senden" }).closest("form")!,
+    );
+
+    expect(signInWithOtpMock).not.toHaveBeenCalled();
+    expect(trackLoginFlowMock).not.toHaveBeenCalled();
+  });
+
+  it("reports google started before the OAuth redirect", async () => {
+    signInWithOAuthMock.mockResolvedValue({ data: {}, error: null });
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOAuth: signInWithOAuthMock },
+    });
+
+    render(
+      <LoginForm
+        next="/konto"
+        accountReady
+        magicLinkReady={false}
+        googleReady
+        turnstileSiteKey={null}
+      />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Mit Google anmelden" }),
+    );
+
+    await screen.findByRole("button", { name: "Google wird geöffnet…" });
+    expect(trackLoginFlowMock.mock.calls).toEqual([["google", "started"]]);
+    expect(trackLoginFlowMock.mock.invocationCallOrder[0]).toBeLessThan(
+      signInWithOAuthMock.mock.invocationCallOrder[0] ?? 0,
+    );
+  });
+});
+
+describe("<LoginForm> sign-in identity notice", () => {
+  it("renders the Google notice beneath the provider button, linked to the privacy notice", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: {
+        signInWithOtp: signInWithOtpMock,
+        signInWithOAuth: signInWithOAuthMock,
+      },
+    });
+
+    const { container } = render(
+      <LoginForm
+        next="/konto"
+        accountReady
+        magicLinkReady
+        googleReady
+        turnstileSiteKey="1x00000000000000000000AA"
+      />,
+    );
+
+    const notice = container.querySelector("[data-login-oauth-notice]");
+    expect(notice).toHaveAttribute("data-login-oauth-notice", "google");
+    expect(notice).toHaveTextContent(
+      "Bei der Anmeldung über Google speichert diese Plattform deine Google-Kontokennung, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den in deinem Google-Konto hinterlegten Namen und die Adresse deines Profilbilds. Name und Profilbild werden nicht angezeigt und nicht ausgewertet. Einzelheiten und Rechtsgrundlagen stehen in der Datenschutzerklärung, Abschnitt 8.",
+    );
+    expect(notice).not.toHaveTextContent(/GitHub/);
+    expect(
+      within(notice as HTMLElement).getByRole("link", {
+        name: "Datenschutzerklärung",
+      }),
+    ).toHaveAttribute("href", "/datenschutz");
+
+    // Directly beneath the provider button, above the email alternative and
+    // its security check, so the Turnstile block keeps its own place.
+    const google = screen.getByRole("button", { name: "Mit Google anmelden" });
+    expect(google.nextElementSibling).toBe(notice);
+    const email = screen.getByRole("textbox", { name: "E-Mail-Adresse" });
+    expect(
+      notice!.compareDocumentPosition(email) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Sicherheitsprüfung abschließen" }),
+    ).toBeVisible();
+    // Information, not a consent control.
+    expect(screen.queryByRole("checkbox")).toBeNull();
+  });
+
+  it("links the English notice to the localized privacy notice", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOAuth: signInWithOAuthMock },
+    });
+
+    const { container } = render(
+      <LoginForm
+        next="/en/konto"
+        accountReady
+        magicLinkReady={false}
+        googleReady
+        turnstileSiteKey={null}
+        locale="en"
+      />,
+    );
+
+    const notice = container.querySelector("[data-login-oauth-notice]");
+    expect(notice).toHaveTextContent(
+      "When you sign in with Google, this platform stores your Google account identifier, your email address and its verification status, and the name and profile-picture address held in your Google account. The name and profile picture are neither displayed nor evaluated. Details and legal bases are set out in the privacy notice, section 8.",
+    );
+    expect(
+      within(notice as HTMLElement).getByRole("link", {
+        name: "privacy notice",
+      }),
+    ).toHaveAttribute("href", "/en/datenschutz");
+  });
+
+  it("renders no notice when no OAuth provider is configured", () => {
+    createBrowserClientMock.mockReturnValue({
+      auth: { signInWithOtp: signInWithOtpMock },
+    });
+
+    const { container } = render(
+      <LoginForm next="/konto" {...MAGIC_LINK_PROPS} />,
+    );
+
+    expect(container.querySelector("[data-login-oauth-notice]")).toBeNull();
+    expect(screen.queryByText(/Kontokennung/)).toBeNull();
+    expect(
+      screen.queryByRole("link", { name: "Datenschutzerklärung" }),
+    ).toBeNull();
   });
 });

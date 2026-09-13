@@ -2,11 +2,13 @@
 
 import { FormEvent, useCallback, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Loader2, Mail, Send } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
+import { trackLoginFlow } from "@/lib/analytics/events";
 import { sanitizeNextPath } from "@/lib/auth/routes";
-import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import {
   TurnstileWidget,
   type TurnstileWidgetHandle,
@@ -55,6 +57,12 @@ export function LoginForm({
   const googleAvailable = accountReady && googleReady;
   const githubAvailable = accountReady && githubReady;
   const oauthAvailable = googleAvailable || githubAvailable;
+  const oauthNoticeVariant =
+    googleAvailable && githubAvailable
+      ? "both"
+      : googleAvailable
+        ? "google"
+        : "github";
   const supabase = useMemo(() => {
     if (!accountReady || (!magicLinkAvailable && !oauthAvailable)) {
       return null;
@@ -127,6 +135,8 @@ export function LoginForm({
     setMessage("");
 
     try {
+      // The event names the method only. The address never enters a payload.
+      trackLoginFlow("magic_link", "started");
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
@@ -137,18 +147,21 @@ export function LoginForm({
       });
 
       if (error) {
+        trackLoginFlow("magic_link", "link_failed");
         setState("error");
         setMessage(copy.otpProviderError);
         return;
       }
 
+      trackLoginFlow("magic_link", "link_sent");
       setLastSentAt(Date.now());
       setState("sent");
       setMessage(copy.sent);
     } catch {
       // Auth transport errors can contain provider or request details. Recover
       // locally without forwarding the thrown value to the console or global
-      // error handlers.
+      // error handlers. The event carries the outcome label, never the error.
+      trackLoginFlow("magic_link", "link_failed");
       setState("error");
       setMessage(copy.otpTransportError);
     } finally {
@@ -171,6 +184,7 @@ export function LoginForm({
     );
     setMessage("");
     try {
+      trackLoginFlow(provider, "started");
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -262,6 +276,25 @@ export function LoginForm({
             />
           ) : null}
         </button>
+      ) : null}
+      {oauthAvailable ? (
+        // Layered Art. 13 notice: what the sign-in identity stores, stated at
+        // the control, with the full notice one link away. Deliberately not a
+        // checkbox, which would read as consent.
+        <p
+          data-login-oauth-notice={oauthNoticeVariant}
+          className="mt-3 break-words text-xs leading-relaxed text-muted-foreground"
+        >
+          {copy.oauthNotice[oauthNoticeVariant]}{" "}
+          {copy.oauthNotice.detailsBefore}
+          <Link
+            href={localizeHref("/datenschutz", locale)}
+            className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {copy.oauthNotice.detailsLink}
+          </Link>
+          {copy.oauthNotice.detailsAfter}
+        </p>
       ) : null}
       {oauthAvailable && magicLinkAvailable ? (
         <div className="my-5 flex items-center gap-3" aria-hidden="true">

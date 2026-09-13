@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { AnalyticsLoginAvailability } from "@/lib/analytics/registry";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { sanitizeNextPath } from "@/lib/auth/routes";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -9,6 +10,21 @@ import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
 import { LOGIN_COPY, type LoginUnavailableReason } from "./login-copy";
 import { LoginForm } from "./login-form";
+import { LoginGateSignal } from "./login-gate-signal";
+
+/**
+ * Which method families the page offers: the email link, OAuth (Google or
+ * GitHub), both, or neither. Reported alongside a gate reason only.
+ */
+function loginAvailabilityFor(
+  magicLinkReady: boolean,
+  oauthReady: boolean,
+): AnalyticsLoginAvailability {
+  if (magicLinkReady && oauthReady) return "all";
+  if (oauthReady) return "oauth_only";
+  if (magicLinkReady) return "magic_only";
+  return "none";
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -40,6 +56,10 @@ export default async function LoginPage({
   // absent on an older feature snapshot, so it is coerced rather than trusted.
   const githubReady = accountReady && runtime.github === true;
   const loginAvailable = magicLinkReady || googleReady || githubReady;
+  const loginAvailability = loginAvailabilityFor(
+    magicLinkReady,
+    googleReady || githubReady,
+  );
   if (accountReady && user) redirect(next);
 
   // Four disjoint machine states, never collapsed into one "not available".
@@ -208,6 +228,11 @@ export default async function LoginPage({
             className="mt-6 max-w-2xl break-words border border-border border-l-[3px] border-l-brand-orange bg-card p-4 text-sm leading-relaxed text-muted-foreground"
           >
             {loginReasonMessage(params.reason, loginAvailable, locale)}
+            {/* No reason, no event: the /login pageview is the denominator. */}
+            <LoginGateSignal
+              reason={params.reason}
+              loginAvailability={loginAvailability}
+            />
           </div>
         ) : null}
         {loginAvailable ? (

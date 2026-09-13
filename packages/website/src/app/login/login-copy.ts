@@ -86,6 +86,20 @@ export interface LoginCopy {
     readonly github: string;
     readonly githubPending: string;
     readonly githubError: string;
+    /**
+     * Layered Art. 13 notice rendered beneath the provider buttons. One lead
+     * per rendered provider set, so the notice never names a provider the page
+     * does not offer or omits one it does. Information only, never a consent
+     * control: consent is not the legal basis for storing the identity.
+     */
+    readonly oauthNotice: {
+      readonly google: string;
+      readonly github: string;
+      readonly both: string;
+      readonly detailsBefore: string;
+      readonly detailsLink: string;
+      readonly detailsAfter: string;
+    };
     readonly emailSeparator: string;
     readonly emailLabel: string;
     readonly emailHint: string;
@@ -221,6 +235,16 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       githubPending: "GitHub wird geöffnet…",
       githubError:
         "Die GitHub-Anmeldung konnte nicht gestartet werden. Versuche es später erneut.",
+      oauthNotice: {
+        google:
+          "Bei der Anmeldung über Google speichert diese Plattform deine Google-Kontokennung, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den in deinem Google-Konto hinterlegten Namen und die Adresse deines Profilbilds. Name und Profilbild werden nicht angezeigt und nicht ausgewertet.",
+        github:
+          "Bei der Anmeldung über GitHub speichert diese Plattform deine GitHub-Kontokennung, deinen GitHub-Benutzernamen, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den in deinem GitHub-Konto hinterlegten Namen und die Adresse deines Profilbilds. Benutzername, Name und Profilbild werden nicht angezeigt und nicht ausgewertet.",
+        both: "Bei der Anmeldung über Google oder GitHub speichert diese Plattform deine Kontokennung beim gewählten Anbieter, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den dort hinterlegten Namen und die Adresse deines Profilbilds; bei GitHub kommt dein Benutzername hinzu. Name, Profilbild und Benutzername werden nicht angezeigt und nicht ausgewertet.",
+        detailsBefore: "Einzelheiten und Rechtsgrundlagen stehen in der ",
+        detailsLink: "Datenschutzerklärung",
+        detailsAfter: ", Abschnitt 8.",
+      },
       emailSeparator: "oder per E-Mail",
       emailLabel: "E-Mail-Adresse",
       emailHint:
@@ -403,6 +427,16 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       github: "Sign in with GitHub",
       githubPending: "Opening GitHub…",
       githubError: "GitHub sign-in could not be started. Try again later.",
+      oauthNotice: {
+        google:
+          "When you sign in with Google, this platform stores your Google account identifier, your email address and its verification status, and the name and profile-picture address held in your Google account. The name and profile picture are neither displayed nor evaluated.",
+        github:
+          "When you sign in with GitHub, this platform stores your GitHub account identifier, your GitHub username, your email address and its verification status, and the name and profile-picture address held in your GitHub account. The username, name and profile picture are neither displayed nor evaluated.",
+        both: "When you sign in with Google or GitHub, this platform stores your account identifier with the provider you choose, your email address and its verification status, and the name and profile-picture address held in that account; with GitHub, your username is stored as well. The name, profile picture and username are neither displayed nor evaluated.",
+        detailsBefore: "Details and legal bases are set out in the ",
+        detailsLink: "privacy notice",
+        detailsAfter: ", section 8.",
+      },
       emailSeparator: "or use email",
       emailLabel: "Email address",
       emailHint: "You will receive a single-use link for this browser.",
