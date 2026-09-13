@@ -1,6 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { trackAgentTokenSurface } from "@/lib/analytics/events";
 import type { Locale } from "@/lib/i18n/locale";
 import type { AgentTokenView, RegionOutcome } from "./account-agent-data";
 import {
@@ -19,6 +20,10 @@ import { formatUtcMoment } from "./moment";
  * panel below. It is held in component state, never written to storage, and
  * disappears with the first navigation or reload. That is the whole point of
  * showing it once, so nothing here may make it recoverable.
+ *
+ * Product events from this panel carry only the step (available, minted,
+ * revoked, failed). The token name, prefix, id, owner and the clear token
+ * never reach analytics.
  */
 
 interface MintedToken {
@@ -55,6 +60,13 @@ export function TokensPanel({
   const [error, setError] = useState<string | null>(null);
   const [minted, setMinted] = useState<MintedToken | null>(null);
   const [copied, setCopied] = useState(false);
+  const availabilityReported = useRef(false);
+
+  useEffect(() => {
+    if (!agentAccessReady || availabilityReported.current) return;
+    availabilityReported.current = true;
+    trackAgentTokenSurface("available");
+  }, [agentAccessReady]);
 
   const unavailable = !initial.ok;
   const activeCount = tokens.filter((token) => token.revokedAt === null).length;
@@ -89,6 +101,7 @@ export function TokensPanel({
         readonly createdAt?: unknown;
       } | null;
       if (!response.ok) {
+        trackAgentTokenSurface("failed");
         setError(
           agentErrorMessage(
             "token",
@@ -106,9 +119,11 @@ export function TokensPanel({
         typeof payload.prefix !== "string" ||
         typeof payload.createdAt !== "string"
       ) {
+        trackAgentTokenSurface("failed");
         setError(copy.tokenUnknownError);
         return;
       }
+      trackAgentTokenSurface("minted");
       setMinted({ id: payload.id, token: payload.token, name: payload.name });
       setTokens((current) => [
         {
@@ -123,6 +138,7 @@ export function TokensPanel({
       ]);
       setName("");
     } catch {
+      trackAgentTokenSurface("failed");
       setError(copy.tokenUnknownError);
     } finally {
       setBusy(null);
@@ -143,6 +159,7 @@ export function TokensPanel({
         readonly revokedAt?: unknown;
       } | null;
       if (!response.ok) {
+        trackAgentTokenSurface("failed");
         setError(
           agentErrorMessage(
             "token",
@@ -153,6 +170,7 @@ export function TokensPanel({
         );
         return;
       }
+      trackAgentTokenSurface("revoked");
       const revokedAt =
         typeof payload?.revokedAt === "string"
           ? payload.revokedAt
@@ -164,6 +182,7 @@ export function TokensPanel({
       );
       if (minted?.id === tokenId) setMinted(null);
     } catch {
+      trackAgentTokenSurface("failed");
       setError(copy.tokenUnknownError);
     } finally {
       setBusy(null);
