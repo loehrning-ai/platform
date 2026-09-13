@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   act,
@@ -1158,5 +1160,128 @@ describe("DatenschutzPage course-reset list", () => {
       "geschützte Export-Datenspeicher ist vorübergehend nicht verfügbar",
     );
     expect(submit).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * The workspace tells learners what the Art. 15/20 export contains. When the
+ * export route gains a field the description must name it, otherwise the two
+ * surfaces contradict each other; the German and English copy must also
+ * enumerate the same items. The route source is the reference, so adding an
+ * identity key there without naming it here fails this suite.
+ */
+describe("DatenschutzPage export description matches the export route", () => {
+  const EXPORT_ROUTE_SOURCE = readFileSync(
+    resolve(process.cwd(), "src/app/api/account/export/route.ts"),
+    "utf8",
+  );
+
+  /** Every item of the export enumeration, as [German phrase, English phrase]. */
+  const BASE_ENUMERATION = [
+    ["deiner E-Mail-Adresse", "your email address"],
+    ["deinem Kursfortschritt", "course progress"],
+    ["vorhandenen historischen Quizversuchen", "existing historical quiz attempts"],
+    ["deinen Dokumenten aus dem Lebenslauf-Editor", "your resume editor documents"],
+    ["dem Exportzeitpunkt", "the export time"],
+  ] as const;
+
+  /** Each `sign_in_identity` key the route writes, and where the copy names it. */
+  const IDENTITY_ENUMERATION: Readonly<
+    Record<string, readonly [de: string, en: string]>
+  > = {
+    provider: ["das Anmeldeverfahren", "the sign-in method"],
+    linked_providers: ["das Anmeldeverfahren", "the sign-in method"],
+    provider_account_id: [
+      "die Kontokennung beim Anmeldedienst",
+      "the account identifier held by the sign-in service",
+    ],
+    email_verified: [
+      "der Bestätigungsstatus der E-Mail-Adresse",
+      "the verification status of the email address",
+    ],
+    name: ["der hinterlegte Name", "the stored name"],
+    picture_url: [
+      "die Adresse des Profilbilds",
+      "the address of the profile picture",
+    ],
+  };
+
+  beforeEach(() => {
+    getProgressSyncFailureMock.mockReset();
+    getProgressSyncFailureMock.mockReturnValue(null);
+  });
+
+  function routeIdentityKeys(): string[] {
+    const match = /const SIGN_IN_IDENTITY_KEYS = \[([\s\S]*?)\] as const/.exec(
+      EXPORT_ROUTE_SOURCE,
+    );
+    expect(match).not.toBeNull();
+    return [...match![1]!.matchAll(/"([a-z_]+)"/g)].map((entry) => entry[1]!);
+  }
+
+  function controlText(locale: "de" | "en", control: string): string {
+    const { container, unmount } = render(<DatenschutzPage locale={locale} />);
+    const text =
+      container.querySelector(`[data-privacy-control="${control}"]`)
+        ?.textContent ?? "";
+    unmount();
+    return text;
+  }
+
+  it("reads the identity key list the export route actually writes", () => {
+    expect(EXPORT_ROUTE_SOURCE).toMatch(
+      /"sign_in_identity": \$\{serializeSignInIdentity\(signInIdentity\)\}/,
+    );
+    expect(routeIdentityKeys()).toEqual([
+      "provider",
+      "linked_providers",
+      "provider_account_id",
+      "email_verified",
+      "name",
+      "picture_url",
+    ]);
+  });
+
+  it("names every exported identity field in both languages", () => {
+    expect(Object.keys(IDENTITY_ENUMERATION).sort()).toEqual(
+      routeIdentityKeys().sort(),
+    );
+    const german = controlText("de", "export");
+    const english = controlText("en", "export");
+
+    for (const key of routeIdentityKeys()) {
+      const [de, en] = IDENTITY_ENUMERATION[key]!;
+      expect(german).toContain(de);
+      expect(english).toContain(en);
+    }
+  });
+
+  it("enumerates the same export items in German and English", () => {
+    const items = [
+      ...BASE_ENUMERATION,
+      ...new Map(
+        Object.values(IDENTITY_ENUMERATION).map((pair) => [pair.join("|"), pair]),
+      ).values(),
+    ];
+    const german = controlText("de", "export");
+    const english = controlText("en", "export");
+
+    expect(new Set(items.map(([de]) => de)).size).toBe(
+      new Set(items.map(([, en]) => en)).size,
+    );
+    for (const [de, en] of items) {
+      expect(german).toContain(de);
+      expect(english).toContain(en);
+      expect(german).not.toContain(en);
+    }
+  });
+
+  it("names the sign-in identity record in the account deletion panel in both languages", () => {
+    expect(controlText("de", "delete")).toContain(
+      "Dabei wird auch der bei der Anmeldung gespeicherte Identitätsdatensatz gelöscht, bei Anmeldung mit Google einschließlich Kontokennung, Name und Adresse des Profilbilds.",
+    );
+    expect(controlText("en", "delete")).toContain(
+      "The identity record stored at sign-in is deleted as well, including, where you signed in with Google, the account identifier, name and profile-picture address.",
+    );
   });
 });

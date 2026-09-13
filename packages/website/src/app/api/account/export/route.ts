@@ -41,7 +41,108 @@ function jsonError(message: string, status: number): Response {
 type BoundExportUser = {
   readonly id: string;
   readonly email?: string | null;
+  readonly email_confirmed_at?: string | null;
+  readonly app_metadata?: Readonly<Record<string, unknown>> | null;
+  readonly user_metadata?: Readonly<Record<string, unknown>> | null;
+  readonly identities?: readonly {
+    readonly id?: unknown;
+    readonly provider?: unknown;
+    readonly identity_data?: Readonly<Record<string, unknown>> | null;
+  }[] | null;
 };
+
+/**
+ * The identity data Supabase Auth stored when this account signed in.
+ *
+ * An Art. 15/20 export that lists the email address but not the provider
+ * account identifier, the verification status or the Google profile details
+ * would omit data this platform demonstrably holds. The fields are read off
+ * the user object the route has already verified, so no further store is
+ * queried. Every key is always present: a field that does not apply to this
+ * account is `null`, never absent, so a reader cannot mistake "not stored"
+ * for "not exported".
+ */
+interface SignInIdentity {
+  readonly provider: string | null;
+  readonly linked_providers: readonly string[];
+  readonly provider_account_id: string | null;
+  readonly email_verified: boolean;
+  readonly name: string | null;
+  readonly picture_url: string | null;
+}
+
+/** Top-level keys of `sign_in_identity`, in the order the export writes them. */
+const SIGN_IN_IDENTITY_KEYS = [
+  "provider",
+  "linked_providers",
+  "provider_account_id",
+  "email_verified",
+  "name",
+  "picture_url",
+] as const satisfies readonly (keyof SignInIdentity)[];
+
+function recordOrEmpty(value: unknown): Readonly<Record<string, unknown>> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? (value as Readonly<Record<string, unknown>>)
+    : {};
+}
+
+function firstNonEmptyString(values: readonly unknown[]): string | null {
+  const found = values.find(
+    (value): value is string => typeof value === "string" && value.length > 0,
+  );
+  return found ?? null;
+}
+
+function readSignInIdentity(user: BoundExportUser): SignInIdentity {
+  const appMetadata = recordOrEmpty(user.app_metadata);
+  const userMetadata = recordOrEmpty(user.user_metadata);
+  const identities = Array.isArray(user.identities) ? user.identities : [];
+  const linkedProviders = Array.isArray(appMetadata.providers)
+    ? appMetadata.providers.filter(
+        (provider): provider is string =>
+          typeof provider === "string" && provider.length > 0,
+      )
+    : [];
+  const googleIdentity = identities.find(
+    (identity) => identity?.provider === "google",
+  );
+  const googleLinked =
+    googleIdentity !== undefined || linkedProviders.includes("google");
+  const googleData = recordOrEmpty(googleIdentity?.identity_data);
+  // GoTrue copies the provider profile into user_metadata at sign-in, so it
+  // is a stored copy of the same values and a fallback when the identity row
+  // is not part of the user object.
+  const googleSources = googleLinked ? [googleData, userMetadata] : [];
+
+  return {
+    provider: firstNonEmptyString([appMetadata.provider]),
+    linked_providers: linkedProviders,
+    provider_account_id: googleLinked
+      ? firstNonEmptyString([
+          googleData.sub,
+          googleIdentity?.id,
+          userMetadata.provider_id,
+          userMetadata.sub,
+        ])
+      : null,
+    email_verified:
+      firstNonEmptyString([user.email_confirmed_at]) !== null ||
+      (googleLinked && googleData.email_verified === true),
+    name: firstNonEmptyString(
+      googleSources.flatMap((source) => [source.name, source.full_name]),
+    ),
+    picture_url: firstNonEmptyString(
+      googleSources.flatMap((source) => [source.picture, source.avatar_url]),
+    ),
+  };
+}
+
+function serializeSignInIdentity(identity: SignInIdentity): string {
+  return serializeJsonValue(
+    Object.fromEntries(SIGN_IN_IDENTITY_KEYS.map((key) => [key, identity[key]])),
+  );
+}
 
 type BoundAuthResult =
   | { readonly ok: true; readonly user: BoundExportUser }
@@ -204,6 +305,7 @@ function serializeJsonValue(value: unknown): string {
 function buildExportPrefix({
   ownerId,
   email,
+  signInIdentity,
   exportedAt,
   progress,
   progressUpdatedAt,
@@ -212,6 +314,7 @@ function buildExportPrefix({
 }: {
   readonly ownerId: string;
   readonly email: string | null;
+  readonly signInIdentity: SignInIdentity;
   readonly exportedAt: string;
   readonly progress: unknown;
   readonly progressUpdatedAt: unknown;
@@ -222,6 +325,7 @@ function buildExportPrefix({
     "{",
     `  "owner_id": ${serializeJsonValue(ownerId)},`,
     `  "email": ${serializeJsonValue(email)},`,
+    `  "sign_in_identity": ${serializeSignInIdentity(signInIdentity)},`,
     `  "exported_at": ${serializeJsonValue(exportedAt)},`,
     `  "progress": ${serializeJsonValue(progress)},`,
     `  "progress_updated_at": ${serializeJsonValue(progressUpdatedAt)},`,
@@ -514,6 +618,7 @@ async function exportBoundAccount(
     prefix = buildExportPrefix({
       ownerId: user.id,
       email: user.email ?? null,
+      signInIdentity: readSignInIdentity(user),
       exportedAt: new Date().toISOString(),
       progress: fetched.result.progress,
       progressUpdatedAt: fetched.result.updatedAt,
