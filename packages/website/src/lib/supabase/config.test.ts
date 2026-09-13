@@ -12,9 +12,13 @@
  * it. `console.warn` is spied so the mismatch branch is asserted without noise.
  */
 
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  AUTH_COOKIE_MAX_AGE_SECONDS,
+  AUTH_COOKIE_OPTIONS,
+  boundAuthCookieOptions,
   getSupabasePublicConfig,
   hasSupabasePublicConfig,
   normalizeSupabaseOrigin,
@@ -255,5 +259,89 @@ describe("hasSupabasePublicConfig", () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = PUBLISHABLE_KEY;
     expect(hasSupabasePublicConfig()).toBe(true);
+  });
+});
+
+const THIRTY_DAYS_SECONDS = 30 * 24 * 60 * 60;
+
+describe("auth cookie lifetime", () => {
+  it("states an explicit lifetime of at most 30 days", () => {
+    expect(AUTH_COOKIE_MAX_AGE_SECONDS).toBe(THIRTY_DAYS_SECONDS);
+    expect(typeof AUTH_COOKIE_OPTIONS.maxAge).toBe("number");
+    expect(AUTH_COOKIE_OPTIONS.maxAge).toBeGreaterThan(0);
+    expect(AUTH_COOKIE_OPTIONS.maxAge).toBeLessThanOrEqual(THIRTY_DAYS_SECONDS);
+    expect(AUTH_COOKIE_OPTIONS.sameSite).toBe("lax");
+  });
+
+  it("shortens a longer lifetime without mutating the input", () => {
+    const input = Object.freeze({
+      path: "/",
+      sameSite: "lax",
+      maxAge: 400 * 24 * 60 * 60,
+    } as const);
+
+    const bounded = boundAuthCookieOptions(input);
+
+    expect(bounded).toEqual({
+      path: "/",
+      sameSite: "lax",
+      maxAge: THIRTY_DAYS_SECONDS,
+    });
+    expect(input.maxAge).toBe(400 * 24 * 60 * 60);
+  });
+
+  it("keeps removals, session cookies, and shorter lifetimes unchanged", () => {
+    for (const input of [
+      { maxAge: 0 },
+      { path: "/" },
+      { maxAge: 60 },
+      { maxAge: THIRTY_DAYS_SECONDS },
+    ]) {
+      expect(boundAuthCookieOptions(input)).toBe(input);
+    }
+  });
+
+  it("replaces an unreadable lifetime with the bound", () => {
+    for (const maxAge of [Number.NaN, Number.POSITIVE_INFINITY]) {
+      expect(boundAuthCookieOptions({ maxAge }).maxAge).toBe(
+        THIRTY_DAYS_SECONDS,
+      );
+    }
+  });
+
+  it("is needed because the library ignores cookieOptions.maxAge on writes", async () => {
+    // Drives the real @supabase/ssr write path offline: storing a PKCE code
+    // verifier flushes straight to setAll, with no network call.
+    const writes: { name: string; options: CookieOptions }[] = [];
+    const client = createServerClient(
+      "https://proj.supabase.co",
+      PUBLISHABLE_KEY,
+      {
+        cookieOptions: AUTH_COOKIE_OPTIONS,
+        cookies: {
+          getAll: () => [],
+          setAll: (cookies) => {
+            for (const { name, options } of cookies) {
+              writes.push({ name, options });
+            }
+          },
+        },
+      },
+    );
+    const storage = (
+      client.auth as unknown as {
+        storage: { setItem: (key: string, value: string) => Promise<void> };
+      }
+    ).storage;
+
+    await storage.setItem("sb-proj-auth-token-code-verifier", "verifier");
+
+    expect(writes.length).toBeGreaterThan(0);
+    for (const { options } of writes) {
+      // If a library upgrade starts honouring cookieOptions.maxAge, this
+      // assertion fails and the bound can be applied through the options alone.
+      expect(options.maxAge).toBeGreaterThan(THIRTY_DAYS_SECONDS);
+      expect(boundAuthCookieOptions(options).maxAge).toBe(THIRTY_DAYS_SECONDS);
+    }
   });
 });

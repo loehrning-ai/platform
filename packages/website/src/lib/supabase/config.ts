@@ -100,13 +100,51 @@ export function hasSupabasePublicConfig(): boolean {
 }
 
 /**
+ * Longest lifetime an auth session cookie may carry: 30 days, in seconds.
+ *
+ * It is explicit rather than inherited from the library's 400-day default for
+ * three reasons. A persistent login cookie that outlives the browser session
+ * is not exempt under criterion B (Article 29 Working Party, WP194, section
+ * 3.2), so its duration has to be bounded and justified. Section 5 of the
+ * published privacy notice states this duration, and a stated duration has to
+ * be the true one. And this cookie is the only credential in front of the
+ * owner-only operating statistics.
+ */
+export const AUTH_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
+
+/**
  * Cookie options shared by every @supabase/ssr client. `secure` is gated to
  * production so auth cookies are HTTPS-only in the deployed app, while local
  * http dev (localhost) still sets them. `sameSite: "lax"` matches the library
  * default and is what makes login/logout CSRF-safe. httpOnly is intentionally
  * left at the library default (false) because the browser client reads the token.
+ * `maxAge` states the bound; see `boundAuthCookieOptions` for why it is not
+ * enough on its own.
  */
 export const AUTH_COOKIE_OPTIONS = {
   secure: process.env.NODE_ENV === "production",
   sameSite: "lax",
+  maxAge: AUTH_COOKIE_MAX_AGE_SECONDS,
 } as const;
+
+/**
+ * Applies the lifetime bound to the options @supabase/ssr hands a cookie
+ * writer.
+ *
+ * @supabase/ssr 0.12.1 spreads `cookieOptions` into every session write and
+ * then overwrites `maxAge` with its own 400-day default, so the value in
+ * `AUTH_COOKIE_OPTIONS` never reaches a Set-Cookie header by itself. A cookie
+ * writer passes each options object through here before writing. A removal
+ * (`maxAge: 0`) and a browser-session cookie (no `maxAge`) pass unchanged;
+ * any longer or unreadable lifetime is replaced by the bound. The input is
+ * never mutated.
+ */
+export function boundAuthCookieOptions<
+  T extends { readonly maxAge?: number },
+>(options: T): T {
+  const { maxAge } = options;
+  if (maxAge === undefined || maxAge <= AUTH_COOKIE_MAX_AGE_SECONDS) {
+    return options;
+  }
+  return { ...options, maxAge: AUTH_COOKIE_MAX_AGE_SECONDS };
+}

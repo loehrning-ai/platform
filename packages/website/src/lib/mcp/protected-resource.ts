@@ -45,12 +45,12 @@ export const MCP_RESOURCE_IDENTIFIER = absoluteUrl(MCP_ENDPOINT_PATH);
  * Scopes a client may request for this resource. They are the OpenID Connect
  * scopes the platform consent screen documents line by line; the agent tools
  * themselves are read-only and grant no additional capability.
+ *
+ * `profile` is deliberately absent. No agent tool reads a stored name or
+ * profile picture, so advertising the scope would promise data this resource
+ * never serves.
  */
-export const AGENT_SCOPES_SUPPORTED = [
-  "openid",
-  "email",
-  "profile",
-] as const;
+export const AGENT_SCOPES_SUPPORTED = ["openid", "email"] as const;
 
 export type ProtectedResourceTarget = "site" | "agent-endpoint";
 
