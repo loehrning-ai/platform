@@ -771,6 +771,53 @@ describe("<LessonLayout> usage events", () => {
     expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
   });
 
+  it("does not report the start again on a later page load after a persisted section review", () => {
+    const first = renderLayout(READABLE_LESSONS);
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+    first.unmount();
+
+    // A reload starts a new document with an empty per-document dedupe.
+    __resetLessonUsageEventsForTests();
+    const laterLessons: readonly Lesson[] = [
+      {
+        ...READABLE_LESSONS[0]!,
+        sections: [
+          {
+            id: "block_1_lesson_1_section_2",
+            title: "Zweiter Prüfabschnitt",
+            readTimeMinutes: 2,
+            content: "Prüfe den nächsten Fall.",
+          },
+        ],
+      },
+    ];
+    renderLayout(laterLessons);
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+
+    expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+      ["ki-fuehrerschein"],
+    ]);
+  });
+
+  it("does not report a start on completion when a section read was persisted earlier", () => {
+    act(() => {
+      markSectionRead(
+        "ki-fuehrerschein",
+        "block_1_lesson_1",
+        "block_1_lesson_1_section_1",
+      );
+    });
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(true);
+    renderLayout(COMPLETABLE_LESSONS);
+
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+
+    expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
+      ["ki-fuehrerschein", "l01"],
+    ]);
+    expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
+  });
+
   it("does not report a section review while ownership is unresolved", () => {
     renderLayout(READABLE_LESSONS);
     act(() => {

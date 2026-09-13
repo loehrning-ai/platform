@@ -11,6 +11,7 @@ import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoin
 import {
   markSectionRead,
   saveLessonQuizScore,
+  getAllProgress,
   getReadSectionIds,
   getLessonQuizScore,
 } from "@/lib/course/progress";
@@ -67,6 +68,19 @@ function reportLessonReached(courseSlug: CourseSlug, lessonId: string): void {
   if (reachedLessonKeys.has(key)) return;
   reachedLessonKeys.add(key);
   trackLessonReached(courseSlug, ordinal);
+}
+
+/**
+ * True while the course holds none of the durable progress that reports a
+ * start: no evidence-backed completed lesson and no read section in any
+ * lesson. Read before the write, so a start reported on an earlier page load
+ * is not reported again once the per-document dedupe is empty.
+ */
+function isCourseUnstarted(courseSlug: CourseSlug): boolean {
+  if (getEvidenceBackedCompletedLessonIds(courseSlug).size > 0) return false;
+  return !Object.values(getAllProgress(courseSlug).lessons).some(
+    (lesson) => lesson.sectionsRead.length > 0,
+  );
 }
 
 function reportCourseStarted(courseSlug: CourseSlug): void {
@@ -221,8 +235,7 @@ export function LessonLayout({
 
   const handleMarkSectionRead = useCallback(
     (sectionId: string) => {
-      const courseWasUnstarted =
-        getEvidenceBackedCompletedLessonIds(courseSlug).size === 0;
+      const courseWasUnstarted = isCourseUnstarted(courseSlug);
       if (
         persistForActiveLearningOwner(
           () => markSectionRead(courseSlug, activeLessonId, sectionId),
@@ -250,8 +263,8 @@ export function LessonLayout({
 
     // Read before the write so a repeat completion and a later lesson are
     // told apart from the first durable progress in this course.
+    const courseWasUnstarted = isCourseUnstarted(courseSlug);
     const completedBefore = getEvidenceBackedCompletedLessonIds(courseSlug);
-    const courseWasUnstarted = completedBefore.size === 0;
     const lessonWasCompleted = completedBefore.has(activeLessonId);
     const persisted = recordLessonCompletionEvidenceDurably(
       courseSlug,
