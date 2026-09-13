@@ -100,7 +100,8 @@ e-mail address or free text cannot reach Vercel.
 ### When each event fires
 
 - `course_started`: on the first durable progress in a course, decided by
-  reading the learner's completed lessons **before** the write. Block courses
+  reading the learner's completed lessons and read sections **before** the
+  write. Block courses
   report it after the first persisted section read or lesson completion and
   additionally dedupe per course per document; ai-native,
   data-engineering-fundamentals and data-science report it after the first
@@ -283,7 +284,9 @@ completions.
 ## 4. `course_started` counts start occasions, not people
 
 The "was this course unstarted" check reads the learner's progress on the
-current device before the write. One learner who starts on a phone and later on
+current device before the write: for block courses, any completed lesson or
+any read section in the course means it has already started, so a reload does
+not report the start again. One learner who starts on a phone and later on
 a laptop before the two have synced counts twice, and a progress reset for a
 course (`POST /api/account/reset-progress`) makes the same person startable
 again. Block courses also dedupe per document, so a new tab after a reload can
@@ -421,12 +424,17 @@ Read with the server-side Supabase client as head-counts only: no row and no
 named column is returned, no auth schema is read, and account totals are
 deliberately not shown.
 
-- **Floor 20** (`GLOBAL_ACTIVITY_FLOOR`): below 20 rows in
+- **Floor 20** (`GLOBAL_ACTIVITY_FLOOR`): below 20 course rows in
   `user_course_progress` the section shows no figures at all, only an
-  insufficient-data note.
+  insufficient-data note. The reserved `_meta` ledger row, which every syncing
+  account writes once, is not a course row and is never counted: including it
+  would let the total minus the shown courses reveal the number of accounts.
 - **k = 5** (`MIN_REPORTABLE_COUNT`): a total below 5 is shown as suppressed,
-  never as a number, and a per-course row below 5 is omitted.
-- Totals: course progress rows, assessment runs, assessment answers, beta
+  never as a number, and a per-course row below 5 is omitted. Complementary
+  suppression: when the course rows not covered by the shown courses add up to
+  1 to 4, the course progress total is shown as suppressed as well, because
+  the difference would otherwise reveal the omitted figure.
+- Totals: course progress rows (without the ledger row), assessment runs, assessment answers, beta
   feedback, agent access events, agent access tokens and stored account model
   keys. The last three come from newer migrations that may not be applied in
   every environment. A count that fails is shown as unavailable, never as zero,

@@ -19,7 +19,7 @@ let serviceClientAvailable = true;
 
 function builderFor(call: QueryCall): Record<string, unknown> {
   const builder: Record<string, unknown> = {};
-  for (const name of ["select", "eq"]) {
+  for (const name of ["select", "eq", "neq"]) {
     builder[name] = (...args: unknown[]) => {
       call.ops.push({ name, args });
       return builder;
@@ -158,12 +158,15 @@ describe("readAdminAggregates", () => {
       });
       const [, ...filters] = call.ops;
       for (const op of filters) {
-        expect(op.name).toBe("eq");
+        expect(["eq", "neq"]).toContain(op.name);
         expect(op.args[0]).toBe("course_slug");
         expect(call.table).toBe("user_course_progress");
+        if (op.name === "neq") expect(op.args[1]).toBe("_meta");
       }
     }
-    const dimensioned = calls.filter((call) => call.ops.length > 1);
+    const dimensioned = calls.filter((call) =>
+      call.ops.some((op) => op.name === "eq"),
+    );
     expect(dimensioned.map((call) => call.ops[1]!.args[1]).sort()).toEqual(
       COURSE_CATALOG.map((course) => course.slug).sort(),
     );
@@ -244,6 +247,70 @@ describe("readAdminAggregates", () => {
     for (const course of snapshot.courses) {
       expect(typeof course.count).toBe("number");
     }
+  });
+
+  it("excludes the cross-course ledger row from the floor and the total", async () => {
+    await readySnapshot();
+    const [floorCall] = calls;
+    expect(floorCall!.table).toBe("user_course_progress");
+    expect(floorCall!.ops.slice(1)).toEqual([
+      { name: "neq", args: ["course_slug", "_meta"] },
+    ]);
+  });
+
+  it("withholds the total when subtracting the shown courses reveals a small figure", async () => {
+    const [large, small] = COURSE_CATALOG;
+    resolveCount = (table, slug) => {
+      if (table !== "user_course_progress") return { count: 60, error: null };
+      if (slug === undefined) return { count: 23, error: null };
+      return {
+        count: slug === large!.slug ? 20 : slug === small!.slug ? 3 : 0,
+        error: null,
+      };
+    };
+    const snapshot = await readySnapshot();
+    expect(snapshot.courses).toEqual([{ slug: large!.slug, count: 20 }]);
+    expect(snapshot.totals.courseProgress).toBe("suppressed");
+    expect(snapshot.totals.assessmentRuns).toBe(60);
+  });
+
+  it("withholds the total when a failed course count leaves a small remainder", async () => {
+    const [large, failing] = COURSE_CATALOG;
+    resolveCount = (table, slug) => {
+      if (table !== "user_course_progress") return { count: 60, error: null };
+      if (slug === undefined) return { count: 22, error: null };
+      if (slug === failing!.slug) return { count: null, error: new Error("timeout") };
+      return { count: slug === large!.slug ? 20 : 0, error: null };
+    };
+    const snapshot = await readySnapshot();
+    expect(snapshot.coursesIncomplete).toBe(true);
+    expect(snapshot.totals.courseProgress).toBe("suppressed");
+  });
+
+  it("keeps the total when the remainder is itself at least the minimum", async () => {
+    const [large, small, other] = COURSE_CATALOG;
+    resolveCount = (table, slug) => {
+      if (table !== "user_course_progress") return { count: 60, error: null };
+      if (slug === undefined) return { count: 27, error: null };
+      return {
+        count:
+          slug === large!.slug ? 20 : slug === small!.slug ? 3 : slug === other!.slug ? 4 : 0,
+        error: null,
+      };
+    };
+    const snapshot = await readySnapshot();
+    expect(snapshot.totals.courseProgress).toBe(27);
+  });
+
+  it("keeps the total when every course row is shown", async () => {
+    const [only] = COURSE_CATALOG;
+    resolveCount = (table, slug) => ({
+      count:
+        table !== "user_course_progress" ? 60 : slug === undefined || slug === only!.slug ? 30 : 0,
+      error: null,
+    });
+    const snapshot = await readySnapshot();
+    expect(snapshot.totals.courseProgress).toBe(30);
   });
 
   it("never names identity, profile or auth-administration data", () => {
