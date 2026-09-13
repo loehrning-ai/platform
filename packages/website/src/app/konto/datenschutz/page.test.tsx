@@ -1199,10 +1199,15 @@ describe("DatenschutzPage export description matches the export route", () => {
       "der Bestätigungsstatus der E-Mail-Adresse",
       "the verification status of the email address",
     ],
+    username: ["der Benutzername", "the username"],
     name: ["der hinterlegte Name", "the stored name"],
     picture_url: [
       "die Adresse des Profilbilds",
       "the address of the profile picture",
+    ],
+    linked_identities: [
+      "für jede verknüpfte Anmeldeidentität",
+      "for each linked sign-in identity",
     ],
   };
 
@@ -1236,9 +1241,11 @@ describe("DatenschutzPage export description matches the export route", () => {
       "provider",
       "linked_providers",
       "provider_account_id",
+      "username",
       "email_verified",
       "name",
       "picture_url",
+      "linked_identities",
     ]);
   });
 

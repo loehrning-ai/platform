@@ -1180,10 +1180,62 @@ describe("GET /api/account/export sign-in identity", () => {
     "provider",
     "linked_providers",
     "provider_account_id",
+    "username",
     "email_verified",
     "name",
     "picture_url",
+    "linked_identities",
   ];
+
+  const GITHUB_ACCOUNT_ID = "5830001";
+  const GITHUB_USERNAME = "fixture-octo";
+  const GITHUB_NAME = "Fixture Octo";
+  const GITHUB_AVATAR = "https://avatars.example.test/u/5830001";
+
+  function githubIdentity() {
+    return {
+      id: GITHUB_ACCOUNT_ID,
+      provider: "github",
+      identity_data: {
+        iss: "https://api.github.com",
+        sub: GITHUB_ACCOUNT_ID,
+        provider_id: GITHUB_ACCOUNT_ID,
+        user_name: GITHUB_USERNAME,
+        preferred_username: GITHUB_USERNAME,
+        name: GITHUB_NAME,
+        full_name: GITHUB_NAME,
+        avatar_url: GITHUB_AVATAR,
+        email_verified: true,
+      },
+    };
+  }
+
+  function githubLinkedUser() {
+    return {
+      id: "user-1",
+      email: "learner@example.test",
+      email_confirmed_at: "2026-09-01T10:00:00.000Z",
+      app_metadata: { provider: "github", providers: ["github"] },
+      user_metadata: githubIdentity().identity_data,
+      identities: [githubIdentity()],
+    };
+  }
+
+  const GOOGLE_LINKED_IDENTITY = {
+    provider: "google",
+    provider_account_id: GOOGLE_ACCOUNT_ID,
+    username: null,
+    name: GOOGLE_NAME,
+    picture_url: GOOGLE_PICTURE,
+  };
+
+  const GITHUB_LINKED_IDENTITY = {
+    provider: "github",
+    provider_account_id: GITHUB_ACCOUNT_ID,
+    username: GITHUB_USERNAME,
+    name: GITHUB_NAME,
+    picture_url: GITHUB_AVATAR,
+  };
 
   it("exports provider, account identifier, verification, name and picture for a Google-linked account", async () => {
     signIn(googleLinkedUser());
@@ -1197,9 +1249,11 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: "google",
       linked_providers: ["google"],
       provider_account_id: GOOGLE_ACCOUNT_ID,
+      username: null,
       email_verified: true,
       name: GOOGLE_NAME,
       picture_url: GOOGLE_PICTURE,
+      linked_identities: [GOOGLE_LINKED_IDENTITY],
     });
     expect(Object.keys(payload.sign_in_identity)).toEqual(IDENTITY_KEYS);
     expect(payload.export_complete).toBe(true);
@@ -1216,9 +1270,11 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: "email",
       linked_providers: ["email"],
       provider_account_id: null,
+      username: null,
       email_verified: true,
       name: null,
       picture_url: null,
+      linked_identities: [],
     });
   });
 
@@ -1237,9 +1293,11 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: "email",
       linked_providers: ["email"],
       provider_account_id: null,
+      username: null,
       email_verified: false,
       name: null,
       picture_url: null,
+      linked_identities: [],
     });
     expect(serialized).not.toContain(GOOGLE_NAME);
     expect(serialized).not.toContain(GOOGLE_PICTURE);
@@ -1256,9 +1314,61 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: "google",
       linked_providers: ["google"],
       provider_account_id: GOOGLE_ACCOUNT_ID,
+      username: null,
       email_verified: false,
       name: GOOGLE_NAME,
       picture_url: GOOGLE_PICTURE,
+      linked_identities: [],
+    });
+  });
+
+  it("exports the account identifier, username, name and avatar for a GitHub-linked account", async () => {
+    signIn(githubLinkedUser());
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(Object.keys(payload.sign_in_identity)).toEqual(IDENTITY_KEYS);
+    expect(payload.sign_in_identity).toEqual({
+      provider: "github",
+      linked_providers: ["github"],
+      provider_account_id: GITHUB_ACCOUNT_ID,
+      username: GITHUB_USERNAME,
+      email_verified: true,
+      name: GITHUB_NAME,
+      picture_url: GITHUB_AVATAR,
+      linked_identities: [GITHUB_LINKED_IDENTITY],
+    });
+    expect(Object.keys(payload.sign_in_identity.linked_identities[0])).toEqual([
+      "provider",
+      "provider_account_id",
+      "username",
+      "name",
+      "picture_url",
+    ]);
+  });
+
+  it("describes the current sign-in method and lists every linked provider identity", async () => {
+    const google = googleLinkedUser();
+    signIn({
+      ...google,
+      app_metadata: { provider: "github", providers: ["google", "github"] },
+      user_metadata: githubIdentity().identity_data,
+      identities: [...google.identities, githubIdentity()],
+    });
+    readyStores();
+
+    const payload = await (await GET(exportRequest())).json();
+
+    expect(payload.sign_in_identity).toEqual({
+      provider: "github",
+      linked_providers: ["google", "github"],
+      provider_account_id: GITHUB_ACCOUNT_ID,
+      username: GITHUB_USERNAME,
+      email_verified: true,
+      name: GITHUB_NAME,
+      picture_url: GITHUB_AVATAR,
+      linked_identities: [GOOGLE_LINKED_IDENTITY, GITHUB_LINKED_IDENTITY],
     });
   });
 
@@ -1280,9 +1390,11 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: null,
       linked_providers: [],
       provider_account_id: null,
+      username: null,
       email_verified: false,
       name: null,
       picture_url: null,
+      linked_identities: [],
     });
   });
 
@@ -1306,9 +1418,19 @@ describe("GET /api/account/export sign-in identity", () => {
       provider: null,
       linked_providers: ["google"],
       provider_account_id: null,
+      username: null,
       email_verified: false,
       name: null,
       picture_url: null,
+      linked_identities: [
+        {
+          provider: "google",
+          provider_account_id: null,
+          username: null,
+          name: null,
+          picture_url: null,
+        },
+      ],
     });
   });
 
