@@ -121,9 +121,48 @@ partial configuration and fails instead of surviving as stale release state.
   attestations. Server and browser DSNs must match when both are set.
   `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT` form an
   all-or-nothing source-map upload group.
-- Analytics: `VERCEL_TELEMETRY_ENABLED=true` requires
-  `VERCEL_TDDDG_ASSESSMENT_AT=YYYY-MM-DD`. Without the pair, Web Analytics and
-  Speed Insights are compiled out.
+- Analytics: `VERCEL_TELEMETRY_ENABLED` must be exactly `true` or `false`, and
+  it governs Web Analytics pageviews, Speed Insights, and the app-authored
+  product events. `true` requires `VERCEL=1` and two separate past-or-present
+  `YYYY-MM-DD` attestations: `VERCEL_TDDDG_ASSESSMENT_AT` for pageviews and
+  Speed Insights, and `VERCEL_EVENT_ASSESSMENT_AT` for product events. Either
+  date without the flag fails as an orphan, and a date in the future fails, so
+  the written assessment has to exist before the deploy. Without the complete
+  set, the telemetry components are not rendered and no event is sent.
+  Web Analytics must additionally be switched on for the project in the Vercel
+  dashboard. Until then the injected script answers 404, the SDK writes a single
+  console line, and the code ships and measures nothing, which on a dashboard
+  looks exactly like zero traffic.
+- Operating statistics: `LOEHRNING_ADMIN_USER_ID` is the operator's own account
+  id as a lowercase canonical UUID. It is server-only, must never appear in a
+  `NEXT_PUBLIC_` variable (the build refuses public names containing `ADMIN` and
+  public values equal to the id), and requires the complete Supabase account
+  group. An email address, padding, uppercase, or a wildcard fails the build.
+  Absent means the page is disabled, which is a valid state. Set it in Vercel
+  Preview and Production only; never commit a value, because this repository is
+  public and the id is a pseudonymous personal identifier. Changing it takes
+  effect on the next deployment. Re-creating the operator account changes the
+  id, and the page then denies access until the variable is updated.
+- The statistics page can also show aggregate Web Analytics numbers read
+  server-side from the Vercel API. `VERCEL_ANALYTICS_API_TOKEN` (a Vercel access
+  token, secret) and `VERCEL_ANALYTICS_TEAM_ID` (`team_` followed by 8-64
+  letters or digits) are all-or-nothing, and either one requires a valid
+  `LOEHRNING_ADMIN_USER_ID`, `VERCEL_TELEMETRY_ENABLED=true`, and `VERCEL=1`.
+  Neither may use a `NEXT_PUBLIC_` name. The token has team-wide authority, so
+  it is handled like `SUPABASE_SERVICE_ROLE_KEY`: server-only, blanked in every
+  verification process, hashed by presence only in build receipts, and blocked
+  by the export secret scan. Scope it to the one team, give it an expiry, and
+  rotate it like any other secret. The runtime also reads `VERCEL_PROJECT_ID`,
+  which Vercel injects at build and runtime; do not set it by hand.
+- Analytics activation order. Each step assumes the previous one:
+  1. Switch Web Analytics on for the project in the Vercel dashboard.
+  2. Merge the code.
+  3. Make one Production environment change that sets
+     `VERCEL_TELEMETRY_ENABLED=true`, `VERCEL_TDDDG_ASSESSMENT_AT`, and
+     `VERCEL_EVENT_ASSESSMENT_AT` together.
+  4. Set `LOEHRNING_ADMIN_USER_ID`, `VERCEL_ANALYTICS_API_TOKEN`, and
+     `VERCEL_ANALYTICS_TEAM_ID`.
+  5. Redeploy.
 - Provider-backed practice is feature-flagged by `AI_NATIVE_PRACTICE_ENABLED` and
   requires the full Supabase group, the applied
   `20260813000000_add_usage_budget_counter.sql` migration with both
@@ -165,8 +204,8 @@ partial configuration and fails instead of surviving as stale release state.
 
 Outside CI, Vercel, and release validation, credential-free local development
 can continue after a validation warning. An invalid environment containing
-`SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, or
-`GEMINI_API_KEY` fails
+`SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`,
+`GEMINI_API_KEY`, or `VERCEL_ANALYTICS_API_TOKEN` fails
 instead because those credentials can authorize uploads, writes, or paid calls.
 
 ## Domain
