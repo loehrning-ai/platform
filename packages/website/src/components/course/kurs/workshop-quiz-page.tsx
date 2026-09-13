@@ -41,6 +41,7 @@ import type { CourseSlug, QuizQuestion } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { MotionProvider } from "@/components/motion-provider";
+import { trackCourseCompletion } from "@/lib/analytics/events";
 
 /**
  * Shared workshop-quiz screen for every free course (shared course architecture,
@@ -201,6 +202,19 @@ export function shuffleArray<T>(arr: readonly T[], seed?: number): T[] {
   return shuffled;
 }
 
+/**
+ * Outcome label for a saved attempt. The three outcomes are disjoint: a pass
+ * is a pass however the attempt ended, and an attempt that ran out of time
+ * without passing is a timeout, never a failure.
+ */
+export function examOutcomeStep(
+  passed: boolean,
+  timedOut: boolean,
+): "exam_passed" | "exam_failed" | "exam_timeout" {
+  if (passed) return "exam_passed";
+  return timedOut ? "exam_timeout" : "exam_failed";
+}
+
 interface WorkshopQuizPageProps {
   readonly courseSlug: CourseSlug;
   readonly locale?: Locale;
@@ -237,6 +251,9 @@ export function WorkshopQuizPage({
   >("pending");
   const [resultSaveAttempt, setResultSaveAttempt] = useState(0);
   const activeQuizGenerationRef = useRef<number | null>(null);
+  // Per attempt: whether the timer ended it, and whether its outcome was sent.
+  const finishedByTimeoutRef = useRef(false);
+  const outcomeReportedRef = useRef(false);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const scoreRef = useRef<HTMLDivElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
@@ -268,8 +285,14 @@ export function WorkshopQuizPage({
     };
   }, [courseSlug]);
 
+  useEffect(() => {
+    if (accessAllowed === false) trackCourseCompletion(courseSlug, "exam_blocked");
+  }, [accessAllowed, courseSlug]);
+
   const resetQuizSession = useCallback(() => {
     activeQuizGenerationRef.current = null;
+    finishedByTimeoutRef.current = false;
+    outcomeReportedRef.current = false;
     setLoadError(false);
     setResultSaveStatus("pending");
     setResultSaveAttempt(0);
@@ -306,6 +329,7 @@ export function WorkshopQuizPage({
         activeQuizGenerationRef.current = quizGeneration;
         setQuestions(selected);
         setAnswers(new Array(selected.length).fill(null));
+        trackCourseCompletion(courseSlug, "exam_started");
       })
       .catch((error: unknown) => {
         if (
@@ -318,6 +342,7 @@ export function WorkshopQuizPage({
         // detail. The sanitized boundary reporter retains operational signal.
         activeQuizGenerationRef.current = quizGeneration;
         setLoadError(true);
+        trackCourseCompletion(courseSlug, "exam_unavailable");
         reportClientBoundaryError("workshop-quiz", error);
       });
     return () => {
@@ -363,6 +388,7 @@ export function WorkshopQuizPage({
       questions.length > 0 &&
       timeLeft === 0
     ) {
+      finishedByTimeoutRef.current = true;
       setFinished(true);
     }
   }, [accessAllowed, ownerGeneration, questions.length, timeLeft]);
@@ -509,6 +535,15 @@ export function WorkshopQuizPage({
         getLearningOwnerContext().generation === ownerGeneration
       ) {
         setResultSaveStatus(saved ? "saved" : "error");
+        // Covers both the last-question ending and the timer auto-finish.
+        // Only the outcome label is sent, never the score or the answers.
+        if (saved && !outcomeReportedRef.current) {
+          outcomeReportedRef.current = true;
+          trackCourseCompletion(
+            courseSlug,
+            examOutcomeStep(passed, finishedByTimeoutRef.current),
+          );
+        }
       }
     }
   }, [

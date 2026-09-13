@@ -13,10 +13,16 @@ import {
   subscribeLearningOwner,
 } from "@/lib/progress/browser-learning-storage";
 import {
+  getEvidenceBackedCompletedLessonIds,
   isEvidenceBackedLessonCompleted,
   recordLessonCompletionEvidenceDurably,
   subscribe,
 } from "@/lib/progress";
+import {
+  lessonOrdinal,
+  trackCourseStarted,
+  trackLessonCompleted,
+} from "@/lib/analytics/events";
 
 type TransferOnlyCourseSlug = Extract<
   EvidenceGatedCourseSlug,
@@ -81,7 +87,22 @@ export function ChapterTransferCheckpoint({
   );
 
   const commitTransfer = () => {
-    recordLessonCompletionEvidenceDurably(courseSlug, chapterId);
+    // Read before the write: the first durable completion starts the course,
+    // and a repeat commit of a completed chapter is not a new completion.
+    const completedBefore = getEvidenceBackedCompletedLessonIds(courseSlug);
+    const courseWasUnstarted = completedBefore.size === 0;
+    const chapterWasCompleted = completedBefore.has(chapterId);
+    const persisted = recordLessonCompletionEvidenceDurably(
+      courseSlug,
+      chapterId,
+    );
+    if (!persisted) return;
+    // The learner's prose is never read here; only course and position leave.
+    const ordinal = lessonOrdinal(courseSlug, chapterId);
+    if (!chapterWasCompleted && ordinal !== null) {
+      trackLessonCompleted(courseSlug, ordinal);
+    }
+    if (courseWasUnstarted) trackCourseStarted(courseSlug);
   };
 
   return (

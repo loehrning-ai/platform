@@ -5,7 +5,28 @@ import {
   render,
   screen,
 } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const usageEvents = vi.hoisted(() => ({
+  trackCourseStarted: vi.fn(),
+  trackLessonCompleted: vi.fn(),
+  trackLessonReached: vi.fn(),
+}));
+
+vi.mock("@/lib/analytics/events", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/analytics/events")>()),
+  ...usageEvents,
+}));
+
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/progress")>();
+  return {
+    ...actual,
+    recordLessonCompletionEvidenceDurably: vi.fn(
+      actual.recordLessonCompletionEvidenceDurably,
+    ),
+  };
+});
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
 import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
@@ -17,6 +38,7 @@ import {
   isCertificateEligible,
   isEvidenceBackedLessonCompleted,
   markLessonCompleted,
+  recordLessonCompletionEvidenceDurably,
 } from "@/lib/progress";
 import {
   activateUnknownProgress,
@@ -213,5 +235,102 @@ describe("ChapterTransferCheckpoint", () => {
       false,
     );
     expect(screen.getByLabelText("Decision or revision")).toHaveValue("");
+  });
+});
+
+describe("ChapterTransferCheckpoint usage events", () => {
+  const ordinalOf = (ids: readonly string[], id: string) =>
+    `l${String(ids.indexOf(id) + 1).padStart(2, "0")}`;
+
+  beforeEach(() => {
+    window.localStorage.clear();
+    __resetCacheForTests();
+    usageEvents.trackCourseStarted.mockClear();
+    usageEvents.trackLessonCompleted.mockClear();
+    usageEvents.trackLessonReached.mockClear();
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockClear();
+  });
+
+  afterEach(() => {
+    cleanup();
+    __resetCacheForTests();
+  });
+
+  function commit(decision: string) {
+    fireEvent.change(screen.getByLabelText("Decision or revision"), {
+      target: { value: decision },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save checkpoint" }));
+  }
+
+  it.each(CASES)(
+    "$label reports the persisted chapter and the course start, never the prose",
+    ({ courseSlug, chapterId, allChapterIds, decision }) => {
+      render(
+        <ChapterTransferCheckpoint
+          courseSlug={courseSlug}
+          chapterId={chapterId}
+          locale="en"
+        />,
+      );
+      commit(decision);
+
+      expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
+        [courseSlug, ordinalOf(allChapterIds, chapterId)],
+      ]);
+      expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+        [courseSlug],
+      ]);
+      expect(usageEvents.trackLessonReached).not.toHaveBeenCalled();
+      const payload = JSON.stringify([
+        usageEvents.trackLessonCompleted.mock.calls,
+        usageEvents.trackCourseStarted.mock.calls,
+      ]);
+      expect(payload).not.toContain(decision);
+    },
+  );
+
+  it("reports the course start only for the first persisted chapter", () => {
+    const { rerender } = render(
+      <ChapterTransferCheckpoint
+        courseSlug="data-science"
+        chapterId="fund"
+        locale="en"
+      />,
+    );
+    commit("I will test one baseline against one counterexample");
+
+    rerender(
+      <ChapterTransferCheckpoint
+        courseSlug="data-science"
+        chapterId="explore"
+        locale="en"
+      />,
+    );
+    commit("I will plot the distribution before trusting the mean");
+
+    expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
+      ["data-science", "l01"],
+      ["data-science", "l02"],
+    ]);
+    expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
+      ["data-science"],
+    ]);
+  });
+
+  it("reports nothing when the completion is not persisted", () => {
+    vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(false);
+    render(
+      <ChapterTransferCheckpoint
+        courseSlug="data-science"
+        chapterId="fund"
+        locale="en"
+      />,
+    );
+    commit("I will challenge the metric with a counterexample");
+
+    expect(recordLessonCompletionEvidenceDurably).toHaveBeenCalledTimes(1);
+    expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
+    expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
   });
 });

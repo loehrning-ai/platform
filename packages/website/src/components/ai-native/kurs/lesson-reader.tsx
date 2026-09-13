@@ -21,6 +21,7 @@ import {
 import { LegalClaimBadge } from "@/components/legal-claim-badge";
 import { LessonQuiz } from "@/components/course/kurs/lesson-quiz";
 import {
+  getEvidenceBackedCompletedLessonIds,
   isEvidenceBackedLessonCompleted,
   recordLessonCompletionEvidenceDurably,
   saveLessonQuizScore,
@@ -45,6 +46,11 @@ import type {
 } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
+import {
+  lessonOrdinal,
+  trackCourseStarted,
+  trackLessonCompleted,
+} from "@/lib/analytics/events";
 
 export function areLessonSectionsReady(
   sectionIds: readonly string[],
@@ -382,11 +388,22 @@ function AiNativeLessonReaderContent({
     ) {
       return;
     }
+    // Read before the write: the first durable completion starts the course,
+    // and a repeat completion of the same lesson is not reported again. Each
+    // lesson has its own route, so reaching a lesson is read from pageviews.
+    const completedBefore = getEvidenceBackedCompletedLessonIds("ai-native");
+    const courseWasUnstarted = completedBefore.size === 0;
+    const lessonWasCompleted = completedBefore.has(lesson.id);
     const persisted = recordLessonCompletionEvidenceDurably(
       "ai-native",
       lesson.id,
     );
     if (!persisted) return;
+    const ordinal = lessonOrdinal("ai-native", lesson.id);
+    if (!lessonWasCompleted && ordinal !== null) {
+      trackLessonCompleted("ai-native", ordinal);
+    }
+    if (courseWasUnstarted) trackCourseStarted("ai-native");
     setCompleted(true);
     // Legacy lesson booleans do not satisfy the new module evidence boundary.
     const moduleEvidenceComplete = allModuleLessonIds.every((moduleLessonId) =>
