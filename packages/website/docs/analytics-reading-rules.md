@@ -382,8 +382,10 @@ a broken release costs money as well as signalling an incident.
 
 ## 10. The owner statistics page: `/konto/statistik`
 
-A server-rendered page for the platform owner only. Nothing links to it; it is
-reached by typing the address. It stores nothing: both sections are computed on
+A server-rendered page for the platform owner only. The one way in from the
+site is a card at the top of `/konto` that the server renders solely for the
+configured owner account; every other account never receives it, and the card
+link is not prefetched. It stores nothing: both sections are computed on
 each request. There is no JSON endpoint and no client component behind it.
 
 ### Gate states

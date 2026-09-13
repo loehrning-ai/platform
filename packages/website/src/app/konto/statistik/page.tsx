@@ -40,8 +40,9 @@ import { STATISTIK_COPY, type StatistikPageCopy } from "./statistik-copy";
  *   back to `next`, so a redirect would only bounce between the two pages.
  * - No host or origin is derived from the request. Every link is a fixed
  *   internal path.
- * - Nothing links here. The page is reached by typing its address, so it is
- *   never prefetched and never enters another visitor's router payload.
+ * - The only link here is the operator card on /konto, which the server
+ *   renders solely for the configured owner account and never prefetches, so
+ *   the address never enters another visitor's HTML or router payload.
  *   Authentication pre-gating, private/no-store headers and the sitemap
  *   exclusion come from the protected /konto/:path* crawl contract entry.
  */
