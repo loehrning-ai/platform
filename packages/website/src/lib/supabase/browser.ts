@@ -2,6 +2,7 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserAuthCookieMethods } from "./browser-cookies";
 import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
 
 let browserClient: SupabaseClient | null = null;
@@ -13,6 +14,7 @@ export function createBrowserSupabaseClient(): SupabaseClient | null {
 
   browserClient = createBrowserClient(config.url, config.publishableKey, {
     cookieOptions: AUTH_COOKIE_OPTIONS,
+    cookies: createBrowserAuthCookieMethods(),
   });
   return browserClient;
 }

@@ -1,7 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
-import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
+import {
+  AUTH_COOKIE_OPTIONS,
+  boundAuthCookieOptions,
+  getSupabasePublicConfig,
+} from "./config";
 
 export async function refreshAuthSession(
   request: NextRequest,
@@ -37,7 +41,7 @@ export async function refreshAuthSession(
         setAll(cookiesToSet, headersToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            response.cookies.set(name, value, boundAuthCookieOptions(options));
           });
           Object.entries(headersToSet).forEach(([key, value]) => {
             response.headers.set(key, value);
