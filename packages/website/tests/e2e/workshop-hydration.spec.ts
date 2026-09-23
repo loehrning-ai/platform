@@ -112,7 +112,11 @@ test.describe("workshop form hydration safety", () => {
       test(`${scenario.locale}: explains the disabled exercise`, async ({ page }) => {
         await page.goto(scenario.path);
         const lab = page.locator("[data-workshop-decision-lab]");
-        await expect(lab).toContainText(scenario.noScript);
+        // Playwright excludes NOSCRIPT subtrees when collecting a parent's
+        // text, even with scripting disabled. Inspect its rendered child.
+        const noScriptNotice = lab.locator("noscript p");
+        await expect(noScriptNotice).toBeVisible();
+        await expect(noScriptNotice).toContainText(scenario.noScript);
         await expect(lab.locator('button[type="submit"]')).toBeDisabled();
         await expect(lab.getByRole("radio")).toHaveCount(6);
         for (const radio of await lab.getByRole("radio").all()) await expect(radio).toBeDisabled();
