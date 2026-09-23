@@ -775,17 +775,37 @@
     }
   }
 
-  function isExpectedPresenterSource(source, offerId) {
+  function isExpectedPresenterSource(source) {
     if (!source || source === window) return false;
     try {
-      const openerMatch = source.opener === window;
-      const trackedMatch = source === expectedPresenterWindow
-        && offerId === presenterPairingOfferId
-        && WINDOW_CHANNEL_PATTERN.test(String(offerId || ""));
-      return (openerMatch || trackedMatch) && hasExpectedWindowPath(source, "presenter.html");
+      // Once P has selected a WindowProxy, a different opener child cannot claim it.
+      const expectedSource = expectedPresenterWindow
+        ? source === expectedPresenterWindow
+        : source.opener === window;
+      return expectedSource && hasExpectedWindowPath(source, "presenter.html");
     } catch (_error) {
       return false;
     }
+  }
+
+  function presenterDocument(source) {
+    try {
+      return source.document;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function releaseNavigatedPresenter() {
+    if (!directPresenter?.document) return false;
+    const currentDocument = presenterDocument(directPresenter.source);
+    if (!currentDocument || currentDocument === directPresenter.document) return false;
+    // Reloads retain the WindowProxy but replace its browser-owned Document.
+    // Rearm from that local navigation evidence, never from an init message.
+    expectedPresenterWindow = directPresenter.source;
+    directPresenter = null;
+    document.documentElement.dataset.presenterChannel = "pending";
+    return true;
   }
 
   function targetOriginFor(origin) {
@@ -815,6 +835,7 @@
   }
 
   function sendPresenterPairingOffer() {
+    if (releaseNavigatedPresenter()) offerPresenterPairing();
     if (!expectedPresenterWindow || expectedPresenterWindow.closed || directPresenter?.authenticated) return;
     try {
       expectedPresenterWindow.postMessage({
@@ -828,19 +849,32 @@
     }
   }
 
+  function offerPresenterPairing() {
+    presenterPairingOfferId = createChannelId();
+    clearPresenterOffers();
+    [0, 100, 250, 500, 1000, 2000, 3500].forEach((delay) => {
+      presenterOfferTimers.push(window.setTimeout(sendPresenterPairingOffer, delay));
+    });
+  }
+
   function installPresenterWindowTracking() {
     const nativeOpen = window.open;
     window.open = function trackedWindowOpen(url, target, features) {
-      const opened = Reflect.apply(nativeOpen, window, [url, target, features]);
+      // Opaque file origins cannot expose a replaced Document. A fresh local
+      // console avoids an old document claiming a new offer before navigation;
+      // HTTP(S) keeps the familiar named-window reuse and automatic refresh.
+      const windowTarget = window.location.protocol === "file:" && target === "foldline-presenter"
+        ? `foldline-presenter-${createChannelId()}`
+        : target;
+      const opened = Reflect.apply(nativeOpen, window, [url, windowTarget, features]);
       try {
         const targetUrl = new URL(String(url), window.location.href);
         if (opened && target === "foldline-presenter" && targetUrl.pathname.endsWith("/presenter.html")) {
           expectedPresenterWindow = opened;
-          presenterPairingOfferId = createChannelId();
-          clearPresenterOffers();
-          [0, 100, 250, 500, 1000, 2000, 3500].forEach((delay) => {
-            presenterOfferTimers.push(window.setTimeout(sendPresenterPairingOffer, delay));
-          });
+          // P is a local user action: it navigates the named HTTP window or
+          // selects a fresh file window, then rearms only that exact peer.
+          directPresenter = null;
+          offerPresenterPairing();
         }
       } catch (_error) {
         // Preserve native window.open behavior for unrelated or malformed URLs.
@@ -856,6 +890,11 @@
 
   function handleWindowMessage(event) {
     if (!isAllowedMessageOrigin(event.origin)) return;
+    if (directPresenter) {
+      if (event.source !== directPresenter.source || event.origin !== directPresenter.origin) return;
+      if (releaseNavigatedPresenter()) offerPresenterPairing();
+    }
+    if (!directPresenter && !isExpectedPresenterSource(event.source)) return;
     const envelope = event.data;
     if (!envelope
       || envelope.protocol !== WINDOW_PROTOCOL
@@ -863,13 +902,19 @@
       || !Number.isFinite(envelope.timestamp)
       || Math.abs(Date.now() - envelope.timestamp) > 15000) return;
 
-    if (envelope.type === "handshake-init") {
-      if (!isExpectedPresenterSource(event.source, envelope.offerId)) return;
+    if (!directPresenter) {
+      if (envelope.type !== "handshake-init") return;
+      // Named-window ownership is proved with the latest locally issued offer,
+      // even when the selected presenter also happens to have this deck as opener.
+      if (expectedPresenterWindow && (!WINDOW_CHANNEL_PATTERN.test(presenterPairingOfferId)
+        || envelope.offerId !== presenterPairingOfferId)) return;
       directPresenter = {
         source: event.source,
+        document: presenterDocument(event.source),
         origin: event.origin,
         channelId: envelope.channelId,
         challenge: createChannelId(),
+        phase: "waiting-response",
         authenticated: false,
       };
       document.documentElement.dataset.presenterChannel = "challenged";
@@ -877,15 +922,19 @@
       return;
     }
 
-    if (!directPresenter
-      || event.source !== directPresenter.source
-      || event.origin !== directPresenter.origin
-      || envelope.channelId !== directPresenter.channelId) return;
+    if (envelope.channelId !== directPresenter.channelId) return;
+    // During pagehide the exact, already bound WindowProxy may temporarily hide
+    // its location. It can relinquish that channel, but cannot use this exception
+    // to authenticate or send commands from another document/path.
+    if (envelope.type !== "disconnect" && !hasExpectedWindowPath(event.source, "presenter.html")) return;
 
-    if (envelope.type === "handshake-response") {
-      if (directPresenter.authenticated || envelope.challenge !== directPresenter.challenge) return;
+    // The local phase determines the only permitted transition. A replayed init
+    // cannot replace a pending challenge or an established shared key.
+    if (directPresenter.phase === "waiting-response") {
+      if (envelope.type !== "handshake-response" || envelope.challenge !== directPresenter.challenge) return;
       rotateSharedAuthentication();
       lastCommandSequence = 0;
+      directPresenter.phase = "authenticated";
       directPresenter.authenticated = true;
       clearPresenterOffers();
       document.documentElement.dataset.presenterChannel = "authenticated";
@@ -897,7 +946,17 @@
       return;
     }
 
-    if (!directPresenter.authenticated || envelope.type !== "payload") return;
+    if (directPresenter.phase !== "authenticated" || !directPresenter.authenticated) return;
+    if (envelope.type === "disconnect") {
+      // A paired document relinquishes its channel on pagehide. Its replacement
+      // must prove a fresh offer; arbitrary init/challenge replays never reset it.
+      expectedPresenterWindow = directPresenter.source;
+      directPresenter = null;
+      document.documentElement.dataset.presenterChannel = "pending";
+      offerPresenterPairing();
+      return;
+    }
+    if (envelope.type !== "payload") return;
     const message = envelope.payload;
     if (message?.type === "request-state") publishState();
     else relayCommand(message);
@@ -992,7 +1051,10 @@
   }
 
   async function acceptSharedMessage(envelope) {
-    if (!await verifySharedEnvelope(envelope, new Set(["command", "request-state"]))) return;
+    const peer = directPresenter;
+    if (!peer?.authenticated
+      || !await verifySharedEnvelope(envelope, new Set(["command", "request-state"]))
+      || directPresenter !== peer || !peer.authenticated) return;
     if (envelope.kind === "request-state") {
       if (validStateRequest(envelope.payload)) publishState();
       return;

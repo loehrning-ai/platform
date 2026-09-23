@@ -3,13 +3,13 @@
   "evidenceMode": "historical-recording-and-synthetic-simulation",
   "sourceHashes": {
     "lib/cover-globe.css": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
-    "lib/deck-runtime.js": "c7921257d17b52b488df6597245d09ddc1c8b40f4349e21621f33c4101aa98b6",
+    "lib/deck-runtime.js": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
     "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
     "lib/demo-adapter.js": "cf1160c0b213550c2d77903476ba00eeafb00c63957febb04ba6ec9e2d035dac",
     "lib/model-capture-data.js": "027d9dfceb519c83442d24272b02810ff7614029a937ae14496431b97729b706",
     "lib/presenter-notes.js": "3d64e63bb0d3790ddeb00b5ea9c2b69f76ce515f7d6062171529f7e5df4c4a86",
     "lib/presenter.css": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
-    "lib/presenter.js": "7a0f7af7269cb913e4c9fb90702e947d79dc6f2f905758dcbf95a6a57ab96e6f",
+    "lib/presenter.js": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
     "lib/replay-data.js": "dfd9e929ac49520b347e6ba78f765c5dd2534c14d7ff7f8b45dd4a75f52d2ceb",
     "lib/story.css": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
     "lib/tokens.css": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
@@ -61,8 +61,8 @@
     },
     {
       "path": "lib/deck-runtime.js",
-      "sizeBytes": 49878,
-      "sha256": "c7921257d17b52b488df6597245d09ddc1c8b40f4349e21621f33c4101aa98b6"
+      "sizeBytes": 52931,
+      "sha256": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c"
     },
     {
       "path": "lib/deck-stage.js",
@@ -91,8 +91,8 @@
     },
     {
       "path": "lib/presenter.js",
-      "sizeBytes": 32250,
-      "sha256": "7a0f7af7269cb913e4c9fb90702e947d79dc6f2f905758dcbf95a6a57ab96e6f"
+      "sizeBytes": 33349,
+      "sha256": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d"
     },
     {
       "path": "lib/replay-data.js",

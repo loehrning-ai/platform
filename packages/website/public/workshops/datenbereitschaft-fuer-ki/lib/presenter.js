@@ -90,6 +90,7 @@
     channelId: createChannelId(),
     challenge: null,
     offerId: null,
+    phase: "waiting-challenge",
     authenticated: false,
   } : null;
   let manifestSignature = "";
@@ -144,60 +145,70 @@
   }
 
   function beginWindowHandshake() {
-    if (!directDeck || directDeck.authenticated) return;
+    if (!directDeck || directDeck.phase !== "waiting-challenge") return;
     document.documentElement.dataset.windowChannel = "pending";
     postWindowEnvelope("handshake-init", { offerId: directDeck.offerId });
   }
 
-  async function handleWindowMessage(event) {
+  function acceptPairingOffer(event) {
+    // This is only an unprivileged named-window bootstrap. The offered source is
+    // bound before any challenge/key is accepted, and the deck must subsequently
+    // verify this exact presenter WindowProxy and the echoed offer nonce.
+    if (directDeck && directDeck.phase !== "waiting-challenge") return;
     const envelope = event.data;
-    if (isAllowedMessageOrigin(event.origin)
-      && envelope?.protocol === WINDOW_PROTOCOL
-      && envelope.type === "pairing-offer"
-      && WINDOW_CHANNEL_PATTERN.test(String(envelope.offerId || ""))
-      && Number.isFinite(envelope.timestamp)
-      && Math.abs(Date.now() - envelope.timestamp) <= 15000
-      && event.source
-      && hasExpectedDeckPath(event.source)
-      && !directDeck?.authenticated) {
-      directDeck = {
-        source: event.source,
-        origin: event.origin,
-        channelId: createChannelId(),
-        challenge: null,
-        offerId: envelope.offerId,
-        authenticated: false,
-      };
-      beginWindowHandshake();
-      return;
-    }
-    if (!directDeck || !isAllowedMessageOrigin(event.origin) || !isExpectedDeckSource(event.source)) return;
+    if (!envelope || envelope.protocol !== WINDOW_PROTOCOL
+      || envelope.type !== "pairing-offer"
+      || !WINDOW_CHANNEL_PATTERN.test(String(envelope.offerId || ""))
+      || !Number.isFinite(envelope.timestamp)
+      || Math.abs(Date.now() - envelope.timestamp) > 15000) return;
+    if (directDeck?.source === event.source && directDeck.offerId === envelope.offerId) return;
+    directDeck = {
+      source: event.source,
+      origin: event.origin,
+      channelId: createChannelId(),
+      challenge: null,
+      offerId: envelope.offerId,
+      phase: "waiting-challenge",
+      authenticated: false,
+    };
+    beginWindowHandshake();
+  }
+
+  async function handleWindowMessage(event) {
+    if (!isAllowedMessageOrigin(event.origin) || !event.source || event.source === window
+      || !hasExpectedDeckPath(event.source)) return;
+    acceptPairingOffer(event);
+    // All authentication-bearing envelopes require the already bound exact peer.
+    if (!directDeck || !isExpectedDeckSource(event.source) || event.origin !== directDeck.origin) return;
+    const envelope = event.data;
     if (!envelope
       || envelope.protocol !== WINDOW_PROTOCOL
       || envelope.channelId !== directDeck.channelId
       || !Number.isFinite(envelope.timestamp)
       || Math.abs(Date.now() - envelope.timestamp) > 15000) return;
-    directDeck.origin = event.origin;
-
-    if (envelope.type === "handshake-challenge") {
-      if (!WINDOW_CHANNEL_PATTERN.test(String(envelope.challenge || ""))) return;
+    if (directDeck.phase === "waiting-challenge") {
+      if (envelope.type !== "handshake-challenge"
+        || !WINDOW_CHANNEL_PATTERN.test(String(envelope.challenge || ""))) return;
       directDeck.challenge = envelope.challenge;
+      directDeck.phase = "waiting-ack";
       postWindowEnvelope("handshake-response", { challenge: directDeck.challenge });
       return;
     }
 
-    if (envelope.type === "handshake-ack") {
-      if (!directDeck.challenge
+    if (directDeck.phase === "waiting-ack") {
+      if (envelope.type !== "handshake-ack" || !directDeck.challenge
         || envelope.challenge !== directDeck.challenge
         || !SHARED_SECRET_PATTERN.test(String(envelope.sharedSecret || ""))) return;
-      const acknowledgedChannelId = directDeck.channelId;
-      const acknowledgedChallenge = directDeck.challenge;
+      const acknowledgedPeer = directDeck;
+      acknowledgedPeer.phase = "importing-key";
       const importedKey = await importSharedAuthKey(envelope.sharedSecret);
-      if (!importedKey
-        || directDeck.channelId !== acknowledgedChannelId
-        || directDeck.challenge !== acknowledgedChallenge
-        || directDeck.authenticated) return;
+      if (directDeck !== acknowledgedPeer || acknowledgedPeer.phase !== "importing-key") return;
+      if (!importedKey) {
+        acknowledgedPeer.phase = "waiting-ack";
+        return;
+      }
       sharedAuthKey = importedKey;
+      directDeck.phase = "authenticated";
       directDeck.authenticated = true;
       activeSyncSessionId = "";
       commandSequence = 0;
@@ -210,7 +221,7 @@
       return;
     }
 
-    if (!directDeck.authenticated || envelope.type !== "payload") return;
+    if (directDeck.phase !== "authenticated" || !directDeck.authenticated || envelope.type !== "payload") return;
     renderState(envelope.payload, { authenticated: true });
   }
 
@@ -382,9 +393,9 @@
 
   function restartWindowHandshake() {
     if (!directDeck || !openerCanReauthenticate()) return;
-    directDeck.authenticated = false;
-    directDeck.challenge = null;
-    directDeck.channelId = createChannelId();
+    if (directDeck.authenticated) postWindowEnvelope("disconnect");
+    // Replacing the peer object also invalidates any in-flight key import.
+    directDeck = { ...directDeck, authenticated: false, challenge: null, channelId: createChannelId(), phase: "waiting-challenge" };
     sharedAuthKey = null;
     activeSyncSessionId = "";
     lastStateSequence = 0;
@@ -691,6 +702,9 @@
       }
     });
     window.addEventListener("message", (event) => { void handleWindowMessage(event); });
+    window.addEventListener("pagehide", () => {
+      if (directDeck?.authenticated) postWindowEnvelope("disconnect");
+    });
     window.addEventListener("keydown", onKey);
 
     // A pointer click (event.detail > 0) releases focus so Space/Enter never repeat the clicked control.
