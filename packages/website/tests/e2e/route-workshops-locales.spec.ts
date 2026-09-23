@@ -20,6 +20,12 @@ const WORKSHOP_ROUTES = [
     enHeading: "Read business reports with AI",
     materialCount: 2,
   },
+  {
+    path: "/workshops/datenbereitschaft-fuer-ki",
+    deHeading: "Sind deine Daten bereit für KI?",
+    enHeading: "Are your data ready for AI?",
+    materialCount: 4,
+  },
 ] as const;
 
 const GERMAN_INTERFACE_TOKENS =

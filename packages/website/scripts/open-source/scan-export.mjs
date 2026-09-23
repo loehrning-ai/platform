@@ -1229,11 +1229,24 @@ function isPublicUrlPathTokenSpan(line, start, end) {
   return false;
 }
 
-function isPublicBase64Token(line, basename, match) {
+function isPublicBase64Token(line, basename, match, rel) {
   const token = match[0];
   const start = match.index;
   const end = start + token.length;
   const before = line.slice(0, start);
+  // The root manifest declares public filenames, not credential values. Only
+  // exempt an entire path field backed by a schema-valid asset entry. The
+  // normal asset pass still checks presence, byte size, magic and exact hash;
+  // other fields and explicit credential patterns remain fully scanned.
+  if (rel === ASSET_MANIFEST_BASENAME) {
+    const pathField = /^\s*"path":\s*"([^"\\]+)"\s*,?\s*$/.exec(line);
+    if (pathField && assetManifestEntries.has(pathField[1])) {
+      const pathStart = line.indexOf(pathField[1], line.indexOf(":"));
+      if (start >= pathStart && end <= pathStart + pathField[1].length) {
+        return true;
+      }
+    }
+  }
   if (before.endsWith(";base64,")) return true;
   if (
     /^sha(?:256|384|512)-[A-Za-z0-9+/_-]{20,}={0,2}$/i.test(token)
@@ -1317,7 +1330,7 @@ function scanText(rel, basename, text) {
       base64Matches.some(
         (match) =>
           hasBase64SecretShape(match[0]) &&
-          !isPublicBase64Token(line, basename, match),
+          !isPublicBase64Token(line, basename, match, rel),
       )
     ) {
       addFinding(

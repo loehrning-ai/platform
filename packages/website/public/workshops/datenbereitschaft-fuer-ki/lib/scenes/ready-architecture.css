@@ -1,0 +1,273 @@
+/* ready-architecture (spec C.9): the shared top row (same boxes as bad-architecture) plus the one
+   isometric boundary drawing. Section coordinates, 1920x1080; content 224–984.
+   Shared top-row geometry, asserted by _build/scene-checks/ready-architecture.mjs and mirrored from
+   bad-architecture: node boxes 136 px at left 96 / 392 / 688, top 240. The five views sit where
+   bad-architecture shows its export stack (left 1280, top 240). */
+
+#ready-architecture .ra-stage {
+  position: absolute;
+  inset: 0;
+}
+
+#ready-architecture .ra-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#ready-architecture .ra-edge--approved {
+  stroke-width: 4;
+}
+
+#ready-architecture .ra-lane {
+  position: absolute;
+  top: 120px;
+  right: 96px;
+}
+
+/* Shared top row. */
+#ready-architecture .ra-node {
+  position: absolute;
+  top: 240px;
+  width: 136px;
+}
+
+#ready-architecture #ready-architecture-node-question { left: 96px; }
+#ready-architecture #ready-architecture-node-app { left: 392px; }
+#ready-architecture #ready-architecture-node-model { left: 688px; }
+
+#ready-architecture .ra-key {
+  top: -28px;
+  right: -28px;
+  width: 60px;
+  height: 60px;
+}
+
+#ready-architecture .ra-key .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 7;
+}
+
+/* The login label sits on the key's line, above the route that leaves the AI model. */
+#ready-architecture .ra-login {
+  position: absolute;
+  top: 226px;
+  left: 872px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Left column callouts, right-aligned to x 440 like the company node (right edge 438). Each label
+   carries an SVG leader that ends on the part it names: "Private data" on the stack's top-left edge
+   (557, 579), "Database permission" on the wall's left end (502, 880). */
+#ready-architecture .ra-private {
+  position: absolute;
+  top: 560px;
+  left: 96px;
+  width: 344px;
+  text-align: right;
+}
+
+#ready-architecture .ra-private p {
+  margin: 0;
+}
+
+#ready-architecture .ra-private__name {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#ready-architecture .ra-private__sub {
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+/* Lock badge centred on the stack's top face (section 610, 629). */
+#ready-architecture .ra-lock {
+  position: absolute;
+  top: 597px;
+  left: 578px;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#ready-architecture .ra-company {
+  position: absolute;
+  top: 690px;
+  left: 96px;
+  display: flex;
+  height: 72px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#ready-architecture .ra-permission {
+  position: absolute;
+  top: 859px;
+  left: 96px;
+  width: 344px;
+  margin: 0;
+  padding: 4px 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* The AI model on its side of the wall: stands on the iso-ai plinth (top face centre 1030, 860). */
+#ready-architecture .ra-ai {
+  position: absolute;
+  top: 770px;
+  left: 982px;
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+/* The five approved views, numbered. The number is real text: a print-rendered PDF paints a
+   CSS counter as a real glyph even though getComputedStyle cannot resolve it, so a counter here
+   would read as visible words in the room but as invisible ones to every text-based check. */
+#ready-architecture .ra-views {
+  position: absolute;
+  top: 240px;
+  left: 1280px;
+  width: 544px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--leinen);
+}
+
+#ready-architecture .ra-views li {
+  position: relative;
+  display: flex;
+  height: 80px;
+  align-items: center;
+  padding-left: 72px;
+  border-bottom: 2px solid var(--leinen);
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#ready-architecture .ra-views .ra-num {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  font-size: 26px;
+  font-weight: 600;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Beside the stop bar at the wall's right end. */
+#ready-architecture .ra-noaccess {
+  position: absolute;
+  top: 560px;
+  left: 950px;
+}
+
+/* SVG overlays. */
+#ready-architecture .ra-leader path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+#ready-architecture .ra-leader rect {
+  fill: var(--ink);
+}
+
+#ready-architecture .ra-sight path {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#ready-architecture .ra-blocked__path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 5;
+  stroke-dasharray: 14 9;
+}
+
+#ready-architecture .ra-blocked__stop {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 10;
+  stroke-linecap: square;
+}
+
+/* One Mennige group per step; the previous focus returns to ink on the next press. */
+#ready-architecture[data-step-current="0"] .ra-top-edges path {
+  stroke: var(--mennige);
+  stroke-width: 6;
+}
+
+#ready-architecture[data-step-current="0"] .ra-top-heads polygon {
+  fill: var(--mennige);
+}
+
+#ready-architecture[data-step-current="1"] .ra-lock {
+  border-color: var(--mennige);
+  color: var(--mennige);
+}
+
+#ready-architecture[data-step-current="2"] .ra-leader--wall path {
+  stroke: var(--mennige);
+  stroke-width: 6;
+}
+
+#ready-architecture[data-step-current="2"] .ra-leader--wall rect {
+  fill: var(--mennige);
+}
+
+#ready-architecture[data-step-current="3"] .ra-sight path {
+  stroke: var(--mennige);
+}
+
+#ready-architecture[data-step-current="4"] .ra-blocked__path,
+#ready-architecture[data-step-current="4"] .ra-blocked__stop {
+  stroke: var(--mennige);
+}
+
+/* Spec H E24: the stop bar and "No access" are caused by the blocked packet; they start when it arrives. */
+#ready-architecture {
+  --ra-arrive: 350ms;
+}
+
+#ready-architecture .ra-blocked .packet {
+  --m-travel: var(--ra-arrive);
+}
+
+#ready-architecture .ra-blocked__stop,
+#ready-architecture .ra-noaccess {
+  animation-delay: var(--ra-arrive);
+}

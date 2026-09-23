@@ -1,0 +1,116 @@
+/* cover (spec C.1): the dark globe cover. The globe keeps its canonical contract (lib/cover-globe.css
+   and the #cover .workshop-globe crop in lib/story.css); everything here sits above it. The one
+   accent is the question card's Mennige left bar (q-card--dark). */
+
+#cover > .cover-brand,
+#cover > .cover-date,
+#cover > .cover-question,
+#cover > .cover-experiment,
+#cover > .cover-meta {
+  position: absolute;
+  z-index: 1;
+  left: var(--margin-x);
+  margin: 0;
+}
+
+#cover > .scene-title {
+  z-index: 1;
+  top: 248px;
+  color: var(--papier);
+  font-size: var(--t-display);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+/* The lockup plus the co-brand word: part of the lockup, outside the content word count. */
+#cover > .cover-brand {
+  top: 64px;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--leinen);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+#cover > .cover-brand::after {
+  content: "× Brainster";
+}
+
+#cover .cover-brand__lockup {
+  display: block;
+  width: auto;
+  height: 40px;
+}
+
+#cover > .cover-date {
+  top: 192px;
+  color: var(--leinen);
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+#cover > .cover-question {
+  top: 496px;
+  width: 1040px;
+  max-width: 1040px;
+}
+
+#cover > .cover-question .q-card__label {
+  color: var(--leinen);
+}
+
+#cover > .cover-experiment {
+  top: 760px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#cover .cover-stamp {
+  padding: 12px 20px;
+  border-color: var(--papier);
+  background: var(--graphit);
+  color: var(--papier);
+  white-space: nowrap;
+}
+
+#cover .cover-stamp--change {
+  background: var(--papier);
+  color: var(--graphit);
+}
+
+#cover .cover-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--leinen);
+}
+
+#cover .cover-arrow {
+  flex: none;
+  overflow: visible;
+}
+
+#cover .cover-arrow__line {
+  fill: none;
+  stroke: var(--papier);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#cover .cover-arrow__head {
+  fill: var(--papier);
+  stroke: none;
+}
+
+#cover > .cover-meta {
+  top: 872px;
+  color: var(--leinen);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}

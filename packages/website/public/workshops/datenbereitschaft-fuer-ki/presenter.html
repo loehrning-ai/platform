@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f3f0e9" />
+  <title>Presenter · Data Readiness for AI</title>
+  <link rel="icon" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/presenter.css" />
+  <script src="./lib/presenter-notes.js" defer></script>
+  <script src="./lib/presenter.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#presenter-main">Skip to presenter controls</a>
+  <header class="presenter-head">
+    <div>
+      <p class="eyebrow">loehrning.ai × brainster</p>
+      <h1>Presenter console</h1><p><a href="./slides.html">Open the course first, then press P to connect this console.</a></p>
+    </div>
+    <div class="runtime-block">
+      <strong id="runtime-mode" data-mode="replay">REPLAY PATH</strong>
+      <span id="runtime-status">Waiting for deck state</span>
+      <span id="connection-state" data-state="disconnected" aria-live="polite">DISCONNECTED</span>
+    </div>
+  </header>
+
+  <main class="presenter-grid" id="presenter-main" tabindex="-1">
+    <section class="clock-panel" aria-labelledby="timer-title">
+      <div class="panel-head"><h2 id="timer-title">Workshop clock</h2><span id="pace-state">NOT STARTED</span></div>
+      <output id="timer" data-state="not-started" aria-live="off">NOT STARTED</output>
+      <div class="timer-actions">
+        <button type="button" data-timer-command="toggle">Start</button>
+        <button type="button" data-timer-command="reset">Reset timer</button>
+      </div>
+      <dl class="pace-grid">
+        <div><dt>Scene window</dt><dd id="scene-window">—</dd></div>
+        <div><dt>Workshop target</dt><dd>75:00</dd></div>
+        <div><dt>State age</dt><dd id="state-age">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="scene-panel current-panel" aria-labelledby="current-title">
+      <div class="panel-head"><h2 id="current-title">Current</h2><span id="current-counter">— / —</span></div>
+      <p id="current-section" class="scene-section">Waiting for deck</p>
+      <h3 id="current-label">Open slides.html, then press P</h3>
+      <div class="scene-meta"><code id="current-id">no-scene</code><span id="fragment-state">reveal — / —</span></div>
+      <dl class="step-lines">
+        <div><dt>Now</dt><dd id="step-now">—</dd></div>
+        <div><dt>Next press</dt><dd id="step-next">—</dd></div>
+        <div id="step-ask-row" hidden><dt>Ask aloud now</dt><dd id="step-ask">—</dd></div>
+      </dl>
+      <section class="vote-card" id="vote-card" aria-labelledby="vote-title" hidden>
+        <h4 id="vote-title">Room vote on this step</h4>
+        <p id="vote-prompt">—</p>
+        <p id="vote-expected">—</p>
+      </section>
+    </section>
+
+    <section class="notes-panel" aria-labelledby="notes-title" data-note-key="none">
+      <div class="panel-head"><h2 id="notes-title">Speaker note</h2><code id="note-hook">note:none</code></div>
+      <div id="speaker-note">The presenter console listens for stable scene IDs over BroadcastChannel, storage and opener messaging.</div>
+      <div class="note-detail-grid">
+        <section><h3>Ask</h3><div id="audience-asks">—</div></section>
+        <section><h3>Expected</h3><div id="expected-audience">—</div></section>
+        <section><h3>Reveal / cut</h3><div id="reveal-cut">—</div></section>
+      </div>
+    </section>
+
+    <section class="scene-panel next-panel" aria-labelledby="next-title">
+      <div class="panel-head"><h2 id="next-title">Next</h2><span id="next-kind">—</span></div>
+      <h3 id="next-label">—</h3>
+      <code id="next-id">—</code>
+    </section>
+
+    <section class="control-panel" aria-labelledby="controls-title">
+      <div class="panel-head"><h2 id="controls-title">Deck controls</h2><span>Keyboard works here</span></div>
+      <div class="control-grid">
+        <button type="button" class="return-control" data-deck-command="appendix-return">Return from appendix (Esc)</button>
+        <button type="button" data-deck-command="previous">Previous scene</button>
+        <button type="button" data-deck-command="fragment-previous">Previous reveal</button>
+        <button type="button" class="primary" data-deck-command="fragment-next">Next reveal</button>
+        <button type="button" data-deck-command="next">Next scene</button>
+        <button type="button" data-deck-command="reset-current">Reset scene</button>
+        <button type="button" data-deck-command="full-reset">Full reset</button>
+      </div>
+      <section class="route-list" aria-labelledby="routes-title"><h3 id="routes-title">Appendix routes</h3><div id="appendix-routes">None</div></section>
+      <label class="scene-jump" for="scene-select"><span>Jump by stable scene ID</span><select id="scene-select" disabled><option>Waiting for manifest</option></select></label>
+    </section>
+  </main>
+
+  <p id="connection-announcer" class="sr-only" aria-live="polite">Waiting for deck state.</p>
+</body>
+</html>

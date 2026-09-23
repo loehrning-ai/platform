@@ -1,0 +1,54 @@
+version: 1
+
+models:
+  - name: mrr_summary_monthly
+    contract_version: 1.0.0
+    relation: analytics.mrr_summary_monthly
+    description: One row per complete calendar month with approved company-level MRR snapshots and movements.
+    grain: [month_start]
+    primary_key: [month_start]
+    time:
+      column: month_start
+      type: calendar_month
+      timezone: UTC
+      completeness: month_end_loaded_and_validated
+    dimensions:
+      - name: data_loaded_at_utc
+        type: timestamptz
+        description: UTC timestamp when this serving model finished loading.
+      - name: complete_through_month
+        type: date
+        description: Latest complete calendar month approved for answers.
+      - name: quality_status
+        type: text
+        allowed_values: [passing, failing]
+        description: Result of the required quality gate for this load.
+    measures:
+      - name: ending_mrr_eur
+        type: numeric
+        description: Recurring subscription value active at the final instant of the month, in EUR.
+        additive: false
+    relationships: []
+    owner: replace-with-team
+    sensitivity:
+      classification: aggregate
+      contains_direct_identifiers: false
+    freshness:
+      expected_by: "third business day 09:00 Europe/Berlin"
+      loaded_at_field: data_loaded_at_utc
+      complete_through_field: complete_through_month
+      evaluation_clock_source: runtime_utc
+      warn_after_hours: 36
+    lineage:
+      sources: [replace-with-approved-source-model]
+      transformation: replace-with-versioned-model-or-job
+    quality:
+      - name: unique_month
+        type: unique
+        columns: [month_start]
+      - name: load_passed
+        type: accepted_values
+        column: quality_status
+        values: [passing]
+    limitations:
+      - No account-level dimensions, costs, margin, or profit fields are present.

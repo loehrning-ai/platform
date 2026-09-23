@@ -35,9 +35,9 @@ describe("<WorkshopsContent>", () => {
         name: /Self-study workshops[\s\S]*for concrete decisions/,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/2 guided cases/)).toBeInTheDocument();
+    expect(screen.getByText(/3 guided cases/)).toBeInTheDocument();
     expect(screen.queryByText("Verfügbare Workshops")).toBeNull();
-    expect(screen.getAllByTestId("workshop-row")).toHaveLength(2);
+    expect(screen.getAllByTestId("workshop-row")).toHaveLength(3);
     expect(
       screen.getByRole("heading", {
         level: 3,
@@ -48,7 +48,7 @@ describe("<WorkshopsContent>", () => {
     const outputs = rows.map((row) =>
       within(row).getByText("Decision + evidence"),
     );
-    expect(outputs).toHaveLength(2);
+    expect(outputs).toHaveLength(3);
     for (const output of outputs) {
       expect(output).toHaveAttribute("data-workshop-output");
     }
@@ -91,9 +91,9 @@ describe("<WorkshopsContent>", () => {
     expect(
       container.querySelector("[data-workshop-editorial-spread]"),
     ).not.toBeNull();
-    expect(container.querySelectorAll("[data-decision-card]")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-decision-card]")).toHaveLength(3);
     const previews = container.querySelectorAll("img");
-    expect(previews).toHaveLength(2);
+    expect(previews).toHaveLength(3);
     expect(previews[0]).toHaveAttribute("loading", "eager");
     expect(previews[0]).toHaveAttribute("fetchpriority", "high");
     expect(previews[1]).toHaveAttribute("loading", "lazy");

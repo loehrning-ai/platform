@@ -1,0 +1,44 @@
+version: 1
+
+policy:
+  identity: ai_analytics_reader
+  allow:
+    operations: [select]
+    models: [mrr_summary_monthly]
+    metrics: [ending_mrr]
+  deny:
+    schemas: [raw, core, staging]
+    columns: [account_name, contact_name, contact_email, phone, address]
+    operations: [insert, update, delete, create, alter, drop, copy]
+  execution:
+    max_rows: 1000
+    statement_timeout_ms: 5000
+    require_limit_for_detail: true
+  behavior:
+    freshness:
+      loaded_at_field: data_loaded_at_utc
+      complete_through_field: complete_through_month
+      quality_status_field: quality_status
+      evaluation_clock_source: runtime_utc
+      warn:
+        condition: source_age_hours_gt_model_warn_after_hours
+        action: answer_with_freshness_warning
+        message: The source is beyond its freshness warning threshold; include the load time and age with any answer.
+      block:
+        - condition: requested_period_after_complete_through
+          action: refuse_before_query
+          message: The requested period is not complete on the approved serving model.
+        - condition: quality_status_not_passing
+          action: refuse_before_query
+          message: The serving model has not passed its required quality gate.
+    clarify:
+      - condition: mrr_without_period_or_snapshot_rule
+        message: Specify a complete month or quarter and whether you need a snapshot or movement.
+    refuse:
+      - condition: requested_metric_not_defined_or_supported
+        message: The approved data surface cannot support this metric.
+      - condition: requested_direct_identifier
+        message: Direct identifiers are outside the approved analytics surface.
+  enforcement:
+    application_policy_required: true
+    database_grants_required: true

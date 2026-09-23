@@ -1,0 +1,197 @@
+/* your-data (spec C.17): the worksheet canvas. Five connected boxes (box 3 carries the Four Blanks icons),
+   a grey worked example on writing lines (box 3 answers the Four Blanks in their order), and one "Now:"
+   prompt that changes on each press. No stage bar on the projector (spec H E21: it read as a loading
+   bar); per-box timing lives in the presenter notes. One Mennige group per step: the active box and the segment that
+   draws into it; on the recovery step, the outline round the whole canvas. */
+
+#your-data-privacy {
+  position: absolute;
+  top: 204px;
+  left: 96px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+#your-data-canvas {
+  position: absolute;
+  top: 304px;
+  left: 96px;
+  width: 1728px;
+  height: 456px;
+}
+
+#your-data .yd-path {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+#your-data .yd-box {
+  position: absolute;
+  top: 0;
+  width: 256px;
+  height: 456px;
+  padding: 24px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#your-data-box-1 { left: 0; }
+#your-data-box-2 { left: 320px; }
+#your-data .yd-box--wide { left: 640px; width: 448px; }
+#your-data-box-4 { left: 1152px; }
+#your-data-box-5 { left: 1472px; }
+
+#your-data .yd-box__head {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  gap: 16px;
+}
+
+#your-data .yd-box__label {
+  display: block;
+  margin-top: 16px;
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#your-data .yd-blank {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  flex: none;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+}
+
+/* Writing lines: the part of each box the participant fills. The grey example sits on them. */
+#your-data .yd-rules {
+  position: absolute;
+  top: 164px;
+  right: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+#your-data .yd-rule {
+  display: block;
+  height: 64px;
+  border-bottom: 2px solid var(--leinen);
+}
+
+/* Box 3's example: one line per blank, each led by that blank's icon, in the Four Blanks order. */
+#your-data .yd-ghost--blanks {
+  display: grid;
+}
+
+#your-data .yd-ghost__line {
+  display: flex;
+  height: 64px;
+  align-items: center;
+  gap: 12px;
+}
+
+#your-data .yd-ghost__line .icon {
+  flex: none;
+  color: var(--slate-soft);
+}
+
+#your-data .yd-ghost {
+  position: absolute;
+  top: 164px;
+  right: 24px;
+  left: 24px;
+  margin: 0;
+  padding-top: 15px;
+  color: var(--slate-soft);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 64px;
+}
+
+/* A step's incoming segment lives inside its box, so box and segment are one focus group. */
+#your-data .yd-link {
+  position: absolute;
+  top: 48px;
+  left: -67px;
+  overflow: visible;
+}
+
+#your-data .yd-link__head {
+  fill: var(--ink);
+}
+
+#your-data-now {
+  position: absolute;
+  top: 800px;
+  right: 96px;
+  left: 96px;
+  height: 64px;
+}
+
+#your-data-now > .icon {
+  position: absolute;
+  top: 8px;
+  left: 0;
+}
+
+#your-data .yd-now__text {
+  position: absolute;
+  top: 0;
+  left: 72px;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 64px;
+  white-space: nowrap;
+}
+
+#your-data .yd-now__text b {
+  font-weight: 700;
+}
+
+/* One Mennige group per step (spec B.1). */
+#your-data[data-step-current="0"] #your-data-box-1,
+#your-data[data-step-current="1"] #your-data-box-2,
+#your-data[data-step-current="2"] #your-data-box-3,
+#your-data[data-step-current="3"] #your-data-box-4,
+#your-data[data-step-current="4"] #your-data-box-5 {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+#your-data[data-step-current="1"] #your-data-box-2 .yd-link__line,
+#your-data[data-step-current="2"] #your-data-box-3 .yd-link__line,
+#your-data[data-step-current="3"] #your-data-box-4 .yd-link__line,
+#your-data[data-step-current="4"] #your-data-box-5 .yd-link__line {
+  stroke: var(--mennige);
+  stroke-width: 4;
+}
+
+#your-data[data-step-current="1"] #your-data-box-2 .yd-link__head,
+#your-data[data-step-current="2"] #your-data-box-3 .yd-link__head,
+#your-data[data-step-current="3"] #your-data-box-4 .yd-link__head,
+#your-data[data-step-current="4"] #your-data-box-5 .yd-link__head {
+  fill: var(--mennige);
+}
+
+#your-data[data-step-current="5"] #your-data-canvas {
+  outline: 4px solid var(--mennige);
+  outline-offset: 16px;
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#your-data .yd-link__line {
+  --m-draw: 300ms;
+}

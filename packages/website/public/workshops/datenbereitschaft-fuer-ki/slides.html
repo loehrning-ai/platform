@@ -1,0 +1,1659 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>Data Readiness for AI · loehrning.ai × brainster</title>
+  <meta name="description" content="An interactive workshop showing how governed data interfaces turn plausible analytics answers into correct, bounded and testable ones." />
+  <link rel="icon" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/cover-globe.css" />
+  <link rel="stylesheet" href="./lib/story.css" />
+  <!-- generated:scene-styles -->
+  <link rel="stylesheet" href="./lib/scenes/cover.css" />
+  <link rel="stylesheet" href="./lib/scenes/host.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-case.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-arc.css" />
+  <link rel="stylesheet" href="./lib/scenes/bad-architecture.css" />
+  <link rel="stylesheet" href="./lib/scenes/bad-ask.css" />
+  <link rel="stylesheet" href="./lib/scenes/failure-anatomy.css" />
+  <link rel="stylesheet" href="./lib/scenes/controlled-comparison.css" />
+  <link rel="stylesheet" href="./lib/scenes/ready-architecture.css" />
+  <link rel="stylesheet" href="./lib/scenes/semantic-contract.css" />
+  <link rel="stylesheet" href="./lib/scenes/contract-consumers.css" />
+  <link rel="stylesheet" href="./lib/scenes/ready-rematch.css" />
+  <link rel="stylesheet" href="./lib/scenes/generalization.css" />
+  <link rel="stylesheet" href="./lib/scenes/honest-no.css" />
+  <link rel="stylesheet" href="./lib/scenes/freshness.css" />
+  <link rel="stylesheet" href="./lib/scenes/evaluation.css" />
+  <link rel="stylesheet" href="./lib/scenes/your-data.css" />
+  <link rel="stylesheet" href="./lib/scenes/resolution.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-architecture.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-semantic-contract.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-access-controls.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-evaluation.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-lineage-freshness.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-ask-boundary.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-run-metadata.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix-research.css" />
+  <!-- /generated:scene-styles -->
+  <script src="./lib/deck-stage.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#stage">Skip to workshop</a>
+<main aria-label="Data Readiness for AI workshop">
+<svg class="icon-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs><pattern id="story-hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="14" fill="#121212" /></pattern></defs>
+<!-- generated:sprite -->
+<symbol id="i-ai-model" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="26" y="26" width="48" height="48"/><path d="M38 10v16M50 10v16M62 10v16M38 74v16M50 74v16M62 74v16M10 38h16M10 50h16M10 62h16M74 38h16M74 50h16M74 62h16"/><g fill="currentColor" stroke="none"><path d="M50 36l14 14-14 14-14-14z"/></g></symbol>
+<symbol id="i-app" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="12" width="84" height="76"/><path d="M8 30h84M20 72h36"/><rect x="20" y="42" width="46" height="16"/><g fill="currentColor" stroke="none"><rect x="68" y="40" width="14" height="20"/></g></symbol>
+<symbol id="i-book" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="16" y="8" width="68" height="72"/><path d="M28 8v72M16 80v12h68V80M40 46h24"/><g fill="currentColor" stroke="none"><rect x="40" y="22" width="32" height="12"/></g></symbol>
+<symbol id="i-calendar" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 32v58h80V32M30 8v10M70 8v10"/><rect x="20" y="52" width="12" height="12"/><rect x="44" y="52" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><g fill="currentColor" stroke="none"><rect x="8" y="16" width="84" height="16"/></g></symbol>
+<symbol id="i-canvas" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="12" y="8" width="76" height="84"/><path d="M24 22h32"/><rect x="24" y="34" width="20" height="16"/><rect x="56" y="34" width="20" height="16"/><rect x="24" y="62" width="20" height="16"/><rect x="56" y="62" width="20" height="16"/></symbol>
+<symbol id="i-change" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 50h84M30 50V18M18 26l12-12 12 12M70 50v32M58 74l12 12 12-12"/></symbol>
+<symbol id="i-chart" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M12 10v78h78M26 70l16-16 12 12 26-26"/><g fill="currentColor" stroke="none"><rect x="74" y="34" width="12" height="12"/></g></symbol>
+<symbol id="i-checklist" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="14" y="14" width="72" height="78"/><path d="M26 44l8 8 14-14M56 46h18M26 72l8 8 14-14M56 74h18"/><g fill="currentColor" stroke="none"><rect x="34" y="8" width="32" height="12"/></g></symbol>
+<symbol id="i-clarify" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M74 20V8H8v48h12"/><path d="M20 20h72v54H78v18L60 74H20z"/><path d="M48 32h16v10h-8v6"/><g fill="currentColor" stroke="none"><rect x="52" y="56" width="8" height="8"/></g></symbol>
+<symbol id="i-clock" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="50" cy="56" r="34"/><path d="M50 36v20h16M40 10h20M50 10v12"/></symbol>
+<symbol id="i-company" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 90V18h42v72M58 40h26v50M8 90h84M28 32h18M28 48h18M28 64h18"/><g fill="currentColor" stroke="none"><rect x="30" y="74" width="14" height="16"/></g></symbol>
+<symbol id="i-compiler" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M32 50h16M48 18v64M48 18h16M48 50h16M48 82h16"/><rect x="64" y="10" width="26" height="16"/><rect x="64" y="42" width="26" height="16"/><rect x="64" y="74" width="26" height="16"/><g fill="currentColor" stroke="none"><rect x="8" y="38" width="24" height="24"/></g></symbol>
+<symbol id="i-contract" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M20 8h40l20 20v64H20z"/><path d="M60 8v20h20M32 40h36M32 54h36M32 68h14"/><g fill="currentColor" stroke="none"><rect x="56" y="66" width="14" height="14"/></g></symbol>
+<symbol id="i-database" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 22a34 10 0 0 0 68 0a34 10 0 0 0-68 0z"/><path d="M16 22v56a34 10 0 0 0 68 0V22M16 50a34 10 0 0 0 68 0"/></symbol>
+<symbol id="i-deny" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="30" width="84" height="26"/><path d="M36 36L22 50M58 36L44 50M80 36L66 50M22 56v34M78 56v34M12 90h20M68 90h20"/></symbol>
+<symbol id="i-export" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="20" width="54" height="60"/><path d="M8 40h54M8 60h54M26 40v40M44 40v40M72 50h14M78 38l12 12-12 12"/></symbol>
+<symbol id="i-fail" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M32 32l36 36M68 32L32 68"/></symbol>
+<symbol id="i-gap" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 26V10h16M42 10h16M74 10h16v16M90 42v16M10 42v16M10 74v16h16M42 90h16"/><g fill="currentColor" stroke="none"><rect x="72" y="72" width="20" height="20"/></g></symbol>
+<symbol id="i-key" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="34" width="32" height="32"/><path d="M40 50h50M78 50v16M90 50v12"/><g fill="currentColor" stroke="none"><rect x="20" y="46" width="8" height="8"/></g></symbol>
+<symbol id="i-level" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M14 12v78h72V12M24 44h52"/><g fill="currentColor" stroke="none"><rect x="24" y="54" width="52" height="28"/></g></symbol>
+<symbol id="i-lock" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M34 44V20h32v24"/><rect x="20" y="44" width="60" height="46"/><g fill="currentColor" stroke="none"><rect x="44" y="58" width="12" height="18"/></g></symbol>
+<symbol id="i-metric" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 28h62l22 22-22 22H8z"/><path d="M22 42h28M22 58h28"/></symbol>
+<symbol id="i-pass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M28 50l14 14 30-30"/></symbol>
+<symbol id="i-person" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="50" cy="28" r="16"/><path d="M18 92V72l16-16h32l16 16v20"/></symbol>
+<symbol id="i-question" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 12h84v60H46L28 90V72H8z"/><path d="M38 24h24v14H50v8"/><g fill="currentColor" stroke="none"><rect x="46" y="54" width="8" height="8"/></g></symbol>
+<symbol id="i-refuse" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M34 8h32l26 26v32L66 92H34L8 66V34z"/><g fill="currentColor" stroke="none"><rect x="26" y="44" width="48" height="12"/></g></symbol>
+<symbol id="i-room-vote" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="38" cy="24" r="12"/><path d="M22 92V50h32v42M54 56l20-20V8"/></symbol>
+<symbol id="i-rows" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="42" width="80" height="16"/><rect x="10" y="70" width="80" height="16"/><g fill="currentColor" stroke="none"><rect x="8" y="12" width="84" height="20"/></g></symbol>
+<symbol id="i-settings" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="28" y="12" width="16" height="16"/><rect x="36" y="72" width="16" height="16"/><path d="M8 20h20M44 20h48M8 50h48M76 50h16M8 80h28M52 80h40"/><g fill="currentColor" stroke="none"><rect x="56" y="40" width="20" height="20"/></g></symbol>
+<symbol id="i-shield" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 10h68v48L50 92 16 58z"/><g fill="currentColor" stroke="none"><rect x="40" y="34" width="20" height="20"/></g></symbol>
+<symbol id="i-table" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="14" width="84" height="72"/><path d="M8 38h84M8 62h84M36 38v48M64 38v48"/></symbol>
+<symbol id="i-view" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 50l22-22h40l22 22-22 22H30z"/><g fill="currentColor" stroke="none"><rect x="40" y="40" width="20" height="20"/></g></symbol>
+<symbol id="iso-stack" viewBox="126 169 321 302"><polygon points="130.5,377.0 286.4,467.0 286.4,437.0 130.5,347.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="442.3,377.0 286.4,467.0 286.4,437.0 442.3,347.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="286.4,257.0 442.3,347.0 286.4,437.0 130.5,347.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="130.5,335.0 286.4,425.0 286.4,395.0 130.5,305.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="442.3,335.0 286.4,425.0 286.4,395.0 442.3,305.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="286.4,215.0 442.3,305.0 286.4,395.0 130.5,305.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="130.5,293.0 286.4,383.0 286.4,353.0 130.5,263.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="442.3,293.0 286.4,383.0 286.4,353.0 442.3,263.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="286.4,173.0 442.3,263.0 286.4,353.0 130.5,263.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/></symbol>
+<symbol id="iso-wall" viewBox="155 192 475 441"><defs><pattern id="iso-hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="14" fill="#121212"/></pattern></defs><polygon points="160.0,618.0 179.0,629.0 179.0,465.0 160.0,454.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="625.9,371.0 179.0,629.0 179.0,465.0 625.9,207.0" fill="#D4CEC5" stroke="none"/><polygon points="625.9,371.0 179.0,629.0 179.0,465.0 625.9,207.0" fill="url(#iso-hatch)" stroke="none"/><polygon points="625.9,371.0 179.0,629.0 179.0,465.0 625.9,207.0" fill="none" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="606.8,196.0 625.9,207.0 179.0,465.0 160.0,454.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/></symbol>
+<symbol id="iso-panes" viewBox="204 254 407 336"><polygon points="534.1,392.0 544.5,398.0 544.5,300.0 534.1,294.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="606.8,362.0 544.5,398.0 544.5,300.0 606.8,264.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="596.4,258.0 606.8,264.0 544.5,300.0 534.1,294.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="452.7,439.0 463.1,445.0 463.1,347.0 452.7,341.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="525.4,409.0 463.1,445.0 463.1,347.0 525.4,311.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="515.0,305.0 525.4,311.0 463.1,347.0 452.7,341.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="371.3,486.0 381.7,492.0 381.7,394.0 371.3,388.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="444.0,456.0 381.7,492.0 381.7,394.0 444.0,358.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="433.6,352.0 444.0,358.0 381.7,394.0 371.3,388.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="289.9,533.0 300.3,539.0 300.3,441.0 289.9,435.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="362.6,503.0 300.3,539.0 300.3,441.0 362.6,405.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="352.2,399.0 362.6,405.0 300.3,441.0 289.9,435.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="208.5,580.0 218.9,586.0 218.9,488.0 208.5,482.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="281.2,550.0 218.9,586.0 218.9,488.0 281.2,452.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="270.8,446.0 281.2,452.0 218.9,488.0 208.5,482.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/></symbol>
+<symbol id="iso-ai" viewBox="564 570 203 164"><polygon points="568.7,674.0 665.7,730.0 665.7,686.0 568.7,630.0" fill="#E5E4E2" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="762.7,674.0 665.7,730.0 665.7,686.0 762.7,630.0" fill="#D4CEC5" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/><polygon points="665.7,574.0 762.7,630.0 665.7,686.0 568.7,630.0" fill="#F2F1EE" stroke="#121212" stroke-width="3" stroke-linejoin="miter"/></symbol>
+<!-- /generated:sprite -->
+</svg>
+<deck-stage id="stage" width="1920" height="1080">
+
+  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="Data Readiness for AI" data-section="Workshop 03 · 24 September 2026" data-track="" data-seconds="45" data-note-key="cover" data-note="One business question, asked twice. The data never changes; only what the AI can see changes. Keep the opening short." data-design="v3" data-route="none">
+  <!-- scene:cover -->
+    <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
+    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
+    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 03 · 24 September 2026</p>
+    <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">Data Readiness<br />for AI.</h1>
+    <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <div>
+        <span class="q-card__label">One question, held fixed</span>
+        <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
+      </div>
+    </div>
+    <div class="cover-experiment" id="cover-experiment" data-step="1" data-visual>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same question</span>
+      <span class="cover-dot" aria-hidden="true"></span>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same data</span>
+      <span class="cover-dot" aria-hidden="true"></span>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same AI route</span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:1"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp cover-stamp--change" data-motion="stamp" style="--order:1">Change the interface</span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:1"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:1">Measure the answer</span>
+    </div>
+    <p class="cover-meta" id="cover-meta" data-motion="fade" style="--order:1">75 minutes · synthetic teaching case</p>
+  <!-- /scene:cover -->
+  </section>
+
+  <section class="slide" id="host" data-act="0" data-kind="main" data-label="Your host" data-section="Your host" data-track="" data-seconds="60" data-note-key="host" data-note="Keep this to 60 seconds: who you are, why it matters, and that the company data is made up. Then move straight on." data-design="v3" data-route="hidden">
+  <!-- scene:host -->
+    <figure class="host-portrait" id="host-portrait" data-motion="fade" style="--order:0"><svg viewBox="0 0 480 480" width="480" height="480" role="img" aria-label="Workshop host symbol"><rect width="480" height="480" fill="#e5e4e2"/><circle cx="240" cy="164" r="62" fill="none" stroke="#121212" stroke-width="14"/><path d="M100 430V325l78-78h124l78 78v105" fill="none" stroke="#121212" stroke-width="14"/></svg></figure>
+    <p class="host-over" id="host-over" data-motion="fade" style="--order:0">Your host</p>
+    <h1 class="scene-title" id="host-name" data-motion="fade" style="--order:0">Tim Löhr</h1>
+    <p class="host-role" id="host-role" data-motion="fade" style="--order:0">Data Engineer at Meta, Warsaw</p>
+    <div class="host-career" id="host-career" data-visual>
+      <svg class="host-career__svg" viewBox="0 0 1000 96" width="1000" height="96" aria-hidden="true" data-allow-overlap>
+        <path class="edge host-career__line" id="host-career-line" data-motion="draw" d="M12 20H876" />
+        <rect class="host-career__past" x="4" y="12" width="16" height="16" />
+        <rect class="host-career__past" x="292" y="12" width="16" height="16" />
+        <rect class="host-career__past" x="580" y="12" width="16" height="16" />
+        <g class="host-career__now" id="host-career-now" data-focus>
+          <rect class="host-career__square" x="864" y="8" width="24" height="24" />
+          <rect class="host-career__eye" x="872" y="16" width="8" height="8" />
+        </g>
+        <text class="host-career__label" x="4" y="76" data-motion="fade" style="--order:0">Amazon</text>
+        <text class="host-career__label" x="292" y="76" data-motion="fade" style="--order:0">Apple</text>
+        <text class="host-career__label" x="580" y="76" data-motion="fade" style="--order:0">Red Bull</text>
+        <text class="host-career__label host-career__label--now" x="864" y="76" data-motion="fade" style="--order:0">Meta</text>
+      </svg>
+    </div>
+    <p class="host-edu" id="host-edu" data-motion="fade" style="--order:0">M.Sc. Computer Science · FAU Erlangen-Nürnberg</p>
+    <p class="host-boundary" id="host-boundary" data-motion="fade" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Synthetic teaching case. No employer data or systems.</span></p>
+    <div class="host-build" id="host-build" data-step="1" data-visual>
+      <p class="host-build__over" data-motion="fade" style="--order:0">What I build</p>
+      <svg class="host-build__edges" viewBox="0 0 1728 136" width="1728" height="136" aria-hidden="true" data-allow-overlap>
+        <path class="edge" id="host-build-flow" data-motion="draw" d="M192 68H526M688 68H1022M1184 68H1518" />
+        <g class="host-build__heads" data-motion="fade" style="--order:4">
+          <path class="edge-head" d="M522 58L540 68L522 78Z" />
+          <path class="edge-head" d="M1018 58L1036 68L1018 78Z" />
+          <path class="edge-head" d="M1514 58L1532 68L1514 78Z" />
+        </g>
+      </svg>
+      <div class="node host-build__node" id="host-build-records" style="left:120px">
+        <div class="node__box" data-motion="fade" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-database" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:1">Stored records</span>
+      </div>
+      <div class="node host-build__node" id="host-build-models" style="left:616px">
+        <div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-table" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:1">Data models</span>
+      </div>
+      <div class="node host-build__node" id="host-build-checks" style="left:1112px">
+        <div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-checklist" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:1">Checks</span>
+      </div>
+      <div class="node host-build__node is-active" id="host-build-numbers" data-focus style="left:1608px">
+        <div class="node__box" data-motion="fade" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:1">Numbers people use</span>
+      </div>
+    </div>
+  <!-- /scene:host -->
+  </section>
+
+  <section class="slide" id="the-case" data-act="0" data-kind="main" data-label="The case" data-section="The case" data-track="setup" data-seconds="90" data-note-key="the-case" data-note="Introduce the company, the question and its three key words before anyone has to use them." data-design="v3" data-route="hidden">
+  <!-- scene:the-case -->
+    <h1 class="scene-title" id="the-case-title" data-motion="rise" style="--order:0">Someone asks this every quarter.</h1>
+    <div class="q-card q-card--hero the-case-question" id="the-case-question" data-motion="rise" style="--order:0">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">Show <span class="the-case-key" id="the-case-key-ending">ending<svg class="the-case-u" id="the-case-u-ending" data-step="2" data-focus aria-hidden="true" data-allow-overlap><line data-motion="draw" x1="0" y1="4" x2="100%" y2="4" /></svg></span> <span class="the-case-key" id="the-case-key-mrr">MRR<svg class="the-case-u" id="the-case-u-mrr" data-step="1" data-focus aria-hidden="true" data-allow-overlap><line data-motion="draw" x1="0" y1="4" x2="100%" y2="4" /></svg></span> by month for the<br /><span class="the-case-key" id="the-case-key-quarter">last complete quarter<svg class="the-case-u" id="the-case-u-quarter" data-step="3" data-focus aria-hidden="true" data-allow-overlap><line data-motion="draw" x1="0" y1="4" x2="100%" y2="4" /></svg></span>.</p>
+    </div>
+    <div class="the-case-company" id="the-case-company" data-motion="rise" style="--order:1">
+      <svg class="icon icon--72" aria-hidden="true"><use href="#i-company" /></svg>
+      <p class="the-case-company__text"><b class="the-case-company__name">FOLDLINE</b><span class="the-case-company__sep"> · </span><span class="the-case-company__facts">made-up SaaS company · <span data-ev="dataset:accountCount" data-format="int">144</span> accounts</span></p>
+    </div>
+    <div class="the-case-level" id="the-case-level" data-step="1" data-motion="rise" style="--order:0" data-visual>
+      <svg class="the-case-tank" id="the-case-tank" viewBox="0 0 100 100" width="240" height="280" preserveAspectRatio="none" aria-hidden="true">
+        <g class="the-case-tank__water" id="the-case-water" data-motion="grow" style="--order:0">
+          <path class="the-case-tank__surface" d="M24 44h52" />
+          <rect class="the-case-tank__body" x="24" y="54" width="52" height="28" />
+        </g>
+        <path class="the-case-tank__walls" d="M14 12v78h72V12" />
+      </svg>
+      <div class="the-case-level__text">
+        <p class="the-case-level__head">MRR: monthly recurring revenue</p>
+        <p class="the-case-level__rule"><svg class="icon icon--48" aria-hidden="true"><use href="#i-level" /></svg><span>MRR: never below zero here.</span></p>
+      </div>
+    </div>
+    <div class="the-case-months" id="the-case-months" data-step="2" data-visual>
+      <p class="the-case-months__ending" data-motion="fade" style="--order:0"><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg><span>Ending = each month's last day</span></p>
+      <svg class="the-case-strip" id="the-case-strip" viewBox="0 0 768 156" width="768" height="156" aria-hidden="true" data-allow-overlap>
+        <g class="the-case-strip__hatch" id="the-case-q3-hatch" data-step="3" data-motion="fade" style="--order:0">
+          <rect x="406" y="12" width="112" height="112" />
+          <rect x="534" y="12" width="112" height="112" />
+          <rect x="662" y="12" width="104" height="112" />
+        </g>
+        <g class="the-case-strip__cells" data-motion="draw" style="--order:0">
+          <rect x="2" y="12" width="112" height="112" />
+          <rect x="130" y="12" width="112" height="112" />
+          <rect x="258" y="12" width="112" height="112" />
+          <rect class="the-case-strip__later" x="406" y="12" width="112" height="112" />
+          <rect class="the-case-strip__later" x="534" y="12" width="112" height="112" />
+          <rect class="the-case-strip__later" x="662" y="12" width="104" height="112" />
+        </g>
+        <g class="the-case-strip__plates">
+          <rect x="430" y="50" width="64" height="36" />
+          <rect x="558" y="50" width="64" height="36" />
+          <rect x="682" y="50" width="64" height="36" />
+        </g>
+        <g class="the-case-strip__months" data-motion="fade" style="--order:0">
+          <text x="58" y="77">Apr</text>
+          <text x="186" y="77">May</text>
+          <text x="314" y="77">Jun</text>
+          <text class="the-case-strip__month-later" x="462" y="77">Jul</text>
+          <text class="the-case-strip__month-later" x="590" y="77">Aug</text>
+          <text class="the-case-strip__month-later" x="714" y="77">Sep</text>
+        </g>
+        <rect class="the-case-strip__tick" x="108" y="0" width="12" height="136" data-motion="stamp" style="--order:0" />
+        <rect class="the-case-strip__tick" x="236" y="0" width="12" height="136" data-motion="stamp" style="--order:1" />
+        <rect class="the-case-strip__tick" x="364" y="0" width="12" height="136" data-motion="stamp" style="--order:2" />
+        <path class="the-case-strip__bracket" id="the-case-q2-bracket" data-step="3" data-motion="grow" data-axis="x" d="M2 138V152H376V138" />
+      </svg>
+      <p class="the-case-months__q2" id="the-case-q2" data-step="3" data-motion="fade" style="--order:0">Last complete quarter: <span class="the-case-nowrap">April–June 2026</span></p>
+      <p class="the-case-months__q3" id="the-case-q3" data-step="3" data-motion="fade" style="--order:0">Q3 not finished</p>
+    </div>
+  <!-- /scene:the-case -->
+  </section>
+
+  <section class="slide" id="the-arc" data-act="0" data-kind="main" data-label="The arc" data-section="The arc" data-track="setup" data-seconds="90" data-note-key="the-arc" data-note="Show the whole route of the session before starting it, and name what people leave with. The route stays at the top of every scene from here on." data-design="v3" data-route="final">
+  <!-- scene:the-arc -->
+    <h1 class="scene-title" id="the-arc-title">One question, asked twice.</h1>
+    <p class="lead the-arc-lead" id="the-arc-lead" data-step-until="2" data-motion="fade" style="--order:0">The data stays the same. What the AI can see changes.</p>
+    <div class="the-arc-route" id="the-arc-route" data-visual>
+      <svg class="the-arc-route__line" viewBox="0 0 1728 136" width="1728" height="136" aria-hidden="true" data-allow-overlap>
+        <path class="edge the-arc-route__path" id="the-arc-path" data-focus data-motion="draw" d="M128 68H1604" />
+      </svg>
+      <div class="node the-arc-station" id="the-arc-s1" style="left:128px">
+        <div class="node__box" data-motion="fade" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-fail" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">Wrong answer</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Seven export tables</span>
+      </div>
+      <div class="node the-arc-station" id="the-arc-s2" style="left:423px">
+        <div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">Why it failed</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Four missing decisions</span>
+      </div>
+      <div class="node the-arc-station" id="the-arc-s3" style="left:718px">
+        <div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-contract" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">The fix</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Approved views</span>
+      </div>
+      <div class="node the-arc-station" id="the-arc-s4" style="left:1014px">
+        <div class="node__box" data-motion="fade" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-question" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">Ask again</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Same question again</span>
+      </div>
+      <div class="node the-arc-station" id="the-arc-s5" style="left:1309px">
+        <div class="node__box" data-motion="fade" style="--order:4"><svg class="icon" aria-hidden="true"><use href="#i-refuse" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">Honest limits</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Refuse, warn, test</span>
+      </div>
+      <div class="node the-arc-station" id="the-arc-s6" data-focus style="left:1604px">
+        <div class="node__box" data-motion="fade" style="--order:4"><svg class="icon" aria-hidden="true"><use href="#i-canvas" /></svg></div>
+        <span class="node__label" data-motion="fade" style="--order:0">Your turn</span>
+        <span class="node__sub the-arc-caption" data-step="1" data-step-until="2" data-motion="fade" style="--order:0">Your own question</span>
+      </div>
+      <svg class="the-arc-route__packets" viewBox="0 0 1728 136" width="1728" height="136" aria-hidden="true" data-allow-overlap>
+        <rect class="packet" id="the-arc-packet" x="118" y="58" width="20" height="20" data-step="1" data-motion="travel" data-path="#the-arc-path" data-target="#the-arc-s6" />
+      </svg>
+    </div>
+    <svg class="the-arc-pointer" id="the-arc-pointer" viewBox="0 0 760 344" width="760" height="344" data-step="2" data-focus aria-hidden="true" data-allow-overlap>
+      <path class="the-arc-pointer__line" data-motion="draw" d="M16 344V232H672V36" />
+      <path class="the-arc-pointer__head" data-motion="fade" style="--order:4" d="M658 42L672 16L686 42Z" />
+    </svg>
+    <p class="the-arc-pointer-note" id="the-arc-pointer-note" data-step="2" data-motion="fade" style="--order:1">This line stays at the top of every scene.</p>
+    <div class="callout the-arc-outcome" id="the-arc-outcome" data-step="2" data-motion="rise" style="--order:0">
+      <svg class="icon icon--56" aria-hidden="true"><use href="#i-canvas" /></svg>
+      <p class="the-arc-outcome__text">You leave with one filled page for your own question.</p>
+    </div>
+  <!-- /scene:the-arc -->
+  </section>
+
+  <section class="slide" id="bad-architecture" data-act="1" data-kind="main" data-label="Bad architecture" data-section="Bad interface · PostgreSQL 16" data-track="database" data-seconds="225" data-note-key="bad-architecture" data-note="Show a working database that offers several reasonable-looking tables and never says which one means month-end MRR." data-design="v3" data-route="shown">
+  <!-- scene:bad-architecture -->
+<h1 class="scene-title">Seven export tables. Nothing is broken.</h1>
+<span class="lane lane--export" id="bad-architecture-lane" data-motion="fade"><span class="lane__swatch"></span><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>Export tables</span>
+<div class="ba-diagram" id="bad-architecture-diagram" data-visual role="img" aria-label="Architecture: a question goes through the AI app and the AI model, then through a login that sees all seven export tables, all built from the same company data.">
+  <svg class="ba-wires" id="bad-architecture-wires" data-allow-overlap width="1920" height="984" viewBox="0 0 1920 984" aria-hidden="true">
+    <path class="edge edge--dashed" d="M232 308H378" data-motion="draw" style="--order:1"/>
+    <path class="edge-head" d="M392 308l-14-7v14z" data-motion="fade" style="--order:3"/>
+    <path class="edge edge--dashed" d="M528 308H674" data-motion="draw" style="--order:2"/>
+    <path class="edge-head" d="M688 308l-14-7v14z" data-motion="fade" style="--order:4"/>
+    <path class="edge edge--dashed" d="M1530 704V654" data-step="1" data-motion="draw" style="--order:1"/>
+    <path class="edge-head" d="M1530 640l-7 14h14z" data-step="1" data-motion="fade" style="--order:3"/>
+    <g id="bad-architecture-query-group" data-focus>
+      <path id="bad-architecture-query" class="edge edge--dashed edge--active" d="M824 284H1266" data-step="2" data-motion="draw"/>
+      <path id="bad-architecture-query-head" class="edge-head ba-head--active" d="M1280 284l-14-7v14z" data-step="2" data-motion="fade" style="--order:3"/>
+      <rect class="packet" x="0" y="0" width="20" height="20" data-step="2" data-motion="travel" data-path="#bad-architecture-query"/>
+    </g>
+    <path class="edge edge--dashed ba-return" d="M1280 332H838" data-step="2" data-motion="draw" style="--order:2"/>
+    <path class="edge-head ba-return-head" d="M824 332l14-7v14z" data-step="2" data-motion="fade" style="--order:4"/>
+    <text class="ba-edge-label" x="904" y="268" text-anchor="middle" data-step="2" data-motion="fade" style="--order:1">query</text>
+    <text class="ba-edge-label ba-edge-label--result" x="904" y="362" text-anchor="middle" data-step="2" data-motion="fade" style="--order:1">result</text>
+    <path class="ba-pointer" d="M1219 500H1248V431H1262" data-step="3" data-step-until="4" data-motion="draw" style="--order:2"/>
+    <rect class="ba-pointer-end" x="1262" y="427" width="8" height="8" data-step="3" data-step-until="4" data-motion="fade" style="--order:4"/>
+    <path class="ba-pointer ba-pointer--stamp" d="M1219 544H1262" data-step="4" data-motion="draw" style="--order:1"/>
+    <rect class="ba-pointer-end ba-pointer-end--stamp" x="1262" y="540" width="8" height="8" data-step="4" data-motion="fade" style="--order:3"/>
+  </svg>
+  <div class="node ba-node" id="bad-architecture-question" data-focus>
+    <div class="node__box" data-motion="fade" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></div>
+    <span class="node__label" data-motion="fade" style="--order:0">Question</span>
+  </div>
+  <div class="node ba-node" id="bad-architecture-app">
+    <div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-app"/></svg></div>
+    <span class="node__label" data-motion="fade" style="--order:1">AI app</span>
+  </div>
+  <div class="node ba-node" id="bad-architecture-model">
+    <div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg></div>
+    <span class="node__label" data-motion="fade" style="--order:1">AI model</span>
+  </div>
+  <div class="node ba-node" id="bad-architecture-login" data-step="2">
+    <div class="node__box" data-motion="fade" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></div>
+    <span class="node__label ba-login-label" data-motion="fade" style="--order:0">Login: sees all 7 tables</span>
+  </div>
+  <div class="node is-stack ba-node" id="bad-architecture-stack" data-step="1" data-motion="rise" data-focus>
+    <div class="node__box">
+      <div class="ba-stack__head"><svg class="icon icon--48" aria-hidden="true"><use href="#i-export"/></svg><span>7 export tables</span></div>
+      <ul class="ba-tables">
+        <li data-motion="fade" style="--order:0">customer_master</li>
+        <li data-motion="fade" style="--order:0">subscription_export<span class="ba-lookalike" data-step="3" data-motion="stamp" style="--order:1"><span class="ba-lookalike__q">?</span></span></li>
+        <li data-motion="fade" style="--order:0">billing_events<span class="ba-lookalike" data-step="3" data-motion="stamp" style="--order:1"><span class="ba-lookalike__q">?</span></span></li>
+        <li data-motion="fade" style="--order:1">monthly_revenue<span class="ba-lookalike" data-step="3" data-motion="stamp" style="--order:0"><span class="ba-lookalike__q">?</span></span></li>
+        <li data-motion="fade" style="--order:1">acct_history</li>
+        <li data-motion="fade" style="--order:1">usage_log</li>
+        <li data-motion="fade" style="--order:1">tickets</li>
+      </ul>
+    </div>
+  </div>
+  <div class="ba-company" id="bad-architecture-company" data-step="1" data-motion="rise" style="--order:1"><svg class="icon icon--48" aria-hidden="true"><use href="#i-company"/></svg><span>Same company data · <span data-ev="dataset:accountCount" data-format="int">144</span> accounts</span></div>
+</div>
+<p class="callout ba-callout" id="bad-architecture-callout" data-step="3" data-step-until="4" data-motion="rise" data-focus>Three of them sound like the answer.</p>
+<p class="stamp ba-stamp" id="bad-architecture-stamp" data-step="4" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span class="ba-stamp__text"><span class="ba-stamp__line">Every table works. Every query runs.</span> <span class="ba-stamp__line">None says what its numbers mean.</span></span></p>
+  <!-- /scene:bad-architecture -->
+  </section>
+
+  <section class="slide" id="bad-ask" data-act="1" data-kind="main" data-label="Bad Ask" data-section="Bad interface · plausible wrong answer" data-track="question" data-seconds="360" data-note-key="bad-ask" data-note="Show the recorded AI answer and let the room judge it. Do not reveal the correct numbers or grade anything on this scene." data-design="v3" data-route="shown">
+  <!-- scene:bad-ask -->
+<h1 class="scene-title">The AI answers. It looks right.</h1>
+<div class="q-card" id="bad-ask-question" data-motion="rise" data-focus>
+  <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
+  <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
+</div>
+<div class="bk-strip" id="bad-ask-strip" data-step-until="2" data-motion="rise" style="--order:1" data-visual role="img" aria-label="The question goes to the AI, which reads the export tables.">
+  <svg class="bk-strip__wires" data-allow-overlap width="600" height="96" viewBox="0 0 600 96" aria-hidden="true">
+    <path class="edge edge--dashed" d="M96 48H186"/>
+    <path class="edge-head" d="M200 48l-14-7v14z"/>
+    <path class="edge edge--dashed" d="M296 48H386"/>
+    <path class="edge-head" d="M400 48l-14-7v14z"/>
+  </svg>
+  <div class="bk-strip__node" id="bad-ask-s-question"><span class="bk-strip__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-question"/></svg></span><span class="bk-strip__label">Question</span></div>
+  <div class="bk-strip__node" id="bad-ask-s-ai"><span class="bk-strip__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="bk-strip__label">AI</span></div>
+  <div class="bk-strip__node" id="bad-ask-s-export"><span class="bk-strip__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-export"/></svg></span><span class="bk-strip__label">Export tables</span></div>
+</div>
+<div class="ev-run bk-run" id="bad-ask-run" data-step="1" data-motion="rise" data-visual>
+  <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI run · one run</span></div>
+  <div class="bk-picked" id="bad-ask-picked" data-focus><svg class="icon icon--40" aria-hidden="true"><use href="#i-export"/></svg><span>Picked:</span><span class="bk-picked__table">monthly_revenue</span></div>
+  <div class="ev-row"><span>Apr</span><span class="ev-value" data-ev="capture:bad:G01:0:ending_mrr" data-format="eur" data-motion="count">−€19,960</span></div>
+  <div class="ev-row"><span>May</span><span class="ev-value" data-ev="capture:bad:G01:1:ending_mrr" data-format="eur" data-motion="count">€9,775</span></div>
+  <div class="ev-row"><span>Jun</span><span class="ev-value" data-ev="capture:bad:G01:2:ending_mrr" data-format="eur" data-motion="count">€42,565</span></div>
+  <p class="ev-foot">An observation, not a benchmark.</p>
+</div>
+<svg class="bk-travel" id="bad-ask-travel" width="1920" height="984" viewBox="0 0 1920 984" aria-hidden="true" data-allow-overlap>
+  <path id="bad-ask-route" class="bk-route" d="M144 448H1016V336H1120"/>
+  <rect class="packet" x="0" y="0" width="20" height="20" data-step="1" data-motion="travel" data-path="#bad-ask-route" data-target="#bad-ask-picked"/>
+</svg>
+<div class="bk-checks" id="bad-ask-checks" data-step="2" data-motion="rise" data-focus>
+  <p class="bk-checks__head">Looks trustworthy</p>
+  <ul class="bk-checks__list">
+    <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:1"><use href="#i-pass"/></svg><span>Ran without errors</span></li>
+    <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:2"><use href="#i-pass"/></svg><span>Valid SQL</span></li>
+    <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:3"><use href="#i-pass"/></svg><span>Column named <span class="bk-mono">ending_mrr</span></span></li>
+    <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:4"><use href="#i-pass"/></svg><span>Three tidy rows</span></li>
+  </ul>
+</div>
+<div class="room-vote" id="bad-ask-vote" data-step="3" data-step-until="4" data-motion="rise" data-allow-overlap>
+  <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
+  <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Put this in the board pack?</p></div>
+  <div class="room-vote__options"><span class="room-vote__option">Trust</span><span class="room-vote__option">Challenge</span><span class="room-vote__option">Refuse</span></div>
+</div>
+<p class="callout bk-hold" id="bad-ask-hold" data-step="4" data-motion="fade" data-focus><span class="bk-hold__line">Remember your hand.</span> <span class="bk-hold__line">Next: we check it against the database.</span></p>
+  <!-- /scene:bad-ask -->
+  </section>
+
+  <section class="slide" id="failure-anatomy" data-act="2" data-kind="main" data-label="Failure anatomy" data-section="Failure anatomy · captured SQL, wrong meaning" data-track="failure" data-seconds="240" data-note-key="failure-anatomy" data-note="Trace the wrong April value to four decisions nobody wrote down, then compare the run with the database check." data-design="v3" data-route="shown" data-live-check="ready:G01">
+  <!-- scene:failure-anatomy -->
+<h1 class="scene-title">Why is April negative?</h1>
+<svg class="fa-chart" id="failure-anatomy-chart" data-visual width="960" height="424" viewBox="0 0 960 424" role="img" aria-label="Truth Chart for April, May and June: the recorded AI run and the database check on one scale.">
+  <g transform="translate(0 56)">
+    <rect id="failure-anatomy-bar-0-1" class="chart__export" x="352" y="252.13" width="120" height="6.53" data-motion="grow" style="--order:0"/>
+    <rect id="failure-anatomy-bar-0-2" class="chart__export" x="704" y="230.21" width="120" height="28.45" data-motion="grow" style="--order:1"/>
+    <g id="failure-anatomy-truth" data-step="4" data-focus>
+      <rect id="failure-anatomy-bar-1-0" class="chart__truth" x="136" y="34.98" width="120" height="223.68" data-motion="grow" style="--order:0"/>
+      <rect id="failure-anatomy-bar-1-1" class="chart__truth" x="488" y="28.45" width="120" height="230.21" data-motion="grow" style="--order:1"/>
+      <rect id="failure-anatomy-bar-1-2" class="chart__truth" x="840" y="0" width="120" height="258.66" data-motion="grow" style="--order:2"/>
+      <text id="failure-anatomy-label-1-0" class="chart__value fa-truth-label" x="196" y="22.98" text-anchor="middle" data-ev="truth:G01:0:ending_mrr_eur" data-format="eur" data-motion="count">€334,675</text>
+      <text id="failure-anatomy-label-1-1" class="chart__value fa-truth-label" x="548" y="16.45" text-anchor="middle" data-ev="truth:G01:1:ending_mrr_eur" data-format="eur" data-motion="count">€344,450</text>
+      <text id="failure-anatomy-label-1-2" class="chart__value fa-truth-label" x="900" y="-12" text-anchor="middle" data-ev="truth:G01:2:ending_mrr_eur" data-format="eur" data-motion="count">€387,015</text>
+    </g>
+    <line id="failure-anatomy-zero" class="chart__zero" x1="0" x2="960" y1="258.66" y2="258.66"/>
+    <text id="failure-anatomy-label-0-1" class="chart__value" x="412" y="240.13" text-anchor="middle" data-ev="capture:bad:G01:1:ending_mrr" data-format="eur" data-motion="count">€9,775</text>
+    <text id="failure-anatomy-label-0-2" class="chart__value" x="764" y="218.21" text-anchor="middle" data-ev="capture:bad:G01:2:ending_mrr" data-format="eur" data-motion="count">€42,565</text>
+    <g id="failure-anatomy-april" data-focus>
+      <rect id="failure-anatomy-bar-0-0" class="chart__export fa-april" x="0" y="258.66" width="120" height="13.34" data-motion="grow" style="--order:2;--grow-origin:50% 0%"/>
+      <text id="failure-anatomy-label-0-0" class="chart__value fa-april-label" x="60" y="306" text-anchor="middle" data-ev="capture:bad:G01:0:ending_mrr" data-format="eur" data-motion="count">−€19,960</text>
+    </g>
+    <text class="fa-month" x="128" y="354" text-anchor="middle">April</text>
+    <text class="fa-month" x="480" y="354" text-anchor="middle">May</text>
+    <text class="fa-month" x="832" y="354" text-anchor="middle">June</text>
+  </g>
+</svg>
+<div class="fa-legend" id="failure-anatomy-legend">
+  <span class="fa-key"><span class="fa-swatch fa-swatch--run"></span>Recorded AI run</span>
+  <span class="fa-key" data-step="4" data-motion="fade"><span class="fa-swatch fa-swatch--db"></span>Database check</span>
+  <span class="chip chip--fail" id="failure-anatomy-chip" data-step="4" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-fail"/></svg>Doesn't match</span>
+</div>
+<p class="callout fa-callout" id="failure-anatomy-callout" data-step-until="2" data-motion="rise" style="--order:1" data-allow-overlap>Ending MRR can't be negative here.<span class="callout__pointer fa-pointer"></span></p>
+<div class="fa-side" id="failure-anatomy-side">
+  <div class="fa-cause" id="failure-anatomy-cause" data-step="2" data-motion="rise" data-focus>
+    <svg class="icon icon--56" aria-hidden="true"><use href="#i-change"/></svg>
+    <div class="fa-cause__text">
+      <p class="fa-cause__lead"><span class="fa-mono">monthly_revenue</span> stores each month's change</p>
+      <p class="fa-formula" id="failure-anatomy-formula" data-step-until="5"><span data-motion="fade" style="--order:0">new</span> <span data-motion="fade" style="--order:0">+</span> <span data-motion="fade" style="--order:0">expansion</span> <span data-motion="fade" style="--order:1">−</span> <span data-motion="fade" style="--order:1">contraction</span> <span data-motion="fade" style="--order:1">−</span> <span data-motion="fade" style="--order:1">churn</span></p>
+    </div>
+  </div>
+  <div class="fa-sum" id="failure-anatomy-sum" data-step="5" data-motion="rise">
+    <p class="fa-sum__terms"><span class="fa-term">−€19,960</span> + <span class="fa-term">€9,775</span> + <span class="fa-term">€42,565</span></p>
+    <p class="fa-sum__total">= <span class="fa-sum__value" id="failure-anatomy-total" data-ev="truth:G02:0:net_new_mrr_eur" data-format="eur" data-motion="count" data-focus>€32,380</span> = database net new MRR</p>
+  </div>
+  <p class="stamp fa-verdict" id="failure-anatomy-verdict" data-step="5" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-change"/></svg><span>Right answer to a different question.</span></p>
+</div>
+<p class="fa-nobody" id="failure-anatomy-nobody" data-step="3" data-step-until="5" data-motion="rise" style="--order:1">Nobody wrote these down.</p>
+<div class="fa-blanks" id="failure-anatomy-blanks" data-step="3" data-focus>
+  <div class="blank is-blank" data-motion="rise" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-level"/></svg><span class="blank__q">Kind of number?</span><span class="blank__a" data-motion="stamp" style="--order:1">?</span></div>
+  <div class="blank is-blank" data-motion="rise" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-rows"/></svg><span class="blank__q">Rows per what?</span><span class="blank__a" data-motion="stamp" style="--order:1">?</span></div>
+  <div class="blank is-blank" data-motion="rise" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span class="blank__q">Which months?</span><span class="blank__a" data-motion="stamp" style="--order:1">?</span></div>
+  <div class="blank is-blank" data-motion="rise" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-view"/></svg><span class="blank__q">Which table?</span><span class="blank__a" data-motion="stamp" style="--order:1">?</span></div>
+</div>
+<div class="room-vote fa-vote" id="failure-anatomy-vote" data-step="1" data-step-until="2" data-motion="rise" data-allow-overlap>
+  <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
+  <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">So what did the AI calculate?</p></div>
+  <div class="room-vote__options"><span class="room-vote__option">Month-end balances, with a bug</span><span class="room-vote__option">Each month's change</span></div>
+</div>
+  <!-- /scene:failure-anatomy -->
+  </section>
+
+  <section class="slide" id="controlled-comparison" data-act="2" data-kind="main" data-label="Controlled comparison" data-section="Controlled comparison · fixed and changed" data-track="control" data-seconds="150" data-note-key="controlled-comparison" data-note="Show what stayed the same (question, data, AI route, answer settings) and the one thing that changed: what the AI could see." data-design="v3" data-route="shown">
+  <!-- scene:controlled-comparison -->
+<h1 class="scene-title">Same question. A different data setup.</h1>
+<div class="cc-stage" data-visual="controlled-variable diagram: two lanes whose shared parts merge into one block; only the database column changes">
+  <svg class="cc-wires" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
+    <g data-step-until="1">
+      <g data-motion="draw">
+        <path class="edge edge--dashed" d="M384 380H1366"/>
+        <path class="edge cc-edge--approved" d="M384 660H1366"/>
+      </g>
+      <polygon class="edge-head" points="1366,372 1380,380 1366,388"/>
+      <polygon class="edge-head" points="1366,652 1380,660 1366,668"/>
+    </g>
+    <g data-step="1">
+      <g data-motion="draw">
+        <path class="edge edge--dashed" d="M364 380H448V520"/>
+        <path class="edge cc-edge--approved" d="M396 660H448V520"/>
+        <path class="edge" d="M448 520H480"/>
+        <path class="edge" d="M616 520H1140"/>
+        <path class="edge" d="M1276 520H1340"/>
+        <path class="edge edge--dashed" d="M1340 520V380H1366"/>
+        <path class="edge cc-edge--approved" d="M1340 520V660H1366"/>
+      </g>
+      <polygon class="edge-head" points="1366,372 1380,380 1366,388"/>
+      <polygon class="edge-head" points="1366,652 1380,660 1366,668"/>
+    </g>
+  </svg>
+
+  <div class="cc-lanes" data-focus="step-0">
+    <span class="lane lane--export cc-lane cc-lane--export"><span class="lane__swatch"></span><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>Export tables</span>
+    <span class="lane lane--approved cc-lane cc-lane--approved"><span class="lane__swatch"></span><svg class="icon" aria-hidden="true"><use href="#i-view"/></svg>Approved views</span>
+  </div>
+
+  <div class="cc-row cc-row--export" data-step-until="1">
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></span><span class="node__label">Question</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-company"/></svg></span><span class="node__label">Data</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="node__label">AI route</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg></span><span class="node__label">Settings</span></div>
+  </div>
+  <div class="cc-row cc-row--approved" data-step-until="1">
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></span><span class="node__label">Question</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-company"/></svg></span><span class="node__label">Data</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="node__label">AI route</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg></span><span class="node__label">Settings</span></div>
+  </div>
+  <div class="node cc-db cc-db--export" data-step-until="2"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg></span><span class="node__label">Database</span></div>
+  <div class="node cc-db cc-db--approved" data-step-until="2"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg></span><span class="node__label">Database</span></div>
+
+  <div class="cc-same" data-step="1" data-focus="step-1">
+    <div class="cc-frame" data-motion="fade"></div>
+    <span class="stamp cc-stamp cc-stamp--same" data-allow-overlap data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Same</span>
+  </div>
+  <div class="cc-row cc-row--merged cc-row--ghost" data-step="1" data-motion="merge" style="--merge-y:140px" data-allow-overlap aria-hidden="true">
+    <div class="node"><span class="node__box"><svg class="icon"><use href="#i-question"/></svg></span></div>
+    <div class="node"><span class="node__box"><svg class="icon"><use href="#i-company"/></svg></span></div>
+    <div class="node"><span class="node__box"><svg class="icon"><use href="#i-ai-model"/></svg></span></div>
+    <div class="node"><span class="node__box"><svg class="icon"><use href="#i-settings"/></svg></span></div>
+  </div>
+  <div class="cc-row cc-row--merged" data-step="1" data-motion="merge" style="--merge-y:-140px">
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></span><span class="node__label">Question</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-company"/></svg></span><span class="node__label">Data</span><span class="node__sub cc-facts" data-step-until="3"><span data-ev="dataset:accountCount" data-format="int">144</span> accounts · Q2 2026</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="node__label">AI route</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg></span><span class="node__label">Settings</span></div>
+  </div>
+
+  <span class="stamp cc-stamp cc-stamp--changed" data-step="2" data-motion="stamp" data-focus="step-2"><svg class="icon" aria-hidden="true"><use href="#i-change"/></svg>Changed</span>
+  <div class="cc-cell cc-cell--export" data-step="2" data-motion="grow" data-axis="x">
+    <span class="cc-cell__swatch" aria-hidden="true"></span>
+    <p class="cc-cell__head"><svg class="icon icon--48" aria-hidden="true"><use href="#i-export"/></svg><span>7 export tables</span></p>
+    <p class="cc-cell__row" data-motion="fade" style="--order:0">names only</p>
+    <p class="cc-cell__row" data-motion="fade" style="--order:1">login sees all</p>
+  </div>
+  <div class="cc-cell cc-cell--approved" data-step="2" data-motion="grow" data-axis="x">
+    <span class="cc-cell__swatch" aria-hidden="true"></span>
+    <p class="cc-cell__head"><svg class="icon icon--48" aria-hidden="true"><use href="#i-view"/></svg><span>5 approved views</span></p>
+    <p class="cc-cell__row" data-motion="fade" style="--order:0">definitions + examples</p>
+    <p class="cc-cell__row" data-motion="fade" style="--order:1">login sees views</p>
+  </div>
+
+  <div class="cc-print" data-step="3" data-motion="fade" data-focus="step-3">
+    <p>One run per lane, forced to answer directly.</p>
+    <p>The recording names the AI route, not the model version.</p>
+  </div>
+</div>
+  <!-- /scene:controlled-comparison -->
+  </section>
+
+  <section class="slide" id="ready-architecture" data-act="3" data-kind="main" data-label="Ready architecture" data-section="Ready interface · approved answer path" data-track="surface" data-seconds="360" data-note-key="ready-architecture" data-note="Show that the ready setup is smaller, not just cleaner: private data is locked away and the AI reaches only five approved views." data-design="v3" data-route="shown">
+  <!-- scene:ready-architecture -->
+<h1 class="scene-title">Private data stays locked. The AI sees five views.</h1>
+<div class="ra-stage" data-visual="ready architecture: shared top row plus the isometric boundary (private stack, permission wall, five view panes, the AI side)">
+  <svg class="ra-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
+    <defs>
+      <clipPath id="ready-architecture-pane-1"><rect x="530" y="250" width="81" height="152"/></clipPath>
+      <clipPath id="ready-architecture-pane-2"><rect x="449" y="297" width="80" height="152"/></clipPath>
+      <clipPath id="ready-architecture-pane-3"><rect x="368" y="344" width="80" height="152"/></clipPath>
+      <clipPath id="ready-architecture-pane-4"><rect x="286" y="391" width="80" height="152"/></clipPath>
+      <clipPath id="ready-architecture-pane-5"><rect x="204" y="438" width="81" height="152"/></clipPath>
+    </defs>
+
+    <g class="ra-top" data-focus="step-0">
+      <g class="ra-top-edges" data-motion="draw">
+        <path class="edge ra-edge--approved" d="M232 308H378"/>
+        <path class="edge ra-edge--approved" d="M528 308H674"/>
+      </g>
+      <g class="ra-top-heads">
+        <polygon class="edge-head" points="376,299 392,308 376,317"/>
+        <polygon class="edge-head" points="672,299 688,308 672,317"/>
+      </g>
+    </g>
+
+    <g data-step="1" data-motion="fade">
+      <path class="edge" d="M438 726H456"/>
+      <polygon class="edge-head" points="456,718 470,726 456,734"/>
+    </g>
+
+    <g transform="matrix(0.9 0 0 0.9 352.5 392.3)">
+      <g data-step="1" data-motion="rise"><use href="#iso-stack" x="126" y="169" width="321" height="302"/></g>
+      <g data-step="2" data-motion="wall"><use href="#iso-wall" x="155" y="192" width="475" height="441"/></g>
+      <g data-step="3" data-motion="rise" style="--order:4"><g clip-path="url(#ready-architecture-pane-5)"><use href="#iso-panes" x="204" y="254" width="407" height="336"/></g></g>
+      <g data-step="3" data-motion="rise" style="--order:3"><g clip-path="url(#ready-architecture-pane-4)"><use href="#iso-panes" x="204" y="254" width="407" height="336"/></g></g>
+      <g data-step="3" data-motion="rise" style="--order:2"><g clip-path="url(#ready-architecture-pane-3)"><use href="#iso-panes" x="204" y="254" width="407" height="336"/></g></g>
+      <g data-step="3" data-motion="rise" style="--order:1"><g clip-path="url(#ready-architecture-pane-2)"><use href="#iso-panes" x="204" y="254" width="407" height="336"/></g></g>
+      <g data-step="3" data-motion="rise" style="--order:0"><g clip-path="url(#ready-architecture-pane-1)"><use href="#iso-panes" x="204" y="254" width="407" height="336"/></g></g>
+      <g data-step="3" data-motion="rise"><use href="#iso-ai" x="651.1" y="460.1" width="203" height="164"/></g>
+    </g>
+
+    <g data-step="3" data-motion="draw">
+      <path class="edge ra-edge--approved" d="M824 308H1238V818H1094"/>
+      <g class="ra-sight" data-focus="step-3">
+        <path d="M982 834L871 690"/>
+        <path d="M982 834L797 733"/>
+        <path d="M982 834L724 775"/>
+        <path d="M982 834L651 817"/>
+        <path d="M982 834L578 859"/>
+      </g>
+    </g>
+    <polygon class="edge-head" data-step="3" data-motion="fade" style="--order:4" points="1094,809 1078,818 1094,827"/>
+
+    <!-- Callout leaders: each left-column label ends on the drawing part it names. -->
+    <g class="ra-leader" data-step="1" data-motion="fade" style="--order:1">
+      <path d="M452 579H551"/>
+      <rect x="551" y="573" width="12" height="12"/>
+    </g>
+    <g class="ra-leader ra-leader--wall" data-step="2" data-motion="fade" style="--order:1" data-focus="step-2">
+      <path d="M452 880H496"/>
+      <rect x="496" y="874" width="12" height="12"/>
+    </g>
+
+    <g class="ra-blocked" data-step="4" data-focus="step-4">
+      <path id="ready-architecture-blocked" class="ra-blocked__path" d="M1030 770L934 676"/>
+      <path class="ra-blocked__stop" data-motion="stamp" style="--order:4" d="M910 700L958 652"/>
+      <rect class="packet" x="1020" y="760" width="20" height="20" data-motion="travel" data-path="#ready-architecture-blocked"/>
+    </g>
+  </svg>
+
+  <span class="lane lane--approved ra-lane"><span class="lane__swatch"></span><svg class="icon" aria-hidden="true"><use href="#i-view"/></svg>Approved views</span>
+
+  <div class="node ra-node" id="ready-architecture-node-question"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></span><span class="node__label">Question</span></div>
+  <div class="node ra-node" id="ready-architecture-node-app"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-app"/></svg></span><span class="node__label">AI app</span></div>
+  <div class="node ra-node" id="ready-architecture-node-model"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg><span class="node__badge ra-key" data-step="4" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span></span><span class="node__label">AI model</span></div>
+
+  <p class="ra-login" data-step="4" data-motion="rise">Read-only login: views only</p>
+
+  <div class="ra-private" data-step="1" data-motion="rise">
+    <p class="ra-private__name">Private data</p>
+    <p class="ra-private__sub" data-step-until="4">raw accounts, billing, identifiers</p>
+  </div>
+  <span class="ra-lock" data-step="1" data-motion="stamp" data-focus="step-1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-lock"/></svg></span>
+
+  <div class="ra-company"><svg class="icon icon--40" aria-hidden="true"><use href="#i-company"/></svg><span>Same company data</span></div>
+
+  <p class="ra-permission" data-step="2" data-motion="fade">Database permission</p>
+
+  <span class="ra-ai" data-step="3" data-motion="rise" aria-hidden="true"><svg class="icon icon--56"><use href="#i-ai-model"/></svg></span>
+
+  <ol class="ra-views" data-step="3">
+    <li data-motion="rise" style="--order:0"><span class="ra-num">1</span>MRR summary by month</li>
+    <li data-motion="rise" style="--order:1"><span class="ra-num">2</span>Logo churn by segment</li>
+    <li data-motion="rise" style="--order:1"><span class="ra-num">3</span>Expansion MRR by country</li>
+    <li data-motion="rise" style="--order:1"><span class="ra-num">4</span>Account MRR by month</li>
+    <li data-motion="rise" style="--order:1"><span class="ra-num">5</span>Data status</li>
+  </ol>
+
+  <span class="stamp ra-noaccess" data-step="4" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg>No access</span>
+</div>
+  <!-- /scene:ready-architecture -->
+  </section>
+
+  <section class="slide" id="semantic-contract" data-act="3" data-kind="main" data-label="Semantic contract" data-section="Semantic contract · four decisions" data-track="metric" data-seconds="360" data-note-key="semantic-contract" data-note="Fill the four blanks in writing, with an owner, so nobody has to guess meaning, detail level, period or table." data-design="v3" data-route="shown">
+  <!-- scene:semantic-contract -->
+<h1 class="scene-title">Write down what ending MRR means.</h1>
+<div class="sc-doc" id="semantic-contract-doc" data-visual="the ending MRR definition drawn as a contract document whose four blank lines fill one by one" data-motion="rise">
+  <svg class="sc-frame" data-allow-overlap viewBox="0 0 1728 600" width="1728" height="600" aria-hidden="true">
+    <path class="sc-frame__page" d="M1.5 1.5H1656.5L1726.5 71.5V598.5H1.5Z"/>
+    <path class="sc-frame__fold" d="M1656.5 1.5V71.5H1726.5Z"/>
+    <path class="sc-frame__rule" d="M48 488H1680"/>
+  </svg>
+
+  <div class="sc-rows" id="semantic-contract-rows" data-focus>
+    <div class="sc-row" id="semantic-contract-row-1">
+      <svg class="icon" aria-hidden="true"><use href="#i-level"/></svg>
+      <span class="sc-row__q">Kind of number?</span>
+      <span class="sc-slot">
+        <span class="sc-slot__blank" data-step-until="1">?</span>
+        <span class="sc-slot__a" data-step="1" data-motion="fade">The month-end balance, a level</span>
+        <svg class="sc-line" data-allow-overlap viewBox="0 0 820 6" width="820" height="6" aria-hidden="true">
+          <line class="sc-line__blank" x1="0" y1="3" x2="820" y2="3" data-step-until="1"/>
+          <line class="sc-line__filled" x1="0" y1="3" x2="820" y2="3" data-step="1" data-motion="draw"/>
+        </svg>
+      </span>
+      <span class="sc-mini" id="semantic-contract-tank" data-step="1" data-motion="fade" style="--order:1">
+        <svg class="sc-tank" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+          <path class="sc-tank__surface" d="M16 26H48"/>
+          <rect class="sc-tank__body" x="16" y="33" width="32" height="20"/>
+          <path class="sc-tank__walls" d="M7 6V59H57V6"/>
+        </svg>
+      </span>
+    </div>
+
+    <div class="sc-row" id="semantic-contract-row-2">
+      <svg class="icon" aria-hidden="true"><use href="#i-rows"/></svg>
+      <span class="sc-row__q">Rows per what?</span>
+      <span class="sc-slot">
+        <span class="sc-slot__blank" data-step-until="2">?</span>
+        <span class="sc-slot__a" data-step="2" data-motion="fade">One row per month</span>
+        <svg class="sc-line" data-allow-overlap viewBox="0 0 820 6" width="820" height="6" aria-hidden="true">
+          <line class="sc-line__blank" x1="0" y1="3" x2="820" y2="3" data-step-until="2"/>
+          <line class="sc-line__filled" x1="0" y1="3" x2="820" y2="3" data-step="2" data-motion="draw"/>
+        </svg>
+      </span>
+      <span class="sc-mini" id="semantic-contract-collapse" data-step="2">
+        <svg class="sc-collapse" viewBox="0 0 240 64" width="240" height="64" aria-hidden="true">
+          <g class="sc-collapse__many" data-motion="fade">
+            <path d="M0 4H80M0 12H80M0 20H80M0 28H80M0 36H80M0 44H80M0 52H80M0 60H80"/>
+          </g>
+          <path class="sc-collapse__arrow" data-motion="draw" style="--order:1" d="M100 32H140M128 20L140 32L128 44"/>
+          <rect class="sc-collapse__month" x="164" y="1.5" width="74" height="15" data-motion="grow" data-axis="x" style="--order:1"/>
+          <rect class="sc-collapse__month" x="164" y="24.5" width="74" height="15" data-motion="grow" data-axis="x" style="--order:2"/>
+          <rect class="sc-collapse__month" x="164" y="47.5" width="74" height="15" data-motion="grow" data-axis="x" style="--order:3"/>
+        </svg>
+      </span>
+    </div>
+
+    <div class="sc-row sc-row--tall" id="semantic-contract-row-3">
+      <svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>
+      <span class="sc-row__q">Which months?</span>
+      <span class="sc-slot">
+        <span class="sc-slot__blank" data-step-until="3">?</span>
+        <span class="sc-slot__a" data-step="3" data-motion="fade">Each complete month: Apr, May, Jun</span>
+        <svg class="sc-line" data-allow-overlap viewBox="0 0 820 6" width="820" height="6" aria-hidden="true">
+          <line class="sc-line__blank" x1="0" y1="3" x2="820" y2="3" data-step-until="3"/>
+          <line class="sc-line__filled" x1="0" y1="3" x2="820" y2="3" data-step="3" data-motion="draw"/>
+        </svg>
+        <span class="chip sc-rule" id="semantic-contract-rule" data-step="3" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg>Never add months together</span>
+      </span>
+      <span class="sc-mini" id="semantic-contract-calendar" data-step="3">
+        <svg class="sc-cal" viewBox="0 0 150 64" width="150" height="64" aria-hidden="true">
+          <g data-motion="fade">
+            <rect class="sc-cal__head" x="0" y="0" width="150" height="14"/>
+            <path class="sc-cal__frame" d="M1.5 14V62.5H148.5V14"/>
+            <rect class="sc-cal__cell" x="14" y="22" width="34" height="32"/>
+            <rect class="sc-cal__cell" x="58" y="22" width="34" height="32"/>
+            <rect class="sc-cal__cell" x="102" y="22" width="34" height="32"/>
+          </g>
+          <rect class="sc-cal__mark" x="21" y="29" width="20" height="18" data-motion="stamp" style="--order:2"/>
+          <rect class="sc-cal__mark" x="65" y="29" width="20" height="18" data-motion="stamp" style="--order:3"/>
+          <rect class="sc-cal__mark" x="109" y="29" width="20" height="18" data-motion="stamp" style="--order:4"/>
+        </svg>
+      </span>
+    </div>
+
+    <div class="sc-row" id="semantic-contract-row-4">
+      <svg class="icon" aria-hidden="true"><use href="#i-view"/></svg>
+      <span class="sc-row__q">Which table?</span>
+      <span class="sc-slot">
+        <span class="sc-slot__blank" data-step-until="4">?</span>
+        <span class="sc-slot__a" data-step="4" data-motion="fade">Only MRR summary by month</span>
+        <svg class="sc-line" data-allow-overlap viewBox="0 0 820 6" width="820" height="6" aria-hidden="true">
+          <line class="sc-line__blank" x1="0" y1="3" x2="820" y2="3" data-step-until="4"/>
+          <line class="sc-line__filled" x1="0" y1="3" x2="820" y2="3" data-step="4" data-motion="draw"/>
+        </svg>
+      </span>
+      <span class="sc-mini" id="semantic-contract-table" data-step="4">
+        <svg class="sc-tables" viewBox="0 0 240 64" width="240" height="64" aria-hidden="true">
+          <g class="sc-tables__other" data-motion="fade">
+            <rect x="89.5" y="1.5" width="61" height="61"/>
+            <path d="M89.5 16H150.5M89.5 32H150.5M89.5 47H150.5"/>
+            <rect x="177.5" y="1.5" width="61" height="61"/>
+            <path d="M177.5 16H238.5M177.5 32H238.5M177.5 47H238.5"/>
+          </g>
+          <g class="sc-tables__only" data-motion="stamp" style="--order:1">
+            <rect class="sc-tables__head" x="0" y="0" width="64" height="16"/>
+            <rect class="sc-tables__frame" x="1.5" y="1.5" width="61" height="61"/>
+            <path class="sc-tables__rows" d="M1.5 32H62.5M1.5 47H62.5"/>
+          </g>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="sc-foot" id="semantic-contract-foot" data-focus>
+    <svg class="icon icon--48" data-step="5" data-motion="fade" aria-hidden="true"><use href="#i-clock"/></svg>
+    <p class="sc-foot__unit" data-step="5" data-motion="fade">EUR · warn after 36 hours</p>
+    <span class="stamp sc-stamp" id="semantic-contract-stamp" data-step="5" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-contract"/></svg>Approved: Revenue Analytics</span>
+  </div>
+</div>
+<p class="sc-caption" id="semantic-contract-caption" data-step-until="2" data-motion="rise" style="--order:1">The four blanks the AI had to guess.</p>
+  <!-- /scene:semantic-contract -->
+  </section>
+
+  <section class="slide" id="contract-consumers" data-act="3" data-kind="main" data-label="Contract consumers" data-section="Contract compiler · consumers versus controls" data-track="consumers" data-seconds="300" data-note-key="contract-consumers" data-note="One written definition feeds four readers, but having it is not the same as using it. The two real locks sit outside it." data-design="v3" data-route="shown">
+  <!-- scene:contract-consumers -->
+<h1 class="scene-title">One definition, four readers, separate locks.</h1>
+<div class="cc-stage" id="contract-consumers-stage" data-visual="fan-out diagram: one definition compiles for four readers; below a hatched band, the two locks that sit outside the definition">
+  <svg class="cc-wires" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
+    <defs>
+      <clipPath id="contract-consumers-band-clip"><rect x="96" y="684" width="1728" height="32"/></clipPath>
+    </defs>
+    <g data-step="1">
+      <path id="contract-consumers-feed" class="edge" d="M232 410H376" data-motion="draw"/>
+      <polygon class="edge-head cc-head--feed" points="376,401 392,410 376,419" data-motion="fade" style="--order:3"/>
+      <path class="edge cc-fan" d="M528 410H616" data-motion="draw" style="--order:1"/>
+      <path class="edge cc-fan" d="M616 410V272H688" data-motion="draw" style="--order:1"/>
+      <path class="edge cc-fan" d="M616 410V364H688" data-motion="draw" style="--order:1"/>
+      <path class="edge cc-fan" d="M616 410V456H688" data-motion="draw" style="--order:1"/>
+      <path class="edge cc-fan" d="M616 410V548H688" data-motion="draw" style="--order:1"/>
+      <polygon class="edge-head cc-head--fan" points="688,263 704,272 688,281" data-motion="fade" style="--order:4"/>
+      <polygon class="edge-head cc-head--fan" points="688,355 704,364 688,373" data-motion="fade" style="--order:4"/>
+      <polygon class="edge-head cc-head--fan" points="688,447 704,456 688,465" data-motion="fade" style="--order:4"/>
+      <polygon class="edge-head cc-head--fan" points="688,539 704,548 688,557" data-motion="fade" style="--order:4"/>
+      <rect class="packet" x="222" y="400" width="20" height="20" data-motion="travel" data-path="#contract-consumers-feed" data-target="#contract-consumers-compile"/>
+    </g>
+    <g class="cc-band" data-step="3" data-motion="draw">
+      <path class="cc-band__hatch" clip-path="url(#contract-consumers-band-clip)" d="M64 716L96 684M78 716L110 684M92 716L124 684M106 716L138 684M120 716L152 684M134 716L166 684M148 716L180 684M162 716L194 684M176 716L208 684M190 716L222 684M204 716L236 684M218 716L250 684M232 716L264 684M246 716L278 684M260 716L292 684M274 716L306 684M288 716L320 684M302 716L334 684M316 716L348 684M330 716L362 684M344 716L376 684M358 716L390 684M372 716L404 684M386 716L418 684M400 716L432 684M414 716L446 684M428 716L460 684M442 716L474 684M456 716L488 684M470 716L502 684M484 716L516 684M498 716L530 684M512 716L544 684M526 716L558 684M540 716L572 684M554 716L586 684M568 716L600 684M582 716L614 684M596 716L628 684M610 716L642 684M624 716L656 684M638 716L670 684M652 716L684 684M666 716L698 684M680 716L712 684M694 716L726 684M708 716L740 684M722 716L754 684M736 716L768 684M750 716L782 684M764 716L796 684M778 716L810 684M792 716L824 684M806 716L838 684M820 716L852 684M834 716L866 684M848 716L880 684M862 716L894 684M876 716L908 684M890 716L922 684M904 716L936 684M918 716L950 684M932 716L964 684M946 716L978 684M960 716L992 684M974 716L1006 684M988 716L1020 684M1002 716L1034 684M1016 716L1048 684M1030 716L1062 684M1044 716L1076 684M1058 716L1090 684M1072 716L1104 684M1086 716L1118 684M1100 716L1132 684M1114 716L1146 684M1128 716L1160 684M1142 716L1174 684M1156 716L1188 684M1170 716L1202 684M1184 716L1216 684M1198 716L1230 684M1212 716L1244 684M1226 716L1258 684M1240 716L1272 684M1254 716L1286 684M1268 716L1300 684M1282 716L1314 684M1296 716L1328 684M1310 716L1342 684M1324 716L1356 684M1338 716L1370 684M1352 716L1384 684M1366 716L1398 684M1380 716L1412 684M1394 716L1426 684M1408 716L1440 684M1422 716L1454 684M1436 716L1468 684M1450 716L1482 684M1464 716L1496 684M1478 716L1510 684M1492 716L1524 684M1506 716L1538 684M1520 716L1552 684M1534 716L1566 684M1548 716L1580 684M1562 716L1594 684M1576 716L1608 684M1590 716L1622 684M1604 716L1636 684M1618 716L1650 684M1632 716L1664 684M1646 716L1678 684M1660 716L1692 684M1674 716L1706 684M1688 716L1720 684M1702 716L1734 684M1716 716L1748 684M1730 716L1762 684M1744 716L1776 684M1758 716L1790 684M1772 716L1804 684M1786 716L1818 684M1800 716L1832 684M1814 716L1846 684"/>
+      <path class="cc-band__rule" d="M96 684H1824"/>
+      <path class="cc-band__rule" d="M96 716H1824"/>
+    </g>
+  </svg>
+
+  <div class="node cc-node" id="contract-consumers-definition" data-focus><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-contract"/></svg></span><span class="node__label">Definition</span></div>
+  <p class="cc-caption" id="contract-consumers-caption" data-step-until="1" data-motion="rise" style="--order:1">A file on disk changes nothing by itself.</p>
+
+  <div class="node cc-node" id="contract-consumers-compile" data-step="1" data-motion="rise" data-focus><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-compiler"/></svg></span><span class="node__label">Compile</span></div>
+
+  <ul class="cc-readers" id="contract-consumers-readers" data-step="1">
+    <li class="cc-reader" id="contract-consumers-reader-ai" data-motion="rise" style="--order:0" data-focus><svg class="icon icon--48" aria-hidden="true"><use href="#i-ai-model"/></svg><span>AI tool: definitions + examples</span></li>
+    <li class="cc-reader" id="contract-consumers-reader-tests" data-motion="rise" style="--order:0"><svg class="icon icon--48" aria-hidden="true"><use href="#i-checklist"/></svg><span>Test cases</span></li>
+    <li class="cc-reader" id="contract-consumers-reader-guide" data-motion="rise" style="--order:1"><svg class="icon icon--48" aria-hidden="true"><use href="#i-book"/></svg><span>Guide for coding assistants</span></li>
+    <li class="cc-reader" id="contract-consumers-reader-catalog" data-motion="rise" style="--order:1"><svg class="icon icon--48" aria-hidden="true"><use href="#i-person"/></svg><span>Catalog for people</span></li>
+  </ul>
+
+  <div class="callout cc-callout" id="contract-consumers-callout" data-step="2" data-motion="rise">
+    <p class="cc-callout__fact">Runs used an approved example <span class="cc-num" data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="of:3" data-motion="count">3 of 3</span>, cited the definition <span class="cc-num" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span>.</p>
+    <p class="cc-callout__punch" id="contract-consumers-punch" data-step-until="3">Loaded is not the same as used.</p>
+    <span class="callout__pointer cc-pointer"></span>
+  </div>
+
+  <span class="cc-band__label" id="contract-consumers-locks-label" data-step="3" data-motion="fade" data-allow-overlap>Locks</span>
+  <div class="cc-locks" id="contract-consumers-locks" data-step="3" data-focus>
+    <div class="cc-lock" id="contract-consumers-lock-rules" data-motion="rise" style="--order:0"><svg class="icon icon--72" aria-hidden="true"><use href="#i-refuse"/></svg><p class="cc-lock__text"><b>Course rules:</b> refuse before a query, outside the AI tool</p></div>
+    <div class="cc-lock" id="contract-consumers-lock-db" data-motion="rise" style="--order:1"><svg class="icon icon--72" aria-hidden="true"><use href="#i-lock"/></svg><p class="cc-lock__text"><b>Database permission:</b> the lock</p><span class="wall cc-wall" data-motion="wall" style="--order:2"></span></div>
+  </div>
+</div>
+  <!-- /scene:contract-consumers -->
+  </section>
+
+  <section class="slide" id="ready-rematch" data-act="4" data-kind="main" data-label="Ready rematch" data-section="Rematch · same question, governed path" data-track="rematch" data-seconds="390" data-note-key="ready-rematch" data-note="Ask the same question again through the approved views. Show the recorded answer first, then the database check and both known gaps." data-design="v3" data-route="shown" data-live-check="ready:G01">
+  <!-- scene:ready-rematch -->
+<h1 class="scene-title">Same question. Approved views.</h1>
+<div class="q-card is-unchanged" id="ready-rematch-question" data-step-until="3" data-motion="rise" data-focus>
+  <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
+  <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
+  <span class="q-card__stamp" data-motion="stamp" style="--order:1">Unchanged</span>
+</div>
+<div class="rr-strip" id="ready-rematch-strip" data-step-until="2" data-motion="rise" style="--order:1" data-visual role="img" aria-label="The question goes to the AI, which reads the approved views through a read-only key.">
+  <svg class="rr-strip__wires" data-allow-overlap width="528" height="96" viewBox="0 0 528 96" aria-hidden="true">
+    <path class="edge rr-edge" d="M96 48H202"/>
+    <path class="edge-head" d="M216 48l-14-7v14z"/>
+    <path class="edge rr-edge" d="M312 48H418"/>
+    <path class="edge-head" d="M432 48l-14-7v14z"/>
+  </svg>
+  <div class="rr-strip__node" id="ready-rematch-s-question"><span class="rr-strip__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-question"/></svg></span><span class="rr-strip__label">Question</span></div>
+  <div class="rr-strip__node" id="ready-rematch-s-ai"><span class="rr-strip__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="rr-strip__label">AI</span></div>
+  <div class="rr-strip__node" id="ready-rematch-s-views"><span class="rr-strip__box rr-strip__box--views"><svg class="icon icon--56" aria-hidden="true"><use href="#i-view"/></svg></span><span class="rr-strip__label">Approved views</span></div>
+  <span class="rr-strip__key" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg></span>
+</div>
+<div class="ev-run rr-card" id="ready-rematch-run" data-step="1" data-motion="rise" data-visual data-focus>
+  <div class="ev-head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI run · one run</span></div>
+  <div class="rr-slot" id="ready-rematch-picked" data-focus><svg class="icon icon--40" aria-hidden="true"><use href="#i-view"/></svg><span>Picked:</span> <span>MRR summary by month</span></div>
+  <div class="ev-row rr-row"><span class="rr-month">Apr</span><span class="ev-value" data-ev="capture:ready:G01:0:ending_mrr_eur" data-format="eur" data-motion="count">€334,675</span><svg class="rr-eq" data-step="2" data-motion="draw" style="--order:0" data-allow-overlap width="208" height="48" viewBox="0 0 208 48" aria-hidden="true"><path d="M0 24H80"/><path d="M80 1.5H128V46.5H80Z"/><path d="M92 18H116M92 30H116"/><path d="M128 24H208"/></svg></div>
+  <div class="ev-row rr-row"><span class="rr-month">May</span><span class="ev-value" data-ev="capture:ready:G01:1:ending_mrr_eur" data-format="eur" data-motion="count">€344,450</span><svg class="rr-eq" data-step="2" data-motion="draw" style="--order:1" data-allow-overlap width="208" height="48" viewBox="0 0 208 48" aria-hidden="true"><path d="M0 24H80"/><path d="M80 1.5H128V46.5H80Z"/><path d="M92 18H116M92 30H116"/><path d="M128 24H208"/></svg></div>
+  <div class="ev-row rr-row"><span class="rr-month">Jun</span><span class="ev-value" data-ev="capture:ready:G01:2:ending_mrr_eur" data-format="eur" data-motion="count">€387,015</span><svg class="rr-eq" data-step="2" data-motion="draw" style="--order:2" data-allow-overlap width="208" height="48" viewBox="0 0 208 48" aria-hidden="true"><path d="M0 24H80"/><path d="M80 1.5H128V46.5H80Z"/><path d="M92 18H116M92 30H116"/><path d="M128 24H208"/></svg></div>
+  <p class="ev-foot rr-foot">An observation, not a benchmark.</p>
+</div>
+<svg class="rr-travel" width="1920" height="984" viewBox="0 0 1920 984" aria-hidden="true" data-allow-overlap>
+  <path id="ready-rematch-route" class="rr-route" d="M1288 296H1720V541H816"/>
+  <rect class="packet" x="0" y="0" width="20" height="20" data-step="1" data-motion="travel" data-path="#ready-rematch-route" data-target="#ready-rematch-picked"/>
+</svg>
+<div class="ev-db rr-card" id="ready-rematch-db" data-step="2" data-motion="rise" data-visual>
+  <div class="ev-head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database"/></svg><svg class="icon icon--40 rr-pass" aria-hidden="true"><use href="#i-pass"/></svg><span>Database check</span></div>
+  <div class="rr-slot"><span class="chip chip--pass" data-step="3" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg>Values match</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:0:ending_mrr_eur" data-format="eur">€334,675</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:1:ending_mrr_eur" data-format="eur">€344,450</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:2:ending_mrr_eur" data-format="eur">€387,015</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="rr-foot" aria-hidden="true"></div>
+</div>
+<div class="rr-gaps" id="ready-rematch-gaps" data-step="3" data-motion="rise" data-focus>
+  <p class="chip chip--gap rr-gap"><svg class="icon" aria-hidden="true"><use href="#i-gap"/></svg><span>Known gap: did not cite the metric definition.</span></p>
+  <p class="chip chip--gap rr-gap"><svg class="icon" aria-hidden="true"><use href="#i-gap"/></svg><span>Known gap: SQL needed a connection setting to find the view.</span></p>
+</div>
+  <!-- /scene:ready-rematch -->
+  </section>
+
+  <section class="slide" id="generalization" data-act="4" data-kind="main" data-label="Generalization" data-section="Generalization · two consumers" data-track="generalize" data-seconds="330" data-note-key="generalization" data-note="Show that the approved views also answer a change and a rate correctly, while the export tables get neither." data-design="v3" data-route="shown" data-live-check="ready:G02 ready:G03">
+  <!-- scene:generalization -->
+<h1 class="scene-title">Does it hold for other questions?</h1>
+<div class="gz-top" id="generalization-top" data-focus>
+  <div class="q-card gz-card" id="generalization-g02-card" data-step-until="3" data-motion="rise">
+    <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
+    <div class="gz-card__body">
+      <p class="q-card__text" data-step-until="2">What was net new MRR in the last complete quarter?</p>
+      <p class="q-card__text gz-card__short" data-step="2" data-motion="fade">Net new MRR</p>
+    </div>
+  </div>
+  <span class="gz-tag" id="generalization-g02-tag" data-step-until="3" data-motion="rise" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-change"/></svg>a change</span>
+  <div class="q-card gz-card" id="generalization-g03-card" data-step-until="5" data-motion="rise">
+    <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
+    <div class="gz-card__body">
+      <p class="q-card__text" data-step-until="4">What was logo churn rate by customer segment in the last complete quarter?</p>
+      <p class="q-card__text gz-card__short" data-step="4" data-motion="fade">Logo churn by segment</p>
+    </div>
+  </div>
+  <span class="gz-tag" id="generalization-g03-tag" data-step-until="4" data-motion="rise" style="--order:1"><svg class="gz-tag__swatch" width="84" height="17" viewBox="0 0 84 17" aria-hidden="true"><rect x="1.5" y="1.5" width="14" height="14"/><rect x="23.5" y="1.5" width="14" height="14"/><rect x="45.5" y="1.5" width="14" height="14"/><rect class="gz-tag__churned" x="67.5" y="1.5" width="14" height="14"/></svg>a rate</span>
+</div>
+
+<p class="gz-band" id="generalization-band" data-step="1" data-step-until="5" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs</span></p>
+
+<div class="gz-line" id="generalization-line" data-step="1" data-step-until="3" data-visual role="img" aria-label="Net new MRR on a line through zero: the export tables run landed below zero, the approved views run above it, where the database check lands too.">
+  <svg class="gz-line__art" width="1728" height="440" viewBox="0 0 1728 440" aria-hidden="true" data-allow-overlap>
+    <g data-motion="draw">
+      <path class="gz-axis" d="M40 180H1688"/>
+      <path class="gz-axis" d="M40 168V192M1688 168V192"/>
+    </g>
+    <g data-focus><path class="gz-zero" data-motion="draw" style="--order:1" d="M628 144V216"/></g>
+    <text class="gz-sign" data-motion="fade" style="--order:1" x="598" y="168" text-anchor="middle">−</text>
+    <text class="gz-sign" data-motion="fade" style="--order:1" x="658" y="168" text-anchor="middle">+</text>
+    <rect class="gz-marker gz-marker--export" data-motion="stamp" style="--order:2" x="191.5" y="133.5" width="45" height="45"/>
+    <rect class="gz-marker gz-marker--approved" data-motion="stamp" style="--order:2" x="1368" y="134" width="44" height="44"/>
+    <g data-focus>
+      <path id="generalization-db-path" class="gz-route" d="M628 204H1390"/>
+      <rect class="gz-marker gz-marker--truth" id="generalization-db-marker" data-step="2" data-motion="stamp" style="--order:4" x="1366" y="180" width="48" height="48"/>
+      <rect class="packet" x="0" y="0" width="20" height="20" data-step="2" data-motion="travel" data-path="#generalization-db-path" data-target="#generalization-db-marker"/>
+    </g>
+  </svg>
+  <p class="gz-mark gz-mark--export" data-motion="rise"><span class="gz-mark__lane">Export tables</span><span class="gz-mark__value" data-ev="capture:bad:G02:0:net_new_mrr" data-format="eur" data-motion="count">−€17,595</span></p>
+  <p class="gz-mark gz-mark--approved" data-motion="rise"><span class="gz-mark__lane">Approved views</span><span class="gz-mark__value" data-ev="capture:ready:G02:0:net_new_mrr_eur" data-format="eur" data-motion="count">€32,380</span></p>
+  <p class="gz-mark gz-mark--truth" data-step="2" data-motion="rise"><span class="gz-mark__lane">Database check</span><span class="gz-mark__value" data-ev="truth:G02:0:net_new_mrr_eur" data-format="eur">€32,380</span></p>
+  <span class="chip chip--fail gz-chip gz-chip--export" data-step="2" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-fail"/></svg>Doesn't match</span>
+  <span class="chip chip--pass gz-chip gz-chip--approved" data-step="2" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span>
+  <p class="gz-callback" data-step="2" data-motion="fade" style="--order:1">Same <span data-ev="truth:G02:0:net_new_mrr_eur" data-format="eur">€32,380</span> as before.</p>
+</div>
+
+<div class="gz-result" id="generalization-g02-result" data-step="3" data-motion="fade">
+  <svg class="icon icon--56 gz-result__icon" aria-hidden="true"><use href="#i-pass"/></svg>
+  <p class="gz-result__text">Net new MRR: approved views matched <span data-ev="truth:G02:0:net_new_mrr_eur" data-format="eur">€32,380</span></p>
+  <p class="gz-result__other"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-fail"/></svg><span>Export tables: doesn't match</span></p>
+</div>
+<div class="gz-result" id="generalization-g03-result" data-step="5" data-motion="fade">
+  <svg class="icon icon--56 gz-result__icon" aria-hidden="true"><use href="#i-pass"/></svg>
+  <p class="gz-result__text">Logo churn: approved views matched <span data-ev="truth:G03:0:logo_churn_rate_pct" data-format="pct0">10%</span> per segment</p>
+  <p class="gz-result__other"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-fail"/></svg><span>Export tables: no rate</span></p>
+</div>
+
+<p class="gz-run gz-run--export" id="generalization-run-export" data-step="3" data-step-until="5" data-motion="rise" data-focus><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-export"/></svg><span class="gz-run__text">Export tables: <span data-ev="capture:bad:G03:0:churned_count" data-format="int">0</span> of <span data-ev="capture:bad:G03:0:active_start_count" data-format="int">0</span>, no rate</span><svg class="icon icon--40 gz-run__mark" data-step="4" data-motion="stamp" style="--order:1" aria-hidden="true"><use href="#i-fail"/></svg></p>
+<p class="gz-run gz-run--approved" id="generalization-run-approved" data-step="3" data-step-until="5" data-motion="rise" data-visual><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-view"/></svg><span class="gz-run__text">Approved views: <span data-ev="capture:ready:G03:0:churned_accounts" data-format="int">4</span> of <span data-ev="capture:ready:G03:0:starting_accounts" data-format="int">40</span> · <span data-ev="capture:ready:G03:0:logo_churn_rate_pct" data-format="pct0">10%</span></span><svg class="icon icon--40 gz-run__mark gz-run__mark--pass" data-step="4" data-motion="stamp" style="--order:1" aria-hidden="true"><use href="#i-pass"/></svg></p>
+
+<p class="callout gz-cause" id="generalization-cause" data-step="4" data-step-until="5" data-motion="rise" data-focus><span class="gz-cause__pointer" aria-hidden="true"></span>It searched 'active'; the table says 'A'.</p>
+
+<div class="ev-db gz-grid" id="generalization-grid" data-step="4" data-step-until="5" data-motion="rise" data-visual role="img" aria-label="Database check cohort grid: 40 starting accounts per segment; 36 stayed and 4 left in each.">
+  <div class="gz-grid__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database"/></svg><svg class="icon icon--40 gz-pass" aria-hidden="true"><use href="#i-pass"/></svg><span>Database check: <span data-ev="truth:G03:0:churned_accounts" data-format="int">4</span> of <span data-ev="truth:G03:0:starting_accounts" data-format="int">40</span> left per segment, <span data-ev="truth:G03:0:logo_churn_rate_pct" data-format="pct0">10%</span></span></div>
+  <div class="gz-grid__rows">
+    <span class="gz-grid__label" aria-hidden="true"></span>
+    <div class="gz-grid__groups"><span class="gz-grid__group gz-grid__group--stayed">Stayed</span><span class="gz-grid__group gz-grid__group--left">Left</span></div>
+    <span class="gz-grid__label">Enterprise</span>
+    <svg class="gz-grid__row" data-row="Enterprise" data-motion="rise" style="--order:0" width="1414" height="30" viewBox="0 0 1414 30" aria-hidden="true"><rect class="gz-cell" x="1.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="36.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="71.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="106.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="141.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="176.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="211.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="246.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="281.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="316.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="351.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="386.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="421.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="456.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="491.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="526.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="561.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="596.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="631.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="666.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="701.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="736.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="771.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="806.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="841.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="876.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="911.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="946.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="981.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1016.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1051.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1086.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1121.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1156.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1191.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1226.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1285.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1320.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1355.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1390.5" y="1.5" width="27" height="27"/></svg>
+    <span class="gz-grid__label">Mid-Market</span>
+    <svg class="gz-grid__row" data-row="Mid-Market" data-motion="rise" style="--order:1" width="1414" height="30" viewBox="0 0 1414 30" aria-hidden="true"><rect class="gz-cell" x="1.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="36.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="71.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="106.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="141.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="176.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="211.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="246.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="281.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="316.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="351.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="386.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="421.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="456.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="491.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="526.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="561.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="596.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="631.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="666.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="701.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="736.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="771.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="806.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="841.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="876.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="911.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="946.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="981.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1016.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1051.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1086.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1121.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1156.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1191.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1226.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1285.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1320.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1355.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1390.5" y="1.5" width="27" height="27"/></svg>
+    <span class="gz-grid__label">SMB</span>
+    <svg class="gz-grid__row" data-row="SMB" data-motion="rise" style="--order:2" width="1414" height="30" viewBox="0 0 1414 30" aria-hidden="true"><rect class="gz-cell" x="1.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="36.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="71.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="106.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="141.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="176.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="211.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="246.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="281.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="316.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="351.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="386.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="421.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="456.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="491.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="526.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="561.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="596.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="631.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="666.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="701.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="736.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="771.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="806.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="841.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="876.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="911.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="946.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="981.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1016.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1051.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1086.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1121.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1156.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1191.5" y="1.5" width="27" height="27"/><rect class="gz-cell" x="1226.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1285.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1320.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1355.5" y="1.5" width="27" height="27"/><rect class="gz-cell gz-cell--churned" data-motion="stamp" style="--order:3" x="1390.5" y="1.5" width="27" height="27"/></svg>
+  </div>
+</div>
+
+<div class="gz-summary" id="generalization-summary" data-step="5" data-motion="fade" data-visual>
+  <p class="gz-summary__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs, <span data-ev="summary:ready:trials" data-format="int">3</span> questions:</span></p>
+  <div class="gz-tiles">
+    <div class="gz-tile gz-tile--export"><p class="gz-tile__head"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-export"/></svg><span>Export tables</span></p><span class="gz-tile__value" data-ev="summary:bad:valueCorrectnessPasses" data-format="of:3" data-motion="count">0 of 3</span></div>
+    <div class="gz-tile gz-tile--approved"><p class="gz-tile__head"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-view"/></svg><span>Approved views</span></p><span class="gz-tile__value" data-ev="summary:ready:valueCorrectnessPasses" data-format="of:3" data-motion="count">3 of 3</span></div>
+    <div class="gz-tile gz-tile--cited" id="generalization-cited" data-focus><p class="gz-tile__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-contract"/></svg><span>Cited the definition</span></p><span class="gz-tile__value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></div>
+  </div>
+  <p class="small gz-summary__scope">One recorded run per question per database.</p>
+</div>
+  <!-- /scene:generalization -->
+  </section>
+
+  <section class="slide" id="honest-no" data-act="5" data-kind="main" data-label="Honest no" data-section="Boundaries · refuse and deny" data-track="boundary" data-seconds="360" data-note-key="honest-no" data-note="A ready system also says no: course rules ask back or refuse before any query, and the database permission blocks private data." data-design="v3" data-route="shown" data-live-check="ready:C01 ready:R01 ready:R02 ready:D01">
+  <!-- scene:honest-no -->
+<h1 class="scene-title">Sometimes the right answer is no.</h1>
+<div class="hn-stage" data-visual="two layers of no: four requests, the course rules that ask back or refuse before any query, and the isometric database permission wall that denies a forced read">
+  <svg class="hn-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
+    <!-- Layer 2: the database permission (foundation sprite parts, reused from ready-architecture). -->
+    <g class="hn-iso" data-motion="fade" transform="matrix(0.95 0 0 0.95 1080.3 114.45)">
+      <use href="#iso-stack" x="126" y="169" width="321" height="302"/>
+      <use href="#iso-wall" x="155" y="192" width="475" height="441"/>
+    </g>
+
+    <!-- Layer 1: the course rules panel and the three request connectors. -->
+    <g class="hn-layers" data-motion="draw">
+      <rect class="hn-rules__frame" x="620" y="224" width="540" height="440"/>
+      <path class="hn-rules__rule" d="M620 300H1160"/>
+    </g>
+    <g class="hn-link" data-focus="step-1">
+      <path id="honest-no-p1" class="edge" data-motion="draw" d="M500 364H606"/>
+      <polygon class="edge-head" points="604,355 620,364 604,373" data-motion="fade" style="--order:3"/>
+    </g>
+    <g class="hn-link" data-focus="step-2">
+      <path id="honest-no-p2" class="edge" data-motion="draw" d="M500 484H606"/>
+      <polygon class="edge-head" points="604,475 620,484 604,493" data-motion="fade" style="--order:3"/>
+    </g>
+    <g class="hn-link" data-focus="step-3">
+      <path id="honest-no-p3" class="edge" data-motion="draw" d="M500 604H606"/>
+      <polygon class="edge-head" points="604,595 620,604 604,613" data-motion="fade" style="--order:3"/>
+    </g>
+
+    <!-- The forced read passes under the rules and climbs straight into the wall's front face
+         (face corners 1250,556 · 1675,311 · 1675,467 · 1250,712); the stop bar crosses its end. -->
+    <g class="hn-bypass" data-step="4" data-focus="step-4">
+      <path id="honest-no-bypass" class="edge edge--dashed hn-bypass__path" data-motion="draw" d="M500 772H1300L1420 560"/>
+      <g class="hn-bypass__stop" data-motion="stamp">
+        <path class="hn-bypass__halo" d="M1394 545L1446 575"/>
+        <path class="hn-bypass__bar" d="M1394 545L1446 575"/>
+      </g>
+      <g class="hn-deny-leader" data-motion="fade" style="--order:1">
+        <path class="hn-deny-leader__halo" d="M1446 581V646"/>
+        <path class="hn-deny-leader__line" d="M1446 581V646"/>
+      </g>
+    </g>
+
+    <rect class="packet" x="490" y="354" width="20" height="20" data-step="1" data-motion="travel" data-path="#honest-no-p1"/>
+    <rect class="packet" x="490" y="474" width="20" height="20" data-step="2" data-motion="travel" data-path="#honest-no-p2"/>
+    <rect class="packet" x="490" y="594" width="20" height="20" data-step="3" data-motion="travel" data-path="#honest-no-p3"/>
+    <rect class="packet" x="490" y="762" width="20" height="20" data-step="4" data-motion="travel" data-path="#honest-no-bypass"/>
+  </svg>
+
+  <div class="hn-requests" data-focus="step-0">
+    <p class="hn-req hn-req--1" data-motion="fade" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question"/></svg><span>How much MRR?</span></p>
+    <p class="hn-req hn-req--2" data-motion="fade" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question"/></svg><span>Profit by plan?</span></p>
+    <p class="hn-req hn-req--3" data-motion="fade" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question"/></svg><span>Customer emails + lifetime value</span></p>
+    <p class="hn-req hn-req--4" data-motion="fade" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question"/></svg><span>Forced private read</span></p>
+  </div>
+
+  <p class="hn-rules__head" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield"/></svg><span>Course rules</span></p>
+  <p class="hn-permission" data-motion="fade"><span class="hn-permission__swatch"></span><span>Database permission</span></p>
+
+  <p class="stamp hn-stamp hn-stamp--1" id="honest-no-c01" data-step="1" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-clarify"/></svg><span>Ask back: which MRR?</span></p>
+  <p class="stamp hn-stamp hn-stamp--2" id="honest-no-r01" data-step="2" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span>Refuse: no cost data</span></p>
+  <p class="stamp hn-stamp hn-stamp--3" id="honest-no-r02" data-step="3" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span>Refuse before any query</span></p>
+  <p class="stamp hn-stamp hn-deny" id="honest-no-d01" data-step="4" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg><span>Database denies it</span></p>
+
+  <div class="hn-close" data-step="5">
+    <p class="stamp hn-close__stamp" data-motion="stamp" data-focus="step-5"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Two locks: refuse early, enforce anyway.</span></p>
+    <p class="small hn-close__small" data-motion="fade" style="--order:1">Course rules and database checks, not AI runs.</p>
+  </div>
+</div>
+  <!-- /scene:honest-no -->
+  </section>
+
+  <section class="slide" id="freshness" data-act="5" data-kind="main" data-label="Freshness" data-section="Freshness · correct can still be stale" data-track="freshness" data-seconds="240" data-note-key="freshness" data-note="Right meaning is not the same as fresh data. Only the clock on the slide moves; the data itself never changes." data-design="v3" data-route="shown">
+  <!-- scene:freshness -->
+<h1 class="scene-title">Right meaning. How old is the data?</h1>
+<div class="fr-stage" data-visual="age gauge: a 0 to 72 hour ruler with the shaded, dashed-edge warning zone after 36 hours, the data needle, and a ghost 60-hour what-if marker">
+  <!-- Ruler scale: x = 164 + 22 px per hour (0h 164 · 3h 230 · 36h 956 · 60h 1484 · 72h 1748). -->
+  <svg class="fr-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
+    <rect class="fr-ruler__fill" x="164" y="500" width="1584" height="48"/>
+    <!-- Spec H E25: the warning zone is a Beton fill with a dashed edge; the 45° pattern belongs to export tables and the permission wall. -->
+    <g class="fr-zone" data-step="1" data-motion="fade">
+      <rect class="fr-zone__fill" x="956" y="500" width="792" height="48"/>
+      <rect class="fr-zone__edge" x="964" y="508" width="776" height="32"/>
+    </g>
+    <g class="fr-ruler" data-motion="draw">
+      <path class="edge edge--dashed" d="M164 379V500"/>
+      <rect class="fr-ruler__band" x="164" y="500" width="1584" height="48"/>
+      <path class="fr-ruler__ticks" d="M164 548V568M428 548V568M692 548V568M956 548V568M1220 548V568M1484 548V568M1748 548V568"/>
+    </g>
+    <g class="fr-marker" data-step="1" data-focus>
+      <path class="fr-marker__line" data-motion="draw" d="M956 392V556"/>
+    </g>
+
+    <path id="freshness-path-load" class="fr-track" d="M164 504H230"/>
+    <path id="freshness-path-out" class="fr-track" d="M230 504H1484"/>
+    <path id="freshness-path-back" class="fr-track" d="M1484 504H230"/>
+
+    <g class="fr-ghost fr-ghost--now" data-step="3" data-step-until="4" data-motion="fade">
+      <rect x="218" y="452" width="24" height="24"/>
+      <path d="M230 476V556"/>
+    </g>
+    <g class="fr-ghost" data-step="4" data-motion="fade">
+      <rect x="1472" y="452" width="24" height="24"/>
+      <path d="M1484 476V556"/>
+    </g>
+
+    <g id="freshness-needle-3" class="fr-needle" data-step-until="3" data-focus><rect x="218" y="452" width="24" height="24"/><rect x="228" y="476" width="4" height="80"/></g>
+    <g id="freshness-needle-60" class="fr-needle" data-step="3" data-step-until="4" data-focus><rect x="1472" y="452" width="24" height="24"/><rect x="1482" y="476" width="4" height="80"/></g>
+    <g id="freshness-needle-back" class="fr-needle" data-step="4"><rect x="218" y="452" width="24" height="24"/><rect x="228" y="476" width="4" height="80"/></g>
+
+    <g class="fr-traveller fr-traveller--load" data-motion="travel" data-path="#freshness-path-load" data-target="#freshness-needle-3"><rect x="152" y="452" width="24" height="24"/><rect x="162" y="476" width="4" height="80"/></g>
+    <g class="fr-traveller fr-traveller--out" data-step="3" data-motion="travel" data-path="#freshness-path-out" data-target="#freshness-needle-60"><rect x="218" y="452" width="24" height="24"/><rect x="228" y="476" width="4" height="80"/></g>
+    <g class="fr-traveller fr-traveller--back" data-step="4" data-motion="travel" data-path="#freshness-path-back" data-target="#freshness-needle-back"><rect x="1472" y="452" width="24" height="24"/><rect x="1482" y="476" width="4" height="80"/></g>
+  </svg>
+
+  <div class="node fr-node"><span class="node__box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-database"/></svg><span class="node__badge fr-clock-badge"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span></span></div>
+  <p class="fr-data">Q2 2026 data</p>
+  <p class="fr-clock">Loaded 06:00 UTC · checked 09:00 UTC</p>
+
+  <p class="fr-age">3 hours old</p>
+  <p class="fr-tick" style="left:164px">0h</p>
+  <p class="fr-tick" style="left:956px">36h</p>
+  <p class="fr-tick" style="left:1748px">72h</p>
+  <p class="chip fr-fresh" data-step-until="3" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg><span>Fresh: answer</span></p>
+
+  <p class="fr-rule" data-step="1" data-motion="fade" style="--order:1">Rule: warn after 36 hours</p>
+
+  <p class="fr-sixty" data-step="3" data-motion="fade">60 hours</p>
+  <p class="stamp fr-warn" data-step="3" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Answer with a warning</span></p>
+  <p class="fr-noblock" data-step="3" data-motion="fade" style="--order:1">No block rule was written.</p>
+
+  <p class="callout fr-whatif" data-step="4" data-motion="fade" style="--order:1" data-focus>What-if only. The data did not change.</p>
+</div>
+<div class="room-vote fr-vote" id="freshness-vote" data-step="2" data-step-until="3" data-motion="rise" data-allow-overlap>
+  <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
+  <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Same data, 60 hours old. What should happen?</p></div>
+  <div class="room-vote__options"><span class="room-vote__option">Answer</span><span class="room-vote__option">Warn</span><span class="room-vote__option">Block</span></div>
+</div>
+  <!-- /scene:freshness -->
+  </section>
+
+  <section class="slide" id="evaluation" data-act="5" data-kind="main" data-label="Evaluation" data-section="Proof · five behaviors, nine-case corpus" data-track="evaluation" data-seconds="300" data-note-key="evaluation" data-note="Show the recorded AI runs first, then the nine fixed database checks. Never present 9 of 9 as an AI score." data-design="v3" data-route="shown" data-live-check="corpus">
+  <!-- scene:evaluation -->
+<h1 class="scene-title" data-step-until="3">Tests check the setup, not the AI.</h1>
+<p class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI score 9 of 9?</p>
+<p class="ev-headline" id="evaluation-scope" data-step="4" data-motion="rise" style="--order:1" data-focus>They test the database and course rules, not the AI.</p>
+<div class="ev-stage" data-visual="five cases, each question with its expected behaviour, then two separate boards: recorded AI runs on three questions, and nine fixed database checks in a nine-cell grid with 9 of 9 and its scope line">
+  <ol class="ev-cases" data-focus>
+    <li class="ev-case" data-motion="fade" style="--order:0">
+      <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-case__label">Ending MRR</span></span>
+      <span class="ev-case__verdict" data-step="1" data-motion="stamp" style="--order:0"><svg class="ev-verdict__arrow" width="32" height="20" viewBox="0 0 32 20" aria-hidden="true"><path class="ev-verdict__stem" d="M0 10H20"/><path class="ev-verdict__head" d="M32 10L18 2V18Z"/></svg><span class="ev-verdict__word">Answer</span></span>
+    </li>
+    <li class="ev-case" data-motion="fade" style="--order:0">
+      <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-clarify"/></svg><span class="ev-case__label">How much MRR?</span></span>
+      <span class="ev-case__verdict" data-step="1" data-motion="stamp" style="--order:0"><svg class="ev-verdict__arrow" width="32" height="20" viewBox="0 0 32 20" aria-hidden="true"><path class="ev-verdict__stem" d="M0 10H20"/><path class="ev-verdict__head" d="M32 10L18 2V18Z"/></svg><span class="ev-verdict__word">Ask back</span></span>
+    </li>
+    <li class="ev-case" data-motion="fade" style="--order:1">
+      <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-case__label">Profit by plan?</span></span>
+      <span class="ev-case__verdict ev-case__verdict--pair" data-step="1" data-motion="stamp" style="--order:1"><svg class="ev-verdict__arrow" width="32" height="20" viewBox="0 0 32 20" aria-hidden="true"><path class="ev-verdict__stem" d="M0 10H20"/><path class="ev-verdict__head" d="M32 10L18 2V18Z"/></svg><span class="ev-verdict__word">Refuse</span></span>
+    </li>
+    <li class="ev-case" data-motion="fade" style="--order:1">
+      <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-case__label">Customer emails?</span></span>
+    </li>
+    <li class="ev-case" data-motion="fade" style="--order:1">
+      <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-deny"/></svg><span class="ev-case__label">Private read</span></span>
+      <span class="ev-case__verdict" data-step="1" data-motion="stamp" style="--order:1"><svg class="ev-verdict__arrow" width="32" height="20" viewBox="0 0 32 20" aria-hidden="true"><path class="ev-verdict__stem" d="M0 10H20"/><path class="ev-verdict__head" d="M32 10L18 2V18Z"/></svg><span class="ev-verdict__word">Deny</span></span>
+    </li>
+  </ol>
+
+  <div class="ev-run ev-board ev-board--run" id="evaluation-runs" data-step="2" data-motion="rise" data-focus>
+    <p class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs · one run each</span></p>
+    <p class="ev-row"><span class="ev-lab"><span class="ev-swatch ev-swatch--export"></span>Export tables:</span><span class="ev-val"><span class="ev-value" data-ev="summary:bad:valueCorrectnessPasses" data-format="of:3" data-motion="count">0 of 3</span></span></p>
+    <p class="ev-row"><span class="ev-lab"><span class="ev-swatch ev-swatch--approved"></span>Approved views:</span><span class="ev-val"><span class="ev-value" data-ev="summary:ready:valueCorrectnessPasses" data-format="of:3" data-motion="count">3 of 3</span></span></p>
+    <p class="ev-row"><span class="ev-lab"><svg class="icon ev-lab__icon" aria-hidden="true"><use href="#i-contract"/></svg>Cited the definition:</span><span class="ev-val"><span class="ev-value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></span></p>
+    <p class="ev-foot">An observation, not a benchmark.</p>
+  </div>
+
+  <span class="ev-divider" data-step="4" data-motion="fade"></span>
+
+  <div class="ev-db ev-board ev-board--db" id="evaluation-checks" data-step="4" data-motion="rise">
+    <p class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><svg class="icon ev-head__pass" aria-hidden="true"><use href="#i-pass"/></svg><span>Database checks</span></p>
+    <ol class="ev-cells">
+      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-clarify"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:4"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+    </ol>
+    <div class="ev-score">
+      <p class="ev-big" id="evaluation-score"><span data-ev="corpus:ready-pass" data-format="of:9" data-motion="count">9 of 9</span></p>
+    </div>
+  </div>
+</div>
+<div class="room-vote ev-vote" id="evaluation-vote" data-step="3" data-step-until="4" data-motion="rise" data-allow-overlap>
+  <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
+  <div><span class="room-vote__label">Room vote</span></div>
+  <div class="room-vote__options"><span class="room-vote__option">Yes</span><span class="room-vote__option">No</span></div>
+</div>
+  <!-- /scene:evaluation -->
+  </section>
+
+  <section class="slide" id="your-data" data-act="6" data-kind="main" data-label="Your data" data-section="Transfer · five-field canvas" data-track="transfer" data-seconds="450" data-recovery-seconds="120" data-note-key="your-data" data-note="Participants work on paper: one question of their own, the four blanks, one boundary and one test. No company data goes into the deck." data-design="v3" data-route="shown">
+  <!-- scene:your-data -->
+<h1 class="scene-title" id="your-data-title">Your turn: one question, five boxes.</h1>
+<p class="yd-privacy" id="your-data-privacy"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield"/></svg><span>Use a synthetic or generic example. Do not enter employer, customer, personal, or sensitive data.</span></p>
+<div class="yd-canvas" id="your-data-canvas" data-visual data-focus role="group" aria-label="Worksheet: five connected boxes, from the question to the test.">
+  <svg class="yd-path" id="your-data-path" width="1728" height="456" viewBox="0 0 1728 456" aria-hidden="true" data-allow-overlap>
+    <g class="yd-path__base" data-motion="draw" style="--order:0">
+      <path class="edge edge--dashed" d="M258 63H316"/>
+      <path class="edge edge--dashed" d="M578 63H636"/>
+      <path class="edge edge--dashed" d="M1090 63H1148"/>
+      <path class="edge edge--dashed" d="M1410 63H1468"/>
+    </g>
+  </svg>
+  <div class="yd-box" id="your-data-box-1" data-focus data-motion="fade" style="--order:0">
+    <div class="yd-box__head"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></div>
+    <span class="yd-box__label">Question</span>
+    <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
+    <p class="yd-ghost" data-step-until="5">Ending MRR by month, Q2</p>
+  </div>
+  <div class="yd-box" id="your-data-box-2" data-focus data-motion="fade" style="--order:0">
+    <svg class="yd-link" data-step="1" width="64" height="24" viewBox="0 0 64 24" aria-hidden="true" data-allow-overlap><path class="edge yd-link__line" d="M2 12H46" data-motion="draw"/><path class="edge-head yd-link__head" d="M60 12l-14-7v14z" data-motion="fade" style="--order:4"/></svg>
+    <div class="yd-box__head"><svg class="icon" aria-hidden="true"><use href="#i-view"/></svg></div>
+    <span class="yd-box__label">Approved view</span>
+    <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
+    <p class="yd-ghost" data-step-until="5">MRR summary by month</p>
+  </div>
+  <div class="yd-box yd-box--wide" id="your-data-box-3" data-focus data-motion="fade" style="--order:1">
+    <svg class="yd-link" data-step="2" width="64" height="24" viewBox="0 0 64 24" aria-hidden="true" data-allow-overlap><path class="edge yd-link__line" d="M2 12H46" data-motion="draw"/><path class="edge-head yd-link__head" d="M60 12l-14-7v14z" data-motion="fade" style="--order:4"/></svg>
+    <div class="yd-box__head yd-blanks" role="list">
+      <span class="yd-blank" role="listitem" aria-label="Kind of number?"><svg class="icon icon--48" aria-hidden="true"><use href="#i-level"/></svg></span>
+      <span class="yd-blank" role="listitem" aria-label="Rows per what?"><svg class="icon icon--48" aria-hidden="true"><use href="#i-rows"/></svg></span>
+      <span class="yd-blank" role="listitem" aria-label="Which months?"><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar"/></svg></span>
+      <span class="yd-blank" role="listitem" aria-label="Which table?"><svg class="icon icon--48" aria-hidden="true"><use href="#i-view"/></svg></span>
+    </div>
+    <span class="yd-box__label">Four blanks</span>
+    <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
+    <p class="yd-ghost yd-ghost--blanks" data-step-until="5"><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-level"/></svg><span>Level</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-rows"/></svg><span>Month</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-calendar"/></svg><span>Apr–Jun</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-view"/></svg><span>MRR summary</span></span></p>
+  </div>
+  <div class="yd-box" id="your-data-box-4" data-focus data-motion="fade" style="--order:1">
+    <svg class="yd-link" data-step="3" width="64" height="24" viewBox="0 0 64 24" aria-hidden="true" data-allow-overlap><path class="edge yd-link__line" d="M2 12H46" data-motion="draw"/><path class="edge-head yd-link__head" d="M60 12l-14-7v14z" data-motion="fade" style="--order:4"/></svg>
+    <div class="yd-box__head"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg></div>
+    <span class="yd-box__label">Boundary</span>
+    <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
+    <p class="yd-ghost" data-step-until="5">No customer identifiers</p>
+  </div>
+  <div class="yd-box" id="your-data-box-5" data-focus data-motion="fade" style="--order:1">
+    <svg class="yd-link" data-step="4" width="64" height="24" viewBox="0 0 64 24" aria-hidden="true" data-allow-overlap><path class="edge yd-link__line" d="M2 12H46" data-motion="draw"/><path class="edge-head yd-link__head" d="M60 12l-14-7v14z" data-motion="fade" style="--order:4"/></svg>
+    <div class="yd-box__head"><svg class="icon" aria-hidden="true"><use href="#i-checklist"/></svg></div>
+    <span class="yd-box__label">Test</span>
+    <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
+    <p class="yd-ghost" data-step-until="5">Answer must match truth</p>
+  </div>
+</div>
+<div class="yd-now" id="your-data-now">
+  <svg class="icon icon--48" aria-hidden="true"><use href="#i-person"/></svg>
+  <p class="yd-now__text" data-step-until="1" data-motion="fade" style="--order:1"><b>Now:</b> write one business question and what should happen.</p>
+  <p class="yd-now__text" data-step="1" data-step-until="2" data-motion="fade"><b>Now:</b> name the smallest approved view it needs.</p>
+  <p class="yd-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> fill the four blanks: kind of number, rows, months, table.</p>
+  <p class="yd-now__text" data-step="3" data-step-until="4" data-motion="fade"><b>Now:</b> one thing the AI must never reach.</p>
+  <p class="yd-now__text" data-step="4" data-step-until="5" data-motion="fade"><b>Now:</b> write one test. Compare with a partner.</p>
+  <p class="yd-now__text" data-step="5" data-motion="fade">Two pairs: say your question and your hardest box.</p>
+</div>
+  <!-- /scene:your-data -->
+  </section>
+
+  <section class="slide" id="resolution" data-act="6" data-kind="main" data-label="Resolution" data-section="Resolution · same experiment" data-track="resolution" data-seconds="150" data-note-key="resolution" data-note="Recall the opening vote, then show that only the interface changed. The verdict is a limited pilot with named gaps, not an AI-ready stamp." data-design="v3" data-route="shown" data-live-check="ready:G01">
+  <!-- scene:resolution -->
+<h1 class="scene-title" id="resolution-title" data-step-until="3">Same question. What changed the answer?</h1>
+<p class="h2 rs-closing" id="resolution-closing" data-step="3" data-motion="rise" style="--order:1">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
+<div class="q-card q-card--hero" id="resolution-question" data-step-until="1" data-motion="rise" style="--order:0" data-focus>
+  <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
+  <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
+</div>
+<svg class="rs-chart" id="resolution-chart" data-step="1" data-visual width="960" height="424" viewBox="0 0 960 424" role="img" aria-label="Truth Chart for April, May and June on one scale: the recorded run on the export tables, the recorded run on the approved views, and the database check.">
+  <g transform="translate(0 56)">
+    <rect id="resolution-bar-1-0" class="chart__approved" x="90.67" y="34.98" width="74.67" height="223.68" data-motion="grow" style="--order:1"/>
+    <rect id="resolution-bar-1-1" class="chart__approved" x="442.67" y="28.45" width="74.67" height="230.21" data-motion="grow" style="--order:1"/>
+    <rect id="resolution-bar-1-2" class="chart__approved" x="794.67" y="0" width="74.67" height="258.66" data-motion="grow" style="--order:1"/>
+    <rect id="resolution-bar-2-0" class="chart__truth" x="181.33" y="34.98" width="74.67" height="223.68" data-motion="grow" style="--order:2"/>
+    <rect id="resolution-bar-2-1" class="chart__truth" x="533.33" y="28.45" width="74.67" height="230.21" data-motion="grow" style="--order:2"/>
+    <rect id="resolution-bar-2-2" class="chart__truth" x="885.33" y="0" width="74.67" height="258.66" data-motion="grow" style="--order:2"/>
+    <rect id="resolution-bar-0-1" class="chart__export" x="352" y="252.13" width="74.67" height="6.53" data-motion="grow" style="--order:0"/>
+    <rect id="resolution-bar-0-2" class="chart__export" x="704" y="230.21" width="74.67" height="28.45" data-motion="grow" style="--order:0"/>
+    <line id="resolution-zero" class="chart__zero" x1="0" x2="960" y1="258.66" y2="258.66"/>
+    <rect id="resolution-bar-0-0" class="chart__export" x="0" y="258.66" width="74.67" height="13.34" data-motion="grow" style="--order:0;--grow-origin:50% 0%"/>
+    <g class="rs-eqs" data-motion="fade" style="--order:3" data-allow-overlap>
+      <g id="resolution-eq-0" class="rs-eq" transform="translate(153.33 58.98)"><rect class="rs-eq__box" width="40" height="40"/><path class="rs-eq__mark" d="M10 15H30M10 25H30"/></g>
+      <g id="resolution-eq-1" class="rs-eq" transform="translate(505.33 52.45)"><rect class="rs-eq__box" width="40" height="40"/><path class="rs-eq__mark" d="M10 15H30M10 25H30"/></g>
+      <g id="resolution-eq-2" class="rs-eq" transform="translate(857.33 24)"><rect class="rs-eq__box" width="40" height="40"/><path class="rs-eq__mark" d="M10 15H30M10 25H30"/></g>
+    </g>
+    <text id="resolution-label-0-0" class="chart__value" x="0" y="306" text-anchor="start" data-ev="capture:bad:G01:0:ending_mrr" data-format="eur" data-motion="count">−€19,960</text>
+    <text id="resolution-label-0-1" class="chart__value" x="426.67" y="240.13" text-anchor="end" data-ev="capture:bad:G01:1:ending_mrr" data-format="eur" data-motion="count">€9,775</text>
+    <text id="resolution-label-0-2" class="chart__value" x="778.67" y="218.21" text-anchor="end" data-ev="capture:bad:G01:2:ending_mrr" data-format="eur" data-motion="count">€42,565</text>
+    <g id="resolution-approved-values" data-focus>
+      <text id="resolution-label-1-0" class="chart__value rs-approved-label" x="173.33" y="22.98" text-anchor="middle" data-ev="capture:ready:G01:0:ending_mrr_eur" data-format="eur" data-motion="count">€334,675</text>
+      <text id="resolution-label-1-1" class="chart__value rs-approved-label" x="525.33" y="16.45" text-anchor="middle" data-ev="capture:ready:G01:1:ending_mrr_eur" data-format="eur" data-motion="count">€344,450</text>
+      <text id="resolution-label-1-2" class="chart__value rs-approved-label" x="877.33" y="-12" text-anchor="middle" data-ev="capture:ready:G01:2:ending_mrr_eur" data-format="eur" data-motion="count">€387,015</text>
+    </g>
+    <text class="rs-month" x="128" y="354" text-anchor="middle">April</text>
+    <text class="rs-month" x="480" y="354" text-anchor="middle">May</text>
+    <text class="rs-month" x="832" y="354" text-anchor="middle">June</text>
+  </g>
+</svg>
+<p class="sr-only" id="resolution-truth" data-step="1">Database check, the same three months: <span data-ev="truth:G01:0:ending_mrr_eur" data-format="eur">€334,675</span>, <span data-ev="truth:G01:1:ending_mrr_eur" data-format="eur">€344,450</span>, <span data-ev="truth:G01:2:ending_mrr_eur" data-format="eur">€387,015</span>.</p>
+<div class="rs-key" id="resolution-key" data-step="1">
+  <div class="rs-key__row" data-motion="rise" style="--order:0"><span class="rs-swatch rs-swatch--export"></span><span class="rs-key__name">Export tables</span><span class="chip chip--fail" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-fail"/></svg>Doesn't match</span></div>
+  <div class="rs-key__row" data-motion="rise" style="--order:0"><span class="rs-swatch rs-swatch--approved"></span><span class="rs-key__name">Approved views</span><span class="chip chip--pass" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="rs-key__row" data-motion="rise" style="--order:1"><span class="rs-swatch rs-swatch--db"></span><span class="rs-key__name">Database check</span></div>
+</div>
+<div class="rs-gaps" id="resolution-gaps" data-step="2" data-step-until="3" data-motion="rise" style="--order:0" data-focus>
+  <p class="rs-gaps__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap"/></svg><span>Known gaps:</span></p>
+  <ul class="rs-gaps__list">
+    <li>did not cite the metric definition</li>
+    <li>SQL needed a connection setting to find the view</li>
+    <li>one recorded run per question</li>
+  </ul>
+</div>
+<p class="rs-nine" id="resolution-nine" data-step="2" data-step-until="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database"/></svg><span><b data-ev="corpus:ready-pass" data-format="of:9">9 of 9</b> tests the setup, not the AI</span></p>
+<p class="stamp rs-verdict" id="resolution-verdict" data-step="3" data-motion="stamp" style="--order:0" data-focus><svg class="icon" aria-hidden="true"><use href="#i-checklist"/></svg><span>Verdict: limited pilot, not signed off.</span></p>
+<p class="rs-gapline" id="resolution-gapline" data-step="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap"/></svg><span>Gaps: no definition cited · SQL leaned on a setting · one run each</span></p>
+<img class="rs-lockup" id="resolution-lockup" data-step="3" data-motion="fade" style="--order:1" src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" />
+<div class="room-vote rs-vote" id="resolution-vote" data-step-until="1" data-motion="rise" style="--order:1" data-allow-overlap>
+  <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
+  <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Which answer goes in the board pack now?</p></div>
+  <div class="room-vote__options"><span class="room-vote__option">Export tables</span><span class="room-vote__option">Approved views</span><span class="room-vote__option">Neither yet</span></div>
+</div>
+  <!-- /scene:resolution -->
+  </section>
+
+  <section class="slide" id="appendix-architecture" data-kind="appendix" data-label="Architecture" data-section="Appendix · runtime architecture" data-track="appendix" data-seconds="0" data-note-key="appendix-architecture" data-note="For questions about how the pieces connect and why there are two databases." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-architecture -->
+<h1 class="scene-title">The model is one part of the answer path.</h1>
+<div class="aa-diagram" data-visual="runtime-path">
+  <svg class="aa-svg" width="1728" height="556" viewBox="0 0 1728 556" role="img" aria-label="The answer path from browser to result, crossing four trust boundaries, and the two lanes the same PostgreSQL facts branch into.">
+    <g class="aa-brackets">
+      <path class="aa-bracket" d="M320 42V34H1440V42" />
+      <text class="aa-blabel" x="320" y="22">Retrieval</text>
+      <path class="aa-bracket" d="M1152 242V234H1590V242" />
+      <text class="aa-blabel" x="1152" y="222">Application</text>
+      <path class="aa-bracket" d="M790 242V234H930V242" />
+      <text class="aa-blabel" x="790" y="222">Database</text>
+      <path class="aa-bracket" d="M421 242V234H539V242" />
+      <text class="aa-blabel" x="421" y="222">Evidence</text>
+    </g>
+    <g class="aa-edges">
+      <path class="edge" data-motion="draw" style="--order:0" d="M96 100H306" />
+      <path class="edge" data-motion="draw" style="--order:0" d="M416 100H568" />
+      <path class="edge" data-motion="draw" style="--order:1" d="M859 100H944" />
+      <path class="edge" data-motion="draw" style="--order:1" d="M1163 100H1330" />
+      <path class="edge" data-motion="draw" style="--order:2" d="M1440 100H1700V298H1604" />
+      <path class="edge" data-motion="draw" style="--order:2" d="M1371 298H1262" />
+      <path class="edge" data-motion="draw" style="--order:3" d="M1152 298H922" />
+      <path class="edge" data-motion="draw" style="--order:3" d="M812 298H553" />
+      <path class="edge" data-motion="draw" style="--order:4" d="M860 398V412H72V528H106M72 456H106" />
+      <path class="edge-head" d="M320 100l-14-7v14z" />
+      <path class="edge-head" d="M582 100l-14-7v14z" />
+      <path class="edge-head" d="M958 100l-14-7v14z" />
+      <path class="edge-head" d="M1344 100l-14-7v14z" />
+      <path class="edge-head" d="M1590 298l14-7v14z" />
+      <path class="edge-head" d="M1248 298l14-7v14z" />
+      <path class="edge-head" d="M908 298l14-7v14z" />
+      <path class="edge-head" d="M539 298l14-7v14z" />
+      <path class="edge-head" d="M120 456l-14-7v14z" />
+      <path class="edge-head" d="M120 528l-14-7v14z" />
+    </g>
+    <g class="aa-path-text">
+      <rect class="aa-box" x="0" y="52" width="96" height="96" />
+      <svg class="icon icon--56" x="20" y="72" width="56" height="56" aria-hidden="true"><use href="#i-person" /></svg>
+      <text class="aa-label" x="48" y="182" text-anchor="middle">Browser</text>
+      <rect class="aa-box" x="320" y="52" width="96" height="96" />
+      <svg class="icon icon--56" x="340" y="72" width="56" height="56" aria-hidden="true"><use href="#i-app" /></svg>
+      <text class="aa-mono" x="368" y="182" text-anchor="middle">Ask :3210</text>
+      <rect class="aa-plate" x="582" y="72" width="277" height="56" />
+      <text class="aa-mono" x="720" y="108" text-anchor="middle">openai-compatible</text>
+      <rect class="aa-plate" x="958" y="72" width="205" height="56" />
+      <text class="aa-mono" x="1060" y="108" text-anchor="middle">bridge :8789</text>
+      <g class="aa-focus" data-focus>
+        <rect class="aa-box aa-box--focus" x="1344" y="52" width="96" height="96" />
+      </g>
+      <svg class="icon icon--56" x="1364" y="72" width="56" height="56" aria-hidden="true"><use href="#i-ai-model" /></svg>
+      <text class="aa-mono" x="1392" y="182" text-anchor="middle">claude-cli</text>
+      <rect class="aa-plate" x="1371" y="270" width="219" height="56" />
+      <text class="aa-mono" x="1480" y="306" text-anchor="middle">generated SQL</text>
+      <rect class="aa-box" x="1152" y="250" width="96" height="96" />
+      <svg class="icon icon--56" x="1172" y="270" width="56" height="56" aria-hidden="true"><use href="#i-shield" /></svg>
+      <text class="aa-label" x="1200" y="378" text-anchor="middle">read-only SQL guard</text>
+      <rect class="aa-box" x="812" y="250" width="96" height="96" />
+      <svg class="icon icon--56" x="832" y="270" width="56" height="56" aria-hidden="true"><use href="#i-database" /></svg>
+      <text class="aa-mono" x="860" y="378" text-anchor="middle">PostgreSQL :55432</text>
+      <rect class="aa-plate" x="421" y="270" width="118" height="56" />
+      <text class="aa-mono" x="480" y="306" text-anchor="middle">result</text>
+    </g>
+    <g class="aa-lanes">
+      <rect class="aa-lane aa-lane--export" x="120" y="428" width="1400" height="56" />
+      <rect class="aa-swatch-ground" x="138" y="444" width="24" height="24" />
+      <rect class="aa-swatch aa-swatch--hatch" x="138" y="444" width="24" height="24" />
+      <svg class="icon icon--32" x="178" y="440" width="32" height="32" aria-hidden="true"><use href="#i-export" /></svg>
+      <text class="aa-lane-text" x="226" y="464"><tspan class="aa-strong">Export lane:</tspan> <tspan class="aa-mono">saas_bad.public</tspan> · 7 tables · <tspan class="aa-mono">foldline_bad_reader</tspan> · FOLDLINE Bad</text>
+      <rect class="aa-lane aa-lane--approved" x="120" y="500" width="1400" height="56" />
+      <rect class="aa-swatch aa-swatch--solid" x="138" y="516" width="24" height="24" />
+      <svg class="icon icon--32" x="178" y="512" width="32" height="32" aria-hidden="true"><use href="#i-view" /></svg>
+      <text class="aa-lane-text" x="226" y="536"><tspan class="aa-strong">Approved lane:</tspan> <tspan class="aa-mono">saas_ready.analytics</tspan> · 5 views · <tspan class="aa-mono">foldline_ready_reader</tspan> · FOLDLINE Ready</text>
+    </g>
+  </svg>
+</div>
+<div class="aa-hide">
+  <p class="aa-hide__head">What the look-alike tables hide:</p>
+  <ul class="aa-hide__grid">
+    <li><span class="mono">monthly_revenue</span> stores each month's change</li>
+    <li><span class="mono">billing_events</span> repeats every 19th movement in a retry batch</li>
+    <li><span class="mono">subscription_export</span> holds June 2026 only</li>
+    <li><span class="mono">acct_history</span> state is A, C or N</li>
+  </ul>
+</div>
+<div class="aa-notes">
+  <p class="aa-note">Two databases keep the comparison legible and avoid a current Ask schema-identity limit. Schemas, roles or views in one database can apply the same principles.</p>
+  <p class="aa-note aa-note--caveat">claude-cli is a reported label. Not a direct Anthropic API run.</p>
+</div>
+  <!-- /scene:appendix-architecture -->
+  </section>
+
+  <section class="slide" id="appendix-semantic-contract" data-kind="appendix" data-label="Semantic contract" data-section="Appendix · semantic contract" data-track="appendix" data-seconds="0" data-note-key="appendix-semantic-contract" data-note="For questions about the actual definition file behind the four blanks." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-semantic-contract -->
+<h1 class="scene-title">The full ending MRR contract.</h1>
+<pre class="code sc-code" data-visual="contract-file"><code><span class="sc-line">slug: ending_mrr</span><span class="sc-line sc-line--mapped">model: analytics.mrr_summary_monthly</span><span class="sc-line sc-line--mapped sc-line--focus" data-focus>aggregation: snapshot</span><span class="sc-line sc-line--mapped">result_grain: monthly</span><span class="sc-line">unit: EUR</span><span class="sc-line">owner: revenue_analytics</span><span class="sc-line">freshness_sla_hours: 36</span><span class="sc-line sc-line--mapped">time_behavior:</span><span class="sc-line">  period_rule: end_of_period</span><span class="sc-line">limitations: [Never sum ending MRR across months.]</span></code></pre>
+<ol class="sc-map">
+  <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-level" /></svg></span><span class="sc-map__q">Kind of number</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">aggregation</span></li>
+  <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-rows" /></svg></span><span class="sc-map__q">Rows per what</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">result_grain</span></li>
+  <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg></span><span class="sc-map__q">Which months</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">time_behavior</span></li>
+  <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-view" /></svg></span><span class="sc-map__q">Which table</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">model</span></li>
+</ol>
+<div class="sc-fan" data-allow-overlap aria-hidden="true">
+  <svg width="1728" height="120" viewBox="0 0 1728 120">
+    <path class="edge" data-motion="draw" style="--order:0" d="M96 56H128V8H1449" />
+    <path class="edge" data-motion="draw" style="--order:1" d="M347 8V22M745 8V22M1143 8V22M1449 8V22" />
+    <path class="edge-head" d="M347 36l-7-14h14z" />
+    <path class="edge-head" d="M745 36l-7-14h14z" />
+    <path class="edge-head" d="M1143 36l-7-14h14z" />
+    <path class="edge-head" d="M1449 36l-7-14h14z" />
+  </svg>
+</div>
+<div class="sc-compiler">
+  <span class="sc-compiler__label">Compiled for:</span>
+  <span class="sc-compiler__box"><svg class="icon icon--56" aria-hidden="true"><use href="#i-compiler" /></svg></span>
+</div>
+<ul class="sc-outputs">
+  <li>Ask metrics + verified question pairs</li>
+  <li>fixed evidence cases</li>
+  <li><span>CLAUDE.md <span class="sc-nowrap">(Claude Code only)</span></span></li>
+  <li>human catalog</li>
+</ul>
+<p class="sc-note">Compiled is not consumed: see the Ask boundary appendix.</p>
+  <!-- /scene:appendix-semantic-contract -->
+  </section>
+
+  <section class="slide" id="appendix-access-controls" data-kind="appendix" data-label="Access controls" data-section="Appendix · database boundary" data-track="appendix" data-seconds="0" data-note-key="appendix-access-controls" data-note="For questions about the difference between instructions, course rules and database permissions." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-access-controls -->
+<h1 class="scene-title">Four controls, one final lock.</h1>
+<div class="ac-edges" data-allow-overlap aria-hidden="true">
+  <svg width="1728" height="320" viewBox="0 0 1728 320">
+    <path class="edge" data-motion="draw" style="--order:0" d="M276 92H570" />
+    <path class="edge" data-motion="draw" style="--order:1" d="M708 92H1002" />
+    <path class="edge" data-motion="draw" style="--order:2" d="M1140 92H1410" />
+    <path class="edge-head" d="M584 92l-14-7v14z" />
+    <path class="edge-head" d="M1016 92l-14-7v14z" />
+    <path class="edge-head" d="M1424 92l-14-7v14z" />
+    <path class="edge edge--dashed" d="M648 268V316" />
+    <path class="edge edge--dashed" d="M1512 268V316" />
+  </svg>
+</div>
+<ol class="ac-chain" data-visual="control-chain">
+  <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-contract" /></svg></span><span class="ac-label">Guide</span><span class="ac-sub">guidance</span></li>
+  <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-refuse" /></svg></span><span class="ac-label">Course policy</span><span class="ac-sub">clarify or refuse before SQL</span></li>
+  <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ac-label">Read-only SQL guard</span><span class="ac-sub">defence in depth</span></li>
+  <li class="ac-step ac-step--lock"><span class="ac-wall"><span class="ac-box ac-box--focus" data-focus><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg></span></span><span class="ac-label">PostgreSQL role</span><span class="ac-sub">enforces the boundary</span></li>
+</ol>
+<div class="ac-left">
+  <p class="ac-card"><svg class="icon icon--40" aria-hidden="true"><use href="#i-refuse" /></svg><span><b>R02:</b> Direct customer identifiers are outside the approved AI data surface. Use approved pseudonymous analytics keys or an authorized operational workflow.</span></p>
+  <p class="ac-small"><span class="mono">account_key</span> is an approved pseudonymous analytics key, not anonymous. Course policy is not imported into Ask.</p>
+</div>
+<div class="ac-right">
+  <pre class="code ac-code"><code>ALTER ROLE … SET default_transaction_read_only = on;
+GRANT USAGE ON SCHEMA analytics …;
+GRANT SELECT ON analytics.mrr_summary_monthly …;
+REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
+  <p class="ac-card"><svg class="icon icon--40" aria-hidden="true"><use href="#i-deny" /></svg><span><b>D01:</b> PostgreSQL denied access to the non-approved schema.</span></p>
+  <p class="ac-reader"><span class="mono">foldline_ready_reader</span> cannot read source, core or direct identifiers, cannot write, and cannot connect to <span class="mono">saas_bad</span>.</p>
+</div>
+  <!-- /scene:appendix-access-controls -->
+  </section>
+
+  <section class="slide" id="appendix-evaluation" data-kind="appendix" data-label="Evaluation record" data-section="Appendix · evaluation contract" data-track="appendix" data-seconds="0" data-note-key="appendix-evaluation" data-note="For questions about what one check records and why the exact query text is not the target." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-evaluation -->
+<h1 class="scene-title">All nine database checks, and the recorded runs.</h1>
+<div class="ae-board ae-board--db" data-visual="database-checks">
+  <p class="ae-head"><span class="ae-head__icon"><svg class="icon icon--32" aria-hidden="true"><use href="#i-database" /></svg></span>Database checks</p>
+  <table class="ctable ae-table ae-table--db">
+    <thead><tr><th>case</th><th>question</th><th>expected</th><th>export</th><th>approved</th></tr></thead>
+    <tbody>
+          <tr><td class="ae-case">G01</td><td>Ending MRR by month, Q2</td><td>answer</td><td><span class="ae-chip ae-chip--fail"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg>fail</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">G02</td><td>Net new MRR, Q2</td><td>answer</td><td><span class="ae-chip ae-chip--fail"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg>fail</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">G03</td><td>Logo churn by segment</td><td>answer</td><td><span class="ae-chip ae-chip--fail"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg>fail</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">G04</td><td>Expansion MRR by country</td><td>answer</td><td><span class="ae-chip ae-chip--fail"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg>fail</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">G05</td><td>Top pseudonymous accounts</td><td>answer</td><td><span class="ae-chip ae-chip--fail"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg>fail</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">C01</td><td>How much MRR?</td><td>clarify</td><td><span class="ae-na">n/a</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">R01</td><td>Profit by plan</td><td>refuse</td><td><span class="ae-na">n/a</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">R02</td><td>Customer emails + LTV</td><td>refuse</td><td><span class="ae-na">n/a</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+          <tr><td class="ae-case">D01</td><td>Forced private read</td><td>deny</td><td><span class="ae-na">n/a</span></td><td><span class="ae-chip ae-chip--pass"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg>pass</span></td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="ae-summary" data-focus>approved <span data-ev="corpus:ready-pass" data-format="int">9</span>/9 · export 0/5 applicable · not an AI score</p>
+<div class="ae-board ae-board--run" data-visual="recorded-runs">
+  <p class="ae-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI runs (G01–G03)</p>
+  <table class="ctable ae-table ae-table--run">
+    <thead><tr><th>grade</th><th class="num">export</th><th class="num">approved</th></tr></thead>
+    <tbody>
+          <tr><td>value matches truth</td><td class="num"><span data-ev="summary:bad:valueCorrectnessPasses" data-format="int">0</span>/<span data-ev="summary:bad:trials" data-format="int">3</span></td><td class="num"><span data-ev="summary:ready:valueCorrectnessPasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>canonical relation</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:relationCorrectnessPasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>verified question in trace</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>governed metric citation</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>combined ready evidence</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:readyEvidencePasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+    </tbody>
+  </table>
+  <p class="ae-small">one forced run per case and lane · <span class="mono">skipClarify=true</span> · uncached · not a benchmark</p>
+</div>
+  <!-- /scene:appendix-evaluation -->
+  </section>
+
+  <section class="slide" id="appendix-lineage-freshness" data-kind="appendix" data-label="Lineage and freshness" data-section="Appendix · data state" data-track="appendix" data-seconds="0" data-note-key="appendix-lineage-freshness" data-note="For questions about the age of the data, the load delay, who owns it and where it comes from." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-lineage-freshness -->
+<h1 class="scene-title">A frozen clock, not a September freshness claim.</h1>
+<div class="lf-diagram" data-visual="lineage-and-clock">
+  <svg width="1728" height="520" viewBox="0 0 1728 520" role="img" aria-label="Lineage from source through core to analytics, and the sealed clock: loaded at 06:00 UTC, evaluated three hours later, warning only after 36 hours.">
+    <path class="lf-flow" data-motion="draw" style="--order:0" d="M232 56H790" />
+    <path class="lf-flow" data-motion="draw" style="--order:1" d="M920 56H1478" />
+    <path class="edge-head" d="M808 56l-18-9v18z" />
+    <path class="edge-head" d="M1496 56l-18-9v18z" />
+    <rect class="lf-box" x="120" y="0" width="112" height="112" />
+    <svg class="icon icon--56" x="148" y="28" width="56" height="56" aria-hidden="true"><use href="#i-database" /></svg>
+    <rect class="lf-box" x="808" y="0" width="112" height="112" />
+    <svg class="icon icon--56" x="836" y="28" width="56" height="56" aria-hidden="true"><use href="#i-database" /></svg>
+    <rect class="lf-box" x="1496" y="0" width="112" height="112" />
+    <svg class="icon icon--56" x="1524" y="28" width="56" height="56" aria-hidden="true"><use href="#i-view" /></svg>
+    <text class="lf-node" x="176" y="150" text-anchor="middle">source</text>
+    <text class="lf-node" x="864" y="150" text-anchor="middle">core</text>
+    <text class="lf-node" x="1552" y="150" text-anchor="middle">analytics</text>
+    <text class="lf-sub" x="176" y="184" text-anchor="middle">complete through June 2026</text>
+    <text class="lf-sub" x="864" y="184" text-anchor="middle">account-month grain</text>
+    <text class="lf-sub" x="1552" y="184" text-anchor="middle">certified month grain</text>
+
+    <path class="lf-rule" d="M0 236H1728" />
+    <rect class="lf-box" x="0" y="364" width="72" height="72" />
+    <svg class="icon icon--48" x="12" y="376" width="48" height="48" aria-hidden="true"><use href="#i-clock" /></svg>
+    <path class="lf-axis" d="M72 400H1456" />
+    <path class="lf-axis lf-axis--open" d="M1456 400H1720" />
+    <rect class="lf-span" x="160" y="390" width="108" height="20" />
+    <path class="lf-tick" d="M160 400V446" />
+    <path class="lf-tick lf-tick--warn" d="M1456 400V326" />
+    <g class="lf-focus" data-focus>
+      <path class="lf-clock" d="M268 400V296" />
+      <rect class="lf-clock-cap" x="260" y="288" width="16" height="16" />
+    </g>
+    <text class="lf-strong" x="160" y="478">Load</text>
+    <text class="lf-mono" x="160" y="508">2026-07-01T06:00:00Z</text>
+    <text class="lf-strong" x="292" y="306">evaluation clock</text>
+    <text class="lf-mono" x="292" y="338">2026-07-01T09:00:00Z</text>
+    <text class="lf-num" x="214" y="376" text-anchor="middle">3h</text>
+    <text class="lf-strong" x="1456" y="310" text-anchor="middle">warn after 36 h</text>
+    <text class="lf-soft" x="1720" y="446" text-anchor="end">no hard expiry</text>
+  </svg>
+</div>
+<div class="lf-envelope">
+  <span class="lf-envelope__icon"><svg class="icon icon--48" aria-hidden="true"><use href="#i-database" /></svg></span>
+  <div class="lf-envelope__text">
+    <p class="lf-envelope__facts">FOLDLINE · Berlin B2B operations SaaS · January 2025–June 2026 · 144 accounts · 2,592 account-months · EUR · Q2 2026</p>
+    <p class="lf-envelope__ids">foldline_saas_2026q2 · foldline-v1 · frozen_historical · load delay 6 h after period close</p>
+  </div>
+</div>
+<p class="lf-note">The 60-hour freshness scene was a what-if, not a rerun.</p>
+  <!-- /scene:appendix-lineage-freshness -->
+  </section>
+
+  <section class="slide" id="appendix-ask-boundary" data-kind="appendix" data-label="Ask boundary" data-section="Appendix · Ask integration boundary" data-track="appendix" data-seconds="0" data-note-key="appendix-ask-boundary" data-note="For questions about what the AI tool receives, and the extra meaning it currently drops." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-ask-boundary -->
+<h1 class="scene-title">Compiled does not mean consumed.</h1>
+<div class="ab-shots" data-visual="recorded-boundary-summary">
+  <figure class="ab-shot"><div class="ab-public-panel"><strong>Two synthetic connections</strong><p>Bad: unclear raw fields.</p><p>Ready: approved analytical views.</p><p>Same frozen FOLDLINE dataset.</p></div><figcaption class="ab-shot__name">Historical source setup, summarized</figcaption></figure>
+  <figure class="ab-shot"><div class="ab-public-panel"><strong>Three recorded questions</strong><p>Ending balance. Net change. Churn.</p><p>One observed run per question and lane.</p><p>No new model call on this page.</p></div><figcaption class="ab-shot__name">Historical run record, summarized</figcaption></figure>
+  <p class="ab-provenance">Original teaching summary of the August 2026 record. Third-party interface screenshots are omitted from this public edition.</p></div>
+<div class="ab-gaps">
+  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Ready G01 SQL is unqualified; the captured <span class="mono">search_path analytics,public</span> resolves it to <span class="mono">analytics.mrr_summary_monthly</span> (portability dependency).</span></p>
+  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Enrichment retrieval currently drops additional semantic meaning and routing fields. Historical application audit; the public course does not operate that application.</span></p>
+</div>
+<div class="ab-stack-edges" data-allow-overlap aria-hidden="true">
+  <svg width="80" height="600" viewBox="0 0 80 600">
+    <path class="edge" data-motion="draw" style="--order:0" d="M40 0V600" />
+  </svg>
+</div>
+<ol class="ab-stack" data-visual="ask-boundary">
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-app" /></svg></span><span class="ab-layer__text"><b>Ask generation:</b> metrics + verified question pairs · frozen traces: verified question <span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/3, metric citations <span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/3</span></li>
+  <li class="ab-layer ab-layer--gap"><span class="ab-box ab-box--gap" data-focus><svg class="icon icon--48" aria-hidden="true"><use href="#i-gap" /></svg></span><span class="ab-layer__text"><b>Prompt gap:</b> 40 enrichments stored and loaded into <span class="mono">genCtx</span>; with <span class="mono">retrievedManifest</span>, <span class="mono">sqlGenerator</span> bypasses <span class="mono">buildSchemaContext</span>, so influence is unproven</span></li>
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ab-layer__text"><b>Application:</b> course policy (not imported) + read-only SQL guard · CLAUDE.md guides Claude Code only</span></li>
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-lock" /></svg></span><span class="ab-layer__text"><b>PostgreSQL:</b> role grants</span></li>
+</ol>
+  <!-- /scene:appendix-ask-boundary -->
+  </section>
+
+  <section class="slide" id="appendix-run-metadata" data-kind="appendix" data-label="Run metadata" data-section="Appendix · evidence envelope" data-track="appendix" data-seconds="0" data-note-key="appendix-run-metadata" data-note="For questions about what a recorded AI run and a database check mean, and what each record holds." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-run-metadata -->
+<h1 class="scene-title">Four labels keep two evidence planes separate.</h1>
+<div class="rm-plane rm-plane--model" data-visual="evidence-planes">
+  <p class="rm-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI run</p>
+  <p class="rm-lead"><strong>MODEL CAPTURE</strong> names the six sealed Claude observations. <strong>LIVE MODEL</strong> is reserved; this deck does not invoke one.</p>
+  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg><span><b>PUBLIC EXPORT · SEALED CAPTURE</b> · <span class="mono">public.monthly_revenue</span> · VALUE FAIL · RELATION FAIL</span></p>
+  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg><span><b>GOVERNED VIEW · SEALED CAPTURE</b> · <span class="mono">mrr_summary_monthly → analytics.mrr_summary_monthly</span> · VALUE + RELATION PASS · VQ PRESENT</span></p>
+  <p class="rm-probe">The default G01 export-lane probe stopped at the ambiguity pre-pass before SQL; no response text retained.</p>
+</div>
+<div class="rm-divider" aria-hidden="true"></div>
+<div class="rm-plane rm-plane--db">
+  <p class="rm-head"><span class="rm-head__db"><svg class="icon icon--32" aria-hidden="true"><use href="#i-database" /></svg><span class="rm-badge" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg></span></span>Database check</p>
+  <p class="rm-label"><b>DB PROOF LIVE:</b> the fixed case ran now</p>
+  <p class="rm-label"><b>DB PROOF REPLAY:</b> checksum-matched earlier result</p>
+  <p class="rm-label rm-label--corpus">DB PROOF · INDEPENDENT TRUTH · deterministic ready corpus 9 / 9</p>
+</div>
+<div class="rm-envelope">
+  <div class="rm-col">
+    <span class="rm-code">ONE RUN / LANE · execute=true</span>
+    <span class="rm-code">highAccuracy=false · history=[]</span>
+    <span class="rm-code">skipClarify=true · uncached</span>
+    <span class="rm-prose">· not Ask default behavior</span>
+  </div>
+  <div class="rm-col">
+    <span class="rm-code">Ask 3210 → openai-compatible</span>
+    <span class="rm-code">→ bridge 8789 → claude-cli → PG 55432</span>
+    <span class="rm-prose">· underlying Anthropic model/version: not established by the capture</span>
+  </div>
+  <div class="rm-col">
+    <span class="rm-code">foldline_saas_2026q2 ·</span>
+    <span class="rm-code">55b8975be7ed08e263719485cf0363d4</span>
+    <span class="rm-code">2026-07-01T06:00:00Z · 2026-07-01T09:00:00Z</span>
+    <span class="rm-code">captured 2026-08-23</span>
+  </div>
+</div>
+<div class="rm-verdict">
+  <span class="rm-stamp" data-focus>BOUNDED PILOT · CITATION GATE RED</span>
+  <span class="rm-verdict__rest">metric citation absent · ready E2E FAIL · fresh 18-call protocol NOT RUN 0/18 · AI deployment BLOCKED</span>
+</div>
+<p class="rm-limits"><b>Does not prove:</b> repeatable model quality · pinned model version · production readiness · current provider availability · 9/9 as an AI score · course policy or database denial as Ask behavior</p>
+  <!-- /scene:appendix-run-metadata -->
+  </section>
+
+  <section class="slide" id="appendix-research" data-kind="appendix" data-label="Research" data-section="Appendix · research" data-track="appendix" data-seconds="0" data-note-key="appendix-research" data-note="For questions about the sources behind the choices in this workshop." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-research -->
+<h1 class="scene-title">The choices follow open standards and guidance.</h1>
+<div class="rs-edges" data-allow-overlap aria-hidden="true">
+  <svg width="1728" height="140" viewBox="0 0 1728 140">
+    <path class="edge" data-motion="draw" style="--order:0" d="M274 70H560" />
+    <path class="edge" data-motion="draw" style="--order:1" d="M714 70H1000" />
+    <path class="edge" data-motion="draw" style="--order:2" d="M1154 70H1440" />
+    <path class="edge-head" d="M574 70l-14-7v14z" />
+    <path class="edge-head" d="M1014 70l-14-7v14z" />
+    <path class="edge-head" d="M1454 70l-14-7v14z" />
+  </svg>
+</div>
+<ol class="rs-map" data-visual="source-map">
+  <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-question" /></svg></span><span class="rs-kind">Question</span><span class="rs-source">Spider 2.0</span></li>
+  <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-metric" /></svg></span><span class="rs-kind">Meaning</span><span class="rs-source">dbt Semantic Layer</span><span class="rs-source">Open Data Contract Standard (ODCS)</span></li>
+  <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-lock" /></svg></span><span class="rs-kind">Boundary</span><span class="rs-source">PostgreSQL privileges</span></li>
+  <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-checklist" /></svg></span><span class="rs-kind">Evidence</span><span class="rs-source">NIST AI RMF</span><span class="rs-source">OpenLineage</span></li>
+</ol>
+<p class="rs-note">Claude Code memory docs scope <span class="mono">CLAUDE.md</span>. Full URLs and rights: speaker notes and <span class="mono">research/source-ledger.md</span>.</p>
+  <!-- /scene:appendix-research -->
+  </section>
+
+</deck-stage>
+</main>
+
+<script src="./lib/model-capture-data.js"></script>
+<script src="./lib/replay-data.js"></script>
+<script src="./lib/demo-adapter.js"></script>
+<script src="./lib/deck-runtime.js"></script>
+<!-- generated:scene-scripts -->
+<script src="./lib/scenes/failure-anatomy.js"></script>
+<script src="./lib/scenes/resolution.js"></script>
+<!-- /generated:scene-scripts -->
+</body>
+</html>

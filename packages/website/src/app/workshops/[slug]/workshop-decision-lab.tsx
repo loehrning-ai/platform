@@ -100,6 +100,7 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
   const validationId = `${decisionName}-validation`;
   const firstChoiceRef = useRef<HTMLInputElement>(null);
   const firstEvidenceRef = useRef<HTMLInputElement>(null);
+  const resetActionRef = useRef<HTMLButtonElement>(null);
   const resetFocusPending = useRef(false);
   const [choiceId, setChoiceId] = useState("");
   const [evidenceId, setEvidenceId] = useState("");
@@ -108,6 +109,12 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
   const feedback = submitted
     ? selectFeedback(config, choiceId, evidenceId)
     : null;
+
+  useLayoutEffect(() => {
+    // Submission replaces its native button. Transfer focus to the new
+    // action instead of leaving keyboard users on the document body.
+    if (submitted) resetActionRef.current?.focus({ preventScroll: true });
+  }, [submitted]);
 
   useLayoutEffect(() => {
     if (!resetFocusPending.current) return;
@@ -291,6 +298,8 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
           <div className="mt-4 flex border-t border-border pt-4">
             {submitted ? (
               <button
+                key="reset"
+                ref={resetActionRef}
                 type="reset"
                 className="inline-flex min-h-11 items-center justify-center gap-2 border border-foreground bg-background px-4 py-2 text-sm font-bold text-foreground transition-colors hover:bg-foreground hover:text-background"
               >
@@ -299,6 +308,7 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
               </button>
             ) : (
               <button
+                key="submit"
                 type="submit"
                 className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground"
               >

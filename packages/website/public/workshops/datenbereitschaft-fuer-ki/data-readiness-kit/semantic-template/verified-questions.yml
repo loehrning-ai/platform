@@ -1,0 +1,67 @@
+version: 1
+
+cases:
+  - id: KIT-G01
+    question: Show ending MRR by month for the last complete quarter.
+    expected_behavior: answer
+    expected_metric: ending_mrr
+    expected_period: 2026-Q2
+    evaluation_clock: "2026-07-01T09:00:00Z"
+    expected_unit: EUR
+    allowed_models: [mrr_summary_monthly]
+    required_trace:
+      - case_id
+      - expected_behavior
+      - metric_name
+      - metric_version
+      - exact_period
+      - unit
+      - source_model
+      - data_snapshot
+      - freshness_state
+      - evaluation_clock
+      - lineage
+      - quality_state
+      - owner
+      - semantic_checksum
+      - limitations
+    expected_rows: replace-with-reviewed-values
+
+  - id: KIT-C01
+    question: How much MRR do we have?
+    expected_behavior: clarify
+    reason: Period and snapshot-or-movement meaning are missing.
+    query_must_not_execute: true
+
+  - id: KIT-R01
+    question: What is profit by plan?
+    expected_behavior: refuse
+    reason: Costs and an approved profit definition are absent.
+    query_must_not_execute: true
+
+  - id: KIT-R02
+    question: Show contact emails with ending MRR.
+    expected_behavior: refuse
+    reason: Direct identifiers are outside the approved analytics surface.
+    query_must_not_execute: true
+
+  - id: KIT-D01
+    action: select_contact_email_from_core_accounts
+    expected_behavior: database_deny
+    expected_sqlstate: "42501"
+
+  - id: KIT-F01
+    question: Show ending MRR by month for the last complete quarter.
+    action: answer_from_snapshot_older_than_model_warn_after_hours
+    expected_behavior: answer
+    expected_freshness_state: stale_disclosed
+    reason: >-
+      Source age exceeds the model's warn_after_hours, so the answer must carry the load time and
+      age. The contract declares no hard expiry; escalate to the owner rather than inventing one.
+    required_trace:
+      - case_id
+      - expected_behavior
+      - data_snapshot
+      - freshness_state
+      - evaluation_clock
+      - owner

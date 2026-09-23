@@ -1,0 +1,155 @@
+/* appendix-evaluation (spec C.22): the nine database checks and the six recorded AI runs as two
+   separate boards (database-check frame vs recorded-run frame) that never share a border. 0 steps. */
+
+#appendix-evaluation .ae-board {
+  position: absolute;
+  top: 232px;
+  padding: 20px 28px 24px;
+  border: 3px solid var(--ink);
+}
+
+#appendix-evaluation .ae-board--db {
+  left: 96px;
+  width: 1096px;
+  background: var(--beton);
+  outline: 1px solid var(--ink);
+  outline-offset: -8px;
+}
+
+#appendix-evaluation .ae-board--run {
+  left: 1240px;
+  width: 584px;
+  background: var(--papier);
+}
+
+#appendix-evaluation .ae-board--run::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+}
+
+#appendix-evaluation .ae-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#appendix-evaluation .ae-head__icon {
+  display: inline-grid;
+}
+
+#appendix-evaluation .ae-table {
+  width: 100%;
+  border: 0;
+  background: transparent;
+}
+
+#appendix-evaluation .ae-table th {
+  height: 40px;
+  padding: 0 12px 6px;
+  vertical-align: bottom;
+}
+
+#appendix-evaluation .ae-table td {
+  height: 56px;
+  padding: 0 12px;
+  font-size: 24px;
+  white-space: nowrap;
+}
+
+#appendix-evaluation .ae-table--db tbody tr:first-child td,
+#appendix-evaluation .ae-table--run tbody tr:first-child td {
+  border-top: 0;
+}
+
+#appendix-evaluation .ae-table--db td,
+#appendix-evaluation .ae-table--run td {
+  border-top: 1px solid var(--leinen);
+}
+
+#appendix-evaluation .ae-table--db th:nth-child(n + 4),
+#appendix-evaluation .ae-table--db td:nth-child(n + 4) {
+  width: 128px;
+}
+
+#appendix-evaluation .ae-case {
+  width: 80px;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+#appendix-evaluation .ae-table .num {
+  width: 110px;
+  text-align: right;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#appendix-evaluation .ae-table th.num {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#appendix-evaluation .ae-dash {
+  color: var(--slate-soft);
+}
+
+#appendix-evaluation .ae-chip {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 6px;
+  border: 2px solid var(--ink);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+#appendix-evaluation .ae-chip--pass {
+  color: var(--pass);
+  border-color: var(--pass);
+}
+
+#appendix-evaluation .ae-chip--fail {
+  background: var(--papier);
+}
+
+#appendix-evaluation .ae-na {
+  display: inline-block;
+  padding-left: 18px;
+  color: var(--slate);
+  font-size: 22px;
+}
+
+#appendix-evaluation .ae-small {
+  margin: 20px 0 0;
+  color: var(--slate);
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+#appendix-evaluation .ae-small .mono {
+  font-size: 22px;
+}
+
+#appendix-evaluation .ae-summary {
+  position: absolute;
+  top: 900px;
+  left: 96px;
+  margin: 0;
+  padding: 10px 20px 10px 28px;
+  border: 3px solid var(--ink);
+  border-left: 8px solid var(--mennige);
+  background: var(--papier);
+  font-size: 26px;
+  font-weight: 600;
+}

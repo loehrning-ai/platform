@@ -1,0 +1,210 @@
+/* resolution (spec C.18): the Truth Chart again (failure-anatomy's geometry, now three series), a key that
+   grades each lane, the known gaps, then the verdict and the closing sentence as the headline. One Mennige
+   group per step: the question, the approved-views values, the known gaps, the verdict. */
+
+#resolution-closing {
+  position: absolute;
+  top: 112px;
+  left: 96px;
+  width: 1728px;
+  margin: 0;
+}
+
+/* Step 0: the unchanged question sits under the title (spec C.18) with the room vote below. From step 1 the
+   chart and its key take the content band at their final position, so nothing moves on a later press. */
+#resolution-question {
+  position: absolute;
+  top: 224px;
+  left: 96px;
+  max-width: 1560px;
+}
+
+#resolution-chart {
+  position: absolute;
+  top: 256px;
+  left: 112px;
+  overflow: visible;
+}
+
+#resolution .rs-month {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+/* "=" badge bridging each approved-views bar and its database check bar (spec B.4 .eq, sized for the chart). */
+#resolution .rs-eq__box {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#resolution .rs-eq__mark {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+#resolution-key {
+  position: absolute;
+  top: 276px;
+  left: 1104px;
+  display: grid;
+  width: 720px;
+  gap: 8px;
+}
+
+#resolution .rs-key__row {
+  display: flex;
+  height: 72px;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--leinen);
+}
+
+#resolution .rs-swatch {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#resolution .rs-swatch--export {
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#resolution .rs-swatch--db {
+  border-color: var(--slate-soft);
+  background: var(--slate-soft);
+}
+
+#resolution .rs-key__name {
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#resolution .rs-key__row .chip {
+  margin-left: auto;
+  background: var(--papier);
+}
+
+#resolution-gaps {
+  position: absolute;
+  top: 540px;
+  left: 1104px;
+  width: 720px;
+  padding: 20px 24px 24px 32px;
+  border: 2px dashed var(--ink);
+  background: var(--papier);
+}
+
+#resolution-gaps::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: -2px;
+  width: 8px;
+  background: var(--mennige);
+}
+
+#resolution .rs-gaps__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 8px;
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+#resolution .rs-gaps__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#resolution .rs-gaps__list li {
+  position: relative;
+  padding-left: 40px;
+  white-space: nowrap;
+}
+
+#resolution .rs-gaps__list li::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 12px;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+
+/* The 9 of 9 line (step 2) and the short gap line (step 3) sit directly under the chart they limit. */
+#resolution-nine {
+  position: absolute;
+  top: 720px;
+  left: 112px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#resolution-nine b {
+  font-weight: 700;
+}
+
+#resolution-verdict {
+  position: absolute;
+  top: 540px;
+  left: 1104px;
+  max-width: 720px;
+  margin: 0;
+  border-color: var(--mennige);
+}
+
+#resolution-gapline {
+  position: absolute;
+  top: 712px;
+  left: 112px;
+  display: flex;
+  max-width: 960px;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 12px 20px;
+  border: 2px dashed var(--ink);
+  font-size: var(--t-body);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+#resolution-gapline .icon {
+  margin-top: -2px;
+}
+
+#resolution-lockup {
+  position: absolute;
+  top: 725px;
+  right: 96px;
+  width: 206px;
+  height: 40px;
+}
+
+/* One Mennige group per step (spec B.1). The step-0 question card (data-focus), the gaps card (step 2) and
+   the verdict (step 3) carry theirs above, since each shows on its step only. */
+#resolution[data-step-current="1"] .rs-approved-label {
+  fill: var(--mennige);
+}
