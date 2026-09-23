@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useId,
   useLayoutEffect,
   useRef,
@@ -95,13 +96,16 @@ function selectFeedback(
 }
 
 export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
+  const english = config.resultLabel === "Decision feedback";
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
   const evidenceName = `workshop-evidence-${useId().replaceAll(":", "")}`;
   const validationId = `${decisionName}-validation`;
+  const readinessId = `${decisionName}-readiness`;
   const firstChoiceRef = useRef<HTMLInputElement>(null);
   const firstEvidenceRef = useRef<HTMLInputElement>(null);
   const resetActionRef = useRef<HTMLButtonElement>(null);
   const resetFocusPending = useRef(false);
+  const [hydrated, setHydrated] = useState(false);
   const [choiceId, setChoiceId] = useState("");
   const [evidenceId, setEvidenceId] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -109,6 +113,12 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
   const feedback = submitted
     ? selectFeedback(config, choiceId, evidenceId)
     : null;
+
+  useEffect(() => {
+    // SSR must not expose a native form submission before React owns it.
+    // Keep both the answers and submit control inert until this island is ready.
+    setHydrated(true);
+  }, []);
 
   useLayoutEffect(() => {
     // Submission replaces its native button. Transfer focus to the new
@@ -150,6 +160,7 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
 
   function submitDecision(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!hydrated) return;
     if (!choiceId) {
       setValidationError("decision");
       return;
@@ -211,16 +222,32 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
 
         <form
           className="bg-card/25 p-4 sm:p-5"
+          aria-busy={!hydrated}
           onSubmit={submitDecision}
           onReset={resetDecision}
           noValidate
         >
+          {!hydrated ? (
+            <p id={readinessId} className="mb-4 text-sm leading-relaxed text-muted-foreground">
+              {english
+                ? "The choices unlock once JavaScript has loaded."
+                : "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist."}
+            </p>
+          ) : null}
+          <noscript>
+            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+              {english
+                ? "JavaScript is required for this exercise. You can still read the course and download its materials without it."
+                : "Diese Übung benötigt JavaScript. Du kannst den Kurs und seine Materialien auch ohne JavaScript lesen und herunterladen."}
+            </p>
+          </noscript>
           <div className="grid gap-5 xl:grid-cols-2">
             <fieldset
+              disabled={!hydrated}
               className="min-w-0"
               aria-invalid={validationError === "decision" || undefined}
               aria-describedby={
-                validationError === "decision" ? validationId : undefined
+                !hydrated ? readinessId : validationError === "decision" ? validationId : undefined
               }
             >
               <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
@@ -241,10 +268,11 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
             </fieldset>
 
             <fieldset
+              disabled={!hydrated}
               className="min-w-0"
               aria-invalid={validationError === "evidence" || undefined}
               aria-describedby={
-                validationError === "evidence" ? validationId : undefined
+                !hydrated ? readinessId : validationError === "evidence" ? validationId : undefined
               }
             >
               <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
@@ -310,7 +338,8 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
               <button
                 key="submit"
                 type="submit"
-                className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground"
+                disabled={!hydrated}
+                className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground disabled:cursor-wait disabled:opacity-60"
               >
                 {config.submitLabel}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
