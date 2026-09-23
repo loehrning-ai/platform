@@ -1,0 +1,511 @@
+/* Presenter console on paper (Das Ö v5.3): ink text, Papier and Beton panels, ink outlines.
+   Mennige marks only the primary press; --pass only a healthy connection. */
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--paper);
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  margin: 0;
+  padding: 16px 20px;
+  overflow: auto;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 16px;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible { transform: none; }
+
+button,
+select {
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+  font: inherit;
+}
+
+button:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 3px solid var(--mennige);
+  outline-offset: 2px;
+}
+
+.presenter-head {
+  display: flex;
+  width: 100%;
+  max-width: 1680px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 auto 12px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--ink);
+}
+
+.eyebrow,
+.panel-head,
+.scene-section,
+.scene-meta,
+.runtime-block,
+.pace-grid,
+.scene-jump span {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: var(--slate);
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(26px, 2.2vw, 38px);
+  letter-spacing: -0.02em;
+}
+
+.runtime-block {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+  max-width: 52%;
+  text-align: right;
+}
+
+.runtime-block strong {
+  padding: 6px 9px;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  background: var(--papier);
+  letter-spacing: 0.08em;
+}
+
+.runtime-block strong[data-mode="live"] {
+  color: var(--pass);
+  border-color: var(--pass);
+}
+
+.runtime-block span {
+  color: var(--slate);
+}
+
+.runtime-block[data-evidence="mismatch"] #runtime-status {
+  color: var(--mennige-deep);
+  font-weight: 700;
+}
+
+#connection-state[data-state="connected"] { color: var(--pass); }
+#connection-state[data-state="stale"],
+#connection-state[data-state="pairing"] { color: var(--mennige-deep); }
+#connection-state[data-state="disconnected"],
+#connection-state[data-state="unpaired"] { color: var(--mennige); font-weight: 700; }
+
+.presenter-grid {
+  display: grid;
+  width: 100%;
+  max-width: 1680px;
+  min-height: 0;
+  /* Three full-height columns at laptop sizes: the current card (Now / Next press / ask / vote), the speaker
+     note (the widest, tallest panel) and the clock, next scene and deck controls. Each column scrolls on its
+     own, and the note and controls return to the top on every scene change. */
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) minmax(260px, 340px);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-areas:
+    "current notes clock"
+    "current notes next"
+    "current notes controls";
+  gap: 14px;
+  margin: 0 auto;
+}
+
+.clock-panel,
+.scene-panel,
+.notes-panel,
+.control-panel {
+  min-width: 0;
+  min-height: 0;
+  padding: 16px 18px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.clock-panel { grid-area: clock; }
+.current-panel { grid-area: current; }
+.next-panel { grid-area: next; background: var(--beton); }
+.notes-panel { grid-area: notes; }
+.control-panel { grid-area: controls; }
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.panel-head h2 {
+  margin: 0;
+  font: inherit;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.panel-head span,
+.panel-head code {
+  color: var(--slate);
+}
+
+#timer {
+  display: block;
+  margin: 8px 0 12px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 56px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+#timer[data-state="not-started"] {
+  font-size: clamp(24px, 2.4vw, 32px);
+  letter-spacing: 0.04em;
+}
+
+.timer-actions,
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+button,
+select {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+button {
+  min-height: 44px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left;
+}
+
+button:hover { color: var(--mennige-deep); border-color: var(--mennige-deep); }
+button:disabled { color: var(--slate-soft); border-style: dashed; cursor: not-allowed; }
+button.primary { border-width: 3px; border-color: var(--mennige); }
+
+.pace-grid {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--leinen);
+}
+
+.pace-grid div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.pace-grid dt,
+.pace-grid dd {
+  margin: 0;
+}
+
+.pace-grid dt { color: var(--slate); }
+.pace-grid dd { font-variant-numeric: tabular-nums; }
+
+.scene-section {
+  margin: 0 0 12px;
+  color: var(--slate);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.scene-panel h3 {
+  margin: 0;
+  font-size: 25px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.scene-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--leinen);
+  color: var(--slate);
+}
+
+.step-lines {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+/* Label above its line, so a long reveal line gets the card's full width instead of wrapping in a column. */
+.step-lines div {
+  display: grid;
+  gap: 2px;
+}
+
+.step-lines div[hidden] {
+  display: none;
+}
+
+.step-lines dt {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.step-lines dd {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.vote-card {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 3px solid var(--ink);
+  background: var(--beton);
+}
+
+.vote-card h4 {
+  margin: 0 0 6px;
+  font-family: var(--mono);
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.vote-card p {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+.next-panel > code {
+  display: block;
+  margin-top: 8px;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+/* Speaker note, one line per say[] entry: must-say lines first and bold, then spoken lines and cues in their
+   authored order, then if-asked and vocabulary lines small and muted; SQL and other verbatim blocks collapse. */
+#speaker-note {
+  display: grid;
+  gap: 10px;
+  max-width: 48em;
+  margin: 10px 0 0;
+}
+
+#speaker-note p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+#speaker-note .note-line--must {
+  padding-left: 12px;
+  border-left: 5px solid var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#speaker-note .note-line--cue {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+#speaker-note .note-line--detail {
+  color: var(--slate);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+#speaker-note details {
+  color: var(--slate);
+  font-size: 15px;
+}
+
+#speaker-note summary {
+  cursor: pointer;
+}
+
+#speaker-note pre {
+  margin: 6px 0 0;
+  padding: 8px;
+  overflow: auto;
+  border: 1px solid var(--leinen);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 13px;
+  white-space: pre;
+}
+
+.note-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.note-detail-grid section {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--leinen);
+  background: var(--paper);
+}
+
+.note-detail-grid h3 {
+  margin: 0 0 9px;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.note-detail-grid div,
+.note-detail-grid p,
+.note-detail-grid li {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.note-detail-grid p {
+  margin: 0 0 7px;
+}
+
+.return-control {
+  grid-column: 1 / -1;
+}
+
+html[data-deck-kind="appendix"] .return-control {
+  border-width: 3px;
+  border-color: var(--mennige);
+}
+
+.route-list {
+  margin-top: 12px;
+}
+
+.route-list h3 {
+  margin: 0 0 6px;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.route-list #appendix-routes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.appendix-route {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 6px 8px;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scene-jump {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.scene-jump span {
+  color: var(--slate);
+  text-transform: uppercase;
+}
+
+.scene-jump select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 10px;
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 980px) {
+  body { display: block; height: auto; min-height: 100vh; padding: 18px; overflow: auto; }
+  .presenter-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: "current notes" "clock next" "controls controls";
+  }
+}
+
+@media (max-width: 640px) {
+  .presenter-head { align-items: flex-start; }
+  .runtime-block { max-width: 50%; }
+  .presenter-grid { grid-template-columns: 1fr; grid-template-areas: "current" "notes" "clock" "next" "controls"; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}

@@ -1,0 +1,224 @@
+/* bad-ask (spec C.6): the recorded answer first, then the surface signals people trust, then the vote.
+   No database value, grade or pointer on this scene. */
+
+#bad-ask-question {
+  position: absolute;
+  top: 224px;
+  left: 96px;
+  width: 880px;
+}
+
+#bad-ask-strip {
+  position: absolute;
+  top: 400px;
+  left: 96px;
+  width: 600px;
+  height: 140px;
+}
+
+#bad-ask .bk-strip__wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#bad-ask .bk-strip__node {
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 96px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#bad-ask-s-question { left: 0; }
+#bad-ask-s-ai { left: 200px; }
+#bad-ask-s-export { left: 400px; }
+
+#bad-ask .bk-strip__box {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  flex: none;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#bad-ask-s-export .bk-strip__box {
+  border-style: dashed;
+}
+
+#bad-ask .bk-strip__label {
+  flex: none;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#bad-ask-run {
+  position: absolute;
+  z-index: 1;
+  top: 224px;
+  left: 1056px;
+  width: 768px;
+  gap: 12px;
+  padding: 28px 40px 28px 36px;
+}
+
+#bad-ask-run .ev-head .icon {
+  width: 40px;
+  height: 40px;
+}
+
+#bad-ask .bk-picked {
+  display: flex;
+  height: 56px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#bad-ask .bk-picked__table {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+#bad-ask-run .ev-row {
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid var(--leinen);
+  font-size: 32px;
+}
+
+#bad-ask-run .ev-foot {
+  padding-top: 4px;
+}
+
+#bad-ask .bk-travel {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+#bad-ask .bk-route {
+  fill: none;
+  stroke: none;
+}
+
+#bad-ask-checks {
+  position: absolute;
+  top: 392px;
+  left: 96px;
+  width: 880px;
+  height: 296px;
+  padding: 20px 32px 16px 44px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#bad-ask-checks::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--ink);
+}
+
+#bad-ask .bk-checks__head {
+  margin: 0 0 4px;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+#bad-ask .bk-checks__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#bad-ask .bk-checks__list li {
+  display: flex;
+  height: 55px;
+  align-items: center;
+  gap: 20px;
+  font-size: var(--t-lead);
+  line-height: 1.2;
+}
+
+#bad-ask .bk-mono {
+  font-family: var(--mono);
+  font-size: 30px;
+}
+
+/* The question card and the checklist keep their geometry on every step (left column y 224–688, the
+   run card's lines), so nothing the room has read moves or re-flows when the vote band arrives. */
+
+/* The holding line takes the vote band's place: full width under both columns, one sentence per line. */
+#bad-ask-hold {
+  position: absolute;
+  top: 776px;
+  left: 96px;
+  width: 1728px;
+  max-width: none;
+  margin: 0;
+  padding: 28px 48px 28px 56px;
+  font-size: var(--t-h2);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+#bad-ask .bk-hold__line {
+  display: block;
+}
+
+/* One Mennige focus group per step (spec B.1): question, picked table, checklist, the answer under vote,
+   the holding line. */
+#bad-ask:not([data-step-current="0"]) #bad-ask-question::before {
+  background: var(--ink);
+}
+
+#bad-ask[data-step-current="1"] #bad-ask-picked.is-active {
+  outline: 4px solid var(--mennige);
+  outline-offset: 4px;
+}
+
+#bad-ask[data-step-current="2"] #bad-ask-checks::before {
+  background: var(--mennige);
+}
+
+#bad-ask[data-step-current="3"] #bad-ask-run {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+/* Spec H E24: the recorded run is what the question's trip produces, so the run card rises when the packet
+   lands on its Picked slot; its values settle with it. */
+#bad-ask {
+  --bk-arrive: 400ms;
+}
+
+#bad-ask .bk-travel .packet {
+  --m-travel: var(--bk-arrive);
+}
+
+#bad-ask-run {
+  animation-delay: var(--bk-arrive);
+}
+
+#bad-ask-run .ev-value {
+  --m-count: 500ms;
+}

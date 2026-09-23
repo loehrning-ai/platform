@@ -58,6 +58,7 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/open-source/tools/cv-engine",
   "/ueber-mich",
   "/workshops",
+  "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/ki-prognosen-einschaetzen",
 ]);

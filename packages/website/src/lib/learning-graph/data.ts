@@ -174,7 +174,8 @@ const workshopNodes: readonly LearningNode[] = WORKSHOPS.map((workshop) => ({
     new Set(workshop.materials.map((material) => material.language)),
   ),
   audience: ["praktiker", "verantwortliche"],
-  level: "intermediate",
+  level:
+    workshop.slug === "datenbereitschaft-fuer-ki" ? "entry" : "intermediate",
   stage: "anwenden",
   evidenceMode: "synthetic",
   sourceOwner: "editorial:workshops",
@@ -300,7 +301,9 @@ const allEdges: readonly LearningEdge[] = [
     to:
       workshop.slug === "ki-prognosen-einschaetzen"
         ? "course:data-science"
-        : "course:ai-native",
+        : workshop.slug === "datenbereitschaft-fuer-ki"
+          ? "course:data-engineering-fundamentals"
+          : "course:ai-native",
     type: "practice_for" as const,
   })),
   ...IMPORTED_COURSE_CATALOG.map((course) => ({

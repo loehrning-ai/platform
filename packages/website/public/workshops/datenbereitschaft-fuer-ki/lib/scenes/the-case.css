@@ -1,0 +1,224 @@
+/* the-case (spec C.3): the question and its three loaded words. Each press underlines one word;
+   the underline in the focus step is Mennige and returns to ink on the next press. Two columns
+   below the question: the level tank (MRR) and the month strip (ending, last complete quarter). */
+
+#the-case > .the-case-question {
+  position: absolute;
+  top: 224px;
+  left: var(--margin-x);
+  width: 912px;
+  max-width: 912px;
+}
+
+/* 60 px lines: the underlines under line 1 ("ending", "MRR") clear the ascenders of line 2. */
+#the-case > .the-case-question .q-card__text {
+  line-height: 1.5;
+}
+
+#the-case[data-step-current="0"] > .the-case-question::before {
+  background: var(--mennige);
+}
+
+#the-case .the-case-key {
+  position: relative;
+  white-space: nowrap;
+}
+
+#the-case .the-case-u {
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 100%;
+  height: 8px;
+  overflow: visible;
+}
+
+#the-case .the-case-u line {
+  stroke: var(--ink);
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+
+#the-case[data-step-current="1"] #the-case-u-mrr line,
+#the-case[data-step-current="2"] #the-case-u-ending line,
+#the-case[data-step-current="3"] #the-case-u-quarter line {
+  stroke: var(--mennige);
+}
+
+#the-case > .the-case-company {
+  position: absolute;
+  top: 224px;
+  left: 1056px;
+  display: flex;
+  width: 768px;
+  height: 162px;
+  align-items: center;
+  gap: var(--s3);
+}
+
+#the-case .the-case-company__text {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+#the-case .the-case-company__name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* The separator is kept in the markup so the copy string stays exact; the line break replaces it. */
+#the-case .the-case-company__sep {
+  display: none;
+}
+
+#the-case .the-case-company__facts {
+  color: var(--slate);
+}
+
+#the-case > .the-case-level {
+  position: absolute;
+  top: 500px;
+  left: var(--margin-x);
+  display: flex;
+  width: 912px;
+  align-items: center;
+  gap: 40px;
+}
+
+#the-case .the-case-tank {
+  display: block;
+  flex: none;
+  overflow: visible;
+}
+
+#the-case .the-case-tank__walls {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 6;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
+}
+
+#the-case .the-case-tank__surface {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 4;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+
+#the-case .the-case-tank__body {
+  fill: var(--slate);
+}
+
+#the-case .the-case-level__text {
+  display: grid;
+  gap: var(--s3);
+}
+
+#the-case .the-case-level__head {
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+#the-case .the-case-level__rule,
+#the-case .the-case-months__ending {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.25;
+}
+
+#the-case > .the-case-months {
+  position: absolute;
+  top: 500px;
+  left: 1056px;
+  width: 768px;
+  height: 400px;
+}
+
+#the-case .the-case-strip {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  overflow: visible;
+}
+
+#the-case .the-case-strip__cells rect {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#the-case .the-case-strip__cells .the-case-strip__later {
+  stroke: var(--slate-soft);
+}
+
+#the-case .the-case-strip__hatch rect {
+  fill: url(#story-hatch);
+  opacity: 0.35;
+}
+
+#the-case .the-case-strip__plates rect {
+  fill: var(--paper);
+}
+
+#the-case .the-case-nowrap {
+  white-space: nowrap;
+}
+
+#the-case .the-case-strip__months text {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+#the-case .the-case-strip__months .the-case-strip__month-later {
+  fill: var(--slate);
+}
+
+#the-case .the-case-strip__tick {
+  fill: var(--ink);
+}
+
+#the-case .the-case-strip__bracket {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#the-case .the-case-months__q2,
+#the-case .the-case-months__q3 {
+  position: absolute;
+  top: 256px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+#the-case .the-case-months__q2 {
+  left: 0;
+  width: 380px;
+}
+
+#the-case .the-case-months__q3 {
+  left: 406px;
+  color: var(--slate);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#the-case .the-case-u {
+  --m-draw: 400ms;
+}

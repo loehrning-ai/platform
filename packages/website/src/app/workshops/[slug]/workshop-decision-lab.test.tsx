@@ -17,6 +17,23 @@ afterEach(() => {
 });
 
 describe("<WorkshopDecisionLab>", () => {
+  it("does not turn the activated submit element into a native reset button", () => {
+    const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
+    render(<WorkshopDecisionLab config={workshop.decisionLab} />);
+    const submit = screen.getByRole("button", { name: "Check answer" });
+    fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.choices[0].label }));
+    fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.evidence[0].label }));
+    fireEvent.submit(submit.closest("form")!);
+
+    const reset = screen.getByRole("button", { name: "Try again" });
+    expect(reset).not.toBe(submit);
+    expect(submit).toHaveAttribute("type", "submit");
+    expect(reset).toHaveAttribute("type", "reset");
+    expect(screen.getByRole("radio", { name: workshop.decisionLab.choices[0].label })).toBeChecked();
+    expect(screen.getByRole("status")).toHaveTextContent(workshop.decisionLab.feedback.aligned.title);
+    expect(reset).toHaveFocus();
+  });
+
   it("announces submit-time validation and focuses the first missing choice", async () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
     expect(workshop).toBeDefined();

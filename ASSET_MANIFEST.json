@@ -831,6 +831,123 @@
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/favicon.svg",
+      "sizeBytes": 375,
+      "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/JetBrainsMono-Static-400.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors",
+      "source": "Existing platform-inventoried JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/JetBrainsMono-Static-700.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors",
+      "source": "Existing platform-inventoried JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Static-400.ttf",
+      "sizeBytes": 408712,
+      "sha256": "47667a2166515b735049b5ce145200298afe416ea287c2e0fb99bd6038bff1ad",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Static-500.ttf",
+      "sizeBytes": 414272,
+      "sha256": "d88596e9745ddfa95b1b5516cbf1d47bc541a7bd19a25970549aa6fe0c3ef2c8",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Static-600.ttf",
+      "sizeBytes": 416192,
+      "sha256": "d097fe311c80163e77ea6f7398414ad7276d7fa86bdf57d16a41e12540e6d380",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Static-700.ttf",
+      "sizeBytes": 417312,
+      "sha256": "762229d8e1bcb0000852b2bb6f2ae9ae72b4e71c81986fc7d10f0defb85227c3",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/globe.svg",
+      "sizeBytes": 158411,
+      "sha256": "b77a3581fe56ed9cb53bacaf88e5af451176f962cecec5129c5b6b33ac70f980",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/lockup-horizontal-dark.svg",
+      "sizeBytes": 4645,
+      "sha256": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/lockup-horizontal.svg",
+      "sizeBytes": 4645,
+      "sha256": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/mark-black.svg",
+      "sizeBytes": 321,
+      "sha256": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
+      "sizeBytes": 22374,
+      "sha256": "47b41e9f9d0b10955a1d7b4030ce81d9cae692418600278f31e0a3673ba3cc7f",
+      "owner": "Tim L\u00f6hr",
+      "source": "Chromium screenshot of the original course cover, resized to 1024 by 576 pixels",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+      "sizeBytes": 17893,
+      "sha256": "0ebde40be426f46e503408783e011f996cfa699c06cacc6e5e4861f083de133d",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     }
   ]
 }

@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "evidenceMode": "historical-recording-and-synthetic-simulation",
+  "sourceHashes": {
+    "lib/cover-globe.css": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
+    "lib/deck-runtime.js": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
+    "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
+    "lib/demo-adapter.js": "cf1160c0b213550c2d77903476ba00eeafb00c63957febb04ba6ec9e2d035dac",
+    "lib/model-capture-data.js": "027d9dfceb519c83442d24272b02810ff7614029a937ae14496431b97729b706",
+    "lib/presenter-notes.js": "3d64e63bb0d3790ddeb00b5ea9c2b69f76ce515f7d6062171529f7e5df4c4a86",
+    "lib/presenter.css": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
+    "lib/presenter.js": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
+    "lib/replay-data.js": "dfd9e929ac49520b347e6ba78f765c5dd2534c14d7ff7f8b45dd4a75f52d2ceb",
+    "lib/story.css": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
+    "lib/tokens.css": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
+    "lib/scenes/appendix-access-controls.css": "fc99d6418a6757fae8c2c078d912650bde00c72ad2b6a50e6d6b0fd90344c7d6",
+    "lib/scenes/appendix-architecture.css": "71b5f42ebf5adf40c7ad4c7dc8b8a06b49a280ae96db31a74338422624704f99",
+    "lib/scenes/appendix-ask-boundary.css": "80272caeded33fe3b86f23e02405065e5d6282799c6275ecb620b88434efc6c5",
+    "lib/scenes/appendix-evaluation.css": "0bb43dc2866c965efa914f5f89d9a7038520e2336270fad1e1a84364faec43dc",
+    "lib/scenes/appendix-lineage-freshness.css": "ea139178782aa5d14c5a97495d6119f35222a0221a01cc6299800f8fe2bedef1",
+    "lib/scenes/appendix-research.css": "e1b39371836ca08a7214190df0afc3582f6502e8aaf0210939fff37993fc82d0",
+    "lib/scenes/appendix-run-metadata.css": "e4080c0bb970d7e9f51cf3636c7710f222538dda385557f9f272837e8ace8e91",
+    "lib/scenes/appendix-semantic-contract.css": "085b42daee324a26a63acf0a288b9da127d726df72b5d1e44622a9495a55a946",
+    "lib/scenes/bad-architecture.css": "eed98fba7da3e1ff92ee6131c932410d86f98e5a3ae13a8de9f69c324dd86795",
+    "lib/scenes/bad-ask.css": "4273d8329b5e3aa3de32345e1cd8a3f4de1f798771ad83f3878c4781cc29a794",
+    "lib/scenes/contract-consumers.css": "5bf5a506229342396e1e1ef06d339155b410a2dc42fd85b85d66b0e215d0414a",
+    "lib/scenes/controlled-comparison.css": "8daaf7c6edef6ee5b059f67927b64f53a5849123159ce76d0fe0d175fbf200b2",
+    "lib/scenes/cover.css": "b9ab6a8cf8b53a8bd8163cffe5417276ef4d721e68148615914fd4017401456b",
+    "lib/scenes/evaluation.css": "558032cc89d7502e43948d50e0c027464a8d8243300ab2380be456df8a22d44d",
+    "lib/scenes/failure-anatomy.css": "f4b2421369213fba63dc786724a84f3c150dd33e843725335c2881cdb68d7037",
+    "lib/scenes/freshness.css": "23e55d32eeb2f7a6f7e2e0b35e8a309e13bd17b755edf1cf78b2b2258ad033b2",
+    "lib/scenes/generalization.css": "58ef568e35fd15d5ee7768a6f957ef115412b6c90b81152bb0829bc1a09b85b1",
+    "lib/scenes/honest-no.css": "08bc666bb0e187973c6c18dd52dcee8b9e5be15c2717a91b97328a62ea6caa7e",
+    "lib/scenes/host.css": "e79a5d57246a84ed8113f26ead08ffb8851e00bcfc71457be134a3b9fddd0433",
+    "lib/scenes/ready-architecture.css": "848c48e69bee6ad4f5a84765215f3341e689d288f8c6b12fc0e14fafb4d4026f",
+    "lib/scenes/ready-rematch.css": "07aaaf66257d184c52fa7b4245bbb13247bed3de16079c367260d2bbb792274e",
+    "lib/scenes/resolution.css": "3beb412addb2a9808e1c8559d1fe24f2c20189834ea0c96481b0f8a81ce53529",
+    "lib/scenes/semantic-contract.css": "b81a18d7af842e943165fb0eb0c24f7e76da46122860ed11976d6264cb601355",
+    "lib/scenes/the-arc.css": "9f2e0d60dcfbdef4d27626966f96d5907cc7e1524fc071a80916681f93e5df7d",
+    "lib/scenes/the-case.css": "09de48d4b35da9fa77ed1b2c346b7e309042dd64010feb6aa790bbd186a39b7a",
+    "lib/scenes/your-data.css": "89c11980d7beaf8c5ea27ded470377e7689530b84231923736e3632441f7fe12",
+    "lib/scenes/failure-anatomy.js": "a37737ca79cb22242cdaa3d5a8f60bbdef8bb621306f3daa2d5e2f4079d8068a",
+    "lib/scenes/resolution.js": "2fea0d036bf316389ec2280c60762e837f01b4004637035cdc7612d6621ea36a",
+    "slides.html": "588aa98f2996750ecbb3c70634d0e0d93fa1aa650f689bba65bfb0f6139493a2",
+    "data-readiness-kit/readiness-lab.html": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
+    "data-readiness-kit/START-HERE.md": "033742158d1a48b9f94b9f1cd9dc9527977bc40921308b095da6c33c12fbac1f",
+    "data-readiness-kit/QUESTION-CARD.md": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
+    "data-readiness-kit/READY-CANVAS.md": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
+    "data-readiness-kit/FOLDLINE-SCENARIOS.md": "9ba75e17a32e1b637c7dc2932bf8358fbff85c3c4f0363de9e08bd8abe9b1d5e",
+    "data-readiness-kit/semantic-template/model.yml": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515",
+    "data-readiness-kit/semantic-template/metric.yml": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
+    "data-readiness-kit/semantic-template/policy.yml": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a",
+    "data-readiness-kit/semantic-template/verified-questions.yml": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
+    "data-readiness-kit/agent/CLAUDE.example.md": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14"
+  },
+  "files": [
+    {
+      "path": "lib/cover-globe.css",
+      "sizeBytes": 269,
+      "sha256": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba"
+    },
+    {
+      "path": "lib/deck-runtime.js",
+      "sizeBytes": 52931,
+      "sha256": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c"
+    },
+    {
+      "path": "lib/deck-stage.js",
+      "sizeBytes": 23551,
+      "sha256": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd"
+    },
+    {
+      "path": "lib/demo-adapter.js",
+      "sizeBytes": 17490,
+      "sha256": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e"
+    },
+    {
+      "path": "lib/model-capture-data.js",
+      "sizeBytes": 24017,
+      "sha256": "027d9dfceb519c83442d24272b02810ff7614029a937ae14496431b97729b706"
+    },
+    {
+      "path": "lib/presenter-notes.js",
+      "sizeBytes": 64940,
+      "sha256": "f7b940942ca438c2e4c85c947b19fb37f2d4723c6c563e45fccc993671e11bd3"
+    },
+    {
+      "path": "lib/presenter.css",
+      "sizeBytes": 9843,
+      "sha256": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2"
+    },
+    {
+      "path": "lib/presenter.js",
+      "sizeBytes": 33349,
+      "sha256": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d"
+    },
+    {
+      "path": "lib/replay-data.js",
+      "sizeBytes": 36870,
+      "sha256": "dfd9e929ac49520b347e6ba78f765c5dd2534c14d7ff7f8b45dd4a75f52d2ceb"
+    },
+    {
+      "path": "lib/story.css",
+      "sizeBytes": 25571,
+      "sha256": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc"
+    },
+    {
+      "path": "lib/tokens.css",
+      "sizeBytes": 3280,
+      "sha256": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134"
+    },
+    {
+      "path": "lib/scenes/appendix-access-controls.css",
+      "sizeBytes": 2842,
+      "sha256": "fc99d6418a6757fae8c2c078d912650bde00c72ad2b6a50e6d6b0fd90344c7d6"
+    },
+    {
+      "path": "lib/scenes/appendix-architecture.css",
+      "sizeBytes": 2881,
+      "sha256": "71b5f42ebf5adf40c7ad4c7dc8b8a06b49a280ae96db31a74338422624704f99"
+    },
+    {
+      "path": "lib/scenes/appendix-ask-boundary.css",
+      "sizeBytes": 2695,
+      "sha256": "59f2ac561a917e4f363c7fff48cdd3e204bd252f4cb582857beed3568e55328a"
+    },
+    {
+      "path": "lib/scenes/appendix-evaluation.css",
+      "sizeBytes": 3014,
+      "sha256": "0bb43dc2866c965efa914f5f89d9a7038520e2336270fad1e1a84364faec43dc"
+    },
+    {
+      "path": "lib/scenes/appendix-lineage-freshness.css",
+      "sizeBytes": 2848,
+      "sha256": "ea139178782aa5d14c5a97495d6119f35222a0221a01cc6299800f8fe2bedef1"
+    },
+    {
+      "path": "lib/scenes/appendix-research.css",
+      "sizeBytes": 1424,
+      "sha256": "e1b39371836ca08a7214190df0afc3582f6502e8aaf0210939fff37993fc82d0"
+    },
+    {
+      "path": "lib/scenes/appendix-run-metadata.css",
+      "sizeBytes": 3881,
+      "sha256": "e4080c0bb970d7e9f51cf3636c7710f222538dda385557f9f272837e8ace8e91"
+    },
+    {
+      "path": "lib/scenes/appendix-semantic-contract.css",
+      "sizeBytes": 3242,
+      "sha256": "085b42daee324a26a63acf0a288b9da127d726df72b5d1e44622a9495a55a946"
+    },
+    {
+      "path": "lib/scenes/bad-architecture.css",
+      "sizeBytes": 5295,
+      "sha256": "eed98fba7da3e1ff92ee6131c932410d86f98e5a3ae13a8de9f69c324dd86795"
+    },
+    {
+      "path": "lib/scenes/bad-ask.css",
+      "sizeBytes": 4189,
+      "sha256": "4273d8329b5e3aa3de32345e1cd8a3f4de1f798771ad83f3878c4781cc29a794"
+    },
+    {
+      "path": "lib/scenes/contract-consumers.css",
+      "sizeBytes": 5252,
+      "sha256": "5bf5a506229342396e1e1ef06d339155b410a2dc42fd85b85d66b0e215d0414a"
+    },
+    {
+      "path": "lib/scenes/controlled-comparison.css",
+      "sizeBytes": 4550,
+      "sha256": "8daaf7c6edef6ee5b059f67927b64f53a5849123159ce76d0fe0d175fbf200b2"
+    },
+    {
+      "path": "lib/scenes/cover.css",
+      "sizeBytes": 2177,
+      "sha256": "b9ab6a8cf8b53a8bd8163cffe5417276ef4d721e68148615914fd4017401456b"
+    },
+    {
+      "path": "lib/scenes/evaluation.css",
+      "sizeBytes": 6476,
+      "sha256": "558032cc89d7502e43948d50e0c027464a8d8243300ab2380be456df8a22d44d"
+    },
+    {
+      "path": "lib/scenes/failure-anatomy.css",
+      "sizeBytes": 4893,
+      "sha256": "f4b2421369213fba63dc786724a84f3c150dd33e843725335c2881cdb68d7037"
+    },
+    {
+      "path": "lib/scenes/freshness.css",
+      "sizeBytes": 5174,
+      "sha256": "23e55d32eeb2f7a6f7e2e0b35e8a309e13bd17b755edf1cf78b2b2258ad033b2"
+    },
+    {
+      "path": "lib/scenes/generalization.css",
+      "sizeBytes": 10978,
+      "sha256": "58ef568e35fd15d5ee7768a6f957ef115412b6c90b81152bb0829bc1a09b85b1"
+    },
+    {
+      "path": "lib/scenes/honest-no.css",
+      "sizeBytes": 5629,
+      "sha256": "08bc666bb0e187973c6c18dd52dcee8b9e5be15c2717a91b97328a62ea6caa7e"
+    },
+    {
+      "path": "lib/scenes/host.css",
+      "sizeBytes": 2382,
+      "sha256": "e79a5d57246a84ed8113f26ead08ffb8851e00bcfc71457be134a3b9fddd0433"
+    },
+    {
+      "path": "lib/scenes/ready-architecture.css",
+      "sizeBytes": 6250,
+      "sha256": "848c48e69bee6ad4f5a84765215f3341e689d288f8c6b12fc0e14fafb4d4026f"
+    },
+    {
+      "path": "lib/scenes/ready-rematch.css",
+      "sizeBytes": 4838,
+      "sha256": "07aaaf66257d184c52fa7b4245bbb13247bed3de16079c367260d2bbb792274e"
+    },
+    {
+      "path": "lib/scenes/resolution.css",
+      "sizeBytes": 4162,
+      "sha256": "3beb412addb2a9808e1c8559d1fe24f2c20189834ea0c96481b0f8a81ce53529"
+    },
+    {
+      "path": "lib/scenes/semantic-contract.css",
+      "sizeBytes": 6708,
+      "sha256": "b81a18d7af842e943165fb0eb0c24f7e76da46122860ed11976d6264cb601355"
+    },
+    {
+      "path": "lib/scenes/the-arc.css",
+      "sizeBytes": 3340,
+      "sha256": "9f2e0d60dcfbdef4d27626966f96d5907cc7e1524fc071a80916681f93e5df7d"
+    },
+    {
+      "path": "lib/scenes/the-case.css",
+      "sizeBytes": 4338,
+      "sha256": "09de48d4b35da9fa77ed1b2c346b7e309042dd64010feb6aa790bbd186a39b7a"
+    },
+    {
+      "path": "lib/scenes/your-data.css",
+      "sizeBytes": 4466,
+      "sha256": "89c11980d7beaf8c5ea27ded470377e7689530b84231923736e3632441f7fe12"
+    },
+    {
+      "path": "lib/scenes/failure-anatomy.js",
+      "sizeBytes": 1894,
+      "sha256": "a37737ca79cb22242cdaa3d5a8f60bbdef8bb621306f3daa2d5e2f4079d8068a"
+    },
+    {
+      "path": "lib/scenes/resolution.js",
+      "sizeBytes": 2798,
+      "sha256": "2fea0d036bf316389ec2280c60762e837f01b4004637035cdc7612d6621ea36a"
+    },
+    {
+      "path": "presenter.html",
+      "sizeBytes": 5100,
+      "sha256": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db"
+    },
+    {
+      "path": "slides.html",
+      "sizeBytes": 178058,
+      "sha256": "1149f8971f61c4f09a33af05af31c0aaf5f8aec7ac7d94458dc68d98dadf1192"
+    },
+    {
+      "path": "assets/favicon.svg",
+      "sizeBytes": 375,
+      "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac"
+    },
+    {
+      "path": "assets/globe.svg",
+      "sizeBytes": 158411,
+      "sha256": "b77a3581fe56ed9cb53bacaf88e5af451176f962cecec5129c5b6b33ac70f980"
+    },
+    {
+      "path": "assets/mark-black.svg",
+      "sizeBytes": 321,
+      "sha256": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384"
+    },
+    {
+      "path": "assets/lockup-horizontal.svg",
+      "sizeBytes": 4645,
+      "sha256": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed"
+    },
+    {
+      "path": "assets/lockup-horizontal-dark.svg",
+      "sizeBytes": 4645,
+      "sha256": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2"
+    },
+    {
+      "path": "assets/fonts/Typing-Static-400.ttf",
+      "sizeBytes": 408712,
+      "sha256": "47667a2166515b735049b5ce145200298afe416ea287c2e0fb99bd6038bff1ad"
+    },
+    {
+      "path": "assets/fonts/Typing-Static-500.ttf",
+      "sizeBytes": 414272,
+      "sha256": "d88596e9745ddfa95b1b5516cbf1d47bc541a7bd19a25970549aa6fe0c3ef2c8"
+    },
+    {
+      "path": "assets/fonts/Typing-Static-600.ttf",
+      "sizeBytes": 416192,
+      "sha256": "d097fe311c80163e77ea6f7398414ad7276d7fa86bdf57d16a41e12540e6d380"
+    },
+    {
+      "path": "assets/fonts/Typing-Static-700.ttf",
+      "sizeBytes": 417312,
+      "sha256": "762229d8e1bcb0000852b2bb6f2ae9ae72b4e71c81986fc7d10f0defb85227c3"
+    },
+    {
+      "path": "assets/fonts/JetBrainsMono-Static-400.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4"
+    },
+    {
+      "path": "assets/fonts/JetBrainsMono-Static-700.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4"
+    },
+    {
+      "path": "assets/fonts/OFL-1.1.txt",
+      "sizeBytes": 4380,
+      "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
+    },
+    {
+      "path": "assets/fonts/OFL-1.1-JetBrainsMono.txt",
+      "sizeBytes": 4398,
+      "sha256": "102a0db84dc6b456966d59a520c4c223721b65d1094c080420fb56fbf4dce273"
+    },
+    {
+      "path": "data-readiness-kit/readiness-lab.html",
+      "sizeBytes": 56251,
+      "sha256": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8"
+    },
+    {
+      "path": "data-readiness-kit/START-HERE.md",
+      "sizeBytes": 2414,
+      "sha256": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea"
+    },
+    {
+      "path": "data-readiness-kit/QUESTION-CARD.md",
+      "sizeBytes": 1968,
+      "sha256": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429"
+    },
+    {
+      "path": "data-readiness-kit/READY-CANVAS.md",
+      "sizeBytes": 1673,
+      "sha256": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4"
+    },
+    {
+      "path": "data-readiness-kit/FOLDLINE-SCENARIOS.md",
+      "sizeBytes": 1013,
+      "sha256": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e"
+    },
+    {
+      "path": "data-readiness-kit/semantic-template/model.yml",
+      "sizeBytes": 1864,
+      "sha256": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515"
+    },
+    {
+      "path": "data-readiness-kit/semantic-template/metric.yml",
+      "sizeBytes": 918,
+      "sha256": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842"
+    },
+    {
+      "path": "data-readiness-kit/semantic-template/policy.yml",
+      "sizeBytes": 1762,
+      "sha256": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a"
+    },
+    {
+      "path": "data-readiness-kit/semantic-template/verified-questions.yml",
+      "sizeBytes": 1981,
+      "sha256": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249"
+    },
+    {
+      "path": "data-readiness-kit/agent/CLAUDE.example.md",
+      "sizeBytes": 1732,
+      "sha256": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14"
+    },
+    {
+      "path": "data-readiness-kit/README.md",
+      "sizeBytes": 621,
+      "sha256": "93e04b5653163a6901d3912b7d15089d9d5e1198085c64586ed9b1266410b70a"
+    },
+    {
+      "path": "data-readiness-kit/ASSET-RIGHTS.md",
+      "sizeBytes": 201,
+      "sha256": "dd053241b701268bf5dea2f04fbec74450fb480b17a239f10574aefa653e04c1"
+    },
+    {
+      "path": "data-readiness-kit.zip",
+      "sizeBytes": 17893,
+      "sha256": "0ebde40be426f46e503408783e011f996cfa699c06cacc6e5e4861f083de133d"
+    },
+    {
+      "path": "guide.html",
+      "sizeBytes": 10474,
+      "sha256": "88accad0cdfea1f6e06f6182a9bc2bdabce05ed7c6d9aa97dc7f0570450815aa"
+    },
+    {
+      "path": "PUBLICATION.md",
+      "sizeBytes": 958,
+      "sha256": "8f40bf776ea40329c106852e7aa844cb6058a3d0375f1fc2d9f201e6245f2847"
+    },
+    {
+      "path": "card-preview.webp",
+      "sizeBytes": 22374,
+      "sha256": "47b41e9f9d0b10955a1d7b4030ce81d9cae692418600278f31e0a3673ba3cc7f"
+    }
+  ]
+}

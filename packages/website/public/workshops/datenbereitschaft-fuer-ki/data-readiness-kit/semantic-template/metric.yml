@@ -1,0 +1,26 @@
+version: 1
+
+metrics:
+  - name: ending_mrr
+    label: Ending MRR
+    model: mrr_summary_monthly
+    type: snapshot
+    result_grain: one row per calendar month
+    expression: ending_mrr_eur
+    description: Total recurring subscription value active at the final instant of a complete month.
+    population: Accounts with an active recurring subscription at month end.
+    period_rule: For a quarter, return each complete month-end snapshot; do not sum snapshots.
+    currency: EUR
+    inclusions:
+      - Recurring subscription fees active at month end.
+    exclusions:
+      - Setup fees
+      - Usage charges
+      - Taxes
+      - Cancelled subscriptions whose service ended before month end
+    valid_dimensions: [month_start]
+    synonyms: [month-end mrr, closing mrr]
+    owner: replace-with-team
+    version: 1.0.0
+    limitations:
+      - This metric does not represent revenue, cash collected, ARR, or profit.

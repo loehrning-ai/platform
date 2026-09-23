@@ -1,0 +1,256 @@
+/* bad-architecture (spec C.5). The top node row (Question / AI app / AI model) sits at box x 96 / 392 / 688,
+   box y 240, 136 px square: ready-architecture uses these exact values (spec A.4; its check asserts top 240). */
+
+#bad-architecture-lane {
+  position: absolute;
+  top: 118px;
+  right: 96px;
+}
+
+#bad-architecture .ba-diagram {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 984px;
+}
+
+#bad-architecture .ba-wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: visible;
+}
+
+#bad-architecture .ba-edge-label {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#bad-architecture .ba-head--active {
+  fill: var(--mennige);
+}
+
+#bad-architecture .ba-node {
+  position: absolute;
+  z-index: 1;
+  width: 136px;
+}
+
+#bad-architecture-question { left: 96px; top: 240px; }
+#bad-architecture-app { left: 392px; top: 240px; }
+#bad-architecture-model { left: 688px; top: 240px; }
+#bad-architecture-login { left: 984px; top: 240px; }
+
+#bad-architecture .ba-login-label {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* The callout's pointer: an orthogonal 2 px line ending in an 8 px square at the three look-alike rows. */
+#bad-architecture .ba-pointer {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+#bad-architecture .ba-pointer-end {
+  fill: var(--ink);
+}
+
+/* The export stack: one group node, two offset outlines at +10 px (spec B.3). */
+#bad-architecture #bad-architecture-stack {
+  left: 1280px;
+  top: 240px;
+  width: 500px;
+}
+
+#bad-architecture-stack .node__box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-items: stretch;
+  width: 500px;
+  height: 380px;
+  padding: 16px 24px;
+  text-align: left;
+}
+
+#bad-architecture-stack .node__box::before {
+  top: 10px;
+  left: 10px;
+}
+
+#bad-architecture-stack .node__box::after {
+  top: 20px;
+  left: 20px;
+}
+
+#bad-architecture .ba-stack__head {
+  display: flex;
+  height: 60px;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+#bad-architecture .ba-tables {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 24px;
+  line-height: 40px;
+}
+
+#bad-architecture .ba-tables li {
+  position: relative;
+  height: 40px;
+  padding-left: 12px;
+}
+
+#bad-architecture .ba-lookalike {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  border: 3px solid var(--ink);
+}
+
+#bad-architecture .ba-lookalike__q {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  background: var(--papier);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#bad-architecture-company {
+  position: absolute;
+  z-index: 1;
+  top: 704px;
+  left: 1280px;
+  display: flex;
+  width: 544px;
+  height: 104px;
+  white-space: nowrap;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px 0 20px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+#bad-architecture-callout {
+  position: absolute;
+  top: 440px;
+  left: 816px;
+  width: 400px;
+  max-width: none;
+  margin: 0;
+  font-size: var(--t-lead);
+}
+
+/* The stamp takes the callout's band directly under the node row and points into the stack it
+   describes; its box spans x 96–1216 and its pointer meets the stack's left edge (x 1280). */
+#bad-architecture-stamp {
+  position: absolute;
+  top: 472px;
+  left: 96px;
+  display: flex;
+  width: 1120px;
+  height: 144px;
+  gap: 24px;
+  margin: 0;
+  padding: 0 32px;
+  font-size: var(--t-h2);
+  line-height: 1.2;
+}
+
+#bad-architecture-stamp .icon {
+  width: 56px;
+  height: 56px;
+  flex: none;
+}
+
+#bad-architecture .ba-stamp__line {
+  display: block;
+}
+
+/* One Mennige focus group per step (spec B.1). */
+#bad-architecture[data-step-current="0"] #bad-architecture-question .node__box {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+#bad-architecture[data-step-current="1"] #bad-architecture-stack .node__box {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+#bad-architecture:not([data-step-current="2"]) #bad-architecture-query {
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+
+#bad-architecture:not([data-step-current="2"]) #bad-architecture-query-head {
+  fill: var(--ink);
+}
+
+#bad-architecture[data-step-current="4"] #bad-architecture-stamp {
+  border-color: var(--mennige);
+}
+
+/* Spec H E24: the query line draws with its packet and its head lands with it; the result is caused by the
+   query, so the return line waits for the packet (--order 2 × --m-stagger 200 ms = 400 ms) and its label and
+   head arrive with it. */
+#bad-architecture {
+  --ba-arrive: 400ms;
+}
+
+#bad-architecture-query-group .packet {
+  --m-travel: var(--ba-arrive);
+}
+
+#bad-architecture-query {
+  --m-draw: 400ms;
+}
+
+#bad-architecture-query-head {
+  animation-delay: var(--ba-arrive);
+}
+
+#bad-architecture .ba-return {
+  --m-stagger: 200ms;
+  --m-draw: 300ms;
+}
+
+#bad-architecture .ba-edge-label--result {
+  animation-delay: 450ms;
+}
+
+#bad-architecture .ba-return-head {
+  animation-delay: 640ms;
+}

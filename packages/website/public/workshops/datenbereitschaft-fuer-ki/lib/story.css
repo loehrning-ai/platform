@@ -1,0 +1,1216 @@
+/* Story system (spec B.2–B.11): type, zones, components, the Route, motion primitives and the
+   reduced-motion / print final-state rules. Class names are the build contract for scene
+   partials; scene-specific styles live in lib/scenes/<id>.css, every selector prefixed #<id>.
+
+   Markup contract details the assembler enforces (_build/assemble-slides.mjs):
+   - .scene-title and .room-vote are direct children of the section: both are positioned in
+     section coordinates (title y 112, vote band y 776–968), and .body is itself offset.
+   - Connectors (.edge) are plain SVG paths. Never author pathLength on a dashed edge: SVG scales
+     stroke-dasharray by pathLength, so 12/8 on a length-1 path renders solid. `draw` measures
+     lengths at runtime and keeps a dashed edge's pattern while it draws.
+   - data-motion is one of the nine primitives; a travel packet names a <path> in its own scene
+     with data-path="#<id>-…" (and optionally data-target="#<id>-…"); --order is 0–4.
+   - data-count is accepted as an alias of data-motion="count". */
+
+:root {
+  /* Type scale (B.2), px at 1920×1080. Nothing the room must read is below 22 px. */
+  --t-display: 104px;
+  --t-h1: 60px;
+  --t-h2: 40px;
+  --t-question-hero: 40px;
+  --t-question: 32px;
+  --t-lead: 32px;
+  --t-body: 26px;
+  --t-label: 22px;
+  --t-small: 22px;
+  --t-num-hero: 120px;
+  --t-num-md: 44px;
+  --t-num-sm: 32px;
+  --t-mono: 24px;
+
+  /* Spacing (B.3): 8 px module. */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s6: 48px;
+  --s8: 64px;
+  --s12: 96px;
+
+  /* Canvas zones (B.3): chrome 0–88, title 112–184, content 224–984, safe band 984–1080 empty. */
+  --margin-x: 96px;
+  --zone-title-top: 112px;
+  --zone-content-top: 224px;
+  --zone-content-bottom: 984px;
+  --safe-band: 96px;
+
+  /* 45° hatch, 3 px ink on a 14 px pitch, as an inline image (no gradients in the brand). */
+  --hatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M-3.5 3.5l7-7M0 14L14 0M10.5 17.5l7-7' stroke='%23121212' stroke-width='2.12' stroke-linecap='square'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------- base */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 16px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+.slide {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  line-height: 1.35;
+}
+
+.slide.dark {
+  color: var(--papier);
+  background: var(--graphit);
+}
+
+.body {
+  position: absolute;
+  top: var(--zone-title-top);
+  right: var(--margin-x);
+  bottom: var(--safe-band);
+  left: var(--margin-x);
+}
+
+.num,
+[data-ev],
+[data-count],
+.ev-value,
+.bignum__value,
+.chart__value {
+  font-feature-settings: "tnum" 1;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+}
+
+.icon {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  color: inherit;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5;
+  overflow: visible;
+}
+
+.icon--32,
+.icon--40,
+.icon--48,
+.icon--56 {
+  stroke-width: 7;
+}
+
+.icon--32 { width: 32px; height: 32px; }
+.icon--40 { width: 40px; height: 40px; }
+.icon--48 { width: 48px; height: 48px; }
+.icon--56 { width: 56px; height: 56px; }
+.icon--72 { width: 72px; height: 72px; }
+.icon--96 { width: 96px; height: 96px; }
+
+.hatch {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+.svg-hatch {
+  fill: url(#story-hatch);
+}
+
+/* ---------------------------------------------------------------- step visibility (B.9) */
+
+/* The engine marks hidden step elements; without JS nothing is hidden, so the final meaning stays
+   on the page. Before the engine is ready (deck-stage sets data-story="pending") future steps do
+   not flash. */
+.is-step-hidden,
+html[data-story="pending"] [data-step] {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+html:not([data-story]) [data-step-until] {
+  visibility: hidden !important;
+}
+
+/* ---------------------------------------------------------------- chrome and the Route (A.3) */
+
+/* The chrome band is 0–88. Its content row starts at y 30, so the Ö mark and the Route's squares share one
+   centre line (y 44) and nothing sits within 30 px of the frame edge (projector overscan); labels hang below. */
+.story-chrome {
+  position: absolute;
+  top: 0;
+  right: var(--margin-x);
+  left: var(--margin-x);
+  z-index: 5;
+  display: flex;
+  height: 88px;
+  padding-top: 30px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s4);
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.story-chrome__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.story-chrome__mark {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.route {
+  display: flex;
+  width: 1100px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity var(--m-fade) var(--ease-out);
+}
+
+.story-chrome[data-route="hidden"] .route {
+  display: none;
+}
+
+.story-chrome[data-route="final"] .route {
+  opacity: 0;
+}
+
+section[data-step-final] .story-chrome[data-route="final"] .route,
+html[data-motion="static"] .story-chrome[data-route="final"] .route {
+  opacity: 1;
+}
+
+/* Stations size to their label plus an equal share of the spare width, so the gaps between labels are equal.
+   Each station draws its own half connectors (centre to edge), which meet the neighbour's halves: the half
+   into a station is solid once that station is reached; the half out of it once it is past. */
+.route__station {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.route__station::before,
+.route__station::after {
+  content: "";
+  position: absolute;
+  top: 11px;
+  width: 50%;
+  border-top: 2px dashed var(--slate-soft);
+}
+
+.route__station::before { left: 0; }
+.route__station::after { right: 0; }
+
+.route__station:first-child::before,
+.route__station:last-child::after {
+  display: none;
+}
+
+.route__station[data-state="past"]::before,
+.route__station[data-state="current"]::before,
+.route__station[data-state="past"]::after {
+  top: 10px;
+  border-top: 3px solid var(--ink);
+}
+
+.route__square {
+  position: relative;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  margin: 4px 0;
+  border: 2px solid var(--ink);
+  background: var(--papier);
+}
+
+.route__station[data-state="past"] .route__square {
+  border: 0;
+  background: var(--ink);
+}
+
+.route__station[data-state="current"] .route__square {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 0;
+  background: var(--ink);
+}
+
+.route__station[data-state="current"] .route__square::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--papier);
+}
+
+.route__text {
+  display: flex;
+  flex-direction: column;
+  margin-top: 6px;
+}
+
+.route__label {
+  color: var(--slate-soft);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.route__station[data-state="past"] .route__label {
+  color: var(--slate);
+}
+
+.route__station[data-state="current"] .route__label {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.route__bar {
+  display: none;
+  height: 4px;
+  margin-top: 2px;
+  background: var(--ink);
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left center;
+  transition: transform var(--m-route) var(--ease-out);
+}
+
+.route__station[data-state="current"] .route__bar {
+  display: block;
+}
+
+.route-appendix {
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- components (B.4) */
+
+.scene-title {
+  position: absolute;
+  top: var(--zone-title-top);
+  left: var(--margin-x);
+  max-width: 1560px;
+  margin: 0;
+  font-size: var(--t-h1);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.h2 {
+  margin: 0;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+.label {
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+}
+
+.small {
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.35;
+  max-width: 60ch;
+}
+
+/* Question card */
+.q-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: var(--s3);
+  align-items: start;
+  max-width: 1100px;
+  padding: var(--s3) var(--s4) var(--s3) calc(var(--s4) + 8px);
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.q-card::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--ink);
+}
+
+.q-card.is-focus::before,
+.q-card[data-focus]::before {
+  background: var(--mennige);
+}
+
+.q-card .icon {
+  width: 56px;
+  height: 56px;
+  stroke-width: 7;
+}
+
+.q-card__label {
+  display: block;
+  margin-bottom: var(--s1);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.q-card__text {
+  margin: 0;
+  font-size: var(--t-question);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.q-card--hero .q-card__text {
+  font-size: var(--t-question-hero);
+  line-height: 1.2;
+}
+
+.q-card__stamp {
+  display: none;
+}
+
+.q-card.is-unchanged .q-card__stamp {
+  position: absolute;
+  top: -22px;
+  right: var(--s3);
+  display: inline-flex;
+  padding: 4px 12px;
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  font-size: var(--t-label);
+  font-weight: 700;
+}
+
+.q-card--dark {
+  color: var(--papier);
+  border-color: var(--papier);
+  background: var(--graphit);
+}
+
+.q-card--dark::before {
+  background: var(--mennige);
+}
+
+/* Lane badge */
+.lane {
+  display: inline-flex;
+  height: 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 var(--s2) 0 12px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.lane .icon {
+  width: 32px;
+  height: 32px;
+  stroke-width: 7;
+}
+
+.lane__swatch {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--ink);
+}
+
+.lane--export {
+  border-style: dashed;
+}
+
+.lane--export .lane__swatch {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+.lane--approved {
+  border-width: 4px;
+}
+
+.lane--approved .lane__swatch {
+  background: var(--ink);
+}
+
+/* Evidence cards */
+.ev-run,
+.ev-db {
+  position: relative;
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  border: 3px solid var(--ink);
+}
+
+.ev-run {
+  background: var(--papier);
+}
+
+.ev-run::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+}
+
+.ev-db {
+  background: var(--beton);
+  outline: 1px solid var(--ink);
+  outline-offset: -8px;
+}
+
+.ev-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.ev-head .icon {
+  width: 32px;
+  height: 32px;
+  stroke-width: 7;
+}
+
+.ev-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+  font-size: var(--t-body);
+}
+
+.ev-value {
+  font-size: var(--t-num-md);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.ev-foot {
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-small);
+}
+
+/* Equality connector */
+.eq {
+  display: inline-grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.eq__rule {
+  display: block;
+  height: 3px;
+  background: var(--ink);
+}
+
+/* Grade chip */
+.chip {
+  display: inline-flex;
+  height: 56px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 var(--s2);
+  border: 2px solid var(--ink);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.chip .icon {
+  width: 32px;
+  height: 32px;
+  stroke-width: 7;
+}
+
+.chip--pass {
+  color: var(--pass);
+  border-color: var(--pass);
+}
+
+.chip--fail .chip__swatch {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+.chip--gap {
+  border-style: dashed;
+}
+
+/* Diagram node */
+.node {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s1);
+  text-align: center;
+}
+
+.node__box {
+  position: relative;
+  display: grid;
+  width: 136px;
+  height: 136px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.node__label {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.node__sub {
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.3;
+}
+
+.node.is-active .node__box {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+.node.is-stack .node__box::before,
+.node.is-stack .node__box::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.node.is-stack .node__box::before { top: 7px; left: 7px; }
+.node.is-stack .node__box::after { top: 17px; left: 17px; z-index: -2; }
+
+.node__badge {
+  position: absolute;
+  top: -22px;
+  right: -22px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.node__badge .icon {
+  width: 28px;
+  height: 28px;
+  stroke-width: 9;
+}
+
+.node.is-unreachable .node__box {
+  border-style: dashed;
+}
+
+.node.is-unreachable .node__box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+/* Connector (SVG): a plain path, no pathLength (see the contract above) */
+.edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.edge--dashed {
+  stroke-dasharray: 12 8;
+}
+
+.edge--active {
+  stroke: var(--mennige);
+  stroke-width: 6;
+}
+
+.edge-head {
+  fill: var(--ink);
+  stroke: none;
+}
+
+.edge-label {
+  padding: 2px 8px;
+  background: var(--papier);
+  font-size: var(--t-small);
+  font-weight: 600;
+}
+
+/* Packet: decorative; the only moving object in its step */
+.packet {
+  width: 20px;
+  height: 20px;
+  background: var(--mennige);
+  fill: var(--mennige);
+}
+
+/* Wall: database permission only */
+.wall {
+  height: 28px;
+  border: 3px solid var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+/* Room vote (content band y 776–968) */
+.room-vote {
+  position: absolute;
+  top: 776px;
+  right: var(--margin-x);
+  left: var(--margin-x);
+  display: grid;
+  height: 192px;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-content: center;
+  align-items: center;
+  gap: var(--s1) var(--s4);
+  padding: 0 var(--s4);
+  border-top: 3px solid var(--ink);
+  background: var(--beton);
+}
+
+.room-vote .icon {
+  grid-row: 1 / span 2;
+  width: 72px;
+  height: 72px;
+}
+
+.room-vote__label {
+  display: block;
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.room-vote__q {
+  margin: 0;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* Options are the answers the room calls out, not controls: a left-aligned row of square-bulleted words
+   under the question, with no box, fill or fixed width. */
+.room-vote__options {
+  display: flex;
+  grid-column: 2;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s1) var(--s6);
+}
+
+.room-vote__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.room-vote__option::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 14px;
+  background: var(--ink);
+}
+
+/* Callout */
+.callout {
+  position: relative;
+  max-width: 36ch;
+  padding: var(--s2) var(--s3) var(--s2) calc(var(--s3) + 8px);
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+.callout::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--ink);
+}
+
+.callout.is-focus::before,
+.callout[data-focus]::before {
+  background: var(--mennige);
+}
+
+.callout__pointer {
+  position: absolute;
+  height: 2px;
+  background: var(--ink);
+}
+
+.callout__pointer::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -8px;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+
+/* Stamp */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 12px 20px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stamp .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 7;
+}
+
+.stamp--pass {
+  color: var(--pass);
+  border-color: var(--pass);
+}
+
+/* Big number: a scoped number never appears without its scope line */
+.bignum {
+  display: grid;
+  gap: var(--s1);
+}
+
+.bignum__label {
+  color: var(--slate);
+  font-size: var(--t-body);
+}
+
+.bignum__value {
+  font-size: var(--t-num-hero);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.bignum__scope {
+  font-size: var(--t-body);
+}
+
+/* Four Blanks tile */
+.blank {
+  display: grid;
+  width: 380px;
+  height: 200px;
+  grid-template-rows: auto auto 1fr;
+  gap: var(--s1);
+  padding: var(--s2) var(--s3);
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+.blank__q {
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.blank__a {
+  align-self: end;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.blank.is-blank .blank__a {
+  border-bottom: 3px dashed var(--slate-soft);
+  color: var(--slate);
+}
+
+/* Compact table (appendix) */
+.ctable {
+  border: 3px solid var(--ink);
+  border-collapse: collapse;
+  font-size: var(--t-body);
+}
+
+.ctable th {
+  padding: 0 var(--s2) var(--s1);
+  border-bottom: 2px solid var(--ink);
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  text-align: left;
+}
+
+.ctable td {
+  height: 56px;
+  padding: 0 var(--s2);
+  border-top: 1px solid var(--leinen);
+}
+
+.ctable .num {
+  text-align: right;
+}
+
+/* Chart marks (SVG) */
+.chart__truth { fill: var(--slate-soft); }
+.chart__export { fill: url(#story-hatch); stroke: var(--ink); stroke-width: 3; }
+.chart__approved { fill: var(--papier); stroke: var(--ink); stroke-width: 3; }
+.chart__zero { stroke: var(--ink); stroke-width: 3; }
+.chart__grid { stroke: var(--leinen); stroke-width: 1; }
+.chart__axis { fill: var(--slate); font-family: var(--sans); font-size: 22px; }
+.chart__value { fill: var(--ink); font-family: var(--sans); font-size: var(--t-num-sm); font-weight: 700; }
+
+/* Code block (appendix only) */
+.code {
+  margin: 0;
+  padding: var(--s2) var(--s3);
+  border: 3px solid var(--ink);
+  background: var(--beton);
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  line-height: 1.4;
+  white-space: pre;
+}
+
+/* A <code> inside .code would take the browser's own `monospace`; it inherits the component's JetBrains Mono. */
+.code code {
+  font: inherit;
+}
+
+/* ---------------------------------------------------------------- motion primitives (B.7) */
+
+@keyframes story-fade { from { opacity: 0; } }
+@keyframes story-rise { from { opacity: 0; transform: translateY(16px); } 50% { opacity: 1; } }
+@keyframes story-grow-y { from { transform: scaleY(0); } }
+@keyframes story-grow-x { from { transform: scaleX(0); } }
+@keyframes story-stamp { from { opacity: 0; transform: scale(1.15); } 50% { opacity: 1; } }
+@keyframes story-wall { from { transform: scaleY(0); } }
+@keyframes story-merge { from { transform: translate(var(--merge-x, 0px), var(--merge-y, 0px)); } }
+
+svg [data-motion] {
+  transform-box: fill-box;
+}
+
+[data-motion="grow"],
+[data-motion="wall"] {
+  transform-origin: var(--grow-origin, 50% 100%);
+}
+
+[data-motion="grow"][data-axis="x"] {
+  transform-origin: var(--grow-origin, 0% 50%);
+}
+
+[data-motion="stamp"] {
+  transform-origin: center;
+}
+
+[data-motion].is-entering {
+  animation-duration: var(--m-rise);
+  animation-timing-function: var(--ease-out);
+  animation-delay: calc(min(var(--order, 0), 4) * var(--m-stagger));
+  animation-fill-mode: both;
+}
+
+[data-motion="fade"].is-entering { animation-name: story-fade; animation-duration: var(--m-fade); }
+[data-motion="rise"].is-entering { animation-name: story-rise; animation-duration: var(--m-rise); }
+[data-motion="stamp"].is-entering { animation-name: story-stamp; animation-duration: var(--m-rise); animation-timing-function: var(--ease-stamp); }
+[data-motion="wall"].is-entering { animation-name: story-wall; animation-duration: var(--m-wall); animation-timing-function: var(--ease-inout); }
+[data-motion="grow"].is-entering { animation-name: story-grow-y; animation-duration: var(--m-grow); }
+[data-motion="grow"][data-axis="x"].is-entering { animation-name: story-grow-x; }
+[data-motion="merge"].is-entering { animation-name: story-merge; animation-duration: var(--m-grow); animation-timing-function: var(--ease-inout); }
+
+/* draw, count and travel are driven by the runtime (Web Animations on stroke-dashoffset,
+   Story.countUp, Story.travel). A packet exists only while it travels; its final state is the
+   target's outline. */
+[data-motion="draw"].is-entering {
+  animation: none;
+}
+
+[data-motion="count"].is-entering {
+  animation: none;
+}
+
+[data-motion="travel"]:not(.is-entering) {
+  visibility: hidden !important;
+}
+
+[data-motion="travel"].is-entering {
+  animation: none;
+}
+
+/* ---------------------------------------------------------------- reduced motion, static, print (B.11) */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion].is-entering {
+    animation: none !important;
+  }
+
+  [data-motion="travel"] {
+    visibility: hidden !important;
+  }
+
+  .route,
+  .route__bar {
+    transition: none !important;
+  }
+}
+
+html[data-motion="reduced"] [data-motion].is-entering,
+html[data-motion="static"] [data-motion].is-entering {
+  animation: none !important;
+}
+
+html[data-motion="reduced"] [data-motion="travel"],
+html[data-motion="static"] [data-motion="travel"] {
+  visibility: hidden !important;
+}
+
+html[data-motion="reduced"] .route,
+html[data-motion="reduced"] .route__bar,
+html[data-motion="static"] .route,
+html[data-motion="static"] .route__bar {
+  transition: none !important;
+}
+
+@media print {
+  .skip-link { display: none !important; }
+
+  [data-motion],
+  .route,
+  .route__bar {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  [data-motion="travel"] {
+    visibility: hidden !important;
+  }
+}
+
+/* ---------------------------------------------------------------- cover */
+
+#cover .workshop-globe {
+  top: 0;
+  right: 0;
+  width: 1020px;
+  height: 1080px;
+  overflow: hidden;
+  background: url("../assets/globe.svg") left center / 1280px auto no-repeat;
+  transform: none;
+}
+
+#cover .workshop-globe img {
+  display: none;
+}
+
+#cover > .body {
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------------- placeholders (design="placeholder")
+   Legacy scene markup with its controls stripped, readable on paper until a scene package moves
+   the partial to design="v3". Everything stays inside the content zones; the safe band is empty. */
+
+[data-design="placeholder"] > .appendix-mark {
+  display: none;
+}
+
+[data-design="placeholder"] > .body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  overflow: hidden;
+  font-size: var(--t-body);
+}
+
+[data-design="placeholder"] .body div,
+[data-design="placeholder"] .body ol,
+[data-design="placeholder"] .body article,
+[data-design="placeholder"] .body aside,
+[data-design="placeholder"] .body header,
+[data-design="placeholder"] .body figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s1) var(--s3);
+  margin: 0;
+  padding: 0;
+}
+
+[data-design="placeholder"] .body ol {
+  list-style: none;
+}
+
+[data-design="placeholder"] .h1,
+[data-design="placeholder"] .display {
+  margin: 0;
+  font-size: var(--t-h1);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+[data-design="placeholder"] .display {
+  font-size: var(--t-display);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+[data-design="placeholder"] p,
+[data-design="placeholder"] h3 {
+  margin: 0;
+}
+
+[data-design="placeholder"] .overline,
+[data-design="placeholder"] .body b {
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+[data-design="placeholder"] small {
+  color: var(--slate);
+  font-size: var(--t-small);
+}
+
+[data-design="placeholder"] blockquote {
+  max-width: 1100px;
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border: 3px solid currentColor;
+  border-left-width: 8px;
+  font-size: var(--t-question);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+[data-design="placeholder"] .body img {
+  width: auto;
+  max-width: 480px;
+  height: auto;
+  max-height: 300px;
+}
+
+[data-design="placeholder"] .body svg:not(.icon) {
+  max-width: 100%;
+  height: auto;
+}
+
+[data-design="placeholder"] table {
+  border: 3px solid var(--ink);
+  border-collapse: collapse;
+}
+
+[data-design="placeholder"] td,
+[data-design="placeholder"] th {
+  padding: 4px var(--s2);
+  border-top: 1px solid var(--leinen);
+  text-align: left;
+}
+
+[data-design="placeholder"] .code {
+  white-space: pre-wrap;
+}

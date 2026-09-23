@@ -13,6 +13,7 @@
  */
 
 import type { Locale } from "./i18n/locale";
+import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 
 export interface WorkshopStep {
   /** Zero-padded step number, e.g. "01". */
@@ -917,12 +918,12 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 export const WORKSHOPS_BY_LOCALE: Readonly<
   Record<Locale, readonly Workshop[]>
 > = {
-  de: WORKSHOPS_DE,
-  en: WORKSHOPS_EN,
+  de: [...WORKSHOPS_DE, DATA_READINESS_WORKSHOP.de],
+  en: [...WORKSHOPS_EN, DATA_READINESS_WORKSHOP.en],
 };
 
 /** German remains the canonical catalog for machine endpoints and legacy imports. */
-export const WORKSHOPS: readonly Workshop[] = WORKSHOPS_DE;
+export const WORKSHOPS: readonly Workshop[] = WORKSHOPS_BY_LOCALE.de;
 
 export function getWorkshops(locale: Locale = "de"): readonly Workshop[] {
   return WORKSHOPS_BY_LOCALE[locale];

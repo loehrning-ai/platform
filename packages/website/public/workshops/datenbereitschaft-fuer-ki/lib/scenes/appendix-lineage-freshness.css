@@ -1,0 +1,148 @@
+/* appendix-lineage-freshness (spec C.23): three-node lineage, the sealed clock drawn to scale
+   (1 h = 36 px), and the dataset envelope with the verify-deck truth tokens. 0 steps. */
+
+#appendix-lineage-freshness .lf-diagram {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+  width: 1728px;
+  height: 520px;
+}
+
+#appendix-lineage-freshness .lf-diagram > svg {
+  display: block;
+  overflow: visible;
+}
+
+#appendix-lineage-freshness .lf-diagram text {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-feature-settings: "tnum" 1;
+}
+
+#appendix-lineage-freshness .lf-box {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#appendix-lineage-freshness .lf-flow {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 5;
+  stroke-linecap: square;
+}
+
+#appendix-lineage-freshness .lf-node {
+  font-family: var(--mono) !important;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#appendix-lineage-freshness .lf-sub {
+  fill: var(--slate) !important;
+  font-size: 24px;
+}
+
+#appendix-lineage-freshness .lf-rule {
+  stroke: var(--leinen);
+  stroke-width: 2;
+}
+
+#appendix-lineage-freshness .lf-axis {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#appendix-lineage-freshness .lf-axis--open {
+  stroke: var(--slate-soft);
+  stroke-dasharray: 12 8;
+  stroke-linecap: butt;
+}
+
+#appendix-lineage-freshness .lf-span {
+  fill: var(--ink);
+}
+
+#appendix-lineage-freshness .lf-tick {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#appendix-lineage-freshness .lf-tick--warn {
+  stroke-dasharray: 8 6;
+}
+
+#appendix-lineage-freshness .lf-clock {
+  stroke: var(--mennige);
+  stroke-width: 6;
+}
+
+#appendix-lineage-freshness .lf-clock-cap {
+  fill: var(--mennige);
+}
+
+#appendix-lineage-freshness .lf-strong {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#appendix-lineage-freshness .lf-num {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+#appendix-lineage-freshness .lf-mono {
+  font-family: var(--mono) !important;
+  font-size: 24px;
+}
+
+#appendix-lineage-freshness .lf-soft {
+  fill: var(--slate) !important;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+#appendix-lineage-freshness .lf-envelope {
+  position: absolute;
+  top: 792px;
+  left: 96px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  width: 1728px;
+  padding: 20px 28px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-lineage-freshness .lf-envelope__text {
+  display: grid;
+  gap: 6px;
+}
+
+#appendix-lineage-freshness .lf-envelope__facts {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+#appendix-lineage-freshness .lf-envelope__ids {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+#appendix-lineage-freshness .lf-note {
+  position: absolute;
+  top: 932px;
+  left: 96px;
+  margin: 0;
+  color: var(--slate);
+  font-size: 22px;
+}

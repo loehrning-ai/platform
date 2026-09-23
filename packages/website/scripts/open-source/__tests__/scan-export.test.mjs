@@ -258,7 +258,7 @@ async function main() {
       ),
     );
     const runtimeFontPath =
-      "packages/website/public/fonts/loehrning-sans-regular-v1.woff2";
+      ["packages/website/public/workshops", "datenbereitschaft-fuer-ki", "assets/fonts", "JetBrainsMono-Static-400.woff2"].join("/");
     const logoSvg = Buffer.from(
       '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1v1z"/></svg>\n',
     );
@@ -580,6 +580,29 @@ async function main() {
       `clean platform fixture should exit 0\n${combined(platformCleanRes)}`,
     );
     assert.match(combined(platformCleanRes), /no findings/);
+
+    // A reviewed long asset path is not a credential. Its exemption must not
+    // extend to arbitrary metadata fields or similarly named nested files.
+    await writeFile(join(platformClean, "ASSET_MANIFEST.json"), manifestJson([
+      manifestAsset(fontPath, font),
+      manifestAsset(runtimeFontPath, runtimeFont, { source: FAKE.base64 }),
+      manifestAsset(logoPath, logoSvg),
+    ]));
+    const manifestSecretRes = runScan("--dest", platformClean, "platform");
+    assert.equal(manifestSecretRes.status, 1);
+    assert.match(combined(manifestSecretRes), /high-entropy base64 run/);
+    await writeFile(join(platformClean, "ASSET_MANIFEST.json"), manifestJson([
+      manifestAsset(fontPath, font),
+      manifestAsset(runtimeFontPath, runtimeFont),
+      manifestAsset(logoPath, logoSvg),
+    ]));
+    await writeTree(platformClean, {
+      "nested/ASSET_MANIFEST.json": JSON.stringify({ path: runtimeFontPath }, null, 2),
+    });
+    const nestedManifestRes = runScan("--dest", platformClean, "platform");
+    assert.equal(nestedManifestRes.status, 1);
+    assert.match(combined(nestedManifestRes), /high-entropy base64 run/);
+    await rm(join(platformClean, "nested"), { recursive: true });
 
     // --- platform dirty: all public-tree policy violations block in one pass ---
     const platformDirtyRes = runScan("--dest", platformDirty, "platform");

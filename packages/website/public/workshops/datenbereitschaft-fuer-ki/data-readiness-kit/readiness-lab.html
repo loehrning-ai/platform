@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#171613">
+  <title>Fix the AI's Data — FOLDLINE Readiness Lab</title>
+  <style>
+    :root {
+      --paper: #f2efe7;
+      --ink: #171613;
+      --muted: #6b675f;
+      --line: #c8c1b4;
+      --accent: #b73a15;
+      --ok: #176b52;
+      --warn: #9a6100;
+      --panel: #fffdf7;
+      --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      --sans: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color-scheme: light;
+      background: var(--ink);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.35;
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    button,
+    input,
+    textarea,
+    select,
+    .choice label,
+    .skip-link {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgb(183 58 21 / 24%);
+    }
+
+    h1, h2 { text-wrap: balance; }
+
+    p,
+    .legend span,
+    .weakest span,
+    .evidence-help { text-wrap: pretty; }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 4px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      transform: translateY(calc(-100% - 24px));
+      border: 3px solid var(--panel);
+      background: var(--ink);
+      color: white;
+      padding: 12px 16px;
+      font-weight: 800;
+    }
+
+    .skip-link:focus-visible { transform: translateY(0); }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: end;
+      padding: clamp(24px, 4vw, 64px);
+      border-bottom: 8px solid var(--ink);
+    }
+
+    .eyebrow,
+    .kicker,
+    .control-id,
+    .result-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 10px 0 0;
+      font-size: clamp(44px, 8vw, 112px);
+      line-height: .88;
+      letter-spacing: -.065em;
+    }
+
+    .mark {
+      width: 84px;
+      height: 84px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: white;
+      font-size: 46px;
+      font-weight: 800;
+    }
+
+    main {
+      padding: 0 clamp(24px, 4vw, 64px) 64px;
+      scroll-margin-top: 16px;
+    }
+
+    .scope {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: 1px;
+      margin: 32px 0;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      padding: 18px;
+      background: var(--panel);
+    }
+
+    .scope-safety {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 14px 18px;
+      background: var(--ink);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .scope-retention {
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 12px 18px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .print-only { display: none; }
+
+    label { font-weight: 800; }
+
+    input[type="text"],
+    .scope textarea {
+      width: 100%;
+      border: 0;
+      border-bottom: 3px solid var(--ink);
+      background: transparent;
+      padding: 8px 0 10px;
+      color: var(--ink);
+    }
+
+    .scope textarea {
+      min-height: 68px;
+      resize: vertical;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .legend div { padding: 12px 14px; border-right: 1px solid var(--ink); }
+    .legend div:last-child { border-right: 0; }
+    .legend strong { display: block; font-family: var(--mono); }
+    .legend span { color: var(--muted); font-size: 14px; }
+
+    .simulation {
+      margin: 24px 0 32px;
+      border: 6px solid var(--ink);
+      background: var(--ink);
+      color: white;
+    }
+
+    .simulation-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(240px, .6fr);
+      gap: 32px;
+      padding: 24px;
+      border-bottom: 1px solid #625f59;
+    }
+
+    .simulation h2 {
+      max-width: 760px;
+      margin: 6px 0 0;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: .98;
+      letter-spacing: -.035em;
+    }
+
+    .simulation-head p {
+      align-self: end;
+      margin: 0;
+      color: #d7d0c4;
+    }
+
+    .simulation-decisions {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      background: #625f59;
+    }
+
+    .simulation-decision {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+      padding: 16px;
+      background: var(--ink);
+    }
+
+    .simulation-decision span {
+      color: #d7d0c4;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    select {
+      width: 100%;
+      min-height: 48px;
+      border: 2px solid white;
+      border-radius: 0;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 34px 8px 10px;
+    }
+
+    .simulation-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      padding: 18px 24px;
+      background: #24231f;
+    }
+
+    .simulation-actions button {
+      border-color: white;
+      background: white;
+      color: var(--ink);
+    }
+
+    .simulation-actions button:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    .simulation-state {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .simulation-output {
+      display: grid;
+      grid-template-columns: minmax(220px, .45fr) minmax(0, 1.55fr);
+      gap: 1px;
+      background: #625f59;
+    }
+
+    .simulation-trace {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      padding: 20px 24px;
+      background: var(--ink);
+    }
+
+    .trace-row span {
+      display: block;
+      color: #bdb6aa;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .trace-row strong {
+      display: block;
+      margin-top: 3px;
+      overflow-wrap: anywhere;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .case-results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      background: var(--panel);
+      color: var(--ink);
+    }
+
+    .case-result {
+      min-height: 112px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .case-result:nth-child(odd) { border-right: 1px solid var(--line); }
+    .case-result:nth-last-child(-n + 2) { border-bottom: 0; }
+
+    .case-result strong {
+      display: inline-block;
+      min-width: 42px;
+      font-family: var(--mono);
+    }
+
+    .case-result [data-case-state] {
+      display: inline-block;
+      padding: 2px 6px;
+      background: #ded9cf;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .05em;
+    }
+
+    .case-result[data-state="pass"] [data-case-state] { background: var(--ok); color: white; }
+    .case-result[data-state="fail"] [data-case-state] { background: var(--accent); color: white; }
+    .case-result p { margin: 8px 0 0; color: #59554e; font-size: 14px; }
+
+    .gates { border-top: 6px solid var(--ink); }
+
+    .gate {
+      display: grid;
+      grid-template-columns: minmax(180px, .75fr) minmax(0, 2.25fr);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .gate-head {
+      padding: 24px 22px 24px 0;
+      border-right: 1px solid var(--ink);
+    }
+
+    .gate-letter {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .gate h2 { margin: 4px 0 8px; font-size: 22px; }
+    .gate-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .controls { display: grid; }
+
+    .control {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 20px;
+      align-items: start;
+      min-height: 148px;
+      padding: 18px 0 18px 22px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .control:last-child { border-bottom: 0; }
+    .control p { margin: 5px 0 0; color: var(--muted); }
+    .control > :first-child, .choices { align-self: center; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--ink);
+    }
+
+    .choice { position: relative; }
+    .choice + .choice { border-left: 1px solid var(--ink); }
+    .choice input { position: absolute; opacity: 0; pointer-events: none; }
+    .choice label {
+      display: grid;
+      min-height: 64px;
+      place-items: center;
+      padding: 8px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 12px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .choice input:checked + label { background: var(--ink); color: white; }
+    .choice input[value="2"]:checked + label { background: var(--ok); }
+    .choice input:focus-visible + label { outline: 4px solid var(--accent); outline-offset: -4px; }
+    .choice input:disabled + label {
+      cursor: not-allowed;
+      background: #ded9cf;
+      color: #6f6a61;
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .evidence-field {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: minmax(150px, .45fr) minmax(0, 1.55fr);
+      gap: 12px 18px;
+      align-items: end;
+      padding: 14px 16px;
+      border-left: 5px solid var(--line);
+      background: #e9e4d9;
+    }
+
+    .evidence-field[data-proof-state="pass"] { border-left-color: var(--ok); }
+    .evidence-field[data-proof-state="fail"] { border-left-color: var(--accent); }
+
+    .evidence-field label {
+      display: grid;
+      gap: 2px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .evidence-field label span {
+      color: #59554e;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .evidence-field input[type="text"] {
+      min-width: 0;
+      padding: 8px 10px;
+      border: 2px solid var(--ink);
+      background: var(--panel);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .evidence-field input[readonly] { color: #45413b; cursor: default; }
+
+    .evidence-help {
+      grid-column: 2;
+      margin-top: -8px;
+      color: #59554e;
+      font-size: 12px;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, .5fr);
+      gap: 1px;
+      margin-top: 32px;
+      border: 6px solid var(--ink);
+      background: var(--ink);
+    }
+
+    .verdict { padding: 26px; background: var(--panel); }
+    .verdict h2 { margin: 8px 0; font-size: clamp(34px, 5vw, 72px); letter-spacing: -.045em; }
+    .verdict p { max-width: 760px; margin: 0; font-size: 18px; }
+    .verdict[data-level="not-ready"] h2 { color: var(--accent); }
+    .verdict[data-level="pilot"] h2 { color: var(--warn); }
+    .verdict[data-level="ready"] h2 { color: var(--ok); }
+
+    .weakest {
+      padding: 26px;
+      background: var(--ink);
+      color: white;
+    }
+
+    .weakest strong { display: block; margin-top: 8px; font-size: 24px; }
+    .weakest span { display: block; margin-top: 8px; color: #d7d0c4; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+
+    button {
+      min-height: 48px;
+      border: 2px solid var(--ink);
+      border-radius: 0;
+      background: var(--ink);
+      color: white;
+      padding: 10px 16px;
+      font-family: var(--mono);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary { background: transparent; color: var(--ink); }
+    button:hover { background: var(--accent); border-color: var(--accent); }
+
+    .rule {
+      max-width: 920px;
+      margin: 32px 0 0;
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 900px) {
+      .scope, .gate, .result, .simulation-head, .simulation-output { grid-template-columns: 1fr; }
+      .simulation-decisions { grid-template-columns: 1fr 1fr; }
+      .simulation-state { width: 100%; margin-left: 0; }
+      .gate-head { border-right: 0; border-bottom: 1px solid var(--ink); padding-left: 0; }
+      .control { grid-template-columns: 1fr; padding: 18px 0; }
+      .choices { width: 100%; }
+      .evidence-field { grid-column: 1; grid-template-columns: 1fr; }
+      .evidence-help { grid-column: 1; margin-top: -4px; }
+      .legend { grid-template-columns: 1fr; }
+      .legend div { border-right: 0; border-bottom: 1px solid var(--ink); }
+      .legend div:last-child { border-bottom: 0; }
+      input[type="text"], textarea, select { min-height: 44px; font-size: 16px; }
+    }
+
+    @media (max-width: 560px) {
+      .simulation-decisions, .case-results { grid-template-columns: 1fr; }
+      .case-result:nth-child(odd) { border-right: 0; }
+      .case-result:nth-last-child(2) { border-bottom: 1px solid var(--line); }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      button, .choice label { transition: background-color 120ms linear, color 120ms linear, border-color 120ms linear; }
+    }
+
+    @media print {
+      html, body { background: white; }
+      .skip-link, .actions, .legend, .simulation-actions { display: none; }
+      .masthead, main { padding-left: 0; padding-right: 0; }
+      .scope input, .scope textarea { display: none; }
+      .scope .print-only {
+        display: block;
+        overflow-wrap: anywhere;
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .gate, .control, .result, .simulation, .case-result { break-inside: avoid; }
+      .simulation { border-width: 3px; }
+      .simulation-head, .simulation-trace { background: white; color: black; }
+      .simulation-head p, .trace-row span { color: #444; }
+      .simulation-decisions { display: none; }
+      .simulation-output { grid-template-columns: 1fr; }
+      .case-results { grid-template-columns: 1fr 1fr; }
+      .choice input:not(:checked) + label { color: #aaa; }
+      .choice input:checked + label { background: transparent; color: black; outline: 3px solid black; outline-offset: -3px; }
+      .choice input:disabled + label { text-decoration: none; }
+      .evidence-field { display: block; padding: 8px 0; border: 0; background: white; }
+      .evidence-field input, .evidence-help { display: none; }
+      .evidence-field::after { content: "Evidence: " attr(data-print-value); display: block; margin-top: 4px; font-family: var(--mono); font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to readiness audit</a>
+  <header class="masthead">
+    <div>
+      <div class="eyebrow">Data readiness for AI · beginner practice lab</div>
+      <h1>Fix the AI's Data.</h1>
+    </div>
+    <div class="mark" aria-hidden="true">01</div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <p><strong>Your mission:</strong> help a made-up subscription company get a trustworthy monthly revenue answer. Run the starting setup, inspect what fails, change one choice, and run again. The spreadsheet has a plot twist.</p>
+    <p>This is a fixed browser simulation. It calls no AI and connects to no database. MRR means <strong>monthly recurring revenue</strong>: 10 subscriptions at €20 per month give €200 MRR. “Ending” means the balance at month end.</p>
+    <section class="scope" aria-label="Audit scope">
+      <div class="field">
+        <label for="question">One exact analytics question</label>
+        <textarea id="question" name="question" rows="2" maxlength="160" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" translate="no" aria-describedby="scope-safety scope-retention">Show ending MRR by month for the last complete quarter.</textarea>
+        <span id="question-print-value" class="print-only" aria-hidden="true"></span>
+      </div>
+      <div class="field">
+        <label for="surface">Data the AI is allowed to see</label>
+        <textarea id="surface" name="surface" rows="2" maxlength="120" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" translate="no" aria-describedby="scope-safety scope-retention">FOLDLINE bad + ready PostgreSQL interfaces</textarea>
+        <span id="surface-print-value" class="print-only" aria-hidden="true"></span>
+      </div>
+      <p id="scope-safety" class="scope-safety" role="note">Use a synthetic or generic example. Do not enter employer, customer, personal, or sensitive data.</p>
+      <p id="scope-retention" class="scope-retention">Typed edits stay only in this page and are never written to browser storage. Reload restores the sealed synthetic defaults. Copies and printouts omit custom text.</p>
+    </section>
+
+    <section class="legend" aria-label="Evidence levels">
+      <div><strong>0 · Unproven</strong><span>No artifact or observed behavior.</span></div>
+      <div><strong>1 · Documented</strong><span>A claim exists. Execution has not proved it.</span></div>
+      <div><strong>2 · Proven</strong><span>A repeatable test or enforced control produces evidence.</span></div>
+    </section>
+
+    <section class="simulation" aria-labelledby="simulation-title" data-simulation-state="not-run">
+      <header class="simulation-head">
+        <div>
+          <div class="kicker">12-minute optional practice · made-up data</div>
+          <h2 id="simulation-title">Make Five Choices. Test the Result.</h2>
+        </div>
+        <p>Start with the defaults. Then repair one choice at a time. The test-set choice controls whether you check one answer or all six cases. A passing result applies only to this simulation.</p>
+      </header>
+
+      <div class="simulation-decisions" aria-label="Architecture decisions">
+        <label class="simulation-decision" for="sim-surface">
+          <span>01 · Which data can it see?</span>
+          <select id="sim-surface" name="sim-surface" data-sim-decision autocomplete="off">
+            <option value="raw">Unexplained revenue export</option>
+            <option value="governed">Approved MRR summary</option>
+          </select>
+        </label>
+        <label class="simulation-decision" for="sim-metric">
+          <span>02 · What number do we mean?</span>
+          <select id="sim-metric" name="sim-metric" data-sim-decision autocomplete="off">
+            <option value="movement">Add monthly changes</option>
+            <option value="ending_snapshot">Month-end balance</option>
+          </select>
+        </label>
+        <label class="simulation-decision" for="sim-boundary">
+          <span>03 · What is off limits?</span>
+          <select id="sim-boundary" name="sim-boundary" data-sim-decision autocomplete="off">
+            <option value="broad">Read everything; just warn</option>
+            <option value="least_privilege">Refuse + restrict access</option>
+          </select>
+        </label>
+        <label class="simulation-decision" for="sim-freshness">
+          <span>04 · What if the data is old?</span>
+          <select id="sim-freshness" name="sim-freshness" data-sim-decision autocomplete="off">
+            <option value="silent">Hide the data's age</option>
+            <option value="governed">Warn after 36 hours</option>
+          </select>
+        </label>
+        <label class="simulation-decision" for="sim-yardstick">
+          <span>05 · How will we check it?</span>
+          <select id="sim-yardstick" name="sim-yardstick" data-sim-decision autocomplete="off">
+            <option value="one">Only one ordinary answer</option>
+            <option value="corpus">All six cases</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="simulation-actions">
+        <button id="run-simulation" type="button">Test My Choices</button>
+        <span id="simulation-status" class="simulation-state" role="status" aria-live="polite">NOT RUN · five decisions</span>
+      </div>
+
+      <div class="simulation-output">
+        <div class="simulation-trace" aria-label="Simulation trace">
+          <div class="trace-row"><span>Fixture</span><strong id="fixture-id">FOLDLINE-AGG-001</strong></div>
+          <div class="trace-row"><span>Fixture hash</span><strong id="fixture-hash">pending</strong></div>
+          <div class="trace-row"><span>Run hash</span><strong id="run-hash">pending</strong></div>
+          <div class="trace-row"><span>Receipt schema</span><strong>FOLDLINE-SIM-001</strong></div>
+          <div class="trace-row"><span>Grade</span><strong id="simulation-grade">0 / 6 cases · 0 / 10 controls</strong></div>
+        </div>
+        <ol id="case-results" class="case-results" aria-label="Deterministic case results">
+          <li class="case-result" data-case-id="G01" data-state="not-run"><strong>G01</strong><span data-case-state>NOT RUN</span><p>Answer exact values from the approved relation.</p></li>
+          <li class="case-result" data-case-id="C01" data-state="not-run"><strong>C01</strong><span data-case-state>NOT RUN</span><p>Clarify an ambiguous revenue request.</p></li>
+          <li class="case-result" data-case-id="R01" data-state="not-run"><strong>R01</strong><span data-case-state>NOT RUN</span><p>Refuse an unsupported profit metric.</p></li>
+          <li class="case-result" data-case-id="R02" data-state="not-run"><strong>R02</strong><span data-case-state>NOT RUN</span><p>Refuse direct identifiers before SQL.</p></li>
+          <li class="case-result" data-case-id="D01" data-state="not-run"><strong>D01</strong><span data-case-state>NOT RUN</span><p>Observe a database permission denial.</p></li>
+          <li class="case-result" data-case-id="F01" data-state="not-run"><strong>F01</strong><span data-case-state>NOT RUN</span><p>Disclose a 60-hour stale snapshot.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <p><strong>Reading the results:</strong> PASS means this setup handled that fixed case correctly. FAIL means a choice needs repair. NOT RUN means your test set did not include it. The run hash is an ID for these choices and results, not an AI confidence score. The freshness rule warns after 36 hours; it does not automatically block an answer.</p>
+    <p><strong>The detail below is optional.</strong> These ten checks explain the five choices. “Proven” unlocks only when a matching test passes. A note by itself cannot make a failing check pass.</p>
+    <form id="audit" class="gates">
+      <section class="gate" data-gate="Restricted surface" data-letter="1">
+        <header class="gate-head"><div class="gate-letter">1</div><h2>Restricted Surface</h2><p>Minimize reach. Make forbidden reads fail.</p></header>
+        <div class="controls">
+          <div class="control" data-control="Named identity sees only approved serving assets"><div><div class="control-id">R1 · Catalog boundary</div><p>One named read-only identity can select only the approved serving models.</p></div><div class="choices" role="radiogroup" aria-label="Catalog boundary evidence"><div class="choice"><input id="r1-0" name="r1" type="radio" value="0" checked><label for="r1-0">Unproven</label></div><div class="choice"><input id="r1-1" name="r1" type="radio" value="1"><label for="r1-1">Documented</label></div><div class="choice"><input id="r1-2" name="r1" type="radio" value="2"><label for="r1-2">Proven</label></div></div></div>
+          <div class="control" data-control="Forbidden raw or identifier read is denied by PostgreSQL"><div><div class="control-id">R2 · Hard denial</div><p>A fixed test proves raw tables and direct identifiers are denied by PostgreSQL.</p></div><div class="choices" role="radiogroup" aria-label="Hard denial evidence"><div class="choice"><input id="r2-0" name="r2" type="radio" value="0" checked><label for="r2-0">Unproven</label></div><div class="choice"><input id="r2-1" name="r2" type="radio" value="1"><label for="r2-1">Documented</label></div><div class="choice"><input id="r2-2" name="r2" type="radio" value="2"><label for="r2-2">Proven</label></div></div></div>
+        </div>
+      </section>
+
+      <section class="gate" data-gate="Explicit structure" data-letter="2">
+        <header class="gate-head"><div class="gate-letter">2</div><h2>Explicit Structure</h2><p>Declare grain, keys, clocks, and joins.</p></header>
+        <div class="controls">
+          <div class="control" data-control="Every model declares grain key and time semantics"><div><div class="control-id">E1 · Grain contract</div><p>Every exposed model declares one-row-per grain, a stable key, and time semantics.</p></div><div class="choices" role="radiogroup" aria-label="Grain contract evidence"><div class="choice"><input id="e1-0" name="e1" type="radio" value="0" checked><label for="e1-0">Unproven</label></div><div class="choice"><input id="e1-1" name="e1" type="radio" value="1"><label for="e1-1">Documented</label></div><div class="choice"><input id="e1-2" name="e1" type="radio" value="2"><label for="e1-2">Proven</label></div></div></div>
+          <div class="control" data-control="Names types and relationships are machine-readable and validated"><div><div class="control-id">E2 · Structural validation</div><p>Business names, types, allowed values, and relationships are machine-readable and validated.</p></div><div class="choices" role="radiogroup" aria-label="Structural validation evidence"><div class="choice"><input id="e2-0" name="e2" type="radio" value="0" checked><label for="e2-0">Unproven</label></div><div class="choice"><input id="e2-1" name="e2" type="radio" value="1"><label for="e2-1">Documented</label></div><div class="choice"><input id="e2-2" name="e2" type="radio" value="2"><label for="e2-2">Proven</label></div></div></div>
+        </div>
+      </section>
+
+      <section class="gate" data-gate="Agreed meaning" data-letter="3">
+        <header class="gate-head"><div class="gate-letter">3</div><h2>Agreed Meaning</h2><p>Version the business contract. Consume it.</p></header>
+        <div class="controls">
+          <div class="control" data-control="Metric meaning is complete and owned"><div><div class="control-id">A1 · Metric contract</div><p>Formula, population, period, status, unit, dimensions, owner, and limits are explicit.</p></div><div class="choices" role="radiogroup" aria-label="Metric contract evidence"><div class="choice"><input id="a1-0" name="a1" type="radio" value="0" checked><label for="a1-0">Unproven</label></div><div class="choice"><input id="a1-1" name="a1" type="radio" value="1"><label for="a1-1">Documented</label></div><div class="choice"><input id="a1-2" name="a1" type="radio" value="2"><label for="a1-2">Proven</label></div></div></div>
+          <div class="control" data-control="Runtime consumes the versioned semantic contract"><div><div class="control-id">A2 · Runtime consumption</div><p>The application compiles and uses the contract; YAML is not inert documentation.</p></div><div class="choices" role="radiogroup" aria-label="Runtime consumption evidence"><div class="choice"><input id="a2-0" name="a2" type="radio" value="0" checked><label for="a2-0">Unproven</label></div><div class="choice"><input id="a2-1" name="a2" type="radio" value="1"><label for="a2-1">Documented</label></div><div class="choice"><input id="a2-2" name="a2" type="radio" value="2"><label for="a2-2">Proven</label></div></div></div>
+        </div>
+      </section>
+
+      <section class="gate" data-gate="Dependable data" data-letter="4">
+        <header class="gate-head"><div class="gate-letter">4</div><h2>Dependable Data</h2><p>Expose state. Define failure behavior.</p></header>
+        <div class="controls">
+          <div class="control" data-control="Freshness quality lineage and ownership are observable"><div><div class="control-id">D1 · Observable state</div><p>Freshness, quality, lineage, version, and ownership appear in the answer trace.</p></div><div class="choices" role="radiogroup" aria-label="Observable state evidence"><div class="choice"><input id="d1-0" name="d1" type="radio" value="0" checked><label for="d1-0">Unproven</label></div><div class="choice"><input id="d1-1" name="d1" type="radio" value="1"><label for="d1-1">Documented</label></div><div class="choice"><input id="d1-2" name="d1" type="radio" value="2"><label for="d1-2">Proven</label></div></div></div>
+          <div class="control" data-control="Stale or broken data triggers the declared behavior"><div><div class="control-id">D2 · Failure path</div><p>A test proves stale or broken data warns or blocks according to policy.</p></div><div class="choices" role="radiogroup" aria-label="Failure path evidence"><div class="choice"><input id="d2-0" name="d2" type="radio" value="0" checked><label for="d2-0">Unproven</label></div><div class="choice"><input id="d2-1" name="d2" type="radio" value="1"><label for="d2-1">Documented</label></div><div class="choice"><input id="d2-2" name="d2" type="radio" value="2"><label for="d2-2">Proven</label></div></div></div>
+        </div>
+      </section>
+
+      <section class="gate" data-gate="Yardstick" data-letter="5">
+        <header class="gate-head"><div class="gate-letter">5</div><h2>Yardstick</h2><p>Test answers, clarifications, refusals, and denials.</p></header>
+        <div class="controls">
+          <div class="control" data-control="Gold questions have reviewed expected results and routes"><div><div class="control-id">Y1 · Ground truth</div><p>Fixed questions carry reviewed values, periods, units, allowed assets, and trace requirements.</p></div><div class="choices" role="radiogroup" aria-label="Ground truth evidence"><div class="choice"><input id="y1-0" name="y1" type="radio" value="0" checked><label for="y1-0">Unproven</label></div><div class="choice"><input id="y1-1" name="y1" type="radio" value="1"><label for="y1-1">Documented</label></div><div class="choice"><input id="y1-2" name="y1" type="radio" value="2"><label for="y1-2">Proven</label></div></div></div>
+          <div class="control" data-control="Clarification refusal denial and trace cases re-run after change"><div><div class="control-id">Y2 · Regression</div><p>Answer, clarify, refuse, permission-denial, and trace cases re-run after every relevant change.</p></div><div class="choices" role="radiogroup" aria-label="Regression evidence"><div class="choice"><input id="y2-0" name="y2" type="radio" value="0" checked><label for="y2-0">Unproven</label></div><div class="choice"><input id="y2-1" name="y2" type="radio" value="1"><label for="y2-1">Documented</label></div><div class="choice"><input id="y2-2" name="y2" type="radio" value="2"><label for="y2-2">Proven</label></div></div></div>
+        </div>
+      </section>
+    </form>
+
+    <section class="result" aria-live="polite">
+      <div id="verdict" class="verdict" data-level="not-ready">
+        <div class="result-label">Weakest-control gate · <span id="count">0 / 10 proven</span></div>
+        <h2 id="status">NOT READY</h2>
+        <p id="status-copy">At least one required control has no evidence. Do not expose this question to an AI path.</p>
+        <div class="actions">
+          <button id="copy" type="button">Copy Evidence Snapshot</button>
+          <button id="print" type="button" class="secondary">Print</button>
+          <button id="reset" type="button" class="secondary">Reset Lab</button>
+        </div>
+      </div>
+      <aside class="weakest">
+        <div id="weak-label" class="result-label">First weak control</div>
+        <strong id="weak-gate">1 · Restricted surface</strong>
+        <span id="weak-control">Named identity sees only approved serving assets</span>
+      </aside>
+    </section>
+
+    <p class="rule">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
+    <p id="announce" class="sr-only" aria-live="polite"></p>
+  </main>
+
+  <script>
+    (() => {
+      const form = document.querySelector('#audit');
+      const scopeFields = [...document.querySelectorAll('#question, #surface')];
+      const decisionFields = [...document.querySelectorAll('[data-sim-decision]')];
+      const controls = [...form.querySelectorAll('.control')];
+      const storageKey = 'data-readiness-ready-gate-v3';
+      const legacyStorageKeys = [
+        'data-readiness-ready-gate-v1',
+        'data-readiness-ready-gate-v2'
+      ];
+      const levels = ['Unproven', 'Documented', 'Proven'];
+      const announce = document.querySelector('#announce');
+      const simulation = document.querySelector('.simulation');
+      const sealedScope = Object.freeze({
+        question: 'Show ending MRR by month for the last complete quarter.',
+        surface: 'FOLDLINE bad + ready PostgreSQL interfaces'
+      });
+      const fixture = Object.freeze({
+        id: 'FOLDLINE-AGG-001',
+        relation: 'analytics.mrr_summary_monthly',
+        deniedRelation: 'core.accounts.contact_email',
+        semanticVersion: 'ending_mrr@1',
+        grain: 'one row per calendar month',
+        unit: 'EUR',
+        freshnessHours: 60,
+        discloseAfterHours: 36,
+        hardExpiryDeclared: false,
+        snapshots: [
+          { month: '2026-04', shards: [111000, 112000, 111675] },
+          { month: '2026-05', shards: [115000, 114000, 115450] },
+          { month: '2026-06', shards: [129000, 128000, 130015] }
+        ],
+        movements: [-19960, 9775, 42565],
+        denial: 'SQLSTATE 42501'
+      });
+      const caseDefaults = Object.freeze({
+        G01: 'Answer exact values from the approved relation.',
+        C01: 'Clarify an ambiguous revenue request.',
+        R01: 'Refuse an unsupported profit metric.',
+        R02: 'Refuse direct identifiers before SQL.',
+        D01: 'Observe a database permission denial.',
+        F01: 'Disclose a 60-hour stale snapshot.'
+      });
+      const controlClaims = Object.freeze({
+        r1: 'surface=analytics.mrr_summary_monthly',
+        r2: 'denial=SQLSTATE_42501',
+        e1: 'grain=calendar_month',
+        e2: 'contract=machine_validated',
+        a1: 'metric=mrr_ending_balance',
+        a2: 'runtime=ending_mrr@1',
+        d1: 'trace=freshness+lineage+version',
+        d2: 'stale=disclose_36h+no_declared_expiry',
+        y1: 'gold=G01_exact_values',
+        y2: 'corpus=G01+C01+R01+R02+D01+F01'
+      });
+      let latestRun = null;
+      let resetTimer = null;
+
+      function fnv1a(value) {
+        let hash = 0x811c9dc5;
+        for (let index = 0; index < value.length; index += 1) {
+          hash ^= value.charCodeAt(index);
+          hash = Math.imul(hash, 0x01000193);
+        }
+        return `fnv1a32:${(hash >>> 0).toString(16).padStart(8, '0')}`;
+      }
+
+      const fixtureHash = fnv1a(JSON.stringify(fixture));
+      document.querySelector('#fixture-hash').textContent = fixtureHash;
+
+      function addReceiptFields() {
+        controls.forEach((control) => {
+          const radio = control.querySelector('input[type="radio"]');
+          const proven = control.querySelector('input[type="radio"][value="2"]');
+          const key = radio.name;
+          const inputId = `${key}-evidence`;
+          const helpId = `${key}-evidence-help`;
+          const field = document.createElement('div');
+          const label = document.createElement('label');
+          const qualifier = document.createElement('span');
+          const input = document.createElement('input');
+          const help = document.createElement('span');
+
+          field.className = 'evidence-field';
+          field.dataset.proofState = 'not-run';
+          field.dataset.printValue = '[simulation not run]';
+
+          label.htmlFor = inputId;
+          label.append(document.createTextNode('Simulation receipt'));
+          qualifier.textContent = 'Issued only by executable grading';
+          label.append(qualifier);
+
+          input.id = inputId;
+          input.name = `${key}-evidence`;
+          input.type = 'text';
+          input.autocomplete = 'off';
+          input.readOnly = true;
+          input.dataset.evidenceRef = '';
+          input.placeholder = 'Run cases to issue receipt…';
+          input.setAttribute('aria-describedby', helpId);
+
+          help.id = helpId;
+          help.className = 'evidence-help';
+          help.textContent = 'Sealed synthetic-case proof only; this does not certify your own system.';
+          proven.setAttribute('aria-describedby', helpId);
+          proven.disabled = true;
+
+          field.append(label, input, help);
+          control.append(field);
+        });
+      }
+
+      addReceiptFields();
+
+      function safeStorageGet() {
+        try { return localStorage.getItem(storageKey); } catch (_) { return null; }
+      }
+
+      function safeStorageSet(value) {
+        try { localStorage.setItem(storageKey, value); } catch (_) { /* persistence is optional */ }
+      }
+
+      function safeStorageRemove(key = storageKey) {
+        try { localStorage.removeItem(key); } catch (_) { /* persistence is optional */ }
+      }
+
+      function readScope() {
+        return {
+          question: document.querySelector('#question').value.trim(),
+          surface: document.querySelector('#surface').value.trim()
+        };
+      }
+
+      function readDecisions() {
+        return Object.fromEntries(decisionFields.map((field) => [field.id.replace('sim-', ''), field.value]));
+      }
+
+      function scopeIsSealed(scope) {
+        return scope.question === sealedScope.question && scope.surface === sealedScope.surface;
+      }
+
+      function exactMrrValues() {
+        return fixture.snapshots.map((snapshot) => ({
+          month: snapshot.month,
+          value: snapshot.shards.reduce((sum, value) => sum + value, 0)
+        }));
+      }
+
+      function executeCases() {
+        const scope = readScope();
+        const decisions = readDecisions();
+        const sealed = scopeIsSealed(scope);
+        const governed = decisions.surface === 'governed';
+        const endingSnapshot = decisions.metric === 'ending_snapshot';
+        const leastPrivilege = decisions.boundary === 'least_privilege';
+        const governedFreshness = decisions.freshness === 'governed';
+        const corpus = decisions.yardstick === 'corpus';
+        const values = exactMrrValues();
+        const valueTrace = values.map((item) => `${item.month} ${item.value} ${fixture.unit}`).join(' · ');
+        const rawCases = [
+          {
+            id: 'G01',
+            pass: sealed && governed && endingSnapshot,
+            detail: governed && endingSnapshot
+              ? `${fixture.relation} → ${valueTrace}`
+              : `Wrong route → movements ${fixture.movements.join(' · ')}`
+          },
+          {
+            id: 'C01',
+            pass: sealed && governed && endingSnapshot,
+            detail: governed && endingSnapshot
+              ? 'Clarified: ending balance or movements?'
+              : 'Ambiguity was answered without clarification.'
+          },
+          {
+            id: 'R01',
+            pass: sealed && governed,
+            detail: governed
+              ? `Refused: profit is outside ${fixture.semanticVersion}.`
+              : 'Unsupported profit reached the broad surface.'
+          },
+          {
+            id: 'R02',
+            pass: sealed && leastPrivilege,
+            detail: leastPrivilege
+              ? 'Refused before SQL: direct identifiers are outside policy.'
+              : 'Prompt warning did not enforce identifier refusal.'
+          },
+          {
+            id: 'D01',
+            pass: sealed && governed && leastPrivilege,
+            detail: governed && leastPrivilege
+              ? `PostgreSQL denied ${fixture.deniedRelation} · ${fixture.denial}.`
+              : 'Broad reader did not produce a database denial.'
+          },
+          {
+            id: 'F01',
+            pass: sealed && governedFreshness,
+            detail: governedFreshness
+              ? `Disclosed stale snapshot: ${fixture.freshnessHours}h > ${fixture.discloseAfterHours}h. The contract declares no hard expiry, so escalate rather than invent one.`
+              : `Returned ${fixture.freshnessHours}h snapshot without disclosure.`
+          }
+        ];
+        const cases = rawCases.map((item) => {
+          if (item.id === 'G01' || corpus) return item;
+          return { ...item, pass: false, detail: 'Not covered by the one-query yardstick.' };
+        });
+        const casesById = Object.fromEntries(cases.map((item) => [item.id, item]));
+        const allCasesPass = cases.every((item) => item.pass);
+        const runHash = fnv1a(JSON.stringify({
+          fixtureHash,
+          scopeMode: sealed ? 'sealed' : 'custom',
+          decisions,
+          cases: cases.map(({ id, pass }) => ({ id, pass }))
+        }));
+        const checks = {
+          r1: sealed && governed && leastPrivilege,
+          r2: casesById.R02.pass && casesById.D01.pass,
+          e1: sealed && endingSnapshot && casesById.G01.pass,
+          e2: sealed && governed && casesById.G01.pass,
+          a1: sealed && endingSnapshot && casesById.C01.pass,
+          a2: sealed && governed && endingSnapshot && casesById.G01.pass,
+          d1: sealed && governedFreshness && casesById.G01.pass,
+          d2: casesById.F01.pass,
+          y1: casesById.G01.pass,
+          y2: corpus && allCasesPass
+        };
+        const gradedControls = Object.fromEntries(Object.entries(checks).map(([key, pass]) => [key, {
+          pass,
+          receipt: `FOLDLINE-SIM-001|${key.toUpperCase()}|${pass ? 'PASS' : 'FAIL'}|run=${runHash}|${controlClaims[key]}`
+        }]));
+
+        return { fixture: fixture.id, fixtureHash, runHash, scope, decisions, cases, controls: gradedControls };
+      }
+
+      function renderCases(run) {
+        run.cases.forEach((result) => {
+          const row = document.querySelector(`[data-case-id="${result.id}"]`);
+          row.dataset.state = result.pass ? 'pass' : 'fail';
+          row.querySelector('[data-case-state]').textContent = result.pass ? 'PASS' : 'FAIL';
+          row.querySelector('p').textContent = result.detail;
+        });
+      }
+
+      function resetCaseDisplay(mode = 'not-run') {
+        Object.entries(caseDefaults).forEach(([id, description]) => {
+          const row = document.querySelector(`[data-case-id="${id}"]`);
+          row.dataset.state = 'not-run';
+          row.querySelector('[data-case-state]').textContent = 'NOT RUN';
+          row.querySelector('p').textContent = description;
+        });
+        simulation.dataset.simulationState = mode;
+        document.querySelector('#simulation-status').textContent = mode === 'invalidated'
+          ? 'INVALIDATED · run again'
+          : 'NOT RUN · five decisions';
+        document.querySelector('#run-hash').textContent = 'pending';
+        document.querySelector('#simulation-grade').textContent = '0 / 6 cases · 0 / 10 controls';
+      }
+
+      function clearProofs() {
+        controls.forEach((control) => {
+          const receipt = control.querySelector('[data-evidence-ref]');
+          const field = receipt.closest('.evidence-field');
+          const proven = control.querySelector('input[type="radio"][value="2"]');
+          const unproven = control.querySelector('input[type="radio"][value="0"]');
+          receipt.value = '';
+          field.dataset.proofState = 'not-run';
+          field.dataset.printValue = '[simulation not run]';
+          proven.disabled = true;
+          if (proven.checked) unproven.checked = true;
+        });
+      }
+
+      function applyControlGrades(run) {
+        controls.forEach((control) => {
+          const key = control.querySelector('input[type="radio"]').name;
+          const grade = run.controls[key];
+          const receipt = control.querySelector('[data-evidence-ref]');
+          const field = receipt.closest('.evidence-field');
+          const proven = control.querySelector('input[type="radio"][value="2"]');
+          const unproven = control.querySelector('input[type="radio"][value="0"]');
+          receipt.value = grade.receipt;
+          field.dataset.proofState = grade.pass ? 'pass' : 'fail';
+          field.dataset.printValue = grade.receipt;
+          proven.disabled = !grade.pass;
+          if (grade.pass) proven.checked = true;
+          else unproven.checked = true;
+        });
+      }
+
+      function readState() {
+        return controls.map((control) => {
+          const gate = control.closest('.gate');
+          const input = control.querySelector('input[type="radio"]:checked');
+          const key = control.querySelector('input[type="radio"]').name;
+          return {
+            key,
+            gate: gate.dataset.gate,
+            letter: gate.dataset.letter,
+            control: control.dataset.control,
+            value: Number(input ? input.value : 0),
+            evidence: latestRun?.controls[key]?.receipt || '[no executable receipt]'
+          };
+        });
+      }
+
+      function saveState() {
+        safeStorageSet(JSON.stringify({
+          decisions: readDecisions(),
+          values: Object.fromEntries([...form.querySelectorAll('input[type="radio"]:checked')].map((input) => [input.name, input.value])),
+          hasRun: Boolean(latestRun)
+        }));
+      }
+
+      function render(persist = true) {
+        const state = readState();
+        const minimum = Math.min(...state.map((item) => item.value));
+        const proven = state.filter((item) => item.value === 2).length;
+        const firstWeak = state.find((item) => item.value === minimum);
+        const verdict = document.querySelector('#verdict');
+        const status = document.querySelector('#status');
+        const copy = document.querySelector('#status-copy');
+
+        document.querySelector('#count').textContent = `${proven} / ${state.length} proven`;
+        document.querySelector('#weak-label').textContent = minimum === 2 ? 'Weakest-control check' : 'First weak control';
+        document.querySelector('#weak-gate').textContent = minimum === 2 ? 'NONE · sealed scope' : `${firstWeak.letter} · ${firstWeak.gate}`;
+        document.querySelector('#weak-control').textContent = minimum === 2 ? 'All ten synthetic controls passed' : firstWeak.control;
+
+        if (minimum === 0) {
+          verdict.dataset.level = 'not-ready';
+          status.textContent = 'NOT READY';
+          copy.textContent = 'At least one control lacks executable proof. Do not expose this question to an AI path.';
+        } else if (minimum === 1) {
+          verdict.dataset.level = 'pilot';
+          status.textContent = 'PILOT ONLY';
+          copy.textContent = 'Every control is documented, but at least one lacks executable proof. Keep use supervised and bounded.';
+        } else {
+          verdict.dataset.level = 'ready';
+          status.textContent = 'BOUNDED READY';
+          copy.textContent = 'All ten controls passed for the sealed synthetic FOLDLINE scope. Your own system still needs equivalent evidence.';
+        }
+
+        if (persist) saveState();
+      }
+
+      function runSimulation({ speak = true, persist = true } = {}) {
+        const run = executeCases();
+        latestRun = run;
+        renderCases(run);
+        applyControlGrades(run);
+        const passedCases = run.cases.filter((item) => item.pass).length;
+        const passedControls = Object.values(run.controls).filter((item) => item.pass).length;
+        const passed = passedCases === run.cases.length && passedControls === Object.keys(run.controls).length;
+        simulation.dataset.simulationState = passed ? 'pass' : 'fail';
+        document.querySelector('#simulation-status').textContent = `${passed ? 'PASS' : 'FAIL'} · ${passedCases} / ${run.cases.length} cases`;
+        document.querySelector('#run-hash').textContent = run.runHash;
+        document.querySelector('#simulation-grade').textContent = `${passedCases} / ${run.cases.length} cases · ${passedControls} / ${Object.keys(run.controls).length} controls`;
+        render(persist);
+        if (speak) announce.textContent = `Simulation complete. ${passedCases} of ${run.cases.length} cases and ${passedControls} of ${Object.keys(run.controls).length} controls passed.`;
+      }
+
+      function invalidateSimulation(message) {
+        const hadRun = Boolean(latestRun);
+        latestRun = null;
+        clearProofs();
+        resetCaseDisplay(hadRun ? 'invalidated' : 'not-run');
+        render();
+        if (hadRun) announce.textContent = message;
+      }
+
+      function snapshot() {
+        const state = readState();
+        const scope = readScope();
+        const caseLines = latestRun
+          ? latestRun.cases.map((item) => `${item.id} | ${item.pass ? 'PASS' : 'FAIL'} | ${item.detail}`)
+          : ['NOT RUN'];
+        const decisionLines = Object.entries(readDecisions()).map(([key, value]) => `${key}=${value}`);
+        return [
+          'BOUNDED EVIDENCE SNAPSHOT',
+          `Question: ${scope.question === sealedScope.question ? scope.question : '[custom entry omitted; not retained]'}`,
+          `Surface: ${scope.surface === sealedScope.surface ? scope.surface : '[custom entry omitted; not retained]'}`,
+          `Gate: ${document.querySelector('#status').textContent}`,
+          `Fixture: ${fixture.id} | ${fixtureHash}`,
+          `Run: ${latestRun?.runHash || '[not run]'}`,
+          `Decisions: ${decisionLines.join(' | ')}`,
+          '',
+          ...caseLines,
+          '',
+          ...state.map((item) => `${item.letter} | ${levels[item.value]} | ${item.control}\n  Receipt: ${item.evidence}`),
+          '',
+          'LIMIT: Receipts apply only to the sealed synthetic FOLDLINE fixture.',
+          `Weakest-control check: ${document.querySelector('#weak-gate').textContent} — ${document.querySelector('#weak-control').textContent}`
+        ].join('\n');
+      }
+
+      async function copySnapshot() {
+        const value = snapshot();
+        let copied = false;
+        try {
+          await navigator.clipboard.writeText(value);
+          copied = true;
+        } catch (_) {
+          const priorFocus = document.activeElement;
+          const helper = document.createElement('textarea');
+          helper.value = value;
+          helper.setAttribute('readonly', '');
+          helper.setAttribute('aria-label', 'Temporary copy buffer');
+          helper.name = 'copy-buffer';
+          helper.autocomplete = 'off';
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.select();
+          copied = document.execCommand('copy');
+          helper.remove();
+          if (priorFocus instanceof HTMLElement) priorFocus.focus();
+        }
+        if (!copied) {
+          announce.textContent = 'Copy failed. Retry in a secure browser context or use Print.';
+          document.querySelector('#copy').textContent = 'Copy Failed';
+          setTimeout(() => { document.querySelector('#copy').textContent = 'Copy Evidence Snapshot'; }, 1800);
+          return;
+        }
+        announce.textContent = 'Evidence snapshot copied.';
+        document.querySelector('#copy').textContent = 'Copied';
+        setTimeout(() => { document.querySelector('#copy').textContent = 'Copy Evidence Snapshot'; }, 1200);
+      }
+
+      function restore() {
+        try {
+          const raw = safeStorageGet();
+          const saved = raw ? JSON.parse(raw) : null;
+          if (!saved) return false;
+          Object.entries(saved.decisions || {}).forEach(([key, value]) => {
+            const field = document.querySelector(`#sim-${key}`);
+            if (field && [...field.options].some((option) => option.value === value)) field.value = value;
+          });
+          if (saved.hasRun) {
+            runSimulation({ speak: false, persist: false });
+            Object.entries(saved.values || {}).forEach(([name, value]) => {
+              const input = form.querySelector(`input[type="radio"][name="${name}"][value="${value}"]`);
+              if (input && !input.disabled) input.checked = true;
+            });
+            render(false);
+          } else {
+            Object.entries(saved.values || {}).forEach(([name, value]) => {
+              if (value === '2') return;
+              const input = form.querySelector(`input[type="radio"][name="${name}"][value="${value}"]`);
+              if (input) input.checked = true;
+            });
+            render(false);
+          }
+          return true;
+        } catch (_) {
+          safeStorageRemove();
+          return false;
+        }
+      }
+
+      function updatePrintScope() {
+        const scope = readScope();
+        document.querySelector('#question-print-value').textContent = scope.question === sealedScope.question
+          ? scope.question
+          : '[custom entry omitted; not retained]';
+        document.querySelector('#surface-print-value').textContent = scope.surface === sealedScope.surface
+          ? scope.surface
+          : '[custom entry omitted; not retained]';
+      }
+
+      function resetLab() {
+        const button = document.querySelector('#reset');
+        if (button.dataset.confirming !== 'true') {
+          button.dataset.confirming = 'true';
+          button.textContent = 'Confirm Reset';
+          announce.textContent = 'Press Confirm Reset to clear this lab.';
+          resetTimer = setTimeout(() => {
+            button.dataset.confirming = 'false';
+            button.textContent = 'Reset Lab';
+          }, 4000);
+          return;
+        }
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = null;
+        button.dataset.confirming = 'false';
+        button.textContent = 'Reset Lab';
+        form.reset();
+        document.querySelector('#question').value = sealedScope.question;
+        document.querySelector('#surface').value = sealedScope.surface;
+        decisionFields.forEach((field) => { field.selectedIndex = 0; });
+        updatePrintScope();
+        latestRun = null;
+        safeStorageRemove();
+        legacyStorageKeys.forEach(safeStorageRemove);
+        clearProofs();
+        resetCaseDisplay();
+        render(false);
+        announce.textContent = 'Lab reset. Stored architecture choices and evidence levels were cleared.';
+        document.querySelector('#r1-0').focus();
+      }
+
+      form.addEventListener('change', (event) => {
+        if (event.target.matches('input[type="radio"]')) render();
+      });
+      scopeFields.forEach((field) => field.addEventListener('input', () => {
+        updatePrintScope();
+        invalidateSimulation('Scope changed. Simulation receipts were invalidated.');
+      }));
+      decisionFields.forEach((field) => field.addEventListener('change', () => {
+        invalidateSimulation('Architecture changed. Simulation receipts were invalidated.');
+      }));
+      document.querySelector('#run-simulation').addEventListener('click', () => runSimulation());
+      document.querySelector('#copy').addEventListener('click', copySnapshot);
+      document.querySelector('#print').addEventListener('click', () => {
+        updatePrintScope();
+        window.print();
+      });
+      window.addEventListener('beforeprint', updatePrintScope);
+      document.querySelector('#reset').addEventListener('click', resetLab);
+
+      clearProofs();
+      resetCaseDisplay();
+      legacyStorageKeys.forEach(safeStorageRemove);
+      updatePrintScope();
+      if (!restore()) render();
+    })();
+  </script>
+</body>
+</html>

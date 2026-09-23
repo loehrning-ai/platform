@@ -1,0 +1,140 @@
+/* host (spec C.2): portrait, name, a career route in words only, and the "What I build" pipeline.
+   Step 0 focus: the current career station (Meta). Step 1 focus: "Numbers people use". */
+
+#host > .host-portrait {
+  position: absolute;
+  top: 128px;
+  left: var(--margin-x);
+  width: 480px;
+  height: 480px;
+  margin: 0;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#host .host-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#host > .host-over,
+#host > .host-role,
+#host > .host-career,
+#host > .host-edu,
+#host > .host-boundary {
+  position: absolute;
+  left: 656px;
+  margin: 0;
+}
+
+#host > .host-over {
+  top: 136px;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+#host > .scene-title {
+  top: 170px;
+  left: 656px;
+}
+
+#host > .host-role {
+  top: 254px;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+#host > .host-career {
+  top: 342px;
+  width: 1000px;
+  height: 96px;
+}
+
+#host .host-career__svg {
+  display: block;
+  overflow: visible;
+}
+
+#host .host-career__past,
+#host .host-career__square {
+  fill: var(--ink);
+}
+
+#host .host-career__eye {
+  fill: var(--papier);
+}
+
+#host[data-step-current="0"] .host-career__square {
+  fill: var(--mennige);
+}
+
+#host .host-career__label {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#host .host-career__label--now {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+#host > .host-edu {
+  top: 462px;
+  color: var(--slate);
+  font-size: var(--t-body);
+  line-height: 1.35;
+}
+
+#host > .host-boundary {
+  top: 540px;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+#host > .host-build {
+  position: absolute;
+  top: 680px;
+  left: var(--margin-x);
+  width: 1728px;
+  height: 240px;
+}
+
+#host .host-build__over {
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+#host .host-build__edges {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  overflow: visible;
+}
+
+#host .host-build__node {
+  position: absolute;
+  top: 48px;
+  width: 320px;
+  margin-left: -160px;
+}
+
+#host .host-build__node .node__label {
+  font-size: var(--t-body);
+}
