@@ -7,7 +7,7 @@
     "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
     "lib/demo-adapter.js": "cf1160c0b213550c2d77903476ba00eeafb00c63957febb04ba6ec9e2d035dac",
     "lib/model-capture-data.js": "027d9dfceb519c83442d24272b02810ff7614029a937ae14496431b97729b706",
-    "lib/presenter-notes.js": "3d64e63bb0d3790ddeb00b5ea9c2b69f76ce515f7d6062171529f7e5df4c4a86",
+    "lib/presenter-notes.js": "67f552da2620fb8d4f2d202f1782043c79bbb5db1153f33a1d933fe5790a4a68",
     "lib/presenter.css": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
     "lib/presenter.js": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
     "lib/replay-data.js": "dfd9e929ac49520b347e6ba78f765c5dd2534c14d7ff7f8b45dd4a75f52d2ceb",
@@ -31,7 +31,7 @@
     "lib/scenes/freshness.css": "23e55d32eeb2f7a6f7e2e0b35e8a309e13bd17b755edf1cf78b2b2258ad033b2",
     "lib/scenes/generalization.css": "58ef568e35fd15d5ee7768a6f957ef115412b6c90b81152bb0829bc1a09b85b1",
     "lib/scenes/honest-no.css": "08bc666bb0e187973c6c18dd52dcee8b9e5be15c2717a91b97328a62ea6caa7e",
-    "lib/scenes/host.css": "e79a5d57246a84ed8113f26ead08ffb8851e00bcfc71457be134a3b9fddd0433",
+    "lib/scenes/host.css": "d188d2d05840311eb586a9f4eff22471708aee39f91d6d3f29aa8215b9851382",
     "lib/scenes/ready-architecture.css": "848c48e69bee6ad4f5a84765215f3341e689d288f8c6b12fc0e14fafb4d4026f",
     "lib/scenes/ready-rematch.css": "07aaaf66257d184c52fa7b4245bbb13247bed3de16079c367260d2bbb792274e",
     "lib/scenes/resolution.css": "3beb412addb2a9808e1c8559d1fe24f2c20189834ea0c96481b0f8a81ce53529",
@@ -41,7 +41,7 @@
     "lib/scenes/your-data.css": "89c11980d7beaf8c5ea27ded470377e7689530b84231923736e3632441f7fe12",
     "lib/scenes/failure-anatomy.js": "a37737ca79cb22242cdaa3d5a8f60bbdef8bb621306f3daa2d5e2f4079d8068a",
     "lib/scenes/resolution.js": "2fea0d036bf316389ec2280c60762e837f01b4004637035cdc7612d6621ea36a",
-    "slides.html": "588aa98f2996750ecbb3c70634d0e0d93fa1aa650f689bba65bfb0f6139493a2",
+    "slides.html": "26499497bdbd451761458ce306073c0c7ca38933605e305b74f18f68c5c59f4a",
     "data-readiness-kit/readiness-lab.html": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
     "data-readiness-kit/START-HERE.md": "033742158d1a48b9f94b9f1cd9dc9527977bc40921308b095da6c33c12fbac1f",
     "data-readiness-kit/QUESTION-CARD.md": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
@@ -81,8 +81,8 @@
     },
     {
       "path": "lib/presenter-notes.js",
-      "sizeBytes": 64940,
-      "sha256": "f7b940942ca438c2e4c85c947b19fb37f2d4723c6c563e45fccc993671e11bd3"
+      "sizeBytes": 65079,
+      "sha256": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8"
     },
     {
       "path": "lib/presenter.css",
@@ -201,8 +201,8 @@
     },
     {
       "path": "lib/scenes/host.css",
-      "sizeBytes": 2382,
-      "sha256": "e79a5d57246a84ed8113f26ead08ffb8851e00bcfc71457be134a3b9fddd0433"
+      "sizeBytes": 2407,
+      "sha256": "d188d2d05840311eb586a9f4eff22471708aee39f91d6d3f29aa8215b9851382"
     },
     {
       "path": "lib/scenes/ready-architecture.css",
@@ -255,9 +255,14 @@
       "sha256": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db"
     },
     {
+      "path": "assets/tim-loehr.jpg",
+      "sizeBytes": 112101,
+      "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4"
+    },
+    {
       "path": "slides.html",
-      "sizeBytes": 178058,
-      "sha256": "1149f8971f61c4f09a33af05af31c0aaf5f8aec7ac7d94458dc68d98dadf1192"
+      "sizeBytes": 176193,
+      "sha256": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783"
     },
     {
       "path": "assets/favicon.svg",
@@ -396,8 +401,8 @@
     },
     {
       "path": "PUBLICATION.md",
-      "sizeBytes": 958,
-      "sha256": "8f40bf776ea40329c106852e7aa844cb6058a3d0375f1fc2d9f201e6245f2847"
+      "sizeBytes": 1012,
+      "sha256": "f13f3d22a847393d7c0ae7c11c469118e434eee7b9e821dacf95bbd2235ceb90"
     },
     {
       "path": "card-preview.webp",

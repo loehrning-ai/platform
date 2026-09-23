@@ -32,18 +32,18 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "mode": "Opening · biography only, no evidence on screen",
     "purpose": "Establish relevant credibility and the synthetic-data boundary.",
     "say": [
-      "Presenter cue: speak the scripted bio (hard 60-second cap); press on “the models, transformations and checks”.",
+      "Presenter cue: speak the scripted bio (hard 60-second cap); press on “Before that” to show experience and education.",
       "I’m Tim Löhr, a data engineer at Meta. Before that I worked as a data scientist at Red Bull and Apple, after starting in data at Amazon. I build the pipelines behind business reporting: the models, transformations and checks that turn stored records into numbers people can use. That is why this course starts before the prompt. An AI can write valid SQL and still answer the wrong business question when the data surface, metric or access rules are unclear. Today we will make those layers visible, one at a time. Everything you will see uses a synthetic company and synthetic data. It is a teaching system, not an employer system.",
-      "Words only on screen: no company artwork, no links, no employment years.",
+      "The portrait and introduction are restored from the earlier courses. Social labels identify the presenter; they are not slide controls. No company artwork or employment years.",
       "[Sources]\nPresenter-supplied biography; no employer-system claim.\n[/Sources]"
     ],
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Portrait, name, role, the career route Amazon → Apple → Red Bull → Meta, education and the synthetic-case line",
-      "What I build: stored records → data models → checks → numbers people use"
+      "Portrait, name, role, short biography, social labels and the synthetic-case line",
+      "Experience and education replace the short biography; portrait, name, social labels and the synthetic-case line remain"
     ],
-    "cut": "Hard 60-second cap; do not narrate the timeline.",
+    "cut": "Hard 60-second cap; do not read every experience or education entry aloud.",
     "appendixRoutes": []
   },
   "the-case": {

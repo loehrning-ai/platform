@@ -948,6 +948,15 @@
       "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/tim-loehr.jpg",
+      "sizeBytes": 112101,
+      "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
+      "owner": "Tim L\u00f6hr",
+      "source": "Portr\u00e4tfoto Tim L\u00f6hr, vom Autor bereitgestellt \u2014 Referentenfolie des Workshops",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     }
   ]
 }

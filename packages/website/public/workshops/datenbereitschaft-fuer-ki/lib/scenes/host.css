@@ -1,5 +1,6 @@
-/* host (spec C.2): portrait, name, a career route in words only, and the "What I build" pipeline.
-   Step 0 focus: the current career station (Meta). Step 1 focus: "Numbers people use". */
+/* Restored Course 02 / former Course 03 introduction, adapted to the v3 canvas.
+   Portrait, name, social labels and synthetic boundary persist. One press replaces
+   the short biography with the complete experience and education columns. */
 
 #host > .host-portrait {
   position: absolute;
@@ -19,13 +20,28 @@
   object-fit: cover;
 }
 
+#host > .host-links {
+  position: absolute;
+  top: 648px;
+  left: var(--margin-x);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 480px;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 #host > .host-over,
 #host > .host-role,
-#host > .host-career,
-#host > .host-edu,
+#host > .host-lede,
+#host > .host-cols,
 #host > .host-boundary {
   position: absolute;
   left: 656px;
+  width: 1168px;
   margin: 0;
 }
 
@@ -47,94 +63,63 @@
 #host > .host-role {
   top: 254px;
   font-size: var(--t-lead);
+  font-weight: 600;
   line-height: 1.3;
 }
 
-#host > .host-career {
-  top: 342px;
-  width: 1000px;
-  height: 96px;
+#host > .host-lede {
+  top: 352px;
+  padding-left: 32px;
+  border-left: 5px solid var(--mennige);
+  font-size: var(--t-lead);
+  line-height: 1.5;
 }
 
-#host .host-career__svg {
-  display: block;
-  overflow: visible;
+#host > .host-cols {
+  top: 312px;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 64px;
 }
 
-#host .host-career__past,
-#host .host-career__square {
-  fill: var(--ink);
-}
+#host .host-col { min-width: 0; }
 
-#host .host-career__eye {
-  fill: var(--papier);
-}
-
-#host[data-step-current="0"] .host-career__square {
-  fill: var(--mennige);
-}
-
-#host .host-career__label {
-  fill: var(--slate);
-  font-family: var(--sans);
-  font-size: var(--t-body);
-  font-weight: 600;
-}
-
-#host .host-career__label--now {
-  fill: var(--ink);
+#host .host-col h2 {
+  margin: 0 0 28px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid var(--ink);
+  font-size: var(--t-label);
   font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
 }
 
-#host > .host-edu {
-  top: 462px;
-  color: var(--slate);
+#host .host-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 26px;
   font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#host .host-item:last-child { margin-bottom: 0; }
+#host .host-item b { font-weight: 700; }
+#host .host-org { color: var(--slate); }
+#host .host-item small {
+  color: var(--slate);
+  font-size: var(--t-label);
   line-height: 1.35;
 }
 
 #host > .host-boundary {
-  top: 540px;
+  top: 872px;
   display: flex;
   align-items: center;
   gap: var(--s2);
+  padding-top: 24px;
+  border-top: 2px solid var(--ink);
   font-size: var(--t-body);
   font-weight: 600;
   line-height: 1.3;
-}
-
-#host > .host-build {
-  position: absolute;
-  top: 680px;
-  left: var(--margin-x);
-  width: 1728px;
-  height: 240px;
-}
-
-#host .host-build__over {
-  margin: 0;
-  color: var(--slate);
-  font-size: var(--t-label);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-#host .host-build__edges {
-  position: absolute;
-  top: 48px;
-  left: 0;
-  overflow: visible;
-}
-
-#host .host-build__node {
-  position: absolute;
-  top: 48px;
-  width: 320px;
-  margin-left: -160px;
-}
-
-#host .host-build__node .node__label {
-  font-size: var(--t-body);
 }

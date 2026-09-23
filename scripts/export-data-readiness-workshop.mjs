@@ -40,8 +40,15 @@ put("presenter.html", safeText(readFileSync(path.join(source, "presenter.html"),
 let slides = readFileSync(path.join(source, "slides.html"), "utf8");
 sourceHashes["slides.html"] = sha256(Buffer.from(slides));
 if (!slides.includes('src="./assets/tim-loehr.jpg"') || !slides.includes('<div class="ab-shots"')) throw new Error("Public visual transforms need review");
-slides = slides.replace(/<img\b[^>]*src="\.\/assets\/tim-loehr\.jpg"[^>]*>/g,
-  '<svg viewBox="0 0 480 480" width="480" height="480" role="img" aria-label="Workshop host symbol"><rect width="480" height="480" fill="#e5e4e2"/><circle cx="240" cy="164" r="62" fill="none" stroke="#121212" stroke-width="14"/><path d="M100 430V325l78-78h124l78 78v105" fill="none" stroke="#121212" stroke-width="14"/></svg>');
+// Reuse the exact author-supplied portrait already published with Workshop 02.
+// This narrowly approved asset is not permission to export other source images.
+const portraitPath = "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/tim-loehr.jpg";
+const portraitRecord = JSON.parse(readFileSync(path.join(root, "ASSET_MANIFEST.json"), "utf8")).assets.find((entry) => entry.path === portraitPath);
+const portrait = readFileSync(path.join(root, portraitPath));
+if (!portraitRecord || sha256(portrait) !== portraitRecord.sha256 || portrait.length !== portraitRecord.sizeBytes || sha256(portrait) !== "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4") {
+  throw new Error("Established workshop portrait no longer matches its reviewed asset record");
+}
+put("assets/tim-loehr.jpg", portrait);
 slides = slides.replace(/<div class="ab-shots"[\s\S]*?<\/div>/,
   `<div class="ab-shots" data-visual="recorded-boundary-summary">
   <figure class="ab-shot"><div class="ab-public-panel"><strong>Two synthetic connections</strong><p>Bad: unclear raw fields.</p><p>Ready: approved analytical views.</p><p>Same frozen FOLDLINE dataset.</p></div><figcaption class="ab-shot__name">Historical source setup, summarized</figcaption></figure>
@@ -111,13 +118,17 @@ const archive = Buffer.concat([...locals, directory, end]);
 inspectZipArchive(archive, { label: "data-readiness-kit.zip" });
 put("data-readiness-kit.zip", archive);
 put("guide.html", readFileSync(path.join(root, "scripts/course03/guide.html")));
-put("PUBLICATION.md", `# Public teaching edition\n\nPublished by the course owner on loehrning.ai. Original course content remains copyright Tim Löhr, all rights reserved. Fonts retain their bundled SIL Open Font License notices.\n\nThis edition includes the interactive deck, presenter notes, learner guide, synthetic browser lab and text worksheets. It omits the portrait with unresolved photographer provenance, third-party interface screenshots, unused third-party marks, the supplied syllabus, authoring logs, runtime services and credentials. The portrait is replaced with an original host symbol; the screenshot appendix uses an explicitly labelled textual teaching summary. The source monospace derivatives are replaced with the platform's inventoried JetBrains Mono variable font.\n\nThe deck always replays embedded historical observations. The lab is a deterministic browser simulation. Neither establishes present-day model reliability, permissions or production readiness.\n`);
+put("PUBLICATION.md", `# Public teaching edition\n\nPublished by the course owner on loehrning.ai. Original course content remains copyright Tim Löhr, all rights reserved. Fonts retain their bundled SIL Open Font License notices.\n\nThis edition includes the interactive deck, presenter notes, learner guide, synthetic browser lab and text worksheets. Slide 2 reuses the author-supplied portrait already published in Workshop 02, at the author's request. Its existing asset restrictions remain unchanged. This edition omits third-party interface screenshots, unused third-party marks, the supplied syllabus, authoring logs, runtime services and credentials. The screenshot appendix uses an explicitly labelled textual teaching summary. The source monospace derivatives are replaced with the platform's inventoried JetBrains Mono variable font.\n\nThe deck always replays embedded historical observations. The lab is a deterministic browser simulation. Neither establishes present-day model reliability, permissions or production readiness.\n`);
 
 const manifestPath = path.join(root, "ASSET_MANIFEST.json");
 if (existsSync(path.join(target, "card-preview.webp"))) put("card-preview.webp", readFileSync(path.join(target, "card-preview.webp")));
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 manifest.assets = manifest.assets.filter((entry) => !entry.path.startsWith(`${relative}/`));
 for (const [name, bytes] of written) {
+  if (name === "assets/tim-loehr.jpg") {
+    manifest.assets.push({ ...portraitRecord, path: `${relative}/${name}` });
+    continue;
+  }
   if (!/\.(?:svg|ttf|woff2|zip|webp)$/.test(name)) continue;
   const isFont = /\.(?:ttf|woff2)$/.test(name);
   manifest.assets.push({ path: `${relative}/${name}`, sizeBytes: bytes.length, sha256: sha256(bytes),
