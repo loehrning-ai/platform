@@ -71,6 +71,10 @@ test.describe("workshop self-study journey", () => {
     await expect(presenter.locator("html")).toHaveAttribute("data-pairing-state", "paired");
     await presenter.getByRole("button", { name: "Next scene", exact: true }).click();
     await expect(page.locator("#host")).toHaveAttribute("data-deck-active", "");
+    const portrait = page.locator('#host img[src="./assets/tim-loehr.jpg"]');
+    await expect(portrait).toBeVisible();
+    await expect(portrait).toHaveAttribute("alt", "Portrait of workshop host Tim Löhr");
+    await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth === 1100 && image.naturalHeight === 1100)).toBe(true);
     await presenter.close();
     expect(serviceRequests).toEqual([]);
     expect(errors).toEqual([]);

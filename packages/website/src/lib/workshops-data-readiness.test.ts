@@ -41,8 +41,27 @@ describe("published Data Readiness workshop", () => {
         expect(existsSync(resolve(dirname(file), reference.split(/[?#]/)[0])), `${file}: ${reference}`).toBe(true);
       }
     }
-    expect(read("slides.html")).not.toMatch(/src=["'][^"']*(?:tim-loehr\.jpg|ask-data-(?:sources|captured-history)\.png)/);
+    expect(read("slides.html")).not.toMatch(/src=["'][^"']*ask-data-(?:sources|captured-history)\.png/);
     expect(read("slides.html")).toContain("Historical source setup, summarized");
+  });
+
+  it("keeps the established host portrait on slide two without broadening asset rights", () => {
+    const slides = read("slides.html");
+    const scenes = [...slides.matchAll(/<section\b[^>]*\bid="([^"]+)"[^>]*>[\s\S]*?<\/section>/g)];
+    expect(scenes[1]?.[1]).toBe("host");
+    expect(scenes[1]?.[0]).toContain('src="./assets/tim-loehr.jpg"');
+    for (const text of ["Experience", "Education", "Meta", "Red Bull", "Apple", "Amazon", "City University of Hong Kong", "TH Nuremberg", "timloehr.me"]) {
+      expect(scenes[1]?.[0]).toContain(text);
+    }
+    expect(slides).not.toContain("Workshop host symbol");
+    const portrait = readFileSync(resolve(root, "assets/tim-loehr.jpg"));
+    expect(portrait.equals(readFileSync(resolve(root, "../geschaeftsberichte-mit-ki-lesen/assets/tim-loehr.jpg")))).toBe(true);
+    expect(createHash("sha256").update(portrait).digest("hex")).toBe("3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4");
+    const assets = JSON.parse(readFileSync(resolve(process.cwd(), "../../ASSET_MANIFEST.json"), "utf8")).assets as { path: string; license: string; redistribution: string }[];
+    const existing = assets.find((asset) => asset.path.endsWith("/geschaeftsberichte-mit-ki-lesen/assets/tim-loehr.jpg"));
+    const restored = assets.find((asset) => asset.path.endsWith("/datenbereitschaft-fuer-ki/assets/tim-loehr.jpg"));
+    expect(restored?.license).toBe(existing?.license);
+    expect(restored?.redistribution).toBe(existing?.redistribution);
   });
 
   it("always starts as replay without a network request, including loopback live URLs", async () => {

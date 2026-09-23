@@ -116,55 +116,32 @@
 
   <section class="slide" id="host" data-act="0" data-kind="main" data-label="Your host" data-section="Your host" data-track="" data-seconds="60" data-note-key="host" data-note="Keep this to 60 seconds: who you are, why it matters, and that the company data is made up. Then move straight on." data-design="v3" data-route="hidden">
   <!-- scene:host -->
-    <figure class="host-portrait" id="host-portrait" data-motion="fade" style="--order:0"><svg viewBox="0 0 480 480" width="480" height="480" role="img" aria-label="Workshop host symbol"><rect width="480" height="480" fill="#e5e4e2"/><circle cx="240" cy="164" r="62" fill="none" stroke="#121212" stroke-width="14"/><path d="M100 430V325l78-78h124l78 78v105" fill="none" stroke="#121212" stroke-width="14"/></svg></figure>
-    <p class="host-over" id="host-over" data-motion="fade" style="--order:0">Your host</p>
+    <figure class="host-portrait" id="host-portrait" data-motion="fade" data-visual style="--order:0"><img src="./assets/tim-loehr.jpg" width="480" height="480" alt="Portrait of workshop host Tim Löhr" /></figure>
+    <div class="host-links" id="host-links" data-motion="fade" style="--order:1">
+      <span>timloehr.me</span>
+      <span>GitHub @Mavengence</span>
+      <span>LinkedIn Tim Löhr</span>
+    </div>
+    <p class="host-over" id="host-over" data-step-until="1" data-motion="fade" style="--order:0">Your host</p>
     <h1 class="scene-title" id="host-name" data-motion="fade" style="--order:0">Tim Löhr</h1>
-    <p class="host-role" id="host-role" data-motion="fade" style="--order:0">Data Engineer at Meta, Warsaw</p>
-    <div class="host-career" id="host-career" data-visual>
-      <svg class="host-career__svg" viewBox="0 0 1000 96" width="1000" height="96" aria-hidden="true" data-allow-overlap>
-        <path class="edge host-career__line" id="host-career-line" data-motion="draw" d="M12 20H876" />
-        <rect class="host-career__past" x="4" y="12" width="16" height="16" />
-        <rect class="host-career__past" x="292" y="12" width="16" height="16" />
-        <rect class="host-career__past" x="580" y="12" width="16" height="16" />
-        <g class="host-career__now" id="host-career-now" data-focus>
-          <rect class="host-career__square" x="864" y="8" width="24" height="24" />
-          <rect class="host-career__eye" x="872" y="16" width="8" height="8" />
-        </g>
-        <text class="host-career__label" x="4" y="76" data-motion="fade" style="--order:0">Amazon</text>
-        <text class="host-career__label" x="292" y="76" data-motion="fade" style="--order:0">Apple</text>
-        <text class="host-career__label" x="580" y="76" data-motion="fade" style="--order:0">Red Bull</text>
-        <text class="host-career__label host-career__label--now" x="864" y="76" data-motion="fade" style="--order:0">Meta</text>
-      </svg>
+    <p class="host-role" id="host-role" data-step-until="1" data-motion="fade" style="--order:0">Data Engineer at Meta, Warsaw</p>
+    <p class="host-lede" id="host-lede" data-step-until="1" data-motion="fade" data-focus style="--order:1">I build data pipelines behind reports like today’s. Before Meta, I was a data scientist at Red Bull and Apple. This session shows the interface work behind a trustworthy answer.</p>
+    <div class="host-cols" id="host-cols" data-step="1" data-motion="rise" data-focus style="--order:0">
+      <div class="host-col" aria-labelledby="host-experience">
+        <h2 id="host-experience">Experience</h2>
+        <div class="host-item"><b>Data Engineer</b><span class="host-org">Meta</span></div>
+        <div class="host-item"><b>Data Scientist</b><span class="host-org">Red Bull</span></div>
+        <div class="host-item"><b>Data Scientist</b><span class="host-org">Apple</span></div>
+        <div class="host-item"><b>Working student, data</b><span class="host-org">Amazon</span></div>
+      </div>
+      <div class="host-col" aria-labelledby="host-education">
+        <h2 id="host-education">Education</h2>
+        <div class="host-item"><b>M.Sc. Computer Science</b><span class="host-org">University of Erlangen-Nuremberg</span><small>with distinction · Deutschlandstipendium</small></div>
+        <div class="host-item"><b>Exchange semester</b><span class="host-org">City University of Hong Kong</span><small>Machine learning</small></div>
+        <div class="host-item"><b>B.Sc. Computer Science</b><span class="host-org">TH Nuremberg</span><small>Computer science and business</small></div>
+      </div>
     </div>
-    <p class="host-edu" id="host-edu" data-motion="fade" style="--order:0">M.Sc. Computer Science · FAU Erlangen-Nürnberg</p>
     <p class="host-boundary" id="host-boundary" data-motion="fade" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Synthetic teaching case. No employer data or systems.</span></p>
-    <div class="host-build" id="host-build" data-step="1" data-visual>
-      <p class="host-build__over" data-motion="fade" style="--order:0">What I build</p>
-      <svg class="host-build__edges" viewBox="0 0 1728 136" width="1728" height="136" aria-hidden="true" data-allow-overlap>
-        <path class="edge" id="host-build-flow" data-motion="draw" d="M192 68H526M688 68H1022M1184 68H1518" />
-        <g class="host-build__heads" data-motion="fade" style="--order:4">
-          <path class="edge-head" d="M522 58L540 68L522 78Z" />
-          <path class="edge-head" d="M1018 58L1036 68L1018 78Z" />
-          <path class="edge-head" d="M1514 58L1532 68L1514 78Z" />
-        </g>
-      </svg>
-      <div class="node host-build__node" id="host-build-records" style="left:120px">
-        <div class="node__box" data-motion="fade" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-database" /></svg></div>
-        <span class="node__label" data-motion="fade" style="--order:1">Stored records</span>
-      </div>
-      <div class="node host-build__node" id="host-build-models" style="left:616px">
-        <div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-table" /></svg></div>
-        <span class="node__label" data-motion="fade" style="--order:1">Data models</span>
-      </div>
-      <div class="node host-build__node" id="host-build-checks" style="left:1112px">
-        <div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-checklist" /></svg></div>
-        <span class="node__label" data-motion="fade" style="--order:1">Checks</span>
-      </div>
-      <div class="node host-build__node is-active" id="host-build-numbers" data-focus style="left:1608px">
-        <div class="node__box" data-motion="fade" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-chart" /></svg></div>
-        <span class="node__label" data-motion="fade" style="--order:1">Numbers people use</span>
-      </div>
-    </div>
   <!-- /scene:host -->
   </section>
 
