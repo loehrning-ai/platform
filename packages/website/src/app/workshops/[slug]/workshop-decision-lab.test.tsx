@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   fireEvent,
   render,
@@ -8,7 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getWorkshopBySlug } from "@/lib/workshops";
+import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
 import { WorkshopDecisionLab } from "./workshop-decision-lab";
 
 afterEach(() => {
@@ -17,6 +18,32 @@ afterEach(() => {
 });
 
 describe("<WorkshopDecisionLab>", () => {
+  for (const locale of ["de", "en"] as const) {
+    for (const workshop of getWorkshops(locale)) {
+      it(`keeps ${locale}/${workshop.slug} inert in server-rendered HTML`, () => {
+        const container = document.createElement("div");
+        container.innerHTML = renderToStaticMarkup(
+          <WorkshopDecisionLab config={workshop.decisionLab} />,
+        );
+
+        expect(container.querySelector("form")).toHaveAttribute("aria-busy", "true");
+        const fieldsets = container.querySelectorAll("fieldset");
+        expect(fieldsets).toHaveLength(2);
+        for (const fieldset of fieldsets) expect(fieldset).toBeDisabled();
+        for (const radio of container.querySelectorAll('input[type="radio"]')) {
+          expect(radio).toBeDisabled();
+        }
+        expect(container.querySelector('button[type="submit"]')).toBeDisabled();
+        expect(container.textContent).toContain(locale === "en"
+          ? "The choices unlock once JavaScript has loaded."
+          : "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist.");
+        expect(container.querySelector("noscript")?.textContent).toContain(locale === "en"
+          ? "JavaScript is required for this exercise."
+          : "Diese Übung benötigt JavaScript.");
+      });
+    }
+  }
+
   it("does not turn the activated submit element into a native reset button", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
     render(<WorkshopDecisionLab config={workshop.decisionLab} />);
