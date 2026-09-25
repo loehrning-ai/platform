@@ -448,7 +448,15 @@ test.describe("local progress import (anonymous namespace offered once)", () => 
       }
     });
 
-    await page.goto("/konto", { waitUntil: "networkidle" });
+    // Without a local namespace the island decides in its first effect after
+    // hydration and never fetches, so the app's hydration marker is the exact
+    // point after which no import request can start. "networkidle" instead
+    // waited for every unrelated background request (route prefetches, the
+    // progress sync) to fall silent and timed out on slower runners.
+    await page.goto("/konto", { waitUntil: "domcontentloaded" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "Dein Lernstand",
