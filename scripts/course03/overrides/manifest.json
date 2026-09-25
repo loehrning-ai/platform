@@ -234,7 +234,7 @@
     },
     "lib/story.css": {
       "original": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
-      "override": "53a6d598370e7ffcddd535bb8a212230c112da87320950fc16d58fc2d9be91d2"
+      "override": "04d275a7d13c0d9b7a9268c841b9fce14c87183b7680876cee490e25de78b150"
     },
     "lib/tokens.css": {
       "original": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
@@ -246,7 +246,7 @@
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "8161d4949201a69ee6e814cbce0b2e5640e536f4418e6555d2bf2fa2880a8f17"
+      "override": "a2e098c003a83655632dd135d06b46cd7ef74869ab79b5a122a8fe182e0faed7"
     }
   }
 }
