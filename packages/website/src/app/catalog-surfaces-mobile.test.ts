@@ -114,20 +114,27 @@ describe("catalog surfaces below lg", () => {
     expect(buecher).toContain("sm:w-56 md:w-full");
   });
 
-  it("leads the workshop row with its decision and drops the step bars", () => {
+  it("leads the workshop row with its numbered title and hides the catalogue index", () => {
     const workshops = source("workshops/workshops-content.tsx");
+    const heading =
+      workshops.match(/<h3\s+id=\{headingId\}\s+className="([^"]+)"/)?.[1] ??
+      "";
     const decision =
       workshops.match(/data-workshop-decision\s+className="([^"]+)"/)?.[1] ??
       "";
 
-    expect(decision).toContain("order-first");
-    expect(decision).toContain("md:order-none");
-    expect(decision).toContain("text-2xl");
-    expect(decision).toContain("sm:text-4xl");
-    // Decoration only: three bars that repeat what the count above already
-    // states, so they cost nothing on a phone and return from sm.
+    // The "Workshop NN: title" heading leads the row on a phone; the quoted
+    // first decision follows it in source order at every width.
+    expect(heading).toContain("order-first");
+    expect(heading).toContain("md:order-none");
+    expect(heading).toContain("text-2xl");
+    expect(heading).toContain("sm:text-4xl");
+    expect(decision).not.toContain("order-first");
+    expect(decision).toContain("font-semibold");
+    // The hero's catalogue index repeats the cards directly below it, so it
+    // costs nothing on a phone and returns from sm.
     expect(workshops).toContain(
-      '<div className="mt-5 hidden space-y-2 sm:block" aria-hidden="true">',
+      '<ol className="mt-5 hidden space-y-2 sm:block">',
     );
     expect(workshops).toContain("py-6 sm:py-14");
     expect(workshops).toContain("gap-6 sm:gap-12");

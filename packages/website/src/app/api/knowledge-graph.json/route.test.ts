@@ -97,7 +97,7 @@ describe("knowledge-graph locale representations", () => {
       url: "https://loehrning.ai/en/workshops/ki-prognosen-einschaetzen",
       pageLanguage: "en-GB",
       format: "Self-study kit",
-      duration: "About 90 minutes",
+      duration: "~90 minutes",
     });
   });
 });

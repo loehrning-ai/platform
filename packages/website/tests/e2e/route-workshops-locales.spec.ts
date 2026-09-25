@@ -12,7 +12,7 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/ki-prognosen-einschaetzen",
     deHeading: "Kann KI die Zukunft vorhersagen?",
     enHeading: "Can AI predict the future?",
-    materialCount: 5,
+    materialCount: 6,
   },
   {
     path: "/workshops/geschaeftsberichte-mit-ki-lesen",
@@ -123,7 +123,7 @@ for (const width of [320, 390, 768, 1440] as const) {
           ).map((link) => link.getAttribute("href") ?? "");
           // A material may point at a section of a file (guide.html#section).
           const isMaterial = (href: string) =>
-            /\.(?:html|zip)$/.test(href.split("#")[0]);
+            /\.(?:html|zip|csv)$/.test(href.split("#")[0]);
           const materialHrefs = internalHrefs.filter(isMaterial);
           const pageHrefs = internalHrefs.filter((href) => !isMaterial(href));
           return {

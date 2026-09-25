@@ -84,6 +84,7 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 .hero    { font-size: 144px; line-height: 0.94; letter-spacing: -0.05em;  font-weight: 700; }
 .h1      { font-size: 104px; line-height: 0.96; letter-spacing: -0.045em; font-weight: 700; }
 .h2      { font-size: 72px;  line-height: 1.0;  letter-spacing: -0.04em;  font-weight: 700; }
+.h1, .h2 { text-wrap: balance; }
 .h3      { font-size: 36px;  line-height: 1.15; letter-spacing: -0.025em; font-weight: 700; }
 
 .body-lg { font-size: 24px; line-height: 1.5; letter-spacing: -0.01em; color: var(--muted); }

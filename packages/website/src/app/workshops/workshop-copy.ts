@@ -18,15 +18,16 @@ export interface WorkshopPageCopy {
     readonly available: string;
     readonly availableDescription: string;
     readonly empty: string;
-    readonly decision: string;
+    readonly catalogueIndex: string;
+    readonly firstDecision: (title: string) => string;
     readonly proofTarget: string;
-    readonly proofOutput: string;
     readonly duration: string;
     readonly steps: string;
     readonly materials: string;
     readonly stepCount: (count: number) => string;
     readonly materialCount: (count: number) => string;
     readonly openWorkshop: string;
+    readonly workshopHeading: (number: string) => string;
   };
   readonly detail: {
     readonly navigation: string;
@@ -35,14 +36,16 @@ export interface WorkshopPageCopy {
     readonly format: string;
     readonly duration: string;
     readonly steps: string;
+    readonly materials: string;
     readonly audiences: string;
     readonly materialsAccess: string;
+    /** Shown only when every material of the workshop is in English. */
+    readonly materialsLanguage: string | null;
     readonly forWhom: string;
     readonly materialsHeading: string;
     readonly download: string;
     readonly openInBrowser: string;
     readonly language: string;
-    readonly materialLanguageNote: string;
     readonly practiceCase: string;
     readonly syntheticCase: string;
     readonly realCompanyData: string;
@@ -56,6 +59,7 @@ export interface WorkshopPageCopy {
     readonly stepsIntroduction: string;
     readonly referenceHeading: string;
     readonly referenceIntroduction: string;
+    readonly whatItCovers: string;
     readonly accessBoundary: string;
   };
 }
@@ -89,15 +93,16 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       available: "Wähle die Entscheidung",
       availableDescription: "Jeder Fall beginnt direkt im Entscheidungslabor.",
       empty: "Derzeit ist kein Workshop veröffentlicht.",
-      decision: "Deine erste Entscheidung",
+      catalogueIndex: "Im Katalog",
+      firstDecision: (title) => `Erste Entscheidung: „${title}“`,
       proofTarget: "Ergebnis",
-      proofOutput: "Entscheidung + Beleg",
       duration: "Dauer",
       steps: "Schritte",
       materials: "Material",
       stepCount: (count) => `${count} Schritte`,
       materialCount: (count) => `${count} ${count === 1 ? "Datei" : "Dateien"}`,
       openWorkshop: "Workshop öffnen",
+      workshopHeading: (number) => `Workshop ${number}`,
     },
     detail: {
       navigation: "Workshopnavigation",
@@ -106,16 +111,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       format: "Format",
       duration: "Dauer",
       steps: "Schritte",
+      materials: "Material",
       audiences: "Zielgruppen",
-      materialsAccess:
-        "Kostenlos und ohne Anmeldung abrufbar. Die Sprache steht an jedem Material.",
+      materialsAccess: "Kostenlos, ohne Anmeldung.",
+      materialsLanguage: "Alle Materialien auf Englisch.",
       forWhom: "Für wen",
       materialsHeading: "Material zum Mitnehmen",
       download: "Download",
       openInBrowser: "Im Browser öffnen",
       language: "Sprache",
-      materialLanguageNote:
-        "Das Material selbst bleibt in der angegebenen Sprache.",
       practiceCase: "Der Übungsfall",
       syntheticCase: "Synthetisches Fallbeispiel",
       realCompanyData: "Echte Unternehmensdaten",
@@ -129,11 +133,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       source: "Quelle:",
       stepsHeading: (count) =>
         `Die ${NUMBER_WORDS.de[count] ?? String(count)} Schritte`,
-      stepsIntroduction:
-        "Der Ablauf zum Nachbauen: von der ersten Prüfung der Rohdaten bis zur begründeten Entscheidung.",
+      stepsIntroduction: "Der Ablauf zum Nachbauen, Schritt für Schritt.",
       referenceHeading: "Referenz",
       referenceIntroduction:
-        "Zielgruppe, Fall und Ablauf bleiben greifbar, ohne vor der ersten Entscheidung zu stehen.",
+        "Worum es geht, für wen, der Übungsfall und der Ablauf: zum Nachlesen nach der ersten Entscheidung.",
+      whatItCovers: "Worum es geht",
       accessBoundary: "Zugang und Datenfluss",
     },
   },
@@ -159,15 +163,16 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       available: "Choose the decision",
       availableDescription: "Every case opens directly in the decision lab.",
       empty: "No workshop is currently published.",
-      decision: "Your first decision",
+      catalogueIndex: "In the catalogue",
+      firstDecision: (title) => `First decision: “${title}”`,
       proofTarget: "Output",
-      proofOutput: "Decision + evidence",
       duration: "Duration",
       steps: "Steps",
       materials: "Materials",
       stepCount: (count) => `${count} steps`,
       materialCount: (count) => `${count} file${count === 1 ? "" : "s"}`,
       openWorkshop: "Open workshop",
+      workshopHeading: (number) => `Workshop ${number}`,
     },
     detail: {
       navigation: "Workshop navigation",
@@ -176,16 +181,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       format: "Format",
       duration: "Duration",
       steps: "Steps",
+      materials: "Materials",
       audiences: "Audience groups",
-      materialsAccess:
-        "Available without payment or an account. The language is stated on each item.",
+      materialsAccess: "Free, no sign-up.",
+      materialsLanguage: null,
       forWhom: "Who this is for",
       materialsHeading: "Workshop materials",
       download: "Download",
       openInBrowser: "Open in browser",
       language: "Language",
-      materialLanguageNote:
-        "The material itself remains in the stated language.",
       practiceCase: "Practice case",
       syntheticCase: "Synthetic case",
       realCompanyData: "Real company data",
@@ -199,11 +203,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       source: "Source:",
       stepsHeading: (count) =>
         `${NUMBER_WORDS.en[count] ?? String(count)} steps`,
-      stepsIntroduction:
-        "The sequence to rebuild, from the first check of the raw data to a reasoned decision.",
+      stepsIntroduction: "The sequence to rebuild, step by step.",
       referenceHeading: "Reference",
       referenceIntroduction:
-        "Audience, case, and sequence remain available without delaying the first decision.",
+        "What it covers, who it is for, the practice case and the sequence: for reference after the first decision.",
+      whatItCovers: "What it covers",
       accessBoundary: "Access and data flow",
     },
   },

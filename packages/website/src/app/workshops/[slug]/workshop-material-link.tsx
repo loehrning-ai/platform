@@ -38,11 +38,11 @@ export function WorkshopMaterialLink({
     <a
       href={material.href}
       hrefLang={material.language}
-      {...(material.kind === "zip"
-        ? { download: `${workshopSlug}-kit.zip` }
-        : // Materials are same-origin files. Keeping the referrer lets the
-          // learner guide send a visitor back to the German or English page.
-          { target: "_blank", rel: "noopener" })}
+      // HTML materials open in the same tab: every static page carries a
+      // back link to this page, and the same-origin referrer tells it whether
+      // to go back to the German or the English version. Files download under
+      // their published name, the one the deck and the guides refer to.
+      {...(material.kind === "html" ? {} : { download: "" })}
       className={className}
       onClick={handleClick}
     >

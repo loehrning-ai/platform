@@ -50,7 +50,7 @@ export interface WorkshopCaseStudy {
 export interface WorkshopMaterial {
   readonly label: string;
   readonly href: string;
-  readonly kind: "html" | "zip";
+  readonly kind: "html" | "zip" | "csv";
   /** Language of the linked file itself, independent from the page locale. */
   readonly language: Locale;
   readonly description: string;
@@ -128,16 +128,23 @@ export interface WorkshopDecisionLabConfig {
 
 export interface Workshop {
   readonly slug: string;
+  /** Two-digit catalogue number, fixed per workshop and never derived from array position. */
+  readonly number: "01" | "02" | "03";
+  /** Short topic used in the eyebrow and the catalogue index, e.g. "Prognosen". */
+  readonly topic: string;
   readonly title: string;
+  /** Always `Workshop NN · <topic>`. */
   readonly eyebrow: string;
-  /** One or two sentences for the listing card. Keep under ~220 characters. */
+  /** One or two sentences for the listing card and meta description. Keep at or under 160 characters. */
   readonly summary: string;
   /** The longer intro shown on the detail page hero. */
   readonly description: string;
   readonly format: string;
   readonly duration: string;
-  /** Concise tool, transfer, or provider boundary shown before materials. */
+  /** Two sentences at most: `<access>. <data flow>.` Shown before the decision lab. */
   readonly accessNote: string;
+  /** What the learner leaves with, shown on the catalogue card. */
+  readonly outcome: string;
   readonly audience: readonly string[];
   readonly decisionLab: WorkshopDecisionLabConfig;
   readonly steps: readonly WorkshopStep[];
@@ -151,16 +158,19 @@ const WORKSHOP_BASE_PATH = "/workshops/geschaeftsberichte-mit-ki-lesen";
 const WORKSHOPS_DE: readonly Workshop[] = [
   {
     slug: "ki-prognosen-einschaetzen",
+    number: "01",
+    topic: "Prognosen",
     title: "Kann KI die Zukunft vorhersagen?",
-    eyebrow: "Selbstlern-Workshop · Prognosen & Entscheidungen",
+    eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "Wann darfst du einer Prognose trauen? Du bezifferst die Kosten des Irrtums, bemisst den Puffer und prüfst den Go-live: in drei Entscheidungslaboren und an einem Launch, bei dem die Menge nicht reicht.",
+      "Wann darfst du einer Prognose trauen? Du bezifferst die Kosten des Irrtums, bemisst den Puffer und prüfst den Go-live: in drei Laboren und einem Launch-Fall.",
     description:
       "Eine Prognose verdient ihren Aufwand erst, wenn sie eine Entscheidung verändert; deshalb steht die Modellfrage hier ganz hinten. Davor kommt die Frage, ob das Modell das Verfahren schlägt, das heute schon läuft, dann die Kosten: Zu viel kostet anders als zu wenig, und ein Puffer muss beides ausgleichen. Und im Betrieb musst du merken, wann eine Prognose kippt. Drei interaktive Entscheidungslabore und ein durchgerechneter Geschäftsfall führen zu einer Go/No-Go-Entscheidung, die du auch verteidigen kannst. Ohne Programmierung, ohne Installation, ohne KI-Zugang: alles läuft als statische Seite im Browser.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Kein KI-Zugang nötig. Alles läuft statisch im Browser; Übungsdaten bleiben lokal.",
+      "Kein KI-Zugang nötig, alles läuft statisch im Browser. Übungsdaten bleiben lokal.",
+    outcome: "Go/No-Go-Regel",
     audience: [
       "Disponenten, Planer und Operations-Teams, die mit Absatz- oder Kapazitätsprognosen arbeiten",
       "Führungskräfte, die eine Prognose verantworten, ohne sie selbst zu rechnen",
@@ -211,7 +221,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       submitLabel: "Entscheidung prüfen",
       resetLabel: "Neu entscheiden",
       privacyNote:
-        "Läuft nur in dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
+        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
       resultLabel: "Auswertung der Entscheidung",
       feedback: {
         aligned: {
@@ -301,15 +311,15 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop-Hub (Englisch)",
+        label: "Hub",
         href: "/workshops/ki-prognosen-einschaetzen/hub.html",
         kind: "html",
         language: "en",
         description:
-          "Die Startseite. Von hier aus öffnest du die drei Labore, den Geschäftsfall und die Blätter zum Mitnehmen, in der vorgesehenen Reihenfolge.",
+          "Die Startseite. Von hier aus öffnest du die drei Labore, den Geschäftsfall und die Blätter zum Mitnehmen in der vorgesehenen Reihenfolge.",
       },
       {
-        label: "Entscheidungslabor (Englisch, 3 Akte)",
+        label: "Hands-on-Labor · 3 Akte",
         href: "/workshops/ki-prognosen-einschaetzen/hands-on.html",
         kind: "html",
         language: "en",
@@ -317,7 +327,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           "Drei interaktive Akte auf einer Seite: Kapazität festlegen, Aufschaukelung stoppen, schnelle Nachfrage kontrolliert freigeben, jeweils mit Simulation zum Mitspielen.",
       },
       {
-        label: "Geschäftsfall (Englisch)",
+        label: "Geschäftsfall",
         href: "/workshops/ki-prognosen-einschaetzen/case-study/index.html",
         kind: "html",
         language: "en",
@@ -325,7 +335,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           "Ein Launch, drei Zahlen, eine knappe Menge: Zuteilungsentscheidung, Systemkarte, Kostenasymmetrie und das tägliche Freigabe-Tor.",
       },
       {
-        label: "Field Card (Englisch, 1 Seite)",
+        label: "Field card · 1 Seite",
         href: "/workshops/ki-prognosen-einschaetzen/field-card.html",
         kind: "html",
         language: "en",
@@ -333,27 +343,38 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           "Die druckbare Prüfliste für jede Prognose: fünf Säulen, Servicelevel-Formel, Sicherheitsbestand und die vier nicht prognostizierbaren Ereignisklassen.",
       },
       {
-        label: "Übungsaufgabe (Englisch)",
+        label: "Übungsaufgabe",
         href: "/workshops/ki-prognosen-einschaetzen/homework.html",
         kind: "html",
         language: "en",
         description:
           "104 Wochen Nachfrage als CSV plus Anleitung: zwei Prognosen rechnen, vier Zahlen vergleichen, eine Frage beantworten. Tabellenblatt genügt.",
       },
+      {
+        label: "Datensatz, 104 Wochen · .csv",
+        href: "/workshops/ki-prognosen-einschaetzen/data/demand-weekly.csv",
+        kind: "csv",
+        language: "en",
+        description:
+          "Die wöchentliche Nachfrage für die Übungsaufgabe (demand-weekly.csv): synthetische Übungsdaten, direkt in jedem Tabellenblatt zu öffnen.",
+      },
     ],
   },
   {
     slug: "geschaeftsberichte-mit-ki-lesen",
+    number: "02",
+    topic: "Geschäftsberichte",
     title: "Geschäftsberichte mit KI lesen",
-    eyebrow: "Selbstlern-Workshop · Business Reports",
+    eyebrow: "Workshop 02 · Geschäftsberichte",
     summary:
-      "Lies einen Monatsbericht wie ein Analyst: Kennzahlen in Klartext definieren, als Skill festhalten, ein Dashboard befüllen, eine Entscheidung begründen. Danach dieselbe Methode an einem echten Quartalsbericht.",
+      "Lies einen Monatsbericht wie ein Analyst: Kennzahlen im Klartext definieren, als Skill festhalten, ein Dashboard füllen und eine Entscheidung begründen.",
     description:
       "Fünf Prompts, ein Analyst. In der Claude-App arbeitest du für ein synthetisches Unternehmen, bekommst dessen Monatsbericht samt der Rohdaten, aus denen er geschrieben wurde, und hältst in Klartext fest, was die Zahlen hier bedeuten. Aus diesen Regeln wird ein wiederverwendbarer Skill: Er liest den Bericht aus, füllt ein Dashboard und stützt eine begründete Entscheidung. In Fall 2 verlässt du die Sandbox und wendest dieselbe Methode auf die öffentlichen Quartalszahlen eines echten Unternehmens an. Ohne Programmierung und ohne API-Key; für die Schritte in Claude brauchst du einen passenden Claude-Zugang.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Claude-Zugang nötig. Nimm nur das fiktive Kit, Dateien können an den Dienst gehen.",
+      "Claude-Zugang nötig. Nimm nur das fiktive Kit, denn Dateien können an den Dienst gehen.",
+    outcome: "Kennzahlen-Skill + Dashboard",
     audience: [
       "Controllerinnen und Controller, die Monats- oder Quartalsberichte schreiben oder lesen",
       "Controlling- und Finance-Teams im Mittelstand",
@@ -406,7 +427,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       submitLabel: "Entscheidung prüfen",
       resetLabel: "Neu entscheiden",
       privacyNote:
-        "Läuft nur in dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
+        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
       resultLabel: "Auswertung der Entscheidung",
       feedback: {
         aligned: {
@@ -522,20 +543,20 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop-Walkthrough (Englisch, 21 Slides)",
+        label: "Walkthrough · 22 Folien",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
         description:
-          "Englisches Slide-Deck entlang des roten Fadens: das Unternehmen, das Zip-Verzeichnis, die fünf Prompts mit ihren Artefakten, drei anspruchsvollere Zusatz-Prompts und Fall 2 (Meta). Jeder Prompt steht mit Kopier-Knopf auf der Folie. Mit Pfeiltasten blättern.",
+          "Das Slide-Deck entlang des roten Fadens: das Unternehmen, das Zip-Verzeichnis, die fünf Prompts mit ihren Artefakten, drei anspruchsvollere Zusatz-Prompts und Fall 2 (Meta). Jeder Prompt steht mit Kopier-Knopf auf der Folie. Mit Pfeiltasten blättern.",
       },
       {
-        label: "NORTHWIND Analyst Kit (Englisch, .zip)",
+        label: "Analyst kit · .zip",
         href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
         kind: "zip",
         language: "en",
         description:
-          "Englisches Kit mit beiden Fällen: CSV-Rohdaten, beide Monatsberichte als Markdown, der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen. Reines Textarchiv: den gestalteten Bericht siehst du im Walkthrough.",
+          "Das NORTHWIND-Kit mit beiden Fällen: CSV-Rohdaten, beide Monatsberichte als Markdown, der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen. Reines Textarchiv: den gestalteten Bericht siehst du im Walkthrough.",
       },
     ],
   },
@@ -544,16 +565,19 @@ const WORKSHOPS_DE: readonly Workshop[] = [
 const WORKSHOPS_EN: readonly Workshop[] = [
   {
     slug: "ki-prognosen-einschaetzen",
+    number: "01",
+    topic: "Forecasts",
     title: "Can AI predict the future?",
-    eyebrow: "Self-study workshop · Forecasts and decisions",
+    eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "When may you trust a forecast? You price the cost of being wrong, size the buffer, and check the go-live: three decision labs and one launch where supply runs short.",
+      "When may you trust a forecast? You price the cost of being wrong, size the buffer and check the go-live: in three labs and one launch case.",
     description:
       "A forecast earns its cost only when it changes a decision, so the model question comes last here. First comes the question of whether the model beats the process already running, then the costs: too much capacity costs differently than too little, and a buffer balances both. And in operation you have to notice when a forecast tips over. Three interactive decision labs and one worked business case lead to a defensible go or no-go decision. No programming, no installation, no AI account; everything runs as static pages in the browser.",
     format: "Self-study kit",
-    duration: "About 90 minutes",
+    duration: "~90 minutes",
     accessNote:
-      "No AI account is required. Everything runs statically in the browser; practice data stays local.",
+      "No AI account needed, everything runs statically in the browser. Practice data stays local.",
+    outcome: "Go/no-go rule",
     audience: [
       "Schedulers, planners, and operations teams working with demand or capacity forecasts",
       "Managers who own a forecast without calculating it themselves",
@@ -694,7 +718,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop hub",
+        label: "Hub",
         href: "/workshops/ki-prognosen-einschaetzen/hub.html",
         kind: "html",
         language: "en",
@@ -702,7 +726,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
           "Starting page for the three labs, business case, and take-away sheets in the intended order.",
       },
       {
-        label: "Decision lab · three acts",
+        label: "Hands-on lab · 3 acts",
         href: "/workshops/ki-prognosen-einschaetzen/hands-on.html",
         kind: "html",
         language: "en",
@@ -718,7 +742,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
           "One launch, three numbers, and constrained supply: allocation decision, system map, asymmetric error costs, and the daily release gate.",
       },
       {
-        label: "Field card · one page",
+        label: "Field card · 1 page",
         href: "/workshops/ki-prognosen-einschaetzen/field-card.html",
         kind: "html",
         language: "en",
@@ -726,27 +750,38 @@ const WORKSHOPS_EN: readonly Workshop[] = [
           "Printable checklist for any forecast: five pillars, the service-level formula, safety stock, and four classes of events that cannot be forecast reliably.",
       },
       {
-        label: "Forecast exercise",
+        label: "Take-home",
         href: "/workshops/ki-prognosen-einschaetzen/homework.html",
         kind: "html",
         language: "en",
         description:
           "A 104-week demand CSV and instructions to calculate two forecasts, compare four measures, and answer one decision question. A spreadsheet is sufficient.",
       },
+      {
+        label: "Dataset, 104 weeks · .csv",
+        href: "/workshops/ki-prognosen-einschaetzen/data/demand-weekly.csv",
+        kind: "csv",
+        language: "en",
+        description:
+          "The weekly demand for the take-home (demand-weekly.csv): synthetic practice data that opens in any spreadsheet.",
+      },
     ],
   },
   {
     slug: "geschaeftsberichte-mit-ki-lesen",
+    number: "02",
+    topic: "Business reports",
     title: "Read business reports with AI",
-    eyebrow: "Self-study workshop · Business reports",
+    eyebrow: "Workshop 02 · Business reports",
     summary:
-      "Read a monthly report like an analyst: define the metrics in plain language, keep them as a skill, fill a dashboard, argue a decision. Then the same method on a real quarterly report.",
+      "Read a monthly report like an analyst: define the metrics in plain language, keep them as a skill, fill a dashboard and argue a decision.",
     description:
       "Five prompts, one analyst. In the Claude app you work for a synthetic company, get its monthly report along with the raw data it was written from, and record in plain language what the numbers mean here. Those rules become a reusable skill; it reads the report, fills a dashboard, and supports a reasoned decision. In case 2 you leave the sandbox and apply the same method to a real company's public quarterly figures. No programming and no API key; the Claude steps need suitable Claude access.",
     format: "Self-study kit",
-    duration: "About 90 minutes",
+    duration: "~90 minutes",
     accessNote:
-      "Claude steps require suitable Claude access. Use only the fictional kit; files may reach that service.",
+      "Claude steps require suitable Claude access. Use only the fictional kit, because files may reach that service.",
+    outcome: "Metrics skill + dashboard",
     audience: [
       "Controllers who write or read monthly and quarterly reports",
       "Controlling and finance teams in small and medium-sized companies",
@@ -912,20 +947,20 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop walkthrough · 21 slides",
+        label: "Walkthrough · 22 slides",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
         description:
-          "English slide deck covering the company, the kit directory, five prompts and their outputs, three advanced follow-up prompts, and case 2 on Meta. Every prompt has a copy control. Navigate with the arrow keys.",
+          "Slide deck covering the company, the kit directory, five prompts and their outputs, three advanced follow-up prompts, and case 2 on Meta. Every prompt has a copy control. Navigate with the arrow keys.",
       },
       {
-        label: "NORTHWIND analyst kit · .zip",
+        label: "Analyst kit · .zip",
         href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
         kind: "zip",
         language: "en",
         description:
-          "English kit containing both cases: raw CSV data, both monthly reports as Markdown, the incomplete metric skill, dashboard template, worksheet, Meta exercise, and an empty template for another company. It is a text-only archive; the rendered report appears in the walkthrough.",
+          "The NORTHWIND kit with both cases: raw CSV data, both monthly reports as Markdown, the incomplete metric skill, dashboard template, worksheet, Meta exercise, and an empty template for another company. It is a text-only archive; the rendered report appears in the walkthrough.",
       },
     ],
   },

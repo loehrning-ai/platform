@@ -3,10 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>loehrning.ai · Demand Decision Lab — Live Hands-on</title>
-<meta name="description" content="Three live business forecasting scenarios: Amazon zip-code Last Mile planning, Apple MacBook demand handoff bullwhip, and Meta fast user-demand trust gates." />
-<meta name="theme-color" content="#0B1622" />
-<link rel="icon" href="data:," />
+<title>Forecasting decisions · Hands-on lab · loehrning.ai</title>
+<meta name="description" content="Workshop 01 hands-on lab: three forecasting decisions to play with. Parcel-network ZIP capacity, a device maker's handoff bullwhip, and a social app's trust gate. Invented figures." />
+
 <style>
   :root{
     color-scheme:light;
@@ -36,13 +35,12 @@
   body{
     min-height:100vh;
     min-height:100dvh;
+    display:flex;flex-direction:column;
     background:
-      linear-gradient(115deg,rgba(36,92,255,.12) 0 1px,transparent 1px 64%),
-      radial-gradient(circle at 14% 18%,rgba(11,143,153,.12),transparent 27%),
-      linear-gradient(90deg,rgba(16,16,20,.045) 1px,transparent 1px),
-      linear-gradient(0deg,rgba(16,16,20,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(18,18,18,.04) 1px,transparent 1px),
+      linear-gradient(0deg,rgba(18,18,18,.04) 1px,transparent 1px),
       var(--paper);
-    background-size:auto,auto,36px 36px,36px 36px,auto;
+    background-size:36px 36px,36px 36px,auto;
     color:var(--ink);
     font-family:var(--sans);
     -webkit-font-smoothing:antialiased;
@@ -56,31 +54,30 @@
     --soft:#142d42;
     --line:#25455f;
     background:
-      radial-gradient(circle at 84% 20%,rgba(36,92,255,.20),transparent 32%),
-      linear-gradient(115deg,rgba(126,189,255,.14) 0 1px,transparent 1px 64%),
       linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),
       linear-gradient(0deg,rgba(255,255,255,.045) 1px,transparent 1px),
       var(--paper);
-    background-size:auto,auto,36px 36px,36px 36px,auto;
+    background-size:36px 36px,36px 36px,auto;
   }
-  :focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+  :focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+  body.dark :focus-visible{outline-color:#f2c6b6}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  body[data-company=amazon]{
-    --case-accent:#ff9900;
-    --case-accent-2:#146eb4;
-    --case-surface:#fff9ed;
+  body[data-company=parcel]{
+    --case-accent:#b73a15;
+    --case-accent-2:#121212;
+    --case-surface:#fffdf7;
   }
-  body[data-company=apple]{
-    --case-accent:#111111;
-    --case-accent-2:#7d8a99;
+  body[data-company=device]{
+    --case-accent:#121212;
+    --case-accent-2:#b73a15;
     --case-surface:#ffffff;
   }
-  body[data-company=meta]{
-    --case-accent:#0866ff;
-    --case-accent-2:#00c2ff;
+  body[data-company=social]{
+    --case-accent:#f2c6b6;
+    --case-accent-2:#f3f0e9;
     --case-surface:#0f2333;
   }
-  .shell{height:100dvh;display:grid;grid-template-rows:74px minmax(0,1fr) 44px}
+  .shell{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:64px minmax(0,1fr) auto}
   .bar{
     display:grid;
     grid-template-columns:minmax(310px,.9fr) minmax(260px,1fr) auto;
@@ -92,11 +89,8 @@
     backdrop-filter:blur(10px);
   }
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
-  .mark{flex:0 0 auto;width:190px;height:54px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,.08);display:grid;place-items:center;padding:6px 12px;overflow:visible}
-  .mark img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
-  body.dark .mark{background:#fff}
   .brand b{display:block;font-size:17px;line-height:1}
-  .brand span{display:block;margin-top:3px;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .tag{display:block;margin-top:3px;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .center-rail{min-width:0;display:block}
   .progress{height:34px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;align-items:center}
   .step{
@@ -112,14 +106,16 @@
   }
   .step:before{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;background:var(--case-accent);transition:transform .42s var(--ease)}
   .step.done:before,.step.current:before{transform:scaleX(1)}
-  .step span{position:relative;z-index:1;color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%}
+  .step span{position:relative;z-index:1;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%}
   .step.done span,.step.current span{color:#fff}
+  body.dark .step.done span,body.dark .step.current span{color:#121212}
   .jump{display:flex;gap:6px}
   .jump button{
     width:40px;height:40px;border:1px solid var(--line);border-radius:5px;background:var(--card);color:var(--muted);
     font-family:var(--mono);font-weight:900;cursor:pointer;
   }
   .jump button.current{background:var(--case-accent);color:#fff;border-color:var(--case-accent)}
+  body.dark .jump button.current{color:#121212}
   main{min-height:0;overflow:hidden;padding:clamp(10px,1.4vh,20px) clamp(16px,2.4vw,34px)}
   .act{display:none;height:100%;min-height:0}
   .act.active{
@@ -132,25 +128,20 @@
   }
   @keyframes actIn{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
   .eyebrow{grid-column:1;grid-row:1;color:var(--case-accent);font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:900;align-self:end;display:grid;gap:8px}
-  /* case mark = the real brand logo on a consistent light plate: fixed height, top-left,
-     each mark keeps its intrinsic aspect ratio (width:auto) so nothing is stretched */
-  .case-mark{height:34px;border-radius:7px;border:1px solid rgba(15,17,17,.12);display:inline-flex;align-items:center;justify-content:flex-start;padding:0 12px;background:#ffffff;box-shadow:0 12px 26px -20px rgba(6,36,63,.55)}
-  .case-mark .brand-svg{width:auto;display:block;flex:0 0 auto}
-  .case-mark .brand-amazon{height:19px}
-  .case-mark .brand-apple{height:22px}
-  .case-mark .brand-meta{height:18px}
+  .case-mark{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border:1.5px solid currentColor;font-family:var(--sans);font-size:15px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--ink)}
+  body.dark .case-mark{color:#f3f0e9}
   .eyebrow .case-line{display:block}
-  body.dark .eyebrow{color:#7ebdff}
+  body.dark .eyebrow{color:#f2c6b6}
   h2{grid-column:1;grid-row:2;margin:0;font-size:clamp(28px,2.7vw,44px);line-height:.92;letter-spacing:0;font-weight:950;text-wrap:balance;align-self:start}
   .lead{grid-column:1;grid-row:3;align-self:start;margin:0;max-width:28ch;color:var(--muted);font-size:clamp(15px,1.15vw,22px);line-height:1.28;font-weight:620}
   .lead p{margin:0 0 12px}
   .lead .chip{display:inline-flex;margin:0 8px 8px 0;padding:4px 8px;border:1px solid color-mix(in srgb,var(--case-accent) 42%,var(--line));border-radius:4px;color:var(--case-accent);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;vertical-align:middle}
-  body.dark .lead .chip{color:#7ebdff}
+  body.dark .lead .chip{color:#f2c6b6}
   /* learning framework: WHAT WE PREDICT / MANUAL today vs AI advantage / OBJECTIVE */
   .framework{display:grid;gap:0;margin-top:12px}
   .fw{padding:6px 0;border-top:1px solid color-mix(in srgb,var(--line) 72%,transparent)}
   .fw:first-child{border-top:0;padding-top:2px}
-  .fw b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;margin-bottom:2px;color:var(--muted)}
+  .fw b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;margin-bottom:2px;color:var(--muted)}
   .fw span{display:block;font-size:12.5px;line-height:1.29;color:var(--ink);font-weight:600}
   .fw-predict b{color:var(--case-accent)}
   .fw-manual b,.fw-manual span{color:var(--muted)}
@@ -158,10 +149,10 @@
   .fw-ai{border-top:0;margin-left:-12px;padding:6px 9px;border-left:3px solid var(--case-accent);background:linear-gradient(90deg,color-mix(in srgb,var(--case-accent) 13%,transparent),transparent);border-radius:0 6px 6px 0}
   .fw-ai b{color:var(--case-accent)}
   .fw-obj b{color:var(--ink)}
-  body.dark .fw-predict b,body.dark .fw-ai b{color:#7ebdff}
-  .act[data-company=apple] .stage .hs-card{border-color:#d4d4d8;background:#ffffff;box-shadow:0 22px 70px -52px rgba(0,0,0,.45)}
-  .act[data-company=amazon] .stage .hs-card{border-color:rgba(255,153,0,.42);background:#fff8ed;box-shadow:0 22px 70px -52px rgba(17,24,32,.6)}
-  .act[data-company=meta] .stage .hs-card{border-color:#25455f}
+  body.dark .fw-predict b,body.dark .fw-ai b{color:#f2c6b6}
+  .act[data-company=device] .stage .hs-card{border-color:#d4cec5;background:#ffffff;box-shadow:none}
+  .act[data-company=parcel] .stage .hs-card{border-color:#d4cec5;background:#fffdf7;box-shadow:none}
+  .act[data-company=social] .stage .hs-card{border-color:#25455f}
   .stage{
     grid-column:2;
     grid-row:1 / 4;
@@ -180,9 +171,15 @@
     padding:8px 16px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);
     color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   }
-  .hint button{border:1px solid var(--line);border-radius:5px;background:var(--card);color:var(--ink);font-family:var(--mono);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
-  .hint .disclaimer{text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:10px;font-weight:500;opacity:.6;max-width:44ch;line-height:1.2;text-align:center}
-  @media (max-width:1150px){.hint .disclaimer{display:none}}
+  body>.wf-strip{width:100%;flex:0 0 auto}
+  .hint .hint-row{display:flex;justify-content:center;align-items:center;gap:8px 18px;flex-wrap:wrap;width:100%}
+  .hint .wf-mats{flex-basis:auto;width:100%;max-width:1200px;justify-content:center;font-family:var(--sans);font-size:14px;letter-spacing:0;text-transform:none}
+  .hint button{min-height:40px;border:1px solid var(--line);border-radius:5px;background:var(--card);color:var(--ink);font-family:var(--mono);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;cursor:pointer}
+  .hint .disclaimer{text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:12px;font-weight:400;color:var(--ink);max-width:48ch;line-height:1.3;text-align:center}
+  .hint .wf-foot-line{margin:0;width:100%;text-align:center;text-transform:none;letter-spacing:0;font-family:var(--sans);font-size:12px;line-height:1.4;color:#4f4640}
+  .hint .wf-foot-line a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+  .hint .wf-foot-line a:hover{color:#97300f}
+  .hint .wf-foot-line a:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
   kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:4px;background:var(--card);color:var(--ink);padding:1px 6px;font-family:var(--mono);font-size:11px}
 
   /* stage density overrides for the live widgets */
@@ -192,12 +189,12 @@
   .stage .hs-metric{padding:7px 9px!important}
   .stage .hs-metric .v{font-size:17px!important}
   .stage .hs-verdict{font-size:13px!important;line-height:1.32!important;margin-top:9px!important;padding:9px 12px!important}
-  .stage .hs-note{font-size:9.5px!important;line-height:1.3!important;margin-top:7px!important}
-  /* densest cards (Apple/Meta) — cap the chart so verdict + note never clip on short viewports */
-  .act[data-company=apple] .stage .hs-chartwrap{max-height:min(24vh,206px)!important}
-  .act[data-company=meta] .stage .hs-chartwrap{max-height:min(23vh,206px)!important}
-  .act[data-company=meta] .stage .hs-verdict{margin-top:8px!important}
-  .act[data-company=meta] .stage .hs-note{margin-top:6px!important}
+  .stage .hs-note{font-size:11px!important;line-height:1.3!important;margin-top:7px!important}
+  /* densest cards (device maker, social app) — cap the chart so verdict + note never clip on short viewports */
+  .act[data-company=device] .stage .hs-chartwrap{max-height:min(24vh,206px)!important}
+  .act[data-company=social] .stage .hs-chartwrap{max-height:min(23vh,206px)!important}
+  .act[data-company=social] .stage .hs-verdict{margin-top:8px!important}
+  .act[data-company=social] .stage .hs-note{margin-top:6px!important}
 
   /* zero layout-shift: reserve space so a click only changes values INSIDE fixed boxes.
      the live status label never wraps; racer rows always reserve 2 lines; verdict boxes
@@ -206,18 +203,28 @@
   .stage .hs-live>span:last-child{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .stage .hs-racer{min-height:32px}
   .stage .hs-racer .who{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.12;align-self:center}
-  .act[data-company=amazon] .stage .hs-verdict{min-height:100px}
-  .act[data-company=apple] .stage .hs-verdict{min-height:92px}
-  .act[data-company=meta] .stage .hs-verdict{min-height:88px}
+  .act[data-company=parcel] .stage .hs-verdict{min-height:100px}
+  .act[data-company=device] .stage .hs-verdict{min-height:92px}
+  .act[data-company=social] .stage .hs-verdict{min-height:88px}
 
   @media (prefers-reduced-motion:reduce){
     *{animation-duration:.001s!important;transition-duration:.001s!important;scroll-behavior:auto!important}
   }
-  /* Below this width the brand tagline would collide with the case rail (the "Amazon" step label);
-     drop the decorative tagline and keep the title. Above it there is a comfortable gap. */
-  @media (max-width:1440px){
-    .brand span{display:none}
+  /* Short desktop viewports (laptops 720-860px tall): the page scrolls instead of clipping the lab card. */
+  @media (min-width:901px) and (max-height:860px){
+    html,body{height:auto;min-height:100%;overflow:auto}
+    body{display:block}
+    .shell{min-height:0;grid-template-rows:64px auto auto}
+    main{overflow:visible}
+    .act{height:auto}
+    .stage{max-height:none;overflow:visible}
+    .stage .hs-card{max-height:none;overflow:visible}
   }
+  /* Below this width the brand tagline would collide with the case rail; drop it and keep the title. */
+  @media (max-width:1440px){
+    .brand .tag{display:none}
+  }
+  @media (max-height:780px){.lead .fw-obj,.lead .fw-manual{display:none}}
   @media (max-width:1150px){
     .act.active{grid-template-columns:minmax(240px,.6fr) minmax(540px,2.1fr);gap:12px 16px}
     h2{font-size:clamp(32px,4vw,52px)}
@@ -225,24 +232,21 @@
   }
   @media (max-width:900px){
     html,body{height:auto;min-height:100%;overflow:auto}
-    .shell{height:auto;min-height:100dvh;grid-template-rows:54px minmax(calc(100dvh - 112px),auto) 48px}
+    body{display:block}
+    .shell{height:auto;min-height:100dvh;grid-template-rows:54px minmax(calc(100dvh - 112px),auto) auto}
     .bar{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:8px 10px}
     .brand{gap:8px}
-    .mark{width:138px;height:40px;padding:4px 8px}
     .brand b{font-size:15px}
-    .brand span{display:none}
+    .brand .tag{display:none}
     .center-rail{display:none}
     .progress{display:none}
     .jump{grid-column:2;grid-row:1;gap:4px}
     .jump button{width:40px;height:36px;border-radius:4px;font-size:13px}
     main{overflow:auto;padding:10px 12px}
-    .act.active{position:relative;grid-template-columns:1fr;grid-template-rows:auto auto minmax(0,1fr);gap:6px;height:auto;min-height:calc(100dvh - 132px);align-items:start}
+    .act.active{position:relative;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);gap:6px;height:auto;min-height:calc(100dvh - 132px);align-items:start}
     .eyebrow,h2,.lead,.stage{grid-column:1;grid-row:auto}
     .eyebrow{font-size:10px;gap:5px}
-    .case-mark{height:26px;padding:0 9px}
-    .case-mark .brand-amazon{height:15px}
-    .case-mark .brand-apple{height:17px}
-    .case-mark .brand-meta{height:14px}
+    .case-mark{min-height:26px;font-size:13px}
     h2{font-size:clamp(28px,9.4vw,38px);line-height:.92}
     .lead{display:block;font-size:13px;line-height:1.24;max-width:none}
     .lead p{margin:0;max-height:2.6em;overflow:hidden}
@@ -250,34 +254,46 @@
     .stage{height:auto;max-height:none;overflow:visible}
     .stage .hs-card{height:auto;max-height:100%;padding:8px!important}
     .stage .hs-note{display:none!important}
-    .stage .hs-verdict{max-height:96px;overflow:hidden}
     .stage .hs-chartwrap{max-height:180px}
     .stage .hs-racer{grid-template-columns:88px 1fr 64px!important}
     .stage .hs-strip i{height:6px!important}
-    .hint{display:flex;position:sticky;bottom:0;z-index:20;font-size:9px;gap:8px}
+    .hint{display:flex;position:static;z-index:20;font-size:11px;gap:8px}
+    .hint .wf-mats{justify-content:flex-start}
   }
 </style>
+<meta name="theme-color" content="#f3f0e9" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preload" href="assets/fonts/Typing-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="lib/tokens.css" />
+<link rel="stylesheet" href="lib/wf.css" />
 </head>
 <body>
+<a class="wf-skip" href="#main">Skip to content</a>
+<header class="wf-strip" data-wf-slug="ki-prognosen-einschaetzen">
+  <a class="wf-brand" href="/en/workshops"><img src="assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
+  <nav class="wf-back" aria-label="Workshop page">
+    <a class="wf-back-main" href="/en/workshops/ki-prognosen-einschaetzen">← Back to workshop</a>
+    <a class="wf-back-alt" href="/workshops/ki-prognosen-einschaetzen" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
+  </nav>
+</header>
 <div class="shell">
-  <h1 class="sr-only">Demand Decision Lab</h1>
+  <h1 class="sr-only">Forecasting decisions: demand decision lab</h1>
   <header class="bar" aria-label="Lab controls">
     <div class="brand">
-      <div class="mark" style="justify-items:start"><span style="font:700 19px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.02em">loehrning<span style="color:#c2410c">.ai</span></span></div>
-      <div><b>Demand Decision Lab</b><span>forecasting only matters when a decision changes</span></div>
+      <div><b>Demand decision lab</b><span class="tag">Workshop 01 &middot; Forecasting decisions &middot; Hands-on lab &middot; English</span></div>
     </div>
-    <div class="center-rail" aria-label="Case scenarios">
+    <div class="center-rail" role="group" aria-label="Case scenarios">
       <div class="progress" id="progress" aria-hidden="true"></div>
     </div>
     <nav class="jump" id="jump" aria-label="Jump to act"></nav>
   </header>
 
-  <main id="lab">
-    <section class="act active" data-mode="light" data-company="amazon" data-result="race" data-short="Amazon">
-      <div class="eyebrow"><div class="case-mark" role="img" aria-label="Amazon"><span style="font:700 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.02em">Amazon</span></div><span class="case-line">Case lens | Last Mile ZIP capacity</span></div>
-      <h2>Set Tomorrow's ZIP Capacity</h2>
+  <main id="main" tabindex="-1">
+    <section class="act active" data-mode="light" data-company="parcel" data-result="race" data-short="Parcel network">
+      <div class="eyebrow"><div class="case-mark">Parcel network</div><span class="case-line">Teaching lens | Last-mile ZIP capacity</span></div>
+      <h2>Set tomorrow's ZIP capacity</h2>
       <div class="lead">
-        <div class="framework" aria-label="Amazon forecasting framework">
+        <div class="framework" aria-label="Parcel network forecasting framework">
           <div class="fw fw-predict"><b>What we predict</b><span>Tomorrow's package demand for a ZIP cluster &mdash; to size delivery capacity (vans, drivers, shifts).</span></div>
           <div class="fw fw-manual"><b>Manual today</b><span>A planner types &ldquo;same weekday last week&rdquo; into a spreadsheet.</span></div>
           <div class="fw fw-ai"><b>AI advantage</b><span>Learns the weekday rhythm <em>and</em> the promo calendar, so it catches the demand spike the sheet misses &mdash; cutting the cost of over- and under-building. The one shock no model can see is flagged to a human.</span></div>
@@ -289,12 +305,12 @@
       </div>
     </section>
 
-    <section class="act" data-mode="light" data-company="apple" data-result="buffer" data-short="Apple">
-      <div class="eyebrow"><div class="case-mark" role="img" aria-label="Apple"><span style="font:700 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.02em">Apple</span></div><span class="case-line">Case lens | SDM to Logistics to Reseller Ops</span></div>
-      <h2>Stop The MacBook Bullwhip</h2>
+    <section class="act" data-mode="light" data-company="device" data-result="buffer" data-short="Device maker">
+      <div class="eyebrow"><div class="case-mark">Device maker</div><span class="case-line">Teaching lens | Demand planning to logistics to resellers</span></div>
+      <h2>Stop the laptop bullwhip</h2>
       <div class="lead">
-        <div class="framework" aria-label="Apple forecasting framework">
-          <div class="fw fw-predict"><b>What we predict</b><span>Weekly MacBook demand, shared as ONE number down the chain (SDM &rarr; logistics &rarr; store).</span></div>
+        <div class="framework" aria-label="Device maker forecasting framework">
+          <div class="fw fw-predict"><b>What we predict</b><span>Weekly laptop demand, shared as ONE number down the chain (demand planning &rarr; logistics &rarr; store).</span></div>
           <div class="fw fw-manual"><b>Manual today</b><span>Each tier adds its own safety buffer on top of the padded order beneath it.</span></div>
           <div class="fw fw-ai"><b>AI advantage</b><span>One shared, calibrated forecast replaces stacked local buffers &mdash; collapsing the bullwhip amplification while holding service and freeing the cash tied in inventory.</span></div>
           <div class="fw fw-obj"><b>Objective</b><span>See how a single shared signal beats local padding on bullwhip, cost and fill rate.</span></div>
@@ -303,11 +319,11 @@
       <div class="stage"><hs-buffer-run></hs-buffer-run></div>
     </section>
 
-    <section class="act" data-mode="dark" data-company="meta" data-result="loop" data-short="Meta">
-      <div class="eyebrow"><div class="case-mark" role="img" aria-label="Meta"><span style="font:700 20px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.02em">Meta</span></div><span class="case-line">Case lens | live demand sensing and capacity release</span></div>
-      <h2>Gate Fast Demand Before It Ships</h2>
+    <section class="act" data-mode="dark" data-company="social" data-result="loop" data-short="Social app">
+      <div class="eyebrow"><div class="case-mark">Social app</div><span class="case-line">Teaching lens | Live demand sensing and capacity release</span></div>
+      <h2>Gate fast demand before it ships</h2>
       <div class="lead">
-        <div class="framework" aria-label="Meta forecasting framework">
+        <div class="framework" aria-label="Social app forecasting framework">
           <div class="fw fw-predict"><b>What we predict</b><span>Fast-moving user demand, nowcast live and released behind a trust gate.</span></div>
           <div class="fw fw-manual"><b>Manual today</b><span>Ship the deploy-day plan and don't look again (no-gate auto-release).</span></div>
           <div class="fw fw-ai"><b>AI advantage</b><span>A monitored model detects drift, routes the exception to an owner, retrains, and resumes &mdash; avoiding the capacity loss the blind plan bleeds.</span></div>
@@ -321,10 +337,20 @@
   </main>
 
   <footer class="hint">
-    <button type="button" id="prev-act">Previous</button>
-    <span>Act <b id="act-count">1/3</b></span>
-    <button type="button" id="next-act">Next</button>
-    <span class="disclaimer">Teaching case lenses, not proprietary Amazon, Apple, or Meta systems.</span>
+    <div class="hint-row">
+      <button type="button" id="prev-act">Previous</button>
+      <span>Act <b id="act-count">1/3</b></span>
+      <button type="button" id="next-act">Next</button>
+      <span class="disclaimer">Teaching lenses with invented figures; not any company's real system.</span>
+    </div>
+    <nav class="wf-mats" aria-label="Workshop materials">
+      <a href="./hub.html"><span>01</span>Hub</a>
+      <a href="./hands-on.html" aria-current="page"><span>02</span>Hands-on lab</a>
+      <a href="./case-study/index.html"><span>03</span>Business case</a>
+      <a href="./field-card.html"><span>04</span>Field card</a>
+      <a href="./homework.html"><span>05</span>Take-home</a>
+    </nav>
+    <p class="wf-foot-line">Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>
   </footer>
 </div>
 
@@ -400,5 +426,18 @@
   paint();
 })();
 </script>
-<a href="/workshops/ki-prognosen-einschaetzen" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-flex;gap:7px;align-items:center;padding:8px 13px;background:#141210;color:#F3F0E9;text-decoration:none;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;border:1px solid rgba(243,240,233,.25)">&#8592; Workshop-Seite</a></body>
+<script>
+(function(){var s=document.querySelector(".wf-strip");if(!s)return;
+var slug="/workshops/"+s.getAttribute("data-wf-slug"),m=s.querySelector(".wf-back-main"),a=s.querySelector(".wf-back-alt"),b=s.querySelector(".wf-brand");
+var f;try{f=document.referrer?new URL(document.referrer):null}catch(e){f=null}
+var de=false,en=false;if(f&&f.origin===location.origin){var p=f.pathname.replace(/\/$/,"");de=p===slug||/^\/workshops(\/[^\/.]+)?$/.test(p);en=/^\/en(\/|$)/.test(p)}
+try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getItem("wf-lang")==="de")de=true;if(de)sessionStorage.setItem("wf-lang","de")}catch(e){}
+if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
+m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
+(function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
+u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
+</script>
+</body>
 </html>

@@ -16,6 +16,14 @@ const ZIP: WorkshopMaterial = {
   description: "Everything in one archive.",
 };
 
+const CSV: WorkshopMaterial = {
+  label: "Dataset",
+  href: "/workshops/example/data/demand-weekly.csv",
+  kind: "csv",
+  language: "en",
+  description: "The practice data.",
+};
+
 const HTML: WorkshopMaterial = {
   label: "Slides",
   href: "/workshops/example/slides.html",
@@ -48,13 +56,25 @@ describe("<WorkshopMaterialLink>", () => {
     const link = screen.getByRole("link", { name: "Kit" });
     expect(link).toHaveAttribute("href", ZIP.href);
     expect(link).toHaveAttribute("hreflang", "en");
-    expect(link).toHaveAttribute("download", "ki-prognosen-einschaetzen-kit.zip");
+    // Bare attribute: the browser keeps the published file name (for example northwind-analyst-kit.zip).
+    expect(link).toHaveAttribute("download", "");
     expect(link).not.toHaveAttribute("target");
     expect(link).not.toHaveAttribute("rel");
     expect(link).toHaveClass("material-row");
   });
 
-  it("opens same-origin HTML material in a new tab with noopener, keeping the referrer for the locale-aware back link", () => {
+  it("downloads CSV material under its published file name", () => {
+    render(
+      <WorkshopMaterialLink workshopSlug="ki-prognosen-einschaetzen" material={CSV}>
+        Dataset
+      </WorkshopMaterialLink>,
+    );
+    const link = screen.getByRole("link", { name: "Dataset" });
+    expect(link).toHaveAttribute("download", "");
+    expect(link).not.toHaveAttribute("target");
+  });
+
+  it("opens same-origin HTML material in the same tab, so the page's own back link returns here", () => {
     render(
       <WorkshopMaterialLink
         workshopSlug="ki-prognosen-einschaetzen"
@@ -64,8 +84,8 @@ describe("<WorkshopMaterialLink>", () => {
       </WorkshopMaterialLink>,
     );
     const link = screen.getByRole("link", { name: "Slides" });
-    expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noopener");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
     expect(link).toHaveAttribute("hreflang", "de");
     expect(link).not.toHaveAttribute("download");
   });
@@ -73,6 +93,7 @@ describe("<WorkshopMaterialLink>", () => {
   it.each([
     [ZIP, "zip"],
     [HTML, "html"],
+    [CSV, "csv"],
   ] as const)(
     "counts a click with only the workshop slug and the %s kind",
     (material, kind) => {
@@ -104,6 +125,7 @@ describe("<WorkshopMaterialLink>", () => {
     preventNavigation(link);
     fireEvent.click(link);
     expect(trackMock).not.toHaveBeenCalled();
-    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("download");
   });
 });

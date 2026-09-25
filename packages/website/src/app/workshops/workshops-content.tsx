@@ -11,12 +11,17 @@ interface Props {
   readonly locale: Locale;
 }
 
-const pad = (value: number) => String(value).padStart(2, "0");
-
 const WORKSHOP_WASHES = [
   "bg-brand-sky/50",
   "bg-brand-pink/50",
   "bg-brand-peach/55",
+] as const;
+
+// Catalogue index bars in the hero aside, one per workshop, widest first.
+const INDEX_BARS = [
+  "w-full bg-brand-pink/70",
+  "w-[86%] bg-brand-sky/70",
+  "w-[68%] bg-brand-peach/75",
 ] as const;
 
 // Offset sheets behind each card. All three stay in the light half of the
@@ -68,7 +73,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
 
           <aside
             className="relative min-w-0 pb-3 pr-3 lg:col-span-4 lg:-rotate-1"
-            aria-label={copy.available}
+            aria-label={copy.catalogueIndex}
           >
             <span
               className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-acid/75"
@@ -77,33 +82,31 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             <div className="relative bg-paper p-4 shadow-card ring-1 ring-foreground/30 sm:p-6">
               <div className="flex items-baseline justify-between gap-4 border-b border-foreground pb-4">
                 <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-                  {copy.available}
+                  {copy.catalogueIndex}
                 </span>
                 <strong className="text-3xl font-bold leading-none tracking-[-0.07em] text-foreground sm:text-4xl">
                   {String(workshops.length).padStart(2, "0")}
                 </strong>
               </div>
-              {/* Decorative step bars: hidden on phones, where the 124px they
-                  cost buys nothing the count above does not already say. */}
-              <div className="mt-5 hidden space-y-2 sm:block" aria-hidden="true">
-                {["01", "02", "03"].map((step, index) => (
-                  <span
-                    key={step}
-                    className={`flex h-9 items-center px-3 font-mono text-xs font-bold ${
-                      index === 0
-                        ? "w-full bg-brand-pink/70"
-                        : index === 1
-                          ? "w-[86%] bg-brand-sky/70"
-                          : "w-[68%] bg-brand-peach/75"
-                    }`}
-                  >
-                    {step}
-                  </span>
-                ))}
-              </div>
-              <p className="mt-3 text-sm font-semibold text-foreground sm:mt-5">
-                {copy.proofOutput}
-              </p>
+              {/* Jump links to each card: hidden on phones, where the cards
+                  follow directly and the count above already says enough. */}
+              {workshops.length > 0 ? (
+                <ol className="mt-5 hidden space-y-2 sm:block">
+                  {workshops.map((workshop, index) => (
+                    <li key={workshop.slug}>
+                      <a
+                        href={`#workshop-${workshop.slug}`}
+                        className={`flex min-h-11 items-center gap-3 px-3 font-mono text-xs font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange ${INDEX_BARS[index % INDEX_BARS.length]}`}
+                      >
+                        <span>{workshop.number}</span>
+                        <span className="font-sans text-sm">
+                          {workshop.topic}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </div>
           </aside>
         </div>
@@ -162,25 +165,28 @@ function WorkshopRow({
   readonly position: number;
 }) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
+  const headingId = `workshop-${workshop.slug}-heading`;
 
   return (
     <article
+      id={`workshop-${workshop.slug}`}
       data-testid="workshop-row"
-      className="group relative isolate grid min-w-0 bg-paper shadow-card ring-1 ring-foreground/20 md:grid-cols-[minmax(18rem,0.88fr)_minmax(0,1.12fr)]"
+      className="group relative isolate grid min-w-0 scroll-mt-24 bg-paper shadow-card ring-1 ring-foreground/20 transition-transform duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none md:grid-cols-[minmax(18rem,0.88fr)_minmax(0,1.12fr)]"
+      aria-labelledby={headingId}
       data-decision-card
     >
       <span
-        className={`absolute inset-0 -z-10 translate-x-2 translate-y-2 ${WORKSHOP_SHEETS[(position - 1) % WORKSHOP_SHEETS.length]}`}
+        className={`absolute inset-0 -z-10 translate-x-2 translate-y-2 transition-transform duration-200 group-hover:translate-x-3 group-hover:translate-y-3 motion-reduce:transition-none ${WORKSHOP_SHEETS[(position - 1) % WORKSHOP_SHEETS.length]}`}
         aria-hidden="true"
       />
 
       <div
-        className={`relative min-w-0 overflow-hidden border-b border-foreground/20 p-4 md:border-b-0 md:border-r sm:p-6 ${
+        className={`relative min-w-0 overflow-hidden border-b border-foreground/20 p-4 md:flex md:flex-col md:justify-center md:border-b-0 md:border-r sm:p-6 ${
           position % 2 === 0 ? "md:order-2 md:border-l md:border-r-0" : ""
         } ${WORKSHOP_WASHES[(position - 1) % WORKSHOP_WASHES.length]}`}
       >
         <span className="absolute left-3 top-3 z-10 bg-paper px-2 py-1 font-mono text-xs font-bold text-foreground ring-1 ring-foreground/30">
-          {pad(position)}
+          {workshop.number}
         </span>
         <div className="relative mt-4 bg-paper p-2 shadow-card ring-1 ring-foreground/30 transition-transform duration-300 group-hover:-rotate-1 motion-reduce:transition-none sm:mt-5">
           <Image
@@ -193,32 +199,38 @@ function WorkshopRow({
               ? { loading: "eager" as const, fetchPriority: "high" as const }
               : { loading: "lazy" as const })}
             sizes="(min-width: 1024px) 430px, (min-width: 768px) 42vw, calc(100vw - 64px)"
-            className="h-auto w-full object-cover ring-1 ring-foreground/20"
+            className="aspect-[16/7] h-auto w-full object-cover object-top ring-1 ring-foreground/20 sm:aspect-[16/9]"
           />
         </div>
         <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          {workshop.title}
+          {workshop.format}
         </p>
       </div>
 
-      {/* On a phone the decision comes first: kicker, title, then the link
-          into the workshop, with the summary and facts after it. That is pure
-          `order` on this flex column (the link is the only control here, so
-          focus order still follows the screen), and from md the reviewed
-          reading order returns. */}
+      {/* On a phone the title comes first, then the link into the workshop,
+          with the decision, summary and facts after it. That is pure `order`
+          on this flex column (the link is the only control here, so focus
+          order still follows the screen), and from md the reviewed reading
+          order returns. */}
       <div className="flex min-w-0 flex-col p-4 sm:p-7">
-        <div className="order-first flex items-center gap-3 md:order-none">
-          <span className="h-3 w-3 bg-brand-cobalt" aria-hidden="true" />
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-            {copy.decision}
-          </p>
-        </div>
         <h3
-          data-workshop-decision
-          className="order-first mt-3 max-w-[20ch] text-2xl font-bold leading-[1.02] tracking-[-0.04em] text-foreground sm:mt-4 sm:text-4xl md:order-none"
+          id={headingId}
+          className="order-first max-w-[22ch] text-2xl font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-4xl md:order-none"
         >
-          {workshop.decisionLab.title}
+          <span className="mb-2 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange sm:mb-3">
+            <span className="h-3 w-3 bg-brand-cobalt" aria-hidden="true" />
+            {copy.workshopHeading(workshop.number)}
+            <span className="sr-only">:</span>
+          </span>{" "}
+          {workshop.title}
         </h3>
+
+        <p
+          data-workshop-decision
+          className="mt-4 max-w-2xl text-base font-semibold leading-snug text-foreground sm:text-lg"
+        >
+          {copy.firstDecision(workshop.decisionLab.title)}
+        </p>
 
         <p className="mt-4 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-sm leading-relaxed text-muted-foreground sm:mt-5">
           {workshop.summary}
@@ -259,7 +271,7 @@ function WorkshopRow({
             data-workshop-output
             className="text-base font-semibold leading-snug text-foreground"
           >
-            {copy.proofOutput}
+            {workshop.outcome}
           </p>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

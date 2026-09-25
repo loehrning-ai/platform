@@ -9,6 +9,7 @@ vi.mock("@/lib/i18n/request-locale", () => ({
 }));
 
 import { generateMetadata } from "./page";
+import { getWorkshopBySlug } from "@/lib/workshops";
 
 const props = {
   params: Promise.resolve({ slug: "ki-prognosen-einschaetzen" }),
@@ -40,7 +41,18 @@ describe("workshop detail locale metadata", () => {
       expect(metadata.openGraph).toMatchObject({
         title,
         url: `https://loehrning.ai${canonical}`,
+        images: [
+          {
+            url: "/workshops/ki-prognosen-einschaetzen/card-preview.webp",
+            width: 1024,
+            height: 576,
+            alt: title,
+          },
+        ],
       });
+      const summary = getWorkshopBySlug("ki-prognosen-einschaetzen", locale)!.summary;
+      expect(metadata.description).toBe(summary);
+      expect(metadata.twitter).toMatchObject({ description: summary });
     },
   );
 

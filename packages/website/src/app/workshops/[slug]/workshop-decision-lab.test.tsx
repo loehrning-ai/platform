@@ -27,7 +27,7 @@ describe("<WorkshopDecisionLab>", () => {
       it(`keeps ${locale}/${workshop.slug} inert in server-rendered HTML`, () => {
         const container = document.createElement("div");
         container.innerHTML = renderToStaticMarkup(
-          <WorkshopDecisionLab config={workshop.decisionLab} />,
+          <WorkshopDecisionLab config={workshop.decisionLab} locale={locale} />,
         );
 
         expect(container.querySelector("form")).toHaveAttribute("aria-busy", "true");
@@ -48,10 +48,41 @@ describe("<WorkshopDecisionLab>", () => {
     }
   }
 
+  it("takes its interface copy from the locale prop, not from the config text", () => {
+    const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "en")!;
+    const container = document.createElement("div");
+    container.innerHTML = renderToStaticMarkup(
+      <WorkshopDecisionLab config={workshop.decisionLab} locale="de" />,
+    );
+    expect(container.textContent).toContain(
+      "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist.",
+    );
+    const source = readFileSync(
+      resolve(process.cwd(), "src/app/workshops/[slug]/workshop-decision-lab.tsx"),
+      "utf8",
+    );
+    expect(source).not.toContain('=== "Decision feedback"');
+  });
+
+  it("uses one set of lab labels across all three workshops", () => {
+    for (const [locale, labels] of [
+      ["de", { kicker: /^Entscheidung 01 · /, decision: "Deine erste Entscheidung", evidence: "Der stärkste Beleg", submit: "Entscheidung prüfen" }],
+      ["en", { kicker: /^Decision 01 · /, decision: "Your first decision", evidence: "The strongest evidence", submit: "Check decision" }],
+    ] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        const lab = workshop.decisionLab;
+        expect(lab.kicker, workshop.slug).toMatch(labels.kicker);
+        expect(lab.decisionLegend, workshop.slug).toBe(labels.decision);
+        expect(lab.evidenceLegend, workshop.slug).toBe(labels.evidence);
+        expect(lab.submitLabel, workshop.slug).toBe(labels.submit);
+      }
+    }
+  });
+
   it("does not turn the activated submit element into a native reset button", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
-    render(<WorkshopDecisionLab config={workshop.decisionLab} />);
-    const submit = screen.getByRole("button", { name: "Check answer" });
+    render(<WorkshopDecisionLab config={workshop.decisionLab} locale="en" />);
+    const submit = screen.getByRole("button", { name: "Check decision" });
     fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.choices[0].label }));
     fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.evidence[0].label }));
     fireEvent.submit(submit.closest("form")!);
@@ -68,7 +99,7 @@ describe("<WorkshopDecisionLab>", () => {
   it("announces submit-time validation and focuses the first missing choice", async () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
     expect(workshop).toBeDefined();
-    render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
+    render(<WorkshopDecisionLab config={workshop!.decisionLab} locale="de" />);
 
     const submit = screen.getByRole("button", {
       name: "Entscheidung prüfen",
@@ -111,7 +142,7 @@ describe("<WorkshopDecisionLab>", () => {
   it("returns evidence-based feedback through a polite live region and resets cleanly", async () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
     expect(workshop).toBeDefined();
-    render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
+    render(<WorkshopDecisionLab config={workshop!.decisionLab} locale="de" />);
 
     const firstChoice = screen.getByRole("radio", {
       name: /Proportional nach geschätzter Nachfrage/,
@@ -170,7 +201,7 @@ describe("<WorkshopDecisionLab>", () => {
   it("uses the selected evidence to challenge an unsupported English decision", () => {
     const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en");
     expect(workshop).toBeDefined();
-    render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
+    render(<WorkshopDecisionLab config={workshop!.decisionLab} locale="en" />);
 
     fireEvent.click(
       screen.getByRole("radio", {
@@ -199,7 +230,7 @@ describe("<WorkshopDecisionLab>", () => {
     const fetchCall = vi.fn();
     vi.stubGlobal("fetch", fetchCall);
 
-    render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
+    render(<WorkshopDecisionLab config={workshop!.decisionLab} locale="en" />);
     fireEvent.click(
       screen.getByRole("radio", { name: /Hold the budget increase/ }),
     );
@@ -221,7 +252,7 @@ describe("<WorkshopDecisionLab>", () => {
   it("uses flat state changes without authored motion or undersized labels", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "en");
     expect(workshop).toBeDefined();
-    render(<WorkshopDecisionLab config={workshop!.decisionLab} />);
+    render(<WorkshopDecisionLab config={workshop!.decisionLab} locale="en" />);
 
     const choice = screen
       .getByRole("radio", {
@@ -269,9 +300,9 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
         expect(orderDecisionOptions(lab, 0)).toEqual(first);
 
         const server = document.createElement("div");
-        server.innerHTML = renderToStaticMarkup(<WorkshopDecisionLab config={lab} />);
+        server.innerHTML = renderToStaticMarkup(<WorkshopDecisionLab config={lab} locale={locale} />);
         const serverValues = [...server.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
-        const { container, unmount } = render(<WorkshopDecisionLab config={lab} />);
+        const { container, unmount } = render(<WorkshopDecisionLab config={lab} locale={locale} />);
         const clientValues = [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
         expect(clientValues).toEqual(serverValues);
         expect(serverValues).toEqual([...first.choices, ...first.evidence].map(({ id }) => id));
@@ -289,13 +320,13 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
 
   it("reorders the options after a retry", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
-    const { container } = render(<WorkshopDecisionLab config={workshop.decisionLab} />);
+    const { container } = render(<WorkshopDecisionLab config={workshop.decisionLab} locale="en" />);
     const values = () => [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
     const before = values();
     fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.choices[1].label }));
     fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.evidence[1].label }));
-    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
-    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
+    fireEvent.click(screen.getByRole("button", { name: "Decide again" }));
     expect(values()).not.toEqual(before);
     expect(values().slice().sort()).toEqual(before.slice().sort());
   });
@@ -341,11 +372,11 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
   it("makes right and wrong answers distinct by icon, colour and wording", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
     const lab = workshop.decisionLab;
-    const { container } = render(<WorkshopDecisionLab config={lab} />);
+    const { container } = render(<WorkshopDecisionLab config={lab} locale="en" />);
 
     fireEvent.click(screen.getByRole("radio", { name: lab.choices[1].label }));
     fireEvent.click(screen.getByRole("radio", { name: lab.evidence[1].label }));
-    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     let outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "wrong");
     expect(outcome).toHaveClass("border-destructive");
@@ -357,12 +388,12 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     const rightChoice = screen.getByRole("radio", { name: lab.choices[0].label });
     expect(rightChoice).toHaveAccessibleDescription("Correct answer");
     expect(rightChoice.closest("label")).toHaveClass("border-brand-teal");
-    expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Decide again" })).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    fireEvent.click(screen.getByRole("button", { name: "Decide again" }));
     fireEvent.click(screen.getByRole("radio", { name: lab.choices[0].label }));
     fireEvent.click(screen.getByRole("radio", { name: lab.evidence[0].label }));
-    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "correct");
     expect(outcome).toHaveClass("border-brand-teal");
@@ -373,7 +404,7 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
     fireEvent.click(screen.getByRole("radio", { name: lab.choices[0].label }));
     fireEvent.click(screen.getByRole("radio", { name: lab.evidence[2].label }));
-    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "partial");
     expect(outcome).toHaveClass("border-brand-amber");

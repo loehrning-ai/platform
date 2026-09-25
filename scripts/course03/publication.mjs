@@ -14,6 +14,7 @@ export const BUILDER_PAGE_SOURCE = "scripts/course03/builder/page/builder.html";
 export const BUILDER_KIT_SOURCE = "scripts/course03/builder/kit/builder";
 export const GUIDE_SOURCE = "scripts/course03/guide.html";
 export const DEMO_PAGE_SOURCE = "scripts/course03/demo/demo.html";
+export const TYPING_WOFF2_SOURCE = "packages/website/src/fonts/typing";
 
 export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
@@ -51,7 +52,7 @@ export function assetRows(files, portraitRecord) {
       sha256: sha256(bytes),
       owner: isFont ? (name.includes("JetBrains") ? "The JetBrains Mono Project Authors" : "The Inter Project Authors; modified and renamed by loehrning.ai") : "Tim Löhr",
       source: isFont
-        ? (name.includes("JetBrains") ? "Existing platform-inventoried JetBrains Mono variable font" : "Course Typing v2.1 statics, renamed Inter 4.001 derivatives")
+        ? (name.includes("JetBrains") ? "Existing platform-inventoried JetBrains Mono variable font" : name.endsWith(".woff2") ? "Existing platform-inventoried Typing woff2 build, renamed Inter derivative" : "Course Typing v2.1 statics, renamed Inter 4.001 derivatives")
         : name === "card-preview.webp"
           ? "Chromium screenshot of the course cover, resized to 1024 by 576 pixels"
           : "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",

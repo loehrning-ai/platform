@@ -23,7 +23,7 @@ import { check as checkOverrides, isRepositoryAuthored, loadOverrides } from "./
 import { KIT_ASSET_RIGHTS, KIT_README, PUBLICATION } from "./published-text.mjs";
 import {
   assetManifestText, assetRows, BUILDER_KIT_SOURCE, BUILDER_PAGE_SOURCE, bundleManifestText,
-  DEMO_PAGE_SOURCE, GUIDE_SOURCE, listFiles, portraitRecord, WORKSHOP_RELATIVE,
+  DEMO_PAGE_SOURCE, GUIDE_SOURCE, listFiles, portraitRecord, TYPING_WOFF2_SOURCE, WORKSHOP_RELATIVE,
 } from "./publication.mjs";
 
 export function planRefresh(root) {
@@ -39,6 +39,8 @@ export function planRefresh(root) {
     ["guide.html", readFileSync(path.join(root, GUIDE_SOURCE))],
     ["builder.html", readFileSync(path.join(root, BUILDER_PAGE_SOURCE))],
     ["demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE))],
+    // The site's own Typing woff2 builds, used by the three pages above before the course TTF statics.
+    ...["Regular", "Medium", "Bold"].map((weight) => [`assets/fonts/Typing-${weight}.woff2`, readFileSync(path.join(root, TYPING_WOFF2_SOURCE, `Typing-${weight}.woff2`))]),
   ]);
   const builderFiles = listFiles(path.join(root, BUILDER_KIT_SOURCE));
   for (const name of builderFiles) authored.set(`data-readiness-kit/builder/${name}`, readFileSync(path.join(root, BUILDER_KIT_SOURCE, name)));

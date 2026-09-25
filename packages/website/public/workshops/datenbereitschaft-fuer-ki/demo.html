@@ -3,13 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One question, two databases</title>
-<meta name="description" content="Workshop 03, Data readiness for AI: look at the real tables behind the slides. Raw export tables against certified views, captured from PostgreSQL 16.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23b73a15'/%3E%3C/svg%3E">
+<title>Data Readiness for AI · Interactive demo · loehrning.ai</title>
+<meta name="description" content="Workshop 03, Data Readiness for AI: look at the real tables behind the slides. Raw export tables against approved views, captured from PostgreSQL 16.">
+<meta name="theme-color" content="#f3f0e9">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preload" href="./assets/fonts/Typing-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-400.ttf") format("truetype");font-weight:400;font-display:swap}
-@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-500.ttf") format("truetype");font-weight:500;font-display:swap}
-@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-700.ttf") format("truetype");font-weight:700;font-display:swap}
+/* Typing: the site's woff2 builds first; the course TTF statics are only a fallback. */
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Regular.woff2") format("woff2"),url("./assets/fonts/Typing-Static-400.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Medium.woff2") format("woff2"),url("./assets/fonts/Typing-Static-500.ttf") format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Bold.woff2") format("woff2"),url("./assets/fonts/Typing-Static-700.ttf") format("truetype");font-weight:700;font-display:swap}
 @font-face{font-family:"JetBrains Mono";src:url("./assets/fonts/JetBrainsMono-Static-400.woff2") format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"JetBrains Mono";src:url("./assets/fonts/JetBrainsMono-Static-700.woff2") format("woff2");font-weight:700;font-display:swap}
 :root{
@@ -24,11 +27,14 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
 a{color:var(--mennige-deep)}
 :focus-visible{outline:3px solid var(--mennige);outline-offset:2px}
-.wrap{max-width:1320px;margin:0 auto;padding:0 16px}
-@media (min-width:720px){.wrap{padding:0 32px}}main.wrap{padding-top:28px;padding-bottom:8px}
+.wrap{max-width:var(--wf-max);margin:0 auto;padding:0 var(--wf-gutter)}
+main.wrap{padding-top:28px;padding-bottom:8px}
 header.top{padding:40px 0 24px;border-bottom:2px solid var(--ink)}
 .kicker{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin:0 0 12px}
 .kicker b{color:var(--mennige-deep)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mennige);margin:0 0 12px}
+html{scroll-padding-top:64px}
+#main:focus{outline:none}
 h1{font-size:clamp(32px,5vw,56px);line-height:1.05;margin:0 0 12px;font-weight:700;letter-spacing:-.01em}
 .lede{max-width:760px;margin:0 0 24px;color:var(--slate)}
 .qcard{background:var(--papier);border:2px solid var(--ink);padding:18px 20px;display:grid;gap:10px;max-width:900px}
@@ -82,8 +88,10 @@ pre.sql{margin:0;background:var(--ink);color:var(--paper);padding:14px;font-fami
 pre.sql:focus-visible{outline-offset:2px}
 .sqlnote{font-size:14px;color:var(--slate);margin:8px 0 0}
 .act{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-.btn{border:2px solid var(--ink);background:var(--mennige);color:#fff;padding:8px 16px;font-weight:700;min-height:44px;box-shadow:3px 3px 0 var(--ink)}
+.btn{border:2px solid var(--ink);background:var(--ink);color:#fff;padding:8px 16px;font-weight:700;min-height:48px;box-shadow:3px 3px 0 var(--ink)}
 .btn:hover{background:var(--mennige-deep)}
+#run-both{background:var(--mennige)}
+#run-both:hover{background:var(--mennige-deep)}
 .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .btn.sec{background:var(--paper);color:var(--ink)}
 .btn.sec:hover{background:var(--beton)}
@@ -124,9 +132,7 @@ ol.diff b{display:block}
 .rule{margin:14px 0 0;font-weight:700;font-size:18px}
 footer.prov{margin:32px 0 0;border-top:2px solid var(--ink);padding:18px 0 40px;font-size:14px;color:var(--slate)}
 footer.prov p{margin:0 0 8px;max-width:900px}
-.back{display:inline-block;margin-top:6px;font-weight:700}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){.reveal{animation:none}.btn:active{transform:none}}
 
 :root{--ease-stamp:cubic-bezier(0.16,1,0.3,1);--ease-io:cubic-bezier(0.65,0,0.35,1)}
 .route{display:flex;align-items:center;gap:0;margin:14px 0 4px;font-family:var(--mono);font-size:13px}
@@ -163,11 +169,10 @@ pre.sql.typing{border-right:3px solid var(--mennige)}
 html.js .fx{opacity:0;transform:translateY(16px);transition:opacity .32s var(--ease-out),transform .32s var(--ease-out)}
 html.js .fx.in{opacity:1;transform:none}
 .runall{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 0}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}html.js .fx{opacity:1;transform:none}.route .pkt{display:none}}
 
 /* ---- dv-: visual overhaul (duel hero, bars, row reveal, diff) ---- */
 header.top{padding:48px 0 36px;background:linear-gradient(var(--paper),var(--paper)) padding-box;position:relative}
-h1{font-size:clamp(38px,6.4vw,84px);letter-spacing:-.025em;line-height:.98;margin-bottom:18px}
+h1{font-size:var(--wf-h1-hero);letter-spacing:-.025em;line-height:.98;margin-bottom:18px}
 h1 .dv-hl{color:var(--mennige);display:inline-block}
 .qcard{box-shadow:6px 6px 0 var(--ink);padding:20px 24px}
 .qcard .q{font-size:clamp(22px,2.8vw,34px);font-weight:700;line-height:1.2}
@@ -243,7 +248,6 @@ td.dv-right{background:#e3eee8;color:var(--pass);font-weight:700;box-shadow:inse
 .cell{box-shadow:4px 4px 0 var(--ink);transition:transform .3s var(--ease-out)}
 .cell.no .v{color:var(--mennige-deep)}.cell.ok .v{color:var(--pass)}
 @media (max-width:519px){.dv-brow{grid-template-columns:minmax(0,1fr)}.dv-stamp{position:static;display:inline-block;margin:0 0 10px}.dv-side{padding-top:16px}}
-@media (prefers-reduced-motion: reduce){.dv-stamp{transform:rotate(-6deg)}}
 
 /* ---- semantic section (.sx-) ---- */
 .sx-root{--sx-paper:#f3f0e9;--sx-papier:#f2f1ee;--sx-beton:#e5e4e2;--sx-leinen:#d4cec5;--sx-ink:#121212;--sx-slate:#4f4640;--sx-rust:#b73a15;--sx-rust-d:#97300f;--sx-pass:#205b46;--sx-ease:cubic-bezier(0.16,1,0.3,1);--sx-mono:"JetBrains Mono","Typing",ui-monospace,monospace;
@@ -352,25 +356,20 @@ td.dv-right{background:#e3eee8;color:var(--pass);font-weight:700;box-shadow:inse
   .sx-long{display:none}
   .sx-pos{margin-left:0}
 }
-@media (prefers-reduced-motion:reduce){
-  .sx-root *,.sx-root *::after{transition:none!important;animation:none!important}
-  .sx-l{opacity:1;transform:none}
-}
 /* ---- guided tour (.tr-) ---- */
 #tr-bar{position:sticky;top:0;z-index:60;background:var(--paper,#f3f0e9);border-bottom:2px solid var(--ink,#121212);font-family:var(--sans,system-ui,sans-serif)}
 #tr-bar .tr-prog{position:absolute;left:0;right:0;bottom:-2px;height:3px;background:var(--mennige,#b73a15);transform-origin:0 50%;transform:scaleX(0);will-change:transform}
-.tr-in{max-width:1320px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:14px}
-@media (min-width:720px){.tr-in{padding:8px 32px}}
+.tr-in{max-width:var(--wf-max);margin:0 auto;padding:8px var(--wf-gutter);display:flex;align-items:center;gap:12px}
 .tr-rail{display:flex;gap:6px;list-style:none;margin:0;padding:2px 2px 4px;overflow-x:auto;flex:1 1 auto;min-width:0;scrollbar-width:thin}
 .tr-rail li{flex:0 0 auto}
-.tr-chip{font-family:var(--mono,ui-monospace,monospace);font-size:12px;letter-spacing:.03em;border:1.5px solid var(--ink,#121212);background:var(--paper,#f3f0e9);color:var(--ink,#121212);padding:5px 10px;min-height:34px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;transition:background .25s cubic-bezier(0.16,1,0.3,1),color .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)}
+.tr-chip{font-family:var(--mono,ui-monospace,monospace);font-size:12px;letter-spacing:.03em;border:1.5px solid var(--ink,#121212);background:var(--paper,#f3f0e9);color:var(--ink,#121212);padding:5px 8px;min-height:44px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;transition:background .25s cubic-bezier(0.16,1,0.3,1),color .25s cubic-bezier(0.16,1,0.3,1),transform .25s cubic-bezier(0.16,1,0.3,1)}
 .tr-chip b{font-weight:700;color:var(--mennige-deep,#97300f)}
 .tr-chip:hover{background:var(--beton,#e5e4e2)}
 .tr-chip[aria-current="step"]{background:var(--ink,#121212);color:#fff;transform:translateY(-1px)}
 .tr-chip[aria-current="step"] b{color:#ffb99f}
 .tr-chip.tr-done:not([aria-current="step"]){border-color:var(--pass,#205b46)}
-.tr-play{flex:0 0 auto;border:2px solid var(--ink,#121212);background:var(--mennige,#b73a15);color:#fff;font-family:var(--sans,system-ui,sans-serif);font-weight:700;font-size:16px;padding:8px 16px;min-height:44px;box-shadow:4px 4px 0 var(--ink,#121212);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .16s cubic-bezier(0.16,1,0.3,1),box-shadow .16s cubic-bezier(0.16,1,0.3,1),background .2s}
-.tr-play:hover{background:var(--mennige-deep,#97300f);transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink,#121212)}
+.tr-play{flex:0 0 auto;border:2px solid var(--ink,#121212);background:var(--ink,#121212);color:#fff;font-family:var(--sans,system-ui,sans-serif);font-weight:700;font-size:16px;padding:8px 16px;min-height:44px;box-shadow:3px 3px 0 var(--ink,#121212);cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:transform .16s cubic-bezier(0.16,1,0.3,1),box-shadow .16s cubic-bezier(0.16,1,0.3,1),background .2s}
+.tr-play:hover{background:var(--mennige-deep,#97300f);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink,#121212)}
 .tr-play:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink,#121212)}
 .tr-play .tr-tri{width:0;height:0;border-left:10px solid #fff;border-top:6px solid transparent;border-bottom:6px solid transparent}
 .tr-play[aria-pressed="true"]{background:var(--ink,#121212)}
@@ -388,7 +387,7 @@ td.dv-right{background:#e3eee8;color:var(--pass);font-weight:700;box-shadow:inse
 .tr-b{border:2px solid var(--ink,#121212);background:var(--paper,#f3f0e9);color:var(--ink,#121212);font-weight:700;font-family:var(--sans,system-ui,sans-serif);font-size:15px;padding:6px 12px;min-height:40px;box-shadow:3px 3px 0 var(--ink,#121212);cursor:pointer;transition:transform .16s cubic-bezier(0.16,1,0.3,1),box-shadow .16s cubic-bezier(0.16,1,0.3,1)}
 .tr-b:hover{background:var(--beton,#e5e4e2)}
 .tr-b:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink,#121212)}
-.tr-b.tr-pri{background:var(--mennige,#b73a15);color:#fff}
+.tr-b.tr-pri{background:var(--ink,#121212);color:#fff}
 .tr-b.tr-pri:hover{background:var(--mennige-deep,#97300f)}
 .tr-hint{font-family:var(--mono,ui-monospace,monospace);font-size:12px;color:var(--slate,#4f4640);margin-left:auto}
 .tr-hint kbd{font-family:inherit;border:1px solid var(--slate,#4f4640);padding:0 4px}
@@ -396,19 +395,13 @@ td.dv-right{background:#e3eee8;color:var(--pass);font-weight:700;box-shadow:inse
 @keyframes tr-spot{0%{outline-offset:12px;outline-color:rgba(183,58,21,0)}40%{outline-offset:4px;outline-color:#b73a15}100%{outline-offset:4px}}
 .tr-sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:719px){
-  .tr-in{gap:8px;padding:6px 12px;flex-wrap:nowrap}
+  .tr-in{gap:8px;padding:6px var(--wf-gutter);flex-wrap:nowrap}
   .tr-play{font-size:14px;padding:6px 10px;min-height:40px;box-shadow:3px 3px 0 var(--ink,#121212)}
-  .tr-chip{font-size:11px;padding:4px 8px;min-height:32px}
+  .tr-chip{font-size:11px;padding:4px 8px;min-height:44px}
   .tr-chip .tr-lb{max-width:none}
   .tr-hint{display:none}
   #tr-toast{bottom:10px;padding:12px}
   .tr-cap{font-size:15.5px}
-}
-@media (prefers-reduced-motion:reduce){
-  #tr-bar .tr-prog,.tr-chip,.tr-play,#tr-toast,.tr-b{transition:none}
-  .tr-cap.tr-pop,.tr-spot{animation:none}
-  .tr-play:hover,.tr-play:active,.tr-b:active,.tr-chip[aria-current="step"]{transform:none}
-  .tr-timer{display:none}
 }
 /* integration: one design across page, semantic section and tour */
 .sx-root{--sx-mono:var(--mono);--sx-ease:var(--ease-out)}
@@ -447,7 +440,9 @@ html.js .fx.in .stag li,html.js .stag.fx.in li{opacity:1;transform:none}
 html.js .sx-take.fx{opacity:1;transform:none}
 .diff-note{margin:12px 0 0;font-size:14px;color:var(--slate)}
 .diff-note b{margin-right:6px;color:var(--ink)}
-.tr-rail{scroll-snap-type:x proximity;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.tr-rail{scroll-snap-type:x proximity}
+.tr-railbox{position:relative;flex:1 1 auto;min-width:0;display:flex}
+.tr-railbox::after{content:"";position:absolute;top:0;right:0;bottom:0;width:28px;pointer-events:none;background:linear-gradient(90deg,rgba(243,240,233,0),var(--paper,#f3f0e9) 85%)}
 .tr-rail li{scroll-snap-align:center}
 .tr-focus{outline:3px solid var(--mennige,#b73a15)!important;outline-offset:6px}
 @media (max-width:600px){
@@ -458,21 +453,76 @@ html.js .sx-take.fx{opacity:1;transform:none}
   .tr-timer{margin-bottom:8px}
   .tr-b{min-height:36px;padding:4px 10px;font-size:14px}
 }
-@media (prefers-reduced-motion: reduce){html.js .stag li{opacity:1;transform:none}.dv-bv{animation:none}}
+/* Shared workshop-material strip (wf-): layout tokens, skip link, top strip, footer. Keep this block byte-identical in every workshop. */
+:root{--wf-max:1200px;--wf-gutter:clamp(16px,4vw,40px);--wf-measure:760px;--wf-h1-hero:clamp(44px,6vw,72px);--wf-h1-doc:clamp(34px,4.5vw,50px)}
+.wf-skip{position:absolute;left:8px;top:-60px;z-index:100;background:#121212;color:#fff;padding:12px 16px;font-weight:700}
+.wf-skip:focus{top:8px}
+.wf-strip{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;box-sizing:border-box;
+  max-width:var(--wf-max);margin:0 auto;padding:12px var(--wf-gutter);border-bottom:1px solid #d4cec5;background:#f3f0e9;color:#121212;
+  font-size:15px;line-height:1.3;position:relative;z-index:5}
+.wf-brand{display:inline-flex;align-items:center;min-height:44px}
+.wf-brand img{display:block;width:176px;height:auto}
+.wf-back{display:flex;flex-wrap:wrap;gap:0 12px}
+.wf-back a,.wf-mats a{display:inline-flex;align-items:center;min-height:44px;color:#121212;text-decoration:none;font-weight:700}
+.wf-back a:hover{color:#97300f;text-decoration:underline;text-underline-offset:3px}
+.wf-back-alt{font-weight:400!important;color:#4f4640!important}
+.wf-mats{flex-basis:calc(100% + 10px);display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;margin:0 -5px;padding:5px;
+  scroll-padding-inline:16px;scroll-snap-type:x proximity}
+.wf-mats[data-more="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
+.wf-mats[data-more="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px);mask-image:linear-gradient(90deg,transparent,#000 48px)}
+.wf-mats[data-more="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}
+.wf-mats a{gap:8px;padding:0 12px;border:1px solid #121212;background:#f2f1ee;white-space:nowrap;font-weight:400;scroll-snap-align:start;
+  transition:background-color .2s cubic-bezier(.4,0,.2,1),color .2s cubic-bezier(.4,0,.2,1)}
+.wf-mats a span{font-family:var(--mono,ui-monospace,"JetBrains Mono",Menlo,monospace);font-size:.78rem;font-weight:700;color:#b73a15;letter-spacing:.06em}
+.wf-mats a:hover{background:#e5e4e2}
+.wf-mats a[aria-current="page"]{background:#121212;color:#fff}
+.wf-mats a[aria-current="page"] span{color:#f3f0e9}
+.wf-strip a:focus-visible,.wf-mats a:focus-visible,.wf-foot a:focus-visible,.wf-skip:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
+.wf-foot{box-sizing:border-box;max-width:var(--wf-max);margin:48px auto 0;padding:20px var(--wf-gutter) 32px;border-top:1px solid #d4cec5;color:#4f4640;font-size:14px;line-height:1.5}
+.wf-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.wf-foot a:hover{color:#97300f}
+@media (max-width:600px){.wf-brand img{width:140px}.wf-strip{font-size:14px}}
+@media (prefers-reduced-motion:reduce){.wf-mats a{transition:none}}
+@media print{.wf-skip,.wf-strip,.wf-foot{display:none!important}}
+/* reduced motion: one block for page, semantic section and tour */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .btn:active{transform:none}
+  html.js .fx{opacity:1;transform:none}.route .pkt{display:none}
+  .dv-stamp{transform:rotate(-6deg)}
+  .sx-l{opacity:1;transform:none}
+  #tr-bar .tr-prog,.tr-chip,.tr-play,#tr-toast,.tr-b{transition:none}
+  .tr-play:hover,.tr-play:active,.tr-b:active,.tr-chip[aria-current="step"]{transform:none}
+  .tr-timer{display:none}
+  html.js .stag li{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
+<a class="wf-skip" href="#main">Skip to content</a>
+<header class="wf-strip" data-wf-slug="datenbereitschaft-fuer-ki">
+  <a class="wf-brand" href="/en/workshops"><img src="./assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
+  <nav class="wf-back" aria-label="Workshop page">
+    <a class="wf-back-main" href="/en/workshops/datenbereitschaft-fuer-ki">← Back to workshop</a>
+    <a class="wf-back-alt" href="/workshops/datenbereitschaft-fuer-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
+  </nav>
+  <nav class="wf-mats" aria-label="Workshop materials">
+    <a href="./slides.html"><span>01</span>Interactive course</a>
+    <a href="./guide.html"><span>02</span>Learner guide</a>
+    <a href="./demo.html" aria-current="page"><span>03</span>Interactive demo</a>
+  </nav>
+</header>
 <nav id="tr-bar" aria-label="Demo chapters">
   <div class="tr-in">
     <button type="button" class="tr-play" id="tr-play" aria-pressed="false"><span class="tr-tri" aria-hidden="true"></span><span class="tr-pl">Play the demo</span></button>
-    <ol class="tr-rail" id="tr-rail">
+    <div class="tr-railbox"><ol class="tr-rail" id="tr-rail">
       <li><button type="button" class="tr-chip" data-ch="1"><b>1</b><span class="tr-lb">The question</span></button></li>
-      <li><button type="button" class="tr-chip" data-ch="2"><b>2</b><span class="tr-lb">Raw vs certified</span></button></li>
+      <li><button type="button" class="tr-chip" data-ch="2"><b>2</b><span class="tr-lb">Raw vs approved</span></button></li>
       <li><button type="button" class="tr-chip" data-ch="3"><b>3</b><span class="tr-lb">Check the numbers</span></button></li>
       <li><button type="button" class="tr-chip" data-ch="4"><b>4</b><span class="tr-lb">Forbidden read</span></button></li>
       <li><button type="button" class="tr-chip" data-ch="5"><b>5</b><span class="tr-lb">How it works</span></button></li>
       <li><button type="button" class="tr-chip" data-ch="6"><b>6</b><span class="tr-lb">What made the difference</span></button></li>
-    </ol>
+    </ol></div>
   </div>
   <span class="tr-prog" aria-hidden="true"></span>
 </nav>
@@ -487,11 +537,12 @@ html.js .sx-take.fx{opacity:1;transform:none}
     <span class="tr-hint">Space/<kbd>&rarr;</kbd> next step · <kbd>Esc</kbd> stop</span>
   </div>
 </div>
+<div id="main" tabindex="-1">
 <header class="top">
   <div class="wrap">
-    <p class="kicker"><b>Workshop 03</b> · Data readiness for AI · Look at the database</p>
+    <p class="eyebrow">Workshop 03 · Data Readiness for AI · Interactive demo · English</p>
     <h1>One question, <span class="dv-hl">two databases.</span></h1>
-    <p class="lede">One question about FOLDLINE's revenue. Asked twice. On raw export tables the AI gets the wrong answer. On certified views it gets the right one. Below you can see why.</p>
+    <p class="lede">One question about FOLDLINE's revenue. Asked twice. On raw export tables the AI gets the wrong answer. On approved views it gets the right one. Below you can see why.</p>
     <div class="hero-grid"><div class="qcard" role="group" aria-labelledby="qtext">
       <p class="kicker" style="margin:0">The question</p>
       <p class="q" id="qtext"></p>
@@ -507,23 +558,23 @@ html.js .sx-take.fx{opacity:1;transform:none}
     <div class="runall"><button type="button" class="btn big" id="run-both">Replay on both</button><button type="button" class="btn sec" id="check-both">Check both against the definition</button><span class="cap" style="margin:0">Same question. Only what the AI can see changes. (Captured results, replayed.)</span></div></div></div>
 
     <div class="dv-duel" id="dv-duel" role="group" aria-label="The two runs side by side">
-      <article class="dv-side dv-bad" data-side="bad" aria-live="polite">
+      <article class="dv-side dv-bad" data-side="bad">
         <p class="dv-run">Run 1</p>
         <h2 class="dv-title">Raw export tables</h2>
         <div class="dv-nums" data-role="nums"><span class="dv-wait">Press "Replay on both".</span></div>
-        <p class="dv-verdict" data-role="verdict"></p>
+        <p class="dv-verdict" data-role="verdict" aria-live="polite"></p>
         <span class="dv-stamp" data-role="stamp" hidden></span>
       </article>
       <div class="dv-vs" aria-hidden="true">vs</div>
-      <article class="dv-side dv-ready" data-side="ready" aria-live="polite">
+      <article class="dv-side dv-ready" data-side="ready">
         <p class="dv-run">Run 2</p>
-        <h2 class="dv-title">Certified views</h2>
+        <h2 class="dv-title">Approved views</h2>
         <div class="dv-nums" data-role="nums"><span class="dv-wait">Press "Replay on both".</span></div>
-        <p class="dv-verdict" data-role="verdict"></p>
+        <p class="dv-verdict" data-role="verdict" aria-live="polite"></p>
         <span class="dv-stamp" data-role="stamp" hidden></span>
       </article>
     </div>
-    <div class="dv-bars" id="dv-bars" hidden><h3>The answers, side by side</h3><div id="dv-bars-body"></div><p class="dv-key"><span><i></i>Run 1: raw export tables</span><span class="ok"><i></i>Run 2: certified views</span><span>Line = zero</span></p></div>
+    <div class="dv-bars" id="dv-bars" hidden><h3>The answers, side by side</h3><div id="dv-bars-body"></div><p class="dv-key"><span><i></i>Run 1: raw export tables</span><span class="ok"><i></i>Run 2: approved views</span><span>Line = zero</span></p></div>
     <p class="dv-note">Replayed from the captured PostgreSQL 16 run. This page does not call an AI or a database.</p>
   </div>
 </header>
@@ -562,9 +613,9 @@ html.js .sx-take.fx{opacity:1;transform:none}
     <section class="fx lane ready" data-lane="ready" aria-labelledby="h-ready">
       <header>
         <span class="tag">Approved lane</span>
-        <h2 id="h-ready">Certified views (what the AI saw on the second run)</h2>
+        <h2 id="h-ready">Approved views (what the AI saw on the second run)</h2>
         <p>Login <code>foldline_ready_reader</code>. Five approved views. Each one has a written definition. Read-only.</p>
-        <div class="route" data-route="ready" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node data">5 certified views + definition</span></div>
+        <div class="route" data-route="ready" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node data">5 approved views + definition</span></div>
       </header>
       <div class="step">
         <h3><span class="n">1</span>Views this login can see</h3>
@@ -573,7 +624,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
       </div>
       <div class="step">
         <h3><span class="n">2</span>The SQL the AI ran</h3>
-        <pre class="sql" tabindex="0" data-role="sql" aria-label="SQL the AI ran on the certified views"></pre>
+        <pre class="sql" tabindex="0" data-role="sql" aria-label="SQL the AI ran on the approved views"></pre>
         <p class="sqlnote" data-role="sqlnote"></p>
         <div class="act"><button type="button" class="btn" data-role="run">Replay the query</button></div>
       </div>
@@ -591,7 +642,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
     <header><h2 id="h-forbid">Try a forbidden read</h2></header>
     <div class="body fb-grid">
       <div class="step fb-left">
-        <p style="margin:0 0 8px;font-size:15px">The AI, logged in as the certified-view reader, asks for customer names and emails from <code>core.accounts</code>. This login has no permission for that table.</p>
+        <p style="margin:0 0 8px;font-size:15px">The AI, logged in as the approved-view reader, asks for customer names and emails from <code>core.accounts</code>. This login has no permission for that table.</p>
         <div class="route" id="forbid-route" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node lock">core (locked)</span></div>
         <pre class="sql" tabindex="0" id="forbid-sql" aria-label="Forbidden SQL"></pre>
         <div class="act"><button type="button" class="btn sec" id="forbid-run">Replay the forbidden read</button></div>
@@ -621,7 +672,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
   <section class="sx-root" id="sx-root" aria-labelledby="sx-h">
   <p class="sx-kick"><b>Behind the answer</b></p>
   <h2 id="sx-h">How the AI finds the right answer</h2>
-  <p class="sx-lede">Four layers. The Skill guides. The semantic layer defines. The certified view serves. The grant enforces. Step through them.</p>
+  <p class="sx-lede">Four layers. The Skill guides. The semantic layer defines. The approved view serves. The grant enforces. Step through them.</p>
   <p class="sx-lede sx-follow">We follow one question through all four layers: logo churn. Pick "Logo churn" above to see the same question fail on raw tables (ERROR 42703).</p>
   <p class="sx-honest">A replay. SQL results were captured from PostgreSQL 16. No live AI or database is called on this page.</p>
 
@@ -641,7 +692,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
         <li><button type="button" class="sx-chip" data-sx-step="0"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Question</b><i>arrives</i></span></button></li>
         <li><button type="button" class="sx-chip sx-gone" data-sx-step="1"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Skill</b><i>guides</i></span></button></li>
         <li><button type="button" class="sx-chip sx-gone" data-sx-step="2"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Semantic<span class="sx-long"> layer</span></b><i>defines</i></span></button></li>
-        <li><button type="button" class="sx-chip sx-gone" data-sx-step="3"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Certified<span class="sx-long"> view</span></b><i>serves</i></span></button></li>
+        <li><button type="button" class="sx-chip sx-gone" data-sx-step="3"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Approved<span class="sx-long"> view</span></b><i>serves</i></span></button></li>
         <li><button type="button" class="sx-chip sx-gone" data-sx-step="4"><span class="sx-dot" aria-hidden="true"></span><span class="sx-card"><b>Grant</b><i>enforces</i></span></button></li>
       </ol>
     </div>
@@ -664,7 +715,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
       </div>
       <!-- step 3 -->
       <div class="sx-panel" data-sx-panel="3" hidden>
-        <div class="sx-say"><span class="sx-verb">Part 4 &middot; serves</span><h3>The certified view hands over one approved number.</h3><p>The AI writes one plain SELECT on the view the definition names. The hard work (base, churn, rate) is already done and tested inside the view.</p><table class="sx-res" aria-label="Captured result"><thead><tr><th>segment</th><th>churned / start</th><th>rate %</th></tr></thead><tbody id="sx-rows"><tr><td>Enterprise</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr><tr><td>Mid-Market</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr><tr><td>SMB</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr></tbody></table></div>
+        <div class="sx-say"><span class="sx-verb">Part 4 &middot; serves</span><h3>The approved view hands over one tested number.</h3><p>The AI writes one plain SELECT on the view the definition names. The hard work (base, churn, rate) is already done and tested inside the view.</p><table class="sx-res" aria-label="Captured result"><thead><tr><th>segment</th><th>churned / start</th><th>rate %</th></tr></thead><tbody id="sx-rows"><tr><td>Enterprise</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr><tr><td>Mid-Market</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr><tr><td>SMB</td><td class="sx-n">4 / 40</td><td class="sx-n">10.0</td></tr></tbody></table></div>
         <div class="sx-code"><span class="sx-fn">captured query, role foldline_ready_reader</span><pre id="sx-readysql"><span class="sx-l">SELECT</span><span class="sx-l">  lcsq.customer_segment,</span><span class="sx-l">  lcsq.starting_accounts,</span><span class="sx-l">  lcsq.churned_accounts,</span><span class="sx-l">  lcsq.logo_churn_rate_pct</span><span class="sx-l sx-k">FROM analytics.logo_churn_by_segment_quarter AS lcsq</span><span class="sx-l">WHERE lcsq.period_start = DATE '2026-04-01'</span><span class="sx-l">  AND lcsq.period_end_exclusive = DATE '2026-07-01'</span><span class="sx-l">ORDER BY lcsq.customer_segment</span><span class="sx-l sx-k sx-ok">-- 3 rows: 4 of 40 = 10.0 % in each segment</span></pre></div>
       </div>
       <!-- step 4 -->
@@ -700,7 +751,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
       <p class="sx-oq" data-sx-off hidden>raw table public.monthly_revenue, labelled ending_mrr</p>
       <div class="sx-big sx-right" data-sx-on><span id="sx-mrr-good">334,675 / 344,450 / 387,015</span> <span class="sx-stamp sx-good">right</span></div>
       <div class="sx-big sx-wrong" data-sx-off hidden><span id="sx-mrr-bad">-19,960 / 9,775 / 42,565</span> <span class="sx-stamp sx-bad">wrong</span></div>
-      <p data-sx-on>Month-end levels from the certified view.</p>
+      <p data-sx-on>Month-end levels from the approved view.</p>
       <p data-sx-off hidden>These are each month's change, not the level. A level cannot be negative here.</p>
     </div>
   </div>
@@ -708,7 +759,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
   <ul class="sx-take stag fx" aria-label="Takeaway">
     <li style="--i:0"><b>Guide</b><span>Instructions tell the AI how to work. Helpful, but not a lock.</span><small>CLAUDE.md, Skill</small></li>
     <li style="--i:1"><b>Define</b><span>The semantic layer writes down what each number means.</span><small>semantic/metric.yml</small></li>
-    <li style="--i:2"><b>Serve</b><span>Certified views hand out one approved, tested number.</span><small>analytics views</small></li>
+    <li style="--i:2"><b>Serve</b><span>Approved views hand out one tested number.</span><small>analytics views</small></li>
     <li style="--i:3"><b>Enforce</b><span>Database grants refuse everything else. ERROR 42501.</span><small>foldline_ready_reader</small></li>
   </ul>
 </section>
@@ -724,7 +775,7 @@ html.js .sx-take.fx{opacity:1;transform:none}
         <li style="--i:3"><b>Enforce</b>The reader login can only select from the approved views. Everything else is denied by PostgreSQL.</li>
       </ol>
       <p class="diff-note"><b>Tests</b> Database checks hold the expected numbers. They test the database and the course rules, not the AI.</p>
-      <p class="rule">Instructions guide. The semantic layer defines. Certified views serve. Grants enforce.</p>
+      <p class="rule">Instructions guide. The semantic layer defines. Approved views serve. Grants enforce.</p>
     </div>
   </section>
 
@@ -732,10 +783,13 @@ html.js .sx-take.fx{opacity:1;transform:none}
     <p><b>Provenance.</b> Tables, rows and results captured from PostgreSQL 16 running the course kit's SQL on 25 September 2026. The page replays them; it does not call an AI or a database.</p>
     <p id="prov-detail"></p>
     <p>All data is synthetic. FOLDLINE is a made-up company with 144 business accounts.</p>
-    <a class="back" href="./slides.html">Back to the slides</a>
   </footer>
 </main>
+</div>
 
+<footer class="wf-foot">
+  <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic FOLDLINE teaching data; invented figures.</p>
+</footer>
 <script type="application/json" id="demo-data">{"capturedOn":"2026-09-25","postgres":"16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)","company":"FOLDLINE (synthetic)","clockUtc":"2026-07-01T09:00:00Z","lanes":{"bad":{"role":"foldline_bad_reader","searchPath":"public","relations":[{"schema":"public","name":"acct_history","kind":"table","comment":null,"columns":[{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"balance","type":"numeric"},{"name":"change","type":"numeric"},{"name":"state","type":"text"}],"rowCount":1388,"rows":[[144,"2026-06-01",5485,5485,"N"],[143,"2026-06-01",1085,1085,"N"],[142,"2026-06-01",2920,2920,"N"],[141,"2026-06-01",5945,5945,"N"],[140,"2026-06-01",1210,1210,"N"],[139,"2026-06-01",3190,3190,"N"],[138,"2026-05-01",4895,4895,"N"],[138,"2026-06-01",4895,0,"A"]]},{"schema":"public","name":"billing_events","kind":"table","comment":null,"columns":[{"name":"event_id","type":"integer"},{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"type","type":"text"},{"name":"status","type":"text"},{"name":"amount","type":"numeric"},{"name":"retry_batch","type":"text"}],"rowCount":334,"rows":[[318,143,"2026-06-28","N","pending",1085,null],[317,140,"2026-06-27","N","pending",1210,null],[316,137,"2026-06-26","N","pending",1340,null],[315,134,"2026-06-25","N","pending",1465,null],[314,144,"2026-06-23","N","posted",5485,null],[313,142,"2026-06-22","N","posted",2920,null],[312,141,"2026-06-21","N","posted",5945,null],[311,139,"2026-06-20","N","posted",3190,null]]},{"schema":"public","name":"customer_master","kind":"table","comment":null,"columns":[{"name":"id","type":"integer"},{"name":"seg","type":"text"},{"name":"country","type":"text"},{"name":"plan","type":"text"},{"name":"status","type":"text"},{"name":"status_dt","type":"date"}],"rowCount":144,"rows":[[144,"Enterprise","GB","Scale","N","2026-06-09"],[143,"SMB","SE","Starter","N","2026-06-02"],[142,"Mid-Market","GB","Growth","N","2026-06-15"],[141,"Enterprise","FR","Scale","N","2026-06-08"],[140,"SMB","DE","Starter","N","2026-06-01"],[139,"Mid-Market","CH","Growth","N","2026-06-14"],[138,"Enterprise","SE","Scale","N","2026-05-07"],[137,"SMB","PL","Starter","N","2026-06-20"]]},{"schema":"public","name":"monthly_revenue","kind":"table","comment":null,"columns":[{"name":"dt","type":"date"},{"name":"segment","type":"text"},{"name":"amount","type":"numeric"}],"rowCount":18,"rows":[["2026-06-01","Enterprise",21230],["2026-06-01","Mid-Market",16785],["2026-06-01","SMB",4550],["2026-05-01","Enterprise",760],["2026-05-01","Mid-Market",5880],["2026-05-01","SMB",3135],["2026-04-01","Enterprise",-13285],["2026-04-01","Mid-Market",-3080]]},{"schema":"public","name":"subscription_export","kind":"table","comment":null,"columns":[{"name":"customer_id","type":"integer"},{"name":"date","type":"date"},{"name":"amount","type":"numeric"}],"rowCount":144,"rows":[[144,"2026-06-01",5485],[143,"2026-06-01",1085],[142,"2026-06-01",2920],[141,"2026-06-01",5945],[140,"2026-06-01",1210],[139,"2026-06-01",3190],[138,"2026-06-01",4895],[137,"2026-06-01",1340]]},{"schema":"public","name":"tickets","kind":"table","comment":null,"columns":[{"name":"id","type":"integer"},{"name":"acct_id","type":"integer"},{"name":"opened","type":"date"},{"name":"closed","type":"date"},{"name":"status","type":"text"},{"name":"prio","type":"integer"}],"rowCount":60,"rows":[[60,13,"2026-04-01",null,"O",1],[59,140,"2026-06-22","2026-06-24","R",3],[58,123,"2026-05-15","2026-05-17","C",2],[57,106,"2026-04-08",null,"P",1],[56,89,"2026-06-01",null,"O",3],[55,72,"2026-05-22","2026-05-24","R",2],[54,55,"2026-04-15","2026-04-17","C",1],[53,38,"2026-06-08",null,"P",3]]},{"schema":"public","name":"usage_log","kind":"table","comment":null,"columns":[{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"events","type":"integer"}],"rowCount":378,"rows":[[144,"2026-06-01",211],[143,"2026-06-01",198],[142,"2026-06-01",185],[141,"2026-06-01",172],[140,"2026-06-01",159],[139,"2026-06-01",146],[138,"2026-05-01",126],[138,"2026-06-01",133]]}]},"ready":{"role":"foldline_ready_reader","searchPath":"analytics","relations":[{"schema":"analytics","name":"account_mrr_monthly","kind":"view","comment":"One row per account and complete month (dense, 2,592 rows). Pseudonymous account_key, never names or contacts. definition 1.0.0. Never treat account_key as anonymous; always use LIMIT.","columns":[{"name":"month_start","type":"date"},{"name":"account_key","type":"text"},{"name":"customer_segment","type":"text"},{"name":"country_code","type":"text"},{"name":"plan_name","type":"text"},{"name":"ending_mrr_eur","type":"numeric(14,2)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":2592,"rows":[["2026-06-01","fl_0001","Mid-Market","AT","Growth",3015.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0002","SMB","CH","Starter",1020.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0003","Enterprise","DE","Scale",3645.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0004","Mid-Market","FR","Growth",1730.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0005","SMB","GB","Starter",935.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0006","Enterprise","PL","Enterprise",7705.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0007","Mid-Market","NL","Growth",1450.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0008","SMB","PL","Starter",1385.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"SELECT m.month_start,\n    a.account_key,\n    a.customer_segment,\n    a.country_code,\n    a.plan_name,\n    m.ending_mrr_eur::numeric(14,2) AS ending_mrr_eur,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM core.account_months m\n     JOIN core.accounts a ON a.account_id = m.account_id\n     CROSS JOIN core.load_status s\n  WHERE m.month_start <= s.complete_through_month;"},{"schema":"analytics","name":"data_status_by_view","kind":"view","comment":"One row per approved data view: load time (UTC), last complete month, quality gate, freshness thresholds, owner and definition version. definition 1.0.0. Read it before answering; never compute age with now().","columns":[{"name":"view_name","type":"text"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"complete_through_month","type":"date"},{"name":"quality_status","type":"text"},{"name":"warn_after_hours","type":"integer"},{"name":"hard_expiry_hours","type":"integer"},{"name":"owner_team","type":"text"},{"name":"definition_version","type":"text"}],"rowCount":4,"rows":[["analytics.mrr_summary_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.logo_churn_by_segment_quarter","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.expansion_mrr_by_country_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.account_mrr_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"]],"definition":"SELECT c.view_name,\n    s.data_loaded_at_utc,\n    s.complete_through_month,\n    s.quality_status,\n    c.warn_after_hours,\n    c.hard_expiry_hours,\n    c.owner_team,\n    c.definition_version\n   FROM core.serving_contracts c\n     CROSS JOIN core.load_status s;"},{"schema":"analytics","name":"expansion_mrr_by_country_monthly","kind":"view","comment":"One row per complete month and country (dense: 18 x 8 = 144 rows, zeros explicit). Expansion MRR in EUR. definition 1.0.0. Never compare with billing_events sums, which contain retry duplicates.","columns":[{"name":"month_start","type":"date"},{"name":"country_code","type":"text"},{"name":"expansion_mrr_eur","type":"numeric(14,2)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":144,"rows":[["2026-06-01","AT",600.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","CH",1015.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","DE",850.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","FR",910.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","GB",360.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","NL",725.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","PL",925.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","SE",910.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"WITH months AS (\n         SELECT DISTINCT account_months.month_start\n           FROM core.account_months\n        ), countries AS (\n         SELECT DISTINCT accounts.country_code\n           FROM core.accounts\n        ), expansion AS (\n         SELECT m.month_start,\n            a.country_code,\n            sum(m.net_new_mrr_eur) AS expansion_mrr_eur\n           FROM core.account_months m\n             JOIN core.accounts a ON a.account_id = m.account_id\n          WHERE m.movement_type = 'expansion'::text\n          GROUP BY m.month_start, a.country_code\n        )\n SELECT mo.month_start,\n    c.country_code,\n    COALESCE(x.expansion_mrr_eur, 0::numeric)::numeric(14,2) AS expansion_mrr_eur,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM months mo\n     CROSS JOIN countries c\n     CROSS JOIN core.load_status s\n     LEFT JOIN expansion x ON x.month_start = mo.month_start AND x.country_code = c.country_code\n  WHERE mo.month_start <= s.complete_through_month;"},{"schema":"analytics","name":"logo_churn_by_segment_quarter","kind":"view","comment":"One row per complete quarter and customer segment. Logo churn rate with its numerator and denominator. definition 1.0.0. Never average the rate across segments or quarters; recompute from the counts.","columns":[{"name":"period_start","type":"date"},{"name":"period_end_exclusive","type":"date"},{"name":"customer_segment","type":"text"},{"name":"starting_accounts","type":"integer"},{"name":"churned_accounts","type":"integer"},{"name":"logo_churn_rate_pct","type":"numeric(5,1)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":15,"rows":[["2026-04-01","2026-07-01","SMB",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01","2026-07-01","Enterprise",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01","2026-07-01","Mid-Market",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","Mid-Market",34,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","SMB",33,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","Enterprise",33,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-10-01","2026-01-01","SMB",25,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-10-01","2026-01-01","Mid-Market",25,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"WITH quarters AS (\n         SELECT DISTINCT date_trunc('quarter'::text, account_months.month_start::timestamp with time zone)::date AS period_start\n           FROM core.account_months\n        ), bounds AS (\n         SELECT quarters.period_start,\n            (quarters.period_start + '3 mons'::interval)::date AS period_end_exclusive,\n            (quarters.period_start - '1 mon'::interval)::date AS base_month,\n            (quarters.period_start + '2 mons'::interval)::date AS last_month\n           FROM quarters\n        )\n SELECT b.period_start,\n    b.period_end_exclusive,\n    a.customer_segment,\n    count(*)::integer AS starting_accounts,\n    count(*) FILTER (WHERE e.ending_mrr_eur = 0::numeric)::integer AS churned_accounts,\n    round(100.0 * count(*) FILTER (WHERE e.ending_mrr_eur = 0::numeric)::numeric / NULLIF(count(*), 0)::numeric, 1)::numeric(5,1) AS logo_churn_rate_pct,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM bounds b\n     CROSS JOIN core.load_status s\n     JOIN core.account_months st ON st.month_start = b.base_month AND st.ending_mrr_eur > 0::numeric\n     JOIN core.account_months e ON e.account_id = st.account_id AND e.month_start = b.last_month\n     JOIN core.accounts a ON a.account_id = st.account_id\n  WHERE b.last_month <= s.complete_through_month\n  GROUP BY b.period_start, b.period_end_exclusive, a.customer_segment, s.complete_through_month, s.data_loaded_at_utc, s.quality_status;"},{"schema":"analytics","name":"mrr_summary_monthly","kind":"view","comment":"One row per complete calendar month, company level, EUR. Ending MRR (a level) beside its movements (changes). definition 1.0.0. Never add ending_mrr_eur across months.","columns":[{"name":"month_start","type":"date"},{"name":"ending_mrr_eur","type":"numeric(14,2)"},{"name":"new_mrr_eur","type":"numeric(14,2)"},{"name":"expansion_mrr_eur","type":"numeric(14,2)"},{"name":"contraction_mrr_eur","type":"numeric(14,2)"},{"name":"churned_mrr_eur","type":"numeric(14,2)"},{"name":"net_new_mrr_eur","type":"numeric(14,2)"},{"name":"active_accounts","type":"integer"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":18,"rows":[["2026-06-01",387015.0,44780.0,6295.0,830.0,7680.0,42565.0,132,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-05-01",344450.0,21900.0,3850.0,2645.0,13330.0,9775.0,123,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01",334675.0,9255.0,2750.0,21845.0,10120.0,-19960.0,123,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-03-01",354635.0,48060.0,12880.0,780.0,0.0,60160.0,120,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-02-01",294475.0,19910.0,2565.0,995.0,0.0,21480.0,108,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01",272995.0,13520.0,1195.0,505.0,0.0,14210.0,104,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-12-01",258785.0,23450.0,1415.0,685.0,0.0,24180.0,100,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-11-01",234605.0,19515.0,2120.0,750.0,0.0,20885.0,92,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"SELECT m.month_start,\n    sum(m.ending_mrr_eur)::numeric(14,2) AS ending_mrr_eur,\n    COALESCE(sum(m.ending_mrr_eur) FILTER (WHERE m.movement_type = 'new'::text), 0::numeric)::numeric(14,2) AS new_mrr_eur,\n    COALESCE(sum(m.net_new_mrr_eur) FILTER (WHERE m.movement_type = 'expansion'::text), 0::numeric)::numeric(14,2) AS expansion_mrr_eur,\n    COALESCE(- sum(m.net_new_mrr_eur) FILTER (WHERE m.movement_type = 'contraction'::text), 0::numeric)::numeric(14,2) AS contraction_mrr_eur,\n    COALESCE(sum(m.starting_mrr_eur) FILTER (WHERE m.movement_type = 'churn'::text), 0::numeric)::numeric(14,2) AS churned_mrr_eur,\n    sum(m.net_new_mrr_eur)::numeric(14,2) AS net_new_mrr_eur,\n    count(*) FILTER (WHERE m.ending_mrr_eur > 0::numeric)::integer AS active_accounts,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM core.account_months m\n     CROSS JOIN core.load_status s\n  WHERE m.month_start <= s.complete_through_month\n  GROUP BY m.month_start, s.complete_through_month, s.data_loaded_at_utc, s.quality_status;"}]}},"cases":[{"id":"G01","question":"Show ending MRR by month for the last complete quarter.","bad":{"sql":"WITH monthly_totals AS (\n    SELECT\n        DATE_TRUNC('month', mr.dt)::date AS revenue_month,\n        SUM(mr.amount) AS mrr\n    FROM monthly_revenue AS mr\n    WHERE mr.dt >= DATE '2026-04-01'\n      AND mr.dt < DATE '2026-07-01'\n    GROUP BY DATE_TRUNC('month', mr.dt)\n)\nSELECT\n    mt.revenue_month,\n    mt.mrr AS ending_mrr\nFROM monthly_totals AS mt\nORDER BY mt.revenue_month","columns":["revenue_month","ending_mrr"],"rows":[["2026-04-01",-19960],["2026-05-01",9775],["2026-06-01",42565]]},"ready":{"sql":"SELECT\n    mrr_summary_monthly.month_start,\n    mrr_summary_monthly.ending_mrr_eur\nFROM mrr_summary_monthly AS mrr_summary_monthly\nWHERE mrr_summary_monthly.month_start >= DATE '2026-04-01'\n  AND mrr_summary_monthly.month_start < DATE '2026-07-01'\nORDER BY mrr_summary_monthly.month_start","columns":["month_start","ending_mrr_eur"],"rows":[["2026-04-01",334675.0],["2026-05-01",344450.0],["2026-06-01",387015.0]]}},{"id":"G02","question":"What was net new MRR in the last complete quarter?","bad":{"sql":"WITH end_of_last_quarter AS (\n    SELECT\n        COALESCE(SUM(monthly_revenue.amount), 0) AS mrr\n    FROM monthly_revenue\n    WHERE monthly_revenue.dt >= DATE '2026-06-01'\n      AND monthly_revenue.dt < DATE '2026-07-01'\n),\nend_of_prior_quarter AS (\n    SELECT\n        COALESCE(SUM(monthly_revenue.amount), 0) AS mrr\n    FROM monthly_revenue\n    WHERE monthly_revenue.dt >= DATE '2026-03-01'\n      AND monthly_revenue.dt < DATE '2026-04-01'\n)\nSELECT\n    end_of_last_quarter.mrr AS end_of_last_quarter_mrr,\n    end_of_prior_quarter.mrr AS end_of_prior_quarter_mrr,\n    end_of_last_quarter.mrr - end_of_prior_quarter.mrr AS net_new_mrr\nFROM end_of_last_quarter\nCROSS JOIN end_of_prior_quarter","columns":["end_of_last_quarter_mrr","end_of_prior_quarter_mrr","net_new_mrr"],"rows":[[42565,60160,-17595]]},"ready":{"sql":"SELECT SUM(mrr_summary_monthly.net_new_mrr_eur)::numeric(14,2) AS net_new_mrr_eur\nFROM analytics.mrr_summary_monthly AS mrr_summary_monthly\nWHERE mrr_summary_monthly.month_start >= DATE '2026-04-01'\n  AND mrr_summary_monthly.month_start < DATE '2026-07-01'","columns":["net_new_mrr_eur"],"rows":[[32380.0]]}},{"id":"G03","question":"What was logo churn rate by customer segment in the last complete quarter?","bad":{"sql":"WITH start_state AS (\n    SELECT DISTINCT ON (ah.id)\n        ah.id,\n        ah.state AS state_start\n    FROM acct_history AS ah\n    WHERE ah.dt <= DATE '2026-03-31'\n    ORDER BY ah.id, ah.dt DESC\n),\nend_state AS (\n    SELECT DISTINCT ON (ah.id)\n        ah.id,\n        ah.state AS state_end\n    FROM acct_history AS ah\n    WHERE ah.dt <= DATE '2026-06-30'\n    ORDER BY ah.id, ah.dt DESC\n),\ncustomer_states AS (\n    SELECT\n        ss.id,\n        ss.state_start,\n        es.state_end\n    FROM start_state AS ss\n    LEFT JOIN end_state AS es\n        ON es.id = ss.id\n),\nchurn_calc AS (\n    SELECT\n        cm.seg AS segment,\n        COUNT(DISTINCT CASE WHEN cs.state_start = 'active' THEN cs.id END) AS active_start_count,\n        COUNT(DISTINCT CASE\n            WHEN cs.state_start = 'active' AND cs.state_end IS DISTINCT FROM 'active'\n            THEN cs.id\n        END) AS churned_count\n    FROM customer_states AS cs\n    INNER JOIN customer_master AS cm\n        ON cm.id = cs.id\n    GROUP BY cm.seg\n)\nSELECT\n    churn_calc.segment,\n    churn_calc.active_start_count,\n    churn_calc.churned_count,\n    ROUND(churn_calc.churned_count * 1.0 / NULLIF(churn_calc.active_start_count, 0), 4) AS logo_churn_rate\nFROM churn_calc\nORDER BY churn_calc.segment","error":{"sqlstate":"42703","message":"column ah.id does not exist"}},"ready":{"sql":"SELECT\n  lcsq.customer_segment,\n  lcsq.starting_accounts,\n  lcsq.churned_accounts,\n  lcsq.logo_churn_rate_pct\nFROM analytics.logo_churn_by_segment_quarter AS lcsq\nWHERE lcsq.period_start = DATE '2026-04-01'\n  AND lcsq.period_end_exclusive = DATE '2026-07-01'\nORDER BY lcsq.customer_segment","columns":["customer_segment","starting_accounts","churned_accounts","logo_churn_rate_pct"],"rows":[["Enterprise",40,4,10.0],["Mid-Market",40,4,10.0],["SMB",40,4,10.0]]}}],"forbidden":{"sql":"SELECT account_name, contact_email FROM core.accounts LIMIT 1","error":{"sqlstate":"42501","message":"permission denied for schema core"}},"checks":{"G01":{"kind":"answer","expected":"2026-04-01 334675, 2026-05-01 344450, 2026-06-01 387015","actual":"2026-04-01 334675, 2026-05-01 344450, 2026-06-01 387015","result":"PASS"},"G02":{"kind":"answer","expected":"32380","actual":"32380","result":"PASS"},"G03":{"kind":"answer","expected":"Enterprise 4/40=10.0, Mid-Market 4/40=10.0, SMB 4/40=10.0","actual":"Enterprise 4/40=10.0, Mid-Market 4/40=10.0, SMB 4/40=10.0","result":"PASS"},"G04":{"kind":"answer","expected":"CH 1990, DE 1780, FR 1780, SE 1780, NL 1655, PL 1640, AT 1565, GB 705","actual":"CH 1990, DE 1780, FR 1780, SE 1780, NL 1655, PL 1640, AT 1565, GB 705","result":"PASS"},"G05":{"kind":"answer","expected":"fl_0006 7705 ... fl_0087 7235 (10 rows)","actual":"fl_0006 7705 ... fl_0087 7235 (10 rows)","result":"PASS"},"D01":{"kind":"deny","expected":"42501 permission denied","actual":"42501 permission denied for schema core","result":"PASS"},"B-W01":{"kind":"deny","expected":"42501 (even in READ WRITE)","actual":"42501 permission denied for schema analytics","result":"PASS"},"B-T01":{"kind":"deny","expected":"42501 (even in READ WRITE)","actual":"42501 permission denied to create temporary tables","result":"PASS"},"B-S01":{"kind":"error","expected":"42P01 with search_path empty","actual":"not tested: SET ROLE skips login settings","result":"SKIP"},"B-X01":{"kind":"access","expected":"no CONNECT on demo_bad","actual":"no CONNECT on demo_bad","result":"PASS"},"B-P01":{"kind":"access","expected":"5 x SELECT, all on analytics","actual":"5 x SELECT, all on analytics","result":"PASS"},"Q01":{"kind":"reconcile","expected":"dups 0/0/0/0, rows 18/15/144/2592","actual":"dups 0/0/0/0, rows 18/15/144/2592","result":"PASS"},"Q02":{"kind":"reconcile","expected":"354635 + 32380 = 387015; breaks 0; parts 0","actual":"354635 + 32380 = 387015; breaks 0; parts 0","result":"PASS"},"Q03":{"kind":"reconcile","expected":"last 2026-06-01, complete 2026-06-01, after 0, passing","actual":"last 2026-06-01, complete 2026-06-01, after 0, passing","result":"PASS"},"Q04":{"kind":"reconcile","expected":"Enterprise 40-4+8=44, Mid-Market 40-4+8=44, SMB 40-4+8=44","actual":"Enterprise 40-4+8=44, Mid-Market 40-4+8=44, SMB 40-4+8=44","result":"PASS"},"Q05":{"kind":"reconcile","expected":"18 months, 0 mismatched","actual":"18 months, 0 mismatched","result":"PASS"},"Q06":{"kind":"reconcile","expected":"5 of 5 views say definition 1.0.0","actual":"5 of 5 views say definition 1.0.0","result":"PASS"},"Q07":{"kind":"lineage","expected":"5 views: upstreams as declared in model.yml","actual":"5 views: upstreams as declared in model.yml","result":"PASS"},"T01":{"kind":"answer","expected":"141 distinct accounts; 378 account-months","actual":"141 distinct accounts; 378 account-months","result":"PASS"},"T02":{"kind":"answer","expected":"2026-04-01 2720.93, 2026-05-01 2800.41, 2026-06-01 2931.93","actual":"2026-04-01 2720.93, 2026-05-01 2800.41, 2026-06-01 2931.93","result":"PASS"},"F00":{"kind":"freshness","expected":"3 h, fresh: answer","actual":"3 h, fresh: answer @ 2026-07-01T09:00","result":"PASS"},"F01":{"kind":"freshness","expected":"60 h, stale_disclosed: answer with warning","actual":"60 h, stale_disclosed: answer with warning @ 2026-07-03T18:00","result":"PASS"},"_summary":"DB CHECKS 21 of 21 PASS. 1 SKIP. 0 FAIL."},"definitions":{"ending_mrr":"  - name: ending_mrr\n    label: Ending MRR\n    description: >-\n      Monthly recurring revenue active at the last instant of a complete calendar month,\n      in EUR, one row per month. Never add it across months.\n    type: snapshot\n    relation: analytics.mrr_summary_monthly\n    expression: ending_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, return each complete month-end (three rows). If the user needs ONE\n      number, return the last month-end of the period and say so. Never sum or average\n      month-ends unless the question explicitly asks for an average balance.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: semi-additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: none\n      time_rollup: last_value\n    unit: EUR\n    precision: 0\n    population: >-\n      All 144 FOLDLINE business accounts; an account contributes its MRR at month end,\n      or 0 if it has not started or has churned.\n    inclusions:\n      - Recurring subscription fees active at month end.\n    exclusions:\n      - Setup fees\n      - Usage charges\n      - Taxes\n      - Subscriptions whose service ended before month end\n    synonyms: [month-end mrr, closing mrr, mrr balance at month end]\n    ambiguous_terms: [mrr, revenue]\n    reconciliation: >-\n      ending_mrr(previous month) + net_new_mrr(month) = ending_mrr(month).\n      Q2 2026: 354,635 + 32,380 = 387,015.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G01, F00, F01]\n    limitations:\n      - Not revenue, cash collected, ARR or profit.\n      - Never sum ending MRR across months.\n    expected_q2_2026:\n      \"2026-04-01\": 334675\n      \"2026-05-01\": 344450\n      \"2026-06-01\": 387015","net_new_mrr":"  - name: net_new_mrr\n    label: Net new MRR\n    description: >-\n      Change in MRR during a complete calendar month, in EUR: new + expansion\n      - contraction - churned. One row per month. Never read it as a balance.\n    type: movement\n    relation: analytics.mrr_summary_monthly\n    expression: net_new_mrr_eur\n    formula: new_mrr_eur + expansion_mrr_eur - contraction_mrr_eur - churned_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, add the three complete monthly movements. The result equals\n      ending MRR at the end of the quarter minus ending MRR at the end of the previous\n      quarter. Partial months are never added.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: sum\n      time_rollup: sum\n    unit: EUR\n    precision: 0\n    sign_convention: >-\n      Negative means MRR shrank during the month. April 2026 is -19,960.\n    synonyms: [net mrr change, mrr movement net, net new mrr]\n    ambiguous_terms: [mrr, mrr growth, revenue]\n    reconciliation: >-\n      sum(net_new_mrr over Q2 2026) = ending_mrr(2026-06) - ending_mrr(2026-03)\n      = 387,015 - 354,635 = 32,380.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G02]\n    limitations:\n      - A monthly change, not a balance. Not revenue, cash or profit.\n    expected_q2_2026:\n      \"2026-04-01\": -19960\n      \"2026-05-01\": 9775\n      \"2026-06-01\": 42565\n      quarter_total: 32380","logo_churn_rate":"  - name: logo_churn_rate\n    label: Logo churn rate\n    description: >-\n      Share of the accounts active at the start of a quarter that were no longer\n      active at its end, in percent (0-100), one row per customer segment and\n      quarter. Never average segment rates; recompute from the counts.\n    type: ratio\n    relation: analytics.logo_churn_by_segment_quarter\n    numerator: churned_accounts\n    denominator: starting_accounts\n    expression: round(100.0 * churned_accounts / nullif(starting_accounts, 0), 1)\n    result_grain: one row per customer_segment per quarter\n    valid_dimensions: [period_start, period_end_exclusive, customer_segment]\n    period_rule: >-\n      Quarters only, as half-open ranges [period_start, period_end_exclusive). A rate\n      for a longer period is recomputed from that period's own base, never built by\n      averaging or adding quarterly rates.\n    completeness: period_end_exclusive <= complete_through_month + 1 month\n    population: >-\n      Accounts active at the end of the month before period_start. Accounts that\n      joined during the quarter are NOT in the base, even if they churn.\n    zero_denominator: \"null\"\n    additivity:\n      class: non-additive\n      across_segments: recompute_from_components\n      across_time: recompute_from_components\n      time_rollup: recompute_from_components\n    unit: percent\n    scale: 0-100\n    precision: 1\n    synonyms: [customer churn rate, account churn rate, logo churn]\n    ambiguous_terms: [churn, churn rate]\n    reconciliation: >-\n      starting_accounts - churned_accounts + new accounts in the quarter\n      = accounts active at the quarter's end. Q2 2026 per segment: 40 - 4 + 8 = 44.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G03, Q04]\n    limitations:\n      - Counts accounts, not money. MRR churn is churned_mrr_eur on analytics.mrr_summary_monthly.\n      - An account that leaves and returns inside one quarter counts by its end state.\n    expected_q2_2026:\n      starting_accounts: 40\n      churned_accounts: 4\n      logo_churn_rate_pct: 10.0"}}</script>
 <script>
 (function(){
@@ -1265,12 +1319,12 @@ html.js .sx-take.fx{opacity:1;transform:none}
     }
     var steps = [
       {ch: 1, el: q(".qcard"), text: "This is the question. FOLDLINE is a made-up company, and every result here is replayed from a captured PostgreSQL 16 run."},
-      {ch: 2, text: "Same question, asked twice. Run 1 reads the raw export tables. Run 2 reads the certified views.", act: function(){ click("#run-both"); }, delay: 450},
+      {ch: 2, text: "Same question, asked twice. Run 1 reads the raw export tables. Run 2 reads the approved views.", act: function(){ click("#run-both"); }, delay: 450},
       {ch: 3, text: "Both answers are now checked against the written definition. Watch which run holds up.", act: function(){ click("#check-both"); }, noScroll: true, wait: 6500},
       {ch: 4, text: "The AI tries to read customer names and emails. Its login has no permission, so PostgreSQL refuses: ERROR 42501.", act: function(){ click("#forbid-run"); }, delay: 700},
       {ch: 5, text: "How it works: CLAUDE.md and the Skill guide the AI. The semantic layer defines the metric.", sx: true},
-      {ch: 5, text: "Next layer: certified views serve the numbers, and database grants enforce who may read what.", sx: true},
-      {ch: 6, text: "Instructions guide. The semantic layer defines. Certified views serve. Database grants enforce.", wait: 6000}
+      {ch: 5, text: "Next layer: approved views serve the numbers, and database grants enforce who may read what.", sx: true},
+      {ch: 6, text: "Instructions guide. The semantic layer defines. Approved views serve. Database grants enforce.", wait: 6000}
     ].filter(function(s){ return !!targets[s.ch]; });
 
     var running = false, paused = false, idx = -1, timer = 0, stepTimer = 0, remain = 0, startedAt = 0;
@@ -1371,6 +1425,19 @@ html.js .sx-take.fx{opacity:1;transform:none}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
+</script>
+<script>
+(function(){var s=document.querySelector(".wf-strip");if(!s)return;
+var slug="/workshops/"+s.getAttribute("data-wf-slug"),m=s.querySelector(".wf-back-main"),a=s.querySelector(".wf-back-alt"),b=s.querySelector(".wf-brand");
+var f;try{f=document.referrer?new URL(document.referrer):null}catch(e){f=null}
+var de=false,en=false;if(f&&f.origin===location.origin){var p=f.pathname.replace(/\/$/,"");de=p===slug||/^\/workshops(\/[^\/.]+)?$/.test(p);en=/^\/en(\/|$)/.test(p)}
+try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getItem("wf-lang")==="de")de=true;if(de)sessionStorage.setItem("wf-lang","de")}catch(e){}
+if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
+m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
+(function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
+u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>
 </body>
 </html>

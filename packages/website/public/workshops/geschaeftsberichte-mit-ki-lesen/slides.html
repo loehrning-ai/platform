@@ -3,15 +3,27 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Using AI to Understand Business Reports and Make Decisions · loehrning.ai</title>
+<title>Reading business reports with AI · Walkthrough · loehrning.ai</title>
 <meta name="description" content="A workshop on using AI to read a monthly business report: writing down what each number means as a reusable Skill, running it on NORTHWIND's September report, and making one decision from the result." />
 <link rel="icon" href="./assets/favicon.svg" />
+<meta name="theme-color" content="#f3f0e9" />
 <link rel="stylesheet" href="./lib/tokens.css" />
 <link rel="stylesheet" href="./lib/deck.css" />
 <link rel="stylesheet" href="./lib/deck-viz.css" />
 <script src="./lib/deck-stage.js"></script>
 <script src="./lib/deck-viz.js"></script>
 <style>
+/* ── wf- · shared workshop-family skip link + deck brand link ─────────── */
+.wf-skip{position:absolute;left:8px;top:-60px;z-index:2147483600;background:#121212;color:#fff;padding:12px 16px;font-weight:700;font-family:var(--sans)}
+.wf-skip:focus{top:8px}
+.wf-skip:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
+@media print{.wf-skip{display:none!important}}
+.chrome__topbar a.brand{pointer-events:auto;color:inherit;text-decoration:none}
+.chrome__topbar a.brand:hover{text-decoration:underline;text-underline-offset:4px}
+.chrome__topbar a.brand:focus-visible{outline:3px solid var(--kupfer-full);outline-offset:4px}
+.cv-kicker{display:flex;align-items:center;gap:22px;margin:0}
+.cv-kicker img{display:block;width:248px;height:auto}
+.cv-kicker span{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#c5b9af;padding-left:22px;border-left:1.5px solid rgba(245,239,232,.3)}
 /* ── cv- · the cover ─────────────────────────────────────────────────── */
 /* the loehrning.ai hero globe, captured as one frame and recoloured for the
    dark cover: paper graticule, Mennige coastlines, bled off the right edge
@@ -130,14 +142,16 @@
 .pc-lead{font-size:15px;line-height:1.45;color:var(--muted);margin:0 0 10px}
 .pc-lead b{color:var(--ink);font-weight:600}
 /* ── clickable report cover ──────────────────────────────────────────── */
-a.report-link{text-decoration:none;position:relative}
+a.report-link{text-decoration:none;position:relative;z-index:2;display:block;flex:0 0 auto;color:inherit}
+a.report-link:focus-visible{outline:4px solid var(--kupfer-full);outline-offset:6px}
+.report-open{position:absolute;right:12px;bottom:12px;z-index:3;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
+a.report-link:hover .report-open,a.report-link:focus-visible .report-open{background:var(--kupfer-full)}
 a.report-link .report-shot{transition:transform .28s var(--ease),box-shadow .28s var(--ease)}
 a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px 14px 0 0 rgba(18,18,18,.16)}
-.pdf-badge{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);z-index:5;display:inline-flex;align-items:center;gap:10px;background:var(--kupfer-full);color:var(--paper);font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px 10px;white-space:nowrap}
-.pdf-badge svg{width:17px;height:17px;display:block}
 </style>
 </head>
 <body>
+<a class="wf-skip" href="#stage">Skip to content</a>
 
 <!-- icon sprite: every glyph below is pulled in by id with a use element -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -161,7 +175,6 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
     <symbol id="i-zip" viewBox="0 0 100 100"><path d="M6 84V20h30l8 11h50v53z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M58 31v8M66 39v8M58 47v8M66 55v8M58 63v8" fill="none" stroke="currentColor" stroke-width="5"/><rect x="56" y="71" width="14" height="13" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-doc" viewBox="0 0 100 100"><path d="M20 8h42l18 18v66H20z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M60 8v20h20M32 46h36M32 60h36M32 74h22" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-csv" viewBox="0 0 100 100"><rect x="10" y="16" width="80" height="68" fill="none" stroke="currentColor" stroke-width="5"/><path d="M10 38h80M10 61h80M40 38v46M65 38v46" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
-    <symbol id="i-pdf" viewBox="0 0 100 100"><path d="M20 8h42l18 18v66H20z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M60 8v20h20" fill="none" stroke="currentColor" stroke-width="5"/><rect x="32" y="48" width="36" height="28" fill="none" stroke="currentColor" stroke-width="5"/><path d="M32 68l10-10 8 8 8-9 10 11" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-skill" viewBox="0 0 100 100"><path d="M14 12h60a12 12 0 0 1 12 12v64H26a12 12 0 0 1-12-12z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M26 76h60M34 32h34M34 46h34M34 60h20" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-dashboard" viewBox="0 0 100 100"><rect x="8" y="14" width="84" height="72" fill="none" stroke="currentColor" stroke-width="5"/><path d="M8 32h84" fill="none" stroke="currentColor" stroke-width="5"/><rect x="20" y="44" width="24" height="30" fill="none" stroke="currentColor" stroke-width="5"/><rect x="56" y="56" width="24" height="18" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-database" viewBox="0 0 100 100"><ellipse cx="50" cy="22" rx="36" ry="12" fill="none" stroke="currentColor" stroke-width="5"/><path d="M14 22v56c0 6.6 16.1 12 36 12s36-5.4 36-12V22" fill="none" stroke="currentColor" stroke-width="5"/><path d="M14 50c0 6.6 16.1 12 36 12s36-5.4 36-12" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
@@ -170,14 +183,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   </g>
 </svg>
 
+<main aria-label="Workshop 02 · Reading business reports with AI">
 <deck-stage width="1920" height="1080" id="stage">
 
 <!-- 01 · COVER -->
 <section class="slide dark" data-label="Cover" data-section="Workshop 02 · the course">
-  <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" /></div>
+  <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" decoding="async" /></div>
   <div class="body center cover-body">
-    <p class="overline" data-rise style="--d:0ms">loehrning.ai · Workshop 02</p>
-    <h1 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.06;margin:30px 0 28px;max-width:1180px">Using AI to Understand Business Reports<br>and Make <span class="kupfer-text">Decisions</span></h1>
+    <p class="cv-kicker" data-rise style="--d:0ms"><img src="./assets/lockup-horizontal-dark.svg" width="248" height="48" alt="loehrning.ai" decoding="async" /><span>Workshop 02</span></p>
+    <h1 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.06;margin:30px 0 28px;max-width:1180px">Using AI to Understand Business Reports and Make <span class="kupfer-text">Decisions</span></h1>
     <p class="body-lg" data-rise style="--d:240ms;max-width:980px;margin-bottom:56px">You get a business report every month. Today you teach Claude what your numbers mean, and let it do the reading for you.</p>
     <div class="cv-learn" data-rise style="--d:360ms">
       <div class="cv-i">
@@ -210,7 +224,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   <div class="body">
     <div class="bio-grid">
       <div data-rise style="--d:200ms">
-        <div class="bio-shot"><img src="./assets/tim-loehr.jpg" alt="Tim Löhr" /></div>
+        <div class="bio-shot"><img src="./assets/tim-loehr.jpg" alt="Tim Löhr" decoding="async" /></div>
         <div class="bio-links">
           <span class="bio-chip">timloehr.me</span>
           <span class="bio-chip">GitHub @Mavengence</span>
@@ -220,15 +234,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
       <div>
         <p class="overline" data-rise style="--d:0ms">Your host</p>
         <h2 class="h2" data-rise style="--d:100ms;font-size:64px;line-height:1;margin:22px 0 10px">Tim Löhr</h2>
-        <p data-rise style="--d:160ms;display:flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--kupfer-full);margin:0 0 20px">Data Engineer at Meta, Warsaw<img src="./assets/meta-platforms-logo.svg" alt="Meta" style="height:19px;width:auto;display:block;opacity:.62;position:relative;top:1px" /></p>
+        <p data-rise style="--d:160ms;display:flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--kupfer-full);margin:0 0 20px">Data Engineer at Meta, Warsaw<img src="./assets/meta-platforms-logo.svg" alt="Meta" decoding="async" style="height:19px;width:auto;display:block;opacity:.62;position:relative;top:1px" /></p>
         <p class="body-lg" data-rise style="--d:240ms;max-width:760px">I build the data pipelines behind reports like the one we work on today. Before Meta I was a data scientist at Red Bull, and at Apple before that. Everything in this session is what I actually do with Claude when a report lands on my desk.</p>
         <div class="bio-cols" data-rise style="--d:360ms">
           <div class="bio-col">
             <h3>Experience</h3>
-            <div class="bio-item"><b>Data Engineer</b><div class="org">Meta</div><div class="meta">Warsaw · 2025 to now</div></div>
-            <div class="bio-item"><b>Data Scientist</b><div class="org">Red Bull</div><div class="meta">2024 to 2025</div></div>
-            <div class="bio-item"><b>Data Scientist</b><div class="org">Apple</div><div class="meta">2022 to 2024</div></div>
-            <div class="bio-item"><b>Working student, data</b><div class="org">Amazon</div><div class="meta">2021</div></div>
+            <div class="bio-item"><b>Data Engineer</b><div class="org">Meta</div><div class="meta">Warsaw</div></div>
+            <div class="bio-item"><b>Data Scientist</b><div class="org">Red Bull</div></div>
+            <div class="bio-item"><b>Data Scientist</b><div class="org">Apple</div></div>
+            <div class="bio-item"><b>Working student, data</b><div class="org">Amazon</div></div>
           </div>
           <div class="bio-col">
             <h3>Education</h3>
@@ -247,7 +261,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   <div class="body">
     <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:80px;flex:1;align-items:center">
       <div>
-        <p class="overline" data-rise style="--d:0ms">The setup for the next hour</p>
+        <p class="overline" data-rise style="--d:0ms">The setup for the next 90 minutes</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 30px">You work at<br><span class="kupfer-text">NORTHWIND.</span></h2>
         <p class="body-lg" data-rise style="--d:260ms;max-width:680px">A family-owned electronics maker in Berlin. About 850 people, roughly €180M a year, eight product lines from speakers to espresso machines. The September numbers just came in, and the leadership meeting wants an answer about one of those lines. You are the analyst they ask.</p>
         <p class="label-mono" data-rise style="--d:420ms;margin-top:32px">NORTHWIND is made up. Every number here is safe to share.</p>
@@ -344,10 +358,10 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
     <div class="kit-head" data-rise style="--d:200ms">
       <svg class="kit-zip" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-zip"/></svg>
       <div>
-        <a class="kit-zipname" href="./northwind-analyst-kit.zip">northwind-analyst-kit.zip</a>
+        <a class="kit-zipname" href="./northwind-analyst-kit.zip" download>northwind-analyst-kit.zip</a>
         <p class="kit-zipsub">Double-click to unzip, put it anywhere you like (Desktop is fine), and open that folder in Claude. Everything below is already inside it.</p>
       </div>
-      <div class="kit-arrow">2.5 MB<br>unzip before you open it</div>
+      <div class="kit-arrow">60 KB<br>unzip before you open it</div>
     </div>
     <div class="kit-grid" data-rise style="--d:320ms">
       <div class="kit-tile">
@@ -356,9 +370,9 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <span class="kit-desc">Open this first. Setup, and all five prompts to copy.</span>
       </div>
       <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-pdf"/></svg>
+        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
         <span class="kit-name">reports/</span>
-        <span class="kit-desc">September's report, 8 pages. As a text file and as a PDF.</span>
+        <span class="kit-desc">September's report, 8 pages, as a text file. Plus August and the template.</span>
       </div>
       <div class="kit-tile">
         <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-database"/></svg>
@@ -463,8 +477,8 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="label-mono" data-rise style="--d:460ms;margin-top:26px">reports/2023-09-monthly-report.md &nbsp;·&nbsp; every page is in this deck</p>
       </div>
       <div class="report-stack" data-rise style="--d:360ms" data-viz="report-cover">
-        <img class="report-shot lead" src="./assets/report/northwind-p01.png" alt="NORTHWIND September report, cover page" />
-        <img class="report-shot back" src="./assets/report/northwind-p02.png" alt="" aria-hidden="true" />
+        <a class="report-link" href="./assets/report/northwind-p01.webp" target="_blank" rel="noopener" aria-label="NORTHWIND September report, cover page, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p01.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND September report, cover page" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
+        <img class="report-shot back" src="./assets/report/northwind-p02.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="" aria-hidden="true" />
         </div>
     </div>
   </div>
@@ -543,7 +557,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="label-mono" data-rise style="--d:480ms;margin-top:18px;font-size:12px">the small E# chips on the report page are its own source references. Every figure names where it came from.</p>
       </div>
       <div class="report-stack" data-rise style="--d:420ms">
-        <img class="report-shot lead" src="./assets/report/northwind-p03.png" alt="NORTHWIND report page 3, the summary numbers" />
+        <a class="report-link" href="./assets/report/northwind-p03.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report page 3, the summary numbers, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p03.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report page 3, the summary numbers" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
       </div>
     </div>
   </div>
@@ -573,7 +587,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="body-md" data-rise style="--d:420ms;margin-top:22px;max-width:800px">Read CRAFT's €450 average price as profit and you would spend more on it. But it is list price, not profit. Writing these definitions down is the skill you take back to your own company.</p>
       </div>
       <div class="report-stack" data-rise style="--d:420ms">
-        <img class="report-shot lead" src="./assets/report/northwind-p04.png" alt="NORTHWIND report page 4, revenue defined as list price contribution" />
+        <a class="report-link" href="./assets/report/northwind-p04.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report page 4, revenue defined as list price contribution, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p04.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report page 4, revenue defined as list price contribution" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
       </div>
     </div>
   </div>
@@ -805,7 +819,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="label-mono" data-rise style="--d:560ms;margin-top:14px">CRAFT defects: 24 in August, 23 in September. A pattern, not noise. &nbsp;·&nbsp; P1 to P4 on the memo is complaint severity, P1 is the worst.</p>
       </div>
       <div class="report-stack" data-rise style="--d:400ms">
-        <img class="report-shot lead" src="./assets/report/northwind-p08.png" alt="NORTHWIND report, the open question: fund CRAFT or fix it first" />
+        <a class="report-link" href="./assets/report/northwind-p08.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report, the open question: fund CRAFT or fix it first, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p08.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report, the open question: fund CRAFT or fix it first" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
       </div>
     </div>
   </div>
@@ -1091,16 +1105,18 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <!-- 21 · IT REPEATS -->
 <section class="slide kupfer" data-label="Next month" data-section="Next month">
   <div class="body center">
-    <p class="overline" data-rise style="--d:0ms">Why this was worth an hour</p>
-    <h1 class="h1" data-rise style="--d:120ms;margin:36px 0 40px">Next month:<br>same Skill, new report.</h1>
+    <p class="overline" data-rise style="--d:0ms">Why this was worth 90 minutes</p>
+    <h2 class="h1" data-rise style="--d:120ms;margin:36px 0 40px">Next month:<br>same Skill, new report.</h2>
     <p class="body-lg" data-rise style="--d:260ms;max-width:1080px">Your reading of the numbers is written down now, so it does not leave with you. Put next month's file in reports/, run the Skill again, rebuild the dashboard, and Claude tells you what changed and whether the CRAFT decision still holds. You keep both cases, the report, the data, the Skill you wrote, the dashboards and every prompt in this deck. Use meta-quarterly/TASK.md on any public company, and your-company-skill/ on your own numbers.</p>
     <div class="chips" data-rise style="--d:440ms;margin-top:52px">
-      <a class="chip" style="border-color:var(--paper);color:var(--paper);text-decoration:none" href="./northwind-analyst-kit.zip"><span class="dot" style="background:var(--paper)"></span>Download the kit (.zip)</a>
+      <a class="chip" style="border-color:var(--paper);color:var(--paper);text-decoration:none" href="./northwind-analyst-kit.zip" download><span class="dot" style="background:var(--paper)"></span>Download the kit (.zip)</a>
+      <a class="chip" style="border-color:var(--paper);color:var(--paper);text-decoration:none" href="/en/workshops/geschaeftsberichte-mit-ki-lesen"><span class="dot" style="background:var(--paper)"></span>loehrning.ai/workshops/geschaeftsberichte-mit-ki-lesen</a>
     </div>
   </div>
 </section>
 
 </deck-stage>
+</main>
 
 <script>
 (function(){
@@ -1113,6 +1129,9 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   function clearT(s){ (timers.get(s) || []).forEach(function(id){ clearTimeout(id); clearInterval(id); }); timers.delete(s); }
 
   // ── stamp chrome + collect slides ─────────────────────────────────────
+  // workshop page in the visitor's language (computed in lib/deck-stage.js)
+  var WS_URL = window.NW_WORKSHOP_URL === '/workshops/geschaeftsberichte-mit-ki-lesen' ? '/workshops/geschaeftsberichte-mit-ki-lesen' : '/en/workshops/geschaeftsberichte-mit-ki-lesen';
+  [].forEach.call(document.querySelectorAll('a[href="/en/workshops/geschaeftsberichte-mit-ki-lesen"]'), function(a){ a.href = WS_URL; });
   var slides = [].slice.call(stage.querySelectorAll('.slide'));
   var total = slides.length;
   slides.forEach(function(s, i){
@@ -1120,9 +1139,12 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
     chrome.className = 'chrome';
     chrome.innerHTML =
       '<div class="chrome__topline"></div>' +
-      '<div class="chrome__topbar"><span class="brand"><span class="markdot"></span>loehrning.ai</span><span>' + (s.getAttribute('data-section') || '') + '</span></div>' +
+      '<div class="chrome__topbar"><a class="brand" href="' + WS_URL + '"><span class="markdot"></span>loehrning.ai</a><span>' + (s.getAttribute('data-section') || '') + '</span></div>' +
       '<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>Using AI to Understand Business Reports and Make Decisions</span><span class="page">' + pad(i+1) + ' / ' + pad(total) + '</span></div>';
     s.insertBefore(chrome, s.firstChild);
+    s.setAttribute('role', 'group');
+    s.setAttribute('aria-roledescription', 'slide');
+    s.setAttribute('aria-label', (i+1) + ' of ' + total + ': ' + (s.getAttribute('data-label') || 'Slide'));
   });
 
   // ── copy-to-clipboard on every prompt card ────────────────────────────
@@ -1147,19 +1169,33 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
     });
   }
 
+  var live = document.createElement('div');
+  live.className = 'sr-live';
+  live.setAttribute('role', 'status');
+  live.setAttribute('aria-live', 'polite');
+  live.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap';
+  document.body.appendChild(live);
+  function announce(msg){ live.textContent = ''; setTimeout(function(){ live.textContent = msg; }, 30); }
+
   document.querySelectorAll('.prompt-card .pc-copy').forEach(function(btn){
     var card = btn.closest('.prompt-card');
     var body = card && card.querySelector('.pc-body');
     if (!body) return;
     var label = btn.textContent;
+    var slideEl = btn.closest('.slide');
+    var leadEl = card.previousElementSibling && card.previousElementSibling.matches('.pc-lead') ? card.previousElementSibling.querySelector('b') : null;
+    var what = leadEl ? leadEl.textContent.trim().replace(/\.$/, '') : (slideEl && slideEl.getAttribute('data-label')) || '';
+    btn.setAttribute('aria-label', 'Copy prompt' + (what ? ': ' + what : ''));
     btn.addEventListener('click', function(ev){
       ev.preventDefault();
       ev.stopPropagation();
       copyText(body.textContent.trim()).then(function(){
         btn.textContent = 'Copied';
         btn.classList.add('done');
+        announce('Prompt copied to the clipboard');
       }, function(){
         btn.textContent = 'Select it';
+        announce('Copy failed. The prompt text is selected; press Control or Command plus C');
         var r = document.createRange();
         r.selectNodeContents(body);
         var sel = window.getSelection();
@@ -1169,6 +1205,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
       setTimeout(function(){ btn.textContent = label; btn.classList.remove('done'); }, 1600);
     });
   });
+
+  // Two prompts on one slide share a slide label; number them so each button reads uniquely.
+  (function(){
+    var seen = {};
+    var btns = [].slice.call(document.querySelectorAll('.prompt-card .pc-copy[aria-label]'));
+    btns.forEach(function(b){ var l = b.getAttribute('aria-label'); seen[l] = (seen[l] || 0) + 1; });
+    var n = {};
+    btns.forEach(function(b){ var l = b.getAttribute('aria-label'); if (seen[l] > 1){ n[l] = (n[l] || 0) + 1; b.setAttribute('aria-label', l + ', ' + n[l] + ' of ' + seen[l]); } });
+  })();
 
   // ── per-slide FX ──────────────────────────────────────────────────────
   function fmt(n, dec){

@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Business Case: Apple Demand Forecasting</title>
+  <title>Forecasting decisions · Business case · loehrning.ai</title>
+  <meta name="description" content="Workshop 01 business case: one device launch in a practice market, three teams, three numbers. How demand planning turns an honest forecast into a rationing decision. Invented figures." />
+  <link rel="stylesheet" href="../lib/tokens.css" />
   <style>
     :root {
-      --ink: #15171a;
-      --muted: #626a75;
-      --line: #d9dee7;
+      --ink: #121212;
+      --muted: #4f4640;
+      --line: #d4cec5;
       --paper: #ffffff;
-      --bg: #f6f8fb;
+      --bg: #f3f0e9;
       --blue: #0b66e4;
       --green: #167a5b;
       --orange: #d56f18;
@@ -18,8 +20,6 @@
       --yellow: #f2c14e;
       --shadow: 0 18px 50px rgba(21, 23, 26, 0.09);
       --radius: 8px;
-      --mono: "SFMono-Regular", "Cascadia Code", "Liberation Mono", Menlo, monospace;
-      --sans: "Aptos", "SF Pro Display", "Segoe UI", system-ui, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -29,8 +29,8 @@
       font-family: var(--sans);
       color: var(--ink);
       background:
-        linear-gradient(90deg, rgba(11,102,228,0.05) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(11,102,228,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(18,18,18,0.04) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(18,18,18,0.035) 1px, transparent 1px),
         var(--bg);
       background-size: 28px 28px;
     }
@@ -74,7 +74,7 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 8px;
-      background: linear-gradient(90deg, var(--red), var(--orange), var(--green), var(--blue));
+      background: #b73a15;
     }
 
     .brand {
@@ -88,22 +88,12 @@
       font-weight: 800;
     }
 
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      border-radius: 7px;
-      background: var(--ink);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-    }
-
-    .brand-mark svg { width: 22px; height: 22px; }
+    .cs-eyebrow { margin: 14px 0 0; font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #97300f; }
+    .cs-disclaimer { margin: 10px 0 0; font-size: 13px; line-height: 1.4; color: var(--ink); font-weight: 400; }
 
     h1 {
       margin: 36px 0 14px;
-      font-size: clamp(42px, 7vw, 82px);
+      font-size: var(--wf-h1-hero);
       line-height: 0.93;
       letter-spacing: 0;
       max-width: 860px;
@@ -1984,29 +1974,44 @@
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--line);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 8px 18px;
 }
 .s09-eval .ev-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 13px;
+  line-height: 1.2;
   font-weight: 700;
   color: var(--ink);
-  padding: 7px 12px;
+  padding: 7px 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: #fbfcff;
-  white-space: nowrap;
+}
+/* the arrow belongs to the step it points at, so a wrap never leaves one dangling */
+.s09-eval .ev-node + .ev-node::before {
+  content: "\2192";
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-weight: 800;
+  color: var(--muted);
 }
 .s09-eval .ev-node-out {
   border-color: var(--blue);
   background: rgba(11, 102, 228, 0.06);
 }
-.s09-eval .ev-arrow {
-  font-family: var(--mono);
-  font-weight: 800;
-  color: var(--muted);
+@media (max-width: 560px) {
+  .s09-eval .ev-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .s09-eval .ev-node:nth-child(3)::before { display: none; }
 }
 .s09-eval .ev-guard {
   margin-top: 12px;
@@ -2197,7 +2202,7 @@
     /* ===================== ONE-PAPER SCROLL JOURNEY ===================== */
     html { scroll-behavior: smooth; }
     body { overflow-x: hidden; }
-    .paper { max-width: 1160px; margin: 0 auto; padding: 34px 26px 160px; }
+    .paper { max-width: var(--wf-max); margin: 0 auto; padding: 34px var(--wf-gutter) 160px; }
 
     /* undo the slide-like viewport blocks: cards flow at natural height */
     .screen { min-height: 0 !important; }
@@ -2218,15 +2223,17 @@
     .read-progress { position: fixed; top: 0; left: 0; right: 0; height: 4px;
       background: rgba(21,23,26,0.06); z-index: 60; }
     .read-progress > span { display: block; height: 100%; width: 0;
-      background: linear-gradient(90deg, var(--red), var(--orange), var(--green), var(--blue)); }
+      background: #b73a15; }
 
     /* scroll-reveal: the story unfolds as you scroll.
        Progressive enhancement: hidden state applies ONLY once JS adds .reveal-on,
        so if JS is off/errors the whole paper still shows. */
-    .paper.reveal-on > .section, .paper.reveal-on > .hero {
-      opacity: 0; transform: translateY(26px);
-      transition: opacity .7s cubic-bezier(.2,.6,.2,1), transform .7s cubic-bezier(.2,.6,.2,1); }
-    .paper.reveal-on > .reveal-in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .paper.reveal-on > .section, .paper.reveal-on > .hero {
+        opacity: 0; transform: translateY(26px);
+        transition: opacity .7s cubic-bezier(.2,.6,.2,1), transform .7s cubic-bezier(.2,.6,.2,1); }
+      .paper.reveal-on > .reveal-in { opacity: 1; transform: none; }
+    }
 
     /* scroll cue under the hero */
     .scroll-cue { text-align: center; margin: 30px 0 0; color: var(--muted);
@@ -2250,21 +2257,39 @@
       .paper > .section, .paper > .hero { opacity: 1; transform: none; transition: none; }
       .scroll-cue .chev { animation: none; }
     }
-    @media (max-width: 700px) { .paper { padding: 24px 16px 120px; } .paper > .section { margin-top: 36px; } }
+    @media (max-width: 700px) { .paper { padding: 24px var(--wf-gutter) 120px; } .paper > .section { margin-top: 36px; } }
 
   </style>
+<meta name="theme-color" content="#f3f0e9" />
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+<link rel="preload" href="../assets/fonts/Typing-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="../lib/wf.css" />
 </head>
 <body>
+<a class="wf-skip" href="#main">Skip to content</a>
+<header class="wf-strip" data-wf-slug="ki-prognosen-einschaetzen">
+  <a class="wf-brand" href="/en/workshops"><img src="../assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
+  <nav class="wf-back" aria-label="Workshop page">
+    <a class="wf-back-main" href="/en/workshops/ki-prognosen-einschaetzen">← Back to workshop</a>
+    <a class="wf-back-alt" href="/workshops/ki-prognosen-einschaetzen" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
+  </nav>
+  <nav class="wf-mats" aria-label="Workshop materials">
+    <a href="../hub.html"><span>01</span>Hub</a>
+    <a href="../hands-on.html"><span>02</span>Hands-on lab</a>
+    <a href="index.html" aria-current="page"><span>03</span>Business case</a>
+    <a href="../field-card.html"><span>04</span>Field card</a>
+    <a href="../homework.html"><span>05</span>Take-home</a>
+  </nav>
+</header>
   <div class="read-progress"><span></span></div>
-  <main class="paper">
+  <main class="paper" id="main" tabindex="-1">
 <header class="hero screen s1-bigpicture">
   <div class="hero-main s1-main">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true">
-        
-      </div>
-      <span>New iPhone launch <span class="sep" aria-hidden="true">|</span> Macedonia</span>
+      <span>Workshop 01 &middot; Forecasting decisions &middot; Business case &middot; English</span>
     </div>
+    <p class="cs-eyebrow">New device launch <span class="sep" aria-hidden="true">|</span> Practice market</p>
+    <p class="cs-disclaimer">Teaching lenses with invented figures; not any company's real system.</p>
     <p class="s1-kicker">System</p>
     <h1>One launch, three numbers.</h1>
     <p class="lede s1-sub">Retail asks, Logistics plans capacity, SDM forecasts demand, and all three collide.</p>
@@ -2458,7 +2483,7 @@
       <h3>Feature calendar</h3>
       <span>weeks around launch</span>
     </div>
-    <svg id="calendarChart" class="chart tall" role="img" aria-label="Feature calendar across eight weeks around the iPhone launch. A quiet blue demand line stays flat before launch, spikes in launch week, then decays with a small holiday bump. Below, three feature lanes grouped into two bands: known-future signals are solid green markers (a launch-phase countdown with post-launch lag, paydays, a Macedonia holiday, a planned promo); not-known signals are open red rings (weather, competitor). A leakage guard reads: use only what is known at forecast time."></svg>
+    <svg id="calendarChart" class="chart tall" role="img" aria-label="Feature calendar across eight weeks around the device launch. A quiet blue demand line stays flat before launch, spikes in launch week, then decays with a small holiday bump. Below, three feature lanes grouped into two bands: known-future signals are solid green markers (a launch-phase countdown with post-launch lag, paydays, a Macedonia holiday, a planned promo); not-known signals are open red rings (weather, competitor). A leakage guard reads: use only what is known at forecast time."></svg>
     <p class="honest-frame">Weekly units, illustrative shape.</p>
     <p class="cal-risk">Competitor moves and weather stay risks, not features, at this horizon.</p>
   </div>
@@ -2525,11 +2550,8 @@
       <svg id="backtestChart" class="chart short" role="img" aria-label="Rolling-origin backtest: the train window grows while the test window slides forward across four folds; the split origin rolls right."></svg>
       <div class="ev-flow" role="list" aria-label="Rolling-origin mechanic">
         <span class="ev-node" role="listitem">Train past</span>
-        <span class="ev-arrow" aria-hidden="true">-&gt;</span>
         <span class="ev-node" role="listitem">Predict forward</span>
-        <span class="ev-arrow" aria-hidden="true">-&gt;</span>
         <span class="ev-node" role="listitem">Slide, refit</span>
-        <span class="ev-arrow" aria-hidden="true">-&gt;</span>
         <span class="ev-node ev-node-out" role="listitem">Average WAPE</span>
       </div>
       <div class="ev-guard"><span class="ev-x" aria-hidden="true">&#10007;</span> Never random k-fold, it leaks the future</div>
@@ -3445,7 +3467,8 @@ function renderMonitor() {
 
       var paper = document.querySelector('.paper');
       var items = document.querySelectorAll('.paper > .section, .paper > .hero');
-      if (paper && 'IntersectionObserver' in window) {
+      var motionOk = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      if (paper && motionOk && 'IntersectionObserver' in window) {
         paper.classList.add('reveal-on');
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (e) {
@@ -3463,5 +3486,21 @@ function renderMonitor() {
     })();
 
   </script>
-<a href="/workshops/ki-prognosen-einschaetzen" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-flex;gap:7px;align-items:center;padding:8px 13px;background:#141210;color:#F3F0E9;text-decoration:none;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;border:1px solid rgba(243,240,233,.25)">&#8592; Workshop-Seite</a></body>
+<footer class="wf-foot">
+  <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>
+</footer>
+<script>
+(function(){var s=document.querySelector(".wf-strip");if(!s)return;
+var slug="/workshops/"+s.getAttribute("data-wf-slug"),m=s.querySelector(".wf-back-main"),a=s.querySelector(".wf-back-alt"),b=s.querySelector(".wf-brand");
+var f;try{f=document.referrer?new URL(document.referrer):null}catch(e){f=null}
+var de=false,en=false;if(f&&f.origin===location.origin){var p=f.pathname.replace(/\/$/,"");de=p===slug||/^\/workshops(\/[^\/.]+)?$/.test(p);en=/^\/en(\/|$)/.test(p)}
+try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getItem("wf-lang")==="de")de=true;if(de)sessionStorage.setItem("wf-lang","de")}catch(e){}
+if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
+m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
+(function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
+u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
+</script>
+</body>
 </html>

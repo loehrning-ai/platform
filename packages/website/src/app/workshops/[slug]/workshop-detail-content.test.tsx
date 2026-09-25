@@ -6,7 +6,7 @@ import { getWorkshopBySlug } from "@/lib/workshops";
 import { WorkshopDetailContent } from "./workshop-detail-content";
 
 describe("<WorkshopDetailContent>", () => {
-  it("puts the German decision before materials and moves long context into native references", () => {
+  it("leads with the summary and facts, puts the German decision before materials and moves long context into native references", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
     expect(workshop).toBeDefined();
     const { container } = render(
@@ -16,11 +16,25 @@ describe("<WorkshopDetailContent>", () => {
     expect(
       screen.getByRole("heading", { name: workshop!.title }),
     ).toBeInTheDocument();
-    expect(screen.queryByText(workshop!.summary)).toBeNull();
-    expect(screen.queryByText(workshop!.description)).toBeNull();
+    const lead = screen.getByText(workshop!.summary);
+    expect(lead.closest("header")).not.toBeNull();
+    expect(screen.getByText(workshop!.eyebrow)).toHaveTextContent(
+      "Workshop 01 · Prognosen",
+    );
+    expect(screen.getByText(workshop!.description).closest("details")).toBe(
+      container.querySelector("details"),
+    );
+    const access = screen.getByText(/Kein KI-Zugang nötig.*statisch im Browser/);
+    const facts = container.querySelector("header dl");
+    expect(facts).not.toBeNull();
+    expect(facts).toHaveTextContent("Material:6");
     expect(
-      screen.getByText(/Kein KI-Zugang nötig.*statisch im Browser/),
-    ).toBeInTheDocument();
+      lead.compareDocumentPosition(facts!) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      facts!.compareDocumentPosition(access) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
 
     const lab = screen
       .getByRole("heading", { name: "1.050 Stück. Wer bekommt sie?" })
@@ -36,8 +50,9 @@ describe("<WorkshopDetailContent>", () => {
     ).toBeTruthy();
 
     const references = [...container.querySelectorAll("details")];
-    expect(references).toHaveLength(3);
+    expect(references).toHaveLength(4);
     expect(references.every((detail) => !detail.open)).toBe(true);
+    expect(references[0]).toHaveTextContent(/^Worum es geht/);
     expect(screen.getByText("Für wen")).toBeInTheDocument();
     expect(screen.getByText("Die sechs Schritte")).toBeInTheDocument();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
@@ -60,7 +75,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/^["']use client["']/m);
   });
 
-  it("keeps each material's download or new-tab behaviour", () => {
+  it("opens HTML materials in the same tab and downloads archives", () => {
     const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de");
     expect(workshop).toBeDefined();
     const { container } = render(
@@ -71,13 +86,43 @@ describe("<WorkshopDetailContent>", () => {
       const link = container.querySelector(`a[href="${material.href}"]`);
       expect(link).not.toBeNull();
       if (material.kind === "zip") {
-        expect(link).toHaveAttribute("download", `${workshop!.slug}-kit.zip`);
+        // Bare download attribute: the file keeps its published name.
+        expect(link).toHaveAttribute("download", "");
         expect(link).not.toHaveAttribute("target");
       } else {
-        expect(link).toHaveAttribute("target", "_blank");
-        expect(link).toHaveAttribute("rel", "noopener");
+        expect(link).not.toHaveAttribute("target");
         expect(link).not.toHaveAttribute("download");
       }
+    }
+  });
+
+  it("derives the all-English note from the materials and drops it when one is German", () => {
+    const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de");
+    expect(workshop).toBeDefined();
+    const mixed = {
+      ...workshop!,
+      materials: workshop!.materials.map((material, index) =>
+        index === 0 ? { ...material, language: "de" as const } : material,
+      ),
+    };
+    render(<WorkshopDetailContent workshop={mixed} locale="de" />);
+    expect(screen.getByText("Kostenlos, ohne Anmeldung.")).toBeInTheDocument();
+    expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
+  });
+
+  it("offers the W01 dataset as a CSV download under its published name", () => {
+    for (const locale of ["de", "en"] as const) {
+      const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", locale);
+      expect(workshop).toBeDefined();
+      const { container, unmount } = render(
+        <WorkshopDetailContent workshop={workshop!} locale={locale} />,
+      );
+      const link = container.querySelector(
+        'a[href="/workshops/ki-prognosen-einschaetzen/data/demand-weekly.csv"]',
+      );
+      expect(link).not.toBeNull();
+      expect(link).toHaveAttribute("download", "");
+      unmount();
     }
   });
 
@@ -87,10 +132,14 @@ describe("<WorkshopDetailContent>", () => {
     render(<WorkshopDetailContent workshop={workshop!} locale="de" />);
 
     expect(
-      screen.getByText(
-        "Kostenlos und ohne Anmeldung abrufbar. Die Sprache steht an jedem Material.",
-      ),
+      screen.getByText("Kostenlos, ohne Anmeldung. Alle Materialien auf Englisch."),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Das Material selbst bleibt in der angegebenen Sprache."),
+    ).toBeNull();
+    for (const material of workshop!.materials) {
+      expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
+    }
     expect(screen.getAllByText("Sprache: Englisch")).toHaveLength(
       workshop!.materials.length,
     );
@@ -158,6 +207,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(screen.getAllByText("Language: English")).toHaveLength(
       workshop!.materials.length,
     );
+    expect(screen.getByText("Free, no sign-up.")).toBeInTheDocument();
+    expect(screen.queryByText(/All materials in English/)).toBeNull();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
 });

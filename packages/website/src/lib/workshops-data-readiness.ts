@@ -6,32 +6,35 @@ const base = "/workshops/datenbereitschaft-fuer-ki";
 export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
   de: {
     slug: "datenbereitschaft-fuer-ki",
+    number: "03",
+    topic: "Datenbereitschaft",
     title: "Sind deine Daten bereit für KI?",
-    eyebrow: "Workshop 03 · Daten verstehen und Antworten prüfen",
+    eyebrow: "Workshop 03 · Datenbereitschaft",
     summary:
-      "Eine Frage, zwei Datenstände, zwei Antworten. Du siehst, wie eine KI eine plausible, aber falsche Zahl liefert und was sie repariert. Ohne Code und ohne KI-Konto; in der interaktiven Demo schaust du dir die Daten selbst an.",
+      "Eine Frage, zwei Datenstände, zwei Antworten. Du siehst, wie eine KI eine plausible, aber falsche Zahl liefert und was sie repariert. Ohne Code, ohne KI-Konto.",
     description:
       "Die fiktive Firma FOLDLINE stellt eine einzige Frage: den MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal. Auf sieben exportierten Tabellen liefert die KI plausible, aber falsche Zahlen (−19.960 / 9.775 / 42.565): Sie hat die Veränderungen jedes Monats addiert und damit Veränderung und Bestand verwechselt. Die Reparatur: freigegebene Auswertungssichten, eine schriftliche Kennzahl-Definition (die semantische Schicht), reiner Lesezugriff und Tests. Danach stimmt dieselbe Frage mit der Datenbank überein (334.675 / 344.450 / 387.015). Der Kurs zeigt auch die ehrlichen Grenzen und endet mit deiner eigenen Frage in fünf Feldern. Alle Daten sind synthetisch.",
-    format: "Interaktiver Kurs + Lernbegleiter",
-    duration: "75 Minuten Kurs + 15 Minuten Fragen; interaktive Demo optional 10 Minuten",
+    format: "Interaktiver Kurs",
+    duration: "~90 Minuten",
     accessNote:
-      "Für Kurs und Demo brauchst du kein Konto und keine Installation. Material auf Englisch, Einführung auf Deutsch. Die im Kurs gezeigten Modellantworten wurden im August 2026 aufgezeichnet und sind keine Live-Abfragen.",
+      "Für Kurs und Demo brauchst du kein Konto und keine Installation; Material auf Englisch, Einführung auf Deutsch. Die gezeigten Modellantworten wurden im August 2026 aufgezeichnet und sind keine Live-Abfragen.",
+    outcome: "Fünf-Felder-Vorlage",
     audience: [
       "Einsteiger ohne SQL- oder Programmierkenntnisse",
       "Teams, die KI-Antworten mit Daten prüfen möchten",
       "Moderatoren, die einen konkreten Datenfall erklären wollen",
     ],
     decisionLab: {
-      kicker: "Aufwärmübung · Bestand und Veränderung",
+      kicker: "Entscheidung 01 · Bestand",
       title: "100 Euro plus 20 Euro. Wirklich 120?",
       prompt:
         "Ein Datensatz enthält den Monatsendbestand von 100 Euro und die Veränderung von +20 Euro. Eine KI meldet 120 Euro Monatsendbestand. Was tust du?",
       facts: [
-        "Endbestand 100 Euro",
-        "Veränderung +20 Euro",
-        "KI-Antwort 120 Euro",
+        "Endbestand 100\u00a0€",
+        "Veränderung +20\u00a0€",
+        "KI-Antwort 120\u00a0€",
       ],
-      decisionLegend: "Deine Entscheidung",
+      decisionLegend: "Deine erste Entscheidung",
       evidenceLegend: "Der stärkste Beleg",
       choices: [
         {
@@ -62,11 +65,11 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
       recommendedChoiceId: "check-definition",
       strongestEvidenceId: "included-change",
-      submitLabel: "Antwort prüfen",
-      resetLabel: "Noch einmal versuchen",
+      submitLabel: "Entscheidung prüfen",
+      resetLabel: "Neu entscheiden",
       privacyNote:
-        "Diese Auswahl bleibt auf der Seite und wird weder gespeichert noch gesendet.",
-      resultLabel: "Deine Auswertung",
+        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
+      resultLabel: "Auswertung der Entscheidung",
       feedback: {
         aligned: {
           title: "Die Veränderung sitzt schon im Endbestand.",
@@ -148,7 +151,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "06",
         title: "Optional: die Daten hinter beiden Antworten ansehen",
         description:
-          "In der interaktiven Demo öffnest du die Rohtabellen und die zertifizierten Sichten, führst dieselbe Frage auf beiden Seiten aus und prüfst das Ergebnis gegen die Definition. Die Tabellen und Ergebnisse stammen aus einem echten PostgreSQL-Lauf des Kurs-Kits.",
+          "In der interaktiven Demo öffnest du die Rohtabellen und die freigegebenen Sichten, führst dieselbe Frage auf beiden Seiten aus und prüfst das Ergebnis gegen die Definition. Die Tabellen und Ergebnisse stammen aus einem echten PostgreSQL-Lauf des Kurs-Kits.",
         tool: "Interaktive Demo · etwa 10 Minuten",
       },
     ],
@@ -177,15 +180,15 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: [
       {
-        label: "Kurs öffnen (Englisch)",
+        label: "Kurs · 26 Szenen",
         href: `${base}/slides.html`,
         kind: "html",
         language: "en",
         description:
-          "26 Szenen mit schrittweisen Erklärungen. Pfeiltasten führen weiter; P öffnet die Moderationsansicht. Am besten auf einem großen Bildschirm im Querformat.",
+          "Etwa 75 Minuten Kurs und 15 Minuten Fragen; die Demo ist optional (10 Min.). Pfeiltasten führen weiter, P öffnet die Moderationsansicht. Am besten auf einem großen Bildschirm im Querformat.",
       },
       {
-        label: "Lernbegleiter (Englisch)",
+        label: "Lernbegleiter",
         href: `${base}/guide.html`,
         kind: "html",
         language: "en",
@@ -193,44 +196,47 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "Die Geschichte des Kurses zum Nachlesen: eine Frage, der Fehler, die Reparatur, die Grenzen und deine fünf Felder. Auch für das Smartphone.",
       },
       {
-        label: "Interaktive Demo: Rohtabellen gegen zertifizierte Sichten (Englisch)",
+        label: "Interaktive Demo · 10 Min.",
         href: `${base}/demo.html`,
         kind: "html",
         language: "en",
         description:
-          "10 Minuten, ohne Konto: Sieh dir die Tabellen an, führe dieselbe Frage auf beiden Seiten aus und vergleiche die Antworten mit der Definition.",
+          "Rohtabellen gegen freigegebene Sichten, ohne Konto: Sieh dir die Tabellen an, führe dieselbe Frage auf beiden Seiten aus und vergleiche die Antworten mit der Definition.",
       },
     ],
   },
   en: {
     slug: "datenbereitschaft-fuer-ki",
+    number: "03",
+    topic: "Data readiness",
     title: "Are your data ready for AI?",
-    eyebrow: "Workshop 03 · Understand data and check answers",
+    eyebrow: "Workshop 03 · Data readiness",
     summary:
-      "One question, two data setups, two answers. See how an AI returns a plausible but wrong number, and what fixes it. No code and no AI account; in the interactive demo you look at the data yourself.",
+      "One question, two data setups, two answers. See how an AI returns a plausible but wrong number, and what fixes it. No code, no AI account.",
     description:
       "Fictional company FOLDLINE asks one question: \"Show ending MRR by month for the last complete quarter.\" On seven export tables the AI returns plausible but wrong numbers (-19,960 / 9,775 / 42,565): it added up each month's change, mixing up a level and a change. The fix: approved views, a written metric definition (the semantic layer), read-only access and tests. The same question then matches the database (334,675 / 344,450 / 387,015). The course also shows the honest limits and ends with your own question in five boxes. All data are synthetic.",
-    format: "Interactive course + learner guide",
-    duration: "75-minute course + 15-minute Q&A; optional 10-minute interactive demo",
+    format: "Interactive course",
+    duration: "~90 minutes",
     accessNote:
-      "The course and the demo need no account or installation. Materials are in English; the live session is introduced in German. The model answers shown in the course were recorded in August 2026; they are not live requests.",
+      "The course and the demo need no account or installation; materials are in English, the live session is introduced in German. The model answers shown were recorded in August 2026; they are not live requests.",
+    outcome: "Five-field template",
     audience: [
       "Beginners without SQL or programming experience",
       "Teams learning to check AI answers against data",
       "Facilitators explaining a concrete data problem",
     ],
     decisionLab: {
-      kicker: "Warm-up · Balances and changes",
+      kicker: "Decision 01 · Balance",
       title: "100 euros plus 20. Really 120?",
       prompt:
         "A record contains a month-end balance of 100 euros and a change of +20 euros. An AI reports a month-end balance of 120 euros. What do you do?",
       facts: [
-        "Ending balance 100 euros",
-        "Change +20 euros",
-        "AI answer 120 euros",
+        "Ending balance €100",
+        "Change +€20",
+        "AI answer €120",
       ],
-      decisionLegend: "Your decision",
-      evidenceLegend: "Your strongest evidence",
+      decisionLegend: "Your first decision",
+      evidenceLegend: "The strongest evidence",
       choices: [
         {
           id: "check-definition",
@@ -259,10 +265,10 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
       recommendedChoiceId: "check-definition",
       strongestEvidenceId: "included-change",
-      submitLabel: "Check answer",
-      resetLabel: "Try again",
+      submitLabel: "Check decision",
+      resetLabel: "Decide again",
       privacyNote:
-        "Your selection stays on this page and is neither saved nor sent.",
+        "Runs only on this page. Your selection and result are neither stored nor sent.",
       resultLabel: "Decision feedback",
       feedback: {
         aligned: {
@@ -345,7 +351,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "06",
         title: "Optional: look at the data behind both answers",
         description:
-          "In the interactive demo you open the raw tables and the certified views, run the same question on both sides and check the result against the definition. The tables and results come from a real PostgreSQL run of the course kit.",
+          "In the interactive demo you open the raw tables and the approved views, run the same question on both sides and check the result against the definition. The tables and results come from a real PostgreSQL run of the course kit.",
         tool: "Interactive demo · about 10 minutes",
       },
     ],
@@ -374,12 +380,12 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: [
       {
-        label: "Open course",
+        label: "Course · 26 scenes",
         href: `${base}/slides.html`,
         kind: "html",
         language: "en",
         description:
-          "26 scenes with step-by-step explanations. Use the arrow keys; P opens the presenter view. Best on a large screen in landscape.",
+          "About 75 minutes of course and 15 minutes of questions; the demo is optional (10 min). Use the arrow keys; P opens the presenter view. Best on a large screen in landscape.",
       },
       {
         label: "Learner guide",
@@ -390,12 +396,12 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "The course story to read at your own pace: one question, the mistake, the fix, the limits and your five boxes. Works on a phone too.",
       },
       {
-        label: "Interactive demo: raw tables vs certified views",
+        label: "Interactive demo · 10 min",
         href: `${base}/demo.html`,
         kind: "html",
         language: "en",
         description:
-          "10 minutes, no account: look at the tables, run the same question on both sides and compare the answers with the definition.",
+          "Raw tables versus approved views, no account: look at the tables, run the same question on both sides and compare the answers with the definition.",
       },
     ],
   },

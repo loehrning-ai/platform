@@ -527,6 +527,15 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/lockup-horizontal-dark.svg",
+      "sizeBytes": 4645,
+      "sha256": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning.ai brand asset",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/meta-platforms-logo.svg",
       "sizeBytes": 3405,
       "sha256": "4c967c04f0c1f69cc0ff6b8f306f091c389a5edfda010065cf961f36d16f44cb",
@@ -536,72 +545,45 @@
       "redistribution": "Nur als Arbeitgeber-Kennzeichnung auf der Referentenfolie, in kleiner Darstellung; keine Co-Branding- oder Markennutzungsrechte"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p01.png",
-      "sizeBytes": 679806,
-      "sha256": "00c5678f3b2f7fc33baf8d756c276092c6a9f9c70a34fecc3975acf02759bb0e",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p01.webp",
+      "sizeBytes": 79836,
+      "sha256": "2cac3d9a5ad1969b862b36519bc19fd42724746eee99c636e523d62a6df5a151",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p02.png",
-      "sizeBytes": 179036,
-      "sha256": "b44c3ca41f9d8201fe7ad22c7bbaa9bc150e39e89416197f1f8577c41fb1e70c",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p02.webp",
+      "sizeBytes": 37012,
+      "sha256": "cd470478106bf340c244fdabef31d473bb44e18c54b8824cadae8c53ab2f7a06",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p03.png",
-      "sizeBytes": 269721,
-      "sha256": "d9d11aa945c8b9c67e72793d153b407126f2ad5e3389d31c91eeee4cc7359b2d",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p03.webp",
+      "sizeBytes": 78384,
+      "sha256": "2c68ea49927e6f1cb7ae23fedbcf6a0d1d4f56967947b1d22ef7f29e33bce903",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p04.png",
-      "sizeBytes": 231739,
-      "sha256": "ae1848e3a6b2d82f9dc4bea47b1125eb012722bc4135d973d0eb964e92ef90f9",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p04.webp",
+      "sizeBytes": 64060,
+      "sha256": "2073ca3da4ad01fda000768a51fc98bda4cba2148c23beb0f60033e985f5784e",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p05.png",
-      "sizeBytes": 300920,
-      "sha256": "7f45eaeb0451b7759f9da98251aec5dc96a0be529ad13c87aadbeaad36e33e08",
-      "owner": "Tim L\u00f6hr",
-      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
-    },
-    {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p06.png",
-      "sizeBytes": 200979,
-      "sha256": "a648f0999a68581b19f222489fc401ce8b49b1d78163f85fcbede621a36fb821",
-      "owner": "Tim L\u00f6hr",
-      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
-    },
-    {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p07.png",
-      "sizeBytes": 260522,
-      "sha256": "3432bd45a076f003897230ba118092a34658c7457c5e2e057d1d43e52aee4744",
-      "owner": "Tim L\u00f6hr",
-      "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
-    },
-    {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p08.png",
-      "sizeBytes": 409371,
-      "sha256": "793444d85bbfa7357ebe3c1b2ca6d2d82c2f043ffb90b18f11a258e80432a94b",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p08.webp",
+      "sizeBytes": 123158,
+      "sha256": "9184fdd2f61b6ed48e0cab893354479e2d1d4efd8f862dd1632330604ba6d252",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 gerendeter NORTHWIND-Beispielbericht (synthetische Daten)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -618,8 +600,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/card-preview.webp",
-      "sizeBytes": 21642,
-      "sha256": "f17ba49a97ac700fd7bcf0768bbcc6bca0b0f8fcdca4bb7be58e2f271eeb8752",
+      "sizeBytes": 27908,
+      "sha256": "3b1e0b213580794615e0e392f68b7062b99436f030ea35450f670c7d8557f444",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Decks (slides.html)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -627,12 +609,60 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
-      "sizeBytes": 58969,
-      "sha256": "90901a8226d9aefe01d88a76b6349ac06da66584041dd72c334c4536a85e2ed6",
+      "sizeBytes": 59639,
+      "sha256": "387fe383f187a66fb46108bab32bc8bab51148ad3bf2aa7ba434b1d65f17385f",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/favicon.svg",
+      "sizeBytes": 375,
+      "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning.ai brand asset",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/JetBrainsMono-var.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)",
+      "source": "JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1-JetBrainsMono.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1-JetBrainsMono.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/lockup-horizontal.svg",
+      "sizeBytes": 4645,
+      "sha256": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning.ai brand asset",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/card-preview.webp",
@@ -957,6 +987,33 @@
       "source": "Portr\u00e4tfoto Tim L\u00f6hr, vom Autor bereitgestellt \u2014 Referentenfolie des Workshops",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Existing platform-inventoried Typing woff2 build, renamed Inter derivative",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Existing platform-inventoried Typing woff2 build, renamed Inter derivative",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Existing platform-inventoried Typing woff2 build, renamed Inter derivative",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
     }
   ]
 }

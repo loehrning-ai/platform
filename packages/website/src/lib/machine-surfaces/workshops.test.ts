@@ -72,7 +72,7 @@ describe("machine workshop records", () => {
           new RegExp(`^/workshops/${workshop.slug}/`),
         );
         expect(material.url).toBe(`https://loehrning.ai${material.path}`);
-        expect(["html", "zip"]).toContain(material.kind);
+        expect(["html", "zip", "csv"]).toContain(material.kind);
         expect(["de", "en"]).toContain(material.language);
         expect(material.description.trim().length).toBeGreaterThan(0);
         expect(

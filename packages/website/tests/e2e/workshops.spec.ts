@@ -46,11 +46,11 @@ test.describe("workshop self-study journey", () => {
     });
     await page.goto("/en/workshops/datenbereitschaft-fuer-ki");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/data.*ready for AI/i);
-    await page.getByRole("button", { name: "Check answer", exact: true }).click();
+    await page.getByRole("button", { name: "Check decision", exact: true }).click();
     await expect(page.getByText("Select one decision before checking the result.", { exact: true })).toBeVisible();
     await page.getByRole("radio", { name: "Use 100 euros and check what the fields mean first.", exact: true }).check();
     await page.getByRole("radio", { name: "The ending balance already includes the change. Adding it again counts it twice.", exact: true }).check();
-    await page.getByRole("button", { name: "Check answer", exact: true }).click();
+    await page.getByRole("button", { name: "Check decision", exact: true }).click();
     await expect(page.getByText("The change is already in the ending balance.", { exact: true })).toBeVisible();
     // A correct answer offers a neutral reset; "Try again" is reserved for wrong answers.
     await expect(page.getByRole("button", { name: "Reset", exact: true })).toBeFocused();

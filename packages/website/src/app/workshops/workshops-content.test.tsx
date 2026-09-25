@@ -38,20 +38,50 @@ describe("<WorkshopsContent>", () => {
     expect(screen.getByText(/3 guided cases/)).toBeInTheDocument();
     expect(screen.queryByText("Verfügbare Workshops")).toBeNull();
     expect(screen.getAllByTestId("workshop-row")).toHaveLength(3);
+    const rows = screen.getAllByTestId("workshop-row");
+    expect(
+      rows.map(
+        (row) => within(row).getByRole("heading", { level: 3 }).textContent,
+      ),
+    ).toEqual([
+      "Workshop 01: Can AI predict the future?",
+      "Workshop 02: Read business reports with AI",
+      "Workshop 03: Are your data ready for AI?",
+    ]);
     expect(
       screen.getByRole("heading", {
         level: 3,
-        name: "1,050 units. Who gets them?",
+        name: "Workshop 01: Can AI predict the future?",
       }),
+    ).toBeInTheDocument();
+    expect(
+      within(rows[0]).getByText("First decision: “1,050 units. Who gets them?”"),
     ).toHaveAttribute("data-workshop-decision");
-    const rows = screen.getAllByTestId("workshop-row");
     const outputs = rows.map((row) =>
-      within(row).getByText("Decision + evidence"),
+      row.querySelector("[data-workshop-output]")?.textContent,
     );
-    expect(outputs).toHaveLength(3);
-    for (const output of outputs) {
-      expect(output).toHaveAttribute("data-workshop-output");
-    }
+    expect(outputs).toEqual([
+      "Go/no-go rule",
+      "Metrics skill + dashboard",
+      "Five-field template",
+    ]);
+    expect(rows.map((row) => row.id)).toEqual([
+      "workshop-ki-prognosen-einschaetzen",
+      "workshop-geschaeftsberichte-mit-ki-lesen",
+      "workshop-datenbereitschaft-fuer-ki",
+    ]);
+    const index = screen.getByRole("complementary", {
+      name: "In the catalogue",
+    });
+    expect(
+      within(index)
+        .getAllByRole("link")
+        .map((link) => [link.textContent, link.getAttribute("href")]),
+    ).toEqual([
+      ["01Forecasts", "#workshop-ki-prognosen-einschaetzen"],
+      ["02Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
+      ["03Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
+    ]);
     expect(screen.queryByText("Release with a gate")).toBeNull();
     expect(
       screen.getByRole("link", {
@@ -59,6 +89,7 @@ describe("<WorkshopsContent>", () => {
       }),
     ).toHaveAttribute("href", "/en/workshops/ki-prognosen-einschaetzen");
     for (const row of rows) {
+      expect(row).toHaveClass("motion-reduce:transition-none");
       const actions = within(row).getAllByRole("link");
       expect(actions).toHaveLength(1);
       expect(actions[0]).toHaveAccessibleName(/^Open workshop:/);

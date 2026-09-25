@@ -1,9 +1,9 @@
 /* ============================================================================
    Hands-on act widgets: live forecast simulations. Offline, vanilla JS,
    no build step. Requires forecast-lab.js (window.FL) loaded first.
-   Elements:  <hs-race>        act 1: Amazon ZIP-level baseline vs AI challenger
-              <hs-buffer-run>  act 2: Apple SDM-to-store handoff bullwhip
-              <hs-trust-loop>  act 3: Meta fast user-demand trust loop
+   Elements:  <hs-race>        act 1: parcel network ZIP-level baseline vs AI challenger
+              <hs-buffer-run>  act 2: device maker planning-to-store handoff bullwhip
+              <hs-trust-loop>  act 3: social app fast user-demand trust loop
    Motion vocabulary (adapted): rAF loops with a
    time accumulator, draw-on line sweeps, count-up money, pulse/alarm states,
    particles along a pipeline. Reduced-motion collapses to instant end-states.
@@ -81,7 +81,7 @@
   var EASE = "cubic-bezier(.23,1,.32,1)";
   var CSS = "" +
     ".hs{--blue:" + BLUE + ";--ink:" + INK + ";--sub:" + SUB + ";--line:" + LINE + ";--paper:" + PAPER + ";--soft:" + SOFT + ";--rust:" + RUST + ";--red:" + RED + ";--teal:" + TEAL + ";--green:" + GREEN + ";--gold:" + GOLD + ";--olive:" + OLIVE + ";" +
-    "display:block;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:var(--ink)}" +
+    "display:block;font-family:var(--sans,system-ui,sans-serif);color:var(--ink)}" +
     ".hs *{box-sizing:border-box}" +
 	    ".hs-card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:0 18px 54px -42px rgba(6,36,63,.5)}" +
 	    ".hs.dark .hs-card{--paper:#0f2333;--ink:#eef6ff;--sub:#a7b8c8;--line:#25455f;--soft:#142d42;background:var(--paper);box-shadow:0 22px 64px -40px rgba(0,0,0,.8)}" +
@@ -92,14 +92,14 @@
 	    ".hs.dark .hs-verdict[data-tone=gold]{background:linear-gradient(90deg,rgba(232,184,75,.16),transparent)}" +
 	    ".hs-chartwrap{position:relative;width:100%}" +
     ".hs-chartwrap canvas{display:block;width:100%;height:100%}" +
-    ".hs-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);font-weight:900;margin-bottom:8px}" +
+    ".hs-live{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);font-weight:900;margin-bottom:8px}" +
     ".hs-live .dot{width:8px;height:8px;border-radius:50%;background:var(--teal)}" +
     ".hs-live[data-on] .dot{animation:hsPulse 1.4s ease-in-out infinite}" +
     ".hs-live[data-alarm] .dot{background:var(--red);animation:hsPulse .6s ease-in-out infinite}" +
     "@keyframes hsPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}" +
     ".hs-ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;margin-top:12px}" +
     ".hs-field{flex:1 1 190px;min-width:160px}" +
-    ".hs-lab{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);display:flex;justify-content:space-between;margin-bottom:6px;font-weight:700}" +
+    ".hs-lab{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);display:flex;justify-content:space-between;margin-bottom:6px;font-weight:700}" +
     ".hs-lab b{color:var(--blue);font-variant-numeric:tabular-nums}" +
     ".hs.dark .hs-lab b{color:#7ebdff}" +
     ".hs input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:6px;background:var(--line);outline-offset:4px;cursor:pointer}" +
@@ -107,10 +107,10 @@
     ".hs input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}" +
     ".hs input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);border:2px solid #fff;cursor:grab}" +
     ".hs-seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}" +
-    ".hs-seg button{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:8px 11px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
+    ".hs-seg button{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:8px 11px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
     ".hs-seg button:first-child{border-left:0}" +
     ".hs-seg button[aria-pressed=true]{background:var(--blue);color:#fff}" +
-    ".hs-btn{appearance:none;border:0;border-radius:6px;background:var(--blue);color:#fff;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:11px 16px;cursor:pointer;transition:transform .06s,filter .15s}" +
+    ".hs-btn{appearance:none;border:0;border-radius:6px;background:var(--blue);color:#fff;font-family:var(--mono,ui-monospace,monospace);font-size:11.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:11px 16px;cursor:pointer;transition:transform .06s,filter .15s}" +
     ".hs-btn:hover{filter:brightness(1.1)} .hs-btn:active{transform:scale(.97)}" +
     ".hs-btn[disabled]{opacity:.55;cursor:default}" +
     ".hs-btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}" +
@@ -118,7 +118,7 @@
     "@keyframes hsInvite{0%,100%{box-shadow:0 0 0 0 rgba(36,92,255,.45)}50%{box-shadow:0 0 0 9px rgba(36,92,255,0)}}" +
     ".hs-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:9px;margin-top:12px}" +
     ".hs-metric{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--paper)}" +
-    ".hs-metric .k{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);font-weight:700}" +
+    ".hs-metric .k{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);font-weight:700}" +
     ".hs-metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-top:2px;transition:color .3s}" +
     ".hs-metric.warn{border-color:rgba(209,31,31,.5)} .hs-metric.warn .v{color:var(--red)}" +
     ".hs-metric.good{border-color:rgba(11,143,153,.5)} .hs-metric.good .v{color:var(--teal)}" +
@@ -129,26 +129,26 @@
     ".hs-verdict[data-tone=warn]{border-left-color:var(--red);background:linear-gradient(90deg,rgba(209,31,31,.10),transparent)}" +
     ".hs-verdict[data-tone=good]{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(11,143,153,.10),transparent)}" +
 	    ".hs-verdict[data-tone=gold]{border-left-color:var(--gold);background:linear-gradient(90deg,rgba(200,149,45,.12),transparent)}" +
-	    ".hs-note{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.03em;color:var(--sub);margin-top:9px;line-height:1.35}" +
+	    ".hs-note{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.03em;color:var(--sub);margin-top:9px;line-height:1.35}" +
 	    ".hs-note b{color:var(--ink)}" +
 	    ".hs-gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:7px;margin-top:10px}" +
 	    ".hs-gate{border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:var(--paper);min-height:48px}" +
-	    ".hs-gate b{display:block;font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+	    ".hs-gate b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:normal;overflow-wrap:anywhere}" +
 	    ".hs-gate span{display:block;margin-top:4px;font-size:12px;line-height:1.12;font-weight:850;color:var(--ink)}" +
 	    ".hs-gate.pass{border-color:rgba(11,143,153,.55);background:rgba(11,143,153,.08)}" +
 	    ".hs-gate.review{border-color:rgba(200,149,45,.65);background:rgba(200,149,45,.10)}" +
 	    ".hs-gate.hold{border-color:rgba(209,31,31,.58);background:rgba(209,31,31,.10)}" +
 	    ".hs-modebar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:10px}" +
-	    ".hs-modepill{display:inline-flex;align-items:center;min-height:30px;border-radius:6px;padding:7px 10px;background:var(--blue);color:#fff;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:900}" +
+	    ".hs-modepill{display:inline-flex;align-items:center;min-height:30px;border-radius:6px;padding:7px 10px;background:var(--blue);color:#fff;font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:900}" +
 	    ".hs-modepill.review{background:var(--gold);color:#101014}.hs-modepill.hold{background:var(--red);color:#fff}" +
 	    ".hs-case{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
 	    ".hs-case div{border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:color-mix(in srgb,var(--soft) 58%,transparent)}" +
-	    ".hs-case b{display:block;font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}" +
+	    ".hs-case b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}" +
 	    ".hs-case span{display:block;margin-top:3px;font-size:12px;line-height:1.22;font-weight:760;color:var(--ink)}" +
 	    /* act 1 race scoreboard */
     ".hs-racers{display:grid;gap:8px;margin-top:12px}" +
     ".hs-racer{display:grid;grid-template-columns:118px 1fr 76px;gap:10px;align-items:center}" +
-    ".hs-racer .who{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:900;color:var(--sub)}" +
+    ".hs-racer .who{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:900;color:var(--sub)}" +
     ".hs-racer .who.front{color:var(--ink)}" +
     ".hs-racer .track{height:14px;border-radius:4px;background:var(--soft);overflow:hidden;position:relative}" +
     ".hs-racer .fill{position:absolute;inset:0 auto 0 0;width:0%;border-radius:4px}" +
@@ -163,7 +163,7 @@
 	    "@keyframes hsFlash{0%{transform:scaleY(2.2);filter:brightness(1.6)}100%{transform:none;filter:none}}" +
 	    ".hs-chain{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
 	    ".hs-chain-card{border:1px solid var(--line);border-radius:6px;padding:7px;background:var(--paper);min-width:0}" +
-	    ".hs-chain-card b{display:block;font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+	    ".hs-chain-card b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:normal;overflow-wrap:anywhere}" +
 	    ".hs-chain-card span{display:block;margin:3px 0 6px;font-size:15px;font-weight:850;font-variant-numeric:tabular-nums}" +
 	    ".hs-chain-card i{display:block;height:7px;border-radius:3px;background:var(--soft);overflow:hidden}" +
 	    ".hs-chain-card i em{display:block;height:100%;width:30%;border-radius:3px;background:var(--blue);transition:width .36s " + EASE + "}" +
@@ -300,9 +300,17 @@
 
   var C = FL.C; // palette (page sets FL_PALETTE before forecast-lab.js)
   // canvas text with a paper-colored halo so labels survive busy chart areas
+  // Chart label on a paper plate, so data lines and markers never run through the text.
   function haloText(ctx, text, x, y, halo) {
-    ctx.lineWidth = 3.5; ctx.strokeStyle = halo || "rgba(255,253,247,.85)"; ctx.lineJoin = "round";
-    ctx.strokeText(text, x, y); ctx.fillText(text, x, y);
+    var mt = ctx.measureText(text), w = mt.width, align = ctx.textAlign;
+    var size = parseFloat((/(\d+(?:\.\d+)?)px/.exec(ctx.font) || [0, 12])[1]);
+    var up = mt.fontBoundingBoxAscent != null ? mt.fontBoundingBoxAscent : size * 0.9;
+    var down = mt.fontBoundingBoxDescent != null ? mt.fontBoundingBoxDescent : size * 0.3;
+    var left = align === "center" ? x - w / 2 : (align === "right" || align === "end") ? x - w : x;
+    var ink = ctx.fillStyle;
+    ctx.fillStyle = halo || "rgba(255,253,247,.92)";
+    ctx.fillRect(left - 3, y - up - 1, w + 6, up + down + 2);
+    ctx.fillStyle = ink; ctx.fillText(text, x, y);
   }
   function rgba(hex, a) {
     var h = hex.replace("#", "");
@@ -312,7 +320,7 @@
 
     /* =========================================================================
      ACT 1: <hs-race>
-     Amazon case lens. A Last Mile ZIP planner races "same weekday last week"
+     Parcel network teaching lens. A Last Mile ZIP planner races "same weekday last week"
      against a feature ladder. One dated promo (on the calendar) is caught only
      when the model is given the promo dates; one un-dated shock is caught by no
      model and routes to the exception owner. Money is a weighted capacity bill.
@@ -349,7 +357,7 @@
       var cw = chartWrap("clamp(220px,32vh,320px)");
       this.chart = cw.chart; this.cv = cw.cv;
 
-      this.live = liveTag("Amazon case | ZIP capacity shadow replay");
+      this.live = liveTag("Parcel network | ZIP capacity shadow replay");
       this.rowBase = this._racer("Same weekday last week", "#8b867c");
       this.rowChal = this._racer(RUNGS[this.model].who, BLUE);
       var racers = el("div", { class: "hs-racers" }, [this.rowBase.row, this.rowChal.row]);
@@ -439,7 +447,7 @@
       this.rowBase.row.classList.remove("win"); this.rowChal.row.classList.remove("win");
       this.rowBase.who.classList.remove("front"); this.rowChal.who.classList.remove("front");
       this.btn.disabled = false; this.btn.textContent = "Run shadow replay"; this.btn.classList.add("hot");
-      this.live._state(false, false, "Amazon case | ZIP capacity shadow replay");
+      this.live._state(false, false, "Parcel network | ZIP capacity shadow replay");
       if (!silent) this.setPrimer();
       this.render();
     },
@@ -512,8 +520,10 @@
         stick(PROMO, rgba("#0b8f99", 0.95), 3.5);
         stick(SHOCK, C.red, 3.5);
         ctx.font = "800 12px ui-monospace,monospace"; ctx.textAlign = "center";
-        ctx.fillStyle = TEAL; haloText(ctx, "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + 92, m.x1 - 92), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 13, m.y1 - 8));
-        ctx.fillStyle = C.red; haloText(ctx, "shock, not on the calendar", clamp(m.xToPx(SHOCK), m.x0 + 92, m.x1 - 92), clamp(m.yToPx(s[SHOCK]) + 22, m.y0 + 24, m.y1 - 6));
+        // narrow charts get the short labels; the act copy above names both days in full
+        var narrow = m.x1 - m.x0 < 440, half = narrow ? 30 : 92;
+        ctx.fillStyle = TEAL; haloText(ctx, narrow ? "promo" : "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 30, m.y1 - 8));
+        ctx.fillStyle = C.red; haloText(ctx, narrow ? "shock" : "shock, not on the calendar", clamp(m.xToPx(SHOCK), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[SHOCK]) + 22, m.y0 + 30, m.y1 - 6));
         // replay cursor
         if (cur > START && cur < n) {
           var cx = m.xToPx(cur);
@@ -545,7 +555,7 @@
 
 /* =========================================================================
 	     ACT 2: <hs-buffer-run>
-	     Apple case lens. SDM forecasts MacBook demand; Logistics and Reseller
+	     Device maker teaching lens. Demand planning forecasts laptop demand; Logistics and Reseller
 	     Ops either pass padded orders as demand or share one POS signal. The score
 	     is order variance amplification plus decision cost, not service in isolation.
 	     ========================================================================= */
@@ -578,7 +588,7 @@
       var cw = chartWrap("clamp(188px,25vh,246px)");
       this.chart = cw.chart;
 
-	      this.live = liveTag("Apple case | MacBook handoff bullwhip");
+	      this.live = liveTag("Device maker | laptop handoff bullwhip");
 	      this.mFill = metric("Fill rate", "n/a", "accent");
 	      this.mBull = metric("Bullwhip ratio", "n/a");
 	      this.mCash = metric("Cash tied", "$0");
@@ -629,7 +639,7 @@
 	        this.strip,
 	        el("div", { class: "hs-metrics" }, [this.mFill, this.mBull, this.mCash, this.mCost]),
 	        this.v,
-	        el("div", { class: "hs-note", html: "Bullwhip is order-variance amplification: CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Local buffers pass padded orders as demand. Shared forecast uses one POS demand distribution and makes safety stock an explicit policy. Teaching case lens only, not a claim about proprietary Apple systems." })
+	        el("div", { class: "hs-note", html: "Bullwhip is order-variance amplification: CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Local buffers pass padded orders as demand. Shared forecast uses one POS demand distribution and makes safety stock an explicit policy. Teaching lens with invented figures; not any company's real system." })
 	      ]));
 
       this.loop = makeLoop(this, 72, function () { self.stepWeek(); }, function () { self.render(); });
@@ -713,10 +723,10 @@
       this.loop.stop(); this.week = 0; this.done = false; this.ranOnce = this.ranOnce || false;
 	      this.btn.disabled = false; this.btn.textContent = this.ranOnce ? "Run same demand again" : "Run same demand year";
 	      this.btn.classList.add("hot");
-	      this.live._state(false, false, "Apple case | MacBook handoff bullwhip");
+	      this.live._state(false, false, "Device maker | laptop handoff bullwhip");
 	      var cells = this.strip.children;
 	      for (var i = 0; i < 52; i++) cells[i].className = "";
-	      this.v._set("Run the same MacBook demand year. <b>Local buffers</b> pass padded orders upstream. <b>Shared forecast</b> gives every team the same POS demand signal and one explicit safety-stock policy.");
+	      this.v._set("Run the same laptop demand year. <b>Local buffers</b> pass padded orders upstream. <b>Shared forecast</b> gives every team the same POS demand signal and one explicit safety-stock policy.");
 	    },
     run: function () {
       if (this.loop.running) return;
@@ -739,7 +749,7 @@
     finish: function () {
       this.done = true;
 	      this.btn.disabled = false; this.btn.textContent = "Run same demand again";
-	      this.live._state(false, false, "year complete · same MacBook demand for every mode");
+	      this.live._state(false, false, "year complete · same laptop demand for every mode");
 	      var mine = this.summary(this.mode, 52);
 	      var local = this.summary("local", 52);
 	      var shared = this.summary("shared", 52);
@@ -754,7 +764,7 @@
 	      } else {
 	        this.v._set(head + "The policy is cleaner, but the launch override, batch size or service target still needs tuning before rollout. The approval gate is bullwhip down, fill rate protected, cost lower.", "gold");
 	      }
-	      emitResult("buffer", mine.bullwhip.toFixed(1) + "x", "MacBook bullwhip ratio",
+	      emitResult("buffer", mine.bullwhip.toFixed(1) + "x", "Laptop bullwhip ratio",
 	        this.modeLabel(this.mode) + " produced " + money(mine.total) + " decision cost. Record: shared forecast or local buffers, service target by store tier, safety-stock location, batch-size rule, launch override owner.");
 	      this.render();
 	    },
@@ -830,7 +840,7 @@
 
   /* =========================================================================
 	     ACT 3: <hs-trust-loop>
-	     Meta case lens. A fast user-demand forecast feeds a capacity decision.
+	     Social app teaching lens. A fast user-demand forecast feeds a capacity decision.
 	     Two policies score simultaneously on the same reality: blind automation
 	     versus governed AI demand sensing with drift monitor, exception owner and
 	     retraining loop.
@@ -855,7 +865,7 @@
       this.wrap.appendChild(this.cv);
       this.ctx = this.cv.getContext("2d");
 
-	      this.live = liveTag("Meta case | live demand capacity release");
+	      this.live = liveTag("Social app | live demand capacity release");
 	      this.mBlind = metric("No-gate auto-release loss", "$0", "warn");
 	      this.mGov = metric("Gated release loss", "$0", "accent");
 	      this.mSaved = metric("Avoided capacity loss", "$0", "good");
@@ -892,7 +902,7 @@
 	        el("div", { class: "hs-gates" }, [this.gFresh, this.gDrift, this.gBias, this.gCoverage, this.gImpact]),
         el("div", { class: "hs-metrics" }, [this.mBlind, this.mGov, this.mSaved]),
         this.v,
-	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>No-gate</b> keeps shipping the deploy-day plan into capacity. <b>Gated AI</b> checks freshness, drift, bias, coverage and business impact before auto-release. Under-capacity costs $" + (META_UNDER / 1000).toFixed(1) + "k per demand point; over-capacity costs $" + (META_OVER / 1000).toFixed(1) + "k. Teaching case lens only, not a proprietary Meta process." })
+	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>No-gate</b> keeps shipping the deploy-day plan into capacity. <b>Gated AI</b> checks freshness, drift, bias, coverage and business impact before auto-release. Under-capacity costs $" + (META_UNDER / 1000).toFixed(1) + "k per demand point; over-capacity costs $" + (META_OVER / 1000).toFixed(1) + "k. Teaching lens with invented figures; not any company's real system." })
       ]));
 
       // particles along the pipeline
@@ -923,7 +933,7 @@
       for (var i = 0; i < 40; i++) this.tick(true);
       if (!silent) {
         this.lossB = 0; this.lossG = 0;
-	        this.live._state(true, false, "Meta case | steady demand state");
+	        this.live._state(true, false, "Social app | steady demand state");
 	        this.v._set("Reset. Both policies are healthy and identical until reality moves. Trigger a shift.", null);
 	        this.updateGateBoard();
         this.draw();
@@ -956,7 +966,7 @@
       var actual = this.base(t) * this.R + spike + gauss(this.rng) * 3.5;
       // blind: the deploy-day model, forever
       var pb = this.base(t);
-      // governed: same model + the loop
+      // governed: the model plus the loop
       var pg;
       if (this.state === "ok" || this.state === "alert") pg = this.base(t) * this.newR;
       else if (this.state === "override") { // planner: mean of the last 5 actuals
@@ -998,7 +1008,7 @@
 	          if (!warm) this.v._set("<b>Retrained on the new regime.</b> Automation resumes with the gate still armed. The blind policy never noticed anything.", "good");
         }
       }
-	      else if (this.state === "retrained") { this.stateT++; if (this.stateT > 10 && this.alarmMAE < THRESH * 0.6) { this.state = "ok"; if (!warm) this.live._state(true, false, "Meta case | steady state under new regime"); } }
+	      else if (this.state === "retrained") { this.stateT++; if (this.stateT > 10 && this.alarmMAE < THRESH * 0.6) { this.state = "ok"; if (!warm) this.live._state(true, false, "Social app | steady state under new regime"); } }
 	      if (!warm) {
 	        this.updateGateBoard();
 	        setMetric(this.mBlind, money(this.lossB));
