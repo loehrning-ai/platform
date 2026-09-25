@@ -933,8 +933,8 @@
     },
     {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
-      "sizeBytes": 36398,
-      "sha256": "bcc0dede05f02ddca685f4fd82629b8ce7df44fc0b4c28e6ed409e6d3241223e",
+      "sizeBytes": 36724,
+      "sha256": "bfacd03ed7ec6ffbef0447c2a819474bfbd56dc71ee7560093c964febc7e978c",
       "owner": "Tim L\u00f6hr",
       "source": "Chromium screenshot of the course cover, resized to 1024 by 576 pixels",
       "license": "LicenseRef-Loehrning-Brand",
