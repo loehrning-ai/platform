@@ -97,7 +97,7 @@ data = {
     ],
     "runs": [
         {"id": "rec-exp", "when": "Aug 2026", "route": "Export tables", "cases": "G01–G03",
-         "runs": "1 each", "values": "0 of 3", "cited": "n/a (not graded)", "note": "−€19,960 / €9,775 / €42,565; −€17,595; 0 of 0, no rate"},
+         "runs": "1 each", "values": "0 of 3", "cited": "n/a (not graded)", "note": "−\u2060€19,960 / €9,775 / €42,565; −\u2060€17,595; 0 of 0, no rate"},
         {"id": "rec-app", "when": "Aug 2026", "route": "Approved views", "cases": "G01–G03",
          "runs": "1 each", "values": "3 of 3", "cited": "0 of 3", "note": "SQL leaned on a search_path setting"},
         {"id": "dry-a", "when": "Rehearsal", "route": "Chat A: export CSVs", "cases": "G01",
@@ -152,7 +152,7 @@ for s in data["setups"]:
 css = (HERE / "page.css").read_text()
 body = (HERE / "body.html").read_text()
 js = (HERE / "app.js").read_text()
-icons = (HERE.parent / "_icons.svg").read_text()
+icons = (HERE / "_icons.svg").read_text()
 blob = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 page = f"""<!doctype html>

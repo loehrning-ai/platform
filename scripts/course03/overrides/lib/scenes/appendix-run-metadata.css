@@ -1,0 +1,174 @@
+/* appendix-run-metadata (spec C.25): the model plane (recorded AI run frame) and the deterministic plane
+   (database check frame) side by side at equal size, never nested; each names its formal label and says in
+   one plain sentence what it is. Then the verdict record and what it does not prove. The run envelope (flags,
+   route, dataset checksum) lives in the speaker notes. 0 steps. */
+
+#appendix-run-metadata .rm-plane {
+  position: absolute;
+  top: 232px;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  width: 840px;
+  height: 416px;
+  padding: 24px 32px;
+  border: 3px solid var(--ink);
+}
+
+#appendix-run-metadata .rm-plane--model {
+  left: 96px;
+  background: var(--papier);
+}
+
+#appendix-run-metadata .rm-plane--db {
+  left: 984px;
+  background: var(--beton);
+  outline: 1px solid var(--ink);
+  outline-offset: -8px;
+}
+
+#appendix-run-metadata .rm-divider {
+  position: absolute;
+  top: 232px;
+  left: 952px;
+  width: 16px;
+  height: 416px;
+  border-right: 3px solid var(--ink);
+  border-left: 3px solid var(--ink);
+}
+
+#appendix-run-metadata .rm-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+#appendix-run-metadata .rm-head__db {
+  position: relative;
+  display: inline-grid;
+  margin-right: 8px;
+}
+
+#appendix-run-metadata .rm-badge {
+  position: absolute;
+  right: -10px;
+  bottom: -8px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 2px solid var(--pass);
+  background: var(--papier);
+  color: var(--pass);
+}
+
+#appendix-run-metadata .rm-badge .icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2px;
+}
+
+/* The formal label: a mono tag, so it reads as a name, not a sentence. */
+#appendix-run-metadata .rm-tag {
+  margin: 8px 0 0;
+}
+
+#appendix-run-metadata .rm-code {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#appendix-run-metadata .rm-lead {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#appendix-run-metadata .rm-corpus {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ink);
+  font-weight: 600;
+}
+
+#appendix-run-metadata .rm-row {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin: 4px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--leinen);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#appendix-run-metadata .rm-row .icon {
+  margin-top: 2px;
+}
+
+/* A relation name never breaks across lines. */
+#appendix-run-metadata .rm-row .mono {
+  font-size: var(--t-small);
+  white-space: nowrap;
+}
+
+#appendix-run-metadata .rm-verdict {
+  position: absolute;
+  top: 688px;
+  left: 96px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 1728px;
+}
+
+#appendix-run-metadata .rm-stamp {
+  padding: 10px 18px;
+  border: 4px solid var(--mennige);
+  background: var(--papier);
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+#appendix-run-metadata .rm-verdict__rest {
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+#appendix-run-metadata .rm-limits {
+  position: absolute;
+  top: 800px;
+  left: 96px;
+  width: 1728px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-body);
+  line-height: 1.35;
+}
+
+#appendix-run-metadata .rm-limits b {
+  color: var(--ink);
+}
+
+#appendix-run-metadata .rm-notes {
+  position: absolute;
+  top: 904px;
+  left: 96px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.3;
+}

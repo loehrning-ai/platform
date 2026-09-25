@@ -1,0 +1,133 @@
+@font-face {
+  font-family: "Typing";
+  src: url("../assets/fonts/Typing-Static-400.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Typing";
+  src: url("../assets/fonts/Typing-Static-500.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Typing";
+  src: url("../assets/fonts/Typing-Static-600.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Typing";
+  src: url("../assets/fonts/Typing-Static-700.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/JetBrainsMono-Static-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/JetBrainsMono-Static-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Das Ö v5.3 palette (spec B.1). Paper everywhere after the cover; Mennige means "look here now",
+   one element group per step, never good or bad. --pass is the one course semantic, always with
+   the pass icon and a word. */
+:root {
+  --paper: #f3f0e9;       /* Kalkweiß: every scene ground, body, stage letterbox */
+  --papier: #f2f1ee;      /* Papier: nodes, cards, question card (always with an ink outline) */
+  --beton: #e5e4e2;       /* Beton: database check card, 9-cell grid, vote band, appendix code */
+  --leinen: #d4cec5;      /* Leinen: decorative hairlines and chart gridlines only */
+  --ink: #121212;         /* Druckschwarz: text, strokes, outlines, connectors, the fail state */
+  --slate: #4f4640;       /* Schiefer-Grau: secondary text, small print, past Route labels */
+  --slate-soft: #655c54;  /* captions, future Route labels, database-check bars */
+  --mennige: #b73a15;     /* the one accent */
+  --mennige-deep: #97300f;/* toolbar hover and pressed only */
+  --graphit: #141414;     /* cover ground only */
+  --pass: #205b46;        /* "Matches" only */
+
+  --sans: "Typing", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", "Typing", ui-monospace, monospace;
+
+  /* Motion (spec B.7). Each animation ≤ 700 ms; one step settles ≤ 900 ms. */
+  --m-fade: 200ms;
+  --m-rise: 320ms;
+  --m-wall: 420ms;
+  --m-grow: 520ms;
+  --m-draw: 560ms;
+  --m-count: 600ms;
+  --m-travel: 700ms;
+  --m-stagger: 80ms;
+  --m-route: 240ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  /* The stamp overshoot lives in its keyframes (1.3 → 0.96 → 1), so the landing reads on a projector;
+     the curve itself is a plain ease-out. */
+  --ease-stamp: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Opacity-only fades: symmetric, so a 200 ms fade reads as a fade, not a cut. */
+  --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Bars and wipes: even growth across --m-grow, so staggered series stay visibly staggered. */
+  --ease-grow: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Packets on a route: a sine in-out, peak speed ≈1.6× the average (for the runtime's travel). */
+  --ease-travel: cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+* {
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--mennige);
+  outline-offset: 2px;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

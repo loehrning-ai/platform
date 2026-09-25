@@ -1,0 +1,244 @@
+/* honest-no (spec C.14): two layers of "no". Four request cards on the left; the course rules panel
+   (layer 1) asks back or refuses before any query; the forced read bypasses the rules and hits the
+   database permission wall (layer 2, the foundation iso-stack + iso-wall parts at 0.95, placed as in
+   ready-architecture). Section coordinates 1920x1080; content 224-984; safe band empty. */
+
+#honest-no .hn-stage {
+  position: absolute;
+  inset: 0;
+}
+
+#honest-no .hn-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Layer 1 frame: x 620-1160, y 224-664, header rule at y 300. */
+#honest-no .hn-rules__frame {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#honest-no .hn-rules__rule {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+#honest-no .hn-rules__head {
+  position: absolute;
+  top: 238px;
+  left: 644px;
+  display: flex;
+  height: 52px;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Request cards: centres y 364 / 484 / 604 (rules) and 772 (forced read). */
+#honest-no .hn-req {
+  position: absolute;
+  left: 96px;
+  display: grid;
+  width: 404px;
+  height: 88px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0 20px 0 28px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+#honest-no .hn-req::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--ink);
+}
+
+#honest-no .hn-req--1 { top: 320px; }
+#honest-no .hn-req--2 { top: 440px; }
+#honest-no .hn-req--3 { top: 560px; }
+#honest-no .hn-req--4 { top: 728px; }
+
+/* Stamps inside the rules panel, on each request's line. */
+#honest-no .hn-stamp {
+  position: absolute;
+  height: 64px;
+  margin: 0;
+  padding: 0 18px;
+  gap: 14px;
+  font-size: var(--t-lead);
+  white-space: nowrap;
+}
+
+#honest-no .hn-stamp--1 { top: 332px; left: 652px; }
+#honest-no .hn-stamp--2 { top: 452px; left: 652px; }
+#honest-no .hn-stamp--3 { top: 572px; left: 652px; }
+
+/* Layer 2 label above the wall's far end, with a hatch swatch matching the wall. */
+#honest-no .hn-permission {
+  position: absolute;
+  top: 226px;
+  right: 96px;
+  display: flex;
+  height: 44px;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#honest-no .hn-permission__swatch {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+/* D01 verdict clear of the drawing: under the wall's bottom edge (at x 1420 it runs at y 614), right
+   of the climbing path, tied to the stop bar's lower end by a short leader (x 1446, y 581-646). */
+#honest-no .hn-deny {
+  top: 646px;
+  left: 1420px;
+}
+
+#honest-no .hn-deny-leader__halo,
+#honest-no .hn-deny-leader__line {
+  fill: none;
+  stroke-linecap: butt;
+}
+
+#honest-no .hn-deny-leader__halo {
+  stroke: var(--papier);
+  stroke-width: 11;
+}
+
+#honest-no .hn-deny-leader__line {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#honest-no .hn-bypass__path {
+  stroke-width: 4;
+}
+
+#honest-no .hn-bypass__halo,
+#honest-no .hn-bypass__bar {
+  fill: none;
+  stroke-linecap: square;
+}
+
+/* Papier halo: the stop bar stays legible on the hatched wall face after it returns to ink. */
+#honest-no .hn-bypass__halo {
+  stroke: var(--papier);
+  stroke-width: 22;
+}
+
+#honest-no .hn-bypass__bar {
+  stroke: var(--ink);
+  stroke-width: 10;
+}
+
+/* Closing lines under the forced-read row. */
+#honest-no .hn-close {
+  position: absolute;
+  top: 848px;
+  left: 96px;
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+#honest-no .hn-close__stamp {
+  margin: 0;
+  white-space: nowrap;
+}
+
+#honest-no .hn-close__small {
+  font-size: var(--t-small);
+  max-width: none;
+}
+
+/* One Mennige group per step (spec B.1): the requests, then each request's route into the rules,
+   the forced read's bypass and stop, then the closing stamp. */
+#honest-no[data-step-current="0"] .hn-req::before {
+  background: var(--mennige);
+}
+
+#honest-no[data-step-current="1"] [data-focus="step-1"] .edge,
+#honest-no[data-step-current="2"] [data-focus="step-2"] .edge,
+#honest-no[data-step-current="3"] [data-focus="step-3"] .edge {
+  stroke: var(--mennige);
+  stroke-width: 6;
+}
+
+#honest-no[data-step-current="1"] [data-focus="step-1"] .edge-head,
+#honest-no[data-step-current="2"] [data-focus="step-2"] .edge-head,
+#honest-no[data-step-current="3"] [data-focus="step-3"] .edge-head {
+  fill: var(--mennige);
+}
+
+#honest-no[data-step-current="4"] .hn-bypass__path,
+#honest-no[data-step-current="4"] .hn-bypass__bar {
+  stroke: var(--mennige);
+}
+
+#honest-no[data-step-current="5"] .hn-close__stamp {
+  border-color: var(--mennige);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#honest-no .edge:not(.hn-bypass__path) {
+  --m-draw: 400ms;
+}
+
+/* Spec H E24: each stamp is caused by its request's packet, so it starts when the packet arrives. */
+#honest-no {
+  --hn-arrive: 350ms;
+  --hn-arrive-bypass: 400ms;
+}
+
+#honest-no .packet:not([data-path="#honest-no-bypass"]) {
+  --m-travel: var(--hn-arrive);
+}
+
+#honest-no .packet[data-path="#honest-no-bypass"] {
+  --m-travel: var(--hn-arrive-bypass);
+}
+
+#honest-no .hn-bypass__path {
+  --m-draw: 400ms;
+}
+
+#honest-no-c01,
+#honest-no-r01,
+#honest-no-r02 {
+  animation-delay: var(--hn-arrive);
+}
+
+#honest-no .hn-bypass__stop,
+#honest-no .hn-deny-leader,
+#honest-no-d01 {
+  animation-delay: var(--hn-arrive-bypass);
+}

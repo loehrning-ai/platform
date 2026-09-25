@@ -827,7 +827,8 @@ function makeTabs(list, items, onSelect, idPrefix) {
   function showFile(name, btn) {
     const f = D.files[name];
     $$('.file', tree).forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${f.badge} stamp">${badgeWord[f.badge]}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a href="./data-readiness-kit/builder/${esc(f.src)}"><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
+    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${f.badge} stamp">${badgeWord[f.badge]}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a data-kit-file><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
+    excerpt.querySelector('a[data-kit-file]').setAttribute('href', './data-readiness-kit/builder/' + f.src);
   }
   let credOn = false;
   makeTabs($('#m8-tabs'), D.setups, (s, _i, user) => {
@@ -1027,9 +1028,9 @@ function makeTabs(list, items, onSelect, idPrefix) {
       $('.st', n).textContent = states[i];
     });
     const weakNames = D.readyGates.filter((_, i) => rank[states[i]] === weakest).map(g => g.name);
-    const v = weakest === 0 ? 'Not ready' : weakest === 1 ? 'Pilot only' : 'Bounded ready';
+    const v = weakest === 0 ? 'Not ready' : weakest === 1 ? 'Limited pilot, not signed off' : 'Bounded ready';
     const why = weakest === 0 ? `Unproven: ${weakNames.join(', ')}.` : weakest === 1 ? `Documented but not proven: ${weakNames.join(', ')}.` : 'Every gate is proven for the declared question and surface.';
-    verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>Worked example: FOLDLINE.</strong> On this scale: Pilot only, which the course says as “limited pilot, not signed off”. The database checks pass and the values matched 3 of 3, but the runs cited the definition 0 of 3 and there was one run per question. Step 11 is not met.</p>` : '');
+    verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>Worked example: FOLDLINE.</strong> The database checks pass and the values matched 3 of 3, but the runs cited the definition 0 of 3 and there was one run per question. Step 11 is not met.</p>` : '');
   }
   $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; });
   $('#m12-clear').addEventListener('click', () => { done.clear(); update(true); });

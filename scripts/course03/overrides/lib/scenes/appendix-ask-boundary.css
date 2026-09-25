@@ -1,0 +1,150 @@
+/* appendix-ask-boundary (spec C.24): both local Ask captures at 1:1 crops with their provenance,
+   the two known gaps, and the vertical boundary stack with the dashed prompt-gap layer. 0 steps. */
+
+/* Left: the two summarized records and the two known gaps (x 96–1152). Right: the boundary stack
+   (x 1224–1824), wide enough that no layer wraps into a column of identifiers. */
+#appendix-ask-boundary .ab-shots {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+  display: grid;
+  grid-template-columns: 522px 522px;
+  gap: 12px 24px;
+  width: 1068px;
+}
+
+#appendix-ask-boundary .ab-shot {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+#appendix-ask-boundary .ab-shot__img {
+  display: block;
+  width: 594px;
+  height: 300px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  object-fit: none;
+}
+
+#appendix-ask-boundary .ab-shot__img--sources {
+  object-position: -600px -96px;
+}
+
+#appendix-ask-boundary .ab-shot__img--history {
+  object-position: -728px -196px;
+}
+
+#appendix-ask-boundary .ab-shot__name {
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.3;
+}
+
+#appendix-ask-boundary .ab-provenance {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.35;
+}
+
+#appendix-ask-boundary .ab-gaps {
+  position: absolute;
+  top: 704px;
+  left: 96px;
+  display: grid;
+  gap: 16px;
+  width: 1068px;
+}
+
+#appendix-ask-boundary .ab-gap {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  margin: 0;
+  padding: 16px 24px;
+  border: 2px dashed var(--ink);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#appendix-ask-boundary .ab-gap .mono {
+  font-size: var(--t-small);
+}
+
+#appendix-ask-boundary .ab-stack-edges {
+  position: absolute;
+  top: 280px;
+  left: 1224px;
+  width: 80px;
+  height: 600px;
+}
+
+#appendix-ask-boundary .ab-stack-edges svg {
+  display: block;
+}
+
+#appendix-ask-boundary .ab-stack {
+  position: absolute;
+  top: 240px;
+  left: 1224px;
+  display: grid;
+  gap: 40px;
+  width: 600px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-ask-boundary .ab-layer {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+#appendix-ask-boundary .ab-box {
+  display: grid;
+  width: 80px;
+  height: 80px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-ask-boundary .ab-box--gap {
+  border: 4px dashed var(--mennige);
+}
+
+#appendix-ask-boundary .ab-layer__text {
+  font-size: var(--t-small);
+  line-height: 1.3;
+}
+
+#appendix-ask-boundary .ab-layer__text b {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+#appendix-ask-boundary .ab-public-panel {
+  box-sizing: border-box;
+  height: 300px;
+  padding: 24px 28px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#appendix-ask-boundary .ab-public-panel strong {
+  font-size: var(--t-lead);
+}
+
+#appendix-ask-boundary .ab-public-panel p {
+  margin: 16px 0 0;
+}

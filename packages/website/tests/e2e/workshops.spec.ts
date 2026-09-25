@@ -52,10 +52,12 @@ test.describe("workshop self-study journey", () => {
     await page.getByRole("radio", { name: "The ending balance already includes the change. Adding it again counts it twice.", exact: true }).check();
     await page.getByRole("button", { name: "Check answer", exact: true }).click();
     await expect(page.getByText("The change is already in the ending balance.", { exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Try again", exact: true })).toBeFocused();
+    // A correct answer offers a neutral reset; "Try again" is reserved for wrong answers.
+    await expect(page.getByRole("button", { name: "Reset", exact: true })).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
-    await expect(page.getByRole("radio", { name: "Use 100 euros and check what the fields mean first.", exact: true })).toBeFocused();
+    // Reset reshuffles the options, then focuses whichever decision now comes first.
+    await expect(page.locator("form fieldset").first().getByRole("radio").first()).toBeFocused();
     await page.goto("/workshops/datenbereitschaft-fuer-ki/guide.html");
     await page.getByText("Reveal the explanation", { exact: true }).click();
     await expect(page.locator("details").first()).toHaveAttribute("open", "");
@@ -95,7 +97,8 @@ test.describe("workshop self-study journey", () => {
       await page.locator(`#${id}`).selectOption(value);
     }
     await page.getByRole("button", { name: "Test My Choices" }).click();
-    await expect(page.locator("#simulation-grade")).toHaveText("6 / 6 cases · 10 / 10 controls");
+    await expect(page.locator("#simulation-grade")).toHaveText("6 / 6 cases · 9 / 10 controls");
+    await expect(page.locator("#status")).toHaveText("PILOT ONLY");
     await page.locator("#sim-metric").selectOption("movement");
     await expect(page.locator("#simulation-grade")).toHaveText("0 / 6 cases · 0 / 10 controls");
     const response = await request.get(`${base}/data-readiness-kit.zip`);

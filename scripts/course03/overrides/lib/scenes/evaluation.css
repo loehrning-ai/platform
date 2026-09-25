@@ -1,0 +1,321 @@
+/* evaluation (spec C.16): five representative cases with their expected behaviours, then two boards
+   that never share a border or a total: Recorded AI runs (left) and Database checks (right),
+   separated by a 6 px double ink rule. Section coordinates 1920x1080; the vote band (776-968) sits
+   below both boards (432-752). */
+
+#evaluation .ev-stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* Case strip: five columns across the content width, y 232-391. */
+#evaluation .ev-cases {
+  position: absolute;
+  top: 232px;
+  left: 96px;
+  display: grid;
+  width: 1728px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#evaluation .ev-case {
+  display: grid;
+  grid-template-rows: 64px 56px;
+  row-gap: 20px;
+  padding-top: 16px;
+  border-top: 3px solid var(--ink);
+}
+
+#evaluation .ev-case__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#evaluation .ev-case__icon {
+  width: 44px;
+  height: 44px;
+  stroke-width: 3px;
+}
+
+#evaluation .ev-case__label {
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Expected behaviour: a label, not a button. An arrow from the question and the word, no frame. The two
+   refusals share one label with a bracket over both cases. */
+#evaluation .ev-case__verdict {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 12px;
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#evaluation .ev-verdict__arrow {
+  flex: none;
+  overflow: visible;
+}
+
+#evaluation .ev-verdict__stem {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#evaluation .ev-verdict__head {
+  fill: var(--ink);
+}
+
+#evaluation .ev-case__verdict--pair {
+  justify-self: stretch;
+  width: calc(200% + 16px);
+  box-sizing: border-box;
+}
+
+/* The bracket sits above the shared label, so "Refuse" keeps the same baseline as its neighbours. */
+#evaluation .ev-case__verdict--pair::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 0;
+  left: 0;
+  height: 10px;
+  border: 3px solid var(--ink);
+  border-bottom: 0;
+}
+
+/* The two boards: x 96-924 and 996-1824, y 424-760 (the vote band starts at 776). */
+#evaluation .ev-board {
+  position: absolute;
+  top: 424px;
+  width: 828px;
+  height: 336px;
+  align-content: start;
+  gap: 8px;
+}
+
+#evaluation .ev-board--run { left: 96px; }
+#evaluation .ev-board--db { left: 996px; gap: 16px; }
+
+#evaluation .ev-divider {
+  position: absolute;
+  top: 424px;
+  left: 954px;
+  width: 12px;
+  height: 336px;
+  border-right: 3px solid var(--ink);
+  border-left: 3px solid var(--ink);
+}
+
+#evaluation .ev-head {
+  height: 40px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+#evaluation .ev-head .icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Which three questions the runs answered, so "3" is never read as the first three cases above. */
+#evaluation .ev-sub {
+  margin: -4px 0 4px;
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.25;
+}
+
+#evaluation .ev-head__pass {
+  margin-left: -6px;
+  color: var(--pass);
+}
+
+#evaluation .ev-row {
+  height: 64px;
+  align-items: center;
+  margin: 0;
+  border-top: 1px solid var(--leinen);
+}
+
+#evaluation .ev-lab {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#evaluation .ev-swatch {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--ink);
+}
+
+#evaluation .ev-swatch--export {
+  border-style: dashed;
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#evaluation .ev-swatch--approved {
+  border-width: 4px;
+  background: var(--ink);
+}
+
+#evaluation .ev-lab__icon {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2.5px;
+}
+
+#evaluation .ev-val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Nine cells (68 px, 12 px apart, +12 px between behaviour groups = 744 px): 5 answers, 1 ask back,
+   2 refuse, 1 deny. */
+#evaluation .ev-cells {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#evaluation .ev-cell {
+  position: relative;
+  display: grid;
+  width: 68px;
+  height: 68px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--beton);
+}
+
+#evaluation .ev-cell--group {
+  margin-left: 12px;
+}
+
+#evaluation .ev-cell > .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 2.5px;
+}
+
+#evaluation .ev-cell__pass {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--pass);
+  background: var(--papier);
+  color: var(--pass);
+}
+
+#evaluation .ev-cell__pass .icon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2.5px;
+}
+
+#evaluation .ev-score {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+#evaluation .ev-big {
+  margin: 0;
+  font-size: var(--t-num-hero);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Step 3 (spec H E26): the vote question takes the title band, so it is never empty; the band keeps "Room vote"
+   and the options. Step 4: the scope line is the scene's closing headline, in the title band the title left for the vote
+   (the title states the vote's answer). The cases and both boards never move. */
+#evaluation-scope,
+#evaluation-vote-question {
+  position: absolute;
+  top: 112px;
+  left: 96px;
+  width: 1728px;
+  margin: 0;
+  font-size: var(--t-h1);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* One Mennige group per step: the five cases, their behaviour labels, the recorded runs board (held while
+   the room votes), then the scope headline. */
+#evaluation[data-step-current="0"] .ev-case__icon {
+  color: var(--mennige);
+}
+
+#evaluation[data-step-current="1"] .ev-case__verdict {
+  color: var(--mennige);
+}
+
+#evaluation[data-step-current="1"] .ev-verdict__stem {
+  stroke: var(--mennige);
+}
+
+#evaluation[data-step-current="1"] .ev-verdict__head {
+  fill: var(--mennige);
+}
+
+#evaluation[data-step-current="1"] .ev-case__verdict--pair::before {
+  border-color: var(--mennige);
+}
+
+#evaluation[data-step-current="2"] .ev-board--run,
+#evaluation[data-step-current="3"] .ev-board--run {
+  border-color: var(--mennige);
+}
+
+/* The closing headline stays in ink; only the phrase that answers the vote takes the accent. */
+#evaluation[data-step-current="4"] .ev-headline__focus {
+  color: var(--mennige);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#evaluation .ev-cell {
+  --m-stagger: 60ms;
+}
+
+/* The runs board also carries its question line and its footer ("An observation, not a benchmark.") inside
+   the fixed 336 px board, so its rows are 50 px. */
+#evaluation .ev-board--run {
+  gap: 6px;
+}
+
+#evaluation .ev-board--run .ev-row {
+  height: 50px;
+}

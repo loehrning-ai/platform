@@ -1,0 +1,165 @@
+/* appendix-semantic-contract (spec C.20): the ending_mrr YAML verbatim (10 lines), the Four Blanks
+   mapped onto its fields, and the compiler fan-out. Static on entry (0 steps). */
+
+#appendix-semantic-contract .sc-code {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+  width: 832px;
+  padding: 16px 0;
+}
+
+#appendix-semantic-contract .sc-line {
+  display: block;
+  padding: 0 24px;
+  border-left: 8px solid transparent;
+  white-space: pre;
+}
+
+#appendix-semantic-contract .sc-line--mapped {
+  font-weight: 700;
+}
+
+#appendix-semantic-contract .sc-line--focus {
+  border-left-color: var(--mennige);
+  background: var(--papier);
+}
+
+#appendix-semantic-contract .sc-map {
+  position: absolute;
+  top: 240px;
+  left: 1000px;
+  display: grid;
+  gap: 18px;
+  width: 824px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-semantic-contract .sc-map__row {
+  display: grid;
+  grid-template-columns: 80px 240px 136px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  height: 80px;
+}
+
+#appendix-semantic-contract .sc-map__tile {
+  display: grid;
+  width: 80px;
+  height: 80px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-semantic-contract .sc-map__q {
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+#appendix-semantic-contract .sc-map__pointer {
+  position: relative;
+  height: 3px;
+  background: var(--ink);
+}
+
+#appendix-semantic-contract .sc-map__pointer::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: -2px;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 14px solid var(--ink);
+}
+
+#appendix-semantic-contract .sc-map__field {
+  justify-self: start;
+  padding: 10px 16px;
+  border: 3px solid var(--ink);
+  background: var(--beton);
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#appendix-semantic-contract .sc-fan {
+  position: absolute;
+  top: 732px;
+  left: 96px;
+  width: 1728px;
+  height: 120px;
+}
+
+#appendix-semantic-contract .sc-fan svg {
+  display: block;
+  overflow: visible;
+}
+
+#appendix-semantic-contract .sc-compiler {
+  position: absolute;
+  top: 690px;
+  left: 96px;
+  display: grid;
+  justify-items: start;
+  gap: 20px;
+}
+
+#appendix-semantic-contract .sc-compiler__box {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-semantic-contract .sc-compiler__label {
+  font-size: var(--t-small);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#appendix-semantic-contract .sc-outputs {
+  position: absolute;
+  top: 768px;
+  left: 256px;
+  display: grid;
+  grid-template-columns: repeat(4, 374px);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-semantic-contract .sc-outputs li {
+  display: grid;
+  height: 96px;
+  place-items: center;
+  padding: 0 20px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-small);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+#appendix-semantic-contract .sc-nowrap {
+  white-space: nowrap;
+}
+
+#appendix-semantic-contract .sc-note {
+  position: absolute;
+  top: 896px;
+  left: 256px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-appendix);
+}

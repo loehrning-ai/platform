@@ -1,0 +1,270 @@
+/* ready-rematch (spec C.12): the same question through the approved views. The recorded run lands
+   first (step 1), the database check rises beside it with row-by-row "=" (step 2), and the two
+   known gaps take the question card's place on the final step. */
+
+#ready-rematch-question {
+  position: absolute;
+  top: 248px;
+  left: 96px;
+  width: 1080px;
+  max-width: none;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+#ready-rematch:not([data-step-current="0"]) #ready-rematch-question::before {
+  background: var(--ink);
+}
+
+/* Mini route strip: question → AI → (read-only key) → approved views, solid lines. */
+#ready-rematch-strip {
+  position: absolute;
+  top: 248px;
+  left: 1240px;
+  width: 528px;
+  height: 136px;
+}
+
+#ready-rematch .rr-strip__wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#ready-rematch .rr-edge {
+  stroke-width: 4;
+}
+
+#ready-rematch .rr-strip__node {
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 96px;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#ready-rematch-s-question { left: 0; }
+#ready-rematch #ready-rematch-s-question { align-items: flex-start; }
+#ready-rematch-s-ai { left: 216px; }
+#ready-rematch-s-views { left: 432px; }
+
+#ready-rematch .rr-strip__box {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  flex: none;
+  box-sizing: border-box;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#ready-rematch .rr-strip__box--views {
+  border-width: 4px;
+}
+
+#ready-rematch .rr-strip__label {
+  flex: none;
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#ready-rematch .rr-strip__key {
+  position: absolute;
+  top: 20px;
+  left: 344px;
+  display: grid;
+  width: 56px;
+  height: 56px;
+  box-sizing: border-box;
+  place-items: center;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#ready-rematch .rr-strip__key .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 2.5px;
+}
+
+/* Icons on the projector stay at 40 px or more (spec B.5): chips, Matches marks, gap chips. */
+#ready-rematch .chip .icon,
+#ready-rematch .rr-match .icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* The two evidence cards share one row grid so every "=" joins equal rows. */
+#ready-rematch .rr-card {
+  position: absolute;
+  top: 424px;
+  width: 760px;
+  box-sizing: border-box;
+  gap: 12px;
+  padding: 28px 40px;
+}
+
+#ready-rematch-run {
+  z-index: 1;
+  left: 96px;
+}
+
+#ready-rematch-db {
+  left: 1064px;
+}
+
+#ready-rematch .ev-head {
+  height: 44px;
+}
+
+#ready-rematch .ev-head .icon {
+  width: 40px;
+  height: 40px;
+}
+
+#ready-rematch .rr-pass {
+  color: var(--pass);
+}
+
+#ready-rematch .rr-slot {
+  display: flex;
+  height: 60px;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#ready-rematch .rr-slot .icon {
+  margin-right: 4px;
+}
+
+#ready-rematch .rr-row {
+  position: relative;
+  height: 80px;
+  box-sizing: border-box;
+  align-items: center;
+  border-top: 1px solid var(--leinen);
+  font-size: var(--t-lead);
+}
+
+#ready-rematch .rr-month {
+  font-size: var(--t-lead);
+}
+
+#ready-rematch .rr-foot {
+  height: 30px;
+  margin: 0;
+}
+
+#ready-rematch .rr-match {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--pass);
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#ready-rematch .rr-eq {
+  position: absolute;
+  top: 16px;
+  left: calc(100% + 43px);
+  overflow: visible;
+}
+
+#ready-rematch .rr-eq path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+#ready-rematch .rr-travel {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+#ready-rematch .rr-route {
+  fill: none;
+  stroke: none;
+}
+
+/* Final step: both known gaps where the question card stood, the step's one accent. */
+#ready-rematch-gaps {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+  display: grid;
+  gap: 12px;
+  padding-left: 24px;
+}
+
+#ready-rematch-gaps::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  background: var(--mennige);
+}
+
+#ready-rematch .rr-gap {
+  margin: 0;
+  justify-self: start;
+  background: var(--papier);
+  color: var(--ink);
+}
+
+/* One Mennige focus group per step: question card, picked view, the "=" connectors, the gaps. */
+#ready-rematch[data-step-current="1"] #ready-rematch-picked.is-active {
+  outline: 4px solid var(--mennige);
+  outline-offset: 4px;
+}
+
+#ready-rematch[data-step-current="2"] .rr-eq path {
+  stroke: var(--mennige);
+}
+
+/* Spec H E24: the recorded run is what the question's trip produces; its values settle when the packet lands
+   on its Picked slot. */
+#ready-rematch {
+  --rr-arrive: 400ms;
+}
+
+#ready-rematch .rr-travel .packet {
+  --m-travel: var(--rr-arrive);
+}
+
+/* The destination exists before the packet leaves: the card frame rises at once (0–320 ms) while the packet
+   travels to its Picked slot; the picked name and the values fade in on arrival. */
+#ready-rematch-run.is-entering .ev-row,
+#ready-rematch-run.is-entering [id$="-picked"] > :last-child {
+  animation: story-fade var(--m-fade) var(--ease-fade) var(--rr-arrive) both;
+}
+
+#ready-rematch-run .ev-value {
+  --m-count: 500ms;
+}
+
+/* Press 2, evidence before verdict (≤ 900 ms): the database card rises, the "=" connectors draw in 400 ms
+   (orders 0–2 end at 400, 480 and 560 ms), then each row's "Matches" stamps (560–880 ms). */
+#ready-rematch .rr-eq {
+  --m-draw: 400ms;
+}
+
+#ready-rematch .rr-match.is-entering {
+  animation-delay: 560ms;
+}

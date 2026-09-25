@@ -337,7 +337,7 @@ WHERE table_schema = 'analytics'
         <div>
           <pre class="code" id="ddl-mrr" role="group" aria-label="View definition of analytics.mrr_summary_monthly"></pre>
           <pre class="code" id="ddl-churn" role="group" aria-label="View definition of analytics.logo_churn_by_segment_quarter"></pre>
-          <div class="fig__controls"><label class="toggle"><input type="checkbox" id="ddl-break"> Break it: remove <code>starting_accounts</code></label></div>
+          <div class="fig__controls"><label class="toggle"><input type="checkbox" id="ddl-break"> <span>Break it: remove <code>starting_accounts</code></span></label></div>
           <div id="ddl-broken" aria-live="polite"></div>
         </div>
       </div>
@@ -582,7 +582,7 @@ dropdb domain_packs</code></pre>
         <tr><td data-label="Change">AI route, instructions, Skill or CLAUDE.md</td><td data-label="Re-run">Step 11</td></tr>
       </tbody></table>
     </div></details>
-    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/RUNBOOK.md">RUNBOOK.md</a><a href="./data-readiness-kit/READY-CANVAS.md">READY-CANVAS.md</a><a href="./data-readiness-kit/QUESTION-CARD.md">QUESTION-CARD.md</a></p>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/BUILD-ORDER.md">BUILD-ORDER.md</a><a href="./data-readiness-kit/READY-CANVAS.md">READY-CANVAS.md</a><a href="./data-readiness-kit/QUESTION-CARD.md">QUESTION-CARD.md</a></p>
   </article>
 </section>
 
@@ -648,7 +648,7 @@ dropdb domain_packs</code></pre>
       <li><a href="./data-readiness-kit.zip" download><strong>Workshop kit</strong><span class="mono">data-readiness-kit.zip</span></a></li>
       <li><a href="./data-readiness-kit/builder/README.md"><strong>Builder kit: start here</strong><span class="mono">builder/README.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/CHEATSHEET.md"><strong>One-page cheat sheet</strong><span class="mono">builder/CHEATSHEET.md</span></a></li>
-      <li><a href="./data-readiness-kit/builder/RUNBOOK.md"><strong>Runbook, steps 0–11</strong><span class="mono">builder/RUNBOOK.md</span></a></li>
+      <li><a href="./data-readiness-kit/builder/BUILD-ORDER.md"><strong>Build order, steps 0–11</strong><span class="mono">builder/BUILD-ORDER.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/semantic/metric.yml"><strong>Annotated metric file</strong><span class="mono">builder/semantic/metric.yml</span></a></li>
       <li><a href="./data-readiness-kit/builder/warehouse/sql/00_build_all.sql"><strong>One-command PostgreSQL build</strong><span class="mono">builder/warehouse/sql/00_build_all.sql</span></a></li>
       <li><a href="./data-readiness-kit/builder/naming/lint_names.sql"><strong>Naming lint</strong><span class="mono">builder/naming/lint_names.sql</span></a></li>
@@ -666,7 +666,7 @@ dropdb domain_packs</code></pre>
     <p class="label">Evidence rules</p>
     <ul>
       <li>One run is an observation, not a benchmark.</li>
-      <li>Say “same AI route”, never “same model”.</li>
+      <li>Two runs share an AI route, not a proven model version: say “same AI route”.</li>
       <li>The database checks test the setup and course rules, not the AI.</li>
       <li>Loaded is not the same as used: the runs cited the definition 0 of 3.</li>
       <li>Two locks: refuse early, enforce anyway.</li>

@@ -1,0 +1,213 @@
+/* controlled-comparison (spec C.8): two lanes whose four shared parts merge into one block;
+   only the database column changes. Section coordinates, 1920x1080; content 224–984. */
+
+#controlled-comparison .cc-stage {
+  position: absolute;
+  inset: 0;
+}
+
+#controlled-comparison .cc-wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#controlled-comparison .cc-edge--approved {
+  stroke-width: 4;
+}
+
+/* Lane badges: one per row, left margin, centred on the lane line. */
+#controlled-comparison .cc-lane {
+  position: absolute;
+  left: 96px;
+}
+
+#controlled-comparison .cc-lane--export { top: 356px; }
+#controlled-comparison .cc-lane--approved { top: 636px; }
+
+/* Node rows: Question · Data · AI route · Settings on a 220 px pitch from x 440. */
+#controlled-comparison .cc-row {
+  position: absolute;
+  left: 480px;
+  display: flex;
+  align-items: flex-start;
+  gap: 84px;
+}
+
+#controlled-comparison .cc-row .node {
+  flex: none;
+  width: 136px;
+}
+
+#controlled-comparison .cc-row--export { top: 312px; }
+#controlled-comparison .cc-row--approved { top: 592px; }
+#controlled-comparison .cc-row--merged { top: 452px; }
+
+#controlled-comparison .cc-facts {
+  white-space: nowrap;
+}
+
+#controlled-comparison .cc-db {
+  position: absolute;
+  left: 1380px;
+  width: 136px;
+}
+
+#controlled-comparison .cc-db--export { top: 312px; }
+#controlled-comparison .cc-db--approved { top: 592px; }
+
+/* The spanning "Same" block. */
+#controlled-comparison .cc-frame {
+  position: absolute;
+  top: 280px;
+  left: 408px;
+  width: 900px;
+  height: 520px;
+  border: 3px solid var(--ink);
+}
+
+#controlled-comparison .cc-stamp {
+  position: absolute;
+  z-index: 2;
+  top: 228px;
+}
+
+#controlled-comparison .cc-stamp--same { left: 440px; }
+#controlled-comparison .cc-stamp--changed { left: 1420px; }
+
+/* Changed cells: the database column split into its two lanes. */
+#controlled-comparison .cc-cell {
+  position: absolute;
+  left: 1380px;
+  display: grid;
+  width: 444px;
+  height: 252px;
+  align-content: center;
+  gap: 6px;
+  padding: 28px 20px 20px 48px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#controlled-comparison .cc-cell--export {
+  top: 280px;
+  border-style: dashed;
+}
+
+#controlled-comparison .cc-cell--approved {
+  top: 548px;
+  border-width: 4px;
+}
+
+#controlled-comparison .cc-cell__swatch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 32px;
+  border-right: 3px solid var(--ink);
+}
+
+#controlled-comparison .cc-cell--export .cc-cell__swatch {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#controlled-comparison .cc-cell--approved .cc-cell__swatch {
+  display: none;
+}
+
+#controlled-comparison .cc-cell__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 6px;
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+#controlled-comparison .cc-cell__row {
+  margin: 0;
+  padding-left: 64px;
+  font-size: var(--t-body);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Small print read aloud word for word. */
+#controlled-comparison .cc-print {
+  position: absolute;
+  top: 856px;
+  left: 96px;
+  padding: 4px 0 4px 32px;
+}
+
+#controlled-comparison .cc-print::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  background: var(--ink);
+}
+
+#controlled-comparison .cc-print p {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+/* One Mennige group per step; the previous focus returns to ink on the next press. */
+#controlled-comparison[data-step-current="0"] .cc-lane {
+  border-color: var(--mennige);
+}
+
+#controlled-comparison[data-step-current="1"] .cc-frame {
+  border: 4px solid var(--mennige);
+}
+
+#controlled-comparison[data-step-current="1"] .cc-stamp--same,
+#controlled-comparison[data-step-current="2"] .cc-stamp--changed {
+  border-color: var(--mennige);
+}
+
+#controlled-comparison[data-step-current="3"] .cc-print::before {
+  background: var(--mennige);
+}
+
+/* Merge (press 1): the unlabelled ghost copy fades out while it converges on the labelled row, so the two
+   copies never double-expose their labels and icons mid-merge. At rest it sits exactly under the labelled
+   row (same boxes and icons, no labels), so reduced motion and the export still show one spanning node. */
+#controlled-comparison .cc-row--ghost.is-entering {
+  animation-name: controlled-comparison-ghost;
+}
+
+@keyframes controlled-comparison-ghost {
+  from { opacity: 1; transform: translate(var(--merge-x, 0px), var(--merge-y, 0px)); }
+  45% { opacity: 0; }
+  to { opacity: 0; transform: none; }
+}
+
+/* Merge choreography (press 1, ≤ 900 ms): the rows converge first (0–520 ms); the frame fades in as they
+   land (400 ms), the connectors draw only once the row is in place (480–800 ms, so no line strikes a label
+   mid-merge), their heads follow (640 ms), and the "Same" verdict stamps last (520–840 ms). */
+#controlled-comparison .cc-wires g[data-step="1"] > g[data-motion="draw"] {
+  --order: 4;
+  --m-stagger: 120ms;
+  --m-draw: 320ms;
+}
+
+#controlled-comparison .cc-merge-head.is-entering {
+  animation-delay: 640ms;
+}
+
+#controlled-comparison .cc-frame.is-entering {
+  animation-delay: 400ms;
+}
+
+#controlled-comparison .cc-stamp--same.is-entering {
+  animation-delay: 520ms;
+}

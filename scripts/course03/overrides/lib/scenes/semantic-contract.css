@@ -1,0 +1,308 @@
+/* semantic-contract (spec C.10): the ending MRR definition drawn as an enlarged contract document
+   (the contract icon's cut corner and fold). Its four lines are the Four Blanks, in failure-anatomy's
+   order and icons; each press fills one line. Section coordinates, 1920x1080; content 224–984. */
+
+#semantic-contract-doc {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+  width: 1728px;
+  height: 600px;
+}
+
+#semantic-contract .sc-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+#semantic-contract .sc-frame__page {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: miter;
+}
+
+#semantic-contract .sc-frame__fold {
+  fill: var(--beton);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: miter;
+}
+
+#semantic-contract .sc-frame__rule {
+  fill: none;
+  stroke: var(--leinen);
+  stroke-width: 2;
+}
+
+/* ---- the four lines */
+
+#semantic-contract-rows {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 488px;
+}
+
+#semantic-contract .sc-row {
+  position: absolute;
+  right: 3px;
+  left: 3px;
+  display: grid;
+  height: 96px;
+  grid-template-columns: 64px 296px 820px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 32px;
+  padding: 16px 32px 0 45px;
+}
+
+#semantic-contract-row-1 { top: 24px; }
+#semantic-contract-row-2 { top: 120px; }
+#semantic-contract-row-3 { top: 216px; height: 160px; }
+#semantic-contract-row-4 { top: 376px; }
+
+/* Left bar: none while blank, ink once filled, Mennige on the line the press just filled. */
+#semantic-contract .sc-row::before,
+#semantic-contract-foot::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  width: 8px;
+  background: transparent;
+}
+
+#semantic-contract .sc-row > .icon {
+  width: 64px;
+  height: 64px;
+}
+
+#semantic-contract .sc-row__q {
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 64px;
+  white-space: nowrap;
+}
+
+#semantic-contract .sc-slot {
+  display: grid;
+  grid-template-rows: 64px 6px auto;
+  justify-items: start;
+}
+
+#semantic-contract .sc-slot__blank,
+#semantic-contract .sc-slot__a {
+  grid-area: 1 / 1;
+  align-self: end;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#semantic-contract .sc-slot__blank {
+  padding: 0 0 8px 8px;
+  color: var(--slate);
+  font-size: var(--t-num-md);
+  font-weight: 700;
+}
+
+#semantic-contract .sc-slot__a {
+  padding-bottom: 10px;
+  font-size: var(--t-h2);
+  font-weight: 600;
+}
+
+#semantic-contract .sc-line {
+  display: block;
+  grid-row: 2;
+  overflow: visible;
+}
+
+#semantic-contract .sc-line__blank {
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+  stroke-dasharray: 12 8;
+}
+
+#semantic-contract .sc-line__filled {
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+/* The rule chip stamps under the months line at press 3; its icon is raised to the 40 px floor (B.5). */
+#semantic-contract .sc-rule {
+  grid-area: 3 / 1;
+  width: 440px;
+  height: 56px;
+  margin-top: 16px;
+  background: var(--papier);
+}
+
+#semantic-contract .sc-rule .icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Right column: one 64 px visual per line, left-aligned at the column start (x 1420) and level with
+   that line's answer (the slot's 64 px text row), so each picture reads as its line's answer. */
+#semantic-contract .sc-mini {
+  display: block;
+  height: 64px;
+  justify-self: start;
+}
+
+/* ---- mini graphics (pure geometry, no words) */
+
+#semantic-contract .sc-tank,
+#semantic-contract .sc-collapse,
+#semantic-contract .sc-cal,
+#semantic-contract .sc-tables {
+  display: block;
+  overflow: visible;
+}
+
+#semantic-contract .sc-tank__walls {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+#semantic-contract .sc-tank__surface {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+#semantic-contract .sc-tank__body {
+  fill: var(--slate);
+}
+
+#semantic-contract .sc-collapse__many {
+  fill: none;
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+}
+
+#semantic-contract .sc-collapse__arrow {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+#semantic-contract .sc-collapse__month {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#semantic-contract .sc-cal__head {
+  fill: var(--slate);
+}
+
+#semantic-contract .sc-cal__mark {
+  fill: var(--ink);
+}
+
+#semantic-contract .sc-cal__frame,
+#semantic-contract .sc-cal__cell {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+/* Only one table: the approved one in ink, the others faint. */
+#semantic-contract .sc-tables__other rect,
+#semantic-contract .sc-tables__other path {
+  fill: none;
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+}
+
+#semantic-contract .sc-tables__head {
+  fill: var(--ink);
+}
+
+#semantic-contract .sc-tables__frame,
+#semantic-contract .sc-tables__rows {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+/* ---- footer (press 5): clock, unit and freshness, then the owner's approval stamp */
+
+#semantic-contract-foot {
+  position: absolute;
+  top: 504px;
+  right: 3px;
+  left: 3px;
+  display: flex;
+  height: 80px;
+  align-items: center;
+  gap: 40px;
+  padding: 0 32px 0 53px;
+}
+
+#semantic-contract .sc-foot__unit {
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#semantic-contract-stamp {
+  position: absolute;
+  top: 6px;
+  right: 32px;
+  width: 620px;
+  height: 68px;
+  justify-content: center;
+  padding: 0 20px;
+  white-space: nowrap;
+}
+
+#semantic-contract-caption {
+  position: absolute;
+  top: 872px;
+  left: 96px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+/* ---- one Mennige group per step: the four "?" at step 0, the filled line at 1–4, the footer at 5 */
+
+#semantic-contract[data-step-current="0"] .sc-slot__blank {
+  color: var(--mennige);
+}
+
+#semantic-contract[data-reached~="1"] #semantic-contract-row-1::before,
+#semantic-contract[data-reached~="2"] #semantic-contract-row-2::before,
+#semantic-contract[data-reached~="3"] #semantic-contract-row-3::before,
+#semantic-contract[data-reached~="4"] #semantic-contract-row-4::before {
+  background: var(--ink);
+}
+
+#semantic-contract[data-step-current="1"] #semantic-contract-row-1::before,
+#semantic-contract[data-step-current="2"] #semantic-contract-row-2::before,
+#semantic-contract[data-step-current="3"] #semantic-contract-row-3::before,
+#semantic-contract[data-step-current="4"] #semantic-contract-row-4::before,
+#semantic-contract[data-step-current="5"] #semantic-contract-foot::before {
+  background: var(--mennige);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#semantic-contract .sc-line__filled,
+#semantic-contract .sc-collapse__arrow {
+  --m-draw: 400ms;
+}

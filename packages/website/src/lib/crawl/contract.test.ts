@@ -284,10 +284,11 @@ describe("crawl contract", () => {
   });
 
   it("keeps workshop fonts and images immutable", () => {
+    const assetsPrefix = "/workshops/datenbereitschaft-fuer-ki/assets";
     for (const path of [
-      "/workshops/datenbereitschaft-fuer-ki/assets/fonts/Typing-Static-400.ttf",
-      "/workshops/datenbereitschaft-fuer-ki/assets/lockup-horizontal.svg",
-      "/workshops/datenbereitschaft-fuer-ki/assets/tim-loehr.jpg",
+      `${assetsPrefix}/fonts/Typing-Static-400.ttf`,
+      `${assetsPrefix}/lockup-horizontal.svg`,
+      `${assetsPrefix}/tim-loehr.jpg`,
     ]) {
       const entry = getCrawlRoute(path);
       expect(entry.pattern, path).toBe("/workshops/:slug/assets/:path*");

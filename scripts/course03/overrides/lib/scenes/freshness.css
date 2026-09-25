@@ -1,0 +1,237 @@
+/* freshness (spec C.15): the age gauge. A flat 0-72 h ruler (x = 164 + 22 px per hour), the shaded
+   warning zone from the 36 h rule, a 24 px needle at the data's real age (3 h), the 60 h what-if and
+   the ghost marker that keeps the warning stamp's referent in the final state. The 72 h tick is only
+   the ruler end. Section coordinates 1920x1080; the vote band (776-968) sits below everything. */
+
+#freshness .fr-stage {
+  position: absolute;
+  inset: 0;
+}
+
+#freshness .fr-art {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#freshness .fr-ruler__fill {
+  fill: var(--papier);
+}
+
+/* Spec H E25: the warning zone is Beton with a dashed edge (inset so the ruler's solid frame never hides it);
+   the 45° hatch keeps its two meanings, export tables and the permission wall. */
+#freshness .fr-zone__fill {
+  fill: var(--beton);
+}
+
+#freshness .fr-zone__edge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-dasharray: 12 8;
+}
+
+#freshness .fr-ruler__band {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#freshness .fr-ruler__ticks {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#freshness .fr-marker__line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 5;
+}
+
+#freshness .fr-track {
+  fill: none;
+  stroke: none;
+}
+
+#freshness .fr-needle rect,
+#freshness .fr-traveller rect {
+  fill: var(--ink);
+}
+
+/* A stop needle shows once its traveller arrives (the runtime sets .is-active; reduced motion and the
+   static export set it directly). */
+#freshness .fr-needle:not(.is-active) {
+  opacity: 0;
+}
+
+#freshness .fr-ghost rect,
+#freshness .fr-ghost path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-dasharray: 6 4;
+}
+
+/* The data: a database with a clock badge, its name and the load / check clock. */
+#freshness .fr-node {
+  position: absolute;
+  top: 240px;
+  left: 96px;
+}
+
+#freshness .fr-clock-badge {
+  top: -24px;
+  right: -24px;
+  width: 56px;
+  height: 56px;
+}
+
+#freshness .fr-clock-badge .icon {
+  width: 40px;
+  height: 40px;
+  stroke-width: 2.5px;
+}
+
+#freshness .fr-data {
+  position: absolute;
+  top: 244px;
+  left: 280px;
+  margin: 0;
+  font-size: var(--t-h2);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* The load / check clock is a compact caption of the data, not a second timeline: the only time
+   scale on the slide is the gauge (22 px per hour), where 0h is the load and the needle is the check. */
+#freshness .fr-clock {
+  position: absolute;
+  top: 304px;
+  left: 280px;
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* Labels on the gauge. */
+#freshness .fr-age,
+#freshness .fr-sixty {
+  position: absolute;
+  top: 443px;
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+#freshness .fr-age { left: 258px; }
+#freshness .fr-sixty { left: 1512px; }
+
+#freshness .fr-rule {
+  position: absolute;
+  top: 376px;
+  left: 976px;
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+#freshness .fr-tick {
+  position: absolute;
+  top: 576px;
+  width: 120px;
+  margin: 0 0 0 -60px;
+  color: var(--slate);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+#freshness .fr-fresh {
+  position: absolute;
+  top: 640px;
+  left: 164px;
+  margin: 0;
+  background: var(--papier);
+}
+
+/* The answer at 60 h, centred under the 60 h mark (x 1484). */
+#freshness .fr-warn {
+  position: absolute;
+  top: 632px;
+  left: 1244px;
+  width: 480px;
+  justify-content: center;
+  margin: 0;
+  white-space: nowrap;
+}
+
+#freshness .fr-noblock {
+  position: absolute;
+  top: 716px;
+  left: 1244px;
+  width: 480px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-body);
+  line-height: 1.3;
+  text-align: center;
+}
+
+#freshness .fr-whatif {
+  position: absolute;
+  top: 812px;
+  left: 96px;
+  max-width: none;
+  margin: 0;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* One Mennige group per step: the needle at the data's age, the 36 h rule (held during the vote), the
+   needle at 60 h, then the what-if line (story.css paints .callout[data-focus]). */
+#freshness[data-step-current="0"] #freshness-needle-3 rect,
+#freshness[data-step-current="0"] .fr-traveller--load rect,
+#freshness[data-step-current="3"] #freshness-needle-60 rect,
+#freshness[data-step-current="3"] .fr-traveller--out rect {
+  fill: var(--mennige);
+}
+
+#freshness[data-step-current="1"] .fr-marker__line,
+#freshness[data-step-current="2"] .fr-marker__line {
+  stroke: var(--mennige);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+/* Spec H E24: a verdict at a needle stop is caused by the needle, so it starts when the needle lands. */
+#freshness {
+  --fr-arrive-load: 350ms;
+  --fr-arrive: 400ms;
+}
+
+#freshness .fr-traveller--load {
+  --m-travel: var(--fr-arrive-load);
+}
+
+#freshness .fr-traveller--out,
+#freshness .fr-traveller--back {
+  --m-travel: var(--fr-arrive);
+}
+
+#freshness .fr-fresh {
+  animation-delay: var(--fr-arrive-load);
+}
+
+#freshness .fr-sixty,
+#freshness .fr-warn,
+#freshness .fr-noblock,
+#freshness .fr-whatif {
+  animation-delay: var(--fr-arrive);
+}

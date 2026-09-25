@@ -1,0 +1,248 @@
+/* contract-consumers (spec C.11): one definition compiles for four readers (fan-out diagram); a
+   callout says what the recorded runs actually used; below a hatched band sit the two locks that
+   live outside the definition. Section coordinates, 1920x1080; content 224–984. */
+
+#contract-consumers-stage {
+  position: absolute;
+  inset: 0;
+}
+
+#contract-consumers .cc-wires {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#contract-consumers .cc-node {
+  position: absolute;
+  top: 342px;
+  width: 136px;
+}
+
+#contract-consumers-definition { left: 96px; }
+#contract-consumers-compile { left: 392px; }
+
+#contract-consumers-caption {
+  position: absolute;
+  top: 560px;
+  left: 96px;
+  max-width: 24ch;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+/* ---- the four readers */
+
+#contract-consumers-readers {
+  position: absolute;
+  top: 232px;
+  left: 704px;
+  display: grid;
+  width: 576px;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#contract-consumers .cc-reader {
+  display: flex;
+  height: 80px;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* ---- what the recorded runs used */
+
+#contract-consumers-callout {
+  position: absolute;
+  top: 232px;
+  left: 1336px;
+  width: 488px;
+  max-width: none;
+  padding: 20px 28px 22px 36px;
+}
+
+#contract-consumers .cc-callout__fact {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+#contract-consumers .cc-num {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* The callout shrinks to the counts once its punch line clears (a hidden step element takes no room). */
+#contract-consumers-punch.is-step-hidden {
+  display: none;
+}
+
+#contract-consumers .cc-callout__fact,
+#contract-consumers .cc-callout__punch,
+#contract-consumers .cc-lock__text {
+  text-wrap: balance;
+}
+
+#contract-consumers .cc-callout__punch {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 2px solid var(--leinen);
+  font-size: var(--t-lead);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#contract-consumers .cc-pointer {
+  top: 37px;
+  left: -59px;
+  width: 56px;
+}
+
+#contract-consumers .cc-pointer::after {
+  right: auto;
+  left: -8px;
+}
+
+/* ---- the locks band */
+
+#contract-consumers .cc-band__hatch {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+}
+
+#contract-consumers .cc-band__rule {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#contract-consumers-locks-label {
+  position: absolute;
+  top: 674px;
+  left: 144px;
+  padding: 0 24px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+  font-weight: 700;
+  line-height: 46px;
+}
+
+#contract-consumers-locks {
+  position: absolute;
+  top: 760px;
+  left: 96px;
+  display: grid;
+  width: 1728px;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+#contract-consumers .cc-lock {
+  position: relative;
+  display: flex;
+  min-height: 150px;
+  align-items: center;
+  gap: 28px;
+  padding: 20px 36px 20px 48px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#contract-consumers .cc-lock::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--ink);
+}
+
+#contract-consumers .cc-lock__text {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.3;
+}
+
+#contract-consumers .cc-lock__text b {
+  font-weight: 700;
+}
+
+#contract-consumers .cc-wall {
+  flex: none;
+  width: 32px;
+  height: 104px;
+  margin-left: auto;
+}
+
+/* ---- one Mennige group per step: definition, compile, the AI tool, the two locks */
+
+#contract-consumers[data-step-current="0"] #contract-consumers-definition .node__box {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+/* Compile is the packet's travel target: story.css outlines it when the packet lands (.is-active). The
+   runtime keeps .is-active on every later step, so the outline is limited to the press that sends it. */
+#contract-consumers:not([data-step-current="1"]) #contract-consumers-compile.is-active .node__box {
+  outline: none;
+}
+
+#contract-consumers[data-step-current="2"] #contract-consumers-reader-ai {
+  outline: 4px solid var(--mennige);
+  outline-offset: -4px;
+}
+
+#contract-consumers[data-step-current="3"] .cc-lock::before {
+  background: var(--mennige);
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#contract-consumers .cc-band {
+  --m-draw: 400ms;
+}
+
+/* Spec H E24: Compile's output is caused by the packet. The feed line draws with the packet and its head
+   lands with it; the fan draws out of Compile once the packet arrives (--order 1 × --m-stagger 300 ms), the
+   readers rise as the lines reach them, and the fan heads arrive with their lines. */
+#contract-consumers {
+  --cc-arrive: 300ms;
+}
+
+#contract-consumers .cc-wires .packet {
+  --m-travel: var(--cc-arrive);
+}
+
+#contract-consumers-feed {
+  --m-draw: 300ms;
+}
+
+#contract-consumers .cc-head--feed {
+  animation-delay: var(--cc-arrive);
+}
+
+#contract-consumers .cc-fan {
+  --m-stagger: 300ms;
+  --m-draw: 300ms;
+}
+
+#contract-consumers .cc-reader {
+  animation-delay: 400ms;
+}
+
+#contract-consumers .cc-head--fan {
+  animation-delay: 500ms;
+}

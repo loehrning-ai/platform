@@ -206,7 +206,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         kind: "zip",
         language: "en",
         description:
-          "Fragekarte, Prüfbogen, Szenariokarten und kommentierte Definitionsvorlagen. Das interaktive Labor ist separat verlinkt.",
+          "Startanleitung, Fragekarte, Prüfbogen, Szenariokarten und kommentierte Definitionsvorlagen. Das interaktive Labor ist separat verlinkt.",
       },
       {
         label:
@@ -420,7 +420,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         kind: "zip",
         language: "en",
         description:
-          "Question card, review canvas, scenario cards and definition templates. The interactive lab is linked separately.",
+          "Start-here guide, question card, evidence canvas, test cases and commented definition templates. The interactive lab is linked separately.",
       },
       {
         label: "Builder guide: semantic layer, warehouse and Claude setup",

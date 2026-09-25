@@ -1,14 +1,22 @@
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
-const require = createRequire('/home/user/repo/packages/website/package.json');
+const ROOT = new URL('../../../../', import.meta.url).pathname;
+const require = createRequire(ROOT + 'packages/website/package.json');
 const { chromium } = require('@playwright/test');
-const axeSource = fs.readFileSync('/home/user/repo/node_modules/.bun/axe-core@4.12.1/node_modules/axe-core/axe.min.js', 'utf8');
+const axePath = (() => {
+  try { return require.resolve('axe-core/axe.min.js'); } catch {
+    const bun = ROOT + 'node_modules/.bun/';
+    const dir = fs.readdirSync(bun).find(d => d.startsWith('axe-core@'));
+    return `${bun}${dir}/node_modules/axe-core/axe.min.js`;
+  }
+})();
+const axeSource = fs.readFileSync(axePath, 'utf8');
 const HERE = new URL('.', import.meta.url).pathname;
 const URL_ = 'file://' + HERE + 'preview/builder.html';
 const SHOTS = HERE + 'shots/';
 const mode = process.argv[2] || 'all';
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium/chrome-linux/chrome' }).catch(() => chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }));
+const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 const report = { console: [], requests: [], drift: null, overflow: {}, axe: {} };
 async function open(width, height, opts = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, reducedMotion: opts.reduce ? 'reduce' : 'no-preference' });

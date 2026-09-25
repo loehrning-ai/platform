@@ -153,7 +153,7 @@ details.builders > summary .label{display:inline;margin-left:auto}
 pre.code{margin:0 0 12px;padding:14px 16px;background:var(--beton);border:2px solid var(--ink);font-size:var(--fs-s);line-height:1.55;white-space:pre;overflow-x:auto;tab-size:2;max-width:100%}
 pre.code.prose{white-space:pre-wrap;overflow-wrap:break-word}
 pre.code .ln{display:block;min-width:calc(100% + 12px);width:max-content;border-top:0;border-right:0;border-bottom:0;background:none;font:inherit;color:inherit;text-align:left;white-space:pre;cursor:default;padding:0 6px;margin:0 -6px;border-left:4px solid transparent;transition:background var(--m-fade) linear,border-color var(--m-fade) linear}
-pre.code button.ln{cursor:pointer}
+pre.code button.ln{cursor:pointer;min-height:24px}
 pre.code .ln.is-hl{background:var(--papier);border-left-color:var(--mennige)}
 pre.code .ln.is-gone{display:none}
 pre.code .cm{color:var(--slate)}
@@ -259,6 +259,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 #m3-file .mono{font-size:var(--fs-s);overflow-wrap:break-word;word-break:normal}
 .stack__col .btn{font-size:var(--fs-s);min-height:40px;padding:6px 10px;width:100%}
 .reader-btn.is-look{outline:0}
+.reader-btn.is-look:focus-visible,.rules .btn.is-hl:focus-visible{outline:3px solid var(--mennige);outline-offset:2px}
 .blanks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 12px}
 .blank{border:2px solid var(--ink);padding:12px;background:var(--paper)}
 .blank .label{margin-bottom:6px}
@@ -395,6 +396,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 .inval::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:3px dashed var(--ink);transform-origin:left;animation:drawx var(--m-draw) var(--ease-out) both}
 @keyframes drawx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .inval{color:var(--slate)}
+.plane > .fig__note{margin:0;padding:0 14px 12px}
 .total{padding:10px 14px;border-top:3px solid var(--ink);font-family:var(--mono);font-size:var(--fs-s);font-weight:700}
 .runs{width:100%;border-collapse:collapse;font-size:var(--fs-s)}
 .runs th,.runs td{padding:8px;border-bottom:2px solid var(--ink);text-align:left;vertical-align:top;position:relative}
@@ -443,7 +445,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 .gatebox li.g-weak{outline:3px solid var(--mennige);outline-offset:-3px}
 .gatebox .st{font-weight:700;font-size:var(--fs-xs);letter-spacing:.06em;text-transform:uppercase}
 .gatebox .vd{padding:12px 14px;border-top:3px solid var(--ink)}
-.gatebox .vd .vd-v{display:block;font-size:var(--fs-xl);font-weight:700;line-height:1.2}
+.gatebox .vd .vd-v{display:block;font-size:var(--fs-l);font-weight:700;line-height:1.2}
 .runbook{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,19em);gap:24px;align-items:start}
 
 /* ---------------------------------------------------------------- M13 index */

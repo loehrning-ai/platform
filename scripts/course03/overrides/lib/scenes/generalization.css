@@ -1,0 +1,523 @@
+/* generalization (spec C.13): two new questions of a different shape. Net new MRR (a change) on a
+   line through zero, then logo churn (a rate) as a cohort grid; each collapses to one labelled
+   result line, and the final step adds the three-question summary. */
+
+#generalization-top {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#generalization .gz-card,
+#generalization .gz-result {
+  position: absolute;
+  top: 248px;
+  width: 852px;
+  height: 200px;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Two columns on the 24 px gutter the summary tiles use: x 96–948 and 972–1824. */
+#generalization-g02-card,
+#generalization-g02-result { left: 96px; }
+#generalization-g03-card,
+#generalization-g03-result { left: 972px; }
+
+#generalization .gz-card__body {
+  display: grid;
+}
+
+#generalization .gz-card__body > p {
+  grid-area: 1 / 1;
+}
+
+#generalization[data-step-current="0"] .gz-card::before {
+  background: var(--mennige);
+}
+
+#generalization .gz-tag {
+  position: absolute;
+  top: 376px;
+  display: inline-flex;
+  height: 52px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 0 12px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#generalization-g02-tag { left: 219px; }
+#generalization-g03-tag { left: 1095px; }
+
+/* Icons on the projector stay at 40 px or more (spec B.5). */
+#generalization .gz-tag .icon,
+#generalization .gz-chip .icon {
+  width: 40px;
+  height: 40px;
+}
+
+#generalization .gz-tag__swatch rect {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#generalization .gz-tag__swatch .gz-tag__churned {
+  fill: var(--slate-soft);
+  stroke: var(--slate-soft);
+}
+
+/* Result cards: one labelled line each, with a thumbnail of the picture it came from. */
+#generalization .gz-result {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  column-gap: 24px;
+  row-gap: 16px;
+  padding: 24px 32px 24px 40px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#generalization .gz-result__icon {
+  grid-row: 1 / 3;
+  color: var(--pass);
+}
+
+#generalization .gz-result__text {
+  margin: 0;
+  font-size: var(--t-question);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/* The export-tables run for the same question, as a labelled line (no thumbnail chart: too small to read
+   from the back row). */
+#generalization .gz-result__other {
+  display: flex;
+  align-self: end;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+  line-height: 40px;
+  white-space: nowrap;
+}
+
+/* "Recorded AI runs": the band label over the number line, then over the churn rows. */
+#generalization-band {
+  position: absolute;
+  top: 476px;
+  left: 96px;
+  display: flex;
+  width: 1728px;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+#generalization-band::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  margin-left: 12px;
+  background: var(--leinen);
+}
+
+#generalization-band .icon {
+  color: var(--ink);
+}
+
+/* G02 number line across the whole band (container origin 96, 516); zero at x 628. */
+#generalization-line {
+  position: absolute;
+  top: 516px;
+  left: 96px;
+  width: 1728px;
+  height: 440px;
+}
+
+#generalization .gz-line__art {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+#generalization .gz-axis {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#generalization .gz-zero {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+/* Signs either side of zero, so the line reads as below / above zero without extra words. */
+#generalization .gz-sign {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: var(--t-h2);
+  font-weight: 700;
+}
+
+#generalization[data-step-current="1"] .gz-zero {
+  stroke: var(--mennige);
+}
+
+#generalization .gz-route {
+  fill: none;
+  stroke: none;
+}
+
+#generalization .gz-marker--export {
+  fill: url(#story-hatch);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+/* Solid ink = approved views, as in every chip, legend and chart of the deck. */
+#generalization .gz-marker--approved {
+  fill: var(--ink);
+  stroke: var(--ink);
+  stroke-width: 4;
+}
+
+#generalization .gz-marker--truth {
+  fill: var(--slate-soft);
+}
+
+#generalization[data-step-current="2"] #generalization-db-marker.is-active {
+  stroke: var(--mennige);
+  stroke-width: 5;
+}
+
+#generalization .gz-mark {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#generalization .gz-mark--export { top: 36px; left: 64px; width: 300px; }
+#generalization .gz-mark--approved { top: 36px; left: 1230px; width: 320px; }
+#generalization .gz-mark--truth { top: 240px; left: 1230px; width: 320px; }
+
+#generalization .gz-mark__lane {
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 32px;
+}
+
+#generalization .gz-mark__value {
+  font-size: var(--t-num-md);
+  font-weight: 700;
+  line-height: 54px;
+}
+
+#generalization .gz-chip {
+  position: absolute;
+  top: 334px;
+  box-sizing: border-box;
+  justify-content: center;
+  background: var(--papier);
+}
+
+#generalization .gz-chip--export { left: 64px; width: 300px; }
+#generalization .gz-chip--approved { left: 1270px; width: 240px; }
+
+#generalization .gz-callback {
+  position: absolute;
+  top: 406px;
+  left: 1150px;
+  width: 480px;
+  margin: 0;
+  font-size: var(--t-body);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* G03 recorded runs: export left, approved right, the same sides as on the number line. */
+#generalization .gz-run {
+  position: absolute;
+  top: 540px;
+  display: flex;
+  width: 852px;
+  height: 72px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0 24px 0 32px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-lead);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+#generalization-run-export { left: 96px; border-style: dashed; }
+#generalization-run-approved { left: 972px; border-width: 4px; }
+
+#generalization .gz-run__swatch {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  box-sizing: border-box;
+  border: 2px solid var(--ink);
+}
+
+#generalization-run-export .gz-run__swatch,
+#generalization .gz-result__other .gz-run__swatch,
+#generalization .gz-tile--export .gz-run__swatch {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#generalization-run-approved .gz-run__swatch,
+#generalization .gz-tile--approved .gz-run__swatch,
+#generalization .gz-tile--cited .gz-run__swatch {
+  background: var(--ink);
+}
+
+#generalization .gz-run__text {
+  flex: 1 1 auto;
+}
+
+#generalization .gz-run__mark--pass {
+  color: var(--pass);
+}
+
+#generalization[data-step-current="3"] #generalization-run-export::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  background: var(--mennige);
+}
+
+/* The cause line sits under the run it explains, on the database-check step only. */
+#generalization-cause {
+  position: absolute;
+  top: 636px;
+  left: 96px;
+  max-width: none;
+  margin: 0;
+  font-size: var(--t-body);
+  white-space: nowrap;
+}
+
+#generalization .gz-cause__pointer {
+  position: absolute;
+  top: -27px;
+  left: 64px;
+  width: 2px;
+  height: 24px;
+  background: var(--ink);
+}
+
+#generalization .gz-cause__pointer::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+}
+
+/* Database check: the cohort grid, 40 starting accounts per segment. */
+#generalization-grid {
+  position: absolute;
+  top: 724px;
+  left: 96px;
+  width: 1728px;
+  box-sizing: border-box;
+  gap: 8px;
+  padding: 16px 32px 20px;
+}
+
+#generalization .gz-grid__head {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#generalization .gz-pass {
+  color: var(--pass);
+}
+
+#generalization .gz-grid__rows {
+  display: grid;
+  grid-template-columns: 184px 1414px;
+  align-items: center;
+  row-gap: 10px;
+}
+
+#generalization .gz-grid__label {
+  font-size: var(--t-label);
+  font-weight: 600;
+  line-height: 28px;
+}
+
+#generalization .gz-grid__row {
+  display: block;
+  overflow: visible;
+}
+
+#generalization .gz-cell {
+  fill: var(--papier);
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+}
+
+/* Churned accounts: solid database-check fill. The hatch belongs to the export-tables lane (spec H E23). */
+#generalization .gz-cell--churned {
+  fill: var(--slate-soft);
+}
+
+/* Bracket labels over the two groups of squares: 36 stayed, then (after a 24 px gap) 4 left. */
+#generalization .gz-grid__groups {
+  position: relative;
+  height: 34px;
+}
+
+#generalization .gz-grid__group {
+  position: absolute;
+  bottom: 0;
+  height: 34px;
+  box-sizing: border-box;
+  border: 2px solid var(--ink);
+  border-bottom: 0;
+  font-size: var(--t-label);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+#generalization .gz-grid__group--stayed { left: 0; width: 1255px; }
+#generalization .gz-grid__group--left { left: 1279px; width: 135px; }
+
+/* Summary: three recorded-run counts across G01–G03 with their scope line. */
+/* The band label above ("Recorded AI runs, 3 questions · one run each") heads the tiles; it keeps its place
+   from step 1, so the summary adds no second heading. */
+#generalization-summary {
+  position: absolute;
+  top: 532px;
+  left: 96px;
+  width: 1728px;
+}
+
+#generalization .gz-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+#generalization .gz-tile {
+  position: relative;
+  display: grid;
+  height: 232px;
+  box-sizing: border-box;
+  align-content: space-between;
+  padding: 24px 32px 28px 40px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#generalization .gz-tile--export { border-style: dashed; }
+#generalization .gz-tile--approved { border-width: 4px; }
+
+#generalization .gz-tile--cited::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  width: 8px;
+  background: var(--mennige);
+}
+
+#generalization .gz-tile__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The third count is an approved-views measure: it carries the lane swatch and says so; the longer label
+   takes two lines. */
+#generalization .gz-tile--cited .gz-tile__head {
+  align-items: flex-start;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+#generalization .gz-tile--cited .gz-tile__head > .gz-run__swatch {
+  margin-top: 4px;
+}
+
+#generalization .gz-tile--cited .gz-tile__head > .icon {
+  margin-top: -4px;
+}
+
+#generalization .gz-tile__value {
+  font-size: var(--t-display);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#generalization .gz-summary__scope {
+  margin-top: 16px;
+}
+
+/* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */
+#generalization .gz-line [data-motion="draw"] {
+  --m-draw: 400ms;
+}
+
+/* Spec H E24: the database check travels to its marker; the marker, its value and both chips wait for it. */
+#generalization {
+  --gz-arrive: 350ms;
+}
+
+#generalization .gz-line .packet {
+  --m-travel: var(--gz-arrive);
+}
+
+#generalization-db-marker,
+#generalization .gz-mark--truth,
+#generalization .gz-chip,
+#generalization .gz-callback {
+  animation-delay: var(--gz-arrive);
+}
