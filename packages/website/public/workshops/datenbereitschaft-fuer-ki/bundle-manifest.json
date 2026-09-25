@@ -741,8 +741,8 @@
     },
     {
       "path": "lib/story.css",
-      "sizeBytes": 29859,
-      "sha256": "53a6d598370e7ffcddd535bb8a212230c112da87320950fc16d58fc2d9be91d2"
+      "sizeBytes": 30176,
+      "sha256": "04d275a7d13c0d9b7a9268c841b9fce14c87183b7680876cee490e25de78b150"
     },
     {
       "path": "lib/tokens.css",
@@ -756,8 +756,8 @@
     },
     {
       "path": "slides.html",
-      "sizeBytes": 180258,
-      "sha256": "8161d4949201a69ee6e814cbce0b2e5640e536f4418e6555d2bf2fa2880a8f17"
+      "sizeBytes": 180348,
+      "sha256": "a2e098c003a83655632dd135d06b46cd7ef74869ab79b5a122a8fe182e0faed7"
     }
   ]
 }
