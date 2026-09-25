@@ -56,8 +56,8 @@
   "files": [
     {
       "path": "PUBLICATION.md",
-      "sizeBytes": 1719,
-      "sha256": "b964811af3afb6196fe50e7c49b8fd11493b4776382edb3d114605f5a993833c"
+      "sizeBytes": 1725,
+      "sha256": "c49f972ee4e83b1009382742bb898aa72acfff83782f0032b9ce61176ac64b1d"
     },
     {
       "path": "assets/favicon.svg",
@@ -136,8 +136,8 @@
     },
     {
       "path": "card-preview.webp",
-      "sizeBytes": 36398,
-      "sha256": "bcc0dede05f02ddca685f4fd82629b8ce7df44fc0b4c28e6ed409e6d3241223e"
+      "sizeBytes": 36724,
+      "sha256": "bfacd03ed7ec6ffbef0447c2a819474bfbd56dc71ee7560093c964febc7e978c"
     },
     {
       "path": "data-readiness-kit.zip",
@@ -751,8 +751,8 @@
     },
     {
       "path": "slides.html",
-      "sizeBytes": 176502,
-      "sha256": "ea3ec41c1f69dbe085cb9a21dbd4071dff8500ab7099f70ad7ede07641fcf8ab"
+      "sizeBytes": 176498,
+      "sha256": "8862905bd2617636b0bd88d6d1751773c909bcb970609cc5903e9c88b1863ccb"
     }
   ]
 }
