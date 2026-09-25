@@ -432,8 +432,8 @@ var slug="/workshops/"+s.getAttribute("data-wf-slug"),m=s.querySelector(".wf-bac
 var f;try{f=document.referrer?new URL(document.referrer):null}catch(e){f=null}
 var de=false,en=false;if(f&&f.origin===location.origin){var p=f.pathname.replace(/\/$/,"");de=p===slug||/^\/workshops(\/[^\/.]+)?$/.test(p);en=/^\/en(\/|$)/.test(p)}
 try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getItem("wf-lang")==="de")de=true;if(de)sessionStorage.setItem("wf-lang","de")}catch(e){}
-if(!de)return;if(b)b.href="/workshops";m.href=slug;m.lang="de";m.hreflang="de";m.textContent="← Zurück zum Workshop";
-a.href="/en"+slug;a.lang="en";a.hreflang="en";a.textContent="Workshop page in English";})();
+if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
+m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
 if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}

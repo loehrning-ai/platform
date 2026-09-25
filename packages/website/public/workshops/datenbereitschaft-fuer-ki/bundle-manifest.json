@@ -146,8 +146,8 @@
     },
     {
       "path": "builder.html",
-      "sizeBytes": 254504,
-      "sha256": "bd71ec12ddbc8723c7cedd9dff85d4bc75dff2d7d024d05addfbf296f9a11b43"
+      "sizeBytes": 254530,
+      "sha256": "921f11a3b35131d4d925479a13d81d8db04cb69bd1252be48383d7d521377faf"
     },
     {
       "path": "card-preview.webp",
@@ -561,13 +561,13 @@
     },
     {
       "path": "demo.html",
-      "sizeBytes": 134923,
-      "sha256": "8acf32d3fd4d92bce8742fd3623ebffdcb54e039cf65f8bc7a56923dc108060f"
+      "sizeBytes": 134949,
+      "sha256": "b60e03f61e4e118fa41044d22dc2616537fc283dca86bf8b6aacc512320171aa"
     },
     {
       "path": "guide.html",
-      "sizeBytes": 26381,
-      "sha256": "0727a5bf92683334c4112b7db197964dd3431986603ff094055585c7bfeb4954"
+      "sizeBytes": 26407,
+      "sha256": "feb4c73d43551f14e743bfc810e0cb649d37ccd481faa854b794b3e7b9221bcf"
     },
     {
       "path": "lib/cover-globe.css",

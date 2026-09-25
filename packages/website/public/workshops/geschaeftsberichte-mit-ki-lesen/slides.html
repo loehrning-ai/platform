@@ -1130,7 +1130,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 
   // ── stamp chrome + collect slides ─────────────────────────────────────
   // workshop page in the visitor's language (computed in lib/deck-stage.js)
-  var WS_URL = window.NW_WORKSHOP_URL || '/en/workshops/geschaeftsberichte-mit-ki-lesen';
+  var WS_URL = window.NW_WORKSHOP_URL === '/workshops/geschaeftsberichte-mit-ki-lesen' ? '/workshops/geschaeftsberichte-mit-ki-lesen' : '/en/workshops/geschaeftsberichte-mit-ki-lesen';
   [].forEach.call(document.querySelectorAll('a[href="/en/workshops/geschaeftsberichte-mit-ki-lesen"]'), function(a){ a.href = WS_URL; });
   var slides = [].slice.call(stage.querySelectorAll('.slide'));
   var total = slides.length;
