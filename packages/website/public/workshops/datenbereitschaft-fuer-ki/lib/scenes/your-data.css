@@ -115,7 +115,7 @@
   margin: 0;
   padding-top: 15px;
   color: var(--slate-soft);
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 500;
   line-height: 64px;
 }
@@ -151,7 +151,7 @@
   top: 0;
   left: 72px;
   margin: 0;
-  font-size: 32px;
+  font-size: var(--t-lead);
   font-weight: 500;
   line-height: 64px;
   white-space: nowrap;
@@ -186,9 +186,10 @@
   fill: var(--mennige);
 }
 
+/* The recovery step marks the whole canvas with a Mennige rule above and below it; the rules stay inside the
+   96 px margins (an outline would cross them). */
 #your-data[data-step-current="5"] #your-data-canvas {
-  outline: 4px solid var(--mennige);
-  outline-offset: 16px;
+  box-shadow: 0 -16px 0 -12px var(--mennige), 0 16px 0 -12px var(--mennige);
 }
 
 /* Short-path timing (spec B.7); the runtime reads motion tokens from the animating element. */

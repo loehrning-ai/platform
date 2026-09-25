@@ -40,7 +40,9 @@ export function WorkshopMaterialLink({
       hrefLang={material.language}
       {...(material.kind === "zip"
         ? { download: `${workshopSlug}-kit.zip` }
-        : { target: "_blank", rel: "noopener noreferrer" })}
+        : // Materials are same-origin files. Keeping the referrer lets the
+          // learner guide send a visitor back to the German or English page.
+          { target: "_blank", rel: "noopener" })}
       className={className}
       onClick={handleClick}
     >

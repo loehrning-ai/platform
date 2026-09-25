@@ -22,7 +22,7 @@
 
 #appendix-architecture .aa-blabel {
   fill: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   font-weight: 600;
   letter-spacing: 0.06em;
 }
@@ -47,14 +47,14 @@
 }
 
 #appendix-architecture .aa-label {
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 600;
 }
 
 #appendix-architecture .aa-svg .aa-mono,
 #appendix-architecture .aa-svg tspan.aa-mono {
   font-family: var(--mono);
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 400;
 }
 
@@ -90,7 +90,7 @@
 }
 
 #appendix-architecture .aa-lane-text {
-  font-size: 24px;
+  font-size: var(--t-small);
 }
 
 #appendix-architecture .aa-strong {
@@ -107,7 +107,7 @@
 #appendix-architecture .aa-hide__head {
   margin: 0 0 8px;
   color: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   font-weight: 600;
   letter-spacing: 0.06em;
 }
@@ -124,13 +124,13 @@
 #appendix-architecture .aa-hide__grid li {
   padding-left: 16px;
   border-left: 3px solid var(--ink);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   line-height: 1.35;
 }
 
 #appendix-architecture .aa-hide__grid .mono {
   display: block;
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 700;
 }
 
@@ -146,7 +146,7 @@
 #appendix-architecture .aa-note {
   margin: 0;
   color: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   line-height: 1.35;
 }
 

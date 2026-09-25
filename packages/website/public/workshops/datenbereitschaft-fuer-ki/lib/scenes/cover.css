@@ -64,11 +64,49 @@
   color: var(--leinen);
 }
 
+/* Step 1: the three constants sit in one bracket labelled "Held fixed"; arrows lead only to what changes and
+   what is measured. The row keeps 52 px from the question card and ends (with its bracket label) 40 px above
+   the meta line. */
 #cover > .cover-experiment {
-  top: 760px;
+  top: 736px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+#cover .cover-fixed {
+  position: relative;
+  display: flex;
   gap: 12px;
+  padding-bottom: 20px;
+}
+
+/* The bracket: a leinen hairline under the three chips with short end ticks. */
+#cover .cover-fixed::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 12px;
+  border: 2px solid var(--leinen);
+  border-top: 0;
+}
+
+#cover .cover-fixed__label {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  color: var(--leinen);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+#cover .cover-arrow {
+  margin-top: 20px;
 }
 
 #cover .cover-stamp {
@@ -79,16 +117,11 @@
   white-space: nowrap;
 }
 
+/* The one thing that changes: the standard stamp with the Mennige outline for focus (no fill). */
 #cover .cover-stamp--change {
-  background: var(--papier);
-  color: var(--graphit);
-}
-
-#cover .cover-dot {
-  flex: none;
-  width: 8px;
-  height: 8px;
-  background: var(--leinen);
+  border-color: var(--mennige);
+  outline: 3px solid var(--mennige);
+  outline-offset: 3px;
 }
 
 #cover .cover-arrow {
@@ -109,7 +142,7 @@
 }
 
 #cover > .cover-meta {
-  top: 872px;
+  top: 920px;
   color: var(--leinen);
   font-size: var(--t-body);
   line-height: 1.3;

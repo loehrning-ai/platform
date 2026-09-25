@@ -32,7 +32,9 @@
   gap: 8px;
 }
 
+/* The first label is wider than its box: it starts at the box edge, so it never crosses the 96 px margin. */
 #bad-ask-s-question { left: 0; }
+#bad-ask #bad-ask-s-question { align-items: flex-start; }
 #bad-ask-s-ai { left: 200px; }
 #bad-ask-s-export { left: 400px; }
 
@@ -52,7 +54,7 @@
 
 #bad-ask .bk-strip__label {
   flex: none;
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -85,7 +87,7 @@
 
 #bad-ask .bk-picked__table {
   font-family: var(--mono);
-  font-size: 28px;
+  font-size: var(--t-mono);
   font-weight: 700;
 }
 
@@ -93,7 +95,7 @@
   align-items: center;
   padding: 10px 0;
   border-top: 1px solid var(--leinen);
-  font-size: 32px;
+  font-size: var(--t-lead);
 }
 
 #bad-ask-run .ev-foot {
@@ -141,7 +143,6 @@
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 #bad-ask .bk-checks__list {
@@ -161,7 +162,7 @@
 
 #bad-ask .bk-mono {
   font-family: var(--mono);
-  font-size: 30px;
+  font-size: var(--t-mono);
 }
 
 /* The question card and the checklist keep their geometry on every step (left column y 224–688, the
@@ -205,8 +206,8 @@
   outline-offset: -4px;
 }
 
-/* Spec H E24: the recorded run is what the question's trip produces, so the run card rises when the packet
-   lands on its Picked slot; its values settle with it. */
+/* Spec H E24: the recorded run is what the question's trip produces; its values settle when the packet lands
+   on its Picked slot. */
 #bad-ask {
   --bk-arrive: 400ms;
 }
@@ -215,8 +216,11 @@
   --m-travel: var(--bk-arrive);
 }
 
-#bad-ask-run {
-  animation-delay: var(--bk-arrive);
+/* The destination exists before the packet leaves: the card frame rises at once (0–320 ms) while the packet
+   travels to its Picked slot; the picked name and the values fade in on arrival. */
+#bad-ask-run.is-entering .ev-row,
+#bad-ask-run.is-entering [id$="-picked"] > :last-child {
+  animation: story-fade var(--m-fade) var(--ease-fade) var(--bk-arrive) both;
 }
 
 #bad-ask-run .ev-value {

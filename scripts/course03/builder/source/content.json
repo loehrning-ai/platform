@@ -1,0 +1,1517 @@
+{
+ "m2cards": [
+  {
+   "id": "netnew",
+   "name": "Net new MRR",
+   "sub": "a change, per month",
+   "tray": "additive",
+   "ok": "Changes add along every axis. Q2: −19,960 + 9,775 + 42,565 = 32,380.",
+   "wrong": {
+    "semi": "A change adds across time too. Q2 net new is the sum: 32,380.",
+    "non": "It is not a rate. Changes add: Q2 net new is 32,380."
+   }
+  },
+  {
+   "id": "expansion",
+   "name": "Expansion MRR",
+   "sub": "a change, by country",
+   "tray": "additive",
+   "ok": "Changes add across countries and months. Q2: CH 1,990 down to GB 705, total 12,895.",
+   "wrong": {
+    "semi": "Expansion is a change, so it also adds across months: Q2 total 12,895.",
+    "non": "It is not a rate. Countries add: Q2 total 12,895."
+   }
+  },
+  {
+   "id": "ending",
+   "name": "Ending MRR",
+   "sub": "a level, per month",
+   "tray": "semi",
+   "ok": "Add across segments at one moment. Never across months: 334,675 + 344,450 + 387,015 = 1,066,140 describes nothing.",
+   "wrong": {
+    "additive": "Added across months, three levels give 1,066,140, which describes nothing.",
+    "non": "Levels do add across segments at one moment. They only fail across time."
+   }
+  },
+  {
+   "id": "active",
+   "name": "Active accounts",
+   "sub": "a count at month end",
+   "tray": "semi",
+   "ok": "June: 44 + 44 + 44 = 132 across segments. Across months, 123 + 123 + 132 = 378 counts account-months; 141 distinct accounts were active in Q2.",
+   "wrong": {
+    "additive": "123 + 123 + 132 = 378 counts account-months, not accounts. Distinct in Q2: 141.",
+    "non": "At one moment, segment counts add: 44 + 44 + 44 = 132."
+   }
+  },
+  {
+   "id": "churn",
+   "name": "Logo churn rate",
+   "sub": "a rate, per segment",
+   "tray": "non",
+   "ok": "Recompute from the counts: 12 of 120 = 10.0 %. Never add 10 + 10 + 10.",
+   "wrong": {
+    "additive": "10.0 + 10.0 + 10.0 = 30 % means nothing. Recompute: 12 of 120 = 10.0 %.",
+    "semi": "A rate never adds, not even across segments. Recompute: 12 of 120 = 10.0 %. And 4 of 48 = 8.33 % is the wrong base."
+   }
+  }
+ ],
+ "blanks": [
+  {
+   "label": "Kind of number?",
+   "with": "The month-end balance, a level",
+   "guess": "“amount” sounds like MRR"
+  },
+  {
+   "label": "Rows per what?",
+   "with": "One row per month",
+   "guess": "group by dt and hope"
+  },
+  {
+   "label": "Which months?",
+   "with": "Apr, May, Jun, each complete. Never add months together",
+   "guess": "whatever the table holds"
+  },
+  {
+   "label": "Which table?",
+   "with": "Only analytics.mrr_summary_monthly",
+   "guess": "monthly_revenue sounds right"
+  }
+ ],
+ "readers": [
+  {
+   "id": "ai",
+   "name": "AI tool",
+   "file": "claude/project/metric-definitions.md",
+   "version": "ending_mrr 1.0.0",
+   "src": "claude/project/metric-definitions.md",
+   "pick": [
+    [
+     "^### ending_mrr",
+     9
+    ]
+   ]
+  },
+  {
+   "id": "tests",
+   "name": "Test cases",
+   "file": "semantic/verified-questions.yml",
+   "version": "ending_mrr 1.0.0",
+   "src": "semantic/verified-questions.yml",
+   "pick": [
+    [
+     "^  metric_version:",
+     1
+    ],
+    [
+     "^  - id: G01$",
+     7
+    ],
+    [
+     "^    expected_rows:",
+     4
+    ]
+   ]
+  },
+  {
+   "id": "guide",
+   "name": "Guide for coding assistants",
+   "file": "claude/CLAUDE.example.md (copied to CLAUDE.md), with the Skill in claude/skills/foldline-analytics/",
+   "version": "ending_mrr 1.0.0",
+   "src": "claude/CLAUDE.example.md",
+   "pick": [
+    [
+     "^## Meaning",
+     4
+    ],
+    [
+     "^## Every answer ends",
+     5
+    ]
+   ]
+  },
+  {
+   "id": "catalog",
+   "name": "Catalog for people",
+   "file": "COMMENT ON VIEW analytics.mrr_summary_monthly",
+   "version": "definition 1.0.0",
+   "src": "warehouse/sql/40_analytics.sql",
+   "pick": [
+    [
+     "^COMMENT ON VIEW analytics\\.mrr_summary_monthly",
+     1
+    ]
+   ]
+  }
+ ],
+ "traps": [
+  {
+   "id": "retry",
+   "label": "Retry duplicates",
+   "layer": "core",
+   "fix": "core.stg_billing_events keeps one row per event_id, and core.mrr_movements has movement_id as its PRIMARY KEY, so a repeat cannot load.",
+   "test": "G04, Q01"
+  },
+  {
+   "id": "june",
+   "label": "June only",
+   "layer": "analytics",
+   "fix": "The views serve complete months only and carry complete_through_month on every row. subscription_export held June 2026 only.",
+   "test": "Q03"
+  },
+  {
+   "id": "codes",
+   "label": "Status codes A/C/N",
+   "layer": "core",
+   "fix": "Decoded once in staging into active, churned and new. A CHECK rejects an unknown code, so it fails the build instead of turning into a silent NULL.",
+   "test": "G03, Q04"
+  },
+  {
+   "id": "amount",
+   "label": "amount = change",
+   "layer": "analytics",
+   "fix": "The change is served as net_new_mrr_eur beside ending_mrr_eur in analytics.mrr_summary_monthly. The level comes from the account grain in core, not from a window of changes.",
+   "test": "G01, Q02"
+  }
+ ],
+ "names": [
+  {
+   "bad": "dt",
+   "where": "saas_bad.public.monthly_revenue",
+   "good": "month_start",
+   "rule": "R3 · Say the time",
+   "guesses": [
+    "Is it the first day of a month, or a posting day?",
+    "Is 30 June inside the range?",
+    "Which time zone?"
+   ],
+   "comment": "First day of the calendar month (UTC). The grain: one row per month.",
+   "quiz": [
+    "month_start",
+    "date",
+    "period"
+   ],
+   "why": "dt means a month key here and a posting day in billing_events. Same name, two meanings."
+  },
+  {
+   "bad": "amount",
+   "where": "saas_bad.public.monthly_revenue",
+   "good": "net_new_mrr_eur",
+   "rule": "R1 · Say the shape",
+   "guesses": [
+    "A level or a change?",
+    "Euros or cents?",
+    "May I add it across months?"
+   ],
+   "comment": "Change: new + expansion - contraction - churned, EUR. Adds across months; never read it as a level.",
+   "quiz": [
+    "net_new_mrr_eur",
+    "mrr_amount",
+    "revenue"
+   ],
+   "why": "The recorded run read it as a level: −19,960 for April."
+  },
+  {
+   "bad": "seg",
+   "where": "saas_bad.public.customer_master",
+   "good": "customer_segment",
+   "rule": "R2 · No abbreviations",
+   "guesses": [
+    "A segment, a segmentation model or a sales territory?",
+    "Which values are allowed?"
+   ],
+   "comment": "Enterprise, Mid-Market or SMB.",
+   "quiz": [
+    "customer_segment",
+    "segment_cd",
+    "seg_name"
+   ],
+   "why": "An abbreviation forces a guess; the AI cannot walk over and ask."
+  },
+  {
+   "bad": "status = 'A' / 'C' / 'N'",
+   "where": "saas_bad.public.customer_master",
+   "good": "account_status = 'active' / 'churned' / 'new'",
+   "rule": "R5 · Words, not codes",
+   "guesses": [
+    "Does A mean active or archived?",
+    "Is C churned, closed or cancelled?",
+    "What do I search for?"
+   ],
+   "comment": "Decoded once in core. A CHECK allows only active, churned and new.",
+   "quiz": [
+    "account_status = 'active'",
+    "status_flag = 1",
+    "state = 'A'"
+   ],
+   "why": "The AI searched 'active', the table said 'A': 0 of 0, no rate."
+  },
+  {
+   "bad": "id",
+   "where": "saas_bad.public.customer_master",
+   "good": "account_key (served) · account_id (core only)",
+   "rule": "R6 · One entity, one key name",
+   "guesses": [
+    "The id of what?",
+    "Does tickets.id join to it?",
+    "Is it safe to serve?"
+   ],
+   "comment": "Pseudonymous analytics key. Stable and joinable, so not anonymous.",
+   "quiz": [
+    "account_key",
+    "customer_id",
+    "row_id"
+   ],
+   "why": "tickets.id = customer_master.id is valid SQL and joins tickets to the wrong accounts."
+  },
+  {
+   "bad": "balance / change",
+   "where": "saas_bad.public.acct_history",
+   "good": "ending_mrr_eur / net_new_mrr_eur",
+   "rule": "R1 · Say the shape",
+   "guesses": [
+    "Start or end of the month?",
+    "Is change already inside balance?",
+    "Should I add them?"
+   ],
+   "comment": "Level: recurring value active at the final instant of the month, EUR.",
+   "quiz": [
+    "ending_mrr_eur",
+    "mrr_balance",
+    "balance_total"
+   ],
+   "why": "balance + change counted April twice: 314,715 instead of 334,675."
+  },
+  {
+   "bad": "type = 'E'",
+   "where": "saas_bad.public.billing_events",
+   "good": "movement_type = 'expansion'",
+   "rule": "R5 · Words, not codes",
+   "guesses": [
+    "Expansion, error or event?",
+    "Does C mean cancel here and churned elsewhere?"
+   ],
+   "comment": "Movement type in words: new, expansion, contraction or churn.",
+   "quiz": [
+    "movement_type = 'expansion'",
+    "type_code = 'E'",
+    "evt = 2"
+   ],
+   "why": "C means churned in customer_master and cancel in billing_events."
+  },
+  {
+   "bad": "monthly_revenue",
+   "where": "saas_bad.public (table)",
+   "good": "analytics.mrr_summary_monthly",
+   "rule": "R4 · Grain in the name · R7 · Always the schema",
+   "guesses": [
+    "One row per month, or per month and segment?",
+    "A total or a change?",
+    "Which schema?"
+   ],
+   "comment": "One row per complete calendar month, company level, EUR. definition 1.0.0.",
+   "quiz": [
+    "analytics.mrr_summary_monthly",
+    "revenue_final_v2",
+    "public.monthly_revenue"
+   ],
+   "why": "“Three of them sound like the answer.” The AI picked by name."
+  },
+  {
+   "bad": "SUM(amount) AS ending_mrr",
+   "where": "alias in the recorded AI run",
+   "good": "SUM(net_new_mrr_eur) AS net_new_mrr_eur",
+   "rule": "R1 · An alias must match its formula",
+   "guesses": [
+    "Is the label evidence that the number is a level?"
+   ],
+   "comment": "An output alias is a name too. It must say what was computed.",
+   "quiz": [
+    "SUM(net_new_mrr_eur) AS net_new_mrr_eur",
+    "SUM(amount) AS ending_mrr",
+    "SUM(amount) AS total"
+   ],
+   "why": "The label turned a guess into a trust signal on the wrong number."
+  }
+ ],
+ "grainQs": [
+  {
+   "q": "Ending MRR by month for the last complete quarter",
+   "s": [
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "n": [
+    "Sum 144 rows per month: one more chance to be wrong.",
+    "Sum three segments per month.",
+    "Read three rows from analytics.mrr_summary_monthly."
+   ]
+  },
+  {
+   "q": "Ending MRR by segment for June",
+   "s": [
+    "ok",
+    "ok",
+    "need"
+   ],
+   "n": [
+    "Sum per segment.",
+    "Read three rows.",
+    "The segment is gone at this grain."
+   ]
+  },
+  {
+   "q": "Top 10 accounts by ending MRR in June",
+   "s": [
+    "ok",
+    "need",
+    "need"
+   ],
+   "n": [
+    "analytics.account_mrr_monthly, pseudonymous account_key, LIMIT 10.",
+    "Accounts are gone at this grain.",
+    "Accounts are gone at this grain."
+   ]
+  },
+  {
+   "q": "Logo churn by segment in Q2",
+   "s": [
+    "need",
+    "need",
+    "need"
+   ],
+   "n": [
+    "Possible, but the base rule is easy to get wrong: serve analytics.logo_churn_by_segment_quarter.",
+    "Sums of MRR cannot tell who was in the starting base.",
+    "Needs its own view with starting and churned accounts."
+   ]
+  },
+  {
+   "q": "Contact emails of the top accounts",
+   "s": [
+    "never",
+    "never",
+    "never"
+   ],
+   "n": [
+    "Identifiers stay in core. No grain serves them.",
+    "Identifiers stay in core. No grain serves them.",
+    "Identifiers stay in core. No grain serves them."
+   ]
+  }
+ ],
+ "rules": [
+  {
+   "id": "grain",
+   "label": "Grain in the name and the key"
+  },
+  {
+   "id": "levelchange",
+   "label": "Level beside its change"
+  },
+  {
+   "id": "ratio",
+   "label": "Rate beside numerator and denominator"
+  },
+  {
+   "id": "zero",
+   "label": "0 ÷ 0 is NULL, never 0 %"
+  },
+  {
+   "id": "state",
+   "label": "Data state on every row"
+  },
+  {
+   "id": "complete",
+   "label": "Complete periods only"
+  },
+  {
+   "id": "halfopen",
+   "label": "Half-open periods"
+  },
+  {
+   "id": "nonow",
+   "label": "No now() in a view"
+  },
+  {
+   "id": "numeric",
+   "label": "Money as numeric"
+  }
+ ],
+ "ddlMrr": [
+  [
+   "CREATE VIEW analytics.mrr_summary_monthly AS",
+   "grain"
+  ],
+  [
+   "SELECT",
+   ""
+  ],
+  [
+   "  m.month_start,                                   -- the grain",
+   "grain"
+  ],
+  [
+   "  sum(m.ending_mrr_eur)::numeric(14, 2)  AS ending_mrr_eur,   -- LEVEL",
+   "levelchange numeric"
+  ],
+  [
+   "  ...new, expansion, contraction and churned components,",
+   "levelchange"
+  ],
+  [
+   "  sum(m.net_new_mrr_eur)::numeric(14, 2) AS net_new_mrr_eur,  -- CHANGE",
+   "levelchange numeric"
+  ],
+  [
+   "  (count(*) FILTER (WHERE m.ending_mrr_eur > 0))::integer AS active_accounts,",
+   ""
+  ],
+  [
+   "  s.complete_through_month,                        -- data state",
+   "state complete"
+  ],
+  [
+   "  s.data_loaded_at_utc,                            -- a fact, not an age",
+   "state nonow"
+  ],
+  [
+   "  s.quality_status                                 -- passing or failing",
+   "state"
+  ],
+  [
+   "FROM core.account_months AS m",
+   "grain"
+  ],
+  [
+   "CROSS JOIN core.load_status AS s",
+   "state"
+  ],
+  [
+   "WHERE m.month_start <= s.complete_through_month    -- complete months only",
+   "complete"
+  ],
+  [
+   "GROUP BY m.month_start, s.complete_through_month, s.data_loaded_at_utc, s.quality_status;",
+   "grain"
+  ],
+  [
+   "-- no now(): the caller states the evaluation clock",
+   "nonow"
+  ]
+ ],
+ "ddlChurn": [
+  [
+   "CREATE VIEW analytics.logo_churn_by_segment_quarter AS",
+   "grain"
+  ],
+  [
+   "SELECT",
+   ""
+  ],
+  [
+   "  b.period_start,                                  -- 2026-04-01, inclusive",
+   "halfopen grain"
+  ],
+  [
+   "  b.period_end_exclusive,                          -- 2026-07-01, exclusive",
+   "halfopen"
+  ],
+  [
+   "  a.customer_segment,",
+   "grain"
+  ],
+  [
+   "  count(*)::integer AS starting_accounts,          -- denominator: 40",
+   "ratio",
+   "starting"
+  ],
+  [
+   "  (count(*) FILTER (WHERE e.ending_mrr_eur = 0))::integer AS churned_accounts,  -- numerator: 4",
+   "ratio"
+  ],
+  [
+   "  round(100.0 * count(*) FILTER (WHERE e.ending_mrr_eur = 0)",
+   "ratio"
+  ],
+  [
+   "        / nullif(count(*), 0), 1)::numeric(5, 1) AS logo_churn_rate_pct,  -- 10.0; 0/0 is NULL",
+   "ratio zero"
+  ],
+  [
+   "  s.complete_through_month, s.data_loaded_at_utc, s.quality_status",
+   "state"
+  ],
+  [
+   "FROM bounds AS b CROSS JOIN core.load_status AS s",
+   "state"
+  ],
+  [
+   "JOIN core.account_months AS st                    -- base: active at the end of March",
+   "ratio"
+  ],
+  [
+   "  ON st.month_start = b.base_month AND st.ending_mrr_eur > 0",
+   "ratio"
+  ],
+  [
+   "JOIN core.account_months AS e ON e.account_id = st.account_id AND e.month_start = b.last_month",
+   ""
+  ],
+  [
+   "JOIN core.accounts AS a ON a.account_id = st.account_id",
+   ""
+  ],
+  [
+   "WHERE b.last_month <= s.complete_through_month;   -- complete quarters only",
+   "complete"
+  ]
+ ],
+ "tradeoffs": [
+  {
+   "id": "view",
+   "tab": "View",
+   "rows": [
+    [
+     "Freshness",
+     "Always as fresh as core"
+    ],
+    [
+     "Cost per query",
+     "Recomputed each time"
+    ],
+    [
+     "Consistency",
+     "Always matches core"
+    ],
+    [
+     "Tests before publish",
+     "Test core; views follow"
+    ],
+    [
+     "Burden",
+     "Lowest"
+    ],
+    [
+     "Use when",
+     "Core is small or indexed and queries are fast enough. FOLDLINE uses views."
+    ]
+   ]
+  },
+  {
+   "id": "matview",
+   "tab": "Materialized view",
+   "rows": [
+    [
+     "Freshness",
+     "As of the last REFRESH"
+    ],
+    [
+     "Cost per query",
+     "Low"
+    ],
+    [
+     "Consistency",
+     "Can lag core"
+    ],
+    [
+     "Tests before publish",
+     "Refresh, test, then grant"
+    ],
+    [
+     "Burden",
+     "A refresh schedule and monitoring"
+    ],
+    [
+     "Use when",
+     "A view is too slow and a known lag is acceptable. The refresh time becomes data_loaded_at_utc."
+    ]
+   ]
+  },
+  {
+   "id": "table",
+   "tab": "Table",
+   "rows": [
+    [
+     "Freshness",
+     "As of the last publish"
+    ],
+    [
+     "Cost per query",
+     "Lowest"
+    ],
+    [
+     "Consistency",
+     "Exactly what was tested"
+    ],
+    [
+     "Tests before publish",
+     "Build into a new table, run the checks, then swap names in one transaction"
+    ],
+    [
+     "Burden",
+     "Highest"
+    ],
+    [
+     "Use when",
+     "Many readers and a strict rule that only tested data is visible."
+    ]
+   ]
+  }
+ ],
+ "gates": [
+  {
+   "id": "guide",
+   "name": "Instructions and Skill",
+   "kind": "guides"
+  },
+  {
+   "id": "hook",
+   "name": "Hook: sql_guard.py",
+   "kind": "guardrail"
+  },
+  {
+   "id": "mcp",
+   "name": "MCP connector, read-only session",
+   "kind": "guardrail"
+  },
+  {
+   "id": "role",
+   "name": "PostgreSQL role",
+   "kind": "enforces"
+  }
+ ],
+ "requests": [
+  {
+   "id": "ending",
+   "label": "Show ending MRR by month for the last complete quarter."
+  },
+  {
+   "id": "howmuch",
+   "label": "How much MRR do we have?"
+  },
+  {
+   "id": "profit",
+   "label": "What is profit by plan?"
+  },
+  {
+   "id": "emails",
+   "label": "Show the contact emails of our top accounts."
+  },
+  {
+   "id": "core",
+   "label": "Forced read, sent straight to the database: <code>SELECT contact_email FROM core.accounts</code>"
+  },
+  {
+   "id": "write",
+   "label": "A write, sent straight to the database: <code>CREATE TABLE analytics.shadow_copy (…)</code>"
+  },
+  {
+   "id": "temp",
+   "label": "<code>BEGIN READ WRITE; CREATE TEMP TABLE scratch (…)</code>"
+  }
+ ],
+ "messages": {
+  "C01": "Specify the MRR meaning: ending MRR, net-new MRR, or an MRR movement component.",
+  "R01": "Profit cannot be calculated because the approved dataset contains no cost, COGS, recognized-revenue, or approved profit definition. MRR is not a profit proxy.",
+  "R02": "Direct customer identifiers are outside the approved AI data surface. Use approved pseudonymous analytics keys or an authorized operational workflow.",
+  "Q3": "The requested period is not complete on the approved serving view.",
+  "QUALITY": "The serving view has not passed its required quality gate."
+ },
+ "setups": [
+  {
+   "id": "project",
+   "tab": "Project setup",
+   "lead": "No code. Upload the approved files and paste the instructions. A Project has no database connection, so the files you upload are everything Claude can see. This is Project B in the live demo.",
+   "tree": [
+    {
+     "dir": "Claude Project",
+     "files": [
+      "PROJECT-INSTRUCTIONS.txt",
+      "metric-definitions.md",
+      "mrr_summary_monthly.csv",
+      "logo_churn_by_segment_quarter.csv",
+      "expansion_mrr_by_country_monthly.csv",
+      "account_mrr_monthly.csv",
+      "data_status_by_view.csv"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "code",
+   "tab": "Claude Code setup",
+   "lead": "A repository with written guidance, a Skill and a hook. Claude Code reads CLAUDE.md and loads the Skill when its description matches the question.",
+   "tree": [
+    {
+     "dir": "your-repo/",
+     "files": [
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "dir": ".claude/skills/foldline-analytics/",
+     "files": [
+      "SKILL.md",
+      "references/metrics.md"
+     ]
+    },
+    {
+     "dir": ".claude/",
+     "files": [
+      "settings.json"
+     ]
+    },
+    {
+     "dir": "hooks/",
+     "files": [
+      "sql_guard.py"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "connector",
+   "tab": "Connector setup",
+   "lead": "Claude Code queries PostgreSQL through an MCP connector that logs in as the read-only reader. The hook checks each query; the role is the lock. Add this to the Claude Code setup.",
+   "tree": [
+    {
+     "dir": "your-repo/",
+     "files": [
+      ".mcp.json"
+     ]
+    },
+    {
+     "dir": ".claude/",
+     "files": [
+      "settings.json"
+     ]
+    },
+    {
+     "dir": "hooks/",
+     "files": [
+      "sql_guard.py"
+     ]
+    },
+    {
+     "dir": "warehouse/sql/",
+     "files": [
+      "60_access.sql"
+     ]
+    }
+   ]
+  }
+ ],
+ "files": {
+  "PROJECT-INSTRUCTIONS.txt": {
+   "badge": "guides",
+   "job": "Tells Claude how to behave: read the data status first, ask back, refuse, and end every answer with a trace. It guides; it cannot stop Claude from reading a file you uploaded.",
+   "src": "claude/project/PROJECT-INSTRUCTIONS.txt",
+   "pick": [
+    [
+     "^Before you answer",
+     3
+    ],
+    [
+     "^Rules:",
+     3
+    ],
+    [
+     "^Answer format",
+     3
+    ]
+   ],
+   "dest": "Paste into the Project instructions"
+  },
+  "metric-definitions.md": {
+   "badge": "guides",
+   "job": "The compiled copy of semantic/metric.yml for this reader. Loaded is not the same as used: the instructions must require the citation.",
+   "src": "claude/project/metric-definitions.md",
+   "pick": [
+    [
+     "^### ending_mrr",
+     13
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "mrr_summary_monthly.csv": {
+   "badge": "enforces",
+   "job": "The MRR summary view as a file. In a Project there is no database, so the files you upload are the edge of what Claude can see. That upload set plays the part of the grants: upload approved views only, never the export tables “for context”.",
+   "src": "claude/project/mrr_summary_monthly.csv",
+   "pick": [
+    [
+     "^month_start,",
+     1
+    ],
+    [
+     "^2026-04-01,",
+     3
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "logo_churn_by_segment_quarter.csv": {
+   "badge": "enforces",
+   "job": "The churn view as a file, with starting and churned accounts beside the rate. Part of the upload set that plays the part of the grants.",
+   "src": "claude/project/logo_churn_by_segment_quarter.csv",
+   "pick": [
+    [
+     "^period_start,",
+     1
+    ],
+    [
+     "^2026-04-01,2026-07-01,Enterprise,",
+     1
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "expansion_mrr_by_country_monthly.csv": {
+   "badge": "enforces",
+   "job": "The dense month-by-country grid as a file: 18 months × 8 countries = 144 rows, zeros explicit. Part of the upload set.",
+   "src": "claude/project/expansion_mrr_by_country_monthly.csv",
+   "pick": [
+    [
+     "^month_start,",
+     1
+    ],
+    [
+     "^2026-04-01,AT,",
+     1
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "account_mrr_monthly.csv": {
+   "badge": "enforces",
+   "job": "Pseudonymous account keys only: 144 accounts × 18 months. Pseudonymous is not anonymous, so the instructions keep a row limit. Part of the upload set.",
+   "src": "claude/project/account_mrr_monthly.csv",
+   "pick": [
+    [
+     "^month_start,",
+     1
+    ],
+    [
+     "^2026-06-01,fl_0006,",
+     1
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "data_status_by_view.csv": {
+   "badge": "enforces",
+   "job": "Load time, last complete month, quality gate and thresholds for the four data views. Claude computes the age against the stated clock. Part of the upload set.",
+   "src": "claude/project/data_status_by_view.csv",
+   "pick": [
+    [
+     "^view_name,",
+     1
+    ],
+    [
+     "^analytics\\.mrr_summary_monthly,",
+     1
+    ]
+   ],
+   "dest": "Add to the Project knowledge"
+  },
+  "CLAUDE.md": {
+   "badge": "guides",
+   "job": "Project memory for Claude Code. It guides every session in this repository. It never holds a connection string.",
+   "src": "claude/CLAUDE.example.md",
+   "pick": [
+    [
+     "^## Meaning",
+     4
+    ],
+    [
+     "^## Every answer ends",
+     5
+    ]
+   ],
+   "dest": "Copy to the repository root"
+  },
+  "SKILL.md": {
+   "badge": "guides",
+   "job": "Claude loads a Skill when its description matches the task. Name the trigger words; “analytics helper” never triggers, or triggers everywhere.",
+   "src": "claude/skills/foldline-analytics/SKILL.md",
+   "pick": [
+    [
+     "^---$",
+     4
+    ],
+    [
+     "^## Trace",
+     10
+    ]
+   ],
+   "dest": "Copy to .claude/skills/foldline-analytics/"
+  },
+  "references/metrics.md": {
+   "badge": "guides",
+   "job": "The compiled metric definitions the Skill points to. Same name and version as metric.yml, or the readers drift.",
+   "src": "claude/skills/foldline-analytics/references/metrics.md",
+   "pick": [
+    [
+     "^\\| Metric \\|",
+     4
+    ]
+   ],
+   "dest": "Copy to .claude/skills/foldline-analytics/references/"
+  },
+  "settings.json": {
+   "badge": "guardrail",
+   "job": "Registers the hook that runs before every database tool call. It changes what Claude Code does; it does not change what the database allows.",
+   "src": "claude/settings.example.json",
+   "pick": null,
+   "dest": "Copy to .claude/settings.json"
+  },
+  "sql_guard.py": {
+   "badge": "guardrail",
+   "job": "A deterministic check before the query runs: one read-only SELECT on the five allowlisted views. Exit code 2 blocks the call and tells Claude why. Another client on the same login skips it: a guardrail, not a lock.",
+   "src": "claude/hooks/sql_guard.py",
+   "pick": [
+    [
+     "^ALLOWED = \\{",
+     7
+    ],
+    [
+     "^    if problem:",
+     3
+    ]
+   ],
+   "dest": "Copy to hooks/sql_guard.py"
+  },
+  ".mcp.json": {
+   "badge": "guardrail",
+   "job": "Tells Claude Code which connector to start and which environment variable holds the connection. It names the secret; it never contains it. A connector's read-only switch is a guardrail too.",
+   "src": "claude/mcp.example.json",
+   "pick": null,
+   "dest": "Copy to .mcp.json at the repository root"
+  },
+  "60_access.sql": {
+   "badge": "enforces",
+   "job": "The only file here that enforces. The database denies everything else with 42501, whatever the instructions say.",
+   "src": "warehouse/sql/60_access.sql",
+   "pick": [
+    [
+     "^  EXECUTE format\\('REVOKE ALL ON DATABASE",
+     1
+    ],
+    [
+     "^GRANT USAGE ON SCHEMA analytics",
+     1
+    ],
+    [
+     "^GRANT SELECT ON$",
+     7
+    ],
+    [
+     "^ALTER ROLE foldline_ready_reader SET search_path",
+     1
+    ]
+   ],
+   "dest": "Run as the database admin"
+  }
+ },
+ "benchChips": [
+  {
+   "id": "AP-M01",
+   "label": "Change read as a level",
+   "db": [
+    "G01",
+    "Q02"
+   ],
+   "ai": [
+    "rec-exp"
+   ],
+   "col": "values",
+   "say": "Caught by G01 and Q02 in the database plane, and by value grading in the AI plane: the export tables matched 0 of 3."
+  },
+  {
+   "id": "AP-M06",
+   "label": "Joiners in the churn base",
+   "db": [
+    "G03",
+    "Q04"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by G03 (4 of 40 = 10.0 %) and Q04 (40 − 4 + 8 = 44)."
+  },
+  {
+   "id": "AP-S04",
+   "label": "Retry duplicates",
+   "db": [
+    "G04",
+    "Q01"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by G04 (AT 1,565, not 1,955) and Q01 (zero duplicate keys)."
+  },
+  {
+   "id": "AP-S03",
+   "label": "Partial period",
+   "db": [
+    "Q03"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by Q03: nothing is served after complete_through_month."
+  },
+  {
+   "id": "AP-A01",
+   "label": "Read-only mode as the lock",
+   "db": [
+    "B-W01"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by B-W01: even after BEGIN READ WRITE, the write fails with 42501."
+  },
+  {
+   "id": "AP-A02",
+   "label": "TEMP left to PUBLIC",
+   "db": [
+    "B-T01"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by B-T01: CREATE TEMP TABLE fails with 42501."
+  },
+  {
+   "id": "AP-C05",
+   "label": "Unqualified names",
+   "db": [
+    "B-S01"
+   ],
+   "ai": [
+    "rec-app"
+   ],
+   "col": "note",
+   "say": "Caught by B-S01 (42P01 with an empty search_path) and seen in the recorded approved-lane SQL."
+  },
+  {
+   "id": "AP-F01",
+   "label": "Hidden data age",
+   "db": [
+    "F01"
+   ],
+   "ai": [],
+   "col": "",
+   "say": "Caught by F01 at a frozen 60-hour clock: answer with a warning."
+  },
+  {
+   "id": "AP-C02",
+   "label": "Definition loaded, not cited",
+   "db": [],
+   "ai": [
+    "rec-app"
+   ],
+   "col": "cited",
+   "say": "No database check can catch it. Only the AI plane's citation grade shows it: the approved-lane runs cited the definition 0 of 3."
+  },
+  {
+   "id": "AP-E02",
+   "label": "One run as a benchmark",
+   "db": [],
+   "ai": [
+    "rec-exp",
+    "rec-app",
+    "dry-a",
+    "dry-b"
+   ],
+   "col": "runs",
+   "say": "Only the run log shows it: one run each. Aim for three per case, and call each an observation."
+  }
+ ],
+ "domains": [
+  {
+   "id": "foldline",
+   "tab": "FOLDLINE",
+   "q": "Show ending MRR by month for the last complete quarter.",
+   "blanks": [
+    "The month-end balance, a level",
+    "One row per month",
+    "Apr–Jun 2026, complete; never add",
+    "analytics.mrr_summary_monthly"
+   ],
+   "unit": "EUR",
+   "startLabel": "Mar",
+   "start": 354635,
+   "labels": [
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "levels": [
+    334675,
+    344450,
+    387015
+   ],
+   "identity": "354,635 + 32,380 = 387,015",
+   "wrong": "−€19,960",
+   "wrongWhy": "April's change read as the April level (recorded)",
+   "right": "€334,675",
+   "rightWhy": "the April month-end level",
+   "renames": [
+    [
+     "amount",
+     "net_new_mrr_eur"
+    ],
+    [
+     "dt",
+     "month_start"
+    ],
+    [
+     "status 'A'",
+     "account_status 'active'"
+    ]
+   ]
+  },
+  {
+   "id": "bike",
+   "tab": "Bike shop",
+   "q": "Show helmets on hand at month end for each month of Q2 2026 at the Harbour store.",
+   "blanks": [
+    "Month-end level, in units",
+    "One row per store, category and month",
+    "Apr–Jun 2026, complete; never add",
+    "analytics.inventory_by_store_category_monthly"
+   ],
+   "unit": "units",
+   "startLabel": "Mar",
+   "start": 120,
+   "labels": [
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "levels": [
+    110,
+    95,
+    110
+   ],
+   "identity": "120 + 180 − 190 = 110",
+   "wrong": "315",
+   "wrongWhy": "“Q2 stock” = 110 + 95 + 110, levels added",
+   "right": "110",
+   "rightWhy": "helmets on the shelf on 30 June",
+   "renames": [
+    [
+     "qty",
+     "ending_units_on_hand"
+    ],
+    [
+     "loc 'HBR'",
+     "store_name 'Harbour'"
+    ],
+    [
+     "ts",
+     "month_start"
+    ]
+   ]
+  },
+  {
+   "id": "people",
+   "tab": "Headcount",
+   "q": "What was company-wide attrition in Q2 2026?",
+   "blanks": [
+    "A rate: leavers ÷ headcount on 31 March",
+    "One row per department and quarter; pool for the company",
+    "2026-04-01 to 2026-07-01, exclusive",
+    "analytics.attrition_by_department_quarter"
+   ],
+   "unit": "people",
+   "startLabel": "Mar",
+   "start": 200,
+   "labels": [
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "levels": [
+    206,
+    202,
+    206
+   ],
+   "identity": "200 + 25 − 19 = 206",
+   "wrong": "3.12 %",
+   "wrongWhy": "the average of three monthly rates",
+   "right": "9.5 %",
+   "rightWhy": "19 leavers of 200 at the start",
+   "renames": [
+    [
+     "hc",
+     "ending_headcount"
+    ],
+    [
+     "attrition",
+     "attrition_rate_pct, with leavers and starting_headcount"
+    ],
+    [
+     "term_flg 'Y'",
+     "is_voluntary_leaver"
+    ]
+   ]
+  },
+  {
+   "id": "web",
+   "tab": "Web shop",
+   "q": "What was the order conversion rate in June 2026, by channel and for the whole shop?",
+   "blanks": [
+    "A rate: orders ÷ sessions, pooled",
+    "One row per channel, plus a total",
+    "June 2026, UTC days 1–30",
+    "analytics.conversion_by_channel_daily"
+   ],
+   "unit": "sessions",
+   "pool": [
+    [
+     "Search",
+     400,
+     20000
+    ],
+    [
+     "Email",
+     80,
+     1000
+    ]
+   ],
+   "identity": "400 + 80 = 480 orders of 20,000 + 1,000 = 21,000 sessions",
+   "wrong": "5.00 %",
+   "wrongWhy": "the average of 2.00 % and 8.00 %",
+   "right": "2.29 %",
+   "rightWhy": "480 orders of 21,000 sessions",
+   "renames": [
+    [
+     "cr",
+     "conversion_rate_pct"
+    ],
+    [
+     "conv",
+     "orders"
+    ],
+    [
+     "ts",
+     "ordered_at_utc"
+    ]
+   ]
+  },
+  {
+   "id": "support",
+   "tab": "Support desk",
+   "q": "Show the open-ticket backlog at each month end in Q2 2026.",
+   "blanks": [
+    "Month-end level: open, pending or reopened",
+    "One row per month",
+    "Apr–Jun 2026, complete; never add",
+    "analytics.ticket_backlog_monthly"
+   ],
+   "unit": "tickets",
+   "startLabel": "Mar",
+   "start": 80,
+   "labels": [
+    "Apr",
+    "May",
+    "Jun"
+   ],
+   "levels": [
+    70,
+    80,
+    70
+   ],
+   "identity": "80 + 900 − 910 = 70",
+   "wrong": "17 h",
+   "wrongWhy": "median resolution: the average of monthly medians 12, 26 and 13 h",
+   "right": "Cannot compute",
+   "rightWhy": "from medians alone; from all 910 closed tickets it is 14 h",
+   "renames": [
+    [
+     "status 'O'",
+     "ticket_status 'open'"
+    ],
+    [
+     "avg_res",
+     "median_resolution_hours"
+    ],
+    [
+     "prio",
+     "priority_rank"
+    ]
+   ]
+  }
+ ],
+ "steps": [
+  {
+   "n": 0,
+   "title": "Pick the question and the owner",
+   "who": "Question owner",
+   "output": "The five boxes in QUESTION-CARD.md",
+   "done": "A second person restates the period, the kind of number, the rows and the unit without asking a question.",
+   "foldline": "“Show ending MRR by month for the last complete quarter.” Owner: revenue_analytics.",
+   "prevents": "AP-Q01 vague question, AP-Q02 no owner"
+  },
+  {
+   "n": 1,
+   "title": "Fill the four blanks and list the behaviours",
+   "who": "Question owner with the data builder",
+   "output": "A first metric.yml block and the case list in verified-questions.yml",
+   "done": "Each blank has one answer. Each case has one behaviour: answer, clarify, refuse, deny or stale.",
+   "foldline": "Level · one row per month · Apr–Jun, never add · analytics.mrr_summary_monthly.",
+   "prevents": "AP-M01, AP-M02, AP-T01"
+  },
+  {
+   "n": 2,
+   "title": "Write the truth",
+   "who": "Question owner and tester, independently",
+   "output": "expected_rows and truth_source for every answer case",
+   "done": "Both people get the same numbers. No placeholder row is left. The AI under test was not used.",
+   "foldline": "G01 334,675 / 344,450 / 387,015; G02 32,380; G03 4 of 40 = 10.0 %.",
+   "prevents": "AP-T02 placeholder rows, AP-T04 truth from the AI"
+  },
+  {
+   "n": 3,
+   "title": "Inventory the sources and name things",
+   "who": "Data builder",
+   "output": "naming/NAMING-REVIEW.md and a rename map",
+   "done": "Every served column has a name a stranger can read. The lint prints the known failures on the old tables.",
+   "foldline": "amount → net_new_mrr_eur; dt → month_start; seg → customer_segment; A/C/N → words.",
+   "prevents": "AP-N01 to AP-N04"
+  },
+  {
+   "n": 4,
+   "title": "Build core",
+   "who": "Data builder",
+   "output": "warehouse/sql/30_core.sql",
+   "done": "Primary keys hold; retry duplicates are gone; status codes are words; core.account_months has 2,592 rows.",
+   "foldline": "billing_events repeated every 19th movement; core keeps one.",
+   "prevents": "AP-S04 retry duplicates, AP-L03 cleaning in the prompt"
+  },
+  {
+   "n": 5,
+   "title": "Build the serving views",
+   "who": "Data builder",
+   "output": "warehouse/sql/40_analytics.sql",
+   "done": "Q01, Q02, Q03, Q05 and Q06 pass. The naming lint returns 0 rows for analytics.",
+   "foldline": "Five views; mrr_summary_monthly holds the level and the changes side by side.",
+   "prevents": "AP-S01 to AP-S06, AP-M04"
+  },
+  {
+   "n": 6,
+   "title": "Write the semantic files",
+   "who": "Data builder, approved by the owner",
+   "output": "semantic/model.yml and semantic/metric.yml",
+   "done": "Every view column appears with a unit; every relation exists; the owner approved version 1.0.0.",
+   "foldline": "Five approved metrics; ending_mrr is snapshot, across_time: none.",
+   "prevents": "AP-M05, AP-M06, AP-M07, AP-N05"
+  },
+  {
+   "n": 7,
+   "title": "Lock access",
+   "who": "Database admin",
+   "output": "warehouse/sql/60_access.sql",
+   "done": "Connected as the login: D01, B-W01, B-T01 return 42501; B-S01 returns 42P01; B-X01 is false; B-P01 lists five grants.",
+   "foldline": "foldline_ready_reader: SELECT on five views, no TEMP, no CREATE, no CONNECT on saas_bad.",
+   "prevents": "AP-A01 to AP-A09, AP-T05"
+  },
+  {
+   "n": 8,
+   "title": "Write the policy",
+   "who": "Question owner and database admin",
+   "output": "semantic/policy.yml",
+   "done": "It is an allowlist; every rule says what backs it; C01, R01 and R02 messages are written; freshness warns at 36 h.",
+   "foldline": "“Two locks: refuse early, enforce anyway.”",
+   "prevents": "AP-C01, AP-F01, AP-F02"
+  },
+  {
+   "n": 9,
+   "title": "Run the database checks",
+   "who": "Tester",
+   "output": "The printed output of 70_checks.sql, saved as a receipt",
+   "done": "DB CHECKS n of n PASS, with date, dataset and definition version on the receipt.",
+   "foldline": "22 of 22 PASS as the login (the deck showed 9 of 9; C01, R01 and R02 move to step 11). “These test the database and course rules, not the AI.”",
+   "prevents": "AP-E03 database checks read as an AI score"
+  },
+  {
+   "n": 10,
+   "title": "Compile to Claude and connect",
+   "who": "AI configurer",
+   "output": "claude/project/ (Project setup), CLAUDE.md with the Skill and hook (Claude Code setup), or a connector using ${FOLDLINE_READY_DSN} (Connector setup)",
+   "done": "Every reader shows ending_mrr 1.0.0; the connector logs in as foldline_ready_reader; no credential in any file.",
+   "foldline": "The export tables are not uploaded “for context”.",
+   "prevents": "AP-C03, AP-C04, AP-C05, AP-A04, AP-A05"
+  },
+  {
+   "n": 11,
+   "title": "Run the AI cases and gate",
+   "who": "Tester, a second person",
+   "output": "claude-demo/AI-RUN-LOG.md with 3 runs per case; READY-CANVAS.md filled",
+   "done": "Each run graded on value, behaviour, relation, citation and freshness. The weakest control sets the verdict.",
+   "foldline": "Values 3 of 3, definition cited 0 of 3, one run each. C01, R01 and R02 are graded here.",
+   "prevents": "AP-C02, AP-E01, AP-E02, AP-E04"
+  }
+ ],
+ "readyGates": [
+  {
+   "id": "surface",
+   "name": "Restricted surface",
+   "steps": [
+    7,
+    8
+   ]
+  },
+  {
+   "id": "structure",
+   "name": "Explicit structure",
+   "steps": [
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "id": "meaning",
+   "name": "Agreed meaning",
+   "steps": [
+    0,
+    1,
+    6,
+    10,
+    11
+   ]
+  },
+  {
+   "id": "data",
+   "name": "Dependable data",
+   "steps": [
+    4,
+    9
+   ]
+  },
+  {
+   "id": "yardstick",
+   "name": "Yardstick",
+   "steps": [
+    2,
+    9,
+    11
+   ]
+  }
+ ],
+ "foldlineDone": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ]
+}

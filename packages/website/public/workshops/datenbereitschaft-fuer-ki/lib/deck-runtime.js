@@ -199,6 +199,80 @@
 
   const easeOut = (t) => 1 - (1 - t) ** 3;
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const clamp01 = (t) => Math.max(0, Math.min(1, t));
+
+  // A CSS cubic-bezier() as a JS timing function (x → y), so rAF-driven motion (travel, the rare
+  // non-evidence count) runs on the same curve as the motion tokens the CSS primitives use.
+  function cubicBezier(x1, y1, x2, y2) {
+    const sample = (a, b, t) => ((1 - 3 * b + 3 * a) * t + (3 * b - 6 * a)) * t * t + 3 * a * t;
+    const slope = (a, b, t) => 3 * (1 - 3 * b + 3 * a) * t * t + 2 * (3 * b - 6 * a) * t + 3 * a;
+    return (x) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 8; i += 1) {
+        const error = sample(x1, x2, t) - x;
+        if (Math.abs(error) < 1e-5) return sample(y1, y2, t);
+        const d = slope(x1, x2, t);
+        if (Math.abs(d) < 1e-6) break;
+        t -= error / d;
+      }
+      let low = 0;
+      let high = 1;
+      t = x;
+      for (let i = 0; i < 24; i += 1) {
+        const value = sample(x1, x2, t);
+        if (Math.abs(value - x) < 1e-5) break;
+        if (value < x) low = t;
+        else high = t;
+        t = (low + high) / 2;
+      }
+      return sample(y1, y2, t);
+    };
+  }
+
+  const NAMED_EASINGS = Object.freeze({
+    linear: [0, 0, 1, 1],
+    ease: [0.25, 0.1, 0.25, 1],
+    "ease-in": [0.42, 0, 1, 1],
+    "ease-out": [0, 0, 0.58, 1],
+    "ease-in-out": [0.42, 0, 0.58, 1],
+  });
+
+  // Reads an easing token (e.g. --ease-out, --ease-travel) from the element (scenes may override it)
+  // and returns { css, fn }; without the token the fallback curve is kept.
+  function easingToken(name, element, fallbackFn, fallbackCss) {
+    const style = element instanceof Element ? window.getComputedStyle(element) : ROOT_STYLE();
+    const css = style.getPropertyValue(name).trim();
+    const named = NAMED_EASINGS[css];
+    if (named) return { css, fn: named[0] === 0 && named[2] === 1 && named[1] === 0 && named[3] === 1 ? (t) => t : cubicBezier(...named) };
+    const match = /^cubic-bezier\(\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*,\s*([-\d.]+)\s*\)$/.exec(css);
+    if (match) {
+      const [x1, y1, x2, y2] = match.slice(1).map(Number);
+      if ([x1, y1, x2, y2].every(Number.isFinite) && x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1) return { css, fn: cubicBezier(x1, y1, x2, y2) };
+    }
+    return { css: fallbackCss, fn: fallbackFn };
+  }
+
+  // When an evidence value may appear: once the bar or card it labels has landed. That is the latest
+  // end of any animation on its animating ancestors, or on its paired bar (…-label-s-g ↔ …-bar-s-g),
+  // less half a fade so the value arrives with the landing rather than after it.
+  function landingDelay(element, slide, fadeMs) {
+    let end = 0;
+    const consider = (node) => {
+      node?.getAnimations?.().forEach((animation) => {
+        const timing = animation.effect?.getComputedTiming?.();
+        if (!timing || !Number.isFinite(timing.endTime)) return;
+        end = Math.max(end, timing.endTime - (Number(animation.currentTime) || 0));
+      });
+    };
+    for (let node = element.parentElement; node && node !== slide; node = node.parentElement) consider(node);
+    const pair = /^(.*)-label-(\d+-\d+)$/.exec(element.id || "");
+    if (pair) consider(slide?.querySelector(`#${CSS.escape(`${pair[1]}-bar-${pair[2]}`)}`));
+    const order = Math.min(4, Math.max(0, Number.parseFloat(window.getComputedStyle(element).getPropertyValue("--order")) || 0));
+    const own = order * cssMilliseconds("--m-stagger", 80, element);
+    return Math.max(own, end > 0 ? end - fadeMs / 2 : 0);
+  }
 
   function parseCount(text) {
     const match = /^([^\d−-]*?)([−-]?)([^\d−-]*?)(\d[\d,]*(?:\.\d+)?)(.*)$/.exec(text);
@@ -216,9 +290,11 @@
     return { target, render };
   }
 
-  // count: 0 → the authored text. A negative value carries its minus sign from the first frame, so
-  // −€19,960 never reads as a positive number mid-count. An "N of M" value (data-format="of:M") fades in
-  // at its authored text instead: counting would show false tallies such as "1 of 3" beside an honesty line.
+  // Evidence values (data-ev) never count: a counting number shows false intermediate values (€174,117
+  // beside a bar at 60 %, "1 of 3" beside an honesty line). They appear at their authored text with a
+  // fade that starts as the bar or card they label lands. Only a value without an evidence binding
+  // counts 0 → the authored text, on the --ease-out token, after the same landing delay; a negative
+  // value carries its minus sign from the first frame.
   function countUp(element, { signal } = {}) {
     const finalText = authoredText.get(element) ?? element.textContent.trim();
     authoredText.set(element, finalText);
@@ -227,31 +303,37 @@
       element.textContent = finalText;
       return Promise.resolve();
     }
-    if (/^of:/.test(element.dataset.format || "")) {
+    const slide = element.closest("section.slide");
+    const fadeMs = cssMilliseconds("--m-fade", 200, element);
+    const delay = landingDelay(element, slide, fadeMs);
+    const ease = easingToken("--ease-out", element, easeOut, "cubic-bezier(0.16, 1, 0.3, 1)");
+    if (element.hasAttribute("data-ev") || /^of:/.test(element.dataset.format || "")) {
       element.textContent = finalText;
-      const fade = element.animate([{ opacity: 0 }, { opacity: 1 }], { duration: cssMilliseconds("--m-fade", 200, element), easing: "ease-out" });
+      const fade = element.animate([{ opacity: 0 }, { opacity: 1 }], { duration: fadeMs, delay, easing: ease.css, fill: "backwards" });
       signal?.addEventListener("abort", () => fade.finish(), { once: true });
       return fade.finished.then(() => undefined, () => undefined);
     }
     const duration = cssMilliseconds("--m-count", 600, element);
     return new Promise((resolve) => {
       let frame = 0;
-      const started = performance.now();
+      let started = null;
       const finish = () => {
         window.cancelAnimationFrame(frame);
         element.textContent = finalText;
         resolve();
       };
       signal?.addEventListener("abort", finish, { once: true });
+      // The clock starts at the first frame (a rAF timestamp can precede performance.now() at the call).
       const tick = (now) => {
         if (signal?.aborted) return;
-        const t = Math.min(1, (now - started) / duration);
-        if (t >= 1) {
+        if (started === null) started = now + delay;
+        const t = clamp01((now - started) / duration);
+        if (now - started >= duration) {
           signal?.removeEventListener("abort", finish);
           finish();
           return;
         }
-        element.textContent = parsed.render(parsed.target * easeOut(t));
+        element.textContent = parsed.render(parsed.target * ease.fn(t));
         frame = window.requestAnimationFrame(tick);
       };
       element.textContent = parsed.render(0);
@@ -344,8 +426,9 @@
     const order = Math.min(4, Math.max(0, Number.parseFloat(window.getComputedStyle(element).getPropertyValue("--order")) || 0));
     const timing = {
       duration: cssMilliseconds("--m-draw", 560, element),
-      delay: order * cssMilliseconds("--m-stagger", 80, element),
-      easing: ROOT_STYLE().getPropertyValue("--ease-out").trim() || "ease-out",
+      // --draw-delay lets a scene hold a connector until the element it joins has landed.
+      delay: order * cssMilliseconds("--m-stagger", 80, element) + cssMilliseconds("--draw-delay", 0, element),
+      easing: easingToken("--ease-out", element, easeOut, "cubic-bezier(0.16, 1, 0.3, 1)").css,
       fill: "backwards",
     };
     const animations = drawShapes(element).map((shape) => {
@@ -361,8 +444,56 @@
     return Promise.all(animations.map((animation) => animation.finished.catch(() => undefined))).then(() => undefined);
   }
 
+  // A thin mennige line follows the packet along its path, so the route stays readable while the
+  // packet moves; it fades once the packet arrives and is then removed (the end state is unchanged).
+  function travelTrail(pathElement) {
+    const svg = pathElement.ownerSVGElement;
+    if (!svg || typeof pathElement.getTotalLength !== "function") return null;
+    const trail = pathElement.cloneNode(false);
+    ["id", "class", "style", "pathLength", "data-motion", "data-step", "data-step-until", "data-focus", "mask", "marker-end", "marker-start"]
+      .forEach((name) => trail.removeAttribute(name));
+    const length = pathElement.getTotalLength();
+    if (!(length > 0)) return null;
+    const colour = ROOT_STYLE().getPropertyValue("--mennige").trim() || "#b73a15";
+    Object.entries({
+      class: "travel-trail",
+      fill: "none",
+      stroke: colour,
+      "stroke-width": "4",
+      "stroke-linecap": "butt",
+      "stroke-linejoin": "miter",
+      "stroke-dasharray": `${length} ${length}`,
+      "stroke-dashoffset": `${length}`,
+      "aria-hidden": "true",
+      "pointer-events": "none",
+    }).forEach(([name, value]) => trail.setAttribute(name, value));
+    const transform = pathElement.getAttribute("transform");
+    if (transform) trail.setAttribute("transform", transform);
+    // Same coordinate system as the path; drawn just above it.
+    pathElement.after(trail);
+    return {
+      progress(fraction) {
+        trail.setAttribute("stroke-dashoffset", String(length * (1 - clamp01(fraction))));
+      },
+      settle(fadeMs, signal) {
+        trail.setAttribute("stroke-dashoffset", "0");
+        if (signal?.aborted || !(fadeMs > 0)) {
+          trail.remove();
+          return;
+        }
+        const fade = trail.animate([{ opacity: 1 }, { opacity: 0 }], { duration: fadeMs, easing: "linear", fill: "forwards" });
+        const remove = () => trail.remove();
+        fade.finished.then(remove, remove);
+      },
+      remove() {
+        trail.remove();
+      },
+    };
+  }
+
   // travel: the packet moves along its data-path, disappears on arrival, and its data-target gets
-  // .is-active. Aborting (the next press) jumps straight to that final state.
+  // .is-active. Aborting (the next press) jumps straight to that final state. The curve is the
+  // --ease-travel token when a scene or tokens.css defines it (the cubic in-out otherwise).
   function travel(element, pathElement, { signal } = {}) {
     const slide = element.closest("section.slide");
     const target = element.dataset.target ? queryInSlide(slide, element.dataset.target) : null;
@@ -376,29 +507,39 @@
       arrive();
       return Promise.resolve();
     }
-    const place = pathPlacer(element, pathElement);
+    const place = pathElement.isConnected ? pathPlacer(element, pathElement) : null;
     if (!place || signal?.aborted || motionMode !== "full") {
       arrive();
       return Promise.resolve();
     }
     const length = pathElement.getTotalLength();
     const duration = cssMilliseconds("--m-travel", 700, element);
+    const ease = easingToken("--ease-travel", element, easeInOut, "").fn;
     target?.classList.remove("is-active");
+    const trail = travelTrail(pathElement);
     return new Promise((resolve) => {
       let frame = 0;
-      const started = performance.now();
+      let started = null;
       const finish = () => {
         window.cancelAnimationFrame(frame);
         arrive();
+        trail?.settle(signal?.aborted ? 0 : cssMilliseconds("--m-fade", 200, element), signal);
         resolve();
       };
-      signal?.addEventListener("abort", finish, { once: true });
+      const abort = () => {
+        trail?.remove();
+        finish();
+      };
+      signal?.addEventListener("abort", abort, { once: true });
       const tick = (now) => {
         if (signal?.aborted) return;
-        const t = Math.min(1, (now - started) / duration);
-        place(pathElement.getPointAtLength(length * easeInOut(t)));
+        if (started === null) started = now;
+        const t = clamp01((now - started) / duration);
+        const eased = ease(t);
+        place(pathElement.getPointAtLength(length * eased));
+        trail?.progress(eased);
         if (t >= 1) {
-          signal?.removeEventListener("abort", finish);
+          signal?.removeEventListener("abort", abort);
           finish();
           return;
         }
@@ -490,8 +631,16 @@
     return host && slide.contains(host) ? stepNumber(host.dataset.step) : 0;
   }
 
+  // ?motion=full|reduced|static overrides the operating system for this page: a presenter whose laptop
+  // has Reduce Motion switched on can still show the room the full choreography, and the reverse.
+  const motionOverride = (() => {
+    const value = new URLSearchParams(window.location.search).get("motion");
+    return ["full", "reduced", "static"].includes(value) ? value : null;
+  })();
+
   function detectMotion() {
     if (exportFinal || printing) return "static";
+    if (motionOverride) return motionOverride;
     return reducedMotionQuery?.matches ? "reduced" : "full";
   }
 
@@ -590,6 +739,41 @@
     });
   }
 
+  // Scene changes: each scene has its own header, so the Route would snap. On a press into the next or
+  // previous scene the new header starts from the old one's picture (same act: the old underline; a new
+  // act: an empty underline, or a full one going back), and the --m-route transition carries it on.
+  function seedRoute(slide, previousSlide) {
+    const list = slide.querySelector(":scope > .story-chrome .route");
+    const previousList = previousSlide?.querySelector(":scope > .story-chrome .route");
+    if (!list || !previousList) return null;
+    const act = Math.max(1, stepNumber(slide.dataset.act));
+    const previousAct = Math.max(1, stepNumber(previousSlide.dataset.act));
+    const stations = [...list.querySelectorAll(".route__station")];
+    const previousStations = [...previousList.querySelectorAll(".route__station")];
+    stations.forEach((station, index) => {
+      const source = previousStations[index];
+      station.dataset.state = source?.dataset.state || "future";
+      station.style.setProperty("--progress", source?.style.getPropertyValue("--progress") || "0");
+    });
+    const current = stations[act - 1];
+    if (!current) return null;
+    if (act !== previousAct) {
+      current.dataset.state = "current";
+      current.style.setProperty("--progress", act > previousAct ? "0" : "1");
+    }
+    const bar = current.querySelector(".route__bar");
+    if (bar) void window.getComputedStyle(bar).transform;
+    return act !== previousAct ? current.querySelector(".route__square") : null;
+  }
+
+  function stampRouteSquare(square) {
+    if (!square) return;
+    square.animate([{ transform: "scale(0.4)" }, { transform: "scale(1)" }], {
+      duration: cssMilliseconds("--m-rise", 320),
+      easing: easingToken("--ease-stamp", square, easeOut, "cubic-bezier(0.34, 1.4, 0.64, 1)").css,
+    });
+  }
+
   function makeContext(slide, fields) {
     return Object.freeze({
       slide,
@@ -613,19 +797,39 @@
     Promise.all(animations.map((animation) => animation.finished)).then(done, () => undefined);
   }
 
-  // `data-count` (spec B.9 item 6) is an alias for data-motion="count".
+  function enteringElements(slide, step) {
+    return [...slide.querySelectorAll("[data-motion], [data-count]")]
+      .filter((element) => revealStep(element, slide) === step && !element.closest(".is-step-hidden"));
+  }
+
+  // `data-count` (spec B.9 item 6) is an alias for data-motion="count". Every element of the step is
+  // marked first, so a value can read the timing of the bar or card it labels, whatever the DOM order.
   function playEntering(slide, step, signal) {
-    [...slide.querySelectorAll("[data-motion], [data-count]")]
-      .filter((element) => revealStep(element, slide) === step && !element.closest(".is-step-hidden"))
-      .forEach((element) => {
-        element.classList.add("is-entering");
-        const primitive = element.dataset.motion || "count";
-        const release = () => element.classList.remove("is-entering");
-        if (primitive === "count") countUp(element, { signal }).then(release);
-        else if (primitive === "travel") travel(element, queryInSlide(slide, element.dataset.path), { signal }).then(release);
-        else if (primitive === "draw") drawIn(element, { signal }).then(release);
-        else settleEntering(element, signal);
-      });
+    const entering = enteringElements(slide, step);
+    entering.forEach((element) => element.classList.add("is-entering"));
+    entering.forEach((element) => {
+      const primitive = element.dataset.motion || "count";
+      const release = () => element.classList.remove("is-entering");
+      if (primitive === "count") countUp(element, { signal }).then(release);
+      else if (primitive === "travel") travel(element, queryInSlide(slide, element.dataset.path), { signal }).then(release);
+      else if (primitive === "draw") drawIn(element, { signal }).then(release);
+      else settleEntering(element, signal);
+    });
+  }
+
+  // Reduced motion reduces, it does not remove: what a press reveals fades in (opacity only, no
+  // movement, no stagger), and a packet's arrival becomes a short fade-up of its target, so the cause
+  // and effect of a step still reads. Nothing moves across the screen.
+  function playReduced(slide, step) {
+    const fadeMs = cssMilliseconds("--m-fade", 200);
+    enteringElements(slide, step).forEach((element) => {
+      if (element.dataset.motion === "travel") {
+        const target = element.dataset.target ? queryInSlide(slide, element.dataset.target) : null;
+        target?.animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: fadeMs + 40, easing: "linear" });
+        return;
+      }
+      element.animate([{ opacity: 0 }, { opacity: 1 }], { duration: fadeMs, easing: "linear", fill: "backwards" });
+    });
   }
 
   // Visible state is a pure function of (scene, step). Rendering the same step twice gives the
@@ -654,7 +858,11 @@
     } catch (error) {
       console.error(`Story scene #${slide.id} render failed`, error);
     }
-    if (!animate || motionMode !== "full") return;
+    if (!animate || motionMode === "static") return;
+    if (motionMode === "reduced") {
+      playReduced(slide, step);
+      return;
+    }
     playEntering(slide, step, controller.signal);
     try {
       registration?.animate?.(ctx);
@@ -860,6 +1068,16 @@
   function installPresenterWindowTracking() {
     const nativeOpen = window.open;
     window.open = function trackedWindowOpen(url, target, features) {
+      // P again with a paired, open console brings it to the front instead of reloading it.
+      if (target === "foldline-presenter" && directPresenter?.authenticated && directPresenter.source
+        && !directPresenter.source.closed && presenterDocument(directPresenter.source) === directPresenter.document) {
+        try {
+          directPresenter.source.focus();
+          return directPresenter.source;
+        } catch (_error) {
+          // Fall through to a fresh open when the window cannot be focused.
+        }
+      }
       // Opaque file origins cannot expose a replaced Document. A fresh local
       // console avoids an old document claiming a new offer before navigation;
       // HTTP(S) keeps the familiar named-window reuse and automatic refresh.
@@ -1002,6 +1220,7 @@
       note: slide.dataset.note || "No presenter note for this scene.",
       next: next ? { sceneId: next.id, label: next.dataset.label, kind: next.dataset.kind || "main" } : null,
       runtimeMode: mode,
+      motionMode,
       runtimeStatus: evidenceLog[0] ? `${status} · ${evidenceLog[0].text}` : status,
       evidence: {
         mode,
@@ -1025,12 +1244,19 @@
     sharedPublishChain = sharedPublishChain.then(() => publishSharedState(state)).catch(() => undefined);
   }
 
+  // The console asks for state every second over two paths. Every answer is broadcast, but the stored
+  // copy (read once when a console pairs) is only rewritten when what it shows has changed.
+  let storedStateSignature = "";
+
   async function publishSharedState(state) {
     const envelope = await signSharedEnvelope("state", state);
     if (!envelope) return;
     channel?.postMessage(envelope);
+    const signature = JSON.stringify({ ...state, sequence: 0, timestamp: 0 });
+    if (channel && signature === storedStateSignature) return;
     try {
       window.localStorage.setItem(STATE_KEY, JSON.stringify(envelope));
+      storedStateSignature = signature;
     } catch (_error) {
       // Direct authenticated window messaging remains available.
     }
@@ -1152,6 +1378,10 @@
         snap(previousSlide);
         runtimeFor(previousSlide).evidenceController?.abort();
       }
+      const pressed = entry === "forward" || entry === "backward";
+      const newStation = motionMode === "full" && pressed && previousSlide && previousSlide !== slide
+        ? seedRoute(slide, previousSlide)
+        : null;
       if (motionMode === "static") {
         renderSlide(slide, Number.POSITIVE_INFINITY, { entry });
       } else {
@@ -1162,6 +1392,7 @@
           animate: entry === "forward",
         });
       }
+      stampRouteSquare(newStation);
       stage.syncHash();
       if (slide.dataset.kind === "appendix") paintRoute(slide);
       runLiveChecks(slide);
@@ -1205,6 +1436,8 @@
 
   async function initialize() {
     stage = document.getElementById("stage");
+    // The stage picks its first scene on DOMContentLoaded; make sure it has, whatever the listener order.
+    stage?.boot?.();
     slides = stage ? [...stage.querySelectorAll("section.slide")] : [];
     if (!slides.length || typeof stage.syncHash !== "function") {
       console.error("Story: <deck-stage id=\"stage\"> with scene sections is required");

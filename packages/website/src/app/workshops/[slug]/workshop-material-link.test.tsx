@@ -54,7 +54,7 @@ describe("<WorkshopMaterialLink>", () => {
     expect(link).toHaveClass("material-row");
   });
 
-  it("opens HTML material in a new tab with noopener noreferrer", () => {
+  it("opens same-origin HTML material in a new tab with noopener, keeping the referrer for the locale-aware back link", () => {
     render(
       <WorkshopMaterialLink
         workshopSlug="ki-prognosen-einschaetzen"
@@ -65,7 +65,7 @@ describe("<WorkshopMaterialLink>", () => {
     );
     const link = screen.getByRole("link", { name: "Slides" });
     expect(link).toHaveAttribute("target", "_blank");
-    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link).toHaveAttribute("rel", "noopener");
     expect(link).toHaveAttribute("hreflang", "de");
     expect(link).not.toHaveAttribute("download");
   });

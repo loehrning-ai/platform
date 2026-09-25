@@ -99,6 +99,8 @@
   let lastLiveStateAt = 0;
   let connectionStatus = "";
   let timerState = readTimer();
+  let selectDirty = false;
+  const NOTE_OPEN_KEY = "foldline-deck:presenter-note-open:v1";
 
   function byId(id) { return document.getElementById(id); }
 
@@ -255,46 +257,89 @@
     return `${String(Math.floor(totalSeconds / 60)).padStart(2, "0")}:${String(totalSeconds % 60).padStart(2, "0")}`;
   }
 
+  function timerStarted() {
+    return timerState.running || timerState.accumulatedMs > 0;
+  }
+
+  function startTimer() {
+    if (timerState.running) return;
+    timerState.startedAt = Date.now();
+    timerState.running = true;
+    writeTimer();
+    renderClock();
+  }
+
   function toggleTimer() {
     if (timerState.running) {
       timerState.accumulatedMs = elapsedMs();
       timerState.startedAt = null;
       timerState.running = false;
+      writeTimer();
+      renderClock();
     } else {
-      timerState.startedAt = Date.now();
-      timerState.running = true;
+      startTimer();
     }
-    writeTimer();
-    renderClock();
   }
 
   function resetTimer() {
     timerState = { accumulatedMs: 0, startedAt: null, running: false };
     writeTimer();
     renderClock();
+    announce("Workshop clock reset to 00:00.");
   }
 
+  const WORKSHOP_TARGET_SECONDS = 75 * 60;
+  const PACE_TOLERANCE_SECONDS = 30;
+
+  function setText(node, text) {
+    if (node && node.textContent !== text) node.textContent = text;
+  }
+
+  function setPace(pace, text) {
+    if (nodes.paceState.dataset.pace !== pace) nodes.paceState.dataset.pace = pace;
+    setText(nodes.paceState, text);
+  }
+
+  // A big clock, one pace pill (early, on time, behind) against the locked scene window, and a thin
+  // 75-minute bar with the scene window marked. Behind shows the scene's cut instruction.
   function renderClock() {
     const elapsed = elapsedMs();
-    const started = timerState.running || timerState.accumulatedMs > 0;
-    nodes.timer.dataset.state = started ? timerState.running ? "running" : "paused" : "not-started";
-    nodes.timer.textContent = started ? formatTime(elapsed) : "NOT STARTED";
-    nodes.timerToggle.textContent = timerState.running ? "Pause" : started ? "Resume" : "Start";
-    if (!started) {
-      nodes.paceState.textContent = "NOT STARTED";
-      return;
-    }
-    if (!state || state.kind !== "main") {
-      nodes.paceState.textContent = state?.kind === "appendix" ? "Appendix · off clock" : "No scene state";
-      return;
-    }
-    // Ahead or behind the locked clock for this scene: early before its start, behind after its end.
+    const started = timerStarted();
+    const timerState_ = started ? timerState.running ? "running" : "paused" : "not-started";
+    if (nodes.timer.dataset.state !== timerState_) nodes.timer.dataset.state = timerState_;
+    setText(nodes.timer, started ? formatTime(elapsed) : "00:00");
+    setText(nodes.timerToggle, timerState.running ? "Pause" : started ? "Resume" : "Start clock");
     const elapsedSeconds = elapsed / 1000;
-    const start = Number(state.startBudgetSeconds) || 0;
-    const end = Number(state.endBudgetSeconds) || 0;
-    if (elapsedSeconds < start - 30) nodes.paceState.textContent = `${formatBudget(start - elapsedSeconds)} early · scene starts ${formatBudget(start)}`;
-    else if (elapsedSeconds > end + 30) nodes.paceState.textContent = `${formatBudget(elapsedSeconds - end)} behind · scene ended ${formatBudget(end)}`;
-    else nodes.paceState.textContent = `On time · ${formatBudget(Math.max(0, end - elapsedSeconds))} left in scene`;
+    nodes.clockFill.style.transform = `scaleX(${Math.min(1, elapsedSeconds / WORKSHOP_TARGET_SECONDS).toFixed(4)})`;
+    const main = state?.kind === "main";
+    const start = main ? Number(state.startBudgetSeconds) || 0 : 0;
+    const end = main ? Number(state.endBudgetSeconds) || 0 : 0;
+    nodes.clockWindow.hidden = !main;
+    if (main) {
+      nodes.clockWindow.style.left = `${(start / WORKSHOP_TARGET_SECONDS) * 100}%`;
+      nodes.clockWindow.style.width = `${Math.max(0.6, ((end - start) / WORKSHOP_TARGET_SECONDS) * 100)}%`;
+    }
+    let cut = "";
+    if (!started) {
+      setPace("not-started", state && !(state.sceneId === "cover" && state.fragmentIndex === 0) ? "CLOCK NOT STARTED" : "Starts on the first press");
+    } else if (!state) {
+      setPace("idle", "No scene state");
+    } else if (!main) {
+      setPace("idle", "Appendix · off clock");
+    } else if (elapsedSeconds < start - PACE_TOLERANCE_SECONDS) {
+      setPace("early", `EARLY · ${formatBudget(start - elapsedSeconds)}`);
+    } else if (elapsedSeconds > end + PACE_TOLERANCE_SECONDS) {
+      setPace("behind", `BEHIND · ${formatBudget(elapsedSeconds - end)}`);
+      cut = window.FOLDLINE_PRESENTER_NOTES?.[state.noteKey]?.cut || "";
+    } else {
+      setPace("on-time", `ON TIME · ${formatBudget(Math.max(0, end - elapsedSeconds))} left`);
+    }
+    nodes.paceCut.hidden = !cut;
+    setText(nodes.paceCut, cut ? `Cut: ${cut}` : "");
+  }
+
+  function sceneNumber(scene, mainNumber, appendixNumber) {
+    return scene.kind === "appendix" ? `A${appendixNumber}` : String(mainNumber).padStart(2, "0");
   }
 
   function populateSceneSelect(scenes) {
@@ -302,18 +347,22 @@
     if (!scenes?.length || signature === manifestSignature) return;
     manifestSignature = signature;
     nodes.sceneSelect.replaceChildren();
+    const mainGroup = document.createElement("optgroup");
+    mainGroup.label = "Main path";
+    const appendixGroup = document.createElement("optgroup");
+    appendixGroup.label = "Appendix (Q&A)";
     let mainNumber = 0;
     let appendixNumber = 0;
     scenes.forEach((scene) => {
       const option = document.createElement("option");
       option.value = scene.sceneId;
-      const sceneNumber = scene.kind === "appendix"
-        ? `A${++appendixNumber}`
-        : String(++mainNumber).padStart(2, "0");
-      option.textContent = `${sceneNumber} · ${scene.sceneId} · ${scene.label}`;
-      nodes.sceneSelect.appendChild(option);
+      const appendix = scene.kind === "appendix";
+      option.textContent = `${sceneNumber(scene, appendix ? mainNumber : ++mainNumber, appendix ? ++appendixNumber : appendixNumber)} · ${scene.label || scene.sceneId}`;
+      (appendix ? appendixGroup : mainGroup).appendChild(option);
     });
-    nodes.sceneSelect.disabled = !directDeck?.authenticated;
+    nodes.sceneSelect.append(mainGroup);
+    if (appendixGroup.children.length) nodes.sceneSelect.append(appendixGroup);
+    selectDirty = false;
   }
 
   function spokenLines(lines) {
@@ -337,28 +386,85 @@
   const NOTE_MUST = /^(Must say|Say once|Say aloud)/i;
   const NOTE_CUE = /^(Presenter cue|Before (each of )?press|On press|Act bridge|Callback|Let the room)/i;
   const NOTE_DETAIL = /^(If asked|Evidence levels?|Keep the|Cause source|Arithmetic|Verbatim|Search path)/i;
+  const VOTE_CUE = /\b(hands?|vote|split)\b/i;
 
-  function noteEntries(lines) {
-    return (lines || []).flatMap((entry) => {
+  // The presses a say[] line belongs to. The notes' sayAt map is authoritative; otherwise the line's own
+  // wording decides ("On press 3", "Before press 3", "on the last press", "at 65:00"). Untagged lines
+  // stay in the full note.
+  function stepsForLine(text, index, richNote, total) {
+    const authored = richNote?.sayAt?.[String(index)];
+    if (Array.isArray(authored)) return authored.filter((step) => Number.isInteger(step));
+    const steps = new Set();
+    const value = String(text);
+    const order = richNote?.revealOrder || [];
+    if (/\b(?:on|at) the last press\b/i.test(value)) steps.add(total);
+    const each = value.match(/\bbefore each of presses (\d+)\s*[–-]\s*(\d+)/i);
+    if (each) for (let step = Number(each[1]); step <= Number(each[2]); step += 1) steps.add(step - 1);
+    const span = value.match(/\(press(?:es)? (\d+)\s*[–-]\s*(\d+)\)/i);
+    if (span) for (let step = Number(span[1]); step <= Number(span[2]); step += 1) steps.add(step);
+    for (const match of value.matchAll(/\bbefore press (\d+)\b/gi)) steps.add(Number(match[1]) - 1);
+    for (const match of value.matchAll(/\b(?:on|at|after) press (\d+)\b/gi)) steps.add(Number(match[1]));
+    for (const match of value.matchAll(/\bat (\d{2}:\d{2})\b/g)) {
+      const step = order.findIndex((line) => String(line).startsWith(match[1]));
+      if (step >= 0) steps.add(step);
+    }
+    return [...steps].filter((step) => step >= 0 && step <= total);
+  }
+
+  function noteEntries(richNote, total) {
+    return (richNote?.say || []).flatMap((entry, index) => {
       const kept = spokenLines([entry]);
       if (!kept.length) return [];
-      if (kept.length > 1) return [{ kind: "block", head: kept[0].trim(), body: kept.slice(1).join("\n") }];
+      if (kept.length > 1) return [{ kind: "block", head: kept[0].trim(), body: kept.slice(1).join("\n"), steps: [], index }];
       const text = kept[0].trim();
       const kind = NOTE_MUST.test(text) ? "must" : NOTE_CUE.test(text) ? "cue" : NOTE_DETAIL.test(text) ? "detail" : "say";
-      return [{ kind, text }];
+      let steps = stepsForLine(text, index, richNote, total);
+      // A single-view page (appendix) has only its entry: every spoken line belongs to it.
+      if (!steps.length && total === 0 && kind !== "detail") steps = [0];
+      // An untagged opening cue belongs to scene entry, or to the scene's room vote when it is about hands.
+      if (!steps.length && kind === "cue") {
+        const votes = (richNote?.ask || []).filter((item) => !item.aloud && Number.isInteger(item.at)).map((item) => item.at);
+        steps = VOTE_CUE.test(text) && votes.length ? votes : [0];
+      }
+      return [{ kind, text, steps, index }];
     });
   }
 
-  function renderSpeakerNote(richNote) {
+  // The hero keeps the spoken part; a trailing technical reference stays in the full note.
+  function heroText(text) {
+    return String(text).split(/\s+Technical reference for Q&A:/)[0];
+  }
+
+  function noteParagraph(entry, className) {
+    const paragraph = document.createElement("p");
+    paragraph.className = `note-line note-line--${entry.kind}${className ? ` ${className}` : ""}`;
+    paragraph.textContent = entry.text;
+    return paragraph;
+  }
+
+  // [0, 1, 2, 5] → "entry–press 2 · press 5"
+  function pressRangeLabel(steps) {
+    const name = (value) => (value === 0 ? "entry" : `press ${value}`);
+    const sorted = [...new Set(steps)].sort((a, b) => a - b);
+    const ranges = [];
+    sorted.forEach((value) => {
+      const last = ranges[ranges.length - 1];
+      if (last && value === last[1] + 1) last[1] = value;
+      else ranges.push([value, value]);
+    });
+    return ranges.map(([from, to]) => (from === to ? name(from) : from === 0 ? `entry–press ${to}` : `press ${from}–${to}`)).join(" · ");
+  }
+
+  function renderSpeakerNote(richNote, step, total) {
     const root = nodes.speakerNote;
     root.replaceChildren();
-    const entries = noteEntries(richNote?.say);
+    const entries = noteEntries(richNote, total);
     if (!entries.length) {
       root.textContent = state.note || "—";
       return;
     }
-    const rank = (entry) => (entry.kind === "must" ? 0 : entry.kind === "detail" || entry.kind === "block" ? 2 : 1);
-    [...entries].sort((a, b) => rank(a) - rank(b)).forEach((entry) => {
+    const rank = (entry) => (entry.kind === "must" && !entry.steps.length ? 0 : entry.kind === "detail" || entry.kind === "block" ? 2 : 1);
+    [...entries].sort((a, b) => rank(a) - rank(b) || a.index - b.index).forEach((entry) => {
       if (entry.kind === "block") {
         const details = document.createElement("details");
         const summary = document.createElement("summary");
@@ -369,18 +475,76 @@
         root.appendChild(details);
         return;
       }
-      const paragraph = document.createElement("p");
-      paragraph.className = `note-line note-line--${entry.kind}`;
-      paragraph.textContent = entry.text;
+      const current = entry.steps.includes(step);
+      const paragraph = noteParagraph(entry, current ? "is-current" : entry.steps.length ? "is-other-press" : "");
+      if (entry.steps.length) {
+        const tag = document.createElement("span");
+        tag.className = "press-tag";
+        tag.textContent = pressRangeLabel(entry.steps);
+        paragraph.prepend(tag);
+      }
       root.appendChild(paragraph);
     });
   }
 
+  // Say this: the lines that belong to the current press. Must say: scene-wide must lines with no press.
+  function renderSayNow(richNote, step, total) {
+    const entries = noteEntries(richNote, total).filter((entry) => entry.kind !== "block");
+    const now = entries.filter((entry) => entry.kind !== "detail" && entry.steps.includes(step));
+    nodes.sayNow.replaceChildren();
+    if (now.length) {
+      now.forEach((entry) => nodes.sayNow.appendChild(noteParagraph({ ...entry, text: heroText(entry.text) })));
+    } else {
+      const empty = document.createElement("p");
+      empty.className = "say-empty";
+      const vote = !nodes.voteCard.hidden;
+      const ask = !nodes.stepAskRow.hidden;
+      empty.textContent = !richNote
+        ? state?.note || "—"
+        : vote
+          ? "Run the vote: take hands for each option, then say the split aloud."
+          : ask
+            ? "Ask the question above and take two answers before the next press."
+            : "No scripted line for this press. Speak to what is on screen; the full note is below.";
+      nodes.sayNow.appendChild(empty);
+    }
+    const musts = entries.filter((entry) => entry.kind === "must" && !entry.steps.length);
+    nodes.mustBlock.hidden = !musts.length;
+    nodes.mustLines.replaceChildren(...musts.map((entry) => noteParagraph(entry)));
+  }
+
+  function renderPressMeter(step, total) {
+    const count = Math.max(0, Math.min(12, total));
+    if (nodes.pressMeter.childElementCount !== count + 1) {
+      nodes.pressMeter.replaceChildren(...Array.from({ length: count + 1 }, () => document.createElement("i")));
+    }
+    [...nodes.pressMeter.children].forEach((dot, index) => {
+      dot.className = index < step ? "done" : index === step ? "current" : "";
+    });
+  }
+
+  function isAppendixState() {
+    return state?.kind === "appendix";
+  }
+
+  function appendixReturnAvailable() {
+    // Older decks do not report their return target; an appendix scene then assumes Esc can return.
+    return isAppendixState() && state.appendixReturn !== null;
+  }
+
   function setDeckControlAvailability() {
     const paired = Boolean(directDeck?.authenticated && activeSyncSessionId);
-    document.documentElement.dataset.pairingState = paired ? "paired" : directDeck ? "pairing" : "unpaired";
-    document.querySelectorAll("[data-deck-command]").forEach((control) => { control.disabled = !paired; });
-    if (nodes.sceneSelect) nodes.sceneSelect.disabled = !paired || !state;
+    const pairing = paired ? "paired" : directDeck ? "pairing" : "unpaired";
+    if (document.documentElement.dataset.pairingState !== pairing) document.documentElement.dataset.pairingState = pairing;
+    document.querySelectorAll("[data-deck-command]").forEach((control) => {
+      const disabled = !paired || (control.dataset.deckCommand === "appendix-return" && !appendixReturnAvailable());
+      if (control.disabled !== disabled) control.disabled = disabled;
+    });
+    if (!paired) cancelConfirm(nodes.resetConfirm);
+    if (nodes.sceneSelect) {
+      nodes.sceneSelect.disabled = !paired || !state;
+      nodes.sceneGo.disabled = !paired || !state;
+    }
   }
 
   function openerCanReauthenticate() {
@@ -406,22 +570,41 @@
     beginWindowHandshake();
   }
 
+  // One polite announcement per burst: a connection change and the first scene arrive together, so
+  // they are joined instead of the second silently replacing the first.
+  let pendingAnnouncements = [];
+  let announceTimer = 0;
+  function announce(text) {
+    pendingAnnouncements.push(text);
+    window.clearTimeout(announceTimer);
+    announceTimer = window.setTimeout(() => {
+      const message = pendingAnnouncements.join(" ");
+      pendingAnnouncements = [];
+      nodes.announcer.textContent = "";
+      window.requestAnimationFrame(() => { nodes.announcer.textContent = message; });
+    }, 80);
+  }
+
+  // Connection text is visual only (no live region). Transitions are announced once through the
+  // announcer; the stale age is shown but never read out second by second.
   function renderConnectionHealth() {
     if (!directDeck?.authenticated) {
       const connection = directDeck ? "pairing" : "unpaired";
-      nodes.connectionState.dataset.state = connection;
+      if (nodes.connectionState.dataset.state !== connection) nodes.connectionState.dataset.state = connection;
       nodes.runtimeBlock.dataset.connection = connection;
-      nodes.connectionState.textContent = connection === "pairing" ? "PAIRING" : "UNPAIRED · READ ONLY";
-      nodes.runtimeStatus.textContent = connection === "pairing" ? "Authenticating deck opener" : "Open from slides.html with P";
+      setText(nodes.connectionState, connection === "pairing" ? "CONNECTING" : "NOT CONNECTED");
+      if (!state) setText(nodes.runtimeStatus, connection === "pairing" ? "Connecting to the deck that opened this console" : "Read only until a deck connects");
+      nodes.pairingGuide.hidden = connection !== "unpaired";
       if (connection !== connectionStatus) {
         connectionStatus = connection;
-        nodes.announcer.textContent = connection === "pairing"
-          ? "Presenter is authenticating the deck opener. Controls remain disabled."
-          : "Presenter is unpaired and read only. Open it from the deck with P.";
+        announce(connection === "pairing"
+          ? "Presenter console is connecting to the deck. Controls unlock when it is connected."
+          : "Presenter console is not connected. Open the deck and press P.");
       }
       setDeckControlAvailability();
       return;
     }
+    nodes.pairingGuide.hidden = true;
     const ageMs = lastLiveStateAt ? Date.now() - lastLiveStateAt : Number.POSITIVE_INFINITY;
     if (ageMs > HEARTBEAT_TIMEOUT_MS && openerCanReauthenticate()) {
       restartWindowHandshake();
@@ -429,20 +612,21 @@
       return;
     }
     const connection = !lastLiveStateAt ? "disconnected" : ageMs > HEARTBEAT_TIMEOUT_MS ? "stale" : "connected";
-    nodes.connectionState.dataset.state = connection;
+    if (nodes.connectionState.dataset.state !== connection) nodes.connectionState.dataset.state = connection;
     nodes.runtimeBlock.dataset.connection = connection;
-    nodes.connectionState.textContent = connection === "connected"
+    setText(nodes.connectionState, connection === "connected"
       ? "CONNECTED"
       : connection === "stale"
         ? `STALE · ${Math.round(ageMs / 1000)}s`
-        : "DISCONNECTED";
+        : "DISCONNECTED");
     if (connection !== connectionStatus) {
       connectionStatus = connection;
-      nodes.announcer.textContent = connection === "connected"
-        ? "Presenter connected to deck."
+      if (connection !== "connected") setText(nodes.runtimeStatus, "Deck window closed or asleep: reopen the deck and press P");
+      announce(connection === "connected"
+        ? "Presenter connected to the deck."
         : connection === "stale"
-          ? "Presenter connection stale. Displayed deck state is cached."
-          : "Presenter disconnected from deck.";
+          ? "Presenter lost the deck. The note shown is the last known scene."
+          : "Presenter disconnected from the deck.");
     }
   }
 
@@ -462,48 +646,90 @@
     activeSyncSessionId = nextState.syncSessionId;
     lastStateSequence = nextState.sequence;
     if (live) lastLiveStateAt = Date.now();
-    const stateSignature = `${nextState.sceneId}:${nextState.fragmentIndex}:${nextState.runtimeMode}:${nextState.runtimeStatus}:${JSON.stringify(nextState.interactionProgress || null)}:${JSON.stringify(nextState.evidence || null)}`;
-    const sceneChanged = state?.sceneId !== nextState.sceneId;
+    const stateSignature = `${nextState.sceneId}:${nextState.fragmentIndex}:${nextState.runtimeMode}:${nextState.runtimeStatus}:${JSON.stringify(nextState.interactionProgress || null)}:${JSON.stringify(nextState.evidence || null)}:${JSON.stringify(nextState.appendixReturn ?? "unknown")}`;
+    const previous = state;
+    const sceneChanged = previous?.sceneId !== nextState.sceneId;
     state = nextState;
     renderConnectionHealth();
     if (stateSignature === lastStateSignature) return;
     lastStateSignature = stateSignature;
+    // The clock starts itself on the first forward press from the cover (the cover note says to start
+    // on the first word); Start stays available for anyone who starts talking earlier.
+    if (!timerStarted() && previous?.sceneId === "cover" && previous.fragmentIndex === 0
+      && (nextState.sceneId !== "cover" || nextState.fragmentIndex > 0) && nextState.kind === "main") {
+      startTimer();
+      showToast("Clock started on the first press.");
+    }
     nodes.runtimeMode.dataset.mode = state.runtimeMode;
-    nodes.runtimeMode.textContent = `${String(state.runtimeMode || "replay").toUpperCase()} PATH`;
+    setText(nodes.runtimeMode, `${String(state.runtimeMode || "replay").toUpperCase()} PATH`);
     renderRuntimeBlock();
-    nodes.currentSection.textContent = state.section || "Data Readiness for AI";
-    nodes.currentLabel.textContent = state.label || state.sceneId;
-    nodes.currentId.textContent = state.sceneId;
-    nodes.currentCounter.textContent = state.kind === "main"
-      ? `${state.mainIndex + 1} / ${state.mainTotal}`
-      : `appendix ${state.index - state.mainTotal + 1}`;
+    const step = Number.isInteger(state.fragmentIndex) ? state.fragmentIndex : 0;
+    const total = Number.isInteger(state.fragmentTotal) ? state.fragmentTotal : 0;
+    setText(nodes.currentSection, state.section || "Data Readiness for AI");
+    setText(nodes.currentLabel, state.label || state.sceneId);
+    setText(nodes.currentId, state.sceneId);
+    setText(nodes.currentCounter, state.kind === "main"
+      ? `${String(state.mainIndex + 1).padStart(2, "0")} / ${state.mainTotal}`
+      : `A${state.index - state.mainTotal + 1}`);
     const progress = state.interactionProgress;
-    nodes.fragmentState.textContent = progress
+    setText(nodes.fragmentState, progress
       ? `${progress.label} · ${progress.done} / ${progress.total}`
-      : `reveal ${state.fragmentIndex} / ${state.fragmentTotal}`;
-    nodes.sceneWindow.textContent = state.kind === "main" ? `${formatBudget(state.startBudgetSeconds)}–${formatBudget(state.endBudgetSeconds)}` : "off clock";
-    nodes.noteHook.textContent = `note:${state.noteKey}`;
+      : total === 0 ? `complete on entry · 0 / 0` : `press ${step} / ${total}`);
+    renderPressMeter(step, total);
+    setText(nodes.sceneWindow, state.kind === "main" ? `${formatBudget(state.startBudgetSeconds)}–${formatBudget(state.endBudgetSeconds)}` : "off clock");
+    setText(nodes.noteHook, `note:${state.noteKey}`);
     nodes.notesPanel.dataset.noteKey = state.noteKey;
     const richNote = window.FOLDLINE_PRESENTER_NOTES?.[state.noteKey];
-    renderSpeakerNote(richNote);
-    renderStepLines(richNote);
-    renderVoteCard(richNote);
-    renderLines(nodes.audienceAsks, richNote?.ask?.map((item) => `${item.at} · ${item.text}`) || []);
+    renderStepLines(richNote, step, total);
+    renderVoteCard(richNote, step);
+    renderSayNow(richNote, step, total);
+    renderSpeakerNote(richNote, step, total);
+    renderLines(nodes.audienceAsks, richNote?.ask?.map((item) => `${item.at === 0 ? "entry" : `press ${item.at}`} · ${item.text}`) || []);
     renderLines(nodes.expectedAudience, richNote?.expectedAudience || []);
     renderLines(nodes.revealCut, richNote ? [`Reveal: ${richNote.revealOrder.join(" → ")}`, `Cut: ${richNote.cut}`] : []);
     renderAppendixRoutes(richNote?.appendixRoutes || []);
+    renderAppendixBanner();
     const endOfMain = state.kind === "main" && state.mainIndex === state.mainTotal - 1;
-    nodes.nextLabel.textContent = endOfMain ? "End of main path · Q&A via appendix routes" : state.next?.label || "End of deck";
-    nodes.nextId.textContent = endOfMain ? "—" : state.next?.sceneId || "—";
-    nodes.nextKind.textContent = endOfMain ? "end" : state.next?.kind || "end";
+    setText(nodes.nextLabel, endOfMain ? "None · Q&A uses the appendix routes" : state.next?.label || "End of deck");
+    setText(nodes.nextId, endOfMain ? "—" : state.next?.sceneId || "—");
+    setText(nodes.nextKind, endOfMain ? "end" : state.next?.kind || "end");
     document.documentElement.dataset.deckKind = state.kind || "main";
-    // A new scene starts every scrolling column at its top, so the new note is never hidden above the fold.
-    if (sceneChanged) [nodes.notesPanel, nodes.currentPanel, nodes.controlPanel].forEach((panel) => { if (panel) panel.scrollTop = 0; });
     populateSceneSelect(state.scenes);
-    nodes.sceneSelect.value = state.sceneId;
-    nodes.announcer.textContent = `Presenter synchronized to ${state.sceneId}.`;
+    if (!selectDirty) nodes.sceneSelect.value = state.sceneId;
+    if (sceneChanged) {
+      // A new scene starts the note at its top, so the new note is never hidden above the fold.
+      nodes.notesPanel.scrollTop = 0;
+      nodes.cueColumn.scrollTop = 0;
+      announce(state.kind === "main"
+        ? `Scene ${state.mainIndex + 1} of ${state.mainTotal}: ${state.label || state.sceneId}.`
+        : `Appendix: ${state.label || state.sceneId}.`);
+    } else {
+      // Keep the current press's first line in view inside the full note.
+      const current = nodes.speakerNote.querySelector(".is-current");
+      if (current && nodes.noteDetails.open) scrollIntoPanel(nodes.notesPanel, current);
+    }
     setDeckControlAvailability();
     renderClock();
+  }
+
+  function scrollIntoPanel(panel, element) {
+    const panelBox = panel.getBoundingClientRect();
+    const box = element.getBoundingClientRect();
+    if (box.top >= panelBox.top && box.bottom <= panelBox.bottom) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    panel.scrollTo({ top: panel.scrollTop + box.top - panelBox.top - 12, behavior: reduce ? "auto" : "smooth" });
+  }
+
+  function renderAppendixBanner() {
+    const appendix = isAppendixState();
+    nodes.appendixBanner.hidden = !appendix;
+    const target = state?.appendixReturn;
+    const returnLabel = target?.label ? `Return to ${target.label} (Esc)` : "Return from appendix (Esc)";
+    setText(nodes.returnControl, returnLabel);
+    if (!appendix) return;
+    setText(nodes.appendixBannerText, target === null
+      ? "opened directly: use Jump to scene to go back to the main path"
+      : target?.label ? `Esc or the return button goes back to ${target.label}` : "Esc or the return button goes back to the calling scene");
   }
 
   // The last background evidence check and any authored value that differs from the sealed
@@ -513,37 +739,45 @@
     const mismatches = state.evidence?.bindingMismatches || [];
     nodes.runtimeBlock.dataset.evidence = mismatches.length || latest?.matchesSealed === false ? "mismatch" : "ok";
     if (mismatches.length) {
-      nodes.runtimeStatus.textContent = `MISMATCH · ${mismatches.length} projected value${mismatches.length === 1 ? "" : "s"} differ from the sealed record: ${mismatches[0]}`;
+      setText(nodes.runtimeStatus, `MISMATCH · ${mismatches.length} projected value${mismatches.length === 1 ? "" : "s"} differ from the sealed record: ${mismatches[0]}`);
       return;
     }
-    nodes.runtimeStatus.textContent = latest ? latest.text : (state.evidence?.status || state.runtimeStatus || "No runtime detail");
+    setText(nodes.runtimeStatus, latest ? latest.text : (state.evidence?.status || state.runtimeStatus || "No runtime detail"));
   }
 
-  // "Now" is what the current press shows; "Next press" is what the next arrow press will show.
-  function renderStepLines(richNote) {
+  // "On screen now" is what the current press shows; "Next press" is what the next arrow press will show.
+  function renderStepLines(richNote, step, total) {
     const order = richNote?.revealOrder || [];
-    const step = Number.isInteger(state.fragmentIndex) ? state.fragmentIndex : 0;
-    const total = Number.isInteger(state.fragmentTotal) ? state.fragmentTotal : 0;
-    nodes.stepNow.textContent = order[step] || "—";
+    setText(nodes.stepNow, order[step] || "—");
     const aloud = (richNote?.ask || []).filter((item) => item.aloud && item.at === step).map((item) => item.text);
     nodes.stepAskRow.hidden = !aloud.length;
-    nodes.stepAsk.textContent = aloud.join(" · ") || "—";
-    if (step < total) nodes.stepNext.textContent = order[step + 1] || "—";
-    else if (state.kind === "main" && state.mainIndex === state.mainTotal - 1) nodes.stepNext.textContent = "Nothing · the main path ends here";
-    else nodes.stepNext.textContent = state.next ? `Next scene · ${state.next.label}` : "End of deck";
+    setText(nodes.stepAsk, aloud.join(" · ") || "—");
+    let next;
+    if (step < total) next = order[step + 1] || "—";
+    else if (state.kind === "main" && state.mainIndex === state.mainTotal - 1) next = "Nothing · the main path ends here. Open Q&A.";
+    else if (state.kind === "appendix") next = state.next?.kind === "appendix" ? `Next appendix page · ${state.next.label}` : "Nothing · last appendix page";
+    else next = state.next ? `Next scene · ${state.next.label}` : "End of deck";
+    setText(nodes.stepNext, next);
+    nodes.stepNextRow.dataset.sceneChange = step >= total ? "true" : "false";
   }
 
   // Notes contract for ask[] items: { at: integer step, text, options?: string[], expected?, aloud? }.
   // The vote card shows the one on-screen room vote whose `at` is the current step; spoken prompts
   // carry aloud: true and stay in the Ask list only. verify-deck and check-scene enforce the shape
   // for v3 scenes (_build/lib/deck-invariants.mjs askViolations).
-  function renderVoteCard(richNote) {
-    const vote = (richNote?.ask || []).find((item) => !item.aloud && Number.isInteger(item.at) && item.at === state.fragmentIndex);
+  function renderVoteCard(richNote, step) {
+    const vote = (richNote?.ask || []).find((item) => !item.aloud && Number.isInteger(item.at) && item.at === step);
     nodes.voteCard.hidden = !vote;
     if (!vote) return;
-    const options = Array.isArray(vote.options) && vote.options.length ? ` · ${vote.options.join(" / ")}` : "";
-    nodes.votePrompt.textContent = `${vote.text}${options}`;
-    nodes.voteExpected.textContent = vote.expected ? `Expected: ${vote.expected}` : "Expected resolution in the speaker note";
+    setText(nodes.votePrompt, vote.text);
+    const options = Array.isArray(vote.options) ? vote.options : [];
+    nodes.voteOptions.replaceChildren(...options.map((option) => {
+      const item = document.createElement("li");
+      item.textContent = option;
+      return item;
+    }));
+    nodes.voteOptions.hidden = !options.length;
+    setText(nodes.voteExpected, vote.expected ? `Expected: ${vote.expected}` : "Take hands for each option and say the split aloud.");
   }
 
   function renderLines(root, lines) {
@@ -559,21 +793,26 @@
     });
   }
 
+  function sceneLabel(sceneId) {
+    return state?.scenes?.find((scene) => scene.sceneId === sceneId)?.label || sceneId.replace(/^appendix-/, "");
+  }
+
   function renderAppendixRoutes(routes) {
     nodes.appendixRoutes.replaceChildren();
     if (!routes.length) {
-      nodes.appendixRoutes.textContent = "None";
+      nodes.appendixRoutes.textContent = "None for this scene";
       return;
     }
     routes.forEach((sceneId) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "appendix-route";
-      button.textContent = sceneId.replace(/^appendix-/, "");
+      button.textContent = sceneLabel(sceneId);
       button.title = sceneId;
-      button.addEventListener("click", () => {
+      button.disabled = !(directDeck?.authenticated && activeSyncSessionId);
+      button.addEventListener("click", (event) => {
         send({ command: "goto", sceneId });
-        button.blur();
+        afterCommand(event);
       });
       nodes.appendixRoutes.appendChild(button);
     });
@@ -653,39 +892,147 @@
     return Boolean(target?.closest?.("select,input,textarea,[contenteditable]"));
   }
 
-  // Keys mirror the deck (spec B.9): → and PageDown are one press forward, ← and PageUp one press
-  // back, Esc returns from an appendix. Scene jumps stay on the buttons and the scene select. A
-  // keyboard-focused button keeps its own Space/Enter activation, so those keys never send a second
-  // command; a mouse click releases focus, so Space and Enter go back to meaning one press.
+  let toastTimer = 0;
+  function showToast(text, duration = 2600) {
+    nodes.toast.hidden = false;
+    nodes.toast.textContent = text;
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => { nodes.toast.hidden = true; nodes.toast.textContent = ""; }, duration);
+  }
+
+  // Two-step confirmations for the two actions that throw away the room's place: the first activation
+  // opens an inline confirm row and moves focus to its harmless choice, so a clicker's Space or Enter
+  // cannot confirm by accident. The row closes itself after a few seconds.
+  const CONFIRM_TIMEOUT_MS = 6000;
+  const confirmTimers = new Map();
+
+  function openConfirm(row, trigger) {
+    if (!row) return;
+    row.hidden = false;
+    row.dataset.trigger = trigger?.dataset.deckCommand || trigger?.dataset.timerCommand || "";
+    trigger?.setAttribute("aria-expanded", "true");
+    row.querySelector("[data-confirm-cancel]")?.focus();
+    window.clearTimeout(confirmTimers.get(row));
+    confirmTimers.set(row, window.setTimeout(() => cancelConfirm(row), CONFIRM_TIMEOUT_MS));
+  }
+
+  function cancelConfirm(row, { restoreFocus = false } = {}) {
+    if (!row || row.hidden) return;
+    const hadFocus = row.contains(document.activeElement);
+    row.hidden = true;
+    window.clearTimeout(confirmTimers.get(row));
+    const trigger = document.querySelector(`[data-confirm-target="${row.id}"]`);
+    trigger?.setAttribute("aria-expanded", "false");
+    if (hadFocus && restoreFocus) trigger?.focus();
+    else if (hadFocus) focusNextReveal();
+  }
+
+  function focusNextReveal() {
+    if (nodes.nextReveal && !nodes.nextReveal.disabled) nodes.nextReveal.focus();
+    else document.activeElement?.blur?.();
+  }
+
+  // After a pointer click the button releases focus, so Space/Enter go back to meaning one press. After a
+  // keyboard activation focus moves to Next reveal, so the next Space/Enter from a clicker is the next press.
+  function afterCommand(event) {
+    const button = event.currentTarget;
+    if (event.detail > 0) button.blur();
+    else if (button !== nodes.nextReveal) focusNextReveal();
+  }
+
+  const RESET_KEY_CONFIRM_MS = 1500;
+  let resetKeyArmedAt = 0;
+
+  // Keys mirror the deck: → and PageDown are one press forward, ← and PageUp one press back (a clicker's
+  // keys), Space/Shift+Space the same when no button has focus, Esc leaves an appendix, and R twice
+  // within 1.5 s sends the deck to the cover, exactly as on the deck. Reset scene stays on its button.
+  // A keyboard-focused button keeps its own Space/Enter activation.
   function onKey(event) {
     if (isInput(event.target) || event.metaKey || event.ctrlKey || event.altKey) return;
     const activatesButton = event.key === " " || event.key === "Spacebar" || event.key === "Enter";
-    if (activatesButton && event.target?.closest?.("button")) return;
+    if (activatesButton && event.target?.closest?.("button, summary, a")) return;
+    const isReset = event.key === "r" || event.key === "R";
+    if (event.key === "Escape") {
+      const open = [nodes.resetConfirm, nodes.timerConfirm].find((row) => !row.hidden);
+      if (open) {
+        event.preventDefault();
+        cancelConfirm(open, { restoreFocus: true });
+        return;
+      }
+    }
     let command = null;
     if (event.key === "ArrowRight" || event.key === "PageDown") command = "fragment-next";
     else if (event.key === "ArrowLeft" || event.key === "PageUp") command = "fragment-previous";
-    else if (event.key === "Escape") command = "appendix-return";
+    else if (event.key === "Escape" && appendixReturnAvailable()) command = "appendix-return";
     else if ((event.key === " " || event.key === "Spacebar") && event.shiftKey) command = "fragment-previous";
     else if (event.key === " " || event.key === "Spacebar" || event.key === "Enter") command = "fragment-next";
-    else if ((event.key === "r" || event.key === "R") && event.shiftKey) command = "full-reset";
-    else if (event.key === "r" || event.key === "R") command = "reset-current";
+    else if (isReset && !event.shiftKey) command = "reset-key";
     if (!command) return;
     event.preventDefault();
+    if (event.repeat) return;
+    if (!directDeck?.authenticated || !activeSyncSessionId) {
+      showToast("Not connected: open the deck and press P first.");
+      return;
+    }
+    if (command === "reset-key") {
+      const now = performance.now();
+      if (resetKeyArmedAt && now - resetKeyArmedAt <= RESET_KEY_CONFIRM_MS) {
+        resetKeyArmedAt = 0;
+        send({ command: "full-reset" });
+        showToast("Deck sent back to the cover.");
+        announce("Deck sent back to the cover.");
+      } else {
+        resetKeyArmedAt = now;
+        showToast("Press R again to send the deck back to the cover.", RESET_KEY_CONFIRM_MS);
+      }
+      return;
+    }
+    resetKeyArmedAt = 0;
     send({ command });
+  }
+
+  function commitSceneJump() {
+    const sceneId = nodes.sceneSelect.value;
+    selectDirty = false;
+    if (!sceneId || sceneId === state?.sceneId) return;
+    send({ command: "goto", sceneId });
+  }
+
+  // A standalone console (opened by hand) becomes the named presenter window, then opens the deck.
+  // The deck's P reuses this window by name and re-runs the normal pairing handshake.
+  function openDeckFromConsole() {
+    try { window.name = "foldline-presenter"; } catch (_error) { /* the deck's P opens its own console */ }
+    const deck = window.open("./slides.html", "_blank");
+    setText(nodes.pairingLead, deck
+      ? "The deck opened in a new tab. Press P there; this console reloads once and connects."
+      : "The browser blocked the new tab. Open slides.html yourself and press P there.");
   }
 
   function initialize() {
     Object.assign(nodes, {
-      runtimeBlock: document.querySelector(".runtime-block"), runtimeMode: byId("runtime-mode"), runtimeStatus: byId("runtime-status"), connectionState: byId("connection-state"), timer: byId("timer"), paceState: byId("pace-state"),
+      runtimeBlock: document.querySelector(".runtime-block"), runtimeMode: byId("runtime-mode"), runtimeStatus: byId("runtime-status"), connectionState: byId("connection-state"),
+      timer: byId("timer"), paceState: byId("pace-state"), paceCut: byId("pace-cut"), clockFill: byId("clock-fill"), clockWindow: byId("clock-window"),
       sceneWindow: byId("scene-window"), stateAge: byId("state-age"), currentSection: byId("current-section"), currentLabel: byId("current-label"),
-      currentId: byId("current-id"), currentCounter: byId("current-counter"), fragmentState: byId("fragment-state"), noteHook: byId("note-hook"),
-      notesPanel: document.querySelector(".notes-panel"), speakerNote: byId("speaker-note"), nextLabel: byId("next-label"), nextId: byId("next-id"),
-      nextKind: byId("next-kind"), sceneSelect: byId("scene-select"), announcer: byId("connection-announcer"),
-      stepNow: byId("step-now"), stepNext: byId("step-next"), stepAsk: byId("step-ask"), stepAskRow: byId("step-ask-row"),
-      currentPanel: document.querySelector(".current-panel"), controlPanel: document.querySelector(".control-panel"), voteCard: byId("vote-card"), votePrompt: byId("vote-prompt"), voteExpected: byId("vote-expected"),
+      currentId: byId("current-id"), currentCounter: byId("current-counter"), fragmentState: byId("fragment-state"), pressMeter: byId("press-meter"), noteHook: byId("note-hook"),
+      notesPanel: byId("notes-panel"), noteDetails: byId("note-details"), speakerNote: byId("speaker-note"), nextLabel: byId("next-label"), nextId: byId("next-id"),
+      nextKind: byId("next-kind"), sceneSelect: byId("scene-select"), sceneGo: byId("scene-go"), announcer: byId("connection-announcer"), toast: byId("console-toast"),
+      stepNow: byId("step-now"), stepNext: byId("step-next"), stepNextRow: document.querySelector(".step-next"), stepAsk: byId("step-ask"), stepAskRow: byId("step-ask-row"),
+      sayNow: byId("say-now"), mustBlock: byId("must-block"), mustLines: byId("must-lines"), cueColumn: document.querySelector(".cue-column"),
+      voteCard: byId("vote-card"), votePrompt: byId("vote-prompt"), voteOptions: byId("vote-options"), voteExpected: byId("vote-expected"),
       audienceAsks: byId("audience-asks"), expectedAudience: byId("expected-audience"), revealCut: byId("reveal-cut"), appendixRoutes: byId("appendix-routes"),
+      appendixBanner: byId("appendix-banner"), appendixBannerText: byId("appendix-banner-text"), returnControl: document.querySelector(".return-control"),
+      nextReveal: document.querySelector(".next-reveal"), pairingGuide: byId("pairing-guide"), pairingLead: byId("pairing-lead"),
+      resetConfirm: byId("reset-confirm"), timerConfirm: byId("timer-confirm"),
     });
     nodes.timerToggle = document.querySelector('[data-timer-command="toggle"]');
+
+    // The full note's open/closed choice is a per-viewer convenience.
+    try {
+      if (window.localStorage.getItem(NOTE_OPEN_KEY) === "closed") nodes.noteDetails.open = false;
+    } catch (_error) { /* default open */ }
+    nodes.noteDetails.addEventListener("toggle", () => {
+      try { window.localStorage.setItem(NOTE_OPEN_KEY, nodes.noteDetails.open ? "open" : "closed"); } catch (_error) { /* not remembered */ }
+    });
 
     if ("BroadcastChannel" in window) {
       channel = new BroadcastChannel(CHANNEL_NAME);
@@ -699,6 +1046,10 @@
         try { void acceptSharedState(JSON.parse(event.newValue)); } catch (_error) { /* ignore malformed signed state */ }
       } else if (event.key === DECK_STARTED_KEY && event.newValue) {
         try { acceptDeckStarted(JSON.parse(event.newValue)); } catch (_error) { /* ignore malformed notices */ }
+      } else if (event.key === TIMER_KEY) {
+        // Start, pause or reset in another console window keeps every console on one clock.
+        timerState = readTimer();
+        renderClock();
       }
     });
     window.addEventListener("message", (event) => { void handleWindowMessage(event); });
@@ -707,22 +1058,70 @@
     });
     window.addEventListener("keydown", onKey);
 
-    // A pointer click (event.detail > 0) releases focus so Space/Enter never repeat the clicked control.
-    const releaseAfterClick = (event) => { if (event.detail > 0) event.currentTarget.blur(); };
     document.querySelectorAll("[data-deck-command]").forEach((button) => {
       button.addEventListener("click", (event) => {
+        const row = button.dataset.confirmTarget ? byId(button.dataset.confirmTarget) : null;
+        if (row) {
+          openConfirm(row, button);
+          return;
+        }
         send({ command: button.dataset.deckCommand });
-        releaseAfterClick(event);
+        afterCommand(event);
       });
     });
-    document.querySelector('[data-timer-command="toggle"]').addEventListener("click", (event) => { toggleTimer(); releaseAfterClick(event); });
-    document.querySelector('[data-timer-command="reset"]').addEventListener("click", (event) => { resetTimer(); releaseAfterClick(event); });
-    nodes.sceneSelect.addEventListener("change", () => {
-      send({ command: "goto", sceneId: nodes.sceneSelect.value });
-      nodes.sceneSelect.blur();
+    nodes.timerToggle.addEventListener("click", (event) => {
+      toggleTimer();
+      if (event.detail > 0) event.currentTarget.blur();
+    });
+    const timerReset = document.querySelector('[data-timer-command="reset"]');
+    timerReset.addEventListener("click", () => {
+      if (!timerStarted()) return;
+      openConfirm(nodes.timerConfirm, timerReset);
+    });
+    document.querySelectorAll("[data-confirm-cancel]").forEach((button) => {
+      button.addEventListener("click", () => cancelConfirm(button.closest(".confirm-row"), { restoreFocus: true }));
+    });
+    document.querySelectorAll("[data-confirm-action]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        const row = button.closest(".confirm-row");
+        if (button.dataset.confirmAction === "reset-timer") resetTimer();
+        else if (button.dataset.confirmAction === "full-reset") {
+          send({ command: "full-reset" });
+          announce("Deck sent back to the cover.");
+        }
+        cancelConfirm(row);
+        if (event.detail > 0 || !row.contains(document.activeElement)) focusNextReveal();
+      });
     });
 
-    if (!directDeck) nodes.speakerNote.textContent = "UNPAIRED · read only. Open this console from slides.html with P.";
+    // The scene list only chooses; Enter or Go commits. Arrow keys on a closed select fire `change`
+    // in Chromium, so change never moves the projector.
+    nodes.sceneSelect.addEventListener("change", () => { selectDirty = nodes.sceneSelect.value !== state?.sceneId; });
+    nodes.sceneSelect.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        commitSceneJump();
+      } else if (event.key === "Escape" && selectDirty) {
+        event.preventDefault();
+        selectDirty = false;
+        if (state) nodes.sceneSelect.value = state.sceneId;
+      }
+    });
+    nodes.sceneSelect.addEventListener("blur", () => {
+      // Leaving the list without committing restores the deck's scene so the list never lies.
+      window.setTimeout(() => {
+        if (document.activeElement === nodes.sceneGo) return;
+        selectDirty = false;
+        if (state) nodes.sceneSelect.value = state.sceneId;
+      }, 0);
+    });
+    nodes.sceneGo.addEventListener("click", () => {
+      commitSceneJump();
+      nodes.sceneSelect.focus();
+    });
+
+    byId("open-deck").addEventListener("click", openDeckFromConsole);
+
     setDeckControlAvailability();
     requestState();
     renderClock();
@@ -731,7 +1130,7 @@
     window.setInterval(() => {
       renderClock();
       renderConnectionHealth();
-      nodes.stateAge.textContent = state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s` : "—";
+      setText(nodes.stateAge, state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s old` : "—");
     }, HEARTBEAT_INTERVAL_MS);
   }
 

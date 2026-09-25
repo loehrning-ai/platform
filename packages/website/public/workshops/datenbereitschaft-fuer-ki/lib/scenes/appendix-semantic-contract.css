@@ -55,7 +55,7 @@
 }
 
 #appendix-semantic-contract .sc-map__q {
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 600;
   line-height: 1.2;
 }
@@ -84,7 +84,7 @@
   border: 3px solid var(--ink);
   background: var(--beton);
   font-family: var(--mono);
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -121,7 +121,7 @@
 }
 
 #appendix-semantic-contract .sc-compiler__label {
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -145,7 +145,7 @@
   padding: 0 20px;
   border: 3px solid var(--ink);
   background: var(--papier);
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 600;
   line-height: 1.25;
   text-align: center;
@@ -161,5 +161,5 @@
   left: 256px;
   margin: 0;
   color: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
 }

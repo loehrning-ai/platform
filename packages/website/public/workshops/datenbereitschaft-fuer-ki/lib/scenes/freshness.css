@@ -90,7 +90,7 @@
 #freshness .fr-clock-badge .icon {
   width: 40px;
   height: 40px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 #freshness .fr-data {

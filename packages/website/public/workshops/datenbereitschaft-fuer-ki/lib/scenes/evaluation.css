@@ -39,7 +39,7 @@
 #evaluation .ev-case__icon {
   width: 44px;
   height: 44px;
-  stroke-width: 7;
+  stroke-width: 3px;
 }
 
 #evaluation .ev-case__label {
@@ -57,7 +57,7 @@
   align-items: center;
   justify-self: start;
   gap: 12px;
-  font-size: 30px;
+  font-size: var(--t-lead);
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -96,12 +96,12 @@
   border-bottom: 0;
 }
 
-/* The two boards: x 96-924 and 996-1824, y 432-752. */
+/* The two boards: x 96-924 and 996-1824, y 424-760 (the vote band starts at 776). */
 #evaluation .ev-board {
   position: absolute;
-  top: 432px;
+  top: 424px;
   width: 828px;
-  height: 320px;
+  height: 336px;
   align-content: start;
   gap: 8px;
 }
@@ -111,10 +111,10 @@
 
 #evaluation .ev-divider {
   position: absolute;
-  top: 432px;
+  top: 424px;
   left: 954px;
   width: 12px;
-  height: 320px;
+  height: 336px;
   border-right: 3px solid var(--ink);
   border-left: 3px solid var(--ink);
 }
@@ -122,7 +122,7 @@
 #evaluation .ev-head {
   height: 40px;
   margin: 0;
-  font-size: 28px;
+  font-size: var(--t-body);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -130,6 +130,14 @@
 #evaluation .ev-head .icon {
   width: 40px;
   height: 40px;
+}
+
+/* Which three questions the runs answered, so "3" is never read as the first three cases above. */
+#evaluation .ev-sub {
+  margin: -4px 0 4px;
+  color: var(--slate);
+  font-size: var(--t-small);
+  line-height: 1.25;
 }
 
 #evaluation .ev-head__pass {
@@ -148,7 +156,7 @@
   display: inline-flex;
   align-items: center;
   gap: 16px;
-  font-size: 28px;
+  font-size: var(--t-body);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -174,14 +182,14 @@
 #evaluation .ev-lab__icon {
   width: 32px;
   height: 32px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 #evaluation .ev-val {
   display: inline-flex;
   align-items: baseline;
   gap: 12px;
-  font-size: 28px;
+  font-size: var(--t-body);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -213,7 +221,7 @@
 #evaluation .ev-cell > .icon {
   width: 40px;
   height: 40px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 #evaluation .ev-cell__pass {
@@ -232,7 +240,7 @@
 #evaluation .ev-cell__pass .icon {
   width: 22px;
   height: 22px;
-  stroke-width: 9;
+  stroke-width: 2.5px;
 }
 
 #evaluation .ev-score {
@@ -292,7 +300,8 @@
   border-color: var(--mennige);
 }
 
-#evaluation[data-step-current="4"] #evaluation-scope {
+/* The closing headline stays in ink; only the phrase that answers the vote takes the accent. */
+#evaluation[data-step-current="4"] .ev-headline__focus {
   color: var(--mennige);
 }
 
@@ -301,8 +310,12 @@
   --m-stagger: 60ms;
 }
 
-/* The runs board also carries its footer ("An observation, not a benchmark.") inside the fixed
-   320 px board, so its rows are 58 px. */
+/* The runs board also carries its question line and its footer ("An observation, not a benchmark.") inside
+   the fixed 336 px board, so its rows are 50 px. */
+#evaluation .ev-board--run {
+  gap: 6px;
+}
+
 #evaluation .ev-board--run .ev-row {
-  height: 58px;
+  height: 50px;
 }

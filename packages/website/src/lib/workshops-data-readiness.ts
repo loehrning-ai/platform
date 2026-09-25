@@ -9,9 +9,9 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Sind deine Daten bereit für KI?",
     eyebrow: "Workshop 03 · Daten verstehen und Antworten prüfen",
     summary:
-      "Gleiche Frage, gleiche Daten, andere Antwort. Du entlarvst eine plausible falsche Zahl und reparierst fünf Regeln im Browserlabor. Ohne Code oder KI-Konto.",
+      "Gleiche Frage, gleiche Daten, andere Antwort. Du entlarvst eine plausible falsche Zahl und übst danach fünf Entscheidungen in einem optionalen Browserlabor. Ohne Code oder KI-Konto.",
     description:
-      "Die fiktive Firma FOLDLINE will ihren monatlichen Abo-Umsatz wissen. Eine KI liefert eine überzeugende Zahl, verwechselt aber monatliche Veränderungen mit Endbeständen. Du prüfst ein Paket aus klar benannten Auswertungsdaten, Definitionen, Kontext und begrenzten Zugriffen. Anschließend baust du fünf Regeln selbst zusammen. Alle Zahlen sind synthetisch. Die Vorführung nutzt aufgezeichnete Ergebnisse; das Übungslabor berechnet feste Fälle direkt im Browser.",
+      "Die fiktive Firma FOLDLINE will ihren monatlichen Abo-Umsatz wissen. Eine KI liefert eine überzeugende Zahl, verwechselt aber monatliche Veränderungen mit Endbeständen. Du prüfst ein Paket aus klar benannten Auswertungsdaten, Definitionen, Kontext und begrenzten Zugriffen. Anschließend triffst du im Labor fünf Entscheidungen selbst. Alle Zahlen sind synthetisch. Die Vorführung nutzt aufgezeichnete Ergebnisse; das Übungslabor berechnet feste Fälle direkt im Browser.",
     format: "Interaktiver Kurs + Browserlabor",
     duration: "75 Minuten Kurs + 15 Minuten Fragen; Labor optional 12 Minuten",
     accessNote:
@@ -63,7 +63,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       recommendedChoiceId: "check-definition",
       strongestEvidenceId: "included-change",
       submitLabel: "Antwort prüfen",
-      resetLabel: "Noch einmal",
+      resetLabel: "Noch einmal versuchen",
       privacyNote:
         "Diese Auswahl bleibt auf der Seite und wird weder gespeichert noch gesendet.",
       resultLabel: "Deine Auswertung",
@@ -81,8 +81,30 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           body: "Wenn die Veränderung schon enthalten ist, sind 120 Euro eine Doppelzählung. Die Daten brauchen eine klare Definition.",
         },
         unsupported: {
-          title: "Ein größerer Taschenrechner löst keine unklare Frage.",
-          body: "Die Rechenoperation funktioniert. Falsch ist die Bedeutung: 100 Euro sind bereits der Endbestand inklusive Veränderung.",
+          title: "Weder Addition noch größeres Modell klärt eine unklare Definition.",
+          body: "Falsch ist die Bedeutung, nicht die Rechnung: 100 Euro sind bereits der Endbestand inklusive Veränderung.",
+        },
+        byChoice: {
+          "trust-sum": {
+            evidenceOnly: {
+              title: "Dein Beleg widerspricht deiner Entscheidung.",
+              body: "Wenn die Veränderung schon im Endbestand steckt, sind 120 Euro eine Doppelzählung. Richtig sind 100 Euro; die Daten brauchen eine klare Definition.",
+            },
+            unsupported: {
+              title: "Zwei richtige Zahlen, falsche Bedeutung.",
+              body: "Die Addition stimmt, aber 120 Euro zählen die Veränderung doppelt: Der Endbestand von 100 Euro enthält sie bereits. Ein sicherer Ton oder dieselbe Tabelle klären nicht, was ein Feld bedeutet.",
+            },
+          },
+          "new-model": {
+            evidenceOnly: {
+              title: "Dein Beleg beantwortet die Frage schon.",
+              body: "Wenn der Endbestand die Veränderung bereits enthält, lautet die Antwort 100 Euro. Auch ein größeres Modell braucht diese Definition; die Bedeutung der Felder zu prüfen klärt die Frage direkt.",
+            },
+            unsupported: {
+              title: "Auch ein größeres Modell braucht die Definition.",
+              body: "Die Modellgröße entscheidet nicht, was ein Feld bedeutet. Der Endbestand von 100 Euro enthält die Veränderung bereits; 120 Euro zählen sie doppelt.",
+            },
+          },
         },
       },
     },
@@ -124,9 +146,9 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "06",
-        title: "Optional: fünf Regeln im Labor reparieren",
+        title: "Optional: fünf Entscheidungen im Labor treffen und prüfen",
         description:
-          "Wähle Datenquelle, Berechnung, Zugriffsgrenze, Aktualität und Prüffälle. Führe sie aus, ändere eine Regel und beobachte, welche Ergebnisse ungültig werden.",
+          "Wähle Datenquelle, Berechnung, Zugriffsgrenze, Aktualität und Prüffälle. Führe sie aus, ändere eine Entscheidung und beobachte, welche Ergebnisse ungültig werden.",
         tool: "Browserlabor · weitere 12 Minuten",
       },
     ],
@@ -137,11 +159,11 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Abo-Software für Geschäftskunden",
       period: "Q2 2026, eingefrorener Übungsstand",
       narrative:
-        "FOLDLINE hat 144 erfundene Kundenkonten. Für dieselbe Frage nach dem Abo-Umsatz werden unklare Rohdaten mit klar definierten Auswertungsdaten verglichen. Der Kurs zeigt historische Modellantworten und getrennt davon feste Datenbankprüfungen. Das Labor ist eine Simulation dieser Regeln.",
+        "FOLDLINE hat 144 erfundene Kundenkonten. Für dieselbe Frage nach dem Abo-Umsatz werden unklare Rohdaten mit klar definierten Auswertungsdaten verglichen. Der Kurs zeigt historische Modellantworten und getrennt davon feste Datenbankprüfungen. Das Labor simuliert diese Entscheidungen.",
       metrics: [
         { label: "Erfundene Konten", value: "144" },
         { label: "Monate im Vergleich", value: "3" },
-        { label: "Regeln im Labor", value: "5" },
+        { label: "Entscheidungen im Labor", value: "5" },
         { label: "Feste Laborfälle", value: "6" },
       ],
       decisionQuestion:
@@ -186,6 +208,15 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         description:
           "Fragekarte, Prüfbogen, Szenariokarten und kommentierte Definitionsvorlagen. Das interaktive Labor ist separat verlinkt.",
       },
+      {
+        label:
+          "Bauanleitung: semantische Schicht, Data Warehouse und Claude einrichten (Englisch)",
+        href: `${base}/builder.html`,
+        kind: "html",
+        language: "en",
+        description:
+          "Optionale Vertiefung für Datenteams, getrennt vom 75-minütigen Einsteigerkurs: Schritt für Schritt vom Übungsfall zu einer eigenen technischen Umgebung. Für den Kurs brauchst du sie nicht.",
+      },
     ],
   },
   en: {
@@ -193,13 +224,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Are your data ready for AI?",
     eyebrow: "Workshop 03 · Understand data and check answers",
     summary:
-      "Same question, same data, different answer. Spot a plausible wrong number and repair five rules in a browser lab. No code or AI account needed.",
+      "Same question, same data, different answer. Spot a plausible wrong number, then practise five choices in an optional browser lab. No code or AI account needed.",
     description:
-      "Fictional company FOLDLINE wants its monthly subscription revenue. An AI returns convincing numbers but mistakes monthly changes for ending balances. Examine a repair combining clearly named analytical data, definitions, context and limited access. Then assemble five rules yourself. All data are synthetic. The walkthrough uses recorded results; the practice lab computes fixed cases in your browser.",
+      "Fictional company FOLDLINE wants its monthly subscription revenue. An AI returns convincing numbers but mistakes monthly changes for ending balances. Examine a repair combining clearly named analytical data, definitions, context and limited access. Then make the five lab choices yourself. All data are synthetic. The walkthrough uses recorded results; the practice lab computes fixed cases in your browser.",
     format: "Interactive course + browser lab",
     duration: "75-minute course + 15-minute Q&A; optional 12-minute lab",
     accessNote:
-      "No account, installation or AI subscription. Course and materials are in English. Model answers were recorded in August 2026; they are not live requests. Use invented examples in the lab.",
+      "No account, installation or AI subscription. Materials are in English; the live session is introduced in German. Model answers were recorded in August 2026; they are not live requests. Use invented examples in the lab.",
     audience: [
       "Beginners without SQL or programming experience",
       "Teams learning to check AI answers against data",
@@ -264,8 +295,30 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           body: "If the change is already included, 120 euros double-counts it. The data need a clear definition.",
         },
         unsupported: {
-          title: "A bigger calculator cannot fix an unclear question.",
-          body: "The addition works. The meaning is wrong: 100 euros is already the ending balance, including the change.",
+          title: "Neither a sum nor a bigger model fixes an unclear definition.",
+          body: "The meaning is wrong, not the arithmetic: 100 euros is already the ending balance, including the change.",
+        },
+        byChoice: {
+          "trust-sum": {
+            evidenceOnly: {
+              title: "Your evidence contradicts your decision.",
+              body: "If the change is already in the ending balance, 120 euros double-counts it. The answer is 100 euros; the data need a clear definition.",
+            },
+            unsupported: {
+              title: "Two correct numbers, wrong meaning.",
+              body: "The addition works, but 120 euros counts the change twice: the 100-euro ending balance already includes it. A confident tone or a shared table does not settle what a field means.",
+            },
+          },
+          "new-model": {
+            evidenceOnly: {
+              title: "Your evidence already answers the question.",
+              body: "If the ending balance already includes the change, the answer is 100 euros. A larger model still needs that definition; checking what the fields mean settles it directly.",
+            },
+            unsupported: {
+              title: "A bigger model still needs the definition.",
+              body: "Model size does not decide what a field means. The 100-euro ending balance already includes the change, so 120 euros counts it twice.",
+            },
+          },
         },
       },
     },
@@ -307,9 +360,9 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "06",
-        title: "Optional: repair five rules in the lab",
+        title: "Optional: make and test five choices in the lab",
         description:
-          "Choose a data surface, calculation, permission boundary, freshness rule and set of checks. Run them, change a rule and see which results become invalid.",
+          "Choose a data surface, calculation, permission boundary, freshness rule and set of checks. Run them, change one choice and see which results become invalid.",
         tool: "Browser lab · 12 more minutes",
       },
     ],
@@ -320,7 +373,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Business subscription software",
       period: "Q2 2026, frozen teaching snapshot",
       narrative:
-        "FOLDLINE has 144 invented accounts. The same subscription-revenue question is compared across unclear raw data and clearly defined analytical data. Historical model answers and fixed database checks are shown separately. The browser lab simulates the rules.",
+        "FOLDLINE has 144 invented accounts. The same subscription-revenue question is compared across unclear raw data and clearly defined analytical data. Historical model answers and fixed database checks are shown separately. The browser lab simulates these choices.",
       metrics: [
         { label: "Invented accounts", value: "144" },
         { label: "Compared months", value: "3" },
@@ -368,6 +421,14 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         language: "en",
         description:
           "Question card, review canvas, scenario cards and definition templates. The interactive lab is linked separately.",
+      },
+      {
+        label: "Builder guide: semantic layer, warehouse and Claude setup",
+        href: `${base}/builder.html`,
+        kind: "html",
+        language: "en",
+        description:
+          "Optional follow-up for data teams, separate from the 75-minute beginner course: go step by step from the practice case to your own technical setup. You do not need it for the course.",
       },
     ],
   },

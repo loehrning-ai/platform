@@ -123,7 +123,7 @@
   align-items: center;
   gap: 16px;
   margin: 0 0 6px;
-  font-size: 32px;
+  font-size: var(--t-lead);
   font-weight: 700;
   line-height: 1.1;
 }
@@ -189,4 +189,25 @@
   from { opacity: 1; transform: translate(var(--merge-x, 0px), var(--merge-y, 0px)); }
   45% { opacity: 0; }
   to { opacity: 0; transform: none; }
+}
+
+/* Merge choreography (press 1, ≤ 900 ms): the rows converge first (0–520 ms); the frame fades in as they
+   land (400 ms), the connectors draw only once the row is in place (480–800 ms, so no line strikes a label
+   mid-merge), their heads follow (640 ms), and the "Same" verdict stamps last (520–840 ms). */
+#controlled-comparison .cc-wires g[data-step="1"] > g[data-motion="draw"] {
+  --order: 4;
+  --m-stagger: 120ms;
+  --m-draw: 320ms;
+}
+
+#controlled-comparison .cc-merge-head.is-entering {
+  animation-delay: 640ms;
+}
+
+#controlled-comparison .cc-frame.is-entering {
+  animation-delay: 400ms;
+}
+
+#controlled-comparison .cc-stamp--same.is-entering {
+  animation-delay: 520ms;
 }

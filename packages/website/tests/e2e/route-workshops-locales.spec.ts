@@ -24,7 +24,7 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
-    materialCount: 4,
+    materialCount: 5,
   },
 ] as const;
 
@@ -174,6 +174,14 @@ for (const width of [320, 390, 768, 1440] as const) {
           expect(state.pageHrefs.every((href) => !href.startsWith("/en"))).toBe(
             true,
           );
+          // The German page keeps German interface copy, and every published
+          // material is honestly labelled as English.
+          if (route.materialCount > 0) {
+            expect(state.mainText).toMatch(GERMAN_INTERFACE_TOKENS);
+            await expect(page.getByText("Sprache: Englisch")).toHaveCount(
+              route.materialCount,
+            );
+          }
         }
 
         expect(pageErrors, `${localizedPath} page errors`).toEqual([]);

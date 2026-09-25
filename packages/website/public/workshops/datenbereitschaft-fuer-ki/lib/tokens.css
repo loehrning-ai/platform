@@ -77,7 +77,15 @@
   --m-route: 240ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-stamp: cubic-bezier(0.34, 1.4, 0.64, 1);
+  /* The stamp overshoot lives in its keyframes (1.3 → 0.96 → 1), so the landing reads on a projector;
+     the curve itself is a plain ease-out. */
+  --ease-stamp: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Opacity-only fades: symmetric, so a 200 ms fade reads as a fade, not a cut. */
+  --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Bars and wipes: even growth across --m-grow, so staggered series stay visibly staggered. */
+  --ease-grow: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Packets on a route: a sine in-out, peak speed ≈1.6× the average (for the runtime's travel). */
+  --ease-travel: cubic-bezier(0.37, 0, 0.63, 1);
 }
 
 * {

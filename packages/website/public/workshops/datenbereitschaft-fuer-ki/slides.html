@@ -86,11 +86,11 @@
 </svg>
 <deck-stage id="stage" width="1920" height="1080">
 
-  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="Data Readiness for AI" data-section="Workshop 03 · 24 September 2026" data-track="" data-seconds="45" data-note-key="cover" data-note="One business question, asked twice. The data never changes; only what the AI can see changes. Keep the opening short." data-design="v3" data-route="none">
+  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="Data Readiness for AI" data-section="Workshop 03 · Live course edition" data-track="" data-seconds="45" data-note-key="cover" data-note="One business question, asked twice. The data never changes; only what the AI can see changes. Keep the opening short." data-design="v3" data-route="none">
   <!-- scene:cover -->
     <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
     <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
-    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 03 · 24 September 2026</p>
+    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 03 · Live course edition</p>
     <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">Data Readiness<br />for AI.</h1>
     <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
       <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
@@ -100,15 +100,16 @@
       </div>
     </div>
     <div class="cover-experiment" id="cover-experiment" data-step="1" data-visual>
-      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same question</span>
-      <span class="cover-dot" aria-hidden="true"></span>
-      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same data</span>
-      <span class="cover-dot" aria-hidden="true"></span>
-      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same AI route</span>
-      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:1"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
-      <span class="stamp cover-stamp cover-stamp--change" data-motion="stamp" style="--order:1">Change the interface</span>
-      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:1"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
-      <span class="stamp cover-stamp" data-motion="stamp" style="--order:1">Measure the answer</span>
+      <span class="cover-fixed" role="group" aria-labelledby="cover-fixed-label">
+        <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same question</span>
+        <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same data</span>
+        <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same AI route</span>
+        <span class="cover-fixed__label" id="cover-fixed-label" data-motion="fade" style="--order:1">Held fixed</span>
+      </span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:2"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp cover-stamp--change" data-motion="stamp" style="--order:2">Change the interface</span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:3"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:3">Measure the answer</span>
     </div>
     <p class="cover-meta" id="cover-meta" data-motion="fade" style="--order:1">75 minutes · synthetic teaching case</p>
   <!-- /scene:cover -->
@@ -252,8 +253,8 @@
       </svg>
     </div>
     <svg class="the-arc-pointer" id="the-arc-pointer" viewBox="0 0 760 344" width="760" height="344" data-step="2" data-focus aria-hidden="true" data-allow-overlap>
-      <path class="the-arc-pointer__line" data-motion="draw" d="M16 344V232H672V36" />
-      <path class="the-arc-pointer__head" data-motion="fade" style="--order:4" d="M658 42L672 16L686 42Z" />
+      <path class="the-arc-pointer__line" data-motion="draw" d="M16 344V232H672V24H625V22" />
+      <path class="the-arc-pointer__head" data-motion="fade" style="--order:4" d="M613 24L625 4L637 24Z" />
     </svg>
     <p class="the-arc-pointer-note" id="the-arc-pointer-note" data-step="2" data-motion="fade" style="--order:1">This line stays at the top of every scene.</p>
     <div class="callout the-arc-outcome" id="the-arc-outcome" data-step="2" data-motion="rise" style="--order:0">
@@ -396,13 +397,14 @@
       <rect id="failure-anatomy-bar-0-0" class="chart__export fa-april" x="0" y="258.66" width="120" height="13.34" data-motion="grow" style="--order:2;--grow-origin:50% 0%"/>
       <text id="failure-anatomy-label-0-0" class="chart__value fa-april-label" x="60" y="306" text-anchor="middle" data-ev="capture:bad:G01:0:ending_mrr" data-format="eur" data-motion="count">−€19,960</text>
     </g>
+    <text class="chart__axis fa-zoom-note" id="failure-anatomy-zoom-note" x="960" y="96" text-anchor="end" data-step-until="4">AI run shown ×3 taller</text>
     <text class="fa-month" x="128" y="354" text-anchor="middle">April</text>
     <text class="fa-month" x="480" y="354" text-anchor="middle">May</text>
     <text class="fa-month" x="832" y="354" text-anchor="middle">June</text>
   </g>
 </svg>
 <div class="fa-legend" id="failure-anatomy-legend">
-  <span class="fa-key"><span class="fa-swatch fa-swatch--run"></span>Recorded AI run</span>
+  <span class="fa-key"><span class="fa-swatch fa-swatch--run"></span>Recorded AI run · export tables</span>
   <span class="fa-key" data-step="4" data-motion="fade"><span class="fa-swatch fa-swatch--db"></span>Database check</span>
   <span class="chip chip--fail" id="failure-anatomy-chip" data-step="4" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-fail"/></svg>Doesn't match</span>
 </div>
@@ -436,7 +438,7 @@
   <!-- /scene:failure-anatomy -->
   </section>
 
-  <section class="slide" id="controlled-comparison" data-act="2" data-kind="main" data-label="Controlled comparison" data-section="Controlled comparison · fixed and changed" data-track="control" data-seconds="150" data-note-key="controlled-comparison" data-note="Show what stayed the same (question, data, AI route, answer settings) and the one thing that changed: what the AI could see." data-design="v3" data-route="shown">
+  <section class="slide" id="controlled-comparison" data-act="2" data-kind="main" data-label="Controlled comparison" data-section="Controlled comparison · fixed and changed" data-track="control" data-seconds="150" data-note-key="controlled-comparison" data-note="Show what stayed the same (question, data, AI route, answer settings) and the package that changed: views, definitions + examples, and the login." data-design="v3" data-route="shown">
   <!-- scene:controlled-comparison -->
 <h1 class="scene-title">Same question. A different data setup.</h1>
 <div class="cc-stage" data-visual="controlled-variable diagram: two lanes whose shared parts merge into one block; only the database column changes">
@@ -459,8 +461,8 @@
         <path class="edge edge--dashed" d="M1340 520V380H1366"/>
         <path class="edge cc-edge--approved" d="M1340 520V660H1366"/>
       </g>
-      <polygon class="edge-head" points="1366,372 1380,380 1366,388"/>
-      <polygon class="edge-head" points="1366,652 1380,660 1366,668"/>
+      <polygon class="edge-head cc-merge-head" points="1366,372 1380,380 1366,388" data-motion="fade"/>
+      <polygon class="edge-head cc-merge-head" points="1366,652 1380,660 1366,668" data-motion="fade"/>
     </g>
   </svg>
 
@@ -496,7 +498,7 @@
   </div>
   <div class="cc-row cc-row--merged" data-step="1" data-motion="merge" style="--merge-y:-140px">
     <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg></span><span class="node__label">Question</span></div>
-    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-company"/></svg></span><span class="node__label">Data</span><span class="node__sub cc-facts" data-step-until="3"><span data-ev="dataset:accountCount" data-format="int">144</span> accounts · Q2 2026</span></div>
+    <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-company"/></svg></span><span class="node__label">Data</span><span class="node__sub cc-facts"><span data-ev="dataset:accountCount" data-format="int">144</span> accounts · Q2 2026</span></div>
     <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg></span><span class="node__label">AI route</span></div>
     <div class="node"><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg></span><span class="node__label">Settings</span></div>
   </div>
@@ -838,9 +840,9 @@
 <div class="ev-db rr-card" id="ready-rematch-db" data-step="2" data-motion="rise" data-visual>
   <div class="ev-head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database"/></svg><svg class="icon icon--40 rr-pass" aria-hidden="true"><use href="#i-pass"/></svg><span>Database check</span></div>
   <div class="rr-slot"><span class="chip chip--pass" data-step="3" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg>Values match</span></div>
-  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:0:ending_mrr_eur" data-format="eur">€334,675</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
-  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:1:ending_mrr_eur" data-format="eur">€344,450</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
-  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:2:ending_mrr_eur" data-format="eur">€387,015</span><span class="rr-match" data-step-until="3" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:0:ending_mrr_eur" data-format="eur">€334,675</span><span class="rr-match" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:1:ending_mrr_eur" data-format="eur">€344,450</span><span class="rr-match" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
+  <div class="ev-row rr-row"><span class="ev-value" data-ev="truth:G01:2:ending_mrr_eur" data-format="eur">€387,015</span><span class="rr-match" data-motion="stamp" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></div>
   <div class="rr-foot" aria-hidden="true"></div>
 </div>
 <div class="rr-gaps" id="ready-rematch-gaps" data-step="3" data-motion="rise" data-focus>
@@ -850,29 +852,27 @@
   <!-- /scene:ready-rematch -->
   </section>
 
-  <section class="slide" id="generalization" data-act="4" data-kind="main" data-label="Generalization" data-section="Generalization · two consumers" data-track="generalize" data-seconds="330" data-note-key="generalization" data-note="Show that the approved views also answer a change and a rate correctly, while the export tables get neither." data-design="v3" data-route="shown" data-live-check="ready:G02 ready:G03">
+  <section class="slide" id="generalization" data-act="4" data-kind="main" data-label="Generalization" data-section="Generalization · a change and a rate" data-track="generalize" data-seconds="330" data-note-key="generalization" data-note="Show that the approved views also answer a change and a rate correctly, while the export tables get neither." data-design="v3" data-route="shown" data-live-check="ready:G02 ready:G03">
   <!-- scene:generalization -->
 <h1 class="scene-title">Does it hold for other questions?</h1>
 <div class="gz-top" id="generalization-top" data-focus>
   <div class="q-card gz-card" id="generalization-g02-card" data-step-until="3" data-motion="rise">
     <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
     <div class="gz-card__body">
-      <p class="q-card__text" data-step-until="2">What was net new MRR in the last complete quarter?</p>
-      <p class="q-card__text gz-card__short" data-step="2" data-motion="fade">Net new MRR</p>
+      <p class="q-card__text">What was net new MRR in the last complete quarter?</p>
     </div>
   </div>
   <span class="gz-tag" id="generalization-g02-tag" data-step-until="3" data-motion="rise" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-change"/></svg>a change</span>
   <div class="q-card gz-card" id="generalization-g03-card" data-step-until="5" data-motion="rise">
     <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
     <div class="gz-card__body">
-      <p class="q-card__text" data-step-until="4">What was logo churn rate by customer segment in the last complete quarter?</p>
-      <p class="q-card__text gz-card__short" data-step="4" data-motion="fade">Logo churn by segment</p>
+      <p class="q-card__text">What was logo churn rate by customer segment in the last complete quarter?</p>
     </div>
   </div>
   <span class="gz-tag" id="generalization-g03-tag" data-step-until="4" data-motion="rise" style="--order:1"><svg class="gz-tag__swatch" width="84" height="17" viewBox="0 0 84 17" aria-hidden="true"><rect x="1.5" y="1.5" width="14" height="14"/><rect x="23.5" y="1.5" width="14" height="14"/><rect x="45.5" y="1.5" width="14" height="14"/><rect class="gz-tag__churned" x="67.5" y="1.5" width="14" height="14"/></svg>a rate</span>
 </div>
 
-<p class="gz-band" id="generalization-band" data-step="1" data-step-until="5" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs</span></p>
+<p class="gz-band" id="generalization-band" data-step="1" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs<span class="gz-band__more" data-step="5" data-motion="fade">, <span data-ev="summary:ready:trials" data-format="int">3</span> questions · one run each</span></span></p>
 
 <div class="gz-line" id="generalization-line" data-step="1" data-step-until="3" data-visual role="img" aria-label="Net new MRR on a line through zero: the export tables run landed below zero, the approved views run above it, where the database check lands too.">
   <svg class="gz-line__art" width="1728" height="440" viewBox="0 0 1728 440" aria-hidden="true" data-allow-overlap>
@@ -930,11 +930,10 @@
 </div>
 
 <div class="gz-summary" id="generalization-summary" data-step="5" data-motion="fade" data-visual>
-  <p class="gz-summary__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs, <span data-ev="summary:ready:trials" data-format="int">3</span> questions:</span></p>
   <div class="gz-tiles">
     <div class="gz-tile gz-tile--export"><p class="gz-tile__head"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-export"/></svg><span>Export tables</span></p><span class="gz-tile__value" data-ev="summary:bad:valueCorrectnessPasses" data-format="of:3" data-motion="count">0 of 3</span></div>
     <div class="gz-tile gz-tile--approved"><p class="gz-tile__head"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-view"/></svg><span>Approved views</span></p><span class="gz-tile__value" data-ev="summary:ready:valueCorrectnessPasses" data-format="of:3" data-motion="count">3 of 3</span></div>
-    <div class="gz-tile gz-tile--cited" id="generalization-cited" data-focus><p class="gz-tile__head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-contract"/></svg><span>Cited the definition</span></p><span class="gz-tile__value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></div>
+    <div class="gz-tile gz-tile--cited" id="generalization-cited" data-focus><p class="gz-tile__head"><span class="gz-run__swatch"></span><svg class="icon icon--40" aria-hidden="true"><use href="#i-contract"/></svg><span>Approved views cited the definition</span></p><span class="gz-tile__value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></div>
   </div>
   <p class="small gz-summary__scope">One recorded run per question per database.</p>
 </div>
@@ -1070,7 +1069,7 @@
 
   <p class="fr-sixty" data-step="3" data-motion="fade">60 hours</p>
   <p class="stamp fr-warn" data-step="3" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Answer with a warning</span></p>
-  <p class="fr-noblock" data-step="3" data-motion="fade" style="--order:1">No block rule was written.</p>
+  <p class="fr-noblock" data-step="3" data-motion="fade" style="--order:1">No age-based block rule was written.</p>
 
   <p class="callout fr-whatif" data-step="4" data-motion="fade" style="--order:1" data-focus>What-if only. The data did not change.</p>
 </div>
@@ -1085,8 +1084,8 @@
   <section class="slide" id="evaluation" data-act="5" data-kind="main" data-label="Evaluation" data-section="Proof · five behaviors, nine-case corpus" data-track="evaluation" data-seconds="300" data-note-key="evaluation" data-note="Show the recorded AI runs first, then the nine fixed database checks. Never present 9 of 9 as an AI score." data-design="v3" data-route="shown" data-live-check="corpus">
   <!-- scene:evaluation -->
 <h1 class="scene-title" data-step-until="3">Tests check the setup, not the AI.</h1>
-<p class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI score 9 of 9?</p>
-<p class="ev-headline" id="evaluation-scope" data-step="4" data-motion="rise" style="--order:1" data-focus>They test the database and course rules, not the AI.</p>
+<h1 class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI score 9 of 9?</h1>
+<h1 class="ev-headline" id="evaluation-scope" data-step="4" data-motion="rise" style="--order:1" data-focus>They test the database and course rules, <span class="ev-headline__focus">not the AI.</span></h1>
 <div class="ev-stage" data-visual="five cases, each question with its expected behaviour, then two separate boards: recorded AI runs on three questions, and nine fixed database checks in a nine-cell grid with 9 of 9 and its scope line">
   <ol class="ev-cases" data-focus>
     <li class="ev-case" data-motion="fade" style="--order:0">
@@ -1103,6 +1102,7 @@
     </li>
     <li class="ev-case" data-motion="fade" style="--order:1">
       <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-case__label">Customer emails?</span></span>
+      <span class="sr-only" data-step="1">Expected: refuse</span>
     </li>
     <li class="ev-case" data-motion="fade" style="--order:1">
       <span class="ev-case__head"><svg class="icon ev-case__icon" aria-hidden="true"><use href="#i-deny"/></svg><span class="ev-case__label">Private read</span></span>
@@ -1111,10 +1111,11 @@
   </ol>
 
   <div class="ev-run ev-board ev-board--run" id="evaluation-runs" data-step="2" data-motion="rise" data-focus>
-    <p class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs · one run each</span></p>
+    <p class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model"/></svg><span>Recorded AI runs · 3 answer questions</span></p>
+    <p class="ev-sub">Ending MRR, net new MRR, logo churn · one run each</p>
     <p class="ev-row"><span class="ev-lab"><span class="ev-swatch ev-swatch--export"></span>Export tables:</span><span class="ev-val"><span class="ev-value" data-ev="summary:bad:valueCorrectnessPasses" data-format="of:3" data-motion="count">0 of 3</span></span></p>
     <p class="ev-row"><span class="ev-lab"><span class="ev-swatch ev-swatch--approved"></span>Approved views:</span><span class="ev-val"><span class="ev-value" data-ev="summary:ready:valueCorrectnessPasses" data-format="of:3" data-motion="count">3 of 3</span></span></p>
-    <p class="ev-row"><span class="ev-lab"><svg class="icon ev-lab__icon" aria-hidden="true"><use href="#i-contract"/></svg>Cited the definition:</span><span class="ev-val"><span class="ev-value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></span></p>
+    <p class="ev-row"><span class="ev-lab"><svg class="icon ev-lab__icon" aria-hidden="true"><use href="#i-contract"/></svg>Approved views cited the definition:</span><span class="ev-val"><span class="ev-value" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span></span></p>
     <p class="ev-foot">An observation, not a benchmark.</p>
   </div>
 
@@ -1122,16 +1123,16 @@
 
   <div class="ev-db ev-board ev-board--db" id="evaluation-checks" data-step="4" data-motion="rise">
     <p class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><svg class="icon ev-head__pass" aria-hidden="true"><use href="#i-pass"/></svg><span>Database checks</span></p>
-    <ol class="ev-cells">
-      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-clarify"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
-      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:4"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg><span class="ev-cell__pass" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+    <ol class="ev-cells" aria-label="Nine fixed database checks">
+      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">Check 1, G01 ending MRR: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:0"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">Check 2, G02 net new MRR: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">Check 3, G03 logo churn: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">Check 4, G04 expansion MRR: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">Check 5, G05 top accounts: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-clarify"/></svg><span class="sr-only">Check 6, C01 how much MRR, ask back: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="sr-only">Check 7, R01 profit by plan, refuse: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell" data-motion="stamp" style="--order:3"><svg class="icon" aria-hidden="true"><use href="#i-refuse"/></svg><span class="sr-only">Check 8, R02 customer emails, refuse: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
+      <li class="ev-cell ev-cell--group" data-motion="stamp" style="--order:4"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg><span class="sr-only">Check 9, D01 forced private read, deny: pass</span><span class="ev-cell__pass" data-allow-overlap aria-hidden="true"><svg class="icon" aria-hidden="true"><use href="#i-pass"/></svg></span></li>
     </ol>
     <div class="ev-score">
       <p class="ev-big" id="evaluation-score"><span data-ev="corpus:ready-pass" data-format="of:9" data-motion="count">9 of 9</span></p>
@@ -1146,7 +1147,7 @@
   <!-- /scene:evaluation -->
   </section>
 
-  <section class="slide" id="your-data" data-act="6" data-kind="main" data-label="Your data" data-section="Transfer · five-field canvas" data-track="transfer" data-seconds="450" data-recovery-seconds="120" data-note-key="your-data" data-note="Participants work on paper: one question of their own, the four blanks, one boundary and one test. No company data goes into the deck." data-design="v3" data-route="shown">
+  <section class="slide" id="your-data" data-act="6" data-kind="main" data-label="Your data" data-section="Transfer · five boxes" data-track="transfer" data-seconds="450" data-recovery-seconds="120" data-note-key="your-data" data-note="Participants work on paper: one question of their own, the four blanks, one boundary and one test. No company data goes into the deck." data-design="v3" data-route="shown">
   <!-- scene:your-data -->
 <h1 class="scene-title" id="your-data-title">Your turn: one question, five boxes.</h1>
 <p class="yd-privacy" id="your-data-privacy"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield"/></svg><span>Use a synthetic or generic example. Do not enter employer, customer, personal, or sensitive data.</span></p>
@@ -1213,8 +1214,8 @@
 
   <section class="slide" id="resolution" data-act="6" data-kind="main" data-label="Resolution" data-section="Resolution · same experiment" data-track="resolution" data-seconds="150" data-note-key="resolution" data-note="Recall the opening vote, then show that only the interface changed. The verdict is a limited pilot with named gaps, not an AI-ready stamp." data-design="v3" data-route="shown" data-live-check="ready:G01">
   <!-- scene:resolution -->
-<h1 class="scene-title" id="resolution-title" data-step-until="3">Same question. What changed the answer?</h1>
-<p class="h2 rs-closing" id="resolution-closing" data-step="3" data-motion="rise" style="--order:1">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
+<h1 class="scene-title" id="resolution-title">Same question. What changed the answer?</h1>
+<p class="rs-closing" id="resolution-closing" data-step="3" data-motion="rise" style="--order:2">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
 <div class="q-card q-card--hero" id="resolution-question" data-step-until="1" data-motion="rise" style="--order:0" data-focus>
   <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
   <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
@@ -1266,7 +1267,10 @@
 <p class="rs-nine" id="resolution-nine" data-step="2" data-step-until="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database"/></svg><span><b data-ev="corpus:ready-pass" data-format="of:9">9 of 9</b> tests the setup, not the AI</span></p>
 <p class="stamp rs-verdict" id="resolution-verdict" data-step="3" data-motion="stamp" style="--order:0" data-focus><svg class="icon" aria-hidden="true"><use href="#i-checklist"/></svg><span>Verdict: limited pilot, not signed off.</span></p>
 <p class="rs-gapline" id="resolution-gapline" data-step="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap"/></svg><span>Gaps: no definition cited · SQL leaned on a setting · one run each</span></p>
-<img class="rs-lockup" id="resolution-lockup" data-step="3" data-motion="fade" style="--order:1" src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" />
+<div class="rs-sign" id="resolution-sign" data-step="3" data-motion="fade" style="--order:3">
+  <p class="rs-materials"><span class="rs-materials__label">Materials:</span> <span class="rs-materials__url">loehrning.ai/workshops/datenbereitschaft-fuer-ki</span></p>
+  <p class="rs-lockup" id="resolution-lockup"><img src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /><span class="rs-lockup__co">× Brainster</span></p>
+</div>
 <div class="room-vote rs-vote" id="resolution-vote" data-step-until="1" data-motion="rise" style="--order:1" data-allow-overlap>
   <svg class="icon" aria-hidden="true"><use href="#i-room-vote"/></svg>
   <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Which answer goes in the board pack now?</p></div>
@@ -1370,7 +1374,7 @@
   <section class="slide" id="appendix-semantic-contract" data-kind="appendix" data-label="Semantic contract" data-section="Appendix · semantic contract" data-track="appendix" data-seconds="0" data-note-key="appendix-semantic-contract" data-note="For questions about the actual definition file behind the four blanks." data-design="v3" data-route="hidden">
   <!-- scene:appendix-semantic-contract -->
 <h1 class="scene-title">The full ending MRR contract.</h1>
-<pre class="code sc-code" data-visual="contract-file"><code><span class="sc-line">slug: ending_mrr</span><span class="sc-line sc-line--mapped">model: analytics.mrr_summary_monthly</span><span class="sc-line sc-line--mapped sc-line--focus" data-focus>aggregation: snapshot</span><span class="sc-line sc-line--mapped">result_grain: monthly</span><span class="sc-line">unit: EUR</span><span class="sc-line">owner: revenue_analytics</span><span class="sc-line">freshness_sla_hours: 36</span><span class="sc-line sc-line--mapped">time_behavior:</span><span class="sc-line">  period_rule: end_of_period</span><span class="sc-line">limitations: [Never sum ending MRR across months.]</span></code></pre>
+<pre class="code sc-code" data-visual="contract-file"><code><span class="sc-line">slug: ending_mrr</span><span class="sc-line sc-line--mapped">model: analytics.mrr_summary_monthly</span><span class="sc-line sc-line--mapped sc-line--focus" data-focus>aggregation: snapshot</span><span class="sc-line sc-line--mapped">result_grain: monthly</span><span class="sc-line">unit: EUR</span><span class="sc-line">owner: revenue_analytics</span><span class="sc-line">freshness_sla_hours: 36</span><span class="sc-line sc-line--mapped">time_behavior:</span><span class="sc-line">  period_rule: end_of_period</span><span class="sc-line">  default_period: last_complete_quarter</span><span class="sc-line">limitations: [Never sum ending MRR across months.]</span></code></pre>
 <ol class="sc-map">
   <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-level" /></svg></span><span class="sc-map__q">Kind of number</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">aggregation</span></li>
   <li class="sc-map__row"><span class="sc-map__tile"><svg class="icon icon--48" aria-hidden="true"><use href="#i-rows" /></svg></span><span class="sc-map__q">Rows per what</span><span class="sc-map__pointer" aria-hidden="true"></span><span class="sc-map__field">result_grain</span></li>
@@ -1537,8 +1541,8 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
   <figure class="ab-shot"><div class="ab-public-panel"><strong>Three recorded questions</strong><p>Ending balance. Net change. Churn.</p><p>One observed run per question and lane.</p><p>No new model call on this page.</p></div><figcaption class="ab-shot__name">Historical run record, summarized</figcaption></figure>
   <p class="ab-provenance">Original teaching summary of the August 2026 record. Third-party interface screenshots are omitted from this public edition.</p></div>
 <div class="ab-gaps">
-  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Ready G01 SQL is unqualified; the captured <span class="mono">search_path analytics,public</span> resolves it to <span class="mono">analytics.mrr_summary_monthly</span> (portability dependency).</span></p>
-  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Enrichment retrieval currently drops additional semantic meaning and routing fields. Historical application audit; the public course does not operate that application.</span></p>
+  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Ready G01 SQL names no schema; the captured <span class="mono">search_path</span> finds <span class="mono">analytics.mrr_summary_monthly</span>. A portability dependency.</span></p>
+  <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Enrichment retrieval drops extra meaning and routing fields (historical application audit; the public course does not run that application).</span></p>
 </div>
 <div class="ab-stack-edges" data-allow-overlap aria-hidden="true">
   <svg width="80" height="600" viewBox="0 0 80 600">
@@ -1546,56 +1550,40 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
   </svg>
 </div>
 <ol class="ab-stack" data-visual="ask-boundary">
-  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-app" /></svg></span><span class="ab-layer__text"><b>Ask generation:</b> metrics + verified question pairs · frozen traces: verified question <span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/3, metric citations <span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/3</span></li>
-  <li class="ab-layer ab-layer--gap"><span class="ab-box ab-box--gap" data-focus><svg class="icon icon--48" aria-hidden="true"><use href="#i-gap" /></svg></span><span class="ab-layer__text"><b>Prompt gap:</b> 40 enrichments stored and loaded into <span class="mono">genCtx</span>; with <span class="mono">retrievedManifest</span>, <span class="mono">sqlGenerator</span> bypasses <span class="mono">buildSchemaContext</span>, so influence is unproven</span></li>
-  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ab-layer__text"><b>Application:</b> course policy (not imported) + read-only SQL guard · CLAUDE.md guides Claude Code only</span></li>
-  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-lock" /></svg></span><span class="ab-layer__text"><b>PostgreSQL:</b> role grants</span></li>
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-app" /></svg></span><span class="ab-layer__text"><b>Ask generation</b> Metrics and verified question pairs. Traces: verified question <span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/3, metric citations <span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/3.</span></li>
+  <li class="ab-layer ab-layer--gap"><span class="ab-box ab-box--gap" data-focus><svg class="icon icon--48" aria-hidden="true"><use href="#i-gap" /></svg></span><span class="ab-layer__text"><b>Prompt gap</b> 40 enrichments are loaded, but the SQL generator bypasses them: influence unproven.</span></li>
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ab-layer__text"><b>Application</b> Read-only SQL guard. Course policy is not imported; CLAUDE.md guides Claude Code only.</span></li>
+  <li class="ab-layer"><span class="ab-box"><svg class="icon icon--48" aria-hidden="true"><use href="#i-lock" /></svg></span><span class="ab-layer__text"><b>PostgreSQL</b> Role grants enforce the boundary.</span></li>
 </ol>
-  <!-- /scene:appendix-ask-boundary -->
+<!-- /scene:appendix-ask-boundary -->
   </section>
 
   <section class="slide" id="appendix-run-metadata" data-kind="appendix" data-label="Run metadata" data-section="Appendix · evidence envelope" data-track="appendix" data-seconds="0" data-note-key="appendix-run-metadata" data-note="For questions about what a recorded AI run and a database check mean, and what each record holds." data-design="v3" data-route="hidden">
   <!-- scene:appendix-run-metadata -->
 <h1 class="scene-title">Four labels keep two evidence planes separate.</h1>
 <div class="rm-plane rm-plane--model" data-visual="evidence-planes">
-  <p class="rm-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI run</p>
-  <p class="rm-lead"><strong>MODEL CAPTURE</strong> names the six sealed Claude observations. <strong>LIVE MODEL</strong> is reserved; this deck does not invoke one.</p>
-  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg><span><b>PUBLIC EXPORT · SEALED CAPTURE</b> · <span class="mono">public.monthly_revenue</span> · VALUE FAIL · RELATION FAIL</span></p>
-  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg><span><b>GOVERNED VIEW · SEALED CAPTURE</b> · <span class="mono">mrr_summary_monthly → analytics.mrr_summary_monthly</span> · VALUE + RELATION PASS · VQ PRESENT</span></p>
-  <p class="rm-probe">The default G01 export-lane probe stopped at the ambiguity pre-pass before SQL; no response text retained.</p>
+  <p class="rm-head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI run</p>
+  <p class="rm-tag"><span class="rm-code">MODEL CAPTURE</span></p>
+  <p class="rm-lead">Six sealed Claude runs, one per question on each database. <b>LIVE MODEL</b> is reserved: this deck never calls one.</p>
+  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-fail" /></svg><span>Export tables · <span class="mono">public.monthly_revenue</span> · value and relation fail</span></p>
+  <p class="rm-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-pass" /></svg><span>Approved views · <span class="mono">analytics.mrr_summary_monthly</span> · value and relation pass · verified question present</span></p>
 </div>
 <div class="rm-divider" aria-hidden="true"></div>
 <div class="rm-plane rm-plane--db">
-  <p class="rm-head"><span class="rm-head__db"><svg class="icon icon--32" aria-hidden="true"><use href="#i-database" /></svg><span class="rm-badge" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg></span></span>Database check</p>
-  <p class="rm-label"><b>DB PROOF LIVE:</b> the fixed case ran now</p>
-  <p class="rm-label"><b>DB PROOF REPLAY:</b> checksum-matched earlier result</p>
-  <p class="rm-label rm-label--corpus">DB PROOF · INDEPENDENT TRUTH · deterministic ready corpus 9 / 9</p>
-</div>
-<div class="rm-envelope">
-  <div class="rm-col">
-    <span class="rm-code">ONE RUN / LANE · execute=true</span>
-    <span class="rm-code">highAccuracy=false · history=[]</span>
-    <span class="rm-code">skipClarify=true · uncached</span>
-    <span class="rm-prose">· not Ask default behavior</span>
-  </div>
-  <div class="rm-col">
-    <span class="rm-code">Ask 3210 → openai-compatible</span>
-    <span class="rm-code">→ bridge 8789 → claude-cli → PG 55432</span>
-    <span class="rm-prose">· underlying Anthropic model/version: not established by the capture</span>
-  </div>
-  <div class="rm-col">
-    <span class="rm-code">foldline_saas_2026q2 ·</span>
-    <span class="rm-code">55b8975be7ed08e263719485cf0363d4</span>
-    <span class="rm-code">2026-07-01T06:00:00Z · 2026-07-01T09:00:00Z</span>
-    <span class="rm-code">captured 2026-08-23</span>
-  </div>
+  <p class="rm-head"><span class="rm-head__db"><svg class="icon icon--40" aria-hidden="true"><use href="#i-database" /></svg><span class="rm-badge" data-allow-overlap><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg></span></span>Database check</p>
+  <p class="rm-tag"><span class="rm-code">DB PROOF LIVE</span></p>
+  <p class="rm-lead">The fixed case ran now.</p>
+  <p class="rm-tag"><span class="rm-code">DB PROOF REPLAY</span></p>
+  <p class="rm-lead">A checksum-matched earlier result.</p>
+  <p class="rm-lead rm-corpus">Independent truth: the deterministic ready corpus, <b>9 / 9</b>.</p>
 </div>
 <div class="rm-verdict">
   <span class="rm-stamp" data-focus>BOUNDED PILOT · CITATION GATE RED</span>
   <span class="rm-verdict__rest">metric citation absent · ready E2E FAIL · fresh 18-call protocol NOT RUN 0/18 · AI deployment BLOCKED</span>
 </div>
 <p class="rm-limits"><b>Does not prove:</b> repeatable model quality · pinned model version · production readiness · current provider availability · 9/9 as an AI score · course policy or database denial as Ask behavior</p>
-  <!-- /scene:appendix-run-metadata -->
+<p class="rm-notes">Run settings, the route and the dataset checksum are in the speaker notes.</p>
+<!-- /scene:appendix-run-metadata -->
   </section>
 
   <section class="slide" id="appendix-research" data-kind="appendix" data-label="Research" data-section="Appendix · research" data-track="appendix" data-seconds="0" data-note-key="appendix-research" data-note="For questions about the sources behind the choices in this workshop." data-design="v3" data-route="hidden">

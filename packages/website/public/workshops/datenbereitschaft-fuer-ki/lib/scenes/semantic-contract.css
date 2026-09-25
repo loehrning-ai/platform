@@ -82,7 +82,7 @@
 }
 
 #semantic-contract .sc-row__q {
-  font-size: 30px;
+  font-size: var(--t-lead);
   font-weight: 600;
   line-height: 64px;
   white-space: nowrap;
@@ -105,13 +105,13 @@
 #semantic-contract .sc-slot__blank {
   padding: 0 0 8px 8px;
   color: var(--slate);
-  font-size: 44px;
+  font-size: var(--t-num-md);
   font-weight: 700;
 }
 
 #semantic-contract .sc-slot__a {
   padding-bottom: 10px;
-  font-size: 36px;
+  font-size: var(--t-h2);
   font-weight: 600;
 }
 
@@ -253,7 +253,7 @@
 
 #semantic-contract .sc-foot__unit {
   margin: 0;
-  font-size: 36px;
+  font-size: var(--t-lead);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;

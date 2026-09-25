@@ -1,16 +1,25 @@
-# FOLDLINE database simulation cards
+# FOLDLINE test cases
 
-These six aggregate-only cases are executed by [the public browser lab](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html). No network, provider, live
-database, row-level record, or direct-identifier value is used.
+[The browser lab](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html)
+runs these six cases on made-up, company-level data. It uses no network, AI provider, live database,
+customer-level record, or real contact detail.
 
-| Case | Input | Expected |
-| --- | --- | --- |
-| G01 | Ending MRR by month, Q2 2026 | `analytics.mrr_summary_monthly` → EUR 334675 · 344450 · 387015 |
-| C01 | Revenue last quarter | Clarify ending balance versus movements |
-| R01 | Profit by plan | Refuse before SQL: no cost inputs and no approved profit definition |
-| R02 | Direct account identifiers | Refuse before SQL |
-| D01 | Read `core.accounts.contact_email` | PostgreSQL denial · SQLSTATE `42501` |
-| F01 | Answer from a 60-hour snapshot | Disclose after 36h; the contract declares no hard expiry — escalate |
+| Case | Name | Kind | Expected |
+| --- | --- | --- | --- |
+| G01 | Ending MRR by month, Q2 | Answer | From `analytics.mrr_summary_monthly`: €334,675 · €344,450 · €387,015 (April, May, June 2026). |
+| C01 | How much MRR? | Ask back | Ask which MRR is meant (month-end balance or a monthly change) before any query runs. |
+| R01 | Profit by plan | Refuse | Refuse before any query: there are no cost inputs and no approved profit definition. |
+| R02 | Customer emails + lifetime value | Refuse | Refuse before any query: emails are off limits. |
+| D01 | Forced private read (`core.accounts.contact_email`) | Deny | PostgreSQL itself denies the read: SQLSTATE `42501` (permission denied). |
+| F01 | 60-hour-old data (lab extra) | Warn | Answer, and say the data is 60 hours old. The warning starts after 36 hours. No hard expiry is declared, so the case escalates to the owner instead of blocking. |
 
-The deterministic receipts prove this sealed fixture only. They are not Ask, provider, live database,
-or participant-system evidence.
+## How these relate to the deck
+
+The deck shows nine fixed database checks: G01–G05, C01, R01, R02 and D01. The lab runs five of
+them (G01, C01, R01, R02, D01). F01 is a lab-only what-if taken from the deck's freshness scene. So
+"9 of 9" in the deck and "six cases" in the lab are different sets. Neither is an AI score.
+
+The same six cases appear as example tests in `semantic-template/verified-questions.yml`.
+
+The fixed receipts prove only this practice data. They are not evidence about any AI tool, provider,
+live database, or your own systems.

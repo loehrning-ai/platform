@@ -48,15 +48,16 @@
 
 #the-arc .the-arc-caption {
   color: var(--slate);
-  font-size: 24px;
+  font-size: var(--t-small);
 }
 
 #the-arc[data-step-current="2"] #the-arc-s6.is-active .node__box {
   outline: none;
 }
 
-/* Elbow from the top of the large "Wrong answer" station (x 224) to under the chrome Route's
-   current station label (x 880, right of the title's end; tip at y 104, just below its progress bar). */
+/* Elbow from the top of the large "Wrong answer" station (x 224) up past the title's end (x 880), then along
+   the gap between the chrome and the title to the centre of the Route's "Wrong answer" stop (x 833), with the
+   tip 4 px under its label (y 92). */
 #the-arc > .the-arc-pointer {
   position: absolute;
   top: 88px;
@@ -77,10 +78,11 @@
   stroke: none;
 }
 
+/* The note sits in the content zone beside the pointer's riser, so the title line stays clean. */
 #the-arc > .the-arc-pointer-note {
   position: absolute;
-  top: 128px;
-  left: 924px;
+  top: 232px;
+  left: 912px;
   width: 560px;
   margin: 0;
   font-size: var(--t-body);

@@ -75,7 +75,7 @@ describe("<WorkshopDetailContent>", () => {
         expect(link).not.toHaveAttribute("target");
       } else {
         expect(link).toHaveAttribute("target", "_blank");
-        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(link).toHaveAttribute("rel", "noopener");
         expect(link).not.toHaveAttribute("download");
       }
     }

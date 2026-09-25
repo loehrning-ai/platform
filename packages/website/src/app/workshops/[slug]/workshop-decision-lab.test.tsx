@@ -10,7 +10,11 @@ import {
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
-import { WorkshopDecisionLab } from "./workshop-decision-lab";
+import {
+  orderDecisionOptions,
+  selectFeedback,
+  WorkshopDecisionLab,
+} from "./workshop-decision-lab";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -52,7 +56,7 @@ describe("<WorkshopDecisionLab>", () => {
     fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.evidence[0].label }));
     fireEvent.submit(submit.closest("form")!);
 
-    const reset = screen.getByRole("button", { name: "Try again" });
+    const reset = screen.getByRole("button", { name: "Reset" });
     expect(reset).not.toBe(submit);
     expect(submit).toHaveAttribute("type", "submit");
     expect(reset).toHaveAttribute("type", "reset");
@@ -69,12 +73,10 @@ describe("<WorkshopDecisionLab>", () => {
     const submit = screen.getByRole("button", {
       name: "Entscheidung prüfen",
     });
-    const firstChoice = screen.getByRole("radio", {
-      name: /Proportional nach geschätzter Nachfrage/,
-    });
-    const firstEvidence = screen.getByRole("radio", {
-      name: /Liefergrenze liegt 130 Stück unter/,
-    });
+    // Validation focuses whichever option is rendered first in each group.
+    const [decisionGroup, evidenceGroup] = screen.getAllByRole("group");
+    const firstChoice = within(decisionGroup).getAllByRole("radio")[0];
+    const firstEvidence = within(evidenceGroup).getAllByRole("radio")[0];
     expect(submit).toBeEnabled();
     expect(firstChoice).toBeRequired();
 
@@ -115,8 +117,9 @@ describe("<WorkshopDecisionLab>", () => {
       name: /Proportional nach geschätzter Nachfrage/,
     });
     const scrollIntoView = vi.fn();
-    Object.defineProperty(firstChoice, "scrollIntoView", {
+    Object.defineProperty(HTMLInputElement.prototype, "scrollIntoView", {
       configurable: true,
+      writable: true,
       value: scrollIntoView,
     });
     fireEvent.click(firstChoice);
@@ -138,14 +141,19 @@ describe("<WorkshopDecisionLab>", () => {
     expect(
       screen.queryByRole("button", { name: "Entscheidung prüfen" }),
     ).toBeNull();
+    // A fully correct answer resets instead of inviting another try.
     expect(
-      screen.getByRole("button", { name: "Neu entscheiden" }),
+      screen.getByRole("button", { name: "Zurücksetzen" }),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Neu entscheiden" }));
+    fireEvent.click(screen.getByRole("button", { name: "Zurücksetzen" }));
     expect(firstChoice).not.toBeChecked();
+    // A retry reorders the options; focus returns to whichever is first now.
+    const firstRendered = within(
+      screen.getAllByRole("group")[0],
+    ).getAllByRole("radio")[0];
     await waitFor(() => {
-      expect(firstChoice).toHaveFocus();
+      expect(firstRendered).toHaveFocus();
       expect(scrollIntoView).toHaveBeenCalledWith({
         block: "center",
         inline: "nearest",
@@ -155,6 +163,8 @@ describe("<WorkshopDecisionLab>", () => {
       screen.getByRole("button", { name: "Entscheidung prüfen" }),
     ).toBeEnabled();
     expect(status).toBeEmptyDOMElement();
+    delete (HTMLInputElement.prototype as { scrollIntoView?: unknown })
+      .scrollIntoView;
   });
 
   it("uses the selected evidence to challenge an unsupported English decision", () => {
@@ -240,5 +250,133 @@ describe("<WorkshopDecisionLab>", () => {
     expect(source).toContain(
       "grid grid-cols-1 border-y border-border sm:grid-cols-3",
     );
+  });
+});
+
+describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
+  for (const locale of ["de", "en"] as const) {
+    for (const workshop of getWorkshops(locale)) {
+      it(`${locale}/${workshop.slug}: never opens with the answers on top, identically on server and client`, () => {
+        const lab = workshop.decisionLab;
+        const first = orderDecisionOptions(lab, 0);
+        expect(first.choices[0].id).not.toBe(lab.recommendedChoiceId);
+        expect(first.evidence[0].id).not.toBe(lab.strongestEvidenceId);
+        expect(
+          first.choices.findIndex(({ id }) => id === lab.recommendedChoiceId),
+        ).not.toBe(
+          first.evidence.findIndex(({ id }) => id === lab.strongestEvidenceId),
+        );
+        expect(orderDecisionOptions(lab, 0)).toEqual(first);
+
+        const server = document.createElement("div");
+        server.innerHTML = renderToStaticMarkup(<WorkshopDecisionLab config={lab} />);
+        const serverValues = [...server.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
+        const { container, unmount } = render(<WorkshopDecisionLab config={lab} />);
+        const clientValues = [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
+        expect(clientValues).toEqual(serverValues);
+        expect(serverValues).toEqual([...first.choices, ...first.evidence].map(({ id }) => id));
+        unmount();
+
+        let previous = first;
+        for (let attempt = 1; attempt < 6; attempt += 1) {
+          const next = orderDecisionOptions(lab, attempt, previous);
+          expect(next).not.toEqual(previous);
+          previous = next;
+        }
+      });
+    }
+  }
+
+  it("reorders the options after a retry", () => {
+    const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
+    const { container } = render(<WorkshopDecisionLab config={workshop.decisionLab} />);
+    const values = () => [...container.querySelectorAll<HTMLInputElement>('input[type="radio"]')].map((input) => input.value);
+    const before = values();
+    fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.choices[1].label }));
+    fireEvent.click(screen.getByRole("radio", { name: workshop.decisionLab.evidence[1].label }));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    expect(values()).not.toEqual(before);
+    expect(values().slice().sort()).toEqual(before.slice().sort());
+  });
+
+  for (const locale of ["de", "en"] as const) {
+    it(`${locale}: names the decision the learner actually picked in every combination`, () => {
+      const lab = getWorkshopBySlug("datenbereitschaft-fuer-ki", locale)!.decisionLab;
+      const modelWords = locale === "en" ? /model/i : /Modell/;
+      for (const choice of lab.choices) {
+        for (const evidence of lab.evidence) {
+          const { outcome, feedback } = selectFeedback(lab, choice.id, evidence.id);
+          const text = `${feedback.title} ${feedback.body}`;
+          const label = `${choice.id}+${evidence.id}`;
+          if (choice.id === "check-definition") {
+            expect(outcome, label).toBe(evidence.id === "included-change" ? "correct" : "partial");
+            expect(text, label).not.toMatch(modelWords);
+          } else {
+            expect(outcome, label).toBe("wrong");
+          }
+          if (choice.id === "trust-sum") {
+            expect(feedback.title, label).not.toMatch(modelWords);
+            expect(feedback.title, label).not.toMatch(/calculator|Taschenrechner/i);
+            expect(text, label).toMatch(/120/);
+          }
+          if (choice.id === "new-model") {
+            expect(text, label).toMatch(modelWords);
+            expect(feedback.body, label).toMatch(/100/);
+          }
+        }
+      }
+      // Every wrong decision gets its own message; no combination reuses one
+      // written for the other distractor.
+      const wrongTitles = new Set(
+        lab.choices
+          .filter(({ id }) => id !== lab.recommendedChoiceId)
+          .flatMap((choice) => lab.evidence.map((evidence) => `${choice.id}:${selectFeedback(lab, choice.id, evidence.id).feedback.title}`)),
+      );
+      const titlesOnly = [...wrongTitles].map((entry) => entry.split(":").slice(1).join(":"));
+      expect(new Set(titlesOnly).size).toBe(4);
+    });
+  }
+
+  it("makes right and wrong answers distinct by icon, colour and wording", () => {
+    const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
+    const lab = workshop.decisionLab;
+    const { container } = render(<WorkshopDecisionLab config={lab} />);
+
+    fireEvent.click(screen.getByRole("radio", { name: lab.choices[1].label }));
+    fireEvent.click(screen.getByRole("radio", { name: lab.evidence[1].label }));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    let outcome = container.querySelector("[data-outcome]")!;
+    expect(outcome).toHaveAttribute("data-outcome", "wrong");
+    expect(outcome).toHaveClass("border-destructive");
+    expect(outcome).toHaveTextContent(/^Not quite/);
+    expect(outcome.querySelector("svg")).not.toBeNull();
+    const wrongPick = screen.getByRole("radio", { name: lab.choices[1].label });
+    expect(wrongPick).toHaveAccessibleDescription("Your pick · not the strongest");
+    expect(wrongPick.closest("label")).toHaveAttribute("data-option-mark", "wrong-pick");
+    const rightChoice = screen.getByRole("radio", { name: lab.choices[0].label });
+    expect(rightChoice).toHaveAccessibleDescription("Correct answer");
+    expect(rightChoice.closest("label")).toHaveClass("border-brand-teal");
+    expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+    fireEvent.click(screen.getByRole("radio", { name: lab.choices[0].label }));
+    fireEvent.click(screen.getByRole("radio", { name: lab.evidence[0].label }));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    outcome = container.querySelector("[data-outcome]")!;
+    expect(outcome).toHaveAttribute("data-outcome", "correct");
+    expect(outcome).toHaveClass("border-brand-teal");
+    expect(outcome).toHaveTextContent(/^Correct/);
+    expect(screen.getByRole("radio", { name: lab.choices[0].label })).toHaveAccessibleDescription("Your pick · correct");
+    expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Reset" }));
+    fireEvent.click(screen.getByRole("radio", { name: lab.choices[0].label }));
+    fireEvent.click(screen.getByRole("radio", { name: lab.evidence[2].label }));
+    fireEvent.click(screen.getByRole("button", { name: "Check answer" }));
+    outcome = container.querySelector("[data-outcome]")!;
+    expect(outcome).toHaveAttribute("data-outcome", "partial");
+    expect(outcome).toHaveClass("border-brand-amber");
+    expect(outcome).toHaveTextContent(/^Almost/);
   });
 });

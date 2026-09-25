@@ -282,10 +282,20 @@ const PUBLIC_ASSET_PATHS = [
   "/artifacts/:path*",
   "/ueber-mich/tim-loehr.jpg",
   "/logo/:path*",
-  "/workshops/:slug/:path*",
+  // Workshop fonts and images keep the year-long immutable class: their
+  // content never changes under the same name. This entry must precede the
+  // broader workshop bundle pattern below.
+  "/workshops/:slug/assets/:path*",
   "/_next/:path*",
   "/opengraph-image",
 ] as const;
+
+// Workshop bundles (HTML, JS, CSS, Markdown, YAML and the ZIP kit) are
+// republished in place under unhashed names, so an immutable year-long cache
+// would keep a returning learner or presenter on an old deck runtime, old
+// speaker notes or an old guide. They stay public assets for crawling but
+// revalidate hourly. Only /workshops/:slug/assets/ above stays immutable.
+const REVALIDATING_ASSET_PATHS = ["/workshops/:slug/:path*"] as const;
 
 // File-convention OG/Twitter images emit as .png, both at the root and under
 // dynamic page prefixes (e.g. /blog/<slug>/opengraph-image.png). They must be
@@ -633,6 +643,12 @@ export const CRAWL_CONTRACT: readonly CrawlRoute[] = [
   ...PUBLIC_ASSET_PATHS.map((path) =>
     route(path, "public-assets", "Public static proof or platform asset.", {
       includeInSitemap: false,
+    }),
+  ),
+  ...REVALIDATING_ASSET_PATHS.map((path) =>
+    route(path, "public-assets", "Public workshop bundle file, republished in place; revalidates instead of caching immutably.", {
+      includeInSitemap: false,
+      cache: "public-short",
     }),
   ),
   route(

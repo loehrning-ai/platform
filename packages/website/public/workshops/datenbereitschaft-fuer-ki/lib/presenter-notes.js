@@ -1,4 +1,6 @@
-/* Generated from facilitator/speaker-notes.json. Do not edit by hand. */
+/* Generated from facilitator/speaker-notes.json. Do not edit by hand.
+   sayAt maps a say[] index to the press(es) it belongs to (0 = scene entry); the console shows those
+   lines under "Say this" at that press. Lines without an entry stay in the full note. */
 window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
   "cover": {
     "clock": {
@@ -14,10 +16,11 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Say “same AI route”, never “same model”: the recording does not establish the model version. No agenda, framework or architecture on the cover.",
       "[Sources]\nOriginal course text; no external claim or asset.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [0], "2": [0, 1]},
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Title, date line, the question card and the footer",
+      "Title, edition line, the question card and the footer",
       "The experiment line: three Same stamps, then Change the interface and Measure the answer"
     ],
     "cut": "No expansion; advance at 00:45.",
@@ -37,6 +40,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "The portrait and introduction are restored from the earlier courses. Social labels identify the presenter; they are not slide controls. No company artwork or employment years.",
       "[Sources]\nPresenter-supplied biography; no employer-system claim.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [0, 1]},
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
@@ -62,6 +66,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Those three definitions are the vocabulary of this session. Every disagreement we find today is about one of them, and one of them is about to be broken in front of you.",
       "[Sources]\nOriginal course text; synthetic FOLDLINE fixture foldline-v1. No external claim or asset.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [0], "2": [1], "3": [2, 3], "4": [3]},
     "ask": [
       {
         "at": 0,
@@ -97,6 +102,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Presenter cue: on the last press point at the top band: “Wherever we are, this line tells you.”",
       "[Sources]\nOriginal course text; no external claim or asset.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [1], "2": [2]},
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
@@ -123,6 +129,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Evidence level, for your own vocabulary: SYSTEM WALKTHROUGH. The identifiers stay in appendix-architecture: saas_bad.public, role foldline_bad_reader, Ask :3210 → openai-compatible → bridge :8789 → claude-cli → PostgreSQL :55432.",
       "[Sources]\nSynthetic repository evidence: demo/db/bad and versioned privilege-check definitions. [/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [1, 4]},
     "ask": [
       {
         "at": 2,
@@ -163,6 +170,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Act bridge on the last press: \"April is negative. How?\"",
       "[Sources]\nSynthetic repository evidence: validated G01 bad-lane capture and manifest.\n[/Sources]"
     ],
+    "sayAt": {"0": [3], "1": [1], "2": [2], "3": [0]},
     "ask": [
       {
         "at": 3,
@@ -210,6 +218,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Evidence levels, for your own vocabulary: steps 0–3 MODEL CAPTURE (bad:G01); step 4 DB PROOF on ready:G01 (live check in the background, replay fallback); step 5 DB PROOF on G02 net new MRR.",
       "[Sources]\nSynthetic repository evidence: G01 bad-lane capture, sealed expected result, and fixed-evidence manifest.\n[/Sources]"
     ],
+    "sayAt": {"1": [2], "3": [2, 5], "6": [5]},
     "ask": [
       {
         "at": 1,
@@ -253,8 +262,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Must say: one recorded run per lane, forced to answer directly on both databases. The tool's default path stopped at its ambiguity check before writing any SQL, so this is not the tool's default behaviour.",
       "Must say: the recording names the route and the reported model label (claude-cli via openai-compatible), not an underlying model version. Never say “same model”.",
       "Held the same (README): the question, the source facts and checksum, the provider path and reported model label, the forced direct-answer settings, uncached. Changed: the tables or views the AI could see, the Ask context (metric definitions and verified question pairs), and the database login.",
-      "[Sources]\nSynthetic repository evidence: dataset manifest, model-capture manifest, and release ledger. Authentic local interface capture: Ask/DataLens Data Sources screen showing the two synthetic course PostgreSQL connections; capture operator: course repository author; underlying UI publisher and license not established in repository evidence; source: assets/ask-data-sources.png; captured and accessed 2026-08-23; 1920 × 1080 PNG; SHA-256 8705b1ed9ab3d718d7bfec2f085e566331cdfe3d2bb7883cf94bdd34b8b67c29; introduced in repository commit 0931969e3bc115383f49fc101e53264259a9d957; relative health-age text is volatile capture metadata; exact capture command, URL, and executing-worktree fingerprint were not sealed; project-local evidence only, external redistribution blocked pending UI rights review.\n[/Sources]"
+      "[Sources]\nSynthetic repository evidence: dataset manifest, model-capture manifest, and release ledger. The historical Ask/DataLens setup (two synthetic course PostgreSQL connections) is summarised as text on appendix-ask-boundary; third-party interface screenshots are omitted from this public edition.\n[/Sources]"
     ],
+    "sayAt": {"1": [2], "2": [3]},
     "ask": [
       {
         "at": 0,
@@ -296,6 +306,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "What the ready login cannot do (README): read source, core or direct identifiers; write or create temporary tables; connect to the export database. PostgreSQL grants, read-only transactions, connection limits and timeouts enforce it. View names, the role name and grants wait for the appendix; column detail waits for Q&A.",
       "[Sources]\nSynthetic repository evidence: demo/db/ready and versioned PostgreSQL privilege-test definitions. [/Sources]"
     ],
+    "sayAt": {"0": [0], "2": [1], "5": [4]},
     "ask": [
       {
         "at": 2,
@@ -335,6 +346,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "The same four blanks were empty on failure-anatomy and come back on your-data. If someone wants the actual file, the verbatim YAML is on appendix-semantic-contract.",
       "[Sources]\nSynthetic repository evidence: demo/semantic and current compiler output.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "2": [5], "4": [4]},
     "ask": [
       {
         "at": 2,
@@ -384,6 +396,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Act bridge at the last press: “Delivered is not the same as used. Did it work?”",
       "[Sources]\nSynthetic repository evidence: compiler manifest, Ask bootstrap read-back, retrieval audit, and privilege tests. Anthropic, Manage Claude's memory, https://code.claude.com/docs/en/memory, accessed 2026-08-23, documentation terms apply.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "3": [2], "4": [1], "5": [3]},
     "ask": [
       {
         "at": 3,
@@ -425,6 +438,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Evidence level, for your own vocabulary: MODEL CAPTURE (ready:G01, uncached, skipClarify=true, reported model label claude-cli via openai-compatible) → DB PROOF (independent G01 truth).",
       "[Sources]\nSynthetic repository evidence: validated G01 ready-lane capture, sealed expected result, and fixed-evidence manifest.\n[/Sources]"
     ],
+    "sayAt": {"1": [0], "3": [2, 3], "4": [3], "5": [3]},
     "ask": [
       {
         "at": 0,
@@ -468,6 +482,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Act bridge on the last press: “Great, but when should it not answer?”",
       "[Sources]\nSynthetic repository evidence: validated G02/G03 capture records and sealed expected results.\n[/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [0], "5": [3], "6": [5]},
     "ask": [
       {
         "at": 0,
@@ -510,6 +525,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "On press 5, read the closing stamp and the small print aloud: “Two locks: refuse early, enforce anyway.” These are course rules and database checks, not AI runs.",
       "[Sources]\nSynthetic repository evidence: course-policy C01/R01/R02 and PostgreSQL-enforced D01. PostgreSQL Global Development Group, Privileges, https://www.postgresql.org/docs/current/ddl-priv.html, accessed 2026-08-23, PostgreSQL License.\n[/Sources]"
     ],
+    "sayAt": {"2": [3, 4], "3": [5]},
     "ask": [
       {
         "at": 0,
@@ -565,6 +581,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Evidence level, for your own vocabulary: COUNTERFACTUAL on a frozen fixture; nothing is rerun.",
       "[Sources]\nSynthetic repository evidence: versioned freshness contract and sealed evaluation-clock fixture.\n[/Sources]"
     ],
+    "sayAt": {"1": [3], "2": [0, 1], "3": [1]},
     "ask": [
       {
         "at": 2,
@@ -611,6 +628,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Act bridge on the last press: “9 of 9, so the AI is reliable? No.”",
       "[Sources]\nSynthetic repository evidence: model-observation artifact, independent grade output, and nine-case fixed-evidence manifest.\n[/Sources]"
     ],
+    "sayAt": {"3": [2], "4": [4]},
     "ask": [
       {
         "at": 0,
@@ -658,8 +676,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "The grey worked example is the course's own G01 case: Ending MRR by month, Q2 · MRR summary by month · Level · Month · Apr–Jun · MRR summary · No customer identifiers · Answer must match truth. It clears at 70:30 so only the room's own boxes remain.",
       "Box 3 is the same four blanks as failure-anatomy and semantic-contract, in the same order: Kind of number? · Rows per what? · Which months? · Which table? Its grey example answers them in that order: Level · Month · Apr–Jun · MRR summary.",
       "70:30–72:30 is protected recovery or a two-pair debrief, never new teaching. Never borrow from resolution.",
+      "If someone asks for a clean copy of the five boxes: the question card (QUESTION-CARD.md) is in the worksheet kit on the workshop page, /workshops/datenbereitschaft-fuer-ki, and the guide lists the same five boxes. You name the path once at the end of resolution.",
       "[Sources]\nOriginal participant-kit exercise: data-readiness-kit/QUESTION-CARD.md and data-readiness-kit/readiness-lab.html. [/Sources]"
     ],
+    "sayAt": {"0": [0], "1": [0, 1, 2, 3, 4], "4": [2], "5": [5]},
     "ask": [
       {
         "at": 0,
@@ -713,8 +733,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "If asked: the fresh 18-call protocol is NOT RUN (0/18) and the AI deployment is BLOCKED. The verdict code BOUNDED PILOT · CITATION GATE RED lives on appendix-run-metadata.",
       "Evidence levels, for your own vocabulary: step 1 MODEL CAPTURE bad:G01 and ready:G01 beside DB PROOF on ready:G01 (live check in the background, replay fallback); step 2 DB PROOF corpus 9/9, a separate claim.",
       "Must say, word for word, on the last press, then stop at 75:00 (a further press does nothing): A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.",
+      "Materials, once, right after the closing sentence as Q&A opens: “Everything is on the workshop page, loehrning.ai/workshops/datenbereitschaft-fuer-ki: the learner guide (guide.html) walks the whole course again, the worksheet kit has the question card and templates, and the browser lab lets you practise on the synthetic data.” Say the path aloud once and paste it into the chat if the room has one.",
       "[Sources]\nSynthetic repository evidence: validated capture summary, independent grade, fixed-evidence manifest, and release-ledger limitations.\n[/Sources]"
     ],
+    "sayAt": {"1": [0], "2": [1], "5": [2], "9": [3]},
     "ask": [
       {
         "at": 0,
@@ -781,7 +803,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "mode": "Appendix: the definition file, verbatim; no AI run",
     "purpose": "Show the actual ending_mrr file and how the four plain-language blanks map onto fields a compiler checks.",
     "say": [
-      "“Show me the actual file.” These ten lines are verbatim from demo/semantic/metrics/ending_mrr.yml.",
+      "“Show me the actual file.” These eleven lines are verbatim from demo/semantic/metrics/ending_mrr.yml, including time_behavior default_period last_complete_quarter (the “Which months?” answer).",
       "Kind of number is aggregation: snapshot, the blank the export-table run got wrong when it added up monthly changes.",
       "Compiled is not consumed: the compiler writes Ask metrics, verified question pairs, evidence cases, the coding-assistant guide and a human catalog, but only metrics and verified pairs reach Ask generation. Jump to the Ask boundary appendix if asked.",
       "[Sources]\nSynthetic repository evidence: versioned semantic YAML, compiler manifest, and generated consumers. dbt Labs, dbt Semantic Layer, https://docs.getdbt.com/docs/use-dbt-semantic-layer/dbt-sl, accessed 2026-08-23, documentation terms apply.\n[/Sources]"
@@ -789,7 +811,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Complete on entry: the ten verbatim YAML lines with aggregation marked, the Four Blanks mapped to aggregation, result_grain, time_behavior and model, and the compiler fan-out with its not-consumed caveat"
+      "Complete on entry: the eleven verbatim YAML lines with aggregation marked, the Four Blanks mapped to aggregation, result_grain, time_behavior and model, and the compiler fan-out with its not-consumed caveat"
     ],
     "cut": "Return to the calling scene.",
     "appendixRoutes": []
@@ -868,20 +890,20 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "end": "75:00",
       "budget_seconds": 0
     },
-    "mode": "Appendix: local screen captures and recorded traces, historical; current health not claimed",
+    "mode": "Appendix: text summaries of a historical local capture and recorded traces; current health not claimed",
     "purpose": "State precisely what reaches Ask generation, where the prompt gap is, and where the search-path dependency lives.",
     "say": [
       "State the boundary precisely; this is where the search-path identifier lives.",
       "Search-path dependency in full: the ready G01 SQL is unqualified; the captured search_path analytics,public resolves it to analytics.mrr_summary_monthly. SQL needed a connection setting to find the view.",
       "40 enrichments are stored and loaded into genCtx, but with retrievedManifest sqlGenerator bypasses buildSchemaContext, so their influence is unproven. Loaded is not the same as used.",
-      "Both screenshots are a local capture from 23 Aug 2026: relative ages are historical and never imply current health.",
+      "The two text panels summarise a local capture from 23 Aug 2026; the screenshots are omitted from this public edition, and the capture is historical: it never implies current health.",
       "CLAUDE.md guides Claude Code only; course policy is not imported into Ask.",
       "[Sources]\nSynthetic repository evidence: Ask source audit, bridge tests, runtime-status record, and sanitized traces. Anthropic, Manage Claude's memory, https://code.claude.com/docs/en/memory, accessed 2026-08-23, documentation terms apply.\n[/Sources]"
     ],
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Complete on entry: both cropped Ask captures with their provenance line, the two known gaps (search path, enrichment retrieval) and the boundary stack Ask generation → Prompt gap → Application → PostgreSQL"
+      "Complete on entry: both text summary panels (Two synthetic connections · Three recorded questions) with their provenance line, the two known gaps (search path, enrichment retrieval) and the boundary stack Ask generation → Prompt gap → Application → PostgreSQL"
     ],
     "cut": "Return to the calling scene.",
     "appendixRoutes": []

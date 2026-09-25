@@ -2,12 +2,17 @@
    grades each lane, the known gaps, then the verdict and the closing sentence as the headline. One Mennige
    group per step: the question, the approved-views values, the known gaps, the verdict. */
 
+/* Step 3: the scene keeps its 60 px title; the thesis lands as a 40 px lead statement in the content zone,
+   under the chart and the verdict, and the materials line and the lockup close the deck. */
 #resolution-closing {
   position: absolute;
-  top: 112px;
+  top: 804px;
   left: 96px;
   width: 1728px;
   margin: 0;
+  font-size: var(--t-h2);
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* Step 0: the unchanged question sits under the title (spec C.18) with the room vote below. From step 1 the
@@ -29,7 +34,7 @@
 #resolution .rs-month {
   fill: var(--ink);
   font-family: var(--sans);
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 600;
 }
 
@@ -75,6 +80,10 @@
 #resolution .rs-swatch--export {
   background-image: var(--hatch);
   background-size: 14px 14px;
+}
+
+#resolution .rs-swatch--approved {
+  background: var(--ink);
 }
 
 #resolution .rs-swatch--db {
@@ -195,10 +204,52 @@
   margin-top: -2px;
 }
 
-#resolution-lockup {
+#resolution-sign {
   position: absolute;
-  top: 725px;
+  top: 920px;
   right: 96px;
+  left: 96px;
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  border-top: 1px solid var(--leinen);
+  padding-top: 8px;
+}
+
+#resolution .rs-materials {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+#resolution .rs-materials__label {
+  color: var(--slate);
+  font-weight: 600;
+}
+
+#resolution .rs-materials__url {
+  font-weight: 700;
+}
+
+/* The closing lockup matches the cover: loehrning.ai × Brainster. */
+#resolution .rs-lockup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+#resolution .rs-lockup img {
+  display: block;
   width: 206px;
   height: 40px;
 }
@@ -207,4 +258,28 @@
    the verdict (step 3) carry theirs above, since each shows on its step only. */
 #resolution[data-step-current="1"] .rs-approved-label {
   fill: var(--mennige);
+}
+
+/* Press 1, evidence before verdict (≤ 900 ms): the three series grow in 420 ms (orders 0–2 end at 420, 500
+   and 580 ms); each value fades in as its bar tops out, the "=" badges once both bars stand (540 ms), and the
+   two grade chips stamp last (560–880 ms). */
+#resolution {
+  --m-grow: 420ms;
+}
+
+#resolution #resolution-chart .chart__value.is-entering {
+  animation: story-fade var(--m-fade) var(--ease-fade) both;
+  animation-delay: 300ms;
+}
+
+#resolution #resolution-approved-values .chart__value.is-entering {
+  animation-delay: 380ms;
+}
+
+#resolution #resolution-chart .rs-eqs.is-entering {
+  animation-delay: 540ms;
+}
+
+#resolution .rs-key .chip.is-entering {
+  animation-delay: 560ms;
 }

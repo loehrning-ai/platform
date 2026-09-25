@@ -1,26 +1,49 @@
-version: 1
+# Metric contract: what one business number means.
+#
+# This is an example, not an active control. No tool in this kit reads it. It shows what a team
+# writes down so that nobody (person or AI) has to guess. The format is tool-neutral: you can copy
+# the same decisions into dbt, Cube, MetricFlow or your own catalog.
+#
+# The first block uses the same keys as the deck's appendix slide "The full ending MRR contract".
+# The four blanks from the lesson map to these keys:
+#   Kind of number  -> aggregation
+#   Rows per what   -> result_grain
+#   Which months    -> time_behavior
+#   Which table     -> model
+# "Who counts" (population and status) -> population, inclusions, exclusions (second block).
+#
+# Lines marked "# replace" hold FOLDLINE example values. Put in your own.
 
-metrics:
-  - name: ending_mrr
-    label: Ending MRR
-    model: mrr_summary_monthly
-    type: snapshot
-    result_grain: one row per calendar month
-    expression: ending_mrr_eur
-    description: Total recurring subscription value active at the final instant of a complete month.
-    population: Accounts with an active recurring subscription at month end.
-    period_rule: For a quarter, return each complete month-end snapshot; do not sum snapshots.
-    currency: EUR
-    inclusions:
+version: 1                     # Version of this file format, not of the metric.
+
+metrics:                                  # List of metrics. This file defines one.
+  # ---- Block 1: the lines shown on the deck slide ----
+  - slug: ending_mrr                          # Short, stable id. Other files refer to it.
+    model: analytics.mrr_summary_monthly      # Which table: the approved view, as schema.view. # replace
+    aggregation: snapshot                     # Kind of number: a balance at one moment (snapshot), not a change.
+    result_grain: monthly                     # Rows per what: one row per calendar month.
+    unit: EUR                                 # Currency or unit of the value.
+    owner: revenue_analytics                  # Team that decides what this number means. # replace
+    freshness_sla_hours: 36                   # Warn when the data is older than this. FOLDLINE declared no hard expiry.
+    time_behavior:                            # Which months.
+      period_rule: end_of_period              # Take the balance at the last instant of each month.
+      default_period: last_complete_quarter   # If no period is given, use the last complete quarter (three months).
+    limitations:                              # What the number must never be used for.
+      - Never sum ending MRR across months.   # Three month-end balances are three numbers, not one total.
+      - This metric does not represent revenue, cash collected, ARR, or profit.
+
+    # ---- Block 2: extra detail a team usually adds ----
+    label: Ending MRR                         # Name people see in reports.
+    contract_version: 1.0.0                   # Version of this definition. Answers cite it, for example ending_mrr@1.
+    expression: ending_mrr_eur                # Column in the approved view that holds the value.
+    description: Total recurring subscription value active at the final instant of a complete month.  # One sentence in plain words.
+    population: Accounts with an active recurring subscription at month end.   # Who counts. # replace
+    inclusions:                               # What is counted.
       - Recurring subscription fees active at month end.
-    exclusions:
+    exclusions:                               # What is left out, even if it looks similar.
       - Setup fees
       - Usage charges
       - Taxes
       - Cancelled subscriptions whose service ended before month end
-    valid_dimensions: [month_start]
-    synonyms: [month-end mrr, closing mrr]
-    owner: replace-with-team
-    version: 1.0.0
-    limitations:
-      - This metric does not represent revenue, cash collected, ARR, or profit.
+    valid_dimensions: [month_start]           # The only ways this number may be broken down.
+    synonyms: [month-end mrr, closing mrr]    # Other words people use for the same number.

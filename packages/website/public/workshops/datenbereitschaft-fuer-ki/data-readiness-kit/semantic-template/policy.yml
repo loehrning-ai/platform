@@ -1,44 +1,57 @@
-version: 1
+# Policy: what the AI may read, and what it must do in special cases.
+#
+# This is an example, not an active control. Writing a rule here does not enforce it.
+# Instructions guide, grants enforce: only database permissions (grants) for the login below make a
+# forbidden read fail. The application that sends the AI's queries must also check them against
+# this policy.
+#
+# Lines marked "# replace" hold FOLDLINE example values. Put in your own.
 
-policy:
-  identity: ai_analytics_reader
-  allow:
-    operations: [select]
-    models: [mrr_summary_monthly]
-    metrics: [ending_mrr]
-  deny:
-    schemas: [raw, core, staging]
-    columns: [account_name, contact_name, contact_email, phone, address]
-    operations: [insert, update, delete, create, alter, drop, copy]
-  execution:
-    max_rows: 1000
-    statement_timeout_ms: 5000
-    require_limit_for_detail: true
-  behavior:
-    freshness:
-      loaded_at_field: data_loaded_at_utc
-      complete_through_field: complete_through_month
-      quality_status_field: quality_status
-      evaluation_clock_source: runtime_utc
-      warn:
-        condition: source_age_hours_gt_model_warn_after_hours
-        action: answer_with_freshness_warning
+version: 1                               # Version of this file format.
+
+policy:                                   # Rules for the AI's database login.
+  identity: ai_analytics_reader          # The read-only database login the AI uses. Give it only the grants below. # replace
+  allow:                                  # What the AI may do.
+    operations: [select]                 # Read only. No writing or changing data.
+    models: [analytics.mrr_summary_monthly]   # The only view it may read (see model.yml). # replace
+    metrics: [ending_mrr]                # The only metric it may answer (see metric.yml). # replace
+  deny:                                   # What the AI must never touch.
+    schemas: [raw, core, staging]        # Internal areas of the database the AI must never read.
+    columns: [account_name, contact_name, contact_email, phone, address]   # Direct identifiers. Always off limits.
+    operations: [insert, update, delete, create, alter, drop, copy]        # Anything that writes or copies data.
+  execution:                              # Safety limits for every query.
+    max_rows: 1000                       # Stop very large results.
+    statement_timeout_ms: 5000           # Stop a query after 5 seconds.
+    require_limit_for_detail: true       # Row-level queries must say how many rows they want.
+  behavior:                               # What the AI does in special cases.
+    freshness:                           # What to do with old or unfinished data.
+      loaded_at_field: data_loaded_at_utc  # Column with the load time (model.yml).
+      complete_through_field: complete_through_month  # Column with the newest complete month.
+      quality_status_field: quality_status  # Column with the quality result.
+      evaluation_clock_source: runtime_utc  # "Now" = current UTC time.
+      hard_expiry: none                  # FOLDLINE declared no age limit. Old data alone never blocks an answer.
+      warn:                              # Data age: answer, but say how old the data is.
+        condition: source_age_hours_gt_metric_freshness_sla_hours   # Older than freshness_sla_hours (36) in metric.yml.
+        action: answer_with_freshness_warning  # Answer, plus the load time and age.
         message: The source is beyond its freshness warning threshold; include the load time and age with any answer.
+      # Optional patterns, not about data age. They stop answers for months that are not finished and
+      # for loads that failed their quality check. Because FOLDLINE declared no hard expiry, data age
+      # only warns. That is why the deck says "No age-based block rule was written."
       block:
-        - condition: requested_period_after_complete_through
-          action: refuse_before_query
+        - condition: requested_period_after_complete_through   # The asked-for month is not complete yet.
+          action: refuse_before_query     # Say no; run no query.
           message: The requested period is not complete on the approved serving model.
-        - condition: quality_status_not_passing
-          action: refuse_before_query
+        - condition: quality_status_not_passing                # The last load failed its quality check.
+          action: refuse_before_query     # Say no; run no query.
           message: The serving model has not passed its required quality gate.
-    clarify:
-      - condition: mrr_without_period_or_snapshot_rule
+    clarify:                             # Ask back before running any query.
+      - condition: mrr_without_period_or_snapshot_rule  # No period, or unclear which MRR.
         message: Specify a complete month or quarter and whether you need a snapshot or movement.
-    refuse:
-      - condition: requested_metric_not_defined_or_supported
+    refuse:                              # Say no before running any query.
+      - condition: requested_metric_not_defined_or_supported  # The metric is not defined here.
         message: The approved data surface cannot support this metric.
-      - condition: requested_direct_identifier
+      - condition: requested_direct_identifier  # Names, emails, phone numbers, addresses.
         message: Direct identifiers are outside the approved analytics surface.
-  enforcement:
-    application_policy_required: true
-    database_grants_required: true
+  enforcement:                            # Who must enforce this file.
+    application_policy_required: true    # The application must check every query against this file.
+    database_grants_required: true       # The database grants must match this file. They do the real enforcing.

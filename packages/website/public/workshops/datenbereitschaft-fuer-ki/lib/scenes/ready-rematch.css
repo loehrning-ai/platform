@@ -46,6 +46,7 @@
 }
 
 #ready-rematch-s-question { left: 0; }
+#ready-rematch #ready-rematch-s-question { align-items: flex-start; }
 #ready-rematch-s-ai { left: 216px; }
 #ready-rematch-s-views { left: 432px; }
 
@@ -66,7 +67,7 @@
 
 #ready-rematch .rr-strip__label {
   flex: none;
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
@@ -88,7 +89,7 @@
 #ready-rematch .rr-strip__key .icon {
   width: 40px;
   height: 40px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 /* Icons on the projector stay at 40 px or more (spec B.5): chips, Matches marks, gap chips. */
@@ -150,11 +151,11 @@
   box-sizing: border-box;
   align-items: center;
   border-top: 1px solid var(--leinen);
-  font-size: 32px;
+  font-size: var(--t-lead);
 }
 
 #ready-rematch .rr-month {
-  font-size: 32px;
+  font-size: var(--t-lead);
 }
 
 #ready-rematch .rr-foot {
@@ -237,8 +238,8 @@
   stroke: var(--mennige);
 }
 
-/* Spec H E24: the recorded run is what the question's trip produces, so the run card rises when the packet
-   lands on its Picked slot; its values settle with it. */
+/* Spec H E24: the recorded run is what the question's trip produces; its values settle when the packet lands
+   on its Picked slot. */
 #ready-rematch {
   --rr-arrive: 400ms;
 }
@@ -247,10 +248,23 @@
   --m-travel: var(--rr-arrive);
 }
 
-#ready-rematch-run {
-  animation-delay: var(--rr-arrive);
+/* The destination exists before the packet leaves: the card frame rises at once (0–320 ms) while the packet
+   travels to its Picked slot; the picked name and the values fade in on arrival. */
+#ready-rematch-run.is-entering .ev-row,
+#ready-rematch-run.is-entering [id$="-picked"] > :last-child {
+  animation: story-fade var(--m-fade) var(--ease-fade) var(--rr-arrive) both;
 }
 
 #ready-rematch-run .ev-value {
   --m-count: 500ms;
+}
+
+/* Press 2, evidence before verdict (≤ 900 ms): the database card rises, the "=" connectors draw in 400 ms
+   (orders 0–2 end at 400, 480 and 560 ms), then each row's "Matches" stamps (560–880 ms). */
+#ready-rematch .rr-eq {
+  --m-draw: 400ms;
+}
+
+#ready-rematch .rr-match.is-entering {
+  animation-delay: 560ms;
 }

@@ -13,7 +13,8 @@
    - data-count is accepted as an alias of data-motion="count". */
 
 :root {
-  /* Type scale (B.2), px at 1920×1080. Nothing the room must read is below 22 px. */
+  /* Type scale (B.2), px at 1920×1080. Anything the room must read is at least 26 px (17 px on a
+     1280×720 projector); 24 px is for captions only, and 22 px for the chrome (brand, Route). */
   --t-display: 104px;
   --t-h1: 60px;
   --t-h2: 40px;
@@ -21,12 +22,14 @@
   --t-question: 32px;
   --t-lead: 32px;
   --t-body: 26px;
-  --t-label: 22px;
-  --t-small: 22px;
+  --t-label: 26px;
+  --t-small: 24px;
+  --t-chrome: 22px;
+  --t-appendix: 22px; /* appendix small print only: read on demand during Q&A, never projected in the talk */
   --t-num-hero: 120px;
   --t-num-md: 44px;
   --t-num-sm: 32px;
-  --t-mono: 24px;
+  --t-mono: 28px;
 
   /* Spacing (B.3): 8 px module. */
   --s1: 8px;
@@ -105,6 +108,13 @@
   font-size: var(--t-mono);
 }
 
+/* Icon strokes do not scale with the icon: every sprite glyph draws a 3 px line at 48 px and up (the
+   3 px node borders) and 2.5 px at 40 px and below, whatever box it sits in. The clones inside <use>
+   take the non-scaling rule from their symbol. */
+.icon-sprite symbol[id^="i-"] * {
+  vector-effect: non-scaling-stroke;
+}
+
 .icon {
   flex: none;
   width: 64px;
@@ -112,15 +122,13 @@
   color: inherit;
   fill: none;
   stroke: currentColor;
-  stroke-width: 5;
+  stroke-width: 3px;
   overflow: visible;
 }
 
 .icon--32,
-.icon--40,
-.icon--48,
-.icon--56 {
-  stroke-width: 7;
+.icon--40 {
+  stroke-width: 2.5px;
 }
 
 .icon--32 { width: 32px; height: 32px; }
@@ -180,7 +188,7 @@ html:not([data-story]) [data-step-until] {
   align-items: center;
   gap: var(--s2);
   color: var(--slate);
-  font-size: var(--t-label);
+  font-size: var(--t-chrome);
   font-weight: 600;
   line-height: 1.3;
   white-space: nowrap;
@@ -291,7 +299,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 
 .route__label {
   color: var(--slate-soft);
-  font-size: var(--t-label);
+  font-size: var(--t-chrome);
   font-weight: 600;
   line-height: 1.3;
   white-space: nowrap;
@@ -323,10 +331,15 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .route-appendix {
   margin: 0;
   color: var(--slate);
-  font-size: var(--t-label);
+  font-size: var(--t-chrome);
   font-weight: 600;
   line-height: 1.3;
   white-space: nowrap;
+}
+
+/* Appendix pages are read on demand during Q&A; their code blocks keep the compact 24 px mono. */
+section[data-kind="appendix"] {
+  --t-mono: 24px;
 }
 
 /* ---------------------------------------------------------------- components (B.4) */
@@ -402,7 +415,6 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .q-card .icon {
   width: 56px;
   height: 56px;
-  stroke-width: 7;
 }
 
 .q-card__label {
@@ -460,7 +472,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
   padding: 0 var(--s2) 0 12px;
   border: 3px solid var(--ink);
   background: var(--papier);
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
@@ -469,7 +481,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .lane .icon {
   width: 32px;
   height: 32px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 .lane__swatch {
@@ -510,16 +522,6 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
   background: var(--papier);
 }
 
-.ev-run::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  background: var(--ink);
-}
-
 .ev-db {
   background: var(--beton);
   outline: 1px solid var(--ink);
@@ -538,7 +540,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .ev-head .icon {
   width: 32px;
   height: 32px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 .ev-row {
@@ -569,7 +571,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
   place-items: center;
   border: 3px solid var(--ink);
   background: var(--papier);
-  font-size: 32px;
+  font-size: var(--t-lead);
   font-weight: 700;
   line-height: 1;
 }
@@ -597,7 +599,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .chip .icon {
   width: 32px;
   height: 32px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 .chip--pass {
@@ -638,7 +640,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 }
 
 .node__label {
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 1.2;
 }
@@ -683,7 +685,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .node__badge .icon {
   width: 28px;
   height: 28px;
-  stroke-width: 9;
+  stroke-width: 2.5px;
 }
 
 .node.is-unreachable .node__box {
@@ -725,14 +727,14 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .edge-label {
   padding: 2px 8px;
   background: var(--papier);
-  font-size: var(--t-small);
+  font-size: var(--t-label);
   font-weight: 600;
 }
 
 /* Packet: decorative; the only moving object in its step */
 .packet {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   background: var(--mennige);
   fill: var(--mennige);
 }
@@ -861,7 +863,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
   padding: 12px 20px;
   border: 3px solid var(--ink);
   background: var(--papier);
-  font-size: 32px;
+  font-size: var(--t-lead);
   font-weight: 700;
   line-height: 1.1;
 }
@@ -869,7 +871,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 .stamp .icon {
   width: 40px;
   height: 40px;
-  stroke-width: 7;
+  stroke-width: 2.5px;
 }
 
 .stamp--pass {
@@ -918,7 +920,7 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 
 .blank__a {
   align-self: end;
-  font-size: 32px;
+  font-size: var(--t-lead);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -957,10 +959,11 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 /* Chart marks (SVG) */
 .chart__truth { fill: var(--slate-soft); }
 .chart__export { fill: url(#story-hatch); stroke: var(--ink); stroke-width: 3; }
-.chart__approved { fill: var(--papier); stroke: var(--ink); stroke-width: 3; }
+/* One encoding everywhere: hatch = export tables, solid ink = approved views, slate = database check. */
+.chart__approved { fill: var(--ink); stroke: var(--ink); stroke-width: 3; }
 .chart__zero { stroke: var(--ink); stroke-width: 3; }
 .chart__grid { stroke: var(--leinen); stroke-width: 1; }
-.chart__axis { fill: var(--slate); font-family: var(--sans); font-size: 22px; }
+.chart__axis { fill: var(--slate); font-family: var(--sans); font-size: var(--t-label); }
 .chart__value { fill: var(--ink); font-family: var(--sans); font-size: var(--t-num-sm); font-weight: 700; }
 
 /* Code block (appendix only) */
@@ -986,7 +989,12 @@ html[data-motion="static"] .story-chrome[data-route="final"] .route {
 @keyframes story-rise { from { opacity: 0; transform: translateY(16px); } 50% { opacity: 1; } }
 @keyframes story-grow-y { from { transform: scaleY(0); } }
 @keyframes story-grow-x { from { transform: scaleX(0); } }
-@keyframes story-stamp { from { opacity: 0; transform: scale(1.15); } 50% { opacity: 1; } }
+/* A stamp lands: in from 1.3, a visible 4 % press below its size, then settles. */
+@keyframes story-stamp {
+  from { opacity: 0; transform: scale(1.3); }
+  55% { opacity: 1; transform: scale(0.96); }
+  to { transform: none; }
+}
 @keyframes story-wall { from { transform: scaleY(0); } }
 @keyframes story-merge { from { transform: translate(var(--merge-x, 0px), var(--merge-y, 0px)); } }
 
@@ -1014,11 +1022,11 @@ svg [data-motion] {
   animation-fill-mode: both;
 }
 
-[data-motion="fade"].is-entering { animation-name: story-fade; animation-duration: var(--m-fade); }
+[data-motion="fade"].is-entering { animation-name: story-fade; animation-duration: var(--m-fade); animation-timing-function: var(--ease-fade); }
 [data-motion="rise"].is-entering { animation-name: story-rise; animation-duration: var(--m-rise); }
 [data-motion="stamp"].is-entering { animation-name: story-stamp; animation-duration: var(--m-rise); animation-timing-function: var(--ease-stamp); }
 [data-motion="wall"].is-entering { animation-name: story-wall; animation-duration: var(--m-wall); animation-timing-function: var(--ease-inout); }
-[data-motion="grow"].is-entering { animation-name: story-grow-y; animation-duration: var(--m-grow); }
+[data-motion="grow"].is-entering { animation-name: story-grow-y; animation-duration: var(--m-grow); animation-timing-function: var(--ease-grow); }
 [data-motion="grow"][data-axis="x"].is-entering { animation-name: story-grow-x; }
 [data-motion="merge"].is-entering { animation-name: story-merge; animation-duration: var(--m-grow); animation-timing-function: var(--ease-inout); }
 
@@ -1043,9 +1051,12 @@ svg [data-motion] {
 
 /* ---------------------------------------------------------------- reduced motion, static, print (B.11) */
 
+/* Reduced motion keeps the meaning and drops the movement: whatever enters only fades (200 ms, no
+   transform, no stagger), and a travelling packet is replaced by its target's highlight. The fade applies
+   wherever the runtime marks an entering element in reduced mode; static and print show end states. */
 @media (prefers-reduced-motion: reduce) {
   [data-motion].is-entering {
-    animation: none !important;
+    animation: story-fade var(--m-fade) var(--ease-fade) both !important;
   }
 
   [data-motion="travel"] {
@@ -1058,7 +1069,10 @@ svg [data-motion] {
   }
 }
 
-html[data-motion="reduced"] [data-motion].is-entering,
+html[data-motion="reduced"] [data-motion].is-entering {
+  animation: story-fade var(--m-fade) var(--ease-fade) both !important;
+}
+
 html[data-motion="static"] [data-motion].is-entering {
   animation: none !important;
 }
@@ -1092,13 +1106,20 @@ html[data-motion="static"] .route__bar {
 
 /* ---------------------------------------------------------------- cover */
 
+/* The globe box spans the slide so nothing crops the sphere mid-canvas; the drawing starts at x 900, and
+   its own left edge (where the SVG viewBox cuts the atmosphere) fades out over 200 px, so there is no seam.
+   Opacity 0.72 lifts the grid lines to about #3a3a3a on the #141414 ground, visible on a projector. */
 #cover .workshop-globe {
   top: 0;
   right: 0;
-  width: 1020px;
+  left: 0;
+  width: 1920px;
   height: 1080px;
   overflow: hidden;
-  background: url("../assets/globe.svg") left center / 1280px auto no-repeat;
+  opacity: 0.72;
+  background: url("../assets/globe.svg") 900px center / 1280px auto no-repeat;
+  -webkit-mask-image: linear-gradient(to right, transparent 900px, #000 1100px);
+  mask-image: linear-gradient(to right, transparent 900px, #000 1100px);
   transform: none;
 }
 

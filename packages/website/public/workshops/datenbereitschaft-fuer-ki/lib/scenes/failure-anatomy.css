@@ -8,10 +8,40 @@
   overflow: visible;
 }
 
+/* Steps 0–3: the recorded run alone, drawn ×3 on the same zero line (failure-anatomy.js sets the geometry and
+   data-zoom); each month label sits under its one visible bar and a little lower, clear of −€19,960. Step 4
+   returns every bar and label to the shared scale while the database check grows (same duration). */
+#failure-anatomy:not([data-step-current="4"]):not([data-step-current="5"]) #failure-anatomy-chart[data-zoom] .chart__export {
+  y: var(--fa-zoom-y);
+  height: var(--fa-zoom-h);
+}
+
+#failure-anatomy:not([data-step-current="4"]):not([data-step-current="5"]) #failure-anatomy-chart[data-zoom] [id^="failure-anatomy-label-0-"] {
+  transform: translateY(var(--fa-zoom-dy, 0px));
+}
+
+#failure-anatomy:not([data-step-current="4"]):not([data-step-current="5"]) #failure-anatomy-chart[data-zoom] .fa-month {
+  transform: translate(var(--fa-month-dx, 0px), 18px);
+}
+
+/* Only the forward press into step 4 animates the change of scale; any other move shows the state at once. */
+#failure-anatomy:has(#failure-anatomy-truth .is-entering) #failure-anatomy-chart .chart__export {
+  transition: y var(--m-grow) var(--ease-inout), height var(--m-grow) var(--ease-inout);
+}
+
+#failure-anatomy:has(#failure-anatomy-truth .is-entering) #failure-anatomy-chart [id^="failure-anatomy-label-0-"],
+#failure-anatomy:has(#failure-anatomy-truth .is-entering) #failure-anatomy-chart .fa-month {
+  transition: transform var(--m-grow) var(--ease-inout);
+}
+
+#failure-anatomy .fa-zoom-note {
+  font-weight: 600;
+}
+
 #failure-anatomy .fa-month {
   fill: var(--ink);
   font-family: var(--sans);
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 600;
 }
 
@@ -128,7 +158,7 @@
 
 #failure-anatomy .fa-mono {
   font-family: var(--mono);
-  font-size: 30px;
+  font-size: var(--t-mono);
   font-weight: 700;
 }
 
@@ -205,13 +235,13 @@
 
 #failure-anatomy-blanks .blank__q {
   align-self: center;
-  font-size: 28px;
+  font-size: var(--t-body);
 }
 
 #failure-anatomy-blanks .blank__a {
   grid-column: 1 / -1;
   padding-bottom: 4px;
-  font-size: 40px;
+  font-size: var(--t-h2);
   font-weight: 700;
   line-height: 1;
 }
@@ -239,4 +269,26 @@
 
 #failure-anatomy[data-step-current="4"] .fa-truth-label {
   fill: var(--mennige);
+}
+
+/* Evidence lands before the verdict, within 900 ms: bars grow in 420 ms (orders 0–2 end at 420, 500 and
+   580 ms), each value fades in as its bar tops out, and the "Doesn't match" chip stamps at 560 ms (done by
+   880 ms). */
+#failure-anatomy {
+  --m-grow: 420ms;
+}
+
+#failure-anatomy #failure-anatomy-chart .chart__value.is-entering {
+  animation: story-fade var(--m-fade) var(--ease-fade) both;
+}
+
+#failure-anatomy #failure-anatomy-label-0-1.is-entering,
+#failure-anatomy #failure-anatomy-label-1-0.is-entering { animation-delay: 300ms; }
+#failure-anatomy #failure-anatomy-label-0-2.is-entering,
+#failure-anatomy #failure-anatomy-label-1-1.is-entering { animation-delay: 380ms; }
+#failure-anatomy #failure-anatomy-label-0-0.is-entering,
+#failure-anatomy #failure-anatomy-label-1-2.is-entering { animation-delay: 460ms; }
+
+#failure-anatomy #failure-anatomy-chip.is-entering {
+  animation-delay: 560ms;
 }

@@ -22,22 +22,12 @@
   background: var(--papier);
 }
 
-#appendix-evaluation .ae-board--run::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  background: var(--ink);
-}
-
 #appendix-evaluation .ae-head {
   display: flex;
   align-items: center;
   gap: 12px;
   margin: 0 0 12px;
-  font-size: 24px;
+  font-size: var(--t-small);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -61,7 +51,7 @@
 #appendix-evaluation .ae-table td {
   height: 56px;
   padding: 0 12px;
-  font-size: 24px;
+  font-size: var(--t-small);
   white-space: nowrap;
 }
 
@@ -89,12 +79,12 @@
 #appendix-evaluation .ae-table .num {
   width: 110px;
   text-align: right;
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 700;
 }
 
 #appendix-evaluation .ae-table th.num {
-  font-size: 22px;
+  font-size: var(--t-appendix);
   font-weight: 600;
 }
 
@@ -109,7 +99,7 @@
   gap: 8px;
   padding: 0 12px 0 6px;
   border: 2px solid var(--ink);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   font-weight: 600;
   line-height: 1;
 }
@@ -127,18 +117,18 @@
   display: inline-block;
   padding-left: 18px;
   color: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
 }
 
 #appendix-evaluation .ae-small {
   margin: 20px 0 0;
   color: var(--slate);
-  font-size: 22px;
+  font-size: var(--t-appendix);
   line-height: 1.35;
 }
 
 #appendix-evaluation .ae-small .mono {
-  font-size: 22px;
+  font-size: var(--t-appendix);
 }
 
 #appendix-evaluation .ae-summary {
@@ -150,6 +140,6 @@
   border: 3px solid var(--ink);
   border-left: 8px solid var(--mennige);
   background: var(--papier);
-  font-size: 26px;
+  font-size: var(--t-body);
   font-weight: 600;
 }

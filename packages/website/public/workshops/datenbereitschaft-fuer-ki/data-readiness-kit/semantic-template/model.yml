@@ -1,54 +1,61 @@
-version: 1
+# Model contract: what one approved view (table) contains.
+#
+# This is an example, not an active control. No tool in this kit reads it. A "model" here is one
+# approved view the AI may read. A view is a saved database query that shows selected data like a
+# table. metric.yml points to this view with its "model" key.
+#
+# Lines marked "# replace" hold FOLDLINE example values. Put in your own.
 
-models:
-  - name: mrr_summary_monthly
-    contract_version: 1.0.0
-    relation: analytics.mrr_summary_monthly
-    description: One row per complete calendar month with approved company-level MRR snapshots and movements.
-    grain: [month_start]
-    primary_key: [month_start]
-    time:
-      column: month_start
-      type: calendar_month
-      timezone: UTC
-      completeness: month_end_loaded_and_validated
-    dimensions:
-      - name: data_loaded_at_utc
-        type: timestamptz
+version: 1                          # Version of this file format.
+
+models:                                   # List of approved views. This file defines one.
+  - name: analytics.mrr_summary_monthly   # Full name as schema.view. Always use the schema, so the query cannot land on another table. # replace
+    contract_version: 1.0.0               # Version of this view's contract. Change it when columns or meaning change.
+    description: One row per complete calendar month with approved company-level MRR snapshots and movements.  # One sentence in plain words.
+    grain: [month_start]                  # What one row stands for: one calendar month.
+    primary_key: [month_start]            # Column(s) that make each row unique.
+    time:                                 # How time works in this view.
+      column: month_start                 # Column that says which month a row belongs to (first day of the month).
+      type: calendar_month                # Each row covers one whole calendar month.
+      timezone: UTC                       # All dates and times are in UTC.
+      completeness: month_end_loaded_and_validated   # A month counts only after it is loaded and checked.
+    dimensions:                           # Columns that describe the data state, not the business value.
+      - name: data_loaded_at_utc          # Load time of the data.
+        type: timestamptz                 # Date and time with time zone.
         description: UTC timestamp when this serving model finished loading.
-      - name: complete_through_month
+      - name: complete_through_month      # Newest month that is finished and checked.
         type: date
         description: Latest complete calendar month approved for answers.
-      - name: quality_status
+      - name: quality_status              # Did the last quality check pass?
         type: text
         allowed_values: [passing, failing]
         description: Result of the required quality gate for this load.
-    measures:
-      - name: ending_mrr_eur
+    measures:                             # Columns that hold numbers you can report.
+      - name: ending_mrr_eur              # The month-end MRR balance in euros.
         type: numeric
         description: Recurring subscription value active at the final instant of the month, in EUR.
-        additive: false
-    relationships: []
-    owner: replace-with-team
-    sensitivity:
-      classification: aggregate
-      contains_direct_identifiers: false
-    freshness:
-      expected_by: "third business day 09:00 Europe/Berlin"
-      loaded_at_field: data_loaded_at_utc
-      complete_through_field: complete_through_month
-      evaluation_clock_source: runtime_utc
-      warn_after_hours: 36
-    lineage:
-      sources: [replace-with-approved-source-model]
-      transformation: replace-with-versioned-model-or-job
-    quality:
+        additive: false                   # Never add rows together: each row is a month-end balance.
+    relationships: []                     # Joins to other views. None: the AI never joins this view to anything.
+    owner: revenue_analytics              # Team that answers for this view. # replace
+    sensitivity:                          # How private the data is.
+      classification: aggregate           # Company-level totals only. No single customer is visible.
+      contains_direct_identifiers: false  # No names, emails, phone numbers or addresses.
+    freshness:                            # Where to find the data's age. The warning threshold is
+                                          # freshness_sla_hours: 36 in metric.yml. No hard expiry is declared.
+      expected_by: "third business day 09:00 Europe/Berlin"   # When the monthly load should be done. # replace
+      loaded_at_field: data_loaded_at_utc          # Column with the load time.
+      complete_through_field: complete_through_month   # Column with the latest complete month.
+      evaluation_clock_source: runtime_utc         # "Now" is the current UTC time when the question is asked.
+    lineage:                              # Where the data comes from.
+      sources: [replace-with-approved-source-model]      # The upstream tables this view is built from. # replace
+      transformation: replace-with-versioned-model-or-job   # The versioned job or code that builds the view. # replace
+    quality:                              # Checks that must pass before answers are allowed.
       - name: unique_month
-        type: unique
+        type: unique                      # Each month appears only once.
         columns: [month_start]
       - name: load_passed
-        type: accepted_values
+        type: accepted_values             # The last load must have passed its quality gate.
         column: quality_status
         values: [passing]
-    limitations:
+    limitations:                          # What this view cannot answer.
       - No account-level dimensions, costs, margin, or profit fields are present.

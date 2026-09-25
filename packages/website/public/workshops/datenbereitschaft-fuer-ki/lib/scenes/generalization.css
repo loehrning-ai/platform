@@ -12,16 +12,17 @@
 #generalization .gz-result {
   position: absolute;
   top: 248px;
-  width: 808px;
+  width: 852px;
   height: 200px;
   max-width: none;
   box-sizing: border-box;
 }
 
+/* Two columns on the 24 px gutter the summary tiles use: x 96–948 and 972–1824. */
 #generalization-g02-card,
 #generalization-g02-result { left: 96px; }
 #generalization-g03-card,
-#generalization-g03-result { left: 1016px; }
+#generalization-g03-result { left: 972px; }
 
 #generalization .gz-card__body {
   display: grid;
@@ -29,12 +30,6 @@
 
 #generalization .gz-card__body > p {
   grid-area: 1 / 1;
-}
-
-#generalization .gz-card__short {
-  font-size: var(--t-h2);
-  font-weight: 700;
-  line-height: 1.2;
 }
 
 #generalization[data-step-current="0"] .gz-card::before {
@@ -52,14 +47,14 @@
   padding: 0 16px 0 12px;
   border: 2px solid var(--ink);
   background: var(--paper);
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
 }
 
 #generalization-g02-tag { left: 219px; }
-#generalization-g03-tag { left: 1139px; }
+#generalization-g03-tag { left: 1095px; }
 
 /* Icons on the projector stay at 40 px or more (spec B.5). */
 #generalization .gz-tag .icon,
@@ -131,7 +126,6 @@
   font-size: var(--t-label);
   font-weight: 600;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 #generalization-band::after {
@@ -180,7 +174,7 @@
 #generalization .gz-sign {
   fill: var(--slate);
   font-family: var(--sans);
-  font-size: 40px;
+  font-size: var(--t-h2);
   font-weight: 700;
 }
 
@@ -199,8 +193,9 @@
   stroke-width: 3;
 }
 
+/* Solid ink = approved views, as in every chip, legend and chart of the deck. */
 #generalization .gz-marker--approved {
-  fill: var(--papier);
+  fill: var(--ink);
   stroke: var(--ink);
   stroke-width: 4;
 }
@@ -229,7 +224,7 @@
 #generalization .gz-mark--truth { top: 240px; left: 1230px; width: 320px; }
 
 #generalization .gz-mark__lane {
-  font-size: 24px;
+  font-size: var(--t-label);
   font-weight: 600;
   line-height: 32px;
 }
@@ -267,7 +262,7 @@
   position: absolute;
   top: 540px;
   display: flex;
-  width: 808px;
+  width: 852px;
   height: 72px;
   box-sizing: border-box;
   align-items: center;
@@ -276,13 +271,13 @@
   padding: 0 24px 0 32px;
   border: 3px solid var(--ink);
   background: var(--papier);
-  font-size: 30px;
+  font-size: var(--t-lead);
   font-weight: 600;
   white-space: nowrap;
 }
 
 #generalization-run-export { left: 96px; border-style: dashed; }
-#generalization-run-approved { left: 1016px; border-width: 4px; }
+#generalization-run-approved { left: 972px; border-width: 4px; }
 
 #generalization .gz-run__swatch {
   width: 24px;
@@ -301,7 +296,8 @@
 }
 
 #generalization-run-approved .gz-run__swatch,
-#generalization .gz-tile--approved .gz-run__swatch {
+#generalization .gz-tile--approved .gz-run__swatch,
+#generalization .gz-tile--cited .gz-run__swatch {
   background: var(--ink);
 }
 
@@ -330,7 +326,7 @@
   left: 96px;
   max-width: none;
   margin: 0;
-  font-size: 28px;
+  font-size: var(--t-body);
   white-space: nowrap;
 }
 
@@ -429,21 +425,13 @@
 #generalization .gz-grid__group--left { left: 1279px; width: 135px; }
 
 /* Summary: three recorded-run counts across G01–G03 with their scope line. */
+/* The band label above ("Recorded AI runs, 3 questions · one run each") heads the tiles; it keeps its place
+   from step 1, so the summary adds no second heading. */
 #generalization-summary {
   position: absolute;
-  top: 516px;
+  top: 532px;
   left: 96px;
   width: 1728px;
-}
-
-#generalization .gz-summary__head {
-  display: flex;
-  height: 44px;
-  align-items: center;
-  gap: 12px;
-  margin: 0 0 16px;
-  font-size: var(--t-body);
-  font-weight: 600;
 }
 
 #generalization .gz-tiles {
@@ -486,8 +474,24 @@
   white-space: nowrap;
 }
 
+/* The third count is an approved-views measure: it carries the lane swatch and says so; the longer label
+   takes two lines. */
+#generalization .gz-tile--cited .gz-tile__head {
+  align-items: flex-start;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+#generalization .gz-tile--cited .gz-tile__head > .gz-run__swatch {
+  margin-top: 4px;
+}
+
+#generalization .gz-tile--cited .gz-tile__head > .icon {
+  margin-top: -4px;
+}
+
 #generalization .gz-tile__value {
-  font-size: 96px;
+  font-size: var(--t-display);
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
