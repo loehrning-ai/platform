@@ -127,6 +127,12 @@ h1 {
   white-space: nowrap;
 }
 
+.runtime-block[data-connection="stale"] #runtime-status,
+.runtime-block[data-connection="disconnected"] #runtime-status {
+  max-width: none;
+  white-space: normal;
+}
+
 .runtime-block[data-evidence="mismatch"] #runtime-status {
   max-width: none;
   color: var(--mennige-deep);

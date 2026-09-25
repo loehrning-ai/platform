@@ -146,7 +146,7 @@ ORDER BY month_start;</code></pre>
     </div>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Q2 net new: −19,960 + 9,775 + 42,565 = 32,380. Logo churn: recompute 12 of 120 = 10.0 %.</p></div>
-      <div class="t-bad"><h3>Counter-example</h3><p>334,675 + 344,450 + 387,015 = 1,066,140. Or churn over every customer row: 4 of 48 = 8.33 %.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>334,675 + 344,450 + 387,015 = 1,066,140. Or churn over every customer row in one segment: 4 of 48 = 8.33 %.</p></div>
       <div class="t-why"><h3>Why it fails</h3><p>Three month-end levels added describe nothing. The 48 includes 8 accounts that joined during Q2 and could never have left the starting base.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">YAML</span></summary><div class="builders__body">
@@ -650,7 +650,7 @@ dropdb domain_packs</code></pre>
       <li><a href="./data-readiness-kit/builder/CHEATSHEET.md"><strong>One-page cheat sheet</strong><span class="mono">builder/CHEATSHEET.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/BUILD-ORDER.md"><strong>Build order, steps 0–11</strong><span class="mono">builder/BUILD-ORDER.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/semantic/metric.yml"><strong>Annotated metric file</strong><span class="mono">builder/semantic/metric.yml</span></a></li>
-      <li><a href="./data-readiness-kit/builder/warehouse/sql/00_build_all.sql"><strong>One-command PostgreSQL build</strong><span class="mono">builder/warehouse/sql/00_build_all.sql</span></a></li>
+      <li><a href="./data-readiness-kit/builder/warehouse/README.md"><strong>PostgreSQL build: how to run it (files are in the ZIP)</strong><span class="mono">builder/warehouse/README.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/naming/lint_names.sql"><strong>Naming lint</strong><span class="mono">builder/naming/lint_names.sql</span></a></li>
       <li><a href="./data-readiness-kit/builder/claude-demo/README.md"><strong>Live Claude demo</strong><span class="mono">builder/claude-demo/README.md</span></a></li>
       <li><a href="./data-readiness-kit/readiness-lab.html"><strong>The 12-minute lab</strong><span class="mono">readiness-lab.html</span></a></li>

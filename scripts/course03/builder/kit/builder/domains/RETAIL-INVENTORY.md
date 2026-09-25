@@ -14,6 +14,7 @@ if they were levels. Here the AI adds levels as if they were changes. Same batht
 All data is synthetic. Stores: Harbour and Market. Clock: 2026-07-01 09:00 UTC. Q2 2026 is the
 last complete quarter.
 
+
 ## The question
 
 > Show helmets on hand at month end for each month of Q2 2026 at the Harbour store.

@@ -232,7 +232,7 @@ BEGIN
     state := SQLSTATE || ' ' || SQLERRM;
   END;
   PERFORM set_config('foldline.b_t01_expected', '42501 (even in READ WRITE)', false),
-          set_config('foldline.b_t01_actual', left(state, 60), false),
+          set_config('foldline.b_t01_actual', split_part(state, ' in database', 1), false),
           set_config('foldline.b_t01_result', CASE WHEN state LIKE '42501%' THEN 'PASS' ELSE 'FAIL' END, false);
 END
 $bt01$;
@@ -270,7 +270,7 @@ DECLARE
   got text;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_catalog.pg_database WHERE datname = db) THEN
-    got := 'database ' || db || ' not found';
+    got := 'database not found';
   ELSE
     got := CASE WHEN has_database_privilege(current_user, db, 'CONNECT') THEN 'CONNECT allowed' ELSE 'no CONNECT' END;
   END IF;

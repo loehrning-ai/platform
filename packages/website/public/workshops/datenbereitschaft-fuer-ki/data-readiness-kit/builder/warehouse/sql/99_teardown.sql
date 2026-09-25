@@ -28,4 +28,4 @@ SELECT format('DROP DATABASE IF EXISTS %I', :'ready_db') \gexec
 DROP ROLE IF EXISTS foldline_ready_reader;
 DROP ROLE IF EXISTS foldline_bad_reader;
 DROP ROLE IF EXISTS foldline_owner;
-\echo 'Removed: databases' :bad_db 'and' :ready_db ', roles foldline_ready_reader, foldline_bad_reader, foldline_owner.'
+\echo 'Removed: databases' :bad_db 'and' :ready_db 'plus roles foldline_ready_reader, foldline_bad_reader, foldline_owner.'

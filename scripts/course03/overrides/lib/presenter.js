@@ -321,7 +321,7 @@
     }
     let cut = "";
     if (!started) {
-      setPace("not-started", state && !(state.sceneId === "cover" && state.fragmentIndex === 0) ? "CLOCK NOT STARTED" : "Starts on the first press");
+      setPace("not-started", state && !(state.sceneId === "cover" && state.fragmentIndex === 0) ? "CLOCK NOT STARTED" : "Press Start clock on your first word");
     } else if (!state) {
       setPace("idle", "No scene state");
     } else if (!main) {
@@ -621,7 +621,7 @@
         : "DISCONNECTED");
     if (connection !== connectionStatus) {
       connectionStatus = connection;
-      if (connection !== "connected") setText(nodes.runtimeStatus, "Deck window closed or asleep: reopen the deck and press P");
+      if (connection !== "connected") setText(nodes.runtimeStatus, "Deck closed or asleep: bring the deck tab back, or reopen slides.html and press P there (a new console opens; close this one).");
       announce(connection === "connected"
         ? "Presenter connected to the deck."
         : connection === "stale"
@@ -1085,7 +1085,7 @@
       openConfirm(nodes.timerConfirm, timerReset);
     });
     document.querySelectorAll("[data-confirm-cancel]").forEach((button) => {
-      button.addEventListener("click", () => cancelConfirm(button.closest(".confirm-row"), { restoreFocus: true }));
+      button.addEventListener("click", () => cancelConfirm(button.closest(".confirm-row")));
     });
     document.querySelectorAll("[data-confirm-action]").forEach((button) => {
       button.addEventListener("click", (event) => {
@@ -1107,6 +1107,7 @@
       if (event.key === "Enter") {
         event.preventDefault();
         commitSceneJump();
+        focusNextReveal();
       } else if (event.key === "Escape" && selectDirty) {
         event.preventDefault();
         selectDirty = false;
@@ -1123,7 +1124,7 @@
     });
     nodes.sceneGo.addEventListener("click", () => {
       commitSceneJump();
-      nodes.sceneSelect.focus();
+      focusNextReveal();
     });
 
     byId("open-deck").addEventListener("click", openDeckFromConsole);

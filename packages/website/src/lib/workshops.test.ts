@@ -181,7 +181,8 @@ describe("workshops catalog", () => {
           material.href.startsWith(`/workshops/${workshop.slug}/`),
           material.href,
         ).toBe(true);
-        const relativePath = material.href.replace(/^\//, "");
+        // An in-page fragment (#section) addresses part of an existing file.
+        const relativePath = material.href.replace(/^\//, "").split("#")[0];
         const filePath = resolve(process.cwd(), "public", relativePath);
         expect(existsSync(filePath), `missing file for ${material.href}`).toBe(
           true,

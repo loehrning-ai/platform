@@ -268,8 +268,8 @@ def main():
     section("6. Freshness (evaluation clock, never the wall clock)")
     loaded = {r["data_loaded_at_utc"] for r in status}
     check("data_loaded_at_utc (every view)", sorted(loaded), ["2026-07-01T06:00:00Z"])
-    check("warn_after_hours / hard_expiry_hours", sorted({(r["warn_after_hours"], r["hard_expiry_hours"]) for r in status}),
-          [("36", "")])
+    check("warn_after_hours / hard_expiry_hours", sorted({(r["warn_after_hours"], r["hard_expiry_hours"] or "none") for r in status}),
+          [("36", "none")])
     loaded_at = parse(next(iter(loaded)))
     age_1 = hours(parse("2026-07-01T09:00:00Z") - loaded_at)
     age_2 = hours(parse("2026-07-03T18:00:00Z") - loaded_at)

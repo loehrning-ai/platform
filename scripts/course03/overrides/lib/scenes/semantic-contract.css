@@ -274,6 +274,7 @@
   position: absolute;
   top: 872px;
   left: 96px;
+  max-width: 1728px;
   margin: 0;
   color: var(--slate);
   font-size: var(--t-lead);

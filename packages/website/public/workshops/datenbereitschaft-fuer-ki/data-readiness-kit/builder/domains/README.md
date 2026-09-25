@@ -67,6 +67,8 @@ synthetic data.
 
 You need psql and a scratch database. No Python.
 
+From the `builder/` folder (one level up from this page):
+
 ```
 createdb domain_packs
 psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/retail_inventory.sql

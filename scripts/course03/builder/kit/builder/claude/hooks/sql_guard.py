@@ -90,8 +90,10 @@ def check(sql):
                     "Use approved pseudonymous analytics keys or an authorized operational workflow.")
 
     ctes = set(re.findall(r"(?:\bwith|,)\s*(?:recursive\s+)?([a-z_]\w*)\s+as\s*\(", body))
+    # FROM inside EXTRACT(... FROM x), SUBSTRING(... FROM n) and similar is an argument, not a table.
+    scan = re.sub(r"\b(extract|substring|trim|overlay|position)\s*\(([^()]*?)\bfrom\b", r"\1(\2 ", body)
     used = []
-    for match in re.finditer(r"\b(?:from|join)\s+([a-z_][\w.]*(?:\s*,\s*[a-z_][\w.]*)*)(\s*\()?", body):
+    for match in re.finditer(r"\b(?:from|join)\s+([a-z_][\w.]*(?:\s*,\s*[a-z_][\w.]*)*)(\s*\()?", scan):
         names, call = match.group(1), match.group(2)
         if call:
             return "Functions in FROM are not allowed. Read one of the five approved views."
@@ -122,7 +124,13 @@ def main():
     except ValueError:
         print("sql_guard: could not read the hook input; blocking to be safe.", file=sys.stderr)
         return 2
+    if not isinstance(event, dict):
+        print("sql_guard: unexpected hook input; blocking to be safe.", file=sys.stderr)
+        return 2
     tool_input = event.get("tool_input") or {}
+    if not isinstance(tool_input, dict):
+        print("sql_guard: unexpected tool_input; blocking to be safe.", file=sys.stderr)
+        return 2
     sql = next((tool_input[k] for k in SQL_KEYS if isinstance(tool_input.get(k), str)), None)
     if sql is None:
         return 0  # A tool without SQL (for example "list tables"). Nothing to check here.

@@ -176,6 +176,7 @@ pre.code .cm{color:var(--slate)}
 .btn--ink:hover{background:var(--mennige-deep);box-shadow:none}
 .btn[aria-pressed="true"],.btn[aria-selected="true"]{background:var(--ink);color:var(--papier)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
+.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
 .btn--small{min-height:36px;padding:4px 12px;font-size:var(--fs-s)}
 .toggle{display:inline-flex;align-items:center;gap:10px;min-height:44px;font-size:var(--fs-m);font-weight:700;cursor:pointer}
 .toggle input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;margin:0;border:2px solid var(--ink);background:var(--papier);display:grid;place-content:center;cursor:pointer}
@@ -306,6 +307,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 .colbtn:first-child{border-left:0}
 .colbtn[aria-pressed="true"]{background:var(--ink);color:var(--papier)}
 .colbtn.is-fixed{background:var(--papier);text-decoration:line-through;text-decoration-thickness:2px}
+.colbtn.is-fixed[aria-pressed="true"]{background:var(--ink);color:var(--papier)}
 .namecard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .oldname,.newname{font-family:var(--mono);font-size:var(--fs-xl);font-weight:700;overflow-wrap:anywhere}
 .oldname{position:relative;display:inline-block}
@@ -410,7 +412,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 .plane > .fig__note{margin:0;padding:0 14px 12px}
 .total{padding:10px 14px;border-top:3px solid var(--ink);font-family:var(--mono);font-size:var(--fs-s);font-weight:700}
 .runs{width:100%;border-collapse:collapse;font-size:var(--fs-s)}
-.runs th,.runs td{padding:8px;border-bottom:2px solid var(--ink);text-align:left;vertical-align:top;position:relative}
+.runs th,.runs td{padding:8px;border-bottom:2px solid var(--ink);text-align:left;vertical-align:top;position:relative;overflow-wrap:anywhere}
 .runs th{font-size:var(--fs-xs);letter-spacing:.08em;text-transform:uppercase}
 .runs tr.is-look td:first-child{box-shadow:inset 5px 0 0 var(--mennige)}
 .runs td.is-look{outline:3px solid var(--mennige);outline-offset:-3px;font-weight:700}
@@ -497,7 +499,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 /* ---------------------------------------------------------------- responsive */
 @media (max-width:1200px){
   .strip__in{grid-template-columns:minmax(0,1fr) auto}
-  .qcard{grid-column:1 / -1}
+  .qcard{display:none}
 }
 @media (max-width:1100px){
   .stack{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -782,7 +784,7 @@ ORDER BY month_start;</code></pre>
     </div>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Q2 net new: −19,960 + 9,775 + 42,565 = 32,380. Logo churn: recompute 12 of 120 = 10.0 %.</p></div>
-      <div class="t-bad"><h3>Counter-example</h3><p>334,675 + 344,450 + 387,015 = 1,066,140. Or churn over every customer row: 4 of 48 = 8.33 %.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>334,675 + 344,450 + 387,015 = 1,066,140. Or churn over every customer row in one segment: 4 of 48 = 8.33 %.</p></div>
       <div class="t-why"><h3>Why it fails</h3><p>Three month-end levels added describe nothing. The 48 includes 8 accounts that joined during Q2 and could never have left the starting base.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">YAML</span></summary><div class="builders__body">
@@ -1286,7 +1288,7 @@ dropdb domain_packs</code></pre>
       <li><a href="./data-readiness-kit/builder/CHEATSHEET.md"><strong>One-page cheat sheet</strong><span class="mono">builder/CHEATSHEET.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/BUILD-ORDER.md"><strong>Build order, steps 0–11</strong><span class="mono">builder/BUILD-ORDER.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/semantic/metric.yml"><strong>Annotated metric file</strong><span class="mono">builder/semantic/metric.yml</span></a></li>
-      <li><a href="./data-readiness-kit/builder/warehouse/sql/00_build_all.sql"><strong>One-command PostgreSQL build</strong><span class="mono">builder/warehouse/sql/00_build_all.sql</span></a></li>
+      <li><a href="./data-readiness-kit/builder/warehouse/README.md"><strong>PostgreSQL build: how to run it (files are in the ZIP)</strong><span class="mono">builder/warehouse/README.md</span></a></li>
       <li><a href="./data-readiness-kit/builder/naming/lint_names.sql"><strong>Naming lint</strong><span class="mono">builder/naming/lint_names.sql</span></a></li>
       <li><a href="./data-readiness-kit/builder/claude-demo/README.md"><strong>Live Claude demo</strong><span class="mono">builder/claude-demo/README.md</span></a></li>
       <li><a href="./data-readiness-kit/readiness-lab.html"><strong>The 12-minute lab</strong><span class="mono">readiness-lab.html</span></a></li>
@@ -1324,6 +1326,7 @@ const $ = (s, r = doc) => r.querySelector(s);
 const $$ = (s, r = doc) => Array.from(r.querySelectorAll(s));
 const SVGNS = 'http://www.w3.org/2000/svg';
 const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+const reveal = n => { const r = n.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) n.scrollIntoView({ block: 'nearest', behavior: RM.matches ? 'auto' : 'smooth' }); };
 const rootStyle = getComputedStyle(doc.documentElement);
 const T = name => (RM.matches ? 0 : parseFloat(rootStyle.getPropertyValue(name)) || 0);
 const STAGGER = () => T('--m-stagger');
@@ -1601,7 +1604,8 @@ function makeTabs(list, items, onSelect, idPrefix) {
   function render(animate = true) {
     const t = tub[cur];
     out.value = t.label; out.textContent = t.label;
-    range.value = cur;
+    range.value = cur; range.setAttribute('aria-valuetext', t.label);
+    $('#tub-prev').setAttribute('aria-disabled', String(cur === 0)); $('#tub-next').setAttribute('aria-disabled', String(cur === tub.length - 1));
     bars.forEach((b, i) => b.classList.toggle('is-now', i === cur));
     const from = shownLevel, to = t.end;
     const prev = cur ? tub[cur - 1].end : t.end;
@@ -1866,7 +1870,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   });
   function updateCount() {
     const left = names.length - fixed.size;
-    count.textContent = `Names that forced a guess: ${left} of ${names.length}` + (left === 0 ? ` → 0. Every name now says what it holds.` : '');
+    count.textContent = `Names that forced a guess: ${left} of ${names.length}` + (left === 0 ? `. Every name now says what it holds.` : '');
     btns.forEach((b, i) => b.classList.toggle('is-fixed', fixed.has(i)));
   }
   function fixedHtml(n) {
@@ -1970,7 +1974,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   }
   function setStage(s, animate = true) {
     stage = s;
-    out.value = LABELS[s]; out.textContent = LABELS[s];
+    out.value = LABELS[s]; out.textContent = LABELS[s]; range.setAttribute('aria-valuetext', LABELS[s]);
     cap.textContent = `Dots for FOLDLINE rows: ${LABELS[s]}.`;
     // Every move tweens from where the dots are now to the new stage, in both directions.
     const start = cur.map(q => q.slice()), startAlpha = curAlpha, endAlpha = s === 0 ? 1 : 0.25, target = pos[s];
@@ -2093,7 +2097,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'),
             roleLock ? S('pass', 'Allows', 'This login has no read-only default.') : S('stop', 'Stops', '25006 cannot execute CREATE TABLE in a read-only transaction. A default, not a lock.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the table is created.') : S('idle', 'Would deny', '42501 permission denied for schema analytics, even after BEGIN READ WRITE (B-W01).')],
-        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">Read-only is a default the reader can switch off. Behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
+        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">Read-only is a default the reader can switch off. Behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
       case 'temp': return {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'), S('skip', 'Switched off', 'BEGIN READ WRITE overrides the read-only default.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the temp table is created.') : o.temp ? S('nolock', 'No lock', 'TEMP left to PUBLIC: the temp table is created.') : S('stop', 'Denies', '42501 permission denied to create temporary tables.')],
@@ -2130,9 +2134,11 @@ function makeTabs(list, items, onSelect, idPrefix) {
     seq.at(g0, Math.round(lastIdx * hop * 0.85 + T('--m-rise')), () => {
       result.className = 'result' + (r.nolock ? ' is-nolock' : '');
       result.innerHTML = `<div class="stamp">${r.res}</div>`;
+      if (revealNext) { revealNext = false; reveal(result); }
     });
   }
-  $('#m7-send').addEventListener('click', send);
+  let revealNext = false;
+  $('#m7-send').addEventListener('click', () => { revealNext = true; send(); });
   ['#m7-ignore', '#m7-temp', '#m7-super'].forEach(s => $(s).addEventListener('change', send));
   $$('input[name="m7req"]').forEach(i => i.addEventListener('change', () => { seq.stop(); result.className = 'result'; result.innerHTML = '<p>Press Send.</p>'; gateNodes.forEach(n => { n.className = 'gate'; $('.out', n).innerHTML = ''; }); packet.hidden = true; }));
   window.__m7Final = send;
@@ -2350,7 +2356,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const why = weakest === 0 ? `Unproven: ${weakNames.join(', ')}.` : weakest === 1 ? `Documented but not proven: ${weakNames.join(', ')}.` : 'Every gate is proven for the declared question and surface.';
     verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>Worked example: FOLDLINE.</strong> The database checks pass and the values matched 3 of 3, but the runs cited the definition 0 of 3 and there was one run per question. Step 11 is not met.</p>` : '');
   }
-  $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; });
+  $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; reveal(verdict); });
   $('#m12-clear').addEventListener('click', () => { done.clear(); update(true); });
   update(false);
   window.__m12Print = on => { printing = on; };
