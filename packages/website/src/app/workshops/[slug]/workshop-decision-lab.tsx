@@ -24,9 +24,11 @@ import type {
   WorkshopDecisionLabConfig,
   WorkshopDecisionOption,
 } from "@/lib/workshops";
+import type { Locale } from "@/lib/i18n/locale";
 
 interface WorkshopDecisionLabProps {
   readonly config: WorkshopDecisionLabConfig;
+  readonly locale: Locale;
 }
 
 type ValidationError = "decision" | "evidence" | null;
@@ -44,6 +46,13 @@ const LAB_COPY = {
     yourCorrectPick: "Your pick · correct",
     yourWrongPick: "Your pick · not the strongest",
     resetAfterCorrect: "Reset",
+    validation: {
+      decision: "Select one decision before checking the result.",
+      evidence: "Select the strongest evidence before checking the result.",
+    },
+    loading: "The choices unlock once JavaScript has loaded.",
+    noScript:
+      "JavaScript is required for this exercise. You can still read the course and download its materials without it.",
   },
   de: {
     outcome: {
@@ -55,6 +64,13 @@ const LAB_COPY = {
     yourCorrectPick: "Deine Wahl · richtig",
     yourWrongPick: "Deine Wahl · nicht die stärkste",
     resetAfterCorrect: "Zurücksetzen",
+    validation: {
+      decision: "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.",
+      evidence: "Wähle den stärksten Beleg aus, bevor du das Ergebnis prüfst.",
+    },
+    loading: "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist.",
+    noScript:
+      "Diese Übung benötigt JavaScript. Du kannst den Kurs und seine Materialien auch ohne JavaScript lesen und herunterladen.",
   },
 } as const;
 
@@ -151,21 +167,6 @@ export function orderDecisionOptions(
   return { choices: rotate(config.choices), evidence: rotate(config.evidence) };
 }
 
-function getValidationMessage(
-  config: WorkshopDecisionLabConfig,
-  error: Exclude<ValidationError, null>,
-): string {
-  const english = config.resultLabel === "Decision feedback";
-  if (error === "decision") {
-    return english
-      ? "Select one decision before checking the result."
-      : "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.";
-  }
-  return english
-    ? "Select the strongest evidence before checking the result."
-    : "Wähle den stärksten Beleg aus, bevor du das Ergebnis prüfst.";
-}
-
 function optionClass(selected: boolean, mark: OptionMark): string {
   const tone =
     mark === "correct"
@@ -196,7 +197,7 @@ function DecisionOption({
   readonly name: string;
   readonly selected: boolean;
   readonly mark: OptionMark;
-  readonly copy: (typeof LAB_COPY)[keyof typeof LAB_COPY];
+  readonly copy: (typeof LAB_COPY)[Locale];
   readonly onSelect: (id: string) => void;
   readonly inputRef?: RefObject<HTMLInputElement | null>;
 }) {
@@ -293,9 +294,11 @@ const OUTCOME_STYLE: Record<
   wrong: { border: "border-destructive", text: "text-destructive", Icon: CircleX },
 };
 
-export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
-  const english = config.resultLabel === "Decision feedback";
-  const copy = LAB_COPY[english ? "en" : "de"];
+export function WorkshopDecisionLab({
+  config,
+  locale,
+}: WorkshopDecisionLabProps) {
+  const copy = LAB_COPY[locale];
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
   const evidenceName = `workshop-evidence-${useId().replaceAll(":", "")}`;
   const validationId = `${decisionName}-validation`;
@@ -450,16 +453,12 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
         >
           {!hydrated ? (
             <p id={readinessId} className="mb-4 text-sm leading-relaxed text-muted-foreground">
-              {english
-                ? "The choices unlock once JavaScript has loaded."
-                : "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist."}
+              {copy.loading}
             </p>
           ) : null}
           <noscript>
             <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-              {english
-                ? "JavaScript is required for this exercise. You can still read the course and download its materials without it."
-                : "Diese Übung benötigt JavaScript. Du kannst den Kurs und seine Materialien auch ohne JavaScript lesen und herunterladen."}
+              {copy.noScript}
             </p>
           </noscript>
           <div className="grid gap-5 xl:grid-cols-2">
@@ -525,7 +524,7 @@ export function WorkshopDecisionLab({ config }: WorkshopDecisionLabProps) {
               aria-atomic="true"
               className="mt-4 border-l-[3px] border-destructive bg-background px-4 py-3 text-sm font-semibold text-destructive"
             >
-              {getValidationMessage(config, validationError)}
+              {copy.validation[validationError]}
             </p>
           ) : null}
 

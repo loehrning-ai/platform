@@ -14,6 +14,7 @@ describe("published Data Readiness workshop", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = getWorkshops(locale)[2];
       expect(workshop.slug).toBe("datenbereitschaft-fuer-ki");
+      expect(workshop.number).toBe("03");
       expect(workshop.materials).toHaveLength(3);
       expect(workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length))).toEqual([
         "slides.html",
@@ -34,12 +35,17 @@ describe("published Data Readiness workshop", () => {
     const de = getWorkshops("de")[2];
     const en = getWorkshops("en")[2];
     expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
-    expect(en.accessNote).toContain("Materials are in English; the live session is introduced in German.");
-    expect(en.accessNote).toMatch(/The course and the demo need no account or installation\./);
-    expect(de.accessNote).toMatch(/Für Kurs und Demo brauchst du kein Konto und keine Installation\./);
-    expect(en.materials[2]?.label).toBe("Interactive demo: raw tables vs certified views");
-    expect(de.materials[2]?.label).toMatch(/^Interaktive Demo: .*\(Englisch\)$/);
-    for (const material of de.materials) expect(material.label).toMatch(/\(Englisch\)$/);
+    expect(en.accessNote).toContain("materials are in English, the live session is introduced in German.");
+    expect(en.accessNote).toMatch(/^The course and the demo need no account or installation;/);
+    expect(de.accessNote).toMatch(/^Für Kurs und Demo brauchst du kein Konto und keine Installation;/);
+    for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
+    expect(de.duration).toBe("~90 Minuten");
+    expect(en.duration).toBe("~90 minutes");
+    expect(de.materials[0]?.description).toMatch(/75 Minuten Kurs und 15 Minuten Fragen/);
+    expect(en.materials[0]?.description).toMatch(/75 minutes of course and 15 minutes of questions/);
+    expect(en.materials.map((material) => material.label)).toEqual(["Course · 26 scenes", "Learner guide", "Interactive demo · 10 min"]);
+    expect(de.materials.map((material) => material.label)).toEqual(["Kurs · 26 Szenen", "Lernbegleiter", "Interaktive Demo · 10 Min."]);
+    for (const workshop of [de, en]) expect(JSON.stringify(workshop)).not.toMatch(/certified|zertifiziert/i);
     expect(en.description).toContain("Show ending MRR by month for the last complete quarter");
     expect(en.description).toContain("-19,960 / 9,775 / 42,565");
     expect(en.description).toContain("334,675 / 344,450 / 387,015");

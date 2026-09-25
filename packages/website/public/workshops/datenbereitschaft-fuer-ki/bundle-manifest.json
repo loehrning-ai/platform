@@ -85,6 +85,21 @@
       "sha256": "262481e844521b326f5ecd053e59b98c8b2da78c8ee1bdbb6e8174305e54935a"
     },
     {
+      "path": "assets/fonts/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2"
+    },
+    {
+      "path": "assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3"
+    },
+    {
+      "path": "assets/fonts/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c"
+    },
+    {
       "path": "assets/fonts/Typing-Static-400.ttf",
       "sizeBytes": 408712,
       "sha256": "47667a2166515b735049b5ce145200298afe416ea287c2e0fb99bd6038bff1ad"
@@ -131,8 +146,8 @@
     },
     {
       "path": "builder.html",
-      "sizeBytes": 248542,
-      "sha256": "7ed878ed804386ebadeaa704f5c64565ad4dca65bdfa020c4481b149d894a855"
+      "sizeBytes": 254504,
+      "sha256": "bd71ec12ddbc8723c7cedd9dff85d4bc75dff2d7d024d05addfbf296f9a11b43"
     },
     {
       "path": "card-preview.webp",
@@ -546,13 +561,13 @@
     },
     {
       "path": "demo.html",
-      "sizeBytes": 129155,
-      "sha256": "9b74eed956f8bf8e09c53243e642dcf65ed6f488f96ef24483f19b9faaaba9f4"
+      "sizeBytes": 134923,
+      "sha256": "8acf32d3fd4d92bce8742fd3623ebffdcb54e039cf65f8bc7a56923dc108060f"
     },
     {
       "path": "guide.html",
-      "sizeBytes": 21616,
-      "sha256": "e05266c863ae5bb83f32fb34e17ba8ad8875890a7f942b3300811d7835eff04c"
+      "sizeBytes": 26381,
+      "sha256": "0727a5bf92683334c4112b7db197964dd3431986603ff094055585c7bfeb4954"
     },
     {
       "path": "lib/cover-globe.css",

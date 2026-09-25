@@ -32,23 +32,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     contentLocalesForPath(basePath),
   );
 
+  const image = {
+    url: `/workshops/${workshop.slug}/card-preview.webp`,
+    width: 1024,
+    height: 576,
+    alt: workshop.title,
+  };
+
   return {
     title: `${workshop.title} · ${copy.detailTitleSuffix}`,
-    description: workshop.description,
+    description: workshop.summary,
     robots: { index: true, follow: true },
     alternates: { ...alternates, canonical: localizedPath },
     openGraph: {
       title: workshop.title,
-      description: workshop.description,
+      description: workshop.summary,
       url: `${SITE_URL}${localizedPath}`,
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "article",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: workshop.title,
-      description: workshop.description,
+      description: workshop.summary,
+      images: [image],
     },
   };
 }

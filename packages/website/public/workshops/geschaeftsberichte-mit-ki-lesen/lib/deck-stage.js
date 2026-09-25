@@ -5,7 +5,8 @@
  *  (a) speaker notes — reads <script type="application/json" id="speaker-notes">
  *      and posts {slideIndexChanged: N} to the parent window on nav.
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
- *  (c) press R to reset to slide 0 (with a tasteful keyboard hint).
+ *  (c) press R twice (within 1.5 s) to reset to slide 0; the first press
+ *      shows "Press R again to reset", so a stray key never loses your place.
  *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
  *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
@@ -53,6 +54,29 @@
   const DESIGN_H_DEFAULT = 1080;
   const STORAGE_PREFIX = 'deck-stage:slide:';
   const OVERLAY_HIDE_MS = 1800;
+  const RESET_CONFIRM_MS = 1500;
+  const PORTRAIT_KEY = 'deck-stage:portrait-hint-dismissed';
+  // Workshop page in the visitor's language: same rule as the strip on the other workshop materials
+  // (German when arriving from /workshops/..., English after any /en/... page, else the session's choice).
+  const WORKSHOP_PATH = '/workshops/geschaeftsberichte-mit-ki-lesen';
+  const WORKSHOP_URL = (() => {
+    let de = false, en = false;
+    try {
+      const f = document.referrer ? new URL(document.referrer) : null;
+      if (f && f.origin === location.origin) {
+        const p = f.pathname.replace(/\/$/, '');
+        de = p === WORKSHOP_PATH || /^\/workshops(\/[^\/.]+)?$/.test(p);
+        en = /^\/en(\/|$)/.test(p);
+      }
+    } catch (e) { /* ignore */ }
+    try {
+      if (en) sessionStorage.removeItem('wf-lang');
+      else if (!de && sessionStorage.getItem('wf-lang') === 'de') de = true;
+      if (de) sessionStorage.setItem('wf-lang', 'de');
+    } catch (e) { /* ignore */ }
+    return de ? WORKSHOP_PATH : '/en' + WORKSHOP_PATH;
+  })();
+  window.NW_WORKSHOP_URL = WORKSHOP_URL;
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 
   const pad2 = (n) => String(n).padStart(2, '0');
@@ -145,6 +169,7 @@
       z-index: 2147483000;
       user-select: none;
     }
+    .overlay:focus-within,
     .overlay[data-visible] {
       opacity: 1;
       pointer-events: auto;
@@ -174,8 +199,7 @@
     }
     .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
     .btn:active { background: rgba(255,255,255,0.18); }
-    .btn:focus { outline: none; }
-    .btn:focus-visible { outline: none; }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
     .btn::-moz-focus-inner { border: 0; }
     .btn svg { width: 14px; height: 14px; display: block; }
     .btn.reset {
@@ -261,7 +285,62 @@
         break-after: auto;
         page-break-after: auto;
       }
-      .overlay, .tapzones { display: none !important; }
+      .overlay, .tapzones, .toast, .portrait { display: none !important; }
+    }
+
+    /* Reset confirmation toast: first R press arms, second resets. */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 68px;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      background: #000;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms ease;
+      z-index: 2147483000;
+      white-space: nowrap;
+    }
+    .toast[data-visible] { opacity: 1; }
+
+    /* Portrait hint: a 16:9 deck on a phone held upright is tiny. */
+    .portrait {
+      display: none;
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      top: 12px;
+      z-index: 2147483100;
+      background: #f3f0e9;
+      color: #121212;
+      border: 2px solid #121212;
+      box-shadow: 3px 3px 0 #121212;
+      padding: 12px 12px 12px 16px;
+      font-size: 15px;
+      line-height: 1.4;
+      align-items: center;
+      gap: 12px;
+    }
+    .portrait p { margin: 0; flex: 1; }
+    .portrait a { color: #97300f; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+    .portrait a:focus-visible, .portrait button:focus-visible { outline: 3px solid #b73a15; outline-offset: 2px; }
+    .portrait button {
+      appearance: none; -webkit-appearance: none;
+      flex: 0 0 auto;
+      min-width: 44px; min-height: 44px;
+      background: #121212; color: #fff; border: 0;
+      font: inherit; font-weight: 700; cursor: pointer;
+    }
+    @media (orientation: portrait) and (max-width: 600px) {
+      .portrait:not([hidden]) { display: flex; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .overlay, .toast, .btn { transition: none; }
     }
   `;
 
@@ -309,6 +388,7 @@
       window.removeEventListener('mousemove', this._onMouseMove);
       if (this._hideTimer) clearTimeout(this._hideTimer);
       if (this._mouseIdleTimer) clearTimeout(this._mouseIdleTimer);
+      if (this._resetTimer) clearTimeout(this._resetTimer);
     }
 
     attributeChangedCallback() {
@@ -370,14 +450,34 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <span class="divider"></span>
-        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (R)">Reset<span class="kbd">R</span></button>
+        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (press R twice)">Reset<span class="kbd">R</span></button>
       `;
 
       overlay.querySelector('.prev').addEventListener('click', () => this._go(this._index - 1, 'click'));
       overlay.querySelector('.next').addEventListener('click', () => this._go(this._index + 1, 'click'));
       overlay.querySelector('.reset').addEventListener('click', () => this._go(0, 'click'));
 
-      this._root.append(style, stage, tapzones, overlay);
+      const toast = document.createElement('div');
+      toast.className = 'toast export-hidden';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+
+      const portrait = document.createElement('div');
+      portrait.className = 'portrait export-hidden';
+      portrait.innerHTML =
+        '<p>Turn your phone sideways, or <a href="' + WORKSHOP_URL + '">read the workshop page</a>.</p>' +
+        '<button type="button" aria-label="Dismiss hint">OK</button>';
+      let dismissed = false;
+      try { dismissed = sessionStorage.getItem(PORTRAIT_KEY) === '1'; } catch (e) { /* ignore */ }
+      if (dismissed) portrait.hidden = true;
+      portrait.querySelector('button').addEventListener('click', (e) => {
+        e.stopPropagation();
+        portrait.hidden = true;
+        try { sessionStorage.setItem(PORTRAIT_KEY, '1'); } catch (err) { /* ignore */ }
+      });
+
+      this._root.append(style, stage, tapzones, overlay, toast, portrait);
+      this._toast = toast;
       this._canvas = canvas;
       this._slot = slot;
       this._overlay = overlay;
@@ -565,6 +665,10 @@
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const key = e.key;
+      // Space/Enter on a focused button or link belongs to that control.
+      const origin = (e.composedPath && e.composedPath()[0]) || t;
+      if ((key === ' ' || key === 'Spacebar' || key === 'Enter') && origin && /^(BUTTON|A)$/.test(origin.tagName)) return;
+      if (key !== 'r' && key !== 'R') this._disarmReset();
       let handled = true;
 
       if (key === 'ArrowRight' || key === 'PageDown' || key === ' ' || key === 'Spacebar') {
@@ -576,7 +680,12 @@
       } else if (key === 'End') {
         this._go(this._slides.length - 1, 'keyboard');
       } else if (key === 'r' || key === 'R') {
-        this._go(0, 'keyboard');
+        if (this._resetArmed) {
+          this._disarmReset();
+          this._go(0, 'keyboard');
+        } else {
+          this._armReset();
+        }
       } else if (/^[0-9]$/.test(key)) {
         // 1..9 jump to that slide; 0 jumps to 10.
         const n = key === '0' ? 9 : parseInt(key, 10) - 1;
@@ -588,6 +697,26 @@
       if (handled) {
         e.preventDefault();
         this._flashOverlay();
+      }
+    }
+
+    _armReset() {
+      this._resetArmed = true;
+      if (this._toast) {
+        this._toast.textContent = 'Press R again to reset';
+        this._toast.setAttribute('data-visible', '');
+      }
+      if (this._resetTimer) clearTimeout(this._resetTimer);
+      this._resetTimer = setTimeout(() => this._disarmReset(), RESET_CONFIRM_MS);
+    }
+
+    _disarmReset() {
+      if (!this._resetArmed) return;
+      this._resetArmed = false;
+      if (this._resetTimer) { clearTimeout(this._resetTimer); this._resetTimer = null; }
+      if (this._toast) {
+        this._toast.removeAttribute('data-visible');
+        this._toast.textContent = '';
       }
     }
 

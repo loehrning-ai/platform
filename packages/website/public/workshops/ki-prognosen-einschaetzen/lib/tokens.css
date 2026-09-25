@@ -1,0 +1,17 @@
+/* loehrning.ai workshop tokens (CI "Das Ö"): light only, flat, one Mennige accent.
+   Shared by every Workshop 01 page. Fonts vendored in ../assets/fonts/ (OFL-1.1 notices beside them). */
+@font-face{font-family:"Typing";font-weight:400;font-style:normal;font-display:swap;src:url("../assets/fonts/Typing-Regular.woff2") format("woff2")}
+@font-face{font-family:"Typing";font-weight:700;font-style:normal;font-display:swap;src:url("../assets/fonts/Typing-Bold.woff2") format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-weight:400;font-style:normal;font-display:swap;src:url("../assets/fonts/JetBrainsMono-var.woff2") format("woff2")}
+
+:root{
+  color-scheme:light;
+  --mennige:#b73a15; --mennige-tief:#97300f; --mennige-hell:#f2c6b6;
+  --rust:#b73a15; --rust-dk:#97300f;
+  --paper:#f3f0e9; --ink:#121212; --ink-soft:#4f4640; --line:#d4cec5;
+  --sans:"Typing",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{border-radius:0!important}
+body{font-family:var(--sans);background-color:var(--paper);color:var(--ink)}
+h1,h2,h3,h4,h5,h6,.h1{font-weight:700!important}

@@ -56,13 +56,52 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("keeps every card summary short enough to read in a card", () => {
-    for (const workshop of WORKSHOPS) {
-      expect(
-        workshop.summary.length,
-        `${workshop.slug}.summary is too long for the card`,
-      ).toBeLessThanOrEqual(260);
+  it("keeps every card summary short enough for a card and a meta description", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        expect(
+          workshop.summary.length,
+          `${locale}/${workshop.slug}.summary is too long for the card`,
+        ).toBeLessThanOrEqual(160);
+      }
     }
+  });
+
+  it("numbers workshops from data and follows one naming pattern in both locales", () => {
+    const formats = {
+      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Interaktiver Kurs"],
+      en: ["Self-study kit", "Self-study kit", "Interactive course"],
+    } as const;
+    for (const locale of ["de", "en"] as const) {
+      const workshops = getWorkshops(locale);
+      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03"]);
+      for (const [index, workshop] of workshops.entries()) {
+        expect(workshop.eyebrow).toBe(
+          `Workshop ${workshop.number} · ${workshop.topic}`,
+        );
+        expect(workshop.duration).toBe(
+          locale === "de" ? "~90 Minuten" : "~90 minutes",
+        );
+        expect(workshop.format).toBe(formats[locale][index]);
+        expect(workshop.outcome.trim().length).toBeGreaterThan(0);
+        expect(workshop.accessNote.split(/(?<=\.)\s+/).length).toBeLessThanOrEqual(2);
+        for (const material of workshop.materials) {
+          expect(material.label).not.toMatch(/\(|\)|Englisch|English|öffnen|\bOpen\b/);
+          if (material.kind !== "html") {
+            expect(material.label).toMatch(new RegExp(`\\.${material.kind}$`));
+          }
+        }
+      }
+    }
+    expect(getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")?.eyebrow).toBe(
+      "Workshop 02 · Geschäftsberichte",
+    );
+    expect(
+      getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")?.materials[0]?.label,
+    ).toBe("Walkthrough · 22 Folien");
+    expect(
+      getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")?.materials[0]?.label,
+    ).toBe("Walkthrough · 22 slides");
   });
 
   it("gives every real-world second case a source and a decision", () => {

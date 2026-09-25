@@ -150,9 +150,9 @@
     return { key: 'traffic', name: 'App: daily active users', unit: 'DAU', m, startDow: 1, n, H,
       y: y.slice(0, n), future: y, comp: { trend, season, noise }, viralAt: 96 };
   }
-  // ---- canonical SKU (real data) --------------------------------------
+  // ---- canonical SKU (synthetic practice data) --------------------------
   // The single running example threaded through every technical widget:
-  // course/data/demand-weekly.csv, 104 weekly points (2024-01-01 .. 2025-12-22).
+  // ../data/demand-weekly.csv, 104 weekly points (2024-01-01 .. 2025-12-22).
   // Authored, deterministic variants (no RNG) drive the leakage, stockout and
   // monitoring-shock artifacts so the same SKU tells one continuous story.
   function buildCanon() {
@@ -394,7 +394,13 @@
         ctx.save(); ctx.strokeStyle = C.faint; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.moveTo(xToPx(cfg.marker), y0); ctx.lineTo(xToPx(cfg.marker), y1); ctx.stroke();
         ctx.restore();
-        if (cfg.markerLabel) { ctx.fillStyle = C.sub; ctx.font = "700 15px 'Space Mono',monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(cfg.markerLabel, xToPx(cfg.marker), y0 + 14); }
+        if (cfg.markerLabel) {
+          // label sits right of its dashed line, with a paper halo so data lines never cut through it
+          ctx.save(); ctx.font = "700 15px 'Space Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+          const mt = ctx.measureText(cfg.markerLabel), up = mt.fontBoundingBoxAscent != null ? mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent : 17;
+          ctx.fillStyle = 'rgba(255,253,247,.92)'; ctx.fillRect(xToPx(cfg.marker) + 3, y0 + 14 - up - 1, mt.width + 6, up + 2);
+          ctx.fillStyle = C.sub; ctx.fillText(cfg.markerLabel, xToPx(cfg.marker) + 6, y0 + 14); ctx.restore();
+        }
       }
       // series
       const clipReveal = cfg.clipX;
@@ -518,5 +524,4 @@
     DATASETS, M, Chart, metrics, C, getDS, fmt, clamp, mean, std, gauss, mulberry32, gboost,
     slider, segmented, chip, metricCard, elt, FLBase, animateReveal, reducedMotion
   };
-  // widget definitions live in forecast-lab.widgets.js (loaded after this)
 })();

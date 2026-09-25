@@ -17,6 +17,13 @@ export async function generateMetadata(): Promise<Metadata> {
     contentLocalesForPath("/workshops"),
   );
 
+  const image = {
+    url: "/workshops/ki-prognosen-einschaetzen/card-preview.webp",
+    width: 1024,
+    height: 576,
+    alt: copy.imageAlt,
+  };
+
   return {
     title: copy.title,
     description: copy.description(workshops.length),
@@ -29,11 +36,13 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "website",
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: copy.title,
       description: copy.openGraphDescription,
+      images: [image],
     },
   };
 }

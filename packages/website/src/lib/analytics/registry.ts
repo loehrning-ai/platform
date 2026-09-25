@@ -98,7 +98,7 @@ export const ANALYTICS_WORKSHOP_SLUGS = [
 export type AnalyticsWorkshopSlug = (typeof ANALYTICS_WORKSHOP_SLUGS)[number];
 
 /** Mirror of WorkshopMaterial["kind"] in src/lib/workshops.ts. */
-export const ANALYTICS_MATERIAL_KINDS = ["html", "zip"] as const;
+export const ANALYTICS_MATERIAL_KINDS = ["html", "zip", "csv"] as const;
 export type AnalyticsMaterialKind = (typeof ANALYTICS_MATERIAL_KINDS)[number];
 
 /**

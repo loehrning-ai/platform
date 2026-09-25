@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Download,
+  FileSpreadsheet,
   FileText,
   Presentation,
   ShieldCheck,
@@ -23,6 +24,7 @@ const MATERIAL_ICONS: Record<
 > = {
   html: Presentation,
   zip: Download,
+  csv: FileSpreadsheet,
 };
 
 const DETAIL_CLASS = "group border-t border-border bg-background";
@@ -37,6 +39,11 @@ function formatSourceDate(value: string, locale: Locale): string {
 }
 
 export function WorkshopDetailContent({ workshop, locale }: Props) {
+  // The "all in English" note is derived from the data, so it disappears as
+  // soon as one material is published in another language.
+  const allMaterialsEnglish = workshop.materials.every(
+    (material) => material.language === "en",
+  );
   const { caseStudy, realWorldCase } = workshop;
   const copy = WORKSHOP_PAGE_COPY[locale].detail;
 
@@ -56,7 +63,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       </nav>
 
       <header className="border-b border-border">
-        <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-5">
+        <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-7">
           <div className="border-l-[3px] border-brand-orange pl-4">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {workshop.eyebrow}
@@ -65,6 +72,33 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               {workshop.title}
             </h1>
           </div>
+
+          <p className="mt-4 max-w-3xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {workshop.summary}
+          </p>
+
+          <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <div className="flex gap-1.5">
+              <dt className="font-semibold text-foreground">{copy.format}:</dt>
+              <dd>{workshop.format}</dd>
+            </div>
+            <div className="flex gap-1.5">
+              <dt className="font-semibold text-foreground">
+                {copy.duration}:
+              </dt>
+              <dd>{workshop.duration}</dd>
+            </div>
+            <div className="flex gap-1.5">
+              <dt className="font-semibold text-foreground">{copy.steps}:</dt>
+              <dd>{workshop.steps.length}</dd>
+            </div>
+            <div className="flex gap-1.5">
+              <dt className="font-semibold text-foreground">
+                {copy.materials}:
+              </dt>
+              <dd>{workshop.materials.length}</dd>
+            </div>
+          </dl>
 
           <div className="mt-3 flex max-w-4xl items-start gap-2 text-xs leading-relaxed text-muted-foreground">
             <ShieldCheck
@@ -81,28 +115,8 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </header>
 
-      <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6 sm:py-4">
-        <WorkshopDecisionLab config={workshop.decisionLab} />
-        <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
-          <div className="flex gap-1.5">
-            <dt className="font-semibold text-foreground">{copy.format}:</dt>
-            <dd>{workshop.format}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="font-semibold text-foreground">{copy.duration}:</dt>
-            <dd>{workshop.duration}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="font-semibold text-foreground">{copy.steps}:</dt>
-            <dd>{workshop.steps.length}</dd>
-          </div>
-          <div className="flex gap-1.5">
-            <dt className="font-semibold text-foreground">
-              {copy.materialsHeading}:
-            </dt>
-            <dd>{workshop.materials.length}</dd>
-          </div>
-        </dl>
+      <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
+        <WorkshopDecisionLab config={workshop.decisionLab} locale={locale} />
       </div>
 
       <section
@@ -119,6 +133,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </h2>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-right">
               {copy.materialsAccess}
+              {copy.materialsLanguage && allMaterialsEnglish
+                ? ` ${copy.materialsLanguage}`
+                : null}
             </p>
           </div>
 
@@ -130,7 +147,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                   key={material.href}
                   workshopSlug={workshop.slug}
                   material={material}
-                  className="group grid min-h-16 gap-3 border-b border-border py-4 transition-colors hover:bg-background sm:grid-cols-[2rem_minmax(10rem,0.55fr)_minmax(0,1fr)_auto] sm:items-center sm:px-3"
+                  className="group grid min-h-16 gap-3 border-b border-border py-4 transition-colors hover:bg-background sm:grid-cols-[2rem_minmax(10rem,0.55fr)_minmax(0,1fr)_11rem] sm:items-center sm:px-3"
                 >
                   <span className="font-mono text-xs font-bold tabular-nums text-brand-orange">
                     {String(index + 1).padStart(2, "0")}
@@ -147,12 +164,17 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                       aria-hidden="true"
                     />
                     <span>
-                      {material.kind === "zip"
-                        ? copy.download
-                        : copy.openInBrowser}
+                      {material.kind === "html"
+                        ? copy.openInBrowser
+                        : copy.download}
                     </span>
-                    <span aria-hidden="true">·</span>
-                    <span>
+                    <span
+                      aria-hidden="true"
+                      className="border border-foreground/40 px-1.5 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.06em]"
+                    >
+                      {material.language}
+                    </span>
+                    <span className="sr-only">
                       {copy.language}:{" "}
                       {materialLanguageLabel(locale, material.language)}
                     </span>
@@ -161,9 +183,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               );
             })}
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">
-            {copy.materialLanguageNote}
-          </p>
         </div>
       </section>
 
@@ -184,6 +203,16 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
 
         <div className="mt-4 border-b border-border">
+          <details className={DETAIL_CLASS}>
+            <summary className={SUMMARY_CLASS}>
+              <h3 className="text-base font-bold">{copy.whatItCovers}</h3>
+              <SummaryMark />
+            </summary>
+            <p className="max-w-4xl border-t border-border px-4 py-5 text-sm leading-relaxed text-foreground/85 sm:px-6">
+              {workshop.description}
+            </p>
+          </details>
+
           <details className={DETAIL_CLASS}>
             <summary className={SUMMARY_CLASS}>
               <h3 className="text-base font-bold">{copy.forWhom}</h3>
