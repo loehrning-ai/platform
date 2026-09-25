@@ -1,0 +1,5 @@
+view_name,data_loaded_at_utc,complete_through_month,quality_status,warn_after_hours,hard_expiry_hours,owner_team,definition_version
+analytics.account_mrr_monthly,2026-07-01T06:00:00Z,2026-06-01,passing,36,,revenue_analytics,1.0.0
+analytics.expansion_mrr_by_country_monthly,2026-07-01T06:00:00Z,2026-06-01,passing,36,,revenue_analytics,1.0.0
+analytics.logo_churn_by_segment_quarter,2026-07-01T06:00:00Z,2026-06-01,passing,36,,revenue_analytics,1.0.0
+analytics.mrr_summary_monthly,2026-07-01T06:00:00Z,2026-06-01,passing,36,,revenue_analytics,1.0.0

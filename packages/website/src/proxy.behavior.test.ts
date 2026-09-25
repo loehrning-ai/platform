@@ -310,6 +310,23 @@ describe("retired API boundaries", () => {
   });
 });
 
+describe("workshop bundle cache policy", () => {
+  it.each([
+    "/workshops/datenbereitschaft-fuer-ki/guide.html",
+    "/workshops/datenbereitschaft-fuer-ki/lib/presenter-notes.js",
+    "/workshops/datenbereitschaft-fuer-ki/lib/story.css",
+    "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/semantic-template/model.yml",
+    "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+  ])("revalidates %s instead of pinning it for a year", async (path) => {
+    expect(unstable_doesMiddlewareMatch({ config, url: path })).toBe(true);
+    const response = await proxy(new NextRequest(`https://loehrning.ai${path}`));
+    expect(response.headers.get("cache-control")).toBe(
+      "public, max-age=3600, s-maxage=3600",
+    );
+    expect(mockRefreshAuthSession).not.toHaveBeenCalled();
+  });
+});
+
 describe("retired redirect authority", () => {
   it("uses the canonical origin for an untrusted request authority", async () => {
     const response = await proxy(

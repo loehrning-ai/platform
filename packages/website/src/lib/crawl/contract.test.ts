@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   AI_RETRIEVAL_AGENTS,
   AI_TRAINING_CRAWLERS,
+  cacheHeaderFor,
   CRAWL_CONTRACT,
   getCrawlRoute,
   isProtectedRoute,
@@ -254,6 +255,46 @@ describe("crawl contract", () => {
       expect(entry.includeInSitemap, path).toBe(false);
       expect(entry.cache, path).toBe("public-static");
       expect(entry.xRobotsTag, path).toBeUndefined();
+    }
+  });
+
+  it("revalidates republished workshop bundle files instead of caching them immutably", () => {
+    for (const path of [
+      "/workshops/datenbereitschaft-fuer-ki/guide.html",
+      "/workshops/datenbereitschaft-fuer-ki/builder.html",
+      "/workshops/datenbereitschaft-fuer-ki/slides.html",
+      "/workshops/datenbereitschaft-fuer-ki/lib/deck-runtime.js",
+      "/workshops/datenbereitschaft-fuer-ki/lib/presenter-notes.js",
+      "/workshops/datenbereitschaft-fuer-ki/lib/story.css",
+      "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/START-HERE.md",
+      "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/semantic-template/model.yml",
+      "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+      "/workshops/ki-prognosen-einschaetzen/slides.html",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe("/workshops/:slug/:path*");
+      expect(entry.routeClass, path).toBe("public-assets");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.robots, path).toBe("allow");
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(entry.cache, path).toBe("public-short");
+      expect(cacheHeaderFor(entry), path).toBe("public, max-age=3600, s-maxage=3600");
+      expect(cacheHeaderFor(entry), path).not.toContain("immutable");
+    }
+  });
+
+  it("keeps workshop fonts and images immutable", () => {
+    const assetsPrefix = "/workshops/datenbereitschaft-fuer-ki/assets";
+    for (const path of [
+      `${assetsPrefix}/fonts/Typing-Static-400.ttf`,
+      `${assetsPrefix}/lockup-horizontal.svg`,
+      `${assetsPrefix}/tim-loehr.jpg`,
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe("/workshops/:slug/assets/:path*");
+      expect(entry.routeClass, path).toBe("public-assets");
+      expect(entry.cache, path).toBe("public-static");
+      expect(cacheHeaderFor(entry), path).toBe("public, max-age=31536000, immutable");
     }
   });
 

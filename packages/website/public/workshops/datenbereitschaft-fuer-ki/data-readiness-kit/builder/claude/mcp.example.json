@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "foldline-ready": {
+      "type": "stdio",
+      "command": "REPLACE-with-a-PostgreSQL-MCP-server-you-have-reviewed",
+      "args": [],
+      "env": {
+        "DATABASE_URL": "${FOLDLINE_READY_DSN}"
+      }
+    }
+  }
+}

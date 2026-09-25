@@ -1,0 +1,393 @@
+# FOLDLINE model contracts (synthetic teaching data)
+# =====================================================================================
+# In plain words
+#   A "model" here is one approved view the AI may read. This file is its contract:
+#   what one row means (the grain), which columns exist, what unit each column has,
+#   whether it may be added up, how fresh the data is, where it comes from, and which
+#   tests guard it. metric.yml says what a NUMBER means; model.yml says what a TABLE is.
+#
+# Rules this file follows (see ../naming/NAMING-RULES.md and ../warehouse/SERVING-VIEWS.md)
+#   - Relations are schema-qualified: analytics.<name>. The reader's search_path is empty.
+#   - The grain is in the view name (_monthly, _by_segment_quarter) and in primary_key.
+#   - Money ends in _eur, percentages in _pct, UTC timestamps in _at_utc.
+#   - Periods are half-open: period_start <= t < period_end_exclusive.
+#   - Every view carries the same three data-state columns:
+#       complete_through_month, data_loaded_at_utc, quality_status.
+#   - Column names here are the names in 40_analytics.sql, the tests and the page.
+#
+# Field notes are in FIELD-REFERENCE.md. Every model block has "# Why:" and
+# "# Counter-example:" comments tied to FOLDLINE's export lane.
+# =====================================================================================
+
+version: 1                                   # Format version of this file.
+
+shared:                                      # Reused below with YAML anchors, so the three columns never drift.
+  data_state_columns: &data_state_columns
+    - name: complete_through_month           # Latest month that is complete and approved for answers.
+      type: date
+      unit: calendar month (first day)
+      additivity: not_a_measure
+      description: Latest complete calendar month approved for answers. 2026-06-01 in this fixture.
+    - name: data_loaded_at_utc               # When the load that produced this row finished.
+      type: timestamptz
+      unit: UTC instant
+      additivity: not_a_measure
+      description: UTC time the serving data finished loading. 2026-07-01 06:00 UTC in this fixture.
+    - name: quality_status                   # Result of the load's quality gate.
+      type: text
+      allowed_values: [passing, failing]     # Readable words, never P/F codes.
+      additivity: not_a_measure
+      description: Result of the required quality gate for this load. Answer only when passing.
+
+  freshness: &freshness                      # One freshness rule for all four data views.
+    loaded_at_field: data_loaded_at_utc
+    complete_through_field: complete_through_month
+    evaluation_clock_source: stated_clock    # The clock the question states; never now() inside a view.
+    warn_after_hours: 36                     # Older than 36 h: answer AND disclose load time and age.
+    hard_expiry_hours: null                  # No block rule was written; escalate to owner, never invent one.
+    block_when:                              # Written block rules, the only ones that stop an answer.
+      - requested_period_after_complete_through
+      - quality_status_not_passing
+    # Counter-example: "Hide the data's age" returned a 60-hour snapshot with no warning.
+    # Counter-example: inventing "older than 48 h: refuse" blocks answers nobody agreed to block.
+
+models:
+
+  # -----------------------------------------------------------------------------------
+  # 1. analytics.mrr_summary_monthly
+  # -----------------------------------------------------------------------------------
+  - name: mrr_summary_monthly                # Short name. Readers use relation, never this alone.
+    relation: analytics.mrr_summary_monthly  # What SQL must write, schema included.
+    contract_version: 1.0.0                  # Bump on any column, grain or meaning change.
+    description: >-                          # One sentence: grain, unit, the "never".
+      One row per complete calendar month, company level, EUR: the month-end MRR level
+      and the movements that explain it. Never add ending_mrr_eur across months.
+    grain: [month_start]                     # "Rows per what?" One row per month.
+    primary_key: [month_start]               # Enforced by test unique_month.
+    expected_row_count: 18                   # 2025-01 to 2026-06.
+    time:
+      column: month_start
+      type: calendar_month
+      timezone: UTC
+      completeness: month_start <= complete_through_month
+    dimensions:
+      - name: month_start
+        type: date
+        description: First day of the calendar month the row describes (UTC).
+    measures:
+      - name: ending_mrr_eur                 # LEVEL at month end.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: semi-additive            # Across accounts yes, across months never.
+        metric: ending_mrr
+        description: MRR active at the last instant of the month (a level). Never add across months.
+      - name: new_mrr_eur                    # CHANGE component.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        description: MRR of accounts that started during the month (a change).
+      - name: expansion_mrr_eur              # CHANGE component.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        metric: expansion_mrr
+        description: MRR increase of accounts active at both month-ends (a change).
+      - name: contraction_mrr_eur            # CHANGE component, stored as a positive number.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        sign: positive_means_decrease
+        description: MRR decrease of accounts still active at month end, stored as a positive amount.
+      - name: churned_mrr_eur                # CHANGE component, stored as a positive number.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        sign: positive_means_decrease
+        description: Prior month-end MRR of accounts that ended the month at 0, stored as a positive amount.
+      - name: net_new_mrr_eur                # CHANGE: new + expansion - contraction - churned.
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        metric: net_new_mrr
+        description: Change in MRR during the month = new + expansion - contraction - churned.
+      - name: active_accounts                # DISTINCT COUNT at month end.
+        type: integer
+        unit: accounts
+        additivity: non-additive_over_time   # 123 + 123 + 132 is not a number of accounts.
+        metric: active_accounts
+        description: Distinct accounts with ending MRR above 0 at month end. Never add across months.
+    data_state: *data_state_columns
+    relationships: []                        # Company level; nothing to join.
+    freshness: *freshness
+    lineage:                                 # What the view reads. Test Q07 compares every upstream list with pg_depend.
+      upstream: [core.account_months, core.load_status]
+      sources: [source.billing_account_mrr, source.crm_accounts, source.load_log]
+      transformation: 40_analytics.sql (view), built on 30_core.sql (tables)
+    quality:
+      - {name: unique_month, type: unique, columns: [month_start]}
+      - {name: no_incomplete_months, type: expression, expression: "month_start <= complete_through_month"}
+      - {name: bathtub_identity, type: expression, expression: "lag(ending_mrr_eur) + net_new_mrr_eur = ending_mrr_eur (from the second month)"}
+      - {name: net_new_components, type: expression, expression: "net_new_mrr_eur = new_mrr_eur + expansion_mrr_eur - contraction_mrr_eur - churned_mrr_eur"}
+      - {name: level_non_negative, type: expression, expression: "ending_mrr_eur >= 0"}
+      - {name: load_passed, type: accepted_values, column: quality_status, values: [passing]}
+    owner: revenue_analytics
+    sensitivity:
+      classification: aggregate
+      contains_direct_identifiers: false
+    limitations:
+      - No account-level, cost, margin or profit fields.
+    # Why: level and change sit side by side, so the reconciliation is one row away and
+    # nobody has to rebuild a level from changes.
+    # Counter-example: public.monthly_revenue(dt, segment, amount) held only the change,
+    # under a name that sounds like a total. The recorded AI answer (-19,960 / 9,775 /
+    # 42,565) and the dry-run answer (running totals 75,890 / 85,665 / 128,230 with no
+    # opening balance) both came from that one unlabelled column.
+
+  # -----------------------------------------------------------------------------------
+  # 2. analytics.logo_churn_by_segment_quarter
+  # -----------------------------------------------------------------------------------
+  - name: logo_churn_by_segment_quarter
+    relation: analytics.logo_churn_by_segment_quarter
+    contract_version: 1.0.0
+    description: >-
+      One row per customer segment and complete quarter: the starting base, the churned
+      count and the rate. Never average the rates; recompute from the counts.
+    grain: [period_start, customer_segment]
+    primary_key: [period_start, customer_segment]
+    time:
+      column: period_start
+      end_column: period_end_exclusive       # Half-open: [2026-04-01, 2026-07-01).
+      type: calendar_quarter
+      timezone: UTC
+      completeness: last month of the quarter <= complete_through_month
+    dimensions:
+      - name: period_start
+        type: date
+        description: First day of the quarter (inclusive), UTC.
+      - name: period_end_exclusive
+        type: date
+        description: First day after the quarter (exclusive), UTC.
+      - name: customer_segment
+        type: text
+        allowed_values: [Enterprise, Mid-Market, SMB]   # 48 accounts each in total.
+        description: Customer segment of the account, as readable words.
+    measures:
+      - name: starting_accounts              # DENOMINATOR, shipped with the rate.
+        type: integer
+        unit: accounts
+        additivity: additive_across_segments # 40 + 40 + 40 = 120 is a real base.
+        description: Accounts with ending MRR above 0 at the end of the month before period_start.
+      - name: churned_accounts               # NUMERATOR, shipped with the rate.
+        type: integer
+        unit: accounts
+        additivity: additive_across_segments
+        description: Starting accounts with ending MRR 0 at the last month-end of the quarter.
+      - name: logo_churn_rate_pct            # RATE, 0-100, one decimal.
+        type: numeric(5,1)
+        unit: percent
+        scale: 0-100
+        additivity: non-additive             # Recompute: sum(churned) / sum(starting).
+        zero_denominator: "null"
+        metric: logo_churn_rate
+        description: 100 * churned_accounts / starting_accounts, one decimal; null when the base is 0.
+    data_state: *data_state_columns
+    relationships: []
+    freshness: *freshness
+    lineage:
+      upstream: [core.account_months, core.accounts, core.load_status]
+      sources: [source.billing_account_mrr, source.crm_accounts, source.load_log]
+      transformation: 40_analytics.sql (view)
+    quality:
+      - {name: unique_segment_quarter, type: unique, columns: [period_start, customer_segment]}
+      - {name: half_open_quarter, type: expression, expression: "period_end_exclusive = period_start + interval '3 months'"}
+      - {name: churn_within_base, type: expression, expression: "churned_accounts <= starting_accounts"}
+      - {name: segment_values, type: accepted_values, column: customer_segment, values: [Enterprise, Mid-Market, SMB]}
+      - {name: rate_recomputes, type: expression, expression: "logo_churn_rate_pct = round(100.0 * churned_accounts / nullif(starting_accounts, 0), 1)"}
+    owner: revenue_analytics
+    sensitivity:
+      classification: aggregate
+      contains_direct_identifiers: false
+    limitations:
+      - Counts accounts, not money.
+      - The name keeps "_quarter" (not "_quarterly") because it is published; see NAMING-RULES.md.
+    # Why: the rate ships with its numerator and denominator, so a reader can check 4 of
+    # 40 and can recompute a company-wide rate (12 of 120 = 10.0 %).
+    # Counter-example: public.customer_master stored status A, C or N. The recorded AI run
+    # searched for 'active' and found 0 of 0. The deck's export-lane database check counted
+    # every customer_master row in the base, new accounts included: 4 of 48 = 8.33 %.
+
+  # -----------------------------------------------------------------------------------
+  # 3. analytics.expansion_mrr_by_country_monthly
+  # -----------------------------------------------------------------------------------
+  - name: expansion_mrr_by_country_monthly
+    relation: analytics.expansion_mrr_by_country_monthly
+    contract_version: 1.0.0
+    description: >-
+      One row per complete calendar month and country: expansion MRR in EUR, with
+      explicit zeros. Add months within a country; do not mix with new MRR.
+    grain: [month_start, country_code]
+    primary_key: [month_start, country_code]
+    expected_row_count: 144                  # 18 months x 8 countries, dense spine.
+    time:
+      column: month_start
+      type: calendar_month
+      timezone: UTC
+      completeness: month_start <= complete_through_month
+    dimensions:
+      - name: month_start
+        type: date
+        description: First day of the calendar month (UTC).
+      - name: country_code
+        type: text                           # Two-letter ISO code; the view stores text, the accepted_values test pins it.
+        allowed_values: [AT, CH, DE, FR, GB, NL, PL, SE]
+        description: ISO 3166-1 alpha-2 country of the account. 18 accounts per country.
+    measures:
+      - name: expansion_mrr_eur
+        type: numeric(14,2)
+        unit: EUR
+        additivity: additive
+        metric: expansion_mrr
+        description: MRR increase during the month from accounts active at both month-ends; 0 when none.
+    data_state: *data_state_columns
+    relationships: []
+    freshness: *freshness
+    lineage:
+      upstream: [core.account_months, core.accounts, core.load_status]
+      sources: [source.billing_account_mrr, source.crm_accounts, source.load_log]
+      transformation: 40_analytics.sql (view)
+    quality:
+      - {name: unique_month_country, type: unique, columns: [month_start, country_code]}
+      - {name: dense_spine, type: row_count, expected: 144}
+      - {name: reconciles_to_summary, type: expression, expression: "sum by month = analytics.mrr_summary_monthly.expansion_mrr_eur"}
+      - {name: country_values, type: accepted_values, column: country_code, values: [AT, CH, DE, FR, GB, NL, PL, SE]}
+    owner: revenue_analytics
+    sensitivity:
+      classification: aggregate
+      contains_direct_identifiers: false
+    limitations:
+      - Expansion only. New, contraction and churned MRR are on analytics.mrr_summary_monthly.
+    # Why: explicit zero rows mean "no expansion", not "no data". A missing row is ambiguous.
+    # Counter-example: public.billing_events(acct_id, dt, type, status, amount) repeats
+    # every 19th movement in a retry batch and codes expansion as type 'E'.
+
+  # -----------------------------------------------------------------------------------
+  # 4. analytics.account_mrr_monthly
+  # -----------------------------------------------------------------------------------
+  - name: account_mrr_monthly
+    relation: analytics.account_mrr_monthly
+    contract_version: 1.0.0
+    description: >-
+      One row per pseudonymous account and complete calendar month: month-end MRR in
+      EUR, dense with zeros. Never add ending_mrr_eur across months; always LIMIT.
+    grain: [month_start, account_key]
+    primary_key: [month_start, account_key]
+    expected_row_count: 2592                 # 144 accounts x 18 months.
+    time:
+      column: month_start
+      type: calendar_month
+      timezone: UTC
+      completeness: month_start <= complete_through_month
+    dimensions:
+      - name: month_start
+        type: date
+        description: First day of the calendar month (UTC).
+      - name: account_key
+        type: text
+        pattern: "^fl_[0-9]{4}$"             # fl_0001 ... fl_0144.
+        description: Approved pseudonymous analytics key. Not anonymous; stable and joinable.
+      - name: customer_segment
+        type: text
+        allowed_values: [Enterprise, Mid-Market, SMB]
+        description: Customer segment, as readable words.
+      - name: country_code
+        type: text                           # Two-letter ISO code, stored as text in the view.
+        allowed_values: [AT, CH, DE, FR, GB, NL, PL, SE]
+        description: ISO 3166-1 alpha-2 country.
+      - name: plan_name
+        type: text
+        allowed_values_source: generated seed (see warehouse/seed/SEED-FACTS.md)   # Includes Enterprise.
+        description: Name of the subscription plan at month end, as readable words.
+    measures:
+      - name: ending_mrr_eur
+        type: numeric(14,2)
+        unit: EUR
+        additivity: semi-additive            # Sum across accounts in one month = company ending MRR.
+        metric: account_ending_mrr
+        description: MRR of the account at the last instant of the month; 0 before start and after churn.
+    data_state: *data_state_columns
+    relationships:
+      - {to: analytics.mrr_summary_monthly, on: [month_start], cardinality: many_to_one, note: "sum(ending_mrr_eur) per month must equal the summary (test Q05)"}
+    freshness: *freshness
+    lineage:
+      upstream: [core.account_months, core.accounts, core.load_status]
+      sources: [source.billing_account_mrr, source.crm_accounts, source.load_log]
+      transformation: 40_analytics.sql (view)
+    quality:
+      - {name: unique_account_month, type: unique, columns: [month_start, account_key]}
+      - {name: dense_grid, type: row_count, expected: 2592}
+      - {name: sums_to_summary, type: expression, expression: "sum(ending_mrr_eur) by month_start = analytics.mrr_summary_monthly.ending_mrr_eur"}
+      - {name: key_format, type: expression, expression: "account_key ~ '^fl_[0-9]{4}$'"}
+    owner: revenue_analytics
+    sensitivity:
+      classification: pseudonymous           # Not anonymous. Treat as personal-adjacent data.
+      contains_direct_identifiers: false
+      max_rows: 1000                         # Every query needs LIMIT 1000 or fewer.
+      forbidden_columns_upstream: [account_name, contact_email, phone, address]   # Live only in core/source.
+    limitations:
+      - No names, emails, phone numbers or addresses. R02 refuses them; D01 proves the database denies them.
+    # Why: G05 (top accounts) needs account grain; G01 does not. Serve the grain the
+    # question needs, with a pseudonymous key and a row limit.
+    # Counter-example: public.subscription_export(customer_id, date, amount) holds June
+    # 2026 only and exposes the operational id. A top-10 from it looks complete and is not
+    # reproducible for any other month.
+
+  # -----------------------------------------------------------------------------------
+  # 5. analytics.data_status_by_view
+  # -----------------------------------------------------------------------------------
+  - name: data_status_by_view
+    relation: analytics.data_status_by_view
+    contract_version: 1.0.0
+    description: >-
+      One row per approved data view: when it loaded, which month is complete, whether
+      quality passed, and the freshness rule. Read it before every answer.
+    grain: [view_name]
+    primary_key: [view_name]
+    expected_row_count: 4                    # The four data views above.
+    dimensions:
+      - name: view_name
+        type: text
+        allowed_values:
+          - analytics.mrr_summary_monthly
+          - analytics.logo_churn_by_segment_quarter
+          - analytics.expansion_mrr_by_country_monthly
+          - analytics.account_mrr_monthly
+        description: Schema-qualified name of the approved view this row describes.
+    measures: []                             # No business measures. Age is computed by the reader.
+    attributes:
+      - {name: data_loaded_at_utc, type: timestamptz, description: "UTC time the view's data finished loading."}
+      - {name: complete_through_month, type: date, description: "Latest complete month approved for answers."}
+      - {name: quality_status, type: text, allowed_values: [passing, failing], description: "Result of the load's quality gate."}
+      - {name: warn_after_hours, type: integer, description: "Disclose load time and age when older than this. 36."}
+      - {name: hard_expiry_hours, type: integer, nullable: true, description: "Null: no hard expiry was written. Never invent one."}
+      - {name: owner_team, type: text, description: "Team to escalate to. revenue_analytics."}
+      - {name: definition_version, type: text, description: "Metric definition version the view serves. 1.0.0."}
+    freshness_computation: >-               # The view stores facts; the reader computes age.
+      age_hours = (stated evaluation clock - data_loaded_at_utc) in hours.
+      2026-07-01T09:00:00Z -> 3 h, fresh (F00). 2026-07-03T18:00:00Z -> 60 h,
+      stale_disclosed: answer with a warning (F01).
+    lineage:
+      upstream: [core.load_status, core.serving_contracts]
+      sources: [source.load_log, "none for core.serving_contracts (contract data defined in 30_core.sql)"]
+      transformation: 40_analytics.sql (view)
+    quality:
+      - {name: one_row_per_view, type: unique, columns: [view_name]}
+      - {name: covers_all_views, type: row_count, expected: 4}
+    owner: revenue_analytics
+    sensitivity:
+      classification: metadata
+      contains_direct_identifiers: false
+    limitations:
+      - It reports the last load. It cannot say whether the source system itself was late.
+    # Why: freshness becomes data the AI can read and cite, instead of a sentence in a prompt.
+    # Counter-example: computing age with now() inside a view. Every re-run gives a
+    # different answer, and a frozen test (F00, F01) becomes impossible.

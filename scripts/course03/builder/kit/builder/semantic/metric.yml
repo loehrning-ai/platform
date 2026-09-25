@@ -1,0 +1,394 @@
+# FOLDLINE metric definitions (synthetic teaching data)
+# =====================================================================================
+# In plain words
+#   This file says what each FOLDLINE number means. It fills the four blanks the AI had
+#   to guess in the workshop: Kind of number? Rows per what? Which months? Which table?
+#   A person, a test, Claude and the data catalog all read the SAME file, so they all
+#   mean the same thing when they say "ending MRR".
+#
+# How to read one block
+#   Every field has a comment. Lines that start with "# Counter-example:" show the
+#   FOLDLINE failure the field prevents. Field details: FIELD-REFERENCE.md.
+#
+# Field order in every block (the first four are the four blanks)
+#   type              -> blank 1 "Kind of number?"  snapshot | movement | ratio | distinct_count | average
+#   result_grain      -> blank 2 "Rows per what?"
+#   period_rule       -> blank 3 "Which months?"    (plus completeness)
+#   relation          -> blank 4 "Which table?"     (always schema-qualified)
+#   additivity        -> what you may add, across what, and how a longer period is built
+#   unit / precision  -> EUR or percent, and rounding
+#   owner / version   -> who approves a change; a major version invalidates every receipt
+#
+# Evaluation clock for every example below: 2026-07-01T09:00:00Z.
+# Last complete quarter at that clock: 2026-04-01 (inclusive) to 2026-07-01 (exclusive).
+# Money is EUR. Time is UTC. Data is synthetic. No real company, person or address.
+# =====================================================================================
+
+version: 1                               # Version of this file's FORMAT, not of any metric.
+
+metrics:
+
+  # -----------------------------------------------------------------------------------
+  # 1. ending_mrr: a LEVEL (the water in the bathtub at one moment)
+  # -----------------------------------------------------------------------------------
+  - name: ending_mrr                     # Stable ID. Readers cite it in every trace. Never rename; deprecate.
+    label: Ending MRR                    # Name people see in a chart or a table header.
+    description: >-                      # One sentence: shape, unit, grain, plus one "never".
+      Monthly recurring revenue active at the last instant of a complete calendar month,
+      in EUR, one row per month. Never add it across months.
+    type: snapshot                       # Blank 1: a level measured at one instant (semi-additive).
+    relation: analytics.mrr_summary_monthly   # Blank 4: the ONLY approved view for this metric.
+    expression: ending_mrr_eur           # The column (or formula) inside that view.
+    result_grain: one row per complete calendar month   # Blank 2: what one result row stands for.
+    valid_dimensions: [month_start]      # Breakdowns allowed on this relation. Nothing else.
+    period_rule: >-                      # Blank 3: how a question's period becomes rows.
+      For a quarter, return each complete month-end (three rows). If the user needs ONE
+      number, return the last month-end of the period and say so. Never sum or average
+      month-ends unless the question explicitly asks for an average balance.
+    completeness: month_start <= complete_through_month   # Only complete months are answerable.
+    additivity:                          # What may be added up, and along which axis.
+      class: semi-additive               # Adds across accounts and segments, NOT across time.
+      across_segments: sum               # Each account is in exactly one segment, so segment totals add.
+      across_accounts: sum               # Sum of account_ending_mrr = ending_mrr (test Q05).
+      across_time: none                  # Adding April + May + June describes nothing.
+      time_rollup: last_value            # A quarter's single value is its last month-end.
+    unit: EUR                            # Currency. One currency per metric.
+    precision: 0                         # Decimals to show. The fixture holds whole euros.
+    population: >-                       # Which things are counted.
+      All 144 FOLDLINE business accounts; an account contributes its MRR at month end,
+      or 0 if it has not started or has churned.
+    inclusions:                          # What is inside the number.
+      - Recurring subscription fees active at month end.
+    exclusions:                          # What is outside, written down so nobody guesses.
+      - Setup fees
+      - Usage charges
+      - Taxes
+      - Subscriptions whose service ended before month end
+    synonyms: [month-end mrr, closing mrr, mrr balance at month end]   # Safe aliases: answer directly.
+    ambiguous_terms: [mrr, revenue]      # Words that could mean this OR another metric: ask back (C01).
+    reconciliation: >-                   # Identity a test checks (Q02).
+      ending_mrr(previous month) + net_new_mrr(month) = ending_mrr(month).
+      Q2 2026: 354,635 + 32,380 = 387,015.
+    owner: revenue_analytics             # Team that approves any change. A team, not a person.
+    version: 1.0.0                       # Semantic version. See METRICS.md "Governance".
+    status: approved                     # approved | draft | example | deprecated.
+    verified_questions: [G01, F00, F01]  # Cases in verified-questions.yml that prove this metric.
+    limitations:                         # What this number is NOT. Readers must repeat one line.
+      - Not revenue, cash collected, ARR or profit.
+      - Never sum ending MRR across months.
+    expected_q2_2026:                    # Reference truth for teaching; tests hold the real check.
+      "2026-04-01": 334675
+      "2026-05-01": 344450
+      "2026-06-01": 387015
+    # Counter-example: the recorded AI run read public.monthly_revenue.amount (each month's
+    # CHANGE) and labelled it ending_mrr: -19,960 / 9,775 / 42,565. A level cannot be
+    # negative here. The fields type, relation and expression above make that impossible
+    # to do by accident. Summing the three correct month-ends gives 1,066,140, a number
+    # that describes nothing (across_time: none).
+
+  # -----------------------------------------------------------------------------------
+  # 2. net_new_mrr: a CHANGE (what flowed in or out during the month)
+  # -----------------------------------------------------------------------------------
+  - name: net_new_mrr                    # Stable ID.
+    label: Net new MRR                   # Display name.
+    description: >-                      # Shape, unit, grain, one "never".
+      Change in MRR during a complete calendar month, in EUR: new + expansion
+      - contraction - churned. One row per month. Never read it as a balance.
+    type: movement                       # Blank 1: a change over a period (additive).
+    relation: analytics.mrr_summary_monthly   # Blank 4.
+    expression: net_new_mrr_eur          # Stored in the view next to its components.
+    formula: new_mrr_eur + expansion_mrr_eur - contraction_mrr_eur - churned_mrr_eur   # Written out.
+    result_grain: one row per complete calendar month   # Blank 2.
+    valid_dimensions: [month_start]      # Allowed breakdowns.
+    period_rule: >-                      # Blank 3.
+      For a quarter, add the three complete monthly movements. The result equals
+      ending MRR at the end of the quarter minus ending MRR at the end of the previous
+      quarter. Partial months are never added.
+    completeness: month_start <= complete_through_month   # Complete months only.
+    additivity:                          # Changes add along every axis inside complete periods.
+      class: additive
+      across_segments: sum
+      across_accounts: sum
+      across_time: sum                   # Q2 = -19,960 + 9,775 + 42,565 = 32,380.
+      time_rollup: sum
+    unit: EUR                            # Currency.
+    precision: 0                         # Whole euros in this fixture.
+    sign_convention: >-                  # Say what a negative means.
+      Negative means MRR shrank during the month. April 2026 is -19,960.
+    synonyms: [net mrr change, mrr movement net, net new mrr]   # Safe aliases.
+    ambiguous_terms: [mrr, mrr growth, revenue]   # Ask back (C01).
+    reconciliation: >-                   # Checked by test Q02.
+      sum(net_new_mrr over Q2 2026) = ending_mrr(2026-06) - ending_mrr(2026-03)
+      = 387,015 - 354,635 = 32,380.
+    owner: revenue_analytics
+    version: 1.0.0
+    status: approved
+    verified_questions: [G02]
+    limitations:
+      - A monthly change, not a balance. Not revenue, cash or profit.
+    expected_q2_2026:
+      "2026-04-01": -19960
+      "2026-05-01": 9775
+      "2026-06-01": 42565
+      quarter_total: 32380
+    # Counter-example: the recorded export-lane run subtracted two monthly CHANGES as if
+    # they were levels: June change - March change = 42,565 - 60,160 = -17,595. The
+    # period_rule and reconciliation above say how a quarter is built from months.
+
+  # -----------------------------------------------------------------------------------
+  # 3. logo_churn_rate: a RATE (a share of a written-down base)
+  # -----------------------------------------------------------------------------------
+  - name: logo_churn_rate                # Stable ID.
+    label: Logo churn rate               # Display name.
+    description: >-                      # Shape, unit, grain, one "never".
+      Share of the accounts active at the start of a quarter that were no longer
+      active at its end, in percent (0-100), one row per customer segment and
+      quarter. Never average segment rates; recompute from the counts.
+    type: ratio                          # Blank 1: numerator / denominator (non-additive).
+    relation: analytics.logo_churn_by_segment_quarter   # Blank 4.
+    numerator: churned_accounts          # Accounts in the base with ending MRR 0 at the last month-end of the period.
+    denominator: starting_accounts       # Accounts with ending MRR > 0 at the end of the PRIOR month (the base).
+    expression: round(100.0 * churned_accounts / nullif(starting_accounts, 0), 1)   # Stored as logo_churn_rate_pct.
+    result_grain: one row per customer_segment per quarter   # Blank 2.
+    valid_dimensions: [period_start, period_end_exclusive, customer_segment]   # Half-open period keys.
+    period_rule: >-                      # Blank 3.
+      Quarters only, as half-open ranges [period_start, period_end_exclusive). A rate
+      for a longer period is recomputed from that period's own base, never built by
+      averaging or adding quarterly rates.
+    completeness: period_end_exclusive <= complete_through_month + 1 month   # The quarter's last month is complete.
+    population: >-                       # The base is the most important sentence of a rate.
+      Accounts active at the end of the month before period_start. Accounts that
+      joined during the quarter are NOT in the base, even if they churn.
+    zero_denominator: "null"             # 0 of 0 is "no rate", never 0 %. Say so in the answer.
+    additivity:
+      class: non-additive                # Never add or average rates.
+      across_segments: recompute_from_components   # sum(churned) / sum(starting) = 12 / 120 = 10.0 %.
+      across_time: recompute_from_components       # A half-year rate needs its own base.
+      time_rollup: recompute_from_components
+    unit: percent                        # Shown as 10.0, meaning ten percent.
+    scale: 0-100                         # Stored as 10.0, not 0.100. Name ends in _pct.
+    precision: 1                         # One decimal.
+    synonyms: [customer churn rate, account churn rate, logo churn]   # Safe aliases.
+    ambiguous_terms: [churn, churn rate]   # Could be MRR churn (money) or logo churn (accounts): ask back.
+    reconciliation: >-                   # Checked by test Q04.
+      starting_accounts - churned_accounts + new accounts in the quarter
+      = accounts active at the quarter's end. Q2 2026 per segment: 40 - 4 + 8 = 44.
+    owner: revenue_analytics
+    version: 1.0.0
+    status: approved
+    verified_questions: [G03, Q04]
+    limitations:
+      - Counts accounts, not money. MRR churn is churned_mrr_eur on analytics.mrr_summary_monthly.
+      - An account that leaves and returns inside one quarter counts by its end state.
+    expected_q2_2026:                    # Same for Enterprise, Mid-Market and SMB.
+      starting_accounts: 40
+      churned_accounts: 4
+      logo_churn_rate_pct: 10.0
+    # Counter-example 1: the deck's export-lane check counted every row of
+    # public.customer_master as the base: 4 of 48 = 8.33 %. The 8 accounts that joined in
+    # Q2 were in the base. The population field above excludes them.
+    # Counter-example 2: the recorded AI run searched for status 'active' while the table
+    # stored 'A': 0 of 0, "no rate". zero_denominator: "null" makes the answer "no rate",
+    # never 0 %.
+    # Right by luck: every segment has 40 in its base, so averaging the three 10 % rates
+    # happens to give 10 %. With unequal bases it does not (see METRICS.md, web shop).
+
+  # -----------------------------------------------------------------------------------
+  # 4. expansion_mrr: a CHANGE, one component of net new, by country
+  # -----------------------------------------------------------------------------------
+  - name: expansion_mrr                  # Stable ID.
+    label: Expansion MRR                 # Display name.
+    description: >-
+      Increase in MRR during a complete month from accounts active at both the
+      previous and the current month-end, in EUR, one row per month and country.
+      New accounts are not expansion.
+    type: movement                       # Blank 1: a change (additive).
+    relation: analytics.expansion_mrr_by_country_monthly   # Blank 4.
+    expression: expansion_mrr_eur        # Zero rows are explicit (dense month x country spine).
+    result_grain: one row per complete calendar month per country_code   # Blank 2.
+    valid_dimensions: [month_start, country_code]   # Allowed breakdowns.
+    allowed_values:
+      country_code: [AT, CH, DE, FR, GB, NL, PL, SE]   # ISO 3166-1 alpha-2. 18 accounts each.
+    period_rule: >-                      # Blank 3.
+      For a quarter, add the three complete months per country.
+    completeness: month_start <= complete_through_month
+    additivity:
+      class: additive
+      across_countries: sum              # Each account has one country.
+      across_time: sum
+      time_rollup: sum
+    unit: EUR
+    precision: 0
+    synonyms: [upsell mrr, expansion]    # Safe aliases.
+    ambiguous_terms: [growth]            # Could be net new or expansion: ask back.
+    reconciliation: >-
+      sum over countries of expansion_mrr_eur = expansion_mrr_eur on
+      analytics.mrr_summary_monthly for the same month. Q2 2026 total: 12,895.
+    owner: revenue_analytics
+    version: 1.0.0
+    status: approved
+    verified_questions: [G04]
+    limitations:
+      - Excludes new, contraction and churned MRR. Not revenue.
+    expected_q2_2026:                    # Ordered by value desc, then country_code.
+      CH: 1990
+      DE: 1780
+      FR: 1780
+      SE: 1780
+      NL: 1655
+      PL: 1640
+      AT: 1565
+      GB: 705
+    # Counter-example: the deck's export-lane check summed public.billing_events rows
+    # with type 'E'. That table repeats every 19th movement in a retry batch, so the
+    # recorded export check is higher in four countries (AT 1,955 instead of 1,565; NL
+    # 1,885 instead of 1,655), consistent with the repeated rows. Deduplication belongs in
+    # core, not in the prompt.
+
+  # -----------------------------------------------------------------------------------
+  # 5. account_ending_mrr: the same LEVEL, one row per account
+  # -----------------------------------------------------------------------------------
+  - name: account_ending_mrr             # Stable ID.
+    label: Account ending MRR            # Display name.
+    description: >-
+      MRR of one pseudonymous account at the last instant of a complete month, in
+      EUR, one row per account and month. Never add it across months.
+    type: snapshot                       # Blank 1: a level (semi-additive).
+    relation: analytics.account_mrr_monthly   # Blank 4: the approved account-grain view.
+    expression: ending_mrr_eur
+    result_grain: one row per account_key per complete calendar month   # Blank 2. Dense: 144 x 18 = 2,592 rows.
+    valid_dimensions: [month_start, account_key, customer_segment, country_code, plan_name]
+    period_rule: >-                      # Blank 3.
+      Pick one complete month-end. For "top accounts", filter one month, order by
+      value, then account_key, and LIMIT.
+    completeness: month_start <= complete_through_month
+    additivity:
+      class: semi-additive
+      across_accounts: sum               # Sum of all accounts in a month = ending_mrr (test Q05).
+      across_time: none
+      time_rollup: last_value
+    unit: EUR
+    precision: 0
+    sensitivity: >-                      # Say exactly what kind of key this is.
+      account_key (fl_0001 ... fl_0144) is an approved pseudonymous analytics key, not
+      anonymous. It is stable and joinable. No names, emails or phone numbers exist here.
+    max_rows: 1000                       # Detail queries must carry LIMIT 1000 or fewer.
+    synonyms: [mrr per account, account mrr]
+    ambiguous_terms: [customer, client]  # "Which customer?" may ask for an identity: refuse (R02).
+    owner: revenue_analytics
+    version: 1.0.0
+    status: approved
+    verified_questions: [G05, Q05]
+    limitations:
+      - No direct identifiers. Requests for names or emails are refused (R02) and denied (D01).
+    expected_2026_06_top10:              # account_key: ending_mrr_eur. All Enterprise.
+      fl_0006: 7705
+      fl_0132: 7695
+      fl_0060: 7595
+      fl_0114: 7435
+      fl_0078: 7385
+      fl_0042: 7335
+      fl_0069: 7280
+      fl_0033: 7265
+      fl_0123: 7250
+      fl_0087: 7235
+    # Counter-example: the export-lane check joined public.subscription_export (June 2026
+    # only) to public.customer_master and returned the raw id ("6") as account_key. That
+    # exposes an operational identifier and silently depends on one partial month.
+
+  # -----------------------------------------------------------------------------------
+  # 6. active_accounts: a DISTINCT COUNT (teaching example, served by the month view)
+  # -----------------------------------------------------------------------------------
+  - name: active_accounts                # Stable ID.
+    label: Active accounts               # Display name.
+    description: >-
+      Number of distinct accounts with ending MRR above 0 at the last instant of a
+      complete month, one row per month. Never add it across months.
+    type: distinct_count                 # Blank 1: counts distinct things (non-additive over time).
+    relation: analytics.mrr_summary_monthly   # Blank 4, monthly grain.
+    expression: active_accounts
+    detail_relation: analytics.account_mrr_monthly   # Needed for distinct counts over a longer period.
+    result_grain: one row per complete calendar month   # Blank 2.
+    valid_dimensions: [month_start]
+    period_rule: >-                      # Blank 3: two different questions, two different answers.
+      "Active at quarter end" = the last month-end (June 2026: 132).
+      "Distinct accounts active at any month-end in the quarter" must be counted at
+      account grain with count(DISTINCT account_key) (Q2 2026: 141). Never add the
+      monthly counts (123 + 123 + 132 = 378 account-months, not accounts).
+    completeness: month_start <= complete_through_month
+    additivity:
+      class: non-additive                # Over time. Across segments it adds, because each account has one segment.
+      across_segments: sum               # 44 + 44 + 44 = 132 in June 2026.
+      across_time: none                  # 378 is account-months, not accounts.
+      time_rollup: recompute_distinct_from_detail   # Go down to account grain; never sum the monthly counts.
+    unit: accounts
+    precision: 0
+    synonyms: [paying accounts, customer count at month end]
+    ambiguous_terms: [customers, active customers]   # "Active" in which month, or at any time? Ask back.
+    owner: revenue_analytics
+    version: 1.0.0
+    status: example                      # Taught in the builder kit; not one of the deck's nine cases.
+    verified_questions: [T01]
+    limitations:
+      - Counts accounts with MRR above 0. A trial with MRR 0 is not active.
+    expected:                            # 120 at the end of March; seed splits Q2 movements 2/2/4 new and 1/2/1 churn per segment.
+      "2026-03-01": 120
+      "2026-04-01": 123
+      "2026-05-01": 123
+      "2026-06-01": 132
+      distinct_any_q2_month_end: 141     # 120 - 3 April churners + 24 new.
+    # Counter-example: "FOLDLINE had 378 active accounts in Q2." That adds three
+    # month-end counts. The same account is counted up to three times. FOLDLINE has only
+    # 144 accounts in total.
+
+  # -----------------------------------------------------------------------------------
+  # 7. avg_mrr_per_active_account: an AVERAGE (teaching example, ratio of two sums)
+  # -----------------------------------------------------------------------------------
+  - name: avg_mrr_per_active_account     # Stable ID. Often called ARPA.
+    label: Average MRR per active account
+    description: >-
+      Ending MRR divided by active accounts at the same month-end, in EUR, one row
+      per month. An average is a ratio: never average the averages.
+    type: average                        # Blank 1: sum / count at the same instant (non-additive).
+    relation: analytics.mrr_summary_monthly   # Blank 4: both inputs live in the same row.
+    numerator: ending_mrr_eur            # A level at month end.
+    denominator: active_accounts         # A distinct count at the SAME month end.
+    expression: round(ending_mrr_eur / nullif(active_accounts, 0), 2)
+    result_grain: one row per complete calendar month   # Blank 2.
+    valid_dimensions: [month_start]
+    period_rule: >-                      # Blank 3.
+      For a quarter, return three month-end rows. If one number is required, the owner
+      chose the last month-end (June 2026: 2,931.93). Any other quarterly figure must be
+      recomputed from summed numerators and summed denominators and labelled as such.
+    completeness: month_start <= complete_through_month
+    zero_denominator: "null"             # No active accounts means no average, not 0 EUR.
+    additivity:
+      class: non-additive
+      across_segments: recompute_from_components   # sum(MRR) / sum(accounts), never mean of segment averages.
+      across_time: recompute_from_components
+      time_rollup: last_value            # The written owner choice for a single quarter figure.
+    unit: EUR
+    precision: 2
+    synonyms: [arpa, average revenue per account]   # "revenue" here is a name, not recognised revenue.
+    ambiguous_terms: [average customer value, ltv]  # LTV is not defined: refuse, as R01 does for profit.
+    owner: revenue_analytics
+    version: 1.0.0
+    status: example                      # Taught in the builder kit; not one of the deck's nine cases.
+    verified_questions: [T02]
+    limitations:
+      - An average hides spread. The ten largest accounts each hold more than 7,200 EUR.
+    expected:
+      "2026-04-01": 2720.93              # 334,675 / 123
+      "2026-05-01": 2800.41              # 344,450 / 123
+      "2026-06-01": 2931.93              # 387,015 / 132
+      q2_pooled_account_months: 2820.48  # 1,066,140 / 378, only if labelled "per account-month".
+    # Counter-example 1 (average of averages): (2,720.93 + 2,800.41 + 2,931.93) / 3 =
+    # 2,817.76. It is not the owner's rule (June, 2,931.93). It is close to 2,820.48 (sum of
+    # levels / account-months, meaningful only per account-month) because the monthly counts
+    # are similar. The
+    # web-shop pack shows the same mistake moving a rate from 2.29 % to 5.00 %.
+    # Counter-example 2 (wrong denominator): 387,015 / 144 = 2,687.60 counts churned and
+    # not-yet-started accounts as if they paid 0.
+    # Counter-example 3 (mixed shapes): 1,066,140 / 141 = 7,561.28 divides a sum of
+    # levels (meaningless) by a distinct count over a different window. It is 2.6 times
+    # the true June value and looks precise.

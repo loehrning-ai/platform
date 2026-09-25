@@ -203,9 +203,10 @@ _None._
 | `/artifacts/:path*` | Public static proof or platform asset. |
 | `/ueber-mich/tim-loehr.jpg` | Public static proof or platform asset. |
 | `/logo/:path*` | Public static proof or platform asset. |
-| `/workshops/:slug/:path*` | Public static proof or platform asset. |
+| `/workshops/:slug/assets/:path*` | Public static proof or platform asset. |
 | `/_next/:path*` | Public static proof or platform asset. |
 | `/opengraph-image` | Public static proof or platform asset. |
+| `/workshops/:slug/:path*` | Public workshop bundle file, republished in place; revalidates instead of caching immutably. |
 
 ## Protected patterns
 

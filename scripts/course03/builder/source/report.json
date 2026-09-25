@@ -1,0 +1,63 @@
+{
+ "console": [],
+ "requests": [],
+ "drift": [],
+ "overflow": {
+  "desktop": {
+   "scrollW": 1440,
+   "clientW": 1440,
+   "bad": []
+  },
+  "phone": {
+   "scrollW": 375,
+   "clientW": 375,
+   "bad": []
+  }
+ },
+ "axe": {
+  "desktop-initial": [],
+  "desktop-after": [],
+  "phone": []
+ },
+ "quiz": {
+  "32,380.00": "Matches 32,380 = 387,015 − 354,635: the ",
+  "32 380 EUR": "Matches 32,380 = 387,015 − 354,635: the ",
+  "€32.380": "Matches 32,380 = 387,015 − 354,635: the ",
+  "1,066,140": "Doesn't match 1,066,140 adds three level",
+  "-17,595": "Doesn't match −17,595 is June's change m"
+ },
+ "m8": {
+  "1": [
+   "PROJECT-INSTRUCTIONS.txtguides",
+   "metric-definitions.mdguides",
+   "mrr_summary_monthly.csvenforces",
+   "logo_churn_by_segment_quarter.csvenforces",
+   "expansion_mrr_by_country_monthly.csvenforces",
+   "account_mrr_monthly.csvenforces",
+   "data_status_by_view.csvenforces"
+  ],
+  "2": [
+   "CLAUDE.mdguides",
+   "SKILL.mdguides",
+   "metrics.mdguides",
+   "settings.jsonguardrail",
+   "sql_guard.pyguardrail"
+  ],
+  "3": [
+   ".mcp.jsonguardrail",
+   "settings.jsonguardrail",
+   "sql_guard.pyguardrail",
+   "60_access.sqlenforces"
+  ]
+ },
+ "m10runs": [
+  "Aug 2026 G01–G03 Export tables −€19,960 / €9,775 / €42,565; −€17,595; 0 of 0, no rate 1 each 0 of 3 n/a (not graded)",
+  "Aug 2026 G01–G03 Approved views SQL leaned on a search_path setting 1 each 3 of 3 0 of 3",
+  "Rehearsal G01 Chat A: export CSVs 75,890 / 85,665 / 128,230 labelled Ending MRR 2 0 of 2 n/a (no definition loaded)",
+  "Rehearsal 7 cases Project B: approved files Behaviour 7 of 7. Earlier file set; re-run on current files 1 each 4 of 4 answers (G01, F01, G02, G03) 4 of 4 answers (C01, R01, R02: n/a)"
+ ],
+ "reduced": {
+  "m4": 6,
+  "m7": "Answer: €334,675 / €344,450 / €387,015 MatchesTrace: ending_mrr 1.0.0 · analytic"
+ }
+}

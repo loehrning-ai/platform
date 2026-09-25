@@ -1,0 +1,679 @@
+<a class="skip" href="#main">Skip to the modules</a>
+
+<header class="hero">
+  <div class="wrap">
+    <a class="hero__back" href="./guide.html">&larr; Learner guide</a>
+    <div class="hero__grid"><div class="hero__main">
+    <p class="label eyebrow">Workshop 03 · Data Readiness for AI · Builder guide</p>
+    <h1>Build the approved lane for your own question.</h1>
+    <p class="hero__lede">The workshop asked one question twice. Seven export tables gave a believable wrong answer. Five approved views, a written definition, a read-only login and tests gave the right one. This page shows how to build that middle part, one module at a time.</p>
+    </div>
+    <div class="hero__side">
+    <p class="hero__q"><span class="label">The fixed question</span><span data-q>Show ending MRR by month for the last complete quarter.</span></p>
+    <div class="recap" role="group" aria-label="The workshop result">
+      <div class="recap__lane recap__lane--bad">
+        <span class="label">Export tables</span>
+        <span class="recap__vals" data-recap="bad">−€19,960 / €9,775 / €42,565</span>
+        <span class="chip chip--fail">Doesn't match</span>
+      </div>
+      <div class="recap__lane">
+        <span class="label">Approved views</span>
+        <span class="recap__vals" data-recap="good">€334,675 / €344,450 / €387,015</span>
+        <span class="chip chip--pass"><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span>
+      </div>
+    </div>
+    </div></div>
+    <ul class="doors" aria-label="Pick your door">
+      <li><a class="door" href="#m1"><span class="door__time">5 minutes</span><span class="door__title">Understand</span><span class="door__body">Level or change, what you may add, and what a semantic layer is. No SQL.</span><span class="door__go">Start with module 1</span></a></li>
+      <li><a class="door" href="#m8"><span class="door__time">30 minutes</span><span class="door__title">Claude, no SQL</span><span class="door__body">Set up a Claude Project with the approved files, then ask the same question two ways.</span><span class="door__go">Open module 8</span></a></li>
+      <li><a class="door" href="#m4"><span class="door__time">An afternoon</span><span class="door__title">PostgreSQL</span><span class="door__body">Build source, core and analytics, lock the login, and run 22 database checks.</span><span class="door__go">Open module 4</span></a></li>
+    </ul>
+    <a class="runbook-link" href="#m12">Building for a team? Go straight to the runbook (module 12).</a>
+  </div>
+</header>
+
+<section class="strip" id="strip" aria-label="Fixed question, parts and depth">
+  <div class="wrap strip__in">
+    <p class="qcard"><svg class="icon" aria-hidden="true"><use href="#i-question"/></svg><span class="sr-only">The fixed question: </span><span data-q>Show ending MRR by month for the last complete quarter.</span></p>
+    <nav aria-label="Parts of this guide">
+      <ul class="parts">
+        <li><a href="#part-understand">Understand</a></li>
+        <li><a href="#part-design">Design</a></li>
+        <li><a href="#part-lock">Lock</a></li>
+        <li><a href="#part-prove">Prove</a></li>
+        <li><a href="#part-transfer">Transfer</a></li>
+      </ul>
+    </nav>
+    <fieldset class="depth">
+      <legend>Depth</legend>
+      <label><input type="radio" name="depth" value="beginner" checked><span>Beginner</span></label>
+      <label><input type="radio" name="depth" value="builder"><span>Builder</span></label>
+    </fieldset>
+  </div>
+</section>
+
+<main id="main">
+<div class="wrap">
+
+<!-- ============================================================ PART 1 -->
+<section class="part" id="part-understand" aria-labelledby="part-understand-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">01</span><p class="part__name" id="part-understand-t">Part 1 · Understand</p><p class="part__lede">Three ideas explain the wrong answer. None of them needs SQL.</p></div>
+
+  <!-- M1 -->
+  <article class="mod" id="m1" aria-labelledby="m1-h">
+    <p class="label mod__eyebrow">Module 1 · Understand</p>
+    <h2 id="m1-h">Is this number a level or a change?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Ending MRR is the water level at month end. Net new MRR is the water that flowed in or out during the month. <span class="num" data-n="q2.start">354,635</span> + <span class="num" data-n="q2.netNew">32,380</span> = <span class="num" data-n="q2.end">387,015</span>.</p>
+    <div class="fig" id="m1-fig">
+      <p class="lead">Move through the months. The tub shows the level. The arrow shows the change. The ledger writes the sum.</p>
+      <div class="tub-grid">
+        <div class="tub">
+          <svg id="tub-svg" viewBox="0 0 640 400" role="img" aria-labelledby="tub-title tub-desc">
+            <title id="tub-title">FOLDLINE ending MRR as water in a tub</title>
+            <desc id="tub-desc">A tub filled to the month-end MRR level, with an arrow for the month's change, and a bar chart of month-end levels from December 2025 to June 2026.</desc>
+          </svg>
+          <p class="fig__note" id="tub-key" style="margin:6px 0 0">Tub: ending MRR (level). Arrow: the change.</p>
+          <div class="sr-only"><table id="tub-table"><caption>Ending MRR and net new MRR by month, EUR</caption><thead><tr><th scope="col">Month</th><th scope="col">Ending MRR (level)</th><th scope="col">Net new MRR (change)</th></tr></thead><tbody></tbody></table></div>
+          <div class="scrub">
+            <button class="btn btn--small" type="button" id="tub-prev" aria-label="Previous month">&larr;</button>
+            <label class="sr-only" for="tub-range">Month</label>
+            <input type="range" id="tub-range" min="0" max="6" step="1" value="0" aria-describedby="tub-month">
+            <button class="btn btn--small" type="button" id="tub-next" aria-label="Next month">&rarr;</button>
+          </div>
+          <p class="fig__note">Month: <output id="tub-month" for="tub-range">Dec 2025</output>. Use the arrows or the slider; arrow keys work on the slider.</p>
+        </div>
+        <div>
+          <span class="label">Ledger</span>
+          <ol class="ledger" id="tub-ledger" aria-live="polite"></ol>
+          <div class="fig__controls" style="margin-top:14px">
+            <label class="toggle"><input type="checkbox" id="tub-recorded"> Recorded AI answer</label>
+            <label class="toggle"><input type="checkbox" id="tub-empty"> Start with an empty tub</label>
+          </div>
+          <p class="live" id="tub-live" aria-live="polite"></p>
+        </div>
+      </div>
+      <form class="qbox" id="tub-quiz" novalidate>
+        <div class="field">
+          <label for="tub-answer"><strong>What is Q2 net new MRR?</strong> Type a number in euros.</label>
+          <input type="text" id="tub-answer" inputmode="numeric" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="btn btn--ink" type="submit">Check</button>
+        <button class="btn" type="button" id="tub-reveal">Show the answer</button>
+      </form>
+      <p class="verdict live" id="tub-verdict" aria-live="polite"></p>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>“Ending MRR, end of June: €387,015.” A level, read at one moment.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“Ending MRR, April: −€19,960.” The recorded AI run plotted April's change as the April level.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p><code>monthly_revenue.amount</code> holds each month's change: new + expansion − contraction − churn. Ending MRR cannot be negative here. Right answer to a different question.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
+      <p>Serve the level and the change side by side, and test the identity every month (case Q02). Never ask an AI to rebuild a level from a window of changes: the dry run did exactly that and started the tub empty.</p>
+<pre class="code"><code>-- Q02: previous level + change = level, for every month
+SELECT month_start, ending_mrr_eur, net_new_mrr_eur,
+       lag(ending_mrr_eur) OVER (ORDER BY month_start) + net_new_mrr_eur
+         = ending_mrr_eur AS identity_holds
+FROM analytics.mrr_summary_monthly
+ORDER BY month_start;</code></pre>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/semantic/METRICS.md">semantic/METRICS.md</a><a href="./data-readiness-kit/builder/CHEATSHEET.md">CHEATSHEET.md</a></p>
+  </article>
+
+  <!-- M2 -->
+  <article class="mod" id="m2" aria-labelledby="m2-h">
+    <p class="label mod__eyebrow">Module 2 · Understand</p>
+    <h2 id="m2-h">Can I add these numbers?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Changes add. Levels add across things, never across time. Rates never add: recompute them from their counts.</p>
+    <div class="fig" id="m2-fig">
+      <p class="lead">Pick a card, then pick the tray it belongs in. Each placement shows the number that proves it.</p>
+      <ul class="cards" id="m2-cards" aria-label="Metric cards"></ul>
+      <div class="trays" id="m2-trays">
+        <section class="tray" data-tray="additive" aria-labelledby="tray-a"><button class="btn" type="button" id="tray-a" data-tray-btn="additive">Additive <span aria-hidden="true">+</span></button><p class="tray__hint">Add along every axis.</p><ul></ul></section>
+        <section class="tray" data-tray="semi" aria-labelledby="tray-s"><button class="btn" type="button" id="tray-s" data-tray-btn="semi">Semi-additive <span aria-hidden="true">+</span></button><p class="tray__hint">Add across things, never across time.</p><ul></ul></section>
+        <section class="tray" data-tray="non" aria-labelledby="tray-n"><button class="btn" type="button" id="tray-n" data-tray-btn="non">Non-additive <span aria-hidden="true">+</span></button><p class="tray__hint">Never add. Recompute from the parts.</p><ul></ul></section>
+      </div>
+      <p class="live" id="m2-live" aria-live="polite"></p>
+      <div class="pool" id="m2-pool">
+        <h3>Average or pool?</h3>
+        <p class="lead">A web shop has two channels. Search converts 400 of 20,000 sessions (2 %). Email converts 8 % of its sessions. Move the email sessions and watch which number moves.</p>
+        <label class="field" for="pool-range"><span><strong>Email sessions:</strong> <output id="pool-out" for="pool-range">1,000</output></span>
+          <input type="range" id="pool-range" min="1000" max="20000" step="1000" value="1000"></label>
+        <div class="bars" id="pool-bars" aria-hidden="true"></div>
+        <div class="sr-only"><table id="pool-table"><caption>Conversion rates</caption><tbody></tbody></table></div>
+        <p class="live" id="pool-live" aria-live="polite"></p>
+        <p class="fig__note">FOLDLINE is right by luck: every segment started Q2 with 40 accounts, so the average of three 10.0 % rates equals the pooled 12 of 120. Drag the email sessions to 20,000 and the two methods agree here too. Equal bases hide the bug.</p>
+      </div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Q2 net new: −19,960 + 9,775 + 42,565 = 32,380. Logo churn: recompute 12 of 120 = 10.0 %.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>334,675 + 344,450 + 387,015 = 1,066,140. Or churn over every customer row: 4 of 48 = 8.33 %.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>Three month-end levels added describe nothing. The 48 includes 8 accounts that joined during Q2 and could never have left the starting base.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">YAML</span></summary><div class="builders__body">
+      <p>Write the additivity class on every metric. A tool that reads <code>across_time: none</code> can refuse to sum the level.</p>
+<pre class="code"><code>- slug: ending_mrr
+  aggregation: snapshot         # a level
+  additivity: {class: semi-additive, across_segments: sum, across_time: none, time_rollup: last_value}
+- slug: net_new_mrr
+  aggregation: movement         # a change
+  additivity: {class: additive}
+- slug: logo_churn_rate
+  aggregation: ratio
+  numerator: churned_accounts
+  denominator: starting_accounts   # active at the start of the period (end of the month
+                                   # before it starts): 40 per segment on 1 April
+  zero_denominator: "null"         # 0/0 is no rate, never 0 %
+  additivity: {class: non-additive, time_rollup: recompute_from_components}</code></pre>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/semantic/METRICS.md">semantic/METRICS.md</a><a href="./data-readiness-kit/builder/semantic/metric.yml">semantic/metric.yml</a></p>
+  </article>
+
+  <!-- M3 -->
+  <article class="mod" id="m3" aria-labelledby="m3-h">
+    <p class="label mod__eyebrow">Module 3 · Understand</p>
+    <h2 id="m3-h">What is a semantic layer, and where does it sit?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>A semantic layer is the written layer between your tables and every reader. It says what each number means, which view answers it and what must be refused. The four blanks are a tiny one.</p>
+    <div class="fig" id="m3-fig">
+      <div class="stack" id="m3-stack">
+        <div class="stack__col"><h3>source</h3><p>Feeds exactly as received.</p><span class="mono">source.billing_account_mrr</span></div>
+        <div class="stack__col"><h3>core</h3><p>Renamed, typed, decoded, deduplicated. Identifiers stay here.</p><span class="mono">core.account_months</span></div>
+        <div class="stack__col"><h3>analytics</h3><p>Five approved views, one per question family.</p><span class="mono">analytics.mrr_summary_monthly</span></div>
+        <div class="stack__col is-sem"><h3>semantic files</h3><p>The written meaning.</p><span class="mono">model.yml<br>metric.yml<br>policy.yml<br>verified-questions.yml</span></div>
+        <div class="stack__col is-readers"><h3>readers</h3><p>One definition, four readers.</p><div class="compile" id="m3-readers"></div></div>
+      </div>
+      <div class="fig__controls">
+        <div class="seg" role="group" aria-label="Show the AI panel">
+          <button class="btn" type="button" data-sem="without" aria-pressed="true">Without definitions</button>
+          <button class="btn" type="button" data-sem="with" aria-pressed="false">With definitions</button>
+        </div>
+      </div>
+      <div class="twocol">
+        <div>
+          <span class="label">What the AI has to work with</span>
+          <div class="blanks" id="m3-blanks"></div>
+          <p class="guess" id="m3-guess"></p>
+        </div>
+        <div>
+          <span class="label">What the selected reader receives</span>
+          <div class="panel panel--code" id="m3-file" aria-live="polite"></div>
+          <p style="margin-top:12px"><span class="chip chip--gap">Cited the definition: 0 of 3</span></p>
+          <p class="fig__note">Loaded is not the same as used. Fix: require the metric name and version in every answer's trace, and grade it.</p>
+        </div>
+      </div>
+      <p class="live sr-only" id="m3-live" aria-live="polite"></p>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>One definition, <code>ending_mrr</code> version 1.0.0, copied to the AI tool, the tests, the coding guide and the catalog. Every answer's trace names it.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>The export lane: seven tables and no written meaning. “Three of them sound like the answer.”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>With nothing written down, the AI guessed all four blanks, picked <code>monthly_revenue</code> and labelled a change <code>ending_mrr</code>. A semantic layer guides; it cannot deny. The grants still lock.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">YAML</span></summary><div class="builders__body">
+      <p>The four blanks become four fields, with the same keys as the deck's appendix slide “The full ending MRR contract”: <code>aggregation</code>, <code>result_grain</code>, <code>time_behavior</code> and <code>model</code>. Everything else in <code>metric.yml</code> keeps them checkable.</p>
+<pre class="code"><code>- slug: ending_mrr
+  model: analytics.mrr_summary_monthly   # Which table?
+  aggregation: snapshot                  # Kind of number?
+  result_grain: monthly                  # Rows per what?
+  unit: EUR
+  owner: revenue_analytics
+  freshness_sla_hours: 36
+  time_behavior:                         # Which months?
+    period_rule: end_of_period           # each complete month-end; never sum
+    default_period: last_complete_quarter
+  limitations: [Never sum ending MRR across months.]
+  contract_version: 1.0.0
+  # block 2: the builder's extra fields
+  ambiguous_terms: [mrr, revenue]        # ask back (C01)</code></pre>
+      <p>There is one numbered build order: the runbook in module 12. The semantic layer is built in these runbook steps: <strong>0</strong> question and owner; <strong>1</strong> the four blanks and the case list in <code>verified-questions.yml</code>; <strong>2</strong> truth rows, computed by two people; <strong>6</strong> <code>model.yml</code> and <code>metric.yml</code>; <strong>8</strong> <code>policy.yml</code>; <strong>10</strong> compile by hand to each reader; <strong>9</strong> and <strong>11</strong> test that the readers use it.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/semantic/SEMANTIC-LAYER.md">semantic/SEMANTIC-LAYER.md</a><a href="./data-readiness-kit/builder/semantic/FIELD-REFERENCE.md">semantic/FIELD-REFERENCE.md</a><a href="./data-readiness-kit/builder/semantic/VAGUE-DEFINITION.md">semantic/VAGUE-DEFINITION.md</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ PART 2 -->
+<section class="part" id="part-design" aria-labelledby="part-design-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">02</span><p class="part__name" id="part-design-t">Part 2 · Design</p><p class="part__lede">Where each trap gets fixed, what to call things, and what one row should mean.</p></div>
+
+  <!-- M4 -->
+  <article class="mod" id="m4" aria-labelledby="m4-h">
+    <p class="label mod__eyebrow">Module 4 · Design</p>
+    <h2 id="m4-h">Where does one number come from?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Source keeps the feeds, core makes them true and labelled, analytics serves one plate per question. Each trap is fixed in one layer. The export table was unlabelled, not wrong.</p>
+    <div class="fig" id="m4-fig">
+      <div class="fig__controls">
+        <button class="btn btn--ink" type="button" id="m4-trace">Trace April €334,675 back to the source</button>
+        <label class="toggle"><input type="checkbox" id="m4-direct"> Let the AI read the export directly</label>
+      </div>
+      <div class="lanes" id="m4-lanes">
+        <div class="lane" data-layer="source"><h3>source</h3><p class="fig__note">As received. Never renamed.</p><div class="edge" data-edge="0"></div><div class="lane__body"></div></div>
+        <div class="lane" data-layer="core"><h3>core</h3><p class="fig__note">Rename, type, decode, deduplicate, then tables with keys.</p><div class="edge" data-edge="1"></div><div class="lane__body"></div></div>
+        <div class="lane" data-layer="analytics"><h3>analytics</h3><p class="fig__note">Five views. The AI reads only here.</p><div class="lane__body"></div></div>
+      </div>
+      <p class="label" style="margin-top:16px">Where is each trap fixed?</p>
+      <div class="traps" id="m4-traps"></div>
+      <ol class="ledger" id="m4-ledger" aria-live="polite" style="min-height:0"></ol>
+      <div id="m4-directbox"></div>
+      <p class="live sr-only" id="m4-live" aria-live="polite"></p>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>The AI's login sees five views in <code>analytics</code>. April 334,675 traces to 144 rows in <code>core.account_months</code> and to the feed.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p><code>foldline_bad_reader</code> sees all seven export tables in <code>saas_bad.public</code>.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>The AI got the delivery boxes, not the plate. It picked <code>monthly_revenue</code>, whose sums are exactly the true monthly changes, and read them as levels. The fix is a name and a neighbour, not a different number.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
+      <p>Lineage you can run. The second person recomputes April from the feed, not from the view under test.</p>
+<pre class="code"><code>-- analytics: what the AI reads
+SELECT ending_mrr_eur FROM analytics.mrr_summary_monthly
+WHERE month_start = DATE '2026-04-01';                 -- 334675.00
+-- core: the account grain behind it
+SELECT count(*), count(*) FILTER (WHERE ending_mrr_eur &gt; 0), sum(ending_mrr_eur)
+FROM core.account_months WHERE month_start = DATE '2026-04-01';  -- 144 | 123 | 334675.00
+-- source: the feed, in cents, with a text period
+SELECT sum(mrr_cents) / 100 FROM source.billing_account_mrr
+WHERE period = '2026-04';                               -- 334675</code></pre>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/LAYERS.md">warehouse/LAYERS.md</a><a href="./data-readiness-kit/builder/warehouse/FRESHNESS-LINEAGE.md">warehouse/FRESHNESS-LINEAGE.md</a></p>
+  </article>
+
+  <!-- M5 -->
+  <article class="mod" id="m5" aria-labelledby="m5-h">
+    <p class="label mod__eyebrow">Module 5 · Design</p>
+    <h2 id="m5-h">What would a stranger have to guess?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>A name is the only documentation that travels with every query. Say the shape, the unit and the time; put the grain in the view name; use words, not codes; one key name; always the schema.</p>
+    <div class="fig" id="m5-fig">
+      <div class="fig__controls">
+        <div class="seg" role="group" aria-label="Mode">
+          <button class="btn" type="button" data-m5mode="learn" aria-pressed="true">Learn</button>
+          <button class="btn" type="button" data-m5mode="quiz" aria-pressed="false">Quiz</button>
+        </div>
+        <span class="counter" id="m5-count" aria-live="polite"></span>
+      </div>
+      <p class="lead">These are real column and table names from FOLDLINE's export lane. Pick one.</p>
+      <div class="cols" id="m5-cols" role="group" aria-label="Export names"></div>
+      <div class="panel" id="m5-panel" aria-live="polite" tabindex="-1"></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p><code>analytics.mrr_summary_monthly(month_start, ending_mrr_eur, net_new_mrr_eur)</code>. Level and change side by side, unit in the name, grain in the view name.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p><code>monthly_revenue(dt, segment, amount)</code>, and the recorded run's alias <code>SUM(amount) AS ending_mrr</code>.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p><code>amount</code> says nothing about shape. The alias turned a guess into a label, and the deck's checklist counted “Column named ending_mrr” as a reason to trust it.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
+      <p>A comment is a name that can hold a sentence: shape, unit and grain, plus one “never”. Test Q06 checks that every view comment carries the definition version.</p>
+<pre class="code"><code>COMMENT ON COLUMN analytics.mrr_summary_monthly.ending_mrr_eur IS
+  'Level: recurring value active at the final instant of the month, EUR.
+   Never sum across months; for a quarter return each month or the last month.';
+-- Lint: every served column that uses a banned name
+SELECT table_schema, table_name, column_name
+FROM information_schema.columns
+WHERE table_schema = 'analytics'
+  AND column_name IN ('amount','value','total','dt','date','ts','seg','status','state','type','id','mrr');</code></pre>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/naming/NAMING-RULES.md">naming/NAMING-RULES.md</a><a href="./data-readiness-kit/builder/naming/NAMING-REVIEW.md">naming/NAMING-REVIEW.md</a><a href="./data-readiness-kit/builder/naming/lint_names.sql">naming/lint_names.sql</a></p>
+  </article>
+
+  <!-- M6 -->
+  <article class="mod" id="m6" aria-labelledby="m6-h">
+    <p class="label mod__eyebrow">Module 6 · Design</p>
+    <h2 id="m6-h">Rows per what?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Serve the grain the question needs, not the lowest grain you have. Put the level beside its change, the rate beside its counts, and the data state on every row.</p>
+    <div class="fig" id="m6-fig">
+      <div class="twocol">
+        <div>
+          <canvas class="grain-canvas" id="grain-canvas" width="720" height="360" role="img" aria-labelledby="grain-cap"></canvas>
+          <p class="sr-only" id="grain-cap">Dots for FOLDLINE rows at the chosen grain.</p>
+          <label class="sr-only" for="grain-range">Grain</label>
+          <input type="range" id="grain-range" min="0" max="2" step="1" value="0" aria-describedby="grain-out">
+          <div class="stops" aria-hidden="true"><span>account-month</span><span>segment-month</span><span>month</span></div>
+          <p class="fig__note"><output id="grain-out" for="grain-range">2,592 rows: one per account and month</output></p>
+        </div>
+        <div>
+          <span class="label">Which questions can this grain answer?</span>
+          <ul class="qlist" id="grain-qs" aria-live="polite"></ul>
+        </div>
+      </div>
+      <h3 style="margin-top:28px">The blueprint: two serving views</h3>
+      <p class="lead">Pick a rule to see the lines that implement it, or pick a line to see its rule.</p>
+      <div class="ddl-grid">
+        <ul class="rules" id="ddl-rules"></ul>
+        <div>
+          <pre class="code" id="ddl-mrr" role="group" aria-label="View definition of analytics.mrr_summary_monthly"></pre>
+          <pre class="code" id="ddl-churn" role="group" aria-label="View definition of analytics.logo_churn_by_segment_quarter"></pre>
+          <div class="fig__controls"><label class="toggle"><input type="checkbox" id="ddl-break"> <span>Break it: remove <code>starting_accounts</code></span></label></div>
+          <div id="ddl-broken" aria-live="polite"></div>
+        </div>
+      </div>
+      <h3 style="margin-top:28px">View, materialized view or table?</h3>
+      <div class="tabs" role="tablist" aria-label="Serving object" id="tradeoff-tabs"></div>
+      <div id="tradeoff-panel" role="tabpanel" tabindex="0"></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p><code>starting_accounts</code> 40, <code>churned_accounts</code> 4 and <code>logo_churn_rate_pct</code> 10.0 in one row, with <code>period_start</code> and <code>period_end_exclusive</code>.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>One mega-view at account-month grain “so the AI can answer anything”, or a <code>churn_rate</code> column alone.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>The AI must aggregate levels itself; adding three month-ends gives 1,066,140. A rate without counts cannot be checked or pooled.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">rules</span></summary><div class="builders__body">
+      <p>Twelve serving rules: grain in name and key; level beside change; rate beside its counts; data state on every row; complete periods only; half-open periods; money as <code>numeric</code>; a dense spine with explicit zeros; no direct identifiers; readable values; no <code>now()</code> in a view; one view per question family.</p>
+      <p>Views run with the owner's rights. Own them with a NOLOGIN, non-superuser role (<code>foldline_owner</code>), and grant the reader SELECT on each view by name.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/SERVING-VIEWS.md">warehouse/SERVING-VIEWS.md</a><a href="./data-readiness-kit/builder/warehouse/sql/40_analytics.sql">warehouse/sql/40_analytics.sql</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ PART 3 -->
+<section class="part" id="part-lock" aria-labelledby="part-lock-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">03</span><p class="part__name" id="part-lock-t">Part 3 · Lock and connect</p><p class="part__lede">Instructions guide. Grants enforce. Connect Claude only after the lock holds.</p></div>
+
+  <!-- M7 -->
+  <article class="mod" id="m7" aria-labelledby="m7-h">
+    <p class="label mod__eyebrow">Module 7 · Lock and connect</p>
+    <h2 id="m7-h">Which gate actually stops a request?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Two locks: refuse early, enforce anyway. Instructions and Skills <strong>guide</strong>; a hook and a read-only default are a <strong>guardrail</strong>; only the database role <strong>enforces</strong>. Guides and guardrails belong to the first lock (refuse early). Only the database role is the second lock (enforce anyway).</p>
+    <div class="fig" id="m7-fig">
+      <fieldset class="reqs" id="m7-reqs"><legend>Pick a request</legend></fieldset>
+      <div class="fig__controls">
+        <button class="btn btn--ink" type="button" id="m7-send">Send</button>
+        <label class="toggle"><input type="checkbox" id="m7-ignore"> Instructions ignored</label>
+        <label class="toggle"><input type="checkbox" id="m7-temp"> TEMP not revoked</label>
+        <label class="toggle"><input type="checkbox" id="m7-super"> Connect as superuser</label>
+      </div>
+      <div class="gates" id="m7-gates"><span class="packet" id="m7-packet" hidden></span></div>
+      <div class="result" id="m7-result" aria-live="polite"><p>Pick a request and press Send.</p></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>The AI's login may read five approved views and nothing else. It cannot write, cannot make scratch copies, and cannot open the export database.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“The prompt says don't read emails, and the login is read-only, so we're safe.”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>A prompt is advice. Read-only is a default the session can switch off with one command. On PostgreSQL 16 the reader could still create a scratch table, because every new database lets everyone do that until you revoke it.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
+      <p>In database terms: <code>foldline_ready_reader</code> gets SELECT on five views, no TEMP, no CREATE, no CONNECT on <code>saas_bad</code>, and <code>search_path = ''</code>. Read-only is a default: <code>BEGIN READ WRITE</code> switches it off. A new database grants TEMP to PUBLIC, so with TEMP left to PUBLIC the reader created a temp table on PostgreSQL 16 (case B-T01).</p>
+      <p>An allowlist, not a denylist. Every line below is a lock except the last three, which are guardrails.</p>
+<pre class="code"><code>REVOKE ALL ON DATABASE saas_ready FROM PUBLIC;       -- removes TEMP and CONNECT
+REVOKE CONNECT ON DATABASE saas_bad FROM PUBLIC;
+GRANT CONNECT ON DATABASE saas_ready TO foldline_ready_reader;
+GRANT USAGE ON SCHEMA analytics TO foldline_ready_reader;
+GRANT SELECT ON analytics.mrr_summary_monthly,
+               analytics.logo_churn_by_segment_quarter,
+               analytics.expansion_mrr_by_country_monthly,
+               analytics.account_mrr_monthly,
+               analytics.data_status_by_view TO foldline_ready_reader;
+-- guardrails: defaults the reader can change, not locks
+ALTER ROLE foldline_ready_reader SET default_transaction_read_only = on;
+ALTER ROLE foldline_ready_reader SET statement_timeout = '5s';
+ALTER ROLE foldline_ready_reader SET search_path = '';</code></pre>
+      <p>Test as the login, not with <code>SET ROLE</code>: role settings load only at login.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/ACCESS.md">warehouse/ACCESS.md</a><a href="./data-readiness-kit/builder/warehouse/sql/60_access.sql">warehouse/sql/60_access.sql</a><a href="./data-readiness-kit/builder/semantic/policy.yml">semantic/policy.yml</a></p>
+  </article>
+
+  <!-- M8 -->
+  <article class="mod" id="m8" aria-labelledby="m8-h">
+    <p class="label mod__eyebrow">Module 8 · Lock and connect</p>
+    <h2 id="m8-h">Which file goes where, and what does it do?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Pick the smallest Claude setup that answers your question. Every file carries one of the three labels from module 7: it <strong>guides</strong>, it is a <strong>guardrail</strong>, or it <strong>enforces</strong>. Credentials live only in the environment.</p>
+    <div class="fig" id="m8-fig">
+      <div class="tabs" role="tablist" aria-label="Claude setup" id="m8-tabs"></div>
+      <div class="twocol" id="m8-panel" role="tabpanel" tabindex="0">
+        <div><p class="lead" id="m8-setup-lead"></p><ul class="tree" id="m8-tree"></ul><p class="envvar" id="m8-env">FOLDLINE_READY_DSN (environment variable, set outside every file)</p></div>
+        <div class="excerpt" id="m8-excerpt" aria-live="polite"></div>
+      </div>
+      <div class="fig__controls" style="margin-top:14px"><button class="btn" type="button" id="m8-cred" aria-pressed="false">Where do credentials go?</button></div>
+      <p class="live" id="m8-live" aria-live="polite"></p>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p><code>.mcp.json</code> names <code>${FOLDLINE_READY_DSN}</code>. The value lives in your shell or a secret manager and logs in as <code>foldline_ready_reader</code>.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>A connection string pasted into <code>CLAUDE.md</code> “for convenience”, or the export CSVs uploaded to the Project “for context”.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>Claude reads the file and it often gets committed. Uploaded look-alikes bring back the choice between seven tables.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">checks</span></summary><div class="builders__body">
+      <p>Done when: every reader shows <code>ending_mrr</code> version 1.0.0; the connector logs in as <code>foldline_ready_reader</code>; no credential appears in any file; D01 is denied through the connector. Claude features change; verify file names and formats against the current Claude documentation before you rely on them.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/claude/README.md">claude/README.md</a><a href="./data-readiness-kit/builder/claude/CONNECTOR.md">claude/CONNECTOR.md</a><a href="./data-readiness-kit/builder/claude-demo/README.md">claude-demo/README.md</a><a href="./data-readiness-kit/agent/CLAUDE.example.md">agent/CLAUDE.example.md</a></p>
+  </article>
+
+  <!-- M9 -->
+  <article class="mod" id="m9" aria-labelledby="m9-h">
+    <p class="label mod__eyebrow">Module 9 · Lock and connect</p>
+    <h2 id="m9-h">How old may the data be?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Warn after 36 hours and still answer. Block only on a written rule: an incomplete period or a failing quality check. Never invent an expiry.</p>
+    <div class="fig" id="m9-fig">
+      <label class="field" for="age-range"><span><strong>Age of the data:</strong> <output id="age-out" for="age-range">3 h</output> <span class="fig__note" id="age-clock"></span></span>
+        <input type="range" id="age-range" min="0" max="72" step="1" value="3" list="age-marks"></label>
+      <datalist id="age-marks"><option value="3"></option><option value="36"></option><option value="60"></option></datalist>
+      <div class="clock-bar" id="age-bar" aria-hidden="true"><span class="fill"></span></div>
+      <div class="clock-labels" id="age-labels" aria-hidden="true"></div>
+      <div class="fig__controls">
+        <label class="toggle"><input type="checkbox" id="age-q3"> Q3 requested</label>
+        <label class="toggle"><input type="checkbox" id="age-quality"> Quality check failing</label>
+        <label class="toggle"><input type="checkbox" id="age-invent"> Invent a 48 h expiry</label>
+      </div>
+      <div class="answer-card" id="age-card" aria-live="polite"></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>At 60 hours: answer, state the load time (2026-07-01 06:00 UTC) and the age, and escalate to <code>revenue_analytics</code>.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“Older than 48 hours: refuse.” Or a 60-hour snapshot returned with no warning.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>Nobody wrote a 48-hour rule, so the next run behaves differently and no test can be written. Hiding the age lets right meaning pass as fresh data.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
+      <p>The view stores facts; the caller supplies the clock. No <code>now()</code> in a view, so F00 and F01 can run on frozen clocks.</p>
+<pre class="code"><code>SELECT view_name, warn_after_hours, hard_expiry_hours,   -- 36, NULL
+       extract(epoch FROM (TIMESTAMPTZ '2026-07-01 09:00:00+00'
+                           - data_loaded_at_utc)) / 3600 AS age_hours   -- 3
+FROM analytics.data_status_by_view
+WHERE view_name = 'analytics.mrr_summary_monthly';</code></pre>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/FRESHNESS-LINEAGE.md">warehouse/FRESHNESS-LINEAGE.md</a><a href="./data-readiness-kit/builder/semantic/policy.yml">semantic/policy.yml</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ PART 4 -->
+<section class="part" id="part-prove" aria-labelledby="part-prove-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">04</span><p class="part__name" id="part-prove-t">Part 4 · Prove</p><p class="part__lede">Write the truth first. Keep the two kinds of evidence apart.</p></div>
+
+  <!-- M10 -->
+  <article class="mod" id="m10" aria-labelledby="m10-h">
+    <p class="label mod__eyebrow">Module 10 · Prove</p>
+    <h2 id="m10-h">What do the tests prove, and what do they not?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Tests check the setup, not the AI. Database checks and AI runs are two evidence planes; they never share a total, and any change invalidates both. The workshop ran 9 course tests; this builder's <code>70_checks.sql</code> runs 22. Neither number grades the AI.</p>
+    <div class="fig" id="m10-fig">
+      <p class="label">Which test catches this mistake?</p>
+      <div class="aps-chips" id="m10-chips"></div>
+      <div class="bench">
+        <section class="plane" aria-labelledby="plane-db">
+          <div class="plane__head"><h3 id="plane-db">Database plane: 70_checks.sql</h3><button class="btn btn--small" type="button" id="m10-replay">Replay</button></div>
+          <ol class="checks" id="m10-checks" aria-label="Recorded check output, logged in as foldline_ready_reader"></ol>
+          <p class="total" id="m10-dbtotal">DB CHECKS 22 of 22 PASS. 0 SKIP. 0 FAIL.</p>
+          <p class="fig__note" id="m10-count-note"><strong>Why 22, when the deck showed 9 of 9?</strong> They are not the same suite. The workshop ran 9 course tests: G01–G05, D01 and three policy cases (C01, R01, R02). A database cannot test a clarify or a refuse, so those three move to the AI run log. This builder's <code>70_checks.sql</code> keeps G01–G05 and D01 and adds access (B-), reconciliation and lineage (Q-), teaching (T-) and freshness (F-) checks: 6 + 5 + 7 + 2 + 2 = 22. Neither number grades the AI. The quick start shows 21 of 21 and 1 SKIP until you log in as the reader: B-S01 needs the login's settings.</p>
+        </section>
+        <section class="plane" aria-labelledby="plane-ai">
+          <div class="plane__head"><h3 id="plane-ai">AI plane: run log</h3><span class="chip chip--gap">An observation, not a benchmark</span></div>
+          <table class="runs" id="m10-runs"><thead><tr><th scope="col">When</th><th scope="col">AI route</th><th scope="col">Runs</th><th scope="col">Values</th><th scope="col">Cited</th></tr></thead><tbody></tbody></table>
+          <p class="total">No total. One or two runs per case: observations.</p>
+          <p class="fig__note">Values and Cited count only answer cases. A clarify or a refuse returns no value and cites no metric, so it counts as behaviour only. The deck graded the definition citation on the approved lane only.</p>
+        </section>
+      </div>
+      <div class="fig__controls" style="margin-top:14px"><button class="btn" type="button" id="m10-version" aria-pressed="false">Change the metric version to 2.0.0</button></div>
+      <p class="live" id="m10-live" aria-live="polite"></p>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>“DB CHECKS 22 of 22 PASS. These test the database and course rules, not the AI.” AI runs logged separately, three per case.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“The deck's 9 of 9 tests pass, so the AI scores 9 of 9.”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>The deck's 9 of 9 (22 checks in this builder) never asked the AI anything. The recorded approved-lane runs matched 3 of 3 values and cited the definition 0 of 3; an average would hide that gap.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">run it</span></summary><div class="builders__body">
+      <p>From the <code>warehouse/</code> folder:</p>
+<pre class="code"><code>psql -X -v ON_ERROR_STOP=1 -d postgres -f sql/00_build_all.sql      # builds and checks, mode A
+psql -X -d postgres -f sql/65_local_login.sql                        # local sandbox only
+psql -X -d saas_ready -U foldline_ready_reader -f sql/70_checks.sql  # full proof, mode B</code></pre>
+      <p>Add <code>-h</code>, <code>-p</code> and <code>-U</code>, or set <code>PGHOST</code>, <code>PGPORT</code> and <code>PGUSER</code>, as in <code>warehouse/README.md</code>. Keep any password in your shell or <code>~/.pgpass</code>, never in a file.</p>
+      <p>Any failing check makes psql exit with code 3, so a CI job fails. Write expected rows before any AI run, computed twice by two people, never by the AI under test.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/TESTS.md">warehouse/TESTS.md</a><a href="./data-readiness-kit/builder/semantic/verified-questions.yml">semantic/verified-questions.yml</a><a href="./data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md">claude-demo/AI-RUN-LOG.md</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ PART 5 -->
+<section class="part" id="part-transfer" aria-labelledby="part-transfer-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">05</span><p class="part__name" id="part-transfer-t">Part 5 · Transfer</p><p class="part__lede">Your data is about helmets, people, visits or tickets. The traps are the same.</p></div>
+
+  <!-- M11 -->
+  <article class="mod" id="m11" aria-labelledby="m11-h">
+    <p class="label mod__eyebrow">Module 11 · Transfer</p>
+    <h2 id="m11-h">Do the same four blanks work in my domain?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Every business has levels, changes and rates. Fill the same four blanks, write the same identity as a test, and rename the same kinds of bad columns.</p>
+    <div class="fig" id="m11-fig">
+      <div class="tabs" role="tablist" aria-label="Domain" id="m11-tabs"></div>
+      <div id="m11-panel" role="tabpanel" tabindex="0"></div>
+      <div class="fig__controls" style="margin-top:16px"><button class="btn" type="button" id="m11-yours" aria-expanded="false" aria-controls="m11-yourcard">Try yours</button></div>
+      <div id="m11-yourcard" hidden></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>“Show helmets on hand at month end for each month of Q2 2026 at the Harbour store.” Period, shape and grain.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“How much stock do we have?”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>No period, no store, no unit: units on hand, or value in EUR? Nothing to test, so nothing to build.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">run it</span></summary><div class="builders__body">
+      <p>From the <code>builder/</code> folder:</p>
+<pre class="code"><code>createdb domain_packs
+psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/retail_inventory.sql
+psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/people_headcount.sql
+psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/webshop_conversion.sql
+psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/support_backlog.sql
+dropdb domain_packs</code></pre>
+      <p>Add <code>-h</code>, <code>-p</code> and <code>-U</code>, or set <code>PGHOST</code>, <code>PGPORT</code> and <code>PGUSER</code>, as in <code>warehouse/README.md</code>.</p>
+      <p>The wrong answers in the packs are plausible, not recorded. FOLDLINE's recorded runs (one per question per lane) and the logged rehearsal runs are the only AI evidence in this course; the domain-pack wrong answers are arithmetic, not AI runs.</p>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/domains/README.md">domains/README.md</a><a href="./data-readiness-kit/builder/domains/RETAIL-INVENTORY.md">RETAIL-INVENTORY.md</a><a href="./data-readiness-kit/builder/domains/PEOPLE-HEADCOUNT.md">PEOPLE-HEADCOUNT.md</a><a href="./data-readiness-kit/builder/domains/WEBSHOP-CONVERSION.md">WEBSHOP-CONVERSION.md</a><a href="./data-readiness-kit/builder/domains/SUPPORT-BACKLOG.md">SUPPORT-BACKLOG.md</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ PART 6 -->
+<section class="part" id="part-build" aria-labelledby="part-build-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">06</span><p class="part__name" id="part-build-t">Part 6 · Build</p><p class="part__lede">The five boxes are the design order. This is the build order.</p></div>
+
+  <!-- M12 -->
+  <article class="mod" id="m12" aria-labelledby="m12-h">
+    <p class="label mod__eyebrow">Module 12 · Build</p>
+    <h2 id="m12-h">In which order do I build it, and when is it ready?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>One question end to end. Write the truth before any AI is connected. Every step ends with evidence you can run. The weakest control decides the verdict.</p>
+    <div class="fig" id="m12-fig">
+      <div class="fig__controls">
+        <button class="btn btn--ink" type="button" id="m12-example">Load the FOLDLINE example</button>
+        <button class="btn" type="button" id="m12-clear">Clear all</button>
+      </div>
+      <div class="runbook">
+        <ol class="steps" id="m12-steps"></ol>
+        <aside class="gatebox" id="m12-gate" aria-labelledby="m12-gate-h">
+          <h3 id="m12-gate-h">Ship rule: the weakest gate decides</h3>
+          <ul id="m12-gates"></ul>
+          <div class="vd" id="m12-verdict" aria-live="polite"></div>
+        </aside>
+      </div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Lock access in step 7 before Claude connects in step 10. The verdict names the weakest gate.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“Four of five gates green: 80 % ready.”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>A weak control hides behind the average. FOLDLINE's citation gap (0 of 3) keeps it at “limited pilot, not signed off”, however green the database checks are.</p></div>
+    </div>
+    <details class="builders"><summary>For builders <span class="label">re-run triggers</span></summary><div class="builders__body">
+      <table class="tbl tbl--stack"><thead><tr><th scope="col">Change</th><th scope="col">Re-run</th></tr></thead><tbody>
+        <tr><td data-label="Change">Schema change</td><td data-label="Re-run">Steps 5–11</td></tr>
+        <tr><td data-label="Change">Metric version change</td><td data-label="Re-run">Steps 6, 9–11; a major bump re-runs every case</td></tr>
+        <tr><td data-label="Change">Policy or grant change</td><td data-label="Re-run">Steps 7–11</td></tr>
+        <tr><td data-label="Change">Data load</td><td data-label="Re-run">Step 9 (Q and F cases), step 11 spot checks</td></tr>
+        <tr><td data-label="Change">AI route, instructions, Skill or CLAUDE.md</td><td data-label="Re-run">Step 11</td></tr>
+      </tbody></table>
+    </div></details>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/BUILD-ORDER.md">BUILD-ORDER.md</a><a href="./data-readiness-kit/READY-CANVAS.md">READY-CANVAS.md</a><a href="./data-readiness-kit/QUESTION-CARD.md">QUESTION-CARD.md</a></p>
+  </article>
+</section>
+
+<!-- ============================================================ REFERENCE -->
+<section class="part" id="reference" aria-labelledby="reference-t">
+  <div class="part__head"><span class="part__num" aria-hidden="true">07</span><p class="part__name" id="reference-t">Reference</p><p class="part__lede">Every known failure in one list, the words, and the files.</p></div>
+
+  <!-- M13 -->
+  <article class="mod" id="m13" aria-labelledby="m13-h">
+    <p class="label mod__eyebrow">Module 13 · Reference</p>
+    <h2 id="m13-h">Which mistake am I looking at?</h2>
+    <p class="oneline"><span class="label">Say it in one line</span>Search by symptom. Each entry names the FOLDLINE instance, why it fails, the fix and the test that catches it.</p>
+    <div class="fig" id="m13-fig">
+      <div class="filters" id="m13-filters" role="group" aria-label="Filter by layer"></div>
+      <div class="field" style="max-width:420px;margin-bottom:12px"><label for="m13-q">Filter by text</label><input type="search" id="m13-q" autocomplete="off" placeholder="for example: churn, TEMP, alias"></div>
+      <p class="live" id="m13-count" aria-live="polite"></p>
+      <ul class="aplist" id="m13-list"></ul>
+      <div class="print-only" id="m13-print"></div>
+    </div>
+    <div class="triple">
+      <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Start with the five that matter most: AP-M01, AP-A01, AP-C02, AP-T04, AP-E03.</p></div>
+      <div class="t-bad"><h3>Counter-example</h3><p>“Something looks off; let's rephrase the prompt.”</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>A clearer prompt can move the failure, not remove it. The dry run did not repeat −19,960 and still labelled 75,890 as Ending MRR.</p></div>
+    </div>
+    <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/ANTI-PATTERNS.md">ANTI-PATTERNS.md</a><a href="./data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md">ANTI-PATTERN-GALLERY.md</a></p>
+  </article>
+
+  <article class="mod" id="glossary" aria-labelledby="glossary-h">
+    <p class="label mod__eyebrow">Reference · Words</p>
+    <h2 id="glossary-h">Glossary</h2>
+    <p class="lead">Start with the first block if you have never written SQL. The words below it are for building.</p>
+    <dl class="gloss">
+      <dt>MRR</dt><dd>Monthly recurring revenue: what accounts pay per month for their subscriptions. FOLDLINE's ending MRR at the end of June 2026 is €387,015. It is not revenue in the accounting sense, not cash and not profit.</dd>
+      <dt>Level, change, rate</dt><dd>Three kinds of number. A <strong>level</strong> is measured at one moment (ending MRR, €387,015 on 30 June). A <strong>change</strong> is what flowed in or out during a period (net new MRR, +€42,565 in June). A <strong>rate</strong> is one count divided by another (logo churn, 4 of 40 = 10.0 %).</dd>
+      <dt>Four blanks</dt><dd>The four things the AI had to guess in the workshop: Kind of number? Rows per what? Which months? Which table? For ending MRR: a level; one row per month; each complete month, never added; <code>analytics.mrr_summary_monthly</code>.</dd>
+      <dt>Five boxes</dt><dd>The question card from the workshop: the question, the approved view, the four blanks, the boundary (what must be refused) and the test. They are the design order; the runbook in module 12 is the build order.</dd>
+      <dt>Schema</dt><dd>A named folder of tables and views inside a database. FOLDLINE has <code>source</code>, <code>core</code> and <code>analytics</code>; the AI may look only in <code>analytics</code>.</dd>
+      <dt>View</dt><dd>A saved query that looks like a table. <code>analytics.mrr_summary_monthly</code> is a view: it holds no copy of the data, it computes its rows from <code>core</code> each time it is read.</dd>
+      <dt>Login and role</dt><dd>The name the AI uses to connect to the database. PostgreSQL calls it a role; a role that may connect is a login. FOLDLINE's AI connects as <code>foldline_ready_reader</code>.</dd>
+      <dt>Grant</dt><dd>A permission given to a role: who may read what. <code>foldline_ready_reader</code> has SELECT on five views and nothing else. Everything not granted fails with SQLSTATE 42501, “permission denied”.</dd>
+      <dt>Trace</dt><dd>The last part of an answer that says where it came from: metric name and version, view or file, period, unit, load time and data age. The recorded runs cited the definition 0 of 3; the trace is what makes that visible.</dd>
+      <dt>Pooled rate</dt><dd>Total numerator ÷ total denominator. Churn for all segments: 12 of 120 = 10.0 %. Web shop: 480 orders of 21,000 sessions = 2.29 %, not the average of 2 % and 8 %.</dd>
+      <dt>Pseudonymous key</dt><dd>A stand-in for an identity, such as <code>fl_0006</code>. It is not a name or an email, but it is stable and joinable, so it can be linked back. Pseudonymous is not anonymous.</dd>
+      <dt>Guardrail</dt><dd>A check in your application, or a default setting, that the reader can bypass: a hook, a read-only default, a connector setting. It narrows mistakes, but it is not a lock. Guides and guardrails belong to the first lock (refuse early); only the database role is the second lock (enforce anyway).</dd>
+      <dt>Semantic layer</dt><dd>The written layer between tables and readers: what each number means, which view answers it, what must be refused. In this kit: <code>model.yml</code>, <code>metric.yml</code>, <code>policy.yml</code>, <code>verified-questions.yml</code>.</dd>
+      <dt>Additive</dt><dd>May be added along every axis. Changes such as net new MRR are additive.</dd>
+      <dt>Semi-additive</dt><dd>May be added across things, never across time. Levels such as ending MRR are semi-additive.</dd>
+      <dt>Non-additive</dt><dd>Never added. Rates, averages and distinct counts are recomputed from their parts.</dd>
+      <dt>Grain</dt><dd>What one row stands for. “One row per account and month” and “one row per month” are different grains.</dd>
+      <dt>Serving view</dt><dd>A view in <code>analytics</code> cut to one question family, with approved names, units, data-state columns and complete periods only.</dd>
+      <dt>Allowlist</dt><dd>A list of what is allowed; everything else is denied. The reader may SELECT five named views. A denylist lets a new schema through the day it appears.</dd>
+      <dt>MCP</dt><dd>Model Context Protocol: a standard way to connect an AI tool to a data source. A database connector over MCP logs in with whatever login you give it, so give it the read-only reader.</dd>
+      <dt>Skill</dt><dd>A folder with a <code>SKILL.md</code> file that Claude loads when its description matches the task, for example <code>.claude/skills/foldline-analytics/SKILL.md</code>. It guides; it does not enforce.</dd>
+      <dt>Hook</dt><dd>A command Claude Code runs at a fixed point, for example before a tool call. A hook can block a query that is not on the allowlist. It is a guardrail in your application, not a database lock.</dd>
+      <dt>Evaluation clock</dt><dd>The stated “now” used to judge freshness and periods: 2026-07-01 09:00 UTC in the course. Tests use a frozen clock, never <code>now()</code>.</dd>
+    </dl>
+  </article>
+
+  <article class="mod" id="downloads" aria-labelledby="downloads-h">
+    <p class="label mod__eyebrow">Reference · Files</p>
+    <h2 id="downloads-h">Downloads</h2>
+    <ul class="downloads">
+      <li><a href="./data-readiness-kit.zip" download><strong>Workshop kit</strong><span class="mono">data-readiness-kit.zip</span></a></li>
+      <li><a href="./data-readiness-kit/builder/README.md"><strong>Builder kit: start here</strong><span class="mono">builder/README.md</span></a></li>
+      <li><a href="./data-readiness-kit/builder/CHEATSHEET.md"><strong>One-page cheat sheet</strong><span class="mono">builder/CHEATSHEET.md</span></a></li>
+      <li><a href="./data-readiness-kit/builder/BUILD-ORDER.md"><strong>Build order, steps 0–11</strong><span class="mono">builder/BUILD-ORDER.md</span></a></li>
+      <li><a href="./data-readiness-kit/builder/semantic/metric.yml"><strong>Annotated metric file</strong><span class="mono">builder/semantic/metric.yml</span></a></li>
+      <li><a href="./data-readiness-kit/builder/warehouse/sql/00_build_all.sql"><strong>One-command PostgreSQL build</strong><span class="mono">builder/warehouse/sql/00_build_all.sql</span></a></li>
+      <li><a href="./data-readiness-kit/builder/naming/lint_names.sql"><strong>Naming lint</strong><span class="mono">builder/naming/lint_names.sql</span></a></li>
+      <li><a href="./data-readiness-kit/builder/claude-demo/README.md"><strong>Live Claude demo</strong><span class="mono">builder/claude-demo/README.md</span></a></li>
+      <li><a href="./data-readiness-kit/readiness-lab.html"><strong>The 12-minute lab</strong><span class="mono">readiness-lab.html</span></a></li>
+    </ul>
+  </article>
+</section>
+
+</div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="label">Evidence rules</p>
+    <ul>
+      <li>One run is an observation, not a benchmark.</li>
+      <li>Two runs share an AI route, not a proven model version: say “same AI route”.</li>
+      <li>The database checks test the setup and course rules, not the AI.</li>
+      <li>Loaded is not the same as used: the runs cited the definition 0 of 3.</li>
+      <li>Two locks: refuse early, enforce anyway.</li>
+      <li>FOLDLINE's verdict stays “limited pilot, not signed off”.</li>
+    </ul>
+    <p>FOLDLINE is a synthetic company. Every number on this page is synthetic teaching data: 144 business accounts, EUR, UTC. Do not paste employer data, personal records or credentials into any file, chat or demo. Nothing on this page certifies production readiness.</p>
+    <p>Claude features change; verify current docs.</p>
+    <p><a href="./guide.html">Learner guide</a> · <a href="./slides.html">Interactive course</a> · <a href="./data-readiness-kit/readiness-lab.html">12-minute lab</a></p>
+  </div>
+</footer>

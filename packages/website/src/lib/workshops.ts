@@ -83,6 +83,18 @@ export interface WorkshopDecisionFeedback {
 }
 
 /**
+ * Feedback for one specific non-recommended decision. A wrong pick is
+ * answered in terms of what the learner actually chose, so a message about
+ * one distractor never appears after another was picked.
+ */
+export interface WorkshopDecisionChoiceFeedback {
+  /** The learner picked this decision together with the strongest evidence. */
+  readonly evidenceOnly?: WorkshopDecisionFeedback;
+  /** The learner picked this decision with weaker evidence. */
+  readonly unsupported?: WorkshopDecisionFeedback;
+}
+
+/**
  * One bounded first decision rendered locally on the workshop detail page.
  * The component receives this copy-only configuration and never persists or
  * transmits a learner's selection.
@@ -107,6 +119,10 @@ export interface WorkshopDecisionLabConfig {
     readonly decisionOnly: WorkshopDecisionFeedback;
     readonly evidenceOnly: WorkshopDecisionFeedback;
     readonly unsupported: WorkshopDecisionFeedback;
+    /** Optional overrides keyed by a non-recommended choice id. */
+    readonly byChoice?: Readonly<
+      Record<string, WorkshopDecisionChoiceFeedback>
+    >;
   };
 }
 
