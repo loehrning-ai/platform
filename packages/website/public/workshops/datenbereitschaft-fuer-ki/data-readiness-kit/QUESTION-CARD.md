@@ -11,7 +11,7 @@ detailed prompts further down are optional follow-up.
 
 | Box | Your answer | Worked FOLDLINE example |
 | --- | --- | --- |
-| 1. Question |  | Show ending MRR by month for April–June 2026. |
+| 1. Question |  | Show ending MRR by month for the last complete quarter (April–June 2026). |
 | 2. Approved view |  | The approved monthly MRR summary. A view is a saved way to show selected data. |
 | 3. Four blanks + who counts |  | Kind: month-end balance. Rows: one per month. Months: Apr–Jun. Table: MRR summary. Who counts: subscriptions still active at month end; cancelled ones are out. |
 | 4. Boundary |  | The AI cannot read customer contact details. Database permissions enforce this. |

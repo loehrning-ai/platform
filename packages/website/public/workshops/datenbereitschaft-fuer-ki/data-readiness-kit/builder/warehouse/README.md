@@ -83,6 +83,8 @@ psql -X -v ON_ERROR_STOP=1 -d saas_ready -U foldline_ready_reader -f sql/70_chec
 
 Expected: `DB CHECKS 22 of 22 PASS. 0 SKIP. 0 FAIL.`
 
+Built with other names? Pass the same `-v bad_db=...` (and `-d` your ready database) here.
+
 Step one works only when your server trusts local connections (`trust` or `peer` in `pg_hba.conf`), which is typical for a laptop sandbox. On a shared server, a person with the right to do so creates the login outside version control. ACCESS.md, "Credentials", explains how.
 
 ## What-if: the same data, 60 hours old
@@ -115,7 +117,7 @@ This drops both databases and the three roles. Roles are cluster-wide, so they a
 | `sql/40_analytics.sql` | analytics | The five approved views, commented with `definition 1.0.0`. |
 | `sql/60_access.sql` | access | Least privilege for `foldline_ready_reader`, with a self-check. |
 | `sql/65_local_login.sql` | access | Optional. Enables LOGIN without a password on a local sandbox. |
-| `sql/70_checks.sql` | tests | 19 database checks. Exit code 3 on failure. |
+| `sql/70_checks.sql` | tests | 22 database checks (one SKIPs under SET ROLE). Exit code 3 on failure. |
 | `sql/80_export_lane_replay.sql` | tests | Runs the wrong queries on purpose, labelled, with an explanation after each. |
 | `sql/99_teardown.sql` | all | Removes everything. |
 | `seed/generate_seed.py` | seed | The single source of every number. Standard-library Python. Its output is committed. |

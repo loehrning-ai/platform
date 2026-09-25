@@ -41,7 +41,7 @@ simulation in your browser. It makes no AI request. It uses no real database, si
 Work in a group of three. Working alone, take all three roles.
 
 - The **operator** makes the five choices and presses **Test My Choices**.
-- The **witness** writes each run into the "Lab run log" at the top of `READY-CANVAS.md`: the run
+- The **witness** writes each run into the "Lab run log" near the top of `READY-CANVAS.md`: the run
   hash, the case counts, the verdict and the first weak check. The run hash is under "Run details
   for auditors" in the lab, and in the copied run record.
 - The **skeptic** checks that each changed choice marks the old results as out of date.
@@ -62,7 +62,8 @@ set up for you.
 
 ### Minutes 5 to 8: press Test My Choices
 
-Read the values, the refusal, the denial, the old-data warning and the run hash. Your first run will
+Read what the run shows: the values and the run hash. The refusal, denial and old-data warning
+appear once choice 05 runs all six cases. Your first run will
 not run all six cases: a test set with one ordinary question cannot report on the other five. A
 check you did not run is missing evidence, even if the first answer looks right. Skipped cases show
 as NOT RUN, not FAIL. That gap is your first finding, not a defect.

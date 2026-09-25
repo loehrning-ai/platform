@@ -45,6 +45,7 @@ export function isRepositoryAuthored(name) {
   return (
     name === "guide.html" ||
     name === "builder.html" ||
+    name === "demo.html" ||
     name === "card-preview.webp" ||
     name === "bundle-manifest.json" ||
     name === "PUBLICATION.md" ||

@@ -53,7 +53,7 @@ test("an edited override copy is rejected until the manifest is recaptured", asy
 });
 
 test("repository-authored surfaces never need an override", () => {
-  for (const name of ["guide.html", "builder.html", "data-readiness-kit/builder/README.md", "data-readiness-kit.zip", "bundle-manifest.json"]) {
+  for (const name of ["guide.html", "builder.html", "demo.html", "data-readiness-kit/builder/README.md", "data-readiness-kit.zip", "bundle-manifest.json"]) {
     assert.equal(isRepositoryAuthored(name), true, name);
   }
   for (const name of ["slides.html", "lib/deck-stage.js", "data-readiness-kit/readiness-lab.html"]) {

@@ -10,36 +10,48 @@ const read = (name: string) => readFileSync(resolve(root, name), "utf8");
 const files = (directory = root): string[] => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? files(resolve(directory, entry.name)) : [resolve(directory, entry.name)]);
 
 describe("published Data Readiness workshop", () => {
-  it("is the third workshop in both locales, with five usable entry points", () => {
+  it("is the third workshop in both locales, with exactly three entry points: course, guide and the Claude demo", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = getWorkshops(locale)[2];
       expect(workshop.slug).toBe("datenbereitschaft-fuer-ki");
-      expect(workshop.materials).toHaveLength(5);
+      expect(workshop.materials).toHaveLength(3);
       expect(workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length))).toEqual([
-        "guide.html",
         "slides.html",
-        "data-readiness-kit/readiness-lab.html",
-        "data-readiness-kit.zip",
-        "builder.html",
+        "guide.html",
+        "demo.html",
       ]);
-      expect(workshop.materials.every((material) => material.language === "en")).toBe(true);
+      expect(workshop.materials.every((material) => material.kind === "html" && material.language === "en")).toBe(true);
       expect(workshop.materials.some((material) => material.href.endsWith("/presenter.html"))).toBe(false);
+      // The lab, worksheet ZIP and builder guide stay published but are no longer offered here.
+      expect(JSON.stringify(workshop)).not.toMatch(/readiness-lab\.html|data-readiness-kit\.zip|builder\.html|Browserlabor|browser lab|Bauanleitung|Builder guide/i);
+      for (const material of workshop.materials) {
+        expect(existsSync(resolve(root, material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length).split("#")[0])), material.href).toBe(true);
+      }
     }
   });
 
-  it("states the same delivery language and labels the builder guide as an optional follow-up in both locales", () => {
+  it("states the delivery language and tells one storyline with the unchanged numbers in both locales", () => {
     const de = getWorkshops("de")[2];
     const en = getWorkshops("en")[2];
     expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
     expect(en.accessNote).toContain("Materials are in English; the live session is introduced in German.");
-    const builderDe = de.materials.find((material) => material.href.endsWith("/builder.html"));
-    const builderEn = en.materials.find((material) => material.href.endsWith("/builder.html"));
-    expect(builderEn?.label).toBe("Builder guide: semantic layer, warehouse and Claude setup");
-    expect(builderDe?.label).toMatch(/^Bauanleitung: .*\(Englisch\)$/);
-    expect(builderEn?.description).toMatch(/Optional follow-up for data teams, separate from the 75-minute beginner course/);
-    expect(builderDe?.description).toMatch(/Optionale Vertiefung für Datenteams, getrennt vom 75-minütigen Einsteigerkurs/);
-    // One vocabulary for the lab across surfaces: five choices, not five rules.
-    for (const workshop of [de, en]) expect(JSON.stringify(workshop)).not.toMatch(/fünf Regeln|five rules|Regeln im Labor/);
+    expect(en.accessNote).toMatch(/The course and the demo need no account or installation\./);
+    expect(de.accessNote).toMatch(/Für Kurs und Demo brauchst du kein Konto und keine Installation\./);
+    expect(en.materials[2]?.label).toBe("Interactive demo: raw tables vs certified views");
+    expect(de.materials[2]?.label).toMatch(/^Interaktive Demo: .*\(Englisch\)$/);
+    for (const material of de.materials) expect(material.label).toMatch(/\(Englisch\)$/);
+    expect(en.description).toContain("Show ending MRR by month for the last complete quarter");
+    expect(en.description).toContain("-19,960 / 9,775 / 42,565");
+    expect(en.description).toContain("334,675 / 344,450 / 387,015");
+    expect(de.description).toContain("334.675 / 344.450 / 387.015");
+    for (const workshop of [de, en]) {
+      const text = JSON.stringify(workshop);
+      expect(text).not.toMatch(/same model|gleiche[sn]? Modell|fünf Regeln|five rules|Regeln im Labor/i);
+      expect(text).toMatch(/36/);
+      expect(text).toMatch(/0 (?:of|von) 3/);
+      expect(text).toMatch(/9 (?:of|von) 9/);
+    }
+    expect(JSON.stringify(en)).toMatch(/limited pilot, not signed off/);
   });
 
   it("keeps the published file inventory and its content hashes exact", () => {

@@ -70,11 +70,11 @@
   "files": {
     "data-readiness-kit/FOLDLINE-SCENARIOS.md": {
       "original": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e",
-      "override": "9bb76c0804af0588b1de4c43cf917938cadca119b0060873880289bbf91a305c"
+      "override": "9e18e00eb2c014a4444d3677ab5f939af2c0667a4e062875ee078aced5d60b7e"
     },
     "data-readiness-kit/QUESTION-CARD.md": {
       "original": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
-      "override": "2d54c71d36eea935b4f7020b34fad39dff19eec76eb39319d0205865075e5a0f"
+      "override": "281b5f0748898403392e61a5f9634618d14ee5a9610d1afcca9af20c3738cb45"
     },
     "data-readiness-kit/READY-CANVAS.md": {
       "original": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
@@ -82,7 +82,7 @@
     },
     "data-readiness-kit/START-HERE.md": {
       "original": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea",
-      "override": "60afa9dcd798b32f80014d0c9017a99308c30be0c17a802504e28d7b092c4fbd"
+      "override": "b7343c92cd4625d0696f3f34072ece84910e8dd9bb3eed960c1fe122e165fc71"
     },
     "data-readiness-kit/agent/CLAUDE.example.md": {
       "original": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14",
@@ -90,7 +90,7 @@
     },
     "data-readiness-kit/readiness-lab.html": {
       "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "90029b91b31c1693a4dcb15e46433c5ec0102126dfd52b31cc545e640b58adf8"
+      "override": "ee7ca48c869e29b464339457d65a66333b4093e6596fd6c9ad0987e547698e4b"
     },
     "data-readiness-kit/semantic-template/metric.yml": {
       "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
@@ -118,15 +118,15 @@
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
-      "override": "75c196201ab64380cd9985cc0614f273da76305932444b87d8e02d19a3435dff"
+      "override": "f0dc529d5553bcb9fb19c8ad036d62a8e87a638b11ccb8887866533dcd8032c1"
     },
     "lib/presenter.css": {
       "original": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
-      "override": "5b40c2a0996a148143bf4c6131a65fdfcdb6aab63edbe6a4e3a5841fe4874f0c"
+      "override": "e38cdbd5a7fb9bf3719f3823757ae38d7cd4450c84c22fb15ce1da5322c618c0"
     },
     "lib/presenter.js": {
       "original": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
-      "override": "2bb73e598231857363af9b1f0c2ce5bcb0db320f261d3afb4203ac7d6804686c"
+      "override": "2b08204e688b5ab3f5e4eee74babbd8fd92ddef69170b63d36d57f5910db0883"
     },
     "lib/scenes/appendix-access-controls.css": {
       "original": "fc99d6418a6757fae8c2c078d912650bde00c72ad2b6a50e6d6b0fd90344c7d6",
@@ -222,7 +222,7 @@
     },
     "lib/scenes/semantic-contract.css": {
       "original": "b81a18d7af842e943165fb0eb0c24f7e76da46122860ed11976d6264cb601355",
-      "override": "a4b8413f347a8495ee27c4810ca42ff8cbee61cf8a4447f94ce7c32cca6ede1d"
+      "override": "6f67eeaefeb9f7ac066a00580748b2038f660b530328fafd6f3f54d2f402b708"
     },
     "lib/scenes/the-arc.css": {
       "original": "9f2e0d60dcfbdef4d27626966f96d5907cc7e1524fc071a80916681f93e5df7d",
@@ -234,7 +234,7 @@
     },
     "lib/story.css": {
       "original": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
-      "override": "b23305be126884eb9b4ce2fc87469388b4d52dfc3b1887440c38dbf388a2ad1b"
+      "override": "53a6d598370e7ffcddd535bb8a212230c112da87320950fc16d58fc2d9be91d2"
     },
     "lib/tokens.css": {
       "original": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
@@ -242,11 +242,11 @@
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
-      "override": "4caebaf71a1003648ae972d952b6a764a3acfd83ead1b6854d14cf16e9403ddb"
+      "override": "0dd671a4e95b70a7068c287f8088bab999827907df3ff0f6ba7a915e4c42f95b"
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "8862905bd2617636b0bd88d6d1751773c909bcb970609cc5903e9c88b1863ccb"
+      "override": "8161d4949201a69ee6e814cbce0b2e5640e536f4418e6555d2bf2fa2880a8f17"
     }
   }
 }

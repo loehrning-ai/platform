@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One question, two databases</title>
+<meta name="description" content="Workshop 03, Data readiness for AI: look at the real tables behind the slides. Raw export tables against certified views, captured from PostgreSQL 16.">
+<style>
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-400.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-500.ttf") format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:"Typing";src:url("./assets/fonts/Typing-Static-700.ttf") format("truetype");font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("./assets/fonts/JetBrainsMono-Static-400.woff2") format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("./assets/fonts/JetBrainsMono-Static-700.woff2") format("woff2");font-weight:700;font-display:swap}
+:root{
+  --paper:#f3f0e9;--papier:#f2f1ee;--beton:#e5e4e2;--leinen:#d4cec5;--ink:#121212;--slate:#4f4640;
+  --mennige:#b73a15;--mennige-deep:#97300f;--pass:#205b46;
+  --sans:"Typing",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono","Typing",ui-monospace,monospace;
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
+a{color:var(--mennige-deep)}
+:focus-visible{outline:3px solid var(--mennige);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 16px}
+@media (min-width:720px){.wrap{padding:0 32px}}main.wrap{padding-top:28px;padding-bottom:8px}
+header.top{padding:40px 0 24px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin:0 0 12px}
+.kicker b{color:var(--mennige-deep)}
+h1{font-size:clamp(32px,5vw,56px);line-height:1.05;margin:0 0 12px;font-weight:700;letter-spacing:-.01em}
+.lede{max-width:760px;margin:0 0 24px;color:var(--slate)}
+.qcard{background:var(--papier);border:2px solid var(--ink);padding:18px 20px;display:grid;gap:10px;max-width:900px}
+.qcard .q{font-size:clamp(20px,2.4vw,28px);font-weight:500;margin:0}
+.meta{font-family:var(--mono);font-size:13px;color:var(--slate);display:flex;flex-wrap:wrap;gap:6px 18px;margin:0}
+.switch{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0}
+.switch .lbl{font-family:var(--mono);font-size:13px;color:var(--slate);align-self:center;margin-right:4px}
+button{font:inherit;cursor:pointer}
+.chip{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:6px 12px;font-size:15px;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chip:hover{background:var(--beton)}
+.chip[aria-pressed="true"]:hover{background:var(--ink)}
+main{padding:28px 0 8px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+@media (min-width:980px){.cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.lane{border:2px solid var(--ink);background:var(--papier);display:flex;flex-direction:column;min-width:0}
+.lane>header{padding:16px 18px;border-bottom:2px solid var(--ink)}
+.lane.bad>header{background:var(--beton)}
+.lane.ready>header{background:var(--paper)}
+.tag{display:inline-block;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:1.5px solid currentColor;padding:1px 8px;margin-bottom:8px}
+.lane.bad .tag{color:var(--mennige-deep)}
+.lane.ready .tag{color:var(--pass)}
+h2{font-size:22px;margin:0 0 4px;line-height:1.2}
+.lane>header p{margin:0;color:var(--slate);font-size:15px}
+.step{padding:16px 18px;border-bottom:1.5px solid var(--leinen)}
+.step:last-child{border-bottom:0}
+h3{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px;color:var(--slate);font-weight:700}
+h3 .n{color:var(--mennige-deep);margin-right:6px}
+.rels{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.rel{border:1.5px solid var(--ink);background:var(--paper);font-family:var(--mono);font-size:13px;padding:6px 10px;min-height:36px;text-align:left;color:var(--ink);max-width:100%;overflow-wrap:anywhere}
+.rels li{min-width:0;max-width:100%}
+.rel small{color:var(--slate);margin-left:6px}
+.rel[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.rel[aria-pressed="true"] small{color:var(--leinen)}
+.rel:hover{border-color:var(--mennige)}
+.relinfo{margin-top:12px}
+.relinfo .cm{margin:0 0 8px;font-size:15px}
+.relinfo .cm.none{color:var(--mennige-deep)}
+.cols-line{font-family:var(--mono);font-size:12px;color:var(--slate);margin:0 0 8px;word-break:break-word}
+.tbl{overflow:auto;max-height:260px;border:1.5px solid var(--ink);background:var(--paper)}
+.tbl:focus-visible{outline-offset:-3px}
+table{border-collapse:collapse;font-family:var(--mono);font-size:12.5px;width:max-content;min-width:100%}
+th,td{padding:5px 10px;text-align:left;border-bottom:1px solid var(--leinen);white-space:nowrap}
+th{position:sticky;top:0;background:var(--beton);font-weight:700}
+th .ty{display:block;font-weight:400;color:var(--slate);font-size:11px}
+td.num{text-align:right}
+td.null{color:var(--slate);font-style:italic}
+.cap{font-family:var(--mono);font-size:12px;color:var(--slate);margin:6px 0 0}
+pre,code,table{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+pre.sql{margin:0;background:var(--ink);color:var(--paper);padding:14px;font-family:var(--mono);font-size:12.5px;line-height:1.55;overflow:auto;max-height:300px;white-space:pre}
+pre.sql:focus-visible{outline-offset:2px}
+.sqlnote{font-size:14px;color:var(--slate);margin:8px 0 0}
+.act{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn{border:2px solid var(--ink);background:var(--mennige);color:#fff;padding:8px 16px;font-weight:700;min-height:44px;box-shadow:3px 3px 0 var(--ink)}
+.btn:hover{background:var(--mennige-deep)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.sec{background:var(--paper);color:var(--ink)}
+.btn.sec:hover{background:var(--beton)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.result{margin-top:12px}
+.result[hidden]{display:none}
+.reveal{animation:rise .6s var(--ease-out) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.bigrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.cell{border:2px solid var(--ink);background:var(--paper);padding:10px 12px}
+.cell .k{font-family:var(--mono);font-size:12px;color:var(--slate)}
+.cell .v{font-family:var(--mono);font-size:clamp(20px,2.4vw,26px);font-weight:700;line-height:1.2;word-break:break-word}
+.cell .verdict{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:6px;display:none}
+.checked .cell .verdict{display:block}
+.cell.ok{border-color:var(--pass)}
+.cell.ok .verdict{color:var(--pass)}
+.cell.no .verdict{color:var(--mennige-deep)}
+.checked .cell.no{background:#f7e4dc}
+.checked .cell.ok{background:#e3eee8}
+.err{border:2px solid var(--mennige-deep);background:#f7e4dc;padding:12px;font-family:var(--mono);font-size:13px;word-break:break-word}
+.err b{color:var(--mennige-deep)}
+.summary{margin:10px 0 0;font-weight:500}
+.summary.ok{color:var(--pass)}
+.summary.no{color:var(--mennige-deep)}
+.truth{font-family:var(--mono);font-size:12px;color:var(--slate);margin:8px 0 0}
+section.band{margin-top:28px;border:2px solid var(--ink);background:var(--papier)}
+section.band>header{padding:14px 18px;border-bottom:2px solid var(--ink);background:var(--beton)}
+section.band>header h2{font-size:20px}
+section.band .body{padding:16px 18px}
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:980px){.two{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+pre.def{margin:0;background:var(--paper);border:1.5px solid var(--ink);padding:12px;font-family:var(--mono);font-size:12px;line-height:1.5;overflow:auto;max-height:320px;white-space:pre}
+ol.diff{margin:0;padding:0;list-style:none;counter-reset:d;display:grid;gap:10px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){ol.diff{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ol.diff li{counter-increment:d;border:1.5px solid var(--ink);background:var(--paper);padding:12px 14px 12px 50px;position:relative}
+ol.diff li::before{content:counter(d);position:absolute;left:12px;top:10px;font-family:var(--mono);font-weight:700;font-size:18px;color:var(--mennige-deep)}
+ol.diff b{display:block}
+.rule{margin:14px 0 0;font-weight:700;font-size:18px}
+footer.prov{margin:32px 0 0;border-top:2px solid var(--ink);padding:18px 0 40px;font-size:14px;color:var(--slate)}
+footer.prov p{margin:0 0 8px;max-width:900px}
+.back{display:inline-block;margin-top:6px;font-weight:700}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.reveal{animation:none}.btn:active{transform:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <p class="kicker"><b>Workshop 03</b> · Data readiness for AI · Look at the database</p>
+    <h1>One question, two databases.</h1>
+    <p class="lede">The slides showed two answers to one question. Here you can look at the tables behind them. On the left: the raw export tables. On the right: the certified views, each with a written definition. Pick a table, read the SQL, run it, then check the result against the definition.</p>
+    <div class="qcard" role="group" aria-labelledby="qtext">
+      <p class="kicker" style="margin:0">The question</p>
+      <p class="q" id="qtext"></p>
+      <p class="meta"><span>Company: FOLDLINE (synthetic)</span><span>Clock: 1 July 2026, 09:00 UTC</span><span>Last complete quarter: April to June 2026</span></p>
+    </div>
+    <div class="switch" role="group" aria-label="Choose the question">
+      <span class="lbl">Question:</span>
+      <button type="button" class="chip" data-case="G01" aria-pressed="true">Ending MRR</button>
+      <button type="button" class="chip" data-case="G02" aria-pressed="false">Net new MRR</button>
+      <button type="button" class="chip" data-case="G03" aria-pressed="false">Logo churn</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="cols">
+    <section class="lane bad" data-lane="bad" aria-labelledby="h-bad">
+      <header>
+        <span class="tag">Export lane</span>
+        <h2 id="h-bad">Raw export tables (what the AI saw on the first run)</h2>
+        <p>Login <code>foldline_bad_reader</code>. Seven tables copied from source systems. No written definitions.</p>
+      </header>
+      <div class="step">
+        <h3><span class="n">1</span>Tables this login can see</h3>
+        <ul class="rels" data-role="rels"></ul>
+        <div class="relinfo" data-role="relinfo"></div>
+      </div>
+      <div class="step">
+        <h3><span class="n">2</span>The SQL the AI ran</h3>
+        <pre class="sql" tabindex="0" data-role="sql" aria-label="SQL the AI ran on the export tables"></pre>
+        <p class="sqlnote" data-role="sqlnote"></p>
+        <div class="act"><button type="button" class="btn" data-role="run">Run it</button></div>
+      </div>
+      <div class="step">
+        <h3><span class="n">3</span>Result and check</h3>
+        <div class="result-wrap" aria-live="polite" data-role="live">
+          <p class="cap" data-role="placeholder">Press "Run it" to show the rows PostgreSQL returned.</p>
+          <div class="result" data-role="result" hidden></div>
+        </div>
+        <div class="act"><button type="button" class="btn sec" data-role="check" disabled>Check against the definition</button></div>
+      </div>
+    </section>
+
+    <section class="lane ready" data-lane="ready" aria-labelledby="h-ready">
+      <header>
+        <span class="tag">Approved lane</span>
+        <h2 id="h-ready">Certified views (what the AI saw on the second run)</h2>
+        <p>Login <code>foldline_ready_reader</code>. Five approved views. Each one has a written definition. Read-only.</p>
+      </header>
+      <div class="step">
+        <h3><span class="n">1</span>Views this login can see</h3>
+        <ul class="rels" data-role="rels"></ul>
+        <div class="relinfo" data-role="relinfo"></div>
+      </div>
+      <div class="step">
+        <h3><span class="n">2</span>The SQL the AI ran</h3>
+        <pre class="sql" tabindex="0" data-role="sql" aria-label="SQL the AI ran on the certified views"></pre>
+        <p class="sqlnote" data-role="sqlnote"></p>
+        <div class="act"><button type="button" class="btn" data-role="run">Run it</button></div>
+      </div>
+      <div class="step">
+        <h3><span class="n">3</span>Result and check</h3>
+        <div class="result-wrap" aria-live="polite" data-role="live">
+          <p class="cap" data-role="placeholder">Press "Run it" to show the rows PostgreSQL returned.</p>
+          <div class="result" data-role="result" hidden></div>
+        </div>
+        <div class="act"><button type="button" class="btn sec" data-role="check" disabled>Check against the definition</button></div>
+      </div>
+      <div class="step">
+        <h3><span class="n">4</span>Try a forbidden read</h3>
+        <p style="margin:0 0 8px;font-size:15px">The reader asks for customer names and emails from <code>core.accounts</code>. That table is not approved for this login.</p>
+        <pre class="sql" tabindex="0" id="forbid-sql" aria-label="Forbidden SQL"></pre>
+        <div class="act"><button type="button" class="btn sec" id="forbid-run">Try a forbidden read</button></div>
+        <div aria-live="polite" id="forbid-live"><div class="result" id="forbid-result" hidden></div></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="band" aria-labelledby="h-def">
+    <header><h2 id="h-def">The written definition (semantic layer)</h2></header>
+    <div class="body two">
+      <div>
+        <p style="margin:0 0 10px">This is the text the AI could read on the second run. It names the one approved view, the column, and the rule for a quarter: three month-ends, never a sum.</p>
+        <p class="cap" data-role="defname">semantic/metric.yml</p>
+        <pre class="def" tabindex="0" id="def-text" aria-label="Metric definition"></pre>
+      </div>
+      <div>
+        <p style="margin:0 0 10px">And the comment PostgreSQL stores on the approved view:</p>
+        <pre class="def" tabindex="0" id="view-comment" aria-label="View comment" style="white-space:pre-wrap"></pre>
+        <p class="truth" id="checks-summary"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="h-diff">
+    <header><h2 id="h-diff">What made the difference</h2></header>
+    <div class="body">
+      <ol class="diff">
+        <li><b>Approved views</b>Five views built for serving. Complete months only. Duplicates removed before they reach a number.</li>
+        <li><b>A written definition</b>The semantic layer says which view and column answer "ending MRR", and that month-ends are never added up.</li>
+        <li><b>Read-only access</b>The reader login can only select from the approved views. Everything else is denied by PostgreSQL.</li>
+        <li><b>Tests</b>Database checks hold the expected numbers. They test the database and the course rules, not the AI.</li>
+      </ol>
+      <p class="rule">Instructions guide. Grants enforce.</p>
+    </div>
+  </section>
+
+  <footer class="prov">
+    <p><b>Provenance.</b> Tables, rows and results captured from PostgreSQL 16 running the course kit's SQL on 25 September 2026. The page replays them; it does not call an AI or a database.</p>
+    <p id="prov-detail"></p>
+    <p>All data is synthetic. FOLDLINE is a made-up company with 144 business accounts.</p>
+    <a class="back" href="./slides.html">Back to the slides</a>
+  </footer>
+</main>
+
+<script type="application/json" id="demo-data">{"capturedOn":"2026-09-25","postgres":"16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)","company":"FOLDLINE (synthetic)","clockUtc":"2026-07-01T09:00:00Z","lanes":{"bad":{"role":"foldline_bad_reader","searchPath":"public","relations":[{"schema":"public","name":"acct_history","kind":"table","comment":null,"columns":[{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"balance","type":"numeric"},{"name":"change","type":"numeric"},{"name":"state","type":"text"}],"rowCount":1388,"rows":[[144,"2026-06-01",5485,5485,"N"],[143,"2026-06-01",1085,1085,"N"],[142,"2026-06-01",2920,2920,"N"],[141,"2026-06-01",5945,5945,"N"],[140,"2026-06-01",1210,1210,"N"],[139,"2026-06-01",3190,3190,"N"],[138,"2026-05-01",4895,4895,"N"],[138,"2026-06-01",4895,0,"A"]]},{"schema":"public","name":"billing_events","kind":"table","comment":null,"columns":[{"name":"event_id","type":"integer"},{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"type","type":"text"},{"name":"status","type":"text"},{"name":"amount","type":"numeric"},{"name":"retry_batch","type":"text"}],"rowCount":334,"rows":[[318,143,"2026-06-28","N","pending",1085,null],[317,140,"2026-06-27","N","pending",1210,null],[316,137,"2026-06-26","N","pending",1340,null],[315,134,"2026-06-25","N","pending",1465,null],[314,144,"2026-06-23","N","posted",5485,null],[313,142,"2026-06-22","N","posted",2920,null],[312,141,"2026-06-21","N","posted",5945,null],[311,139,"2026-06-20","N","posted",3190,null]]},{"schema":"public","name":"customer_master","kind":"table","comment":null,"columns":[{"name":"id","type":"integer"},{"name":"seg","type":"text"},{"name":"country","type":"text"},{"name":"plan","type":"text"},{"name":"status","type":"text"},{"name":"status_dt","type":"date"}],"rowCount":144,"rows":[[144,"Enterprise","GB","Scale","N","2026-06-09"],[143,"SMB","SE","Starter","N","2026-06-02"],[142,"Mid-Market","GB","Growth","N","2026-06-15"],[141,"Enterprise","FR","Scale","N","2026-06-08"],[140,"SMB","DE","Starter","N","2026-06-01"],[139,"Mid-Market","CH","Growth","N","2026-06-14"],[138,"Enterprise","SE","Scale","N","2026-05-07"],[137,"SMB","PL","Starter","N","2026-06-20"]]},{"schema":"public","name":"monthly_revenue","kind":"table","comment":null,"columns":[{"name":"dt","type":"date"},{"name":"segment","type":"text"},{"name":"amount","type":"numeric"}],"rowCount":18,"rows":[["2026-06-01","Enterprise",21230],["2026-06-01","Mid-Market",16785],["2026-06-01","SMB",4550],["2026-05-01","Enterprise",760],["2026-05-01","Mid-Market",5880],["2026-05-01","SMB",3135],["2026-04-01","Enterprise",-13285],["2026-04-01","Mid-Market",-3080]]},{"schema":"public","name":"subscription_export","kind":"table","comment":null,"columns":[{"name":"customer_id","type":"integer"},{"name":"date","type":"date"},{"name":"amount","type":"numeric"}],"rowCount":144,"rows":[[144,"2026-06-01",5485],[143,"2026-06-01",1085],[142,"2026-06-01",2920],[141,"2026-06-01",5945],[140,"2026-06-01",1210],[139,"2026-06-01",3190],[138,"2026-06-01",4895],[137,"2026-06-01",1340]]},{"schema":"public","name":"tickets","kind":"table","comment":null,"columns":[{"name":"id","type":"integer"},{"name":"acct_id","type":"integer"},{"name":"opened","type":"date"},{"name":"closed","type":"date"},{"name":"status","type":"text"},{"name":"prio","type":"integer"}],"rowCount":60,"rows":[[60,13,"2026-04-01",null,"O",1],[59,140,"2026-06-22","2026-06-24","R",3],[58,123,"2026-05-15","2026-05-17","C",2],[57,106,"2026-04-08",null,"P",1],[56,89,"2026-06-01",null,"O",3],[55,72,"2026-05-22","2026-05-24","R",2],[54,55,"2026-04-15","2026-04-17","C",1],[53,38,"2026-06-08",null,"P",3]]},{"schema":"public","name":"usage_log","kind":"table","comment":null,"columns":[{"name":"acct_id","type":"integer"},{"name":"dt","type":"date"},{"name":"events","type":"integer"}],"rowCount":378,"rows":[[144,"2026-06-01",211],[143,"2026-06-01",198],[142,"2026-06-01",185],[141,"2026-06-01",172],[140,"2026-06-01",159],[139,"2026-06-01",146],[138,"2026-05-01",126],[138,"2026-06-01",133]]}]},"ready":{"role":"foldline_ready_reader","searchPath":"analytics","relations":[{"schema":"analytics","name":"account_mrr_monthly","kind":"view","comment":"One row per account and complete month (dense, 2,592 rows). Pseudonymous account_key, never names or contacts. definition 1.0.0. Never treat account_key as anonymous; always use LIMIT.","columns":[{"name":"month_start","type":"date"},{"name":"account_key","type":"text"},{"name":"customer_segment","type":"text"},{"name":"country_code","type":"text"},{"name":"plan_name","type":"text"},{"name":"ending_mrr_eur","type":"numeric(14,2)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":2592,"rows":[["2026-06-01","fl_0001","Mid-Market","AT","Growth",3015.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0002","SMB","CH","Starter",1020.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0003","Enterprise","DE","Scale",3645.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0004","Mid-Market","FR","Growth",1730.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0005","SMB","GB","Starter",935.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0006","Enterprise","PL","Enterprise",7705.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0007","Mid-Market","NL","Growth",1450.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","fl_0008","SMB","PL","Starter",1385.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"SELECT m.month_start,\n    a.account_key,\n    a.customer_segment,\n    a.country_code,\n    a.plan_name,\n    m.ending_mrr_eur::numeric(14,2) AS ending_mrr_eur,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM core.account_months m\n     JOIN core.accounts a ON a.account_id = m.account_id\n     CROSS JOIN core.load_status s\n  WHERE m.month_start <= s.complete_through_month;"},{"schema":"analytics","name":"data_status_by_view","kind":"view","comment":"One row per approved data view: load time (UTC), last complete month, quality gate, freshness thresholds, owner and definition version. definition 1.0.0. Read it before answering; never compute age with now().","columns":[{"name":"view_name","type":"text"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"complete_through_month","type":"date"},{"name":"quality_status","type":"text"},{"name":"warn_after_hours","type":"integer"},{"name":"hard_expiry_hours","type":"integer"},{"name":"owner_team","type":"text"},{"name":"definition_version","type":"text"}],"rowCount":4,"rows":[["analytics.mrr_summary_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.logo_churn_by_segment_quarter","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.expansion_mrr_by_country_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"],["analytics.account_mrr_monthly","2026-07-01T06:00:00+00:00","2026-06-01","passing",36,null,"revenue_analytics","1.0.0"]],"definition":"SELECT c.view_name,\n    s.data_loaded_at_utc,\n    s.complete_through_month,\n    s.quality_status,\n    c.warn_after_hours,\n    c.hard_expiry_hours,\n    c.owner_team,\n    c.definition_version\n   FROM core.serving_contracts c\n     CROSS JOIN core.load_status s;"},{"schema":"analytics","name":"expansion_mrr_by_country_monthly","kind":"view","comment":"One row per complete month and country (dense: 18 x 8 = 144 rows, zeros explicit). Expansion MRR in EUR. definition 1.0.0. Never compare with billing_events sums, which contain retry duplicates.","columns":[{"name":"month_start","type":"date"},{"name":"country_code","type":"text"},{"name":"expansion_mrr_eur","type":"numeric(14,2)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":144,"rows":[["2026-06-01","AT",600.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","CH",1015.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","DE",850.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","FR",910.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","GB",360.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","NL",725.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","PL",925.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-06-01","SE",910.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"WITH months AS (\n         SELECT DISTINCT account_months.month_start\n           FROM core.account_months\n        ), countries AS (\n         SELECT DISTINCT accounts.country_code\n           FROM core.accounts\n        ), expansion AS (\n         SELECT m.month_start,\n            a.country_code,\n            sum(m.net_new_mrr_eur) AS expansion_mrr_eur\n           FROM core.account_months m\n             JOIN core.accounts a ON a.account_id = m.account_id\n          WHERE m.movement_type = 'expansion'::text\n          GROUP BY m.month_start, a.country_code\n        )\n SELECT mo.month_start,\n    c.country_code,\n    COALESCE(x.expansion_mrr_eur, 0::numeric)::numeric(14,2) AS expansion_mrr_eur,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM months mo\n     CROSS JOIN countries c\n     CROSS JOIN core.load_status s\n     LEFT JOIN expansion x ON x.month_start = mo.month_start AND x.country_code = c.country_code\n  WHERE mo.month_start <= s.complete_through_month;"},{"schema":"analytics","name":"logo_churn_by_segment_quarter","kind":"view","comment":"One row per complete quarter and customer segment. Logo churn rate with its numerator and denominator. definition 1.0.0. Never average the rate across segments or quarters; recompute from the counts.","columns":[{"name":"period_start","type":"date"},{"name":"period_end_exclusive","type":"date"},{"name":"customer_segment","type":"text"},{"name":"starting_accounts","type":"integer"},{"name":"churned_accounts","type":"integer"},{"name":"logo_churn_rate_pct","type":"numeric(5,1)"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":15,"rows":[["2026-04-01","2026-07-01","SMB",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01","2026-07-01","Enterprise",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01","2026-07-01","Mid-Market",40,4,10.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","Mid-Market",34,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","SMB",33,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01","2026-04-01","Enterprise",33,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-10-01","2026-01-01","SMB",25,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-10-01","2026-01-01","Mid-Market",25,0,0.0,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"WITH quarters AS (\n         SELECT DISTINCT date_trunc('quarter'::text, account_months.month_start::timestamp with time zone)::date AS period_start\n           FROM core.account_months\n        ), bounds AS (\n         SELECT quarters.period_start,\n            (quarters.period_start + '3 mons'::interval)::date AS period_end_exclusive,\n            (quarters.period_start - '1 mon'::interval)::date AS base_month,\n            (quarters.period_start + '2 mons'::interval)::date AS last_month\n           FROM quarters\n        )\n SELECT b.period_start,\n    b.period_end_exclusive,\n    a.customer_segment,\n    count(*)::integer AS starting_accounts,\n    count(*) FILTER (WHERE e.ending_mrr_eur = 0::numeric)::integer AS churned_accounts,\n    round(100.0 * count(*) FILTER (WHERE e.ending_mrr_eur = 0::numeric)::numeric / NULLIF(count(*), 0)::numeric, 1)::numeric(5,1) AS logo_churn_rate_pct,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM bounds b\n     CROSS JOIN core.load_status s\n     JOIN core.account_months st ON st.month_start = b.base_month AND st.ending_mrr_eur > 0::numeric\n     JOIN core.account_months e ON e.account_id = st.account_id AND e.month_start = b.last_month\n     JOIN core.accounts a ON a.account_id = st.account_id\n  WHERE b.last_month <= s.complete_through_month\n  GROUP BY b.period_start, b.period_end_exclusive, a.customer_segment, s.complete_through_month, s.data_loaded_at_utc, s.quality_status;"},{"schema":"analytics","name":"mrr_summary_monthly","kind":"view","comment":"One row per complete calendar month, company level, EUR. Ending MRR (a level) beside its movements (changes). definition 1.0.0. Never add ending_mrr_eur across months.","columns":[{"name":"month_start","type":"date"},{"name":"ending_mrr_eur","type":"numeric(14,2)"},{"name":"new_mrr_eur","type":"numeric(14,2)"},{"name":"expansion_mrr_eur","type":"numeric(14,2)"},{"name":"contraction_mrr_eur","type":"numeric(14,2)"},{"name":"churned_mrr_eur","type":"numeric(14,2)"},{"name":"net_new_mrr_eur","type":"numeric(14,2)"},{"name":"active_accounts","type":"integer"},{"name":"complete_through_month","type":"date"},{"name":"data_loaded_at_utc","type":"timestamp with time zone"},{"name":"quality_status","type":"text"}],"rowCount":18,"rows":[["2026-06-01",387015.0,44780.0,6295.0,830.0,7680.0,42565.0,132,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-05-01",344450.0,21900.0,3850.0,2645.0,13330.0,9775.0,123,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-04-01",334675.0,9255.0,2750.0,21845.0,10120.0,-19960.0,123,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-03-01",354635.0,48060.0,12880.0,780.0,0.0,60160.0,120,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-02-01",294475.0,19910.0,2565.0,995.0,0.0,21480.0,108,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2026-01-01",272995.0,13520.0,1195.0,505.0,0.0,14210.0,104,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-12-01",258785.0,23450.0,1415.0,685.0,0.0,24180.0,100,"2026-06-01","2026-07-01T06:00:00+00:00","passing"],["2025-11-01",234605.0,19515.0,2120.0,750.0,0.0,20885.0,92,"2026-06-01","2026-07-01T06:00:00+00:00","passing"]],"definition":"SELECT m.month_start,\n    sum(m.ending_mrr_eur)::numeric(14,2) AS ending_mrr_eur,\n    COALESCE(sum(m.ending_mrr_eur) FILTER (WHERE m.movement_type = 'new'::text), 0::numeric)::numeric(14,2) AS new_mrr_eur,\n    COALESCE(sum(m.net_new_mrr_eur) FILTER (WHERE m.movement_type = 'expansion'::text), 0::numeric)::numeric(14,2) AS expansion_mrr_eur,\n    COALESCE(- sum(m.net_new_mrr_eur) FILTER (WHERE m.movement_type = 'contraction'::text), 0::numeric)::numeric(14,2) AS contraction_mrr_eur,\n    COALESCE(sum(m.starting_mrr_eur) FILTER (WHERE m.movement_type = 'churn'::text), 0::numeric)::numeric(14,2) AS churned_mrr_eur,\n    sum(m.net_new_mrr_eur)::numeric(14,2) AS net_new_mrr_eur,\n    count(*) FILTER (WHERE m.ending_mrr_eur > 0::numeric)::integer AS active_accounts,\n    s.complete_through_month,\n    s.data_loaded_at_utc,\n    s.quality_status\n   FROM core.account_months m\n     CROSS JOIN core.load_status s\n  WHERE m.month_start <= s.complete_through_month\n  GROUP BY m.month_start, s.complete_through_month, s.data_loaded_at_utc, s.quality_status;"}]}},"cases":[{"id":"G01","question":"Show ending MRR by month for the last complete quarter.","bad":{"sql":"WITH monthly_totals AS (\n    SELECT\n        DATE_TRUNC('month', mr.dt)::date AS revenue_month,\n        SUM(mr.amount) AS mrr\n    FROM monthly_revenue AS mr\n    WHERE mr.dt >= DATE '2026-04-01'\n      AND mr.dt < DATE '2026-07-01'\n    GROUP BY DATE_TRUNC('month', mr.dt)\n)\nSELECT\n    mt.revenue_month,\n    mt.mrr AS ending_mrr\nFROM monthly_totals AS mt\nORDER BY mt.revenue_month","columns":["revenue_month","ending_mrr"],"rows":[["2026-04-01",-19960],["2026-05-01",9775],["2026-06-01",42565]]},"ready":{"sql":"SELECT\n    mrr_summary_monthly.month_start,\n    mrr_summary_monthly.ending_mrr_eur\nFROM mrr_summary_monthly AS mrr_summary_monthly\nWHERE mrr_summary_monthly.month_start >= DATE '2026-04-01'\n  AND mrr_summary_monthly.month_start < DATE '2026-07-01'\nORDER BY mrr_summary_monthly.month_start","columns":["month_start","ending_mrr_eur"],"rows":[["2026-04-01",334675.0],["2026-05-01",344450.0],["2026-06-01",387015.0]]}},{"id":"G02","question":"What was net new MRR in the last complete quarter?","bad":{"sql":"WITH end_of_last_quarter AS (\n    SELECT\n        COALESCE(SUM(monthly_revenue.amount), 0) AS mrr\n    FROM monthly_revenue\n    WHERE monthly_revenue.dt >= DATE '2026-06-01'\n      AND monthly_revenue.dt < DATE '2026-07-01'\n),\nend_of_prior_quarter AS (\n    SELECT\n        COALESCE(SUM(monthly_revenue.amount), 0) AS mrr\n    FROM monthly_revenue\n    WHERE monthly_revenue.dt >= DATE '2026-03-01'\n      AND monthly_revenue.dt < DATE '2026-04-01'\n)\nSELECT\n    end_of_last_quarter.mrr AS end_of_last_quarter_mrr,\n    end_of_prior_quarter.mrr AS end_of_prior_quarter_mrr,\n    end_of_last_quarter.mrr - end_of_prior_quarter.mrr AS net_new_mrr\nFROM end_of_last_quarter\nCROSS JOIN end_of_prior_quarter","columns":["end_of_last_quarter_mrr","end_of_prior_quarter_mrr","net_new_mrr"],"rows":[[42565,60160,-17595]]},"ready":{"sql":"SELECT SUM(mrr_summary_monthly.net_new_mrr_eur)::numeric(14,2) AS net_new_mrr_eur\nFROM analytics.mrr_summary_monthly AS mrr_summary_monthly\nWHERE mrr_summary_monthly.month_start >= DATE '2026-04-01'\n  AND mrr_summary_monthly.month_start < DATE '2026-07-01'","columns":["net_new_mrr_eur"],"rows":[[32380.0]]}},{"id":"G03","question":"What was logo churn rate by customer segment in the last complete quarter?","bad":{"sql":"WITH start_state AS (\n    SELECT DISTINCT ON (ah.id)\n        ah.id,\n        ah.state AS state_start\n    FROM acct_history AS ah\n    WHERE ah.dt <= DATE '2026-03-31'\n    ORDER BY ah.id, ah.dt DESC\n),\nend_state AS (\n    SELECT DISTINCT ON (ah.id)\n        ah.id,\n        ah.state AS state_end\n    FROM acct_history AS ah\n    WHERE ah.dt <= DATE '2026-06-30'\n    ORDER BY ah.id, ah.dt DESC\n),\ncustomer_states AS (\n    SELECT\n        ss.id,\n        ss.state_start,\n        es.state_end\n    FROM start_state AS ss\n    LEFT JOIN end_state AS es\n        ON es.id = ss.id\n),\nchurn_calc AS (\n    SELECT\n        cm.seg AS segment,\n        COUNT(DISTINCT CASE WHEN cs.state_start = 'active' THEN cs.id END) AS active_start_count,\n        COUNT(DISTINCT CASE\n            WHEN cs.state_start = 'active' AND cs.state_end IS DISTINCT FROM 'active'\n            THEN cs.id\n        END) AS churned_count\n    FROM customer_states AS cs\n    INNER JOIN customer_master AS cm\n        ON cm.id = cs.id\n    GROUP BY cm.seg\n)\nSELECT\n    churn_calc.segment,\n    churn_calc.active_start_count,\n    churn_calc.churned_count,\n    ROUND(churn_calc.churned_count * 1.0 / NULLIF(churn_calc.active_start_count, 0), 4) AS logo_churn_rate\nFROM churn_calc\nORDER BY churn_calc.segment","error":{"sqlstate":"42703","message":"column ah.id does not exist"}},"ready":{"sql":"SELECT\n  lcsq.customer_segment,\n  lcsq.starting_accounts,\n  lcsq.churned_accounts,\n  lcsq.logo_churn_rate_pct\nFROM analytics.logo_churn_by_segment_quarter AS lcsq\nWHERE lcsq.period_start = DATE '2026-04-01'\n  AND lcsq.period_end_exclusive = DATE '2026-07-01'\nORDER BY lcsq.customer_segment","columns":["customer_segment","starting_accounts","churned_accounts","logo_churn_rate_pct"],"rows":[["Enterprise",40,4,10.0],["Mid-Market",40,4,10.0],["SMB",40,4,10.0]]}}],"forbidden":{"sql":"SELECT account_name, contact_email FROM core.accounts LIMIT 1","error":{"sqlstate":"42501","message":"permission denied for schema core"}},"checks":{"G01":{"kind":"answer","expected":"2026-04-01 334675, 2026-05-01 344450, 2026-06-01 387015","actual":"2026-04-01 334675, 2026-05-01 344450, 2026-06-01 387015","result":"PASS"},"G02":{"kind":"answer","expected":"32380","actual":"32380","result":"PASS"},"G03":{"kind":"answer","expected":"Enterprise 4/40=10.0, Mid-Market 4/40=10.0, SMB 4/40=10.0","actual":"Enterprise 4/40=10.0, Mid-Market 4/40=10.0, SMB 4/40=10.0","result":"PASS"},"G04":{"kind":"answer","expected":"CH 1990, DE 1780, FR 1780, SE 1780, NL 1655, PL 1640, AT 1565, GB 705","actual":"CH 1990, DE 1780, FR 1780, SE 1780, NL 1655, PL 1640, AT 1565, GB 705","result":"PASS"},"G05":{"kind":"answer","expected":"fl_0006 7705 ... fl_0087 7235 (10 rows)","actual":"fl_0006 7705 ... fl_0087 7235 (10 rows)","result":"PASS"},"D01":{"kind":"deny","expected":"42501 permission denied","actual":"42501 permission denied for schema core","result":"PASS"},"B-W01":{"kind":"deny","expected":"42501 (even in READ WRITE)","actual":"42501 permission denied for schema analytics","result":"PASS"},"B-T01":{"kind":"deny","expected":"42501 (even in READ WRITE)","actual":"42501 permission denied to create temporary tables","result":"PASS"},"B-S01":{"kind":"error","expected":"42P01 with search_path empty","actual":"not tested: SET ROLE skips login settings","result":"SKIP"},"B-X01":{"kind":"access","expected":"no CONNECT on demo_bad","actual":"no CONNECT on demo_bad","result":"PASS"},"B-P01":{"kind":"access","expected":"5 x SELECT, all on analytics","actual":"5 x SELECT, all on analytics","result":"PASS"},"Q01":{"kind":"reconcile","expected":"dups 0/0/0/0, rows 18/15/144/2592","actual":"dups 0/0/0/0, rows 18/15/144/2592","result":"PASS"},"Q02":{"kind":"reconcile","expected":"354635 + 32380 = 387015; breaks 0; parts 0","actual":"354635 + 32380 = 387015; breaks 0; parts 0","result":"PASS"},"Q03":{"kind":"reconcile","expected":"last 2026-06-01, complete 2026-06-01, after 0, passing","actual":"last 2026-06-01, complete 2026-06-01, after 0, passing","result":"PASS"},"Q04":{"kind":"reconcile","expected":"Enterprise 40-4+8=44, Mid-Market 40-4+8=44, SMB 40-4+8=44","actual":"Enterprise 40-4+8=44, Mid-Market 40-4+8=44, SMB 40-4+8=44","result":"PASS"},"Q05":{"kind":"reconcile","expected":"18 months, 0 mismatched","actual":"18 months, 0 mismatched","result":"PASS"},"Q06":{"kind":"reconcile","expected":"5 of 5 views say definition 1.0.0","actual":"5 of 5 views say definition 1.0.0","result":"PASS"},"Q07":{"kind":"lineage","expected":"5 views: upstreams as declared in model.yml","actual":"5 views: upstreams as declared in model.yml","result":"PASS"},"T01":{"kind":"answer","expected":"141 distinct accounts; 378 account-months","actual":"141 distinct accounts; 378 account-months","result":"PASS"},"T02":{"kind":"answer","expected":"2026-04-01 2720.93, 2026-05-01 2800.41, 2026-06-01 2931.93","actual":"2026-04-01 2720.93, 2026-05-01 2800.41, 2026-06-01 2931.93","result":"PASS"},"F00":{"kind":"freshness","expected":"3 h, fresh: answer","actual":"3 h, fresh: answer @ 2026-07-01T09:00","result":"PASS"},"F01":{"kind":"freshness","expected":"60 h, stale_disclosed: answer with warning","actual":"60 h, stale_disclosed: answer with warning @ 2026-07-03T18:00","result":"PASS"},"_summary":"DB CHECKS 21 of 21 PASS. 1 SKIP. 0 FAIL."},"definitions":{"ending_mrr":"  - name: ending_mrr\n    label: Ending MRR\n    description: >-\n      Monthly recurring revenue active at the last instant of a complete calendar month,\n      in EUR, one row per month. Never add it across months.\n    type: snapshot\n    relation: analytics.mrr_summary_monthly\n    expression: ending_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, return each complete month-end (three rows). If the user needs ONE\n      number, return the last month-end of the period and say so. Never sum or average\n      month-ends unless the question explicitly asks for an average balance.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: semi-additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: none\n      time_rollup: last_value\n    unit: EUR\n    precision: 0\n    population: >-\n      All 144 FOLDLINE business accounts; an account contributes its MRR at month end,\n      or 0 if it has not started or has churned.\n    inclusions:\n      - Recurring subscription fees active at month end.\n    exclusions:\n      - Setup fees\n      - Usage charges\n      - Taxes\n      - Subscriptions whose service ended before month end\n    synonyms: [month-end mrr, closing mrr, mrr balance at month end]\n    ambiguous_terms: [mrr, revenue]\n    reconciliation: >-\n      ending_mrr(previous month) + net_new_mrr(month) = ending_mrr(month).\n      Q2 2026: 354,635 + 32,380 = 387,015.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G01, F00, F01]\n    limitations:\n      - Not revenue, cash collected, ARR or profit.\n      - Never sum ending MRR across months.\n    expected_q2_2026:\n      \"2026-04-01\": 334675\n      \"2026-05-01\": 344450\n      \"2026-06-01\": 387015","net_new_mrr":"  - name: net_new_mrr\n    label: Net new MRR\n    description: >-\n      Change in MRR during a complete calendar month, in EUR: new + expansion\n      - contraction - churned. One row per month. Never read it as a balance.\n    type: movement\n    relation: analytics.mrr_summary_monthly\n    expression: net_new_mrr_eur\n    formula: new_mrr_eur + expansion_mrr_eur - contraction_mrr_eur - churned_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, add the three complete monthly movements. The result equals\n      ending MRR at the end of the quarter minus ending MRR at the end of the previous\n      quarter. Partial months are never added.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: sum\n      time_rollup: sum\n    unit: EUR\n    precision: 0\n    sign_convention: >-\n      Negative means MRR shrank during the month. April 2026 is -19,960.\n    synonyms: [net mrr change, mrr movement net, net new mrr]\n    ambiguous_terms: [mrr, mrr growth, revenue]\n    reconciliation: >-\n      sum(net_new_mrr over Q2 2026) = ending_mrr(2026-06) - ending_mrr(2026-03)\n      = 387,015 - 354,635 = 32,380.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G02]\n    limitations:\n      - A monthly change, not a balance. Not revenue, cash or profit.\n    expected_q2_2026:\n      \"2026-04-01\": -19960\n      \"2026-05-01\": 9775\n      \"2026-06-01\": 42565\n      quarter_total: 32380","logo_churn_rate":"  - name: logo_churn_rate\n    label: Logo churn rate\n    description: >-\n      Share of the accounts active at the start of a quarter that were no longer\n      active at its end, in percent (0-100), one row per customer segment and\n      quarter. Never average segment rates; recompute from the counts.\n    type: ratio\n    relation: analytics.logo_churn_by_segment_quarter\n    numerator: churned_accounts\n    denominator: starting_accounts\n    expression: round(100.0 * churned_accounts / nullif(starting_accounts, 0), 1)\n    result_grain: one row per customer_segment per quarter\n    valid_dimensions: [period_start, period_end_exclusive, customer_segment]\n    period_rule: >-\n      Quarters only, as half-open ranges [period_start, period_end_exclusive). A rate\n      for a longer period is recomputed from that period's own base, never built by\n      averaging or adding quarterly rates.\n    completeness: period_end_exclusive <= complete_through_month + 1 month\n    population: >-\n      Accounts active at the end of the month before period_start. Accounts that\n      joined during the quarter are NOT in the base, even if they churn.\n    zero_denominator: \"null\"\n    additivity:\n      class: non-additive\n      across_segments: recompute_from_components\n      across_time: recompute_from_components\n      time_rollup: recompute_from_components\n    unit: percent\n    scale: 0-100\n    precision: 1\n    synonyms: [customer churn rate, account churn rate, logo churn]\n    ambiguous_terms: [churn, churn rate]\n    reconciliation: >-\n      starting_accounts - churned_accounts + new accounts in the quarter\n      = accounts active at the quarter's end. Q2 2026 per segment: 40 - 4 + 8 = 44.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G03, Q04]\n    limitations:\n      - Counts accounts, not money. MRR churn is churned_mrr_eur on analytics.mrr_summary_monthly.\n      - An account that leaves and returns inside one quarter counts by its end state.\n    expected_q2_2026:\n      starting_accounts: 40\n      churned_accounts: 4\n      logo_churn_rate_pct: 10.0"}}</script>
+<script>
+(function(){
+  "use strict";
+  var D = JSON.parse(document.getElementById("demo-data").textContent);
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var current = "G01";
+  var fmt = new Intl.NumberFormat("en-US", {maximumFractionDigits: 2});
+  var DEFAULT_REL = {bad: "monthly_revenue", ready: "mrr_summary_monthly"};
+  var DEF_FOR = {G01: "ending_mrr", G02: "net_new_mrr", G03: "logo_churn_rate"};
+  var VIEW_FOR = {G01: "mrr_summary_monthly", G02: "mrr_summary_monthly", G03: "logo_churn_by_segment_quarter"};
+
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function num(v){ return typeof v === "number" ? fmt.format(v) : v; }
+  function caseById(id){ for (var i = 0; i < D.cases.length; i++) if (D.cases[i].id === id) return D.cases[i]; return null; }
+
+  // Truth: the kit's database checks (70_checks.sql), as captured in the build log.
+  function truth(id){
+    var c = D.checks[id]; if (!c) return null;
+    var t = {};
+    c.expected.split(",").forEach(function(part){
+      part = part.trim();
+      var m = part.match(/^(\S+) ([\d.\/=]+)$/);
+      if (m) t[m[1]] = m[2]; else t._ = part;
+    });
+    return t;
+  }
+
+  function dataTable(cols, types, rows){
+    var wrap = el("div", "tbl"); wrap.tabIndex = 0; wrap.setAttribute("role", "region");
+    var t = el("table"), thead = el("thead"), tr = el("tr");
+    cols.forEach(function(c, i){ var th = el("th", null, c); th.scope = "col"; if (types) th.appendChild(el("span", "ty", types[i])); tr.appendChild(th); });
+    thead.appendChild(tr); t.appendChild(thead);
+    var tb = el("tbody");
+    rows.forEach(function(r){
+      var row = el("tr");
+      r.forEach(function(v){
+        var td = el("td", v === null ? "null" : (typeof v === "number" ? "num" : null), v === null ? "null" : String(typeof v === "number" ? num(v) : v));
+        row.appendChild(td);
+      });
+      tb.appendChild(row);
+    });
+    t.appendChild(tb); wrap.appendChild(t);
+    return wrap;
+  }
+
+  function showRel(lane, name){
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var rels = D.lanes[lane].relations, r = null;
+    rels.forEach(function(x){ if (x.name === name) r = x; });
+    sec.querySelectorAll(".rel").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.rel === name ? "true" : "false"); });
+    var box = sec.querySelector('[data-role="relinfo"]'); box.textContent = "";
+    box.appendChild(el("p", "cm" + (r.comment ? "" : " none"), r.comment ? r.comment : "No description. Nobody wrote down what this table means."));
+    box.appendChild(dataTable(r.columns.map(function(c){ return c.name; }), r.columns.map(function(c){ return c.type; }), r.rows)
+    ).setAttribute("aria-label", r.schema + "." + r.name + ", first rows");
+    box.appendChild(el("p", "cap", r.schema + "." + r.name + " · " + r.kind + " · " + r.rows.length + " of " + fmt.format(r.rowCount) + " rows, sorted by " + r.columns[0].name + " descending"));
+  }
+
+  function buildRels(lane){
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var ul = sec.querySelector('[data-role="rels"]');
+    D.lanes[lane].relations.forEach(function(r){
+      var li = el("li"), b = el("button", "rel", r.schema + "." + r.name);
+      b.type = "button"; b.dataset.rel = r.name; b.setAttribute("aria-pressed", "false");
+      b.appendChild(el("small", null, fmt.format(r.rowCount) + " rows"));
+      b.addEventListener("click", function(){ showRel(lane, r.name); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+    showRel(lane, DEFAULT_REL[lane]);
+  }
+
+  // Compare one lane's result with the checks. Returns [{key, value, ok}].
+  function verdicts(id, res){
+    var t = truth(id); if (!t || !res || res.error) return null;
+    var out = [];
+    if (id === "G01"){
+      res.rows.forEach(function(r){ var exp = t[r[0]]; out.push({key: r[0], label: monthName(r[0]), value: num(r[1]), ok: exp != null && Number(exp) === Number(r[1]), exp: exp}); });
+    } else if (id === "G02"){
+      var r0 = res.rows[0] || [], v = r0[r0.length - 1];
+      out.push({key: "Q2", label: "Net new MRR, Q2", value: num(v), ok: Number(t._) === Number(v), exp: t._});
+    } else if (id === "G03"){
+      res.rows.forEach(function(r){
+        var exp = t[r[0]]; var got = r[2] + "/" + r[1] + "=" + Number(r[3]).toFixed(1);
+        out.push({key: r[0], label: r[0], value: r[2] + " of " + r[1] + " = " + Number(r[3]).toFixed(1) + " %", ok: exp === got, exp: exp});
+      });
+    }
+    return out;
+  }
+  function monthName(iso){ var m = {"01":"January","02":"February","03":"March","04":"April","05":"May","06":"June","07":"July","08":"August","09":"September","10":"October","11":"November","12":"December"}; var p = String(iso).split("-"); return (m[p[1]] || iso) + " " + p[0]; }
+
+  function expText(id){
+    var t = truth(id); if (!t) return "";
+    if (id === "G01") return "Definition says: April 334,675 · May 344,450 · June 387,015 (month-end levels).".replace(/[\d,]+/g, function(s){ return s; });
+    if (id === "G02") return "Definition says: " + fmt.format(Number(t._)) + " for the quarter.";
+    return "Definition says: 4 of 40 = 10.0 % in every segment.";
+  }
+
+  function renderResult(lane){
+    var c = caseById(current), res = c[lane];
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var box = sec.querySelector('[data-role="result"]'); box.textContent = "";
+    box.classList.remove("checked");
+    if (res.error){
+      var e = el("div", "err");
+      e.appendChild(el("b", null, "ERROR " + res.error.sqlstate + ": ")); e.appendChild(document.createTextNode(res.error.message));
+      box.appendChild(e);
+      box.appendChild(el("p", "sqlnote", "PostgreSQL could not run this SQL on the kit's export tables: acct_history calls its key acct_id, and its states are one-letter codes such as A and N. In the recorded run on 23 August 2026 the same SQL returned 0 of 0 for every segment. Either way there is no churn rate."));
+    } else {
+      var v = verdicts(current, res);
+      var grid = el("div", "bigrow");
+      v.forEach(function(x){
+        var cell = el("div", "cell " + (x.ok ? "ok" : "no"));
+        cell.appendChild(el("div", "k", x.label));
+        cell.appendChild(el("div", "v", x.value));
+        cell.appendChild(el("div", "verdict", x.ok ? "Matches the definition" : "Does not match"));
+        grid.appendChild(cell);
+      });
+      box.appendChild(grid);
+      var tbl = dataTable(res.columns, null, res.rows); tbl.setAttribute("aria-label", "Rows returned"); tbl.style.marginTop = "10px"; tbl.style.maxHeight = "180px";
+      box.appendChild(tbl);
+      box.appendChild(el("p", "cap", res.rows.length + " row" + (res.rows.length === 1 ? "" : "s") + " returned, as captured."));
+    }
+    box.hidden = false;
+    sec.querySelector('[data-role="placeholder"]').hidden = true;
+    if (!reduce){ box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal"); }
+    var chk = sec.querySelector('[data-role="check"]');
+    chk.disabled = !!res.error;
+  }
+
+  function runCheck(lane){
+    var c = caseById(current), res = c[lane];
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var box = sec.querySelector('[data-role="result"]');
+    if (box.hidden) renderResult(lane);
+    var v = verdicts(current, res); if (!v) return;
+    box.classList.add("checked");
+    var old = box.querySelector(".summary"); if (old) old.remove();
+    var oldT = box.querySelector(".truth"); if (oldT) oldT.remove();
+    var okCount = v.filter(function(x){ return x.ok; }).length;
+    var all = okCount === v.length;
+    box.appendChild(el("p", "summary " + (all ? "ok" : "no"), all ? "Matches the definition: " + okCount + " of " + v.length + "." : "Does not match the definition: " + okCount + " of " + v.length + " match."));
+    box.appendChild(el("p", "truth", expText(current) + " Source: the kit's database check " + current + "."));
+  }
+
+  function resetLane(lane){
+    var c = caseById(current), res = c[lane];
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    sec.querySelector('[data-role="sql"]').textContent = res.sql;
+    var note = sec.querySelector('[data-role="sqlnote"]');
+    note.textContent = lane === "bad"
+      ? "Run as foldline_bad_reader with search_path public."
+      : "Run as foldline_ready_reader with search_path analytics.";
+    var box = sec.querySelector('[data-role="result"]'); box.hidden = true; box.textContent = "";
+    sec.querySelector('[data-role="placeholder"]').hidden = false;
+    sec.querySelector('[data-role="check"]').disabled = true;
+  }
+
+  function setCase(id){
+    current = id;
+    var c = caseById(id);
+    document.getElementById("qtext").textContent = c.question;
+    document.querySelectorAll(".chip[data-case]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.case === id ? "true" : "false"); });
+    resetLane("bad"); resetLane("ready");
+    var dn = DEF_FOR[id];
+    document.querySelector('[data-role="defname"]').textContent = "semantic/metric.yml · " + dn;
+    document.getElementById("def-text").textContent = D.definitions[dn] || "";
+    var vc = null; D.lanes.ready.relations.forEach(function(r){ if (r.name === VIEW_FOR[id]) vc = r; });
+    document.getElementById("view-comment").textContent = vc ? "COMMENT ON VIEW analytics." + vc.name + "\n\n" + vc.comment : "";
+  }
+
+  document.querySelectorAll(".chip[data-case]").forEach(function(b){ b.addEventListener("click", function(){ setCase(b.dataset.case); }); });
+  ["bad", "ready"].forEach(function(lane){
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    sec.querySelector('[data-role="run"]').addEventListener("click", function(){ renderResult(lane); });
+    sec.querySelector('[data-role="check"]').addEventListener("click", function(){ runCheck(lane); });
+    buildRels(lane);
+  });
+
+  document.getElementById("forbid-sql").textContent = D.forbidden.sql;
+  document.getElementById("forbid-run").addEventListener("click", function(){
+    var box = document.getElementById("forbid-result"); box.textContent = "";
+    var e = el("div", "err");
+    e.appendChild(el("b", null, "ERROR " + D.forbidden.error.sqlstate + ": ")); e.appendChild(document.createTextNode(D.forbidden.error.message));
+    box.appendChild(e);
+    box.appendChild(el("p", "sqlnote", "PostgreSQL refused the read. No rows left the database. The prompt did not stop it; the grant did."));
+    box.hidden = false;
+    if (!reduce){ box.classList.remove("reveal"); void box.offsetWidth; box.classList.add("reveal"); }
+  });
+
+  document.getElementById("checks-summary").textContent = D.checks._summary ? "Kit build on this capture: " + D.checks._summary + " These test the database and the course rules, not the AI." : "";
+  document.getElementById("prov-detail").textContent = "Server: PostgreSQL " + D.postgres.split(" ")[0] + ". Question SQL: the recorded AI runs from 23 August 2026, run again as the matching reader login. Checks: the kit's 70_checks.sql.";
+  setCase("G01");
+})();
+</script>
+</body>
+</html>

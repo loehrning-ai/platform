@@ -13,6 +13,7 @@ export const PORTRAIT_SHA256 = "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd
 export const BUILDER_PAGE_SOURCE = "scripts/course03/builder/page/builder.html";
 export const BUILDER_KIT_SOURCE = "scripts/course03/builder/kit/builder";
 export const GUIDE_SOURCE = "scripts/course03/guide.html";
+export const DEMO_PAGE_SOURCE = "scripts/course03/demo/demo.html";
 
 export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 

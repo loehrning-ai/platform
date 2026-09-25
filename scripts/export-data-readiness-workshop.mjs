@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { buildKitArchive, kitArchiveFiles, KIT_SOURCE_FILES } from "./course03/kit-archive.mjs";
 import { loadOverrides, resolveOverride, writeManifest as writeOverrideManifest } from "./course03/overrides.mjs";
 import { KIT_ASSET_RIGHTS, KIT_README, PUBLICATION } from "./course03/published-text.mjs";
-import { assetRows, BUILDER_KIT_SOURCE, BUILDER_PAGE_SOURCE, bundleManifestText, GUIDE_SOURCE, listFiles, portraitRecord, sha256, writeAssetManifest } from "./course03/publication.mjs";
+import { assetRows, BUILDER_KIT_SOURCE, BUILDER_PAGE_SOURCE, bundleManifestText, DEMO_PAGE_SOURCE, GUIDE_SOURCE, listFiles, portraitRecord, sha256, writeAssetManifest } from "./course03/publication.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = process.argv[2] && path.resolve(process.argv[2]);
@@ -99,6 +99,7 @@ put("data-readiness-kit/ASSET-RIGHTS.md", KIT_ASSET_RIGHTS);
 const builderFiles = listFiles(path.join(root, BUILDER_KIT_SOURCE));
 for (const name of builderFiles) put(`data-readiness-kit/builder/${name}`, readFileSync(path.join(root, BUILDER_KIT_SOURCE, name)));
 put("builder.html", readFileSync(path.join(root, BUILDER_PAGE_SOURCE)));
+put("demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE)));
 put("guide.html", readFileSync(path.join(root, GUIDE_SOURCE)));
 put("PUBLICATION.md", PUBLICATION);
 put("data-readiness-kit.zip", buildKitArchive(kitArchiveFiles(builderFiles).map((name) => [name, written.get(`data-readiness-kit/${name}`)])));

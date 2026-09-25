@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#141414" />
-  <title>Data Readiness for AI · loehrning.ai × brainster</title>
+  <title>Data Readiness for AI · loehrning.ai × Brainster</title>
   <meta name="description" content="An interactive workshop showing how governed data interfaces turn plausible analytics answers into correct, bounded and testable ones." />
   <link rel="icon" href="./assets/favicon.svg" />
   <link rel="stylesheet" href="./lib/tokens.css" />
@@ -266,7 +266,7 @@
 
   <section class="slide" id="bad-architecture" data-act="1" data-kind="main" data-label="Bad architecture" data-section="Bad interface · PostgreSQL 16" data-track="database" data-seconds="225" data-note-key="bad-architecture" data-note="Show a working database that offers several reasonable-looking tables and never says which one means month-end MRR." data-design="v3" data-route="shown">
   <!-- scene:bad-architecture -->
-<h1 class="scene-title">Seven export tables. Nothing is broken.</h1>
+<h1 class="scene-title">Seven export tables, no MRR definition</h1>
 <span class="lane lane--export" id="bad-architecture-lane" data-motion="fade"><span class="lane__swatch"></span><svg class="icon" aria-hidden="true"><use href="#i-export"/></svg>Export tables</span>
 <div class="ba-diagram" id="bad-architecture-diagram" data-visual role="img" aria-label="Architecture: a question goes through the AI app and the AI model, then through a login that sees all seven export tables, all built from the same company data.">
   <svg class="ba-wires" id="bad-architecture-wires" data-allow-overlap width="1920" height="984" viewBox="0 0 1920 984" aria-hidden="true">
@@ -329,7 +329,7 @@
 
   <section class="slide" id="bad-ask" data-act="1" data-kind="main" data-label="Bad Ask" data-section="Bad interface · plausible wrong answer" data-track="question" data-seconds="360" data-note-key="bad-ask" data-note="Show the recorded AI answer and let the room judge it. Do not reveal the correct numbers or grade anything on this scene." data-design="v3" data-route="shown">
   <!-- scene:bad-ask -->
-<h1 class="scene-title">The AI answers. It looks right.</h1>
+<h1 class="scene-title">The AI's answer from the export tables</h1>
 <div class="q-card" id="bad-ask-question" data-motion="rise" data-focus>
   <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
   <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
@@ -378,7 +378,7 @@
   <section class="slide" id="failure-anatomy" data-act="2" data-kind="main" data-label="Failure anatomy" data-section="Failure anatomy · captured SQL, wrong meaning" data-track="failure" data-seconds="240" data-note-key="failure-anatomy" data-note="Trace the wrong April value to four decisions nobody wrote down, then compare the run with the database check." data-design="v3" data-route="shown" data-live-check="ready:G01">
   <!-- scene:failure-anatomy -->
 <h1 class="scene-title">Why is April negative?</h1>
-<svg class="fa-chart" id="failure-anatomy-chart" data-visual width="960" height="424" viewBox="0 0 960 424" role="img" aria-label="Truth Chart for April, May and June: the recorded AI run and the database check on one scale.">
+<svg class="fa-chart" id="failure-anatomy-chart" data-visual width="960" height="424" viewBox="0 0 960 424" role="img" aria-label="Truth Chart for April, May and June: the recorded AI run, drawn three times taller until the database check appears on the same scale.">
   <g transform="translate(0 56)">
     <rect id="failure-anatomy-bar-0-1" class="chart__export" x="352" y="252.13" width="120" height="6.53" data-motion="grow" style="--order:0"/>
     <rect id="failure-anatomy-bar-0-2" class="chart__export" x="704" y="230.21" width="120" height="28.45" data-motion="grow" style="--order:1"/>
@@ -440,7 +440,7 @@
 
   <section class="slide" id="controlled-comparison" data-act="2" data-kind="main" data-label="Controlled comparison" data-section="Controlled comparison · fixed and changed" data-track="control" data-seconds="150" data-note-key="controlled-comparison" data-note="Show what stayed the same (question, data, AI route, answer settings) and the package that changed: views, definitions + examples, and the login." data-design="v3" data-route="shown">
   <!-- scene:controlled-comparison -->
-<h1 class="scene-title">Same question. A different data setup.</h1>
+<h1 class="scene-title">What stayed the same, and what changed</h1>
 <div class="cc-stage" data-visual="controlled-variable diagram: two lanes whose shared parts merge into one block; only the database column changes">
   <svg class="cc-wires" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
     <g data-step-until="1">
@@ -527,7 +527,7 @@
 
   <section class="slide" id="ready-architecture" data-act="3" data-kind="main" data-label="Ready architecture" data-section="Ready interface · approved answer path" data-track="surface" data-seconds="360" data-note-key="ready-architecture" data-note="Show that the ready setup is smaller, not just cleaner: private data is locked away and the AI reaches only five approved views." data-design="v3" data-route="shown">
   <!-- scene:ready-architecture -->
-<h1 class="scene-title">Private data stays locked. The AI sees five views.</h1>
+<h1 class="scene-title">The ready setup: the AI reads five views</h1>
 <div class="ra-stage" data-visual="ready architecture: shared top row plus the isometric boundary (private stack, permission wall, five view panes, the AI side)">
   <svg class="ra-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
     <defs>
@@ -745,13 +745,13 @@
     <span class="stamp sc-stamp" id="semantic-contract-stamp" data-step="5" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-contract"/></svg>Approved: Revenue Analytics</span>
   </div>
 </div>
-<p class="sc-caption" id="semantic-contract-caption" data-step-until="2" data-motion="rise" style="--order:1">The four blanks the AI had to guess.</p>
+<p class="sc-caption" id="semantic-contract-caption" data-motion="rise" style="--order:1">A semantic layer is the written, machine-readable definition of your business numbers: which table, which column, how to add it up, and what never to do.</p>
   <!-- /scene:semantic-contract -->
   </section>
 
-  <section class="slide" id="contract-consumers" data-act="3" data-kind="main" data-label="Contract consumers" data-section="Contract compiler · consumers versus controls" data-track="consumers" data-seconds="300" data-note-key="contract-consumers" data-note="One written definition feeds four readers, but having it is not the same as using it. The two real locks sit outside it." data-design="v3" data-route="shown">
+  <section class="slide" id="contract-consumers" data-act="3" data-kind="main" data-label="Contract consumers" data-section="Definition · readers and locks" data-track="consumers" data-seconds="300" data-note-key="contract-consumers" data-note="One written definition feeds four readers, but having it is not the same as using it. The two real locks sit outside it." data-design="v3" data-route="shown">
   <!-- scene:contract-consumers -->
-<h1 class="scene-title">One definition, four readers, separate locks.</h1>
+<h1 class="scene-title">Who reads the definition, what enforces it</h1>
 <div class="cc-stage" id="contract-consumers-stage" data-visual="fan-out diagram: one definition compiles for four readers; below a hatched band, the two locks that sit outside the definition">
   <svg class="cc-wires" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
     <defs>
@@ -805,15 +805,15 @@
   <!-- /scene:contract-consumers -->
   </section>
 
-  <section class="slide" id="ready-rematch" data-act="4" data-kind="main" data-label="Ready rematch" data-section="Rematch · same question, governed path" data-track="rematch" data-seconds="390" data-note-key="ready-rematch" data-note="Ask the same question again through the approved views. Show the recorded answer first, then the database check and both known gaps." data-design="v3" data-route="shown" data-live-check="ready:G01">
+  <section class="slide" id="ready-rematch" data-act="4" data-kind="main" data-label="Ready rematch" data-section="Rematch · same question, approved views" data-track="rematch" data-seconds="390" data-note-key="ready-rematch" data-note="Ask the same question again through the approved views. Show the recorded answer first, then the database check and both known gaps." data-design="v3" data-route="shown" data-live-check="ready:G01">
   <!-- scene:ready-rematch -->
-<h1 class="scene-title">Same question. Approved views.</h1>
+<h1 class="scene-title">The same question on the approved views</h1>
 <div class="q-card is-unchanged" id="ready-rematch-question" data-step-until="3" data-motion="rise" data-focus>
   <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
   <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
   <span class="q-card__stamp" data-motion="stamp" style="--order:1">Unchanged</span>
 </div>
-<div class="rr-strip" id="ready-rematch-strip" data-step-until="2" data-motion="rise" style="--order:1" data-visual role="img" aria-label="The question goes to the AI, which reads the approved views through a read-only key.">
+<div class="rr-strip" id="ready-rematch-strip" data-step-until="2" data-motion="rise" style="--order:1" data-visual role="img" aria-label="The question goes to the AI, which reads the approved views through a read-only login.">
   <svg class="rr-strip__wires" data-allow-overlap width="528" height="96" viewBox="0 0 528 96" aria-hidden="true">
     <path class="edge rr-edge" d="M96 48H202"/>
     <path class="edge-head" d="M216 48l-14-7v14z"/>
@@ -854,7 +854,7 @@
 
   <section class="slide" id="generalization" data-act="4" data-kind="main" data-label="Generalization" data-section="Generalization · a change and a rate" data-track="generalize" data-seconds="330" data-note-key="generalization" data-note="Show that the approved views also answer a change and a rate correctly, while the export tables get neither." data-design="v3" data-route="shown" data-live-check="ready:G02 ready:G03">
   <!-- scene:generalization -->
-<h1 class="scene-title">Does it hold for other questions?</h1>
+<h1 class="scene-title">Two more questions: a change and a rate</h1>
 <div class="gz-top" id="generalization-top" data-focus>
   <div class="q-card gz-card" id="generalization-g02-card" data-step-until="3" data-motion="rise">
     <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
@@ -942,7 +942,7 @@
 
   <section class="slide" id="honest-no" data-act="5" data-kind="main" data-label="Honest no" data-section="Boundaries · refuse and deny" data-track="boundary" data-seconds="360" data-note-key="honest-no" data-note="A ready system also says no: course rules ask back or refuse before any query, and the database permission blocks private data." data-design="v3" data-route="shown" data-live-check="ready:C01 ready:R01 ready:R02 ready:D01">
   <!-- scene:honest-no -->
-<h1 class="scene-title">Sometimes the right answer is no.</h1>
+<h1 class="scene-title">When the AI should ask back or refuse</h1>
 <div class="hn-stage" data-visual="two layers of no: four requests, the course rules that ask back or refuse before any query, and the isometric database permission wall that denies a forced read">
   <svg class="hn-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
     <!-- Layer 2: the database permission (foundation sprite parts, reused from ready-architecture). -->
@@ -1012,9 +1012,9 @@
   <!-- /scene:honest-no -->
   </section>
 
-  <section class="slide" id="freshness" data-act="5" data-kind="main" data-label="Freshness" data-section="Freshness · correct can still be stale" data-track="freshness" data-seconds="240" data-note-key="freshness" data-note="Right meaning is not the same as fresh data. Only the clock on the slide moves; the data itself never changes." data-design="v3" data-route="shown">
+  <section class="slide" id="freshness" data-act="5" data-kind="main" data-label="Freshness" data-section="Freshness · how old the data is" data-track="freshness" data-seconds="240" data-note-key="freshness" data-note="Right meaning is not the same as fresh data. Only the clock on the slide moves; the data itself never changes." data-design="v3" data-route="shown">
   <!-- scene:freshness -->
-<h1 class="scene-title">Right meaning. How old is the data?</h1>
+<h1 class="scene-title">How old is the data behind the answer?</h1>
 <div class="fr-stage" data-visual="age gauge: a 0 to 72 hour ruler with the shaded, dashed-edge warning zone after 36 hours, the data needle, and a ghost 60-hour what-if marker">
   <!-- Ruler scale: x = 164 + 22 px per hour (0h 164 · 3h 230 · 36h 956 · 60h 1484 · 72h 1748). -->
   <svg class="fr-art" data-allow-overlap viewBox="0 0 1920 1080" width="1920" height="1080" aria-hidden="true">
@@ -1081,9 +1081,9 @@
   <!-- /scene:freshness -->
   </section>
 
-  <section class="slide" id="evaluation" data-act="5" data-kind="main" data-label="Evaluation" data-section="Proof · five behaviors, nine-case corpus" data-track="evaluation" data-seconds="300" data-note-key="evaluation" data-note="Show the recorded AI runs first, then the nine fixed database checks. Never present 9 of 9 as an AI score." data-design="v3" data-route="shown" data-live-check="corpus">
+  <section class="slide" id="evaluation" data-act="5" data-kind="main" data-label="Evaluation" data-section="Evaluation · five requests, nine checks" data-track="evaluation" data-seconds="300" data-note-key="evaluation" data-note="Show the recorded AI runs first, then the nine fixed database checks. Never present 9 of 9 as an AI score." data-design="v3" data-route="shown" data-live-check="corpus">
   <!-- scene:evaluation -->
-<h1 class="scene-title" data-step-until="3">Tests check the setup, not the AI.</h1>
+<h1 class="scene-title" data-step-until="3">What should the AI do with each request?</h1>
 <h1 class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI score 9 of 9?</h1>
 <h1 class="ev-headline" id="evaluation-scope" data-step="4" data-motion="rise" style="--order:1" data-focus>They test the database and course rules, <span class="ev-headline__focus">not the AI.</span></h1>
 <div class="ev-stage" data-visual="five cases, each question with its expected behaviour, then two separate boards: recorded AI runs on three questions, and nine fixed database checks in a nine-cell grid with 9 of 9 and its scope line">
@@ -1207,14 +1207,14 @@
   <p class="yd-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> fill the four blanks: kind of number, rows, months, table.</p>
   <p class="yd-now__text" data-step="3" data-step-until="4" data-motion="fade"><b>Now:</b> one thing the AI must never reach.</p>
   <p class="yd-now__text" data-step="4" data-step-until="5" data-motion="fade"><b>Now:</b> write one test. Compare with a partner.</p>
-  <p class="yd-now__text" data-step="5" data-motion="fade">Two pairs: say your question and your hardest box.</p>
+  <p class="yd-now__text" data-step="5" data-motion="fade">Two pairs share with the room: your question and your hardest box.</p>
 </div>
   <!-- /scene:your-data -->
   </section>
 
   <section class="slide" id="resolution" data-act="6" data-kind="main" data-label="Resolution" data-section="Resolution · same experiment" data-track="resolution" data-seconds="150" data-note-key="resolution" data-note="Recall the opening vote, then show that only the interface changed. The verdict is a limited pilot with named gaps, not an AI-ready stamp." data-design="v3" data-route="shown" data-live-check="ready:G01">
   <!-- scene:resolution -->
-<h1 class="scene-title" id="resolution-title">Same question. What changed the answer?</h1>
+<h1 class="scene-title" id="resolution-title">What changed between the two answers?</h1>
 <p class="rs-closing" id="resolution-closing" data-step="3" data-motion="rise" style="--order:2">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
 <div class="q-card q-card--hero" id="resolution-question" data-step-until="1" data-motion="rise" style="--order:0" data-focus>
   <svg class="icon" aria-hidden="true"><use href="#i-question"/></svg>
@@ -1268,7 +1268,7 @@
 <p class="stamp rs-verdict" id="resolution-verdict" data-step="3" data-motion="stamp" style="--order:0" data-focus><svg class="icon" aria-hidden="true"><use href="#i-checklist"/></svg><span>Verdict: limited pilot, not signed off.</span></p>
 <p class="rs-gapline" id="resolution-gapline" data-step="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap"/></svg><span>Gaps: no definition cited · SQL leaned on a setting · one run each</span></p>
 <div class="rs-sign" id="resolution-sign" data-step="3" data-motion="fade" style="--order:3">
-  <p class="rs-materials"><span class="rs-materials__label">Materials:</span> <span class="rs-materials__url">loehrning.ai/workshops/datenbereitschaft-fuer-ki</span></p>
+  <p class="rs-materials"><span class="rs-materials__label">Materials:</span> <span class="rs-materials__url">loehrning.ai/workshops/datenbereitschaft-fuer-ki</span> <span class="rs-materials__label">· Try it:</span> <a class="rs-materials__url" href="./demo.html">interactive demo</a></p>
   <p class="rs-lockup" id="resolution-lockup"><img src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /><span class="rs-lockup__co">× Brainster</span></p>
 </div>
 <div class="room-vote rs-vote" id="resolution-vote" data-step-until="1" data-motion="rise" style="--order:1" data-allow-overlap>
@@ -1405,9 +1405,64 @@
   <!-- /scene:appendix-semantic-contract -->
   </section>
 
+  <section class="slide" id="appendix-fix" data-kind="appendix" data-label="What a fix looks like" data-section="Appendix · what a fix looks like" data-track="appendix" data-seconds="0" data-note-key="appendix-fix" data-note="For questions about what a fix means in practice: four small files, on any database." data-design="v3" data-route="hidden">
+  <!-- scene:appendix-fix -->
+<h1 class="scene-title">What a fix looks like: four small files</h1>
+<div class="fx-case">
+  <p class="fx-case__q"><span class="fx-case__k">Question</span>“Show helmets on hand at month end for each month of Q2 2026.” <span class="fx-case__src">Bike shop, Harbour store, synthetic data</span></p>
+  <p class="fx-case__a"><span class="fx-case__k">Wrong</span><b class="fx-wrong">Q2 stock = 315</b> (three month-end counts added) <span class="fx-case__k fx-case__k--gap">Right</span><b>110 / 95 / 110</b> · Same pattern as FOLDLINE: a level is never added across months.</p>
+</div>
+<ol class="fx-grid" data-visual="four-files">
+  <li class="fx-panel">
+    <p class="fx-head"><span class="fx-num">1</span>Approved view <span class="fx-kind">SQL</span></p>
+<pre class="code fx-code"><code>CREATE VIEW analytics.inventory_by_store_category_monthly AS
+SELECT store_name, category_name, month_start,
+  ending_units_on_hand, received_units, sold_units
+FROM core.stock_months;</code></pre>
+    <p class="fx-does">The AI sees readable names: one row per store, category and month.</p>
+    <p class="fx-with">Works with: BigQuery, Snowflake, Databricks, PostgreSQL</p>
+  </li>
+  <li class="fx-panel">
+    <p class="fx-head"><span class="fx-num">2</span>Read-only access <span class="fx-kind">SQL</span></p>
+<pre class="code fx-code"><code>GRANT SELECT
+  ON analytics.inventory_by_store_category_monthly
+  TO ai_reader;
+-- no grant on core.* or raw.*</code></pre>
+    <p class="fx-does"><b>The lock:</b> the database refuses everything else.</p>
+    <p class="fx-with">BigQuery: dataset role · Snowflake: role grant · Postgres: GRANT</p>
+  </li>
+  <li class="fx-panel">
+    <p class="fx-head"><span class="fx-num">3</span>Metric definition <span class="fx-kind">semantic layer · metrics.yml</span></p>
+<pre class="code fx-code"><code>metrics:
+  units_on_hand:
+    source: analytics.inventory_by_store_category_monthly
+    kind: level   # snapshot: never add across months
+    meta: {unit: units, owner: supply-chain}
+  units_sold:
+    kind: change  # add freely across months</code></pre>
+    <p class="fx-does">Says what each number is and how to add it up; it does not block.</p>
+    <p class="fx-with">Works with: dbt Semantic Layer, Cube, LookML, a plain YAML file</p>
+  </li>
+  <li class="fx-panel">
+    <p class="fx-head"><span class="fx-num">4</span>A Claude Skill <span class="fx-kind">SKILL.md</span></p>
+<pre class="code fx-code"><code>---
+name: inventory-metrics
+description: Use for questions about stock, sales or
+  sell-through. Read the metric file first.
+---
+1. Read metrics.yml. 2. Query only analytics.* views.
+3. Answer with a trace: view, metric, months used.</code></pre>
+    <p class="fx-does">Guides Claude to the definitions; the grant in 2 still enforces.</p>
+    <p class="fx-with">Works with: Claude Code, Claude apps, the Claude API</p>
+  </li>
+</ol>
+<p class="fx-kit"><b>Kit:</b> <span class="mono">data-readiness-kit/builder/</span> (runnable PostgreSQL starter with the same pattern) · <a href="./demo.html">Interactive demo: raw tables vs certified views</a></p>
+  <!-- /scene:appendix-fix -->
+  </section>
+
   <section class="slide" id="appendix-access-controls" data-kind="appendix" data-label="Access controls" data-section="Appendix · database boundary" data-track="appendix" data-seconds="0" data-note-key="appendix-access-controls" data-note="For questions about the difference between instructions, course rules and database permissions." data-design="v3" data-route="hidden">
   <!-- scene:appendix-access-controls -->
-<h1 class="scene-title">Four controls, one final lock.</h1>
+<h1 class="scene-title">Four controls and the one that enforces</h1>
 <div class="ac-edges" data-allow-overlap aria-hidden="true">
   <svg width="1728" height="320" viewBox="0 0 1728 320">
     <path class="edge" data-motion="draw" style="--order:0" d="M276 92H570" />
@@ -1423,7 +1478,7 @@
 <ol class="ac-chain" data-visual="control-chain">
   <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-contract" /></svg></span><span class="ac-label">Guide</span><span class="ac-sub">guidance</span></li>
   <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-refuse" /></svg></span><span class="ac-label">Course policy</span><span class="ac-sub">clarify or refuse before SQL</span></li>
-  <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ac-label">Read-only SQL guard</span><span class="ac-sub">defence in depth</span></li>
+  <li class="ac-step"><span class="ac-box"><svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg></span><span class="ac-label">Read-only SQL guard</span><span class="ac-sub">defense in depth</span></li>
   <li class="ac-step ac-step--lock"><span class="ac-wall"><span class="ac-box ac-box--focus" data-focus><svg class="icon" aria-hidden="true"><use href="#i-lock" /></svg></span></span><span class="ac-label">PostgreSQL role</span><span class="ac-sub">enforces the boundary</span></li>
 </ol>
 <div class="ac-left">
@@ -1535,7 +1590,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 
   <section class="slide" id="appendix-ask-boundary" data-kind="appendix" data-label="Ask boundary" data-section="Appendix · Ask integration boundary" data-track="appendix" data-seconds="0" data-note-key="appendix-ask-boundary" data-note="For questions about what the AI tool receives, and the extra meaning it currently drops." data-design="v3" data-route="hidden">
   <!-- scene:appendix-ask-boundary -->
-<h1 class="scene-title">Compiled does not mean consumed.</h1>
+<h1 class="scene-title">What the AI tool receives, and what it drops</h1>
 <div class="ab-shots" data-visual="recorded-boundary-summary">
   <figure class="ab-shot"><div class="ab-public-panel"><strong>Two synthetic connections</strong><p>Bad: unclear raw fields.</p><p>Ready: approved analytical views.</p><p>Same frozen FOLDLINE dataset.</p></div><figcaption class="ab-shot__name">Historical source setup, summarized</figcaption></figure>
   <figure class="ab-shot"><div class="ab-public-panel"><strong>Three recorded questions</strong><p>Ending balance. Net change. Churn.</p><p>One observed run per question and lane.</p><p>No new model call on this page.</p></div><figcaption class="ab-shot__name">Historical run record, summarized</figcaption></figure>
@@ -1546,7 +1601,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 </div>
 <div class="ab-stack-edges" data-allow-overlap aria-hidden="true">
   <svg width="80" height="600" viewBox="0 0 80 600">
-    <path class="edge" data-motion="draw" style="--order:0" d="M40 0V600" />
+    <path class="edge" data-motion="draw" style="--order:0" d="M40 0V477" />
   </svg>
 </div>
 <ol class="ab-stack" data-visual="ask-boundary">
@@ -1560,7 +1615,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 
   <section class="slide" id="appendix-run-metadata" data-kind="appendix" data-label="Run metadata" data-section="Appendix · evidence envelope" data-track="appendix" data-seconds="0" data-note-key="appendix-run-metadata" data-note="For questions about what a recorded AI run and a database check mean, and what each record holds." data-design="v3" data-route="hidden">
   <!-- scene:appendix-run-metadata -->
-<h1 class="scene-title">Four labels keep two evidence planes separate.</h1>
+<h1 class="scene-title">Four evidence labels: AI runs and database checks</h1>
 <div class="rm-plane rm-plane--model" data-visual="evidence-planes">
   <p class="rm-head"><svg class="icon icon--40" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI run</p>
   <p class="rm-tag"><span class="rm-code">MODEL CAPTURE</span></p>
@@ -1578,7 +1633,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
   <p class="rm-lead rm-corpus">Independent truth: the deterministic ready corpus, <b>9 / 9</b>.</p>
 </div>
 <div class="rm-verdict">
-  <span class="rm-stamp" data-focus>BOUNDED PILOT · CITATION GATE RED</span>
+  <span class="rm-stamp" data-focus>LIMITED PILOT · CITATION GATE RED</span>
   <span class="rm-verdict__rest">metric citation absent · ready E2E FAIL · fresh 18-call protocol NOT RUN 0/18 · AI deployment BLOCKED</span>
 </div>
 <p class="rm-limits"><b>Does not prove:</b> repeatable model quality · pinned model version · production readiness · current provider availability · 9/9 as an AI score · course policy or database denial as Ask behavior</p>
@@ -1605,7 +1660,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
   <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-lock" /></svg></span><span class="rs-kind">Boundary</span><span class="rs-source">PostgreSQL privileges</span></li>
   <li class="rs-col"><span class="rs-box"><svg class="icon icon--72" aria-hidden="true"><use href="#i-checklist" /></svg></span><span class="rs-kind">Evidence</span><span class="rs-source">NIST AI RMF</span><span class="rs-source">OpenLineage</span></li>
 </ol>
-<p class="rs-note">Claude Code memory docs scope <span class="mono">CLAUDE.md</span>. Full URLs and rights: speaker notes and <span class="mono">research/source-ledger.md</span>.</p>
+<p class="rs-note">Claude Code memory docs scope <span class="mono">CLAUDE.md</span>. Full URLs and rights: speaker notes.</p>
   <!-- /scene:appendix-research -->
   </section>
 

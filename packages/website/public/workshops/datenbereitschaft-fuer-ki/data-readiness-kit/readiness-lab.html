@@ -416,7 +416,7 @@
     .control[data-state="not-run"] .chip { border-style: dashed; }
 
     fieldset.levels-pick { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; border: 2px solid var(--ink); min-width: 0; }
-    .pick { position: relative; }
+    .pick { position: relative; display: grid; }
     .pick + .pick { border-left: 2px solid var(--ink); }
     .pick input { position: absolute; inset: 0; opacity: 0; margin: 0; pointer-events: none; }
     .pick label {
@@ -496,7 +496,7 @@
     /* ---------- Print: one or two A4 pages ---------- */
     @media print {
       @page { size: A4; margin: 14mm; }
-      html, body { background: #fff; font-size: 11pt; }
+      html, body { background: #fff; font-size: 11pt; min-height: 0; }
       .skip-link, .crumbs, .rail, .brief, .sim, .runbar, .verdict-section, .next-steps, .rule, noscript, .checks { display: none !important; }
       body.print-detail .checks { display: block !important; }
       .masthead { padding: 0 0 8px; border-bottom: 2px solid #000; }
@@ -512,6 +512,8 @@
       .print-summary .blank { display: inline-block; min-width: 110mm; border-bottom: 1px solid #000; }
       .print-summary p { margin: 3px 0; }
       .checks { margin-top: 12px; break-before: page; }
+      main { display: flex; flex-direction: column; }
+      .print-summary { order: -1; }
       .checks-head { display: block; }
       .levels, .control-test .reason { display: none; }
       .gate, .control { break-inside: avoid; }
@@ -645,7 +647,7 @@
         <button id="run-simulation" class="run-button" type="button">Test My Choices</button>
         <div class="run-status">
           <p id="simulation-status">Not tested yet</p>
-          <p class="grade-line"><span>Current choices: </span><span id="simulation-grade">0 / 6 cases · 0 / 10 controls</span></p>
+          <p class="grade-line"><span id="grade-label">Current choices: </span><span id="simulation-grade">0 / 6 cases · 0 / 10 controls</span></p>
         </div>
         <p class="verdict-chip" id="verdict-chip" data-level="untested"><span>Verdict</span> <a href="#verdict-title" id="verdict-chip-text">NOT TESTED</a></p>
     </div>
@@ -795,7 +797,7 @@
           { key: 'e2', id: 'E2', name: 'Structural validation', desc: 'Names, types, allowed values and relationships are machine-readable and validated.', claim: 'contract=machine_validated', needs: ['surface'], cases: ['G01'] }
         ] },
         { num: '3', name: 'Agreed meaning', tagline: 'Version the business definition. Use it.', controls: [
-          { key: 'a1', id: 'A1', name: 'Metric contract', desc: 'Formula, population, period, unit, owner and limits are written down.', claim: 'metric=mrr_ending_balance', needs: ['metric'], cases: ['C01'] },
+          { key: 'a1', id: 'A1', name: 'Metric contract', desc: 'Formula, population, period, unit, owner and limits are written down.', claim: 'metric=ending_mrr', needs: ['metric'], cases: ['C01'] },
           { key: 'a2', id: 'A2', name: 'Runtime consumption', desc: 'The answer shows it used the versioned definition (it cites ending_mrr@1). A correct value alone cannot show this.', claim: 'runtime=ending_mrr@1', needs: ['surface', 'metric'], cases: ['G01'], cap: true }
         ] },
         { num: '4', name: 'Dependable data', tagline: 'Show the data state. Define what happens when it fails.', controls: [
@@ -867,7 +869,7 @@
       };
       const numsOf = (keys) => keys.map((key) => decisionByKey[key].num);
       const joinNums = (keys) => {
-        const nums = numsOf(keys);
+        const nums = numsOf(keys).sort();
         return nums.length === 1 ? `choice ${nums[0]}` : `choices ${nums.slice(0, -1).join(', ')} and ${nums.at(-1)}`;
       };
 
@@ -1054,6 +1056,10 @@
               chip.dataset.ok = String(need.ok);
               chip.textContent = `${decisionByKey[need.key].num} ${need.ok ? '✓' : '✗'}`;
               chip.title = `${decisionByKey[need.key].question} ${need.ok ? 'set right' : 'needs repair'}`;
+              const chipSr = document.createElement('span');
+              chipSr.className = 'sr-only';
+              chipSr.textContent = need.ok ? ' set right' : ' needs repair';
+              chip.append(chipSr);
               needs.append(chip);
             });
           }
@@ -1105,7 +1111,7 @@
           if (delta > 0) {
             const up = document.createElement('span');
             up.className = 'up';
-            up.textContent = ` ▲${delta}`;
+            up.textContent = ` ▲${delta} (cases + checks)`;
             li.append(up);
           }
           if (index === history.length - 1 && latestRun) li.setAttribute('aria-current', 'true');
@@ -1194,7 +1200,7 @@
         const next = nextRepair(latestRun);
         const weakGate = `Gate ${weak.control.gate.num} · ${weak.control.gate.name}`;
         const weakControl = `${weak.control.id} ${weak.control.name}: ${latestRun.controls[weak.control.key].reason}`;
-        const weakNext = next ? `Next repair: choice ${next.num} · ${next.question}` : 'Next test: the answer must cite ending_mrr@1 in its trace.';
+        const weakNext = next ? `Any weak choice can go next. In choice order: choice ${next.num} · ${next.question}` : 'Next test: the answer must cite ending_mrr@1 in its trace.';
         if (minimum === 0) {
           return { level: 'not-ready', title: 'NOT READY', proven, weakGate, weakControl, weakNext,
             copy: 'At least one check failed or has no evidence. Do not let an AI answer this question yet.' };
@@ -1240,12 +1246,14 @@
           status.textContent = allPass
             ? `PASS · ${t.pass} of ${latestRun.cases.length} cases passed`
             : `${t.fail ? 'FAIL' : 'INCOMPLETE'} · ${t.pass} pass · ${t.fail} fail · ${t.notRun} not run`;
+          $('#grade-label').textContent = 'Current choices: ';
           grade.textContent = `${t.pass} / ${latestRun.cases.length} cases · ${t.proven} / ${CONTROLS.length} controls`;
         } else {
           const changed = lastRun ? DECISIONS.filter((item) => lastRun.decisions[item.key] !== $(`#sim-${item.key}`).value) : [];
           status.textContent = lastRun
             ? `STALE · you changed ${changed.length ? joinNums(changed.map((item) => item.key)) : 'a choice'} · test again`
             : 'Not tested yet';
+          $('#grade-label').textContent = 'Untested choices: ';
           grade.textContent = `0 / ${CASES.length} cases · 0 / ${CONTROLS.length} controls`;
           $('#results-note').textContent = lastRun ? 'These results belong to your previous choices.' : 'No run yet. Each card says what the case expects.';
         }
@@ -1365,7 +1373,7 @@
         lines.push('', `First weak control: ${info.weakGate}. ${info.weakControl}`);
         if (info.weakNext) lines.push(info.weakNext);
         lines.push('My next test: ', '', 'Limit: this record covers only the fixed synthetic FOLDLINE simulation. It proves nothing about your own systems. Your notes are not included.');
-        lines.push('', 'Machine receipts', `Fixture: ${fixture.id} ${fixtureHash}`, `Run: ${latestRun?.runHash || '[not run]'}`);
+        lines.push('', 'Machine receipts', `Fixture: ${fixture.id} ${fixtureHash}`, `Run hash: ${latestRun?.runHash || '[not run]'}`);
         if (latestRun) CONTROLS.forEach((control) => lines.push(latestRun.controls[control.key].receipt));
         return lines.join('\n');
       }

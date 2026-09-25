@@ -165,7 +165,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Let the room read the numbers in silence for five seconds, take hands for each option and say the split out loud (you recall it at 72:30).",
       "One recorded run, forced to answer directly on both databases; not the tool's default. On the default path the tool stopped at its ambiguity check before writing any SQL.",
       "Every tick on the checklist is true of this run: it executed without error, the SQL is valid, the column is named ending_mrr and there are three tidy rows. None of that says the numbers are right.",
-      "No verdict, no database value and no pointer at April on this scene. The database check comes on failure-anatomy.",
+      "Here is the AI's recorded answer from the export tables. Judge it the way you would judge a report a colleague sends you; we check it against the database on the next scene.",
       "Evidence level, for your own vocabulary: MODEL CAPTURE (bad:G01, uncached, skipClarify=true, reported model label claude-cli via openai-compatible).",
       "Act bridge on the last press: \"April is negative. How?\"",
       "[Sources]\nSynthetic repository evidence: validated G01 bad-lane capture and manifest.\n[/Sources]"
@@ -280,7 +280,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "revealOrder": [
       "two identical-looking lanes: Question, Data, AI route, Settings, Database",
       "the four shared parts merge into one block; the connectors draw once it lands; stamp Same (144 accounts · Q2 2026) stays for the rest of the scene",
-      "the database column splits: 7 export tables vs 5 approved views, marked Changed",
+      "the two Database boxes become 7 export tables vs 5 approved views, marked Changed",
       "small print: one run per lane, forced to answer directly; the recording names the AI route, not the model version"
     ],
     "cut": "Press through quickly if late, but read press 3's small print word for word.",
@@ -339,7 +339,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "mode": "Walkthrough of the written definition (no AI run and no database check on screen)",
     "purpose": "A written, owned definition fills the four blanks, so nobody (person or AI) has to guess meaning, grain, period or table.",
     "say": [
-      "A metric contract is a written agreement about what a number means. Grain means what one row represents: one month here. These are business decisions before they become code.",
+      "Read the caption once: a semantic layer is the written, machine-readable definition of your business numbers: which table, which column, how to add it up, and what never to do. A metric contract is one entry in it, a written agreement about what a number means. Grain means what one row represents: one month here. These are business decisions before they become code.",
       "Before press 3 ask aloud (no slide vote): “Last complete quarter: one number, or three?” Then: “The business owner decides this, not the room and not the AI.”",
       "Writing the definition down does not make the AI correct. Bridge to the next scene: “Who actually reads it?”",
       "Each line is one field of demo/semantic/metrics/ending_mrr.yml. Kind of number: aggregation snapshot. Rows per what: result_grain monthly. Which months: time_behavior period_rule end_of_period, default_period last_complete_quarter. Which table: model analytics.mrr_summary_monthly. Footer: unit EUR, freshness_sla_hours 36, owner revenue_analytics. The rule chip is the limitation “Never sum ending MRR across months.”",
@@ -364,9 +364,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Three month-end balances, one for each complete month (April, May, June), never added together; the owner decides, not the room or the AI."
     ],
     "revealOrder": [
-      "Title; the contract document with four blank lines, each with a ?: Kind of number? · Rows per what? · Which months? · Which table?; caption: The four blanks the AI had to guess.",
+      "Title; the contract document with four blank lines, each with a ?: Kind of number? · Rows per what? · Which months? · Which table?; caption (stays for the whole scene): A semantic layer is the written, machine-readable definition of your business numbers: which table, which column, how to add it up, and what never to do.",
       "Line 1 fills: The month-end balance, a level; its ? goes and the level tank returns",
-      "Line 2 fills: One row per month; many account rows collapse into one row per month; the caption clears",
+      "Line 2 fills: One row per month; many account rows collapse into one row per month",
       "Line 3 fills: Each complete month: Apr, May, Jun; the three months mark on the mini calendar; the rule stamps: Never add months together",
       "Line 4 fills: Only MRR summary by month; beside it one table stands out in ink and the other tables stay faint",
       "Footer fills: EUR · warn after 36 hours; the stamp lands: Approved: Revenue Analytics"
@@ -374,6 +374,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "cut": "Keep lines 1 and 3 with the rule chip; press through line 4 and the footer without discussion.",
     "appendixRoutes": [
       "appendix-semantic-contract",
+      "appendix-fix",
       "appendix-lineage-freshness"
     ]
   },
@@ -393,14 +394,14 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "“Guide for coding assistants” is generated/claude/CLAUDE.md. It guides Claude Code only; it does not configure the AI app's requests and enforces nothing.",
       "The two locks sit outside the definition: course policy is not imported into the AI app and refuses before a query; PostgreSQL grants enforce the final boundary.",
       "Evidence level, for your own vocabulary: the two counts on press 2 are MODEL CAPTURE summary fields for the ready lane (3 runs); everything else is a walkthrough of the course setup.",
-      "Act bridge at the last press: “Delivered is not the same as used. Did it work?”",
+      "Act bridge at the last press: “Loaded is not the same as used. Did it work?”",
       "[Sources]\nSynthetic repository evidence: compiler manifest, Ask bootstrap read-back, retrieval audit, and privilege tests. Anthropic, Manage Claude's memory, https://code.claude.com/docs/en/memory, accessed 2026-08-23, documentation terms apply.\n[/Sources]"
     ],
     "sayAt": {"0": [0], "3": [2], "4": [1], "5": [3]},
     "ask": [
       {
         "at": 3,
-        "text": "Delivered is not the same as used. Did it work?",
+        "text": "Loaded is not the same as used. Did it work?",
         "aloud": true
       }
     ],
@@ -416,6 +417,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "cut": "Keep the 3 of 3 / 0 of 3 callout and both locks; press through the fan-out quickly. Never cut the AI tool, course-rules or guide limitations.",
     "appendixRoutes": [
       "appendix-semantic-contract",
+      "appendix-fix",
       "appendix-ask-boundary",
       "appendix-access-controls"
     ]
@@ -516,7 +518,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "mode": "Course rules and database checks (no AI run on screen)",
     "purpose": "Show that a ready system also says no, in two layers: course rules ask back or refuse before any query, and the database permission denies what must never be read.",
     "say": [
-      "Before each of presses 1–4 ask aloud: “Answer, ask back, refuse or block?”",
+      "Before each of presses 1–4 ask aloud: “Answer, ask back, refuse or deny?”",
       "After press 4: “If the rule ever fails, the wall still holds.”",
       "Customer emails + lifetime value resolves to Refuse only, before any query. The forced private read is a separate request that the database denies. Never say “both answers are right”.",
       "Say the small print as written: these are course rules and database checks, not AI runs. No identifier values are read or shown.",
@@ -529,22 +531,22 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "ask": [
       {
         "at": 0,
-        "text": "How much MRR? Answer, ask back, refuse or block?",
+        "text": "How much MRR? Answer, ask back, refuse or deny?",
         "aloud": true
       },
       {
         "at": 1,
-        "text": "Profit by plan? Answer, ask back, refuse or block?",
+        "text": "Profit by plan? Answer, ask back, refuse or deny?",
         "aloud": true
       },
       {
         "at": 2,
-        "text": "Customer emails + lifetime value? Answer, ask back, refuse or block?",
+        "text": "Customer emails + lifetime value? Answer, ask back, refuse or deny?",
         "aloud": true
       },
       {
         "at": 3,
-        "text": "A forced private read? Answer, ask back, refuse or block?",
+        "text": "A forced private read? Answer, ask back, refuse or deny?",
         "aloud": true
       }
     ],
@@ -652,7 +654,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Title; five cases: Ending MRR · How much MRR? · Profit by plan? · Customer emails? · Private read (honest-no's forced private read)",
       "Expected behaviour labels stamp in under their questions: → Answer · → Ask back · → Refuse (one bracket over both refusals) · → Deny",
       "The Recorded AI runs board rises: 3 answer questions (ending MRR, net new MRR, logo churn), one run each: Export tables 0 of 3 · Approved views 3 of 3 · Approved views cited the definition 0 of 3 · An observation, not a benchmark. Case questions and behaviours stay.",
-      "Title clears (it would give the answer away) and the vote question takes the title band: 9 of 9 tests pass. Does the AI score 9 of 9? The cases and both boards stay where they are; room vote band: Yes · No",
+      "Title clears (it would give the answer away) and the vote question takes the title band: 9 of 9 tests pass. Does the AI score 9 of 9? The cases, their behaviour labels and the Recorded AI runs board stay where they are; room vote band: Yes · No",
       "Vote clears; the Database checks board fills cell by cell; 9 of 9 counts up; the scope line becomes the headline: They test the database and course rules, not the AI. (only “not the AI.” is in Mennige). Say the “No.” aloud."
     ],
     "cut": "Press through the behaviour call-out if behind; never merge the two boards, never show 9 of 9 without its scope line, never show the database checks before the recorded runs.",
@@ -693,7 +695,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       },
       {
         "at": 5,
-        "text": "Two pairs: say your question and your hardest box.",
+        "text": "Two pairs share with the room: your question and your hardest box.",
         "aloud": true
       }
     ],
@@ -706,7 +708,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "66:45 · Box 3 active. Now: fill the four blanks: kind of number, rows, months, table.",
       "68:15 · Box 4 active. Now: one thing the AI must never reach.",
       "69:15 · Box 5 active. Now: write one test. Compare with a partner.",
-      "70:30 · Protected recovery / debrief: grey examples clear, the outline surrounds the whole canvas. Two pairs: say your question and your hardest box."
+      "70:30 · Protected recovery / debrief: grey examples clear, the outline surrounds the whole canvas. Two pairs share with the room: your question and your hardest box."
     ],
     "cut": "Work 65:00–70:30 is protected; 70:30–72:30 is recovery or debrief only; never borrow from resolution. If late, press through the box prompts on the clock marks and keep the recovery.",
     "appendixRoutes": [
@@ -729,8 +731,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "The question and facts stayed fixed. The AI route and reported model label stayed fixed (claude-cli via openai-compatible); the capture does not establish an underlying Anthropic model/version. The interface changed.",
       "Both runs were forced to answer directly on both databases (skipClarify=true, uncached); on the default path the tool stopped at its ambiguity check before writing any SQL.",
       "Search path in full: the approved-views SQL named mrr_summary_monthly without a schema; it resolved to analytics.mrr_summary_monthly only because the connection's search_path is analytics,public. Portable SQL would qualify the view.",
-      "No governed metric citation was recorded (0 of 3), so ready end-to-end evidence fails. The deterministic 9 of 9 database proof tests the database and course rules, not Claude.",
-      "If asked: the fresh 18-call protocol is NOT RUN (0/18) and the AI deployment is BLOCKED. The verdict code BOUNDED PILOT · CITATION GATE RED lives on appendix-run-metadata.",
+      "No governed metric citation was recorded (0 of 3), so ready end-to-end evidence fails. The deterministic 9 of 9 database proof tests the database and course rules, not the AI.",
+      "If asked: the fresh 18-call protocol is NOT RUN (0/18) and the AI deployment is BLOCKED. The verdict code LIMITED PILOT · CITATION GATE RED lives on appendix-run-metadata.",
       "Evidence levels, for your own vocabulary: step 1 MODEL CAPTURE bad:G01 and ready:G01 beside DB PROOF on ready:G01 (live check in the background, replay fallback); step 2 DB PROOF corpus 9/9, a separate claim.",
       "Must say, word for word, on the last press, then stop at 75:00 (a further press does nothing): A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.",
       "Materials, once, right after the closing sentence as Q&A opens: “Everything is on the workshop page, loehrning.ai/workshops/datenbereitschaft-fuer-ki: the learner guide (guide.html) walks the whole course again, the worksheet kit has the question card and templates, and the browser lab lets you practise on the synthetic data.” Say the path aloud once and paste it into the chat if the room has one.",
@@ -762,6 +764,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": [
       "appendix-architecture",
       "appendix-semantic-contract",
+      "appendix-fix",
       "appendix-access-controls",
       "appendix-evaluation",
       "appendix-lineage-freshness",
@@ -816,6 +819,28 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "cut": "Return to the calling scene.",
     "appendixRoutes": []
   },
+  "appendix-fix": {
+    "clock": {
+      "start": "75:00",
+      "end": "75:00",
+      "budget_seconds": 0
+    },
+    "mode": "Appendix: what a fix looks like on any database; synthetic helmets example from the kit",
+    "purpose": "Show concretely what a fix means: four small files, tool-neutral, for one real product question.",
+    "say": [
+      "Thirty seconds: same trap as FOLDLINE, on stock. Asked for helmets on hand per month in Q2, an AI adds three month-end counts and says Q2 stock = 315. The shelf never held 315: the right answer is 110, 95 and 110. A fix is four small files: an approved view with readable names, a read-only grant on that view, a metric file that says units on hand is a level you never add across months, and a Skill that tells Claude to read the metric file first and query only the approved views.",
+      "If asked which piece does what: only the grant (2) enforces; the database refuses everything else. The view (1) and the metric file (3) describe; the Skill (4) guides. Instructions guide, grants enforce.",
+      "If asked which tool: none is required. The view works in BigQuery, Snowflake, Databricks or PostgreSQL; the metric file can be dbt Semantic Layer, Cube, LookML or a plain YAML file. The kit has a runnable PostgreSQL starter in data-readiness-kit/builder/.",
+      "[Sources]\nSynthetic kit example (bike shop, Harbour store, helmets); original course text.\n[/Sources]"
+    ],
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Complete on entry: the question with the wrong answer (Q2 stock = 315) and the right one (110 / 95 / 110), then four panels: 1 Approved view, 2 Read-only access, 3 Metric definition, 4 A Claude Skill, each with what it does and what it works with; the kit pointer at the bottom"
+    ],
+    "cut": "Return to the calling scene.",
+    "appendixRoutes": []
+  },
   "appendix-access-controls": {
     "clock": {
       "start": "75:00",
@@ -826,7 +851,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "purpose": "Separate guidance, course policy and the SQL guard from the PostgreSQL role, which is the final boundary.",
     "say": [
       "Use to separate instructions, application policy and least privilege.",
-      "The SQL guard is defence in depth; PostgreSQL least privilege is the final relation boundary.",
+      "The SQL guard is defense in depth; PostgreSQL least privilege is the final relation boundary.",
       "R02 is a course-policy refusal before any SQL; D01 is a separate forced read that the database itself denied.",
       "If asked: account_key is an approved pseudonymous analytics key, not anonymous. Course policy is not imported into Ask.",
       "[Sources]\nSynthetic repository evidence: course-policy cases and versioned PostgreSQL denial-test definitions. PostgreSQL Global Development Group, Privileges, https://www.postgresql.org/docs/current/ddl-priv.html, accessed 2026-08-23, PostgreSQL License.\n[/Sources]"
@@ -920,7 +945,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Use the four labels exactly when asked what “recorded” and “database check” mean: MODEL CAPTURE (Recorded AI run), DB PROOF LIVE and DB PROOF REPLAY (Database check); LIVE MODEL is reserved and never invoked.",
       "Forced direct answer on both databases (execute=true, highAccuracy=false, history=[], skipClarify=true, uncached): not Ask default behaviour. The default G01 export-lane probe stopped at the ambiguity pre-pass before SQL.",
       "The capture names the route Ask 3210 → openai-compatible → bridge 8789 → claude-cli → PG 55432; the underlying Anthropic model and version are not established by the capture.",
-      "If asked: the fresh 18-call protocol is NOT RUN 0/18 and the AI deployment is BLOCKED. Verdict code BOUNDED PILOT · CITATION GATE RED; on screen elsewhere this is “Verdict: limited pilot, not signed off.”",
+      "If asked: the fresh 18-call protocol is NOT RUN 0/18 and the AI deployment is BLOCKED. Verdict code LIMITED PILOT · CITATION GATE RED; on screen elsewhere this is “Verdict: limited pilot, not signed off.”",
       "Verified query IDs 1, 2, 3 appear in the ready traces; metric citations are absent in all six runs.",
       "If asked for the run envelope (no longer on the slide): Dataset foldline_saas_2026q2 · checksum 55b8975be7ed08e263719485cf0363d4 · loaded 2026-07-01T06:00:00Z · evaluated 2026-07-01T09:00:00Z · captured 2026-08-23. Export capture: public.monthly_revenue, value and relation fail. Governed capture: mrr_summary_monthly → analytics.mrr_summary_monthly, value + relation pass, VQ present.",
       "[Sources]\nSynthetic repository evidence: validated model-observation manifest, sanitized run metadata, and release ledger.\n[/Sources]"

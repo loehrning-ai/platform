@@ -9,13 +9,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Sind deine Daten bereit für KI?",
     eyebrow: "Workshop 03 · Daten verstehen und Antworten prüfen",
     summary:
-      "Gleiche Frage, gleiche Daten, andere Antwort. Du entlarvst eine plausible falsche Zahl und übst danach fünf Entscheidungen in einem optionalen Browserlabor. Ohne Code oder KI-Konto.",
+      "Eine Frage, zwei Datenstände, zwei Antworten. Du siehst, wie eine KI eine plausible, aber falsche Zahl liefert und was sie repariert. Ohne Code und ohne KI-Konto; in der interaktiven Demo schaust du dir die Daten selbst an.",
     description:
-      "Die fiktive Firma FOLDLINE will ihren monatlichen Abo-Umsatz wissen. Eine KI liefert eine überzeugende Zahl, verwechselt aber monatliche Veränderungen mit Endbeständen. Du prüfst ein Paket aus klar benannten Auswertungsdaten, Definitionen, Kontext und begrenzten Zugriffen. Anschließend triffst du im Labor fünf Entscheidungen selbst. Alle Zahlen sind synthetisch. Die Vorführung nutzt aufgezeichnete Ergebnisse; das Übungslabor berechnet feste Fälle direkt im Browser.",
-    format: "Interaktiver Kurs + Browserlabor",
-    duration: "75 Minuten Kurs + 15 Minuten Fragen; Labor optional 12 Minuten",
+      "Die fiktive Firma FOLDLINE stellt eine einzige Frage: den MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal. Auf sieben exportierten Tabellen liefert die KI plausible, aber falsche Zahlen (−19.960 / 9.775 / 42.565): Sie hat die Veränderungen jedes Monats addiert und damit Veränderung und Bestand verwechselt. Die Reparatur: freigegebene Auswertungssichten, eine schriftliche Kennzahl-Definition (die semantische Schicht), reiner Lesezugriff und Tests. Danach stimmt dieselbe Frage mit der Datenbank überein (334.675 / 344.450 / 387.015). Der Kurs zeigt auch die ehrlichen Grenzen und endet mit deiner eigenen Frage in fünf Feldern. Alle Daten sind synthetisch.",
+    format: "Interaktiver Kurs + Lernbegleiter",
+    duration: "75 Minuten Kurs + 15 Minuten Fragen; interaktive Demo optional 10 Minuten",
     accessNote:
-      "Ohne Konto, Installation oder KI-Zugang. Material auf Englisch, Einführung auf Deutsch. Aufgezeichnete Modellantworten vom August 2026 sind keine Live-Abfragen. Im Labor nur erfundene Beispiele verwenden.",
+      "Für Kurs und Demo brauchst du kein Konto und keine Installation. Material auf Englisch, Einführung auf Deutsch. Die im Kurs gezeigten Modellantworten wurden im August 2026 aufgezeichnet und sind keine Live-Abfragen.",
     audience: [
       "Einsteiger ohne SQL- oder Programmierkenntnisse",
       "Teams, die KI-Antworten mit Daten prüfen möchten",
@@ -111,45 +111,45 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     steps: [
       {
         n: "01",
-        title: "Eine plausible falsche Antwort entdecken",
+        title: "Eine Frage stellen",
         description:
-          "Lerne FOLDLINE und den monatlich wiederkehrenden Abo-Umsatz kennen. Stimme ab, bevor der Denkfehler sichtbar wird.",
-        tool: "Kurs · Einstieg",
+          "FOLDLINE will den MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal wissen. Diese eine Frage zieht sich durch den ganzen Kurs.",
+        tool: "Kurs · Die Frage",
       },
       {
         n: "02",
-        title: "Die Frage gleich lassen, die Daten erklären",
+        title: "Die plausible falsche Antwort entlarven",
         description:
-          "Vergleiche dieselbe Frage vor und nach der Reparatur. Auswertungsdaten, Definitionen, Kontext und Zugriffsrechte ändern sich gemeinsam; ein einzelner Lauf beweist keine allgemeine Zuverlässigkeit.",
-        tool: "Kurs · Vergleich",
+          "Auf sieben exportierten Tabellen antwortet die KI mit −19.960 / 9.775 / 42.565. Sie hat die Veränderungen jedes Monats addiert: Bestand und Veränderung verwechselt.",
+        tool: "Kurs · Der Fehler",
       },
       {
         n: "03",
-        title: "Drei Arten von Grenzen unterscheiden",
+        title: "Die Reparatur verstehen",
         description:
-          "Eine Anleitung empfiehlt einen Weg. Eine Regel stoppt unzulässige Fragen. Datenbankrechte verhindern den Zugriff tatsächlich.",
-        tool: "Kurs · Grenzen",
+          "Freigegebene Sichten, eine schriftliche Kennzahl-Definition (die semantische Schicht), reiner Lesezugriff und Tests. Dieselbe Frage stimmt danach mit der Datenbank überein: 334.675 / 344.450 / 387.015.",
+        tool: "Kurs · Die Reparatur",
       },
       {
         n: "04",
-        title: "Alter und Gegenproben prüfen",
+        title: "Die ehrlichen Grenzen kennen",
         description:
-          "Eine Zahl kann rechnerisch stimmen und trotzdem veraltet sein. Prüfe auch unklare Fragen, fehlende Daten und verweigerten Zugriff.",
-        tool: "Kurs · Prüfungen",
+          "Der Aufbau soll nachfragen oder verweigern und warnen, wenn die Daten älter als 36 Stunden sind. 9 von 9 Tests prüfen den Aufbau, nicht die KI; die Läufe zitierten die Definition 0 von 3 Mal. Urteil: begrenzter Pilot, nicht freigegeben.",
+        tool: "Kurs · Grenzen",
       },
       {
         n: "05",
-        title: "Eine eigene erfundene Frage abgrenzen",
+        title: "Du bist dran: fünf Felder",
         description:
-          "Halte Frage, Daten, Definition, Grenze und nächsten Test auf den Arbeitsblättern fest. Ein erfolgreicher Übungsfall ist keine Freigabe für ein reales System.",
-        tool: "Arbeitsblätter",
+          "Übertrage das Vorgehen auf eine eigene erfundene Frage. Der Lernbegleiter führt dich durch fünf Felder, von der Frage bis zum ersten Test. Ein gelungener Übungsfall ist keine Freigabe für ein reales System.",
+        tool: "Lernbegleiter",
       },
       {
         n: "06",
-        title: "Optional: fünf Entscheidungen im Labor treffen und prüfen",
+        title: "Optional: die Daten hinter beiden Antworten ansehen",
         description:
-          "Wähle Datenquelle, Berechnung, Zugriffsgrenze, Aktualität und Prüffälle. Führe sie aus, ändere eine Entscheidung und beobachte, welche Ergebnisse ungültig werden.",
-        tool: "Browserlabor · weitere 12 Minuten",
+          "In der interaktiven Demo öffnest du die Rohtabellen und die zertifizierten Sichten, führst dieselbe Frage auf beiden Seiten aus und prüfst das Ergebnis gegen die Definition. Die Tabellen und Ergebnisse stammen aus einem echten PostgreSQL-Lauf des Kurs-Kits.",
+        tool: "Interaktive Demo · etwa 10 Minuten",
       },
     ],
     caseStudy: {
@@ -159,31 +159,23 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Abo-Software für Geschäftskunden",
       period: "Q2 2026, eingefrorener Übungsstand",
       narrative:
-        "FOLDLINE hat 144 erfundene Kundenkonten. Für dieselbe Frage nach dem Abo-Umsatz werden unklare Rohdaten mit klar definierten Auswertungsdaten verglichen. Der Kurs zeigt historische Modellantworten und getrennt davon feste Datenbankprüfungen. Das Labor simuliert diese Entscheidungen.",
+        "FOLDLINE hat 144 erfundene Kundenkonten. Eine Frage nach dem MRR-Endbestand wird in zwei Datenständen gestellt: sieben exportierte Tabellen gegen freigegebene Sichten mit schriftlicher Definition. Der Kurs zeigt aufgezeichnete Modellantworten und getrennt davon feste Datenbankprüfungen.",
       metrics: [
         { label: "Erfundene Konten", value: "144" },
+        { label: "Frage", value: "1" },
+        { label: "Datenstände", value: "2" },
         { label: "Monate im Vergleich", value: "3" },
-        { label: "Entscheidungen im Labor", value: "5" },
-        { label: "Feste Laborfälle", value: "6" },
       ],
       decisionQuestion:
         "Welche Definition und welche Grenzen braucht eine KI, bevor du ihrer Antwort auf genau diese Frage vertraust?",
       dataLimitations: [
         "Die Daten sind vollständig synthetisch und historisch eingefroren.",
         "Aufgezeichnete Modellantworten belegen einzelne Beobachtungen, keine allgemeine Zuverlässigkeit.",
-        "Das Browserlabor führt weder KI-Modelle noch SQL oder Datenbankrechte aus.",
+        "9 von 9 Tests prüfen die Datenbank und die Kursregeln, nicht die KI. Anweisungen leiten, Rechte setzen durch.",
         "Ein bestandener Übungsfall ist keine Produktionsfreigabe oder Zertifizierung.",
       ],
     },
     materials: [
-      {
-        label: "Lernbegleiter (Englisch)",
-        href: `${base}/guide.html`,
-        kind: "html",
-        language: "en",
-        description:
-          "Lesbare Zusammenfassung mit Begriffen, Ablauf und Übungsanleitung. Auch für das Smartphone.",
-      },
       {
         label: "Kurs öffnen (Englisch)",
         href: `${base}/slides.html`,
@@ -193,29 +185,20 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "26 Szenen mit schrittweisen Erklärungen. Pfeiltasten führen weiter; P öffnet die Moderationsansicht. Am besten auf einem großen Bildschirm im Querformat.",
       },
       {
-        label: "Browserlabor (Englisch)",
-        href: `${base}/data-readiness-kit/readiness-lab.html`,
+        label: "Lernbegleiter (Englisch)",
+        href: `${base}/guide.html`,
         kind: "html",
         language: "en",
         description:
-          "Fünf Entscheidungen, sechs feste Fälle. Funktioniert ohne Installation. Nur Auswahlwerte bleiben lokal; eigene Freitexte werden nicht gespeichert.",
+          "Die Geschichte des Kurses zum Nachlesen: eine Frage, der Fehler, die Reparatur, die Grenzen und deine fünf Felder. Auch für das Smartphone.",
       },
       {
-        label: "Arbeitsblätter und Vorlagen · ZIP (Englisch)",
-        href: `${base}/data-readiness-kit.zip`,
-        kind: "zip",
-        language: "en",
-        description:
-          "Startanleitung, Fragekarte, Prüfbogen, Szenariokarten und kommentierte Definitionsvorlagen. Das interaktive Labor ist separat verlinkt.",
-      },
-      {
-        label:
-          "Bauanleitung: semantische Schicht, Data Warehouse und Claude einrichten (Englisch)",
-        href: `${base}/builder.html`,
+        label: "Interaktive Demo: Rohtabellen gegen zertifizierte Sichten (Englisch)",
+        href: `${base}/demo.html`,
         kind: "html",
         language: "en",
         description:
-          "Optionale Vertiefung für Datenteams, getrennt vom 75-minütigen Einsteigerkurs: Schritt für Schritt vom Übungsfall zu einer eigenen technischen Umgebung. Für den Kurs brauchst du sie nicht.",
+          "10 Minuten, ohne Konto: Sieh dir die Tabellen an, führe dieselbe Frage auf beiden Seiten aus und vergleiche die Antworten mit der Definition.",
       },
     ],
   },
@@ -224,13 +207,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Are your data ready for AI?",
     eyebrow: "Workshop 03 · Understand data and check answers",
     summary:
-      "Same question, same data, different answer. Spot a plausible wrong number, then practise five choices in an optional browser lab. No code or AI account needed.",
+      "One question, two data setups, two answers. See how an AI returns a plausible but wrong number, and what fixes it. No code and no AI account; in the interactive demo you look at the data yourself.",
     description:
-      "Fictional company FOLDLINE wants its monthly subscription revenue. An AI returns convincing numbers but mistakes monthly changes for ending balances. Examine a repair combining clearly named analytical data, definitions, context and limited access. Then make the five lab choices yourself. All data are synthetic. The walkthrough uses recorded results; the practice lab computes fixed cases in your browser.",
-    format: "Interactive course + browser lab",
-    duration: "75-minute course + 15-minute Q&A; optional 12-minute lab",
+      "Fictional company FOLDLINE asks one question: \"Show ending MRR by month for the last complete quarter.\" On seven export tables the AI returns plausible but wrong numbers (-19,960 / 9,775 / 42,565): it added up each month's change, mixing up a level and a change. The fix: approved views, a written metric definition (the semantic layer), read-only access and tests. The same question then matches the database (334,675 / 344,450 / 387,015). The course also shows the honest limits and ends with your own question in five boxes. All data are synthetic.",
+    format: "Interactive course + learner guide",
+    duration: "75-minute course + 15-minute Q&A; optional 10-minute interactive demo",
     accessNote:
-      "No account, installation or AI subscription. Materials are in English; the live session is introduced in German. Model answers were recorded in August 2026; they are not live requests. Use invented examples in the lab.",
+      "The course and the demo need no account or installation. Materials are in English; the live session is introduced in German. The model answers shown in the course were recorded in August 2026; they are not live requests.",
     audience: [
       "Beginners without SQL or programming experience",
       "Teams learning to check AI answers against data",
@@ -325,45 +308,45 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     steps: [
       {
         n: "01",
-        title: "Spot a plausible wrong answer",
+        title: "Ask one question",
         description:
-          "Meet FOLDLINE and monthly recurring subscription revenue. Vote before the mistake is revealed.",
-        tool: "Course · Opening",
+          "FOLDLINE wants ending MRR by month for the last complete quarter. This one question runs through the whole course.",
+        tool: "Course · The question",
       },
       {
         n: "02",
-        title: "Keep the question, explain the data",
+        title: "Spot the plausible wrong answer",
         description:
-          "Compare the same question before and after the repair. Analytical data, definitions, context and permissions change together; one run does not establish general reliability.",
-        tool: "Course · Comparison",
+          "On seven export tables the AI answers -19,960 / 9,775 / 42,565. It added up each month's change: a level and a change mixed up.",
+        tool: "Course · The mistake",
       },
       {
         n: "03",
-        title: "Separate three kinds of boundary",
+        title: "Understand the fix",
         description:
-          "Guidance recommends a path. Policy stops unsupported questions. Database permissions make forbidden reads fail.",
-        tool: "Course · Boundaries",
+          "Approved views, a written metric definition (the semantic layer), read-only access and tests. The same question then matches the database: 334,675 / 344,450 / 387,015.",
+        tool: "Course · The fix",
       },
       {
         n: "04",
-        title: "Check age and counterexamples",
+        title: "Know the honest limits",
         description:
-          "A number can be mathematically correct and still be stale. Check ambiguous requests, missing data and denied access too.",
-        tool: "Course · Checks",
+          "The setup should ask back or refuse, and warn when data are older than 36 hours. 9 of 9 tests check the setup, not the AI; the runs cited the definition 0 of 3 times. Verdict: limited pilot, not signed off.",
+        tool: "Course · Limits",
       },
       {
         n: "05",
-        title: "Bound one invented question",
+        title: "Your turn: five boxes",
         description:
-          "Record the question, data, definition, boundary and next test on the worksheets. A successful practice case does not approve a real system.",
-        tool: "Worksheets",
+          "Apply the method to one invented question of your own. The learner guide walks you through five boxes, from the question to the first test. A successful practice case does not approve a real system.",
+        tool: "Learner guide",
       },
       {
         n: "06",
-        title: "Optional: make and test five choices in the lab",
+        title: "Optional: look at the data behind both answers",
         description:
-          "Choose a data surface, calculation, permission boundary, freshness rule and set of checks. Run them, change one choice and see which results become invalid.",
-        tool: "Browser lab · 12 more minutes",
+          "In the interactive demo you open the raw tables and the certified views, run the same question on both sides and check the result against the definition. The tables and results come from a real PostgreSQL run of the course kit.",
+        tool: "Interactive demo · about 10 minutes",
       },
     ],
     caseStudy: {
@@ -373,31 +356,23 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Business subscription software",
       period: "Q2 2026, frozen teaching snapshot",
       narrative:
-        "FOLDLINE has 144 invented accounts. The same subscription-revenue question is compared across unclear raw data and clearly defined analytical data. Historical model answers and fixed database checks are shown separately. The browser lab simulates these choices.",
+        "FOLDLINE has 144 invented accounts. One question about ending MRR is asked in two data setups: seven export tables versus approved views with a written definition. The course shows recorded model answers and, separately, fixed database checks.",
       metrics: [
         { label: "Invented accounts", value: "144" },
+        { label: "Question", value: "1" },
+        { label: "Data setups", value: "2" },
         { label: "Compared months", value: "3" },
-        { label: "Lab decisions", value: "5" },
-        { label: "Fixed lab cases", value: "6" },
       ],
       decisionQuestion:
         "Which definition and boundaries does an AI need before you trust its answer to this particular question?",
       dataLimitations: [
         "All data are synthetic and historically frozen.",
         "Recorded model answers establish individual observations, not general reliability.",
-        "The browser lab runs neither AI models nor SQL or database permissions.",
+        "9 of 9 tests check the database and course rules, not the AI. Instructions guide, grants enforce.",
         "Passing a practice case is not production approval or certification.",
       ],
     },
     materials: [
-      {
-        label: "Learner guide",
-        href: `${base}/guide.html`,
-        kind: "html",
-        language: "en",
-        description:
-          "Readable summary, glossary and exercise instructions. Works on a phone too.",
-      },
       {
         label: "Open course",
         href: `${base}/slides.html`,
@@ -407,28 +382,20 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "26 scenes with step-by-step explanations. Use the arrow keys; P opens the presenter view. Best on a large screen in landscape.",
       },
       {
-        label: "Browser lab",
-        href: `${base}/data-readiness-kit/readiness-lab.html`,
+        label: "Learner guide",
+        href: `${base}/guide.html`,
         kind: "html",
         language: "en",
         description:
-          "Five decisions, six fixed cases. No installation. Only choices stay in local browser storage; custom text is not saved.",
+          "The course story to read at your own pace: one question, the mistake, the fix, the limits and your five boxes. Works on a phone too.",
       },
       {
-        label: "Worksheets and templates · ZIP",
-        href: `${base}/data-readiness-kit.zip`,
-        kind: "zip",
-        language: "en",
-        description:
-          "Start-here guide, question card, evidence canvas, test cases and commented definition templates. The interactive lab is linked separately.",
-      },
-      {
-        label: "Builder guide: semantic layer, warehouse and Claude setup",
-        href: `${base}/builder.html`,
+        label: "Interactive demo: raw tables vs certified views",
+        href: `${base}/demo.html`,
         kind: "html",
         language: "en",
         description:
-          "Optional follow-up for data teams, separate from the 75-minute beginner course: go step by step from the practice case to your own technical setup. You do not need it for the course.",
+          "10 minutes, no account: look at the tables, run the same question on both sides and compare the answers with the definition.",
       },
     ],
   },

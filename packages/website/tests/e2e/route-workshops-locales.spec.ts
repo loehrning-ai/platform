@@ -24,7 +24,7 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
-    materialCount: 5,
+    materialCount: 3,
   },
 ] as const;
 
@@ -121,12 +121,11 @@ for (const width of [320, 390, 768, 1440] as const) {
           const internalHrefs = Array.from(
             main?.querySelectorAll<HTMLAnchorElement>('a[href^="/"]') ?? [],
           ).map((link) => link.getAttribute("href") ?? "");
-          const materialHrefs = internalHrefs.filter((href) =>
-            /\.(?:html|zip)$/.test(href),
-          );
-          const pageHrefs = internalHrefs.filter(
-            (href) => !/\.(?:html|zip)$/.test(href),
-          );
+          // A material may point at a section of a file (guide.html#section).
+          const isMaterial = (href: string) =>
+            /\.(?:html|zip)$/.test(href.split("#")[0]);
+          const materialHrefs = internalHrefs.filter(isMaterial);
+          const pageHrefs = internalHrefs.filter((href) => !isMaterial(href));
           return {
             bodyWidth: document.body.scrollWidth,
             documentWidth: document.documentElement.scrollWidth,

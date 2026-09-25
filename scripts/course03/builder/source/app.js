@@ -6,6 +6,7 @@ const $ = (s, r = doc) => r.querySelector(s);
 const $$ = (s, r = doc) => Array.from(r.querySelectorAll(s));
 const SVGNS = 'http://www.w3.org/2000/svg';
 const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+const reveal = n => { const r = n.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) n.scrollIntoView({ block: 'nearest', behavior: RM.matches ? 'auto' : 'smooth' }); };
 const rootStyle = getComputedStyle(doc.documentElement);
 const T = name => (RM.matches ? 0 : parseFloat(rootStyle.getPropertyValue(name)) || 0);
 const STAGGER = () => T('--m-stagger');
@@ -283,7 +284,8 @@ function makeTabs(list, items, onSelect, idPrefix) {
   function render(animate = true) {
     const t = tub[cur];
     out.value = t.label; out.textContent = t.label;
-    range.value = cur;
+    range.value = cur; range.setAttribute('aria-valuetext', t.label);
+    $('#tub-prev').setAttribute('aria-disabled', String(cur === 0)); $('#tub-next').setAttribute('aria-disabled', String(cur === tub.length - 1));
     bars.forEach((b, i) => b.classList.toggle('is-now', i === cur));
     const from = shownLevel, to = t.end;
     const prev = cur ? tub[cur - 1].end : t.end;
@@ -548,7 +550,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   });
   function updateCount() {
     const left = names.length - fixed.size;
-    count.textContent = `Names that forced a guess: ${left} of ${names.length}` + (left === 0 ? ` → 0. Every name now says what it holds.` : '');
+    count.textContent = `Names that forced a guess: ${left} of ${names.length}` + (left === 0 ? `. Every name now says what it holds.` : '');
     btns.forEach((b, i) => b.classList.toggle('is-fixed', fixed.has(i)));
   }
   function fixedHtml(n) {
@@ -652,7 +654,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   }
   function setStage(s, animate = true) {
     stage = s;
-    out.value = LABELS[s]; out.textContent = LABELS[s];
+    out.value = LABELS[s]; out.textContent = LABELS[s]; range.setAttribute('aria-valuetext', LABELS[s]);
     cap.textContent = `Dots for FOLDLINE rows: ${LABELS[s]}.`;
     // Every move tweens from where the dots are now to the new stage, in both directions.
     const start = cur.map(q => q.slice()), startAlpha = curAlpha, endAlpha = s === 0 ? 1 : 0.25, target = pos[s];
@@ -775,7 +777,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'),
             roleLock ? S('pass', 'Allows', 'This login has no read-only default.') : S('stop', 'Stops', '25006 cannot execute CREATE TABLE in a read-only transaction. A default, not a lock.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the table is created.') : S('idle', 'Would deny', '42501 permission denied for schema analytics, even after BEGIN READ WRITE (B-W01).')],
-        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">Read-only is a default the reader can switch off. Behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
+        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">Read-only is a default the reader can switch off. Behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
       case 'temp': return {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'), S('skip', 'Switched off', 'BEGIN READ WRITE overrides the read-only default.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the temp table is created.') : o.temp ? S('nolock', 'No lock', 'TEMP left to PUBLIC: the temp table is created.') : S('stop', 'Denies', '42501 permission denied to create temporary tables.')],
@@ -812,9 +814,11 @@ function makeTabs(list, items, onSelect, idPrefix) {
     seq.at(g0, Math.round(lastIdx * hop * 0.85 + T('--m-rise')), () => {
       result.className = 'result' + (r.nolock ? ' is-nolock' : '');
       result.innerHTML = `<div class="stamp">${r.res}</div>`;
+      if (revealNext) { revealNext = false; reveal(result); }
     });
   }
-  $('#m7-send').addEventListener('click', send);
+  let revealNext = false;
+  $('#m7-send').addEventListener('click', () => { revealNext = true; send(); });
   ['#m7-ignore', '#m7-temp', '#m7-super'].forEach(s => $(s).addEventListener('change', send));
   $$('input[name="m7req"]').forEach(i => i.addEventListener('change', () => { seq.stop(); result.className = 'result'; result.innerHTML = '<p>Press Send.</p>'; gateNodes.forEach(n => { n.className = 'gate'; $('.out', n).innerHTML = ''; }); packet.hidden = true; }));
   window.__m7Final = send;
@@ -1032,7 +1036,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const why = weakest === 0 ? `Unproven: ${weakNames.join(', ')}.` : weakest === 1 ? `Documented but not proven: ${weakNames.join(', ')}.` : 'Every gate is proven for the declared question and surface.';
     verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>Worked example: FOLDLINE.</strong> The database checks pass and the values matched 3 of 3, but the runs cited the definition 0 of 3 and there was one run per question. Step 11 is not met.</p>` : '');
   }
-  $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; });
+  $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; reveal(verdict); });
   $('#m12-clear').addEventListener('click', () => { done.clear(); update(true); });
   update(false);
   window.__m12Print = on => { printing = on; };
