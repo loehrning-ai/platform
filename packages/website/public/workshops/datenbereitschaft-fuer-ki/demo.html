@@ -126,6 +126,43 @@ footer.prov p{margin:0 0 8px;max-width:900px}
 .back{display:inline-block;margin-top:6px;font-weight:700}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){.reveal{animation:none}.btn:active{transform:none}}
+
+:root{--ease-stamp:cubic-bezier(0.16,1,0.3,1);--ease-io:cubic-bezier(0.65,0,0.35,1)}
+.route{display:flex;align-items:center;gap:0;margin:14px 0 4px;font-family:var(--mono);font-size:13px}
+.route .node{border:2px solid var(--ink);background:var(--paper);padding:6px 10px;font-weight:700;white-space:nowrap;transition:background .3s var(--ease-out),color .3s var(--ease-out)}
+.route .node.ai{background:var(--ink);color:var(--paper)}
+.route .node.lock{border:3px solid var(--ink);color:var(--ink)}
+.route .wire{flex:1;min-width:18px;height:2px;background:var(--ink);position:relative}
+.route .pkt{position:absolute;top:-7px;left:0;width:16px;height:16px;background:var(--mennige);opacity:0}
+.route.go .w1 .pkt{animation:travel .32s var(--ease-io) both}
+.route.go .w2 .pkt{animation:travel .32s var(--ease-io) .3s both}
+.route.go .node.data{animation:flash .7s var(--ease-out) .55s both}
+.route.bounce .w1 .pkt{animation:travel .3s var(--ease-io) both}
+.route.bounce .w2 .pkt{animation:bounce .62s var(--ease-io) .3s both}
+.route.bounce .node.lock{animation:flash .5s var(--ease-out) .55s both}
+@keyframes travel{0%{left:0;opacity:1}85%{opacity:1}100%{left:calc(100% - 16px);opacity:0}}
+@keyframes bounce{0%{left:0;opacity:1}50%{left:calc(100% - 16px);opacity:1}100%{left:0;opacity:0}}
+@keyframes flash{0%{background:var(--mennige);color:var(--paper)}100%{background:var(--paper)}}
+.rel.hit{box-shadow:inset 0 0 0 3px var(--mennige);}
+.rel.hit::after{content:"touched by the SQL";display:block;font-family:var(--mono);font-size:11px;color:var(--mennige-deep);font-weight:700}
+@media (max-width:719px){.route{font-size:11px}.route .node{padding:4px 6px;white-space:normal;min-width:0}.route .node.data,.route .node.lock{flex:0 1 auto}}
+.result .tbl th{white-space:normal;overflow-wrap:anywhere;font-size:12px}.result .tbl td{font-size:13px}
+.btn.big{font-size:17px;padding:10px 18px}
+.cell{position:relative}
+.cell .exp{font-family:var(--mono);font-size:12px;color:var(--slate);margin-top:6px;display:none}
+.checked .cell .exp{display:block}
+.checked .cell .verdict{display:inline-block;border:3px solid currentColor;padding:2px 8px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;background:var(--papier);animation:stamp .32s var(--ease-stamp) both;animation-delay:calc(var(--i,0) * 120ms + 180ms)}
+@keyframes stamp{from{opacity:0;transform:scale(1.3)}55%{opacity:1;transform:scale(.96)}to{transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+#forbid-result .err,#forbid-result .err ~ *{animation:fin .2s var(--ease-out) .6s both}
+@media (max-width:479px){.bigrow{grid-template-columns:minmax(0,1fr)}}
+.cols{align-items:start}
+.stamp-deny{display:inline-block;border:3px solid var(--mennige-deep);color:var(--mennige-deep);font-family:var(--mono);font-weight:700;padding:4px 10px;letter-spacing:.06em;margin:8px 0;animation:stamp .32s var(--ease-stamp) .45s both}
+pre.sql.typing{border-right:3px solid var(--mennige)}
+html.js .fx{opacity:0;transform:translateY(16px);transition:opacity .32s var(--ease-out),transform .32s var(--ease-out)}
+html.js .fx.in{opacity:1;transform:none}
+.runall{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 0}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}html.js .fx{opacity:1;transform:none}.route .pkt{display:none}}
 </style>
 </head>
 <body>
@@ -145,16 +182,18 @@ footer.prov p{margin:0 0 8px;max-width:900px}
       <button type="button" class="chip" data-case="G02" aria-pressed="false">Net new MRR</button>
       <button type="button" class="chip" data-case="G03" aria-pressed="false">Logo churn</button>
     </div>
+    <div class="runall"><button type="button" class="btn big" id="run-both">Run on both</button><button type="button" class="btn sec" id="check-both">Check both against the definition</button><span class="cap" style="margin:0">Same question. Only what the AI can see changes.</span></div>
   </div>
 </header>
 
 <main class="wrap">
   <div class="cols">
-    <section class="lane bad" data-lane="bad" aria-labelledby="h-bad">
+    <section class="fx lane bad" data-lane="bad" aria-labelledby="h-bad">
       <header>
         <span class="tag">Export lane</span>
         <h2 id="h-bad">Raw export tables (what the AI saw on the first run)</h2>
         <p>Login <code>foldline_bad_reader</code>. Seven tables copied from source systems. No written definitions.</p>
+        <div class="route" data-route="bad" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node data">7 export tables</span></div>
       </header>
       <div class="step">
         <h3><span class="n">1</span>Tables this login can see</h3>
@@ -177,11 +216,12 @@ footer.prov p{margin:0 0 8px;max-width:900px}
       </div>
     </section>
 
-    <section class="lane ready" data-lane="ready" aria-labelledby="h-ready">
+    <section class="fx lane ready" data-lane="ready" aria-labelledby="h-ready">
       <header>
         <span class="tag">Approved lane</span>
         <h2 id="h-ready">Certified views (what the AI saw on the second run)</h2>
         <p>Login <code>foldline_ready_reader</code>. Five approved views. Each one has a written definition. Read-only.</p>
+        <div class="route" data-route="ready" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node data">5 certified views + definition</span></div>
       </header>
       <div class="step">
         <h3><span class="n">1</span>Views this login can see</h3>
@@ -205,6 +245,7 @@ footer.prov p{margin:0 0 8px;max-width:900px}
       <div class="step">
         <h3><span class="n">4</span>Try a forbidden read</h3>
         <p style="margin:0 0 8px;font-size:15px">The reader asks for customer names and emails from <code>core.accounts</code>. That table is not approved for this login.</p>
+        <div class="route" id="forbid-route" aria-hidden="true"><span class="node ai">AI</span><span class="wire w1"><i class="pkt"></i></span><span class="node login">login</span><span class="wire w2"><i class="pkt"></i></span><span class="node lock">core (locked)</span></div>
         <pre class="sql" tabindex="0" id="forbid-sql" aria-label="Forbidden SQL"></pre>
         <div class="act"><button type="button" class="btn sec" id="forbid-run">Try a forbidden read</button></div>
         <div aria-live="polite" id="forbid-live"><div class="result" id="forbid-result" hidden></div></div>
@@ -212,7 +253,7 @@ footer.prov p{margin:0 0 8px;max-width:900px}
     </section>
   </div>
 
-  <section class="band" aria-labelledby="h-def">
+  <section class="fx band" aria-labelledby="h-def">
     <header><h2 id="h-def">The written definition (semantic layer)</h2></header>
     <div class="body two">
       <div>
@@ -228,7 +269,7 @@ footer.prov p{margin:0 0 8px;max-width:900px}
     </div>
   </section>
 
-  <section class="band" aria-labelledby="h-diff">
+  <section class="fx band" aria-labelledby="h-diff">
     <header><h2 id="h-diff">What made the difference</h2></header>
     <div class="body">
       <ol class="diff">
@@ -363,7 +404,9 @@ footer.prov p{margin:0 0 8px;max-width:900px}
         var cell = el("div", "cell " + (x.ok ? "ok" : "no"));
         cell.appendChild(el("div", "k", x.label));
         cell.appendChild(el("div", "v", x.value));
-        cell.appendChild(el("div", "verdict", x.ok ? "Matches the definition" : "Does not match"));
+        cell.style.setProperty("--i", grid.children.length);
+        if (x.exp != null) cell.appendChild(el("div", "exp", "Definition: " + (/^[\d.]+$/.test(x.exp) ? num(Number(x.exp)) : x.exp.replace("/", " of ").replace("=", " = ") + " %")));
+        cell.appendChild(el("div", "verdict", x.ok ? "Matches" : "Does not match"));
         grid.appendChild(cell);
       });
       box.appendChild(grid);
@@ -396,7 +439,7 @@ footer.prov p{margin:0 0 8px;max-width:900px}
   function resetLane(lane){
     var c = caseById(current), res = c[lane];
     var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
-    sec.querySelector('[data-role="sql"]').textContent = res.sql;
+    var spre = sec.querySelector('[data-role="sql"]'); spre.textContent = res.sql; spre.style.minHeight = ""; spre.classList.remove("typing");
     var note = sec.querySelector('[data-role="sqlnote"]');
     note.textContent = lane === "bad"
       ? "Run as foldline_bad_reader with search_path public."
@@ -441,6 +484,62 @@ footer.prov p{margin:0 0 8px;max-width:900px}
   document.getElementById("checks-summary").textContent = D.checks._summary ? "Kit build on this capture: " + D.checks._summary + " These test the database and the course rules, not the AI." : "";
   document.getElementById("prov-detail").textContent = "Server: PostgreSQL " + D.postgres.split(" ")[0] + ". Question SQL: the recorded AI runs from 23 August 2026, run again as the matching reader login. Checks: the kit's 70_checks.sql.";
   setCase("G01");
+
+  document.documentElement.classList.add("js");
+  var runTok = {bad: 0, ready: 0};
+  function playRoute(r, cls){ if (!r || reduce) return; r.classList.remove("go","bounce"); void r.offsetWidth; r.classList.add(cls); }
+  function markHits(lane){
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]'), sql = caseById(current)[lane].sql;
+    sec.querySelectorAll(".rel").forEach(function(b){ b.classList.toggle("hit", new RegExp("\\b" + b.dataset.rel + "\\b").test(sql)); });
+  }
+  function runLane(lane, then){
+    var tok = ++runTok[lane];
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var pre = sec.querySelector('[data-role="sql"]'), full = caseById(current)[lane].sql;
+    var rbox = sec.querySelector('[data-role="result"]'); rbox.hidden = true; rbox.textContent = ""; sec.classList.remove("checked");
+    sec.querySelector('[data-role="placeholder"]').hidden = false; sec.querySelector('[data-role="check"]').disabled = true;
+    playRoute(sec.querySelector(".route"), "go"); markHits(lane);
+    if (reduce){ pre.textContent = full; renderResult(lane); if (then) then(); return; }
+    var lines = full.split("\n"), n = 0, step = Math.max(12, Math.floor(600 / lines.length));
+    pre.textContent = full; pre.style.minHeight = pre.offsetHeight + "px";
+    pre.classList.add("typing"); pre.textContent = "";
+    var iv = setInterval(function(){
+      if (tok !== runTok[lane]){ clearInterval(iv); return; }
+      n++; pre.textContent = lines.slice(0, n).join("\n");
+      if (n >= lines.length){ clearInterval(iv); pre.classList.remove("typing"); pre.textContent = full; renderResult(lane); if (then) then(); }
+    }, step);
+  }
+  ["bad", "ready"].forEach(function(lane){
+    var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+    var rb = sec.querySelector('[data-role="run"]'), nb = rb.cloneNode(true);
+    rb.parentNode.replaceChild(nb, rb);
+    nb.addEventListener("click", function(){ runLane(lane); });
+  });
+  document.getElementById("run-both").addEventListener("click", function(){
+    document.querySelectorAll(".fx").forEach(function(x){ x.classList.add("in"); });
+    var tgt = document.querySelector('.lane[data-lane="bad"] [data-role="sql"]');
+    if (tgt) tgt.scrollIntoView({behavior: reduce ? "auto" : "smooth", block: "start"});
+    runLane("bad"); runLane("ready");
+  });
+  document.getElementById("check-both").addEventListener("click", function(){
+    var tg = document.querySelector('.lane[data-lane="bad"] [data-role="result"]');
+    if (tg) (tg.hidden ? tg.parentNode : tg).scrollIntoView({behavior: reduce ? "auto" : "smooth", block: "center"});
+    ["bad","ready"].forEach(function(lane){
+      var sec = document.querySelector('.lane[data-lane="' + lane + '"]');
+      if (sec.querySelector('[data-role="result"]').hidden) runLane(lane, function(){ runCheck(lane); }); else runCheck(lane);
+    });
+  });
+  document.querySelectorAll(".chip[data-case]").forEach(function(b){ b.addEventListener("click", function(){ runTok.bad++; runTok.ready++; document.querySelectorAll("pre.sql.typing").forEach(function(x){ x.classList.remove("typing"); }); document.querySelectorAll(".rel.hit").forEach(function(x){ x.classList.remove("hit"); }); }); });
+  document.getElementById("forbid-run").addEventListener("click", function(){
+    playRoute(document.getElementById("forbid-route"), "bounce");
+    var box = document.getElementById("forbid-result");
+    var st = el("p", "stamp-deny", "DENIED · " + D.forbidden.error.sqlstate); box.insertBefore(st, box.firstChild);
+  });
+  if ("IntersectionObserver" in window && !reduce){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, {rootMargin: "0px 0px -8% 0px"});
+    document.querySelectorAll(".fx").forEach(function(x){ io.observe(x); });
+    setTimeout(function(){ document.querySelectorAll(".fx").forEach(function(x){ x.classList.add("in"); }); }, 2500);
+  } else { document.querySelectorAll(".fx").forEach(function(x){ x.classList.add("in"); }); }
 })();
 </script>
 </body>
