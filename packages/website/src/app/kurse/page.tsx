@@ -7,6 +7,16 @@ import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { LearningAtlas } from "./learning-atlas";
 import { getCourseAccess } from "@/lib/courses/access";
+import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { getWorkshops } from "@/lib/workshops";
+import {
+  ArrowGlyph,
+  BUTTON_CLASSES,
+  ButtonLink,
+  Kicker,
+  SectionHead,
+  cx,
+} from "@/components/werk";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -49,82 +59,92 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function KursePage() {
   const locale = await getRequestLocale();
   const copy = COURSE_HUB_COPY[locale];
+  const workshopCount = getWorkshops(locale).length;
 
   return (
     <>
       <JsonLd data={createCoursesGraph(locale)} id="kurse-hub-jsonld" />
-      {/* Below lg this hub reads as a companion screen: the title band has to
-          leave room for the level chips and the first atlas decision inside
-          390x844. Every base value here is the phone value, and each
-          `sm:`/`lg:` variant restores the reviewed desktop geometry byte for
-          byte, so the 1440 baseline does not move. */}
-      <div className="mx-auto max-w-[1180px] px-4 pb-8 pt-5 sm:px-6 sm:pt-10 lg:pb-12">
-        <header className="grid gap-3 border-b border-border pb-4 sm:gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.65fr)] lg:items-end lg:pb-6">
-          <h1 className="max-w-[820px] text-[30px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[48px] md:text-[56px]">
-            {copy.headingLead}
-            <br />
-            <span className="text-brand-orange">{copy.headingAccent}</span>
+      {/* Paper hero, no band: kicker, one ink headline, one lead sentence and
+          the KI-Check as a text link. Kept short so the atlas starts inside
+          the first phone viewport. */}
+      <div className="mx-auto max-w-[1180px] px-4 pb-14 pt-6 sm:px-6 sm:pt-12 lg:pb-16 lg:pt-10">
+        <header className="max-w-[46rem]">
+          <Kicker>{copy.kicker(ALL_COURSE_CATALOG.length)}</Kicker>
+          <h1 className="mt-3 text-fluid-h1 font-bold text-foreground text-balance">
+            {copy.heading}
           </h1>
-
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">
-              {copy.firstStep}
-            </span>{" "}
+          <p className="mt-3 max-w-[58ch] text-body sm:mt-4 sm:text-lead text-muted-foreground text-pretty">
+            {copy.intro}
+          </p>
+          <p className="mt-2 text-body text-muted-foreground">
+            {copy.firstStep}{" "}
             <Link
               href={localizeHref("/ki-check", locale)}
-              className="inline-flex min-h-11 items-center font-semibold text-brand-orange underline decoration-brand-orange/40 underline-offset-4 transition-colors duration-150 hover:text-foreground focus-visible:text-foreground motion-reduce:transition-none"
+              className={cx(BUTTON_CLASSES.paper.text, "align-baseline")}
             >
               {copy.checkLabel}
+              <ArrowGlyph />
             </Link>
           </p>
         </header>
 
-        <section className="mt-4 sm:mt-6" data-learning-gallery>
+        <section className="mt-8 sm:mt-10 lg:mt-8" data-learning-gallery>
           <LearningAtlas locale={locale} access={getCourseAccess()} />
         </section>
 
-        <aside className="mt-8 border border-border border-t-[3px] border-t-brand-orange bg-kupfer-mist lg:mt-10">
-          <details className="group">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-left marker:content-none sm:px-5 [&::-webkit-details-marker]:hidden">
-              <span>
-                <span className="block font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-                  {copy.accessKicker}
-                </span>
-                <span className="mt-1 block text-lg font-bold tracking-[-0.02em] text-foreground">
-                  {copy.accessHeading}
-                </span>
-              </span>
-              <span
-                aria-hidden="true"
-                className="font-mono text-lg transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
-              >
-                +
-              </span>
-            </summary>
-            <div className="border-t border-border px-4 py-4 sm:px-5">
-              <p className="max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
-                {copy.accessBody}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
-                <Link
-                  href={localizeHref("/ueber-mich", locale)}
-                  className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  {copy.aboutMe}
-                  <span aria-hidden="true">→</span>
-                </Link>
-                <Link
-                  href={localizeHref("/ki-check", locale)}
-                  className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  {copy.aiCheck}
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </div>
-          </details>
-        </aside>
+        {/* Cost and account sit with the ledger they explain, before the
+            workshop band, so the page ends ledger, note, band, footer. */}
+        <section
+          aria-labelledby="kurse-access-heading"
+          className="mt-16 lg:mt-20"
+        >
+          <SectionHead id="kurse-access-heading" title={copy.accessHeading} />
+          <p className="mt-4 max-w-[64ch] text-body text-muted-foreground text-pretty">
+            {copy.accessBody}
+          </p>
+          <Link
+            href={localizeHref("/konto", locale)}
+            prefetch={false}
+            className={cx(BUTTON_CLASSES.paper.text, "mt-3")}
+          >
+            {copy.accessAction}
+            <ArrowGlyph />
+          </Link>
+        </section>
       </div>
+
+      {/* Workshops as the practical companion: an in-flow Beton band across
+          the full width, no negative margins. */}
+      <section
+        aria-labelledby="kurse-workshops-heading"
+        className="bg-inset"
+        data-kurse-workshops
+      >
+        <div className="mx-auto grid max-w-[1180px] gap-4 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12 lg:py-12">
+          <div className="min-w-0">
+            <h2
+              id="kurse-workshops-heading"
+              className="text-fluid-h2 font-bold text-foreground"
+            >
+              {copy.workshopsHeading}
+            </h2>
+            <p className="mt-2 max-w-[60ch] text-body text-foreground text-pretty">
+              {copy.workshopsBody(workshopCount)}
+            </p>
+            <p className="mt-3 text-caption text-muted-foreground">
+              {copy.workshopsNote}
+            </p>
+          </div>
+          <ButtonLink
+            href={localizeHref("/workshops", locale)}
+            variant="secondary"
+            locale={locale}
+            className="justify-self-start"
+          >
+            {copy.workshopsAction}
+          </ButtonLink>
+        </div>
+      </section>
     </>
   );
 }

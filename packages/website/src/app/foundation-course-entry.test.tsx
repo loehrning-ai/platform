@@ -85,7 +85,13 @@ describe("foundation course entry contract", () => {
       ).filter((link) => link.classList.contains("bg-brand-orange"));
       expect(emphasizedLinks).toEqual([primary]);
       expect(frame?.querySelector("header")?.contains(primary)).toBe(true);
-      expect(frame?.querySelector('[role="progressbar"]')).not.toBeNull();
+      // The hero reserves a progress slot, but a first-time visitor sees no
+      // empty "0 / N · 0%" bar; it appears once a lesson is recorded
+      // (covered in technical-course-progress.test.tsx).
+      const progressSlot = frame?.querySelector("[data-course-progress-card]");
+      expect(progressSlot).not.toBeNull();
+      expect(progressSlot?.className).toContain("empty:hidden");
+      expect(frame?.querySelector('[role="progressbar"]')).toBeNull();
       expect(frame?.querySelector("details")).not.toBeNull();
       expect(frame?.querySelector("img")).toBeNull();
 

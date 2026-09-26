@@ -1,0 +1,258 @@
+/* the-ledger: what stayed the same and what changed, then the ledger excerpt (solid ink frame), one
+   row expanded to its bill, the call-out, three completion rows (worked, half, blank) and the slate
+   control total. */
+
+#the-ledger > .tl-same {
+  position: absolute;
+  top: 248px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  grid-template-columns: 760px 1fr;
+  gap: 48px;
+}
+
+#the-ledger .tl-col {
+  padding: 24px 32px 28px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#the-ledger .tl-col--changed {
+  border-width: 4px;
+}
+
+#the-ledger .tl-col__head {
+  margin: 0 0 16px;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+#the-ledger .tl-col ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-lead);
+}
+
+#the-ledger .tl-col > ul li::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 16px;
+  background: var(--ink);
+  vertical-align: middle;
+}
+
+#the-ledger .tl-change {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+#the-ledger .tl-change svg {
+  flex: none;
+  overflow: visible;
+}
+
+#the-ledger .tl-change__from,
+#the-ledger .tl-change__to li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--t-lead);
+}
+
+#the-ledger .tl-change__to {
+  display: grid;
+  gap: 12px;
+}
+
+#the-ledger .tl-swatch {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--ink);
+}
+
+#the-ledger .tl-swatch--raw {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#the-ledger .tl-swatch--ink {
+  background: var(--ink);
+}
+
+#the-ledger > .tl-table {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+}
+
+/* Press 2: the first row's bill, the quoted line marked; press 3 the call-out takes the mark. */
+#the-ledger > .tl-evidence {
+  position: absolute;
+  top: 680px;
+  left: var(--margin-x);
+  display: flex;
+  align-items: flex-end;
+  gap: 32px;
+}
+
+#the-ledger .tl-evidence .doc {
+  width: 660px;
+}
+
+#the-ledger .doc--compact .doc__sheet {
+  padding: 24px 22px 14px;
+  line-height: 1.28;
+}
+
+#the-ledger .doc--compact .doc__title {
+  font-size: 24px;
+}
+
+#the-ledger[data-step-current="3"] .tl-evidence .doc__mark {
+  border-color: var(--ink);
+}
+
+#the-ledger .tl-evidence__link {
+  max-width: 520px;
+  margin: 0 0 16px;
+  font-size: var(--t-body);
+}
+
+#the-ledger > .tl-ask {
+  position: absolute;
+  top: 716px;
+  right: var(--margin-x);
+  max-width: 460px;
+  font-size: var(--t-lead);
+  font-weight: 600;
+}
+
+/* Completion rows (presses 4 to 7): the ledger excerpt has done its job, so the three rows take the
+   page at reading size. Labels above values; the row the room works on carries the Mennige rail. */
+#the-ledger > .tl-rows {
+  position: absolute;
+  top: 256px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: 32px;
+}
+
+#the-ledger .tl-card {
+  position: relative;
+  padding: 18px 26px 22px;
+  border: 4px solid var(--ink);
+  background: var(--papier);
+}
+
+#the-ledger .tl-card::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  width: 10px;
+  background: transparent;
+}
+
+#the-ledger[data-step-current="4"] #the-ledger-card-1::before,
+#the-ledger[data-step-current="5"] #the-ledger-card-2::before,
+#the-ledger[data-step-current="6"] #the-ledger-card-3::before {
+  background: var(--mennige);
+}
+
+#the-ledger .tl-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--t-lead);
+  font-weight: 700;
+}
+
+#the-ledger .tl-card__mode {
+  color: var(--slate);
+  font-size: var(--t-small);
+  font-weight: 600;
+}
+
+#the-ledger .tl-card dl {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+#the-ledger .tl-card dl > div {
+  display: grid;
+  gap: 2px;
+}
+
+#the-ledger .tl-card dt {
+  color: var(--slate);
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+#the-ledger .tl-card dd {
+  position: relative;
+  min-height: 34px;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#the-ledger .tl-card dd .w-mono,
+#the-ledger .tl-card dd.w-mono {
+  font-size: 24px;
+}
+
+#the-ledger .tl-blank {
+  display: inline-block;
+  min-width: 180px;
+  border-bottom: 3px dashed var(--slate-soft);
+  color: var(--slate);
+  font-weight: 700;
+}
+
+/* The blank and its filled value share one slot. */
+#the-ledger .tl-fill {
+  font-weight: 700;
+}
+
+#the-ledger .tl-blank.is-step-hidden,
+#the-ledger .tl-fill.is-step-hidden {
+  display: none;
+}
+
+#the-ledger > .tl-control {
+  position: absolute;
+  top: 856px;
+  left: var(--margin-x);
+  width: 1728px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+#the-ledger .tl-control p {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--t-body);
+}

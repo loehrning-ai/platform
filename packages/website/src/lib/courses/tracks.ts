@@ -393,7 +393,7 @@ export const COURSE_SECTIONS: Readonly<
   },
   deeper: {
     title: "Technikkurse",
-    eyebrow: "6 Kurse · DE + EN · offener Quellstand",
+    eyebrow: "6 Kurse · DE + EN · Quellcode auf GitHub",
     blurb:
       "Sechs Kurse zu Prompting, Coding Agents, Datenarbeit und technischen Betriebsmodellen. Alle Inhalte gibt es auf Deutsch und Englisch. Umfang, Voraussetzungen, Lizenz und übernommener Quellstand bleiben sichtbar. Die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
   },
@@ -408,7 +408,7 @@ const COURSE_SECTIONS_EN: typeof COURSE_SECTIONS = {
   },
   deeper: {
     title: "Technical courses",
-    eyebrow: "6 courses · DE + EN · traceable source revision",
+    eyebrow: "6 courses · DE + EN · source on GitHub",
     blurb:
       "Six courses cover prompting, coding agents, data work, and technical operating models. Every course is available in English and German. Each course states its scope, prerequisites, licence, and imported source revision. Completion documents are issued by loehrning.ai.",
   },

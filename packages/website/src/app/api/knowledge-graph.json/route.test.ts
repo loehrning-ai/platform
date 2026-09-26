@@ -75,11 +75,13 @@ describe("knowledge-graph locale representations", () => {
     const demo = body.catalogs.demos.find(({ id }) => id === "demo:excel");
 
     expect(demo?.riskNotes).toBeUndefined();
-    expect(demo?.localizedPages.de.riskNotes?.[0]).toMatch(/fachlich/);
+    expect(demo?.localizedPages.de.riskNotes?.[0]).toMatch(/von Hand/);
     expect(demo?.localizedPages.en).toMatchObject({
       url: "https://loehrning.ai/en/demos/excel",
       pageLanguage: "en-GB",
-      riskNotes: ["Formulas and forecasts require a subject-matter review."],
+      riskNotes: expect.arrayContaining([
+        "Recalculate each suggested formula by hand for one row.",
+      ]),
     });
   });
 

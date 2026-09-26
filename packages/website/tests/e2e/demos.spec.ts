@@ -10,7 +10,7 @@ test.describe("/demos gallery", () => {
     await page.goto("/demos", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/demos$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page.locator("[data-demo-atlas-hero]")).toBeVisible();
     await expect(page.locator("[data-demo-filter-console]")).toBeVisible();
@@ -24,12 +24,12 @@ test.describe("/demos gallery", () => {
     await page.goto("/demos?cat=RAG&level=einstieg");
     await expect(page).toHaveURL(/\/demos\?cat=RAG&level=einstieg/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page).not.toHaveURL(/\/login/);
   });
 
-  test("keeps compact filters and the preview atlas usable at 390px", async ({
+  test("keeps compact filters and the ledger rows usable at 390px", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -41,7 +41,9 @@ test.describe("/demos gallery", () => {
     await expect(
       page.getByRole("combobox", { name: "Kategorie" }),
     ).toBeVisible();
-    await expect(page.locator("[data-demo-preview]").first()).toBeVisible();
+    // Below sm the gallery is a ledger: tiles stay, drawings are hidden.
+    await expect(page.locator("[data-demo-tile]").first()).toBeVisible();
+    await expect(page.locator("[data-demo-preview]").first()).toBeHidden();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
       scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
@@ -221,7 +223,7 @@ test("English demo hub links every registry item and renders a localized detail"
   expect(hubResponse?.status()).toBe(200);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    `${DEMOS_PAGE_COPY.en.catalog.headingLead} ${DEMOS_PAGE_COPY.en.catalog.headingAccent}`,
+    DEMOS_PAGE_COPY.en.catalog.heading,
   );
   await expect(page.locator("[data-demo-tile]")).toHaveCount(
     englishDemos.length,

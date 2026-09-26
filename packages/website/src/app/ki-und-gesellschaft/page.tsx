@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
-  TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
+import {
+  CourseBlockLedger,
+  CourseBoundaryColumn,
+  CourseBoundaryDetails,
+  CourseLandingSection,
+  CourseNextLink,
+  CourseNoteList,
+  CourseOutcomeList,
+} from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
@@ -43,22 +50,16 @@ interface LandingCopy {
   readonly allCourses: string;
   readonly imageAlt: string;
   readonly imageLabel: string;
-  readonly facts: readonly { readonly value: string; readonly label: string }[];
-  readonly whyEyebrow: string;
+  readonly facts: readonly string[];
   readonly whyHeading: string;
   readonly whyBody: string;
-  readonly curriculumEyebrow: string;
   readonly curriculumHeading: string;
-  readonly blockLabel: (number: number) => string;
   readonly minutes: (count: number) => string;
-  readonly methodEyebrow: string;
-  readonly methodHeading: string;
   readonly methods: readonly {
     readonly number: string;
     readonly title: string;
     readonly body: string;
   }[];
-  readonly evidenceEyebrow: string;
   readonly evidenceHeading: string;
   readonly evidence: readonly string[];
   readonly factsLabel: string;
@@ -90,32 +91,27 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Bias in Daten, Modellen und Entscheidungen erkennen",
       ],
     },
-    eyebrow: "KI und Gesellschaft · Lernpfad Stufe 2",
+    eyebrow: "KI und Gesellschaft · Grundlagenkurs · kostenlos",
     heading: "Arbeit, Deepfakes",
     headingAccent: "und Bias einordnen.",
     introduction:
-      "Der Kurs trennt belastbare Befunde von pauschalen KI-Behauptungen. Du prüfst, welche Aufgaben sich verändern, wie synthetische Medien bewertet werden und an welchen Stellen Bias in Entscheidungen entsteht. Drei Blöcke, neun Lektionen, 46 Minuten.",
+      "Du führst eine Schlagzeile über KI und Jobs auf ihre Datenbasis zurück, prüfst ein verdächtiges Video, bevor du es teilst, und findest die Stelle, an der Bias in eine automatisierte Entscheidung gelangt. Technikwissen brauchst du nicht.",
     start: "Mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
       "Editoriale Berlin-Collage mit Menschen, synthetischen Porträts, Datenrastern und einem Prüfentscheid",
     imageLabel: "3 Blöcke · 9 Lektionen",
     facts: [
-      { value: "3", label: "Blöcke" },
-      { value: "9", label: "Lektionen" },
-      { value: "46 Min", label: "Lernzeit" },
-      { value: "Lokal", label: "Lernnachweis" },
+      "3 Blöcke, 9 Lektionen",
+      "46 Min. Lernzeit",
+      "Kostenlos, mit Lernkonto",
+      "Lernnachweis als PDF",
     ],
-    whyEyebrow: "§ Ausgangspunkt",
-    whyHeading: "Drei Themen brauchen drei verschiedene Prüfmethoden.",
+    whyHeading: "Was du prüfst",
     whyBody:
       "Prognosen zum Arbeitsmarkt, die Echtheit eines Videos und die Fairness einer automatisierten Entscheidung lassen sich nicht mit derselben Checkliste bewerten. Der Kurs ordnet für jedes Thema die relevante Datenbasis, typische Fehlschlüsse und konkrete Prüfschritte. Quellen und Prüfstände stehen direkt in den Lektionen.",
-    curriculumEyebrow: "§ Curriculum",
-    curriculumHeading: "Neun Lektionen entlang realer Entscheidungen.",
-    blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
+    curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
-    methodEyebrow: "§ Prüfraster",
-    methodHeading: "Was du in jedem Themenfeld untersuchst.",
     methods: [
       {
         number: "01",
@@ -133,15 +129,14 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         body: "Trainingsdaten, Zielgröße, Fehlerfolgen, Verantwortliche und Beschwerdeweg prüfen.",
       },
     ],
-    evidenceEyebrow: "§ Aussagekraft",
-    evidenceHeading: "Was der Lernnachweis festhält.",
+    evidenceHeading: "Was der Lernnachweis festhält",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokal durchgeführten Abschlussquiz.",
       "Er ist nicht akkreditiert, nicht servergeprüft und keine amtliche oder berufliche Qualifikation.",
       "Quellen und zeitabhängige Aussagen werden in den einzelnen Lektionen ausgewiesen.",
       "Der Kurs ersetzt keine Rechtsberatung und keine Prüfung eines konkreten Beschäftigungs- oder Diskriminierungsfalls.",
     ],
-    factsLabel: "Kursrahmen",
+    factsLabel: "Auf einen Blick",
     progressLabel: "Fortschritt in KI und Gesellschaft",
     lessonsLabel: "Lektionen",
     boundarySummary: "Aussagekraft, Quellen und Grenzen",
@@ -168,32 +163,27 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Identify bias in data, models, and decisions",
       ],
     },
-    eyebrow: "AI and Society · Learning path stage 2",
+    eyebrow: "AI and Society · Foundation course · free",
     heading: "Assess work, deepfakes,",
     headingAccent: "and bias.",
     introduction:
-      "This course separates supported findings from broad claims about AI. You examine which tasks change, how to assess synthetic media, and where bias enters decisions. Three blocks, nine lessons, 46 minutes.",
+      "You trace a headline about AI and jobs back to its data, check a suspicious video before you share it, and find the point where bias enters an automated decision. No technical background needed.",
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
       "Editorial Berlin collage with people, synthetic portraits, data grids, and a review decision",
     imageLabel: "3 blocks · 9 lessons",
     facts: [
-      { value: "3", label: "Blocks" },
-      { value: "9", label: "Lessons" },
-      { value: "46 min", label: "Study time" },
-      { value: "Local", label: "Completion record" },
+      "3 blocks, 9 lessons",
+      "46 min of study",
+      "Free, with a learning account",
+      "Completion record as a PDF",
     ],
-    whyEyebrow: "§ Starting point",
-    whyHeading: "Three topics require three different review methods.",
+    whyHeading: "What you check",
     whyBody:
       "A labour-market forecast, the authenticity of a video, and the fairness of an automated decision cannot be assessed with one checklist. For each topic, the course identifies the relevant evidence, common reasoning errors, and concrete review steps. Sources and review dates appear in the lessons.",
-    curriculumEyebrow: "§ Curriculum",
-    curriculumHeading: "Nine lessons organized around real decisions.",
-    blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
+    curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,
-    methodEyebrow: "§ Review methods",
-    methodHeading: "What to examine in each topic.",
     methods: [
       {
         number: "01",
@@ -211,15 +201,14 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         body: "Check training data, the target measure, error costs, accountable owners, and the appeal route.",
       },
     ],
-    evidenceEyebrow: "§ Scope of the record",
-    evidenceHeading: "What the completion record establishes.",
+    evidenceHeading: "What the completion record establishes",
     evidence: [
       "It records completion of this course and the result of the locally administered final quiz.",
       "It is not accredited, server-verified, or an official or professional qualification.",
       "Sources and time-dependent claims are identified in the individual lessons.",
       "The course is not legal advice and does not assess a specific employment or discrimination case.",
     ],
-    factsLabel: "Course frame",
+    factsLabel: "At a glance",
     progressLabel: "AI and Society course progress",
     lessonsLabel: "lessons",
     boundarySummary: "Evidence, sources, and limits",
@@ -343,7 +332,7 @@ export default async function KiUndGesellschaftLandingPage() {
               {copy.start} <span aria-hidden="true">→</span>
             </Link>
           }
-          facts={copy.facts.map((fact) => `${fact.value} ${fact.label}`)}
+          facts={copy.facts}
           factsLabel={copy.factsLabel}
           progress={
             <TechnicalCourseProgressBar
@@ -355,102 +344,38 @@ export default async function KiUndGesellschaftLandingPage() {
           }
         />
 
-        <div>
-          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.whyEyebrow}
-              title={copy.whyHeading}
-              intro={copy.whyBody}
-            />
-            <ol className="border-y border-border">
-              {copy.methods.map((method) => (
-                <li
-                  key={method.number}
-                  className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
-                >
-                  <span className="font-mono text-xs font-bold text-brand-orange">
-                    {method.number}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-semibold text-foreground">
-                      {method.title}
-                    </h3>
-                    <p className="mt-1 break-words text-[13px] leading-relaxed text-muted-foreground">
-                      {method.body}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.whyHeading} intro={copy.whyBody}>
+          <CourseOutcomeList
+            items={copy.methods.map((method) => ({
+              title: method.title,
+              detail: method.body,
+            }))}
+          />
+        </CourseLandingSection>
 
-          <section className="mt-10">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.curriculumEyebrow}
-              title={copy.curriculumHeading}
-            />
-            <ol className="mt-5 border-t border-border">
-              {blocks.map((block, index) => (
-                <li
-                  key={block.id}
-                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[6rem_minmax(0,1fr)_8rem] md:items-start md:gap-5"
-                >
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                    {copy.blockLabel(index + 1)}
-                  </p>
-                  <div className="min-w-0">
-                    <h3 className="break-words text-base font-semibold text-foreground">
-                      {block.title}
-                    </h3>
-                    <p className="mt-1 max-w-[720px] break-words text-sm leading-relaxed text-muted-foreground">
-                      {block.description}
-                    </p>
-                  </div>
-                  <p className="font-mono text-xs text-muted-foreground md:text-right">
-                    {block.lessons.length} {copy.lessonsLabel} ·{" "}
-                    {copy.minutes(block.durationMinutes)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.curriculumHeading}>
+          <CourseBlockLedger
+            rows={blocks.map((block, index) => ({
+              id: block.id,
+              number: String(index + 1).padStart(2, "0"),
+              title: block.title,
+              description: block.description,
+              meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
+            }))}
+          />
+          <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
+            {copy.nextCourse}
+          </CourseNextLink>
+        </CourseLandingSection>
 
-          <details className="mt-10 border-y border-border">
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
-              {copy.boundarySummary}
-              <span className="text-brand-orange" aria-hidden="true">
-                +
-              </span>
-            </summary>
-            <div className="border-t border-border py-4">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                {copy.evidenceHeading}
-              </p>
-              <ul className="mt-2 grid border-t border-border md:grid-cols-2">
-                {copy.evidence.map((item) => (
-                  <li
-                    key={item}
-                    className="border-b border-border py-3 text-[13px] leading-relaxed text-muted-foreground md:px-3 md:first:pl-0"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
-
-          <Link
-            href={localizeHref("/eu-ai-act-kurs", locale)}
-            className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} mt-8 sm:grid-cols-[minmax(0,1fr)_auto]`}
+        <CourseBoundaryDetails summary={copy.boundarySummary}>
+          <CourseBoundaryColumn
+            title={copy.evidenceHeading}
+            className="lg:col-span-2"
           >
-            <span className="text-sm font-semibold text-foreground">
-              {copy.nextCourse}
-            </span>
-            <span className="text-brand-orange" aria-hidden="true">
-              →
-            </span>
-          </Link>
-        </div>
+            <CourseNoteList items={copy.evidence} />
+          </CourseBoundaryColumn>
+        </CourseBoundaryDetails>
       </TechnicalCourseFrame>
     </>
   );

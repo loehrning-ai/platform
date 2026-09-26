@@ -600,8 +600,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/card-preview.webp",
-      "sizeBytes": 27908,
-      "sha256": "3b1e0b213580794615e0e392f68b7062b99436f030ea35450f670c7d8557f444",
+      "sizeBytes": 33332,
+      "sha256": "beae2b0d611b25720e551bc1c20519195250c2947ce162c2c00ed2ce9a4e8049",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Decks (slides.html)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -646,9 +646,29 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Regular.woff2",
       "sizeBytes": 61064,
       "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-SemiBold.woff2",
+      "sizeBytes": 60860,
+      "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
@@ -666,10 +686,10 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/card-preview.webp",
-      "sizeBytes": 30258,
-      "sha256": "c2df35d9f5845163203b3f47f6d60c29f1da11e0968dd6139765f6aa99295ac0",
+      "sizeBytes": 37074,
+      "sha256": "d2d374a08c602dd20acce6653b0c4015072f6c4ccae031893a5827c631d03a99",
       "owner": "Tim L\u00f6hr",
-      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html)",
+      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html, Titelband)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -963,8 +983,8 @@
     },
     {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
-      "sizeBytes": 36724,
-      "sha256": "bfacd03ed7ec6ffbef0447c2a819474bfbd56dc71ee7560093c964febc7e978c",
+      "sizeBytes": 24874,
+      "sha256": "9c4d52f05d2862fcacdbf6a7a40fcfa42a8b9418a45f0002f7822780c961a726",
       "owner": "Tim L\u00f6hr",
       "source": "Chromium screenshot of the course cover, resized to 1024 by 576 pixels",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1014,6 +1034,78 @@
       "source": "Existing platform-inventoried Typing woff2 build, renamed Inter derivative",
       "license": "OFL-1.1",
       "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-400.woff2",
+      "sizeBytes": 141644,
+      "sha256": "3114b3c1543719e35fbcd79171995e87a5e8e6bb598e10c855e2525a89a28063",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-500.woff2",
+      "sizeBytes": 144292,
+      "sha256": "016640b5e194f4694a1ac1a00ac98a7cb389afed1bd3d307fe0c816291aa7ad4",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-600.woff2",
+      "sizeBytes": 144896,
+      "sha256": "be0f9efc556e7d576554004698acd1d0dc759340731d96fdd0b5aa7fdc7dd3ca",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-700.woff2",
+      "sizeBytes": 144608,
+      "sha256": "81cdb156fd821407c6651739d6fe75c679ac9fba973bc3b934c2946494f789c8",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/JetBrainsMono-var.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors",
+      "source": "Existing platform-inventoried JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/tim-loehr.jpg",
+      "sizeBytes": 112101,
+      "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
+      "owner": "Tim L\u00f6hr",
+      "source": "Portr\u00e4tfoto Tim L\u00f6hr, vom Autor bereitgestellt \u2014 Referentenfolie des Workshops",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/kellbrunn-esg-kit.zip",
+      "sizeBytes": 92968,
+      "sha256": "234019ba52d5d57c8e7b9b20015ad0424b6c0880a0df3cde8cb3c6d61fb76718",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original ESG Reporting with AI workshop material (Workshop 04 kit, text files generated by scripts/workshop04/build_dataset.py), owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/card-preview.webp",
+      "sha256": "c5fd88043262019dfc0ef5b8c555146ff4c0b73d55b96731ea50a5765c663ef0",
+      "sizeBytes": 32730,
+      "owner": "Tim L\u00f6hr",
+      "source": "Chromium screenshot of the workshop deck cover, resized to 1024 by 576 pixels",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     }
   ]
 }

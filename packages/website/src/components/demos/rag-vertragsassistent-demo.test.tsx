@@ -54,7 +54,8 @@ describe("<RagVertragsassistentDemo>", () => {
     expect(
       screen.getByText("Keyword-Suche · 8 Beispieldokumente"),
     ).toBeInTheDocument();
-    expect(screen.getByText("● DEMO-MODUS")).toBeInTheDocument();
+    // The green DEMO-MODUS pill restated the shell's evidence line.
+    expect(screen.queryByText(/DEMO-MODUS/)).toBeNull();
 
     // The engine no longer restates the simulation mode: the detail shell says
     // it once via EvidenceBadge, and the mode belongs stated once, and
@@ -66,10 +67,15 @@ describe("<RagVertragsassistentDemo>", () => {
       screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
     ).not.toBeInTheDocument();
 
-    // Empty-state prompt heading.
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Fragen Sie das Beispielarchiv.",
+    // One plain sr-only landmark heading; the empty state asks in du-form,
+    // one colour, as a paragraph rather than a slogan heading.
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent(
+      "Vertragsassistent: Fragen an das Beispielarchiv",
     );
+    expect(screen.getByText("Frag das Beispielarchiv.")).toBeInTheDocument();
+    expect(screen.queryByText(/Fragen Sie/)).toBeNull();
 
     // All four suggested questions render as buttons.
     expect(

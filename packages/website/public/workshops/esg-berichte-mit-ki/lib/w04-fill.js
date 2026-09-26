@@ -1,0 +1,107 @@
+/* Workshop 04 number binding. Every figure on the deck is an element with data-num="<key>" (a key
+   in numbers of w04-data.json) or data-j="<path>" (any other JSON value). This file resolves them
+   from window.W04_DATA (lib/w04-data.js, generated from the dataset; no fetch) and writes the text,
+   so a slide can never show a number the dataset does not hold. scripts/workshop04/build-deck.mjs
+   runs the same resolver at build time, so the HTML already carries the right text without JS.
+
+   data-num forms (data-form):
+     (none)   the English display string, for example "1,444.0 t"
+     bare     without the unit: "1,444.0"
+     abs      without the sign and unit: "495.5"
+     absunit  without the sign: "495.5 t"
+     de       the German display string
+   data-j paths are dot-separated; an array segment is an index or an id matched against row_id,
+   id, step, n or a document's file name without its extension. data-form="cell:N" picks cell N of
+   a Markdown table line, data-form="md" drops a leading "# ", int / fix1 / fix2 / pct format a
+   plain number, math writes worked arithmetic with × and the minus sign, and seg:A-B keeps the
+   " · " parts A to B of a line. */
+(function (root) {
+  "use strict";
+
+  const UNIT = /\s+(t\/Mio\. EUR|kWh|MWh|t|l)$/;
+  const SIGN = /^[+−-]/;
+
+  function numberText(data, key, form) {
+    const entry = data?.numbers?.[key];
+    if (!entry) return null;
+    const en = String(entry.en);
+    switch (form || "") {
+      case "": return en;
+      case "de": return String(entry.de);
+      case "bare": return en.replace(UNIT, "");
+      case "abs": return en.replace(UNIT, "").replace(SIGN, "");
+      case "absunit": return en.replace(SIGN, "");
+      default: return null;
+    }
+  }
+
+  function pick(list, segment) {
+    if (/^\d+$/.test(segment)) return list[Number(segment)];
+    return list.find((item) => item && typeof item === "object" && (
+      item.row_id === segment || item.id === segment || item.step === segment || String(item.n) === segment
+      || (typeof item.file === "string" && item.file.replace(/\.[a-z]+$/, "") === segment)
+      || (typeof item.path === "string" && item.path.split("/").pop().replace(/\.[a-z]+$/, "") === segment)));
+  }
+
+  function resolvePath(data, path) {
+    let value = data;
+    for (const segment of String(path).split(".")) {
+      if (value == null) return null;
+      if (Array.isArray(value)) value = pick(value, segment);
+      else if (typeof value === "object") value = value[segment];
+      else return null;
+    }
+    return value;
+  }
+
+  function pathText(data, path, form) {
+    const value = resolvePath(data, path);
+    if (value == null || typeof value === "object") return null;
+    let text = String(value);
+    if (form === "md") text = text.replace(/^#+\s+/, "");
+    if (form === "int") text = Number(value).toLocaleString("en-US");
+    if (form === "fix1") text = Number(value).toFixed(1);
+    if (form === "fix2") text = Number(value).toFixed(2);
+    if (form === "pct") text = `${Number(value)}%`;
+    // Worked arithmetic from the dataset is written in ASCII ("x", " - ", "-72.2"); on screen it gets
+    // the multiplication sign and the minus sign U+2212.
+    if (form === "math") text = text.replace(/ x /g, " × ").replace(/ - /g, " − ").replace(/(^|[\s(])-(?=\d)/g, "$1−");
+    // A slide may show only some " · " parts of a long document line (seg:0 or seg:0-1); the kit keeps
+    // the whole line.
+    const seg = /^seg:(\d+)(?:-(\d+))?$/.exec(form || "");
+    if (seg) text = text.split(" · ").slice(Number(seg[1]), Number(seg[2] ?? seg[1]) + 1).join(" · ");
+    const cell = /^cell:(\d+)$/.exec(form || "");
+    if (cell) {
+      const cells = text.split("|").map((part) => part.trim()).filter((part, index, all) => !(part === "" && (index === 0 || index === all.length - 1)));
+      text = cells[Number(cell[1])] ?? "";
+    }
+    return text;
+  }
+
+  function textFor(data, attrs) {
+    if (attrs.num) return numberText(data, attrs.num, attrs.form);
+    if (attrs.j) return pathText(data, attrs.j, attrs.form);
+    return null;
+  }
+
+  function fill(doc, data) {
+    const problems = [];
+    doc.querySelectorAll("[data-num], [data-j]").forEach((node) => {
+      const text = textFor(data, { num: node.dataset.num, j: node.dataset.j, form: node.dataset.form });
+      if (text == null) {
+        problems.push(node.dataset.num || node.dataset.j);
+        return;
+      }
+      if (node.textContent !== text) node.textContent = text;
+    });
+    return problems;
+  }
+
+  const api = Object.freeze({ numberText, pathText, resolvePath, textFor, fill });
+  root.W04Fill = api;
+
+  if (root.document && root.W04_DATA) {
+    const problems = fill(root.document, root.W04_DATA);
+    if (problems.length) console.error(`W04 numbers: ${problems.length} unresolved binding(s): ${problems.join(", ")}`);
+  }
+})(typeof window !== "undefined" ? window : globalThis);

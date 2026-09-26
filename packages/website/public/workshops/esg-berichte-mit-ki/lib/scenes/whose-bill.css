@@ -1,0 +1,142 @@
+/* whose-bill: the Talbrück bill with its addressee block outlined; on the right the ownership note
+   and a small boundary sketch. Press 2 the answer and its ledger row, press 3 what counting it adds. */
+
+#whose-bill > .wb-doc {
+  position: absolute;
+  top: 232px;
+  left: var(--margin-x);
+  width: 900px;
+}
+
+#whose-bill > .wb-doc .doc__sheet {
+  font-size: 22px;
+}
+
+#whose-bill > .wb-doc .doc__title {
+  font-size: 28px;
+}
+
+#whose-bill > .wb-note {
+  position: absolute;
+  top: 240px;
+  right: var(--margin-x);
+  width: 760px;
+  max-width: none;
+  display: grid;
+  gap: 6px;
+}
+
+#whose-bill .wb-note p {
+  margin: 0;
+}
+
+#whose-bill > .wb-map {
+  position: absolute;
+  top: 440px;
+  right: var(--margin-x);
+  display: flex;
+  width: 760px;
+  align-items: stretch;
+  gap: 24px;
+}
+
+#whose-bill .wb-inside {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  padding: 14px 20px;
+  border: 4px solid var(--ink);
+  font-size: 22px;
+}
+
+#whose-bill .wb-inside__label {
+  color: var(--slate);
+  font-weight: 600;
+}
+
+#whose-bill .wb-outside {
+  display: grid;
+  flex: none;
+  width: 200px;
+  align-content: center;
+  gap: 2px;
+  padding: 14px 20px;
+  border: 3px dashed var(--ink);
+  font-size: 22px;
+}
+
+#whose-bill .wb-outside span {
+  color: var(--slate);
+}
+
+#whose-bill > .wb-answer {
+  position: absolute;
+  top: 580px;
+  right: var(--margin-x);
+  display: grid;
+  width: 760px;
+  justify-items: start;
+  gap: 12px;
+}
+
+#whose-bill .wb-answer p {
+  margin: 0;
+}
+
+#whose-bill .wb-answer__why {
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#whose-bill .wb-row {
+  display: flex;
+  gap: 16px;
+  padding: 8px 14px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  color: var(--slate);
+  font-size: 22px;
+}
+
+#whose-bill .wb-row .w-mono {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#whose-bill > .wb-effect {
+  position: absolute;
+  top: 820px;
+  right: var(--margin-x);
+  display: flex;
+  width: 760px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 28px;
+}
+
+#whose-bill .wb-effect .w-label {
+  width: 100%;
+}
+
+#whose-bill .wb-effect__row {
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#whose-bill .wb-effect__row[data-focus] {
+  padding: 4px 12px;
+  border: 3px solid var(--mennige);
+}
+
+/* One Mennige mark per press: the addressee block on entry and during the vote, the answer stamp on
+   press 2, the location-based effect on press 3. Earlier marks fall back to ink. */
+#whose-bill:not([data-step-current="0"]):not([data-step-current="1"]) .wb-doc .doc__mark {
+  border-color: var(--ink);
+}
+
+#whose-bill[data-step-current="3"] .wb-answer .stamp[data-focus] {
+  outline-color: var(--ink);
+  outline-width: 2px;
+}

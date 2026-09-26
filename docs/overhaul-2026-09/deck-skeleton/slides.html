@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>ESG Reporting with AI · loehrning.ai</title>
+  <meta name="description" content="Workshop 04 deck skeleton: raw ESG inputs, one checked table, a clear statement." />
+  <link rel="icon" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/cover-globe.css" />
+  <link rel="stylesheet" href="./lib/story.css" />
+  <link rel="stylesheet" href="./lib/scenes/cover.css" />
+  <link rel="stylesheet" href="./lib/scenes/raw-inputs.css" />
+  <link rel="stylesheet" href="./lib/scenes/compare.css" />
+  <link rel="stylesheet" href="./lib/scenes/end.css" />
+  <script src="./lib/deck-stage.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#stage">Skip to workshop</a>
+<main aria-label="ESG Reporting with AI workshop">
+<svg class="icon-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs><pattern id="story-hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="14" fill="#121212" /></pattern></defs>
+<symbol id="i-question" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 12h84v60H46L28 90V72H8z"/><path d="M38 24h24v14H50v8"/><g fill="currentColor" stroke="none"><rect x="46" y="54" width="8" height="8"/></g></symbol>
+<symbol id="i-pass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M28 50l14 14 30-30"/></symbol>
+<symbol id="i-fail" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M32 32l36 36M68 32L32 68"/></symbol>
+<symbol id="i-checklist" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="14" y="14" width="72" height="78"/><path d="M26 44l8 8 14-14M56 46h18M26 72l8 8 14-14M56 74h18"/><g fill="currentColor" stroke="none"><rect x="34" y="8" width="32" height="12"/></g></symbol>
+<symbol id="i-table" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="14" width="84" height="72"/><path d="M8 38h84M8 62h84M36 38v48M64 38v48"/></symbol>
+<symbol id="i-gap" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 26V10h16M42 10h16M74 10h16v16M90 42v16M10 42v16M10 74v16h16M42 90h16"/><g fill="currentColor" stroke="none"><rect x="72" y="72" width="20" height="20"/></g></symbol>
+<symbol id="i-book" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="16" y="8" width="68" height="72"/><path d="M28 8v72M16 80v12h68V80M40 46h24"/><g fill="currentColor" stroke="none"><rect x="40" y="22" width="32" height="12"/></g></symbol>
+</svg>
+<deck-stage id="stage" width="1920" height="1080" data-deck-title="ESG Reporting with AI" data-route-stations="Raw inputs|Side by side|Take home">
+
+  <section class="slide dark" id="cover" data-act="0" data-kind="main" data-label="ESG Reporting with AI" data-section="Workshop 04 · skeleton" data-seconds="45" data-note-key="cover" data-note="One question about electricity emissions, held fixed for the whole session." data-route="none">
+    <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
+    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
+    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 04 · skeleton</p>
+    <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">ESG Reporting<br />with AI.</h1>
+    <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <div>
+        <span class="q-card__label">One question, held fixed</span>
+        <p class="q-card__text">How much did our electricity emissions change from 2024 to 2025?</p>
+      </div>
+    </div>
+    <div class="cover-experiment" id="cover-experiment" data-step="1">
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Raw inputs</span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:1"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp cover-stamp--change" data-motion="stamp" style="--order:1">One checked table</span>
+      <svg class="cover-arrow" viewBox="0 0 56 24" width="56" height="24" aria-hidden="true" data-motion="fade" style="--order:2"><path class="cover-arrow__line" d="M4 12H40" /><path class="cover-arrow__head" d="M38 3L52 12L38 21Z" /></svg>
+      <span class="stamp cover-stamp" data-motion="stamp" style="--order:2">A clear statement</span>
+    </div>
+    <p class="cover-meta" id="cover-meta" data-motion="fade" style="--order:1">75 minutes · synthetic teaching case</p>
+  </section>
+
+  <section class="slide" id="raw-inputs" data-act="1" data-kind="main" data-label="Raw inputs" data-section="Raw inputs · three files, one number" data-seconds="240" data-note-key="raw-inputs" data-note="Show the three files behind one emissions number, one per press." data-route="shown">
+    <h1 class="scene-title" id="raw-inputs-title">Three files. One reported number.</h1>
+    <p class="lead ri-lead" id="raw-inputs-lead" data-motion="fade" style="--order:0">Every ESG figure starts as a pile of files. Name each one before you ask an AI anything.</p>
+    <ol class="ri-cards" id="raw-inputs-cards">
+      <li class="ri-card" id="raw-inputs-card-1" data-step="1" data-motion="rise" style="--order:0">
+        <p class="ri-card__head"><svg class="icon icon--56" aria-hidden="true"><use href="#i-book" /></svg><span>Invoices</span></p>
+        <p class="ri-card__sub">12 PDFs from the utility, one per month</p>
+        <p class="ri-card__sample">Jan 2025: 38,410 kWh</p>
+      </li>
+      <li class="ri-card" id="raw-inputs-card-2" data-step="2" data-motion="rise" style="--order:0">
+        <p class="ri-card__head"><svg class="icon icon--56" aria-hidden="true"><use href="#i-table" /></svg><span>Meter export</span></p>
+        <p class="ri-card__sub">One CSV from facilities</p>
+        <p class="ri-card__sample">2025 total: 452,300 kWh</p>
+      </li>
+      <li class="ri-card" id="raw-inputs-card-3" data-step="3" data-motion="rise" style="--order:0">
+        <p class="ri-card__head"><svg class="icon icon--56" aria-hidden="true"><use href="#i-checklist" /></svg><span>Emission factor</span></p>
+        <p class="ri-card__sub">From the supplier contract</p>
+        <p class="ri-card__sample">0.366 kg CO₂e per kWh</p>
+      </li>
+    </ol>
+    <svg class="ri-join" id="raw-inputs-join" viewBox="0 0 1728 128" width="1728" height="128" data-step="3" aria-hidden="true">
+      <path class="edge" data-motion="draw" style="--order:1" d="M260 0V64H1468V0M864 0V120" />
+    </svg>
+    <div class="ri-result-row" id="raw-inputs-result-row">
+      <p class="stamp ri-result" id="raw-inputs-result" data-step="3" data-motion="stamp" data-focus style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg><span>452,300 kWh × 0.366 = <span class="num" data-motion="count">165.5</span> t CO₂e</span></p>
+    </div>
+    <p class="ri-note" id="raw-inputs-note" data-step="3" data-motion="fade" style="--order:3">Synthetic numbers. The invoices and the meter disagree by 1.2 %: write down which one you used.</p>
+  </section>
+
+  <section class="slide" id="compare" data-act="2" data-kind="main" data-label="Side by side" data-section="Side by side · draft and checked" data-seconds="300" data-note-key="compare" data-note="Same inputs, two write-ups. Let the room find what the first draft leaves out." data-route="shown">
+    <h1 class="scene-title" id="compare-title">Same inputs. Two summaries.</h1>
+    <div class="cmp-cols" id="compare-cols">
+      <div class="cmp-col cmp-col--draft" id="compare-draft">
+        <span class="lane lane--export" data-motion="fade" style="--order:0"><span class="lane__swatch"></span>First AI draft</span>
+        <p class="cmp-quote" id="compare-draft-quote" data-step="1" data-motion="rise" style="--order:0">“Thanks to our green initiatives, emissions fell sharply this year.”</p>
+        <ul class="cmp-list" id="compare-draft-list" data-step="1" data-motion="fade" style="--order:1">
+          <li>No number</li>
+          <li>No scope, no method</li>
+          <li>No source file</li>
+        </ul>
+        <div class="cmp-chip-row" data-step="1"><span class="chip chip--fail" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-fail" /></svg>Cannot be checked</span></div>
+      </div>
+      <span class="cmp-rule" aria-hidden="true"></span>
+      <div class="cmp-col cmp-col--checked" id="compare-checked">
+        <span class="lane lane--approved" data-motion="fade" style="--order:1"><span class="lane__swatch"></span>After a checked table</span>
+        <p class="cmp-quote" id="compare-checked-quote" data-step="2" data-motion="rise" data-focus style="--order:0">“Scope 2 (market-based) fell from 181.2 t to 165.5 t CO₂e, −8.7 %, from 2024 to 2025.”</p>
+        <ul class="cmp-list" id="compare-checked-list" data-step="2" data-motion="fade" style="--order:1">
+          <li>Meter export, 452,300 kWh</li>
+          <li>Supplier factor, 0.366 kg per kWh</li>
+          <li>Calculation kept next to the claim</li>
+        </ul>
+        <div class="cmp-chip-row" data-step="2"><span class="chip chip--pass" data-motion="stamp" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg>Every number has a source</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="end" data-act="3" data-kind="main" data-label="Take home" data-section="Take home · three rules" data-seconds="120" data-note-key="end" data-note="Three rules, then point to the materials. No new content here." data-route="shown">
+    <h1 class="scene-title" id="end-title">Take this home.</h1>
+    <ol class="end-rules" id="end-rules">
+      <li class="end-rule" data-motion="rise" style="--order:0">Name the source file behind every number.</li>
+      <li class="end-rule" data-motion="rise" style="--order:1">Say which scope, which method and which year.</li>
+      <li class="end-rule" data-motion="rise" style="--order:2">Keep the calculation next to the claim.</li>
+    </ol>
+    <div class="end-stamp-row" id="end-stamp-row">
+      <p class="stamp end-stamp" id="end-stamp" data-step="1" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-checklist" /></svg><span>A checked table beats a fluent paragraph.</span></p>
+    </div>
+    <p class="end-sign" id="end-sign" data-step="1" data-motion="fade" style="--order:2"><span class="end-sign__url">loehrning.ai/workshops/esg-reporting-mit-ki</span><img src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /></p>
+  </section>
+
+</deck-stage>
+</main>
+
+<script src="./lib/deck-runtime.js"></script>
+</body>
+</html>

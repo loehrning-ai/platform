@@ -87,6 +87,32 @@ describe("course-owned reader continuation", () => {
     expect(state.completed).toBe(false);
   });
 
+  it("lands on the lesson title in the reference head when there is no checkpoint", () => {
+    function HeadHarness() {
+      const reader = useLessonReaderBar({
+        courseSlug: "claude", lessonId: "anatomy", ordinal: 2, total: 12, locale: "de",
+        next: { kind: "link", label: "Weiter", href: "/next" },
+      });
+      return <>
+        <div ref={reader.contentRef}>
+          <div data-lesson-reference-block>
+            <div role="heading" aria-level={1}>Anatomie eines Prompts</div>
+            <details data-lesson-reference>
+              <summary>Einklappen</summary>
+              <h2>Erster Abschnitt</h2>
+            </details>
+          </div>
+        </div>
+        <ReaderFocusBar {...reader.bar} action={reader.bar.next} />
+      </>;
+    }
+    render(<HeadHarness />);
+    fireEvent.click(screen.getByRole("button", { name: "Aufgabe öffnen" }));
+    expect(document.querySelector("details")).toHaveAttribute("open");
+    expect(screen.getByRole("heading", { level: 1, name: "Anatomie eines Prompts" })).toHaveFocus();
+    expect(scroll).toHaveBeenLastCalledWith({ block: "start", behavior: "instant" });
+  });
+
   it("switches to next only after persisted evidence, and back after reset/rejected persistence", () => {
     render(<Harness />);
     act(() => state.listeners.forEach((listener) => listener()));

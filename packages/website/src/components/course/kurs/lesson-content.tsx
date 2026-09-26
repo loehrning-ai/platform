@@ -162,10 +162,10 @@ export function LessonContent({
       {/* Lesson Header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="mb-1 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
+          <p className="mb-1 text-label text-muted-foreground tabular-nums">
             {copy.position(lesson.number, totalLessons)}
           </p>
-          <h2 className="break-words text-2xl font-bold tracking-[-0.03em]">
+          <h2 className="break-words text-fluid-h2 font-bold">
             {lesson.title}
           </h2>
           {lesson.subtitle && (
@@ -220,7 +220,7 @@ export function LessonContent({
           className={cn(
             "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
             activeTab === "lernen"
-              ? "border-brand-orange text-brand-orange"
+              ? "border-foreground font-semibold text-foreground"
               : "border-transparent text-muted-foreground hover:text-foreground",
           )}
         >
@@ -243,7 +243,7 @@ export function LessonContent({
             className={cn(
               "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
               activeTab === "quiz"
-                ? "border-brand-orange text-brand-orange"
+                ? "border-foreground font-semibold text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >

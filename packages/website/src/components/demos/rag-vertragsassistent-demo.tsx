@@ -117,7 +117,7 @@ const KONFIDENZ_CONFIG: Record<
 > = {
   hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
   mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
-  niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
+  niedrig: { label: "Niedrig", color: "#b91c1c", bg: "rgba(220,38,38,0.1)" },
 };
 
 function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
@@ -136,12 +136,8 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       <span
         style={
           {
+            ...DEMO.label,
             padding: "2px 6px",
-            fontSize: 12,
-            fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
             color: cfg.color,
             background: cfg.bg,
             title:
@@ -154,11 +150,8 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       </span>
       <span
         style={{
-          fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-          fontSize: 12,
-          color: "#6b7280",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
+          ...DEMO.label,
+          color: "#4f4640",
           marginTop: 2,
         }}
       >
@@ -179,14 +172,12 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
         border: "1px solid rgba(37,99,235,0.2)",
         fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
         fontSize: 12,
-        letterSpacing: "0.08em",
       }}
     >
       <span
         style={{
-          color: "#6b7280",
-          textTransform: "uppercase",
-          fontWeight: 700,
+          ...DEMO.label,
+          color: "#4f4640",
         }}
       >
         {/* Carries the definition the shell badge cannot: this engine's
@@ -198,7 +189,7 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
       {terms.map((term, i) => (
         <span
           key={i}
-          style={{ color: "#2563eb", fontWeight: 700, marginRight: 6 }}
+          style={{ color: DEMO.ink, fontWeight: 700, marginRight: 6 }}
         >
           {term}
         </span>
@@ -210,7 +201,7 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
 function renderBold(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((c, i) =>
     c.startsWith("**") ? (
-      <strong key={i} style={{ color: "var(--color-brand-orange)" }}>
+      <strong key={i} style={{ color: DEMO.ink }}>
         {c.slice(2, -2)}
       </strong>
     ) : (
@@ -292,6 +283,9 @@ function RagVertragsassistentGerman() {
         color: DEMO.ink,
       }}
     >
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">Vertragsassistent: Fragen an das Beispielarchiv</h2>
       <div
         style={{
           display: "flex",
@@ -315,7 +309,7 @@ function RagVertragsassistentGerman() {
               width: 32,
               height: 32,
               flexShrink: 0,
-              background: "var(--color-brand-orange)",
+              background: DEMO.ink,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -331,7 +325,7 @@ function RagVertragsassistentGerman() {
               style={{
                 fontSize: 14,
                 fontWeight: 700,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -344,7 +338,6 @@ function RagVertragsassistentGerman() {
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 color: DEMO.schiefer,
-                letterSpacing: "0.08em",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -354,21 +347,6 @@ function RagVertragsassistentGerman() {
             </div>
           </div>
         </div>
-        <span
-          style={{
-            background: "rgba(34,197,94,0.12)",
-            color: DEMO.statusGreen,
-            padding: "3px 8px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.12em",
-            fontWeight: 700,
-            flexShrink: 0,
-            whiteSpace: "nowrap",
-          }}
-        >
-          ● DEMO-MODUS
-        </span>
       </div>
 
       <div
@@ -396,52 +374,29 @@ function RagVertragsassistentGerman() {
               padding: 16,
             }}
           >
-            <div
+            <p
               style={{
-                width: 140,
-                height: 3,
-                background: "var(--color-brand-orange)",
-                marginBottom: 16,
-              }}
-            />
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "#2563eb",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
+                fontSize: 16,
                 fontWeight: 700,
-              }}
-            >
-              Keyword-Suche · Regelbasiert
-            </div>
-            <h2
-              style={{
-                fontSize: 22,
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                marginTop: 8,
+                letterSpacing: "-0.005em",
                 maxWidth: 440,
-                lineHeight: 1.15,
+                lineHeight: 1.3,
+                margin: 0,
               }}
             >
-              Fragen Sie das Beispielarchiv.{" "}
-              <span style={{ color: "var(--color-brand-orange)" }}>
-                Antworten mit Quelle.
-              </span>
-            </h2>
+              Frag das Beispielarchiv.
+            </p>
             <p
               style={{
                 fontSize: 13,
                 color: DEMO.schiefer,
-                marginTop: 10,
+                marginTop: 6,
                 maxWidth: 420,
                 lineHeight: 1.5,
               }}
             >
-              Antworten zeigen passende Fundstellen; Fehler und fehlende Treffer
-              bleiben möglich.
+              Jede Antwort nennt ihre Fundstelle. Die Suche vergleicht
+              Schlüsselwörter und kann Treffer übersehen.
             </p>
             <div
               style={{
@@ -477,9 +432,8 @@ function RagVertragsassistentGerman() {
                       : "background 150ms, border-color 150ms",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = DEMO.kupferMist;
-                    e.currentTarget.style.borderColor =
-                      "var(--color-brand-orange)";
+                    e.currentTarget.style.background = DEMO.kalk;
+                    e.currentTarget.style.borderColor = DEMO.ink;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = DEMO.birke;
@@ -487,8 +441,9 @@ function RagVertragsassistentGerman() {
                   }}
                 >
                   <span
+                    aria-hidden
                     style={{
-                      color: "var(--color-brand-orange)",
+                      color: DEMO.ink,
                       fontWeight: 700,
                       marginRight: 6,
                     }}
@@ -525,29 +480,26 @@ function RagVertragsassistentGerman() {
             <div key={m.id} style={{ maxWidth: "85%", minWidth: 0 }}>
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: m.isEmpty ? "#6b7280" : "var(--color-brand-orange)",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
+                  ...DEMO.label,
+                  color: "#4f4640",
                   marginBottom: 4,
                 }}
               >
-                ⎯{" "}
                 {m.isEmpty
                   ? "Kein Treffer"
                   : `Keyword-Suche · ${m.sources?.length ?? 0} Quellen`}
               </div>
               <div
                 style={{
-                  background: m.isEmpty ? "rgba(107,114,128,0.06)" : DEMO.birke,
+                  // An answer is an ink-framed sheet; "no match" is dashed
+                  // (a known gap). No coloured left rule.
+                  background: m.isEmpty ? "transparent" : DEMO.birke,
                   padding: "11px 13px",
                   fontSize: 13,
                   lineHeight: 1.65,
-                  borderLeft: `3px solid ${m.isEmpty ? "#6b7280" : "var(--color-brand-orange)"}`,
+                  border: `1px ${m.isEmpty ? "dashed" : "solid"} ${m.isEmpty ? "#4f4640" : DEMO.ink}`,
                   wordBreak: "break-word",
-                  color: m.isEmpty ? "#6b7280" : "inherit",
+                  color: m.isEmpty ? "#4f4640" : "inherit",
                 }}
               >
                 {m.isEmpty
@@ -567,20 +519,16 @@ function RagVertragsassistentGerman() {
                     aria-expanded={!!expanded[m.id]}
                     aria-label={`${expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}: ${m.sources.length} Quellen zur Antwort auf „${m.queryContext}“`}
                     style={{
+                      ...DEMO.label,
                       minHeight: 44,
                       background: "transparent",
                       border: `1px solid ${DEMO.leinen}`,
                       padding: "4px 8px",
-                      fontFamily: DEMO.font.mono,
-                      fontSize: 12,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
                       cursor: "pointer",
                       color: DEMO.schiefer,
-                      fontWeight: 700,
                     }}
                   >
-                    {expanded[m.id] ? "▼" : "▶"} {m.sources.length}{" "}
+                    {expanded[m.id] ? "−" : "+"} {m.sources.length}{" "}
                     {expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}
                   </button>
                   {expanded[m.id] && (
@@ -611,14 +559,14 @@ function RagVertragsassistentGerman() {
                               style={{
                                 width: 22,
                                 flexShrink: 0,
-                                background: DEMO.kupferMist,
+                                background: "transparent",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontFamily: DEMO.font.mono,
                                 fontSize: 12,
                                 fontWeight: 700,
-                                color: "var(--color-brand-orange)",
+                                color: DEMO.ink,
                               }}
                             >
                               {String(i + 1).padStart(2, "0")}
@@ -685,8 +633,8 @@ function RagVertragsassistentGerman() {
                       style={{
                         minHeight: 44,
                         background: "transparent",
-                        border: `1px solid var(--color-brand-orange)`,
-                        color: "var(--color-brand-orange)",
+                        border: `1px solid ${DEMO.ink}`,
+                        color: DEMO.ink,
                         padding: "5px 9px",
                         fontSize: 12,
                         lineHeight: 1.3,
@@ -696,7 +644,7 @@ function RagVertragsassistentGerman() {
                         transition: reduced ? "none" : "background 150ms",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = DEMO.kupferMist;
+                        e.currentTarget.style.background = DEMO.kalk;
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
@@ -715,29 +663,21 @@ function RagVertragsassistentGerman() {
           <div style={{ maxWidth: "85%", minWidth: 0 }}>
             <div
               style={{
+                ...DEMO.label,
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
                 marginBottom: 6,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-                color: "var(--color-brand-orange)",
+                color: "var(--color-muted-foreground)",
               }}
               aria-live="polite"
             >
               <span
+                aria-hidden
                 style={{
                   width: 6,
                   height: 6,
-                  borderRadius: 999,
-                  background: "var(--color-brand-orange)",
-                  animation: reduced
-                    ? "none"
-                    : "ragPulse 1.1s ease-in-out infinite",
-                  boxShadow: "0 0 0 3px rgba(249,115,22,0.15)",
+                  border: `1px dashed ${DEMO.ink}`,
                 }}
               />
               Simuliertes Retrieval · durchsucht Beispielarchiv…
@@ -746,7 +686,7 @@ function RagVertragsassistentGerman() {
               style={{
                 background: DEMO.birke,
                 padding: "10px 12px",
-                borderLeft: `3px solid #2563eb`,
+                border: `1px dashed ${DEMO.ink}`,
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -786,9 +726,9 @@ function RagVertragsassistentGerman() {
                         flexShrink: 0,
                         background:
                           searchStage > s.stage
-                            ? DEMO.statusGreen
+                            ? "#205b46"
                             : searchStage === s.stage
-                              ? "#2563eb"
+                              ? DEMO.ink
                               : DEMO.leinen,
                       }}
                     />
@@ -827,12 +767,6 @@ function RagVertragsassistentGerman() {
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes ragPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.45; transform: scale(0.82); }
-        }
-      `}</style>
 
       {/* Failure mode beat */}
       <div
@@ -847,11 +781,8 @@ function RagVertragsassistentGerman() {
       >
         <span
           style={{
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "#6b7280",
-            fontSize: 12,
+            ...DEMO.label,
+            color: "#4f4640",
           }}
         >
           Grenzfall:{" "}
@@ -916,16 +847,13 @@ function RagVertragsassistentGerman() {
           onClick={() => submit()}
           disabled={typing || !input.trim()}
           style={{
+            ...DEMO.label,
             minHeight: 44,
-            background: "var(--color-brand-orange)",
+            // Ink button: the page's one Mennige button is the course link.
+            background: DEMO.ink,
             color: DEMO.kalk,
             border: "none",
             padding: "9px 12px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
             cursor: typing || !input.trim() ? "not-allowed" : "pointer",
             opacity: typing || !input.trim() ? 0.5 : 1,
             flexShrink: 0,
@@ -1052,39 +980,10 @@ function RagContractAssistantEnglish() {
       }}
     >
       <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          Contract archive · deterministic retrieval
-        </div>
-        <h2
-          style={{
-            margin: "6px 0 0",
-            fontSize: "clamp(20px, 4vw, 28px)",
-            lineHeight: 1.08,
-          }}
-        >
-          Answer from the archive.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Show the source and the gap.
-          </span>
-        </h2>
-        <p
-          style={{
-            margin: "8px 0 0",
-            maxWidth: 760,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
+        {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+        <h2 className="sr-only">Contract assistant: questions to the sample archive</h2>
+        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           Three fictional contract records are searched with fixed keyword rules
           in the browser. This is not legal advice and no model or document
           service is called.
@@ -1120,12 +1019,12 @@ function RagContractAssistantEnglish() {
         style={{
           border: `1px solid ${DEMO.ink}`,
           background: DEMO.kalk,
-          boxShadow: `3px 3px 0 ${DEMO.ink}`,
           minWidth: 0,
         }}
       >
         <div
           style={{
+            ...DEMO.label,
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
@@ -1133,15 +1032,9 @@ function RagContractAssistantEnglish() {
             padding: "8px 12px",
             background: DEMO.ink,
             color: DEMO.kalk,
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
           }}
         >
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Local sample index
-          </span>
+          <span style={{ fontWeight: 700 }}>Local sample index</span>
           <span>3 records · 14 sample clauses</span>
           <span style={{ marginLeft: "auto" }}>no external connection</span>
         </div>
@@ -1171,17 +1064,14 @@ function RagContractAssistantEnglish() {
             <div style={{ display: "grid", gap: 14 }}>
               <div
                 style={{
-                  borderLeft: "3px solid var(--color-brand-orange)",
-                  paddingLeft: 12,
+                  borderTop: `2px solid ${DEMO.ink}`,
+                  paddingTop: 8,
                 }}
               >
                 <div
                   style={{
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
+                    ...DEMO.label,
                     color: DEMO.schiefer,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.12em",
                   }}
                 >
                   Query
@@ -1258,6 +1148,7 @@ function RagContractAssistantEnglish() {
                           </strong>
                           <span
                             style={{
+                              ...DEMO.label,
                               flexShrink: 0,
                               color:
                                 source.confidence === "high"
@@ -1265,9 +1156,6 @@ function RagContractAssistantEnglish() {
                                   : source.confidence === "medium"
                                     ? "#b45309"
                                     : "#b91c1c",
-                              fontFamily: DEMO.font.mono,
-                              fontSize: 12,
-                              textTransform: "uppercase",
                             }}
                             // Locale parity with the German engine, which
                             // defines this metric beside its own chip: the
@@ -1355,12 +1243,10 @@ function RagContractAssistantEnglish() {
             style={{
               minHeight: 44,
               border: `1px solid ${DEMO.ink}`,
-              background: "var(--color-brand-orange)",
-              color: "white",
+              background: DEMO.ink,
+              color: DEMO.kalk,
               padding: "9px 14px",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
+              ...DEMO.label,
               cursor: query.trim() ? "pointer" : "not-allowed",
               opacity: query.trim() ? 1 : 0.5,
             }}

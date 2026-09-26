@@ -79,7 +79,7 @@ test.describe("/kurse unified hub", () => {
     const res = await page.goto("/kurse", { waitUntil: "domcontentloaded" });
     expect(res?.status(), "/kurse should not 404").toBeLessThan(400);
 
-    await expect(page.locator("h1")).toContainText("KI verstehen,");
+    await expect(page.locator("h1")).toContainText("Kostenlose KI-Kurse");
 
     await expect(page.locator("body")).toContainText("KI-Führerschein");
     await expect(page.locator("body")).toContainText("EU AI Act Kurs");

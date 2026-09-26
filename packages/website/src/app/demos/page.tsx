@@ -3,10 +3,12 @@ import {
   DemoGrid,
   type DemoGridInitialFilters,
 } from "@/components/demos/demo-grid";
+import { Kicker, StatRow } from "@/components/werk";
 import {
   DEMO_CATEGORIES,
   DEMO_LEVELS,
   type DemoCategory,
+  type DemoExternalActionMode,
   type DemoLevel,
 } from "@/lib/demos";
 import { getDemoIndustries, getDemosForLocale } from "@/lib/demos-localization";
@@ -69,11 +71,17 @@ function isDemoCategory(value: unknown): value is DemoCategory {
   );
 }
 
-const STAT_TONES = [
-  "border-t-brand-acid",
-  "border-t-brand-sky",
-  "border-t-brand-pink",
-] as const;
+/**
+ * Whether an action mode reaches a real system. The stat counts demos from
+ * the registry through this map, so a new mode has to declare itself here
+ * before the hub can render.
+ */
+const ACTION_REACHES_SYSTEM: Readonly<Record<DemoExternalActionMode, boolean>> = {
+  none: false,
+  simulated: false,
+  review_gated: false,
+  real_disabled: false,
+};
 
 function singleValue(
   value: string | readonly string[] | undefined,
@@ -134,90 +142,96 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
     ],
   };
 
+  const stats = [
+    {
+      label: copy.catalog.stats.examples.label,
+      value: demos.length,
+      note: copy.catalog.stats.examples.note,
+    },
+    {
+      label: copy.catalog.stats.modes.label,
+      value: new Set(demos.map((demo) => demo.evidenceMode)).size,
+      note: copy.catalog.stats.modes.note,
+    },
+    {
+      label: copy.catalog.stats.externalActions.label,
+      value: demos.filter((demo) => ACTION_REACHES_SYSTEM[demo.externalActionMode])
+        .length,
+      note: copy.catalog.stats.externalActions.note,
+    },
+  ];
+
   return (
-    <div className="min-h-[100svh] overflow-x-clip">
+    <div className="overflow-x-clip">
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
-      {/* The cover is written phone-first: every base value is the compact
-          companion value so the filter console lands closer to the first
-          viewport at 390px, and each `sm:`/`lg:` variant restores the reviewed
-          desktop geometry unchanged. */}
+      {/* Paper hero: kicker, one-colour H1, lead, the three checks as an
+          ink-square list, then evidence stats derived from the registry. */}
       <header
-        className="border-b border-border px-3 py-4 sm:px-6 sm:py-8 md:px-10"
+        className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-12"
         data-demo-atlas-hero
       >
-        <div className="mx-auto max-w-7xl border border-foreground/70 bg-background">
-          <div className="grid lg:grid-cols-[minmax(0,1.55fr)_minmax(18rem,0.45fr)]">
-            <div className="min-w-0 p-4 sm:p-7 lg:border-r lg:border-foreground/20 lg:p-9">
-              <div className="flex items-center gap-3">
-                <div
-                  className="h-[3px] w-12 bg-brand-orange"
-                  aria-hidden="true"
-                />
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-                  {copy.catalog.kicker}
-                </p>
-              </div>
-              <h1 className="mt-3 max-w-5xl text-balance text-[2.15rem] font-bold leading-[0.9] tracking-[-0.055em] text-foreground sm:mt-4 sm:text-[clamp(2.45rem,5.5vw,5.5rem)]">
-                {copy.catalog.headingLead}{" "}
-                <span className="text-brand-orange">
-                  {copy.catalog.headingAccent}
-                </span>
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
+            <div className="min-w-0">
+              <Kicker>{copy.catalog.kicker}</Kicker>
+              <h1 className="mt-3 max-w-[22ch] text-fluid-h1 font-bold text-foreground">
+                {copy.catalog.heading}
               </h1>
-              <p className="mt-3 max-w-3xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-5 sm:text-base">
+              <p className="mt-4 max-w-[56ch] text-lead text-muted-foreground text-pretty">
                 {copy.catalog.introduction}
               </p>
             </div>
-
-            <aside
-              className="bg-foreground p-4 text-background sm:p-6"
-              aria-label={copy.catalog.scopeLabel}
+            {/* Top-aligned with the H1 (the kicker line plus its gap sits above
+                it), so both columns share a first line at every width. */}
+            <div
+              className="min-w-0 lg:pt-[calc(var(--text-label)*1.3+0.75rem)]"
+              data-demo-scope
             >
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-kupfer-light">
+              <p
+                id="demo-scope-label"
+                className="text-label text-foreground"
+              >
                 {copy.catalog.scopeLabel}
               </p>
-              <ol className="mt-3 border-t border-background/25 sm:mt-4">
-                {copy.catalog.scopeItems.map((item, index) => (
+              <ul
+                aria-labelledby="demo-scope-label"
+                className="mt-3 border-t border-hairline"
+              >
+                {copy.catalog.scopeItems.map((item) => (
                   <li
                     key={item}
-                    className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 border-b border-background/20 py-2 text-sm leading-5 text-background/80 sm:py-3"
+                    className="flex items-baseline gap-3 border-b border-hairline py-3 text-body text-foreground"
                   >
-                    <span className="font-mono text-xs font-bold text-kupfer-light tabular-nums">
-                      0{index + 1}
-                    </span>
+                    <span
+                      className="size-2.5 shrink-0 translate-y-[-0.1em] bg-foreground"
+                      aria-hidden="true"
+                    />
                     <span>{item}</span>
                   </li>
                 ))}
-              </ol>
-            </aside>
+              </ul>
+            </div>
           </div>
 
-          <dl
-            className="grid divide-y divide-foreground/20 border-t border-foreground/70 sm:grid-cols-3 sm:divide-x sm:divide-y-0"
-            aria-label={copy.catalog.kicker}
-          >
-            {copy.catalog.stats.map((stat, index) => (
-              <div
-                key={stat.label}
-                className={`flex min-w-0 items-center justify-between gap-4 border-t-2 px-3 py-2 sm:block sm:px-5 sm:py-3 ${STAT_TONES[index % STAT_TONES.length]}`}
-              >
-                <dt className="text-pretty font-mono text-xs uppercase leading-4 tracking-[0.08em] text-muted-foreground">
-                  {stat.label}
-                </dt>
-                {/* The value sits beside its label on phones, so the top
-                    margin that separates the two in the stacked desktop cell
-                    would only pad the row taller. */}
-                <dd className="text-xl font-bold tracking-[-0.04em] text-foreground sm:mt-1 sm:text-3xl">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-10 border-t border-hairline pt-6" aria-label={copy.catalog.statsLabel} role="group">
+            {/* Below sm each stat is one hairline row, value then label
+                ("12 Praxisbeispiele"), without the note. Three columns do not
+                fit German labels such as "Ausführungsarten" at 390px. The
+                DOM order stays label, value for screen readers. */}
+            <StatRow
+              stats={stats}
+              className="max-sm:grid-cols-1 max-sm:gap-y-0 max-sm:divide-y max-sm:divide-hairline max-sm:[&>div]:flex-row-reverse max-sm:[&>div]:items-baseline max-sm:[&>div]:justify-end max-sm:[&>div]:gap-3 max-sm:[&>div]:py-2 max-sm:[&_dd]:mt-0 max-sm:[&_dd+dd]:hidden"
+            />
+          </div>
         </div>
       </header>
 
-      <section className="px-3 pb-10 pt-5 sm:px-6 sm:pb-12 md:px-10">
-        <div className="mx-auto max-w-7xl">
+      <section
+        className="px-4 pb-12 sm:px-6 sm:pb-16"
+        aria-labelledby="demo-gallery-heading"
+      >
+        <div className="mx-auto max-w-6xl">
           <DemoGrid
             key={filterKey}
             initialFilters={initialFilters}

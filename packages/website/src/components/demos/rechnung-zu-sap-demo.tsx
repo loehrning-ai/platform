@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
+
+/** Status colours for text on paper: the DEMO status fills are 1.6-2:1 as text. */
+const STATUS_TEXT = { green: "#166534", amber: "#854d0e" } as const;
+/** Befund grün: the pass colour, always next to a tick or a word. */
+const PASS = "#205b46";
 import {
   DEMO_HEIGHT,
   usePrefersReducedMotion,
@@ -242,8 +247,10 @@ export default function RechnungZuSapDemo() {
   const stages = locale === "de" ? STAGES : STAGES_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
-  const [autoplay, setAutoplay] = useState(true);
+  // Final state first: the extracted IDoc draft renders on load, and "Neu
+  // abspielen" is the only way into a replay.
+  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(4);
+  const [autoplay, setAutoplay] = useState(false);
   const [replayNonce, setReplayNonce] = useState(0);
 
   useEffect(() => {
@@ -267,7 +274,12 @@ export default function RechnungZuSapDemo() {
       setTimeout(() => setStage(1), 300),
       setTimeout(() => setStage(2), 1600),
       setTimeout(() => setStage(3), 2700),
-      setTimeout(() => setStage(4), 3600),
+      // The run ends at rest: scrolling away afterwards must not rewind
+      // the finished extract.
+      setTimeout(() => {
+        setStage(4);
+        setAutoplay(false);
+      }, 3600),
     ];
     return () => timers.forEach(clearTimeout);
   }, [visible, reduced, autoplay, replayNonce]);
@@ -284,10 +296,11 @@ export default function RechnungZuSapDemo() {
     setAutoplay(true);
     setReplayNonce((n) => n + 1);
   };
+  // Another document opens on its own final state; replay stays separate.
   const selectScenario = (next: "clean" | "flagged") => {
     setScenario(next);
-    setAutoplay(true);
-    setReplayNonce((n) => n + 1);
+    setAutoplay(false);
+    setStage(4);
   };
 
   return (
@@ -305,40 +318,17 @@ export default function RechnungZuSapDemo() {
         color: DEMO.ink,
       }}
     >
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {text("Rechnungs-Automatisierung", "Invoice automation")}
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          {text("Vom Scan zum", "From scan to")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("SAP-Importentwurf", "SAP import draft")}
-          </span>
-          .
-        </h2>
-        <p style={{ fontSize: 12, color: DEMO.schiefer, marginTop: 4 }}>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {text("Rechnung zum SAP-Importentwurf", "Invoice to SAP import draft")}
+      </h2>
+      <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           {text(
             "Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab. Hier werden nur feste Beispieldaten verarbeitet.",
             "Runtime and error rate depend on document quality, rules, and review. This interface processes fixed sample data only.",
           )}
         </p>
-      </div>
 
       <div
         style={{
@@ -373,7 +363,6 @@ export default function RechnungZuSapDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               color: DEMO.schiefer,
-              letterSpacing: "0.08em",
               whiteSpace: "nowrap",
             }}
           >
@@ -411,8 +400,8 @@ export default function RechnungZuSapDemo() {
               fontSize: 12,
               fontWeight: 700,
               background: DEMO.kalk,
-              color: "var(--color-brand-orange)",
-              border: "1px solid var(--color-brand-orange)",
+              color: DEMO.ink,
+              border: `1px solid ${DEMO.ink}`,
               cursor: "pointer",
             }}
           >
@@ -483,7 +472,6 @@ export default function RechnungZuSapDemo() {
                     : DEMO.statusGreen
                   : DEMO.leinen
               }`,
-              boxShadow: "0 1px 0 rgba(11,9,8,0.04)",
               padding: "16px 18px",
               overflow: "hidden",
               transition: "border-color 300ms ease",
@@ -515,13 +503,9 @@ export default function RechnungZuSapDemo() {
 
             <div
               style={{
+                ...DEMO.label,
                 marginTop: 12,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
+                color: "var(--color-muted-foreground)",
               }}
             >
               {text("Rechnung", "Invoice")}
@@ -576,10 +560,8 @@ export default function RechnungZuSapDemo() {
             >
               <span
                 style={{
-                  fontSize: 12,
+                  ...DEMO.label,
                   color: DEMO.schiefer,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
                 }}
               >
                 {text("Brutto", "Gross")}
@@ -596,35 +578,12 @@ export default function RechnungZuSapDemo() {
                 style={{
                   position: "absolute",
                   inset: 0,
+                  // One pass of an ink scan line per replay; no loop.
                   background:
-                    "linear-gradient(180deg, rgba(249,115,22,0) 0%, rgba(249,115,22,0.18) 50%, rgba(249,115,22,0) 100%)",
+                    "linear-gradient(180deg, rgba(11,9,8,0) 0%, rgba(11,9,8,0.10) 50%, rgba(11,9,8,0) 100%)",
                   backgroundSize: "100% 40%",
                   backgroundRepeat: "no-repeat",
-                  animation: "rechnung-scan 1.6s ease-in-out infinite",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-            {stage >= 1 && stage < 4 && (
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "rgba(249,115,22,0.06)",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-            {stage === 4 && (
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: data.needsReview
-                    ? "rgba(234,179,8,0.08)"
-                    : "rgba(34,197,94,0.08)",
+                  animation: "rechnung-scan 1.2s cubic-bezier(0.16,1,0.3,1) 1 both",
                   pointerEvents: "none",
                 }}
               />
@@ -692,15 +651,9 @@ export default function RechnungZuSapDemo() {
                     alignItems: "center",
                     gap: 10,
                     padding: "7px 10px",
-                    background: payoff
-                      ? data.needsReview
-                        ? "rgba(234,179,8,0.08)"
-                        : "rgba(34,197,94,0.08)"
-                      : active
-                        ? "rgba(249,115,22,0.08)"
-                        : done
-                          ? DEMO.birke
-                          : "transparent",
+                    // Flat: state is the border, the number square and a
+                    // word, never a pastel wash.
+                    background: done || payoff ? DEMO.birke : "transparent",
                     border: `1px solid ${
                       payoff
                         ? payoffColor
@@ -724,7 +677,7 @@ export default function RechnungZuSapDemo() {
                         bottom: -4,
                         width: 2,
                         height: 4,
-                        background: done ? DEMO.statusGreen : DEMO.leinen,
+                        background: done ? PASS : DEMO.leinen,
                       }}
                     />
                   )}
@@ -733,7 +686,7 @@ export default function RechnungZuSapDemo() {
                       width: 20,
                       height: 20,
                       background: done
-                        ? DEMO.statusGreen
+                        ? PASS
                         : active
                           ? "var(--color-brand-orange)"
                           : DEMO.leinen,
@@ -743,13 +696,8 @@ export default function RechnungZuSapDemo() {
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
                       fontWeight: 700,
-                      color: DEMO.kalk,
-                      boxShadow:
-                        active && !reduced
-                          ? "0 0 0 3px rgba(249,115,22,0.18)"
-                          : "none",
-                      transition:
-                        "background 280ms ease, box-shadow 280ms ease",
+                      color: done || active ? "#f9f7f2" : DEMO.ink,
+                      transition: reduced ? "none" : "background-color 200ms ease",
                     }}
                   >
                     {done ? "✓" : st.s}
@@ -769,12 +717,7 @@ export default function RechnungZuSapDemo() {
                     }}
                   >
                     {active && !done ? (
-                      <span
-                        style={{
-                          color: "var(--color-brand-orange)",
-                          fontWeight: 700,
-                        }}
-                      >
+                      <span style={{ color: DEMO.ink, fontWeight: 700 }}>
                         {text("läuft…", "running…")}
                       </span>
                     ) : (
@@ -790,10 +733,8 @@ export default function RechnungZuSapDemo() {
             <div
               style={{
                 background: DEMO.kalk,
-                borderTop: `3px solid ${data.needsReview ? DEMO.statusAmber : DEMO.statusGreen}`,
-                borderRight: `1px solid ${DEMO.leinen}`,
-                borderBottom: `1px solid ${DEMO.leinen}`,
-                borderLeft: `1px solid ${DEMO.leinen}`,
+                border: `1px solid ${DEMO.leinen}`,
+                borderTop: `2px solid ${DEMO.ink}`,
                 padding: 12,
               }}
             >
@@ -817,9 +758,9 @@ export default function RechnungZuSapDemo() {
                       width: 16,
                       height: 16,
                       background: data.needsReview
-                        ? DEMO.statusAmber
-                        : DEMO.statusGreen,
-                      color: DEMO.kalk,
+                        ? STATUS_TEXT.amber
+                        : STATUS_TEXT.green,
+                      color: "#f9f7f2",
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
                       fontWeight: 700,
@@ -829,14 +770,10 @@ export default function RechnungZuSapDemo() {
                   </span>
                   <div
                     style={{
-                      fontFamily: DEMO.font.mono,
-                      fontSize: 12,
+                      ...DEMO.label,
                       color: data.needsReview
-                        ? DEMO.statusAmber
-                        : DEMO.statusGreen,
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      fontWeight: 700,
+                        ? STATUS_TEXT.amber
+                        : STATUS_TEXT.green,
                     }}
                   >
                     {data.needsReview
@@ -849,12 +786,10 @@ export default function RechnungZuSapDemo() {
                 </div>
                 <span
                   style={{
-                    background: data.needsReview
-                      ? "rgba(234,179,8,0.14)"
-                      : "rgba(34,197,94,0.12)",
+                    border: `1px solid ${data.needsReview ? STATUS_TEXT.amber : STATUS_TEXT.green}`,
                     color: data.needsReview
-                      ? DEMO.statusAmber
-                      : DEMO.statusGreen,
+                      ? STATUS_TEXT.amber
+                      : STATUS_TEXT.green,
                     padding: "2px 8px",
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
@@ -948,13 +883,10 @@ export default function RechnungZuSapDemo() {
                         <th
                           key={h}
                           style={{
+                            ...DEMO.label,
                             textAlign: align,
                             padding: "6px 4px",
-                            letterSpacing: "0.1em",
-                            textTransform: "uppercase",
-                            fontSize: 12,
                             color: DEMO.schiefer,
-                            fontWeight: 600,
                           }}
                         >
                           {h}
@@ -969,10 +901,12 @@ export default function RechnungZuSapDemo() {
                         <tr
                           key={p.pos}
                           style={{
-                            borderBottom: `1px solid ${DEMO.leinen}`,
-                            background: low
-                              ? "rgba(234,179,8,0.08)"
-                              : "transparent",
+                            // A low-confidence row is marked by a dashed
+                            // underline (an open gap), not an amber wash.
+                            background: "transparent",
+                            borderBottom: low
+                              ? `1px dashed ${DEMO.ink}`
+                              : `1px solid ${DEMO.leinen}`,
                           }}
                         >
                           <td
@@ -1007,7 +941,7 @@ export default function RechnungZuSapDemo() {
                               padding: "6px 4px",
                               textAlign: "right",
                               fontWeight: 700,
-                              color: low ? DEMO.statusAmber : DEMO.statusGreen,
+                              color: low ? STATUS_TEXT.amber : STATUS_TEXT.green,
                             }}
                           >
                             {Math.round(p.conf * 100)}%
@@ -1019,13 +953,10 @@ export default function RechnungZuSapDemo() {
                       <td
                         colSpan={3}
                         style={{
+                          ...DEMO.label,
                           padding: "8px 4px",
                           textAlign: "right",
-                          fontWeight: 700,
-                          color: "var(--color-brand-orange)",
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                          fontSize: 12,
+                          color: "var(--color-muted-foreground)",
                         }}
                       >
                         {text("Brutto", "Gross")}
@@ -1035,7 +966,7 @@ export default function RechnungZuSapDemo() {
                           padding: "8px 4px",
                           textAlign: "right",
                           fontWeight: 700,
-                          color: "var(--color-brand-orange)",
+                          color: DEMO.ink,
                           fontSize: 12,
                         }}
                       >
@@ -1061,12 +992,8 @@ export default function RechnungZuSapDemo() {
             >
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--color-brand-orange)",
-                  fontWeight: 700,
+                  ...DEMO.label,
+                  color: "var(--color-muted-foreground)",
                   marginBottom: 4,
                 }}
               >

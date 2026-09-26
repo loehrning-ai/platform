@@ -88,8 +88,25 @@ describe("<DemoShell>", () => {
     expect(mockedGetComponent).toHaveBeenCalledWith("excel");
     expect(screen.getByText("DEMO BODY")).toBeInTheDocument();
     expect(screen.queryByRole("status")).toBeNull();
-    expect(screen.getByText("Interaktives Labor")).toBeVisible();
+    expect(screen.getByText("Interaktives Beispiel")).toBeVisible();
     expect(container.firstElementChild).toHaveAttribute("data-demo-shell");
+  });
+
+  it("carries the evidence line in its header row, beside the instrument label", () => {
+    const { container } = render(<DemoShell demo={excel} />);
+    const header = container.querySelector("[data-demo-shell-header]");
+    expect(header).toHaveClass("min-h-11", "flex-wrap", "justify-between");
+    expect(header).toHaveTextContent("Interaktives Beispiel");
+    const line = header?.querySelector("[data-evidence-line]");
+    expect(line).toHaveTextContent("Synthetisch");
+    // The disclosure keeps its 44px target and wiring inside the header.
+    const button = screen.getByRole("button", {
+      name: "Was heißt das? Ausführung: Synthetisch",
+    });
+    expect(header).toContainElement(button);
+    expect(button).toHaveClass("min-h-11");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    expect(button).toHaveAttribute("aria-controls");
   });
 
   it("shows the loading fallback when the slug has no registered component", () => {
@@ -103,7 +120,8 @@ describe("<DemoShell>", () => {
   it("applies the light surface classes for a light demo", () => {
     const { container } = render(<DemoShell demo={excel} />);
     const shell = container.firstChild as HTMLElement;
-    expect(shell.className).toContain("bg-background");
+    // Raised Bogen sheet with a 1px ink frame.
+    expect(shell).toHaveClass("bg-card", "border-foreground");
     expect(shell.className).not.toContain("dark-section");
   });
 

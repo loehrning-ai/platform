@@ -22,8 +22,9 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
   de: [
     {
       id: "start",
-      label: "Sicher starten",
-      summary: "Alltagseinsatz, Prüfung und Verantwortung in fester Folge.",
+      label: "Ich nutze KI im Job",
+      summary:
+        "Die vier Grundlagenkurse, vom Datenschutz im Alltag bis zum eigenen KI-Ablauf.",
       courseSlugs: [
         "ki-fuehrerschein",
         "ki-und-gesellschaft",
@@ -33,21 +34,21 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     },
     {
       id: "judge",
-      label: "Folgen beurteilen",
-      summary:
-        "Beispiele prüfen, Risiken klassifizieren, Entscheidungen begründen.",
+      label: "Ich bewerte KI-Risiken",
+      summary: "Schlagzeilen, Risikoklassen und Modellkennzahlen nachprüfen.",
       courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
     },
     {
       id: "build",
-      label: "Mit KI bauen",
-      summary: "Arbeitsablauf, Prompt, Spezifikation und Kontrolle verbinden.",
+      label: "Ich baue mit KI",
+      summary: "Prompts, Claude-Projekte, Coding-Agenten und KI-Abläufe im Team.",
       courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
     },
     {
       id: "data",
-      label: "Daten entscheiden",
-      summary: "Pipeline, Infrastruktur und Modellwirkung als System prüfen.",
+      label: "Ich arbeite mit Daten",
+      summary:
+        "Von der Pipeline über die Datenplattform bis zur Modellkennzahl.",
       courseSlugs: [
         "data-engineering-fundamentals",
         "data-infrastructure",
@@ -59,8 +60,9 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
   en: [
     {
       id: "start",
-      label: "Start safely",
-      summary: "Everyday use, verification, and responsibility in sequence.",
+      label: "I use AI at work",
+      summary:
+        "The four foundation courses, from data protection at work to your own AI workflow.",
       courseSlugs: [
         "ki-fuehrerschein",
         "ki-und-gesellschaft",
@@ -70,21 +72,20 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     },
     {
       id: "judge",
-      label: "Judge impact",
-      summary: "Examine examples, classify risk, and justify decisions.",
+      label: "I assess AI risks",
+      summary: "Check headlines, risk classes and model metrics.",
       courseSlugs: ["ki-und-gesellschaft", "eu-ai-act-kurs", "data-science"],
     },
     {
       id: "build",
-      label: "Build with AI",
-      summary: "Connect workflow, prompting, specification, and control.",
+      label: "I build with AI",
+      summary: "Prompts, Claude projects, coding agents and AI workflows in a team.",
       courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
     },
     {
       id: "data",
-      label: "Decide with data",
-      summary:
-        "Test pipeline, infrastructure, and model behavior as a system.",
+      label: "I work with data",
+      summary: "From the pipeline to the data platform to the model metric.",
       courseSlugs: [
         "data-engineering-fundamentals",
         "data-infrastructure",

@@ -1,177 +1,129 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { DemoEvidenceMode, DemoExternalActionMode } from "@/lib/demos";
 import type { Locale } from "@/lib/i18n/locale";
-import { DEMO_ACTION_LABELS, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
+import {
+  DEMO_ACTION_LABELS,
+  DEMO_EVIDENCE_COPY,
+  DEMOS_PAGE_COPY,
+} from "@/lib/demos-ui-copy";
+import { Pictogram, type PictogramName } from "@/components/werk";
 import { useDemoLocale } from "./demo-locale";
 
-const EVIDENCE_CONFIG: Record<
-  DemoEvidenceMode,
-  {
-    color: string;
-    bg: string;
-    border: string;
-    icon: string;
-  }
-> = {
-  synthetic: {
-    color: "#9a3412",
-    bg: "rgba(249,115,22,0.08)",
-    border: "rgba(249,115,22,0.4)",
-    icon: "◆",
-  },
-  rule_based: {
-    color: "#1d4ed8",
-    bg: "rgba(37,99,235,0.08)",
-    border: "rgba(37,99,235,0.4)",
-    icon: "◎",
-  },
-  recorded_trace: {
-    color: "#4b5563",
-    bg: "rgba(107,114,128,0.08)",
-    border: "rgba(107,114,128,0.4)",
-    icon: "▶",
-  },
-  live_api: {
-    color: "#166534",
-    bg: "rgba(22,163,74,0.08)",
-    border: "rgba(22,163,74,0.4)",
-    icon: "●",
-  },
+/** One deck pictogram per execution mode; the word always sits beside it. */
+const EVIDENCE_ICON: Record<DemoEvidenceMode, PictogramName> = {
+  synthetic: "table",
+  rule_based: "checklist",
+  recorded_trace: "demo",
+  live_api: "export",
 };
 
-/** Renders a coloured mode badge at the TOP of a demo interactive panel. */
-export function EvidenceBadge({
-  evidenceMode,
-  externalActionMode,
-  locale = "de",
-}: {
-  evidenceMode: DemoEvidenceMode;
-  externalActionMode: DemoExternalActionMode;
-  locale?: Locale;
-}) {
-  const [open, setOpen] = useState(false);
-  const cfg = EVIDENCE_CONFIG[evidenceMode];
-  const evidenceCopy = DEMO_EVIDENCE_COPY[locale][evidenceMode];
-  const actionLabel = DEMO_ACTION_LABELS[locale][externalActionMode];
-
+/**
+ * Plus when closed, minus when open: a disclosure mark, not a scroll arrow.
+ * Square caps and miter joins, like the deck pictograms. It sits after the
+ * visible "Was heißt das?" label, so the minus never reads as a dash inside
+ * the evidence phrase.
+ */
+function DisclosureGlyph({ open }: { open: boolean }) {
   return (
-    <div
-      style={{
-        marginBottom: 12,
-        fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-      }}
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className="size-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="square"
+      data-disclosure-glyph={open ? "open" : "closed"}
     >
-      {/* Badge row */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 6,
-          alignItems: "center",
-        }}
-      >
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-          aria-label={
-            locale === "de"
-              ? `Evidenzmodus: ${evidenceCopy.label}. Details einblenden.`
-              : `Evidence mode: ${evidenceCopy.label}. Show details.`
-          }
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            minHeight: 44,
-            padding: "8px 10px",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: cfg.color,
-            background: cfg.bg,
-            border: `1px solid ${cfg.border}`,
-            cursor: "pointer",
-            userSelect: "none",
-          }}
-        >
-          <span aria-hidden="true">{cfg.icon}</span>
-          {evidenceCopy.label}
-          <span aria-hidden="true" style={{ opacity: 0.7, fontSize: 12 }}>
-            {open ? "▲" : "▼"}
-          </span>
-        </button>
-
-        {actionLabel && (
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              minHeight: 44,
-              padding: "8px 10px",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "#4b5563",
-              background: "rgba(107,114,128,0.08)",
-              border: "1px solid rgba(107,114,128,0.3)",
-            }}
-          >
-            ◇ {actionLabel}
-          </span>
-        )}
-
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            minHeight: 44,
-            padding: "8px 10px",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "#92400e",
-            background: "rgba(146,64,14,0.08)",
-            border: "1px solid rgba(146,64,14,0.3)",
-          }}
-        >
-          {locale === "de" ? "SIMULIERT" : "SIMULATED"}
-        </span>
-      </div>
-
-      {/* Tooltip accordion */}
-      {open && (
-        <div
-          role="tooltip"
-          style={{
-            marginTop: 6,
-            padding: "10px 12px",
-            fontSize: 12,
-            lineHeight: 1.6,
-            color: "#f3f0e9",
-            background: "#0b0908",
-            border: `1px solid ${cfg.border}`,
-            maxWidth: 480,
-          }}
-        >
-          {evidenceCopy.tooltip}
-        </div>
-      )}
-    </div>
+      <path d="M3 8h10" />
+      {open ? null : <path d="M8 3v10" />}
+    </svg>
   );
 }
 
 /**
- * Inline simulation disclosure block — renders a one-sentence explanation
- * before any metric or interactive element, following the Ciechanowski
- * "before the claim, co-located with it" disclosure principle.
+ * The evidence line of a demo engine: execution mode and external-action mode
+ * as one plain caption phrase ("Synthetisch · Aktionen simuliert"), the
+ * optional invented-data note, and a last, labelled disclosure button that
+ * expands the explanation of the mode.
+ *
+ * It renders two siblings (the line and, when open, the explanation) so a
+ * wrapping flex parent such as the DemoShell header can give the explanation
+ * its own full-width row without moving the button that opened it. In block
+ * flow the two simply stack.
+ */
+export function EvidenceBadge({
+  evidenceMode,
+  externalActionMode,
+  note,
+  locale = "de",
+}: {
+  evidenceMode: DemoEvidenceMode;
+  externalActionMode: DemoExternalActionMode;
+  /** What in this example is invented, e.g. the catalog's syntheticDataLabel. */
+  note?: string;
+  locale?: Locale;
+}) {
+  const [open, setOpen] = useState(false);
+  const detailsId = useId();
+  const evidenceCopy = DEMO_EVIDENCE_COPY[locale][evidenceMode];
+  const actionLabel = DEMO_ACTION_LABELS[locale][externalActionMode];
+  const disclosure = DEMOS_PAGE_COPY[locale].evidence;
+
+  return (
+    <>
+      <div
+        data-evidence-line
+        className="flex min-w-0 flex-wrap items-center gap-x-3 text-caption text-muted-foreground"
+      >
+        <span
+          className="inline-flex min-w-0 items-center gap-1.5"
+          data-evidence-mode={evidenceMode}
+        >
+          <Pictogram
+            name={EVIDENCE_ICON[evidenceMode]}
+            className="size-4 shrink-0 text-foreground"
+          />
+          <span className="text-foreground">{evidenceCopy.label}</span>
+          {actionLabel ? (
+            <span data-evidence-actions>
+              <span aria-hidden="true">· </span>
+              {actionLabel}
+            </span>
+          ) : null}
+        </span>
+        {note ? <span className="min-w-0 break-words">{note}</span> : null}
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          aria-controls={detailsId}
+          aria-label={disclosure.explainAria(evidenceCopy.label)}
+          className="inline-flex min-h-11 items-center gap-1.5 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
+        >
+          {disclosure.explain}
+          <DisclosureGlyph open={open} />
+        </button>
+      </div>
+      <p
+        id={detailsId}
+        hidden={!open}
+        data-evidence-details={open ? "" : undefined}
+        className="basis-full max-w-[64ch] pb-3 text-caption text-muted-foreground"
+      >
+        {evidenceCopy.tooltip}
+      </p>
+    </>
+  );
+}
+
+/**
+ * Inline simulation note: one caption line before a metric or an interactive
+ * element, stated next to the claim it qualifies. No box and no left bar; the
+ * muted token follows the engine's scope, so it stays AA on paper and inside
+ * a dark engine frame.
  */
 export function SimulationDisclosure({
   children,
@@ -181,17 +133,7 @@ export function SimulationDisclosure({
   const { locale } = useDemoLocale();
   return (
     <div
-      style={{
-        marginBottom: 14,
-        padding: "8px 12px",
-        fontSize: 12,
-        lineHeight: 1.5,
-        color: "#9ca3af",
-        background: "rgba(107,114,128,0.06)",
-        borderLeft: "3px solid rgba(107,114,128,0.4)",
-        fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-        letterSpacing: "0.02em",
-      }}
+      className="mb-3 text-caption text-muted-foreground"
       role="note"
       aria-label={
         locale === "de" ? "Hinweis zur Simulation" : "Simulation notice"

@@ -14,7 +14,7 @@
   /* Das Ö palette — Kalkweiss / Druckschwarz / Mennige */
   --mennige:#B73A15; --mennige-tief:#97300F; --mennige-hell:#F2C6B6;
   --paper:#F3F0E9; --card:#E5E4E2; --card-hover:#DAD8D3; --ink:#121212; --muted:#4f4640;
-  --line:#D4CEC5; --mist:#F2C6B6; --dark:#141414;
+  --line:#D4CEC5; --mist:#F2C6B6; --dark:#141414; --mennige-on-dark:#E07050; --pass:#205B46;
   /* legacy aliases → Mennige (keep old var names working) */
   --kupfer:var(--mennige); --kupfer-full:var(--mennige); --kupfer-light:var(--mennige-hell);
   --sans:'Typing','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -41,11 +41,10 @@ html,body{margin:0}
 body{
   background:var(--paper); color:var(--ink); font-family:var(--sans);
   -webkit-font-smoothing:antialiased; line-height:1.6;
-  background-image:radial-gradient(circle at 1px 1px, rgba(18,18,18,.05) 1px, transparent 0); background-size:22px 22px;
 }
 :focus-visible{outline:2.5px solid var(--mennige); outline-offset:3px}
 a{color:var(--mennige)}
 .num{font-family:var(--mono); font-feature-settings:"tnum" 1; letter-spacing:-.01em}   /* data is the hero */
-.over{font-family:var(--mono); font-size:.6875rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+.over{font-family:var(--sans); font-size:.875rem; font-weight:600; letter-spacing:.02em; color:var(--muted)}
 .over.k{color:var(--mennige)}
 @media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}

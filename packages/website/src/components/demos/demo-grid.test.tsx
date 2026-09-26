@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DemoGrid, type DemoGridInitialFilters } from "./demo-grid";
 import { trackDemoFilter } from "@/lib/analytics";
@@ -60,15 +60,33 @@ describe("<DemoGrid>", () => {
   it("renders every demo when no filter is seeded and reports the total count", () => {
     const { container } = render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(12);
-    expect(screen.getByRole("status")).toHaveTextContent("12 Praxisbeispiele");
+    // The live region stays mounted but says nothing while unfiltered: the
+    // total already shows in the stat row and in both "Alle (12)" chips.
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    expect(
+      within(screen.getByRole("group", { name: "Kategorie" })).getByRole(
+        "button",
+        { name: "Alle (12)" },
+      ),
+    ).toHaveAttribute("aria-pressed", "true");
     // The mount effect reports the complete unfiltered state explicitly.
     expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", "alle");
     const levelFilters = screen.getByRole("group", { name: "Reifegrad" });
-    expect(levelFilters.lastElementChild).toHaveClass("flex", "flex-wrap");
+    expect(levelFilters.lastElementChild).toHaveClass("sm:flex", "flex-wrap");
     expect(levelFilters.lastElementChild).not.toHaveClass("overflow-x-auto");
     expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
-    expect(container.querySelector(".lg\\:grid-cols-4")).toBeTruthy();
+    expect(container.querySelector(".lg\\:grid-cols-3")).toBeTruthy();
+    // Section head with a Kopflinie; square filter chips, ink fill when pressed.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Alle Beispiele" }),
+    ).toBeInTheDocument();
+    const allChip = within(
+      screen.getByRole("group", { name: "Reifegrad" }),
+    ).getByRole("button", { name: /Alle \(12\)/ });
+    expect(allChip).toHaveAttribute("aria-pressed", "true");
+    expect(allChip).toHaveClass("min-h-11", "aria-pressed:bg-foreground");
+    expect(allChip.className).not.toMatch(/rounded|uppercase|font-mono/);
   });
 
   it("seeds filter state from the server-provided filters", () => {
@@ -179,8 +197,12 @@ describe("<DemoGrid>", () => {
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "/" }));
     });
+    // The first chip in DOM order is the level group's "Alle (12)".
     expect(document.activeElement).toBe(
-      screen.getByRole("button", { name: /Alle \(12\)/ }),
+      within(screen.getByRole("group", { name: "Reifegrad" })).getByRole(
+        "button",
+        { name: /Alle \(12\)/ },
+      ),
     );
 
     act(() => {

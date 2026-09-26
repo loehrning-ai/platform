@@ -160,13 +160,13 @@ export function LessonProofCheckpoint({
     return (
       <section
         data-lesson-proof-checkpoint="complete"
-        className="border border-border bg-brand-teal/10 p-4"
+        className="border border-pass bg-card p-4"
         aria-live="polite"
       >
-        <p className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-risk-green">
+        <p className="text-label text-pass">
           {copy.completed}
         </p>
-        <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+        <p className="mt-2 text-caption text-muted-foreground">
           {copy.completedBody}
         </p>
       </section>
@@ -176,21 +176,21 @@ export function LessonProofCheckpoint({
   return (
     <section
       data-lesson-proof-checkpoint="open"
-      className="border border-border bg-background"
+      className="border-t-2 border-foreground bg-background"
     >
-      <div className="border-b border-border p-4">
-        <p className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+      <div className="border-b border-hairline py-4">
+        <p className="text-label text-muted-foreground">
           {copy.eyebrow}
         </p>
-        <h2 className="mt-1 text-[19px] font-semibold tracking-[-0.02em] text-foreground">
+        <h2 className="mt-1 text-fluid-h3 font-bold text-foreground">
           {copy.title}
         </h2>
-        <p className="mt-1 max-w-[62ch] text-[14px] leading-relaxed text-muted-foreground">
+        <p className="mt-1 max-w-[62ch] text-body text-muted-foreground">
           {copy.body}
         </p>
       </div>
 
-      <form onSubmit={commit} className="space-y-3 p-4">
+      <form onSubmit={commit} className="space-y-3 py-4">
         <label
           htmlFor={inputId}
           className="block text-[13px] font-semibold text-foreground"
@@ -207,7 +207,7 @@ export function LessonProofCheckpoint({
           autoComplete="off"
           disabled={!progressReady || !prerequisitesMet}
           aria-describedby={helpId}
-          className="w-full resize-y border border-border bg-card px-3 py-2 text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full resize-y border border-border bg-card px-3 py-2 text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted-foreground focus:border-foreground focus:ring-2 focus:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60"
         />
         <div
           id={helpId}
@@ -216,7 +216,7 @@ export function LessonProofCheckpoint({
           <p>{prerequisitesMet ? copy.validation : prerequisiteHint}</p>
           <p className="sm:text-right">{copy.privacy}</p>
         </div>
-        <div className="flex flex-col gap-3 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 border-t border-hairline pt-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="max-w-[48ch] text-[12px] leading-relaxed text-muted-foreground">
             {copy.boundary}
           </p>
@@ -224,7 +224,7 @@ export function LessonProofCheckpoint({
             type="submit"
             disabled={!canCommit}
             aria-busy={!progressReady || undefined}
-            className="inline-flex min-h-11 shrink-0 items-center justify-center border border-foreground bg-brand-orange px-4 text-[12px] font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:border-border disabled:bg-track disabled:text-muted-foreground"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center border border-foreground bg-foreground px-5 text-[0.9375rem] font-semibold text-background outline-none transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:border-border disabled:bg-track disabled:text-muted-foreground"
           >
             {!progressReady ? copy.loading : copy.save}
           </button>

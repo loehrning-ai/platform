@@ -106,7 +106,7 @@ export default function PromptScannerDemo() {
   const verdicts = {
     block: {
       c: DEMO.statusRedOnDark,
-      t: copy("MARKIERT", "FLAGGED"),
+      t: copy("Markiert", "Flagged"),
       s: copy(
         "PII-Treffer im Beispieltext: nicht ungeprüft weitergeben",
         "Personal-data match in sample text: review before sharing",
@@ -114,17 +114,17 @@ export default function PromptScannerDemo() {
     },
     review: {
       c: DEMO.statusAmber,
-      t: "REVIEW",
+      t: copy("Prüfen", "Review"),
       s: copy("Geschäftsgeheimnis erkannt", "Confidential term detected"),
     },
     mask: {
       c: "var(--color-brand-orange)",
-      t: copy("MASKIERT", "MASKED"),
+      t: copy("Maskiert", "Masked"),
       s: copy("Maskierte Fassung erzeugt", "Masked version generated"),
     },
     safe: {
       c: DEMO.statusGreen,
-      t: copy("KEINE DEMO-TREFFER", "NO SAMPLE MATCHES"),
+      t: copy("Keine Treffer im Beispiel", "No sample matches"),
       s: copy("Prüfung unvollständig möglich", "Rule check may be incomplete"),
     },
   } as const;
@@ -217,7 +217,9 @@ export default function PromptScannerDemo() {
                 )[d.type as "Name" | "Unternehmen" | "Finanz"] ?? d.type)
           }
           style={{
-            background: `${d.level === "block" ? "rgba(239,68,68,0.22)" : d.level === "review" ? "rgba(234,179,8,0.22)" : "rgba(249,115,22,0.2)"}`,
+            // The level lives in the coloured underline and the type label;
+            // the fill is one neutral tone, not a pastel per level.
+            background: "rgba(243,240,233,0.1)",
             borderBottom: `2px solid ${c}`,
             padding: "1px 3px",
             animation: "promptScannerFlash 0.35s ease-out",
@@ -282,45 +284,17 @@ export default function PromptScannerDemo() {
           }
         }
       `}</style>
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {copy("Compliance-Sandbox", "Control sandbox")}
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          {copy("Prompt-Scanner", "Prompt scanner")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {copy("für DSGVO & IP.", "for data and IP warnings.")}
-          </span>
-        </h2>
-        <p
-          style={{
-            fontSize: 12,
-            color: "rgba(243,240,233,0.65)",
-            marginTop: 4,
-          }}
-        >
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {copy("Prompt prüfen", "Check a prompt")}
+      </h2>
+      <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           {copy(
             "Lokale Regelprüfung mit Beispieldaten. Treffer werden vor einer Weitergabe markiert.",
             "Local rule check with sample data. Matches are marked before any submission.",
           )}
         </p>
-      </div>
 
       <div
         style={{
@@ -332,13 +306,9 @@ export default function PromptScannerDemo() {
       >
         <div
           style={{
+            ...DEMO.label,
             width: "100%",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            color: "var(--color-muted-foreground)",
             marginBottom: 4,
           }}
         >
@@ -353,18 +323,14 @@ export default function PromptScannerDemo() {
               onClick={() => setText(s)}
               aria-pressed={active}
               style={{
+                ...DEMO.label,
                 minHeight: 44,
                 padding: "6px 11px",
                 minWidth: 44,
                 border: `1px solid ${active ? DEMO.kalk : "rgba(243,240,233,0.25)"}`,
                 background: active ? DEMO.kalk : "transparent",
                 color: active ? DEMO.ink : DEMO.kalk,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
                 cursor: "pointer",
-                fontWeight: 700,
                 transition: "background 0.15s, color 0.15s, border-color 0.15s",
                 flexShrink: 0,
               }}
@@ -384,12 +350,8 @@ export default function PromptScannerDemo() {
       >
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "rgba(243,240,233,0.5)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            ...DEMO.label,
+            color: "rgba(243,240,233,0.72)",
             padding: "6px 12px",
             borderBottom: "1px solid rgba(243,240,233,0.1)",
             display: "flex",
@@ -397,10 +359,10 @@ export default function PromptScannerDemo() {
             alignItems: "center",
           }}
         >
-          <span>$ prompt.txt</span>
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            ◆ {copy("Beispielscan", "sample scan")}
+          <span style={{ fontFamily: DEMO.font.mono, fontSize: 12, fontWeight: 400 }}>
+            prompt.txt
           </span>
+          <span>{copy("Beispielscan", "Sample scan")}</span>
         </div>
         <textarea
           value={text}
@@ -439,7 +401,7 @@ export default function PromptScannerDemo() {
         <div
           style={{
             display: "inline-flex",
-            border: "1px solid rgba(243,240,233,0.3)",
+            border: "1px solid rgba(243,240,233,0.4)",
           }}
         >
           {(["detect", "mask"] as const).map((m, idx) => {
@@ -451,29 +413,24 @@ export default function PromptScannerDemo() {
                 onClick={() => setMode(m)}
                 aria-pressed={active}
                 style={{
+                  ...DEMO.label,
                   minHeight: 44,
                   padding: "7px 14px",
-                  background: active
-                    ? "var(--color-brand-orange)"
-                    : "transparent",
-                  color: active ? DEMO.ink : DEMO.kalk,
+                  // Selected = filled (paper on graphit), like the chips.
+                  background: active ? DEMO.kalk : "transparent",
+                  color: active ? "#141414" : DEMO.kalk,
                   borderTop: "none",
                   borderRight: "none",
                   borderBottom: "none",
                   borderLeft:
-                    idx === 1 ? "1px solid rgba(243,240,233,0.3)" : "none",
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
+                    idx === 1 ? "1px solid rgba(243,240,233,0.4)" : "none",
                   cursor: "pointer",
                   transition: "background 0.15s, color 0.15s",
                 }}
               >
                 {m === "detect"
-                  ? copy("› Erkannt", "› Detected")
-                  : copy("› Maskiert", "› Masked")}
+                  ? copy("Erkannt", "Detected")
+                  : copy("Maskiert", "Masked")}
               </button>
             );
           })}
@@ -507,11 +464,8 @@ export default function PromptScannerDemo() {
         role="status"
         aria-live="polite"
         style={{
-          borderTop: "1px solid rgba(243,240,233,0.15)",
-          borderRight: "1px solid rgba(243,240,233,0.15)",
-          borderBottom: "1px solid rgba(243,240,233,0.15)",
-          borderLeft: `4px solid ${verdict.c}`,
-          background: "rgba(243,240,233,0.06)",
+          // No coloured left rule: the verdict is a word in its colour.
+          border: "1px solid rgba(243,240,233,0.16)",
           padding: "12px 14px",
           display: "flex",
           alignItems: "center",
@@ -522,20 +476,13 @@ export default function PromptScannerDemo() {
       >
         <div style={{ minWidth: 160 }}>
           <div
+            data-scanner-verdict={worstLevel}
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: verdict.c,
+              fontSize: 16,
               fontWeight: 700,
-              letterSpacing: "0.16em",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
+              color: verdict.c,
             }}
           >
-            <span aria-hidden="true">
-              {worstLevel === "block" ? "■" : worstLevel === "safe" ? "●" : "▲"}
-            </span>
             {verdict.t}
           </div>
           <div
@@ -564,12 +511,12 @@ export default function PromptScannerDemo() {
                 DEMO.statusRedOnDark,
               ],
               [
-                "REVIEW",
+                copy("Prüfen", "Review"),
                 detections.filter((d) => d.level === "review").length,
                 DEMO.statusAmber,
               ],
               [
-                "MASK",
+                copy("Maskiert", "Masked"),
                 detections.filter((d) => d.level === "mask").length,
                 "var(--color-brand-orange)",
               ],
@@ -581,7 +528,7 @@ export default function PromptScannerDemo() {
                   fontFamily: DEMO.font.mono,
                   fontSize: 20,
                   fontWeight: 700,
-                  color: n > 0 ? c : "rgba(243,240,233,0.55)",
+                  color: n > 0 ? c : "rgba(243,240,233,0.72)",
                   lineHeight: 1,
                 }}
               >
@@ -589,10 +536,8 @@ export default function PromptScannerDemo() {
               </div>
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: "rgba(243,240,233,0.55)",
-                  letterSpacing: "0.12em",
+                  ...DEMO.label,
+                  color: "rgba(243,240,233,0.72)",
                   marginTop: 3,
                 }}
               >
@@ -606,19 +551,15 @@ export default function PromptScannerDemo() {
       {/* Failure-mode beat: missed injection */}
       <div
         style={{
-          border: "1px solid rgba(220,38,38,0.3)",
-          background: "rgba(220,38,38,0.04)",
+          // Dashed = a known gap (deck grammar), not a red alarm box.
+          border: "1px dashed rgba(243,240,233,0.4)",
           padding: "10px 14px",
         }}
       >
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-            color: "#f87171",
+            ...DEMO.label,
+            color: DEMO.kalk,
             marginBottom: 6,
           }}
         >
@@ -653,16 +594,12 @@ export default function PromptScannerDemo() {
           onClick={() => setShowMissedInjection((v) => !v)}
           aria-expanded={showMissedInjection}
           style={{
+            ...DEMO.label,
             minHeight: 44,
             background: "transparent",
-            border: "1px solid #f87171",
-            color: "#f87171",
+            border: "1px solid rgba(243,240,233,0.4)",
+            color: DEMO.kalk,
             padding: "5px 12px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
             cursor: "pointer",
           }}
         >
@@ -682,7 +619,6 @@ export default function PromptScannerDemo() {
                 border: "1px solid rgba(243,240,233,0.1)",
                 marginBottom: 8,
                 fontFamily: DEMO.font.mono,
-                letterSpacing: "0.02em",
               }}
             >
               {missedInjection}
@@ -690,17 +626,16 @@ export default function PromptScannerDemo() {
             <div
               style={{
                 padding: "8px 12px",
-                background: "rgba(220,38,38,0.08)",
-                borderLeft: "3px solid rgba(220,38,38,0.6)",
+                border: "1px solid rgba(243,240,233,0.16)",
                 fontSize: 12,
                 lineHeight: 1.55,
                 color: "rgba(243,240,233,0.85)",
               }}
             >
               {copy("Scan-Ergebnis: 0 Treffer. ", "Scan result: 0 matches. ")}
-              <strong style={{ color: "#f87171" }}>
+              <strong style={{ color: DEMO.statusRedOnDark }}>
                 {copy(
-                  "dieser Angriff wurde nicht erkannt.",
+                  "Dieser Angriff wurde nicht erkannt.",
                   "The attack was not detected.",
                 )}
               </strong>{" "}

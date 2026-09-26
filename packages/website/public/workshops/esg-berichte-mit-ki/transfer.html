@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f0e9">
+<title>ESG Reporting with AI · Transfer sheet · loehrning.ai</title>
+<meta name="description" content="Workshop 04, ESG Reporting with AI: the one-page transfer sheet. Five boxes for one bill (source, period, unit, boundary, factor) with the Werk Süd worked example, printable on A4.">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preload" href="./assets/fonts/Typing-Static-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./lib/workshop-frame.css">
+<link rel="stylesheet" href="./lib/w04-pages.css">
+</head>
+<body class="wf-page">
+<a class="wf-skip" href="#main">Skip to content</a>
+<header class="wf-strip" data-wf-slug="esg-berichte-mit-ki">
+  <a class="wf-brand" href="/en/workshops"><img src="./assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
+  <nav class="wf-back" aria-label="Workshop page">
+    <a class="wf-back-main" href="/en/workshops/esg-berichte-mit-ki">← Back to workshop</a>
+    <a class="wf-back-alt" href="/workshops/esg-berichte-mit-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
+  </nav>
+  <nav class="wf-mats" aria-label="Workshop materials">
+    <a href="./slides.html"><span>01</span>Deck</a>
+    <a href="./demo.html"><span>02</span>Interactive demo</a>
+    <a href="./kellbrunn-esg-kit.zip" download><span>03</span>Kit</a>
+    <a href="./transfer.html" aria-current="page"><span>04</span>Transfer sheet</a>
+    <a href="./guide.html"><span>05</span>Learner guide</a>
+    <a href="./field-card.html"><span>06</span>Field card</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1" class="pg sheet sheet--transfer">
+  <header class="sheet-mast">
+    <div>
+      <p class="wf-kicker">Workshop 04 · ESG Reporting with AI · Transfer sheet</p>
+      <h1 class="wf-h1">One bill, five boxes</h1>
+      <p class="wf-lead">Use an invented or anonymised bill. No company data goes into any tool.</p>
+    </div>
+  </header>
+  <div class="sheet-tools no-print">
+    <button type="button" class="wf-btn wf-btn--primary" id="print-page">Print this sheet</button>
+    <p class="wf-small"><span class="for-wide">Prints on one A4 page. Write in the dashed boxes; the worked example is Kellbrunn's Werk Süd electricity.</span><span class="for-phone">Prints on one A4 page, with space to write next to each box. The worked example is Kellbrunn's Werk Süd electricity.</span></p>
+  </div>
+
+  <ol class="boxes">
+    <li class="box">
+      <div><h2><span>1</span>Source</h2><p class="what">File, page and the exact line you read.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p><code>jahresuebersicht_2025_oekostrom.md</code>, page 1, “Verbrauch 2025: 1.240 MWh”</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>2</span>Period</h2><p class="what">From, to, months covered; gaps or overlaps with other bills.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>01.01.2025 to 31.12.2025, 12 months, no overlap. Last year on the same page: 1.250 MWh.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>3</span>Unit</h2><p class="what">Value and unit as printed → normalised value, and the rule.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>1.240 MWh → 1,240,000 kWh (MWh × 1,000; the dot separates thousands). Check: 22,545 kWh per employee, close to last year's 22,727 kWh.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>4</span>Boundary</h2><p class="what">Legal entity on the document; in or out; which rule.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>Kellbrunn Präzisionsteile GmbH, Werk Süd; in; operational control.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>5</span>Factor</h2><p class="what">Factor ID, year, basis, edition; method; any certificate.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>Location-based: <code class="nowrap">F-EL-LB-2025</code> (0.40, illustrative teaching value) → 496.0 t.</p><p>Market-based: <code class="nowrap">F-EL-GO</code> under <code class="nowrap">I-WS-GO</code> (1,240 MWh guarantees of origin, cancelled, Werk Süd only) → 0.0&nbsp;t.</p></div>
+    </li>
+  </ol>
+
+  <section class="sentence" aria-labelledby="sentence-title">
+    <h2 class="wf-kicker" id="sentence-title">End with one sentence</h2>
+    <p>“This number comes from [document, line], covers [period], was converted by [rule], belongs to [entity] under [boundary rule], and uses [factor ID, year, edition]. Still open: [one thing].”</p>
+    <p class="de" lang="de">„Diese Zahl stammt aus [Beleg, Zeile], deckt [Zeitraum] ab, wurde mit [Regel] umgerechnet, gehört zu [Gesellschaft] nach [Regel zur Bilanzgrenze] und nutzt [Faktor-ID, Jahr, Stand]. Noch offen: [eine Sache].“</p>
+    <div class="write"><span class="visually-hidden">Space to write your sentence</span></div>
+  </section>
+
+  <section class="sentence sentence--ex" aria-labelledby="worked-title">
+    <h2 class="wf-kicker" id="worked-title">Worked sentence</h2>
+    <p>This number comes from the Werk Süd annual statement 2025, line “Verbrauch 2025: 1.240 MWh”, covers January to December 2025, was converted with MWh × 1,000, belongs to Kellbrunn Präzisionsteile GmbH, Werk Süd, under operational control, and uses <code class="nowrap">F-EL-LB-2025</code> (edition Lehrwerte v1.0, <span class="nowrap">2026-01-15</span>). Still open: the monthly split, if the customer asks for quarters.</p>
+  </section>
+
+  <footer class="sheet-foot">
+    <p>Fictional case, illustrative teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
+  </footer>
+</main>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are illustrative teaching values, not official factors.</p></footer>
+<script src="./lib/w04-pages.js"></script>
+</body>
+</html>

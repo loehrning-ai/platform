@@ -1,0 +1,10 @@
+methode;treiber;bezeichnung;rechnung;aenderung_t;anteil_prozent
+standortbasiert;grid_factor;Netzfaktor 0,42 auf 0,40 (Lehrwerte);3.610.000 x (0,40 - 0,42);-72,2;71
+standortbasiert;less_electricity;Weniger Strom;(3.610.000 - 3.650.000) x 0,42;-16,8;16
+standortbasiert;less_gas;Weniger Gas;(2.090.000 - 2.150.000) x 0,18;-10,8;11
+standortbasiert;less_diesel;Weniger Diesel;(38.000 - 39.000) x 2,50;-2,5;2
+standortbasiert;summe;Summe 2024 auf 2025;2.017,5 auf 1.915,2;-102,3;100
+marktbasiert;certificates;Herkunftsnachweise für Werk Süd;1.240.000 x 0,60;-744,0;95
+marktbasiert;less_electricity;Weniger Strom;(3.610.000 - 3.650.000) x 0,60;-24,0;3
+marktbasiert;less_gas_diesel;Weniger Gas und Diesel (Scope 1);-10,8 - 2,5;-13,3;2
+marktbasiert;summe;Summe 2024 auf 2025;2.674,5 auf 1.893,2;-781,3;100

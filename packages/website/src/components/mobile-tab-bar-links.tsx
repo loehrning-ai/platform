@@ -71,18 +71,19 @@ export function MobileTabBarLinks({
         const active = isActiveTab(tab.matchPath, pathname);
         return (
           <li key={tab.id} className="min-w-0 flex-1">
-            {/* The active rule is a border that is always present and only
-                changes colour, so marking a tab moves no layout. */}
+            {/* The active rule is a 2px ink border that is always present and
+                only changes colour, so marking a tab moves no layout. Weight
+                and aria-current carry the same state without colour. */}
             <Link
               href={tab.href}
               prefetch={false}
               aria-current={active ? "page" : undefined}
               data-mobile-tab={tab.id}
               data-active={active ? "true" : "false"}
-              className={`flex h-full min-h-11 w-full min-w-11 flex-col items-center justify-center gap-1 border-t-2 px-1 ${
+              className={`flex h-full min-h-11 w-full min-w-11 flex-col items-center justify-center gap-1 border-t-2 px-1 transition-colors duration-[120ms] motion-reduce:transition-none ${
                 active
-                  ? "border-brand-orange text-brand-orange"
-                  : "border-transparent text-muted-foreground"
+                  ? "border-foreground font-semibold text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
               {tab.icon}

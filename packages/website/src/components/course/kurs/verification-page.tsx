@@ -224,20 +224,23 @@ export function VerificationPage({
             </h1>
 
             {data && (
-              <div className="border-2 border-brand-sand bg-card p-5 text-center sm:p-8">
-                <CheckCircle2 className="mx-auto h-12 w-12 text-brand-sand" />
-                <p className="mt-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-sand">
+              <div className="border border-foreground bg-card p-5 text-center sm:p-8">
+                <CheckCircle2
+                  className="mx-auto h-10 w-10 text-pass"
+                  aria-hidden="true"
+                />
+                <p className="mt-2 text-label text-pass">
                   {config.language === "en"
                     ? "QR data read"
                     : "QR-Daten gelesen"}
                 </p>
-                <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
+                <h2 className="mt-4 text-fluid-h2 font-bold">
                   {config.certificateTitle}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {config.certificateSubtitle}
                 </p>
-                <div className="mx-auto mt-6 h-px w-16 bg-brand-sand" />
+                <div className="mx-auto mt-6 h-0.5 w-16 bg-foreground" />
                 <p className="mt-6 break-words text-lg font-semibold [overflow-wrap:anywhere]">
                   {data.n}
                 </p>
@@ -256,11 +259,11 @@ export function VerificationPage({
                     </p>
                   )}
                 </div>
-                <div className="mx-auto mt-6 h-px w-16 bg-border" />
+                <div className="mx-auto mt-6 h-px w-16 bg-hairline" />
                 <p className="mt-4 text-xs text-muted">
                   loehrning.ai | {config.certificateReferenceLabel}
                 </p>
-                <p className="mt-3 border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-4 border-t border-hairline pt-3 text-caption text-muted-foreground">
                   {config.language === "en" ? (
                     <>
                       {config.recordNoun.label}, generated locally. The QR data
@@ -281,9 +284,12 @@ export function VerificationPage({
             )}
 
             {invalidReason && (
-              <div className="border-2 border-destructive/30 bg-card p-5 text-center sm:p-8">
-                <XCircle className="mx-auto h-12 w-12 text-destructive" />
-                <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
+              <div className="border border-destructive bg-card p-5 text-center sm:p-8">
+                <XCircle
+                  className="mx-auto h-10 w-10 text-destructive"
+                  aria-hidden="true"
+                />
+                <h2 className="mt-4 text-fluid-h2 font-bold">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
                       ? "Certificate code doesn't match this course."

@@ -45,7 +45,7 @@ test.describe("/ki-fuehrerschein landing", () => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(
-      page.getByRole("heading", { name: /Was du lernst/i }),
+      page.getByRole("heading", { name: /^Lehrplan$/ }),
     ).toBeVisible();
     // Block titles come from the course-data single source; assert the first
     // one renders so a broken getBlocks() (empty list) is caught.

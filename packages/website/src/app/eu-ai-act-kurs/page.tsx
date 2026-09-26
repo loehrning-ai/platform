@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
-  TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
+import {
+  CourseBlockLedger,
+  CourseBoundaryColumn,
+  CourseBoundaryDetails,
+  CourseLandingSection,
+  CourseNextLink,
+  CourseNoteList,
+  CourseOutcomeList,
+} from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
@@ -41,62 +48,65 @@ const LANDING_COPY = {
         "Umsetzungsmaßnahmen dokumentiert priorisieren",
       ],
     },
-    eyebrow: "EU AI Act · Lernpfad Stufe 3",
+    eyebrow: "EU AI Act Kurs · Grundlagen · kostenlos",
     heading: "Rollen, Risiken und",
     headingAccent: "Pflichten einordnen.",
     introduction:
-      "Der Kurs trennt Grundbegriffe, rechtliche Rollen und operative Schritte. Du arbeitest mit der Verordnung (EU) 2024/1689 in der seit 27. Juli 2026 geltenden geänderten Fassung.",
+      "Sie nehmen ein KI-Tool aus Ihrem Unternehmen und bestimmen seine Risikoklasse, Ihre Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27.\u00a0Juli\u00a02026 geltenden Fassung.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
       "Editoriale Prozessgrafik: Bildkarten durchlaufen Prüfstufen, farbige Risikoklassen und einen Abschlusscheck",
     imageLabel: "EU AI Act · 6 Blöcke · 24 Lektionen",
     facts: [
-      { value: "6", label: "Blöcke" },
-      { value: "24", label: "Lektionen" },
-      { value: "1:50", label: "Lernzeit" },
-      { value: "Lokal", label: "Teilnahmenachweis" },
+      "6 Blöcke",
+      "24 Lektionen",
+      "ca. 1 Std. 50 Min. Lernzeit",
+      "Abschlussquiz mit 27 Fragen",
     ],
-    legalEyebrow: "§ Rechtsgrundlage",
-    legalHeading: "Was Artikel 4 tatsächlich verlangt.",
+    legalHeading: "Was Artikel 4 verlangt",
     legalBody:
-      "Artikel 4 gilt seit 2. Februar 2025. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen treffen, die die KI-Kompetenz ihrer Beschäftigten und weiterer Personen unterstützen, die in ihrem Auftrag mit den Systemen arbeiten. Vorwissen, Erfahrung, Ausbildung, Nutzungskontext und betroffene Personengruppen sind zu berücksichtigen. Die seit 27. Juli 2026 geltende Fassung verlangt kein garantiertes individuelles Kompetenzniveau.",
-    tracksEyebrow: "§ Zwei Zugänge",
+      "Artikel 4 gilt seit 2.\u00a0Februar\u00a02025. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen treffen, die die KI-Kompetenz ihrer Beschäftigten und weiterer Personen unterstützen, die in ihrem Auftrag mit den Systemen arbeiten. Vorwissen, Erfahrung, Ausbildung, Nutzungskontext und betroffene Personengruppen sind zu berücksichtigen. Die seit 27.\u00a0Juli\u00a02026 geltende Fassung verlangt kein garantiertes individuelles Kompetenzniveau.",
     tracks: [
       {
-        title: "Blöcke 1–2 · Orientierung",
+        title: "Blöcke 1 und 2 · Orientierung",
         body: "Rollen, Geltungsbereich, Fristen, verbotene Praktiken und Risikoklassen. Geeignet ohne juristische Vorkenntnisse.",
       },
       {
-        title: "Blöcke 3–6 · Umsetzung",
+        title: "Blöcke 3 bis 6 · Umsetzung",
         body: "Hochrisiko-Pflichten, GPAI, Transparenz, Governance und eine dokumentierbare Arbeitsmethode für Organisationen.",
       },
     ],
-    curriculumEyebrow: "§ Curriculum",
-    curriculumHeading: "Sechs Blöcke, eine durchgehende Klassifikationslogik.",
-    blockLabel: (number: number) => `Block ${String(number).padStart(2, "0")}`,
-    minutes: (count: number) => `${count} Min`,
-    total: "24 Lektionen · ca. 1 Std. 50 Min. · Abschlussquiz mit 27 Fragen",
-    audienceEyebrow: "§ Für wen",
-    audienceHeading: "Für Personen, die KI-Nutzung erklären oder verantworten.",
+    curriculumHeading: "Lehrplan",
+    minutes: (count: number) => `${count} Min.`,
+    audienceHeading: "Für wen",
     audienceBody:
       "Der Einstieg setzt weder Programmierkenntnisse noch ein Jurastudium voraus. Die späteren Blöcke richten sich besonders an Datenschutz, IT, Compliance, Einkauf, Personal und Fachverantwortliche.",
     outcomes: [
-      "eine konkrete Nutzung den Rollen Anbieter, Betreiber, Einführer oder Händler zuordnen",
-      "verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle getrennt prüfen",
-      "offene Pflichten als belegbare Aufgaben mit Zuständigkeit und Prüfkriterium erfassen",
+      {
+        title: "Eine konkrete Nutzung einer Rolle zuordnen",
+        detail: "Anbieter, Betreiber, Einführer oder Händler.",
+      },
+      {
+        title: "Verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle auseinanderhalten",
+        detail: "Für jeden Fall gilt eine eigene Liste von Pflichten.",
+      },
+      {
+        title: "Eine Pflichtenliste mit Zuständigen und Fristen anlegen",
+        detail: "Mit Rechtsstand und Quelle zu jeder Frist.",
+      },
     ],
-    decisionsHeading: "Drei Entscheidungen statt einer Compliance-Behauptung.",
-    evidenceEyebrow: "§ Aussagekraft",
-    evidenceHeading: "Was der Teilnahmenachweis belegt.",
+    // The EU AI Act course addresses the reader with "Sie" (CONTENT_GUIDE).
+    outcomesHeading: "Was Sie danach können",
+    evidenceHeading: "Was der Teilnahmenachweis belegt",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokalen Abschlussquiz.",
-      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28. Juli 2026 geprüft.",
+      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28.\u00a0Juli\u00a02026 geprüft.",
     ],
     disclaimerLabel: "Hinweis:",
     disclaimer:
       "Bildungsangebot, keine Rechtsberatung: Der Nachweis ist weder akkreditiert noch serverseitig signiert. Teilnahme oder Teilnahmenachweis allein belegen weder Kompetenz noch die Erfüllung von Artikel 4; Systeminventur, Rollenklärung, Risikoklassifizierung und organisationsbezogene Kontrollen bleiben erforderlich.",
-    factsLabel: "Kursrahmen",
+    factsLabel: "Auf einen Blick",
     progressLabel: "Fortschritt im EU AI Act Kurs",
     lessonsLabel: "Lektionen",
     boundarySummary: "Rechtsstand, Nachweis und Haftungsgrenze",
@@ -121,54 +131,56 @@ const LANDING_COPY = {
         "Prioritize implementation measures with traceable evidence",
       ],
     },
-    eyebrow: "EU AI Act · Learning path stage 3",
+    eyebrow: "EU AI Act Course · Foundations · free",
     heading: "Map roles, risks,",
     headingAccent: "and duties.",
     introduction:
-      "This course separates foundational concepts, legal roles, and operational steps. It uses Regulation (EU) 2024/1689 in the amended version in force since 27 July 2026.",
+      "You take one AI tool your company uses and work out its risk class, your role as provider or deployer, and the duties that follow. The basis is Regulation (EU) 2024/1689 in the amended version in force since 27 July 2026.",
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
       "Editorial process graphic showing image cards passing through review stages, colour-coded risk classes, and a final check",
     imageLabel: "EU AI Act · 6 blocks · 24 lessons",
     facts: [
-      { value: "6", label: "Blocks" },
-      { value: "24", label: "Lessons" },
-      { value: "1:50", label: "Study time" },
-      { value: "Local", label: "Completion record" },
+      "6 blocks",
+      "24 lessons",
+      "About 1 hr 50 min of study",
+      "Final quiz with 27 questions",
     ],
-    legalEyebrow: "§ Legal basis",
-    legalHeading: "What Article 4 actually requires.",
+    legalHeading: "What Article 4 requires",
     legalBody:
       "Article 4 has applied since 2 February 2025. Providers and deployers of AI systems must take measures that support the development of AI literacy among staff and other people who work with those systems on their behalf. Prior knowledge, experience, education, context of use, and affected groups must be considered. The version in force since 27 July 2026 does not require a guaranteed level of individual AI literacy.",
-    tracksEyebrow: "§ Two entry points",
     tracks: [
       {
-        title: "Blocks 1–2 · Orientation",
+        title: "Blocks 1 and 2 · Orientation",
         body: "Roles, scope, application dates, prohibited practices, and risk categories. No legal background required.",
       },
       {
-        title: "Blocks 3–6 · Implementation",
+        title: "Blocks 3 to 6 · Implementation",
         body: "High-risk duties, GPAI, transparency, governance, and a documented working method for organizations.",
       },
     ],
-    curriculumEyebrow: "§ Curriculum",
-    curriculumHeading: "Six blocks, one consistent classification method.",
-    blockLabel: (number: number) => `Block ${String(number).padStart(2, "0")}`,
+    curriculumHeading: "Course plan",
     minutes: (count: number) => `${count} min`,
-    total: "24 lessons · about 1 hour 50 minutes · 27-question final quiz",
-    audienceEyebrow: "§ Who it is for",
-    audienceHeading: "For people who explain or govern AI use.",
+    audienceHeading: "Who it is for",
     audienceBody:
       "The opening blocks require neither programming skills nor legal training. The later blocks are especially relevant to data protection, IT, compliance, procurement, HR, and operational owners.",
     outcomes: [
-      "assign a specific use to the provider, deployer, importer, or distributor role",
-      "assess prohibited practices, high-risk systems, and transparency cases separately",
-      "record open duties as evidence-based tasks with an owner and verification criterion",
+      {
+        title: "Assign a specific use to a role",
+        detail: "Provider, deployer, importer or distributor.",
+      },
+      {
+        title: "Tell prohibited practices, high-risk systems and transparency cases apart",
+        detail: "Each case comes with its own list of duties.",
+      },
+      {
+        title: "Set up a list of duties with owners and deadlines",
+        detail: "With the legal state and source for every deadline.",
+      },
     ],
-    decisionsHeading: "Three decisions instead of a compliance claim.",
-    evidenceEyebrow: "§ Scope of the record",
-    evidenceHeading: "What the completion record establishes.",
+    outcomesHeading: "What you can do afterwards",
+    evidenceHeading: "What the completion record establishes",
     evidence: [
       "It records completion of this course and the result of the locally administered final quiz.",
       "Time-dependent legal statements in the course were last reviewed on 28 July 2026.",
@@ -176,7 +188,7 @@ const LANDING_COPY = {
     disclaimerLabel: "Scope:",
     disclaimer:
       "Educational material, not legal advice: the record is neither accredited nor server-signed. Participation or a completion record alone establishes neither competence nor compliance with Article 4; a system inventory, role analysis, risk classification, and organization-specific controls remain necessary.",
-    factsLabel: "Course frame",
+    factsLabel: "At a glance",
     progressLabel: "EU AI Act Course progress",
     lessonsLabel: "lessons",
     boundarySummary: "Legal state, record, and liability boundary",
@@ -297,7 +309,7 @@ export default async function EuAiActKursLandingPage() {
               {copy.start} <span aria-hidden="true">→</span>
             </Link>
           }
-          facts={copy.facts.map((fact) => `${fact.value} ${fact.label}`)}
+          facts={copy.facts}
           factsLabel={copy.factsLabel}
           progress={
             <TechnicalCourseProgressBar
@@ -309,140 +321,51 @@ export default async function EuAiActKursLandingPage() {
           }
         />
 
-        <div>
-          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.audienceEyebrow}
-              title={copy.decisionsHeading}
-            />
-            <div className="border-y border-border">
-              <p className="border-b border-border py-3 text-sm leading-relaxed text-muted-foreground">
-                {copy.audienceBody}
-              </p>
-              <ol>
-                {copy.outcomes.map((outcome, index) => (
-                  <li
-                    key={outcome}
-                    className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
-                  >
-                    <span className="font-mono text-xs tabular-nums text-brand-orange">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="break-words text-sm font-medium leading-relaxed text-foreground">
-                      {outcome}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </section>
+        <CourseLandingSection title={copy.outcomesHeading}>
+          <CourseOutcomeList items={copy.outcomes} />
+        </CourseLandingSection>
 
-          <section className="mt-10">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.tracksEyebrow}
-              title={copy.audienceHeading}
-            />
-            <div className="mt-5 grid border-y border-border sm:grid-cols-2">
-              {copy.tracks.map((track) => (
-                <article
-                  key={track.title}
-                  className="min-w-0 border-b border-border py-4 sm:border-b-0 sm:border-r sm:px-4 sm:first:pl-0 sm:last:border-r-0"
-                >
-                  <h3 className="text-base font-semibold text-foreground">
-                    {track.title}
-                  </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {track.body}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </section>
+        <CourseLandingSection
+          title={copy.audienceHeading}
+          intro={copy.audienceBody}
+        >
+          <CourseOutcomeList
+            items={copy.tracks.map((track) => ({
+              title: track.title,
+              detail: track.body,
+            }))}
+          />
+        </CourseLandingSection>
 
-          <section className="mt-10">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.curriculumEyebrow}
-              title={copy.curriculumHeading}
-              intro={copy.total}
-            />
-            <ol className="mt-5 border-t border-border">
-              {blocks.map((block, index) => (
-                <li
-                  key={block.id}
-                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[6rem_minmax(0,1fr)_8rem] md:items-start md:gap-5"
-                >
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                    {copy.blockLabel(index + 1)}
-                  </p>
-                  <div className="min-w-0">
-                    <h3 className="break-words text-base font-semibold text-foreground">
-                      {block.title}
-                    </h3>
-                    <p className="mt-1 max-w-[720px] break-words text-sm leading-relaxed text-muted-foreground">
-                      {block.description}
-                    </p>
-                  </div>
-                  <p className="font-mono text-xs text-muted-foreground md:text-right">
-                    {block.lessons.length} {copy.lessonsLabel} ·{" "}
-                    {copy.minutes(block.durationMinutes)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.curriculumHeading}>
+          <CourseBlockLedger
+            rows={blocks.map((block, index) => ({
+              id: block.id,
+              number: String(index + 1).padStart(2, "0"),
+              title: block.title,
+              description: block.description,
+              meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
+            }))}
+          />
+          <CourseNextLink href={localizeHref("/ai-native", locale)}>
+            {copy.nextCourse}
+          </CourseNextLink>
+        </CourseLandingSection>
 
-          <details className="mt-10 border-y border-border">
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
-              {copy.boundarySummary}
-              <span className="text-brand-orange" aria-hidden="true">
-                +
-              </span>
-            </summary>
-            <div className="grid gap-5 border-t border-border py-4 lg:grid-cols-2">
-              <div>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                  {copy.legalHeading}
-                </p>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                  {copy.legalBody}
-                </p>
-              </div>
-              <div>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                  {copy.evidenceHeading}
-                </p>
-                <ul className="mt-2 border-t border-border">
-                  {copy.evidence.map((item) => (
-                    <li
-                      key={item}
-                      className="border-b border-border py-2 text-[13px] leading-relaxed text-muted-foreground"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
-                  <strong className="text-foreground">
-                    {copy.disclaimerLabel}
-                  </strong>{" "}
-                  {copy.disclaimer}
-                </p>
-              </div>
-            </div>
-          </details>
-
-          <Link
-            href={localizeHref("/ai-native", locale)}
-            className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} mt-8 sm:grid-cols-[minmax(0,1fr)_auto]`}
-          >
-            <span className="text-sm font-semibold text-foreground">
-              {copy.nextCourse}
-            </span>
-            <span className="text-brand-orange" aria-hidden="true">
-              →
-            </span>
-          </Link>
-        </div>
+        <CourseBoundaryDetails summary={copy.boundarySummary}>
+          <CourseBoundaryColumn title={copy.legalHeading}>
+            <p>{copy.legalBody}</p>
+          </CourseBoundaryColumn>
+          <CourseBoundaryColumn title={copy.evidenceHeading}>
+            <CourseNoteList items={copy.evidence} />
+            <p className="mt-3">
+              <strong className="font-semibold text-foreground">
+                {copy.disclaimerLabel}
+              </strong>{" "}
+              {copy.disclaimer}
+            </p>
+          </CourseBoundaryColumn>
+        </CourseBoundaryDetails>
       </TechnicalCourseFrame>
     </>
   );

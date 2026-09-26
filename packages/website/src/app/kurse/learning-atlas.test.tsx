@@ -9,6 +9,7 @@ import {
   within,
 } from "@testing-library/react";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { COURSE_PROMISES } from "@/lib/courses/course-hub-copy";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { renderToString } from "react-dom/server";
 
@@ -61,6 +62,18 @@ describe("LearningAtlas", () => {
     expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
     expect(next).toHaveTextContent(locale === "de" ? "Offener Einstieg ohne Lernkonto" : "Open starting point without an account");
     expect(next.textContent).not.toContain("0/4");
+    // The sheet says why it offers a course off the path, and the Route
+    // still marks the path's own first course as current.
+    expect(next).toHaveTextContent(
+      locale === "de"
+        ? "Dein Pfad beginnt mit KI-Führerschein, der hier nicht verfügbar ist."
+        : "Your path starts with AI Fundamentals, which is unavailable here.",
+    );
+    const stations = screen
+      .getByTestId("selected-path-sequence")
+      .querySelectorAll("[data-learning-path-stepper] > li");
+    expect(stations[0]).toHaveAttribute("data-state", "current");
+    expect(stations[0]?.querySelector("a")).toHaveAttribute("aria-current", "step");
   });
 
   it.each(["de", "en"] as const)("preserves an explicit unavailable goal and target in %s", (locale) => {
@@ -80,12 +93,26 @@ describe("LearningAtlas", () => {
     const row = container.querySelector('[data-course-slug="ai-native"]');
     expect(row).toHaveAttribute("data-course-access", "unavailable");
     expect(row?.querySelector("[data-course-access-label]")).not.toHaveClass("sr-only");
-    expect(row?.querySelector("[data-course-action] a")).toHaveAttribute("href", `${prefix}/ai-native`);
+    const rowAction = row?.querySelector("[data-course-action] a");
+    expect(rowAction).toHaveAttribute("href", `${prefix}/ai-native`);
+    // The state prints once, in the facts; the action shows the verb and
+    // keeps the full state in its accessible name.
+    expect(rowAction?.querySelector("span:not(.sr-only)")).toHaveTextContent(
+      locale === "de" ? /^Kursübersicht$/ : /^Course overview$/,
+    );
+    expect(rowAction).toHaveAccessibleName(
+      locale === "de"
+        ? "Hier nicht verfügbar · Kursübersicht: AI-Native Arbeitskurs"
+        : /^Unavailable here · Course overview: /,
+    );
+    expect(row?.querySelector("[data-course-meta]")).toHaveTextContent(
+      locale === "de" ? "Hier nicht verfügbar" : "Unavailable here",
+    );
   });
 
   it("honors a selected goal even when the learner explicitly chooses the default", () => {
     render(<LearningAtlas access={getCourseAccess(false)} />);
-    fireEvent.click(screen.getByRole("button", { name: "Sicher starten" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ich nutze KI im Job" }));
     const links = within(screen.getByTestId("next-proof")).getAllByRole("link");
     expect(links[0]).toHaveAttribute("href", "/ki-fuehrerschein");
     expect(links[1]).toHaveAttribute("data-open-course-alternative");
@@ -162,25 +189,26 @@ describe("LearningAtlas", () => {
       buttons.every((button) => button.className.includes("min-h-14")),
     ).toBe(true);
     expect(
-      within(goals).getByRole("button", { name: "Sicher starten" }),
+      within(goals).getByRole("button", { name: "Ich nutze KI im Job" }),
     ).toHaveAttribute("aria-pressed", "true");
 
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis beginnen · Lernkonto nötig: KI-Führerschein",
+        name: "Kurs starten · Lernkonto nötig: KI-Führerschein",
       }),
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
-      screen.getByText(
-        "Prüfe eine reale Aufgabe auf Eingabe, Datenrisiko und Ergebnisqualität.",
+      within(screen.getByTestId("next-proof")).getByText(
+        COURSE_PROMISES.de["ki-fuehrerschein"] as string,
       ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByTestId("next-proof").querySelector("[data-next-proof-stack]"),
-    ).not.toBeNull();
-    expect(
-      screen.getByTestId("next-proof").querySelector("[data-next-proof-card]"),
-    ).toHaveClass("bg-paper", "border-t-brand-orange");
+    // One flat sheet: no offset stack behind it, no mist fill, and the
+    // page's single Mennige button is its action.
+    const nextProof = screen.getByTestId("next-proof");
+    expect(nextProof.querySelector("[data-next-proof-stack]")).toBeNull();
+    expect(nextProof).toHaveClass("bg-card", "border-hairline");
+    expect(nextProof.className).not.toMatch(/kupfer-mist|translate-|shadow/);
+    expect(within(nextProof).getAllByRole("link")[0]).toHaveClass("bg-mennige");
     expect(
       screen.getByTestId("next-proof").querySelector(".dark-section"),
     ).toBeNull();
@@ -194,6 +222,17 @@ describe("LearningAtlas", () => {
         name: /KI-Führerschein.*offen/,
       }),
     ).toHaveAttribute("aria-current", "step");
+    // The path is a vertical Route: the recommended course carries the
+    // current station, the rest are open stations behind a dashed line.
+    const stations = screen
+      .getByTestId("selected-path-sequence")
+      .querySelectorAll("[data-learning-path-stepper] > li");
+    expect([...stations].map((li) => li.getAttribute("data-state"))).toEqual([
+      "current",
+      "future",
+      "future",
+      "future",
+    ]);
     expect(screen.queryByText(/XP|Serie/)).not.toBeInTheDocument();
   });
 
@@ -212,11 +251,17 @@ describe("LearningAtlas", () => {
       const action = row?.querySelector<HTMLElement>("[data-course-action]");
       expect(action).not.toBeNull();
       expect(action?.closest("details")).toBeNull();
+      // The row action is a text link, not a boxed button.
       expect(action?.querySelector("a")).toHaveClass(
-        "border-brand-orange",
-        "bg-paper",
+        "min-h-11",
+        "underline",
         "text-foreground",
       );
+      expect(action?.querySelector("a")?.className).not.toMatch(
+        /border-brand-orange|bg-paper|kupfer-mist/,
+      );
+      // No pastel wash on the row itself.
+      expect(row?.className).not.toMatch(/bg-brand-|border-l-/);
       // No per-row progress meter: the teaser states duration only and the
       // progress affordances live on the account catalog.
       expect(
@@ -281,6 +326,18 @@ describe("LearningAtlas", () => {
     expect(foundation.querySelectorAll("[data-course-slug]")).toHaveLength(4);
     expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(6);
 
+    // A readable ladder: the group head sits one step above the 20px row
+    // titles at every width (22px on phones, 26px from sm), under a Kopflinie.
+    const groupHead = within(foundation).getByRole("heading", {
+      level: 3,
+      name: "Grundlagenpfad",
+    });
+    expect(groupHead).toHaveClass("text-[1.375rem]", "sm:text-[1.625rem]");
+    expect(groupHead.parentElement).toHaveClass("border-t-2", "border-foreground");
+    for (const title of within(foundation).getAllByRole("heading", { level: 4 })) {
+      expect(title).toHaveClass("text-[1.25rem]");
+    }
+
     for (const slug of [
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -295,11 +352,17 @@ describe("LearningAtlas", () => {
 
   it("changes the path with semantic buttons and persists the goal in the URL", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
-    fireEvent.click(screen.getByRole("button", { name: "Mit KI bauen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ich baue mit KI" }));
 
     expect(window.location.search).toBe("?goal=build");
     expect(
-      screen.getByRole("button", { name: "Mit KI bauen" }),
+      within(screen.getByTestId("selected-path-sequence")).getByRole("heading", {
+        level: 3,
+        name: "Dein Pfad · 4 Kurse: Ich baue mit KI",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Ich baue mit KI" }),
     ).toHaveAttribute("aria-pressed", "true");
     const path = screen.getByTestId("selected-path-sequence");
     for (const title of [
@@ -312,7 +375,7 @@ describe("LearningAtlas", () => {
     }
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis beginnen · Lernkonto nötig: AI-Native Arbeitskurs",
+        name: "Kurs starten · Lernkonto nötig: AI-Native Arbeitskurs",
       }),
     ).toHaveAttribute("href", "/ai-native/kurs/modul_1");
     expect(
@@ -328,11 +391,11 @@ describe("LearningAtlas", () => {
     const { container } = render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);
 
     expect(
-      screen.getByRole("button", { name: "Decide with data" }),
+      screen.getByRole("button", { name: "I work with data" }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Start this proof: Data Engineering Fundamentals",
+        name: "Start course: Data Engineering Fundamentals",
       }),
     ).toHaveAttribute(
       "href",
@@ -362,17 +425,21 @@ describe("LearningAtlas", () => {
 
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Nachweis fortsetzen · Lernkonto nötig: KI und Gesellschaft",
+        name: "Weiterlernen · Lernkonto nötig: KI und Gesellschaft",
       }),
     ).toBeInTheDocument();
     expect(
       container.querySelector('[data-course-slug="ki-fuehrerschein"]'),
     ).toHaveAttribute("data-course-status", "complete");
+    // A finished course states it with the pass pictogram plus a word.
     expect(
-      container
-        .querySelector('[data-course-slug="ki-fuehrerschein"]')
-        ?.querySelector("[aria-hidden='true']"),
-    ).toHaveClass("border-brand-orange", "bg-kupfer-mist", "text-brand-orange");
+      container.querySelector('[data-course-slug="ki-fuehrerschein"]'),
+    ).toHaveTextContent("Abgeschlossen");
+    expect(
+      screen
+        .getByTestId("selected-path-sequence")
+        .querySelector("[data-learning-path-stepper] > li"),
+    ).toHaveAttribute("data-state", "past");
     expect(
       container.querySelector('[data-course-slug="ki-und-gesellschaft"]'),
     ).toHaveAttribute("data-course-status", "started");
@@ -414,11 +481,11 @@ describe("LearningAtlas", () => {
       '[data-course-slug="ai-native"]',
     );
     // Nine demos on this course, so the label carries the real count.
-    expect(aiNative).toHaveTextContent("9 Praxisbeispiele testen");
+    expect(aiNative).toHaveTextContent("9 Praxisbeispiele ansehen");
     const single = container.querySelector<HTMLElement>(
       '[data-course-slug="ki-fuehrerschein"]',
     );
-    expect(single).toHaveTextContent("Praxisbeispiel testen");
+    expect(single).toHaveTextContent("Praxisbeispiel ansehen");
   });
 });
 
@@ -504,38 +571,36 @@ describe("LearningAtlas phone ledger", () => {
     expect(document.getElementById("tiefer-gehen")).not.toHaveClass("hidden");
   });
 
-  it("states level and duration on every row and keeps the plate out of the accessibility tree", () => {
+  it("states level and duration on every row as plain text, with the number out of the accessibility tree", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
       const row = container.querySelector<HTMLElement>(
         `[data-course-slug="${course.slug}"]`,
       );
-      const eyebrow = row?.querySelector<HTMLElement>(
+      const levelLine = row?.querySelector<HTMLElement>(
         "[data-course-level-label]",
       );
-      expect(eyebrow, course.slug).not.toBeNull();
-      expect(eyebrow).toHaveClass("lg:hidden");
-      expect(eyebrow).toHaveTextContent(course.duration);
-      expect(eyebrow).toHaveTextContent(
-        { einstieg: "Einstieg", mittel: "Mittel", fortg: "Fortgeschritten" }[
-          course.level
-        ],
-      );
+      const level = { einstieg: "Einstieg", mittel: "Mittel", fortg: "Fortgeschritten" }[
+        course.level
+      ];
+      expect(levelLine, course.slug).not.toBeNull();
+      expect(levelLine).toHaveClass("lg:hidden");
+      expect(levelLine).toHaveTextContent(course.duration);
+      expect(levelLine).toHaveTextContent(level);
 
-      // The plate is a styling column only. It carries no aria-hidden of its
-      // own, so the row's first hidden element is still the number badge.
-      const plate = row?.querySelector<HTMLElement>("[data-course-plate]");
-      expect(plate, course.slug).not.toBeNull();
-      expect(plate).not.toHaveAttribute("aria-hidden");
-      expect(plate).toHaveClass("lg:bg-transparent");
-      expect(plate?.firstElementChild).toHaveAttribute("aria-hidden", "true");
-      expect(row?.querySelector("[aria-hidden='true']")).toBe(
-        plate?.firstElementChild,
-      );
+      // From lg the duration sits in its own column as plain text, never an
+      // input-looking box.
+      const meta = row?.querySelector<HTMLElement>("[data-course-meta]");
+      expect(meta, course.slug).toHaveClass("hidden", "lg:block");
+      expect(meta).toHaveTextContent(course.duration);
+      expect(meta?.querySelector("[class*='border']")).toBeNull();
+
+      const number = row?.querySelector<HTMLElement>("[data-course-number]");
+      expect(number).toHaveAttribute("aria-hidden", "true");
+      expect(row?.querySelector("[aria-hidden='true']")).toBe(number);
     }
   });
-
   it("keeps the full repository path and commit in the attribution's accessible name", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const codex = container.querySelector<HTMLElement>(
@@ -559,7 +624,7 @@ describe("LearningAtlas phone ledger", () => {
     );
   });
 
-  it("renders the goal decision as joined 44px segments below lg and the 56px tiles from lg", () => {
+  it("renders the goal decision as joined square tabs: 44px in two rows below lg, one 56px row from lg", () => {
     render(<LearningAtlas access={getCourseAccess(true)} />);
     const goals = screen.getByRole("group", { name: "Lernziel auswählen" });
     expect(goals).toHaveClass("grid-cols-2", "lg:grid-cols-4");
@@ -569,16 +634,18 @@ describe("LearningAtlas phone ledger", () => {
     for (const button of buttons) {
       expect(button.className).toContain("min-h-11");
       expect(button.className).toContain("lg:min-h-14");
+      expect(button.className).not.toMatch(/kupfer-mist|rounded/);
     }
-    // Shared hairlines: the right column and the second row overlap by 1px
-    // below lg and get their gap back from lg.
-    expect(buttons[1]).toHaveClass("-ml-px", "lg:ml-0");
-    expect(buttons[2]).toHaveClass("-mt-px", "lg:mt-0");
+    // Shared hairlines: neighbours overlap by 1px at both widths.
+    expect(buttons[1]).toHaveClass("-ml-px");
+    expect(buttons[2]).toHaveClass("-mt-px", "lg:mt-0", "lg:-ml-px");
     expect(buttons[3]).toHaveClass("-ml-px", "-mt-px");
     expect(buttons[0]).not.toHaveClass("-ml-px");
     expect(buttons[0]).not.toHaveClass("-mt-px");
+    // The chosen goal is an ink fill.
+    expect(buttons[0]).toHaveClass("bg-foreground", "text-background");
+    expect(buttons[1]).not.toHaveClass("bg-foreground");
   });
-
   it("localizes the level chips in English", () => {
     window.history.replaceState({}, "", "/en/kurse");
     render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);
@@ -594,81 +661,67 @@ describe("LearningAtlas phone ledger", () => {
     expect(screen.getByText("3 of 10 courses")).toBeInTheDocument();
   });
 
-  it("puts the row action inside the tinted rail below lg and keeps its wording addressable", () => {
+  it("gives every row one visible, addressable text-link action", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     for (const course of [...COURSE_CATALOG, ...IMPORTED_COURSE_CATALOG]) {
       const row = container.querySelector<HTMLElement>(
         `[data-course-slug="${course.slug}"]`,
       );
-      const plate = row?.querySelector<HTMLElement>("[data-course-plate]");
+      expect(row?.querySelector("[data-course-plate]")).toBeNull();
       const actionCell = row?.querySelector<HTMLElement>(
         "[data-course-action]",
       );
       expect(actionCell, course.slug).not.toBeNull();
-
-      // Both rail cells carry the row's own plate tone, which is what makes
-      // them read as one strip, and both drop it at lg so the reviewed
-      // four-column row keeps its flat wash.
-      const tone = [...(plate?.classList ?? [])].find((name) =>
-        name.startsWith("bg-brand-"),
-      );
-      expect(tone, `${course.slug} plate tone`).toBeDefined();
-      expect(actionCell).toHaveClass(tone as string, "lg:bg-transparent");
-      expect(plate).toHaveClass("lg:bg-transparent");
-
-      // The rail is two cells, so neither spans rows; the copy column does.
-      expect(plate?.className).not.toContain("row-span");
-      expect(actionCell?.className).not.toContain("row-span");
-
       const action = actionCell?.querySelector<HTMLElement>("a");
       expect(action, `${course.slug} action`).not.toBeNull();
-      // 44x44 outright below lg, the labelled button from lg.
-      expect(action).toHaveClass("h-11", "w-11", "lg:h-auto", "lg:w-auto");
-      expect(action?.className).toContain("lg:min-h-11");
-      const label = action?.querySelector(".sr-only.lg\\:not-sr-only");
-      expect(label, `${course.slug} action label`).not.toBeNull();
+      expect(action).toHaveClass("min-h-11");
+      // The label is printed at every width.
+      const label = action?.querySelector("span:not(.sr-only)");
       expect(label?.textContent?.trim().length).toBeGreaterThan(0);
     }
 
-    // The accessible name is unchanged by the icon-only phone treatment.
     const ledger = screen.getByRole("region", { name: "Alle Kurse" });
     expect(
       within(ledger).getByRole("link", {
-        name: "Nachweis beginnen · Lernkonto nötig: KI-Führerschein",
+        name: "Kurs starten · Lernkonto nötig: KI-Führerschein",
       }),
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
       within(ledger).getByRole("link", {
-        name: "Nachweis beginnen: Codex-Kurs",
+        name: "Kurs starten: Codex-Kurs",
       }),
     ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/L01");
   });
-
-  it("keeps the path marker and the ledger intro in the accessibility tree when the phone drops their lines", () => {
+  it("marks path courses with an ink square and keeps the marker text and ledger intro in the accessibility tree", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
-    // Selected goal "start" — its courses carry the marker, others do not.
     const marked = Array.from(
       container.querySelectorAll<HTMLElement>('[data-in-path="true"]'),
     );
     expect(marked.length).toBeGreaterThan(0);
     for (const row of marked) {
-      const marker = within(row).getByText("Teil des gewählten Pfads");
-      expect(marker, row.dataset.courseSlug).toHaveClass(
-        "sr-only",
-        "lg:not-sr-only",
-      );
-      // The orange left edge and the orange badge still state membership.
-      expect(row).toHaveClass("border-l-brand-orange");
+      // The square is the visible signal; the words stay for screen
+      // readers only, and the ledger head prints the key once.
+      const marker = within(row).getByText("Teil deines Pfads");
+      expect(marker, row.dataset.courseSlug).toHaveClass("sr-only");
+      expect(marker).not.toHaveClass("lg:not-sr-only");
+      // Ink square instead of an orange left edge.
+      expect(row.querySelector("[data-path-marker]")).toHaveClass("bg-foreground");
+      expect(row.className).not.toMatch(/border-l-/);
     }
-    expect(
-      container.querySelector('[data-in-path="false"]'),
-    ).not.toHaveTextContent("Teil des gewählten Pfads");
+    const outside = container.querySelector<HTMLElement>('[data-in-path="false"]');
+    expect(outside).not.toHaveTextContent("Teil deines Pfads");
+    expect(outside?.querySelector("[data-path-marker]")).not.toHaveClass(
+      "bg-foreground",
+    );
 
     const intro = screen.getByText(
-      "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
+      "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
     );
     expect(intro).toHaveClass("sr-only", "sm:not-sr-only");
+    const legend = container.querySelector("[data-path-legend]");
+    expect(legend).toHaveAttribute("aria-hidden", "true");
+    expect(legend).toHaveTextContent("Teil deines Pfads");
   });
 });

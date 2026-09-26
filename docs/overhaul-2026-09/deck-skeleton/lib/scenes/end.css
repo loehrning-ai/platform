@@ -1,0 +1,83 @@
+/* end: the last main scene. Step 0: three take-home rules. Step 1: the closing stamp and the
+   materials line with the ink lockup. Section coordinates, 1920 x 1080. */
+
+#end > .end-rules {
+  position: absolute;
+  top: 240px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1320px;
+  gap: var(--s4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: end-rule;
+}
+
+#end .end-rule {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s3);
+  font-size: var(--t-lead);
+  font-weight: 600;
+  line-height: 1.25;
+  counter-increment: end-rule;
+}
+
+#end .end-rule::before {
+  content: counter(end-rule, decimal-leading-zero);
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+  font-family: var(--mono);
+  font-size: var(--t-num-sm);
+  font-weight: 700;
+}
+
+#end > .end-stamp-row {
+  position: absolute;
+  top: 680px;
+  left: var(--margin-x);
+  display: flex;
+}
+
+#end .end-stamp {
+  margin: 0;
+}
+
+/* story.css paints [data-focus] only on .q-card and .callout; a focused stamp gets the Mennige
+   outline here, as the cover's "change" stamp does. */
+#end .end-stamp[data-focus] {
+  border-color: var(--mennige);
+  outline: 3px solid var(--mennige);
+  outline-offset: 3px;
+}
+
+#end > .end-sign {
+  position: absolute;
+  top: 872px;
+  right: var(--margin-x);
+  left: var(--margin-x);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  margin: 0;
+  padding-top: var(--s3);
+  border-top: 3px solid var(--ink);
+}
+
+#end .end-sign__url {
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#end .end-sign img {
+  display: block;
+  width: auto;
+  height: 40px;
+}

@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
-  TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
+import {
+  CourseBlockLedger,
+  CourseBoundaryColumn,
+  CourseBoundaryDetails,
+  CourseLandingSection,
+  CourseNextLink,
+  CourseNoteList,
+  CourseOutcomeList,
+  type CourseOutcome,
+} from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
@@ -39,22 +47,17 @@ interface LandingCopy {
   readonly headingAccent: string;
   readonly introduction: string;
   readonly imageAlt: string;
-  readonly imageLabel: string;
   readonly start: string;
-  readonly allCourses: string;
-  readonly facts: readonly { readonly value: string; readonly label: string }[];
-  readonly whyEyebrow: string;
-  readonly decisionHeading: string;
-  readonly decisions: readonly string[];
-  readonly whyBody: string;
-  readonly curriculumEyebrow: string;
+  readonly facts: readonly string[];
+  readonly factsLabel: string;
+  readonly outcomesHeading: string;
+  readonly outcomes: readonly CourseOutcome[];
   readonly curriculumHeading: string;
-  readonly blockLabel: (number: number) => string;
   readonly minutes: (count: number) => string;
-  readonly evidenceEyebrow: string;
+  readonly legalHeading: string;
+  readonly whyBody: string;
   readonly evidenceHeading: string;
   readonly evidence: readonly string[];
-  readonly factsLabel: string;
   readonly progressLabel: string;
   readonly lessonsLabel: string;
   readonly boundarySummary: string;
@@ -78,42 +81,50 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Kostenloser Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
       audience: "Erwachsene ohne technische Vorkenntnisse",
     },
-    eyebrow: "§ KI-Führerschein · Kostenloser Grundlagenkurs",
+    eyebrow: "KI-Führerschein · Grundlagenkurs · kostenlos",
     heading: "KI im Alltag:",
     headingAccent: "Was du wissen solltest.",
     introduction:
-      "Der Kurs erklärt, wo dir KI im Alltag und bei der Arbeit begegnet, welche Daten nicht in ein Tool gehören und wie du Ergebnisse prüfst. Fünf Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Lernzeit. Keine technischen Vorkenntnisse.",
+      "Du lernst, wo dir KI im Alltag und bei der Arbeit begegnet, welche Daten nicht in ein KI-Tool gehören und wie du eine Antwort prüfst, bevor sie in eine Mail oder einen Bericht geht. Technische Vorkenntnisse brauchst du nicht.",
     imageAlt:
       "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
-    imageLabel: "5 Blöcke · 18 Lektionen",
     start: "Kostenlos mit Lernkonto starten",
-    allCourses: "Alle Kurse",
     facts: [
-      { value: "5", label: "Blöcke" },
-      { value: "18", label: "Lektionen" },
-      { value: "1:40", label: "Lernzeit" },
-      { value: "Lokal", label: "Teilnahmebestätigung" },
+      "5 Blöcke, 18 Lektionen",
+      "ca. 1 Std. 40 Min. Lernzeit",
+      "Kostenlos, mit Lernkonto",
+      "Teilnahmebestätigung als PDF",
     ],
-    whyEyebrow: "§ Warum dieser Kurs",
-    decisionHeading: "Drei Entscheidungen für jeden KI-Einsatz.",
-    decisions: [
-      "Datengrenze: Welche Angaben bleiben außerhalb eines KI-Tools?",
-      "Prüfweg: Welche Quelle oder Gegenprobe kann den Output widerlegen?",
-      "Verantwortung: Wer entscheidet, wenn der Output Folgen hat?",
+    factsLabel: "Auf einen Blick",
+    outcomesHeading: "Was du danach kannst",
+    outcomes: [
+      {
+        title: "Daten einordnen, bevor du sie in ein KI-Tool gibst",
+        detail: "Vier Stufen von öffentlich bis vertraulich, mit Beispielen aus dem Büro.",
+      },
+      {
+        title: "Eine Mail, ein Protokoll, eine Auswertung und einen Bericht mit KI entwerfen",
+        detail: "Das sind die vier Übungen aus Block 3.",
+      },
+      {
+        title: "Eine KI-Antwort prüfen, bevor sie weitergeht",
+        detail: "Quelle suchen, gegenprüfen und erfundene Angaben erkennen.",
+      },
+      {
+        title: "Klären, wer entscheidet, wenn ein Ergebnis Folgen hat",
+        detail: "Block 5 zeigt, wie im Team eine KI-Nutzungsrichtlinie entsteht.",
+      },
     ],
-    whyBody:
-      "Artikel 4 der EU-KI-Verordnung gilt seit dem 2. Februar 2025. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber kontextbezogene Maßnahmen treffen, die die Entwicklung der KI-Kompetenz unterstützen; Vorwissen, Rolle, Einsatzkontext und betroffene Personen zählen. Vorgeschrieben ist weder ein einheitliches Kursformat noch ein Zertifikat. Dieser Kurs kann solche Maßnahmen ergänzen, belegt aber keine organisationsweite Compliance.",
-    curriculumEyebrow: "§ Kursweg",
-    curriculumHeading: "Was du lernst.",
-    blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
+    curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
-    evidenceEyebrow: "§ Aussagekraft",
-    evidenceHeading: "Was die Teilnahmebestätigung belegt.",
+    legalHeading: "Rechtsgrundlage",
+    whyBody:
+      "Artikel 4 der EU-KI-Verordnung gilt seit dem 2.\u00a0Februar\u00a02025. In der seit 27.\u00a0Juli\u00a02026 geltenden Fassung müssen Anbieter und Betreiber kontextbezogene Maßnahmen treffen, die die Entwicklung der KI-Kompetenz unterstützen; Vorwissen, Rolle, Einsatzkontext und betroffene Personen zählen. Vorgeschrieben ist weder ein einheitliches Kursformat noch ein Zertifikat. Dieser Kurs kann solche Maßnahmen ergänzen, belegt aber keine organisationsweite Compliance.",
+    evidenceHeading: "Was die Teilnahmebestätigung belegt",
     evidence: [
       "Die lokal erzeugte PDF dokumentiert den Abschluss dieses Kurses; sie ist kein Rechts-, Compliance- oder unabhängiger Kompetenznachweis.",
       "Für Hochrisiko-Systeme bleiben Systeminventar, Risikoklassifizierung und organisationsbezogene Kontrollen erforderlich.",
     ],
-    factsLabel: "Kursrahmen",
     progressLabel: "Fortschritt im KI-Führerschein",
     lessonsLabel: "Lektionen",
     boundarySummary: "Rechtsgrundlage und Aussagekraft",
@@ -135,42 +146,50 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Free online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
       audience: "Adults without a technical background",
     },
-    eyebrow: "§ Everyday AI Literacy · Free foundation course",
+    eyebrow: "Everyday AI Literacy · Foundation course · free",
     heading: "AI at work:",
     headingAccent: "what you need to know.",
     introduction:
-      "Learn where AI appears in daily work, which data must stay out of an AI tool, and how to check a generated answer. Five blocks, 18 lessons, about 1 hour 40 minutes. No technical background required.",
+      "Learn where AI shows up in daily life and at work, which data must stay out of an AI tool, and how to check an answer before it goes into an email or a report. No technical background required.",
     imageAlt:
       "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
-    imageLabel: "5 blocks · 18 lessons",
     start: "Start with a free learning account",
-    allCourses: "All courses",
     facts: [
-      { value: "5", label: "Blocks" },
-      { value: "18", label: "Lessons" },
-      { value: "1:40", label: "Study time" },
-      { value: "Local", label: "Completion record" },
+      "5 blocks, 18 lessons",
+      "About 1 hr 40 min of study",
+      "Free, with a learning account",
+      "Completion record as a PDF",
     ],
-    whyEyebrow: "§ Why this course exists",
-    decisionHeading: "Three decisions for every AI use.",
-    decisions: [
-      "Data boundary: which information must stay outside an AI tool?",
-      "Review path: which source or counter-check could disprove the output?",
-      "Responsibility: who decides when the output has consequences?",
+    factsLabel: "At a glance",
+    outcomesHeading: "What you can do afterwards",
+    outcomes: [
+      {
+        title: "Classify data before it goes into an AI tool",
+        detail: "Four levels from public to confidential, with office examples.",
+      },
+      {
+        title: "Draft an email, meeting minutes, a small analysis and a report with AI",
+        detail: "These are the four exercises in block 3.",
+      },
+      {
+        title: "Check an AI answer before you pass it on",
+        detail: "Find the source, cross-check it and spot invented details.",
+      },
+      {
+        title: "Settle who decides when a result has consequences",
+        detail: "Block 5 shows how a team writes an AI usage policy.",
+      },
     ],
+    curriculumHeading: "Course plan",
+    minutes: (count) => `${count} min`,
+    legalHeading: "Legal basis",
     whyBody:
       "Article 4 of the EU AI Act has applied since 2 February 2025. Under the version in force since 27 July 2026, providers and deployers must support context-specific AI-literacy measures; prior knowledge, role, use context, and affected people matter. It prescribes neither one course format nor a certificate. This course can support those measures; it does not establish organization-wide compliance.",
-    curriculumEyebrow: "§ Course path",
-    curriculumHeading: "What you will learn.",
-    blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
-    minutes: (count) => `${count} min`,
-    evidenceEyebrow: "§ Scope of the record",
-    evidenceHeading: "What the completion record proves.",
+    evidenceHeading: "What the completion record proves",
     evidence: [
       "The locally generated PDF records completion of this course; it is not legal, compliance, or independent competence evidence.",
       "High-risk systems still require an inventory, risk classification, and organization-specific controls.",
     ],
-    factsLabel: "Course frame",
     progressLabel: "Everyday AI Literacy progress",
     lessonsLabel: "lessons",
     boundarySummary: "Legal basis and scope of the record",
@@ -263,6 +282,26 @@ function courseGraph(locale: Locale) {
   };
 }
 
+/**
+ * The clause after the colon is an inline-block: it starts a new line as a
+ * whole, so the question word ("Was") never hangs at the end of line one, and
+ * it still wraps inside itself on a phone. Plain spaces keep the accessible
+ * name identical to the copy.
+ */
+function KfHeading({
+  lead,
+  accent,
+}: {
+  readonly lead: string;
+  readonly accent: string;
+}) {
+  return (
+    <>
+      {lead} <span className="inline-block">{accent}</span>
+    </>
+  );
+}
+
 export default async function KiFuehrerscheinLandingPage() {
   const locale = resolveFoundationCourseContentLocale(
     COURSE_SLUG,
@@ -279,7 +318,7 @@ export default async function KiFuehrerscheinLandingPage() {
       <TechnicalCourseFrame courseId={COURSE_SLUG} lang={locale}>
         <TechnicalCourseHeader
           eyebrow={copy.eyebrow}
-          title={`${copy.heading} ${copy.headingAccent}`}
+          title={<KfHeading lead={copy.heading} accent={copy.headingAccent} />}
           intro={copy.introduction}
           primaryAction={
             <Link
@@ -290,7 +329,7 @@ export default async function KiFuehrerscheinLandingPage() {
               {copy.start} <span aria-hidden="true">→</span>
             </Link>
           }
-          facts={copy.facts.map((fact) => `${fact.value} ${fact.label}`)}
+          facts={copy.facts}
           factsLabel={copy.factsLabel}
           progress={
             <TechnicalCourseProgressBar
@@ -302,106 +341,33 @@ export default async function KiFuehrerscheinLandingPage() {
           }
         />
 
-        <div>
-          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.whyEyebrow}
-              title={copy.decisionHeading}
-            />
-            <ol className="border-y border-border">
-              {copy.decisions.map((decision, index) => (
-                <li
-                  key={decision}
-                  className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
-                >
-                  <span className="font-mono text-xs tabular-nums text-brand-orange">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="break-words text-sm font-medium leading-relaxed text-foreground">
-                    {decision}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.outcomesHeading}>
+          <CourseOutcomeList items={copy.outcomes} />
+        </CourseLandingSection>
 
-          <section className="mt-10">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.curriculumEyebrow}
-              title={copy.curriculumHeading}
-            />
-            <ol className="mt-5 border-t border-border">
-              {blocks.map((block, index) => (
-                <li
-                  key={block.id}
-                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[6rem_minmax(0,1fr)_8rem] md:items-start md:gap-5"
-                >
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                    {copy.blockLabel(index + 1)}
-                  </p>
-                  <div className="min-w-0">
-                    <h3 className="break-words text-base font-semibold text-foreground">
-                      {block.title}
-                    </h3>
-                    <p className="mt-1 max-w-[720px] break-words text-sm leading-relaxed text-muted-foreground">
-                      {block.description}
-                    </p>
-                  </div>
-                  <p className="font-mono text-xs text-muted-foreground md:text-right">
-                    {block.lessons.length} {copy.lessonsLabel} ·{" "}
-                    {copy.minutes(block.durationMinutes)}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.curriculumHeading}>
+          <CourseBlockLedger
+            rows={blocks.map((block, index) => ({
+              id: block.id,
+              number: String(index + 1).padStart(2, "0"),
+              title: block.title,
+              description: block.description,
+              meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
+            }))}
+          />
+          <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
+            {copy.related}
+          </CourseNextLink>
+        </CourseLandingSection>
 
-          <details className="mt-10 border-y border-border">
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
-              {copy.boundarySummary}
-              <span className="text-brand-orange" aria-hidden="true">
-                +
-              </span>
-            </summary>
-            <div className="grid gap-5 border-t border-border py-4 lg:grid-cols-2">
-              <div>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                  {copy.whyEyebrow}
-                </p>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                  {copy.whyBody}
-                </p>
-              </div>
-              <div>
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                  {copy.evidenceHeading}
-                </p>
-                <ul className="mt-2 border-t border-border">
-                  {copy.evidence.map((item) => (
-                    <li
-                      key={item}
-                      className="border-b border-border py-2 text-[13px] leading-relaxed text-muted-foreground"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </details>
-
-          <Link
-            href={localizeHref("/eu-ai-act-kurs", locale)}
-            className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} mt-8 sm:grid-cols-[minmax(0,1fr)_auto]`}
-          >
-            <span className="text-sm font-semibold text-foreground">
-              {copy.related}
-            </span>
-            <span className="text-brand-orange" aria-hidden="true">
-              →
-            </span>
-          </Link>
-        </div>
+        <CourseBoundaryDetails summary={copy.boundarySummary}>
+          <CourseBoundaryColumn title={copy.legalHeading}>
+            <p>{copy.whyBody}</p>
+          </CourseBoundaryColumn>
+          <CourseBoundaryColumn title={copy.evidenceHeading}>
+            <CourseNoteList items={copy.evidence} />
+          </CourseBoundaryColumn>
+        </CourseBoundaryDetails>
       </TechnicalCourseFrame>
     </>
   );

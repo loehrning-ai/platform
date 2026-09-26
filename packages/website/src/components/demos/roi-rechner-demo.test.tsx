@@ -54,12 +54,11 @@ describe("<RoiRechnerDemo>", () => {
   it("renders the header and the initial model output from the default inputs", () => {
     render(<RoiRechnerDemo />);
 
-    expect(
-      screen.getByText("Annahmen-Rechner · Transparente Formel"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Bauchgefühl.",
-    );
+    // No kicker and no "Zahlen statt Bauchgefühl" slogan.
+    expect(screen.queryByText(/Bauchgefühl/)).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Annahmen-Rechner");
 
     // Yearly value is rendered twice: the big KPI (animated, snapped) and the
     // transparent inline formula (raw). Both must show the exact computed total.

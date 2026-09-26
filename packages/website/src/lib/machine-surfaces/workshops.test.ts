@@ -85,6 +85,30 @@ describe("machine workshop records", () => {
     }
   });
 
+  it("exposes the workshop standard: question, outcomes, agenda, needs and provenance", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of WORKSHOPS) {
+        const source = getWorkshopBySlug(workshop.slug, locale)!;
+        const record = getMachineWorkshop(workshop.slug, locale)!;
+        expect(record.question).toBe(source.question);
+        expect(record.outcomes).toEqual(source.outcomes);
+        expect(record.agenda.map((item) => item.minutes)).toEqual(
+          source.agenda.map((item) => item.minutes),
+        );
+        expect(record.agenda.every((item) => ["live", "self", "both"].includes(item.mode))).toBe(true);
+        expect(record.minutes_live).toBe(source.minutesLive ?? null);
+        expect(record.minutes_self_study).toBe(source.minutesSelfStudy);
+        expect(record.not_covered).toEqual(source.notCovered);
+        expect(record.provenance.reviewed_at).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(record.materials.filter((material) => material.primary)).toHaveLength(1);
+        for (const material of record.materials) {
+          expect(["before", "during", "after"]).toContain(material.phase);
+          expect(material.role.length).toBeGreaterThan(0);
+        }
+      }
+    }
+  });
+
   it("keeps the workshop steps in their taught order", () => {
     for (const workshop of WORKSHOPS) {
       const record = getMachineWorkshop(workshop.slug, "de");

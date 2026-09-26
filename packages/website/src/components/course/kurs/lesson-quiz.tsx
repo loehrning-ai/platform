@@ -240,7 +240,7 @@ export function LessonQuiz({
       </div>
       <div className="mb-6 h-1 overflow-hidden bg-border">
         <div
-          className="h-full bg-brand-orange transition-[width,background-color] duration-300"
+          className="h-full bg-foreground transition-[width,background-color] duration-300 motion-reduce:transition-none"
           style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
         />
       </div>
@@ -274,7 +274,7 @@ export function LessonQuiz({
               const isCorrect = option.isCorrect;
               const isFocused = focusedIndex === i;
               let optionClass =
-                "border-border bg-card hover:border-brand-orange/30";
+                "border-border bg-card hover:border-foreground";
               if (showExplanation) {
                 if (isCorrect)
                   optionClass = "border-brand-sand bg-brand-sand/5";
@@ -334,13 +334,11 @@ export function LessonQuiz({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
               className={cn(
-                "mt-4 border-l-2 px-4 py-3",
-                isCorrectAnswer
-                  ? "border-brand-sand bg-brand-sand/5"
-                  : "border-destructive/50 bg-destructive/5",
+                "mt-4 border bg-card px-4 py-3",
+                isCorrectAnswer ? "border-pass" : "border-destructive",
               )}
             >
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <p className="text-label text-foreground">
                 {isCorrectAnswer ? copy.correct : copy.incorrect}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -359,7 +357,7 @@ export function LessonQuiz({
               <button
                 type="button"
                 onClick={handleNext}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
               >
                 {currentIndex < questions.length - 1 ? copy.next : copy.result}
                 <ArrowRight className="h-3.5 w-3.5" />

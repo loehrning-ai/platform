@@ -14,7 +14,7 @@
 <script src="./lib/deck-viz.js"></script>
 <style>
 /* ── wf- · shared workshop-family skip link + deck brand link ─────────── */
-.wf-skip{position:absolute;left:8px;top:-60px;z-index:2147483600;background:#121212;color:#fff;padding:12px 16px;font-weight:700;font-family:var(--sans)}
+.wf-skip{position:absolute;left:8px;top:-60px;z-index:2147483600;background:#121212;color:#f2f1ee;padding:12px 16px;font-weight:700;font-family:var(--sans)}
 .wf-skip:focus{top:8px}
 .wf-skip:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
 @media print{.wf-skip{display:none!important}}
@@ -23,114 +23,114 @@
 .chrome__topbar a.brand:focus-visible{outline:3px solid var(--kupfer-full);outline-offset:4px}
 .cv-kicker{display:flex;align-items:center;gap:22px;margin:0}
 .cv-kicker img{display:block;width:248px;height:auto}
-.cv-kicker span{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#c5b9af;padding-left:22px;border-left:1.5px solid rgba(245,239,232,.3)}
+.cv-kicker span{font-family:var(--sans);font-size:24px;font-weight:600;letter-spacing:.02em;color:#d4cec5;padding-left:22px;border-left:1.5px solid rgba(242,241,238,.3)}
 /* ── cv- · the cover ─────────────────────────────────────────────────── */
 /* the loehrning.ai hero globe, captured as one frame and recoloured for the
    dark cover: paper graticule, Mennige coastlines, bled off the right edge
    and held well under the type. */
-.cv-globe{position:absolute;top:50%;right:-260px;transform:translateY(-50%);width:1280px;opacity:.34;pointer-events:none;user-select:none;z-index:0}
+.cv-globe{position:absolute;top:50%;right:-260px;transform:translateY(-50%);width:1280px;opacity:.34;pointer-events:none;user-select:none;z-index:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24%);mask-image:linear-gradient(90deg,transparent,#000 24%)}
 .cv-globe img{width:100%;height:auto;display:block}
 .slide .body.cover-body{z-index:2}
 /* ── cv- · cover "what you'll learn" strip ────────────────────────────── */
 .cv-learn{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;width:100%;max-width:1180px;margin-top:16px}
-.cv-i{display:flex;flex-direction:column;gap:13px;padding-top:20px;border-top:2px solid rgba(245,239,232,.22)}
-.cv-ico{width:38px;height:38px;color:var(--kupfer-light);display:block}
-.cv-t{font-size:21px;font-weight:600;letter-spacing:-.015em}
-.cv-s{font-size:15.5px;line-height:1.45;color:#c5b9af}
+.cv-i{display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:2px solid rgba(242,241,238,.4)}
+.cv-ico{width:38px;height:38px;color:#f2f1ee;display:block}
+.cv-t{font-size:24px;font-weight:600;letter-spacing:0}
+.cv-s{font-size:20px;line-height:1.4;color:#d4cec5}
 /* ── bio- · the host slide ───────────────────────────────────────────── */
 .bio-grid{display:grid;grid-template-columns:460px 1fr;gap:72px;flex:1;align-items:center}
 .bio-shot{width:100%;aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line);background:var(--card)}
 .bio-shot img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block;filter:saturate(.92)}
 .bio-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-.bio-chip{font-family:var(--mono);font-size:11px;letter-spacing:.06em;border:1.5px solid var(--line);padding:8px 11px;color:var(--muted);white-space:nowrap}
+.bio-chip{font-family:var(--sans);font-size:18px;font-weight:500;letter-spacing:0;border:1.5px solid var(--line);padding:6px 12px;color:var(--muted);white-space:nowrap}
 .bio-cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:34px}
-.bio-col h3{margin:0 0 6px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--kupfer-full)}
+.bio-col h3{margin:0 0 6px;font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
 .bio-item{padding:11px 0;border-top:1px solid var(--line)}
-.bio-item b{display:block;font-size:17px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
-.bio-item .org{font-size:15px;color:var(--muted);line-height:1.35}
-.bio-item .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.8;margin-top:3px}
+.bio-item b{display:block;font-size:22px;font-weight:600;letter-spacing:0;line-height:1.25}
+.bio-item .org{font-size:19px;color:var(--muted);line-height:1.35}
+.bio-item .meta{font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--muted);margin-top:2px}
 /* ── cr- · what CRAFT actually is ────────────────────────────────────── */
-.cr-card{border-top:3px solid var(--kupfer-full);background:var(--card);padding:22px 26px 20px;margin-top:22px}
+.cr-card{border:1px solid var(--line);background:#f9f7f2;padding:22px 26px 20px;margin-top:22px}
 .cr-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
-.cr-name{font-size:30px;font-weight:700;letter-spacing:-.025em;color:var(--kupfer-full)}
-.cr-kind{font-size:17px;color:var(--muted)}
-.cr-body{font-size:16px;line-height:1.5;color:var(--muted);margin:0 0 14px;max-width:660px}
+.cr-name{font-size:30px;font-weight:700;letter-spacing:-.01em;color:var(--kupfer-full)}
+.cr-kind{font-size:22px;color:var(--muted)}
+.cr-body{font-size:20px;line-height:1.45;color:var(--muted);margin:0 0 14px;max-width:680px}
 .cr-body b{color:var(--ink);font-weight:600}
 .cr-models{display:flex;gap:0;border-top:1px solid var(--line)}
 .cr-m{flex:1;padding:11px 0 2px}
 .cr-m+.cr-m{border-left:1px solid var(--line);padding-left:16px}
-.cr-m .n{display:block;font-family:var(--mono);font-size:13px;color:var(--ink);font-weight:600}
-.cr-m .p{display:block;font-family:var(--mono);font-size:19px;font-weight:700;color:var(--kupfer-full);margin-top:3px;font-variant-numeric:tabular-nums}
+.cr-m .n{display:block;font-family:var(--mono);font-size:17px;color:var(--ink);font-weight:600}
+.cr-m .p{display:block;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums}
 /* ── rl- · the red-line rail (hero + compact strip) ───────────────────── */
 .rl-hero{flex:1;display:flex;align-items:center;min-height:0}
 .rl-rail{position:relative;width:100%;display:grid;grid-template-columns:280px repeat(5,1fr) 210px;column-gap:18px;align-items:start}
-.rl-thread{position:absolute;left:0;right:0;top:61px;height:2.5px;background:var(--kupfer-full)}
+.rl-thread{position:absolute;left:0;right:0;top:61px;height:2px;background:var(--ink)}
 .rl-cell{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
-.rl-over{height:26px;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-.rl-sq{width:72px;height:72px;background:var(--kupfer-full);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:30px;font-weight:500}
+.rl-over{height:26px;font-family:var(--sans);font-size:18px;font-weight:600;letter-spacing:.01em;color:var(--muted)}
+.rl-sq{width:72px;height:72px;background:#f9f7f2;color:var(--ink);border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:30px;font-weight:500}
 .rl-srcbox{width:100%;height:72px;background:var(--card);border:1.5px solid var(--ink);display:flex;flex-direction:column;justify-content:center}
-.rl-srcrow{display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:34px;font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.rl-srcrow{display:flex;align-items:center;justify-content:space-between;padding:0 12px;height:34px;font-family:var(--mono);font-size:17px;color:var(--ink)}
 .rl-srcrow+.rl-srcrow{border-top:1px solid var(--line)}
 .rl-srcrow .rl-n{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.02em}
-.rl-srcrow .rl-n svg{width:15px;height:15px;color:var(--kupfer-full);flex:0 0 auto}
-.rl-srcrow .rl-s{color:var(--muted);font-size:11.5px}
-.rl-loopbox{width:100%;height:72px;background:var(--paper);border:1.5px dashed var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:30px;line-height:1;color:var(--kupfer-full)}
-.rl-lab{margin-top:18px;font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
-.rl-lab.rl-dim{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:none;color:var(--muted)}
-.rl-act{margin-top:8px;min-height:44px;max-width:225px;font-size:14.5px;line-height:1.45;color:var(--muted)}
-.rl-art{margin-top:6px;max-width:232px;border:1px solid var(--line);background:var(--card);padding:9px 14px;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--muted)}
+.rl-srcrow .rl-n svg{width:17px;height:17px;color:var(--ink);flex:0 0 auto}
+.rl-srcrow .rl-s{color:var(--muted);font-size:16px}
+.rl-loopbox{width:100%;height:72px;background:var(--paper);border:1.5px dashed var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:30px;line-height:1;color:var(--ink)}
+.rl-lab{margin-top:18px;font-family:var(--sans);font-size:24px;font-weight:700;letter-spacing:0;color:var(--ink)}
+.rl-lab.rl-dim{font-size:18px;font-weight:600;letter-spacing:.01em;color:var(--muted)}
+.rl-act{margin-top:8px;min-height:44px;max-width:232px;font-size:19px;line-height:1.35;color:var(--muted)}
+.rl-art{margin-top:6px;max-width:236px;border:1px solid var(--line);background:#f9f7f2;padding:8px 12px;font-family:var(--mono);font-size:16px;line-height:1.4;color:var(--muted)}
 .rl-art b{color:var(--ink);font-weight:600}
 .rl-caption{margin-top:44px;text-align:center}
 .rl-strip{display:flex;align-items:center;gap:16px;width:100%}
 .rl-c{display:inline-flex;align-items:center;gap:11px;flex:0 0 auto}
-.rl-c-n{width:30px;height:30px;border:1.5px solid var(--ink);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-style:normal;font-size:14px;font-weight:600}
-.rl-c-l{font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.rl-c-n{width:34px;height:34px;border:2px solid var(--ink);background:#f9f7f2;color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-style:normal;font-size:17px;font-weight:600}
+.rl-c-l{font-family:var(--sans);font-size:19px;font-weight:600;letter-spacing:.01em;color:var(--muted)}
 .rl-c-x{flex:1 1 24px;height:1.5px;min-width:20px;background:var(--line)}
-.rl-c.rl-on .rl-c-n{background:var(--kupfer-full);border-color:var(--kupfer-full);color:#fff}
-.rl-c.rl-on .rl-c-l{color:var(--kupfer-full);font-weight:700}
+.rl-c.rl-on .rl-c-n{background:var(--ink);border-color:var(--ink);color:#f2f1ee}
+.rl-c.rl-on .rl-c-l{color:var(--ink);font-weight:700}
 /* ── kit- · the zip and what's inside it ─────────────────────────────── */
-.kit-head{display:flex;align-items:center;gap:30px;border-top:3px solid var(--kupfer-full);background:var(--card);padding:22px 30px;margin-bottom:22px}
-.kit-zip{width:76px;height:76px;color:var(--kupfer-full);flex:0 0 auto;display:block}
+.kit-head{display:flex;align-items:center;gap:30px;border:2px solid var(--ink);background:#f9f7f2;padding:20px 28px;margin-bottom:22px}
+.kit-zip{width:76px;height:76px;color:var(--ink);flex:0 0 auto;display:block}
 .kit-zipname{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-.015em;color:var(--ink);text-decoration:none;display:block}
-.kit-zipname:hover{color:var(--kupfer-full)}
-.kit-zipsub{font-size:17px;line-height:1.5;color:var(--muted);margin:6px 0 0;max-width:900px}
-.kit-arrow{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:right;line-height:1.7}
+.kit-zipname:hover{color:var(--mennige-tief)}
+.kit-zipsub{font-size:22px;line-height:1.4;color:var(--muted);margin:6px 0 0;max-width:980px}
+.kit-arrow{margin-left:auto;font-family:var(--sans);font-size:19px;font-weight:600;letter-spacing:.01em;color:var(--muted);text-align:right;line-height:1.4}
 .kit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.kit-tile{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--line);padding:20px 20px 18px;display:flex;flex-direction:column;gap:11px;min-height:200px}
-.kit-tile.fill{border-top-color:var(--kupfer-full);background:var(--paper)}
+.kit-tile{background:#f9f7f2;border:1px solid var(--line);padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.kit-tile.fill{border:2px solid var(--ink);background:#f9f7f2}
 .kit-ico{width:34px;height:34px;color:var(--ink);display:block}
-.kit-tile.fill .kit-ico{color:var(--kupfer-full)}
-.kit-name{font-family:var(--mono);font-size:14.5px;font-weight:700;color:var(--ink);letter-spacing:-.01em;word-break:break-word}
-.kit-desc{font-size:14px;line-height:1.45;color:var(--muted)}
-.kit-flag{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--paper);background:var(--kupfer-full);padding:5px 9px 4px}
+.kit-tile.fill .kit-ico{color:var(--ink)}
+.kit-name{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.01em;word-break:break-word}
+.kit-desc{font-size:18px;line-height:1.35;color:var(--muted)}
+.kit-flag{margin-top:auto;align-self:flex-start;font-family:var(--sans);font-size:17px;font-weight:600;letter-spacing:.01em;color:var(--ink);background:transparent;border:1.5px solid var(--ink);padding:3px 10px}
 /* ── grd- · the CSV excerpts ─────────────────────────────────────────── */
 .grd-col{display:flex;flex-direction:column;gap:24px;max-width:820px;width:100%}
-.grd-kicker{margin:0;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.grd-kicker svg{width:20px;height:20px;color:var(--kupfer-full);flex:0 0 auto}
+.grd-kicker{margin:0;display:flex;align-items:center;gap:12px;font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:.01em;color:var(--muted)}
+.grd-kicker svg{width:22px;height:22px;color:var(--ink);flex:0 0 auto}
 .grd-pane{display:flex;flex-direction:column;align-items:flex-start}
-.grd-tab{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#f5efe8;font-family:var(--mono);font-size:12.5px;font-weight:600;letter-spacing:.07em;padding:9px 16px;position:relative;z-index:1}
-.grd-tab .grd-dot{width:8px;height:8px;background:var(--kupfer-full);flex:0 0 auto}
-.grd-sheet{align-self:stretch;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--kupfer-full);padding:2px 22px 4px}
-.grd-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:14.5px;line-height:1.35;font-variant-numeric:tabular-nums;color:var(--ink)}
-.grd-table th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:11px 18px 8px 0;border-bottom:1.5px solid var(--ink);white-space:nowrap}
-.grd-table td{padding:8px 18px 8px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+.grd-tab{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#f2f1ee;font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:0;padding:7px 14px;position:relative;z-index:1}
+.grd-tab .grd-dot{width:8px;height:8px;background:#f2f1ee;flex:0 0 auto}
+.grd-sheet{align-self:stretch;background:#f9f7f2;border:1px solid var(--line);border-top:2px solid var(--ink);padding:2px 20px 4px}
+.grd-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:18px;line-height:1.3;font-variant-numeric:tabular-nums;color:var(--ink)}
+.grd-table th{text-align:left;font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em;color:var(--muted);padding:10px 16px 6px 0;border-bottom:2px solid var(--ink);white-space:nowrap}
+.grd-table td{padding:6px 16px 6px 0;border-bottom:1px solid var(--line);white-space:nowrap}
 .grd-table tr:last-child td{border-bottom:0}
 .grd-table th:last-child,.grd-table td:last-child{padding-right:0}
 .grd-table .r{text-align:right}
 .grd-craft{color:var(--kupfer-full);font-weight:600}
-.grd-note{margin:9px 0 0;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted)}
+.grd-note{margin:8px 0 0;font-family:var(--sans);font-size:18px;letter-spacing:0;color:var(--muted)}
 .grd-note b{color:var(--ink);font-weight:600}
-.grd-sum{align-self:stretch;border:1.5px solid var(--ink);border-left:6px solid var(--kupfer-full);background:var(--paper);padding:13px 20px;font-family:var(--mono);font-size:14px;line-height:1.5;color:var(--muted)}
+.grd-sum{align-self:stretch;border:2px solid var(--ink);background:#f9f7f2;padding:12px 20px;font-family:var(--sans);font-size:20px;line-height:1.4;color:var(--muted)}
 .grd-sum b{color:var(--kupfer-full);font-weight:700;font-variant-numeric:tabular-nums}
 /* ── ph- · prompt-slide "what happens" rows ───────────────────────────── */
 .ph-rows{margin-top:20px;display:flex;flex-direction:column;gap:7px;max-width:760px}
-.ph-row{display:flex;align-items:baseline;gap:14px;font-family:var(--mono);font-size:13.5px;line-height:1.5;color:var(--muted)}
-.ph-k{flex:0 0 96px;color:var(--kupfer-full);font-weight:600;letter-spacing:.08em;font-size:11.5px;text-transform:uppercase}
+.ph-row{display:flex;align-items:baseline;gap:14px;font-family:var(--sans);font-size:19px;line-height:1.4;color:var(--muted)}
+.ph-k{flex:0 0 110px;color:var(--ink);font-weight:700;letter-spacing:.01em;font-size:18px}
 .ph-row b{color:var(--ink);font-weight:600}
 /* ── open- · the "open the app" banner above every prompt ─────────────── */
-.open-app{display:flex;align-items:center;gap:14px;background:var(--card);border-left:5px solid var(--kupfer-full);padding:12px 18px;margin-bottom:18px;max-width:760px}
-.open-app svg{width:26px;height:26px;color:var(--kupfer-full);flex:0 0 auto;display:block}
-.open-app span{font-family:var(--mono);font-size:13px;line-height:1.45;color:var(--ink);font-weight:600}
+.open-app{display:flex;align-items:center;gap:14px;background:transparent;border:1px solid var(--line);padding:10px 16px;margin-bottom:16px;max-width:780px}
+.open-app svg{width:26px;height:26px;color:var(--ink);flex:0 0 auto;display:block}
+.open-app span{font-family:var(--sans);font-size:19px;line-height:1.35;color:var(--ink);font-weight:600}
 /* ── stack of prompt cards (take-home slide) ─────────────────────────── */
 .pc-stack{display:grid;grid-template-columns:1fr 1fr;gap:26px;width:100%;max-width:1560px}
 .pc-stack.grow{flex:1;align-content:center;min-height:0}
@@ -138,16 +138,16 @@
 .pc-stack.three>div{display:flex;flex-direction:column}
 .pc-stack.three .pc-lead{min-height:44px}
 .pc-stack.three .prompt-card{flex:1}
-.pc-why{margin:10px 0 0;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--kupfer-full);letter-spacing:.02em}
-.pc-lead{font-size:15px;line-height:1.45;color:var(--muted);margin:0 0 10px}
+.pc-why{margin:10px 0 0;font-family:var(--sans);font-size:18px;line-height:1.4;color:var(--muted);letter-spacing:0}
+.pc-lead{font-size:20px;line-height:1.4;color:var(--muted);margin:0 0 10px}
 .pc-lead b{color:var(--ink);font-weight:600}
 /* ── clickable report cover ──────────────────────────────────────────── */
 a.report-link{text-decoration:none;position:relative;z-index:2;display:block;flex:0 0 auto;color:inherit}
 a.report-link:focus-visible{outline:4px solid var(--kupfer-full);outline-offset:6px}
-.report-open{position:absolute;right:12px;bottom:12px;z-index:3;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:8px 12px}
-a.report-link:hover .report-open,a.report-link:focus-visible .report-open{background:var(--kupfer-full)}
-a.report-link .report-shot{transition:transform .28s var(--ease),box-shadow .28s var(--ease)}
-a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px 14px 0 0 rgba(18,18,18,.16)}
+.report-open{position:absolute;right:12px;bottom:12px;z-index:3;background:var(--ink);color:#f2f1ee;font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:0;padding:8px 14px}
+a.report-link:hover .report-open,a.report-link:focus-visible .report-open{background:#2b2a28}
+a.report-link .report-shot{transition:border-color .16s var(--ease)}
+a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 </style>
 </head>
 <body>
@@ -191,7 +191,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" decoding="async" /></div>
   <div class="body center cover-body">
     <p class="cv-kicker" data-rise style="--d:0ms"><img src="./assets/lockup-horizontal-dark.svg" width="248" height="48" alt="loehrning.ai" decoding="async" /><span>Workshop 02</span></p>
-    <h1 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.06;margin:30px 0 28px;max-width:1180px">Using AI to Understand Business Reports and Make <span class="kupfer-text">Decisions</span></h1>
+    <h1 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.06;margin:30px 0 28px;max-width:1180px">Using AI to understand business reports and make <span class="kupfer-text">decisions</span></h1>
     <p class="body-lg" data-rise style="--d:240ms;max-width:980px;margin-bottom:56px">You get a business report every month. Today you teach Claude what your numbers mean, and let it do the reading for you.</p>
     <div class="cv-learn" data-rise style="--d:360ms">
       <div class="cv-i">
@@ -215,7 +215,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <span class="cv-s">And be able to say which number it rests on.</span>
       </div>
     </div>
-    <p class="label-mono" data-rise style="--d:520ms;margin-top:52px">90 minutes &nbsp;·&nbsp; Claude desktop app &nbsp;·&nbsp; no code, no API key, nothing to install</p>
+    <p class="label-mono" data-rise style="--d:520ms;margin-top:52px">90 minutes &nbsp;·&nbsp; Claude desktop app &nbsp;·&nbsp; one zip folder with the practice data</p>
   </div>
 </section>
 
@@ -264,15 +264,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="overline" data-rise style="--d:0ms">The setup for the next 90 minutes</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 30px">You work at<br><span class="kupfer-text">NORTHWIND.</span></h2>
         <p class="body-lg" data-rise style="--d:260ms;max-width:680px">A family-owned electronics maker in Berlin. About 850 people, roughly €180M a year, eight product lines from speakers to espresso machines. The September numbers just came in, and the leadership meeting wants an answer about one of those lines. You are the analyst they ask.</p>
-        <p class="label-mono" data-rise style="--d:420ms;margin-top:32px">NORTHWIND is made up. Every number here is safe to share.</p>
+        <p class="label-mono" data-rise style="--d:420ms;margin-top:32px">NORTHWIND is an invented company, so every number here is safe to share.</p>
       </div>
       <div data-rise style="--d:360ms">
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">HQ</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">Berlin, Germany</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Ownership</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">family-owned</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">People</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">~850</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Revenue</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">~€180M <span style="color:var(--muted);font-weight:400">(FY24)</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Product lines</span><span style="font-size:17px;font-weight:600;letter-spacing:-.01em">AURA · ECHO · NEST · BEAM · PULSE · <span class="kupfer-text">CRAFT</span> · BREW · FLOW</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Channel</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">~150 resellers <span style="color:var(--muted);font-weight:400">plus direct</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">HQ</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">Berlin, Germany</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Ownership</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">family-owned</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">People</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~850</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Revenue</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~€180M <span style="color:var(--muted);font-weight:400">(FY24)</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Product lines</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">AURA · ECHO · NEST · BEAM · PULSE · <span class="kupfer-text">CRAFT</span> · BREW · FLOW</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Channel</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~150 resellers <span style="color:var(--muted);font-weight:400">plus direct</span></span></div>
         <div class="cr-card">
           <div class="cr-head"><span class="cr-name">CRAFT</span><span class="cr-kind">the coffee line, and the one this month is about</span></div>
           <p class="cr-body">Three products: two espresso machines and a grinder. It is NORTHWIND's <b>newest line and its most expensive</b>, launched to move the company upmarket. It sells in <b>small numbers at high prices</b>, and the factory is still working the quality problems out of it. Every other line is older and cheaper.</p>
@@ -291,7 +291,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="The plan" data-section="What we do today">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">What we do today</p>
-    <h2 class="h2" data-rise style="--d:120ms;margin:24px 0 10px;max-width:1440px;font-size:54px">Five prompts. Each one leaves a <span class="kupfer-text">file</span> behind.</h2>
+    <h2 class="h2" data-rise style="--d:120ms;margin:24px 0 10px;max-width:1440px;font-size:54px">Each of the five prompts leaves a <span class="kupfer-text">file</span> behind.</h2>
     <div class="rl-hero">
       <div class="rl-rail">
         <i class="rl-thread" data-rise style="--d:260ms"></i>
@@ -306,42 +306,42 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <div class="rl-cell" data-rise style="--d:420ms">
           <div class="rl-over">Prompt 01</div>
           <div class="rl-sq">1</div>
-          <div class="rl-lab">GROUND</div>
+          <div class="rl-lab">Ground</div>
           <div class="rl-act">Claude reads your folder</div>
           <div class="rl-art">nothing written yet</div>
         </div>
         <div class="rl-cell" data-rise style="--d:500ms">
           <div class="rl-over">Prompt 02</div>
           <div class="rl-sq">2</div>
-          <div class="rl-lab">TEACH</div>
+          <div class="rl-lab">Teach</div>
           <div class="rl-act">you say what the numbers mean</div>
           <div class="rl-art"><b>SKILL.md</b> your rules</div>
         </div>
         <div class="rl-cell" data-rise style="--d:580ms">
           <div class="rl-over">Prompt 03</div>
           <div class="rl-sq">3</div>
-          <div class="rl-lab">RUN</div>
+          <div class="rl-lab">Run</div>
           <div class="rl-act">your rules read the report</div>
           <div class="rl-art"><b>metrics.json</b> checked vs the CSV</div>
         </div>
         <div class="rl-cell" data-rise style="--d:660ms">
           <div class="rl-over">Prompt 04</div>
           <div class="rl-sq">4</div>
-          <div class="rl-lab">SEE</div>
+          <div class="rl-lab">See</div>
           <div class="rl-act">the numbers fill a page</div>
           <div class="rl-art"><b>the dashboard</b></div>
         </div>
         <div class="rl-cell" data-rise style="--d:740ms">
           <div class="rl-over">Prompt 05</div>
           <div class="rl-sq">5</div>
-          <div class="rl-lab">DECIDE</div>
+          <div class="rl-lab">Decide</div>
           <div class="rl-act">you make the call</div>
-          <div class="rl-art"><b>one decision</b> you can defend</div>
+          <div class="rl-art"><b>one decision</b> and its number</div>
         </div>
         <div class="rl-cell" data-rise style="--d:820ms">
           <div class="rl-over">Next month</div>
           <div class="rl-loopbox"><svg viewBox="0 0 100 100" style="width:34px;height:34px" aria-hidden="true"><use href="#i-repeat"/></svg></div>
-          <div class="rl-lab">REPEAT</div>
+          <div class="rl-lab">Repeat</div>
           <div class="rl-act">new report, same rules</div>
         </div>
       </div>
@@ -354,14 +354,14 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="The kit" data-section="The zip folder on your laptop">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">What you download</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:18px 0 20px">Download one zip file. Unzip it. That folder is your <span class="kupfer-text">workspace.</span></h2>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:18px 0 20px">Unzip the kit, and that folder becomes your <span class="kupfer-text">workspace</span>.</h2>
     <div class="kit-head" data-rise style="--d:200ms">
       <svg class="kit-zip" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-zip"/></svg>
       <div>
         <a class="kit-zipname" href="./northwind-analyst-kit.zip" download>northwind-analyst-kit.zip</a>
         <p class="kit-zipsub">Double-click to unzip, put it anywhere you like (Desktop is fine), and open that folder in Claude. Everything below is already inside it.</p>
       </div>
-      <div class="kit-arrow">60 KB<br>unzip before you open it</div>
+      <div class="kit-arrow">60 KB<br>Unzip before you open it</div>
     </div>
     <div class="kit-grid" data-rise style="--d:320ms">
       <div class="kit-tile">
@@ -393,22 +393,22 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-skill"/></svg>
         <span class="kit-name">SKILL.md</span>
         <span class="kit-desc">Your rulebook, in the hidden .claude folder. Half written; prompt 2 finishes it.</span>
-        <span class="kit-flag">you fill this</span>
+        <span class="kit-flag">You fill this</span>
       </div>
       <div class="kit-tile fill">
         <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-csv"/></svg>
         <span class="kit-name">metrics/</span>
         <span class="kit-desc">Empty. Prompt 3 writes metrics.json in here.</span>
-        <span class="kit-flag">you fill this</span>
+        <span class="kit-flag">You fill this</span>
       </div>
       <div class="kit-tile fill">
         <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-dashboard"/></svg>
         <span class="kit-name">dashboard/</span>
         <span class="kit-desc">A blank page. Prompt 4 fills it with your numbers.</span>
-        <span class="kit-flag">you fill this</span>
+        <span class="kit-flag">You fill this</span>
       </div>
     </div>
-    <p class="label-mono" data-rise style="--d:460ms;margin-top:20px;font-size:13px;letter-spacing:.18em"><span style="color:var(--kupfer-full)">■</span>&nbsp; the three marked ones are empty on purpose. You fill them during the session.</p>
+    <p class="label-mono" data-rise style="--d:460ms;margin-top:20px;font-size:18px;letter-spacing:.01em">The three files marked “You fill this” start empty. You fill them during the session.</p>
   </div>
 </section>
 
@@ -416,15 +416,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="Prompt 1" data-section="Prompt 1 of 5 · let Claude read the folder">
   <div class="body">
     <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 1 of 5">
-      <span class="rl-c rl-on"><i class="rl-c-n">1</i><span class="rl-c-l">GROUND</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">TEACH</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">RUN</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">SEE</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">DECIDE</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
@@ -443,7 +443,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Read data/company-backstory.md and reports/2023-09-monthly-report.md. In two sentences: who is NORTHWIND, and what decision is this month's report building toward?</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms">
+        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
           <div class="ph-row"><span class="ph-k">Reads</span><span><b>company-backstory.md</b> and <b>2023-09-monthly-report.md</b></span></div>
           <div class="ph-row"><span class="ph-k">Writes</span><span>nothing yet. Writing starts in prompt 2.</span></div>
           <div class="ph-row"><span class="ph-k">You see</span><span>two sentences ending at the <b>CRAFT</b> question</span></div>
@@ -455,8 +455,8 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           <div class="msg user"><span class="who">You</span><span class="text" data-type="Read the backstory and this month's report. Who is NORTHWIND, and what decision is this report building toward?"></span></div>
           <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
           <div class="msg claude" style="flex-direction:column;gap:14px">
-            <div class="reveal"><span class="who">Claude</span><div class="label-mono">read company-backstory.md ✓ · read 2023-09-monthly-report.md ✓</div></div>
-            <div class="reveal" style="font-size:16px;line-height:1.55;max-width:640px">NORTHWIND is a family-owned consumer electronics maker in Berlin, with eight product lines and about €180M a year, selling through around 150 resellers. September closed strong: €21.69M on 139,056 units.</div>
+            <div class="reveal"><span class="who">Claude</span><div class="label-mono">Read company-backstory.md ✓ · read 2023-09-monthly-report.md ✓</div></div>
+            <div class="reveal" style="font-size:20px;line-height:1.55;max-width:640px">NORTHWIND is a family-owned consumer electronics maker in Berlin, with eight product lines and about €180M a year, selling through around 150 resellers. September closed strong: €21.69M on 139,056 units.</div>
             <div class="reveal verdict"><div class="h">The decision coming up</div><div class="t">CRAFT: high revenue on low volume, and the most defects two months in a row. Fix the line, or spend more Q3 marketing on it?</div></div>
           </div>
         </div>
@@ -547,14 +547,14 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 22px;max-width:820px">You cannot track everything. Pick the few numbers that <span class="kupfer-text">decide the month.</span></h2>
         <p class="body-md" data-rise style="--d:240ms;max-width:800px;margin-bottom:24px">A monthly report has hundreds of figures in it. Your job is to pick the handful that answer two questions: was this a good month, and what do we do next? For NORTHWIND that is five numbers, plus one flag.</p>
         <div data-rise style="--d:360ms">
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">Revenue</span><span style="font-size:16px;color:var(--muted)">how big the month was</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">Units</span><span style="font-size:16px;color:var(--muted)">how much shipped, separate from price</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">Defects (NCRs)</span><span style="font-size:16px;color:var(--muted)">production problems logged, per line</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">Marketing spend</span><span style="font-size:16px;color:var(--muted)">campaign cost per channel</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">Open escalations</span><span style="font-size:16px;color:var(--muted)">customer complaints still unresolved</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:2px solid var(--kupfer-full)"><span class="kupfer-text" style="font-size:20px;font-weight:700;letter-spacing:-.02em;min-width:210px">The flag</span><span style="font-size:16px;color:var(--muted)">the one line to look at closely before spending more on it</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Revenue</span><span style="font-size:20px;color:var(--muted)">how big the month was</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Units</span><span style="font-size:20px;color:var(--muted)">how much shipped, separate from price</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Defects (NCRs)</span><span style="font-size:20px;color:var(--muted)">production problems logged, per line</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Marketing spend</span><span style="font-size:20px;color:var(--muted)">campaign cost per channel</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Open escalations</span><span style="font-size:20px;color:var(--muted)">customer complaints still unresolved</span></div>
+          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:2px solid var(--kupfer-full)"><span class="kupfer-text" style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">The flag</span><span style="font-size:20px;color:var(--muted)">the one line to look at closely before spending more on it</span></div>
         </div>
-        <p class="label-mono" data-rise style="--d:480ms;margin-top:18px;font-size:12px">the small E# chips on the report page are its own source references. Every figure names where it came from.</p>
+        <p class="label-mono" data-rise style="--d:480ms;margin-top:18px;font-size:17px">The small E# chips on the report page are its own source references. Every figure names where it came from.</p>
       </div>
       <div class="report-stack" data-rise style="--d:420ms">
         <a class="report-link" href="./assets/report/northwind-p03.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report page 3, the summary numbers, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p03.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report page 3, the summary numbers" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
@@ -573,15 +573,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <div data-rise style="--d:280ms">
           <div style="padding:20px 0;border-top:1px solid var(--line)">
             <div class="label-mono" style="margin-bottom:8px">Revenue</div>
-            <div style="font-size:18px;line-height:1.45"><span style="color:var(--muted)">Sounds like profit.</span> <b>Here it is units times list price. It is not margin, because the data has no cost per product.</b></div>
+            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like profit.</span> <b>Here it is units times list price. It is not margin, because the data has no cost per product.</b></div>
           </div>
           <div style="padding:20px 0;border-top:1px solid var(--line)">
             <div class="label-mono" style="margin-bottom:8px">Defects (NCRs)</div>
-            <div style="font-size:18px;line-height:1.45"><span style="color:var(--muted)">Sounds like returns.</span> <b>Here it is problems caught in production, not products customers sent back.</b></div>
+            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like returns.</span> <b>Here it is problems caught in production, not products customers sent back.</b></div>
           </div>
           <div style="padding:20px 0;border-top:1px solid var(--line)">
             <div class="label-mono" style="margin-bottom:8px">Marketing</div>
-            <div style="font-size:18px;line-height:1.45"><span style="color:var(--muted)">Sounds like spend on CRAFT.</span> <b>Here it is spend per channel. It cannot be split cleanly per product line.</b></div>
+            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like spend on CRAFT.</span> <b>Here it is spend per channel. It cannot be split cleanly per product line.</b></div>
           </div>
         </div>
         <p class="body-md" data-rise style="--d:420ms;margin-top:22px;max-width:800px">Read CRAFT's €450 average price as profit and you would spend more on it. But it is list price, not profit. Writing these definitions down is the skill you take back to your own company.</p>
@@ -597,8 +597,8 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="The question" data-section="The question in the numbers">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">The question in the numbers</p>
-    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:24px 0 18px;max-width:1500px">Put the numbers side by side and one line stands out: <span class="kupfer-text">CRAFT.</span></h2>
-    <p class="body-md" data-rise style="--d:220ms;max-width:1360px;margin-bottom:8px"><b style="color:var(--ink)">A reminder of what CRAFT is:</b> the espresso line, three products between €199 and €699, the priciest things NORTHWIND makes. CRAFT is second in revenue at €4.12M but only sixth in units sold. It also has more defects than any other line, two months in a row: 23 in September after 24 in August. (A dash in the defect column means nothing was logged that month, not that there were none.)</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:24px 0 18px;max-width:1500px">Side by side, <span class="kupfer-text">CRAFT</span> has high revenue, few units and the most defects.</h2>
+    <p class="body-md" data-rise style="--d:220ms;max-width:1360px;margin-bottom:8px">CRAFT is the espresso line, three products between €199 and €699. It is second in revenue at €4.12M, sixth in units, and has logged the most defects two months running (24 in August, 23 in September). "Not logged" means no defect report that month.</p>
     <div class="viz-slot" data-rise style="--d:340ms;flex:1" id="viz-tension" data-viz="tension">
       <!-- animated revenue-by-line + defect flag mounts here -->
     </div>
@@ -609,15 +609,15 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="Prompt 2" data-section="Prompt 2 of 5 · write your rules down">
   <div class="body">
     <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 2 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">GROUND</span></span>
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">2</i><span class="rl-c-l">TEACH</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">RUN</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">SEE</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">DECIDE</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
@@ -636,7 +636,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Open worksheet.md. Ask me the blanks one at a time, I'll answer in plain English. Then complete the northwind-metrics Skill (.claude/skills/northwind-metrics/SKILL.md) from my answers: fill in the blank metric definitions and reading rules, matching the worked examples (Revenue, Units), plus the CRAFT flag. Show me the finished Skill.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms">
+        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
           <div class="ph-row"><span class="ph-k">Reads</span><span><b>worksheet.md</b> and your answers</span></div>
           <div class="ph-row"><span class="ph-k">Writes</span><span><b>.claude/skills/northwind-metrics/SKILL.md</b></span></div>
           <div class="ph-row"><span class="ph-k">You see</span><span>the finished file, with your own words in it</span></div>
@@ -666,21 +666,21 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="Prompt 3" data-section="Prompt 3 of 5 · run your rules on the report">
   <div class="body">
     <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 3 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">GROUND</span></span>
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">TEACH</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">3</i><span class="rl-c-l">RUN</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">SEE</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">DECIDE</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 3 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 18px;max-width:760px">Run your rules on the report, and <span class="kupfer-text">check one number</span> against the raw data.</h2>
-        <p class="body-md" data-rise style="--d:200ms;margin-bottom:18px;max-width:760px">This is where the CSV files come back. Your Skill does not take the report's word for it, it checks one figure against the source rows.</p>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:40px;line-height:1.08;margin:10px 0 10px;max-width:800px">Run your rules on the report, and <span class="kupfer-text">check one number</span> against the raw data.</h2>
+        <p class="body-md" data-rise style="--d:200ms;margin-bottom:16px;max-width:780px">Here the CSV files come back: your Skill checks one figure from the report against the source rows.</p>
         <div class="prompt-card compact" data-rise style="--d:280ms;margin-bottom:16px">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -697,7 +697,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Use my northwind-metrics Skill on reports/2023-09-monthly-report.md: extract this month's numbers into metrics/metrics.json following my reading rules, and verify one number against the source CSV in data/. Show me total revenue and units, revenue and defects by line, and the one line to interrogate.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms">
+        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
           <div class="ph-row"><span class="ph-k">Reads</span><span>the report, with <b>your rules</b> loaded first</span></div>
           <div class="ph-row"><span class="ph-k">Writes</span><span><b>metrics/metrics.json</b>, the month as clean numbers</span></div>
           <div class="ph-row"><span class="ph-k">Checks</span><span>one figure against <b>data/demand_actuals.csv</b></span></div>
@@ -731,21 +731,21 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="Prompt 4" data-section="Prompt 4 of 5 · build the dashboard">
   <div class="body">
     <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 4 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">GROUND</span></span>
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">TEACH</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">RUN</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">4</i><span class="rl-c-l">SEE</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">DECIDE</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 4 of 5</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 20px;max-width:760px">Build the <span class="kupfer-text">dashboard</span> from the numbers your Skill pulled.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">Why a dashboard at all? Not to reprint the report on one page — that would be pointless. This page carries what the report <b>cannot say</b>: growth normalised per shipping week, defects priced in euros, the machine spread behind the flag, the countries the volume sits in. Claude writes one file of numbers, the page renders it, and the recommendation sits at the top where a VP reads it first.</p>
+        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">The dashboard shows what the report <b>cannot say</b>: growth normalised per shipping week, defects priced in euros, the machine spread behind the flag, the countries the volume sits in. Claude writes one file of numbers, the page renders it, and the recommendation sits at the top where a VP reads it first.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
           <span>Back in Claude Code. This one is a single line.</span>
@@ -758,7 +758,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Build the dashboard from this month's metrics and open it. Include the insights and the decision.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms">
+        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
           <div class="ph-row"><span class="ph-k">Reads</span><span><b>metrics/metrics.json</b>, the file prompt 3 wrote</span></div>
           <div class="ph-row"><span class="ph-k">Writes</span><span><b>dashboard/data.js</b>, the template's data file</span></div>
           <div class="ph-row"><span class="ph-k">Opens</span><span><b>dashboard/index.html</b>, filled in, CRAFT flagged</span></div>
@@ -778,7 +778,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
               <div class="bar-row"><span class="n">NEST</span><span class="bar"><i data-w="28%" style="--w:28%"></i></span><span class="v">€2.21M</span></div>
               <div class="bar-row"><span class="n">BREW</span><span class="bar"><i data-w="26%" style="--w:26%"></i></span><span class="v">€2.07M</span></div>
             </div>
-            <div class="reveal label-mono"><span style="color:var(--kupfer-full)">■</span> the flagged line is highlighted · all seven lines are on the page, read from metrics.json</div>
+            <div class="reveal label-mono"><span style="color:var(--kupfer-full)">■</span> Flagged line. All seven lines are on the page, read from metrics.json.</div>
           </div>
         </div>
       </div>
@@ -790,21 +790,21 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <section class="slide" data-label="Prompt 5" data-section="Prompt 5 of 5 · make the decision">
   <div class="body">
     <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 5 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">GROUND</span></span>
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">TEACH</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">RUN</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">SEE</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">5</i><span class="rl-c-l">DECIDE</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
     </div>
     <div style="display:grid;grid-template-columns:.98fr 1.02fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 5 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:40px;line-height:1.12;margin:20px 0 16px;max-width:720px">Make the <span class="kupfer-text">decision:</span> the number behind it, the cost of being wrong, and what you cannot see.</h2>
-        <p class="body-md" data-rise style="--d:220ms;max-width:720px;margin-bottom:18px">The VP of Sales wants more Q3 marketing money behind CRAFT. <b>Vote first, hands up.</b> Then send the prompt and see whether your own numbers agree with you.</p>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:38px;line-height:1.1;margin:12px 0 12px;max-width:760px">Make the <span class="kupfer-text">decision</span> and name the number behind it, the cost of being wrong and what you cannot see.</h2>
+        <p class="body-md" data-rise style="--d:220ms;max-width:760px;margin-bottom:14px">The VP of Sales wants more Q3 marketing money behind CRAFT. <b>Vote first, hands up.</b> Then send the prompt and see whether your own numbers agree with you.</p>
         <div class="prompt-card" data-rise style="--d:340ms">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -813,10 +813,12 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">The VP of Sales wants more Q3 marketing budget behind CRAFT. Using my Skill's reading rules and this month's numbers, make the call: rework CRAFT first, or put more Q3 marketing behind it? Give the number that backs it, the cost of being wrong, and what this data can't tell us. Then argue the opposite as hard as you can.</p>
         </div>
-        <div class="viz-slot dark" data-rise style="--d:480ms;margin-top:20px;min-height:180px" id="viz-ncr" data-viz="ncr">
-          <!-- two-months-running NCR motif mounts here -->
+        <div style="display:flex;align-items:flex-end;gap:36px;margin-top:16px">
+          <div class="viz-slot dark" data-rise style="--d:480ms;min-height:0;width:auto;flex:0 0 auto" id="viz-ncr" data-viz="ncr">
+            <!-- two-months-running NCR motif mounts here -->
+          </div>
+          <p class="label-mono" data-rise style="--d:560ms;margin:0 0 4px;max-width:470px">Defects in August, then September: CRAFT 24 and 23, NEST (the next worst line) 12 and 19. P1 to P4 on the memo is complaint severity; P1 is the worst.</p>
         </div>
-        <p class="label-mono" data-rise style="--d:560ms;margin-top:14px">CRAFT defects: 24 in August, 23 in September. A pattern, not noise. &nbsp;·&nbsp; P1 to P4 on the memo is complaint severity, P1 is the worst.</p>
       </div>
       <div class="report-stack" data-rise style="--d:400ms">
         <a class="report-link" href="./assets/report/northwind-p08.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report, the open question: fund CRAFT or fix it first, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p08.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report, the open question: fund CRAFT or fix it first" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
@@ -828,72 +830,69 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 <!-- 16 · THE ANSWER — what the five prompts actually bought you -->
 <section class="slide" data-label="The answer" data-section="The answer you take to the VP">
   <div class="body">
-    <p class="overline" data-rise style="--d:0ms">The answer · what your Skill found that the report could not</p>
+    <p class="overline" data-rise style="--d:0ms">The answer you take to the VP</p>
     <h2 class="h2" data-rise style="--d:100ms;font-size:34px;line-height:1.1;margin:12px 0 14px;max-width:1560px">The report said <span class="tnum">+26%</span> and “strong close”. Your Skill said <span class="kupfer-text tnum">+0.8%</span> and “don’t fund it yet.”</h2>
 
     <div data-rise style="--d:220ms;display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);margin-bottom:18px">
       <div style="padding:12px 20px 12px 0">
-        <div class="label-mono" style="letter-spacing:.1em">Per shipping week</div>
-        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">+0.8<span style="color:var(--kupfer-full)">%</span></div>
-        <div class="body-sm" style="margin-top:5px">not +26%. Three lines shrank.</div>
+        <div class="label-mono" style="letter-spacing:.01em">Per shipping week</div>
+        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">+0.8%</div>
+        <div class="body-sm" style="margin-top:5px">against +26% in the report; three lines shrank</div>
       </div>
       <div style="padding:12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.1em">Scrapped before shipping</div>
+        <div class="label-mono" style="letter-spacing:.01em">Scrapped before shipping</div>
         <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">€691k</div>
         <div class="body-sm" style="margin-top:5px">CRAFT · 16.8% of its own revenue</div>
       </div>
       <div style="padding:12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.1em">Defect intensity</div>
+        <div class="label-mono" style="letter-spacing:.01em">Defect intensity</div>
         <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">2.51</div>
         <div class="body-sm" style="margin-top:5px">per 1,000 · 2.2× the next-worst</div>
       </div>
       <div style="padding:12px 0 12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.1em">Machines involved</div>
+        <div class="label-mono" style="letter-spacing:.01em">Machines involved</div>
         <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">6</div>
-        <div class="body-sm" style="margin-top:5px">a line programme, not one repair</div>
+        <div class="body-sm" style="margin-top:5px">spread across the whole line</div>
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:48px;flex:1;min-height:0">
+    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:48px;flex:0 0 auto">
       <div>
         <div class="verdict" data-rise style="--d:300ms">
           <div class="h">The call you hand the VP</div>
           <div class="t">Rework CRAFT first. Hold the extra Q3 marketing for one month.</div>
           <div class="s">One euro of product in six is destroyed before it ships, and the growth the spend case rests on is the fifth week of the calendar.<br><b style="color:var(--ink)">Trigger, agreed now:</b> October below 2.51 per 1,000 and scrap under 8% of revenue releases the money.</div>
         </div>
-        <div class="verdict" data-rise style="--d:380ms;margin-top:12px;border-left-color:var(--ink)">
-          <div class="h" style="color:var(--ink)">Where the VP is right — say it out loud</div>
-          <div class="t" style="font-size:15px">CRAFT’s defect intensity improved <b>22%</b> in a month, 3.21 → 2.51. The only line getting better.</div>
-          <div class="s">Which is why this is a one-month hold, not a freeze.</div>
+        <div class="verdict" data-rise style="--d:380ms;margin-top:12px;border-color:var(--line)">
+          <div class="h" style="color:var(--ink)">Where the VP is right</div>
+          <div class="t" style="font-size:20px">CRAFT’s defect intensity improved <b>22%</b> in a month, 3.21 → 2.51, the only line that got better. That is why the hold lasts one month.</div>
         </div>
       </div>
       <div data-rise style="--d:340ms">
         <p class="label-mono" style="margin-bottom:10px">And what it still cannot tell you</p>
         <div style="border-top:1px solid var(--line)">
           <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono" style="color:var(--kupfer-full)">01</span>
-            <div class="body-sm"><b style="color:var(--ink)">No per-SKU cost.</b> €691k is destroyed value, not lost margin. “CRAFT is profitable” stays an assertion.</div>
+            <span class="label-mono">01</span>
+            <div class="body-sm"><b style="color:var(--ink)">No per-SKU cost.</b> €691k is scrapped value; the lost margin is unknown, so “CRAFT is profitable” stays unproven.</div>
           </div>
           <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono" style="color:var(--kupfer-full)">02</span>
-            <div class="body-sm"><b style="color:var(--ink)">No returns joined to line.</b> NCRs are caught in the plant; nothing here measures what reached a customer.</div>
+            <span class="label-mono">02</span>
+            <div class="body-sm"><b style="color:var(--ink)">No returns per line.</b> NCRs are caught in the plant. What reached customers is not in the data.</div>
           </div>
           <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono" style="color:var(--kupfer-full)">03</span>
-            <div class="body-sm"><b style="color:var(--ink)">Marketing is campaign-level.</b> Fund it and this data still could not tell you whether it moved CRAFT.</div>
+            <span class="label-mono">03</span>
+            <div class="body-sm"><b style="color:var(--ink)">Marketing is booked per campaign.</b> If you fund it, this data cannot show whether it moved CRAFT.</div>
           </div>
         </div>
-        <p class="body-sm" style="margin-top:14px">Two of these are the same gap that makes the VP’s case unfalsifiable. Saying so is the job.</p>
-        <p class="label-mono" style="margin-top:18px;color:var(--kupfer-full)">Everything above is on the dashboard you built — one page, no slides needed.</p>
       </div>
     </div>
 
-    <div data-rise style="--d:560ms;margin-top:auto;padding-top:20px;border-top:1.5px solid var(--ink)">
-      <p class="label-mono" style="margin-bottom:12px">None of this came from a smarter model. It came from the three rules you wrote in prompt 2.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:44px">
-        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · compare</b><br>Normalise before comparing → the +26% headline became <b style="color:var(--ink)">+0.8% per shipping week</b>, and three lines turned negative.</div>
-        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · flag</b><br>Defects per 1,000, not raw count → CRAFT&rsquo;s 21% lead on count became a <b style="color:var(--ink)">2.2× lead on intensity</b>, and €691k of scrap.</div>
-        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · limits</b><br>Name the limit next to the number → the recommendation says what would <b style="color:var(--ink)">reverse it</b>, so next month is a measurement.</div>
+    <div data-rise style="--d:560ms;margin-top:auto;padding-top:14px;border-top:1.5px solid var(--ink)">
+      <p class="label-mono" style="margin-bottom:12px">Each result comes from one of the three rules you wrote in prompt 2</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:44px;font-size:20px">
+        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: compare</b><br>Normalise before comparing: the +26% headline became <b style="color:var(--ink)">+0.8% per shipping week</b>, and three lines turned negative.</div>
+        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: flag</b><br>Count defects per 1,000 units: CRAFT&rsquo;s 21% lead on raw count became a <b style="color:var(--ink)">2.2× lead on intensity</b>, and €691k of scrap.</div>
+        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: limits</b><br>Name the limit next to the number: the recommendation says what would <b style="color:var(--ink)">reverse it</b>, so next month is a measurement.</div>
       </div>
     </div>
   </div>
@@ -931,7 +930,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         <p class="pc-why">There is a real trap in this data. Nobody in the room spots it by eye. Claude does, and prices it.</p>
       </div>
       <div>
-        <p class="pc-lead"><b>3. Ask for a tool, not an answer.</b> One sentence, one working page.</p>
+        <p class="pc-lead"><b>3. Ask Claude to build a tool.</b> One sentence gets you a working page.</p>
         <div class="prompt-card compact">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -940,7 +939,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Build me dashboard/whatif.html: a one-page tool with two sliders, CRAFT price change and CRAFT defect rate, that recomputes CRAFT revenue and re-runs my Skill's flag rule live as I drag them. Read the starting numbers from metrics/metrics.json. Plain HTML, CSS and JavaScript in one file, no libraries, and open it when it is done.</p>
         </div>
-        <p class="pc-why">You asked a question and got software back. This is the step people do not believe until they see it.</p>
+        <p class="pc-why">You asked a question and got a small program back that you can run again next month.</p>
       </div>
     </div>
   </div>
@@ -986,7 +985,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
       <div>
         <p class="overline" data-rise style="--d:0ms">Case 2 · leave the sandbox</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:780px">Same recipe, on <span class="kupfer-text">Meta's real quarter.</span></h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:780px">NORTHWIND is made up. The method is not. Meta's Q2 2026 results are a public earnings release, so Claude can fetch it live and there is nothing to download. It is also the same shape as CRAFT at a much bigger scale: a strong headline with a question sitting underneath it. The full task is in <b>meta-quarterly/TASK.md</b> in your kit.</p>
+        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:780px">NORTHWIND is invented; the method works on real reports too. Meta's Q2 2026 results are a public earnings release, so Claude can fetch it live and there is nothing to download. It is also the same shape as CRAFT at a much bigger scale: a strong headline with a question sitting underneath it. The full task is in <b>meta-quarterly/TASK.md</b> in your kit.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
           <span>Back in Claude Code. Claude fetches the page itself, no download needed.</span>
@@ -999,16 +998,16 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           </div>
           <p class="pc-body">Fetch Meta's Q2 2026 earnings press release from https://www.prnewswire.com/news-releases/meta-reports-second-quarter-2026-results-302838214.html and tell me, in three sentences: how did the quarter look on the surface, and what tension sits underneath?</p>
         </div>
-        <p class="label-mono" data-rise style="--d:520ms;margin-top:18px;font-size:12px">source: Meta's Q2 2026 earnings release, 2026-07-29 · <a href="https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm" target="_blank" rel="noopener" style="color:inherit">also filed with the SEC as 8-K exhibit 99.1</a> · public, fetched live</p>
+        <p class="label-mono" data-rise style="--d:520ms;margin-top:18px;font-size:17px">Source: Meta's Q2 2026 earnings release, 2026-07-29 · <a href="https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm" target="_blank" rel="noopener" style="color:inherit">also filed with the SEC as 8-K exhibit 99.1</a> · public, fetched live</p>
       </div>
       <div data-rise style="--d:360ms">
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Revenue</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">$60.80B <span style="color:var(--muted);font-weight:400">▲ +28% vs last year</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating income</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">$18.78B <span style="color:var(--kupfer-full);font-weight:600">▼ -8%</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating margin</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">31% <span style="color:var(--muted);font-weight:400">was 43% a year ago</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Capex, one quarter</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">$31.08B</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Free cash flow</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">$784M <span style="color:var(--muted);font-weight:400">out of $31.9B operating cash</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Daily active people</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em">3.60B <span style="color:var(--muted);font-weight:400">+3% vs last year</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:2px solid var(--kupfer-full)"><span class="label-mono" style="min-width:250px;color:var(--kupfer-full)">The question</span><span style="font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--kupfer-full)">$31B a quarter: an investment, or a leak?</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Revenue</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$60.80B <span style="color:var(--muted);font-weight:400">▲ +28% vs last year</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating income</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$18.78B <span style="color:var(--kupfer-full);font-weight:600">▼ -8%</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating margin</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">31% <span style="color:var(--muted);font-weight:400">was 43% a year ago</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Capex, one quarter</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$31.08B</span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Free cash flow</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$784M <span style="color:var(--muted);font-weight:400">out of $31.9B operating cash</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Daily active people</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">3.60B <span style="color:var(--muted);font-weight:400">+3% vs last year</span></span></div>
+        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:2px solid var(--kupfer-full)"><span class="label-mono" style="min-width:250px;color:var(--kupfer-full)">The question</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--kupfer-full)">$31B a quarter: an investment, or a leak?</span></div>
       </div>
     </div>
   </div>
@@ -1033,7 +1032,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         </div>
       </div>
       <div>
-        <p class="pc-lead"><b>M3. Build the page.</b> No template this time. Claude designs it.</p>
+        <p class="pc-lead"><b>M3. Build the page.</b> This time there is no template, and Claude designs the page.</p>
         <div class="prompt-card compact">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -1044,7 +1043,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
         </div>
       </div>
     </div>
-    <p class="label-mono" data-rise style="--d:460ms;margin-top:24px;font-size:12px">if the fetch comes back blocked, TASK.md has the SEC fallback URL and the User-Agent rule the SEC requires</p>
+    <p class="label-mono" data-rise style="--d:460ms;margin-top:24px;font-size:17px">If the fetch comes back blocked, TASK.md has the SEC fallback URL and the User-Agent rule the SEC requires</p>
   </div>
 </section>
 
@@ -1104,13 +1103,14 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
 
 <!-- 21 · IT REPEATS -->
 <section class="slide kupfer" data-label="Next month" data-section="Next month">
-  <div class="body center">
-    <p class="overline" data-rise style="--d:0ms">Why this was worth 90 minutes</p>
-    <h2 class="h1" data-rise style="--d:120ms;margin:36px 0 40px">Next month:<br>same Skill, new report.</h2>
-    <p class="body-lg" data-rise style="--d:260ms;max-width:1080px">Your reading of the numbers is written down now, so it does not leave with you. Put next month's file in reports/, run the Skill again, rebuild the dashboard, and Claude tells you what changed and whether the CRAFT decision still holds. You keep both cases, the report, the data, the Skill you wrote, the dashboards and every prompt in this deck. Use meta-quarterly/TASK.md on any public company, and your-company-skill/ on your own numbers.</p>
+  <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" decoding="async" loading="lazy" /></div>
+  <div class="body center cover-body">
+    <p class="overline" data-rise style="--d:0ms">What you keep</p>
+    <h2 class="h1" data-rise style="--d:120ms;font-size:88px;line-height:1.04;margin:32px 0 36px;max-width:1300px">Next month you run the same Skill on a <span class="kupfer-text">new report</span></h2>
+    <p class="body-lg" data-rise style="--d:260ms;max-width:1080px">Your reading of the numbers is now written down in the Skill. Put next month's file in reports/, run the Skill, rebuild the dashboard, and Claude reports what changed and whether the CRAFT decision still holds. The kit keeps both cases, the report, the data, your Skill, the dashboards and every prompt in this deck. Use meta-quarterly/TASK.md on any listed company and your-company-skill/ on your own numbers.</p>
     <div class="chips" data-rise style="--d:440ms;margin-top:52px">
-      <a class="chip" style="border-color:var(--paper);color:var(--paper);text-decoration:none" href="./northwind-analyst-kit.zip" download><span class="dot" style="background:var(--paper)"></span>Download the kit (.zip)</a>
-      <a class="chip" style="border-color:var(--paper);color:var(--paper);text-decoration:none" href="/en/workshops/geschaeftsberichte-mit-ki-lesen"><span class="dot" style="background:var(--paper)"></span>loehrning.ai/workshops/geschaeftsberichte-mit-ki-lesen</a>
+      <a class="chip" style="color:#f2f1ee;text-decoration:none;pointer-events:auto" href="./northwind-analyst-kit.zip" download><span class="dot"></span>Download the kit (.zip)</a>
+      <a class="chip" style="color:#f2f1ee;text-decoration:none;pointer-events:auto" href="/en/workshops/geschaeftsberichte-mit-ki-lesen"><span class="dot"></span>loehrning.ai/workshops/geschaeftsberichte-mit-ki-lesen</a>
     </div>
   </div>
 </section>
@@ -1139,8 +1139,8 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
     chrome.className = 'chrome';
     chrome.innerHTML =
       '<div class="chrome__topline"></div>' +
-      '<div class="chrome__topbar"><a class="brand" href="' + WS_URL + '"><span class="markdot"></span>loehrning.ai</a><span>' + (s.getAttribute('data-section') || '') + '</span></div>' +
-      '<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>Using AI to Understand Business Reports and Make Decisions</span><span class="page">' + pad(i+1) + ' / ' + pad(total) + '</span></div>';
+      '<div class="chrome__topbar"><a class="brand" href="' + WS_URL + '"><span class="markdot"></span>loehrning.ai</a><span>Workshop 02 · Reading business reports with AI</span></div>' +
+      '<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>' + (s.getAttribute('data-label') || '') + '</span><span class="page">' + pad(i+1) + ' / ' + pad(total) + '</span></div>';
     s.insertBefore(chrome, s.firstChild);
     s.setAttribute('role', 'group');
     s.setAttribute('aria-roledescription', 'slide');

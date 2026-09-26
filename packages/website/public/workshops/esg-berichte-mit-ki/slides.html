@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>ESG Reporting with AI · loehrning.ai</title>
+  <meta name="description" content="A workshop deck: one fictional company, one question about Scope 1 and 2 emissions, asked of an AI twice. First on a raw folder of bills, then on a ledger where every number points to a page." />
+  <link rel="icon" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/cover-globe.css" />
+  <link rel="stylesheet" href="./lib/story.css" />
+  <link rel="stylesheet" href="./lib/w04-deck.css" />
+  <link rel="stylesheet" href="./lib/scenes/cover.css" />
+  <link rel="stylesheet" href="./lib/scenes/host.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-case.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-arc.css" />
+  <link rel="stylesheet" href="./lib/scenes/raw-folder.css" />
+  <link rel="stylesheet" href="./lib/scenes/raw-answer.css" />
+  <link rel="stylesheet" href="./lib/scenes/month-grid.css" />
+  <link rel="stylesheet" href="./lib/scenes/one-unit.css" />
+  <link rel="stylesheet" href="./lib/scenes/whose-bill.css" />
+  <link rel="stylesheet" href="./lib/scenes/anatomy.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-ledger.css" />
+  <link rel="stylesheet" href="./lib/scenes/six-rules.css" />
+  <link rel="stylesheet" href="./lib/scenes/two-scope-2.css" />
+  <link rel="stylesheet" href="./lib/scenes/rematch.css" />
+  <link rel="stylesheet" href="./lib/scenes/trace-two.css" />
+  <link rel="stylesheet" href="./lib/scenes/what-drove-it.css" />
+  <link rel="stylesheet" href="./lib/scenes/ask-back.css" />
+  <link rel="stylesheet" href="./lib/scenes/limits.css" />
+  <link rel="stylesheet" href="./lib/scenes/your-bill.css" />
+  <link rel="stylesheet" href="./lib/scenes/resolution.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix.css" />
+  <script src="./lib/deck-stage.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#stage">Skip to workshop</a>
+<main aria-label="ESG Reporting with AI workshop">
+<svg class="icon-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs><pattern id="story-hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="14" fill="#121212" /></pattern></defs>
+<symbol id="i-ai-model" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="26" y="26" width="48" height="48"/><path d="M38 10v16M50 10v16M62 10v16M38 74v16M50 74v16M62 74v16M10 38h16M10 50h16M10 62h16M74 38h16M74 50h16M74 62h16"/><g fill="currentColor" stroke="none"><path d="M50 36l14 14-14 14-14-14z"/></g></symbol>
+<symbol id="i-bank" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 34L50 10l42 24zM10 90h80M20 42v38M40 42v38M60 42v38M80 42v38"/><g fill="currentColor" stroke="none"><rect x="44" y="20" width="12" height="10"/></g></symbol>
+<symbol id="i-book" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="16" y="8" width="68" height="72"/><path d="M28 8v72M16 80v12h68V80M40 46h24"/><g fill="currentColor" stroke="none"><rect x="40" y="22" width="32" height="12"/></g></symbol>
+<symbol id="i-clock" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="50" cy="56" r="34"/><path d="M50 36v20h16M40 10h20M50 10v12"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 32v58h80V32M30 8v10M70 8v10"/><rect x="20" y="52" width="12" height="12"/><rect x="44" y="52" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><g fill="currentColor" stroke="none"><rect x="8" y="16" width="84" height="16"/></g></symbol>
+<symbol id="i-certificate" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 12h80v56H62M38 68H10z"/><path d="M24 28h52M24 42h26"/><rect x="40" y="52" width="20" height="20"/><path d="M40 72v18l10-8 10 8V72"/><g fill="currentColor" stroke="none"><rect x="46" y="58" width="8" height="8"/></g></symbol>
+<symbol id="i-checklist" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="14" y="14" width="72" height="78"/><path d="M26 44l8 8 14-14M56 46h18M26 72l8 8 14-14M56 74h18"/><g fill="currentColor" stroke="none"><rect x="34" y="8" width="32" height="12"/></g></symbol>
+<symbol id="i-company" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 90V18h42v72M58 40h26v50M8 90h84M28 32h18M28 48h18M28 64h18"/><g fill="currentColor" stroke="none"><rect x="30" y="74" width="14" height="16"/></g></symbol>
+<symbol id="i-contract" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M20 8h40l20 20v64H20z"/><path d="M60 8v20h20M32 40h36M32 54h36M32 68h14"/><g fill="currentColor" stroke="none"><rect x="56" y="66" width="14" height="14"/></g></symbol>
+<symbol id="i-factor" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="8" width="84" height="84"/><path d="M22 50h56"/><rect x="38" y="60" width="24" height="20"/><g fill="currentColor" stroke="none"><rect x="38" y="20" width="24" height="20"/></g></symbol>
+<symbol id="i-fail" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M32 32l36 36M68 32L32 68"/></symbol>
+<symbol id="i-fleet" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 24h54v46H8zM62 40h16l14 16v14H62"/><g fill="currentColor" stroke="none"><rect x="18" y="68" width="16" height="16"/><rect x="68" y="68" width="16" height="16"/></g></symbol>
+<symbol id="i-folder" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 18h30l8 10h46v60H8z"/><path d="M8 40h84"/><g fill="currentColor" stroke="none"><rect x="70" y="66" width="12" height="12"/></g></symbol>
+<symbol id="i-gap" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 26V10h16M42 10h16M74 10h16v16M90 42v16M10 42v16M10 74v16h16M42 90h16"/><g fill="currentColor" stroke="none"><rect x="72" y="72" width="20" height="20"/></g></symbol>
+<symbol id="i-gas" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M50 8l26 34v28L50 92 24 70V42l12 14z"/><g fill="currentColor" stroke="none"><rect x="44" y="62" width="12" height="12"/></g></symbol>
+<symbol id="i-invoice" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M18 8h64v84l-10-8-11 8-11-8-11 8-11-8-10 8z"/><path d="M30 26h40M30 42h40M30 58h18"/><g fill="currentColor" stroke="none"><rect x="56" y="54" width="14" height="14"/></g></symbol>
+<symbol id="i-meter" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="12" width="80" height="76"/><rect x="22" y="26" width="56" height="22"/><path d="M36 26v22M50 26v22M64 26v22M24 72h28"/><g fill="currentColor" stroke="none"><rect x="64" y="64" width="14" height="14"/></g></symbol>
+<symbol id="i-pass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M28 50l14 14 30-30"/></symbol>
+<symbol id="i-person" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="50" cy="28" r="16"/><path d="M18 92V72l16-16h32l16 16v20"/></symbol>
+<symbol id="i-question" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 12h84v60H46L28 90V72H8z"/><path d="M38 24h24v14H50v8"/><g fill="currentColor" stroke="none"><rect x="46" y="54" width="8" height="8"/></g></symbol>
+<symbol id="i-refuse" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M34 8h32l26 26v32L66 92H34L8 66V34z"/><g fill="currentColor" stroke="none"><rect x="26" y="44" width="48" height="12"/></g></symbol>
+<symbol id="i-room-vote" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="38" cy="24" r="12"/><path d="M22 92V50h32v42M54 56l20-20V8"/></symbol>
+<symbol id="i-rows" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="42" width="80" height="16"/><rect x="10" y="70" width="80" height="16"/><g fill="currentColor" stroke="none"><rect x="8" y="12" width="84" height="20"/></g></symbol>
+<symbol id="i-scope" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="8" width="84" height="84"/><rect x="26" y="26" width="48" height="48"/><g fill="currentColor" stroke="none"><rect x="42" y="42" width="16" height="16"/></g></symbol>
+<symbol id="i-shield" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 10h68v48L50 92 16 58z"/><g fill="currentColor" stroke="none"><rect x="40" y="34" width="20" height="20"/></g></symbol>
+<symbol id="i-table" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="14" width="84" height="72"/><path d="M8 38h84M8 62h84M36 38v48M64 38v48"/></symbol>
+</svg>
+<deck-stage id="stage" width="1920" height="1080" data-deck-title="ESG Reporting with AI" data-route-stations="Wrong answer|Why it failed|The fix|Ask again|Honest limits|Your turn">
+
+  <!-- ================================================================ ACT 0 · before the route -->
+
+  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="ESG Reporting with AI" data-section="Workshop 04 · the question" data-seconds="40" data-mode="listen" data-note-key="cover" data-note="One question about one fictional company, held fixed for the whole session. Read it once and advance." data-route="none">
+    <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
+    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
+    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 04 · 26 September 2026</p>
+    <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">ESG Reporting<br />with AI.</h1>
+    <p class="cover-sub" id="cover-sub" data-motion="rise" style="--order:1">From raw inputs to clearer insights</p>
+    <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <div>
+        <span class="q-card__label">One question, held fixed</span>
+        <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+      </div>
+    </div>
+    <p class="cover-meta" id="cover-meta" data-motion="fade" style="--order:2">90 minutes · one fictional company · illustrative teaching factors</p>
+    <p class="cover-foot" id="cover-foot" data-motion="fade" style="--order:2">Rules as of 26 Sep 2026. Not legal advice.</p>
+  </section>
+
+  <section class="slide" id="host" data-act="0" data-kind="main" data-label="Your host" data-section="Your host" data-seconds="30" data-mode="listen" data-note-key="host" data-note="Thirty seconds: who you are, and that the company, the numbers and the factors are invented. Then move on." data-route="hidden">
+    <figure class="host-portrait" id="host-portrait" data-motion="fade" style="--order:0"><img src="./assets/tim-loehr.jpg" width="480" height="480" alt="Portrait of workshop host Tim Löhr" /></figure>
+    <div class="host-links" id="host-links" data-motion="fade" style="--order:1">
+      <span>timloehr.me</span>
+      <span>GitHub @Mavengence</span>
+      <span>LinkedIn Tim Löhr</span>
+    </div>
+    <p class="host-over" id="host-over" data-motion="fade" style="--order:0">Your host</p>
+    <h1 class="scene-title" id="host-name" data-motion="fade" style="--order:0">Tim Löhr</h1>
+    <p class="host-role" id="host-role" data-motion="fade" style="--order:0">Data Engineer at Meta, Warsaw</p>
+    <p class="host-lede" id="host-lede" data-motion="fade" data-focus style="--order:1">I build the data pipelines behind reports like this one. Today we follow one emissions figure from the bill it came from to the sentence that reports it.</p>
+    <div class="host-cols host-cols--static" id="host-cols" data-motion="rise" style="--order:2">
+      <div class="host-col" aria-labelledby="host-experience">
+        <h2 id="host-experience">Experience</h2>
+        <div class="host-item"><b>Data Engineer</b><span class="host-org">Meta</span></div>
+        <div class="host-item"><b>Data Scientist</b><span class="host-org">Red Bull, Apple</span></div>
+      </div>
+      <div class="host-col" aria-labelledby="host-education">
+        <h2 id="host-education">Education</h2>
+        <div class="host-item"><b>M.Sc. Computer Science</b><span class="host-org">University of Erlangen-Nuremberg</span></div>
+        <div class="host-item"><b>B.Sc. Computer Science</b><span class="host-org">TH Nuremberg</span></div>
+      </div>
+    </div>
+    <p class="host-boundary" id="host-boundary" data-motion="fade" style="--order:2"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Fictional company, invented numbers, illustrative teaching factors. No employer data.</span></p>
+  </section>
+
+  <section class="slide" id="the-case" data-act="0" data-kind="main" data-label="The case" data-section="The case · Kellbrunn and its question" data-seconds="100" data-mode="listen" data-note-key="the-case" data-note="Introduce Kellbrunn, its boundary and the people who send the question. Keep the second half of the question in mind." data-route="hidden">
+    <h1 class="scene-title" id="the-case-title" data-motion="rise" style="--order:0">A bank and a customer ask the same question every spring.</h1>
+    <p class="case-tag" id="the-case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="q-card the-case-question" id="the-case-question" data-motion="rise" style="--order:0">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and <span class="the-case-key" id="the-case-key">did they go down<svg class="the-case-u" id="the-case-u" data-step="2" data-focus aria-hidden="true"><line data-motion="draw" x1="0" y1="4" x2="100%" y2="4" /></svg></span> compared with 2024?</p>
+    </div>
+    <div class="the-case-company" id="the-case-company" data-motion="rise" style="--order:1">
+      <svg class="icon icon--72" aria-hidden="true"><use href="#i-company" /></svg>
+      <p class="the-case-company__text"><b>Kellbrunn Präzisionsteile GmbH</b><span>Metal parts supplier · <span class="num" data-num="staff">180</span> staff · three sites · turnover €<span class="num" data-j="company.turnover_meur">38</span>m</span></p>
+    </div>
+    <div class="the-case-map" id="the-case-map" role="img" aria-label="Boundary sketch: Werk Nord, Werk Süd, Lager Ost and the fleet inside the operational control boundary; Talbrück Beschichtung outside it." data-motion="fade" style="--order:2">
+      <div class="the-case-boundary">
+        <span class="the-case-boundary__label">Inside the boundary · operational control</span>
+        <div class="the-case-site" id="the-case-wn"><b>Werk Nord</b><span>HQ · stamping, assembly</span><span><span class="num" data-j="company.staff_WN">110</span> staff</span></div>
+        <div class="the-case-site" id="the-case-ws"><b>Werk Süd</b><span>CNC machining</span><span><span class="num" data-j="company.staff_WS">55</span> staff</span></div>
+        <div class="the-case-site" id="the-case-lo"><b>Lager Ost</b><span>Leased warehouse</span><span><span class="num" data-j="company.staff_LO">15</span> staff</span></div>
+        <div class="the-case-site" id="the-case-fl"><b>Fleet</b><span>Vans and cars</span><span><span class="num" data-j="company.vehicles">14</span> vehicles</span></div>
+      </div>
+      <svg class="the-case-link" width="120" height="40" viewBox="0 0 120 40" aria-hidden="true"><path class="edge edge--dashed" d="M0 20H120" /></svg>
+      <div class="the-case-jv" id="the-case-jv"><b>Talbrück Beschichtung GmbH</b><span>Kellbrunn holds <span class="num" data-j="company.jv_share_pct" data-form="pct">40%</span>, the partner runs it</span><span>Halle 3, on the Werk Nord premises</span></div>
+    </div>
+    <ol class="the-case-senders" id="the-case-senders" data-step="1">
+      <li class="the-case-sender" data-motion="rise" style="--order:0"><svg class="icon icon--56" aria-hidden="true"><use href="#i-bank" /></svg><p><b>House bank</b><span>Scope 1 and 2 for loan pricing</span></p></li>
+      <li class="the-case-sender" data-motion="rise" style="--order:1"><svg class="icon icon--56" aria-hidden="true"><use href="#i-company" /></svg><p><b>OEM customer</b><span>Supplier questionnaire</span></p></li>
+      <li class="the-case-sender" data-motion="rise" style="--order:2"><svg class="icon icon--56" aria-hidden="true"><use href="#i-book" /></svg><p><b>Voluntary report</b><span>Based on the VSME Basic Module: energy, Scope&nbsp;1&nbsp;and&nbsp;2</span></p></li>
+    </ol>
+    <p class="w-note the-case-foot" id="the-case-foot" data-motion="fade" style="--order:3">Kellbrunn has never been in CSRD scope. It still gets asked. Rules as of 26 Sep 2026.</p>
+  </section>
+
+  <section class="slide" id="the-arc" data-act="0" data-kind="main" data-label="The arc" data-section="The arc · one question, two data states" data-seconds="70" data-mode="listen" data-note-key="the-arc" data-note="Two runs of the same AI: first on the raw folder, then on the prepared ledger. Then show the route." data-route="final">
+    <h1 class="scene-title" id="the-arc-title">One question, asked twice.</h1>
+    <p class="lead the-arc-lead" id="the-arc-lead" data-motion="fade" style="--order:0">Same question, same AI, same factor table. Only the data changes.</p>
+    <svg class="the-arc-wires" width="1728" height="480" viewBox="0 0 1728 480" aria-hidden="true">
+      <path class="edge" d="M512 110H646" data-motion="draw" style="--order:1" /><path class="edge-head" d="M660 110l-14-7v14z" />
+      <path class="edge" d="M816 110H950" data-motion="draw" style="--order:2" /><path class="edge-head" d="M964 110l-14-7v14z" />
+      <path class="edge" d="M512 370H646" data-motion="draw" style="--order:1" /><path class="edge-head" d="M660 370l-14-7v14z" />
+      <path class="edge" d="M816 370H950" data-motion="draw" style="--order:2" /><path class="edge-head" d="M964 370l-14-7v14z" />
+    </svg>
+    <div class="the-arc-src the-arc-src--raw" id="the-arc-raw" data-motion="rise" style="--order:0">
+      <span class="the-arc-swatch" aria-hidden="true"></span>
+      <p><b>Raw folder</b><span><span class="num" data-num="files_raw_2025">22</span> files, as Kellbrunn has them today</span></p>
+    </div>
+    <div class="the-arc-src the-arc-src--ledger" id="the-arc-ledger" data-motion="rise" style="--order:1">
+      <span class="the-arc-swatch" aria-hidden="true"></span>
+      <p><b>Prepared data</b><span>One ledger, one coverage grid, one page of rules</span></p>
+    </div>
+    <div class="node the-arc-ai" id="the-arc-ai-1"><div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg></div><span class="node__label">AI</span></div>
+    <div class="node the-arc-ai" id="the-arc-ai-2"><div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg></div><span class="node__label">Same AI</span></div>
+    <div class="the-arc-answer the-arc-answer--raw" id="the-arc-answer-1" data-motion="rise" style="--order:2">
+      <span class="lane lane--export"><span class="lane__swatch"></span>Answer 1</span>
+      <p>A total and a trend, from files nobody has checked</p>
+    </div>
+    <div class="the-arc-answer the-arc-answer--ledger" id="the-arc-answer-2" data-motion="rise" style="--order:3">
+      <span class="lane lane--approved"><span class="lane__swatch"></span>Answer 2</span>
+      <p>The same question, answered from rows that point to pages</p>
+    </div>
+    <div class="the-arc-pointer" id="the-arc-pointer" data-step="1" data-focus>
+      <svg width="24" height="96" viewBox="0 0 24 96" aria-hidden="true"><path class="the-arc-pointer__line" d="M12 96V14" data-motion="draw" /><path class="the-arc-pointer__head" d="M0 20L12 0L24 20Z" data-motion="fade" style="--order:2" /></svg>
+      <p class="callout" data-motion="rise" style="--order:1">The route stays at the top of every scene from here on.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 1 · Wrong answer -->
+
+  <section class="slide" id="raw-folder" data-act="1" data-kind="main" data-label="The raw folder" data-section="Wrong answer · what the AI gets" data-seconds="150" data-mode="listen" data-note-key="raw-folder" data-note="A normal folder: monthly bills, an annual statement, landlord statements, a fuel-card export. Twelve bills for Werk Nord looks like a full year." data-route="shown">
+    <h1 class="scene-title" id="raw-folder-title">What the AI gets: <span class="num" data-num="files_raw_2025">22</span> files from 2025.</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="rf-tree" id="raw-folder-tree">
+      <p class="rf-root"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">rohdaten_2025</span></p>
+      <ul class="rf-list">
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">werk_nord</span><span class="rf-desc">Werk Nord, headquarters</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:0"><svg class="icon icon--32" aria-hidden="true"><use href="#i-invoice" /></svg><span class="w-mono">strom</span><span class="rf-count" id="raw-folder-count-12"><span class="num" data-num="files_wn_electricity">12</span><span class="rf-box" data-step="2" data-motion="stamp" aria-hidden="true"></span></span><span class="rf-desc">electricity bills</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-gas" /></svg><span class="w-mono">gas</span><span class="rf-count">1</span><span class="rf-desc">annual gas bill</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-meter" /></svg><span class="w-mono">zaehlerstaende_2025.csv</span><span class="rf-count">1</span><span class="rf-desc">meter readings</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">werk_sued</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:2">3</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:2">annual statement, certificate, gas bill</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">lager_ost</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:3">4</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:3">quarterly statements from the landlord</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">flotte</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:4">1</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:4">fuel-card export</span></li>
+      </ul>
+      <div class="rf-also" data-step="1" data-motion="fade" style="--order:4">
+        <p class="rf-also__lead">Plus last year's figures from the consultant, and the factor table.</p>
+        <p class="rf-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-table" /></svg><span class="w-mono">vorjahr/thg_2024_zusammenfassung.csv</span></p>
+        <p class="rf-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-factor" /></svg><span class="w-mono">faktoren/faktoren_lehrwerte.csv</span></p>
+      </div>
+    </div>
+    <div class="rf-docs" id="raw-folder-docs" data-motion="rise" style="--order:1">
+      <!-- gen:doc file=2025-01_strom_wn.md lines=0,2,5-6,10-12,22 seg=2:0 cls=doc--narrow id=raw-folder-bill --><figure class="doc doc--narrow" id="raw-folder-bill"><figcaption class="doc__file">2025-01_strom_wn.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.2025-01_strom_wn.lines.0" data-form="md">Stromrechnung 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.2" data-form="seg:0">Lindmark Energie GmbH</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.5">Kellbrunn Präzisionsteile GmbH</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.6">Werk Nord, Werkstraße 12</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.10">Rechnungsnummer: 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.11">Zählpunkt: DE0005678900WN01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.01.2025</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.22">Verbrauch 210.000 kWh</span></p></div></figure><!-- /gen:doc -->
+      <!-- gen:doc file=jahresuebersicht_2025_oekostrom.md lines=0,2,4-6,8-9,11 seg=2:0-1 id=raw-folder-ws --><figure class="doc" id="raw-folder-ws"><figcaption class="doc__file">jahresuebersicht_2025_oekostrom.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.0" data-form="md">Jahresübersicht Strom 2025</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.2" data-form="seg:0-1">Lindmark Energie GmbH · Tarif Ökostrom Plus</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.4">Kunde: Kellbrunn Präzisionsteile GmbH, Werk Süd</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.5">Zählpunkt: DE0005678900WS01</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.6">Zeitraum: 01.01.2025 bis 31.12.2025</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.8">Verbrauch 2025: 1.240 MWh</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.9">Vorjahr: 1.250 MWh</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.11">Ihr Tarif Ökostrom Plus: Für Ihre Liefermenge wurden Herkunftsnachweise entwertet (Bestätigung liegt bei).</span></p></div></figure><!-- /gen:doc -->
+    </div>
+  </section>
+
+  <section class="slide" id="raw-answer" data-act="1" data-kind="main" data-label="The raw answer" data-section="Wrong answer · the AI's answer from the raw folder" data-seconds="300" data-mode="vote" data-note-key="raw-answer" data-note="Constructed answer, all six traps firing. Read the total and the 7.5%, show the five checks it passes, then the vote. Do not reveal what is wrong." data-route="shown">
+    <h1 class="scene-title" id="raw-answer-title">The AI's answer from the raw folder</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="q-card raw-answer-question" id="raw-answer-question" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+    </div>
+    <article class="ev-run ra-answer" id="raw-answer-card" data-step="1" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>AI answer · raw folder</span></div>
+      <p class="w-label ra-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span class="w-constructed" data-j="meta.constructedLabel_en">Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+      <p class="ra-text">“Kellbrunn's 2025 emissions. Scope 1: <span class="num" data-num="wrong_s1">516.0 t</span> CO₂e, Scope 2: <span class="num" data-num="wrong_s2lb">1,350.5 t</span> CO₂e (location-based), total <b class="ra-total" data-focus><span class="num" data-num="wrong_total_lb">1,866.5 t</span></b>. That is <b class="ra-total"><span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span></b> below 2024 (<span class="num" data-num="total_lb_2024">2,017.5 t</span>). Scope 2 market-based: <span class="num" data-num="wrong_s2mb">1,350.0 t</span>. Since 2025 Kellbrunn runs on green electricity (Ökostrom Plus). The reduction comes mainly from efficiency measures at Werk Nord. Scope 1 rose by <span class="num" data-num="wrong_chg_s1_pct" data-form="abs">6.5%</span>, probably due to higher heating demand.”</p>
+    </article>
+    <div class="ra-checks" id="raw-answer-checks" data-step="2" data-motion="rise">
+      <p class="ra-checks__head">Looks trustworthy</p>
+      <ul class="ra-checks__list">
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:1"><use href="#i-pass" /></svg><span><span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span> below last year</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:2"><use href="#i-pass" /></svg><span><span class="num" data-num="wrong_per_employee_t">10.4 t</span> per employee (last year <span class="num" data-num="per_employee_2024_t" data-form="bare">11.2</span>)</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:3"><use href="#i-pass" /></svg><span><span class="num" data-num="files_wn_electricity">12</span> files in Werk Nord</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:4"><use href="#i-pass" /></svg><span>Shows its sums</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:4"><use href="#i-pass" /></svg><span>Both Scope 2 numbers given</span></li>
+      </ul>
+    </div>
+    <div class="room-vote" id="raw-answer-vote" data-step="3" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · remember your hand</span><p class="room-vote__q">Send this to the bank?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Send</span><span class="room-vote__option">Ask back first</span><span class="room-vote__option">Refuse</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 2 · Why it failed -->
+
+  <section class="slide" id="month-grid" data-act="2" data-kind="main" data-label="Month grid" data-section="Why it failed · twelve files, eleven months" data-seconds="300" data-mode="vote" data-note-key="month-grid" data-note="Twelve files are not twelve months. March twice, October missing, November and December on one bill. August is real." data-route="shown">
+    <h1 class="scene-title" id="month-grid-title">Twelve files, eleven months</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="mg-wrap" id="month-grid-wrap">
+      <!-- gen:grid --><svg class="mg" id="month-grid-svg" viewBox="0 0 1246 348" width="1246" height="348" role="img" aria-label="Site by month grid for 2025: which documents cover which months."><g class="mg-frame" data-step="1"><text class="mg-month" x="368" y="30" text-anchor="middle">J</text><text class="mg-month" x="444" y="30" text-anchor="middle">F</text><text class="mg-month" x="520" y="30" text-anchor="middle">M</text><text class="mg-month" x="596" y="30" text-anchor="middle">A</text><text class="mg-month" x="672" y="30" text-anchor="middle">M</text><text class="mg-month" x="748" y="30" text-anchor="middle">J</text><text class="mg-month" x="824" y="30" text-anchor="middle">J</text><text class="mg-month" x="900" y="30" text-anchor="middle">A</text><text class="mg-month" x="976" y="30" text-anchor="middle">S</text><text class="mg-month" x="1052" y="30" text-anchor="middle">O</text><text class="mg-month" x="1128" y="30" text-anchor="middle">N</text><text class="mg-month" x="1204" y="30" text-anchor="middle">D</text><text class="mg-row" x="0" y="78"><tspan class="mg-row__site">Werk Nord</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="128"><tspan class="mg-row__site">Werk Süd</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="178"><tspan class="mg-row__site">Lager Ost</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="228"><tspan class="mg-row__site">Werk Nord</tspan><tspan class="mg-row__carrier" dx="10">gas</tspan></text><text class="mg-row" x="0" y="278"><tspan class="mg-row__site">Werk Süd</tspan><tspan class="mg-row__carrier" dx="10">gas</tspan></text><text class="mg-row" x="0" y="328"><tspan class="mg-row__site">Fleet</tspan><tspan class="mg-row__carrier" dx="10">diesel</tspan></text><rect class="mg-cell" x="334" y="51" width="68" height="38" /><rect class="mg-cell" x="410" y="51" width="68" height="38" /><rect class="mg-cell" x="486" y="51" width="68" height="38" /><rect class="mg-cell" x="562" y="51" width="68" height="38" /><rect class="mg-cell" x="638" y="51" width="68" height="38" /><rect class="mg-cell" x="714" y="51" width="68" height="38" /><rect class="mg-cell" x="790" y="51" width="68" height="38" /><rect class="mg-cell" x="866" y="51" width="68" height="38" /><rect class="mg-cell" x="942" y="51" width="68" height="38" /><rect class="mg-cell" x="1018" y="51" width="68" height="38" /><rect class="mg-cell" x="1094" y="51" width="68" height="38" /><rect class="mg-cell" x="1170" y="51" width="68" height="38" /><rect class="mg-cell" x="334" y="101" width="68" height="38" /><rect class="mg-cell" x="410" y="101" width="68" height="38" /><rect class="mg-cell" x="486" y="101" width="68" height="38" /><rect class="mg-cell" x="562" y="101" width="68" height="38" /><rect class="mg-cell" x="638" y="101" width="68" height="38" /><rect class="mg-cell" x="714" y="101" width="68" height="38" /><rect class="mg-cell" x="790" y="101" width="68" height="38" /><rect class="mg-cell" x="866" y="101" width="68" height="38" /><rect class="mg-cell" x="942" y="101" width="68" height="38" /><rect class="mg-cell" x="1018" y="101" width="68" height="38" /><rect class="mg-cell" x="1094" y="101" width="68" height="38" /><rect class="mg-cell" x="1170" y="101" width="68" height="38" /><rect class="mg-cell" x="334" y="151" width="68" height="38" /><rect class="mg-cell" x="410" y="151" width="68" height="38" /><rect class="mg-cell" x="486" y="151" width="68" height="38" /><rect class="mg-cell" x="562" y="151" width="68" height="38" /><rect class="mg-cell" x="638" y="151" width="68" height="38" /><rect class="mg-cell" x="714" y="151" width="68" height="38" /><rect class="mg-cell" x="790" y="151" width="68" height="38" /><rect class="mg-cell" x="866" y="151" width="68" height="38" /><rect class="mg-cell" x="942" y="151" width="68" height="38" /><rect class="mg-cell" x="1018" y="151" width="68" height="38" /><rect class="mg-cell" x="1094" y="151" width="68" height="38" /><rect class="mg-cell" x="1170" y="151" width="68" height="38" /><rect class="mg-cell" x="334" y="201" width="68" height="38" /><rect class="mg-cell" x="410" y="201" width="68" height="38" /><rect class="mg-cell" x="486" y="201" width="68" height="38" /><rect class="mg-cell" x="562" y="201" width="68" height="38" /><rect class="mg-cell" x="638" y="201" width="68" height="38" /><rect class="mg-cell" x="714" y="201" width="68" height="38" /><rect class="mg-cell" x="790" y="201" width="68" height="38" /><rect class="mg-cell" x="866" y="201" width="68" height="38" /><rect class="mg-cell" x="942" y="201" width="68" height="38" /><rect class="mg-cell" x="1018" y="201" width="68" height="38" /><rect class="mg-cell" x="1094" y="201" width="68" height="38" /><rect class="mg-cell" x="1170" y="201" width="68" height="38" /><rect class="mg-cell" x="334" y="251" width="68" height="38" /><rect class="mg-cell" x="410" y="251" width="68" height="38" /><rect class="mg-cell" x="486" y="251" width="68" height="38" /><rect class="mg-cell" x="562" y="251" width="68" height="38" /><rect class="mg-cell" x="638" y="251" width="68" height="38" /><rect class="mg-cell" x="714" y="251" width="68" height="38" /><rect class="mg-cell" x="790" y="251" width="68" height="38" /><rect class="mg-cell" x="866" y="251" width="68" height="38" /><rect class="mg-cell" x="942" y="251" width="68" height="38" /><rect class="mg-cell" x="1018" y="251" width="68" height="38" /><rect class="mg-cell" x="1094" y="251" width="68" height="38" /><rect class="mg-cell" x="1170" y="251" width="68" height="38" /><rect class="mg-cell" x="334" y="301" width="68" height="38" /><rect class="mg-cell" x="410" y="301" width="68" height="38" /><rect class="mg-cell" x="486" y="301" width="68" height="38" /><rect class="mg-cell" x="562" y="301" width="68" height="38" /><rect class="mg-cell" x="638" y="301" width="68" height="38" /><rect class="mg-cell" x="714" y="301" width="68" height="38" /><rect class="mg-cell" x="790" y="301" width="68" height="38" /><rect class="mg-cell" x="866" y="301" width="68" height="38" /><rect class="mg-cell" x="942" y="301" width="68" height="38" /><rect class="mg-cell" x="1018" y="301" width="68" height="38" /><rect class="mg-cell" x="1094" y="301" width="68" height="38" /><rect class="mg-cell" x="1170" y="301" width="68" height="38" /></g><g class="mg-fill" data-step="3"><rect class="mg-doc-bg" x="334" y="51" width="68" height="38" /><rect class="mg-doc" x="334" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="410" y="51" width="68" height="38" /><rect class="mg-doc" x="410" y="51" width="68" height="38" /><g class="mg-dup" data-focus><rect class="mg-doc-bg" x="486" y="51" width="68" height="38" /><rect class="mg-doc" x="486" y="51" width="68" height="38" /><rect class="mg-badge" x="524" y="45" width="34" height="34" /><text class="mg-badge__t" x="541" y="70" text-anchor="middle">2</text></g><rect class="mg-doc-bg" x="562" y="51" width="68" height="38" /><rect class="mg-doc" x="562" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="638" y="51" width="68" height="38" /><rect class="mg-doc" x="638" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="714" y="51" width="68" height="38" /><rect class="mg-doc" x="714" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="790" y="51" width="68" height="38" /><rect class="mg-doc" x="790" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="866" y="51" width="68" height="38" /><rect class="mg-doc" x="866" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="942" y="51" width="68" height="38" /><rect class="mg-doc" x="942" y="51" width="68" height="38" /><rect class="mg-missing" x="1018" y="51" width="68" height="38" /><rect class="mg-doc-bg" x="1094" y="51" width="144" height="38" /><rect class="mg-doc mg-doc--span" x="1094" y="51" width="144" height="38" /><path class="mg-span" d="M1095 92v6H1237v-6" /><rect class="mg-tag-bg" x="1111.0" y="56" width="110" height="28" /><text class="mg-tag" x="1166" y="77" text-anchor="middle">one bill</text><rect class="mg-doc-bg" x="334" y="101" width="904" height="38" /><rect class="mg-doc mg-doc--span" x="334" y="101" width="904" height="38" /><path class="mg-span" d="M335 142v6H1237v-6" /><rect class="mg-tag-bg" x="684.0" y="106" width="204" height="28" /><text class="mg-tag" x="786" y="127" text-anchor="middle">annual statement</text><rect class="mg-doc-bg" x="334" y="151" width="220" height="38" /><rect class="mg-doc mg-doc--span" x="334" y="151" width="220" height="38" /><path class="mg-span" d="M335 192v6H553v-6" /><rect class="mg-tag-bg" x="424.0" y="156" width="40" height="28" /><text class="mg-tag" x="444" y="177" text-anchor="middle">Q1</text><rect class="mg-doc-bg" x="562" y="151" width="220" height="38" /><rect class="mg-doc mg-doc--span" x="562" y="151" width="220" height="38" /><path class="mg-span" d="M563 192v6H781v-6" /><rect class="mg-tag-bg" x="652.0" y="156" width="40" height="28" /><text class="mg-tag" x="672" y="177" text-anchor="middle">Q2</text><rect class="mg-doc-bg" x="790" y="151" width="220" height="38" /><rect class="mg-doc mg-doc--span" x="790" y="151" width="220" height="38" /><path class="mg-span" d="M791 192v6H1009v-6" /><rect class="mg-tag-bg" x="880.0" y="156" width="40" height="28" /><text class="mg-tag" x="900" y="177" text-anchor="middle">Q3</text><rect class="mg-doc-bg" x="1018" y="151" width="220" height="38" /><rect class="mg-doc mg-doc--span" x="1018" y="151" width="220" height="38" /><path class="mg-span" d="M1019 192v6H1237v-6" /><rect class="mg-tag-bg" x="1108.0" y="156" width="40" height="28" /><text class="mg-tag" x="1128" y="177" text-anchor="middle">Q4</text><rect class="mg-doc-bg" x="334" y="201" width="904" height="38" /><rect class="mg-doc mg-doc--span" x="334" y="201" width="904" height="38" /><path class="mg-span" d="M335 242v6H1237v-6" /><rect class="mg-tag-bg" x="684.0" y="206" width="204" height="28" /><text class="mg-tag" x="786" y="227" text-anchor="middle">annual statement</text><rect class="mg-doc-bg" x="334" y="251" width="904" height="38" /><rect class="mg-doc mg-doc--span" x="334" y="251" width="904" height="38" /><path class="mg-span" d="M335 292v6H1237v-6" /><rect class="mg-tag-bg" x="684.0" y="256" width="204" height="28" /><text class="mg-tag" x="786" y="277" text-anchor="middle">annual statement</text><rect class="mg-doc-bg" x="334" y="301" width="68" height="38" /><rect class="mg-doc" x="334" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="410" y="301" width="68" height="38" /><rect class="mg-doc" x="410" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="486" y="301" width="68" height="38" /><rect class="mg-doc" x="486" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="562" y="301" width="68" height="38" /><rect class="mg-doc" x="562" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="638" y="301" width="68" height="38" /><rect class="mg-doc" x="638" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="714" y="301" width="68" height="38" /><rect class="mg-doc" x="714" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="790" y="301" width="68" height="38" /><rect class="mg-doc" x="790" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="866" y="301" width="68" height="38" /><rect class="mg-doc" x="866" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="942" y="301" width="68" height="38" /><rect class="mg-doc" x="942" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="1018" y="301" width="68" height="38" /><rect class="mg-doc" x="1018" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="1094" y="301" width="68" height="38" /><rect class="mg-doc" x="1094" y="301" width="68" height="38" /><rect class="mg-doc-bg" x="1170" y="301" width="68" height="38" /><rect class="mg-doc" x="1170" y="301" width="68" height="38" /><path class="mg-dip" d="M892 91l8 9 8-9" /></g><g class="mg-meter" data-step="5" data-focus><rect x="1018" y="51" width="68" height="38" data-motion="fade" /><text x="1052" y="77" text-anchor="middle" data-motion="fade">meter</text></g></svg><!-- /gen:grid -->
+    </div>
+    <div class="mg-extra" id="month-grid-extra" data-step="3" data-motion="fade" style="--order:2">
+      <span class="mg-extra__label">Also in the folder</span>
+      <span class="mg-extra__bar"><span>Talbrück Beschichtung GmbH · 12 months</span></span>
+    </div>
+    <div class="mg-side" id="month-grid-side">
+      <p class="stamp mg-files" id="month-grid-files"><svg class="icon" aria-hidden="true"><use href="#i-folder" /></svg><span><span class="w-mono">werk_nord/strom</span> · <span class="num" data-num="files_wn_electricity">12</span> files</span></p>
+      <ul class="mg-legend" data-step="3" data-motion="fade" style="--order:1">
+        <li><span class="mg-key mg-key--doc"></span>Bill in the folder</li>
+        <li><span class="mg-key mg-key--dup">2</span>Same bill twice</li>
+        <li><span class="mg-key mg-key--missing"></span>No bill for the month</li>
+        <li><span class="mg-key mg-key--span"><span class="mg-key__cell"></span><span class="mg-key__cell"></span></span>One bill, several months</li>
+        <li><span class="mg-key mg-key--other"></span>Another company's bill</li>
+        <li data-step="5"><span class="mg-key mg-key--meter"></span>Meter reading</li>
+      </ul>
+      <p class="mg-aug" data-step="3" data-step-until="4" data-motion="fade" style="--order:3"><b>August <span class="num" data-num="aug_kwh">120,000 kWh</span></b><span><span class="num" data-num="aug_vs_jul_pct">−31%</span> against July. Error or real?</span></p>
+    </div>
+    <div class="room-vote" id="month-grid-vote" data-step="2" data-step-until="3" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How many months does the Werk Nord folder cover?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">12</span><span class="room-vote__option">11</span><span class="room-vote__option">Can't tell from the file count</span></div>
+    </div>
+    <div class="mg-march" id="month-grid-march" data-step="4" data-motion="rise">
+      <!-- gen:doc file=2025-03_strom_wn.md lines=0,2,10,22 seg=2:0 mark=10 cls=doc--compact id=month-grid-march-a --><figure class="doc doc--compact" id="month-grid-march-a"><figcaption class="doc__file">2025-03_strom_wn.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.2025-03_strom_wn.lines.0" data-form="md">Stromrechnung 4711-03</span></p><p class="doc__line"><span data-j="documents.2025-03_strom_wn.lines.2" data-form="seg:0">Lindmark Energie GmbH</span></p><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.2025-03_strom_wn.lines.10">Rechnungsnummer: 4711-03</span></p></div><p class="doc__line"><span data-j="documents.2025-03_strom_wn.lines.22">Verbrauch 205.000 kWh</span></p></div></figure><!-- /gen:doc -->
+      <!-- gen:doc file=scan_rechnung_maerz.md lines=0,2,4,13,25 seg=4:0 box=4 mark=13 cls=doc--compact id=month-grid-march-b --><figure class="doc doc--compact" id="month-grid-march-b"><figcaption class="doc__file">scan_rechnung_maerz.md</figcaption><div class="doc__sheet"><p class="doc__line"><span data-j="documents.scan_rechnung_maerz.lines.0">WG: Rechnung März (weitergeleitet vom Einkauf, erneut gescannt)</span></p><p class="doc__title"><span data-j="documents.scan_rechnung_maerz.lines.2" data-form="md">Stromrechnung 4711-03</span></p><div class="doc__box"><p class="doc__line"><span data-j="documents.scan_rechnung_maerz.lines.4" data-form="seg:0">Lindmark Enerqie GmbH</span></p></div><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.scan_rechnung_maerz.lines.13">Rechnungsnummer: 4711-03</span></p></div><p class="doc__line"><span data-j="documents.scan_rechnung_maerz.lines.25">Verbrauch 205.000 kWh</span></p></div></figure><!-- /gen:doc -->
+    </div>
+    <div class="mg-meter-rows" id="month-grid-meter" data-step="5" data-motion="rise">
+      <p class="doc__file">werk_nord/zaehlerstaende_2025.csv</p>
+      <div class="mg-csv">
+        <p><span data-j="inputs.meterReadings.9.date">30.09.2025</span><span data-j="inputs.meterReadings.9.kwh">4812300</span></p>
+        <p><span data-j="inputs.meterReadings.10.date">31.10.2025</span><span data-j="inputs.meterReadings.10.kwh">5012300</span></p>
+      </div>
+      <p class="mg-sub"><span data-j="inputs.meterReadings.10.kwh" data-form="int">5,012,300</span> − <span data-j="inputs.meterReadings.9.kwh" data-form="int">4,812,300</span> = <b><span class="num" data-num="oct_kwh">200,000 kWh</span></b> in October</p>
+    </div>
+    <div class="focus-line mg-net" id="month-grid-net" data-step="6" data-motion="rise">
+      <p class="mg-net__row"><span>Duplicate March</span><span>+<span class="num" data-num="dup_kwh">205,000 kWh</span></span></p>
+      <p class="mg-net__row"><span>Missing October</span><span>− <span class="num" data-num="oct_kwh">200,000 kWh</span></span></p>
+      <p class="mg-net__row mg-net__row--sum"><span>Werk Nord total off by</span><span><span class="num" data-num="wn_net_raw_vs_right_kwh">+5,000 kWh</span></span></p>
+      <p class="mg-net__note">Two errors, almost no trace in the total.</p>
+    </div>
+  </section>
+
+  <section class="slide" id="one-unit" data-act="2" data-kind="main" data-label="One unit" data-section="Why it failed · a dot that means a thousand" data-seconds="225" data-mode="vote" data-note-key="one-unit" data-note="On a German bill the dot separates thousands. Vote, reveal C, show what the misread does, then the two checks that catch it." data-route="shown">
+    <h1 class="scene-title" id="one-unit-title">What does “1.240 MWh” mean?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <!-- gen:doc file=jahresuebersicht_2025_oekostrom.md lines=0,2,4-6,8-9 seg=2:0-1 mark=8 id=one-unit-doc cls=ou-doc --><figure class="doc ou-doc" id="one-unit-doc"><figcaption class="doc__file">jahresuebersicht_2025_oekostrom.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.0" data-form="md">Jahresübersicht Strom 2025</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.2" data-form="seg:0-1">Lindmark Energie GmbH · Tarif Ökostrom Plus</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.4">Kunde: Kellbrunn Präzisionsteile GmbH, Werk Süd</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.5">Zählpunkt: DE0005678900WS01</span></p><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.6">Zeitraum: 01.01.2025 bis 31.12.2025</span></p><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.8">Verbrauch 2025: 1.240 MWh</span></p></div><p class="doc__line"><span data-j="documents.jahresuebersicht_2025_oekostrom.lines.9">Vorjahr: 1.250 MWh</span></p></div></figure><!-- /gen:doc -->
+    <ol class="ou-options" id="one-unit-options">
+      <li class="ou-opt" data-motion="rise" style="--order:0"><span class="ou-opt__letter">A</span><span class="ou-opt__text">1.24 MWh</span></li>
+      <li class="ou-opt" data-motion="rise" style="--order:1"><span class="ou-opt__letter">B</span><span class="ou-opt__text"><span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh</span></li>
+      <li class="ou-opt ou-opt--c" id="one-unit-c" data-motion="rise" style="--order:2"><span class="ou-opt__letter">C</span><span class="ou-opt__text"><span class="num" data-num="el_ws_mwh">1,240 MWh</span> = <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span></span><span class="ou-right" data-step="2" data-motion="stamp"><span class="chip chip--pass"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg>Right reading</span></span><span class="ou-ring" data-step="2" data-step-until="3" data-focus aria-hidden="true"></span></li>
+    </ol>
+    <p class="w-note ou-same" data-step="3" data-motion="fade">A and B are the same reading, and both are a thousand times too small.</p>
+    <div class="ou-effect" id="one-unit-effect" data-step="3" data-motion="rise">
+      <div class="ou-bar-row"><span class="ou-bar-label">Read as <span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh</span><span class="ou-bar ou-bar--misread" data-motion="grow" data-axis="x"></span></div>
+      <div class="ou-bar-row"><span class="ou-bar-label">Read as <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span></span><span class="ou-bar ou-bar--right" data-motion="grow" data-axis="x" style="--order:1"></span></div>
+      <p class="ou-effect__t" data-focus><span class="num" data-num="unit_lb_t">−495.5 t</span> location-based</p>
+    </div>
+    <div class="check ou-check" id="one-unit-check" data-step="4" data-motion="rise">
+      <p class="check__head"><svg class="icon" aria-hidden="true"><use href="#i-person" /></svg>Two checks that need no number format</p>
+      <p><span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh ÷ <span class="num" data-j="company.staff_WS">55</span> staff = <b><span class="num" data-num="ws_misread_kwh_per_employee">23 kWh</span></b> per person per year. Correct: <span class="num" data-num="ws_kwh_per_employee">22,545 kWh</span>.</p>
+      <p>Last year on the same page: <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span>.</p>
+    </div>
+    <div class="room-vote" id="one-unit-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">What does “1.240 MWh” mean?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">A</span><span class="room-vote__option">B</span><span class="room-vote__option">C</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="whose-bill" data-act="2" data-kind="main" data-label="Whose bill" data-section="Why it failed · whose bill is this?" data-seconds="180" data-mode="vote" data-note-key="whose-bill" data-note="The bill is addressed to the joint venture. Operational control, written down before the run, keeps it out; the row stays with its reason." data-route="shown">
+    <h1 class="scene-title" id="whose-bill-title">Whose bill is this?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <!-- gen:doc file=jahresrechnung_tb_2025.md lines=0,2,4-7,9-12,22 seg=2:0 mark=5-7 id=whose-bill-doc cls=wb-doc --><figure class="doc wb-doc" id="whose-bill-doc"><figcaption class="doc__file">jahresrechnung_tb_2025.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.jahresrechnung_tb_2025.lines.0" data-form="md">Stromrechnung TB-2025-12</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.2" data-form="seg:0">Lindmark Energie GmbH</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.4">Rechnungsempfänger:</span></p><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.5">Talbrück Beschichtung GmbH</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.6">Halle 3, Werkstraße 12</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.7">z. Hd. Einkauf Kellbrunn Präzisionsteile GmbH (Rechnungsprüfung laut Dienstleistungsvertrag)</span></p></div><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.9">Kundennummer: 55-0388</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.10">Rechnungsnummer: TB-2025-12</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.11">Zählpunkt: DE0005678900TB07</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.12.2025</span></p><p class="doc__line"><span data-j="documents.jahresrechnung_tb_2025.lines.22">Verbrauch 1.000.000 kWh</span></p></div></figure><!-- /gen:doc -->
+    <div class="callout wb-note" id="whose-bill-note" data-motion="rise" style="--order:1">
+      <p>Kellbrunn holds <span class="num" data-j="company.jv_share_pct" data-form="pct">40%</span>. The partner runs it.</p>
+      <p>Own customer number <span class="w-mono" data-j="inputs.customerNoJV">55-0388</span></p>
+      <p>Own meter <span class="w-mono" data-j="inputs.meters.TB">DE0005678900TB07</span></p>
+    </div>
+    <div class="wb-map" id="whose-bill-map" role="img" aria-label="Boundary sketch: Werk Nord, Werk Süd, Lager Ost and fleet inside; Talbrück outside." data-motion="fade" style="--order:2">
+      <div class="wb-inside"><span class="wb-inside__label">Inside · operational control</span><span>Werk Nord · Werk Süd · Lager Ost · fleet</span></div>
+      <div class="wb-outside"><b>Talbrück</b><span>outside</span></div>
+    </div>
+    <div class="wb-answer" id="whose-bill-answer" data-step="2" data-motion="rise">
+      <p class="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-refuse" /></svg><span>Leave it out and note it</span></p>
+      <p class="wb-answer__why">Operational control: the partner runs the plant, and the contract and the meter are Talbrück's.</p>
+      <p class="wb-row"><span class="w-mono">E-TB-01</span><span>excluded · boundary · Scope 3 Category 15 candidate</span></p>
+    </div>
+    <div class="wb-effect" id="whose-bill-effect" data-step="3" data-motion="rise">
+      <p class="w-label">If it is counted</p>
+      <p class="wb-effect__row"><span class="num" data-num="jv_kwh">1,000,000 kWh</span></p>
+      <p class="wb-effect__row" data-focus><span class="num" data-num="jv_lb_t">+400.0 t</span> location-based</p>
+      <p class="wb-effect__row"><span class="num" data-num="jv_rm_t">+600.0 t</span> at the residual mix</p>
+    </div>
+    <div class="room-vote" id="whose-bill-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Whose bill is this?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Include 100%</span><span class="room-vote__option"><span>Include <span data-j="company.jv_share_pct" data-form="pct">40%</span></span></span><span class="room-vote__option">Leave it out and note it</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="anatomy" data-act="2" data-kind="main" data-label="Anatomy" data-section="Why it failed · six errors, one small gap" data-seconds="255" data-mode="vote" data-note-key="anatomy" data-note="Prediction vote first. Then remove the errors in pairs: duplicate and October, Talbrück and the unit, gas and AdBlue. The total swings and lands 48.7 t away." data-route="shown">
+    <h1 class="scene-title" id="anatomy-title"><span class="an-title-q" data-step-until="5">What do six errors do to the total?</span><span class="an-title-a" data-step="5" data-motion="fade">Six errors, <span class="num" data-num="gap_lb_t" data-form="bare">48.7</span> tonnes apart: <span class="num" data-num="gap_lb_pct">2.5%</span></span></h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="an-chart" id="anatomy-chart">
+      <!-- gen:waterfall --><svg class="wf" id="anatomy-wf" viewBox="0 0 1360 530" width="1360" height="530" role="img" aria-label="Waterfall, location-based Scope 1 and 2: from the raw-folder answer, one correction per bar, to the right total."><path class="wf-axis" d="M16 456H1194" /><path class="wf-break" d="M10 466l10 -20M20 466l10 -20" /><g class="wf-col" data-col="start" data-step="0"><rect class="wf-bar wf-bar--raw" x="40" y="145.0" width="104" height="311.0" data-motion="grow" /><text class="wf-val" x="92" y="131.0" text-anchor="middle" data-j="waterfall.lb.start.running_en">1,866.5</text><text class="wf-name" x="92" y="490" text-anchor="middle">Raw-folder</text><text class="wf-name wf-name--sub" x="92" y="518" text-anchor="middle">answer</text></g><g class="wf-col" data-col="T1" data-step="2"><path class="wf-link" d="M144 145.0H190" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="190" y="145.0" width="104" height="54.7" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="242" y="233.7" text-anchor="middle" data-j="waterfall.lb.T1.change_en">−82.0</text><text class="wf-name" x="242" y="490" text-anchor="middle">Duplicate</text><text class="wf-name wf-name--sub" x="242" y="518" text-anchor="middle">March</text></g><g class="wf-col" data-col="T2" data-step="2"><path class="wf-link" d="M294 199.7H340" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="340" y="146.3" width="104" height="53.3" data-motion="grow" style="--grow-origin: 50% 100%" /><text class="wf-val wf-val--change" x="392" y="132.3" text-anchor="middle" data-j="waterfall.lb.T2.change_en">+80.0</text><text class="wf-name" x="392" y="490" text-anchor="middle">October</text><text class="wf-name wf-name--sub" x="392" y="518" text-anchor="middle">missing</text></g><g class="wf-col" data-col="T3" data-step="3"><path class="wf-link" d="M444 146.3H490" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="490" y="146.3" width="104" height="266.7" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="542" y="447.0" text-anchor="middle" data-j="waterfall.lb.T3.change_en">−400.0</text><text class="wf-name" x="542" y="490" text-anchor="middle">Talbrück</text><text class="wf-name wf-name--sub" x="542" y="518" text-anchor="middle">bill</text></g><g class="wf-col" data-col="T4" data-step="3"><path class="wf-link" d="M594 413.0H640" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="640" y="82.7" width="104" height="330.3" data-motion="grow" style="--grow-origin: 50% 100%" /><text class="wf-val wf-val--change" x="692" y="68.7" text-anchor="middle" data-j="waterfall.lb.T4.change_en">+495.5</text><text class="wf-name" x="692" y="490" text-anchor="middle">1.240 MWh</text><text class="wf-name wf-name--sub" x="692" y="518" text-anchor="middle">misread</text></g><g class="wf-col" data-col="T5" data-step="4"><path class="wf-link" d="M744 82.7H790" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="790" y="82.7" width="104" height="27.9" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="842" y="144.5" text-anchor="middle" data-j="waterfall.lb.T5.change_en">−41.8</text><text class="wf-name" x="842" y="490" text-anchor="middle">Gas</text><text class="wf-name wf-name--sub" x="842" y="518" text-anchor="middle">Hs / Hi</text></g><g class="wf-col" data-col="T6" data-step="4"><path class="wf-link" d="M894 110.5H940" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="940" y="110.5" width="104" height="3.0" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="992" y="147.5" text-anchor="middle" data-j="waterfall.lb.T6.change_en">−3.0</text><text class="wf-name" x="992" y="490" text-anchor="middle">AdBlue</text><text class="wf-name wf-name--sub" x="992" y="518" text-anchor="middle">as diesel</text></g><g class="wf-col" data-col="end" data-step="2"><rect class="wf-bar wf-bar--ink" x="1090" y="112.5" width="104" height="343.5" data-motion="grow" /><text class="wf-val wf-val--end" x="1142" y="152.5" text-anchor="middle" data-num="total_lb_2025" data-form="bare">1,915.2</text><text class="wf-name" x="1142" y="490" text-anchor="middle">Right</text><text class="wf-name wf-name--sub" x="1142" y="518" text-anchor="middle">total</text></g><g class="wf-col wf-col--pending" data-step-until="2"><text class="wf-pending" x="1142" y="336" text-anchor="middle">?</text><text class="wf-name" x="1142" y="490" text-anchor="middle">Right</text><text class="wf-name wf-name--sub" x="1142" y="518" text-anchor="middle">total</text></g><g class="wf-swing" data-step="5" data-focus><path class="wf-swing__line" d="M40 82.7H1222M40 413.0H1222" data-motion="draw" /><path class="wf-swing__bracket" d="M1222 82.7h14V413.0h-14" data-motion="draw" style="--order:1" /><text class="wf-swing__label" x="1248" y="92.7" data-num="wf_lb_max_t" data-motion="fade" style="--order:2">1,960.0 t</text><text class="wf-swing__label" x="1248" y="423.0" data-num="wf_lb_min_t" data-motion="fade" style="--order:2">1,464.5 t</text></g></svg><!-- /gen:waterfall -->
+    </div>
+    <div class="an-cards" id="anatomy-cards" data-step="4">
+      <div class="callout an-card" data-motion="rise" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gas" /></svg><p>Gas bill says Brennwert (Hs) on page 2; the AI picked the Hi factor: <b><span class="num" data-num="gasbasis_t">+41.8 t</span></b></p></div>
+      <div class="callout an-card" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-fleet" /></svg><p>AdBlue is not diesel: <b><span class="num" data-num="adblue_t">+3.0 t</span></b></p></div>
+    </div>
+    <p class="w-note an-caption" id="anatomy-caption" data-step="2" data-motion="fade">Computed from the traps: what they do when they fire. Location-based Scope 1 and 2; the raw-folder answer is constructed from documented failure modes, not a recorded run.</p>
+    <p class="stamp an-accident" id="anatomy-accident" data-step="5" data-motion="stamp" style="--order:3"><span>The total was right by accident.</span></p>
+    <div class="an-predict" id="anatomy-predict" data-step-until="1" data-motion="fade" style="--order:2">
+      <svg class="icon icon--56" aria-hidden="true"><use href="#i-question" /></svg>
+      <p>Predict: how far is the AI's total from the right one?</p>
+    </div>
+    <div class="room-vote" id="anatomy-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · prediction</span><p class="room-vote__q">How far is the AI's total from the right one?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Less than 5%</span><span class="room-vote__option">About 10%</span><span class="room-vote__option">More than 20%</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 3 · The fix -->
+
+  <section class="slide" id="the-ledger" data-act="3" data-kind="main" data-label="The ledger" data-section="The fix · one row per quantity" data-seconds="390" data-recovery-seconds="90" data-mode="do" data-note-key="the-ledger" data-note="Hold the question, model, prompt and factor table constant; change how the data arrives. Then the ledger, one evidence row, and three rows the room completes." data-route="shown">
+    <h1 class="scene-title" id="the-ledger-title">One row per quantity, and every row points to a page</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="tl-same" id="the-ledger-same" data-step-until="1">
+      <div class="tl-col" data-motion="rise" style="--order:0">
+        <p class="tl-col__head">Same</p>
+        <ul>
+          <li>The question</li>
+          <li>The AI model, named in the run record</li>
+          <li>The prompt</li>
+          <li>The factor table</li>
+          <li>The <span>2024</span> figures</li>
+        </ul>
+      </div>
+      <div class="tl-col tl-col--changed" data-motion="rise" style="--order:1">
+        <p class="tl-col__head">Changed</p>
+        <div class="tl-change">
+          <p class="tl-change__from"><span class="tl-swatch tl-swatch--raw" aria-hidden="true"></span><span><span class="num" data-num="files_raw_2025">22</span> raw files</span></p>
+          <svg width="56" height="24" viewBox="0 0 56 24" aria-hidden="true"><path class="edge" d="M4 12H40" /><path class="edge-head" d="M38 3L52 12L38 21Z" /></svg>
+          <ul class="tl-change__to">
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one ledger</li>
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one coverage grid</li>
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one page of rules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tl-table" id="the-ledger-table" data-step="1" data-step-until="4" data-motion="rise">
+      <!-- gen:ledger rows=E-WN-01,E-WN-03D,E-TB-01,D-FL-02 id=the-ledger-excerpt --><table class="lg" id="the-ledger-excerpt"><thead><tr><th><span class="lg-h">Row</span><span class="lg-f">row_id</span></th><th class="lg-entity-head" id="the-ledger-entity-head"><span class="lg-h">Company on the bill</span><span class="lg-f">entity_on_document</span></th><th class="lg-num"><span class="lg-h">As printed</span><span class="lg-f">qty_source</span></th><th class="lg-num"><span class="lg-h">Counted</span><span class="lg-f">qty_norm</span></th><th><span class="lg-h">Status</span><span class="lg-f">status</span></th><th><span class="lg-h">Source: file and quote</span><span class="lg-f">source_file, source_quote</span></th></tr></thead><tbody><tr class="lg-row" data-row="E-WN-01"><td class="lg-id"><span data-j="ledger.E-WN-01.row_id">E-WN-01</span></td><td class="lg-entity"><span data-j="ledger.E-WN-01.entity_on_document">Kellbrunn Präzisionsteile GmbH, Werk Nord</span></td><td class="lg-num"><span data-j="ledger.E-WN-01.qty_source">210.000</span> <span data-j="ledger.E-WN-01.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-WN-01.qty_norm" data-form="int">210,000</span> <span data-j="ledger.E-WN-01.unit_norm">kWh</span></td><td class="lg-status"><span data-j="ledger.E-WN-01.status">actual</span></td><td class="lg-src"><span class="lg-file">2025-01_strom_wn.md</span><span class="lg-quote" data-j="ledger.E-WN-01.source_quote">Verbrauch 210.000 kWh</span></td></tr><tr class="lg-row lg-row--excluded" data-row="E-WN-03D"><td class="lg-id"><span data-j="ledger.E-WN-03D.row_id">E-WN-03D</span></td><td class="lg-entity"><span data-j="ledger.E-WN-03D.entity_on_document">Kellbrunn Präzisionsteile GmbH, Werk Nord</span></td><td class="lg-num"><span data-j="ledger.E-WN-03D.qty_source">205.000</span> <span data-j="ledger.E-WN-03D.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-WN-03D.qty_norm" data-form="int">0</span> <span data-j="ledger.E-WN-03D.unit_norm">kWh</span></td><td class="lg-status"><span data-j="ledger.E-WN-03D.status">excluded</span></td><td class="lg-src"><span class="lg-file">scan_rechnung_maerz.md</span><span class="lg-quote" data-j="ledger.E-WN-03D.source_quote">Verbrauch 205.000 kWh</span></td></tr><tr class="lg-row lg-row--excluded" data-row="E-TB-01"><td class="lg-id"><span data-j="ledger.E-TB-01.row_id">E-TB-01</span></td><td class="lg-entity"><span data-j="ledger.E-TB-01.entity_on_document">Talbrück Beschichtung GmbH, Halle 3</span></td><td class="lg-num"><span data-j="ledger.E-TB-01.qty_source">1.000.000</span> <span data-j="ledger.E-TB-01.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-TB-01.qty_norm" data-form="int">0</span> <span data-j="ledger.E-TB-01.unit_norm">kWh</span></td><td class="lg-status"><span data-j="ledger.E-TB-01.status">excluded</span></td><td class="lg-src"><span class="lg-file">jahresrechnung_tb_2025.md</span><span class="lg-quote" data-j="ledger.E-TB-01.source_quote">Rechnungsempfänger: Talbrück Beschichtung GmbH</span></td></tr><tr class="lg-row lg-row--excluded" data-row="D-FL-02"><td class="lg-id"><span data-j="ledger.D-FL-02.row_id">D-FL-02</span></td><td class="lg-entity"><span data-j="ledger.D-FL-02.entity_on_document">Kellbrunn Präzisionsteile GmbH</span></td><td class="lg-num"><span data-j="ledger.D-FL-02.qty_source">1.200</span> <span data-j="ledger.D-FL-02.unit_source">l</span></td><td class="lg-num"><span data-j="ledger.D-FL-02.qty_norm" data-form="int">0</span> <span data-j="ledger.D-FL-02.unit_norm">l</span></td><td class="lg-status"><span data-j="ledger.D-FL-02.status">excluded</span></td><td class="lg-src"><span class="lg-file">tankkarten_2025.csv</span><span class="lg-quote" data-j="ledger.D-FL-02.source_quote">produkt=AdBlue; einheit=l</span></td></tr></tbody></table><!-- /gen:ledger -->
+    </div>
+    <div class="tl-evidence" id="the-ledger-evidence" data-step="2" data-step-until="4" data-motion="rise">
+      <!-- gen:doc file=2025-01_strom_wn.md lines=0,5,10-12,22 mark=22 cls=doc--compact id=the-ledger-bill --><figure class="doc doc--compact" id="the-ledger-bill"><figcaption class="doc__file">2025-01_strom_wn.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.2025-01_strom_wn.lines.0" data-form="md">Stromrechnung 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.5">Kellbrunn Präzisionsteile GmbH</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.10">Rechnungsnummer: 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.11">Zählpunkt: DE0005678900WN01</span></p><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.01.2025</span></p><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.2025-01_strom_wn.lines.22">Verbrauch 210.000 kWh</span></p></div></div></figure><!-- /gen:doc -->
+      <p class="tl-evidence__link"><span class="w-mono">E-WN-01</span> → page 1, line “Verbrauch <span data-j="ledger.E-WN-01.qty_source">210.000</span> kWh”</p>
+    </div>
+    <p class="callout tl-ask" id="the-ledger-ask" data-step="3" data-step-until="4" data-motion="rise" data-focus>Which column would have caught the Talbrück bill?</p>
+    <div class="tl-rows" id="the-ledger-rows" data-step="4">
+      <article class="tl-card" id="the-ledger-card-1" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WN-03</span><span class="tl-card__mode">Worked</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="w-mono">2025-03_strom_wn.md</span> · “<span data-j="ledger.E-WN-03.source_quote">Verbrauch 205.000 kWh</span>”</dd></div>
+          <div><dt>As printed</dt><dd><span data-j="ledger.E-WN-03.qty_source">205.000</span> <span data-j="ledger.E-WN-03.unit_source">kWh</span></dd></div>
+          <div><dt>kWh</dt><dd><span data-j="ledger.E-WN-03.qty_norm" data-form="int">205,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span data-j="ledger.E-WN-03.status">actual</span> · <span data-j="ledger.E-WN-03.dq">A</span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span data-j="ledger.E-WN-03.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WN-03.factor_mb">F-EL-RM-2025</span></dd></div>
+        </dl>
+      </article>
+      <article class="tl-card" id="the-ledger-card-2" data-step="5" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WS-01</span><span class="tl-card__mode">Half done</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="w-mono">jahresuebersicht_2025_oekostrom.md</span></dd></div>
+          <div><dt>As printed</dt><dd><span data-j="ledger.E-WS-01.qty_source">1.240</span> <span data-j="ledger.E-WS-01.unit_source">MWh</span></dd></div>
+          <div><dt>kWh</dt><dd><span class="tl-blank" data-step-until="6">?</span><span class="tl-fill" data-step="6" data-motion="fade" data-j="ledger.E-WS-01.qty_norm" data-form="int">1,240,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span data-j="ledger.E-WS-01.status">actual</span> · <span data-j="ledger.E-WS-01.dq">A</span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span class="tl-blank" data-step-until="6">?</span><span class="tl-fill" data-step="6" data-motion="fade"><span data-j="ledger.E-WS-01.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WS-01.factor_mb">F-EL-GO</span></span></dd></div>
+        </dl>
+      </article>
+      <article class="tl-card" id="the-ledger-card-3" data-step="6" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WN-10</span><span class="tl-card__mode">Your turn · October</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span class="w-mono">zaehlerstaende_2025.csv</span> · meter reading</span></dd></div>
+          <div><dt>As printed</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span data-j="ledger.E-WN-10.qty_source">5.012.300 minus 4.812.300</span></span></dd></div>
+          <div><dt>kWh</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade" data-j="ledger.E-WN-10.qty_norm" data-form="int">200,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span data-j="ledger.E-WN-10.status">actual_meter</span> · <span data-j="ledger.E-WN-10.dq">B</span></span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span data-j="ledger.E-WN-10.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WN-10.factor_mb">F-EL-RM-2025</span></dd></div>
+        </dl>
+      </article>
+    </div>
+    <div class="check tl-control" id="the-ledger-control" data-step="7" data-motion="rise">
+      <p><svg class="icon icon--40" aria-hidden="true"><use href="#i-pass" /></svg><span>Control total: documents <span class="num" data-num="ctl_docs_kwh" data-form="bare">4,615,000</span> − excluded <span class="num" data-num="ctl_excluded_kwh" data-form="bare">1,205,000</span> + October meter <span class="num" data-num="ctl_meter_kwh" data-form="bare">200,000</span> = <b><span class="num" data-num="ctl_total_kwh">3,610,000 kWh</span></b></span></p>
+    </div>
+  </section>
+
+  <section class="slide" id="six-rules" data-act="3" data-kind="main" data-label="Six rules" data-section="The fix · rules written before the run" data-seconds="270" data-mode="vote" data-note-key="six-rules" data-note="Six plain rules a controller would sign, each against one trap, three roles. The factor rule matters most for a comparison." data-route="shown">
+    <h1 class="scene-title" id="six-rules-title">Six rules, written down before the AI runs</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <ol class="sr-rules" id="six-rules-list">
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:0"><span class="sr-n">1</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-company" /></svg><p><b>Boundary</b><span>Check the company on the bill against the written boundary.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:1"><span class="sr-n">2</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg><p><b>Coverage</b><span>Fill the site-by-month table first. Count each bill once: invoice number, period and meter.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:2"><span class="sr-n">3</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-meter" /></svg><p><b>Units</b><span>Keep value and unit as printed. Convert only by the table.</span></p><span class="sr-role">Reader</span></li>
+      <li class="sr-rule" data-step="2" data-motion="rise" style="--order:0"><span class="sr-n">4</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-factor" /></svg><p><b>Factors</b><span>Pick an ID from the pinned table. Record the edition.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule sr-rule--tall" data-step="2" data-motion="rise" style="--order:1"><span class="sr-n">5</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-certificate" /></svg><p><b>Scope 2</b><span>Report both. Market-based order: certificate, supplier rate, residual mix.</span><small>Kit bills leave out the Stromkennzeichnung; real bills carry it.</small></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="2" data-motion="rise" style="--order:2"><span class="sr-n">6</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-contract" /></svg><p><b>Citations</b><span>Every number names its rows. Words like “green” or “efficient” need a number behind them.</span></p><span class="sr-role">Writer</span></li>
+    </ol>
+    <p class="sr-approve" id="six-rules-approve" data-step="2" data-motion="fade" style="--order:3"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>The AI may propose rules; a spreadsheet applies them, and a person approves the list.</span></p>
+    <div class="sr-factors" id="six-rules-factors" data-motion="rise" style="--order:1">
+      <p class="doc__file">faktoren/faktoren_lehrwerte.csv</p>
+      <!-- gen:factors ids=F-EL-LB-2025,F-EL-LB-2024,F-EL-RM-2025,F-EL-GO,F-GAS-HS,F-GAS-HI,F-DSL --><table class="ft"><thead><tr><th>Factor ID</th><th class="ft-num">Value</th><th>Unit</th></tr></thead><tbody><tr data-factor="F-EL-LB-2025"><td class="ft-id">F-EL-LB-2025</td><td class="ft-num"><span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-LB-2024"><td class="ft-id">F-EL-LB-2024</td><td class="ft-num"><span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2024.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-RM-2025"><td class="ft-id">F-EL-RM-2025</td><td class="ft-num"><span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span></td><td class="ft-unit"><span data-j="factors.F-EL-RM-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-GO"><td class="ft-id">F-EL-GO</td><td class="ft-num"><span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span></td><td class="ft-unit"><span data-j="factors.F-EL-GO.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-GAS-HS"><td class="ft-id">F-GAS-HS</td><td class="ft-num"><span data-j="factors.F-GAS-HS.value" data-form="fix2">0.18</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HS.unit">kg CO2e/kWh(Hs)</span></td></tr><tr data-factor="F-GAS-HI"><td class="ft-id">F-GAS-HI</td><td class="ft-num"><span data-j="factors.F-GAS-HI.value" data-form="fix2">0.20</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HI.unit">kg CO2e/kWh(Hi)</span></td></tr><tr data-factor="F-DSL"><td class="ft-id">F-DSL</td><td class="ft-num"><span data-j="factors.F-DSL.value" data-form="fix1">2.5</span></td><td class="ft-unit"><span data-j="factors.F-DSL.unit">kg CO2e/l</span></td></tr></tbody></table><!-- /gen:factors -->
+      <p class="w-note sr-edition">Edition <span data-j="factorEdition">Lehrwerte v1.0, 2026-01-15</span>. <span class="w-factorlabel" data-j="meta.factorLabel_en">Illustrative teaching values, not official factors.</span></p>
+    </div>
+    <div class="sr-answer" id="six-rules-answer" data-step="4" data-motion="rise">
+      <p class="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-factor" /></svg><span>A pinned table; the AI only picks an ID</span></p>
+      <p class="sr-answer__effect">Last year's grid factor (<span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span>) on 2025 electricity adds <b><span class="num" data-num="last_year_factor_effect_t" data-form="absunit">72.2 t</span></b>: the whole grid effect in this year's change.</p>
+    </div>
+    <div class="room-vote" id="six-rules-vote" data-step="3" data-step-until="4" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Where should the grid factor come from?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">The AI knows it</span><span class="room-vote__option">The AI searches the web</span><span class="room-vote__option">A pinned table; the AI only picks an ID</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="two-scope-2" data-act="3" data-kind="main" data-label="Two Scope 2 numbers" data-section="The fix · one certificate, two Scope 2 numbers" data-seconds="330" data-mode="vote" data-note-key="two-scope-2" data-note="Report both Scope 2 figures. The certificate covers Werk Süd only; the residual mix puts most of it back. Market-based ends 22 t below location-based." data-route="shown">
+    <h1 class="scene-title" id="two-scope-2-title">One certificate, two Scope 2 numbers</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <!-- gen:doc file=hkn_bestaetigung_2025.md lines=0,4-7,9 join=4-7 mark=9 id=two-scope-2-doc cls=ts-doc --><figure class="doc ts-doc" id="two-scope-2-doc"><figcaption class="doc__file">hkn_bestaetigung_2025.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.hkn_bestaetigung_2025.lines.0" data-form="md">Bestätigung über entwertete Herkunftsnachweise 2025</span></p><p class="doc__line"><span data-j="documents.hkn_bestaetigung_2025.lines.4">Herkunftsnachweise über 1.240 MWh, Erzeugungsjahr 2025, Wasserkraft,</span> <span data-j="documents.hkn_bestaetigung_2025.lines.5">entwertet im Herkunftsnachweisregister für die Liefermenge an</span> <span data-j="documents.hkn_bestaetigung_2025.lines.6">Kellbrunn Präzisionsteile GmbH, Lieferstelle Werk Süd,</span> <span data-j="documents.hkn_bestaetigung_2025.lines.7">Zählpunkt DE0005678900WS01.</span></p><div class="doc__mark" data-focus><p class="doc__line"><span data-j="documents.hkn_bestaetigung_2025.lines.9">Andere Lieferstellen sind von dieser Bestätigung nicht erfasst.</span></p></div></div></figure><!-- /gen:doc -->
+    <div class="ts-stack" id="two-scope-2-stack" data-motion="rise" style="--order:1">
+      <!-- gen:stack --><div class="st" style="--st-ws:357px"><div class="st__bar"><span class="st__ws" data-motion="grow" data-axis="x"><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg></span><span class="st__rest" data-motion="grow" data-axis="x" style="--order:1"></span></div><p class="st__lab st__lab--ws"><b>Werk Süd <span class="num" data-num="el_ws_mwh">1,240 MWh</span></b><span>covered by guarantees of origin</span></p><p class="st__lab st__lab--rest"><b>Werk Nord + Lager Ost <span class="num" data-num="el_uncovered_mwh">2,370 MWh</span></b><span>no certificate</span></p><p class="st__total">2025 electricity <span class="num" data-num="el_total_mwh">3,610 MWh</span> · covered <span class="num" data-num="renewable_share_el_pct">34.3%</span></p></div><!-- /gen:stack -->
+    </div>
+    <div class="ts-nums" id="two-scope-2-nums" data-step="2" data-step-until="5">
+      <div class="bignum ts-num" data-motion="rise" style="--order:0"><span class="bignum__label">Location-based</span><span class="bignum__value"><span class="num" data-num="s2lb_2025">1,444.0 t</span></span><span class="bignum__scope">grid average where the power is used</span></div>
+      <div class="bignum ts-num" data-motion="rise" style="--order:1"><span class="bignum__label">Market-based</span><span class="bignum__value"><span class="num" data-num="s2mb_2025">1,422.0 t</span></span><span class="bignum__scope">what Kellbrunn bought</span></div>
+    </div>
+    <div class="ts-wrong" id="two-scope-2-wrong" data-step="3" data-step-until="5">
+      <div class="ts-wrong__opt" data-motion="rise" style="--order:0"><span class="ts-wrong__letter">A</span><p><b>0 t for the whole company</b><span>The certificate covers Werk Süd only</span></p></div>
+      <div class="ts-wrong__opt" data-motion="rise" style="--order:1"><span class="ts-wrong__letter">B</span><p><b><span class="num" data-num="mb_grid_avg_wrong_s2_t">948.0 t</span></b><span>Grid average on the rest: <span class="num" data-num="mb_grid_avg_too_low_t">474.0 t</span> too low</span></p></div>
+    </div>
+    <p class="callout ts-claim" id="two-scope-2-claim" data-step="3" data-step-until="5" data-motion="rise" data-focus>“We run on green electricity” is false: certificates cover <span class="num" data-num="renewable_share_el_pct">34.3%</span> of the electricity, all of it at Werk Süd.</p>
+    <div class="ts-bridge" id="two-scope-2-bridge-wrap" data-step="5" data-focus>
+      <!-- gen:bridge --><svg class="br" id="two-scope-2-bridge" viewBox="0 0 1040 256" width="1040" height="256" role="img" aria-label="Bridge from location-based to market-based Scope 2, 2025."><g class="br-row" style="--order:0"><text class="br-label" x="276" y="34" text-anchor="end">Location-based</text><rect class="br-bar br-bar--lb" x="300.0" y="8" width="590.0" height="44" data-motion="grow" data-axis="x" style="--order:0" /><text class="br-val" x="906.0" y="38" data-num="s2lb_2025" data-motion="fade" style="--order:0">1,444.0 t</text></g><g class="br-row" style="--order:1"><text class="br-label" x="276" y="98" text-anchor="end">Certificate, Werk Süd</text><rect class="br-bar br-bar--minus" x="687.3" y="72" width="202.7" height="44" data-motion="grow" data-axis="x" style="--order:1" /><text class="br-sign" x="788.7" y="106" text-anchor="middle" data-motion="fade" style="--order:1">−</text><text class="br-val" x="906.0" y="102" data-num="bridge_cert_t" data-motion="fade" style="--order:1">−496.0 t</text></g><g class="br-row" style="--order:2"><text class="br-label" x="276" y="162" text-anchor="end">Residual mix on the rest</text><rect class="br-bar br-bar--plus" x="687.3" y="136" width="193.7" height="44" data-motion="grow" data-axis="x" style="--order:2" /><text class="br-val" x="897.0" y="166" data-num="bridge_rm_t" data-motion="fade" style="--order:2">+474.0 t</text></g><g class="br-row" style="--order:3"><text class="br-label" x="276" y="226" text-anchor="end">Market-based</text><rect class="br-bar br-bar--mb" x="300.0" y="200" width="581.0" height="44" data-motion="grow" data-axis="x" style="--order:3" /><text class="br-val" x="897.0" y="230" data-num="s2mb_2025" data-motion="fade" style="--order:3">1,422.0 t</text></g></svg><!-- /gen:bridge -->
+    </div>
+    <p class="focus-line ts-net" id="two-scope-2-net" data-step="6" data-motion="rise">Market-based is <span class="num" data-num="bridge_net_t" data-form="absunit">22.0 t</span> below location-based, even with a green tariff.</p>
+    <div class="room-vote" id="two-scope-2-vote-1" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How do you calculate market-based Scope 2?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option"><b>A</b> 0 for the whole company</span><span class="room-vote__option"><b>B</b> 0 for Werk Süd, grid average for the rest</span><span class="room-vote__option"><b>C</b> 0 for Werk Süd, residual mix for the rest, and location-based too</span></div>
+    </div>
+    <div class="room-vote" id="two-scope-2-vote-2" data-step="4" data-step-until="5" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How far below location-based is market-based?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">About 500 t</span><span class="room-vote__option">Zero</span><span class="room-vote__option">About 20 t</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 4 · Ask again -->
+
+  <section class="slide" id="rematch" data-act="4" data-kind="main" data-label="Rematch" data-section="Ask again · the same question on the ledger" data-seconds="240" data-mode="listen" data-note-key="rematch" data-note="Same question, same model, now on the ledger. Every figure names its rows, the meter reading is labelled, both Scope 2 numbers use the right method, and the answer says what it did not check." data-route="shown">
+    <h1 class="scene-title" id="rematch-title">The same question on the ledger</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="q-card is-unchanged rm-question" id="rematch-question" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+      <span class="q-card__stamp">Unchanged</span>
+    </div>
+    <article class="ev-run rm-answer" id="rematch-answer" data-step="1" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>AI answer · ledger, coverage grid, six rules</span></div>
+      <p class="w-label rm-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <div class="rm-text">
+        <p>Scope 1 (2025): <b><span class="num" data-num="s1_2025">471.2 t</span></b> CO₂e <span class="rm-rows rm-rows--line">G-WN-01, G-WS-01, D-FL-01</span></p>
+        <p>Scope 2 location-based: <b><span class="num" data-num="s2lb_2025">1,444.0 t</span></b> <span class="rm-rows rm-rows--line">E-WN-01 to E-WN-11, E-WS-01, E-LO-Q1 to Q4 · F-EL-LB-2025</span></p>
+        <p>Scope 2 market-based: <b><span class="num" data-num="s2mb_2025">1,422.0 t</span></b> <span class="rm-rows rm-rows--line">Werk Süd at 0 under I-WS-GO · <span class="num" data-num="el_uncovered_kwh">2,370,000 kWh</span> at F-EL-RM-2025</span></p>
+        <p class="rm-total">Scope 1 + 2: <b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b> location-based, <span class="num" data-num="chg_lb_pct" data-form="abs">5.1%</span> below 2024 (<span class="num" data-num="total_lb_2024">2,017.5 t</span>); <b><span class="num" data-num="total_mb_2025">1,893.2 t</span></b> market-based, <span class="num" data-num="chg_mb_pct" data-form="abs">29.2%</span> below 2024 (<span class="num" data-num="total_mb_2024">2,674.5 t</span>).</p>
+        <p>One row is a meter reading: <span class="rm-rows">E-WN-10, grade B</span>. Excluded: <span class="rm-rows">E-WN-03D</span> duplicate, <span class="rm-rows">E-TB-01</span> boundary, <span class="rm-rows">D-FL-02</span> not a fuel.</p>
+        <p class="rm-unchecked">Not checked: Scope 1 sources without documents in the folder (refrigerants, forklifts, generator).</p>
+      </div>
+    </article>
+    <div class="check rm-check" id="rematch-check" data-step="2" data-motion="rise">
+      <p class="check__head"><svg class="icon" aria-hidden="true"><use href="#i-table" /></svg>Recalculated in the spreadsheet</p>
+      <ul class="rm-check__list">
+        <li><span>Scope 2 location-based</span><b><span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:1"><use href="#i-pass" /></svg></li>
+        <li><span>Scope 2 market-based</span><b><span class="num" data-num="s2mb_2025" data-form="bare">1,422.0</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:2"><use href="#i-pass" /></svg></li>
+        <li><span>Scope 1</span><b><span class="num" data-num="s1_2025" data-form="bare">471.2</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:3"><use href="#i-pass" /></svg></li>
+      </ul>
+    </div>
+    <table class="rm-compare" id="rematch-compare" data-step="3" data-motion="rise">
+      <thead><tr><th></th><th>Scope 1 + 2</th><th>vs 2024</th></tr></thead>
+      <tbody>
+        <tr class="rm-compare__raw"><td><span class="rm-swatch rm-swatch--raw" aria-hidden="true"></span>Raw folder</td><td><span class="num" data-num="wrong_total_lb">1,866.5 t</span></td><td><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span></td></tr>
+        <tr><td><span class="rm-swatch rm-swatch--ink" aria-hidden="true"></span>Ledger, location-based</td><td><b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b></td><td><b><span class="num" data-num="chg_lb_pct">−5.1%</span></b></td></tr>
+        <tr><td><span class="rm-swatch rm-swatch--ink" aria-hidden="true"></span>Ledger, market-based</td><td><b><span class="num" data-num="total_mb_2025">1,893.2 t</span></b></td><td><b><span class="num" data-num="chg_mb_pct">−29.2%</span></b></td></tr>
+      </tbody>
+    </table>
+    <p class="rm-gap" id="rematch-gap" data-step="4" data-motion="rise"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span><b>Known gap</b> · written from the recorded run once it is captured. Until then the protocol and the planned runs are in appendix A3.</span></p>
+  </section>
+
+  <section class="slide" id="trace-two" data-act="4" data-kind="main" data-label="Trace three figures" data-section="Ask again · trace three figures to paper" data-seconds="360" data-recovery-seconds="120" data-mode="pair" data-note-key="trace-two" data-note="Pairs, paper, no tools, four minutes. Figure 1 is worked, figure 2 half done, figure 3 is theirs. Then the answers and the usual slips." data-route="shown">
+    <h1 class="scene-title" id="trace-two-title">Trace three figures to paper</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <p class="tt-task" id="trace-two-task" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>In pairs, on paper, no tools. For each figure: rows, factor, arithmetic, and file and quote where there is one.</span></p>
+    <p class="stamp tt-timer" id="trace-two-timer" data-step="1" data-step-until="2" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-clock" /></svg><span>4 minutes</span></p>
+    <ol class="tt-cards" id="trace-two-cards">
+      <li class="tt-card" id="trace-two-card-1" data-motion="rise" style="--order:0">
+        <p class="tt-card__head"><span class="tt-card__n">1</span><span class="tt-card__mode">Worked</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="ws_lb_2025">496.0 t</span><span class="tt-card__what">Werk Süd electricity, location-based</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd class="w-mono" data-j="traceTwo.0.rows.0">E-WS-01</dd></div>
+          <div class="tt-stack"><dt>File</dt><dd class="w-mono tt-files" data-j="traceTwo.0.file">jahresuebersicht_2025_oekostrom.md</dd></div>
+          <div><dt>Quote</dt><dd>“<span data-j="traceTwo.0.quote">Verbrauch 2025: 1.240 MWh</span>”</dd></div>
+          <div><dt>Factor</dt><dd class="w-mono" data-j="traceTwo.0.factor">F-EL-LB-2025</dd></div>
+          <div class="tt-math tt-stack"><dt>Arithmetic</dt><dd data-j="traceTwo.0.arithmetic_en" data-form="math">1,240 MWh × 1,000 = 1,240,000 kWh; × 0.40 kg/kWh = 496,000 kg = 496.0 t</dd></div>
+        </dl>
+      </li>
+      <li class="tt-card" id="trace-two-card-2" data-motion="rise" style="--order:1">
+        <p class="tt-card__head"><span class="tt-card__n">2</span><span class="tt-card__mode">Half done</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="s1_gas_2025">376.2 t</span><span class="tt-card__what">Scope 1 gas, both sites</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd><span class="w-mono" data-j="traceTwo.1.rows.0">G-WN-01</span>, <span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade" data-j="traceTwo.1.rows.1">G-WS-01</span></dd></div>
+          <div><dt>Files</dt><dd class="w-mono tt-files">gas_jahresrechnung_wn_2025.md<br />gas_jahresrechnung_ws_2025.md</dd></div>
+          <div><dt>Quote</dt><dd>“<span data-j="traceTwo.1.quote">Energiemenge 1.850.000 kWh / 240.000 kWh; Seite 2: Brennwert (Hs)</span>”</dd></div>
+          <div><dt>Factor</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade"><span class="w-mono" data-j="traceTwo.1.factor">F-GAS-HS</span>, basis Hs, page 2</span></dd></div>
+          <div class="tt-math tt-stack"><dt>Arithmetic</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade" data-j="traceTwo.1.arithmetic_en" data-form="math">(1,850,000 + 240,000) kWh(Hs) × 0.18 = 376.2 t</span></dd></div>
+        </dl>
+      </li>
+      <li class="tt-card" id="trace-two-card-3" data-motion="rise" style="--order:2">
+        <p class="tt-card__head"><span class="tt-card__n">3</span><span class="tt-card__mode">Your turn</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="drv_lb_grid_t">−72.2 t</span><span class="tt-card__what">Grid factor bar, location-based</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade"><span data-j="traceTwo.2.rows.0">E-WN-01 to E-WN-11</span>, <span data-j="traceTwo.2.rows.1">E-WS-01</span>, <span data-j="traceTwo.2.rows.2">E-LO-Q1 to E-LO-Q4</span></span></dd></div>
+          <div><dt>Factors</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade" data-j="traceTwo.2.factor">F-EL-LB-2025 and F-EL-LB-2024</span></dd></div>
+          <div class="tt-math tt-stack"><dt>Arithmetic</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade" data-j="traceTwo.2.arithmetic_en" data-form="math">3,610,000 kWh × (0.40 − 0.42) = −72,200 kg = −72.2 t</span></dd></div>
+        </dl>
+      </li>
+    </ol>
+    <div class="tt-differs" id="trace-two-differs" data-step="3" data-motion="rise">
+      <p class="tt-differs__head">If yours differs</p>
+      <div class="tt-slip" data-motion="rise" style="--order:0"><b><span class="num" data-num="wrong_s1_gas">418.0 t</span>?</b><span>You used 0.20 (Hi) on Hs kWh. Page 2 says Brennwert (Hs).</span></div>
+      <div class="tt-slip tt-slip--ok" data-motion="rise" style="--order:1"><b><span class="num" data-num="gas_hi_route_t">376.6 t</span>?</b><span>You converted to Hi first with 1.11. That is also right; the <span class="num" data-num="gas_hi_route_diff_t">0.4 t</span> is the rounding of the teaching value 0.18.</span></div>
+      <div class="tt-slip" data-motion="rise" style="--order:2"><b><span class="num" data-num="trace_slip_grid_t">−73.0 t</span>?</b><span>You used 2024 kWh. The factor effect uses 2025 consumption.</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="what-drove-it" data-act="4" data-kind="main" data-label="What drove it" data-section="Ask again · what made the number go down" data-seconds="330" data-mode="vote" data-note-key="what-drove-it" data-note="Vote first. Location-based: most of the fall is the grid factor. Market-based: almost all of it is the certificate. Own lower use is about 30 t, and nobody can call it efficiency without production figures." data-route="shown">
+    <h1 class="scene-title" id="what-drove-it-title">What made the number go down?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <p class="wd-claim" id="what-drove-it-claim" data-motion="fade"><span class="wd-claim__who">The AI's reason</span><span class="wd-claim__text">“The reduction comes mainly from efficiency measures at Werk Nord.”<svg class="wd-strike" data-step="2" width="100%" height="12" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 12"><line x1="0" y1="6" x2="100" y2="6" data-motion="draw" /></svg></span></p>
+    <div class="wd-chart" id="what-drove-it-chart-wrap">
+      <!-- gen:drivers lb=2 mb=3 --><svg class="dv" id="what-drove-it-chart" viewBox="0 0 1728 402" width="1728" height="402" role="img" aria-label="Scope 1 and 2, 2024 to 2025, location-based and market-based on one scale: one bar per driver."><g class="dv-frame"><path class="dv-axis" d="M12 336H1732" /><path class="dv-break" d="M6 346l10 -20M16 346l10 -20" /><text class="dv-head" x="0" y="30">Location-based · fell <tspan class="dv-head__num" data-num="chg_lb_t" data-form="absunit">102.3 t</tspan></text><path class="dv-head__rule" d="M0 46H876" /><rect class="dv-bar dv-bar--prior" x="30" y="291.9" width="96" height="44.1" /><text class="dv-val" x="78" y="277.9" text-anchor="middle" data-num="total_lb_2024" data-form="bare">2,017.5</text><rect class="dv-bar dv-bar--now" x="780" y="318.8" width="96" height="17.2" /><text class="dv-val" x="828" y="304.8" text-anchor="middle" data-num="total_lb_2025" data-form="bare">1,915.2</text><text class="dv-name" x="78" y="370" text-anchor="middle">2024</text><text class="dv-name" x="828" y="370" text-anchor="middle">2025</text><text class="dv-head" x="1026" y="30">Market-based · fell <tspan class="dv-head__num" data-num="chg_mb_t" data-form="absunit">781.3 t</tspan></text><path class="dv-head__rule" d="M1026 46H1722" /><rect class="dv-bar dv-bar--prior" x="1026" y="118.7" width="96" height="217.3" /><text class="dv-val" x="1074" y="104.7" text-anchor="middle" data-num="total_mb_2024" data-form="bare">2,674.5</text><rect class="dv-bar dv-bar--now" x="1626" y="324.6" width="96" height="11.4" /><text class="dv-val" x="1674" y="310.6" text-anchor="middle" data-num="total_mb_2025" data-form="bare">1,893.2</text><text class="dv-name" x="1074" y="370" text-anchor="middle">2024</text><text class="dv-name" x="1674" y="370" text-anchor="middle">2025</text><text class="dv-scale" x="1728" y="30" text-anchor="end">One scale for both</text></g><g class="dv-changes dv-changes--lb" data-step="2"><path class="dv-link" d="M126 291.9H180" data-motion="draw" style="--order:0" /><rect class="dv-bar dv-bar--change dv-bar--lead" x="180" y="291.9" width="96" height="19.0" data-motion="grow" style="--grow-origin: 50% 0%; --order:0" /><text class="dv-val dv-val--change" x="228" y="279.9" text-anchor="middle" data-num="drv_lb_grid_t" data-form="bare" data-motion="fade" style="--order:0">−72.2</text><text class="dv-name" x="228" y="370" text-anchor="middle" data-motion="fade" style="--order:0">Grid</text><text class="dv-name dv-name--sub" x="228" y="398" text-anchor="middle" data-motion="fade" style="--order:0">factor</text><path class="dv-link" d="M276 310.9H330" data-motion="draw" style="--order:1" /><rect class="dv-bar dv-bar--change" x="330" y="310.9" width="96" height="4.4" data-motion="grow" style="--grow-origin: 50% 0%; --order:1" /><text class="dv-val dv-val--change" x="378" y="298.9" text-anchor="middle" data-num="drv_lb_elec_t" data-form="bare" data-motion="fade" style="--order:1">−16.8</text><text class="dv-name" x="378" y="370" text-anchor="middle" data-motion="fade" style="--order:1">Less</text><text class="dv-name dv-name--sub" x="378" y="398" text-anchor="middle" data-motion="fade" style="--order:1">electricity</text><path class="dv-link" d="M426 315.3H480" data-motion="draw" style="--order:2" /><rect class="dv-bar dv-bar--change" x="480" y="315.3" width="96" height="3.0" data-motion="grow" style="--grow-origin: 50% 0%; --order:2" /><text class="dv-val dv-val--change" x="528" y="303.3" text-anchor="middle" data-num="drv_lb_gas_t" data-form="bare" data-motion="fade" style="--order:2">−10.8</text><text class="dv-name" x="528" y="370" text-anchor="middle" data-motion="fade" style="--order:2">Less</text><text class="dv-name dv-name--sub" x="528" y="398" text-anchor="middle" data-motion="fade" style="--order:2">gas</text><path class="dv-link" d="M576 318.2H630" data-motion="draw" style="--order:3" /><rect class="dv-bar dv-bar--change" x="630" y="318.2" width="96" height="3.0" data-motion="grow" style="--grow-origin: 50% 0%; --order:3" /><text class="dv-val dv-val--change" x="678" y="306.2" text-anchor="middle" data-num="drv_lb_diesel_t" data-form="bare" data-motion="fade" style="--order:3">−2.5</text><text class="dv-name" x="678" y="370" text-anchor="middle" data-motion="fade" style="--order:3">Less</text><text class="dv-name dv-name--sub" x="678" y="398" text-anchor="middle" data-motion="fade" style="--order:3">diesel</text><path class="dv-link" d="M726 318.8H780" data-motion="draw" style="--order:4" /><g class="dv-own"><path class="dv-own__bracket" d="M324 266.9V252.9H732V266.9" data-motion="draw" style="--order:4" /><text class="dv-own__label" x="528" y="238.9" text-anchor="middle" data-motion="fade" style="--order:4">own use <tspan class="dv-own__num" data-num="drv_lb_own_t">−30.1 t</tspan></text></g></g><g class="dv-changes dv-changes--mb" data-step="3"><path class="dv-link" d="M1122 118.7H1176" data-motion="draw" style="--order:0" /><rect class="dv-bar dv-bar--change dv-bar--lead" x="1176" y="118.7" width="96" height="196.1" data-motion="grow" style="--grow-origin: 50% 0%; --order:0" /><text class="dv-val dv-val--change" x="1224" y="106.7" text-anchor="middle" data-num="drv_mb_cert_t" data-form="bare" data-motion="fade" style="--order:0">−744.0</text><text class="dv-name" x="1224" y="370" text-anchor="middle" data-motion="fade" style="--order:0">Guarantees</text><text class="dv-name dv-name--sub" x="1224" y="398" text-anchor="middle" data-motion="fade" style="--order:0">of origin</text><path class="dv-link" d="M1272 314.8H1326" data-motion="draw" style="--order:1" /><rect class="dv-bar dv-bar--change" x="1326" y="314.8" width="96" height="6.3" data-motion="grow" style="--grow-origin: 50% 0%; --order:1" /><text class="dv-val dv-val--change" x="1374" y="302.8" text-anchor="middle" data-num="drv_mb_elec_t" data-form="bare" data-motion="fade" style="--order:1">−24.0</text><text class="dv-name" x="1374" y="370" text-anchor="middle" data-motion="fade" style="--order:1">Less</text><text class="dv-name dv-name--sub" x="1374" y="398" text-anchor="middle" data-motion="fade" style="--order:1">electricity</text><path class="dv-link" d="M1422 321.1H1476" data-motion="draw" style="--order:2" /><rect class="dv-bar dv-bar--change" x="1476" y="321.1" width="96" height="3.5" data-motion="grow" style="--grow-origin: 50% 0%; --order:2" /><text class="dv-val dv-val--change" x="1524" y="309.1" text-anchor="middle" data-num="drv_mb_s1_t" data-form="bare" data-motion="fade" style="--order:2">−13.3</text><text class="dv-name" x="1524" y="370" text-anchor="middle" data-motion="fade" style="--order:2">Less gas</text><text class="dv-name dv-name--sub" x="1524" y="398" text-anchor="middle" data-motion="fade" style="--order:2">and diesel</text><path class="dv-link" d="M1572 324.6H1626" data-motion="draw" style="--order:3" /><g class="dv-own"><path class="dv-own__bracket" d="M1320 270.8V256.8H1578V270.8" data-motion="draw" style="--order:3" /><text class="dv-own__label" x="1449" y="242.8" text-anchor="middle" data-motion="fade" style="--order:3">own use <tspan class="dv-own__num" data-num="drv_mb_own_t">−37.3 t</tspan></text></g></g></svg><!-- /gen:drivers -->
+    </div>
+    <p class="wd-share wd-share--lb" data-step="2" data-motion="fade"><b><span class="num" data-num="drv_lb_grid_share_pct">71%</span></b> of the location-based decrease is the lower grid factor. No production volumes in the folder: “used less” is supported, “more efficient” is not.</p>
+    <p class="wd-share wd-share--mb" data-step="3" data-motion="fade"><b><span class="num" data-num="drv_mb_cert_share_pct">95%</span></b> of the market-based decrease is the certificate. The residual mix stays at <span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span> in both years on purpose, so no factor effect here. Real residual mixes change every year.</p>
+    <div class="room-vote" id="what-drove-it-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">What made location-based emissions fall <span class="num" data-num="chg_lb_t" data-form="absunit">102.3 t</span>?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Our efficiency measures</span><span class="room-vote__option">A lower grid factor</span><span class="room-vote__option">We produced less</span></div>
+    </div>
+    <div class="wd-sentence" id="what-drove-it-sentence" data-step="4" data-motion="rise">
+      <p class="wd-sentence__label"><svg class="icon" aria-hidden="true"><use href="#i-contract" /></svg>The sentence, rewritten from the driver lines</p>
+      <p class="wd-sentence__text">Scope 1 and 2 fell <span class="num" data-num="chg_lb_pct" data-form="abs">5.1%</span> location-based (<span class="num" data-num="chg_lb_t">−102.3 t</span>). In this case's teaching values, <span class="num" data-num="drv_lb_grid_t" data-form="absunit">72.2 t</span> of that comes from a lower grid factor and <span class="num" data-num="drv_lb_own_t" data-form="absunit">30.1 t</span> from using less electricity, gas and diesel. Market-based fell <span class="num" data-num="chg_mb_pct" data-form="abs">29.2%</span>; <span class="num" data-num="drv_mb_cert_t" data-form="absunit">744.0 t</span> of that is guarantees of origin covering Werk Süd since January 2025.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 5 · Honest limits -->
+
+  <section class="slide" id="ask-back" data-act="5" data-kind="main" data-label="Ask back" data-section="Honest limits · calculate, ask back or refuse" data-seconds="270" data-mode="do" data-note-key="ask-back" data-note="The room sorts five requests into calculate, ask back, refuse or rewrite. Card 4 is refused on evidence. Then the answer we want from the raw folder: seven points before any number." data-route="shown">
+    <h1 class="scene-title" id="ask-back-title">Calculate, ask back or refuse?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <ol class="ab-tray" id="ask-back-tray" data-step-until="4">
+      <li class="ab-req" data-step="1" data-step-until="2" data-motion="rise" style="--order:0"><span class="ab-req__n">1</span><span>“Sum Scope 2 for 2025.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="3" data-motion="rise" style="--order:1"><span class="ab-req__n">2</span><span>“Fill in October.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="4" data-motion="rise" style="--order:2"><span class="ab-req__n">3</span><span>“Write that we run on green electricity.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="4" data-motion="rise" style="--order:3"><span class="ab-req__n">4</span><span>“Write that we are climate-neutral.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="2" data-motion="rise" style="--order:4"><span class="ab-req__n">5</span><span>“Explain why emissions fell compared with 2024.”</span></li>
+    </ol>
+    <div class="ab-cols" id="ask-back-cols" data-step-until="5">
+      <section class="ab-col" aria-labelledby="ask-back-h-calc">
+        <h2 class="ab-col__head" id="ask-back-h-calc"><svg class="icon icon--40" aria-hidden="true"><use href="#i-table" /></svg>Calculate from the ledger</h2>
+        <div class="ab-item" data-step="2" data-motion="rise" style="--order:0"><p class="ab-item__req"><span class="ab-req__n">1</span>“Sum Scope 2 for 2025.”</p><p><span class="num" data-num="s2lb_2025">1,444.0 t</span> location-based and <span class="num" data-num="s2mb_2025">1,422.0 t</span> market-based, with rows.</p></div>
+        <div class="ab-item" data-step="2" data-motion="rise" style="--order:1"><p class="ab-item__req"><span class="ab-req__n">5</span>“Explain why emissions fell compared with 2024.”</p><p>Calculate the bridge first, then draft citing the driver lines. No “efficiency” without production data.</p></div>
+      </section>
+      <section class="ab-col" aria-labelledby="ask-back-h-ask">
+        <h2 class="ab-col__head" id="ask-back-h-ask"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question" /></svg>Ask back</h2>
+        <div class="ab-item" data-step="3" data-motion="rise"><p class="ab-item__req"><span class="ab-req__n">2</span>“Fill in October.”</p><p>“Use the meter reading, <span class="num" data-num="oct_kwh">200,000 kWh</span>, grade B, or an estimate with a stated method?”</p></div>
+      </section>
+      <section class="ab-col" aria-labelledby="ask-back-h-refuse">
+        <h2 class="ab-col__head" id="ask-back-h-refuse"><svg class="icon icon--40" aria-hidden="true"><use href="#i-refuse" /></svg>Refuse or rewrite</h2>
+        <div class="ab-item" data-step="4" data-motion="rise" style="--order:0"><p class="ab-item__req"><span class="ab-req__n">3</span>“Write that we run on green electricity.”</p><p>Rewrite: “<span class="num" data-num="renewable_share_el_pct">34.3%</span> of our electricity (Werk Süd, <span class="num" data-num="go_mwh">1,240 MWh</span>) is covered by cancelled guarantees of origin.”</p></div>
+        <div class="ab-item ab-item--refuse" data-step="4" data-motion="rise" style="--order:1"><p class="ab-item__req"><span class="ab-req__n">4</span>“Write that we are climate-neutral.”</p><p>Refuse: nothing in the ledger supports it.</p></div>
+      </section>
+    </div>
+    <p class="w-note ab-foot" id="ask-back-foot" data-step="4" data-step-until="5" data-motion="fade">Rules as of 26 Sep 2026. Not legal advice. Check the German transposition.</p>
+    <article class="ev-run ab-answer" id="ask-back-answer" data-step="5" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>The answer we want from the raw folder</span></div>
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <p class="ab-answer__lead">“I can give a provisional figure, but these points need your decision first:</p>
+      <ol class="ab-points">
+        <li>October is missing for Werk Nord. The meter file shows <span class="num" data-num="oct_kwh">200,000 kWh</span>. Use it?</li>
+        <li>Two files carry invoice <span data-j="inputs.wnDuplicate.invoice">4711-03</span>. I counted March once.</li>
+        <li>One bill is addressed to Talbrück Beschichtung GmbH with its own meter. Inside your boundary? I left it out.</li>
+        <li>Werk Süd reports “<span data-j="inputs.ws.printed">1.240 MWh</span>”. I read <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span>; last year's <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span> on the same page fits.</li>
+        <li>The gas bills state Brennwert (Hs) on page 2. I used <span class="w-mono ab-nowrap">F-GAS-HS</span>.</li>
+        <li>August is almost a third below July (<span class="num" data-num="aug_vs_jul_pct">−31%</span>). Plant holiday? I did not change it.</li>
+        <li>The folder has no refrigerant service invoices and no forklift fuel. Are there other Scope 1 sources?”</li>
+      </ol>
+    </article>
+  </section>
+
+  <section class="slide" id="limits" data-act="5" data-kind="main" data-label="Limits" data-section="Honest limits · what this does not prove" data-seconds="150" data-mode="listen" data-note-key="limits" data-note="Five limits, one per press. The case is constructed, published accuracy figures come from reports rather than bills, and rules only catch what they were written for." data-route="shown">
+    <h1 class="scene-title" id="limits-title">What this does not prove</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <ol class="lm-rows" id="limits-rows">
+      <li class="lm-row" data-motion="rise"><span class="lm-n">1</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-gap" /></svg><p><b>One fictional case</b><span>The raw-folder answer is constructed from documented failure modes. Recorded runs, when captured, are in appendix A3 with a per-trap catch table.</span></p></li>
+      <li class="lm-row" data-step="1" data-motion="rise"><span class="lm-n">2</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-book" /></svg><p><b>Published accuracy</b><span>Two studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</span></p></li>
+      <li class="lm-row" data-step="2" data-motion="rise"><span class="lm-n">3</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-checklist" /></svg><p><b>Rules catch what they are written for</b><span>No documents for refrigerant top-ups, forklifts at Lager Ost, an emergency generator or heating oil: nothing was checked there.</span></p></li>
+      <li class="lm-row" data-step="3" data-motion="rise"><span class="lm-n">4</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg><p><b>A thin comparison year</b><span>The 2024 figures are a consultant summary, grade B, with no bills. Same boundary, same factor file.</span></p></li>
+      <li class="lm-row" data-step="4" data-motion="rise"><span class="lm-n">5</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-factor" /></svg><p><b>Illustrative teaching factors, simplified bills</b><span>Kit bills leave out the supplier mix disclosure. Rules as of 26 Sep 2026. Not legal or audit advice.</span></p></li>
+    </ol>
+  </section>
+
+  <!-- ================================================================ ACT 6 · Your turn -->
+
+  <section class="slide" id="your-bill" data-act="6" data-kind="main" data-label="Your bill" data-section="Your turn · one bill, five boxes" data-seconds="420" data-recovery-seconds="120" data-mode="write" data-note-key="your-bill" data-note="Five minutes alone on one bill, invented or anonymised, then two minutes in pairs. No company data goes into any tool." data-route="shown">
+    <h1 class="scene-title" id="your-bill-title">Your turn: one bill, five boxes</h1>
+    <p class="yb-privacy" id="your-bill-privacy"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Use an invented or anonymised bill. No company data goes into any tool.</span></p>
+    <div class="yb-sheet" id="your-bill-sheet" role="table" aria-label="Transfer sheet: five boxes, with the Werk Süd example">
+      <div class="yb-head" role="row"><span role="columnheader">Box</span><span role="columnheader">What you write</span><span role="columnheader">Example · Kellbrunn, Werk Süd</span></div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">1</span>Source</span>
+        <span class="yb-what" role="cell">File, page and the exact line you read</span>
+        <span class="yb-ex" role="cell"><span class="w-mono">jahresuebersicht_2025_oekostrom.md</span>, page 1, “<span data-j="traceTwo.0.quote">Verbrauch 2025: 1.240 MWh</span>”</span>
+        <span class="yb-mark" data-step="1" data-step-until="2" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">2</span>Period</span>
+        <span class="yb-what" role="cell">From, to, months covered; gaps or overlaps with other bills</span>
+        <span class="yb-ex" role="cell">January to December 2025, 12 months, no overlap. Last year on the same page: <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span></span>
+        <span class="yb-mark" data-step="2" data-step-until="3" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">3</span>Unit</span>
+        <span class="yb-what" role="cell">Value and unit as printed, the normalised value, and the rule</span>
+        <span class="yb-ex" role="cell"><span data-j="inputs.ws.printed">1.240 MWh</span> → <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span> (MWh × 1,000; the dot separates thousands). Check: <span class="num" data-num="ws_kwh_per_employee">22,545 kWh</span> per employee, close to last year</span>
+        <span class="yb-mark" data-step="3" data-step-until="4" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">4</span>Boundary</span>
+        <span class="yb-what" role="cell">Legal entity on the document; in or out; which rule</span>
+        <span class="yb-ex" role="cell">Kellbrunn Präzisionsteile GmbH, Werk Süd; in; operational control</span>
+        <span class="yb-mark" data-step="4" data-step-until="5" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">5</span>Factor</span>
+        <span class="yb-what" role="cell">Factor ID, year, basis, edition; method; any certificate</span>
+        <span class="yb-ex" role="cell">Location-based: F-EL-LB-2025 (<span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span>, teaching value) → <span class="num" data-num="ws_lb_2025">496.0 t</span>. Market-based: F-EL-GO under I-WS-GO (<span class="num" data-num="go_mwh">1,240 MWh</span> guarantees of origin, cancelled, Werk Süd only) → 0 t</span>
+        <span class="yb-mark" data-step="5" data-step-until="6" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="yb-now" id="your-bill-now">
+      <svg class="icon icon--48" aria-hidden="true"><use href="#i-person" /></svg>
+      <p class="yb-now__text" data-step-until="1">Take one bill you know from work, or invent a realistic one. Five minutes alone.</p>
+      <p class="yb-now__text" data-step="1" data-step-until="2" data-motion="fade"><b>Now:</b> Source</p>
+      <p class="yb-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> Period</p>
+      <p class="yb-now__text" data-step="3" data-step-until="4" data-motion="fade"><b>Now:</b> Unit</p>
+      <p class="yb-now__text" data-step="4" data-step-until="5" data-motion="fade"><b>Now:</b> Boundary</p>
+      <p class="yb-now__text" data-step="5" data-step-until="6" data-motion="fade"><b>Now:</b> Factor</p>
+      <p class="yb-now__text" data-step="6" data-motion="fade">Compare with a partner. Two pairs share their hardest box.</p>
+    </div>
+  </section>
+
+  <section class="slide" id="resolution" data-act="6" data-kind="main" data-label="Resolution" data-section="Your turn · what changed between the two answers" data-seconds="180" data-mode="vote" data-note-key="resolution" data-note="Both answers side by side, the number ladder, the same vote as at the start, then four questions for any AI tool and the materials link." data-route="shown">
+    <h1 class="scene-title" id="resolution-title">What changed between the two answers?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="q-card q-card--hero rs-question" id="resolution-question" data-step-until="1" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+    </div>
+    <div class="rs-answers" id="resolution-answers" data-step="1">
+      <div class="rs-ans rs-ans--raw" data-motion="rise" style="--order:0">
+        <p class="rs-ans__head">Raw folder <span class="rs-ans__label w-constructed" data-j="meta.constructedLabel_en">Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+        <p class="rs-ans__nums"><b><span class="num" data-num="wrong_total_lb">1,866.5 t</span></b><span><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span>, “through efficiency”</span></p>
+        <p class="rs-ans__foot">No rows, one site's unit misread, a joint venture counted, market-based on the grid average</p>
+      </div>
+      <div class="rs-ans rs-ans--ledger" data-motion="rise" style="--order:1">
+        <p class="rs-ans__head">Ledger <span data-j="meta.targetLabel_en" class="rs-ans__label">Target answer, constructed. Not a recorded run.</span></p>
+        <p class="rs-ans__nums"><b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b><span><span class="num" data-num="chg_lb_pct">−5.1%</span> location-based · <span class="num" data-num="total_mb_2025">1,893.2 t</span>, <span class="num" data-num="chg_mb_pct">−29.2%</span> market-based</span></p>
+        <p class="rs-ans__foot">Every figure cites its rows; one meter reading labelled; what was not checked is named</p>
+      </div>
+    </div>
+    <ol class="rs-ladder" id="resolution-ladder" data-step="2">
+      <li class="rs-rung rs-rung--raw" data-motion="rise" style="--order:0"><span class="rs-rung__n">1</span><p>AI said: <b><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span></b>, “through efficiency”.</p></li>
+      <li class="rs-rung" data-motion="rise" style="--order:1"><span class="rs-rung__n">2</span><p>Right data: <b><span class="num" data-num="chg_lb_pct">−5.1%</span></b>.</p></li>
+      <li class="rs-rung rs-rung--focus" data-motion="rise" style="--order:2"><span class="rs-rung__n">3</span><p>Of the <span class="num" data-num="chg_lb_t" data-form="absunit">102.3 t</span>, <b><span class="num" data-num="drv_lb_grid_t" data-form="absunit">72.2 t</span></b> is the grid factor (teaching values).</p></li>
+      <li class="rs-rung" data-motion="rise" style="--order:3"><span class="rs-rung__n">4</span><p><b><span class="num" data-num="drv_lb_own_t" data-form="absunit">30.1 t</span></b> is own lower use. Efficiency is not proven.</p></li>
+    </ol>
+    <div class="room-vote" id="resolution-vote" data-step="3" data-step-until="4" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · same as at the start</span><p class="room-vote__q">Send the raw-folder answer to the bank now?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Send</span><span class="room-vote__option">Ask back first</span><span class="room-vote__option">Refuse</span></div>
+    </div>
+    <div class="rs-close" id="resolution-close" data-step="4">
+      <p class="rs-close__head" data-motion="fade">Ask any AI tool you are offered</p>
+      <ol class="rs-qs">
+        <li data-motion="rise" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-invoice" /></svg><span>Does each number link to its document?</span></li>
+        <li data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><span>Which factor, which edition?</span></li>
+        <li data-motion="rise" style="--order:2"><svg class="icon icon--40" aria-hidden="true"><use href="#i-refuse" /></svg><span>What was excluded, and why?</span></li>
+        <li data-motion="rise" style="--order:3"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>Who approved it?</span></li>
+      </ol>
+      <p class="rs-materials" data-motion="fade" style="--order:4"><span class="rs-materials__label">Materials</span> <span class="rs-materials__url">loehrning.ai/workshops/esg-berichte-mit-ki</span> <span class="rs-materials__label">· Try it</span> <a class="rs-materials__url deck-link" href="./demo.html" target="_blank" rel="noopener">interactive demo</a><img class="rs-lockup" src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /></p>
+    </div>
+  </section>
+
+  <!-- ================================================================ APPENDIX (data-kind="appendix", on request) -->
+
+  <section class="slide" id="appendix-arithmetic" data-kind="appendix" data-label="Every calculation" data-section="Appendix A1 · every calculation on one page" data-seconds="0" data-note-key="appendix-arithmetic" data-note="For questions like 'where does 1,422 come from?'. Every line of the case arithmetic, both waterfalls, the drivers and the largest sources." data-route="hidden">
+    <h1 class="scene-title">Every calculation on one page</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="ax-col ax-col--totals">
+      <p class="ax-head">Totals, t CO₂e</p>
+      <table class="ax-table">
+        <thead><tr><th></th><th class="ax-num">2024</th><th class="ax-num">2025</th></tr></thead>
+        <tbody>
+          <tr><td>Electricity, kWh</td><td class="ax-num"><span class="num" data-num="el_total_2024_kwh" data-form="bare">3,650,000</span></td><td class="ax-num"><span class="num" data-num="el_total_kwh" data-form="bare">3,610,000</span></td></tr>
+          <tr><td>Scope 1</td><td class="ax-num"><span class="num" data-num="s1_2024" data-form="bare">484.5</span></td><td class="ax-num"><span class="num" data-num="s1_2025" data-form="bare">471.2</span></td></tr>
+          <tr><td>Scope 2 location-based</td><td class="ax-num"><span class="num" data-num="s2lb_2024" data-form="bare">1,533.0</span></td><td class="ax-num"><span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span></td></tr>
+          <tr><td>Scope 2 market-based</td><td class="ax-num"><span class="num" data-num="s2mb_2024" data-form="bare">2,190.0</span></td><td class="ax-num"><span class="num" data-num="s2mb_2025" data-form="bare">1,422.0</span></td></tr>
+          <tr class="ax-sum"><td>Total, location-based</td><td class="ax-num"><span class="num" data-num="total_lb_2024" data-form="bare">2,017.5</span></td><td class="ax-num"><span class="num" data-num="total_lb_2025" data-form="bare">1,915.2</span></td></tr>
+          <tr class="ax-sum"><td>Total, market-based</td><td class="ax-num"><span class="num" data-num="total_mb_2024" data-form="bare">2,674.5</span></td><td class="ax-num"><span class="num" data-num="total_mb_2025" data-form="bare">1,893.2</span></td></tr>
+        </tbody>
+      </table>
+      <p class="ax-head">2025, line by line</p>
+      <ul class="ax-lines">
+        <li>Gas <span class="num" data-num="s1_gas_wn_2025" data-form="bare">333.0</span> + <span class="num" data-num="s1_gas_ws_2025" data-form="bare">43.2</span> = <span class="num" data-num="s1_gas_2025">376.2 t</span>; diesel <span class="num" data-num="s1_diesel_2025">95.0 t</span></li>
+        <li>Scope 2 location-based <span class="num" data-num="wn_el_lb_2025" data-form="bare">904.0</span> + <span class="num" data-num="ws_lb_2025" data-form="bare">496.0</span> + <span class="num" data-num="lo_el_lb_2025" data-form="bare">44.0</span> = <span class="num" data-num="s2lb_2025">1,444.0 t</span></li>
+        <li>Bridge <span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span> <span class="num" data-num="bridge_cert_t" data-form="bare">−496.0</span> <span class="num" data-num="bridge_rm_t" data-form="bare">+474.0</span> = <span class="num" data-num="s2mb_2025">1,422.0 t</span></li>
+        <li>Change location-based <span class="num" data-num="chg_lb_t">−102.3 t</span> (<span class="num" data-num="chg_lb_pct">−5.1%</span>), market-based <span class="num" data-num="chg_mb_t">−781.3 t</span> (<span class="num" data-num="chg_mb_pct">−29.2%</span>)</li>
+        <li>Control total <span class="num" data-num="ctl_docs_kwh" data-form="bare">4,615,000</span> − <span class="num" data-num="ctl_excluded_kwh" data-form="bare">1,205,000</span> + <span class="num" data-num="ctl_meter_kwh" data-form="bare">200,000</span> = <span class="num" data-num="ctl_total_kwh">3,610,000 kWh</span></li>
+      </ul>
+    </div>
+    <div class="ax-col ax-col--wf">
+      <p class="ax-head">Both waterfalls, Scope 1 + 2, t</p>
+      <!-- gen:wftable --><table class="ax-table ax-wf"><thead><tr><th>Correction, in order</th><th class="ax-num">LB</th><th class="ax-num">running</th><th class="ax-num">MB</th><th class="ax-num">running</th></tr></thead><tbody><tr><td>Raw-folder answer</td><td class="ax-num"></td><td class="ax-num"><span data-j="waterfall.lb.start.running_en">1,866.5</span></td><td class="ax-num"></td><td class="ax-num"><span data-j="waterfall.mb.start.running_en">1,866.0</span></td></tr><tr><td>T1 duplicate out</td><td class="ax-num"><span data-j="waterfall.lb.T1.change_en">−82.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T1.running_en">1,784.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T1.change_en">−82.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T1.running_en">1,784.0</span></td></tr><tr><td>T2 October in</td><td class="ax-num"><span data-j="waterfall.lb.T2.change_en">+80.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T2.running_en">1,864.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T2.change_en">+80.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T2.running_en">1,864.0</span></td></tr><tr><td>T3 Talbrück out</td><td class="ax-num"><span data-j="waterfall.lb.T3.change_en">−400.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T3.running_en">1,464.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T3.change_en">−400.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T3.running_en">1,464.0</span></td></tr><tr><td>T4 unit as MWh</td><td class="ax-num"><span data-j="waterfall.lb.T4.change_en">+495.5</span></td><td class="ax-num"><span data-j="waterfall.lb.T4.running_en">1,960.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T4.change_en">0.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T4.running_en">1,464.0</span></td></tr><tr><td>T5 Hs gas factor</td><td class="ax-num"><span data-j="waterfall.lb.T5.change_en">−41.8</span></td><td class="ax-num"><span data-j="waterfall.lb.T5.running_en">1,918.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T5.change_en">−41.8</span></td><td class="ax-num"><span data-j="waterfall.mb.T5.running_en">1,422.2</span></td></tr><tr><td>T6 AdBlue out</td><td class="ax-num"><span data-j="waterfall.lb.T6.change_en">−3.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T6.running_en">1,915.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T6.change_en">−3.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T6.running_en">1,419.2</span></td></tr><tr><td>T7 residual mix</td><td class="ax-num"><span data-j="waterfall.lb.T7.change_en">0.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T7.running_en">1,915.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T7.change_en">+474.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T7.running_en">1,893.2</span></td></tr></tbody></table><!-- /gen:wftable -->
+      <p class="ax-note">Same fixed order T1 to T7. In market-based, T1 to T3 are valued at the factor in force at that step, so they differ from the location-based bars.</p>
+    </div>
+    <div class="ax-col ax-col--drivers">
+      <p class="ax-head">Drivers, 2024 to 2025</p>
+      <table class="ax-table ax-drivers">
+        <tbody>
+          <tr class="ax-sub"><td colspan="2">Location-based</td></tr>
+          <tr><td data-j="drivers.lb.grid_factor.en">Grid factor 0.42 to 0.40 (teaching values)</td><td class="ax-num"><span class="num" data-num="drv_lb_grid_t" data-form="bare">−72.2</span></td></tr>
+          <tr><td data-j="drivers.lb.less_electricity.en">Less electricity</td><td class="ax-num"><span class="num" data-num="drv_lb_elec_t" data-form="bare">−16.8</span></td></tr>
+          <tr><td data-j="drivers.lb.less_gas.en">Less gas</td><td class="ax-num"><span class="num" data-num="drv_lb_gas_t" data-form="bare">−10.8</span></td></tr>
+          <tr><td data-j="drivers.lb.less_diesel.en">Less diesel</td><td class="ax-num"><span class="num" data-num="drv_lb_diesel_t" data-form="bare">−2.5</span></td></tr>
+          <tr class="ax-sub"><td colspan="2">Market-based</td></tr>
+          <tr><td data-j="drivers.mb.certificates.en">Guarantees of origin for Werk Süd</td><td class="ax-num"><span class="num" data-num="drv_mb_cert_t" data-form="bare">−744.0</span></td></tr>
+          <tr><td data-j="drivers.mb.less_electricity.en">Less electricity</td><td class="ax-num"><span class="num" data-num="drv_mb_elec_t" data-form="bare">−24.0</span></td></tr>
+          <tr><td data-j="drivers.mb.less_gas_diesel.en">Less gas and diesel (Scope 1)</td><td class="ax-num"><span class="num" data-num="drv_mb_s1_t" data-form="bare">−13.3</span></td></tr>
+        </tbody>
+      </table>
+      <p class="ax-head">Largest sources, 2025</p>
+      <p class="ax-rank"><b>Location-based</b> <span data-j="ranking.lb.0.en">WN electricity</span> <span class="num" data-num="wn_el_lb_2025">904.0 t</span> (<span data-j="ranking.lb.0.share_pct" data-form="pct">47.2%</span>), <span data-j="ranking.lb.1.en">WS electricity</span> <span class="num" data-num="ws_lb_2025">496.0 t</span> (<span data-j="ranking.lb.1.share_pct" data-form="pct">25.9%</span>), <span data-j="ranking.lb.2.en">WN gas</span> <span class="num" data-num="s1_gas_wn_2025">333.0 t</span> (<span data-j="ranking.lb.2.share_pct" data-form="pct">17.4%</span>)</p>
+      <p class="ax-rank"><b>Market-based</b> <span data-j="ranking.mb.0.en">WN electricity</span> <span class="num" data-num="wn_el_mb_2025">1,356.0 t</span> (<span data-j="ranking.mb.0.share_pct" data-form="pct">71.6%</span>), <span data-j="ranking.mb.1.en">WN gas</span> <span class="num" data-num="s1_gas_wn_2025">333.0 t</span> (<span data-j="ranking.mb.1.share_pct" data-form="pct">17.6%</span>), <span data-j="ranking.mb.2.en">Diesel fleet</span> <span class="num" data-num="s1_diesel_2025">95.0 t</span> (<span data-j="ranking.mb.2.share_pct" data-form="pct">5%</span>)</p>
+      <p class="ax-note">Werk Süd electricity is 0 t in market-based because of the certificate, not lower use.</p>
+    </div>
+    <p class="ax-foot">Rounding: totals from unrounded values, rounded once to 0.1 t, half up; the rounded waterfall bars still add up to the end totals.</p>
+  </section>
+
+  <section class="slide" id="appendix-factors" data-kind="appendix" data-label="Real factors" data-section="Appendix A2 · where real factors come from" data-seconds="0" data-note-key="appendix-factors" data-note="For questions about real emission factors: who publishes them, how often, and what the licence allows." data-route="hidden">
+    <h1 class="scene-title">Where real factors come from</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="af-teach">
+      <p class="ax-head">This case: the pinned teaching table</p>
+      <!-- gen:factors ids=F-EL-LB-2025,F-EL-LB-2024,F-EL-RM-2025,F-EL-GO,F-GAS-HS,F-GAS-HI,F-DSL --><table class="ft"><thead><tr><th>Factor ID</th><th class="ft-num">Value</th><th>Unit</th></tr></thead><tbody><tr data-factor="F-EL-LB-2025"><td class="ft-id">F-EL-LB-2025</td><td class="ft-num"><span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-LB-2024"><td class="ft-id">F-EL-LB-2024</td><td class="ft-num"><span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2024.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-RM-2025"><td class="ft-id">F-EL-RM-2025</td><td class="ft-num"><span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span></td><td class="ft-unit"><span data-j="factors.F-EL-RM-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-GO"><td class="ft-id">F-EL-GO</td><td class="ft-num"><span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span></td><td class="ft-unit"><span data-j="factors.F-EL-GO.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-GAS-HS"><td class="ft-id">F-GAS-HS</td><td class="ft-num"><span data-j="factors.F-GAS-HS.value" data-form="fix2">0.18</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HS.unit">kg CO2e/kWh(Hs)</span></td></tr><tr data-factor="F-GAS-HI"><td class="ft-id">F-GAS-HI</td><td class="ft-num"><span data-j="factors.F-GAS-HI.value" data-form="fix2">0.20</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HI.unit">kg CO2e/kWh(Hi)</span></td></tr><tr data-factor="F-DSL"><td class="ft-id">F-DSL</td><td class="ft-num"><span data-j="factors.F-DSL.value" data-form="fix1">2.5</span></td><td class="ft-unit"><span data-j="factors.F-DSL.unit">kg CO2e/l</span></td></tr></tbody></table><!-- /gen:factors -->
+      <p class="ax-note">Edition <span data-j="factorEdition">Lehrwerte v1.0, 2026-01-15</span>. <span class="w-factorlabel" data-j="meta.factorLabel_en">Illustrative teaching values, not official factors.</span></p>
+    </div>
+    <ul class="af-real">
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><p><b>UBA grid factor, Germany</b><span>Published every year: 433, 386 and 363 g CO₂/kWh for 2022 to 2024, direct CO₂ only. Read in search summaries on 26 Sep 2026; UBA revises earlier years in each publication.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg><p><b>AIB European residual mix</b><span>New every year. The 2025 results were published on 26 May 2026.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-table" /></svg><p><b>DESNZ conversion factors</b><span>The UK set, published every June.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-contract" /></svg><p><b>IEA and ecoinvent</b><span>Licensed. The licence limits sharing, so check it before you paste values into an external tool or a kit.</span></p></li>
+    </ul>
+    <p class="focus-line af-rule">Always record source, edition, year, region, basis and licence.</p>
+  </section>
+
+  <section class="slide" id="appendix-run-record" data-kind="appendix" data-label="Run record" data-section="Appendix A3 · how the two answers were produced" data-seconds="0" data-note-key="appendix-run-record" data-note="For questions about whether the answers are real runs. Not yet: both are constructed; the capture protocol and the empty catch table are here." data-route="hidden">
+    <h1 class="scene-title">How the two answers were produced</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <div class="ar-status">
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span class="w-constructed" data-j="meta.constructedLabel_en">Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <p class="stamp ar-stamp"><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg><span>Capture planned before publication</span></p>
+    </div>
+    <div class="ar-protocol">
+      <p class="ax-head">Held constant</p>
+      <p class="ar-text">Model and version, tool surface, prompt text, factor file, 2024 summary, date. Protocol: kit <span class="w-mono">prompts/00_run_protocol.md</span>.</p>
+      <p class="ax-head">Conditions, <span data-j="runs.runsPerCondition">5</span> runs each</p>
+      <ul class="ar-conds">
+        <li data-j="runs.plannedConditions.0">A: raw folder</li>
+        <li data-j="runs.plannedConditions.1">B: ledger + coverage grid + rules</li>
+        <li data-j="runs.plannedConditions.2">C (optional): raw folder without the factor file</li>
+      </ul>
+      <p class="ax-head">Recorded per run</p>
+      <p class="ar-text">Model, date, prompt hash, run number, Scope 1, both Scope 2 figures, the change, which traps were caught, whether August was flagged, whether other Scope 1 sources were asked about.</p>
+    </div>
+    <table class="ax-table ar-table">
+      <thead><tr><th>Scored item</th><th>A · raw folder</th><th>B · ledger</th></tr></thead>
+      <tbody>
+        <tr><td data-j="runs.scoredItems.0">Scope 1</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.1">Scope 2 LB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.2">Scope 2 MB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.3">change vs 2024 LB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.4">flag T1</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.5">flag T2</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.6">flag T3</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.7">flag T4</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.8">flag T5</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.9">flag T6</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.10">method T7</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.11">August flagged not corrected</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.12">asks about other Scope 1 sources</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide" id="appendix-regulation" data-kind="appendix" data-label="Rules in September 2026" data-section="Appendix A4 · what is true on 26 September 2026" data-seconds="0" data-note-key="appendix-regulation" data-note="For questions about CSRD, the voluntary standard, Scope 2 rules and green claims. Dated 26 September 2026; items marked unverified or secondary need a check before the session." data-route="hidden">
+    <h1 class="scene-title">What is true on 26 September 2026</h1>
+    <ol class="rg-grid">
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">1</span>Fewer companies must report</p><p class="rg-body">Since 18 March 2026 (Directive (EU) 2026/470) the CSRD at EU level covers companies with more than 1,000 employees and more than €450m net turnover; both must be met. National law by 19 March 2027. Kellbrunn has never been in scope.</p><p class="rg-src">Council press release, 24 Feb 2026 · EUR-Lex 2026/470</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">2</span>The standards got shorter</p><p class="rg-body">Revised ESRS were published on 21 September 2026 (Delegated Regulation (EU) 2026/1563): mandatory for financial years from 1 January 2027, optional for 2026.</p><p class="rg-src">Commission, 3 Jul 2026 · OJ, 21 Sep 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">3</span>Customers can ask, within a cap</p><p class="rg-body">Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests beyond the voluntary standard (Delegated Regulation (EU) 2026/1560). Transposition by 19 March 2027. Check whether 2026/1560 keeps the Scope 1 and 2 datapoints.</p><p class="rg-src">EP press release, Dec 2025 · EUR-Lex 2026/1560</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">4</span>VSME Basic Module: Scope 1 and 2</p><p class="rg-body">EFRAG VSME, December 2024: 11 disclosures, including energy and Scope 1 and 2; no double materiality assessment, no assurance required. Which Scope 2 methods B3 requires: check the EFRAG text.</p><p class="rg-src">EFRAG</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">5</span>Scope 2 is reported twice</p><p class="rg-body">The 2015 GHG Protocol Scope 2 Guidance asks for location-based and market-based, and it still applies. A joint GHG Protocol and ISO standard is planned: consultation Q2 2027, publication Q4 2028.</p><p class="rg-src">Scope 2 Guidance · GHG Protocol update, 29 Jul 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">6</span>Green-claim rules from 27 Sep 2026</p><p class="rg-body">Directive (EU) 2024/825 bans, towards consumers, generic environmental claims unless recognised excellent environmental performance can be shown, and product climate claims based on offsetting. Who a text is aimed at is for a lawyer to judge. Misleading claims to business customers are banned too (§&nbsp;5&nbsp;UWG).</p><p class="rg-src">EUR-Lex 2024/825 · Commission FAQ · UWG route <span class="rg-tag">secondary</span></p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">7</span>The Green Claims Directive is stalled</p><p class="rg-body">The Commission announced its intent to withdraw it on 20 June 2025; the file is formally pending.</p><p class="rg-src">Status in September 2026 <span class="rg-tag">unverified</span></p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">8</span>Assurance stays limited</p><p class="rg-body">For companies that must report, the route to reasonable assurance was removed; a limited-assurance standard is due by 1 July 2027.</p><p class="rg-src">Accountancy Europe factsheet, 29 Jan 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">9</span>Germany's CSRD law</p><p class="rg-body">The CSRD-Umsetzungsgesetz had a Bundestag committee hearing on 13 April 2026. Check the current status before you say more.</p><p class="rg-src">Final passage <span class="rg-tag">unverified</span></p></li>
+    </ol>
+    <p class="rg-foot">Rules as of 26 Sep 2026. Not legal advice. Check before you present: German CSRD and UWG transposition, Green Claims Directive, GHG Protocol timeline.</p>
+  </section>
+
+  <section class="slide" id="appendix-claims" data-kind="appendix" data-label="Claims checked" data-section="Appendix A5 · six sentences from the AI's answer, checked" data-seconds="0" data-note-key="appendix-claims" data-note="For questions about which parts of the raw-folder answer were wrong, and why: each sentence against the evidence." data-route="hidden">
+    <h1 class="scene-title">Six sentences from the AI's answer, checked</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <table class="ax-table cl-table">
+      <thead><tr><th>Sentence in the raw-folder answer</th><th>Evidence</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>“<span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span> below 2024”</td><td>Right data: <span class="num" data-num="chg_lb_pct">−5.1%</span></td><td class="cl-verdict">Wrong</td></tr>
+        <tr><td>“Since 2025 Kellbrunn runs on green electricity”</td><td>Certificates cover <span class="num" data-num="renewable_share_el_pct">34.3%</span>, all at Werk Süd</td><td class="cl-verdict">False; rewrite with share and site</td></tr>
+        <tr><td>“The reduction comes mainly from efficiency measures”</td><td><span class="num" data-num="drv_lb_grid_share_pct">71%</span> is the grid factor (location-based, teaching values); no production data</td><td class="cl-verdict">Unsupported</td></tr>
+        <tr><td>“Scope 1 rose by <span class="num" data-num="wrong_chg_s1_pct" data-form="abs">6.5%</span>, probably due to higher heating demand”</td><td>Scope 1 <span class="num" data-num="chg_s1_pct">−2.7%</span>, gas kWh <span class="num" data-num="gas_change_pct">−2.8%</span></td><td class="cl-verdict">False direction, invented cause</td></tr>
+        <tr><td>“Scope 2 market-based: <span class="num" data-num="wrong_s2mb">1,350.0 t</span>”</td><td>Grid average used for power without a certificate</td><td class="cl-verdict">Wrong method; <span class="num" data-num="s2mb_2025">1,422.0 t</span></td></tr>
+        <tr><td>“<span class="num" data-num="wrong_per_employee_t">10.4 t</span> per employee”</td><td>Right data: <span class="num" data-num="per_employee_2025_t">10.6 t</span></td><td class="cl-verdict">Wrong, and not a check</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide" id="appendix-baseline" data-kind="appendix" data-label="Base year" data-section="Appendix A6 · when the base year must be restated" data-seconds="0" data-note-key="appendix-baseline" data-note="For 'our emissions fell 40 percent since 2023'. A separate teaching variant: restate the base year after a divestment, then compare like for like." data-route="hidden">
+    <h1 class="scene-title">When the base year must be restated</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <p class="bl-variant"><b>Separate teaching variant.</b> It does not connect to the 2024 comparison in the main case. Kellbrunn's first inventory was 2023, and it sold a foundry, Werk 3, on 1 July 2024. The GHG Protocol Corporate Standard requires recalculating the base year for a significant structural change such as a divestment.</p>
+    <div class="bl-cards">
+      <div class="bl-card">
+        <p class="ax-head">Restated 2023 base, location-based</p>
+        <p class="bl-line"><span>As first reported</span><span class="num" data-num="var_2023_lb_reported_t">3,160.0 t</span></p>
+        <p class="bl-line"><span>Werk 3 removed</span><span class="num" data-num="var_w3_t">945.0 t</span></p>
+        <p class="bl-line bl-line--sum"><span>Restated</span><b><span class="num" data-num="var_2023_lb_restated_t">2,215.0 t</span></b></p>
+      </div>
+      <div class="bl-card bl-card--main">
+        <p class="ax-head">Like for like, 2023 to 2025</p>
+        <p class="bl-big"><span class="num" data-num="var_chg_vs_restated_pct">−13.5%</span> <span class="bl-big__t">(<span class="num" data-num="var_chg_vs_restated_t">−299.8 t</span>)</span></p>
+        <p class="bl-line"><span>Less electricity</span><span class="num" data-num="var_drv_elec_t">−94.5 t</span></p>
+        <p class="bl-line"><span>Grid factor</span><span class="num" data-num="var_drv_grid_t">−180.5 t</span></p>
+        <p class="bl-line"><span>Less gas</span><span class="num" data-num="var_drv_gas_t">−19.8 t</span></p>
+        <p class="bl-line"><span>Less diesel</span><span class="num" data-num="var_drv_diesel_t">−5.0 t</span></p>
+      </div>
+      <div class="bl-card bl-card--wrong">
+        <p class="ax-head">What the unrestated comparison would wrongly show</p>
+        <p class="bl-big"><span class="num" data-num="var_chg_vs_reported_pct">−39.4%</span></p>
+        <p class="bl-text">against <span class="num" data-num="var_2023_lb_reported_t">3,160.0 t</span> as first reported, with the foundry still in the base year</p>
+      </div>
+    </div>
+    <p class="bl-mb">Market-based 2023 was never reported. Recalculated from 2023 activity data with the 2023 residual mix (teaching value <span data-j="factors.F-EL-RM-2023.value" data-form="fix2">0.60</span>) and labelled “recalculated, restated”: <b><span class="num" data-num="var_2023_mb_restated_t">2,788.0 t</span></b> (<span class="num" data-num="var_2023_mb_reported_t">3,868.0 t</span> with Werk 3). Like for like <span class="num" data-num="var_chg_mb_vs_restated_pct">−32.1%</span>.</p>
+    <p class="focus-line bl-sentence">“Our Scope 1 and 2 emissions (location-based, CO₂e) fell <span class="num" data-num="var_chg_vs_restated_pct" data-form="abs">13.5%</span> from 2023 to 2025 at the sites we still run. The base year is restated without Werk 3, sold in July 2024.”</p>
+    <p class="ax-note bl-note">Grid-factor changes that reflect a real change in the grid are not a reason to restate; they appear as a driver. A switch of factor source or method is a methodology change and is checked against the same significance threshold. Inputs: continuing sites <span data-j="inputs.variant2023.el_continuing" data-form="int">3,820,000</span> kWh electricity, <span data-j="inputs.variant2023.gas_continuing" data-form="int">2,200,000</span> kWh(Hs) gas, <span data-j="inputs.variant2023.diesel_l" data-form="int">40,000</span> l diesel; Werk 3 <span data-j="inputs.variant2023.el_W3" data-form="int">900,000</span> kWh electricity and <span data-j="inputs.variant2023.gas_W3" data-form="int">3,000,000</span> kWh(Hs) gas.</p>
+  </section>
+
+  <section class="slide" id="appendix-steel" data-kind="appendix" data-label="Supplier numbers" data-section="Appendix A7 · which number from the supplier's reply" data-seconds="0" data-note-key="appendix-steel" data-note="For questions about Scope 3: the supplier sends three different numbers, and only one is the product footprint for the steel Kellbrunn bought." data-route="hidden">
+    <h1 class="scene-title">Which number from the supplier's reply?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <p class="st-case"><svg class="icon icon--48" aria-hidden="true"><use href="#i-rows" /></svg><span>Steel strip from Bandstahl Wendelin GmbH (fictional): <b><span data-j="inputs.steel.t_2024" data-form="int">2,400</span> t in 2024 and in 2025</b>. Spend €<span data-j="inputs.steel.eur_2024" data-form="int">1,800,000</span> in 2024 and €<span data-j="inputs.steel.eur_2025" data-form="int">2,160,000</span> in 2025.</span></p>
+    <ol class="st-opts">
+      <li class="st-opt st-opt--right">
+        <p class="st-opt__head"><span class="chip chip--pass"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg>Use this one</span></p>
+        <p class="st-opt__what">Product footprint from the supplier</p>
+        <p class="st-opt__calc"><span data-j="inputs.steel.supplierPcf_kg_per_t" data-form="int">1,650</span> kg CO₂e per t × <span data-j="inputs.steel.t_2025" data-form="int">2,400</span> t</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_supplier_t">3,960 t</span></p>
+      </li>
+      <li class="st-opt">
+        <p class="st-opt__head"><span class="st-opt__tag">Wrong number</span></p>
+        <p class="st-opt__what">The supplier's own Scope 1 + 2 intensity</p>
+        <p class="st-opt__calc"><span data-j="inputs.steel.supplierS12Intensity_t_per_t">0.12</span> t per t × <span data-j="inputs.steel.t_2025" data-form="int">2,400</span> t</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_intensity_wrong_t">288 t</span> <span class="st-opt__pct"><span class="num" data-num="steel_intensity_wrong_pct">−93%</span></span></p>
+      </li>
+      <li class="st-opt">
+        <p class="st-opt__head"><span class="st-opt__tag">Moves with prices</span></p>
+        <p class="st-opt__what">Spend-based, on nominal 2025 euros</p>
+        <p class="st-opt__calc">€<span data-j="inputs.steel.eur_2025" data-form="int">2,160,000</span> × <span data-j="inputs.steel.spendFactor_kg_per_eur">2.4</span> kg CO₂e per €</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_spend_nominal_t">5,184 t</span> <span class="st-opt__pct"><span class="num" data-num="steel_spend_yoy_pct">+20%</span></span></p>
+        <p class="st-opt__note">while the tonnage stayed flat. In 2024 prices (deflator <span data-j="inputs.steel.deflator_2025_vs_2024">1.2</span>): <span class="num" data-num="steel_spend_deflated_t">4,320 t</span>, the same as the 2024 spend figure <span class="num" data-num="steel_spend_2024_t">4,320 t</span>.</p>
+      </li>
+    </ol>
+    <p class="focus-line st-line">Steel alone (<span class="num" data-num="steel_supplier_t">3,960 t</span>) is larger than Scope 1 and 2 together (<span class="num" data-num="total_lb_2025">1,915.2 t</span> location-based).</p>
+  </section>
+
+  <section class="slide" id="appendix-scope2-order" data-kind="appendix" data-label="Market-based order" data-section="Appendix A8 · market-based: which rate for which kWh" data-seconds="0" data-note-key="appendix-scope2-order" data-note="For questions about the market-based method: which rate applies to which kilowatt hour, in which order." data-route="hidden">
+    <h1 class="scene-title">Market-based: which rate for which kWh?</h1>
+    <p class="case-tag">Fictional company · illustrative teaching factors</p>
+    <p class="so-lead">The order from the GHG Protocol Scope 2 Guidance (2015), applied to Kellbrunn's <span class="num" data-num="el_total_mwh">3,610 MWh</span>:</p>
+    <ol class="so-steps">
+      <li class="so-step">
+        <span class="so-n">1</span>
+        <p class="so-what"><b>Energy attribute certificates</b><span>for the kWh they cover: guarantees of origin, cancelled</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg><span>Werk Süd <span class="num" data-num="go_mwh">1,240 MWh</span> × <span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span> = 0 t</span></p>
+      </li>
+      <li class="so-step so-step--empty">
+        <span class="so-n">2</span>
+        <p class="so-what"><b>Supplier-specific emission rate</b><span>if it meets the quality criteria. Every German bill carries the Stromkennzeichnung under §&nbsp;42&nbsp;EnWG; check whether it qualifies.</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Empty here: the kit's bills leave out the Stromkennzeichnung for simplicity.</span></p>
+      </li>
+      <li class="so-step">
+        <span class="so-n">3</span>
+        <p class="so-what"><b>Residual mix</b><span>for the rest</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><span>Werk Nord and Lager Ost <span class="num" data-num="el_uncovered_mwh">2,370 MWh</span> × <span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span> = <b><span class="num" data-num="s2mb_2025">1,422.0 t</span></b></span></p>
+      </li>
+    </ol>
+    <p class="ax-note so-small so-small--a">Simplified: the Guidance also lists direct contracts (PPAs), and allows a grid average only where no residual mix is published. AIB publishes one for Germany.</p>
+    <p class="ax-note so-small so-small--b">Hourly matching and deliverability were consultation proposals (Oct 2025 to Jan 2026). The 2015 Guidance still applies.</p>
+  </section>
+
+  <section class="slide" id="appendix-sources" data-kind="appendix" data-label="Sources" data-section="Appendix · sources" data-seconds="0" data-note-key="appendix-sources" data-note="For questions about where a rule, a date or a published figure comes from. All links were read on 26 September 2026." data-route="hidden">
+    <h1 class="scene-title">Sources, read on 26 September 2026</h1>
+    <div class="sc-col">
+      <p class="ax-head">Regulation</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/dir/2026/470/oj/eng" target="_blank" rel="noopener">Directive (EU) 2026/470</a><span>EUR-Lex</span></li>
+        <li><a class="deck-link" href="https://www.consilium.europa.eu/en/press/press-releases/2026/02/24/council-signs-off-simplification-of-sustainability-reporting-and-due-diligence-requirements-to-boost-eu-competitiveness" target="_blank" rel="noopener">Council press release, 24 Feb 2026</a><span>consilium.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.europarl.europa.eu/news/en/press-room/20251211IPR32164/simplified-sustainability-reporting-and-due-diligence-rules-for-businesses" target="_blank" rel="noopener">European Parliament press release, Dec 2025</a><span>value-chain cap</span></li>
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/reg_del/2026/1560/oj/eng" target="_blank" rel="noopener">Delegated Regulation (EU) 2026/1560</a><span>voluntary standard</span></li>
+        <li><a class="deck-link" href="https://finance.ec.europa.eu/news/commission-adopts-revised-sustainability-reporting-standards-reduce-administrative-burdens-eu-2026-07-03_en" target="_blank" rel="noopener">Revised ESRS, Commission, 3 Jul 2026</a><span>finance.ec.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.efrag.org/en/news-and-calendar/news/efrag-releases-the-voluntary-sustainability-reporting-standard-for-nonlisted-smes" target="_blank" rel="noopener">EFRAG VSME</a><span>efrag.org</span></li>
+        <li><a class="deck-link" href="https://accountancyeurope.eu/wp-content/uploads/2026/01/260129-Omnibus-explained-CSRD-factsheet.pdf" target="_blank" rel="noopener">Omnibus explained, 29 Jan 2026</a><span>Accountancy Europe</span></li>
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/dir/2024/825/oj/eng" target="_blank" rel="noopener">Directive (EU) 2024/825</a><span>EUR-Lex</span></li>
+        <li><a class="deck-link" href="https://commission.europa.eu/document/download/3c257883-bb2a-4dd9-a6dc-501d587bb34f_en?filename=faq-empowerting-consumers-gtd.pdf" target="_blank" rel="noopener">Commission FAQ on 2024/825</a><span>commission.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.ebnerstolz.de/de/unser-angebot/leistungen/rechtsberatung/wirtschaftsrecht-commercial/umsetzung-empco-richtlinie-99600.html" target="_blank" rel="noopener">UWG transposition, Ebner Stolz</a><span>secondary</span></li>
+        <li><a class="deck-link" href="https://kpmg-law.de/die-empco-tritt-in-kraft-antworten-auf-die-wichtigsten-praxisfragen" target="_blank" rel="noopener">UWG transposition, KPMG Law</a><span>secondary</span></li>
+        <li><a class="deck-link" href="https://www.europarl.europa.eu/legislative-train/theme-a-european-green-deal/file-substantiating-green-claims" target="_blank" rel="noopener">Green Claims Directive, legislative train</a><span>europarl.europa.eu</span></li>
+        <li><a class="deck-link" href="https://blogs.pwc.de/de/accounting-and-reporting/article/254119/aktuelle-entwicklungen-zur-umsetzung-der-csrd-in-deutsches-recht" target="_blank" rel="noopener">CSRD transposition in Germany, PwC</a><span>secondary</span></li>
+      </ul>
+    </div>
+    <div class="sc-col sc-col--right">
+      <p class="ax-head">Carbon accounting</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://ghgprotocol.org/corporate-standard" target="_blank" rel="noopener">GHG Protocol Corporate Standard</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/sites/default/files/2023-03/Scope%202%20Guidance.pdf" target="_blank" rel="noopener">Scope 2 Guidance, 2015</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/blog/ghg-protocol-announces-key-standard-development-updates" target="_blank" rel="noopener">Standard development update, 29 Jul 2026</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/blog/release-ghg-protocol-opens-public-consultations-scope-2-and-electricity-sector-consequential" target="_blank" rel="noopener">Scope 2 consultation</a><span>ghgprotocol.org</span></li>
+      </ul>
+      <p class="ax-head">Factors (real-world anchors only)</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024" target="_blank" rel="noopener">UBA grid factor 2024</a><span>umweltbundesamt.de</span></li>
+        <li><a class="deck-link" href="https://www.aib-net.org/facts/european-residual-mix/2024" target="_blank" rel="noopener">AIB European residual mix 2024</a><span>aib-net.org</span></li>
+        <li><a class="deck-link" href="https://www.aib-net.org/sites/default/files/assets/eecs/Residual%20Mix/AIB_2025_Residual_Mix_Final%20Results_%2026052026.pdf" target="_blank" rel="noopener">AIB residual mix, 2025 results</a><span>26 May 2026</span></li>
+        <li><a class="deck-link" href="https://ecoinvent.org/licenses" target="_blank" rel="noopener">ecoinvent licences</a><span>ecoinvent.org</span></li>
+        <li><a class="deck-link" href="https://www.iea.org/data-and-statistics/data-product/emissions-factors-2025" target="_blank" rel="noopener">IEA emissions factors</a><span>licensed</span></li>
+        <li><a class="deck-link" href="https://www.entega.de/ratgeber/gas/gasverbrauch/heizwert-gas" target="_blank" rel="noopener">Gas: Brennwert, Heizwert and m³ to kWh</a><span>entega.de</span></li>
+      </ul>
+      <p class="ax-head">AI extraction accuracy</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://arxiv.org/abs/2312.17264" target="_blank" rel="noopener">ESGReveal</a><span>arXiv</span></li>
+        <li><a class="deck-link" href="https://link.springer.com/article/10.1007/s13042-026-03146-w" target="_blank" rel="noopener">ESG Insight</a><span>Springer</span></li>
+        <li><a class="deck-link" href="https://arxiv.org/html/2507.18932v2" target="_blank" rel="noopener">MMESGBench</a><span>arXiv</span></li>
+      </ul>
+    </div>
+  </section>
+
+</deck-stage>
+</main>
+
+<script src="./lib/w04-data.js"></script>
+<script src="./lib/w04-fill.js"></script>
+<script src="./lib/deck-runtime.js"></script>
+</body>
+</html>

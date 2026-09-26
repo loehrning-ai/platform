@@ -23,30 +23,30 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 pt-20 text-center">
-      <div className="font-mono text-xs uppercase tracking-[0.14em] text-brand-orange">
-        {copy.indexKicker}
-      </div>
-      <h1 className="mt-4 max-w-xl text-3xl font-bold tracking-[-0.02em]">
-        {copy.indexHeading}
-      </h1>
-      <p className="mt-3 max-w-lg text-sm text-muted-foreground">
-        {copy.indexBody}
-      </p>
-      <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <button
-          type="button"
-          onClick={reset}
-          className="inline-flex min-h-11 items-center border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-brand-orange/90"
-        >
-          {copy.retry}
-        </button>
-        <Link
-          href={localizeHref("/kurse", locale)}
-          className="inline-flex min-h-11 items-center border border-foreground px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:bg-foreground hover:text-background"
-        >
-          {copy.courses}
-        </Link>
+    <div className="px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
+      <div className="mx-auto max-w-[75rem]">
+        <p className="text-label text-muted-foreground">{copy.indexKicker}</p>
+        <h1 className="mt-3 max-w-[24ch] text-fluid-h1 font-bold text-foreground">
+          {copy.indexHeading}
+        </h1>
+        <p className="mt-4 max-w-[56ch] text-lead text-muted-foreground">
+          {copy.indexBody}
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={reset}
+            className="inline-flex min-h-11 items-center bg-foreground px-5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+          >
+            {copy.retry}
+          </button>
+          <Link
+            href={localizeHref("/kurse", locale)}
+            className="inline-flex min-h-11 items-center border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
+          >
+            {copy.courses}
+          </Link>
+        </div>
       </div>
     </div>
   );

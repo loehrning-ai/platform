@@ -47,7 +47,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 01 · AI literacy",
     tagline: "Define tasks, protect data, and check model output.",
     description:
-      "How generative AI answers, where it fails, which data stays out, and how you use it safely anyway. The Article 4 version in force since 27 July 2026, in context. It ends with a locally created certificate of participation.",
+      "You learn how generative AI answers, where it fails and which data you keep out. The course explains Article 4 of the AI Act in the version in force since 27 July 2026. At the end you create a certificate of participation locally.",
     duration: "about 1 hr 40 min",
     unitLabel: "units",
     audience: "People who use AI in their day-to-day work",
@@ -59,7 +59,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 02 · Society",
     tagline: "Examine deepfakes, bias, and effects on work through examples.",
     description:
-      "Work changes, media get manipulated, systems discriminate. Three units separate findings from claims. Source, interest, and uncertainty stay separate.",
+      "Three units cover the job market, deepfakes and bias. For every claim you see the source, who has an interest in it and how certain the finding is.",
     duration: "about 46 min",
     unitLabel: "units",
     audience: "No technical background required",
@@ -71,7 +71,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 03 · Regulation",
     tagline: "Classify a use case, determine roles, and map obligations.",
     description:
-      "Prohibited, transparency-bound, general-purpose, high-risk, or none of these: the course sorts a use case into the class it belongs to. Every time-dependent statement names its legal date and primary source. Not legal advice.",
+      "You sort a use case into its class: prohibited, transparency-bound, general-purpose, high-risk, or none. Every statement with a deadline names its legal date and primary source. The course does not replace legal advice.",
     duration: "about 1 hr 50 min",
     unitLabel: "units",
     audience: "Compliance, IT leadership, management",
@@ -84,7 +84,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     tagline: "Clarify intent, provide context, and check execution and output.",
     description:
       "One workflow you can repeat: research, documentation, automation. Four modules, and every exercise names its tool, input, review step, and stopping condition.",
-    duration: "about 12 hrs",
+    duration: "about 5 hrs of lessons, 12 hrs with exercises",
     unitLabel: "modules",
     audience: "Employees, independent professionals, students",
     coverImageAlt:
@@ -95,7 +95,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Technical course · Prompting",
     tagline: "Use Claude with explicit context, tools, and verification steps.",
     description:
-      "Twelve lessons, always the same pattern. One model, one bounded exercise. Prompt structure, context files, tool use, grounding, reviews, evaluation, collaboration.",
+      "Twelve lessons, each with a short exercise in Claude, cover prompt structure, context files, tool use, grounding, reviews, evaluation and collaboration.",
     duration: "about 2 hrs",
     unitLabel: "tracks",
     audience: "Knowledge workers, developers, teams using Claude Code",
@@ -140,7 +140,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Technical course · System design",
     tagline: "Compare storage, streaming, and consistency decisions.",
     description:
-      "Where does a data system break? Twelve lessons on CAP and PACELC, data models, file formats, lakehouse tables, streaming, CDC, idempotency, and data SLAs. Simulations find the limit first.",
+      "The twelve lessons cover CAP and PACELC, data models, file formats, lakehouse tables, streaming, CDC, idempotency and data SLAs. Simulations show at which load or failure a design stops holding.",
     duration: "about 3 hrs",
     unitLabel: "tracks",
     audience: "Senior and staff data engineers, IC5+ candidates, platform teams",
@@ -161,9 +161,9 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "data-engineering-fundamentals": {
     title: "Data Engineering Fundamentals",
     eyebrow: "Technical course · Data engineering",
-    tagline: "Design a reliable data pipeline from source to consumption.",
+    tagline: "Design and safeguard a data pipeline from source to consumption.",
     description:
-      "A pipeline rarely fails in one place. Twelve chapters follow the data through ingestion, streaming, storage, compute, orchestration, quality, discovery, serving, and governance. Seventeen simulations and a final case run the failure chains.",
+      "Twelve chapters follow the data through ingestion, streaming, storage, compute, orchestration, quality, discovery, serving and governance. In 17 simulations and a final case you trace how an error at one stage causes damage further down.",
     duration: "about 90 min",
     unitLabel: "chapters",
     audience: "Data engineers, analytics engineers, platform teams",
@@ -184,7 +184,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Technical course · Data science",
     tagline: "Evaluate models, spot misreadings, monitor production behavior.",
     description:
-      "A metric can look fine and still mislead. Twelve chapters connect sampling, data cleaning, features, evaluation, interpretability, experiments, causality, and drift. Thirty-seven simulations show where that happens.",
+      "Twelve chapters connect sampling, data cleaning, features, evaluation, interpretability, experiments, causality and drift. Thirty-seven simulations show where a good-looking metric misleads.",
     duration: "about 2 hrs",
     unitLabel: "chapters",
     audience: "Data scientists, ML engineers, analysts",
@@ -206,7 +206,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     tagline:
       "Organize AI-supported work with ownership, controls, and measurement.",
     description:
-      "Who is accountable when AI works alongside you? Nine modules with 39 lessons on engineering, product work, operations, roles, organization design, data, governance, and measurement. Thirty exercises ask for decisions, not definitions.",
+      "Nine modules with 39 lessons cover engineering, product work, operations, roles, organization design, data, governance and measurement. In 30 exercises you set who decides and who reviews each step of AI-supported work.",
     duration: "about 14 hrs",
     unitLabel: "modules",
     audience: "Specialists and managers",

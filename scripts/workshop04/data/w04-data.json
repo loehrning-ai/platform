@@ -1,0 +1,6027 @@
+{
+ "meta": {
+  "slug": "esg-berichte-mit-ki",
+  "number": "04",
+  "dataVersion": "1.0.0",
+  "builtOn": "2026-09-26",
+  "rulesAsOf": "2026-09-26",
+  "company": "Kellbrunn Präzisionsteile GmbH",
+  "companyShort": "Kellbrunn",
+  "fictional": true,
+  "jv": "Talbrück Beschichtung GmbH",
+  "supplier": "Lindmark Energie GmbH",
+  "landlord": "Grundstücksverwaltung Lager Ost GbR",
+  "location_de": "Erfundener Standort in Hessen",
+  "location_en": "Invented site in Hesse, Germany",
+  "factorLabel_en": "Illustrative teaching values, not official factors.",
+  "factorLabel_de": "Illustrative Lehrwerte, keine amtlichen Faktoren.",
+  "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.",
+  "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sechs Fallen zuschlagen. Kein aufgezeichneter Lauf.",
+  "targetLabel_en": "Target answer, constructed. Not a recorded run.",
+  "targetLabel_de": "Zielantwort, konstruiert. Kein aufgezeichneter Lauf."
+ },
+ "company": {
+  "staff_2024": 180,
+  "staff_2025": 180,
+  "staff_WN": 110,
+  "staff_WS": 55,
+  "staff_LO": 15,
+  "turnover_meur": 38,
+  "balance_sheet_meur": 17,
+  "vehicles": 14,
+  "jv_share_pct": 40
+ },
+ "question": {
+  "en": "What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?",
+  "de": "Wie hoch waren unsere Scope-1- und Scope-2-Emissionen 2025, und sind sie gegenüber 2024 gesunken?"
+ },
+ "factors": {
+  "F-GAS-HI": {
+   "unit": "kg CO2e/kWh(Hi)",
+   "basis": "Hi",
+   "year": "alle",
+   "label_de": "Erdgas",
+   "label_en": "Natural gas",
+   "note": "bezogen auf Heizwert (Hi)",
+   "value": 0.2
+  },
+  "F-GAS-HS": {
+   "unit": "kg CO2e/kWh(Hs)",
+   "basis": "Hs",
+   "year": "alle",
+   "label_de": "Erdgas (Brennwert)",
+   "label_en": "Natural gas (gross calorific value)",
+   "note": "bezogen auf Brennwert (Hs); rund 0,20 / 1,11",
+   "value": 0.18
+  },
+  "F-EL-LB-2025": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2025",
+   "label_de": "Strom Netz DE, standortbasiert",
+   "label_en": "Grid electricity DE, location-based",
+   "note": "Lehrwert; UBA 2024: 363 g CO2/kWh (nur CO2)",
+   "value": 0.4
+  },
+  "F-EL-LB-2024": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2024",
+   "label_de": "Strom Netz DE, standortbasiert",
+   "label_en": "Grid electricity DE, location-based",
+   "note": "Lehrwert; UBA 2023: 386 g CO2/kWh (nur CO2)",
+   "value": 0.42
+  },
+  "F-EL-LB-2023": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2023",
+   "label_de": "Strom Netz DE, standortbasiert",
+   "label_en": "Grid electricity DE, location-based",
+   "note": "Lehrwert; nur für die Anhang-Variante",
+   "value": 0.45
+  },
+  "F-EL-RM-2025": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2025",
+   "label_de": "Residualmix DE, marktbasiert",
+   "label_en": "Residual mix DE, market-based",
+   "note": "Lehrwert; absichtlich gleich wie 2024",
+   "value": 0.6
+  },
+  "F-EL-RM-2024": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2024",
+   "label_de": "Residualmix DE, marktbasiert",
+   "label_en": "Residual mix DE, market-based",
+   "note": "Lehrwert; echte Residualmixe ändern sich jedes Jahr",
+   "value": 0.6
+  },
+  "F-EL-RM-2023": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "2023",
+   "label_de": "Residualmix DE, marktbasiert",
+   "label_en": "Residual mix DE, market-based",
+   "note": "Lehrwert; nur für die Anhang-Variante",
+   "value": 0.6
+  },
+  "F-EL-GO": {
+   "unit": "kg CO2e/kWh",
+   "basis": "",
+   "year": "alle",
+   "label_de": "Strom mit entwerteten Herkunftsnachweisen, marktbasiert",
+   "label_en": "Electricity covered by cancelled guarantees of origin, market-based",
+   "note": "nur für die kWh, die der Nachweis abdeckt",
+   "value": 0.0
+  },
+  "F-DSL": {
+   "unit": "kg CO2e/l",
+   "basis": "",
+   "year": "alle",
+   "label_de": "Diesel, Straße",
+   "label_en": "Diesel, road",
+   "note": "Lehrwert; veröffentlichte Werte rund 2,5 bis 2,7",
+   "value": 2.5
+  },
+  "C-DSL-E": {
+   "unit": "kWh/l",
+   "basis": "Hi",
+   "year": "alle",
+   "label_de": "Energiegehalt Diesel",
+   "label_en": "Diesel energy content",
+   "note": "Heizwert",
+   "value": 10.0
+  },
+  "C-HS-HI": {
+   "unit": "Verhältnis",
+   "basis": "",
+   "year": "alle",
+   "label_de": "Verhältnis Brennwert zu Heizwert, Erdgas",
+   "label_en": "Gross to net ratio, natural gas",
+   "note": "",
+   "value": 1.11
+  }
+ },
+ "factorEdition": "Lehrwerte v1.0, 2026-01-15",
+ "inputs": {
+  "wnBills": [
+   {
+    "invoice": "4711-01",
+    "firstMonth": 1,
+    "lastMonth": 1,
+    "kwh": 210000,
+    "file": "2025-01_strom_wn.md"
+   },
+   {
+    "invoice": "4711-02",
+    "firstMonth": 2,
+    "lastMonth": 2,
+    "kwh": 195000,
+    "file": "2025-02_strom_wn.md"
+   },
+   {
+    "invoice": "4711-03",
+    "firstMonth": 3,
+    "lastMonth": 3,
+    "kwh": 205000,
+    "file": "2025-03_strom_wn.md"
+   },
+   {
+    "invoice": "4711-04",
+    "firstMonth": 4,
+    "lastMonth": 4,
+    "kwh": 190000,
+    "file": "2025-04_strom_wn.md"
+   },
+   {
+    "invoice": "4711-05",
+    "firstMonth": 5,
+    "lastMonth": 5,
+    "kwh": 185000,
+    "file": "2025-05_strom_wn.md"
+   },
+   {
+    "invoice": "4711-06",
+    "firstMonth": 6,
+    "lastMonth": 6,
+    "kwh": 180000,
+    "file": "2025-06_strom_wn.md"
+   },
+   {
+    "invoice": "4711-07",
+    "firstMonth": 7,
+    "lastMonth": 7,
+    "kwh": 175000,
+    "file": "2025-07_strom_wn.md"
+   },
+   {
+    "invoice": "4711-08",
+    "firstMonth": 8,
+    "lastMonth": 8,
+    "kwh": 120000,
+    "file": "2025-08_strom_wn.md"
+   },
+   {
+    "invoice": "4711-09",
+    "firstMonth": 9,
+    "lastMonth": 9,
+    "kwh": 190000,
+    "file": "2025-09_strom_wn.md"
+   },
+   {
+    "invoice": "4711-11",
+    "firstMonth": 11,
+    "lastMonth": 12,
+    "kwh": 410000,
+    "file": "2025-11-12_strom_wn.md"
+   }
+  ],
+  "wnDuplicate": {
+   "invoice": "4711-03",
+   "kwh": 205000,
+   "file": "scan_rechnung_maerz.md"
+  },
+  "wnMissingInvoice": "4711-10",
+  "jvBill": {
+   "invoice": "TB-2025-12",
+   "kwh": 1000000,
+   "file": "jahresrechnung_tb_2025.md",
+   "meter": "DE0005678900TB07"
+  },
+  "meterReadings": [
+   {
+    "date": "31.12.2024",
+    "kwh": 3162300
+   },
+   {
+    "date": "31.01.2025",
+    "kwh": 3372300
+   },
+   {
+    "date": "28.02.2025",
+    "kwh": 3567300
+   },
+   {
+    "date": "31.03.2025",
+    "kwh": 3772300
+   },
+   {
+    "date": "30.04.2025",
+    "kwh": 3962300
+   },
+   {
+    "date": "31.05.2025",
+    "kwh": 4147300
+   },
+   {
+    "date": "30.06.2025",
+    "kwh": 4327300
+   },
+   {
+    "date": "31.07.2025",
+    "kwh": 4502300
+   },
+   {
+    "date": "31.08.2025",
+    "kwh": 4622300
+   },
+   {
+    "date": "30.09.2025",
+    "kwh": 4812300
+   },
+   {
+    "date": "31.10.2025",
+    "kwh": 5012300
+   },
+   {
+    "date": "31.12.2025",
+    "kwh": 5422300
+   }
+  ],
+  "ws": {
+   "printed": "1.240 MWh",
+   "kwh": 1240000,
+   "misreadKwh": 1240,
+   "priorYearPrinted": "1.250 MWh",
+   "meter": "DE0005678900WS01"
+  },
+  "go": {
+   "mwh": 1240,
+   "kwh": 1240000,
+   "site": "WS"
+  },
+  "lo": [
+   {
+    "quarter": "Q1",
+    "kwh": 30000
+   },
+   {
+    "quarter": "Q2",
+    "kwh": 25000
+   },
+   {
+    "quarter": "Q3",
+    "kwh": 25000
+   },
+   {
+    "quarter": "Q4",
+    "kwh": 30000
+   }
+  ],
+  "gas": {
+   "WN": {
+    "m3": 169817,
+    "z": 0.96,
+    "hs": 11.348,
+    "kwhExact": 1849999.98336,
+    "kwhPrinted": 1850000,
+    "invoice": "G-2025-0417",
+    "file": "gas_jahresrechnung_wn_2025.md"
+   },
+   "WS": {
+    "m3": 22077,
+    "z": 0.96,
+    "hs": 11.324,
+    "kwhExact": 239999.95008,
+    "kwhPrinted": 240000,
+    "invoice": "G-2025-0418",
+    "file": "gas_jahresrechnung_ws_2025.md"
+   }
+  },
+  "dieselMonthL": [
+   3300,
+   3100,
+   3300,
+   3200,
+   3200,
+   3100,
+   3000,
+   2600,
+   3300,
+   3300,
+   3300,
+   3300
+  ],
+  "adblueMonthL": [
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100,
+   100
+  ],
+  "prior2024": {
+   "el_WN": 2290000,
+   "el_WS": 1250000,
+   "el_LO": 110000,
+   "gas_WN": 1900000,
+   "gas_WS": 250000,
+   "diesel_l": 39000
+  },
+  "meters": {
+   "WN": "DE0005678900WN01",
+   "WS": "DE0005678900WS01",
+   "TB": "DE0005678900TB07",
+   "LO": "LO-UZ-03"
+  },
+  "customerNo": "55-0192",
+  "customerNoJV": "55-0388",
+  "variant2023": {
+   "el_continuing": 3820000,
+   "el_W3": 900000,
+   "gas_continuing": 2200000,
+   "gas_W3": 3000000,
+   "diesel_l": 40000,
+   "note": "Appendix A6 only. Werk 3 (foundry) sold on 2024-07-01; W3 = el_W3 plus gas_W3 (Hs). Factors: F-EL-LB-2023, F-EL-RM-2023, F-GAS-HS, F-DSL."
+  },
+  "steel": {
+   "t_2024": 2400,
+   "t_2025": 2400,
+   "eur_2024": 1800000,
+   "eur_2025": 2160000,
+   "spendFactor_kg_per_eur": 2.4,
+   "deflator_2025_vs_2024": 1.2,
+   "supplierPcf_kg_per_t": 1650.0,
+   "supplierS12Intensity_t_per_t": 0.12,
+   "note": "Appendix A7 only. Teaching values; supplier Bandstahl Wendelin GmbH is fictional."
+  }
+ },
+ "numbers": {
+  "staff": {
+   "value": 180,
+   "rounded": 180,
+   "unit": "",
+   "en": "180",
+   "de": "180"
+  },
+  "files_raw_2025": {
+   "value": 22,
+   "rounded": 22,
+   "unit": "",
+   "en": "22",
+   "de": "22"
+  },
+  "files_wn_electricity": {
+   "value": 12,
+   "rounded": 12,
+   "unit": "",
+   "en": "12",
+   "de": "12"
+  },
+  "months_wn_covered_raw": {
+   "value": 11,
+   "rounded": 11,
+   "unit": "",
+   "en": "11",
+   "de": "11"
+  },
+  "el_wn_kwh": {
+   "value": 2260000,
+   "rounded": 2260000,
+   "unit": "kWh",
+   "en": "2,260,000 kWh",
+   "de": "2.260.000 kWh"
+  },
+  "el_ws_kwh": {
+   "value": 1240000,
+   "rounded": 1240000,
+   "unit": "kWh",
+   "en": "1,240,000 kWh",
+   "de": "1.240.000 kWh"
+  },
+  "el_lo_kwh": {
+   "value": 110000,
+   "rounded": 110000,
+   "unit": "kWh",
+   "en": "110,000 kWh",
+   "de": "110.000 kWh"
+  },
+  "el_total_kwh": {
+   "value": 3610000,
+   "rounded": 3610000,
+   "unit": "kWh",
+   "en": "3,610,000 kWh",
+   "de": "3.610.000 kWh"
+  },
+  "el_total_mwh": {
+   "value": 3610,
+   "rounded": 3610,
+   "unit": "MWh",
+   "en": "3,610 MWh",
+   "de": "3.610 MWh"
+  },
+  "el_ws_mwh": {
+   "value": 1240,
+   "rounded": 1240,
+   "unit": "MWh",
+   "en": "1,240 MWh",
+   "de": "1.240 MWh"
+  },
+  "el_uncovered_kwh": {
+   "value": 2370000,
+   "rounded": 2370000,
+   "unit": "kWh",
+   "en": "2,370,000 kWh",
+   "de": "2.370.000 kWh"
+  },
+  "el_uncovered_mwh": {
+   "value": 2370,
+   "rounded": 2370,
+   "unit": "MWh",
+   "en": "2,370 MWh",
+   "de": "2.370 MWh"
+  },
+  "el_total_2024_kwh": {
+   "value": 3650000,
+   "rounded": 3650000,
+   "unit": "kWh",
+   "en": "3,650,000 kWh",
+   "de": "3.650.000 kWh"
+  },
+  "el_change_kwh": {
+   "value": -40000,
+   "rounded": -40000,
+   "unit": "kWh",
+   "en": "−40,000 kWh",
+   "de": "−40.000 kWh"
+  },
+  "el_change_pct": {
+   "value": -1.095890410958904,
+   "rounded": -1.1,
+   "unit": "%",
+   "en": "−1.1%",
+   "de": "−1,1 %"
+  },
+  "oct_kwh": {
+   "value": 200000,
+   "rounded": 200000,
+   "unit": "kWh",
+   "en": "200,000 kWh",
+   "de": "200.000 kWh"
+  },
+  "dup_kwh": {
+   "value": 205000,
+   "rounded": 205000,
+   "unit": "kWh",
+   "en": "205,000 kWh",
+   "de": "205.000 kWh"
+  },
+  "jv_kwh": {
+   "value": 1000000,
+   "rounded": 1000000,
+   "unit": "kWh",
+   "en": "1,000,000 kWh",
+   "de": "1.000.000 kWh"
+  },
+  "aug_kwh": {
+   "value": 120000,
+   "rounded": 120000,
+   "unit": "kWh",
+   "en": "120,000 kWh",
+   "de": "120.000 kWh"
+  },
+  "jul_kwh": {
+   "value": 175000,
+   "rounded": 175000,
+   "unit": "kWh",
+   "en": "175,000 kWh",
+   "de": "175.000 kWh"
+  },
+  "aug_vs_jul_pct": {
+   "value": -31.428571428571427,
+   "rounded": -31,
+   "unit": "%",
+   "en": "−31%",
+   "de": "−31 %"
+  },
+  "wn_net_raw_vs_right_kwh": {
+   "value": 5000,
+   "rounded": 5000,
+   "unit": "kWh",
+   "en": "+5,000 kWh",
+   "de": "+5.000 kWh"
+  },
+  "gas_total_kwh": {
+   "value": 2090000,
+   "rounded": 2090000,
+   "unit": "kWh",
+   "en": "2,090,000 kWh",
+   "de": "2.090.000 kWh"
+  },
+  "gas_wn_kwh": {
+   "value": 1850000,
+   "rounded": 1850000,
+   "unit": "kWh",
+   "en": "1,850,000 kWh",
+   "de": "1.850.000 kWh"
+  },
+  "gas_ws_kwh": {
+   "value": 240000,
+   "rounded": 240000,
+   "unit": "kWh",
+   "en": "240,000 kWh",
+   "de": "240.000 kWh"
+  },
+  "gas_change_pct": {
+   "value": -2.7906976744186047,
+   "rounded": -2.8,
+   "unit": "%",
+   "en": "−2.8%",
+   "de": "−2,8 %"
+  },
+  "diesel_l": {
+   "value": 38000,
+   "rounded": 38000,
+   "unit": "l",
+   "en": "38,000 l",
+   "de": "38.000 l"
+  },
+  "adblue_l": {
+   "value": 1200,
+   "rounded": 1200,
+   "unit": "l",
+   "en": "1,200 l",
+   "de": "1.200 l"
+  },
+  "go_mwh": {
+   "value": 1240,
+   "rounded": 1240,
+   "unit": "MWh",
+   "en": "1,240 MWh",
+   "de": "1.240 MWh"
+  },
+  "s1_2025": {
+   "value": 471.2,
+   "rounded": 471.2,
+   "unit": "t",
+   "en": "471.2 t",
+   "de": "471,2 t"
+  },
+  "s1_gas_2025": {
+   "value": 376.2,
+   "rounded": 376.2,
+   "unit": "t",
+   "en": "376.2 t",
+   "de": "376,2 t"
+  },
+  "s1_gas_wn_2025": {
+   "value": 333,
+   "rounded": 333.0,
+   "unit": "t",
+   "en": "333.0 t",
+   "de": "333,0 t"
+  },
+  "s1_gas_ws_2025": {
+   "value": 43.2,
+   "rounded": 43.2,
+   "unit": "t",
+   "en": "43.2 t",
+   "de": "43,2 t"
+  },
+  "s1_diesel_2025": {
+   "value": 95,
+   "rounded": 95.0,
+   "unit": "t",
+   "en": "95.0 t",
+   "de": "95,0 t"
+  },
+  "s2lb_2025": {
+   "value": 1444,
+   "rounded": 1444.0,
+   "unit": "t",
+   "en": "1,444.0 t",
+   "de": "1.444,0 t"
+  },
+  "s2mb_2025": {
+   "value": 1422,
+   "rounded": 1422.0,
+   "unit": "t",
+   "en": "1,422.0 t",
+   "de": "1.422,0 t"
+  },
+  "total_lb_2025": {
+   "value": 1915.2,
+   "rounded": 1915.2,
+   "unit": "t",
+   "en": "1,915.2 t",
+   "de": "1.915,2 t"
+  },
+  "total_mb_2025": {
+   "value": 1893.2,
+   "rounded": 1893.2,
+   "unit": "t",
+   "en": "1,893.2 t",
+   "de": "1.893,2 t"
+  },
+  "ws_lb_2025": {
+   "value": 496,
+   "rounded": 496.0,
+   "unit": "t",
+   "en": "496.0 t",
+   "de": "496,0 t"
+  },
+  "wn_el_lb_2025": {
+   "value": 904,
+   "rounded": 904.0,
+   "unit": "t",
+   "en": "904.0 t",
+   "de": "904,0 t"
+  },
+  "lo_el_lb_2025": {
+   "value": 44,
+   "rounded": 44.0,
+   "unit": "t",
+   "en": "44.0 t",
+   "de": "44,0 t"
+  },
+  "wn_el_mb_2025": {
+   "value": 1356,
+   "rounded": 1356.0,
+   "unit": "t",
+   "en": "1,356.0 t",
+   "de": "1.356,0 t"
+  },
+  "lo_el_mb_2025": {
+   "value": 66,
+   "rounded": 66.0,
+   "unit": "t",
+   "en": "66.0 t",
+   "de": "66,0 t"
+  },
+  "s1_2024": {
+   "value": 484.5,
+   "rounded": 484.5,
+   "unit": "t",
+   "en": "484.5 t",
+   "de": "484,5 t"
+  },
+  "s2lb_2024": {
+   "value": 1533,
+   "rounded": 1533.0,
+   "unit": "t",
+   "en": "1,533.0 t",
+   "de": "1.533,0 t"
+  },
+  "s2mb_2024": {
+   "value": 2190,
+   "rounded": 2190.0,
+   "unit": "t",
+   "en": "2,190.0 t",
+   "de": "2.190,0 t"
+  },
+  "total_lb_2024": {
+   "value": 2017.5,
+   "rounded": 2017.5,
+   "unit": "t",
+   "en": "2,017.5 t",
+   "de": "2.017,5 t"
+  },
+  "total_mb_2024": {
+   "value": 2674.5,
+   "rounded": 2674.5,
+   "unit": "t",
+   "en": "2,674.5 t",
+   "de": "2.674,5 t"
+  },
+  "chg_lb_t": {
+   "value": -102.3,
+   "rounded": -102.3,
+   "unit": "t",
+   "en": "−102.3 t",
+   "de": "−102,3 t"
+  },
+  "chg_lb_pct": {
+   "value": -5.070631970260223,
+   "rounded": -5.1,
+   "unit": "%",
+   "en": "−5.1%",
+   "de": "−5,1 %"
+  },
+  "chg_mb_t": {
+   "value": -781.3,
+   "rounded": -781.3,
+   "unit": "t",
+   "en": "−781.3 t",
+   "de": "−781,3 t"
+  },
+  "chg_mb_pct": {
+   "value": -29.21293699756964,
+   "rounded": -29.2,
+   "unit": "%",
+   "en": "−29.2%",
+   "de": "−29,2 %"
+  },
+  "chg_s1_t": {
+   "value": -13.3,
+   "rounded": -13.3,
+   "unit": "t",
+   "en": "−13.3 t",
+   "de": "−13,3 t"
+  },
+  "chg_s1_pct": {
+   "value": -2.7450980392156863,
+   "rounded": -2.7,
+   "unit": "%",
+   "en": "−2.7%",
+   "de": "−2,7 %"
+  },
+  "drv_lb_grid_t": {
+   "value": -72.2,
+   "rounded": -72.2,
+   "unit": "t",
+   "en": "−72.2 t",
+   "de": "−72,2 t"
+  },
+  "drv_lb_elec_t": {
+   "value": -16.8,
+   "rounded": -16.8,
+   "unit": "t",
+   "en": "−16.8 t",
+   "de": "−16,8 t"
+  },
+  "drv_lb_gas_t": {
+   "value": -10.8,
+   "rounded": -10.8,
+   "unit": "t",
+   "en": "−10.8 t",
+   "de": "−10,8 t"
+  },
+  "drv_lb_diesel_t": {
+   "value": -2.5,
+   "rounded": -2.5,
+   "unit": "t",
+   "en": "−2.5 t",
+   "de": "−2,5 t"
+  },
+  "drv_lb_own_t": {
+   "value": -30.1,
+   "rounded": -30.1,
+   "unit": "t",
+   "en": "−30.1 t",
+   "de": "−30,1 t"
+  },
+  "drv_lb_grid_share_pct": {
+   "value": 70.57673509286413,
+   "rounded": 71,
+   "unit": "%",
+   "en": "71%",
+   "de": "71 %"
+  },
+  "drv_lb_own_share_pct": {
+   "value": 29.423264907135874,
+   "rounded": 29,
+   "unit": "%",
+   "en": "29%",
+   "de": "29 %"
+  },
+  "drv_mb_cert_t": {
+   "value": -744,
+   "rounded": -744.0,
+   "unit": "t",
+   "en": "−744.0 t",
+   "de": "−744,0 t"
+  },
+  "drv_mb_elec_t": {
+   "value": -24,
+   "rounded": -24.0,
+   "unit": "t",
+   "en": "−24.0 t",
+   "de": "−24,0 t"
+  },
+  "drv_mb_s1_t": {
+   "value": -13.3,
+   "rounded": -13.3,
+   "unit": "t",
+   "en": "−13.3 t",
+   "de": "−13,3 t"
+  },
+  "drv_mb_own_t": {
+   "value": -37.3,
+   "rounded": -37.3,
+   "unit": "t",
+   "en": "−37.3 t",
+   "de": "−37,3 t"
+  },
+  "drv_mb_cert_share_pct": {
+   "value": 95.22590554204531,
+   "rounded": 95,
+   "unit": "%",
+   "en": "95%",
+   "de": "95 %"
+  },
+  "drv_mb_own_share_pct": {
+   "value": 4.774094457954691,
+   "rounded": 5,
+   "unit": "%",
+   "en": "5%",
+   "de": "5 %"
+  },
+  "bridge_cert_t": {
+   "value": -496,
+   "rounded": -496.0,
+   "unit": "t",
+   "en": "−496.0 t",
+   "de": "−496,0 t"
+  },
+  "bridge_rm_t": {
+   "value": 474,
+   "rounded": 474.0,
+   "unit": "t",
+   "en": "+474.0 t",
+   "de": "+474,0 t"
+  },
+  "bridge_net_t": {
+   "value": -22,
+   "rounded": -22.0,
+   "unit": "t",
+   "en": "−22.0 t",
+   "de": "−22,0 t"
+  },
+  "wrong_el_kwh": {
+   "value": 3376240,
+   "rounded": 3376240,
+   "unit": "kWh",
+   "en": "3,376,240 kWh",
+   "de": "3.376.240 kWh"
+  },
+  "wrong_wn_kwh": {
+   "value": 2265000,
+   "rounded": 2265000,
+   "unit": "kWh",
+   "en": "2,265,000 kWh",
+   "de": "2.265.000 kWh"
+  },
+  "wrong_s1": {
+   "value": 516,
+   "rounded": 516.0,
+   "unit": "t",
+   "en": "516.0 t",
+   "de": "516,0 t"
+  },
+  "wrong_s1_gas": {
+   "value": 418,
+   "rounded": 418.0,
+   "unit": "t",
+   "en": "418.0 t",
+   "de": "418,0 t"
+  },
+  "wrong_s1_diesel": {
+   "value": 98,
+   "rounded": 98.0,
+   "unit": "t",
+   "en": "98.0 t",
+   "de": "98,0 t"
+  },
+  "wrong_s2lb": {
+   "value": 1350.496,
+   "rounded": 1350.5,
+   "unit": "t",
+   "en": "1,350.5 t",
+   "de": "1.350,5 t"
+  },
+  "wrong_s2mb": {
+   "value": 1350,
+   "rounded": 1350.0,
+   "unit": "t",
+   "en": "1,350.0 t",
+   "de": "1.350,0 t"
+  },
+  "wrong_total_lb": {
+   "value": 1866.496,
+   "rounded": 1866.5,
+   "unit": "t",
+   "en": "1,866.5 t",
+   "de": "1.866,5 t"
+  },
+  "wrong_total_mb": {
+   "value": 1866,
+   "rounded": 1866.0,
+   "unit": "t",
+   "en": "1,866.0 t",
+   "de": "1.866,0 t"
+  },
+  "wrong_chg_lb_t": {
+   "value": -151.004,
+   "rounded": -151.0,
+   "unit": "t",
+   "en": "−151.0 t",
+   "de": "−151,0 t"
+  },
+  "wrong_chg_lb_pct": {
+   "value": -7.484708798017349,
+   "rounded": -7.5,
+   "unit": "%",
+   "en": "−7.5%",
+   "de": "−7,5 %"
+  },
+  "wrong_chg_mb_pct": {
+   "value": -30.22994952327538,
+   "rounded": -30.2,
+   "unit": "%",
+   "en": "−30.2%",
+   "de": "−30,2 %"
+  },
+  "wrong_chg_s1_pct": {
+   "value": 6.501547987616099,
+   "rounded": 6.5,
+   "unit": "%",
+   "en": "+6.5%",
+   "de": "+6,5 %"
+  },
+  "chg_lb_pp_shift": {
+   "value": 2.414076827757125,
+   "rounded": 2.4,
+   "unit": "",
+   "en": "2.4",
+   "de": "2,4",
+   "note": "percentage points between the raw answer's change vs 2024 and the right change (location-based)"
+  },
+  "wrong_minus_right_lb_t": {
+   "value": -48.704,
+   "rounded": -48.7,
+   "unit": "t",
+   "en": "−48.7 t",
+   "de": "−48,7 t"
+  },
+  "gap_lb_t": {
+   "value": 48.704,
+   "rounded": 48.7,
+   "unit": "t",
+   "en": "48.7 t",
+   "de": "48,7 t"
+  },
+  "gap_lb_pct": {
+   "value": 2.5430242272347536,
+   "rounded": 2.5,
+   "unit": "%",
+   "en": "2.5%",
+   "de": "2,5 %"
+  },
+  "wrong_ws_site_t": {
+   "value": 0.496,
+   "rounded": 0.5,
+   "unit": "t",
+   "en": "0.5 t",
+   "de": "0,5 t"
+  },
+  "wrong_jv_site_t": {
+   "value": 400,
+   "rounded": 400.0,
+   "unit": "t",
+   "en": "400.0 t",
+   "de": "400,0 t"
+  },
+  "wrong_per_employee_t": {
+   "value": 10.369422222222223,
+   "rounded": 10.4,
+   "unit": "t",
+   "en": "10.4 t",
+   "de": "10,4 t"
+  },
+  "per_employee_2025_t": {
+   "value": 10.64,
+   "rounded": 10.6,
+   "unit": "t",
+   "en": "10.6 t",
+   "de": "10,6 t"
+  },
+  "per_employee_2024_t": {
+   "value": 11.208333333333334,
+   "rounded": 11.2,
+   "unit": "t",
+   "en": "11.2 t",
+   "de": "11,2 t"
+  },
+  "wf_lb_min_t": {
+   "value": 1464.496,
+   "rounded": 1464.5,
+   "unit": "t",
+   "en": "1,464.5 t",
+   "de": "1.464,5 t"
+  },
+  "wf_lb_max_t": {
+   "value": 1960,
+   "rounded": 1960.0,
+   "unit": "t",
+   "en": "1,960.0 t",
+   "de": "1.960,0 t"
+  },
+  "pair_dup_oct_t": {
+   "value": 2,
+   "rounded": 2.0,
+   "unit": "t",
+   "en": "+2.0 t",
+   "de": "+2,0 t"
+  },
+  "pair_dup_oct_mb_t": {
+   "value": 3,
+   "rounded": 3.0,
+   "unit": "t",
+   "en": "+3.0 t",
+   "de": "+3,0 t"
+  },
+  "pair_jv_unit_t": {
+   "value": -95.504,
+   "rounded": -95.5,
+   "unit": "t",
+   "en": "−95.5 t",
+   "de": "−95,5 t"
+  },
+  "jv_hides_unit_share_pct": {
+   "value": 80.72588717750008,
+   "rounded": 81,
+   "unit": "%",
+   "en": "81%",
+   "de": "81 %"
+  },
+  "jv_lb_t": {
+   "value": 400,
+   "rounded": 400.0,
+   "unit": "t",
+   "en": "+400.0 t",
+   "de": "+400,0 t"
+  },
+  "jv_rm_t": {
+   "value": 600,
+   "rounded": 600.0,
+   "unit": "t",
+   "en": "+600.0 t",
+   "de": "+600,0 t"
+  },
+  "unit_lb_t": {
+   "value": -495.504,
+   "rounded": -495.5,
+   "unit": "t",
+   "en": "−495.5 t",
+   "de": "−495,5 t"
+  },
+  "dup_lb_t": {
+   "value": 82,
+   "rounded": 82.0,
+   "unit": "t",
+   "en": "+82.0 t",
+   "de": "+82,0 t"
+  },
+  "oct_lb_t": {
+   "value": -80,
+   "rounded": -80.0,
+   "unit": "t",
+   "en": "−80.0 t",
+   "de": "−80,0 t"
+  },
+  "gasbasis_t": {
+   "value": 41.8,
+   "rounded": 41.8,
+   "unit": "t",
+   "en": "+41.8 t",
+   "de": "+41,8 t"
+  },
+  "adblue_t": {
+   "value": 3,
+   "rounded": 3.0,
+   "unit": "t",
+   "en": "+3.0 t",
+   "de": "+3,0 t"
+  },
+  "mb_grid_avg_wrong_s2_t": {
+   "value": 948,
+   "rounded": 948.0,
+   "unit": "t",
+   "en": "948.0 t",
+   "de": "948,0 t"
+  },
+  "mb_grid_avg_too_low_t": {
+   "value": 474,
+   "rounded": 474.0,
+   "unit": "t",
+   "en": "474.0 t",
+   "de": "474,0 t"
+  },
+  "last_year_factor_effect_t": {
+   "value": 72.2,
+   "rounded": 72.2,
+   "unit": "t",
+   "en": "+72.2 t",
+   "de": "+72,2 t"
+  },
+  "demo_only_jv_lb_t": {
+   "value": 2315.2,
+   "rounded": 2315.2,
+   "unit": "t",
+   "en": "2,315.2 t",
+   "de": "2.315,2 t"
+  },
+  "demo_only_jv_vs2024_pct": {
+   "value": 14.755885997521686,
+   "rounded": 14.8,
+   "unit": "%",
+   "en": "+14.8%",
+   "de": "+14,8 %"
+  },
+  "demo_jv_unit_lb_t": {
+   "value": 1819.696,
+   "rounded": 1819.7,
+   "unit": "t",
+   "en": "1,819.7 t",
+   "de": "1.819,7 t"
+  },
+  "demo_jv_unit_vs2024_pct": {
+   "value": -9.804411400247831,
+   "rounded": -9.8,
+   "unit": "%",
+   "en": "−9.8%",
+   "de": "−9,8 %"
+  },
+  "demo_jv_unit_mb_t": {
+   "value": 2493.2,
+   "rounded": 2493.2,
+   "unit": "t",
+   "en": "2,493.2 t",
+   "de": "2.493,2 t"
+  },
+  "demo_jv_unit_vs2024_mb_pct": {
+   "value": -6.778837165825388,
+   "rounded": -6.8,
+   "unit": "%",
+   "en": "−6.8%",
+   "de": "−6,8 %"
+  },
+  "ctl_wn_genuine_kwh": {
+   "value": 2060000,
+   "rounded": 2060000,
+   "unit": "kWh",
+   "en": "2,060,000 kWh",
+   "de": "2.060.000 kWh"
+  },
+  "ctl_wn_folder_kwh": {
+   "value": 3265000,
+   "rounded": 3265000,
+   "unit": "kWh",
+   "en": "3,265,000 kWh",
+   "de": "3.265.000 kWh"
+  },
+  "ctl_docs_kwh": {
+   "value": 4615000,
+   "rounded": 4615000,
+   "unit": "kWh",
+   "en": "4,615,000 kWh",
+   "de": "4.615.000 kWh"
+  },
+  "ctl_excluded_kwh": {
+   "value": 1205000,
+   "rounded": 1205000,
+   "unit": "kWh",
+   "en": "1,205,000 kWh",
+   "de": "1.205.000 kWh"
+  },
+  "ctl_included_kwh": {
+   "value": 3410000,
+   "rounded": 3410000,
+   "unit": "kWh",
+   "en": "3,410,000 kWh",
+   "de": "3.410.000 kWh"
+  },
+  "ctl_meter_kwh": {
+   "value": 200000,
+   "rounded": 200000,
+   "unit": "kWh",
+   "en": "200,000 kWh",
+   "de": "200.000 kWh"
+  },
+  "ctl_total_kwh": {
+   "value": 3610000,
+   "rounded": 3610000,
+   "unit": "kWh",
+   "en": "3,610,000 kWh",
+   "de": "3.610.000 kWh"
+  },
+  "ws_kwh_per_employee": {
+   "value": 22545.454545454544,
+   "rounded": 22545,
+   "unit": "kWh",
+   "en": "22,545 kWh",
+   "de": "22.545 kWh"
+  },
+  "ws_misread_kwh_per_employee": {
+   "value": 22.545454545454547,
+   "rounded": 23,
+   "unit": "kWh",
+   "en": "23 kWh",
+   "de": "23 kWh"
+  },
+  "wn_kwh_per_employee": {
+   "value": 20545.454545454544,
+   "rounded": 20545,
+   "unit": "kWh",
+   "en": "20,545 kWh",
+   "de": "20.545 kWh"
+  },
+  "lo_kwh_per_employee": {
+   "value": 7333.333333333333,
+   "rounded": 7333,
+   "unit": "kWh",
+   "en": "7,333 kWh",
+   "de": "7.333 kWh"
+  },
+  "ws_2024_kwh_per_employee": {
+   "value": 22727.272727272728,
+   "rounded": 22727,
+   "unit": "kWh",
+   "en": "22,727 kWh",
+   "de": "22.727 kWh"
+  },
+  "renewable_share_el_pct": {
+   "value": 34.34903047091413,
+   "rounded": 34.3,
+   "unit": "%",
+   "en": "34.3%",
+   "de": "34,3 %"
+  },
+  "energy_gas_hi_mwh": {
+   "value": 1882.882882882883,
+   "rounded": 1882.9,
+   "unit": "MWh",
+   "en": "1,882.9 MWh",
+   "de": "1.882,9 MWh"
+  },
+  "gas_hi_route_t": {
+   "value": 376.5765765765766,
+   "rounded": 376.6,
+   "unit": "t",
+   "en": "376.6 t",
+   "de": "376,6 t"
+  },
+  "gas_hi_route_diff_t": {
+   "value": 0.37657657657657656,
+   "rounded": 0.4,
+   "unit": "t",
+   "en": "0.4 t",
+   "de": "0,4 t"
+  },
+  "energy_diesel_mwh": {
+   "value": 380,
+   "rounded": 380,
+   "unit": "MWh",
+   "en": "380 MWh",
+   "de": "380 MWh"
+  },
+  "energy_total_hi_mwh": {
+   "value": 5872.882882882883,
+   "rounded": 5872.9,
+   "unit": "MWh",
+   "en": "5,872.9 MWh",
+   "de": "5.872,9 MWh"
+  },
+  "renewable_share_energy_pct": {
+   "value": 21.1139916243538,
+   "rounded": 21.1,
+   "unit": "%",
+   "en": "21.1%",
+   "de": "21,1 %"
+  },
+  "intensity_lb_t_per_meur": {
+   "value": 50.4,
+   "rounded": 50.4,
+   "unit": "t/Mio. EUR",
+   "en": "50.4 t/Mio. EUR",
+   "de": "50,4 t/Mio. EUR"
+  },
+  "trace_slip_grid_t": {
+   "value": -73,
+   "rounded": -73.0,
+   "unit": "t",
+   "en": "−73.0 t",
+   "de": "−73,0 t"
+  },
+  "var_2023_lb_reported_t": {
+   "value": 3160,
+   "rounded": 3160.0,
+   "unit": "t",
+   "en": "3,160.0 t",
+   "de": "3.160,0 t"
+  },
+  "var_w3_t": {
+   "value": 945,
+   "rounded": 945.0,
+   "unit": "t",
+   "en": "945.0 t",
+   "de": "945,0 t"
+  },
+  "var_2023_lb_restated_t": {
+   "value": 2215,
+   "rounded": 2215.0,
+   "unit": "t",
+   "en": "2,215.0 t",
+   "de": "2.215,0 t"
+  },
+  "var_chg_vs_reported_pct": {
+   "value": -39.392405063291136,
+   "rounded": -39.4,
+   "unit": "%",
+   "en": "−39.4%",
+   "de": "−39,4 %"
+  },
+  "var_chg_vs_restated_pct": {
+   "value": -13.534988713318285,
+   "rounded": -13.5,
+   "unit": "%",
+   "en": "−13.5%",
+   "de": "−13,5 %"
+  },
+  "var_chg_vs_restated_t": {
+   "value": -299.8,
+   "rounded": -299.8,
+   "unit": "t",
+   "en": "−299.8 t",
+   "de": "−299,8 t"
+  },
+  "var_drv_elec_t": {
+   "value": -94.5,
+   "rounded": -94.5,
+   "unit": "t",
+   "en": "−94.5 t",
+   "de": "−94,5 t"
+  },
+  "var_drv_grid_t": {
+   "value": -180.5,
+   "rounded": -180.5,
+   "unit": "t",
+   "en": "−180.5 t",
+   "de": "−180,5 t"
+  },
+  "var_drv_gas_t": {
+   "value": -19.8,
+   "rounded": -19.8,
+   "unit": "t",
+   "en": "−19.8 t",
+   "de": "−19,8 t"
+  },
+  "var_drv_diesel_t": {
+   "value": -5,
+   "rounded": -5.0,
+   "unit": "t",
+   "en": "−5.0 t",
+   "de": "−5,0 t"
+  },
+  "var_2023_mb_reported_t": {
+   "value": 3868,
+   "rounded": 3868.0,
+   "unit": "t",
+   "en": "3,868.0 t",
+   "de": "3.868,0 t"
+  },
+  "var_2023_mb_restated_t": {
+   "value": 2788,
+   "rounded": 2788.0,
+   "unit": "t",
+   "en": "2,788.0 t",
+   "de": "2.788,0 t"
+  },
+  "var_chg_mb_vs_restated_pct": {
+   "value": -32.094691535150645,
+   "rounded": -32.1,
+   "unit": "%",
+   "en": "−32.1%",
+   "de": "−32,1 %"
+  },
+  "steel_supplier_t": {
+   "value": 3960,
+   "rounded": 3960,
+   "unit": "t",
+   "en": "3,960 t",
+   "de": "3.960 t"
+  },
+  "steel_spend_nominal_t": {
+   "value": 5184,
+   "rounded": 5184,
+   "unit": "t",
+   "en": "5,184 t",
+   "de": "5.184 t"
+  },
+  "steel_spend_2024_t": {
+   "value": 4320,
+   "rounded": 4320,
+   "unit": "t",
+   "en": "4,320 t",
+   "de": "4.320 t"
+  },
+  "steel_spend_deflated_t": {
+   "value": 4320,
+   "rounded": 4320,
+   "unit": "t",
+   "en": "4,320 t",
+   "de": "4.320 t"
+  },
+  "steel_intensity_wrong_t": {
+   "value": 288,
+   "rounded": 288,
+   "unit": "t",
+   "en": "288 t",
+   "de": "288 t"
+  },
+  "steel_intensity_wrong_pct": {
+   "value": -92.72727272727273,
+   "rounded": -93,
+   "unit": "%",
+   "en": "−93%",
+   "de": "−93 %"
+  },
+  "steel_spend_yoy_pct": {
+   "value": 20,
+   "rounded": 20,
+   "unit": "%",
+   "en": "+20%",
+   "de": "+20 %"
+  }
+ },
+ "traps": [
+  {
+   "id": "T1",
+   "key": "duplicate",
+   "en": "Duplicate March bill counted",
+   "de": "Doppelte Märzrechnung gezählt",
+   "fix_en": "Remove the duplicate March bill",
+   "fix_de": "Doppelte Märzrechnung entfernen",
+   "caughtBy_en": "Unique key: invoice no. + period + meter (fallback: period + meter + quantity)",
+   "caughtBy_de": "Eindeutiger Schlüssel: Rechnungsnr. + Zeitraum + Zähler (Ersatz: Zeitraum + Zähler + Menge)",
+   "role": "Clerk",
+   "kind": "headline",
+   "isolated": {
+    "lb_t": 82.0,
+    "mb_t": 123.0,
+    "lb_en": "+82.0",
+    "mb_en": "+123.0",
+    "lb_de": "+82,0",
+    "mb_de": "+123,0"
+   }
+  },
+  {
+   "id": "T2",
+   "key": "october",
+   "en": "October missing",
+   "de": "Oktober fehlt",
+   "fix_en": "Add October from the meter readings",
+   "fix_de": "Oktober aus den Zählerständen ergänzen",
+   "caughtBy_en": "Site x month grid",
+   "caughtBy_de": "Tabelle Standort x Monat",
+   "role": "Clerk",
+   "kind": "headline",
+   "isolated": {
+    "lb_t": -80.0,
+    "mb_t": -120.0,
+    "lb_en": "−80.0",
+    "mb_en": "−120.0",
+    "lb_de": "−80,0",
+    "mb_de": "−120,0"
+   }
+  },
+  {
+   "id": "T3",
+   "key": "jv",
+   "en": "Joint venture bill included",
+   "de": "Rechnung des Gemeinschaftsunternehmens gezählt",
+   "fix_en": "Exclude Talbrück (JV)",
+   "fix_de": "Talbrück (GU) ausschließen",
+   "caughtBy_en": "entity_on_document column + written boundary",
+   "caughtBy_de": "Spalte entity_on_document + schriftliche Grenze",
+   "role": "Clerk",
+   "kind": "headline",
+   "isolated": {
+    "lb_t": 400.0,
+    "mb_t": 600.0,
+    "lb_en": "+400.0",
+    "mb_en": "+600.0",
+    "lb_de": "+400,0",
+    "mb_de": "+600,0"
+   }
+  },
+  {
+   "id": "T4",
+   "key": "unit",
+   "en": "\"1.240 MWh\" read as 1,240 kWh",
+   "de": "„1.240 MWh“ als 1.240 kWh gelesen",
+   "fix_en": "Read Werk Süd as 1,240 MWh",
+   "fix_de": "Werk Süd als 1.240 MWh lesen",
+   "caughtBy_en": "Value and unit kept as printed; kWh per employee per site; prior year on the same page",
+   "caughtBy_de": "Wert und Einheit wie gedruckt; kWh je Beschäftigten je Standort; Vorjahr auf derselben Seite",
+   "role": "Reader",
+   "kind": "headline",
+   "isolated": {
+    "lb_t": -495.5,
+    "mb_t": 0.0,
+    "lb_en": "−495.5",
+    "mb_en": "0.0",
+    "lb_de": "−495,5",
+    "mb_de": "0,0"
+   }
+  },
+  {
+   "id": "T5",
+   "key": "gasbasis",
+   "en": "Hi factor on Hs kWh",
+   "de": "Hi-Faktor auf Hs-kWh",
+   "fix_en": "Use the Hs gas factor",
+   "fix_de": "Hs-Gasfaktor verwenden",
+   "caughtBy_en": "Factor ID must match the basis on the bill (page 2)",
+   "caughtBy_de": "Faktor-ID muss zur Basis auf der Rechnung passen (Seite 2)",
+   "role": "Reader",
+   "kind": "background",
+   "isolated": {
+    "lb_t": 41.8,
+    "mb_t": 41.8,
+    "lb_en": "+41.8",
+    "mb_en": "+41.8",
+    "lb_de": "+41,8",
+    "mb_de": "+41,8"
+   }
+  },
+  {
+   "id": "T6",
+   "key": "adblue",
+   "en": "AdBlue counted as diesel",
+   "de": "AdBlue als Diesel gezählt",
+   "fix_en": "Drop AdBlue",
+   "fix_de": "AdBlue herausnehmen",
+   "caughtBy_en": "Product filter on the fuel-card export",
+   "caughtBy_de": "Produktfilter im Tankkarten-Export",
+   "role": "Clerk",
+   "kind": "background",
+   "isolated": {
+    "lb_t": 3.0,
+    "mb_t": 3.0,
+    "lb_en": "+3.0",
+    "mb_en": "+3.0",
+    "lb_de": "+3,0",
+    "mb_de": "+3,0"
+   }
+  },
+  {
+   "id": "T7",
+   "key": "mbmethod",
+   "en": "Grid average instead of residual mix (market-based)",
+   "de": "Netzdurchschnitt statt Residualmix (marktbasiert)",
+   "fix_en": "Residual mix for kWh without a certificate",
+   "fix_de": "Residualmix für kWh ohne Nachweis",
+   "caughtBy_en": "Market-based order: certificate, supplier rate, residual mix",
+   "caughtBy_de": "Reihenfolge marktbasiert: Nachweis, Lieferantenfaktor, Residualmix",
+   "role": "Clerk",
+   "kind": "method",
+   "isolated": {
+    "lb_t": 0.0,
+    "mb_t": -474.0,
+    "lb_en": "0.0",
+    "mb_en": "−474.0",
+    "lb_de": "0,0",
+    "mb_de": "−474,0"
+   }
+  }
+ ],
+ "trapNotes": {
+  "twoMonthBill_en": "0 t in the sum; keeps the file count at 12 and hides the missing October.",
+  "twoMonthBill_de": "0 t in der Summe; hält die Dateizahl bei 12 und versteckt den fehlenden Oktober.",
+  "august_en": "August 120,000 kWh is real (plant holiday). Flag it, do not correct it.",
+  "august_de": "August 120.000 kWh ist echt (Betriebsferien). Markieren, nicht korrigieren."
+ },
+ "waterfall": {
+  "lb": [
+   {
+    "step": "start",
+    "label_en": "Raw-folder answer (constructed)",
+    "label_de": "Antwort auf den Rohordner (konstruiert)",
+    "change_t": null,
+    "change_en": null,
+    "change_de": null,
+    "running_t": 1866.5,
+    "running_en": "1,866.5",
+    "running_de": "1.866,5"
+   },
+   {
+    "step": "T1",
+    "label_en": "Remove the duplicate March bill",
+    "label_de": "Doppelte Märzrechnung entfernen",
+    "change_t": -82.0,
+    "change_en": "−82.0",
+    "change_de": "−82,0",
+    "running_t": 1784.5,
+    "running_en": "1,784.5",
+    "running_de": "1.784,5"
+   },
+   {
+    "step": "T2",
+    "label_en": "Add October from the meter readings",
+    "label_de": "Oktober aus den Zählerständen ergänzen",
+    "change_t": 80.0,
+    "change_en": "+80.0",
+    "change_de": "+80,0",
+    "running_t": 1864.5,
+    "running_en": "1,864.5",
+    "running_de": "1.864,5"
+   },
+   {
+    "step": "T3",
+    "label_en": "Exclude Talbrück (JV)",
+    "label_de": "Talbrück (GU) ausschließen",
+    "change_t": -400.0,
+    "change_en": "−400.0",
+    "change_de": "−400,0",
+    "running_t": 1464.5,
+    "running_en": "1,464.5",
+    "running_de": "1.464,5"
+   },
+   {
+    "step": "T4",
+    "label_en": "Read Werk Süd as 1,240 MWh",
+    "label_de": "Werk Süd als 1.240 MWh lesen",
+    "change_t": 495.5,
+    "change_en": "+495.5",
+    "change_de": "+495,5",
+    "running_t": 1960.0,
+    "running_en": "1,960.0",
+    "running_de": "1.960,0"
+   },
+   {
+    "step": "T5",
+    "label_en": "Use the Hs gas factor",
+    "label_de": "Hs-Gasfaktor verwenden",
+    "change_t": -41.8,
+    "change_en": "−41.8",
+    "change_de": "−41,8",
+    "running_t": 1918.2,
+    "running_en": "1,918.2",
+    "running_de": "1.918,2"
+   },
+   {
+    "step": "T6",
+    "label_en": "Drop AdBlue",
+    "label_de": "AdBlue herausnehmen",
+    "change_t": -3.0,
+    "change_en": "−3.0",
+    "change_de": "−3,0",
+    "running_t": 1915.2,
+    "running_en": "1,915.2",
+    "running_de": "1.915,2"
+   },
+   {
+    "step": "T7",
+    "label_en": "Residual mix for kWh without a certificate",
+    "label_de": "Residualmix für kWh ohne Nachweis",
+    "change_t": 0.0,
+    "change_en": "0.0",
+    "change_de": "0,0",
+    "running_t": 1915.2,
+    "running_en": "1,915.2",
+    "running_de": "1.915,2"
+   }
+  ],
+  "mb": [
+   {
+    "step": "start",
+    "label_en": "Raw-folder answer (constructed)",
+    "label_de": "Antwort auf den Rohordner (konstruiert)",
+    "change_t": null,
+    "change_en": null,
+    "change_de": null,
+    "running_t": 1866.0,
+    "running_en": "1,866.0",
+    "running_de": "1.866,0"
+   },
+   {
+    "step": "T1",
+    "label_en": "Remove the duplicate March bill",
+    "label_de": "Doppelte Märzrechnung entfernen",
+    "change_t": -82.0,
+    "change_en": "−82.0",
+    "change_de": "−82,0",
+    "running_t": 1784.0,
+    "running_en": "1,784.0",
+    "running_de": "1.784,0"
+   },
+   {
+    "step": "T2",
+    "label_en": "Add October from the meter readings",
+    "label_de": "Oktober aus den Zählerständen ergänzen",
+    "change_t": 80.0,
+    "change_en": "+80.0",
+    "change_de": "+80,0",
+    "running_t": 1864.0,
+    "running_en": "1,864.0",
+    "running_de": "1.864,0"
+   },
+   {
+    "step": "T3",
+    "label_en": "Exclude Talbrück (JV)",
+    "label_de": "Talbrück (GU) ausschließen",
+    "change_t": -400.0,
+    "change_en": "−400.0",
+    "change_de": "−400,0",
+    "running_t": 1464.0,
+    "running_en": "1,464.0",
+    "running_de": "1.464,0"
+   },
+   {
+    "step": "T4",
+    "label_en": "Read Werk Süd as 1,240 MWh",
+    "label_de": "Werk Süd als 1.240 MWh lesen",
+    "change_t": 0.0,
+    "change_en": "0.0",
+    "change_de": "0,0",
+    "running_t": 1464.0,
+    "running_en": "1,464.0",
+    "running_de": "1.464,0"
+   },
+   {
+    "step": "T5",
+    "label_en": "Use the Hs gas factor",
+    "label_de": "Hs-Gasfaktor verwenden",
+    "change_t": -41.8,
+    "change_en": "−41.8",
+    "change_de": "−41,8",
+    "running_t": 1422.2,
+    "running_en": "1,422.2",
+    "running_de": "1.422,2"
+   },
+   {
+    "step": "T6",
+    "label_en": "Drop AdBlue",
+    "label_de": "AdBlue herausnehmen",
+    "change_t": -3.0,
+    "change_en": "−3.0",
+    "change_de": "−3,0",
+    "running_t": 1419.2,
+    "running_en": "1,419.2",
+    "running_de": "1.419,2"
+   },
+   {
+    "step": "T7",
+    "label_en": "Residual mix for kWh without a certificate",
+    "label_de": "Residualmix für kWh ohne Nachweis",
+    "change_t": 474.0,
+    "change_en": "+474.0",
+    "change_de": "+474,0",
+    "running_t": 1893.2,
+    "running_en": "1,893.2",
+    "running_de": "1.893,2"
+   }
+  ]
+ },
+ "combinations": {
+  "0": {
+   "traps": [],
+   "lb_t": 1915.2,
+   "mb_t": 1893.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -5.1,
+   "vs2024_mb_pct": -29.2,
+   "delta_vs_right_lb_t": 0.0,
+   "delta_vs_right_lb_pct": 0.0,
+   "delta_vs_right_mb_t": 0.0,
+   "delta_vs_right_mb_pct": 0.0
+  },
+  "1": {
+   "traps": [
+    "T1"
+   ],
+   "lb_t": 1997.2,
+   "mb_t": 2016.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -1.0,
+   "vs2024_mb_pct": -24.6,
+   "delta_vs_right_lb_t": 82.0,
+   "delta_vs_right_lb_pct": 4.3,
+   "delta_vs_right_mb_t": 123.0,
+   "delta_vs_right_mb_pct": 6.5
+  },
+  "2": {
+   "traps": [
+    "T2"
+   ],
+   "lb_t": 1835.2,
+   "mb_t": 1773.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -9.0,
+   "vs2024_mb_pct": -33.7,
+   "delta_vs_right_lb_t": -80.0,
+   "delta_vs_right_lb_pct": -4.2,
+   "delta_vs_right_mb_t": -120.0,
+   "delta_vs_right_mb_pct": -6.3
+  },
+  "4": {
+   "traps": [
+    "T3"
+   ],
+   "lb_t": 2315.2,
+   "mb_t": 2493.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": 14.8,
+   "vs2024_mb_pct": -6.8,
+   "delta_vs_right_lb_t": 400.0,
+   "delta_vs_right_lb_pct": 20.9,
+   "delta_vs_right_mb_t": 600.0,
+   "delta_vs_right_mb_pct": 31.7
+  },
+  "8": {
+   "traps": [
+    "T4"
+   ],
+   "lb_t": 1419.7,
+   "mb_t": 1893.2,
+   "s1_t": 471.2,
+   "s2lb_t": 948.5,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -29.6,
+   "vs2024_mb_pct": -29.2,
+   "delta_vs_right_lb_t": -495.5,
+   "delta_vs_right_lb_pct": -25.9,
+   "delta_vs_right_mb_t": 0.0,
+   "delta_vs_right_mb_pct": 0.0
+  },
+  "16": {
+   "traps": [
+    "T5"
+   ],
+   "lb_t": 1957.0,
+   "mb_t": 1935.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -3.0,
+   "vs2024_mb_pct": -27.7,
+   "delta_vs_right_lb_t": 41.8,
+   "delta_vs_right_lb_pct": 2.2,
+   "delta_vs_right_mb_t": 41.8,
+   "delta_vs_right_mb_pct": 2.2
+  },
+  "32": {
+   "traps": [
+    "T6"
+   ],
+   "lb_t": 1918.2,
+   "mb_t": 1896.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -4.9,
+   "vs2024_mb_pct": -29.1,
+   "delta_vs_right_lb_t": 3.0,
+   "delta_vs_right_lb_pct": 0.2,
+   "delta_vs_right_mb_t": 3.0,
+   "delta_vs_right_mb_pct": 0.2
+  },
+  "64": {
+   "traps": [
+    "T7"
+   ],
+   "lb_t": 1915.2,
+   "mb_t": 1419.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -5.1,
+   "vs2024_mb_pct": -46.9,
+   "delta_vs_right_lb_t": 0.0,
+   "delta_vs_right_lb_pct": 0.0,
+   "delta_vs_right_mb_t": -474.0,
+   "delta_vs_right_mb_pct": -25.0
+  },
+  "3": {
+   "traps": [
+    "T1",
+    "T2"
+   ],
+   "lb_t": 1917.2,
+   "mb_t": 1896.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -5.0,
+   "vs2024_mb_pct": -29.1,
+   "delta_vs_right_lb_t": 2.0,
+   "delta_vs_right_lb_pct": 0.1,
+   "delta_vs_right_mb_t": 3.0,
+   "delta_vs_right_mb_pct": 0.2
+  },
+  "5": {
+   "traps": [
+    "T1",
+    "T3"
+   ],
+   "lb_t": 2397.2,
+   "mb_t": 2616.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": 18.8,
+   "vs2024_mb_pct": -2.2,
+   "delta_vs_right_lb_t": 482.0,
+   "delta_vs_right_lb_pct": 25.2,
+   "delta_vs_right_mb_t": 723.0,
+   "delta_vs_right_mb_pct": 38.2
+  },
+  "9": {
+   "traps": [
+    "T1",
+    "T4"
+   ],
+   "lb_t": 1501.7,
+   "mb_t": 2016.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -25.6,
+   "vs2024_mb_pct": -24.6,
+   "delta_vs_right_lb_t": -413.5,
+   "delta_vs_right_lb_pct": -21.6,
+   "delta_vs_right_mb_t": 123.0,
+   "delta_vs_right_mb_pct": 6.5
+  },
+  "17": {
+   "traps": [
+    "T1",
+    "T5"
+   ],
+   "lb_t": 2039.0,
+   "mb_t": 2058.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": 1.1,
+   "vs2024_mb_pct": -23.1,
+   "delta_vs_right_lb_t": 123.8,
+   "delta_vs_right_lb_pct": 6.5,
+   "delta_vs_right_mb_t": 164.8,
+   "delta_vs_right_mb_pct": 8.7
+  },
+  "33": {
+   "traps": [
+    "T1",
+    "T6"
+   ],
+   "lb_t": 2000.2,
+   "mb_t": 2019.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -0.9,
+   "vs2024_mb_pct": -24.5,
+   "delta_vs_right_lb_t": 85.0,
+   "delta_vs_right_lb_pct": 4.4,
+   "delta_vs_right_mb_t": 126.0,
+   "delta_vs_right_mb_pct": 6.7
+  },
+  "65": {
+   "traps": [
+    "T1",
+    "T7"
+   ],
+   "lb_t": 1997.2,
+   "mb_t": 1501.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -1.0,
+   "vs2024_mb_pct": -43.9,
+   "delta_vs_right_lb_t": 82.0,
+   "delta_vs_right_lb_pct": 4.3,
+   "delta_vs_right_mb_t": -392.0,
+   "delta_vs_right_mb_pct": -20.7
+  },
+  "6": {
+   "traps": [
+    "T2",
+    "T3"
+   ],
+   "lb_t": 2235.2,
+   "mb_t": 2373.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": 10.8,
+   "vs2024_mb_pct": -11.3,
+   "delta_vs_right_lb_t": 320.0,
+   "delta_vs_right_lb_pct": 16.7,
+   "delta_vs_right_mb_t": 480.0,
+   "delta_vs_right_mb_pct": 25.4
+  },
+  "10": {
+   "traps": [
+    "T2",
+    "T4"
+   ],
+   "lb_t": 1339.7,
+   "mb_t": 1773.2,
+   "s1_t": 471.2,
+   "s2lb_t": 868.5,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -33.6,
+   "vs2024_mb_pct": -33.7,
+   "delta_vs_right_lb_t": -575.5,
+   "delta_vs_right_lb_pct": -30.0,
+   "delta_vs_right_mb_t": -120.0,
+   "delta_vs_right_mb_pct": -6.3
+  },
+  "18": {
+   "traps": [
+    "T2",
+    "T5"
+   ],
+   "lb_t": 1877.0,
+   "mb_t": 1815.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -7.0,
+   "vs2024_mb_pct": -32.1,
+   "delta_vs_right_lb_t": -38.2,
+   "delta_vs_right_lb_pct": -2.0,
+   "delta_vs_right_mb_t": -78.2,
+   "delta_vs_right_mb_pct": -4.1
+  },
+  "34": {
+   "traps": [
+    "T2",
+    "T6"
+   ],
+   "lb_t": 1838.2,
+   "mb_t": 1776.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -8.9,
+   "vs2024_mb_pct": -33.6,
+   "delta_vs_right_lb_t": -77.0,
+   "delta_vs_right_lb_pct": -4.0,
+   "delta_vs_right_mb_t": -117.0,
+   "delta_vs_right_mb_pct": -6.2
+  },
+  "66": {
+   "traps": [
+    "T2",
+    "T7"
+   ],
+   "lb_t": 1835.2,
+   "mb_t": 1339.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -9.0,
+   "vs2024_mb_pct": -49.9,
+   "delta_vs_right_lb_t": -80.0,
+   "delta_vs_right_lb_pct": -4.2,
+   "delta_vs_right_mb_t": -554.0,
+   "delta_vs_right_mb_pct": -29.3
+  },
+  "12": {
+   "traps": [
+    "T3",
+    "T4"
+   ],
+   "lb_t": 1819.7,
+   "mb_t": 2493.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": -9.8,
+   "vs2024_mb_pct": -6.8,
+   "delta_vs_right_lb_t": -95.5,
+   "delta_vs_right_lb_pct": -5.0,
+   "delta_vs_right_mb_t": 600.0,
+   "delta_vs_right_mb_pct": 31.7
+  },
+  "20": {
+   "traps": [
+    "T3",
+    "T5"
+   ],
+   "lb_t": 2357.0,
+   "mb_t": 2535.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": 16.8,
+   "vs2024_mb_pct": -5.2,
+   "delta_vs_right_lb_t": 441.8,
+   "delta_vs_right_lb_pct": 23.1,
+   "delta_vs_right_mb_t": 641.8,
+   "delta_vs_right_mb_pct": 33.9
+  },
+  "36": {
+   "traps": [
+    "T3",
+    "T6"
+   ],
+   "lb_t": 2318.2,
+   "mb_t": 2496.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": 14.9,
+   "vs2024_mb_pct": -6.7,
+   "delta_vs_right_lb_t": 403.0,
+   "delta_vs_right_lb_pct": 21.0,
+   "delta_vs_right_mb_t": 603.0,
+   "delta_vs_right_mb_pct": 31.9
+  },
+  "68": {
+   "traps": [
+    "T3",
+    "T7"
+   ],
+   "lb_t": 2315.2,
+   "mb_t": 1819.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": 14.8,
+   "vs2024_mb_pct": -32.0,
+   "delta_vs_right_lb_t": 400.0,
+   "delta_vs_right_lb_pct": 20.9,
+   "delta_vs_right_mb_t": -74.0,
+   "delta_vs_right_mb_pct": -3.9
+  },
+  "24": {
+   "traps": [
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1461.5,
+   "mb_t": 1935.0,
+   "s1_t": 513.0,
+   "s2lb_t": 948.5,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -27.6,
+   "vs2024_mb_pct": -27.7,
+   "delta_vs_right_lb_t": -453.7,
+   "delta_vs_right_lb_pct": -23.7,
+   "delta_vs_right_mb_t": 41.8,
+   "delta_vs_right_mb_pct": 2.2
+  },
+  "40": {
+   "traps": [
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1422.7,
+   "mb_t": 1896.2,
+   "s1_t": 474.2,
+   "s2lb_t": 948.5,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -29.5,
+   "vs2024_mb_pct": -29.1,
+   "delta_vs_right_lb_t": -492.5,
+   "delta_vs_right_lb_pct": -25.7,
+   "delta_vs_right_mb_t": 3.0,
+   "delta_vs_right_mb_pct": 0.2
+  },
+  "72": {
+   "traps": [
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1419.7,
+   "mb_t": 1419.2,
+   "s1_t": 471.2,
+   "s2lb_t": 948.5,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -29.6,
+   "vs2024_mb_pct": -46.9,
+   "delta_vs_right_lb_t": -495.5,
+   "delta_vs_right_lb_pct": -25.9,
+   "delta_vs_right_mb_t": -474.0,
+   "delta_vs_right_mb_pct": -25.0
+  },
+  "48": {
+   "traps": [
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1960.0,
+   "mb_t": 1938.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -2.9,
+   "vs2024_mb_pct": -27.5,
+   "delta_vs_right_lb_t": 44.8,
+   "delta_vs_right_lb_pct": 2.3,
+   "delta_vs_right_mb_t": 44.8,
+   "delta_vs_right_mb_pct": 2.4
+  },
+  "80": {
+   "traps": [
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1957.0,
+   "mb_t": 1461.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -3.0,
+   "vs2024_mb_pct": -45.4,
+   "delta_vs_right_lb_t": 41.8,
+   "delta_vs_right_lb_pct": 2.2,
+   "delta_vs_right_mb_t": -432.2,
+   "delta_vs_right_mb_pct": -22.8
+  },
+  "96": {
+   "traps": [
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1918.2,
+   "mb_t": 1422.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -4.9,
+   "vs2024_mb_pct": -46.8,
+   "delta_vs_right_lb_t": 3.0,
+   "delta_vs_right_lb_pct": 0.2,
+   "delta_vs_right_mb_t": -471.0,
+   "delta_vs_right_mb_pct": -24.9
+  },
+  "7": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3"
+   ],
+   "lb_t": 2317.2,
+   "mb_t": 2496.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": 14.9,
+   "vs2024_mb_pct": -6.7,
+   "delta_vs_right_lb_t": 402.0,
+   "delta_vs_right_lb_pct": 21.0,
+   "delta_vs_right_mb_t": 603.0,
+   "delta_vs_right_mb_pct": 31.9
+  },
+  "11": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4"
+   ],
+   "lb_t": 1421.7,
+   "mb_t": 1896.2,
+   "s1_t": 471.2,
+   "s2lb_t": 950.5,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -29.5,
+   "vs2024_mb_pct": -29.1,
+   "delta_vs_right_lb_t": -493.5,
+   "delta_vs_right_lb_pct": -25.8,
+   "delta_vs_right_mb_t": 3.0,
+   "delta_vs_right_mb_pct": 0.2
+  },
+  "19": {
+   "traps": [
+    "T1",
+    "T2",
+    "T5"
+   ],
+   "lb_t": 1959.0,
+   "mb_t": 1938.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -2.9,
+   "vs2024_mb_pct": -27.5,
+   "delta_vs_right_lb_t": 43.8,
+   "delta_vs_right_lb_pct": 2.3,
+   "delta_vs_right_mb_t": 44.8,
+   "delta_vs_right_mb_pct": 2.4
+  },
+  "35": {
+   "traps": [
+    "T1",
+    "T2",
+    "T6"
+   ],
+   "lb_t": 1920.2,
+   "mb_t": 1899.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -4.8,
+   "vs2024_mb_pct": -29.0,
+   "delta_vs_right_lb_t": 5.0,
+   "delta_vs_right_lb_pct": 0.3,
+   "delta_vs_right_mb_t": 6.0,
+   "delta_vs_right_mb_pct": 0.3
+  },
+  "67": {
+   "traps": [
+    "T1",
+    "T2",
+    "T7"
+   ],
+   "lb_t": 1917.2,
+   "mb_t": 1421.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -5.0,
+   "vs2024_mb_pct": -46.9,
+   "delta_vs_right_lb_t": 2.0,
+   "delta_vs_right_lb_pct": 0.1,
+   "delta_vs_right_mb_t": -472.0,
+   "delta_vs_right_mb_pct": -24.9
+  },
+  "13": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4"
+   ],
+   "lb_t": 1901.7,
+   "mb_t": 2616.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": -5.7,
+   "vs2024_mb_pct": -2.2,
+   "delta_vs_right_lb_t": -13.5,
+   "delta_vs_right_lb_pct": -0.7,
+   "delta_vs_right_mb_t": 723.0,
+   "delta_vs_right_mb_pct": 38.2
+  },
+  "21": {
+   "traps": [
+    "T1",
+    "T3",
+    "T5"
+   ],
+   "lb_t": 2439.0,
+   "mb_t": 2658.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": 20.9,
+   "vs2024_mb_pct": -0.6,
+   "delta_vs_right_lb_t": 523.8,
+   "delta_vs_right_lb_pct": 27.3,
+   "delta_vs_right_mb_t": 764.8,
+   "delta_vs_right_mb_pct": 40.4
+  },
+  "37": {
+   "traps": [
+    "T1",
+    "T3",
+    "T6"
+   ],
+   "lb_t": 2400.2,
+   "mb_t": 2619.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": 19.0,
+   "vs2024_mb_pct": -2.1,
+   "delta_vs_right_lb_t": 485.0,
+   "delta_vs_right_lb_pct": 25.3,
+   "delta_vs_right_mb_t": 726.0,
+   "delta_vs_right_mb_pct": 38.3
+  },
+  "69": {
+   "traps": [
+    "T1",
+    "T3",
+    "T7"
+   ],
+   "lb_t": 2397.2,
+   "mb_t": 1901.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": 18.8,
+   "vs2024_mb_pct": -28.9,
+   "delta_vs_right_lb_t": 482.0,
+   "delta_vs_right_lb_pct": 25.2,
+   "delta_vs_right_mb_t": 8.0,
+   "delta_vs_right_mb_pct": 0.4
+  },
+  "25": {
+   "traps": [
+    "T1",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1543.5,
+   "mb_t": 2058.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -23.5,
+   "vs2024_mb_pct": -23.1,
+   "delta_vs_right_lb_t": -371.7,
+   "delta_vs_right_lb_pct": -19.4,
+   "delta_vs_right_mb_t": 164.8,
+   "delta_vs_right_mb_pct": 8.7
+  },
+  "41": {
+   "traps": [
+    "T1",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1504.7,
+   "mb_t": 2019.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -25.4,
+   "vs2024_mb_pct": -24.5,
+   "delta_vs_right_lb_t": -410.5,
+   "delta_vs_right_lb_pct": -21.4,
+   "delta_vs_right_mb_t": 126.0,
+   "delta_vs_right_mb_pct": 6.7
+  },
+  "73": {
+   "traps": [
+    "T1",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1501.7,
+   "mb_t": 1501.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -25.6,
+   "vs2024_mb_pct": -43.9,
+   "delta_vs_right_lb_t": -413.5,
+   "delta_vs_right_lb_pct": -21.6,
+   "delta_vs_right_mb_t": -392.0,
+   "delta_vs_right_mb_pct": -20.7
+  },
+  "49": {
+   "traps": [
+    "T1",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 2042.0,
+   "mb_t": 2061.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": 1.2,
+   "vs2024_mb_pct": -22.9,
+   "delta_vs_right_lb_t": 126.8,
+   "delta_vs_right_lb_pct": 6.6,
+   "delta_vs_right_mb_t": 167.8,
+   "delta_vs_right_mb_pct": 8.9
+  },
+  "81": {
+   "traps": [
+    "T1",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 2039.0,
+   "mb_t": 1543.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": 1.1,
+   "vs2024_mb_pct": -42.3,
+   "delta_vs_right_lb_t": 123.8,
+   "delta_vs_right_lb_pct": 6.5,
+   "delta_vs_right_mb_t": -350.2,
+   "delta_vs_right_mb_pct": -18.5
+  },
+  "97": {
+   "traps": [
+    "T1",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2000.2,
+   "mb_t": 1504.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -0.9,
+   "vs2024_mb_pct": -43.8,
+   "delta_vs_right_lb_t": 85.0,
+   "delta_vs_right_lb_pct": 4.4,
+   "delta_vs_right_mb_t": -389.0,
+   "delta_vs_right_mb_pct": -20.5
+  },
+  "14": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4"
+   ],
+   "lb_t": 1739.7,
+   "mb_t": 2373.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": -13.8,
+   "vs2024_mb_pct": -11.3,
+   "delta_vs_right_lb_t": -175.5,
+   "delta_vs_right_lb_pct": -9.2,
+   "delta_vs_right_mb_t": 480.0,
+   "delta_vs_right_mb_pct": 25.4
+  },
+  "22": {
+   "traps": [
+    "T2",
+    "T3",
+    "T5"
+   ],
+   "lb_t": 2277.0,
+   "mb_t": 2415.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": 12.9,
+   "vs2024_mb_pct": -9.7,
+   "delta_vs_right_lb_t": 361.8,
+   "delta_vs_right_lb_pct": 18.9,
+   "delta_vs_right_mb_t": 521.8,
+   "delta_vs_right_mb_pct": 27.6
+  },
+  "38": {
+   "traps": [
+    "T2",
+    "T3",
+    "T6"
+   ],
+   "lb_t": 2238.2,
+   "mb_t": 2376.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": 10.9,
+   "vs2024_mb_pct": -11.2,
+   "delta_vs_right_lb_t": 323.0,
+   "delta_vs_right_lb_pct": 16.9,
+   "delta_vs_right_mb_t": 483.0,
+   "delta_vs_right_mb_pct": 25.5
+  },
+  "70": {
+   "traps": [
+    "T2",
+    "T3",
+    "T7"
+   ],
+   "lb_t": 2235.2,
+   "mb_t": 1739.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": 10.8,
+   "vs2024_mb_pct": -35.0,
+   "delta_vs_right_lb_t": 320.0,
+   "delta_vs_right_lb_pct": 16.7,
+   "delta_vs_right_mb_t": -154.0,
+   "delta_vs_right_mb_pct": -8.1
+  },
+  "26": {
+   "traps": [
+    "T2",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1381.5,
+   "mb_t": 1815.0,
+   "s1_t": 513.0,
+   "s2lb_t": 868.5,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -31.5,
+   "vs2024_mb_pct": -32.1,
+   "delta_vs_right_lb_t": -533.7,
+   "delta_vs_right_lb_pct": -27.9,
+   "delta_vs_right_mb_t": -78.2,
+   "delta_vs_right_mb_pct": -4.1
+  },
+  "42": {
+   "traps": [
+    "T2",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1342.7,
+   "mb_t": 1776.2,
+   "s1_t": 474.2,
+   "s2lb_t": 868.5,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -33.4,
+   "vs2024_mb_pct": -33.6,
+   "delta_vs_right_lb_t": -572.5,
+   "delta_vs_right_lb_pct": -29.9,
+   "delta_vs_right_mb_t": -117.0,
+   "delta_vs_right_mb_pct": -6.2
+  },
+  "74": {
+   "traps": [
+    "T2",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1339.7,
+   "mb_t": 1339.2,
+   "s1_t": 471.2,
+   "s2lb_t": 868.5,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -33.6,
+   "vs2024_mb_pct": -49.9,
+   "delta_vs_right_lb_t": -575.5,
+   "delta_vs_right_lb_pct": -30.0,
+   "delta_vs_right_mb_t": -554.0,
+   "delta_vs_right_mb_pct": -29.3
+  },
+  "50": {
+   "traps": [
+    "T2",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1880.0,
+   "mb_t": 1818.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -6.8,
+   "vs2024_mb_pct": -32.0,
+   "delta_vs_right_lb_t": -35.2,
+   "delta_vs_right_lb_pct": -1.8,
+   "delta_vs_right_mb_t": -75.2,
+   "delta_vs_right_mb_pct": -4.0
+  },
+  "82": {
+   "traps": [
+    "T2",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1877.0,
+   "mb_t": 1381.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -7.0,
+   "vs2024_mb_pct": -48.4,
+   "delta_vs_right_lb_t": -38.2,
+   "delta_vs_right_lb_pct": -2.0,
+   "delta_vs_right_mb_t": -512.2,
+   "delta_vs_right_mb_pct": -27.1
+  },
+  "98": {
+   "traps": [
+    "T2",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1838.2,
+   "mb_t": 1342.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -8.9,
+   "vs2024_mb_pct": -49.8,
+   "delta_vs_right_lb_t": -77.0,
+   "delta_vs_right_lb_pct": -4.0,
+   "delta_vs_right_mb_t": -551.0,
+   "delta_vs_right_mb_pct": -29.1
+  },
+  "28": {
+   "traps": [
+    "T3",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1861.5,
+   "mb_t": 2535.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": -7.7,
+   "vs2024_mb_pct": -5.2,
+   "delta_vs_right_lb_t": -53.7,
+   "delta_vs_right_lb_pct": -2.8,
+   "delta_vs_right_mb_t": 641.8,
+   "delta_vs_right_mb_pct": 33.9
+  },
+  "44": {
+   "traps": [
+    "T3",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1822.7,
+   "mb_t": 2496.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": -9.7,
+   "vs2024_mb_pct": -6.7,
+   "delta_vs_right_lb_t": -92.5,
+   "delta_vs_right_lb_pct": -4.8,
+   "delta_vs_right_mb_t": 603.0,
+   "delta_vs_right_mb_pct": 31.9
+  },
+  "76": {
+   "traps": [
+    "T3",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1819.7,
+   "mb_t": 1819.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": -9.8,
+   "vs2024_mb_pct": -32.0,
+   "delta_vs_right_lb_t": -95.5,
+   "delta_vs_right_lb_pct": -5.0,
+   "delta_vs_right_mb_t": -74.0,
+   "delta_vs_right_mb_pct": -3.9
+  },
+  "52": {
+   "traps": [
+    "T3",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 2360.0,
+   "mb_t": 2538.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": 17.0,
+   "vs2024_mb_pct": -5.1,
+   "delta_vs_right_lb_t": 444.8,
+   "delta_vs_right_lb_pct": 23.2,
+   "delta_vs_right_mb_t": 644.8,
+   "delta_vs_right_mb_pct": 34.1
+  },
+  "84": {
+   "traps": [
+    "T3",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 2357.0,
+   "mb_t": 1861.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": 16.8,
+   "vs2024_mb_pct": -30.4,
+   "delta_vs_right_lb_t": 441.8,
+   "delta_vs_right_lb_pct": 23.1,
+   "delta_vs_right_mb_t": -32.2,
+   "delta_vs_right_mb_pct": -1.7
+  },
+  "100": {
+   "traps": [
+    "T3",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2318.2,
+   "mb_t": 1822.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": 14.9,
+   "vs2024_mb_pct": -31.9,
+   "delta_vs_right_lb_t": 403.0,
+   "delta_vs_right_lb_pct": 21.0,
+   "delta_vs_right_mb_t": -71.0,
+   "delta_vs_right_mb_pct": -3.8
+  },
+  "56": {
+   "traps": [
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1464.5,
+   "mb_t": 1938.0,
+   "s1_t": 516.0,
+   "s2lb_t": 948.5,
+   "s2mb_t": 1422.0,
+   "vs2024_lb_pct": -27.4,
+   "vs2024_mb_pct": -27.5,
+   "delta_vs_right_lb_t": -450.7,
+   "delta_vs_right_lb_pct": -23.5,
+   "delta_vs_right_mb_t": 44.8,
+   "delta_vs_right_mb_pct": 2.4
+  },
+  "88": {
+   "traps": [
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1461.5,
+   "mb_t": 1461.0,
+   "s1_t": 513.0,
+   "s2lb_t": 948.5,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -27.6,
+   "vs2024_mb_pct": -45.4,
+   "delta_vs_right_lb_t": -453.7,
+   "delta_vs_right_lb_pct": -23.7,
+   "delta_vs_right_mb_t": -432.2,
+   "delta_vs_right_mb_pct": -22.8
+  },
+  "104": {
+   "traps": [
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1422.7,
+   "mb_t": 1422.2,
+   "s1_t": 474.2,
+   "s2lb_t": 948.5,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -29.5,
+   "vs2024_mb_pct": -46.8,
+   "delta_vs_right_lb_t": -492.5,
+   "delta_vs_right_lb_pct": -25.7,
+   "delta_vs_right_mb_t": -471.0,
+   "delta_vs_right_mb_pct": -24.9
+  },
+  "112": {
+   "traps": [
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1960.0,
+   "mb_t": 1464.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1444.0,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -2.9,
+   "vs2024_mb_pct": -45.3,
+   "delta_vs_right_lb_t": 44.8,
+   "delta_vs_right_lb_pct": 2.3,
+   "delta_vs_right_mb_t": -429.2,
+   "delta_vs_right_mb_pct": -22.7
+  },
+  "15": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4"
+   ],
+   "lb_t": 1821.7,
+   "mb_t": 2496.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": -9.7,
+   "vs2024_mb_pct": -6.7,
+   "delta_vs_right_lb_t": -93.5,
+   "delta_vs_right_lb_pct": -4.9,
+   "delta_vs_right_mb_t": 603.0,
+   "delta_vs_right_mb_pct": 31.9
+  },
+  "23": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T5"
+   ],
+   "lb_t": 2359.0,
+   "mb_t": 2538.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": 16.9,
+   "vs2024_mb_pct": -5.1,
+   "delta_vs_right_lb_t": 443.8,
+   "delta_vs_right_lb_pct": 23.2,
+   "delta_vs_right_mb_t": 644.8,
+   "delta_vs_right_mb_pct": 34.1
+  },
+  "39": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T6"
+   ],
+   "lb_t": 2320.2,
+   "mb_t": 2499.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": 15.0,
+   "vs2024_mb_pct": -6.6,
+   "delta_vs_right_lb_t": 405.0,
+   "delta_vs_right_lb_pct": 21.1,
+   "delta_vs_right_mb_t": 606.0,
+   "delta_vs_right_mb_pct": 32.0
+  },
+  "71": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T7"
+   ],
+   "lb_t": 2317.2,
+   "mb_t": 1821.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": 14.9,
+   "vs2024_mb_pct": -31.9,
+   "delta_vs_right_lb_t": 402.0,
+   "delta_vs_right_lb_pct": 21.0,
+   "delta_vs_right_mb_t": -72.0,
+   "delta_vs_right_mb_pct": -3.8
+  },
+  "27": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1463.5,
+   "mb_t": 1938.0,
+   "s1_t": 513.0,
+   "s2lb_t": 950.5,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -27.5,
+   "vs2024_mb_pct": -27.5,
+   "delta_vs_right_lb_t": -451.7,
+   "delta_vs_right_lb_pct": -23.6,
+   "delta_vs_right_mb_t": 44.8,
+   "delta_vs_right_mb_pct": 2.4
+  },
+  "43": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1424.7,
+   "mb_t": 1899.2,
+   "s1_t": 474.2,
+   "s2lb_t": 950.5,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -29.4,
+   "vs2024_mb_pct": -29.0,
+   "delta_vs_right_lb_t": -490.5,
+   "delta_vs_right_lb_pct": -25.6,
+   "delta_vs_right_mb_t": 6.0,
+   "delta_vs_right_mb_pct": 0.3
+  },
+  "75": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1421.7,
+   "mb_t": 1421.2,
+   "s1_t": 471.2,
+   "s2lb_t": 950.5,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -29.5,
+   "vs2024_mb_pct": -46.9,
+   "delta_vs_right_lb_t": -493.5,
+   "delta_vs_right_lb_pct": -25.8,
+   "delta_vs_right_mb_t": -472.0,
+   "delta_vs_right_mb_pct": -24.9
+  },
+  "51": {
+   "traps": [
+    "T1",
+    "T2",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1962.0,
+   "mb_t": 1941.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -2.8,
+   "vs2024_mb_pct": -27.4,
+   "delta_vs_right_lb_t": 46.8,
+   "delta_vs_right_lb_pct": 2.4,
+   "delta_vs_right_mb_t": 47.8,
+   "delta_vs_right_mb_pct": 2.5
+  },
+  "83": {
+   "traps": [
+    "T1",
+    "T2",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1959.0,
+   "mb_t": 1463.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -2.9,
+   "vs2024_mb_pct": -45.3,
+   "delta_vs_right_lb_t": 43.8,
+   "delta_vs_right_lb_pct": 2.3,
+   "delta_vs_right_mb_t": -430.2,
+   "delta_vs_right_mb_pct": -22.7
+  },
+  "99": {
+   "traps": [
+    "T1",
+    "T2",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1920.2,
+   "mb_t": 1424.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -4.8,
+   "vs2024_mb_pct": -46.7,
+   "delta_vs_right_lb_t": 5.0,
+   "delta_vs_right_lb_pct": 0.3,
+   "delta_vs_right_mb_t": -469.0,
+   "delta_vs_right_mb_pct": -24.8
+  },
+  "29": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1943.5,
+   "mb_t": 2658.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": -3.7,
+   "vs2024_mb_pct": -0.6,
+   "delta_vs_right_lb_t": 28.3,
+   "delta_vs_right_lb_pct": 1.5,
+   "delta_vs_right_mb_t": 764.8,
+   "delta_vs_right_mb_pct": 40.4
+  },
+  "45": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1904.7,
+   "mb_t": 2619.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": -5.6,
+   "vs2024_mb_pct": -2.1,
+   "delta_vs_right_lb_t": -10.5,
+   "delta_vs_right_lb_pct": -0.5,
+   "delta_vs_right_mb_t": 726.0,
+   "delta_vs_right_mb_pct": 38.3
+  },
+  "77": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1901.7,
+   "mb_t": 1901.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": -5.7,
+   "vs2024_mb_pct": -28.9,
+   "delta_vs_right_lb_t": -13.5,
+   "delta_vs_right_lb_pct": -0.7,
+   "delta_vs_right_mb_t": 8.0,
+   "delta_vs_right_mb_pct": 0.4
+  },
+  "53": {
+   "traps": [
+    "T1",
+    "T3",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 2442.0,
+   "mb_t": 2661.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": 21.0,
+   "vs2024_mb_pct": -0.5,
+   "delta_vs_right_lb_t": 526.8,
+   "delta_vs_right_lb_pct": 27.5,
+   "delta_vs_right_mb_t": 767.8,
+   "delta_vs_right_mb_pct": 40.6
+  },
+  "85": {
+   "traps": [
+    "T1",
+    "T3",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 2439.0,
+   "mb_t": 1943.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": 20.9,
+   "vs2024_mb_pct": -27.4,
+   "delta_vs_right_lb_t": 523.8,
+   "delta_vs_right_lb_pct": 27.3,
+   "delta_vs_right_mb_t": 49.8,
+   "delta_vs_right_mb_pct": 2.6
+  },
+  "101": {
+   "traps": [
+    "T1",
+    "T3",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2400.2,
+   "mb_t": 1904.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": 19.0,
+   "vs2024_mb_pct": -28.8,
+   "delta_vs_right_lb_t": 485.0,
+   "delta_vs_right_lb_pct": 25.3,
+   "delta_vs_right_mb_t": 11.0,
+   "delta_vs_right_mb_pct": 0.6
+  },
+  "57": {
+   "traps": [
+    "T1",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1546.5,
+   "mb_t": 2061.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1545.0,
+   "vs2024_lb_pct": -23.3,
+   "vs2024_mb_pct": -22.9,
+   "delta_vs_right_lb_t": -368.7,
+   "delta_vs_right_lb_pct": -19.3,
+   "delta_vs_right_mb_t": 167.8,
+   "delta_vs_right_mb_pct": 8.9
+  },
+  "89": {
+   "traps": [
+    "T1",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1543.5,
+   "mb_t": 1543.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -23.5,
+   "vs2024_mb_pct": -42.3,
+   "delta_vs_right_lb_t": -371.7,
+   "delta_vs_right_lb_pct": -19.4,
+   "delta_vs_right_mb_t": -350.2,
+   "delta_vs_right_mb_pct": -18.5
+  },
+  "105": {
+   "traps": [
+    "T1",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1504.7,
+   "mb_t": 1504.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -25.4,
+   "vs2024_mb_pct": -43.8,
+   "delta_vs_right_lb_t": -410.5,
+   "delta_vs_right_lb_pct": -21.4,
+   "delta_vs_right_mb_t": -389.0,
+   "delta_vs_right_mb_pct": -20.5
+  },
+  "113": {
+   "traps": [
+    "T1",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2042.0,
+   "mb_t": 1546.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1526.0,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": 1.2,
+   "vs2024_mb_pct": -42.2,
+   "delta_vs_right_lb_t": 126.8,
+   "delta_vs_right_lb_pct": 6.6,
+   "delta_vs_right_mb_t": -347.2,
+   "delta_vs_right_mb_pct": -18.3
+  },
+  "30": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1781.5,
+   "mb_t": 2415.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": -11.7,
+   "vs2024_mb_pct": -9.7,
+   "delta_vs_right_lb_t": -133.7,
+   "delta_vs_right_lb_pct": -7.0,
+   "delta_vs_right_mb_t": 521.8,
+   "delta_vs_right_mb_pct": 27.6
+  },
+  "46": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1742.7,
+   "mb_t": 2376.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": -13.6,
+   "vs2024_mb_pct": -11.2,
+   "delta_vs_right_lb_t": -172.5,
+   "delta_vs_right_lb_pct": -9.0,
+   "delta_vs_right_mb_t": 483.0,
+   "delta_vs_right_mb_pct": 25.5
+  },
+  "78": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1739.7,
+   "mb_t": 1739.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": -13.8,
+   "vs2024_mb_pct": -35.0,
+   "delta_vs_right_lb_t": -175.5,
+   "delta_vs_right_lb_pct": -9.2,
+   "delta_vs_right_mb_t": -154.0,
+   "delta_vs_right_mb_pct": -8.1
+  },
+  "54": {
+   "traps": [
+    "T2",
+    "T3",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 2280.0,
+   "mb_t": 2418.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": 13.0,
+   "vs2024_mb_pct": -9.6,
+   "delta_vs_right_lb_t": 364.8,
+   "delta_vs_right_lb_pct": 19.0,
+   "delta_vs_right_mb_t": 524.8,
+   "delta_vs_right_mb_pct": 27.7
+  },
+  "86": {
+   "traps": [
+    "T2",
+    "T3",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 2277.0,
+   "mb_t": 1781.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": 12.9,
+   "vs2024_mb_pct": -33.4,
+   "delta_vs_right_lb_t": 361.8,
+   "delta_vs_right_lb_pct": 18.9,
+   "delta_vs_right_mb_t": -112.2,
+   "delta_vs_right_mb_pct": -5.9
+  },
+  "102": {
+   "traps": [
+    "T2",
+    "T3",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2238.2,
+   "mb_t": 1742.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": 10.9,
+   "vs2024_mb_pct": -34.9,
+   "delta_vs_right_lb_t": 323.0,
+   "delta_vs_right_lb_pct": 16.9,
+   "delta_vs_right_mb_t": -151.0,
+   "delta_vs_right_mb_pct": -8.0
+  },
+  "58": {
+   "traps": [
+    "T2",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1384.5,
+   "mb_t": 1818.0,
+   "s1_t": 516.0,
+   "s2lb_t": 868.5,
+   "s2mb_t": 1302.0,
+   "vs2024_lb_pct": -31.4,
+   "vs2024_mb_pct": -32.0,
+   "delta_vs_right_lb_t": -530.7,
+   "delta_vs_right_lb_pct": -27.7,
+   "delta_vs_right_mb_t": -75.2,
+   "delta_vs_right_mb_pct": -4.0
+  },
+  "90": {
+   "traps": [
+    "T2",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1381.5,
+   "mb_t": 1381.0,
+   "s1_t": 513.0,
+   "s2lb_t": 868.5,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -31.5,
+   "vs2024_mb_pct": -48.4,
+   "delta_vs_right_lb_t": -533.7,
+   "delta_vs_right_lb_pct": -27.9,
+   "delta_vs_right_mb_t": -512.2,
+   "delta_vs_right_mb_pct": -27.1
+  },
+  "106": {
+   "traps": [
+    "T2",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1342.7,
+   "mb_t": 1342.2,
+   "s1_t": 474.2,
+   "s2lb_t": 868.5,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -33.4,
+   "vs2024_mb_pct": -49.8,
+   "delta_vs_right_lb_t": -572.5,
+   "delta_vs_right_lb_pct": -29.9,
+   "delta_vs_right_mb_t": -551.0,
+   "delta_vs_right_mb_pct": -29.1
+  },
+  "114": {
+   "traps": [
+    "T2",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1880.0,
+   "mb_t": 1384.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1364.0,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -6.8,
+   "vs2024_mb_pct": -48.3,
+   "delta_vs_right_lb_t": -35.2,
+   "delta_vs_right_lb_pct": -1.8,
+   "delta_vs_right_mb_t": -509.2,
+   "delta_vs_right_mb_pct": -26.9
+  },
+  "60": {
+   "traps": [
+    "T3",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1864.5,
+   "mb_t": 2538.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 2022.0,
+   "vs2024_lb_pct": -7.6,
+   "vs2024_mb_pct": -5.1,
+   "delta_vs_right_lb_t": -50.7,
+   "delta_vs_right_lb_pct": -2.6,
+   "delta_vs_right_mb_t": 644.8,
+   "delta_vs_right_mb_pct": 34.1
+  },
+  "92": {
+   "traps": [
+    "T3",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1861.5,
+   "mb_t": 1861.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": -7.7,
+   "vs2024_mb_pct": -30.4,
+   "delta_vs_right_lb_t": -53.7,
+   "delta_vs_right_lb_pct": -2.8,
+   "delta_vs_right_mb_t": -32.2,
+   "delta_vs_right_mb_pct": -1.7
+  },
+  "108": {
+   "traps": [
+    "T3",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1822.7,
+   "mb_t": 1822.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": -9.7,
+   "vs2024_mb_pct": -31.9,
+   "delta_vs_right_lb_t": -92.5,
+   "delta_vs_right_lb_pct": -4.8,
+   "delta_vs_right_mb_t": -71.0,
+   "delta_vs_right_mb_pct": -3.8
+  },
+  "116": {
+   "traps": [
+    "T3",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2360.0,
+   "mb_t": 1864.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1844.0,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": 17.0,
+   "vs2024_mb_pct": -30.3,
+   "delta_vs_right_lb_t": 444.8,
+   "delta_vs_right_lb_pct": 23.2,
+   "delta_vs_right_mb_t": -29.2,
+   "delta_vs_right_mb_pct": -1.5
+  },
+  "120": {
+   "traps": [
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1464.5,
+   "mb_t": 1464.0,
+   "s1_t": 516.0,
+   "s2lb_t": 948.5,
+   "s2mb_t": 948.0,
+   "vs2024_lb_pct": -27.4,
+   "vs2024_mb_pct": -45.3,
+   "delta_vs_right_lb_t": -450.7,
+   "delta_vs_right_lb_pct": -23.5,
+   "delta_vs_right_mb_t": -429.2,
+   "delta_vs_right_mb_pct": -22.7
+  },
+  "31": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5"
+   ],
+   "lb_t": 1863.5,
+   "mb_t": 2538.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": -7.6,
+   "vs2024_mb_pct": -5.1,
+   "delta_vs_right_lb_t": -51.7,
+   "delta_vs_right_lb_pct": -2.7,
+   "delta_vs_right_mb_t": 644.8,
+   "delta_vs_right_mb_pct": 34.1
+  },
+  "47": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T6"
+   ],
+   "lb_t": 1824.7,
+   "mb_t": 2499.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": -9.6,
+   "vs2024_mb_pct": -6.6,
+   "delta_vs_right_lb_t": -90.5,
+   "delta_vs_right_lb_pct": -4.7,
+   "delta_vs_right_mb_t": 606.0,
+   "delta_vs_right_mb_pct": 32.0
+  },
+  "79": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T7"
+   ],
+   "lb_t": 1821.7,
+   "mb_t": 1821.2,
+   "s1_t": 471.2,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": -9.7,
+   "vs2024_mb_pct": -31.9,
+   "delta_vs_right_lb_t": -93.5,
+   "delta_vs_right_lb_pct": -4.9,
+   "delta_vs_right_mb_t": -72.0,
+   "delta_vs_right_mb_pct": -3.8
+  },
+  "55": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 2362.0,
+   "mb_t": 2541.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": 17.1,
+   "vs2024_mb_pct": -5.0,
+   "delta_vs_right_lb_t": 446.8,
+   "delta_vs_right_lb_pct": 23.3,
+   "delta_vs_right_mb_t": 647.8,
+   "delta_vs_right_mb_pct": 34.2
+  },
+  "87": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 2359.0,
+   "mb_t": 1863.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": 16.9,
+   "vs2024_mb_pct": -30.3,
+   "delta_vs_right_lb_t": 443.8,
+   "delta_vs_right_lb_pct": 23.2,
+   "delta_vs_right_mb_t": -30.2,
+   "delta_vs_right_mb_pct": -1.6
+  },
+  "103": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2320.2,
+   "mb_t": 1824.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": 15.0,
+   "vs2024_mb_pct": -31.8,
+   "delta_vs_right_lb_t": 405.0,
+   "delta_vs_right_lb_pct": 21.1,
+   "delta_vs_right_mb_t": -69.0,
+   "delta_vs_right_mb_pct": -3.6
+  },
+  "59": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1466.5,
+   "mb_t": 1941.0,
+   "s1_t": 516.0,
+   "s2lb_t": 950.5,
+   "s2mb_t": 1425.0,
+   "vs2024_lb_pct": -27.3,
+   "vs2024_mb_pct": -27.4,
+   "delta_vs_right_lb_t": -448.7,
+   "delta_vs_right_lb_pct": -23.4,
+   "delta_vs_right_mb_t": 47.8,
+   "delta_vs_right_mb_pct": 2.5
+  },
+  "91": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1463.5,
+   "mb_t": 1463.0,
+   "s1_t": 513.0,
+   "s2lb_t": 950.5,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -27.5,
+   "vs2024_mb_pct": -45.3,
+   "delta_vs_right_lb_t": -451.7,
+   "delta_vs_right_lb_pct": -23.6,
+   "delta_vs_right_mb_t": -430.2,
+   "delta_vs_right_mb_pct": -22.7
+  },
+  "107": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1424.7,
+   "mb_t": 1424.2,
+   "s1_t": 474.2,
+   "s2lb_t": 950.5,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -29.4,
+   "vs2024_mb_pct": -46.7,
+   "delta_vs_right_lb_t": -490.5,
+   "delta_vs_right_lb_pct": -25.6,
+   "delta_vs_right_mb_t": -469.0,
+   "delta_vs_right_mb_pct": -24.8
+  },
+  "115": {
+   "traps": [
+    "T1",
+    "T2",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1962.0,
+   "mb_t": 1466.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1446.0,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -2.8,
+   "vs2024_mb_pct": -45.2,
+   "delta_vs_right_lb_t": 46.8,
+   "delta_vs_right_lb_pct": 2.4,
+   "delta_vs_right_mb_t": -427.2,
+   "delta_vs_right_mb_pct": -22.6
+  },
+  "61": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1946.5,
+   "mb_t": 2661.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 2145.0,
+   "vs2024_lb_pct": -3.5,
+   "vs2024_mb_pct": -0.5,
+   "delta_vs_right_lb_t": 31.3,
+   "delta_vs_right_lb_pct": 1.6,
+   "delta_vs_right_mb_t": 767.8,
+   "delta_vs_right_mb_pct": 40.6
+  },
+  "93": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1943.5,
+   "mb_t": 1943.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": -3.7,
+   "vs2024_mb_pct": -27.4,
+   "delta_vs_right_lb_t": 28.3,
+   "delta_vs_right_lb_pct": 1.5,
+   "delta_vs_right_mb_t": 49.8,
+   "delta_vs_right_mb_pct": 2.6
+  },
+  "109": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1904.7,
+   "mb_t": 1904.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": -5.6,
+   "vs2024_mb_pct": -28.8,
+   "delta_vs_right_lb_t": -10.5,
+   "delta_vs_right_lb_pct": -0.5,
+   "delta_vs_right_mb_t": 11.0,
+   "delta_vs_right_mb_pct": 0.6
+  },
+  "117": {
+   "traps": [
+    "T1",
+    "T3",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2442.0,
+   "mb_t": 1946.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1926.0,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": 21.0,
+   "vs2024_mb_pct": -27.2,
+   "delta_vs_right_lb_t": 526.8,
+   "delta_vs_right_lb_pct": 27.5,
+   "delta_vs_right_mb_t": 52.8,
+   "delta_vs_right_mb_pct": 2.8
+  },
+  "121": {
+   "traps": [
+    "T1",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1546.5,
+   "mb_t": 1546.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1030.5,
+   "s2mb_t": 1030.0,
+   "vs2024_lb_pct": -23.3,
+   "vs2024_mb_pct": -42.2,
+   "delta_vs_right_lb_t": -368.7,
+   "delta_vs_right_lb_pct": -19.3,
+   "delta_vs_right_mb_t": -347.2,
+   "delta_vs_right_mb_pct": -18.3
+  },
+  "62": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1784.5,
+   "mb_t": 2418.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1902.0,
+   "vs2024_lb_pct": -11.5,
+   "vs2024_mb_pct": -9.6,
+   "delta_vs_right_lb_t": -130.7,
+   "delta_vs_right_lb_pct": -6.8,
+   "delta_vs_right_mb_t": 524.8,
+   "delta_vs_right_mb_pct": 27.7
+  },
+  "94": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1781.5,
+   "mb_t": 1781.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": -11.7,
+   "vs2024_mb_pct": -33.4,
+   "delta_vs_right_lb_t": -133.7,
+   "delta_vs_right_lb_pct": -7.0,
+   "delta_vs_right_mb_t": -112.2,
+   "delta_vs_right_mb_pct": -5.9
+  },
+  "110": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1742.7,
+   "mb_t": 1742.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": -13.6,
+   "vs2024_mb_pct": -34.9,
+   "delta_vs_right_lb_t": -172.5,
+   "delta_vs_right_lb_pct": -9.0,
+   "delta_vs_right_mb_t": -151.0,
+   "delta_vs_right_mb_pct": -8.0
+  },
+  "118": {
+   "traps": [
+    "T2",
+    "T3",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2280.0,
+   "mb_t": 1784.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1764.0,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": 13.0,
+   "vs2024_mb_pct": -33.3,
+   "delta_vs_right_lb_t": 364.8,
+   "delta_vs_right_lb_pct": 19.0,
+   "delta_vs_right_mb_t": -109.2,
+   "delta_vs_right_mb_pct": -5.8
+  },
+  "122": {
+   "traps": [
+    "T2",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1384.5,
+   "mb_t": 1384.0,
+   "s1_t": 516.0,
+   "s2lb_t": 868.5,
+   "s2mb_t": 868.0,
+   "vs2024_lb_pct": -31.4,
+   "vs2024_mb_pct": -48.3,
+   "delta_vs_right_lb_t": -530.7,
+   "delta_vs_right_lb_pct": -27.7,
+   "delta_vs_right_mb_t": -509.2,
+   "delta_vs_right_mb_pct": -26.9
+  },
+  "124": {
+   "traps": [
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1864.5,
+   "mb_t": 1864.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1348.5,
+   "s2mb_t": 1348.0,
+   "vs2024_lb_pct": -7.6,
+   "vs2024_mb_pct": -30.3,
+   "delta_vs_right_lb_t": -50.7,
+   "delta_vs_right_lb_pct": -2.6,
+   "delta_vs_right_mb_t": -29.2,
+   "delta_vs_right_mb_pct": -1.5
+  },
+  "63": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6"
+   ],
+   "lb_t": 1866.5,
+   "mb_t": 2541.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 2025.0,
+   "vs2024_lb_pct": -7.5,
+   "vs2024_mb_pct": -5.0,
+   "delta_vs_right_lb_t": -48.7,
+   "delta_vs_right_lb_pct": -2.5,
+   "delta_vs_right_mb_t": 647.8,
+   "delta_vs_right_mb_pct": 34.2
+  },
+  "95": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T7"
+   ],
+   "lb_t": 1863.5,
+   "mb_t": 1863.0,
+   "s1_t": 513.0,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": -7.6,
+   "vs2024_mb_pct": -30.3,
+   "delta_vs_right_lb_t": -51.7,
+   "delta_vs_right_lb_pct": -2.7,
+   "delta_vs_right_mb_t": -30.2,
+   "delta_vs_right_mb_pct": -1.6
+  },
+  "111": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1824.7,
+   "mb_t": 1824.2,
+   "s1_t": 474.2,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": -9.6,
+   "vs2024_mb_pct": -31.8,
+   "delta_vs_right_lb_t": -90.5,
+   "delta_vs_right_lb_pct": -4.7,
+   "delta_vs_right_mb_t": -69.0,
+   "delta_vs_right_mb_pct": -3.6
+  },
+  "119": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 2362.0,
+   "mb_t": 1866.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1846.0,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": 17.1,
+   "vs2024_mb_pct": -30.2,
+   "delta_vs_right_lb_t": 446.8,
+   "delta_vs_right_lb_pct": 23.3,
+   "delta_vs_right_mb_t": -27.2,
+   "delta_vs_right_mb_pct": -1.4
+  },
+  "123": {
+   "traps": [
+    "T1",
+    "T2",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1466.5,
+   "mb_t": 1466.0,
+   "s1_t": 516.0,
+   "s2lb_t": 950.5,
+   "s2mb_t": 950.0,
+   "vs2024_lb_pct": -27.3,
+   "vs2024_mb_pct": -45.2,
+   "delta_vs_right_lb_t": -448.7,
+   "delta_vs_right_lb_pct": -23.4,
+   "delta_vs_right_mb_t": -427.2,
+   "delta_vs_right_mb_pct": -22.6
+  },
+  "125": {
+   "traps": [
+    "T1",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1946.5,
+   "mb_t": 1946.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1430.5,
+   "s2mb_t": 1430.0,
+   "vs2024_lb_pct": -3.5,
+   "vs2024_mb_pct": -27.2,
+   "delta_vs_right_lb_t": 31.3,
+   "delta_vs_right_lb_pct": 1.6,
+   "delta_vs_right_mb_t": 52.8,
+   "delta_vs_right_mb_pct": 2.8
+  },
+  "126": {
+   "traps": [
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1784.5,
+   "mb_t": 1784.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1268.5,
+   "s2mb_t": 1268.0,
+   "vs2024_lb_pct": -11.5,
+   "vs2024_mb_pct": -33.3,
+   "delta_vs_right_lb_t": -130.7,
+   "delta_vs_right_lb_pct": -6.8,
+   "delta_vs_right_mb_t": -109.2,
+   "delta_vs_right_mb_pct": -5.8
+  },
+  "127": {
+   "traps": [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+   ],
+   "lb_t": 1866.5,
+   "mb_t": 1866.0,
+   "s1_t": 516.0,
+   "s2lb_t": 1350.5,
+   "s2mb_t": 1350.0,
+   "vs2024_lb_pct": -7.5,
+   "vs2024_mb_pct": -30.2,
+   "delta_vs_right_lb_t": -48.7,
+   "delta_vs_right_lb_pct": -2.5,
+   "delta_vs_right_mb_t": -27.2,
+   "delta_vs_right_mb_pct": -1.4
+  }
+ },
+ "trapBits": {
+  "T1": 1,
+  "T2": 2,
+  "T3": 4,
+  "T4": 8,
+  "T5": 16,
+  "T6": 32,
+  "T7": 64
+ },
+ "demoSequence": [
+  {
+   "n": 1,
+   "action_en": "Predict: which switch moves the total most? Duplicate March, Talbrück bill or \"1.240 MWh\".",
+   "action_de": "Vorhersage: Welcher Schalter bewegt die Summe am meisten? Doppelter März, Talbrück-Rechnung oder „1.240 MWh“.",
+   "answer_key": "unit_lb_t"
+  },
+  {
+   "n": 2,
+   "action_en": "Switch on only the Talbrück bill.",
+   "action_de": "Nur die Talbrück-Rechnung einschalten.",
+   "state_mask": "4",
+   "keys": [
+    "demo_only_jv_lb_t",
+    "demo_only_jv_vs2024_pct"
+   ]
+  },
+  {
+   "n": 3,
+   "action_en": "Add the MWh misread.",
+   "action_de": "Den MWh-Lesefehler dazuschalten.",
+   "state_mask": "12",
+   "keys": [
+    "demo_jv_unit_lb_t",
+    "demo_jv_unit_vs2024_pct"
+   ]
+  },
+  {
+   "n": 4,
+   "action_en": "Switch the method to market-based. The MWh switch now shows 0 t.",
+   "action_de": "Methode auf marktbasiert stellen. Der MWh-Schalter zeigt jetzt 0 t.",
+   "method": "mb",
+   "state_mask": "12",
+   "keys": [
+    "demo_jv_unit_mb_t",
+    "demo_jv_unit_vs2024_mb_pct"
+   ]
+  },
+  {
+   "n": 5,
+   "action_en": "Switch the method back to location-based. Then switch on only duplicate March and October. Together they move the total by only +2.0 t, so a check on the total misses both. (In market-based the pair moves it by +3.0 t.)",
+   "action_de": "Die Methode wieder auf standortbasiert stellen. Dann nur doppelten März und Oktober einschalten. Zusammen bewegen sie die Summe nur um +2,0 t, deshalb übersieht eine Prüfung der Summe beide. (Marktbasiert sind es +3,0 t.)",
+   "method": "lb",
+   "state_mask": "3",
+   "keys": [
+    "pair_dup_oct_t",
+    "pair_dup_oct_mb_t"
+   ]
+  },
+  {
+   "n": 6,
+   "action_en": "Open the evidence drawer from \"72.2 t\" in the rewritten sentence.",
+   "action_de": "Die Belegschublade über „72,2 t“ im neuen Satz öffnen.",
+   "keys": [
+    "drv_lb_grid_t"
+   ]
+  }
+ ],
+ "drivers": {
+  "lb": [
+   {
+    "id": "grid_factor",
+    "en": "Grid factor 0.42 to 0.40 (teaching values)",
+    "de": "Netzfaktor 0,42 auf 0,40 (Lehrwerte)",
+    "t": -72.2,
+    "arithmetic": "3,610,000 x (0.40 - 0.42)"
+   },
+   {
+    "id": "less_electricity",
+    "en": "Less electricity",
+    "de": "Weniger Strom",
+    "t": -16.8,
+    "arithmetic": "(3,610,000 - 3,650,000) x 0.42"
+   },
+   {
+    "id": "less_gas",
+    "en": "Less gas",
+    "de": "Weniger Gas",
+    "t": -10.8,
+    "arithmetic": "(2,090,000 - 2,150,000) x 0.18"
+   },
+   {
+    "id": "less_diesel",
+    "en": "Less diesel",
+    "de": "Weniger Diesel",
+    "t": -2.5,
+    "arithmetic": "(38,000 - 39,000) x 2.50"
+   }
+  ],
+  "mb": [
+   {
+    "id": "certificates",
+    "en": "Guarantees of origin for Werk Süd",
+    "de": "Herkunftsnachweise für Werk Süd",
+    "t": -744.0,
+    "arithmetic": "1,240,000 x 0.60"
+   },
+   {
+    "id": "less_electricity",
+    "en": "Less electricity",
+    "de": "Weniger Strom",
+    "t": -24.0,
+    "arithmetic": "(3,610,000 - 3,650,000) x 0.60"
+   },
+   {
+    "id": "less_gas_diesel",
+    "en": "Less gas and diesel (Scope 1)",
+    "de": "Weniger Gas und Diesel (Scope 1)",
+    "t": -13.3,
+    "arithmetic": "-10.8 - 2.5"
+   }
+  ],
+  "convention_en": "Consumption effects use the 2024 factor; the factor effect uses 2025 consumption. The residual mix is held at 0.60 in both years on purpose, so the market-based bridge has no factor effect. Real residual mixes change every year.",
+  "convention_de": "Verbrauchseffekte mit dem Faktor 2024; der Faktoreffekt mit dem Verbrauch 2025. Der Residualmix bleibt absichtlich in beiden Jahren bei 0,60, deshalb hat die marktbasierte Brücke keinen Faktoreffekt. Echte Residualmixe ändern sich jedes Jahr."
+ },
+ "ranking": {
+  "lb": [
+   {
+    "en": "WN electricity",
+    "de": "Strom Werk Nord",
+    "t": 904.0,
+    "share_pct": 47.2
+   },
+   {
+    "en": "WS electricity",
+    "de": "Strom Werk Süd",
+    "t": 496.0,
+    "share_pct": 25.9
+   },
+   {
+    "en": "WN gas",
+    "de": "Gas Werk Nord",
+    "t": 333.0,
+    "share_pct": 17.4
+   },
+   {
+    "en": "Diesel fleet",
+    "de": "Diesel Flotte",
+    "t": 95.0,
+    "share_pct": 5.0
+   },
+   {
+    "en": "LO electricity",
+    "de": "Strom Lager Ost",
+    "t": 44.0,
+    "share_pct": 2.3
+   },
+   {
+    "en": "WS gas",
+    "de": "Gas Werk Süd",
+    "t": 43.2,
+    "share_pct": 2.3
+   }
+  ],
+  "mb": [
+   {
+    "en": "WN electricity",
+    "de": "Strom Werk Nord",
+    "t": 1356.0,
+    "share_pct": 71.6
+   },
+   {
+    "en": "WN gas",
+    "de": "Gas Werk Nord",
+    "t": 333.0,
+    "share_pct": 17.6
+   },
+   {
+    "en": "Diesel fleet",
+    "de": "Diesel Flotte",
+    "t": 95.0,
+    "share_pct": 5.0
+   },
+   {
+    "en": "LO electricity",
+    "de": "Strom Lager Ost",
+    "t": 66.0,
+    "share_pct": 3.5
+   },
+   {
+    "en": "WS gas",
+    "de": "Gas Werk Süd",
+    "t": 43.2,
+    "share_pct": 2.3
+   },
+   {
+    "en": "WS electricity",
+    "de": "Strom Werk Süd",
+    "t": 0.0,
+    "share_pct": 0.0
+   }
+  ],
+  "shareNote_en": "Shares are rounded one by one and may not add up to exactly 100%.",
+  "shareNote_de": "Anteile einzeln gerundet; die Summe kann von 100 % abweichen."
+ },
+ "controlTotal": [
+  {
+   "de": "Werk Nord: 10 echte Rechnungen",
+   "en": "Werk Nord: 10 genuine bills",
+   "kwh": 2060000,
+   "status": "enthalten",
+   "group": "document"
+  },
+  {
+   "de": "Werk Nord: Duplikat März (4711-03)",
+   "en": "Werk Nord: duplicate March (4711-03)",
+   "kwh": 205000,
+   "status": "ausgeschlossen: Duplikat",
+   "group": "document"
+  },
+  {
+   "de": "Talbrück Beschichtung GmbH",
+   "en": "Talbrück Beschichtung GmbH",
+   "kwh": 1000000,
+   "status": "ausgeschlossen: Grenze",
+   "group": "document"
+  },
+  {
+   "de": "Werk Süd: Jahresübersicht",
+   "en": "Werk Süd: annual statement",
+   "kwh": 1240000,
+   "status": "enthalten",
+   "group": "document"
+  },
+  {
+   "de": "Lager Ost: 4 Quartale",
+   "en": "Lager Ost: 4 quarters",
+   "kwh": 110000,
+   "status": "enthalten",
+   "group": "document"
+  },
+  {
+   "de": "Oktober Werk Nord aus Zählerständen",
+   "en": "October Werk Nord from meter readings",
+   "kwh": 200000,
+   "status": "ergänzt: Zählerstand, DQ B",
+   "group": "meter"
+  }
+ ],
+ "ledger": [
+  {
+   "row_id": "E-WN-01",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-01-01",
+   "period_end": "2025-01-31",
+   "months": "1",
+   "qty_source": "210.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "210000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-01_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 210.000 kWh",
+   "invoice_no": "4711-01",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "84,0",
+   "t_mb": "126,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-02",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-02-01",
+   "period_end": "2025-02-28",
+   "months": "1",
+   "qty_source": "195.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "195000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-02_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 195.000 kWh",
+   "invoice_no": "4711-02",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "78,0",
+   "t_mb": "117,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-03",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-03-01",
+   "period_end": "2025-03-31",
+   "months": "1",
+   "qty_source": "205.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "205000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-03_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 205.000 kWh",
+   "invoice_no": "4711-03",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "82,0",
+   "t_mb": "123,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-03D",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-03-01",
+   "period_end": "2025-03-31",
+   "months": "1",
+   "qty_source": "205.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "0",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/scan_rechnung_maerz.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 205.000 kWh",
+   "invoice_no": "4711-03",
+   "meter_id": "DE0005678900WN01",
+   "status": "excluded",
+   "reason": "Duplikat von E-WN-03 (Rechnung 4711-03, gleicher Zeitraum, gleicher Zähler)",
+   "instrument_id": "",
+   "factor_lb": "",
+   "factor_mb": "",
+   "factor_edition": "",
+   "dq": "",
+   "t_lb": "0,0",
+   "t_mb": "0,0",
+   "role_proposed_by": "Clerk (Regel Schlüssel)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-04",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-04-01",
+   "period_end": "2025-04-30",
+   "months": "1",
+   "qty_source": "190.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "190000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-04_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 190.000 kWh",
+   "invoice_no": "4711-04",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "76,0",
+   "t_mb": "114,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-05",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-05-01",
+   "period_end": "2025-05-31",
+   "months": "1",
+   "qty_source": "185.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "185000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-05_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 185.000 kWh",
+   "invoice_no": "4711-05",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "74,0",
+   "t_mb": "111,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-06",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-06-01",
+   "period_end": "2025-06-30",
+   "months": "1",
+   "qty_source": "180.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "180000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-06_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 180.000 kWh",
+   "invoice_no": "4711-06",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "72,0",
+   "t_mb": "108,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-07",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-07-01",
+   "period_end": "2025-07-31",
+   "months": "1",
+   "qty_source": "175.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "175000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-07_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 175.000 kWh",
+   "invoice_no": "4711-07",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "70,0",
+   "t_mb": "105,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-08",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-08-01",
+   "period_end": "2025-08-31",
+   "months": "1",
+   "qty_source": "120.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "120000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-08_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 120.000 kWh",
+   "invoice_no": "4711-08",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "Einbruch bestätigt: Betriebsferien",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "48,0",
+   "t_mb": "72,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-09",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-09-01",
+   "period_end": "2025-09-30",
+   "months": "1",
+   "qty_source": "190.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "190000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-09_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 190.000 kWh",
+   "invoice_no": "4711-09",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "76,0",
+   "t_mb": "114,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-10",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-10-01",
+   "period_end": "2025-10-31",
+   "months": "1",
+   "qty_source": "5.012.300 minus 4.812.300",
+   "unit_source": "kWh (Zählerstand)",
+   "basis": "",
+   "qty_norm": "200000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/zaehlerstaende_2025.csv",
+   "source_page": "Zeilen 30.09.2025 und 31.10.2025",
+   "source_quote": "30.09.2025;...;4812300 / 31.10.2025;...;5012300",
+   "invoice_no": "4711-10 (angefordert)",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual_meter",
+   "reason": "Rechnung fehlt; Zählerstand bis zur Rechnung",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "B",
+   "t_lb": "80,0",
+   "t_mb": "120,0",
+   "role_proposed_by": "Clerk (Regel Abdeckung)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WN-11",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-11-01",
+   "period_end": "2025-12-31",
+   "months": "2",
+   "qty_source": "410.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "410000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-11-12_strom_wn.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 410.000 kWh",
+   "invoice_no": "4711-11",
+   "meter_id": "DE0005678900WN01",
+   "status": "actual",
+   "reason": "zwei Monate auf einer Rechnung",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "164,0",
+   "t_mb": "246,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-TB-01",
+   "site_id": "TB",
+   "entity_on_document": "Talbrück Beschichtung GmbH, Halle 3",
+   "in_boundary": "nein",
+   "carrier": "Strom",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "1.000.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "0",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_nord/strom/jahresrechnung_tb_2025.md",
+   "source_page": "1",
+   "source_quote": "Rechnungsempfänger: Talbrück Beschichtung GmbH",
+   "invoice_no": "TB-2025-12",
+   "meter_id": "DE0005678900TB07",
+   "status": "excluded",
+   "reason": "Grenze: operative Kontrolle liegt beim Partner (Kellbrunn 40 %); Kandidat Scope 3 Kat. 15",
+   "instrument_id": "",
+   "factor_lb": "",
+   "factor_mb": "",
+   "factor_edition": "",
+   "dq": "",
+   "t_lb": "0,0",
+   "t_mb": "0,0",
+   "role_proposed_by": "Clerk (Regel Grenze)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-WS-01",
+   "site_id": "WS",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Süd",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "1.240",
+   "unit_source": "MWh",
+   "basis": "",
+   "qty_norm": "1240000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md",
+   "source_page": "1",
+   "source_quote": "Verbrauch 2025: 1.240 MWh",
+   "invoice_no": "",
+   "meter_id": "DE0005678900WS01",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "I-WS-GO",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-GO",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "496,0",
+   "t_mb": "0,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-LO-Q1",
+   "site_id": "LO",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH (Lager Ost, Mieterin)",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-01-01",
+   "period_end": "2025-03-31",
+   "months": "3",
+   "qty_source": "30.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "30000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q1_2025.md",
+   "source_page": "1",
+   "source_quote": "Unterzähler LO-UZ-03: 30.000 kWh",
+   "invoice_no": "",
+   "meter_id": "LO-UZ-03",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "12,0",
+   "t_mb": "18,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-LO-Q2",
+   "site_id": "LO",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH (Lager Ost, Mieterin)",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-04-01",
+   "period_end": "2025-06-30",
+   "months": "3",
+   "qty_source": "25.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "25000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q2_2025.md",
+   "source_page": "1",
+   "source_quote": "Unterzähler LO-UZ-03: 25.000 kWh",
+   "invoice_no": "",
+   "meter_id": "LO-UZ-03",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "10,0",
+   "t_mb": "15,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-LO-Q3",
+   "site_id": "LO",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH (Lager Ost, Mieterin)",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-07-01",
+   "period_end": "2025-09-30",
+   "months": "3",
+   "qty_source": "25.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "25000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q3_2025.md",
+   "source_page": "1",
+   "source_quote": "Unterzähler LO-UZ-03: 25.000 kWh",
+   "invoice_no": "",
+   "meter_id": "LO-UZ-03",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "10,0",
+   "t_mb": "15,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "E-LO-Q4",
+   "site_id": "LO",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH (Lager Ost, Mieterin)",
+   "in_boundary": "ja",
+   "carrier": "Strom",
+   "period_start": "2025-10-01",
+   "period_end": "2025-12-31",
+   "months": "3",
+   "qty_source": "30.000",
+   "unit_source": "kWh",
+   "basis": "",
+   "qty_norm": "30000",
+   "unit_norm": "kWh",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q4_2025.md",
+   "source_page": "1",
+   "source_quote": "Unterzähler LO-UZ-03: 30.000 kWh",
+   "invoice_no": "",
+   "meter_id": "LO-UZ-03",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-EL-LB-2025",
+   "factor_mb": "F-EL-RM-2025",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "12,0",
+   "t_mb": "18,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "G-WN-01",
+   "site_id": "WN",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Nord",
+   "in_boundary": "ja",
+   "carrier": "Erdgas",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "1.850.000",
+   "unit_source": "kWh",
+   "basis": "Hs",
+   "qty_norm": "1850000",
+   "unit_norm": "kWh(Hs)",
+   "source_file": "rohdaten_2025/werk_nord/gas/gas_jahresrechnung_wn_2025.md",
+   "source_page": "1 (Menge), 2 (Basis)",
+   "source_quote": "Energiemenge 1.850.000 kWh; Seite 2: Brennwert (Hs)",
+   "invoice_no": "G-2025-0417",
+   "meter_id": "",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-GAS-HS",
+   "factor_mb": "F-GAS-HS",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "333,0",
+   "t_mb": "333,0",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "G-WS-01",
+   "site_id": "WS",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Süd",
+   "in_boundary": "ja",
+   "carrier": "Erdgas",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "240.000",
+   "unit_source": "kWh",
+   "basis": "Hs",
+   "qty_norm": "240000",
+   "unit_norm": "kWh(Hs)",
+   "source_file": "rohdaten_2025/werk_sued/gas_jahresrechnung_ws_2025.md",
+   "source_page": "1 (Menge), 2 (Basis)",
+   "source_quote": "Energiemenge 240.000 kWh; Seite 2: Brennwert (Hs)",
+   "invoice_no": "G-2025-0418",
+   "meter_id": "",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-GAS-HS",
+   "factor_mb": "F-GAS-HS",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "43,2",
+   "t_mb": "43,2",
+   "role_proposed_by": "Reader (KI-Vorschlag)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "D-FL-01",
+   "site_id": "FL",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH",
+   "in_boundary": "ja",
+   "carrier": "Diesel",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "38.000",
+   "unit_source": "l",
+   "basis": "",
+   "qty_norm": "38000",
+   "unit_norm": "l",
+   "source_file": "rohdaten_2025/flotte/tankkarten_2025.csv",
+   "source_page": "Summe produkt = Diesel",
+   "source_quote": "produkt=Diesel; einheit=l",
+   "invoice_no": "",
+   "meter_id": "",
+   "status": "actual",
+   "reason": "",
+   "instrument_id": "",
+   "factor_lb": "F-DSL",
+   "factor_mb": "F-DSL",
+   "factor_edition": "Lehrwerte v1.0, 2026-01-15",
+   "dq": "A",
+   "t_lb": "95,0",
+   "t_mb": "95,0",
+   "role_proposed_by": "Clerk (Regel Produktfilter)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "D-FL-02",
+   "site_id": "FL",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH",
+   "in_boundary": "ja",
+   "carrier": "AdBlue",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "1.200",
+   "unit_source": "l",
+   "basis": "",
+   "qty_norm": "0",
+   "unit_norm": "l",
+   "source_file": "rohdaten_2025/flotte/tankkarten_2025.csv",
+   "source_page": "Summe produkt = AdBlue",
+   "source_quote": "produkt=AdBlue; einheit=l",
+   "invoice_no": "",
+   "meter_id": "",
+   "status": "excluded",
+   "reason": "kein Kraftstoff (Harnstofflösung)",
+   "instrument_id": "",
+   "factor_lb": "",
+   "factor_mb": "",
+   "factor_edition": "",
+   "dq": "",
+   "t_lb": "0,0",
+   "t_mb": "0,0",
+   "role_proposed_by": "Clerk (Regel Produktfilter)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  },
+  {
+   "row_id": "I-WS-GO",
+   "site_id": "WS",
+   "entity_on_document": "Kellbrunn Präzisionsteile GmbH, Werk Süd",
+   "in_boundary": "ja",
+   "carrier": "Herkunftsnachweis",
+   "period_start": "2025-01-01",
+   "period_end": "2025-12-31",
+   "months": "12",
+   "qty_source": "1.240",
+   "unit_source": "MWh",
+   "basis": "",
+   "qty_norm": "1240000",
+   "unit_norm": "kWh (abgedeckt)",
+   "source_file": "rohdaten_2025/werk_sued/hkn_bestaetigung_2025.md",
+   "source_page": "1",
+   "source_quote": "Herkunftsnachweise über 1.240 MWh ... entwertet ... Lieferstelle Werk Süd",
+   "invoice_no": "",
+   "meter_id": "",
+   "status": "instrument",
+   "reason": "deckt E-WS-01 vollständig, sonst nichts",
+   "instrument_id": "",
+   "factor_lb": "",
+   "factor_mb": "",
+   "factor_edition": "",
+   "dq": "A",
+   "t_lb": "",
+   "t_mb": "",
+   "role_proposed_by": "Clerk (Regel Scope 2)",
+   "reviewed_by": "Controlling, 2026-01-20"
+  }
+ ],
+ "ledgerColumns": [
+  "row_id",
+  "site_id",
+  "entity_on_document",
+  "in_boundary",
+  "carrier",
+  "period_start",
+  "period_end",
+  "months",
+  "qty_source",
+  "unit_source",
+  "basis",
+  "qty_norm",
+  "unit_norm",
+  "source_file",
+  "source_page",
+  "source_quote",
+  "invoice_no",
+  "meter_id",
+  "status",
+  "reason",
+  "instrument_id",
+  "factor_lb",
+  "factor_mb",
+  "factor_edition",
+  "dq",
+  "t_lb",
+  "t_mb",
+  "role_proposed_by",
+  "reviewed_by"
+ ],
+ "coverage": {
+  "rows": [
+   "WN Strom",
+   "WS Strom",
+   "LO Strom",
+   "WN Gas",
+   "WS Gas",
+   "FL Diesel"
+  ],
+  "expected": {
+   "WN Strom": [
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "Z",
+    "S",
+    "S"
+   ],
+   "WS Strom": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "LO Strom": [
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q"
+   ],
+   "WN Gas": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "WS Gas": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "FL Diesel": [
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "asDelivered": {
+   "WN Strom": [
+    "1",
+    "1",
+    "2",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "0",
+    "S",
+    "S"
+   ],
+   "WS Strom": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "LO Strom": [
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q",
+    "Q"
+   ],
+   "WN Gas": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "WS Gas": [
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J",
+    "J"
+   ],
+   "FL Diesel": [
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1",
+    "1"
+   ]
+  },
+  "legend": {
+   "1": "eine Rechnung",
+   "2": "doppelt",
+   "0": "fehlt",
+   "S": "Teil einer Rechnung über zwei Monate",
+   "Z": "Zählerstand statt Rechnung (DQ B)",
+   "J": "Jahresrechnung",
+   "Q": "Quartalsabrechnung"
+  }
+ },
+ "traceTwo": [
+  {
+   "n": 1,
+   "mode": "worked",
+   "figure_key": "ws_lb_2025",
+   "rows": [
+    "E-WS-01"
+   ],
+   "factor": "F-EL-LB-2025",
+   "quote": "Verbrauch 2025: 1.240 MWh",
+   "file": "jahresuebersicht_2025_oekostrom.md",
+   "arithmetic_en": "1,240 MWh x 1,000 = 1,240,000 kWh; x 0.40 kg/kWh = 496,000 kg = 496.0 t",
+   "arithmetic_de": "1.240 MWh x 1.000 = 1.240.000 kWh; x 0,40 kg/kWh = 496.000 kg = 496,0 t"
+  },
+  {
+   "n": 2,
+   "mode": "half",
+   "figure_key": "s1_gas_2025",
+   "rows": [
+    "G-WN-01",
+    "G-WS-01"
+   ],
+   "factor": "F-GAS-HS",
+   "quote": "Energiemenge 1.850.000 kWh / 240.000 kWh; Seite 2: Brennwert (Hs)",
+   "blanks_en": [
+    "the second row ID",
+    "the factor ID and its basis"
+   ],
+   "blanks_de": [
+    "die zweite Zeilen-ID",
+    "die Faktor-ID und ihre Basis"
+   ],
+   "arithmetic_en": "(1,850,000 + 240,000) kWh(Hs) x 0.18 = 376.2 t",
+   "arithmetic_de": "(1.850.000 + 240.000) kWh(Hs) x 0,18 = 376,2 t",
+   "slip_en": "0.20 (the Hi factor) gives 418.0 t. Check page 2 of the gas bill: Brennwert (Hs).",
+   "slip_de": "0,20 (Hi-Faktor) ergibt 418,0 t. Seite 2 der Gasrechnung prüfen: Brennwert (Hs).",
+   "slip_key": "wrong_s1_gas",
+   "alt_en": "Converting to Hi first (2,090,000 / 1.11 = 1,882,883 kWh(Hi) x 0.20) gives 376.6 t. That route is also right; the 0.4 t difference is the rounding of the teaching value 0.18.",
+   "alt_de": "Wer zuerst auf Hi umrechnet (2.090.000 / 1,11 = 1.882.883 kWh(Hi) x 0,20), kommt auf 376,6 t. Auch dieser Weg ist richtig; die 0,4 t Unterschied sind die Rundung des Lehrwerts 0,18.",
+   "alt_key": "gas_hi_route_t"
+  },
+  {
+   "n": 3,
+   "mode": "alone",
+   "figure_key": "drv_lb_grid_t",
+   "rows": [
+    "E-WN-01 to E-WN-11",
+    "E-WS-01",
+    "E-LO-Q1 to E-LO-Q4"
+   ],
+   "factor": "F-EL-LB-2025 and F-EL-LB-2024",
+   "arithmetic_en": "3,610,000 kWh x (0.40 - 0.42) = -72,200 kg = -72.2 t",
+   "arithmetic_de": "3.610.000 kWh x (0,40 - 0,42) = -72.200 kg = -72,2 t",
+   "slip_en": "Using 2024 kWh (3,650,000) gives -73.0 t. The factor effect uses 2025 consumption.",
+   "slip_de": "Mit den kWh von 2024 (3.650.000) kommen -73,0 t heraus. Der Faktoreffekt rechnet mit dem Verbrauch 2025.",
+   "slip_key": "trace_slip_grid_t"
+  }
+ ],
+ "rawFolder": "rohdaten_2025",
+ "documents": [
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-01_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-01",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-01",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.01.2025 bis 31.01.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 210.000 kWh | 0,2150 €/kWh | 45.150,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 45.195,00 € |",
+    "| USt 19 % | | | 8.587,05 € |",
+    "| Rechnungsbetrag | | | 53.782,05 € |",
+    "",
+    "Verbrauch 210.000 kWh",
+    "Abschlag ab dem nächsten Monat: 53.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-02_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-02",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-02",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.02.2025 bis 28.02.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 195.000 kWh | 0,2150 €/kWh | 41.925,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 41.970,00 € |",
+    "| USt 19 % | | | 7.974,30 € |",
+    "| Rechnungsbetrag | | | 49.944,30 € |",
+    "",
+    "Verbrauch 195.000 kWh",
+    "Abschlag ab dem nächsten Monat: 49.900,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-03_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-03",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-03",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.03.2025 bis 31.03.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 205.000 kWh | 0,2150 €/kWh | 44.075,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 44.120,00 € |",
+    "| USt 19 % | | | 8.382,80 € |",
+    "| Rechnungsbetrag | | | 52.502,80 € |",
+    "",
+    "Verbrauch 205.000 kWh",
+    "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-04_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-04",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-04",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.04.2025 bis 30.04.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 190.000 kWh | 0,2150 €/kWh | 40.850,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 40.895,00 € |",
+    "| USt 19 % | | | 7.770,05 € |",
+    "| Rechnungsbetrag | | | 48.665,05 € |",
+    "",
+    "Verbrauch 190.000 kWh",
+    "Abschlag ab dem nächsten Monat: 48.700,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-05_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-05",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-05",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.05.2025 bis 31.05.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 185.000 kWh | 0,2150 €/kWh | 39.775,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 39.820,00 € |",
+    "| USt 19 % | | | 7.565,80 € |",
+    "| Rechnungsbetrag | | | 47.385,80 € |",
+    "",
+    "Verbrauch 185.000 kWh",
+    "Abschlag ab dem nächsten Monat: 47.400,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-06_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-06",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-06",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.06.2025 bis 30.06.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 180.000 kWh | 0,2150 €/kWh | 38.700,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 38.745,00 € |",
+    "| USt 19 % | | | 7.361,55 € |",
+    "| Rechnungsbetrag | | | 46.106,55 € |",
+    "",
+    "Verbrauch 180.000 kWh",
+    "Abschlag ab dem nächsten Monat: 46.100,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-07_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-07",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-07",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.07.2025 bis 31.07.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 175.000 kWh | 0,2150 €/kWh | 37.625,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 37.670,00 € |",
+    "| USt 19 % | | | 7.157,30 € |",
+    "| Rechnungsbetrag | | | 44.827,30 € |",
+    "",
+    "Verbrauch 175.000 kWh",
+    "Abschlag ab dem nächsten Monat: 44.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-08_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-08",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-08",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.08.2025 bis 31.08.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 120.000 kWh | 0,2150 €/kWh | 25.800,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 25.845,00 € |",
+    "| USt 19 % | | | 4.910,55 € |",
+    "| Rechnungsbetrag | | | 30.755,55 € |",
+    "",
+    "Verbrauch 120.000 kWh",
+    "Abschlag ab dem nächsten Monat: 30.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": "real-dip",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-09_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-09",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-09",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.09.2025 bis 30.09.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 190.000 kWh | 0,2150 €/kWh | 40.850,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 40.895,00 € |",
+    "| USt 19 % | | | 7.770,05 € |",
+    "| Rechnungsbetrag | | | 48.665,05 € |",
+    "",
+    "Verbrauch 190.000 kWh",
+    "Abschlag ab dem nächsten Monat: 48.700,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/2025-11-12_strom_wn.md",
+   "lines": [
+    "# Stromrechnung 4711-11",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-11",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungszeitraum: 01.11.2025 bis 31.12.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 410.000 kWh | 0,2150 €/kWh | 88.150,00 € |",
+    "| Grundpreis | 2 Monate | 45,00 € | 90,00 € |",
+    "| Summe netto | | | 88.240,00 € |",
+    "| USt 19 % | | | 16.765,60 € |",
+    "| Rechnungsbetrag | | | 105.005,60 € |",
+    "",
+    "Verbrauch 410.000 kWh",
+    "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": "two-month",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/scan_rechnung_maerz.md",
+   "lines": [
+    "WG: Rechnung März (weitergeleitet vom Einkauf, erneut gescannt)",
+    "",
+    "# Stromrechnung 4711-03",
+    "",
+    "Lindmark Enerqie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord,",
+    "Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Kundennummer: 55-0192",
+    "Rechnungsnummer: 4711-03",
+    "Zählpunkt: DE0005678900WN01",
+    "Abrechnungs zeitraum: 01.03.2025 bis 31.03.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 205.000 kWh | 0,2150 €/kWh | 44.075,00 € |",
+    "| Grundpreis | 1 Monat | 45,00 € | 45,00 € |",
+    "| Summe netto | | | 44.120,00 € |",
+    "| USt 19 % | | | 8.382,80 € |",
+    "| Rechnungsbetrag | | | 52.502,80 € |",
+    "",
+    "Verbrauch 205.000 kWh",
+    "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": "T1",
+   "note_en": "Same invoice number 4711-03; OCR noise in supplier name and a stray line break, invoice number clean."
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/strom/jahresrechnung_tb_2025.md",
+   "lines": [
+    "# Stromrechnung TB-2025-12",
+    "",
+    "Lindmark Energie GmbH · Vertrieb Gewerbekunden · Postfach 00 00 · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Talbrück Beschichtung GmbH",
+    "Halle 3, Werkstraße 12",
+    "z. Hd. Einkauf Kellbrunn Präzisionsteile GmbH (Rechnungsprüfung laut Dienstleistungsvertrag)",
+    "",
+    "Kundennummer: 55-0388",
+    "Rechnungsnummer: TB-2025-12",
+    "Zählpunkt: DE0005678900TB07",
+    "Abrechnungszeitraum: 01.01.2025 bis 31.12.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Verbrauch (Arbeitspreis) | 1.000.000 kWh | 0,2150 €/kWh | 215.000,00 € |",
+    "| Grundpreis | 12 Monate | 45,00 € | 540,00 € |",
+    "| Summe netto | | | 215.540,00 € |",
+    "| USt 19 % | | | 40.952,60 € |",
+    "| Rechnungsbetrag | | | 256.492,60 € |",
+    "",
+    "Verbrauch 1.000.000 kWh",
+    "Abschlag ab dem nächsten Monat: 21.400,00 € (Vorauszahlung, keine Verbrauchsmenge)",
+    "",
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+   ],
+   "trap": "T3",
+   "note_en": "Contract party, customer number and meter belong to the JV; Kellbrunn purchasing only checks the invoice."
+  },
+  {
+   "path": "rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md",
+   "lines": [
+    "# Jahresübersicht Strom 2025",
+    "",
+    "Lindmark Energie GmbH · Tarif Ökostrom Plus · (erfundener Lieferant)",
+    "",
+    "Kunde: Kellbrunn Präzisionsteile GmbH, Werk Süd",
+    "Zählpunkt: DE0005678900WS01",
+    "Zeitraum: 01.01.2025 bis 31.12.2025",
+    "",
+    "Verbrauch 2025: 1.240 MWh",
+    "Vorjahr: 1.250 MWh",
+    "",
+    "Ihr Tarif Ökostrom Plus: Für Ihre Liefermenge wurden Herkunftsnachweise entwertet (Bestätigung liegt bei)."
+   ],
+   "trap": "T4",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_sued/hkn_bestaetigung_2025.md",
+   "lines": [
+    "# Bestätigung über entwertete Herkunftsnachweise 2025",
+    "",
+    "Lindmark Energie GmbH · (erfundener Lieferant)",
+    "",
+    "Herkunftsnachweise über 1.240 MWh, Erzeugungsjahr 2025, Wasserkraft,",
+    "entwertet im Herkunftsnachweisregister für die Liefermenge an",
+    "Kellbrunn Präzisionsteile GmbH, Lieferstelle Werk Süd,",
+    "Zählpunkt DE0005678900WS01.",
+    "",
+    "Andere Lieferstellen sind von dieser Bestätigung nicht erfasst."
+   ],
+   "trap": "scope2",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_nord/gas/gas_jahresrechnung_wn_2025.md",
+   "lines": [
+    "# Gas-Jahresrechnung G-2025-0417",
+    "",
+    "Lindmark Energie GmbH · Erdgas Gewerbe · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Nord, Werkstraße 12",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Abrechnungszeitraum: 01.01.2025 bis 31.12.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Erdgas, Energiemenge | 1.850.000 kWh | 0,0890 €/kWh | 164.650,00 € |",
+    "| USt 19 % | | | 31.283,50 € |",
+    "| Rechnungsbetrag | | | 195.933,50 € |",
+    "",
+    "Energiemenge 1.850.000 kWh",
+    "",
+    "--- Seite 2 ---",
+    "",
+    "Erläuterungen zur Abrechnung",
+    "Die Energiemenge wurde aus dem Volumen ermittelt: 169.817 m³ × Zustandszahl 0,9600 × Brennwert (Hs) 11,348 kWh/m³ = 1.849.999,98 kWh, kaufmännisch gerundet 1.850.000 kWh.",
+    "Abrechnung nach Brennwert (Hs) gemäß DVGW-Arbeitsblatt G 685."
+   ],
+   "trap": "T5",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/werk_sued/gas_jahresrechnung_ws_2025.md",
+   "lines": [
+    "# Gas-Jahresrechnung G-2025-0418",
+    "",
+    "Lindmark Energie GmbH · Erdgas Gewerbe · (erfundener Lieferant)",
+    "",
+    "Rechnungsempfänger:",
+    "Kellbrunn Präzisionsteile GmbH",
+    "Werk Süd, Talweg 4",
+    "(erfundener Standort in Hessen)",
+    "",
+    "Abrechnungszeitraum: 01.01.2025 bis 31.12.2025",
+    "",
+    "| Position | Menge | Preis | Betrag |",
+    "|---|---|---|---|",
+    "| Erdgas, Energiemenge | 240.000 kWh | 0,0890 €/kWh | 21.360,00 € |",
+    "| USt 19 % | | | 4.058,40 € |",
+    "| Rechnungsbetrag | | | 25.418,40 € |",
+    "",
+    "Energiemenge 240.000 kWh",
+    "",
+    "--- Seite 2 ---",
+    "",
+    "Erläuterungen zur Abrechnung",
+    "Die Energiemenge wurde aus dem Volumen ermittelt: 22.077 m³ × Zustandszahl 0,9600 × Brennwert (Hs) 11,324 kWh/m³ = 239.999,95 kWh, kaufmännisch gerundet 240.000 kWh.",
+    "Abrechnung nach Brennwert (Hs) gemäß DVGW-Arbeitsblatt G 685."
+   ],
+   "trap": "T5",
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q1_2025.md",
+   "lines": [
+    "# Nebenkostenabrechnung Strom Q1 2025",
+    "",
+    "Grundstücksverwaltung Lager Ost GbR · (erfundene Vermieterin)",
+    "",
+    "Mieterin: Kellbrunn Präzisionsteile GmbH, Lager Ost",
+    "Zeitraum: 01.01.2025 bis 31.03.2025",
+    "",
+    "Unterzähler LO-UZ-03: 30.000 kWh",
+    "Tarif: Graustrom (Vertrag der Vermieterin)",
+    "Umlage: 6.450,00 € netto"
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q2_2025.md",
+   "lines": [
+    "# Nebenkostenabrechnung Strom Q2 2025",
+    "",
+    "Grundstücksverwaltung Lager Ost GbR · (erfundene Vermieterin)",
+    "",
+    "Mieterin: Kellbrunn Präzisionsteile GmbH, Lager Ost",
+    "Zeitraum: 01.04.2025 bis 30.06.2025",
+    "",
+    "Unterzähler LO-UZ-03: 25.000 kWh",
+    "Tarif: Graustrom (Vertrag der Vermieterin)",
+    "Umlage: 5.375,00 € netto"
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q3_2025.md",
+   "lines": [
+    "# Nebenkostenabrechnung Strom Q3 2025",
+    "",
+    "Grundstücksverwaltung Lager Ost GbR · (erfundene Vermieterin)",
+    "",
+    "Mieterin: Kellbrunn Präzisionsteile GmbH, Lager Ost",
+    "Zeitraum: 01.07.2025 bis 30.09.2025",
+    "",
+    "Unterzähler LO-UZ-03: 25.000 kWh",
+    "Tarif: Graustrom (Vertrag der Vermieterin)",
+    "Umlage: 5.375,00 € netto"
+   ],
+   "trap": null,
+   "note_en": ""
+  },
+  {
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q4_2025.md",
+   "lines": [
+    "# Nebenkostenabrechnung Strom Q4 2025",
+    "",
+    "Grundstücksverwaltung Lager Ost GbR · (erfundene Vermieterin)",
+    "",
+    "Mieterin: Kellbrunn Präzisionsteile GmbH, Lager Ost",
+    "Zeitraum: 01.10.2025 bis 31.12.2025",
+    "",
+    "Unterzähler LO-UZ-03: 30.000 kWh",
+    "Tarif: Graustrom (Vertrag der Vermieterin)",
+    "Umlage: 6.450,00 € netto"
+   ],
+   "trap": null,
+   "note_en": ""
+  }
+ ],
+ "runs": {
+  "status": "not_captured",
+  "plannedConditions": [
+   "A: raw folder",
+   "B: ledger + coverage grid + rules",
+   "C (optional): raw folder without the factor file"
+  ],
+  "runsPerCondition": 5,
+  "scoredItems": [
+   "Scope 1",
+   "Scope 2 LB",
+   "Scope 2 MB",
+   "change vs 2024 LB",
+   "flag T1",
+   "flag T2",
+   "flag T3",
+   "flag T4",
+   "flag T5",
+   "flag T6",
+   "method T7",
+   "August flagged not corrected",
+   "asks about other Scope 1 sources"
+  ],
+  "table": []
+ },
+ "kitRules": {
+  "monthChangeFlagPct": 25,
+  "restatementThresholdPct": 5,
+  "mwhToKwh": 1000,
+  "traceExerciseMinutes": 4
+ }
+}

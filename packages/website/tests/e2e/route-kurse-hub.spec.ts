@@ -8,7 +8,7 @@ import {
 /**
  * /kurse hub smoke + interaction (regression coverage). The unified course hub:
  * four ordered foundation rows with cross-course progress indicators,
- * a learning-goal decision, and one explicit next proof. Assertions target roles
+ * a learning-goal decision, and one recommended next course. Assertions target roles
  * and stable test IDs so a wording refresh stays green while a real regression
  * (missing rows, dead proof CTA, broken progress bars, mobile overflow) fails.
  *
@@ -40,7 +40,7 @@ test.describe("/kurse hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText("KI verstehen");
+    await expect(h1).toHaveText("Kostenlose KI-Kurse für den Arbeitsalltag.");
 
     const noise = meaningfulBrowserErrors(errors);
     expect(
@@ -101,7 +101,7 @@ test.describe("/kurse hub", () => {
       proof.locator("[data-open-course-alternative]"),
     ).toHaveCount(0);
     const startCta = proof.getByRole("link", {
-      name: /^Nachweis beginnen\s*:\s*Claude Course$/,
+      name: /^Kurs starten\s*:\s*Claude Course$/,
     });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", CLAUDE_START);
@@ -134,14 +134,14 @@ test.describe("/kurse hub", () => {
 
     const decisions = [
       {
-        label: "Sicher starten",
+        label: "Ich nutze KI im Job",
         goal: "start",
         course: "KI-Führerschein",
         href: "/ki-fuehrerschein",
         alternative: { course: "Claude Course", href: CLAUDE_START },
       },
       {
-        label: "Folgen beurteilen",
+        label: "Ich bewerte KI-Risiken",
         goal: "judge",
         course: "KI und Gesellschaft",
         href: "/ki-und-gesellschaft",
@@ -151,14 +151,14 @@ test.describe("/kurse hub", () => {
         },
       },
       {
-        label: "Mit KI bauen",
+        label: "Ich baue mit KI",
         goal: "build",
         course: "AI-Native Arbeitskurs",
         href: "/ai-native",
         alternative: { course: "Claude Course", href: CLAUDE_START },
       },
       {
-        label: "Daten entscheiden",
+        label: "Ich arbeite mit Daten",
         goal: "data",
         course: "Data Engineering Fundamentals",
         href: "/kurse/open-source/data-engineering-fundamentals/home",
@@ -182,7 +182,7 @@ test.describe("/kurse hub", () => {
       const primary = proof.locator("a:not([data-open-course-alternative])");
       const actionLabel = alternative
         ? "Hier nicht verfügbar · Kursübersicht"
-        : "Nachweis beginnen";
+        : "Kurs starten";
       await expect(primary).toHaveCount(1);
       await expect(primary).toBeVisible();
       await expect(primary).toHaveAttribute("href", href);
@@ -241,6 +241,13 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
     await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
+    // Workshops are linked once as the practical companion.
+    await expect(
+      page.locator("[data-kurse-workshops]").getByRole("link"),
+    ).toHaveAttribute(
+      "href",
+      route.startsWith("/en/") ? "/en/workshops" : "/workshops",
+    );
     // The ledger brief's zero-image rule, restored. Cover thumbnails were
     // tried and removed: the artwork crops to mush at the size a dense row
     // allows, and the imported courses carry only site screenshots.

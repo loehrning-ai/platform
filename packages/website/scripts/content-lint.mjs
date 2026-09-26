@@ -597,6 +597,46 @@ function checkEmDash() {
     const lines = readFileSync(file, "utf-8").split("\n");
     checkEmDashInTsx(file, lines);
   }
+
+  checkWorkshopHtmlDashes();
+}
+
+// Static workshop materials (public/workshops/<slug>/**.html) are checked on
+// their visible prose only: attribute values, scripts, styles and single-dash
+// table placeholders never fire. These are WARNINGS, never errors, so decks
+// and handouts that predate the rule do not fail the lint.
+export function findWorkshopHtmlDashes(root = ROOT) {
+  const hits = [];
+  const files = collectLearnerFacingFiles(root).filter((relFile) =>
+    relFile.startsWith("public/workshops/"),
+  );
+  for (const relFile of files) {
+    const unit = extractProseUnits(relFile, readFileSync(join(root, relFile), "utf-8"));
+    for (const lesson of unit.lessons) {
+      for (const segment of lesson.segments) {
+        if (segment.text.includes(EM_DASH)) {
+          hits.push({ relFile, line: segment.line, rule: "EM-DASH" });
+        }
+        if (segment.text.includes(EN_DASH) && !/\d\s?–\s?\d/.test(segment.text)) {
+          hits.push({ relFile, line: segment.line, rule: "EN-DASH" });
+        }
+      }
+    }
+  }
+  return hits;
+}
+
+function checkWorkshopHtmlDashes() {
+  for (const hit of findWorkshopHtmlDashes()) {
+    warn(
+      hit.relFile,
+      hit.line,
+      hit.rule,
+      hit.rule === "EM-DASH"
+        ? "Em-dash (U+2014) in workshop page prose: use a comma, parentheses or two sentences"
+        : "En-dash (U+2013) in workshop page prose: use a hyphen for ranges or restructure",
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------

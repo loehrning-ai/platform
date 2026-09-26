@@ -9,9 +9,11 @@ import {
   type DemoOpenSource,
 } from "@/lib/analytics";
 import { EngagementTracker } from "./engagement-tracker";
+import { EvidenceBadge } from "./evidence-badge";
 import { DemoLocaleProvider } from "./demo-locale";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import type { Locale } from "@/lib/i18n/locale";
+import { Pictogram } from "@/components/werk";
 
 const DEMO_OPEN_SOURCE_SET = new Set<string>(DEMO_OPEN_SOURCES);
 
@@ -24,7 +26,7 @@ function parseDemoOpenSource(
 }
 
 /**
- * DemoShell — hosts the interactive demo component inside detail page,
+ * DemoShell hosts the interactive demo component inside detail page,
  * and derives the optional analytics source in the browser. Keeping query-string
  * access out of the server page preserves static metadata in the initial HTML.
  */
@@ -50,31 +52,36 @@ export function DemoShell({
     trackDemoOpen(demo.slug, origin);
   }, [demo.slug]);
 
+  // Light engines sit on a raised Bogen sheet with a 1px ink frame. A dark
+  // engine (a terminal, a node canvas) scopes the graphit tokens to its own
+  // frame only; the page band around it stays paper.
   return (
     <div
-      className={`min-w-0 overflow-hidden border border-foreground/60 ${demo.dark ? "dark-section border-border" : "border-border bg-background"}`}
+      className={
+        demo.dark
+          ? "dark-section min-w-0 overflow-hidden border border-border"
+          : "min-w-0 overflow-hidden border border-foreground bg-card"
+      }
       data-demo-shell
     >
-      <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-current/20 px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em]">
-        <span
-          className={`inline-flex items-center gap-2 ${demo.dark ? "text-kupfer-light" : "text-brand-orange"}`}
-        >
-          <span
-            className="h-2 w-2 border border-current bg-current"
-            aria-hidden="true"
-          />
+      {/* One header row: the instrument label on the left, the evidence
+          line (mode, actions, "Was heißt das?") on the right. When opened,
+          the explanation wraps onto its own full-width row below. */}
+      <div
+        className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 border-b border-hairline px-4"
+        data-demo-shell-header
+      >
+        <span className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground">
+          <Pictogram name="demo" className="size-4" />
           {shellCopy.instrument}
         </span>
+        <EvidenceBadge
+          evidenceMode={demo.evidenceMode}
+          externalActionMode={demo.externalActionMode}
+          locale={locale}
+        />
       </div>
       <div className="relative p-2 sm:p-3 lg:p-4">
-        <div
-          className="pointer-events-none absolute right-3 top-3 h-5 w-[2px] bg-brand-orange/70"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute right-3 top-3 h-[2px] w-5 bg-brand-orange/70"
-          aria-hidden="true"
-        />
         <DemoLocaleProvider locale={locale}>
           {Comp ? (
             <Comp />
@@ -82,7 +89,7 @@ export function DemoShell({
             <div
               role="status"
               aria-live="polite"
-              className="py-8 text-center text-sm text-muted-foreground"
+              className="py-8 text-center text-body text-muted-foreground"
             >
               {shellCopy.loading}
             </div>

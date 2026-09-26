@@ -14,6 +14,8 @@ const ZIP: WorkshopMaterial = {
   kind: "zip",
   language: "en",
   description: "Everything in one archive.",
+  role: "kit",
+  phase: "before",
 };
 
 const CSV: WorkshopMaterial = {
@@ -22,6 +24,8 @@ const CSV: WorkshopMaterial = {
   kind: "csv",
   language: "en",
   description: "The practice data.",
+  role: "data",
+  phase: "after",
 };
 
 const HTML: WorkshopMaterial = {
@@ -30,6 +34,8 @@ const HTML: WorkshopMaterial = {
   kind: "html",
   language: "de",
   description: "Opens in the browser.",
+  role: "deck",
+  phase: "during",
 };
 
 /** Keep jsdom from attempting a navigation when a link is clicked. */

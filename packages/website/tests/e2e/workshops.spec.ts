@@ -5,9 +5,10 @@ test.describe("workshop self-study journey", () => {
     page,
   }) => {
     await page.goto("/workshops");
+    // Each hub row has exactly one link into its workshop page.
     const workshop = page.getByRole("link", {
-      name: /Geschäftsberichte mit KI lesen/i,
-    }).first();
+      name: "Workshop ansehen: Geschäftsberichte mit KI lesen",
+    });
     await expect(workshop).toBeVisible();
     await workshop.click();
     await expect(page).toHaveURL(
@@ -17,6 +18,16 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
+    // Detail page (design-direction 7.2): the cover starts the primary
+    // material, the agenda is a Route, and nothing is hidden in accordions.
+    const cover = page.locator("[data-cover-band]");
+    await expect(cover.getByRole("link", { name: "Deck öffnen" })).toHaveAttribute(
+      "href",
+      "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
+    );
+    await expect(page.getByRole("list", { name: "Ablauf" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
+    await expect(page.locator("main details")).toHaveCount(0);
   });
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {

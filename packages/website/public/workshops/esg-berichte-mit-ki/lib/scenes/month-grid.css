@@ -1,0 +1,375 @@
+/* month-grid: the site × month grid. Press 1 the empty grid, press 3 the documents as delivered
+   (hatch = a bill in the folder, 2 = counted twice, dashed = no bill, a bracket under the months one
+   bill covers), press 4 the two March bills, press 5 the October meter reading (slate dashed), press 6
+   the net line. One Mennige mark per press: the 2 on press 3, the invoice numbers on press 4, the
+   October meter cell on press 5, the net line on press 6; earlier marks fall back to ink. */
+
+#month-grid > .mg-wrap {
+  position: absolute;
+  top: 232px;
+  left: var(--margin-x);
+}
+
+#month-grid .mg {
+  display: block;
+  overflow: visible;
+}
+
+#month-grid .mg-month {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#month-grid .mg-row {
+  font-family: var(--sans);
+  font-size: 24px;
+}
+
+#month-grid .mg-row__site {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+#month-grid .mg-row__carrier {
+  fill: var(--slate);
+}
+
+#month-grid .mg-cell {
+  fill: var(--papier);
+  stroke: var(--leinen);
+  stroke-width: 2;
+}
+
+#month-grid .mg-doc-bg {
+  fill: var(--papier);
+}
+
+#month-grid .mg-doc {
+  fill: url(#story-hatch);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+#month-grid .mg-doc--span {
+  stroke-width: 3;
+}
+
+/* Tags sit on a paper plate cut out of the hatch. */
+#month-grid .mg-tag-bg {
+  fill: var(--papier);
+}
+
+#month-grid .mg-tag {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+#month-grid .mg-span {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#month-grid .mg-missing {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+}
+
+#month-grid .mg-badge {
+  fill: var(--ink);
+}
+
+#month-grid[data-step-current="3"] .mg-badge {
+  fill: var(--mennige);
+}
+
+#month-grid .mg-badge__t {
+  fill: var(--papier);
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#month-grid .mg-dip {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#month-grid .mg-meter rect {
+  fill: var(--beton);
+  stroke: var(--slate);
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+}
+
+#month-grid .mg-meter text {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+#month-grid[data-step-current="5"] .mg-meter rect {
+  stroke: var(--mennige);
+}
+
+/* The Talbrück bill: in the folder, but on no row of the grid. */
+#month-grid > .mg-extra {
+  position: absolute;
+  top: 588px;
+  left: var(--margin-x);
+  display: flex;
+  width: 1246px;
+  height: 48px;
+  align-items: center;
+}
+
+#month-grid .mg-extra__label {
+  flex: none;
+  width: 330px;
+  color: var(--slate);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+#month-grid .mg-extra__bar {
+  display: flex;
+  flex: 1;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 4px;
+  border: 3px dashed var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#month-grid .mg-extra__bar span {
+  padding: 0 12px;
+  background: var(--papier);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Right column: the file count, the legend and the August question. */
+#month-grid > .mg-side {
+  position: absolute;
+  top: 232px;
+  right: var(--margin-x);
+  display: grid;
+  width: 420px;
+  gap: 22px;
+}
+
+#month-grid .mg-files {
+  justify-self: start;
+  font-size: var(--t-body);
+}
+
+#month-grid .mg-legend {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 22px;
+}
+
+#month-grid .mg-legend li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#month-grid .mg-key {
+  display: inline-grid;
+  flex: none;
+  width: 44px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  background: var(--papier);
+}
+
+#month-grid .mg-key--doc,
+#month-grid .mg-key__cell,
+#month-grid .mg-key--other {
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+/* One bill, several months: two month cells under one ink bracket, as the grid draws it. */
+#month-grid .mg-key--span {
+  position: relative;
+  display: flex;
+  width: 76px;
+  height: 30px;
+  align-items: flex-start;
+  gap: 4px;
+  border: 0;
+  background: none;
+}
+
+#month-grid .mg-key__cell {
+  width: 36px;
+  height: 20px;
+  border: 2px solid var(--ink);
+  background-color: var(--papier);
+}
+
+#month-grid .mg-key--span::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 7px;
+  border: 3px solid var(--ink);
+  border-top: 0;
+}
+
+/* Another company's bill: the Talbrück bar's dashed outline over the hatch. */
+#month-grid .mg-key--other {
+  border: 3px dashed var(--ink);
+  background-color: var(--papier);
+}
+
+#month-grid .mg-key--dup {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--papier);
+  font-weight: 700;
+}
+
+#month-grid .mg-key--missing {
+  border: 3px dashed var(--ink);
+}
+
+#month-grid .mg-key--meter {
+  border: 3px dashed var(--slate);
+  background: var(--beton);
+}
+
+#month-grid .mg-aug {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 14px 18px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+#month-grid .mg-aug b {
+  font-size: var(--t-body);
+}
+
+/* Press 4: the two March bills. */
+#month-grid > .mg-march {
+  position: absolute;
+  top: 652px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1000px;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+#month-grid .doc--compact .doc__sheet {
+  padding: 24px 20px 14px;
+  line-height: 1.28;
+}
+
+#month-grid .doc--compact .doc__title {
+  font-size: 24px;
+}
+
+/* The invoice numbers are the press-4 mark; afterwards they stay framed, in ink. */
+#month-grid[data-step-current="5"] .mg-march .doc__mark,
+#month-grid[data-step-current="6"] .mg-march .doc__mark {
+  border-color: var(--ink);
+}
+
+/* Press 5: the meter readings and the subtraction. */
+#month-grid > .mg-meter-rows {
+  position: absolute;
+  top: 652px;
+  right: var(--margin-x);
+  display: grid;
+  width: 680px;
+  gap: 6px;
+}
+
+#month-grid .mg-meter-rows .doc__file {
+  margin: 0;
+}
+
+#month-grid .mg-csv {
+  display: grid;
+  padding: 6px 20px;
+  border: 3px dashed var(--slate);
+  background: var(--beton);
+  font-family: var(--mono);
+  font-size: 22px;
+}
+
+#month-grid .mg-csv p {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+
+#month-grid .mg-sub {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#month-grid > .mg-net {
+  position: absolute;
+  top: 818px;
+  right: var(--margin-x);
+  display: grid;
+  width: 680px;
+  gap: 0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: var(--t-small);
+  line-height: 1.3;
+}
+
+#month-grid .mg-net__row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  font-weight: 500;
+  font-feature-settings: "tnum" 1;
+}
+
+#month-grid .mg-net__row--sum {
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 2px solid var(--ink);
+  font-weight: 700;
+}
+
+#month-grid .mg-net__note {
+  margin: 2px 0 0;
+  color: var(--slate);
+  font-size: var(--t-chrome);
+  font-weight: 500;
+}
+
+/* Once the August question is answered it leaves the column, so the legend ends above the meter rows. */
+#month-grid .mg-aug.is-step-hidden {
+  display: none;
+}

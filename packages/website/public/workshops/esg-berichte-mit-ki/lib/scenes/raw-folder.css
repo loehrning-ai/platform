@@ -1,0 +1,101 @@
+/* raw-folder: the folder tree on the left (collapsed on entry, counts on press 1, an ink box around
+   the 12 on press 2), two paper cards on the right rendered from the dataset's documents. */
+
+#raw-folder > .rf-tree {
+  position: absolute;
+  top: 240px;
+  left: var(--margin-x);
+  width: 800px;
+}
+
+#raw-folder .rf-root,
+#raw-folder .rf-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.25;
+}
+
+#raw-folder .rf-root {
+  height: 56px;
+  font-weight: 600;
+}
+
+#raw-folder .rf-list {
+  display: grid;
+  margin: 0 0 0 20px;
+  padding: 0 0 0 28px;
+  border-left: 2px solid var(--leinen);
+  list-style: none;
+}
+
+#raw-folder .rf-row {
+  min-height: 56px;
+}
+
+#raw-folder .rf-row--sub {
+  padding-left: 52px;
+}
+
+/* Collapsed on entry: the three Werk Nord entries take no space until the folders open. */
+#raw-folder[data-step-current="0"] .rf-row--sub {
+  display: none;
+}
+
+#raw-folder .rf-count {
+  position: relative;
+  display: inline-grid;
+  min-width: 48px;
+  height: 40px;
+  padding: 0 10px;
+  place-items: center;
+  border: 2px solid var(--ink);
+  background: var(--papier);
+  font-weight: 700;
+  font-feature-settings: "tnum" 1;
+}
+
+#raw-folder .rf-box {
+  position: absolute;
+  inset: -10px;
+  border: 4px solid var(--ink);
+}
+
+#raw-folder .rf-desc {
+  color: var(--slate);
+}
+
+#raw-folder .rf-also {
+  display: grid;
+  gap: 4px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 2px solid var(--leinen);
+}
+
+#raw-folder .rf-also__lead {
+  margin: 0 0 8px;
+  font-size: var(--t-body);
+}
+
+#raw-folder .rf-also .rf-row {
+  min-height: 44px;
+  color: var(--slate);
+}
+
+#raw-folder > .rf-docs {
+  position: absolute;
+  top: 232px;
+  right: var(--margin-x);
+  display: grid;
+  width: 920px;
+  grid-template-columns: 430px 466px;
+  align-items: start;
+  gap: 24px;
+}
+
+#raw-folder .rf-docs .doc__sheet {
+  padding: 28px 22px 18px;
+}

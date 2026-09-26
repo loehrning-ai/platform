@@ -72,7 +72,11 @@ export default function OutboundWorkflowDemo() {
 function OutboundWorkflowDemoGerman() {
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
+  // Final state first: the reviewed draft renders on load. "Neu abspielen"
+  // is the only way into a replay, which pauses while off-screen.
+  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(4);
+  const [replaying, setReplaying] = useState(false);
+  const [runId, setRunId] = useState(0);
   const [showChecklist, setShowChecklist] = useState(false);
   const [leadIndex, setLeadIndex] = useState(0);
   const [minScore, setMinScore] = useState(70);
@@ -80,8 +84,10 @@ function OutboundWorkflowDemoGerman() {
   useEffect(() => {
     if (reduced) {
       setStage(4);
+      setReplaying(false);
       return;
     }
+    if (!replaying) return;
     if (!visible) {
       setStage(0);
       return;
@@ -91,10 +97,19 @@ function OutboundWorkflowDemoGerman() {
       setTimeout(() => setStage(1), 400),
       setTimeout(() => setStage(2), 1100),
       setTimeout(() => setStage(3), 2000),
-      setTimeout(() => setStage(4), 3000),
+      setTimeout(() => {
+        setStage(4);
+        setReplaying(false);
+      }, 3000),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [visible, reduced]);
+  }, [visible, reduced, replaying, runId]);
+
+  const replay = () => {
+    setShowChecklist(false);
+    setReplaying(true);
+    setRunId((n) => n + 1);
+  };
 
   const lead = LEADS[leadIndex];
   const email = lead.address;
@@ -120,17 +135,9 @@ function OutboundWorkflowDemoGerman() {
       }}
     >
       <style>{`
-        @keyframes outbound-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.55); }
-          50% { box-shadow: 0 0 0 6px rgba(249,115,22,0); }
-        }
         @keyframes outbound-scan {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(200%); }
-        }
-        @keyframes outbound-caret {
-          0%, 49% { opacity: 1; }
-          50%, 100% { opacity: 0; }
         }
         [data-demo-id="outbound-workflow"] [data-outbound-pipeline],
         [data-demo-id="outbound-workflow"] [data-outbound-body],
@@ -162,32 +169,38 @@ function OutboundWorkflowDemoGerman() {
           }
         }
       `}</style>
-      <div>
-        <div
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">Nachricht aus öffentlichen Signalen</h2>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <span
+          style={{ ...DEMO.label, color: DEMO.schiefer, fontVariantNumeric: "tabular-nums" }}
+        >
+          {`Schritt ${stage} / 4`}
+        </span>
+        <button
+          type="button"
+          onClick={replay}
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            minHeight: 44,
+            padding: "0 12px",
+            ...DEMO.label,
+            background: "transparent",
+            color: DEMO.ink,
+            border: `1px solid ${DEMO.ink}`,
+            cursor: "pointer",
           }}
         >
-          Signalbasierte Nachricht · Pipeline
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          Öffentliche Signale.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Begründet schreiben. Vor Versand prüfen.
-          </span>
-        </h2>
+          ↻ Neu abspielen
+        </button>
       </div>
 
       {/* Pipeline stages */}
@@ -224,27 +237,22 @@ function OutboundWorkflowDemoGerman() {
             <div
               key={n.label}
               style={{
-                background: current ? "var(--color-brand-orange)" : DEMO.kalk,
-                color: current ? DEMO.kalk : DEMO.ink,
-                borderTop: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-                borderRight: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-                borderBottom: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-                borderLeft: `3px solid var(--color-brand-orange)`,
+                // The current stage is the one Mennige mark; run stages get
+                // an ink edge, open ones a dashed edge. Flat, no lift.
+                background: current ? "var(--color-mennige)" : DEMO.kalk,
+                color: current ? "#f9f7f2" : DEMO.ink,
+                border: `1px ${active ? "solid" : "dashed"} ${current ? "var(--color-mennige)" : active ? DEMO.ink : DEMO.schiefer}`,
                 padding: "8px 10px",
                 transition: reduced
                   ? "none"
-                  : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out, transform 200ms ease-out",
-                transform: current ? "translate(-1px,-1px)" : "none",
-                boxShadow: active
-                  ? `3px 3px 0 0 var(--color-brand-orange)`
-                  : "3px 3px 0 0 transparent",
+                  : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out",
               }}
             >
               <div
                 style={{
                   fontSize: 12,
                   fontWeight: 700,
-                  letterSpacing: "-0.02em",
+                  letterSpacing: "-0.01em",
                 }}
               >
                 {n.label}
@@ -253,9 +261,8 @@ function OutboundWorkflowDemoGerman() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: current ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
+                  color: current ? "#f9f7f2" : DEMO.schiefer,
                   marginTop: 3,
-                  letterSpacing: "0.04em",
                 }}
               >
                 {n.sub}
@@ -278,16 +285,12 @@ function OutboundWorkflowDemoGerman() {
         <div
           style={{
             background: DEMO.kalk,
-            borderTop: `1px solid ${DEMO.ink}`,
-            borderRight: `1px solid ${DEMO.ink}`,
-            borderBottom: `1px solid ${DEMO.ink}`,
-            borderLeft: `3px solid var(--color-brand-orange)`,
+            border: `1px solid ${DEMO.ink}`,
             padding: "12px 14px",
             display: "flex",
             flexDirection: "column",
             gap: 10,
             minWidth: 0,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
           {/* Lead picker — switches which of the 3 fictional contacts is shown */}
@@ -311,10 +314,7 @@ function OutboundWorkflowDemoGerman() {
                     border: `1px solid ${DEMO.ink}`,
                     background: selected ? DEMO.ink : DEMO.kalk,
                     color: selected ? DEMO.kalk : DEMO.ink,
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: "0.04em",
+                    ...DEMO.label,
                     cursor: "pointer",
                   }}
                 >
@@ -327,18 +327,11 @@ function OutboundWorkflowDemoGerman() {
           {/* Fictional scenario banner */}
           <div
             style={{
-              padding: "5px 10px",
-              background: "rgba(249,115,22,0.12)",
-              border: "1px solid rgba(249,115,22,0.4)",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "var(--color-brand-orange)",
+              ...DEMO.label,
+              color: "var(--color-muted-foreground)",
             }}
           >
-            FIKTIVES SZENARIO · BEISPIELDATEN
+            Fiktives Szenario, Beispieldaten
           </div>
           <div
             style={{
@@ -351,34 +344,20 @@ function OutboundWorkflowDemoGerman() {
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "0.18em",
+                color: DEMO.ink,
                 fontWeight: 700,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
               }}
             >
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 6,
-                  height: 6,
-                  background: "var(--color-brand-orange)",
-                  borderRadius: "50%",
-                }}
-              />
-              LEAD #0412
+              Lead #0412
             </div>
             <div
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 color: DEMO.schiefer,
-                letterSpacing: "0.12em",
               }}
             >
-              CRM · ROW {leadIndex + 1}/{LEADS.length}
+              CRM · Zeile {leadIndex + 1}/{LEADS.length}
             </div>
           </div>
           <div
@@ -402,8 +381,7 @@ function OutboundWorkflowDemoGerman() {
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 fontWeight: 700,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "-0.02em",
+                color: DEMO.ink,
               }}
             >
               {lead.name
@@ -418,7 +396,7 @@ function OutboundWorkflowDemoGerman() {
                 style={{
                   fontSize: 14,
                   fontWeight: 700,
-                  letterSpacing: "-0.02em",
+                  letterSpacing: "-0.01em",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -451,14 +429,11 @@ function OutboundWorkflowDemoGerman() {
             <div>
               <div
                 style={{
+                  ...DEMO.label,
                   color: DEMO.schiefer,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  fontSize: 12,
                 }}
               >
-                Last Contact
+                Letzter Kontakt
               </div>
               <div
                 style={{
@@ -474,18 +449,15 @@ function OutboundWorkflowDemoGerman() {
             <div>
               <div
                 style={{
+                  ...DEMO.label,
                   color: DEMO.schiefer,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  fontSize: 12,
                 }}
               >
                 Intent-Score
               </div>
               <div
                 style={{
-                  color: "var(--color-brand-orange)",
+                  color: DEMO.ink,
                   marginTop: 1,
                   fontWeight: 700,
                   fontSize: 16,
@@ -522,20 +494,15 @@ function OutboundWorkflowDemoGerman() {
             >
               <span
                 style={{
+                  ...DEMO.label,
                   color: DEMO.schiefer,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  fontSize: 12,
                 }}
               >
                 Score-Schwelle
               </span>
               <span
                 style={{
-                  color: gated
-                    ? "var(--color-destructive)"
-                    : "var(--color-brand-orange)",
+                  color: gated ? "var(--color-destructive)" : DEMO.ink,
                   fontWeight: 700,
                   fontSize: 12,
                 }}
@@ -557,7 +524,7 @@ function OutboundWorkflowDemoGerman() {
               style={{
                 minHeight: 44,
                 width: "100%",
-                accentColor: "var(--color-brand-orange)",
+                accentColor: DEMO.ink,
               }}
             />
           </label>
@@ -565,10 +532,10 @@ function OutboundWorkflowDemoGerman() {
             style={{
               position: "relative",
               padding: "8px 10px",
-              background: stage >= 2 ? "rgba(249,115,22,0.10)" : DEMO.birke,
-              border: `1px ${stage >= 2 ? "solid" : "dashed"} var(--color-brand-orange)`,
+              background: DEMO.birke,
+              // Dashed while the scan is open, solid once the signal is in.
+              border: `1px ${stage >= 2 ? "solid" : "dashed"} ${DEMO.ink}`,
               overflow: "hidden",
-              transition: "background 300ms ease-out",
             }}
           >
             {stage === 1 && visible && !reduced && (
@@ -578,24 +545,20 @@ function OutboundWorkflowDemoGerman() {
                   position: "absolute",
                   inset: 0,
                   background:
-                    "linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.35) 50%, transparent 100%)",
-                  animation: "outbound-scan 1.1s ease-in-out infinite",
+                    "linear-gradient(90deg, transparent 0%, rgba(11,9,8,0.10) 50%, transparent 100%)",
+                  animation: "outbound-scan 700ms cubic-bezier(0.16,1,0.3,1) 1 both",
                   pointerEvents: "none",
                 }}
               />
             )}
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "0.14em",
-                fontWeight: 700,
-                textTransform: "uppercase",
+                ...DEMO.label,
+                color: "var(--color-muted-foreground)",
                 position: "relative",
               }}
             >
-              {stage >= 2 ? "◆ Signal erkannt" : "○ Signal-Scan läuft"}
+              {stage >= 2 ? "Signal erkannt" : "Signal-Scan läuft"}
             </div>
             <div
               style={{
@@ -617,7 +580,6 @@ function OutboundWorkflowDemoGerman() {
               marginTop: 2,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
-              letterSpacing: "0.08em",
             }}
           >
             {(
@@ -630,13 +592,11 @@ function OutboundWorkflowDemoGerman() {
               <div
                 key={s.key}
                 style={{
-                  color:
-                    stage >= s.at ? "var(--color-brand-orange)" : DEMO.schiefer,
+                  color: stage >= s.at ? DEMO.ink : DEMO.schiefer,
                   fontWeight: stage >= s.at ? 700 : 400,
-                  transition: "color 200ms ease-out",
                 }}
               >
-                {stage >= s.at ? "✓" : "○"} {s.label}
+                {stage >= s.at ? `✓ ${s.label}` : s.label}
               </div>
             ))}
           </div>
@@ -650,7 +610,6 @@ function OutboundWorkflowDemoGerman() {
             flexDirection: "column",
             minHeight: 260,
             minWidth: 0,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
           <div
@@ -664,11 +623,10 @@ function OutboundWorkflowDemoGerman() {
               color: DEMO.kalk,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
-              letterSpacing: "0.12em",
               fontWeight: 700,
             }}
           >
-            <span style={{ color: "var(--color-brand-orange)" }}>✉ Review</span>
+            <span style={{ color: "var(--color-kupfer-light)" }}>✉ Review</span>
             <span style={{ opacity: 0.5 }}>›</span>
             <span
               style={{
@@ -696,11 +654,11 @@ function OutboundWorkflowDemoGerman() {
             >
               {stage >= 4
                 ? gated
-                  ? "⛔ Nicht gesendet: unter Score-Schwelle"
-                  : "● Versand simuliert 09:14"
+                  ? "Nicht gesendet: unter Score-Schwelle"
+                  : "Versand simuliert 09:14"
                 : stage >= 3
-                  ? "◆ DRAFT"
-                  : "○ WARTE…"}
+                  ? "Entwurf"
+                  : "Wartet …"}
             </span>
           </div>
           <div
@@ -710,7 +668,6 @@ function OutboundWorkflowDemoGerman() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               color: DEMO.schiefer,
-              letterSpacing: "0.06em",
               display: "flex",
               flexDirection: "column",
               gap: 3,
@@ -784,35 +741,18 @@ function OutboundWorkflowDemoGerman() {
                 }}
               >
                 <span
+                  aria-hidden
                   style={{
                     display: "inline-block",
                     width: 10,
                     height: 10,
-                    background: "var(--color-brand-orange)",
-                    animation:
-                      visible && !reduced
-                        ? "outbound-pulse 1.2s ease-out infinite"
-                        : "none",
+                    border: `1px dashed ${DEMO.ink}`,
                   }}
                 />
                 <span>
                   {stage === 1
-                    ? "// Signal-Scan läuft"
-                    : "// Claude Sonnet generiert"}
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 6,
-                      height: 13,
-                      marginLeft: 4,
-                      background: "var(--color-brand-orange)",
-                      verticalAlign: "-2px",
-                      animation:
-                        visible && !reduced
-                          ? "outbound-caret 0.9s step-end infinite"
-                          : "none",
-                    }}
-                  />
+                    ? "Signal-Scan läuft …"
+                    : "Claude Sonnet schreibt den Entwurf …"}
                 </span>
               </div>
             ) : (
@@ -842,28 +782,24 @@ function OutboundWorkflowDemoGerman() {
             <div
               data-outbound-footer
               style={{
+                ...DEMO.label,
                 padding: "6px 14px",
                 borderTop: `1px dashed ${DEMO.leinen}`,
                 background: DEMO.birke,
                 display: "flex",
                 gap: 12,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
                 color: DEMO.schiefer,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
               }}
             >
-              <span>◆ 247 Tokens</span>
-              <span>◆ Sonnet 4.6</span>
-              <span>◆ 1,8 s</span>
-              <span>◆ Quelle geprüft</span>
+              <span>247 Tokens · Sonnet 4.6 · 1,8 s · Quelle geprüft</span>
               {stage >= 4 && !gated && (
                 <span
                   style={{
                     marginLeft: "auto",
-                    color: "var(--color-brand-orange)",
-                    fontWeight: 700,
+                    fontFamily: DEMO.font.mono,
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: DEMO.ink,
                   }}
                 >
                   touched_at = 2026-04-21 09:14:03
@@ -894,21 +830,14 @@ function OutboundWorkflowDemoGerman() {
             key={l}
             style={{
               background: DEMO.kalk,
-              borderTop: `1px solid ${DEMO.leinen}`,
-              borderRight: `1px solid ${DEMO.leinen}`,
-              borderBottom: `1px solid ${DEMO.leinen}`,
-              borderLeft: `3px solid var(--color-brand-orange)`,
+              border: `1px solid ${DEMO.leinen}`,
               padding: 10,
             }}
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
+                ...DEMO.label,
                 color: DEMO.schiefer,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
               }}
             >
               {l}
@@ -932,39 +861,31 @@ function OutboundWorkflowDemoGerman() {
       {stage >= 4 && (
         <div
           style={{
-            border: "1px solid rgba(249,115,22,0.25)",
-            background: "rgba(249,115,22,0.04)",
+            // Dashed = what is still missing before a real send.
+            border: `1px dashed ${DEMO.ink}`,
             padding: "10px 14px",
           }}
         >
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              fontWeight: 700,
-              color: "var(--color-brand-orange)",
+              ...DEMO.label,
+              color: DEMO.ink,
               marginBottom: 6,
             }}
           >
-            Was passiert, wenn...?
+            Vor einem echten Versand
           </div>
           <button
             type="button"
             onClick={() => setShowChecklist((v) => !v)}
             aria-expanded={showChecklist}
             style={{
+              ...DEMO.label,
               minHeight: 44,
               background: "transparent",
-              border: "1px solid rgba(249,115,22,0.4)",
-              color: "var(--color-brand-orange)",
+              border: `1px solid ${DEMO.ink}`,
+              color: DEMO.ink,
               padding: "5px 12px",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
               cursor: "pointer",
             }}
           >
@@ -985,22 +906,18 @@ function OutboundWorkflowDemoGerman() {
             >
               {[
                 {
-                  icon: "◻",
                   label:
                     "Rechtliche Grundlage: Einwilligung oder berechtigtes Interesse nachweisen (DSGVO Art. 6)",
                 },
                 {
-                  icon: "◻",
                   label:
                     "Opt-out-Mechanismus: Abmeldelink in jeder E-Mail, sofortige Umsetzung",
                 },
                 {
-                  icon: "◻",
                   label:
                     "Quellenprüfung: Woher stammt die Kontaktadresse? Wird sie aktuell gehalten?",
                 },
                 {
-                  icon: "◻",
                   label:
                     "Menschliche Freigabe: Entwurf gelesen und bestätigt, bevor etwas verschickt wird",
                 },
@@ -1020,14 +937,15 @@ function OutboundWorkflowDemoGerman() {
                   }}
                 >
                   <span
+                    aria-hidden
                     style={{
-                      color: "var(--color-brand-orange)",
-                      fontWeight: 700,
+                      width: 10,
+                      height: 10,
+                      marginTop: 4,
+                      border: `1px solid ${DEMO.ink}`,
                       flexShrink: 0,
                     }}
-                  >
-                    {item.icon}
-                  </span>
+                  />
                   {item.label}
                 </li>
               ))}
@@ -1104,39 +1022,10 @@ function OutboundWorkflowDemoEnglish() {
       }}
     >
       <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          Signal-based draft · review required
-        </div>
-        <h2
-          style={{
-            margin: "6px 0 0",
-            fontSize: "clamp(20px, 4vw, 28px)",
-            lineHeight: 1.08,
-          }}
-        >
-          State the evidence.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Stop before delivery.
-          </span>
-        </h2>
-        <p
-          style={{
-            margin: "8px 0 0",
-            maxWidth: 760,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
+        {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+        <h2 className="sr-only">Message from public signals</h2>
+        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           All people, companies, addresses, and signals below are fictional. The
           interface drafts locally and cannot send email.
         </p>
@@ -1162,7 +1051,7 @@ function OutboundWorkflowDemoEnglish() {
             style={{
               minWidth: 0,
               border: `1px solid ${DEMO.leinen}`,
-              borderTop: "3px solid var(--color-brand-orange)",
+              borderTop: `2px solid ${DEMO.ink}`,
               background: DEMO.birke,
               padding: "10px 12px",
             }}
@@ -1232,9 +1121,6 @@ function OutboundWorkflowDemoEnglish() {
                   border: `1px solid ${DEMO.ink}`,
                   background: selected ? DEMO.ink : DEMO.kalk,
                   color: selected ? DEMO.kalk : DEMO.ink,
-                  boxShadow: selected
-                    ? "3px 3px 0 var(--color-brand-orange)"
-                    : "none",
                   cursor: "pointer",
                 }}
               >
@@ -1285,15 +1171,15 @@ function OutboundWorkflowDemoEnglish() {
               }}
             >
               <span>Sample score</span>
-              <strong style={{ color: "var(--color-brand-orange)" }}>
+              <strong style={{ color: DEMO.ink }}>
                 {lead.score}/100
               </strong>
             </div>
             <div
               style={{
                 marginTop: 10,
-                borderLeft: "3px solid var(--color-brand-orange)",
-                paddingLeft: 9,
+                borderTop: `1px solid ${DEMO.leinen}`,
+                paddingTop: 8,
                 fontSize: 12,
                 lineHeight: 1.5,
               }}
@@ -1318,20 +1204,15 @@ function OutboundWorkflowDemoEnglish() {
               >
                 <span
                   style={{
+                    ...DEMO.label,
                     color: DEMO.schiefer,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    fontWeight: 700,
-                    fontSize: 12,
                   }}
                 >
                   Score threshold
                 </span>
                 <span
                   style={{
-                    color: gated
-                      ? "var(--color-destructive)"
-                      : "var(--color-brand-orange)",
+                    color: gated ? "var(--color-destructive)" : DEMO.ink,
                     fontWeight: 700,
                     fontSize: 12,
                   }}
@@ -1353,7 +1234,7 @@ function OutboundWorkflowDemoEnglish() {
                 style={{
                   minHeight: 44,
                   width: "100%",
-                  accentColor: "var(--color-brand-orange)",
+                  accentColor: DEMO.ink,
                 }}
               />
             </label>
@@ -1367,7 +1248,6 @@ function OutboundWorkflowDemoEnglish() {
             border: `1px solid ${DEMO.ink}`,
             background: "white",
             color: "#222",
-            boxShadow: `3px 3px 0 ${DEMO.ink}`,
           }}
         >
           <div
@@ -1383,8 +1263,8 @@ function OutboundWorkflowDemoEnglish() {
               fontSize: 12,
             }}
           >
-            <strong style={{ color: "var(--color-brand-orange)" }}>
-              REVIEW DRAFT
+            <strong style={{ color: "var(--color-kupfer-light)" }}>
+              Review draft
             </strong>
             <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>
             <span
@@ -1394,7 +1274,7 @@ function OutboundWorkflowDemoEnglish() {
                 color: gated ? "#fca5a5" : "#fbbf24",
               }}
             >
-              {gated ? "HOLD · BELOW THRESHOLD" : "QUALIFIED · NOT SENT"}
+              {gated ? "Hold: below threshold" : "Qualified, not sent"}
             </span>
           </div>
           <div
@@ -1439,8 +1319,7 @@ function OutboundWorkflowDemoEnglish() {
 
       <section
         style={{
-          border: "1px solid rgba(249,115,22,0.35)",
-          background: "rgba(249,115,22,0.05)",
+          border: `1px dashed ${DEMO.ink}`,
           padding: "12px 14px",
         }}
       >
@@ -1449,15 +1328,12 @@ function OutboundWorkflowDemoEnglish() {
           aria-expanded={showControls}
           onClick={() => setShowControls((current) => !current)}
           style={{
+            ...DEMO.label,
             minHeight: 44,
-            border: "1px solid var(--color-brand-orange)",
+            border: `1px solid ${DEMO.ink}`,
             background: "transparent",
-            color: "var(--color-brand-orange)",
+            color: DEMO.ink,
             padding: "7px 11px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: "uppercase",
             cursor: "pointer",
           }}
         >

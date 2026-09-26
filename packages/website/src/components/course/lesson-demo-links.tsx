@@ -57,10 +57,10 @@ export function LessonDemoLinks({
 
   return (
     <section className={cn("mt-10", className)}>
-      <h3 className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <h3 className="text-label text-foreground">
         {lessonDemos.length === 1 ? copy.heading : copy.headingPlural}
       </h3>
-      <ul className="mt-3 divide-y divide-border border-t border-border">
+      <ul className="mt-3 divide-y divide-hairline border-y border-hairline">
         {lessonDemos.map((demo) => (
           <li key={demo.slug}>
             <Link
@@ -71,11 +71,11 @@ export function LessonDemoLinks({
               aria-label={openLabel(`${demo.title} ${demo.titleKicker}`)}
               className="group grid min-h-11 grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 py-3 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
-              <span className="font-mono text-xs text-brand-orange">
+              <span className="text-label text-muted tabular-nums">
                 {demo.n}
               </span>
               <span className="min-w-0">
-                <span className="block break-words text-base font-semibold text-foreground transition-colors group-hover:text-brand-orange">
+                <span className="block break-words text-base font-semibold text-foreground transition-colors group-hover:underline group-hover:decoration-foreground group-hover:underline-offset-4">
                   {demo.title} {demo.titleKicker}
                 </span>
                 <span className="mt-0.5 block break-words text-sm leading-relaxed text-muted-foreground">
@@ -83,7 +83,7 @@ export function LessonDemoLinks({
                 </span>
               </span>
               <ArrowUpRight
-                className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-brand-orange"
+                className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
                 aria-hidden="true"
               />
             </Link>

@@ -195,7 +195,8 @@ describe("<LessonShell>", () => {
       "lg:h-[calc(100svh-7rem)]",
     );
     expect(desktopSidebar).toHaveAttribute("aria-label", "Testnavigation");
-    expect(desktopSidebar).toHaveClass("border-foreground", "bg-card");
+    expect(desktopSidebar).toHaveClass("border-hairline", "bg-background");
+    expect(desktopSidebar).not.toHaveClass("border-foreground");
     expect(desktopSidebar).not.toHaveClass("md:block");
     expect(
       desktopSidebar?.querySelector(`#mobile-lesson-nav-desktop`),
@@ -214,13 +215,14 @@ describe("<LessonShell>", () => {
     );
     expect(mobileToolbar).not.toHaveClass("top-28");
     expect(within(mobileToolbar).getByText("Testnavigation")).toBeVisible();
-    expect(mobileToolbar).toHaveClass("border-foreground", "bg-card");
+    expect(mobileToolbar).toHaveClass("border-hairline", "bg-background");
     expect(
       screen.getByRole("button", { name: "Navigation öffnen" }),
     ).not.toHaveClass("fixed");
 
     const stage = document.querySelector("[data-lesson-stage]");
-    expect(stage).toHaveClass("border-t-[3px]", "border-brand-orange");
+    expect(stage).not.toHaveClass("border-t-[3px]", "border-brand-orange");
+    expect(stage?.className ?? "").not.toMatch(/border-brand-orange|shadow-\[/);
   });
 
   it("collapses and expands the desktop sidebar with accessible state", () => {

@@ -189,7 +189,11 @@ describe("<AuthStatus>", () => {
     const mobileLink = screen.getByRole("link");
     expect(mobileLink.className).toContain("min-h-11");
     expect(mobileLink.className).toContain("min-w-[6.75rem]");
-    expect(mobileLink.className).toContain("bg-brand-cobalt");
+    // A square secondary ink control: no cobalt fill, no pill, no lift.
+    expect(mobileLink.className).toContain("border-foreground");
+    expect(mobileLink.className).not.toMatch(
+      /bg-brand-|\brounded-|uppercase|-translate-y-/,
+    );
     expect(mobileLink.className).toContain("w-full");
 
     rerender(<AuthStatus />);

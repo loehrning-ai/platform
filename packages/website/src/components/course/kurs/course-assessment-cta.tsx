@@ -209,7 +209,7 @@ export function CourseAssessmentCta({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
         className={cn(
-          "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 md:p-8",
+          "mt-12 scroll-mt-24 border-t-2 border-foreground pt-5",
           className,
         )}
         aria-labelledby={headingId}
@@ -225,17 +225,17 @@ export function CourseAssessmentCta({
               : "locked"
         }
       >
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="text-label text-muted-foreground">
           <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
           {copy.eyebrow}
         </p>
         <h2
           id={headingId}
-          className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground"
+          className="mt-2 text-fluid-h2 font-bold text-foreground"
         >
           {copy.heading(config.recordNoun.label)}
         </h2>
-        <p className="mt-2 font-mono text-xs text-muted-foreground">
+        <p className="mt-2 text-caption text-muted-foreground tabular-nums">
           {copy.details(
             config.workshopQuizQuestionCount,
             passPercentage,
@@ -243,7 +243,7 @@ export function CourseAssessmentCta({
           )}
         </p>
         <p
-          className="mt-3 max-w-[680px] text-[14.5px] leading-[1.55] text-muted-foreground"
+          className="mt-3 max-w-[64ch] text-body text-muted-foreground"
           role="status"
           aria-live="polite"
           aria-atomic="true"
@@ -252,7 +252,7 @@ export function CourseAssessmentCta({
         </p>
 
         {progress && (
-          <p className="mt-2 font-mono text-xs text-muted-foreground">
+          <p className="mt-2 text-caption text-muted-foreground tabular-nums">
             {copy.progress(progress.completedLessons, totalLessons)}
           </p>
         )}
@@ -262,7 +262,7 @@ export function CourseAssessmentCta({
             <>
               <Link
                 href={quizHref}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-foreground px-5 py-3 text-left text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
               >
                 <Trophy className="h-4 w-4" aria-hidden="true" />
                 {progress.quizPassed ? copy.retakeQuiz : copy.startQuiz}
@@ -271,7 +271,7 @@ export function CourseAssessmentCta({
               {progress.certificateEligible && (
                 <Link
                   href={certificateHref}
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-3 text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-foreground hover:text-background"
+                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
                 >
                   <GraduationCap className="h-4 w-4" aria-hidden="true" />
                   {copy.downloadRecord(config.recordNoun.label)}
@@ -282,7 +282,7 @@ export function CourseAssessmentCta({
             <button
               type="button"
               disabled
-              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-border bg-background px-5 py-3 text-sm font-bold uppercase tracking-wide text-muted-foreground"
+              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-dashed border-border bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-muted-foreground"
             >
               <LockKeyhole className="h-4 w-4" aria-hidden="true" />
               {copy.lockedLabel}
@@ -291,7 +291,7 @@ export function CourseAssessmentCta({
         </div>
 
         {progress?.certificateEligible && (
-          <p className="mt-4 max-w-[680px] text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground">
             {copy.localRecordNotice}
           </p>
         )}

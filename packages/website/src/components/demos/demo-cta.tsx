@@ -1,36 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { trackDemoCta } from "@/lib/analytics";
 import type { DemoCtaTarget } from "@/lib/analytics";
+import { ArrowGlyph } from "@/components/werk";
+
+const BASE =
+  "group inline-flex min-h-11 items-center gap-2 border px-5 text-[0.9375rem] font-semibold transition-colors duration-[120ms] motion-reduce:transition-none";
 
 export function DemoCta({
   slug,
   target,
   href,
   variant = "primary",
+  ariaLabel,
   children,
 }: {
   slug: string;
   target: DemoCtaTarget;
   href: string;
   variant?: "primary" | "secondary";
+  /** Only when the visible text needs its target; must start with that text. */
+  ariaLabel?: string;
   children: React.ReactNode;
 }) {
+  // Primary: Mennige fill with paper text (5.40:1), once per page.
+  // Secondary: ink outline on paper.
   const className =
     variant === "primary"
-      ? "inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-      : "inline-flex min-h-11 items-center gap-2 border border-border bg-background px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange";
+      ? `${BASE} border-brand-orange bg-brand-orange text-paper hover:border-kupfer-dark hover:bg-kupfer-dark`
+      : `${BASE} border-border bg-transparent text-foreground hover:border-foreground hover:bg-card-hover`;
 
   return (
     <Link
       href={href}
       onClick={() => trackDemoCta(slug, target)}
+      aria-label={ariaLabel}
       className={className}
     >
       {children}
-      <ArrowUpRight size={14} strokeWidth={2.5} />
+      <ArrowGlyph />
     </Link>
   );
 }

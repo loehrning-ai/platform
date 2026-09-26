@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { COURSE_CATALOG } from "./catalog";
 import { localizeCatalog } from "./catalog-copy";
-import { COURSE_HUB_COPY } from "./course-hub-copy";
+import { COURSE_HUB_COPY, COURSE_PROMISES } from "./course-hub-copy";
 import { courseBadges, courseSections } from "./tracks";
 
 describe("course catalogue locale copy", () => {
@@ -76,12 +76,33 @@ describe("course catalogue locale copy", () => {
     expect(COURSE_HUB_COPY.de.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
     expect(COURSE_HUB_COPY.en.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
     expect(COURSE_HUB_COPY.en.metadataTitle).toContain("AI courses");
+    // The access note gives the reason for the account in the same sentence.
+    expect(COURSE_HUB_COPY.de.accessBody).toContain("damit dein Fortschritt");
+    expect(COURSE_HUB_COPY.en.accessBody).toContain("so your progress");
+    // Every course has a down-to-earth promise in both locales.
+    for (const course of COURSE_CATALOG) {
+      // The ledger intro states the frame once; a row opens with the action.
+      expect(COURSE_PROMISES.de[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.de[course.slug], course.slug).not.toMatch(/^Nach dem Kurs/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).not.toMatch(/^After this/);
+    }
+    for (const text of [
+      ...Object.values(COURSE_PROMISES.de),
+      ...Object.values(COURSE_PROMISES.en),
+      COURSE_HUB_COPY.de.accessBody,
+      COURSE_HUB_COPY.en.accessBody,
+      COURSE_HUB_COPY.de.intro,
+      COURSE_HUB_COPY.en.intro,
+    ]) {
+      expect(text).not.toMatch(/[\u2013\u2014]/);
+    }
     expect(COURSE_HUB_COPY.de.metadataTitle).toContain("KI-Kurse");
     expect(COURSE_HUB_COPY.de.accessBody).toContain(
-      "das PDF des veröffentlichten Lernbuchs benötigt ein Konto",
+      "nur das PDF des Lernbuchs braucht eins",
     );
     expect(COURSE_HUB_COPY.en.accessBody).toContain(
-      "the published learning book's PDF requires an account",
+      "only the learning book's PDF needs one",
     );
     expect(COURSE_HUB_COPY.de.accessBody).not.toContain(
       "Downloads bleiben ohne Konto erreichbar",

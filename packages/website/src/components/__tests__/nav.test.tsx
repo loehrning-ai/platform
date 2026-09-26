@@ -127,7 +127,10 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
-    expect(menu).toHaveClass("rounded-2xl", "shadow-card-hover");
+    // Werkzeichnung: a square overlay sheet. The only shadow in the header is
+    // the overlay token, because the menu floats over the page.
+    expect(menu).toHaveClass("shadow-overlay", "border-foreground");
+    expect(menu.className).not.toMatch(/\brounded-/);
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
   });
 
@@ -149,46 +152,51 @@ describe("<Nav />", () => {
     ).not.toHaveAttribute("aria-current");
   });
 
-  it("uses a copper rule for the current group and a translucent studio bar", () => {
+  it("uses an ink rule for the current group and a flat paper bar", () => {
     navigationMock.pathname = "/kurse";
     renderGerman();
 
     const trigger = screen.getByRole("button", { name: /Lernen/ });
     expect(trigger.className).toContain("min-h-11");
-    expect(trigger.className).toContain("border-brand-orange");
+    expect(trigger.className).toContain("border-b-foreground");
+    expect(trigger.className).not.toContain("brand-orange text-foreground");
     const row = document.querySelector("[data-nav-header-row]");
-    // Copy lock updated: the studio pill is now the desktop treatment only.
-    // Below lg the same row is the flush companion bar, so its rounding and
-    // its shadow are lg-scoped while the translucent surface stays global.
-    expect(row).toHaveClass(
-      "lg:rounded-2xl",
-      "bg-background/85",
-      "lg:shadow-card",
-      "backdrop-blur-xl",
-    );
+    // Werkzeichnung: paper ground, one hairline at the bottom, no pill, no
+    // shadow and no translucency at any width.
+    expect(row).toHaveClass("bg-background", "border-b", "border-hairline");
+    expect(row?.className).not.toMatch(/\brounded-|shadow-|backdrop-blur/);
   });
 
-  it("is a flush --nav-h-compact band below lg and the studio pill from lg", () => {
+  it("marks the current menu row with an ink square and weight, not a coloured rule", () => {
+    navigationMock.pathname = "/kurse";
+    renderGerman();
+    const menu = openDropdown(/Lernen/);
+    const current = within(menu).getByRole("link", { name: "Alle Kurse" });
+    expect(current).toHaveClass("font-semibold");
+    expect(
+      current.querySelector('[data-nav-active-marker="true"]'),
+    ).toHaveAttribute("aria-hidden", "true");
+    expect(menu.innerHTML).not.toMatch(/border-l-\[/);
+  });
+
+  it("is a flush band, --nav-h-compact below lg and --nav-h from lg", () => {
     renderGerman();
     const nav = document.querySelector("nav.no-js-primary-nav");
     const row = document.querySelector("[data-nav-header-row]");
 
-    // Below lg the bar occupies exactly the offset <main> reserves, so it may
-    // carry no outer inset of its own: content begins directly beneath it.
-    expect(nav).toHaveClass("w-full", "lg:px-3", "lg:pt-2");
-    expect(nav).not.toHaveClass("px-2");
-    expect(nav).not.toHaveClass("pt-2");
+    // The bar occupies exactly the offset <main> reserves at every width, so
+    // it carries no outer inset of its own: content begins directly beneath.
+    expect(nav).toHaveClass("w-full");
+    expect(nav?.className).not.toMatch(/\b(?:lg:)?p[xt]-/);
 
     // The height comes from the token, never from a repeated pixel figure.
-    expect(row).toHaveClass("h-[var(--nav-h-compact)]", "border-b");
-    expect(row).not.toHaveClass("rounded-2xl");
-    expect(row).not.toHaveClass("shadow-card");
     expect(row).toHaveClass(
-      "lg:h-12",
-      "lg:rounded-2xl",
-      "lg:border-x",
-      "lg:border-t",
+      "h-[var(--nav-h-compact)]",
+      "lg:h-[var(--nav-h)]",
+      "border-b",
+      "w-full",
     );
+    expect(row?.className).not.toMatch(/rounded|shadow|border-x|border-t\b/);
   });
 
   it("carries only the wordmark, the language switch and the menu button below lg", () => {

@@ -5,17 +5,17 @@ import N8nSupplyChainDemo from "./n8n-supply-chain-demo";
 /**
  * n8n-supply-chain-demo.test.tsx (regression coverage)
  *
- * Drives the real <N8nSupplyChainDemo>. The polyfilled IntersectionObserver
- * never reports the demo in-view, so useVisibleAutoplay keeps visible=false
- * and the autoplay timer never starts — the demo sits at its initial
- * activeStep=-1 until a manual step-through click moves it. Both autoplay and
- * manual stepping derive the visible log purely from (activeStep, scenario)
- * via eventsForStep, so exercising the Weiter/Zurück buttons is a
- * deterministic stand-in for exercising the timer.
+ * Drives the real <N8nSupplyChainDemo>. The engine renders its final state
+ * first (design direction, principle 6): the finished run, all six log lines
+ * and the three prepared actions are on screen on load. "Neu abspielen" is
+ * the only way into a replay; the polyfilled IntersectionObserver never
+ * reports the demo in view, so a replay waits at the unstarted step and the
+ * Weiter/Zurück buttons are a deterministic stand-in for its timer. Both
+ * autoplay and manual stepping derive the log from (activeStep, scenario) via
+ * eventsForStep.
  *
  * matchMedia + IntersectionObserver are polyfilled in src/test/setup.ts; we
- * override matchMedia locally to force the reduced-motion branch, following
- * the same helper as agent-pipeline-demo.test.tsx.
+ * override matchMedia locally to force the reduced-motion branch.
  */
 
 const originalMatchMedia = window.matchMedia;
@@ -39,37 +39,60 @@ describe("<N8nSupplyChainDemo>", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("renders the header and the idle log placeholder before any step runs", () => {
-    render(<N8nSupplyChainDemo />);
+  it("renders the finished run on load, with a plain sr-only heading", () => {
+    const { container } = render(<N8nSupplyChainDemo />);
 
-    expect(
-      screen.getByText("n8n · Supply-Chain-Automation"),
-    ).toBeInTheDocument();
+    expect(screen.queryByText("n8n · Supply-Chain-Automation")).toBeNull();
     const heading = screen.getByRole("heading", { level: 2 });
-    expect(heading).toHaveTextContent("Lieferverzug erkannt.");
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Lieferverzug im n8n-Workflow");
+    expect(heading.querySelector("span")).toBeNull();
+    // The timing scope is a caption, not a slogan.
+    expect(
+      screen.getByText(/zeigen nur die Reihenfolge der sechs Schritte/),
+    ).toBeInTheDocument();
 
-    // useVisibleAutoplay never reports in-view in jsdom, so nothing has
-    // advanced yet: the step indicator shows the unstarted placeholder and
-    // the log shows its waiting message.
+    // Final state first.
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    expect(screen.getByText(/Workflow-Simulation abgeschlossen/)).toBeInTheDocument();
+    expect(screen.getByText("SAP · MM-BANF")).toBeInTheDocument();
+    expect(screen.queryByText(/Wartet auf das Webhook-Ereignis/)).toBeNull();
+
+    // No dot-grid canvas and no invented usage figures.
+    expect(container.innerHTML).not.toMatch(/radial-gradient/);
+    expect(screen.queryByText(/Beispiel-Läufe/)).toBeNull();
+    expect(screen.queryByText(/Manuelle Annahme/)).toBeNull();
+    expect(screen.getByText("Beispiel-Reaktionszeit")).toBeInTheDocument();
+  });
+
+  it("keeps paper text on the current Mennige node at AA", () => {
+    const { container } = render(<N8nSupplyChainDemo />);
+    // The three action nodes are current at rest; their sub-lines were
+    // rgba(243,240,233,0.9), 4.4:1 on Mennige.
+    expect(container.innerHTML).not.toContain("rgba(243,240,233,0.9)");
+    const note = screen.getByText("einkauf@fiktivwerk.example");
+    expect(note).toHaveStyle({ color: "#f9f7f2" });
+  });
+
+  it("enables Zurück and disables Weiter at the finished state", () => {
+    render(<N8nSupplyChainDemo />);
+
+    expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Weiter ▶" })).toBeDisabled();
+  });
+
+  it("rewinds on Neu abspielen and then steps through the log one line at a time", () => {
+    render(<N8nSupplyChainDemo />);
+
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
     expect(screen.getByText("Schritt - / 4")).toBeInTheDocument();
-    expect(screen.getByText(/warte auf Webhook-Ereignis/)).toBeInTheDocument();
-  });
-
-  it("disables Zurück and enables Weiter before the sequence has started", () => {
-    render(<N8nSupplyChainDemo />);
-
+    expect(screen.getByText(/Wartet auf das Webhook-Ereignis/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Weiter ▶" })).toBeEnabled();
-  });
-
-  it("advances one step at a time on Weiter and reveals the matching log line, and Zurück reverses it", () => {
-    render(<N8nSupplyChainDemo />);
 
     fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
     expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
     expect(screen.getByText("DHL-Webhook")).toBeInTheDocument();
-    // Step 0 is Zurück's floor — it stays disabled here, one click doesn't
-    // enable it (there is no manually-reachable state before step 0).
+    // Step 0 is Zurück's floor.
     expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeDisabled();
 
     fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
@@ -82,29 +105,12 @@ describe("<N8nSupplyChainDemo>", () => {
     expect(screen.queryByText("SAP · MM02")).not.toBeInTheDocument();
   });
 
-  it("offers a replay control that resets the step position", () => {
-    render(<N8nSupplyChainDemo />);
-
-    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
-    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt - / 4")).toBeInTheDocument();
-  });
-
-  it("switches to the low-confidence scenario, which stops one step earlier with an escalation line instead of the three automated actions", () => {
+  it("opens the low-confidence scenario on its own final state: an escalation instead of the three automated actions", () => {
     render(<N8nSupplyChainDemo />);
 
     fireEvent.click(screen.getByRole("button", { name: "Konfidenz niedrig" }));
-    expect(screen.getByText("Schritt - / 3")).toBeInTheDocument();
-
-    const weiter = screen.getByRole("button", { name: "Weiter ▶" });
-    fireEvent.click(weiter);
-    fireEvent.click(weiter);
-    fireEvent.click(weiter);
-
     expect(screen.getByText("Schritt 3 / 3")).toBeInTheDocument();
-    expect(weiter).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Weiter ▶" })).toBeDisabled();
     expect(screen.getByText(/Konfidenz < Schwellenwert/)).toBeInTheDocument();
     expect(
       screen.getByText(/Automatisierter Pfad gestoppt/),

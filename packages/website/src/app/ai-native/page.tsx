@@ -7,8 +7,15 @@ import {
   TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
-  TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
+import {
+  CourseBlockLedger,
+  CourseBoundaryColumn,
+  CourseBoundaryDetails,
+  CourseLandingSection,
+  CourseNoteList,
+  CourseOutcomeList,
+} from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
@@ -40,21 +47,37 @@ const LANDING_COPY = {
       "Kontext und Prüfkriterien dokumentieren",
       "wiederholbare Abläufe mit klaren Kontrollen entwerfen",
     ],
-    eyebrow: "AI-Native · Arbeitsinstrument",
-    heading: "Aufgabe definieren. Output prüfen.",
+    eyebrow: "AI-Native Arbeitskurs · kostenlos",
+    heading: "Routinearbeit mit Claude automatisieren.",
     intro:
-      "Vier Module führen von einer begrenzten Aufgabe zu einem kontrollierten Workflow mit sichtbaren Prüfpunkten.",
+      "Der Kurs ist für Menschen, die jede Woche dieselben Mails, Notizen und Berichte bearbeiten. Im Abschlussprojekt baust du einen Ablauf aus deiner eigenen Arbeit als Pilot und legst fest, wie du ihn prüfst. Programmieren musst du dafür nicht.",
     start: "Mit Modul 1 beginnen",
     workspace: "Kursstand öffnen",
-    factsLabel: "Kursrahmen",
+    factsLabel: "Auf einen Blick",
     progressLabel: "Fortschritt im AI-Native Arbeitskurs",
     lessonsLabel: "Lektionen",
-    decisionsEyebrow: "Arbeitsvertrag",
-    decisionsHeading: "Drei Entscheidungen vor jedem KI-Schritt.",
-    modulesEyebrow: "Module",
-    modulesHeading: "Vier Projekte, ein kontrollierter Ablauf.",
-    resourcesEyebrow: "Instrumente",
-    resourcesHeading: "Prüfen, simulieren, nachschlagen.",
+    outcomesHeading: "Was du danach kannst",
+    outcomes: [
+      {
+        title: "Eine Aufgabe so beschreiben, dass Claude sie ohne Rückfragen bearbeitet",
+        detail: "Mit Ziel, Kontext, Beispiel und dem Kriterium, an dem du das Ergebnis prüfst.",
+      },
+      {
+        title: "Claude für ein festes Projekt einrichten",
+        detail: "In einem Claude-Projekt mit festen Anweisungen, Beispieldateien und Skills.",
+      },
+      {
+        title: "Material aus Mails, Notizen und Ordnern durchsuchbar ablegen",
+        detail: "In Modul 3 legst du dafür eine Wissensbasis in Obsidian an.",
+      },
+      {
+        title: "Prüfen, ob sich eine wiederkehrende Aufgabe als n8n-Ablauf eignet",
+        detail: "Du legst die Kontrollen fest, bevor etwas automatisch läuft.",
+      },
+    ],
+    modulesHeading: "Module",
+    topicsLabel: "Themen im Modul",
+    resourcesHeading: "Außerdem im Kurs",
     resources: [
       {
         href: "/ai-native/fluency-test",
@@ -64,7 +87,7 @@ const LANDING_COPY = {
       {
         href: "/ai-native/demos",
         label: "Kurssimulationen",
-        output: "kontrollierte Beispiele",
+        output: "Kontrollierte Beispiele",
       },
       { href: "/ai-native/glossar", label: "Glossar", output: "70 Begriffe" },
       {
@@ -97,37 +120,53 @@ const LANDING_COPY = {
       "document context and review criteria",
       "design repeatable workflows with explicit controls",
     ],
-    eyebrow: "AI-Native · working instrument",
-    heading: "Define the task. Review the output.",
+    eyebrow: "AI-Native Workflow Course · free",
+    heading: "Automate routine work with Claude.",
     intro:
-      "Four modules move from one bounded task to a controlled workflow with visible review points.",
+      "The course is for people who handle the same emails, notes and reports every week. In the final project you build a pilot workflow from your own work and decide how you check it. You do not need to write code.",
     start: "Start with module 1",
     workspace: "Open course progress",
-    factsLabel: "Course frame",
+    factsLabel: "At a glance",
     progressLabel: "AI-Native Workflow Course progress",
     lessonsLabel: "lessons",
-    decisionsEyebrow: "Operating contract",
-    decisionsHeading: "Three decisions before every AI-assisted step.",
-    modulesEyebrow: "Modules",
-    modulesHeading: "Four projects, one controlled workflow.",
-    resourcesEyebrow: "Instruments",
-    resourcesHeading: "Assess, simulate, and look up.",
+    outcomesHeading: "What you can do afterwards",
+    outcomes: [
+      {
+        title: "Describe a task so that Claude can work on it without follow-up questions",
+        detail: "With goal, context, an example and the criterion you check the result against.",
+      },
+      {
+        title: "Set Claude up for one fixed project",
+        detail: "In a Claude project with fixed instructions, sample files and skills.",
+      },
+      {
+        title: "Keep material from emails, notes and folders in one searchable place",
+        detail: "In module 3 you set up a knowledge base in Obsidian for this.",
+      },
+      {
+        title: "Check whether a recurring task fits an n8n workflow",
+        detail: "You set the checks before anything runs on its own.",
+      },
+    ],
+    modulesHeading: "Modules",
+    topicsLabel: "Topics in this module",
+    resourcesHeading: "Also in this course",
     resources: [
       {
         href: "/ai-native/fluency-test",
         label: "Fluency self-assessment",
-        output: "starting point",
+        output: "Starting point",
       },
       {
         href: "/ai-native/demos",
         label: "Course simulations",
-        output: "controlled examples",
+        output: "Controlled examples",
       },
       { href: "/ai-native/glossar", label: "Glossary", output: "70 terms" },
       {
         href: "/ai-native/capstone-gallery",
         label: "Capstone rules",
-        output: "publication boundary",
+        output: "Publication boundary",
       },
     ],
     boundarySummary: "Access, record, and provenance",
@@ -236,6 +275,13 @@ export default async function AiNativePage() {
   const copy = LANDING_COPY[locale];
   const meta = getCourseMeta(locale);
   const modules = getModules(locale);
+  // Reading time of the lessons alone; targetDurationHours adds the exercises.
+  const lessonHours = Math.max(
+    1,
+    Math.round(
+      modules.reduce((sum, module) => sum + module.durationMinutes, 0) / 60,
+    ),
+  );
   const trustSignals = getAiNativeTrustSignals(locale);
   const moduleOneHref = localizeHref("/ai-native/kurs/modul_1", locale);
 
@@ -268,8 +314,10 @@ export default async function AiNativePage() {
           facts={[
             `${meta.totalModules} ${locale === "de" ? "Module" : "modules"}`,
             `${meta.totalLessons} ${copy.lessonsLabel}`,
-            `${meta.targetDurationHours} h · ${locale === "de" ? "eigenes Tempo" : "self-paced"}`,
-            locale === "de" ? "kostenloses Lernkonto" : "free learning account",
+            locale === "de"
+              ? `ca. ${lessonHours} Std. Lesezeit, ca. ${meta.targetDurationHours} Std. mit Übungen`
+              : `About ${lessonHours} hrs of reading, about ${meta.targetDurationHours} hrs with exercises`,
+            locale === "de" ? "Kostenlos, mit Lernkonto" : "Free, with a learning account",
           ]}
           factsLabel={copy.factsLabel}
           progress={
@@ -282,144 +330,68 @@ export default async function AiNativePage() {
           }
         />
 
-        <div>
-          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.decisionsEyebrow}
-              title={copy.decisionsHeading}
-            />
-            <ol className="border-y border-border">
-              {copy.teaches.map((decision, index) => (
-                <li
-                  key={decision}
-                  className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
-                >
-                  <span className="font-mono text-xs tabular-nums text-brand-orange">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="break-words text-sm font-medium leading-relaxed text-foreground">
-                    {decision}
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </section>
+        <CourseLandingSection title={copy.outcomesHeading}>
+          <CourseOutcomeList items={copy.outcomes} />
+        </CourseLandingSection>
 
-          <section className="mt-10">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.modulesEyebrow}
-              title={copy.modulesHeading}
-            />
-            <ol className="mt-5 border-t border-border">
-              {modules.map((module) => (
-                <li
-                  key={module.id}
-                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[4rem_minmax(0,1fr)_9rem] md:items-start md:gap-5"
-                >
-                  <p className="font-mono text-xs font-bold text-brand-orange">
-                    {String(module.number).padStart(2, "0")}
-                  </p>
-                  <div className="min-w-0">
-                    <h3 className="break-words text-base font-semibold text-foreground">
-                      {module.title}
-                    </h3>
-                    <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground">
-                      {module.description}
-                    </p>
-                    <details className="mt-2 border-t border-border">
-                      <summary
-                        aria-label={`${
-                          locale === "de"
-                            ? "Entscheidungen und Übungen"
-                            : "Decisions and exercises"
-                        }: ${module.title}`}
-                        className="flex min-h-11 cursor-pointer items-center font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground"
-                      >
-                        {locale === "de"
-                          ? "Entscheidungen und Übungen"
-                          : "Decisions and exercises"}
-                      </summary>
-                      <ul className="border-t border-border py-2">
-                        {module.topics.map((topic) => (
-                          <li
-                            key={topic}
-                            className="border-b border-border py-2 text-[13px] leading-relaxed text-muted-foreground last:border-b-0"
-                          >
-                            {topic}
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </div>
-                  <p className="font-mono text-xs text-muted-foreground md:text-right">
-                    {module.lessonCount} {copy.lessonsLabel} ·{" "}
-                    {module.durationMinutes} {locale === "de" ? "Min." : "min"}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
-            <TechnicalCourseSectionHeading
-              eyebrow={copy.resourcesEyebrow}
-              title={copy.resourcesHeading}
-            />
-            <nav
-              aria-label={copy.resourcesHeading}
-              className="border-t border-border"
-            >
-              {copy.resources.map((resource) => (
-                <Link
-                  key={resource.href}
-                  href={localizeHref(resource.href, locale)}
-                  className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} sm:grid-cols-[minmax(0,1fr)_12rem_auto]`}
-                >
-                  <span className="break-words text-sm font-semibold text-foreground">
-                    {resource.label}
-                  </span>
-                  <span className="break-words font-mono text-xs text-muted-foreground">
-                    {resource.output}
-                  </span>
-                  <span className="text-brand-orange" aria-hidden="true">
-                    →
-                  </span>
-                </Link>
-              ))}
-            </nav>
-          </section>
-
-          <details className="mt-10 border-y border-border">
-            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
-              {copy.boundarySummary}
-              <span className="text-brand-orange" aria-hidden="true">
-                +
-              </span>
-            </summary>
-            <div className="grid gap-5 border-t border-border py-4 lg:grid-cols-2">
-              <ul className="border-t border-border">
-                {copy.boundary.map((item) => (
-                  <li
-                    key={item}
-                    className="border-b border-border py-3 text-[13px] leading-relaxed text-muted-foreground"
+        <CourseLandingSection title={copy.modulesHeading}>
+          <CourseBlockLedger
+            rows={modules.map((module) => ({
+              id: module.id,
+              number: String(module.number).padStart(2, "0"),
+              title: module.title,
+              description: module.description,
+              meta: `${module.lessonCount} ${copy.lessonsLabel} · ${module.durationMinutes} ${locale === "de" ? "Min." : "min"}`,
+              extra: (
+                <details className="group/topics mt-3 max-w-[60ch]">
+                  <summary
+                    aria-label={`${copy.topicsLabel}: ${module.title}`}
+                    className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 text-label text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground [&::-webkit-details-marker]:hidden"
                   >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <ul className="border-t border-border">
-                {trustSignals.map((signal) => (
-                  <li
-                    key={signal}
-                    className="border-b border-border py-3 text-[13px] leading-relaxed text-muted-foreground"
-                  >
-                    {signal}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
-        </div>
+                    {copy.topicsLabel}
+                    <span aria-hidden="true" className="group-open/topics:hidden">+</span>
+                    <span aria-hidden="true" className="hidden group-open/topics:inline">−</span>
+                  </summary>
+                  <CourseNoteList items={module.topics} />
+                </details>
+              ),
+            }))}
+          />
+        </CourseLandingSection>
+
+        <CourseLandingSection title={copy.resourcesHeading}>
+          <nav aria-label={copy.resourcesHeading} className="border-t border-hairline">
+            {copy.resources.map((resource) => (
+              <Link
+                key={resource.href}
+                href={localizeHref(resource.href, locale)}
+                className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[minmax(0,1fr)_1.5rem] sm:grid-cols-[minmax(0,1fr)_auto_1.5rem]`}
+              >
+                <span className="break-words text-body font-semibold text-foreground">
+                  {resource.label}
+                </span>
+                <span className="hidden break-words text-caption text-muted-foreground tabular-nums sm:block sm:text-right">
+                  {resource.output}
+                </span>
+                <span
+                  className="arrow-nudge text-foreground motion-reduce:transition-none"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </Link>
+            ))}
+          </nav>
+        </CourseLandingSection>
+
+        <CourseBoundaryDetails summary={copy.boundarySummary}>
+          <CourseBoundaryColumn>
+            <CourseNoteList items={copy.boundary} />
+          </CourseBoundaryColumn>
+          <CourseBoundaryColumn>
+            <CourseNoteList items={trustSignals} />
+          </CourseBoundaryColumn>
+        </CourseBoundaryDetails>
       </TechnicalCourseFrame>
     </>
   );

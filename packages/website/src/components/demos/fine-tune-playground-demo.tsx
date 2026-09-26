@@ -90,7 +90,7 @@ function confLabel(pct: number): "niedrig" | "mittel" | "hoch" {
 }
 
 const CONF_LABEL_CONFIG = {
-  niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
+  niedrig: { label: "Niedrig", color: "#b91c1c", bg: "rgba(220,38,38,0.1)" },
   mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
   hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
 } as const;
@@ -106,12 +106,8 @@ function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
         "Confidence only represents how strongly a fictional model recognizes vocabulary from the sample training set. It is not a standardized metric.",
       )}
       style={{
+        ...DEMO.label,
         padding: "2px 7px",
-        fontSize: 12,
-        fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-        fontWeight: 700,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
         color: accentColor ?? cfg.color,
         background: cfg.bg,
         border: `1px solid ${cfg.color}30`,
@@ -262,7 +258,6 @@ export default function FineTunePlaygroundDemo() {
           border: 2px solid ${DEMO.ink};
           margin-top: -7px;
           cursor: grab;
-          box-shadow: 2px 2px 0 0 ${DEMO.ink};
         }
         [data-demo-id="fine-tune-playground"] [data-ft-slider]::-webkit-slider-thumb:active {
           cursor: grabbing;
@@ -274,7 +269,6 @@ export default function FineTunePlaygroundDemo() {
           border: 2px solid ${DEMO.ink};
           border-radius: 0;
           cursor: grab;
-          box-shadow: 2px 2px 0 0 ${DEMO.ink};
         }
         [data-demo-id="fine-tune-playground"] [data-ft-slider]:focus-visible {
           outline: 2px solid var(--color-brand-orange);
@@ -285,33 +279,14 @@ export default function FineTunePlaygroundDemo() {
           outline-offset: 2px;
         }
       `}</style>
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          Fine-Tuning Playground
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          {text("Generische Antwort vs.", "Generic answer versus")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("Domänenbeispiel.", "domain example.")}
-          </span>
-        </h2>
-      </div>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {text(
+          "Basismodell und angepasstes Modell im Vergleich",
+          "Base model and adapted model compared",
+        )}
+      </h2>
 
       <div
         data-ft-tabs
@@ -354,12 +329,11 @@ export default function FineTunePlaygroundDemo() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: active ? DEMO.kupferLight : DEMO.schiefer,
-                  letterSpacing: "0.12em",
+                  color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   fontWeight: 700,
                 }}
               >
-                PROMPT {String(i + 1).padStart(2, "0")}
+                Prompt {String(i + 1).padStart(2, "0")}
               </span>
               <div style={{ marginTop: 3 }}>
                 {p.q.slice(0, 50)}
@@ -394,17 +368,9 @@ export default function FineTunePlaygroundDemo() {
             }}
           >
             <span
-              style={{
-                background: "rgba(11,9,8,0.08)",
-                color: DEMO.ink,
-                padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-              }}
+              style={{ ...DEMO.label, color: DEMO.ink }}
             >
-              {text("BASISMODELL", "BASE MODEL")}
+              {text("Basismodell", "Base model")}
             </span>
             <span
               style={{
@@ -447,12 +413,10 @@ export default function FineTunePlaygroundDemo() {
         <div
           style={{
             background: DEMO.kalk,
-            borderTop: `4px solid var(--color-brand-orange)`,
-            borderRight: `2px solid var(--color-brand-orange)`,
-            borderBottom: `2px solid var(--color-brand-orange)`,
-            borderLeft: `2px solid var(--color-brand-orange)`,
+            // Ink frame with a Kopflinie; the Mennige mark is the delta.
+            border: `1px solid ${DEMO.ink}`,
+            borderTop: `2px solid ${DEMO.ink}`,
             padding: 14,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
             position: "relative",
           }}
         >
@@ -462,14 +426,11 @@ export default function FineTunePlaygroundDemo() {
               top: -10,
               right: 10,
               background: "var(--color-brand-orange)",
-              color: DEMO.kalk,
+              color: "#f9f7f2",
               padding: "2px 8px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
-              letterSpacing: "0.1em",
-              border: `1px solid ${DEMO.ink}`,
-              boxShadow: `1px 1px 0 0 ${DEMO.ink}`,
             }}
           >
             +{accuracyDelta} {text("Punkte · Beispiel", "points · sample")}
@@ -483,19 +444,11 @@ export default function FineTunePlaygroundDemo() {
             }}
           >
             <span
-              style={{
-                background: "var(--color-brand-orange)",
-                color: DEMO.kalk,
-                padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-              }}
+              style={{ ...DEMO.label, color: DEMO.ink }}
             >
               {text(
-                "DOMÄNENBEISPIEL · SIMULIERT",
-                "DOMAIN EXAMPLE · SIMULATED",
+                "Domänenbeispiel, simuliert",
+                "Domain example, simulated",
               )}
             </span>
             <span
@@ -528,7 +481,7 @@ export default function FineTunePlaygroundDemo() {
             }}
           >
             <span>
-              <strong style={{ color: "var(--color-brand-orange)" }}>
+              <strong style={{ color: DEMO.ink }}>
                 {prompt.tunedSpec} %
               </strong>{" "}
               {text("Spezifität", "specificity")}
@@ -539,7 +492,7 @@ export default function FineTunePlaygroundDemo() {
               {text("Konfidenz (Vokabelabgleich)", "Confidence (vocabulary match)")}{" "}
               <ConfChip
                 pct={prompt.tunedConf}
-                accentColor="var(--color-brand-orange)"
+                accentColor={DEMO.ink}
               />
             </span>
           </div>
@@ -559,12 +512,8 @@ export default function FineTunePlaygroundDemo() {
         >
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: "var(--color-brand-orange)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              fontWeight: 700,
+              ...DEMO.label,
+              color: "var(--color-muted-foreground)",
             }}
           >
             {text("Trainingsmetriken · Epoche", "Training metrics · epoch")}{" "}
@@ -592,22 +541,19 @@ export default function FineTunePlaygroundDemo() {
         >
           {(
             [
-              ["Loss", metrics.loss, "↓"],
-              ["Accuracy", `${metrics.acc} %`, "↑"],
+              ["Loss ↓", metrics.loss],
+              ["Accuracy ↑", `${metrics.acc} %`],
               [
-                text("Domänenspezifität", "Domain specificity"),
+                text("Domänenspezifität ↑", "Domain specificity ↑"),
                 `${metrics.specificity} %`,
-                "↑",
               ],
             ] as const
-          ).map(([l, v, dir]) => (
+          ).map(([l, v]) => (
             <div key={l}>
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: "rgba(243,240,233,0.55)",
-                  letterSpacing: "0.14em",
+                  ...DEMO.label,
+                  color: "rgba(243,240,233,0.75)",
                 }}
               >
                 {l}
@@ -617,9 +563,9 @@ export default function FineTunePlaygroundDemo() {
                   fontFamily: DEMO.font.mono,
                   fontSize: 24,
                   fontWeight: 700,
-                  letterSpacing: "-0.03em",
+                  letterSpacing: "-0.01em",
                   marginTop: 3,
-                  color: dir === "↑" ? "var(--color-brand-orange)" : DEMO.kalk,
+                  color: DEMO.kalk,
                 }}
               >
                 {v}
@@ -648,10 +594,9 @@ export default function FineTunePlaygroundDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               color: DEMO.schiefer,
-              letterSpacing: "0.12em",
             }}
           >
-            <span>LOSS ↓ · ACCURACY ↑</span>
+            <span>Loss ↓ · Accuracy ↑</span>
             <span style={{ display: "flex", gap: 12 }}>
               <span
                 style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
@@ -664,7 +609,7 @@ export default function FineTunePlaygroundDemo() {
                     background: DEMO.ink,
                   }}
                 />
-                LOSS
+                Loss
               </span>
               <span
                 style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
@@ -677,7 +622,7 @@ export default function FineTunePlaygroundDemo() {
                     background: "var(--color-brand-orange)",
                   }}
                 />
-                ACC
+                Acc
               </span>
             </span>
           </div>
@@ -760,7 +705,6 @@ export default function FineTunePlaygroundDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               color: DEMO.schiefer,
-              letterSpacing: "0.1em",
             }}
           >
             <span>E0</span>
@@ -781,11 +725,10 @@ export default function FineTunePlaygroundDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               color: DEMO.schiefer,
-              letterSpacing: "0.12em",
               fontWeight: 700,
             }}
           >
-            {text("EPOCHE", "EPOCH")}
+            {text("Epoche", "Epoch")}
           </span>
           <input
             data-ft-slider
@@ -821,7 +764,7 @@ export default function FineTunePlaygroundDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
-              color: "var(--color-brand-orange)",
+              color: DEMO.ink,
               minWidth: 42,
               textAlign: "right",
             }}

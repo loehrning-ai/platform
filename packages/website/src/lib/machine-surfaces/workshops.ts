@@ -6,7 +6,8 @@
  * workshops exist" and "what does this workshop hand me". Each field comes
  * from a canonical registry, never from a second catalog kept here:
  *
- *   - src/lib/workshops.ts             both locales, steps, cases, materials
+ *   - src/lib/workshops.ts             both locales, question, outcomes, agenda,
+ *                                      needs, provenance, steps, cases, materials
  *   - src/lib/auth/routes.ts           whether the page needs a login
  *   - src/lib/i18n/content-parity.ts   which locales really have a page
  *   - src/lib/learning-graph           stage, level, evidence mode, access
@@ -48,6 +49,34 @@ export interface MachineWorkshopMaterial {
   /** Site-root path of the static file. */
   readonly path: string;
   readonly url: string;
+  /** What the file is for: deck, guide, kit, lab and so on. */
+  readonly role: WorkshopMaterial["role"];
+  /** When a learner uses it: before, during or after the session. */
+  readonly phase: WorkshopMaterial["phase"];
+  readonly size_label: string | null;
+  readonly minutes: number | null;
+  readonly optional: boolean;
+  /** The one material to open first. */
+  readonly primary: boolean;
+}
+
+export interface MachineWorkshopAgendaItem {
+  readonly label: string;
+  readonly minutes: number;
+  /** "live", "self" or "both". */
+  readonly mode: string;
+  readonly activity: string | null;
+  readonly description: string | null;
+  readonly optional: boolean;
+}
+
+export interface MachineWorkshopProvenance {
+  readonly author: string;
+  readonly reviewed_at: string;
+  readonly ai_outputs_recorded_at: string | null;
+  readonly live_run_at: string | null;
+  readonly data: Workshop["provenance"]["data"];
+  readonly note: string;
 }
 
 export interface MachineWorkshopStep {
@@ -100,6 +129,20 @@ export interface MachineWorkshop {
   readonly duration: string;
   readonly access_note: string;
   readonly audience: readonly string[];
+  readonly not_for_you: string;
+  /** The one question the workshop holds fixed from start to end. */
+  readonly question: string;
+  /** Three or four observable outcomes. */
+  readonly outcomes: readonly string[];
+  readonly agenda: readonly MachineWorkshopAgendaItem[];
+  /** "deck" when minutes come from the deck's scene timings, "plan" otherwise. */
+  readonly agenda_source: Workshop["agendaSource"];
+  readonly minutes_live: number | null;
+  readonly minutes_self_study: number;
+  readonly needs: readonly string[];
+  readonly not_needed: readonly string[];
+  readonly not_covered: readonly string[];
+  readonly provenance: MachineWorkshopProvenance;
   readonly url: string;
   readonly requires_login: boolean;
   readonly steps: readonly MachineWorkshopStep[];
@@ -140,6 +183,12 @@ function machineMaterial(
     language: material.language,
     path: material.href,
     url: absoluteUrl(material.href),
+    role: material.role,
+    phase: material.phase,
+    size_label: material.sizeLabel ?? null,
+    minutes: material.minutes ?? null,
+    optional: material.optional === true,
+    primary: material.primary === true,
   };
 }
 
@@ -197,6 +246,31 @@ function machineWorkshop(workshop: Workshop, locale: Locale): MachineWorkshop {
     duration: workshop.duration,
     access_note: workshop.accessNote,
     audience: workshop.audience,
+    not_for_you: workshop.notForYou,
+    question: workshop.question,
+    outcomes: workshop.outcomes,
+    agenda: workshop.agenda.map((item) => ({
+      label: item.label,
+      minutes: item.minutes,
+      mode: item.mode ?? "both",
+      activity: item.activity ?? null,
+      description: item.description ?? null,
+      optional: item.optional === true,
+    })),
+    agenda_source: workshop.agendaSource,
+    minutes_live: workshop.minutesLive ?? null,
+    minutes_self_study: workshop.minutesSelfStudy,
+    needs: workshop.needs,
+    not_needed: workshop.notNeeded,
+    not_covered: workshop.notCovered,
+    provenance: {
+      author: workshop.provenance.author,
+      reviewed_at: workshop.provenance.reviewedAt,
+      ai_outputs_recorded_at: workshop.provenance.aiOutputsRecordedAt ?? null,
+      live_run_at: workshop.provenance.liveRunAt ?? null,
+      data: workshop.provenance.data,
+      note: workshop.provenance.note,
+    },
     url: absoluteLocalizedUrl(path, locale),
     requires_login: isProtectedPlatformPath(path),
     steps: workshop.steps.map((step) => ({

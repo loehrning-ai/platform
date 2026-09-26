@@ -22,14 +22,14 @@ describe("<LanguageSwitch />", () => {
     );
 
     const group = screen.getByRole("group", { name: "Sprache" });
-    expect(group.className).toContain("rounded-xl");
-    expect(group.className).not.toMatch(/shadow-\[/);
-    expect(group.className).not.toContain("rounded-full");
+    // Werkzeichnung: square, flat, no fill. The active language is an ink
+    // underline plus weight; the text size stays above the 12px floor.
+    expect(group.className).not.toMatch(/\brounded-|shadow-|\bbg-/);
     for (const link of within(group).getAllByRole("link")) {
       expect(link.className).toContain("min-h-11");
       expect(link.className).toContain("min-w-11");
-      expect(link.className).toContain("text-xs");
-      expect(link.className).not.toContain("rounded-full");
+      expect(link.className).toContain("text-label");
+      expect(link.className).not.toMatch(/\brounded-|\bbg-brand-|uppercase/);
     }
   });
 

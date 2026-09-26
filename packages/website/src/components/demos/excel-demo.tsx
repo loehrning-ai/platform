@@ -150,65 +150,13 @@ export default function ExcelDemo() {
         minWidth: 0,
       }}
     >
-      {/* Header */}
+      {/* Header: the page H1 and lead name the demo, so the engine keeps
+          only an sr-only landmark heading and its one-line scope note. */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <Overline>
-            {text("Excel-Lab mit KI-Assistent", "Spreadsheet lab · fixed sample data")}
-          </Overline>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: DEMO.schiefer,
-              letterSpacing: "0.08em",
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: 999,
-                background: DEMO.schiefer,
-              }}
-            />
-            {text("Manuell", "Manual")}
-          </div>
-        </div>
-        <h2
-          style={{
-            fontSize: "clamp(18px, 2.6vw, 22px)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.15,
-            margin: 0,
-          }}
-        >
-          {text("Formeln, Pivots und Forecasts im Beispiel-Lab,", "Inspect the calculation,")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("ohne Microsoft-365-Verbindung.", "then challenge it.")}
-          </span>
+        <h2 className="sr-only">
+          {text("Excel-Beispiel mit KI-Assistent", "Spreadsheet example with an AI assistant")}
         </h2>
-        <p
-          style={{
-            margin: 0,
-            maxWidth: 720,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
+        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           {text(
             "Neun fiktive Verkaufszeilen, rein im Browser. Keine Verbindung zu Excel, Microsoft 365 oder einem KI-Anbieter.",
             "This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.",
@@ -249,13 +197,13 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
       style={{
         background: DEMO.kalk,
         border: `1px solid ${DEMO.ink}`,
-        boxShadow: `2px 2px 0 0 ${DEMO.leinen}`,
         display: "flex",
         flexDirection: "column",
         minWidth: 0,
       }}
     >
-      {/* File bar */}
+      {/* File bar: ink band with the file name as data; no product
+          colours or logo. */}
       <div
         style={{
           display: "flex",
@@ -263,31 +211,14 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           flexWrap: "wrap",
           gap: 8,
           padding: "7px 10px",
-          background: "#107C41",
-          color: "white",
+          background: DEMO.ink,
+          color: DEMO.kalk,
+          borderBottom: `1px solid ${DEMO.leinen}`,
           fontFamily: DEMO.font.mono,
           fontSize: 12,
-          letterSpacing: "0.1em",
-          fontWeight: 700,
           minWidth: 0,
         }}
       >
-        <div
-          style={{
-            width: 16,
-            height: 16,
-            background: "white",
-            color: "#107C41",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 12,
-            fontWeight: 900,
-            flexShrink: 0,
-          }}
-        >
-          X
-        </div>
         <span
           style={{
             overflowWrap: "anywhere",
@@ -298,7 +229,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         >
           {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
         </span>
-        <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 12 }}>
+        <span style={{ marginLeft: "auto", fontSize: 12 }}>
           {isDe ? "· gespeichert" : "· local sample"}
         </span>
       </div>
@@ -329,8 +260,8 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         >
           F2
         </span>
-        <span style={{ opacity: 0.6 }}>ƒx</span>
-        <span style={{ color: "var(--color-brand-orange)", fontWeight: 600 }}>
+        <span style={{ color: DEMO.schiefer }}>ƒx</span>
+        <span style={{ color: DEMO.ink, fontWeight: 600 }}>
           {isDe ? "Wachstum W/W" : "Growth W/W"}
         </span>
       </div>
@@ -382,7 +313,9 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
                     color: i === 0 ? DEMO.schiefer : DEMO.ink,
                   }}
                 >
-                  {h}
+                  {h || (
+                    <span className="sr-only">{isDe ? "Zeile" : "Row"}</span>
+                  )}
                 </th>
               ))}
             </tr>
@@ -393,7 +326,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
                 key={`${r.w}-${r.region}`}
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background: i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
+                  background: "transparent",
                 }}
               >
                 <td
@@ -438,7 +371,6 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           color: DEMO.schiefer,
-          letterSpacing: "0.08em",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -449,7 +381,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         <span>{isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}</span>
         <span
           style={{
-            color: "var(--color-brand-orange)",
+            color: DEMO.ink,
             fontWeight: 700,
             display: "inline-flex",
             alignItems: "center",
@@ -457,13 +389,8 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           }}
         >
           <span
-            style={{
-              width: 6,
-              height: 6,
-              background: "var(--color-brand-orange)",
-              borderRadius: 999,
-              boxShadow: "0 0 0 3px rgba(249,115,22,0.18)",
-            }}
+            aria-hidden
+            style={{ width: 6, height: 6, background: DEMO.ink }}
           />
           Claude-Add-In
         </span>
@@ -499,11 +426,8 @@ function TaskPicker({
         <Overline>{text("Aufgabe an Claude", "Task for Claude")}</Overline>
         <span
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
+            ...DEMO.label,
             color: DEMO.schiefer,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
           }}
         >
           {TASKS.length} {text("Aufgaben", "tasks")}
@@ -527,18 +451,17 @@ function TaskPicker({
               padding: "11px 13px",
               background: active ? DEMO.ink : DEMO.birke,
               color: active ? DEMO.kalk : DEMO.ink,
-              border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-              boxShadow: active ? `3px 3px 0 0 var(--color-brand-orange)` : "none",
-              transform: active ? "translate(-2px,-2px)" : "translate(0,0)",
+              // Selected = ink fill (the site's chip grammar): flat, no
+              // offset shadow and no lift.
+              border: `1px solid ${active ? DEMO.ink : DEMO.leinen}`,
               cursor: "pointer",
               fontFamily: "inherit",
-              transition:
-                "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
+              transition: "background-color 120ms, border-color 120ms",
               overflow: "hidden",
             }}
             onMouseEnter={(e) => {
               if (!active) {
-                e.currentTarget.style.borderColor = "var(--color-brand-orange)";
+                e.currentTarget.style.borderColor = DEMO.ink;
                 e.currentTarget.style.background = DEMO.kalk;
               }
             }}
@@ -562,8 +485,7 @@ function TaskPicker({
                   style={{
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
-                    letterSpacing: "0.1em",
-                    color: active ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -586,8 +508,7 @@ function TaskPicker({
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: active ? "rgba(243,240,233,0.7)" : DEMO.schiefer,
-                  letterSpacing: "0.06em",
+                  color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   flexShrink: 0,
                 }}
               >
@@ -607,11 +528,8 @@ function TaskPicker({
             <div
               style={{
                 marginTop: 7,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "0.12em",
-                fontWeight: 700,
+                ...DEMO.label,
+                color: active ? DEMO.kalk : DEMO.ink,
               }}
             >
               {(isDe ? t.action.de : t.action.en)} →
@@ -627,16 +545,7 @@ function TaskPicker({
 
 function Overline({ children }: { readonly children: ReactNode }) {
   return (
-    <div
-      style={{
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        color: "var(--color-brand-orange)",
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        fontWeight: 700,
-      }}
-    >
+    <div style={{ ...DEMO.label, color: DEMO.ink }}>
       {children}
     </div>
   );
@@ -657,11 +566,8 @@ function OutputShell({
     <div
       style={{
         background: DEMO.kalk,
-        borderTop: `3px solid var(--color-brand-orange)`,
-        borderRight: `1px solid ${DEMO.ink}`,
-        borderBottom: `1px solid ${DEMO.ink}`,
-        borderLeft: `1px solid ${DEMO.ink}`,
-        boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
+        border: `1px solid ${DEMO.ink}`,
+        borderTop: `2px solid ${DEMO.ink}`,
         padding: "14px 16px 16px",
       }}
     >
@@ -675,15 +581,8 @@ function OutputShell({
           flexWrap: "wrap",
         }}
       >
-        <Overline>◆ {label}</Overline>
-        <span
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: DEMO.schiefer,
-            letterSpacing: "0.08em",
-          }}
-        >
+        <Overline>{label}</Overline>
+        <span className="text-caption" style={{ color: DEMO.schiefer }}>
           {caption}
         </span>
       </div>
@@ -709,8 +608,8 @@ function FormulaOutput({ text }: OutputProps) {
           border: `1px solid ${DEMO.leinen}`,
           padding: "12px 14px",
           fontFamily: DEMO.font.mono,
-          fontSize: "clamp(12px, 1.6vw, 12px)",
-          color: "var(--color-brand-orange)",
+          fontSize: 12,
+          color: DEMO.ink,
           lineHeight: 1.65,
           overflowWrap: "anywhere",
         }}
@@ -747,9 +646,6 @@ function FormulaOutput({ text }: OutputProps) {
           fontSize: 12,
           color: DEMO.schiefer,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "12px 0 0",
         }}
       >
@@ -774,11 +670,8 @@ function FormulaNote({ k, v }: { readonly k: string; readonly v: string }) {
     >
       <div
         style={{
-          fontFamily: DEMO.font.mono,
-          fontSize: 12,
+          ...DEMO.label,
           color: DEMO.schiefer,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
         }}
       >
         {k}
@@ -799,11 +692,8 @@ function PivotOutput({ locale, text }: OutputProps) {
     >
       <div
         style={{
-          fontFamily: DEMO.font.mono,
-          fontSize: 12,
-          fontWeight: 700,
-          color: "var(--color-brand-orange)",
-          letterSpacing: "0.06em",
+          ...DEMO.label,
+          color: DEMO.ink,
           marginBottom: 10,
         }}
       >
@@ -829,14 +719,10 @@ function PivotOutput({ locale, text }: OutputProps) {
                 <th
                   key={h}
                   style={{
+                    ...DEMO.label,
                     textAlign: i > 0 ? "right" : "left",
                     padding: "8px 8px",
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
                     color: DEMO.schiefer,
-                    fontWeight: 700,
                   }}
                 >
                   {h}
@@ -850,14 +736,14 @@ function PivotOutput({ locale, text }: OutputProps) {
                 key={r.region}
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background: i === 0 ? DEMO.kupferMist : "transparent",
+                  background: "transparent",
                 }}
               >
                 <td
                   style={{
                     padding: "10px 8px",
                     fontWeight: 700,
-                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.ink,
+                    color: DEMO.ink,
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
@@ -868,11 +754,11 @@ function PivotOutput({ locale, text }: OutputProps) {
                       style={{
                         fontFamily: DEMO.font.mono,
                         fontSize: 12,
+                        // The pivot's one Mennige mark: paper on Mennige, 5.4:1.
                         background: "var(--color-brand-orange)",
-                        color: DEMO.kalk,
+                        color: "#f9f7f2",
                         padding: "1px 5px",
-                        letterSpacing: "0.06em",
-                        fontWeight: 800,
+                        fontWeight: 700,
                       }}
                     >
                       #1
@@ -905,7 +791,7 @@ function PivotOutput({ locale, text }: OutputProps) {
                     padding: "10px 8px",
                     textAlign: "right",
                     fontFamily: DEMO.font.mono,
-                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color: i === 0 ? DEMO.ink : DEMO.schiefer,
                     fontWeight: 700,
                   }}
                 >
@@ -921,9 +807,6 @@ function PivotOutput({ locale, text }: OutputProps) {
           fontSize: 12,
           color: DEMO.schiefer,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "14px 0 0",
         }}
       >
@@ -965,12 +848,8 @@ function ForecastOutput({ locale, text }: OutputProps) {
         >
           <span
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
+              ...DEMO.label,
               color: DEMO.schiefer,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontWeight: 700,
             }}
           >
             {text("Angenommenes Wachstum / Woche", "Assumed growth / week")}
@@ -980,9 +859,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
               fontFamily: DEMO.font.mono,
               fontSize: 13,
               fontWeight: 800,
-              color: exceedsRange
-                ? "var(--color-destructive)"
-                : "var(--color-brand-orange)",
+              color: exceedsRange ? "var(--color-destructive)" : DEMO.ink,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -1008,7 +885,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
           style={{
             minHeight: 44,
             width: "100%",
-            accentColor: "var(--color-brand-orange)",
+            accentColor: DEMO.ink,
           }}
         />
       </label>
@@ -1089,10 +966,11 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   width: "62%",
                   maxWidth: 40,
                   height: `${hiH - loH}%`,
-                  background: DEMO.kupferMist,
+                  // Dashed = an estimate (deck grammar); no tint.
+                  background: "transparent",
                   position: "absolute",
                   bottom: `${loH}%`,
-                  border: `1px dashed var(--color-brand-orange)`,
+                  border: `1px dashed ${DEMO.ink}`,
                 }}
               />
               {/* Prediction bar */}
@@ -1104,7 +982,6 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   background: "var(--color-brand-orange)",
                   position: "absolute",
                   bottom: 0,
-                  boxShadow: `2px 2px 0 0 ${DEMO.ink}`,
                 }}
               />
               {/* Value label */}
@@ -1131,7 +1008,6 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   color: DEMO.ink,
                   position: "absolute",
                   bottom: -22,
-                  letterSpacing: "0.06em",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -1160,7 +1036,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
             label={text("Prognose", "Forecast")}
           />
           <LegendDot
-            color={DEMO.kupferMist}
+            color="transparent"
             label={text("Konfidenz-Band", "Confidence band")}
             border
           />
@@ -1171,15 +1047,12 @@ function ForecastOutput({ locale, text }: OutputProps) {
             fontSize: 12,
             color: DEMO.ink,
             fontWeight: 700,
-            letterSpacing: "0.08em",
           }}
         >
           {text("Trend", "Trend")}{" "}
           <span
             style={{
-              color: exceedsRange
-                ? "var(--color-destructive)"
-                : "var(--color-brand-orange)",
+              color: exceedsRange ? "var(--color-destructive)" : DEMO.ink,
             }}
           >
             {locale === "de" ? `+${growthRate} %` : `+${growthRate}%`}
@@ -1194,15 +1067,12 @@ function ForecastOutput({ locale, text }: OutputProps) {
           color: DEMO.schiefer,
           marginTop: 12,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "12px 0 0",
         }}
       >
         {text(
-          "Lineare Projektion mit leichter Quartals-Saisonalität. Die Konfidenz weitet sich mit jeder Woche, realistisch, nicht geschönt.",
-          "A linear projection with light quarterly seasonality. The confidence band widens each week: realistic, not flattering.",
+          "Lineare Projektion mit leichter Quartals-Saisonalität. Das Konfidenzband wird mit jeder Woche breiter.",
+          "A linear projection with light quarterly seasonality. The confidence band widens with each week.",
         )}
       </p>
     </OutputShell>
@@ -1227,7 +1097,6 @@ function LegendDot({
         fontFamily: DEMO.font.mono,
         fontSize: 12,
         color: DEMO.schiefer,
-        letterSpacing: "0.06em",
       }}
     >
       <span
@@ -1235,7 +1104,7 @@ function LegendDot({
           width: 10,
           height: 10,
           background: color,
-          border: border ? `1px dashed var(--color-brand-orange)` : "none",
+          border: border ? `1px dashed ${DEMO.ink}` : "none",
         }}
       />
       {label}

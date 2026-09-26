@@ -2,6 +2,9 @@
 
 import { useState, type CSSProperties, type JSX } from "react";
 import { DEMO } from "@/lib/demo-tokens";
+
+/** Status colours for text on paper: the DEMO status fills fail AA as text. */
+const STATUS_TEXT = { amber: "#854d0e", red: "#b91c1c" } as const;
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
@@ -123,15 +126,17 @@ const ENGLISH_EVAL_ROWS: readonly EvalRow[] = [
 const SCORE_COLORS: Readonly<
   Record<"hoch" | "mittel" | "niedrig", { fg: string; bg: string }>
 > = {
-  hoch: { fg: "#166534", bg: "#dcfce7" },
-  mittel: { fg: "#78350f", bg: "rgba(120,53,15,0.12)" },
-  niedrig: { fg: "#991b1b", bg: "rgba(153,27,27,0.1)" },
+  // Word plus outline on a paper chip, no pastel fill: the rating reads
+  // without colour and stays AA on the ink (selected) row.
+  hoch: { fg: "#205b46", bg: DEMO.kalk },
+  mittel: { fg: "#78350f", bg: DEMO.kalk },
+  niedrig: { fg: "#991b1b", bg: DEMO.kalk },
 };
 
 const SCORE_LABELS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
-  hoch: "HOCH",
-  mittel: "MITTEL",
-  niedrig: "NIEDRIG",
+  hoch: "hoch",
+  mittel: "mittel",
+  niedrig: "niedrig",
 };
 
 function ScoreChip({
@@ -147,6 +152,7 @@ function ScoreChip({
   return (
     <span
       style={{
+        ...DEMO.label,
         display: "inline-flex",
         alignItems: "center",
         gap: 4,
@@ -154,17 +160,12 @@ function ScoreChip({
         background: c.bg,
         color: c.fg,
         padding: "2px 8px",
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.1em",
       }}
     >
       {label}:{" "}
       {locale === "de"
         ? SCORE_LABELS[score]
-        : ({ hoch: "HIGH", mittel: "MEDIUM", niedrig: "LOW" } as const)[score]}
+        : ({ hoch: "high", mittel: "medium", niedrig: "low" } as const)[score]}
     </span>
   );
 }
@@ -257,19 +258,16 @@ export function LlmObservabilityDemo(): JSX.Element {
             key={label}
             style={{
               minWidth: 0,
-              border: `1px solid ${DEMO.leinen}`,
-              borderLeft: `3px solid ${accent ? DEMO.statusAmber : DEMO.schiefer}`,
+              // The mismatch tile is the row's one mark: an ink frame
+              // instead of a coloured left rule.
+              border: `1px solid ${accent ? DEMO.ink : DEMO.leinen}`,
               background: DEMO.birke,
               padding: 14,
             }}
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.14em",
+                ...DEMO.label,
                 color: DEMO.schiefer,
               }}
             >
@@ -282,7 +280,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 fontSize: 20,
                 fontWeight: 700,
                 lineHeight: 1.1,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
                 color: DEMO.ink,
               }}
             >
@@ -306,13 +304,9 @@ export function LlmObservabilityDemo(): JSX.Element {
       <div>
         <div
           style={{
+            ...DEMO.label,
             marginBottom: 8,
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: "var(--color-brand-orange)",
+            color: "var(--color-muted-foreground)",
           }}
         >
           {text("Eval-Szenarien (Beispiele)", "Evaluation scenarios (samples)")}
@@ -332,7 +326,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                   alignItems: "flex-start",
                   justifyContent: "space-between",
                   gap: 12,
-                  border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
+                  border: `1px solid ${active ? DEMO.ink : DEMO.leinen}`,
                   background: active ? DEMO.ink : DEMO.birke,
                   color: active ? DEMO.kalk : DEMO.ink,
                   padding: 12,
@@ -366,36 +360,28 @@ export function LlmObservabilityDemo(): JSX.Element {
                   {row.driftFlag && (
                     <span
                       style={{
+                        ...DEMO.label,
                         border: `1px solid ${DEMO.statusAmber}`,
-                        background: "rgba(234,179,8,0.12)",
-                        color: DEMO.statusAmber,
+                        background: DEMO.kalk,
+                        color: STATUS_TEXT.amber,
                         padding: "1px 6px",
-                        fontFamily: DEMO.font.mono,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.1em",
                       }}
                     >
-                      DRIFT
+                      Drift
                     </span>
                   )}
                   {row.humanScore !== null &&
                     row.humanScore !== row.autoScore && (
                       <span
                         style={{
-                          border: `1px solid ${DEMO.statusRed}`,
-                          background: "rgba(239,68,68,0.12)",
-                          color: DEMO.statusRed,
+                          ...DEMO.label,
+                          border: `1px solid ${STATUS_TEXT.red}`,
+                          background: DEMO.kalk,
+                          color: STATUS_TEXT.red,
                           padding: "1px 6px",
-                          fontFamily: DEMO.font.mono,
-                          fontSize: 12,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.1em",
                         }}
                       >
-                        {text("DIVERGENZ", "MISMATCH")}
+                        {text("Abweichung", "Mismatch")}
                       </span>
                     )}
                 </div>
@@ -415,11 +401,7 @@ export function LlmObservabilityDemo(): JSX.Element {
       >
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
+            ...DEMO.label,
             color: DEMO.schiefer,
           }}
         >
@@ -457,12 +439,9 @@ export function LlmObservabilityDemo(): JSX.Element {
           ) : (
             <span
               style={{
+                ...DEMO.label,
                 border: `1px solid ${DEMO.leinen}`,
                 padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
                 color: DEMO.schiefer,
               }}
             >
@@ -472,27 +451,22 @@ export function LlmObservabilityDemo(): JSX.Element {
           {selected.driftFlag && (
             <span
               style={{
+                ...DEMO.label,
                 border: `1px solid ${DEMO.statusAmber}`,
-                background: "rgba(234,179,8,0.12)",
-                color: DEMO.statusAmber,
+                background: DEMO.kalk,
+                color: STATUS_TEXT.amber,
                 padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
               }}
             >
-              {text("DRIFT-INDIKATOR AKTIV", "DRIFT FLAG ACTIVE")}
+              {text("Drift-Indikator aktiv", "Drift flag active")}
             </span>
           )}
         </div>
         <div
           style={{
             marginTop: 12,
-            borderLeft: `2px solid ${DEMO.leinen}`,
-            background: "rgba(11,9,8,0.03)",
-            padding: 12,
+            borderTop: `1px solid ${DEMO.leinen}`,
+            paddingTop: 12,
           }}
         >
           <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.schiefer }}>
@@ -534,12 +508,8 @@ export function LlmObservabilityDemo(): JSX.Element {
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.14em",
-                color: "var(--color-brand-orange)",
+                ...DEMO.label,
+                color: "var(--color-muted-foreground)",
               }}
             >
               {text(
@@ -556,7 +526,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 color: DEMO.schiefer,
               }}
             >
-              {showFailureBeat ? "▲" : "▼"}
+              {showFailureBeat ? "−" : "+"}
             </span>
           </div>
         </button>
@@ -621,9 +591,8 @@ export function LlmObservabilityDemo(): JSX.Element {
             ))}
             <div
               style={{
-                borderLeft: "2px solid var(--color-brand-orange)",
-                background: "rgba(249,115,22,0.05)",
-                padding: 12,
+                borderTop: `2px solid ${DEMO.ink}`,
+                paddingTop: 12,
               }}
             >
               <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.ink }}>

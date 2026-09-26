@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+const progressState = vi.hoisted(() => ({ completed: 1 }));
+
 vi.mock("@/lib/progress", () => ({
   subscribe: (listener: () => void) => {
     listener();
@@ -8,7 +10,7 @@ vi.mock("@/lib/progress", () => ({
   },
   getEvidenceBackedCompletedLessonIds: () => new Set(["lesson-1"]),
   getCompletedLessonIds: () => new Set(["lesson-1"]),
-  getCompletedLessonsCount: () => 1,
+  getCompletedLessonsCount: () => progressState.completed,
   getOverallProgress: () => 50,
 }));
 
@@ -32,6 +34,24 @@ describe("TechnicalCourseProgress", () => {
     expect(
       screen.getByRole("progressbar", { name: "Lesson progress" }),
     ).toHaveAttribute("aria-valuenow", "50");
+  });
+
+  it("renders nothing for a visitor without a completed lesson", () => {
+    progressState.completed = 0;
+    try {
+      const { container } = render(
+        <TechnicalCourseProgressBar
+          courseSlug="ai-native-operator"
+          totalLessons={2}
+          label="Lesson progress"
+          unitLabel="lessons"
+        />,
+      );
+      expect(container).toBeEmptyDOMElement();
+      expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+    } finally {
+      progressState.completed = 1;
+    }
   });
 
   it("reports per-track and overall progress without card chrome", () => {

@@ -71,6 +71,8 @@ export default async function WorkshopsPage() {
           isAccessibleForFree: true,
           learningResourceType: "Workshop",
           educationalUse: "self-study",
+          timeRequired: `PT${workshop.minutesLive ?? workshop.minutesSelfStudy}M`,
+          teaches: workshop.outcomes,
         })),
       },
     ],

@@ -27,6 +27,8 @@ vi.mock("./learning-atlas", () => ({
 }));
 
 import KursePage from "./page";
+import { getWorkshops } from "@/lib/workshops";
+import { numberWord } from "@/lib/courses/course-hub-copy";
 
 describe("course hub introduction", () => {
   beforeEach(() => {
@@ -40,7 +42,7 @@ describe("course hub introduction", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /KI verstehen,\s*einsetzen und prüfen\./,
+        name: "Kostenlose KI-Kurse für den Arbeitsalltag.",
       }),
     ).toBeVisible();
     expect(
@@ -59,6 +61,36 @@ describe("course hub introduction", () => {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
 
+    // Workshops appear once as the practical companion, with the registry
+    // count, and the cost note states its facts in plain text.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Lieber an einem Fall arbeiten?" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Workshops ansehen" }),
+    ).toHaveAttribute("href", "/workshops");
+    expect(
+      screen.getByText(
+        new RegExp(`In jedem der ${numberWord("de", getWorkshops("de").length)} Workshops`),
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Kosten und Konto" }),
+    ).toBeInTheDocument();
+    // The cost note sits before the workshop band and offers one action.
+    expect(
+      screen.getByRole("link", { name: "Lernkonto anlegen" }),
+    ).toHaveAttribute("href", "/konto");
+    expect(screen.queryByRole("link", { name: "Über mich" })).toBeNull();
+    const accessHeading = screen.getByRole("heading", { level: 2, name: "Kosten und Konto" });
+    const band = document.querySelector("[data-kurse-workshops]") as HTMLElement;
+    expect(
+      accessHeading.compareDocumentPosition(band) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(document.querySelector("details")).toBeNull();
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+
     expect(
       screen.queryByText("Was ist der Unterschied?"),
     ).not.toBeInTheDocument();
@@ -75,12 +107,18 @@ describe("course hub introduction", () => {
       screen.queryByText(/Four foundation courses establish the base/),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Map it in five minutes" }),
+      screen.getByRole("link", { name: "Find out in five minutes" }),
     ).toHaveAttribute("href", "/en/ki-check");
     expect(screen.getByTestId("learning-atlas")).toHaveAttribute(
       "data-locale",
       "en",
     );
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Free AI courses for everyday work." }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "See the workshops" }),
+    ).toHaveAttribute("href", "/en/workshops");
   });
 
   it.each([false, true])("passes public access facts from server readiness %s", async (ready) => {

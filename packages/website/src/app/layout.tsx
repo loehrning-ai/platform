@@ -89,7 +89,7 @@ export const viewport: Viewport = {
   // report zero unless the viewport covers the whole screen. Zoom stays
   // unrestricted: no maximumScale, no userScalable.
   viewportFit: "cover",
-  themeColor: "#f7f1e7",
+  themeColor: "#f3f0e9",
 };
 
 // Hosting on Vercel does not silently opt the site into measurement. The

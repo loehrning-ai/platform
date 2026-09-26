@@ -24,7 +24,7 @@
 
   /* ---- inject widget UI stylesheet once --------------------------------- */
   const css = `
-  .fl-root{font-family:'Space Grotesk',Inter,sans-serif;color:#16140E;width:100%;}
+  .fl-root{font-family:'Typing',system-ui,sans-serif;color:#16140E;width:100%;}
   .fl-card{background:#F4F0E7;border:1.5px solid rgba(20,18,12,.20);border-radius:4px;box-shadow:none;overflow:hidden;}
   .fl-chartwrap{position:relative;width:100%;}
   .fl-chartwrap canvas{display:block;width:100%;height:100%;touch-action:none;}
@@ -32,29 +32,29 @@
   .fl-overlay{position:absolute;pointer-events:none;font-weight:600;}
   .fl-controls{display:flex;flex-wrap:wrap;align-items:center;gap:22px 30px;padding:26px 28px;border-top:1.5px solid rgba(20,18,12,.16);}
   .fl-ctl{display:flex;flex-direction:column;gap:9px;min-width:172px;}
-  .fl-ctl-label{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#16140E;display:flex;justify-content:space-between;gap:14px;align-items:baseline;}
-  .fl-ctl-val{font-family:'Space Mono',monospace;font-variant-numeric:tabular-nums;color:#F23005;font-weight:700;font-size:25px;}
+  .fl-ctl-label{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:18px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#16140E;display:flex;justify-content:space-between;gap:14px;align-items:baseline;}
+  .fl-ctl-val{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;color:#F23005;font-weight:700;font-size:25px;}
   input[type=range].fl-range{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:0;background:rgba(20,18,12,.24);outline:none;cursor:pointer;}
   input[type=range].fl-range:focus-visible{outline:3px solid #F23005;outline-offset:5px;}
   input[type=range].fl-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:30px;border-radius:1px;background:#F23005;border:0;cursor:grab;}
   .fl-seg{display:inline-flex;background:#E8E3D7;border:1.5px solid rgba(20,18,12,.20);border-radius:3px;padding:4px;gap:4px;}
-  .fl-seg button{appearance:none;border:0;background:transparent;font-family:'Space Mono',monospace;font-weight:700;font-size:18px;letter-spacing:.4px;text-transform:uppercase;color:#55514A;padding:13px 22px;border-radius:2px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;}
+  .fl-seg button{appearance:none;border:0;background:transparent;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;font-size:18px;letter-spacing:.4px;text-transform:uppercase;color:#55514A;padding:13px 22px;border-radius:2px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;}
   .fl-seg button[aria-pressed=true]{background:#F23005;color:#0C0C0D;}
-  .fl-chip{appearance:none;border:1.5px solid rgba(20,18,12,.28);background:transparent;font-family:'Space Mono',monospace;font-weight:700;font-size:18px;letter-spacing:.4px;text-transform:uppercase;color:#16140E;padding:14px 18px;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:background .15s,border-color .15s,color .15s;}
+  .fl-chip{appearance:none;border:1.5px solid rgba(20,18,12,.28);background:transparent;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;font-size:18px;letter-spacing:.4px;text-transform:uppercase;color:#16140E;padding:14px 18px;border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;transition:background .15s,border-color .15s,color .15s;}
   .fl-chip[aria-pressed=true]{background:rgba(242,48,5,.14);border-color:#F23005;color:#F23005;}
   .fl-chip .dot{width:10px;height:10px;border-radius:0;background:#A8A294;flex:none;}
   .fl-chip[aria-pressed=true] .dot{background:var(--chipdot,#F23005);}
-  .fl-btn{appearance:none;border:0;background:#F23005;color:#0C0C0D;font-family:'Space Mono',monospace;font-weight:700;font-size:20px;letter-spacing:1px;text-transform:uppercase;padding:17px 32px;border-radius:3px;cursor:pointer;transition:transform .05s,filter .15s;}
+  .fl-btn{appearance:none;border:0;background:#F23005;color:#0C0C0D;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;font-size:20px;letter-spacing:1px;text-transform:uppercase;padding:17px 32px;border-radius:3px;cursor:pointer;transition:transform .05s,filter .15s;}
   .fl-btn:hover{filter:brightness(1.08);} .fl-btn:active{transform:scale(.97);}
   .fl-btn.ghost{background:transparent;color:#16140E;border:2px solid rgba(20,18,12,.38);}
   .fl-btn.ghost:hover{border-color:#16140E;}
   .fl-metrics{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
   .fl-metric{background:#E8E3D7;border:1.5px solid rgba(20,18,12,.14);border-radius:3px;padding:14px 20px;min-width:118px;}
-  .fl-metric .k{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#55514A;letter-spacing:.6px;text-transform:uppercase;}
+  .fl-metric .k{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:16px;font-weight:700;color:#55514A;letter-spacing:.6px;text-transform:uppercase;}
   .fl-metric .v{font-size:39px;font-weight:700;color:#16140E;font-variant-numeric:tabular-nums;line-height:1.15;}
   .fl-note{font-size:22px;line-height:1.5;color:#55514A;max-width:none;}
   .fl-note b{color:#16140E;font-weight:700;}
-  .fl-tag{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:17px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:11px 16px;border-radius:3px;}
+  .fl-tag{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:17px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:11px 16px;border-radius:3px;}
   .fl-coach{display:flex;align-items:center;gap:13px;font-size:21px;font-weight:500;color:#55514A;background:#E8E3D7;border:1.5px solid rgba(20,18,12,.16);border-left:4px solid #A8A294;border-radius:3px;padding:15px 20px;flex:1 1 360px;min-width:320px;transition:background .2s,border-color .2s,color .2s;}
   .fl-coach .ic{width:26px;height:26px;border-radius:0;flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#0C0C0D;background:#A8A294;}
   .fl-coach.good{border-left-color:#0E8A5E;color:#16140E;}
@@ -363,11 +363,11 @@
       // region shading
       regions.forEach(r => {
         ctx.fillStyle = r.color; ctx.fillRect(xToPx(r.x0), y0, xToPx(r.x1) - xToPx(r.x0), y1 - y0);
-        if (r.label) { ctx.fillStyle = r.labelColor || C.sub; ctx.font = "700 16px 'Space Mono',monospace"; ctx.textAlign = 'start'; ctx.fillText(r.label, xToPx(r.x0) + 10, y0 + 20); }
+        if (r.label) { ctx.fillStyle = r.labelColor || C.sub; ctx.font = "700 16px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'start'; ctx.fillText(r.label, xToPx(r.x0) + 10, y0 + 20); }
       });
       // gridlines + y labels
       ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.fillStyle = C.sub;
-      ctx.font = "600 16px 'Space Mono',monospace"; ctx.textAlign = 'end'; ctx.textBaseline = 'middle';
+      ctx.font = "600 16px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'end'; ctx.textBaseline = 'middle';
       const ticks = 4;
       for (let i = 0; i <= ticks; i++) {
         const yv = ymin + (ymax - ymin) * i / ticks, py = yToPx(yv);
@@ -376,7 +376,7 @@
       }
       // x labels
       if (cfg.xlabels) {
-        ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = C.sub; ctx.font = "600 15px 'Space Mono',monospace";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = C.sub; ctx.font = "600 15px 'JetBrains Mono',ui-monospace,monospace";
         cfg.xlabels.forEach(l => { ctx.fillText(l.t, xToPx(l.x), y1 + 13); });
       }
       // entrance / sim clip
@@ -396,7 +396,7 @@
         ctx.restore();
         if (cfg.markerLabel) {
           // label sits right of its dashed line, with a paper halo so data lines never cut through it
-          ctx.save(); ctx.font = "700 15px 'Space Mono',monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+          ctx.save(); ctx.font = "700 15px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
           const mt = ctx.measureText(cfg.markerLabel), up = mt.fontBoundingBoxAscent != null ? mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent : 17;
           ctx.fillStyle = 'rgba(255,253,247,.92)'; ctx.fillRect(xToPx(cfg.marker) + 3, y0 + 14 - up - 1, mt.width + 6, up + 2);
           ctx.fillStyle = C.sub; ctx.fillText(cfg.markerLabel, xToPx(cfg.marker) + 6, y0 + 14); ctx.restore();

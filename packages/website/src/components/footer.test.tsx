@@ -155,7 +155,7 @@ describe("Footer semantics and stable public dates", () => {
     }
   });
 
-  it("uses compact editorial geometry with a restrained Berlin backdrop", async () => {
+  it("is a flat graphit band with hairlines and no decorative shapes", async () => {
     await renderFooter("de");
 
     const footer = document.querySelector("footer");
@@ -166,7 +166,14 @@ describe("Footer semantics and stable public dates", () => {
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
     expect(footer).toHaveClass("dark-section");
-    expect(footer?.innerHTML).toMatch(/rounded-(?:full|xl)|shadow-/);
+    // Werkzeichnung: square geometry, no stamp shadows, no decorative
+    // circles, no hover lift and no mono-uppercase labels.
+    expect(footer?.innerHTML).not.toMatch(/rounded-|shadow-|-translate-y-/);
+    expect(footer?.querySelectorAll('[aria-hidden="true"].absolute')).toHaveLength(0);
+    expect(footer?.innerHTML).not.toMatch(/\buppercase\b/);
+    for (const heading of footer?.querySelectorAll("h2") ?? []) {
+      expect(heading).toHaveClass("text-label");
+    }
   });
 
   it("derives the copyright year from reviewed content instead of the wall clock", async () => {
@@ -223,9 +230,10 @@ describe("Footer link disclosure below lg", () => {
     expect(summary?.parentElement).toBe(disclosure);
     expect(summary).toHaveTextContent("Alle Bereiche");
     // The summary is the only way into the columns on a phone: 44px floor,
-    // and a label at 14px rather than anything below the 12px typography floor.
+    // and a label at 14px (the text-label token, 0.875rem) rather than
+    // anything below the 12px typography floor.
     expect(summary?.className).toContain("min-h-11");
-    expect(summary?.className).toContain("text-sm");
+    expect(summary?.className).toContain("text-label");
 
     const indicator = summary?.querySelector("[aria-hidden='true']");
     expect(indicator).toHaveTextContent("+");

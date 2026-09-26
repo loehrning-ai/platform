@@ -13,6 +13,8 @@ import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
 import {
   orderDecisionOptions,
   selectFeedback,
+  splitFact,
+  keepNumbersWithUnits,
   WorkshopDecisionLab,
 } from "./workshop-decision-lab";
 
@@ -264,10 +266,19 @@ describe("<WorkshopDecisionLab>", () => {
     expect(choice?.className).not.toMatch(
       /translate|motion-safe|motion-reduce/,
     );
+    // Sentence-case kicker in Schiefer: no orange, no mono caps.
     expect(screen.getByText(workshop!.decisionLab.kicker)).toHaveClass(
-      "text-xs",
-      "text-brand-orange",
+      "text-label",
+      "text-muted-foreground",
     );
+    // Square radio rows on the Beton band, no per-option boxes.
+    expect(choice).toHaveClass("border-b", "border-hairline", "min-h-12");
+    expect(choice?.className).not.toMatch(/(?:^| )border(?: |$)|border-2/);
+    expect(
+      screen.getByRole("radio", { name: /Allocate proportionally/ }),
+    ).toHaveClass("appearance-none", "border-2", "border-foreground");
+    const lab = document.querySelector("[data-workshop-decision-lab]");
+    expect(lab).toHaveClass("border-t-2", "border-foreground", "bg-inset");
 
     const source = readFileSync(
       resolve(
@@ -278,9 +289,16 @@ describe("<WorkshopDecisionLab>", () => {
     );
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/motion-safe|motion-reduce|animate-|shadow-/);
-    expect(source).toContain(
-      "grid grid-cols-1 border-y border-border sm:grid-cols-3",
-    );
+    expect(source).not.toMatch(/border-l-\[\d+px\]|uppercase|font-mono|font-black/);
+    // Facts are a hairline fact table: label above value.
+    const facts = lab?.querySelector("header dl");
+    expect(facts).toHaveClass("border-t", "border-hairline");
+    expect(facts?.querySelectorAll("dt")).toHaveLength(3);
+    expect(facts?.querySelectorAll("dd")).toHaveLength(3);
+    // A column is never narrower than its longest word, so "12 Stromrechnungen"
+    // wraps between the words instead of inside one.
+    expect(facts).toHaveClass("min-[26rem]:auto-cols-[minmax(min-content,1fr)]");
+    expect(facts).not.toHaveClass("min-[26rem]:grid-cols-3");
   });
 });
 
@@ -373,21 +391,33 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
     const lab = workshop.decisionLab;
     const { container } = render(<WorkshopDecisionLab config={lab} locale="en" />);
+    // No Mennige in the lab before a check.
+    expect(container.querySelector("[data-strongest-mark]")).toBeNull();
 
     fireEvent.click(screen.getByRole("radio", { name: lab.choices[1].label }));
     fireEvent.click(screen.getByRole("radio", { name: lab.evidence[1].label }));
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     let outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "wrong");
-    expect(outcome).toHaveClass("border-destructive");
+    expect(outcome.querySelector('[data-pictogram="fail"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Not quite/);
     expect(outcome.querySelector("svg")).not.toBeNull();
     const wrongPick = screen.getByRole("radio", { name: lab.choices[1].label });
-    expect(wrongPick).toHaveAccessibleDescription("Your pick · not the strongest");
+    expect(wrongPick).toHaveAccessibleDescription("Your pick · not correct");
     expect(wrongPick.closest("label")).toHaveAttribute("data-option-mark", "wrong-pick");
+    // A wrong evidence pick says so in evidence terms, a wrong decision does not.
+    expect(
+      screen.getByRole("radio", { name: lab.evidence[1].label }),
+    ).toHaveAccessibleDescription("Your pick · not the strongest evidence");
     const rightChoice = screen.getByRole("radio", { name: lab.choices[0].label });
     expect(rightChoice).toHaveAccessibleDescription("Correct answer");
-    expect(rightChoice.closest("label")).toHaveClass("border-brand-teal");
+    expect(rightChoice.closest("label")).toHaveAttribute("data-option-mark", "correct");
+    expect(rightChoice.closest("label")?.querySelector('[data-pictogram="pass"]')).not.toBeNull();
+    // The lab's one Mennige mark sits on the strongest-evidence square, only after a check.
+    const marked = document.querySelectorAll("[data-strongest-mark]");
+    expect(marked).toHaveLength(1);
+    expect(marked[0]).toHaveAttribute("value", lab.strongestEvidenceId);
+    expect(marked[0]).toHaveClass("outline-mennige");
     expect(screen.getByRole("button", { name: "Decide again" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Decide again" }));
@@ -396,7 +426,7 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "correct");
-    expect(outcome).toHaveClass("border-brand-teal");
+    expect(outcome.querySelector('[data-chip="pass"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Correct/);
     expect(screen.getByRole("radio", { name: lab.choices[0].label })).toHaveAccessibleDescription("Your pick · correct");
     expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
@@ -407,7 +437,32 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "partial");
-    expect(outcome).toHaveClass("border-brand-amber");
+    expect(outcome.querySelector('[data-chip="gap"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Almost/);
+  });
+});
+
+describe("splitFact", () => {
+  it("splits authored facts into label and value for the fact table", () => {
+    expect(splitFact("Endbestand 100 €")).toEqual({ label: "Endbestand", value: "100 €" });
+    expect(splitFact("Change +€20")).toEqual({ label: "Change", value: "+€20" });
+    expect(splitFact("Nachfrage p50 1.180")).toEqual({ label: "Nachfrage p50", value: "1.180" });
+    expect(splitFact("KI-Antwort 2025: 1.866,5 t CO₂e")).toEqual({
+      label: "KI-Antwort 2025",
+      value: "1.866,5 t CO₂e",
+    });
+    expect(splitFact("Meiste Mängel · Monat 2")).toEqual({ label: "Meiste Mängel", value: "Monat 2" });
+    expect(splitFact("Revenue €4.12m")).toEqual({ label: "Revenue", value: "€4.12m" });
+  });
+});
+
+describe("keepNumbersWithUnits", () => {
+  it("binds numbers to the unit after them, leaving other spaces alone", () => {
+    expect(keepNumbersWithUnits("100 Euro plus 20 Euro. Wirklich 120?")).toBe(
+      "100\u00a0Euro plus 20\u00a0Euro. Wirklich 120?",
+    );
+    expect(keepNumbersWithUnits("1.050 Stück, 7,5 % weniger")).toBe(
+      "1.050\u00a0Stück, 7,5\u00a0% weniger",
+    );
   });
 });

@@ -4,8 +4,8 @@ import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 const WORKSHOP_ROUTES = [
   {
     path: "/workshops",
-    deHeading: "Selbstlern-Workshops für konkrete Entscheidungen.",
-    enHeading: "Self-study workshops for concrete decisions.",
+    deHeading: "Workshops mit Fall und Vorlage",
+    enHeading: "Workshops with a case and a template",
     materialCount: 0,
   },
   {
@@ -24,12 +24,18 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
-    materialCount: 3,
+    materialCount: 7,
+  },
+  {
+    path: "/workshops/esg-berichte-mit-ki",
+    deHeading: "ESG-Berichte mit KI: Von Rohdaten zu klaren Erkenntnissen",
+    enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
+    materialCount: 7,
   },
 ] as const;
 
 const GERMAN_INTERFACE_TOKENS =
-  /(?:Für wen|Alle Workshops|Die offene Entscheidung|Einordnung|Kostenlos und ohne Anmeldung|Material zum Mitnehmen|Verfügbare Workshops)/;
+  /(?:Für wen|Alle Workshops|Die offene Entscheidung|Einordnung|Kostenlos und ohne Anmeldung|Das brauchst du|Nicht Teil dieses Workshops|Verfügbare Workshops)/;
 
 for (const width of [320, 390, 768, 1440] as const) {
   test(`workshop DE/EN pages are complete and contain their layout at ${width}px`, async ({
@@ -143,7 +149,9 @@ for (const width of [320, 390, 768, 1440] as const) {
           state.documentWidth,
           `${localizedPath} document overflow`,
         ).toBeLessThanOrEqual(width + 1);
-        expect(state.materialHrefs).toHaveLength(route.materialCount);
+        // The cover's start buttons point at materials that the list below
+        // also carries, so count distinct files: each one listed once.
+        expect(new Set(state.materialHrefs).size).toBe(route.materialCount);
         expect(
           state.materialHrefs.every(
             (href) =>

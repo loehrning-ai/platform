@@ -66,13 +66,13 @@ export function CompletionCertificateCta({
   return (
     <section
       className={cn(
-        "border-2 border-foreground bg-brand-acid/15 p-5",
+        "border-t-2 border-foreground pt-5",
         className,
       )}
       aria-labelledby={headingId}
       data-certificate-cta={courseSlug}
     >
-      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+      <p className="text-label text-muted-foreground">
         <GraduationCap
           className="mr-1.5 inline h-3.5 w-3.5"
           aria-hidden="true"
@@ -81,20 +81,20 @@ export function CompletionCertificateCta({
       </p>
       <h2
         id={headingId}
-        className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground"
+        className="mt-2 text-fluid-h3 font-bold text-foreground"
       >
         {isGerman
           ? `${config.recordNoun.possessive} ist bereit.`
           : `Your ${config.recordNoun.label.toLowerCase()} is ready.`}
       </h2>
-      <p className="mt-2 max-w-[620px] text-[13.5px] leading-relaxed text-muted-foreground">
+      <p className="mt-2 max-w-[64ch] text-body text-muted-foreground">
         {isGerman
           ? "Alle erforderlichen Lektionen sind abgeschlossen. Die Download-Seite prüft deinen Lernstand erneut, bevor sie die lokale PDF vorbereitet."
           : "Every required lesson is complete. The download page checks your progress again before preparing the local PDF."}
       </p>
       <Link
         href={certificateHref}
-        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3 text-left text-[12px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-brand-orange/90"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-foreground px-5 py-3 text-left text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
       >
         {isGerman
           ? `${config.recordNoun.label} öffnen`

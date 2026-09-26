@@ -9,16 +9,7 @@ import {
   type FormEvent,
   type RefObject,
 } from "react";
-import {
-  ArrowRight,
-  Check,
-  CircleAlert,
-  CircleCheck,
-  CircleX,
-  RotateCcw,
-  ShieldCheck,
-  X,
-} from "lucide-react";
+import { Chip, cx, Pictogram } from "@/components/werk";
 import type {
   WorkshopDecisionFeedback,
   WorkshopDecisionLabConfig,
@@ -29,6 +20,8 @@ import type { Locale } from "@/lib/i18n/locale";
 interface WorkshopDecisionLabProps {
   readonly config: WorkshopDecisionLabConfig;
   readonly locale: Locale;
+  /** Anchor id of the band, so the agenda can link to it. */
+  readonly id?: string;
 }
 
 type ValidationError = "decision" | "evidence" | null;
@@ -44,7 +37,8 @@ const LAB_COPY = {
     },
     correctOption: "Correct answer",
     yourCorrectPick: "Your pick · correct",
-    yourWrongPick: "Your pick · not the strongest",
+    yourWrongDecision: "Your pick · not correct",
+    yourWrongEvidence: "Your pick · not the strongest evidence",
     resetAfterCorrect: "Reset",
     validation: {
       decision: "Select one decision before checking the result.",
@@ -52,7 +46,7 @@ const LAB_COPY = {
     },
     loading: "The choices unlock once JavaScript has loaded.",
     noScript:
-      "JavaScript is required for this exercise. You can still read the course and download its materials without it.",
+      "JavaScript is required for this exercise. The page and the materials work without it.",
   },
   de: {
     outcome: {
@@ -62,7 +56,8 @@ const LAB_COPY = {
     },
     correctOption: "Richtige Antwort",
     yourCorrectPick: "Deine Wahl · richtig",
-    yourWrongPick: "Deine Wahl · nicht die stärkste",
+    yourWrongDecision: "Deine Wahl · nicht richtig",
+    yourWrongEvidence: "Deine Wahl · nicht der stärkste Beleg",
     resetAfterCorrect: "Zurücksetzen",
     validation: {
       decision: "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.",
@@ -70,7 +65,7 @@ const LAB_COPY = {
     },
     loading: "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist.",
     noScript:
-      "Diese Übung benötigt JavaScript. Du kannst den Kurs und seine Materialien auch ohne JavaScript lesen und herunterladen.",
+      "Diese Übung benötigt JavaScript. Die Seite und das Material funktionieren auch ohne.",
   },
 } as const;
 
@@ -167,28 +162,59 @@ export function orderDecisionOptions(
   return { choices: rotate(config.choices), evidence: rotate(config.evidence) };
 }
 
-function optionClass(selected: boolean, mark: OptionMark): string {
-  const tone =
-    mark === "correct"
-      ? "border-2 border-brand-teal bg-brand-teal/10"
-      : mark === "wrong-pick"
-        ? "border-2 border-destructive bg-destructive/5"
-        : mark === "other"
-          ? "border-border bg-background text-muted-foreground hover:border-foreground/50"
-          : selected
-            ? "border-brand-orange bg-brand-orange/10"
-            : "border-border bg-background hover:border-foreground/50";
-  return [
-    "flex min-h-12 cursor-pointer items-start gap-3 border p-3 text-left transition-colors",
-    tone,
-  ].join(" ");
+/**
+ * Facts are authored as one string ("Endbestand 100 €", "KI-Antwort 2025:
+ * 1.866,5 t CO₂e", "Meiste Mängel · Monat 2"). Split them into label and
+ * value for the fact table: at the first colon or middle dot, otherwise
+ * before the first token that starts with a digit, sign or currency.
+ */
+export function splitFact(fact: string): {
+  readonly label: string;
+  readonly value: string;
+} {
+  for (const separator of [": ", " · "]) {
+    const at = fact.indexOf(separator);
+    if (at > 0)
+      return {
+        label: fact.slice(0, at),
+        value: fact.slice(at + separator.length),
+      };
+  }
+  const match = /^(.*?\S)\s+([+\-−±~≈€$£]*\d.*)$/u.exec(fact);
+  if (match) return { label: match[1], value: match[2] };
+  return { label: "", value: fact };
 }
+
+/** Bind a number to the word or unit after it ("20 Euro", "1.050 Stück"), so a title never breaks between them. */
+export function keepNumbersWithUnits(text: string): string {
+  return text.replace(/(\d) (?=[\p{L}€%])/gu, "$1\u00a0");
+}
+
+const OPTION_ROW =
+  "flex min-h-12 cursor-pointer items-start gap-3 border-b border-hairline px-2 py-3 text-left transition-colors duration-[120ms] hover:bg-card has-[:checked]:bg-card";
+
+/**
+ * Square radio, the same shape as the Route's current station: an ink frame
+ * that fills when checked, leaving a card-coloured square inside. Native
+ * input, so keyboard and screen-reader behaviour stay as they are.
+ */
+const RADIO =
+  "mt-0.5 size-5 shrink-0 cursor-pointer appearance-none border-2 border-foreground bg-card checked:border-[6px] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait";
+
+/**
+ * After a check the strongest-evidence square gets the lab's one Mennige
+ * mark. It is a non-text outline (4.55:1 on Beton), and the option also
+ * carries the pass pictogram and a word, so colour is never the only cue.
+ */
+const STRONGEST_MARK = "outline outline-2 outline-offset-2 outline-mennige";
 
 function DecisionOption({
   option,
   name,
   selected,
   mark,
+  strongest,
+  kind,
   copy,
   onSelect,
   inputRef,
@@ -197,6 +223,10 @@ function DecisionOption({
   readonly name: string;
   readonly selected: boolean;
   readonly mark: OptionMark;
+  /** True for the strongest-evidence option once the result is shown. */
+  readonly strongest: boolean;
+  /** Which fieldset the option belongs to; picks the wording of a wrong pick. */
+  readonly kind: "decision" | "evidence";
   readonly copy: (typeof LAB_COPY)[Locale];
   readonly onSelect: (id: string) => void;
   readonly inputRef?: RefObject<HTMLInputElement | null>;
@@ -209,12 +239,14 @@ function DecisionOption({
         ? copy.yourCorrectPick
         : copy.correctOption
       : mark === "wrong-pick"
-        ? copy.yourWrongPick
+        ? kind === "decision"
+          ? copy.yourWrongDecision
+          : copy.yourWrongEvidence
         : null;
 
   return (
     <label
-      className={optionClass(selected, mark)}
+      className={OPTION_ROW}
       htmlFor={inputId}
       data-option-mark={mark ?? undefined}
     >
@@ -228,13 +260,16 @@ function DecisionOption({
         required
         onChange={() => onSelect(option.id)}
         aria-describedby={markText ? markId : undefined}
-        className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+        data-strongest-mark={strongest ? "" : undefined}
+        className={cx(RADIO, strongest && STRONGEST_MARK)}
       />
       <span className="min-w-0 flex-1">
         <span
-          className={`block text-sm font-medium leading-snug ${
-            mark === "other" ? "text-muted-foreground" : "text-foreground"
-          }`}
+          className={cx(
+            "block text-[0.9375rem] leading-snug",
+            selected ? "font-semibold" : "font-normal",
+            mark === "other" ? "text-muted-foreground" : "text-foreground",
+          )}
         >
           {option.label}
         </span>
@@ -244,15 +279,15 @@ function DecisionOption({
             // Kept out of the radio's name (the option label stays the name);
             // aria-describedby still announces it as the description.
             aria-hidden="true"
-            className={`mt-1.5 flex items-center gap-1.5 text-xs font-bold ${
-              mark === "correct" ? "text-brand-teal" : "text-destructive"
-            }`}
-          >
-            {mark === "correct" ? (
-              <Check className="h-4 w-4 shrink-0" aria-hidden="true" />
-            ) : (
-              <X className="h-4 w-4 shrink-0" aria-hidden="true" />
+            className={cx(
+              "mt-1.5 flex items-center gap-1.5 text-label",
+              mark === "correct" ? "text-pass" : "text-foreground",
             )}
+          >
+            <Pictogram
+              name={mark === "correct" ? "pass" : "fail"}
+              className="size-4"
+            />
             {markText}
           </span>
         ) : null}
@@ -285,18 +320,32 @@ export function selectFeedback(
   };
 }
 
-const OUTCOME_STYLE: Record<
-  Outcome,
-  { readonly border: string; readonly text: string; readonly Icon: typeof CircleCheck }
-> = {
-  correct: { border: "border-brand-teal", text: "text-brand-teal", Icon: CircleCheck },
-  partial: { border: "border-brand-amber", text: "text-brand-amber", Icon: CircleAlert },
-  wrong: { border: "border-destructive", text: "text-destructive", Icon: CircleX },
-};
+/**
+ * Verdict chip per outcome: pass (green, icon and word), partial (dashed ink
+ * with the gap pictogram), wrong (ink with the fail pictogram). The word is
+ * always there, so the colour is never the only cue.
+ */
+function VerdictChip({
+  outcome,
+  children,
+}: {
+  readonly outcome: Outcome;
+  readonly children: string;
+}) {
+  if (outcome === "correct") return <Chip variant="pass">{children}</Chip>;
+  if (outcome === "partial") return <Chip variant="gap">{children}</Chip>;
+  return (
+    <span className="inline-flex h-7 items-center gap-1.5 whitespace-nowrap border border-foreground px-2.5 text-label text-foreground">
+      <Pictogram name="fail" className="size-3.5" />
+      {children}
+    </span>
+  );
+}
 
 export function WorkshopDecisionLab({
   config,
   locale,
+  id,
 }: WorkshopDecisionLabProps) {
   const copy = LAB_COPY[locale];
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
@@ -323,7 +372,6 @@ export function WorkshopDecisionLab({
     ? selectFeedback(config, choiceId, evidenceId)
     : null;
   const feedback = result?.feedback ?? null;
-  const outcomeStyle = result ? OUTCOME_STYLE[result.outcome] : null;
   const markFor = (
     option: WorkshopDecisionOption,
     correctId: string,
@@ -407,61 +455,68 @@ export function WorkshopDecisionLab({
 
   return (
     <section
+      id={id}
       aria-labelledby={`${decisionName}-title`}
       data-workshop-decision-lab
-      className="border border-foreground border-t-[3px] border-t-brand-orange bg-background"
+      className="scroll-mt-20 border-t-2 border-foreground bg-inset"
     >
-      <div className="grid lg:grid-cols-[minmax(16rem,0.72fr)_minmax(0,1.28fr)]">
-        <header className="border-b border-border p-4 sm:p-5 lg:border-b-0 lg:border-r">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+      <div className="mx-auto grid max-w-[75rem] gap-8 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
+        <header className="min-w-0">
+          <p className="text-label text-muted-foreground tabular-nums">
             {config.kicker}
           </p>
           <h2
             id={`${decisionName}-title`}
-            className="mt-2 max-w-xl text-2xl font-black leading-tight tracking-[-0.035em] sm:text-3xl"
+            className="mt-3 max-w-[24ch] text-fluid-h2 font-bold text-foreground text-balance"
           >
-            {config.title}
+            {keepNumbersWithUnits(config.title)}
           </h2>
-          <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-[52ch] text-body text-muted-foreground text-pretty">
             {config.prompt}
           </p>
-          <ul className="mt-4 grid grid-cols-1 border-y border-border sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            {config.facts.map((fact) => (
-              <li
-                key={fact}
-                className="break-words border-t border-border px-2 py-2 font-mono text-xs font-semibold leading-snug text-foreground first:border-t-0 sm:border-l sm:border-t-0 sm:first:border-l-0 lg:border-l-0 lg:border-t lg:first:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0"
-              >
-                {fact}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-            <ShieldCheck
-              aria-hidden="true"
-              className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
-            />
-            {config.privacyNote}
+          {/* One row from 26rem: equal columns, but a column never gets
+              narrower than its longest word ("12 Stromrechnungen"), so a
+              value wraps between words and never inside one. */}
+          <dl
+            data-lab-facts=""
+            className="mt-6 grid grid-cols-1 gap-x-4 gap-y-3 border-t border-hairline pt-3 min-[26rem]:grid-flow-col min-[26rem]:grid-cols-none min-[26rem]:auto-cols-[minmax(min-content,1fr)]"
+          >
+            {config.facts.map((fact) => {
+              const { label, value } = splitFact(fact);
+              return (
+                <div key={fact}>
+                  <dt className="text-label text-muted-foreground">{label}</dt>
+                  <dd className="mt-1 break-words text-[1.25rem] font-bold leading-tight text-foreground tabular-nums">
+                    {value}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+          <p className="mt-6 flex items-start gap-2 text-caption text-muted-foreground">
+            <Pictogram name="shield" className="mt-0.5 size-4" />
+            <span>{config.privacyNote}</span>
           </p>
         </header>
 
         <form
-          className="bg-card/25 p-4 sm:p-5"
+          className="min-w-0"
           aria-busy={!hydrated}
           onSubmit={submitDecision}
           onReset={resetDecision}
           noValidate
         >
           {!hydrated ? (
-            <p id={readinessId} className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            <p id={readinessId} className="mb-4 text-caption text-muted-foreground">
               {copy.loading}
             </p>
           ) : null}
           <noscript>
-            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mb-4 text-body text-muted-foreground">
               {copy.noScript}
             </p>
           </noscript>
-          <div className="grid gap-5 xl:grid-cols-2">
+          <div className="grid gap-8">
             <fieldset
               disabled={!hydrated}
               className="min-w-0"
@@ -470,10 +525,10 @@ export function WorkshopDecisionLab({
                 !hydrated ? readinessId : validationError === "decision" ? validationId : undefined
               }
             >
-              <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              <legend className="mb-2 text-label text-foreground">
                 {config.decisionLegend}
               </legend>
-              <div className="grid gap-2">
+              <div className="border-t border-hairline">
                 {order.choices.map((option, index) => (
                   <DecisionOption
                     key={option.id}
@@ -481,6 +536,8 @@ export function WorkshopDecisionLab({
                     name={decisionName}
                     selected={choiceId === option.id}
                     mark={markFor(option, config.recommendedChoiceId, choiceId)}
+                    strongest={false}
+                    kind="decision"
                     copy={copy}
                     onSelect={reviseChoice}
                     inputRef={index === 0 ? firstChoiceRef : undefined}
@@ -497,10 +554,10 @@ export function WorkshopDecisionLab({
                 !hydrated ? readinessId : validationError === "evidence" ? validationId : undefined
               }
             >
-              <legend className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              <legend className="mb-2 text-label text-foreground">
                 {config.evidenceLegend}
               </legend>
-              <div className="grid gap-2">
+              <div className="border-t border-hairline">
                 {order.evidence.map((option, index) => (
                   <DecisionOption
                     key={option.id}
@@ -508,6 +565,8 @@ export function WorkshopDecisionLab({
                     name={evidenceName}
                     selected={evidenceId === option.id}
                     mark={markFor(option, config.strongestEvidenceId, evidenceId)}
+                    strongest={submitted && option.id === config.strongestEvidenceId}
+                    kind="evidence"
                     copy={copy}
                     onSelect={reviseEvidence}
                     inputRef={index === 0 ? firstEvidenceRef : undefined}
@@ -522,9 +581,10 @@ export function WorkshopDecisionLab({
               id={validationId}
               role="alert"
               aria-atomic="true"
-              className="mt-4 border-l-[3px] border-destructive bg-background px-4 py-3 text-sm font-semibold text-destructive"
+              className="mt-4 flex items-start gap-2 text-[0.9375rem] font-semibold text-destructive"
             >
-              {copy.validation[validationError]}
+              <Pictogram name="fail" className="mt-0.5 size-4" />
+              <span>{copy.validation[validationError]}</span>
             </p>
           ) : null}
 
@@ -535,39 +595,32 @@ export function WorkshopDecisionLab({
             aria-label={config.resultLabel}
             className="mt-4 min-h-0"
           >
-            {feedback && result && outcomeStyle ? (
+            {feedback && result ? (
               <div
                 data-outcome={result.outcome}
-                className={`border-l-[4px] ${outcomeStyle.border} bg-background p-4`}
+                className="border-t border-foreground pt-4"
               >
-                <p
-                  className={`flex items-center gap-2 text-xs font-bold uppercase tracking-[0.1em] ${outcomeStyle.text}`}
-                >
-                  <outcomeStyle.Icon
-                    className="h-5 w-5 shrink-0"
-                    aria-hidden="true"
-                  />
+                <VerdictChip outcome={result.outcome}>
                   {copy.outcome[result.outcome]}
-                </p>
-                <p className="mt-2 text-base font-bold leading-snug text-foreground">
+                </VerdictChip>
+                <p className="mt-3 text-[1.0625rem] font-bold leading-snug text-foreground">
                   {feedback.title}
                 </p>
-                <p className="mt-2 max-w-[70ch] text-sm leading-relaxed text-foreground/80">
+                <p className="mt-2 max-w-[64ch] text-body text-muted-foreground">
                   {feedback.body}
                 </p>
               </div>
             ) : null}
           </div>
 
-          <div className="mt-4 flex border-t border-border pt-4">
+          <div className="mt-6 flex flex-wrap items-center gap-4">
             {submitted ? (
               <button
                 key="reset"
                 ref={resetActionRef}
                 type="reset"
-                className="inline-flex min-h-11 items-center justify-center gap-2 border border-foreground bg-background px-4 py-2 text-sm font-bold text-foreground transition-colors hover:bg-foreground hover:text-background"
+                className="inline-flex min-h-11 items-center font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
               >
-                <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 {result?.outcome === "correct"
                   ? copy.resetAfterCorrect
                   : config.resetLabel}
@@ -577,10 +630,9 @@ export function WorkshopDecisionLab({
                 key="submit"
                 type="submit"
                 disabled={!hydrated}
-                className="inline-flex min-h-11 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-foreground disabled:cursor-wait disabled:opacity-60"
+                className="inline-flex min-h-11 items-center justify-center bg-foreground px-5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait disabled:opacity-60"
               >
                 {config.submitLabel}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </button>
             )}
           </div>
