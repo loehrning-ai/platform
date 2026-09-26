@@ -65,3 +65,7 @@ Done in the tree (from the implementation logs in `impl-logs/`):
 - `workshop-04/`: three concepts, the verified SPEC, the dataset script and JSON.
 - `deck-skeleton/`: the verified four-slide W04 deck skeleton (text files only; fonts and images come from the W03 folder).
 - `impl-logs/`: per-agent change logs.
+
+## CI on PR #103 at hand-off
+
+All red CI runs are on WIP snapshots (see the status comment on the PR). The cloud session unsubscribed from PR events to save budget. The next session should start from `bun run --cwd packages/website typecheck` (at last check the only type errors were in `src/components/demos/demo-detail-layout.tsx`, `demo-grid.tsx` and `tests/e2e/demos.spec.ts`), then unit tests, then the rest of step 6 above.

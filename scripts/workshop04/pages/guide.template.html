@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f0e9">
+<title>ESG Reporting with AI · Learner guide · loehrning.ai</title>
+<meta name="description" content="Workshop 04, ESG Reporting with AI: the learner guide. One invented metal-parts supplier, one question about its Scope 1 and 2 emissions, and the ledger, rules and checks that make every number traceable.">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preload" href="./assets/fonts/Typing-Static-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./lib/workshop-frame.css">
+<link rel="stylesheet" href="./lib/w04-pages.css">
+</head>
+<body class="wf-page">
+<a class="wf-skip" href="#main">Skip to content</a>
+{{strip:guide.html}}
+
+<main id="main" tabindex="-1">
+<div class="pg">
+<header class="pg-head">
+  <p class="wf-kicker">Workshop 04 · ESG Reporting with AI · Learner guide · to read after the session · about 25 minutes</p>
+  <h1 class="wf-h1">From a folder of energy bills to a figure you can trace</h1>
+  <p class="wf-lead">This guide follows one invented company and one question through the session, in the same order as the deck. Every figure on this page comes from the workshop's dataset.</p>
+  <div class="wf-qcard">
+    <p class="wf-kicker">The question for the whole workshop</p>
+    <p>{{j:question.en}}</p>
+  </div>
+  <ul class="chips" aria-label="What the figures are">
+    <li class="chip">Fictional company</li>
+    <li class="chip">{{j:meta.factorLabel_en}}</li>
+    <li class="chip chip--gap">Raw-folder answer: constructed from documented failure modes</li>
+  </ul>
+  <nav class="actions" aria-label="Other materials">
+    <a class="wf-btn wf-btn--primary" href="./slides.html">Open the deck</a>
+    <a class="wf-btn" href="./demo.html">Interactive demo</a>
+    <a class="wf-btn" href="./field-card.html">Field card</a>
+    <a class="wf-btn" href="./transfer.html">Transfer sheet</a>
+  </nav>
+  <details class="toc-phone">
+    <summary><span>On this page · {{toccount}} sections</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary>
+    <nav aria-label="On this page">{{toc}}</nav>
+  </details>
+</header>
+</div>
+
+<div class="pg">
+<div class="g-layout">
+<nav class="toc-side" aria-labelledby="toc-side-title"><h2 id="toc-side-title">On this page</h2>{{toc}}</nav>
+<div class="g-main">
+
+<section class="g-sec" aria-labelledby="why-asked">
+  <div class="g-kopf"><p class="wf-kicker">Before the route</p><h2 id="why-asked"><span class="g-n">{{sec}}</span>Why does a {{j:company.staff_2025}}-person company get this question?</h2></div>
+  <p>Kellbrunn Präzisionsteile GmbH is invented. It makes stamped and machined metal parts at two plants, Werk Nord and Werk Süd, and runs a leased warehouse, Lager Ost. It has {{j:company.staff_2025}} staff and has never been in CSRD scope. Its house bank asks for Scope 1 and 2 emissions to price a loan, and a car maker's supplier questionnaire asks the same, plus whether the number went down. The question for the whole workshop is: “{{j:question.en}}”</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two thresholds decide CSRD scope since 18 March 2026?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>A company must have more than 1,000 employees and more than €450m turnover, both. That is the EU rule; member states must bring national law in line by 19 March 2027. Kellbrunn, with {{j:company.staff_2025}} staff and €{{j:company.turnover_meur}}m turnover, is far below both.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>A company outside the reporting law still gets asked, by the people who lend it money and buy its parts.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="first-answer">
+  <div class="g-kopf"><p class="wf-kicker">Wrong answer</p><h2 id="first-answer"><span class="g-n">{{sec}}</span>The first answer, and the checks it passed</h2></div>
+  <p>We gave an AI the 2025 folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: {{n:wrong_total_lb}} CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
+  <div class="answer answer--raw">
+    <p class="wf-kicker">Raw-folder answer · constructed from documented failure modes</p>
+    <dl class="nums">
+      <div><dt>Scope 1</dt><dd>{{n:wrong_s1}}</dd></div>
+      <div><dt>Scope 2, location-based</dt><dd>{{n:wrong_s2lb}}</dd></div>
+      <div><dt>Scope 1 and 2</dt><dd>{{n:wrong_total_lb}}<small>{{n:wrong_chg_lb_pct}} against 2024</small></dd></div>
+      <div><dt>“Market-based”</dt><dd>{{n:wrong_s2mb}}</dd></div>
+    </dl>
+    <p class="provline">{{j:meta.constructedLabel_en}}</p>
+  </div>
+  <p>It passes the checks people usually do: the change looks like a normal year, {{n:wrong_per_employee_t}} per employee is close to last year's {{n:per_employee_2024_t}}, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. This answer is constructed from documented failure modes. It shows what happens when all six traps fire; it is not a recorded run.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it actually test?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <ul>
+        <li>A normal-looking change tests the total against last year's total. Errors that cancel pass it.</li>
+        <li>Tonnes per employee tests the same total, divided by headcount.</li>
+        <li>Twelve bills counts files. One March bill is in twice, one bill covers November and December, and one belongs to another company.</li>
+        <li>Visible sums show that the arithmetic works. They say nothing about whether each input belongs in the sum.</li>
+        <li>Two Scope 2 numbers show two labels. The “market-based” one used the grid average for power without a certificate.</li>
+      </ul>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>A total close to last year's does not show that each bill was counted once.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="twelve-files">
+  <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="twelve-files"><span class="g-n">{{sec}}</span>Twelve files, eleven months</h2></div>
+  <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number {{j:inputs.wnDuplicate.invoice}} is next to the first. October is missing. The November and December bill covers two months, which keeps the count at twelve.</p>
+  <p>The facility manager's meter readings show October: {{j:inputs.meterReadings.10.kwh:int}} minus {{j:inputs.meterReadings.9.kwh:int}} is {{n:oct_kwh}}. The duplicate adds {{n:dup_kwh}} and the gap removes {{n:oct_kwh:bare}}, so the Werk Nord sum is only {{n:wn_net_raw_vs_right_kwh:absunit}} off. August is low ({{n:aug_kwh}}, {{n:aug_vs_jul_pct}} against July) because of the plant holiday. That is real, and a good assistant flags it for a person without changing it.</p>
+  {{fig:months}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why did the Werk Nord sum end up only {{n:wn_net_raw_vs_right_kwh:absunit}} off?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Two errors cancel. The duplicate March bill adds {{n:dup_kwh}}, and the missing October takes out {{n:oct_kwh}}. A check on the Werk Nord total cannot see either error; a month-by-month grid shows both at once.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Fill a site-by-month grid before you add anything up. Count months, not files.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="dot">
+  <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="dot"><span class="g-n">{{sec}}</span>A dot that means a thousand</h2></div>
+  <p>The Werk Süd statement says “Verbrauch 2025: {{j:inputs.ws.printed}}”. On a German document the dot separates thousands, so this is {{n:el_ws_mwh}}, or {{n:el_ws_kwh}}. Read as {{j:inputs.ws.misreadKwh:int}} kWh, Werk Süd almost disappears and location-based Scope 2 drops by {{n:unit_lb_t:absunit}}.</p>
+  <p>Two checks catch it without knowing the number format: {{j:inputs.ws.misreadKwh:int}} kWh would be {{n:ws_misread_kwh_per_employee}} per Werk Süd employee per year, against {{n:ws_kwh_per_employee}} when read correctly, and the same page prints last year's value, {{j:inputs.ws.priorYearPrinted}}.</p>
+  {{fig:dot}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>What does the misread do to the market-based figure?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Nothing. Werk Süd counts as zero in market-based either way, because the certificate covers all of its electricity.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Keep the value and unit exactly as printed in the row, and convert with a written rule.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="whose-bill">
+  <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="whose-bill"><span class="g-n">{{sec}}</span>Whose bill is it?</h2></div>
+  <p>One annual bill in the Werk Nord folder is addressed to {{j:meta.jv}}, a powder-coating company on the same premises. Kellbrunn holds {{j:company.jv_share_pct:pct}} and the partner runs it; the contract and the meter are Talbrück's, and the bill carries Talbrück's own customer number, {{j:inputs.customerNoJV}}. Kellbrunn chose the operational control approach, so the bill is out.</p>
+  <p>Counting it adds {{n:jv_kwh}} and {{n:jv_lb_t:absunit}} location-based ({{n:jv_rm_t:absunit}} at the residual mix). The row stays in the ledger as excluded, with the reason, and is a candidate for Scope 3 category 15 later.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>When would {{j:company.jv_share_pct:pct}} be right?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Only if the company had chosen and written down the equity-share approach. Kellbrunn wrote down operational control before any AI run, so Talbrück counts as zero here.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>The name on the document decides, checked against a boundary written down before the AI runs.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="looked-right">
+  <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="looked-right"><span class="g-n">{{sec}}</span>Why the total looked right</h2></div>
+  <p>Six errors are inside the first answer. The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: {{n:adblue_t}}.</p>
+  <p>When you remove the errors one by one, the running total swings between {{n:wf_lb_min_t}} and {{n:wf_lb_max_t}} and ends at {{n:total_lb_2025}}, {{n:gap_lb_t}} away from where it started.</p>
+  {{fig:waterfall}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two errors cancel to {{n:pair_dup_oct_t:absunit}}, and which error hides four fifths of another?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>The duplicate March bill ({{n:dup_lb_t}}) and the missing October ({{n:oct_lb_t}}) cancel to {{n:pair_dup_oct_t}}. The Talbrück bill ({{n:jv_lb_t}}) hides {{n:jv_hides_unit_share_pct}} of the misread Werk Süd unit ({{n:unit_lb_t}}); together the two move the total by {{n:pair_jv_unit_t}}.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>A small gap in the total can hide large errors in the parts.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="ledger">
+  <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="ledger"><span class="g-n">{{sec}}</span>The ledger</h2></div>
+  <p>A ledger (Belegtabelle) has one row for each quantity on a document. Each row keeps the file, the page, the quoted line, the value and unit as printed, the normalised value, the legal entity on the document, whether it is inside the boundary, the status and the factor ID. Excluded rows stay in with a reason: the duplicate March scan, the Talbrück bill and the AdBlue litres. The October row is a meter reading, so it gets data-quality grade B.</p>
+  <p>A control total ties it together: all electricity on documents ({{n:ctl_docs_kwh:bare}}) minus what was excluded with a reason ({{n:ctl_excluded_kwh:bare}}) plus October from the meter ({{n:ctl_meter_kwh:bare}}) equals the {{n:ctl_total_kwh}} in the ledger.</p>
+  {{fig:control}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which column catches the Talbrück bill, and which check catches a missing month?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>The column <code>entity_on_document</code>, checked against the written boundary, catches the Talbrück bill. Its row stays in with the status excluded and the reason boundary. The site-by-month coverage grid catches the missing month: October has no bill, so its cell stays empty until a person decides how to fill it.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Every number points to a page, including the numbers you left out.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="six-rules">
+  <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="six-rules"><span class="g-n">{{sec}}</span>Six rules and a pinned factor table</h2></div>
+  <p>The rules are written before the AI runs: boundary, coverage, units, factors, Scope 2 and citations. The work splits into three roles. The reader extracts rows and quotes what is printed. The clerk applies the rules in a spreadsheet, never by mental arithmetic. The writer drafts sentences that cite rows. The AI may propose rules; a spreadsheet applies them, and a person approves the list.</p>
+  <ol class="wf-steps">
+    <li><p><b>Boundary</b> (clerk). Check the entity on each document against the written list of sites. A name not on the list stops the sum until a person decides.</p></li>
+    <li><p><b>Coverage</b> (clerk). Fill the site-by-month grid before summing. One bill counts once, by invoice number, period and meter.</p></li>
+    <li><p><b>Units</b> (reader, then clerk). Keep value and unit as printed, with the quoted line. Convert only with the written table.</p></li>
+    <li><p><b>Factors</b> (clerk). Use factor IDs from the pinned table and record the edition. The gas basis must match the bill.</p></li>
+    <li><p><b>Scope 2</b> (clerk). Report location-based and market-based, in the market-based order.</p></li>
+    <li><p><b>Citations</b> (writer). Every number in a text names its row IDs. No claim word without a number, a scope and a row.</p></li>
+  </ol>
+  <p>Factors come from a pinned table by ID, with the edition recorded ({{j:factorEdition}}). Using last year's grid factor ({{j:factors.F-EL-LB-2024.value:fix2}}) on 2025 electricity would add {{n:last_year_factor_effect_t:absunit}}, which is the whole grid effect in this year's change.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why should the AI never type a factor from memory?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>A value from memory has no year, no edition and no basis that anyone can check. It may be last year's grid factor, which here adds {{n:last_year_factor_effect_t:absunit}}, or a gas factor on the wrong calorific basis, which adds {{n:gasbasis_t:absunit}}. A factor ID points to one row in a table a person approved.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>The AI picks an ID. The value, year and edition are in a table a person approved.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="two-scope-2">
+  <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="two-scope-2"><span class="g-n">{{sec}}</span>Two Scope 2 numbers</h2></div>
+  <p>Location-based Scope 2 uses the average grid factor where the power is used: {{n:el_total_kwh}} × {{j:factors.F-EL-LB-2025.value:fix2}} = {{n:s2lb_2025}}. Market-based Scope 2 uses what the company bought. The guarantees of origin cover {{n:go_mwh}} at Werk Süd and nothing else, so Werk Süd is zero. The other {{n:el_uncovered_kwh}} get, in order, a qualifying supplier-specific rate if one exists, otherwise the residual mix: {{j:factors.F-EL-RM-2025.value:fix2}} in the teaching values, giving {{n:s2mb_2025}}.</p>
+  <p>Under the GHG Protocol a company buying power in a market with certificates and supplier contracts, such as Germany, reports both figures. The kit's bills leave out the supplier mix disclosure that real German bills carry, so here the residual mix applies. The certificate removes {{n:bridge_cert_t:absunit}} and the residual mix adds {{n:bridge_rm_t:absunit}} back, so market-based is only {{n:bridge_net_t:absunit}} below location-based. “We run on green electricity” is false; {{n:renewable_share_el_pct}} of the electricity is covered.</p>
+  {{fig:bridge}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why is {{n:mb_grid_avg_wrong_s2_t}} wrong for market-based?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>It uses the grid average for the power without a certificate, and comes out {{n:mb_grid_avg_too_low_t}} too low. Market-based takes the residual mix for that power, because the renewable share of the grid has already been sold to others as certificates.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Report both numbers, and count a certificate only for the kWh it covers.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="same-question">
+  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="same-question"><span class="g-n">{{sec}}</span>The same question on the ledger</h2></div>
+  <p>With the ledger, the coverage grid and the rules, the same AI gets the same question. The target answer names row IDs for every figure.</p>
+  <div class="answer">
+    <p class="wf-kicker">{{j:meta.targetLabel_en}}</p>
+    <dl class="nums">
+      <div><dt>Scope 1</dt><dd>{{n:s1_2025}}</dd></div>
+      <div><dt>Scope 2, location-based</dt><dd>{{n:s2lb_2025}}</dd></div>
+      <div><dt>Scope 2, market-based</dt><dd>{{n:s2mb_2025}}</dd></div>
+      <div><dt>Total, location-based</dt><dd>{{n:total_lb_2025}}<small>{{n:chg_lb_pct}} against 2024</small></dd></div>
+      <div><dt>Total, market-based</dt><dd>{{n:total_mb_2025}}<small>{{n:chg_mb_pct}} against 2024</small></dd></div>
+    </dl>
+  </div>
+  <p>It labels the October meter reading, lists the three excluded rows, and says which Scope 1 sources it could not check. Until recorded runs exist, this answer is labelled as constructed.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Pick one number in the answer. Which rows and which page would you ask for?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>One example: Werk Süd electricity, {{n:ws_lb_2025}} location-based. Ask for row <code>E-WS-01</code> and page 1 of the Werk Süd annual statement, line “Verbrauch 2025: {{j:inputs.ws.printed}}”. For its market-based zero, ask for the instrument row <code>I-WS-GO</code> and the certificate confirmation it points to, <code>HKN_Bestaetigung_2025.md</code>.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>The total moved by {{n:gap_lb_t}}. Every tonne now has a row behind it.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="drivers">
+  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="drivers"><span class="g-n">{{sec}}</span>What drove the change</h2></div>
+  <p>Location-based emissions fell {{n:chg_lb_t:absunit}}. In this case's teaching values, {{n:drv_lb_grid_t:absunit}} of that ({{n:drv_lb_grid_share_pct}}) comes from the lower grid factor and {{n:drv_lb_own_t:absunit}} from using less electricity, gas and diesel. Market-based fell {{n:chg_mb_t:absunit}}, and {{n:drv_mb_cert_t:absunit}} of that ({{n:drv_mb_cert_share_pct}}) is the guarantees of origin for Werk Süd. The residual mix is held at {{j:factors.F-EL-RM-2025.value:fix2}} in both years on purpose; real residual mixes change every year.</p>
+  <p>The folder has no production volumes, so “used less” is supported and “more efficient” is not. The largest sources also depend on the method: location-based, Werk Nord electricity leads with {{n:wn_el_lb_2025}}, then Werk Süd electricity with {{n:ws_lb_2025}}; market-based, Werk Nord electricity is {{n:wn_el_mb_2025}} and Werk Süd electricity drops to zero.</p>
+  {{fig:drivers}}
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why can't Kellbrunn write “thanks to efficiency measures”?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Without production volumes nobody can tell whether Kellbrunn used less energy per part or made fewer parts. And {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor, which Kellbrunn did not cause. A sentence the ledger supports: “Location-based emissions fell by {{n:chg_lb_t:absunit}}; {{n:drv_lb_grid_t:absunit}} came from the lower grid factor (teaching values) and {{n:drv_lb_own_t:absunit}} from lower electricity, gas and diesel use.”</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Say which part of a change you caused, and which part came from the grid or from certificates.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="ask-back">
+  <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
+  <p>Five requests show the three jobs of a useful assistant.</p>
+  <ul class="wf-rows">
+    <li><div class="wf-row"><span class="wf-row__n">Calculate</span><span class="wf-row__title">“Sum Scope 2”</span><p class="wf-row__desc">A calculation from the ledger.</p></div></li>
+    <li><div class="wf-row"><span class="wf-row__n">Ask back</span><span class="wf-row__title">“Fill in October”</span><p class="wf-row__desc">Needs a decision: the meter reading (grade B) or a labelled estimate.</p></div></li>
+    <li><div class="wf-row"><span class="wf-row__n">Rewrite</span><span class="wf-row__title">“Write that we run on green electricity”</span><p class="wf-row__desc">Gets rewritten with the share ({{n:renewable_share_el_pct}}) and the site (Werk Süd).</p></div></li>
+    <li><div class="wf-row"><span class="wf-row__n">Refuse</span><span class="wf-row__title">“Write that we are climate-neutral”</span><p class="wf-row__desc">Gets refused, because nothing in the ledger supports it.</p></div></li>
+    <li><div class="wf-row"><span class="wf-row__n">Explain</span><span class="wf-row__title">“Explain why emissions fell”</span><p class="wf-row__desc">Gets the bridge first, then a draft that cites driver lines.</p></div></li>
+  </ul>
+  <p class="wf-note">For context: since 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as “eco-friendly” unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets. In Germany this happens through an amendment to the UWG, known from secondary sources; check the current text. Whether a text such as your website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG). Rules as of 26 Sep 2026. Not legal advice.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which request needs a person to decide, and what is the decision?</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>“Fill in October.” A person chooses between the meter reading, which gets grade B, and a labelled estimate, and the ledger records who chose. The assistant names the choice and does not make it silently.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>A good assistant asks back when a person has to decide, and names the decision.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="limits">
+  <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="limits"><span class="g-n">{{sec}}</span>What this does not prove</h2></div>
+  <p>This is one fictional case. The raw-folder answer is constructed; recorded runs, with date and model, are listed separately. Two published studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</p>
+  <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
+  <div class="recall">
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Name two Scope 1 sources a folder of energy bills never shows.</p>
+    <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Any two of these: refrigerant top-ups for air conditioning or cooling, LPG or diesel forklifts at Lager Ost, an emergency generator, heating oil. Ask for the service invoices and fuel deliveries by name, and write next to the number which of them you did not check.</p>
+    </div></details>
+  </div>
+  <p class="key"><b>Key point</b><span>Write what you did not check on the page, next to the number.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="your-bill">
+  <div class="g-kopf"><p class="wf-kicker">Your turn</p><h2 id="your-bill"><span class="g-n">{{sec}}</span>Your bill</h2></div>
+  <p>Take one bill you know, or invent one, and fill the five boxes of the transfer sheet: source, period, unit, boundary, factor. The Werk Süd example is next to each box. Use no company data in any tool. The field card holds the seven checks on one page.</p>
+  <nav class="actions" aria-label="Sheets for your bill">
+    <a class="wf-btn wf-btn--primary" href="./transfer.html">Open the transfer sheet</a>
+    <a class="wf-btn" href="./field-card.html">Open the field card</a>
+  </nav>
+  <p class="key"><b>Key point</b><span>Fill five boxes for one bill and end with one sentence that says where the number comes from.</span></p>
+</section>
+
+<section class="g-sec" aria-labelledby="try-it">
+  <div class="g-kopf"><p class="wf-kicker">Your turn</p><h2 id="try-it"><span class="g-n">{{sec}}</span>Try it with an AI</h2></div>
+  <p class="provline">Optional, 20 minutes, needs an AI account.</p>
+  <p>Open the kit. Run <code>prompts/01_auslesen.md</code> (the reader) on the raw folder and compare your rows with <code>erwartet/belegtabelle_2025.csv</code>. Run <code>prompts/02_pruefen.md</code> (the clerk) on the rows and check whether it flags the duplicate, October, Talbrück and the unit. Use only the kit's invented files, never company data in a tool your company has not approved.</p>
+  <nav class="actions" aria-label="Kit">
+    <a class="wf-btn" href="./esg-kit.zip" download>Download the kit (.zip)</a>
+  </nav>
+</section>
+
+<section class="g-sec" aria-labelledby="week-later">
+  <div class="g-kopf"><p class="wf-kicker">After the session</p><h2 id="week-later"><span class="g-n">{{sec}}</span>One week later</h2></div>
+  <p class="provline">Follow-up: 5 minutes plus an optional 30-minute stretch.</p>
+  <p>Answer each question from memory before you open it.</p>
+  <div class="recall">
+    <p class="recall-q">Name the unique key for a bill, and the fallback key.</p>
+    <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>Invoice number + period + meter. Fallback: period + meter + quantity, after normalising characters that OCR confuses (letter O to zero, letter l to one).</p>
+    </div></details>
+  </div>
+  <div class="recall">
+    <p class="recall-q">What rate does market-based use for power without a certificate?</p>
+    <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>A qualifying supplier-specific rate if one exists, otherwise the residual mix ({{j:factors.F-EL-RM-2025.value:fix2}} in the teaching values). Never the grid average.</p>
+    </div></details>
+  </div>
+  <div class="recall">
+    <p class="recall-q">Which part of a year-on-year change is usually not your doing?</p>
+    <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>The grid factor in location-based, and in market-based whatever certificates you bought. In this case {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor.</p>
+    </div></details>
+  </div>
+  <div class="recall">
+    <p class="recall-q">What does a good assistant do when a month is missing?</p>
+    <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
+      <p>It stops, names the month, offers the meter reading (grade B) or a labelled estimate, and lets a person decide.</p>
+    </div></details>
+  </div>
+  <h3>Stretch task</h3>
+  <p>Build the ledger from <code>rohdaten_2025/</code> yourself and compare it with <code>erwartet/belegtabelle_2025.csv</code>. You are done when your location-based total is {{n:total_lb_2025}} and your control total is {{n:ctl_total_kwh}}.</p>
+</section>
+
+<section class="g-sec" aria-labelledby="glossary">
+  <div class="g-kopf"><p class="wf-kicker">Reference</p><h2 id="glossary"><span class="g-n">{{sec}}</span>Glossary</h2></div>
+  <dl class="gloss">
+    <dt>Scope 1</dt><dd>Direct emissions from sources the company owns or runs, here the gas for heating and washing lines and the diesel fleet.</dd>
+    <dt>Scope 2</dt><dd>Emissions from producing the electricity the company buys and uses.</dd>
+    <dt>Scope 3</dt><dd>All other emissions in the value chain, such as purchased steel or a joint venture's share.</dd>
+    <dt>Location-based</dt><dd>Scope 2 method: electricity used times the average grid factor where it is used.</dd>
+    <dt>Market-based</dt><dd>Scope 2 method: electricity used, valued by what the company bought, in the order certificate, qualifying supplier-specific rate, residual mix.</dd>
+    <dt>Residual mix</dt><dd>The factor for electricity that is left once certificates have been sold off the grid; in Germany usually higher than the grid average.</dd>
+    <dt>Guarantee of origin <i>(Herkunftsnachweis)</i>, cancelled <i>(entwertet)</i></dt><dd>A certificate that one MWh came from renewable sources; cancelled for a named delivery point, it counts for that point and nowhere else.</dd>
+    <dt>Supplier mix disclosure <i>(Stromkennzeichnung)</i></dt><dd>The fuel mix and emissions a German supplier prints on its bills; the kit's bills leave it out on purpose.</dd>
+    <dt>Operational control</dt><dd>Boundary approach: count all of what the company runs, and none of what it does not run, whatever it owns.</dd>
+    <dt>Equity share</dt><dd>Boundary approach: count each operation by the company's ownership share.</dd>
+    <dt>Activity data</dt><dd>The measured quantity behind an emission, such as kWh, cubic metres or litres.</dd>
+    <dt>Emission factor</dt><dd>Kilograms of CO₂e per unit of activity, from a named source and year.</dd>
+    <dt>Factor ID and edition</dt><dd>The key of a factor in the pinned table, such as <code>F-EL-LB-2025</code>, and the version of the table ({{j:factorEdition}}).</dd>
+    <dt>Gross and net calorific value <i>(Brennwert Hs, Heizwert Hi)</i></dt><dd>Hs includes the heat in the water vapour, Hi does not; the factor's basis must match the basis printed on the bill.</dd>
+    <dt>Ledger <i>(Belegtabelle)</i></dt><dd>One row per quantity on a document, with file, page, quote, value as printed, normalised value, entity, boundary, status and factor ID.</dd>
+    <dt>Coverage grid</dt><dd>A site-by-month table that shows which document covers each month, filled before anything is added up.</dd>
+    <dt>Control total</dt><dd>All quantities on documents, minus what was excluded with a reason, plus additions from other sources, must equal the ledger total.</dd>
+    <dt>Data-quality grade A/B/C</dt><dd>A: bill or statement for the full period. B: meter reading or summary without bills. C: estimate with a stated method.</dd>
+    <dt>Base year, restatement, like for like</dt><dd>The year you compare against; recalculating it after a structural change or a significant error; comparing the same sites and methods in both years.</dd>
+    <dt>VSME</dt><dd>EFRAG's voluntary sustainability reporting standard for small and medium-sized companies; its Basic Module includes Scope 1 and 2.</dd>
+    <dt>CSRD</dt><dd>The EU Corporate Sustainability Reporting Directive, which sets who must publish a sustainability report.</dd>
+    <dt>Directive 2024/825 <i>(EmpCo)</i></dt><dd>The EU directive on empowering consumers for the green transition; it restricts generic environmental claims and offset-based neutrality claims towards consumers.</dd>
+  </dl>
+</section>
+
+<section class="g-sec" aria-labelledby="deeper">
+  <div class="g-kopf"><p class="wf-kicker">Reference</p><h2 id="deeper"><span class="g-n">{{sec}}</span>Where to go deeper</h2></div>
+  <ul class="links">
+    <li><a href="https://ghgprotocol.org/corporate-standard" rel="noopener">GHG Protocol Corporate Standard</a><small>Boundaries, operational control and equity share</small></li>
+    <li><a href="https://ghgprotocol.org/sites/default/files/2023-03/Scope%202%20Guidance.pdf" rel="noopener">GHG Protocol Scope 2 Guidance</a><small>Location-based and market-based, quality criteria for certificates and supplier rates</small></li>
+    <li><a href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024" rel="noopener">Umweltbundesamt: CO₂ emissions per kilowatt hour of electricity</a><small>The German grid factor, in German; UBA revises earlier years</small></li>
+    <li><a href="https://www.aib-net.org/facts/european-residual-mix/2024" rel="noopener">AIB: European residual mix</a><small>Residual mix per country, published each year</small></li>
+    <li><a href="https://www.efrag.org/en/news-and-calendar/news/efrag-releases-the-voluntary-sustainability-reporting-standard-for-nonlisted-smes" rel="noopener">EFRAG: VSME</a><small>The voluntary standard for small and medium-sized companies</small></li>
+    <li><a href="https://eur-lex.europa.eu/eli/dir/2024/825/oj/eng" rel="noopener">Directive (EU) 2024/825 on EUR-Lex</a><small>The text of the green-claims rules towards consumers</small></li>
+    <li><a href="https://commission.europa.eu/document/download/3c257883-bb2a-4dd9-a6dc-501d587bb34f_en?filename=faq-empowerting-consumers-gtd.pdf" rel="noopener">European Commission: questions and answers on Directive 2024/825</a><small>How the Commission reads the directive</small></li>
+  </ul>
+</section>
+
+</div>
+</div>
+</div>
+</main>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH and Lindmark Energie GmbH are invented. Emission factors are teaching values, not official factors. Rules as of 26 September 2026. Not legal or audit advice.</p></footer>
+<script src="./lib/w04-pages.js"></script>
+</body>
+</html>
