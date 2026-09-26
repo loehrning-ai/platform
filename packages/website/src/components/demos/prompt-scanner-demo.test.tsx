@@ -26,14 +26,21 @@ function typePrompt(value: string): void {
   });
 }
 
+function verdict(): Element | null {
+  return document.querySelector("[data-scanner-verdict]");
+}
+
 describe("<PromptScannerDemo>", () => {
   it("renders the header, blind-spot note, mode toggle and sample buttons, scanning the default sample", () => {
     render(<PromptScannerDemo />);
 
-    expect(screen.getByText("Compliance-Sandbox")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Prompt-Scanner",
-    );
+    // No kicker and no two-colour slogan: the page H1 names the demo, and
+    // the engine keeps one plain sr-only heading as a landmark.
+    expect(screen.queryByText("Compliance-Sandbox")).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Prompt prüfen");
+    expect(heading.querySelector("span")).toBeNull();
     // The engine no longer restates its execution mode: the detail shell says
     // it once via EvidenceBadge, so the inline SimulationDisclosure made it
     // twice, and the mode belongs stated once per detail page.
@@ -51,8 +58,8 @@ describe("<PromptScannerDemo>", () => {
     );
 
     // Both scanner modes are offered; "Erkannt" (detect) is the default.
-    expect(screen.getByRole("button", { name: "› Erkannt" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "› Maskiert" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Erkannt" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Maskiert" })).toBeInTheDocument();
 
     // Four sample buttons (1..4); the first is active by default.
     expect(screen.getByRole("button", { name: "1" })).toHaveAttribute(
@@ -62,7 +69,9 @@ describe("<PromptScannerDemo>", () => {
     expect(screen.getByRole("button", { name: "4" })).toBeInTheDocument();
 
     // The default sample contains an IBAN, so the worst level is "block".
-    expect(screen.getByText("MARKIERT")).toBeInTheDocument();
+    // The verdict is a sentence-case word, with no coloured left rule.
+    expect(verdict()).toHaveTextContent(/^Markiert$/);
+    expect(verdict()).toHaveAttribute("data-scanner-verdict", "block");
     expect(
       screen.getByText("PII-Treffer im Beispieltext: nicht ungeprüft weitergeben"),
     ).toBeInTheDocument();
@@ -72,8 +81,8 @@ describe("<PromptScannerDemo>", () => {
     render(<PromptScannerDemo />);
     typePrompt("bitte an demo.person@example.invalid senden");
 
-    // One mask-level detection -> MASKIERT verdict + hit count.
-    expect(screen.getByText("MASKIERT")).toBeInTheDocument();
+    // One mask-level detection -> "Maskiert" verdict + hit count.
+    expect(verdict()).toHaveTextContent(/^Maskiert$/);
     expect(screen.getByText("Maskierte Fassung erzeugt")).toBeInTheDocument();
     expect(
       screen.getByText("1 Treffer · Beispiel-Laufzeit · lokale Regeln"),
@@ -84,7 +93,7 @@ describe("<PromptScannerDemo>", () => {
     expect(screen.getByText("E-Mail")).toBeInTheDocument();
 
     // Mask mode replaces the address with the [E-MAIL] token.
-    fireEvent.click(screen.getByRole("button", { name: "› Maskiert" }));
+    fireEvent.click(screen.getByRole("button", { name: "Maskiert" }));
     expect(screen.getByText("[E-MAIL]")).toBeInTheDocument();
     expect(screen.queryByText("demo.person@example.invalid")).not.toBeInTheDocument();
   });
@@ -93,7 +102,7 @@ describe("<PromptScannerDemo>", () => {
     render(<PromptScannerDemo />);
     typePrompt("dummy-iban DE00 0000 0000 0000 0000 00 prüfen");
 
-    expect(screen.getByText("MARKIERT")).toBeInTheDocument();
+    expect(verdict()).toHaveTextContent(/^Markiert$/);
     expect(
       screen.getByText("1 Treffer · Beispiel-Laufzeit · lokale Regeln"),
     ).toBeInTheDocument();
@@ -102,7 +111,7 @@ describe("<PromptScannerDemo>", () => {
     expect(screen.getByText("IBAN")).toBeInTheDocument();
 
     // Block-level hits are hard-redacted (not tokenised) in mask mode.
-    fireEvent.click(screen.getByRole("button", { name: "› Maskiert" }));
+    fireEvent.click(screen.getByRole("button", { name: "Maskiert" }));
     expect(screen.getByText(/▓▓▓/)).toBeInTheDocument();
   });
 
@@ -110,13 +119,13 @@ describe("<PromptScannerDemo>", () => {
     render(<PromptScannerDemo />);
     typePrompt("die FIKTIVWERK-BEISPIEL AG plant etwas");
 
-    // "review" verdict - asserted via its unique subtitle (the badge text
-    // "REVIEW" is shared with the counter label).
+    // "review" verdict: the word and its subtitle.
+    expect(verdict()).toHaveTextContent(/^Prüfen$/);
     expect(screen.getByText("Geschäftsgeheimnis erkannt")).toBeInTheDocument();
     expect(screen.getByText("FIKTIVWERK-BEISPIEL AG")).toBeInTheDocument();
     expect(screen.getByText("Unternehmen")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "› Maskiert" }));
+    fireEvent.click(screen.getByRole("button", { name: "Maskiert" }));
     expect(screen.getByText("[UNTERNEHMEN]")).toBeInTheDocument();
   });
 
@@ -124,7 +133,7 @@ describe("<PromptScannerDemo>", () => {
     render(<PromptScannerDemo />);
     typePrompt("nur eine harmlose anfrage ohne treffer");
 
-    expect(screen.getByText("KEINE DEMO-TREFFER")).toBeInTheDocument();
+    expect(verdict()).toHaveTextContent(/^Keine Treffer im Beispiel$/);
     expect(screen.getByText("Prüfung unvollständig möglich")).toBeInTheDocument();
     expect(
       screen.getByText("0 Treffer · Beispiel-Laufzeit · lokale Regeln"),
@@ -144,7 +153,7 @@ describe("<PromptScannerDemo>", () => {
     const trigger = screen.getByRole("button", { name: /Prompt-Injection testen/ });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     expect(
-      screen.queryByText(/dieser Angriff wurde nicht erkannt/),
+      screen.queryByText(/Dieser Angriff wurde nicht erkannt/),
     ).not.toBeInTheDocument();
 
     fireEvent.click(trigger);
@@ -154,7 +163,7 @@ describe("<PromptScannerDemo>", () => {
       screen.getByText(/Ignoriere alle bisherigen Anweisungen/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/dieser Angriff wurde nicht erkannt/),
+      screen.getByText(/Dieser Angriff wurde nicht erkannt/),
     ).toBeInTheDocument();
   });
 });

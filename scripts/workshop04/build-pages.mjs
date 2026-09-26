@@ -3,15 +3,15 @@
 
    Templates live in scripts/workshop04/pages/*.template.html. Every figure on a page is a
    placeholder resolved from scripts/workshop04/data/w04-data.json (built by
-   data/build_dataset.py, the same file the deck build reads), so a page can never show a
-   number the dataset does not hold:
+   scripts/workshop04/build_dataset.py, the same file the deck and demo builds read), so a page
+   can never show a number the dataset does not hold:
 
      {{n:key}}            numbers[key].en            "1,444.0 t"
      {{n:key:abs}}        without sign and unit      "495.5"
      {{n:key:absunit}}    without sign               "495.5 t"
      {{n:key:bare}}       without unit               "−102.3"
      {{j:path}}           any JSON value by dot path (array segments: index, row_id, id, step)
-     {{j:path:int|fix1|fix2|pct|dmy}}
+     {{j:path:int|fix1|fix2|pct|dmy|file}}   (file: the last segment of a path, the file name)
      {{fig:name}}         a figure generated below from the JSON
      {{strip:page}}       the shared top strip with numbered material tabs
      {{sec}}              the next section number (guide)
@@ -86,6 +86,7 @@ function j(path, form = "") {
     case "fix1": return Number(value).toFixed(1);
     case "fix2": return Number(value).toFixed(2);
     case "pct": return `${Number(value)}%`;
+    case "file": return String(value).split("/").pop();
     case "dmy": { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value)); if (!m) fail(`not an ISO date: ${path}`); return m ? `${m[3]}.${m[2]}.${m[1]}` : String(value); }
     default: fail(`unknown JSON form ${form} for ${path}`); return String(value);
   }
@@ -139,7 +140,7 @@ function assert(cond, msg) { if (!cond) fail(`data check: ${msg}`); }
   // the month strip draws every file in the Werk Nord electricity folder: month cells plus the Talbrück bill
   const raw = cov.asDelivered["WN Strom"];
   const monthFiles = raw.filter((c) => c === "1").length + 2 * raw.filter((c) => c === "2").length + (raw.includes("S") ? 1 : 0);
-  const wnDocs = data.documents.filter((d) => d.path.includes("/Werk_Nord/Strom/"));
+  const wnDocs = data.documents.filter((d) => d.path.includes("/werk_nord/strom/"));
   const tb = data.ledger.find((r) => r.row_id === "E-TB-01");
   assert(tb && tb.status === "excluded" && wnDocs.some((d) => d.path === tb.source_file), "Talbrück bill is in the Werk Nord electricity folder");
   assert(monthFiles + 1 === val("files_wn_electricity") && wnDocs.length === val("files_wn_electricity"), "month strip draws all Werk Nord electricity files");

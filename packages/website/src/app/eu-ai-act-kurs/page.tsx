@@ -52,7 +52,7 @@ const LANDING_COPY = {
     heading: "Rollen, Risiken und",
     headingAccent: "Pflichten einordnen.",
     introduction:
-      "Du nimmst ein KI-Tool aus deinem Unternehmen und bestimmst seine Risikoklasse, eure Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27.\u00a0Juli\u00a02026 geltenden Fassung.",
+      "Sie nehmen ein KI-Tool aus Ihrem Unternehmen und bestimmen seine Risikoklasse, Ihre Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27.\u00a0Juli\u00a02026 geltenden Fassung.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
@@ -79,7 +79,6 @@ const LANDING_COPY = {
     ],
     curriculumHeading: "Lehrplan",
     minutes: (count: number) => `${count} Min.`,
-    total: "24 Lektionen · ca. 1 Std. 50 Min. · Abschlussquiz mit 27 Fragen",
     audienceHeading: "Für wen",
     audienceBody:
       "Der Einstieg setzt weder Programmierkenntnisse noch ein Jurastudium voraus. Die späteren Blöcke richten sich besonders an Datenschutz, IT, Compliance, Einkauf, Personal und Fachverantwortliche.",
@@ -97,7 +96,8 @@ const LANDING_COPY = {
         detail: "Mit Rechtsstand und Quelle zu jeder Frist.",
       },
     ],
-    outcomesHeading: "Was du danach kannst",
+    // The EU AI Act course addresses the reader with "Sie" (CONTENT_GUIDE).
+    outcomesHeading: "Was Sie danach können",
     evidenceHeading: "Was der Teilnahmenachweis belegt",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokalen Abschlussquiz.",
@@ -162,7 +162,6 @@ const LANDING_COPY = {
     ],
     curriculumHeading: "Course plan",
     minutes: (count: number) => `${count} min`,
-    total: "24 lessons · about 1 hour 50 minutes · 27-question final quiz",
     audienceHeading: "Who it is for",
     audienceBody:
       "The opening blocks require neither programming skills nor legal training. The later blocks are especially relevant to data protection, IT, compliance, procurement, HR, and operational owners.",
@@ -338,10 +337,7 @@ export default async function EuAiActKursLandingPage() {
           />
         </CourseLandingSection>
 
-        <CourseLandingSection
-          title={copy.curriculumHeading}
-          caption={copy.total}
-        >
+        <CourseLandingSection title={copy.curriculumHeading}>
           <CourseBlockLedger
             rows={blocks.map((block, index) => ({
               id: block.id,

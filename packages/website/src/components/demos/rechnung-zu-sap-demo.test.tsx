@@ -6,16 +6,12 @@ import RechnungZuSapDemo from "./rechnung-zu-sap-demo";
  * rechnung-zu-sap-demo.test.tsx (regression coverage)
  *
  * Drives the real <RechnungZuSapDemo>, a 4-stage OCR -> SAP extraction demo.
- * The stage machine only runs from timers when the demo is both in view and
- * under normal motion. Two branches are deterministic in jsdom:
- *
- *  - Normal motion: the polyfilled IntersectionObserver never reports the demo
- *    in-view, so useVisibleAutoplay keeps visible=false and the effect returns
- *    before scheduling any timer. stage stays 0 -> the pending placeholder
- *    shows and the extracted SAP fields are absent.
- *  - Reduced motion: the effect short-circuits to setStage(4) with no timers, so
- *    the extracted output panel (IDoc draft, invoice fields, positions table)
- *    renders immediately.
+ * The engine renders its final state first (design direction, principle 6):
+ * the extracted IDoc draft is on screen on load, and "Neu abspielen" is the
+ * only way into a replay. A replay only runs from timers when the demo is in
+ * view under normal motion; the polyfilled IntersectionObserver never reports
+ * it in view, so a replay waits at stage 0 (the pending placeholder) in jsdom.
+ * Reduced motion always shows stage 4.
  *
  * We assert on output-only strings (positions, IBAN, USt-ID, the extracted
  * "Von" line) rather than the static A4 mock, whose "RE-2026-04211" and
@@ -43,26 +39,33 @@ afterEach(() => {
 });
 
 describe("<RechnungZuSapDemo>", () => {
-  it("stays in the pending state with the extract hidden when not in view (normal motion)", () => {
+  it("renders the extracted SAP draft on load and rewinds to pending on replay", () => {
     render(<RechnungZuSapDemo />);
 
-    expect(screen.getByText("Rechnungs-Automatisierung")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "SAP-Importentwurf",
-    );
+    expect(screen.queryByText("Rechnungs-Automatisierung")).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Rechnung zum SAP-Importentwurf");
+    expect(heading.querySelector("span")).toBeNull();
 
     // The four pipeline stages are always listed.
     expect(screen.getByText("OCR")).toBeInTheDocument();
     expect(screen.getByText("Struktur-Parsing")).toBeInTheDocument();
     expect(screen.getByText("SAP-Export vorbereiten")).toBeInTheDocument();
 
-    // stage 0 -> the pending placeholder is shown, extracted fields are not.
+    // Final state first: the extract is there, the placeholder is not.
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    expect(screen.getByText("Industrie-Sensoren Typ S-2200")).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Extrahierte Felder erscheinen nach UStG-Validierung/),
+    ).not.toBeInTheDocument();
+
+    // Replay rewinds; off-screen (jsdom) it waits at stage 0.
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
     expect(
       screen.getByText(/Extrahierte Felder erscheinen nach UStG-Validierung/),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByText("Industrie-Sensoren Typ S-2200"),
-    ).not.toBeInTheDocument();
     expect(
       screen.queryByText("DE00 0000 0000 0000 0000 00 (DUMMY)"),
     ).not.toBeInTheDocument();
@@ -98,6 +101,7 @@ describe("<RechnungZuSapDemo>", () => {
   it("lets the user step through the pipeline manually, independent of autoplay", () => {
     render(<RechnungZuSapDemo />);
 
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
     expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
     const back = screen.getByRole("button", { name: "◀ Zurück" });
     const next = screen.getByRole("button", { name: "Weiter ▶" });
@@ -116,11 +120,6 @@ describe("<RechnungZuSapDemo>", () => {
     render(<RechnungZuSapDemo />);
     const next = screen.getByRole("button", { name: "Weiter ▶" });
 
-    fireEvent.click(next);
-    fireEvent.click(next);
-    fireEvent.click(next);
-    fireEvent.click(next);
-
     expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
     expect(next).toBeDisabled();
     expect(
@@ -137,15 +136,9 @@ describe("<RechnungZuSapDemo>", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Beleg B · Abweichung" }),
     );
-    // Picking a scenario resets to stage 0 and swaps the data source; jsdom
-    // never reports the demo in view, so autoplay does not race the assertion.
-    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
-
-    const next = screen.getByRole("button", { name: "Weiter ▶" });
-    fireEvent.click(next);
-    fireEvent.click(next);
-    fireEvent.click(next);
-    fireEvent.click(next);
+    // Picking a document swaps the data source and shows its own final
+    // state; the replay stays a separate choice.
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
 
     expect(
       screen.getByText("Manuelle Prüfung erforderlich"),

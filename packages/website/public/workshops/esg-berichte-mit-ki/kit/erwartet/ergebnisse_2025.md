@@ -29,5 +29,5 @@ Convention: consumption effects at the 2024 factor, factor effect on 2025 consum
 Renewable share of electricity 34.3% · energy on the net (Hi) basis 5,872.9 MWh (electricity 3,610, gas 1,882.9, diesel 380) · renewable share of energy 21.1% · 10.6 t per employee (2024: 11.2 t).
 
 ## The constructed raw-folder answer
-Constructed: what the answer looks like when all six traps fire. Not a recorded run.
+Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.
 1,866.5 t location-based (−7.5%), 1,866.0 t "market-based". Gap to the right answer 48.7 t (2.5% of the total); the change against 2024 is 2.4 percentage points off (−7.5% against −5.1%). Waterfall in `wasserfall.csv`.

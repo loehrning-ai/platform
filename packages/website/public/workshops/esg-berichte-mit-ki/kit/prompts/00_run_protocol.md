@@ -5,7 +5,7 @@ Goal: show what the data state changes, with everything else held constant.
 Hold constant, and write down:
 - model name and version, tool (app with file upload and analysis, or an agent in a terminal), date
 - the prompt text below, copied exactly
-- `faktoren/faktoren_lehrwerte.csv` and `vorjahr/THG_2024_Zusammenfassung.csv`
+- `faktoren/faktoren_lehrwerte.csv` and `vorjahr/thg_2024_zusammenfassung.csv`
 
 Prompt for both conditions:
 "What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024? Use the attached files."

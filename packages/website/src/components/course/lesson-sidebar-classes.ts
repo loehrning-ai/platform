@@ -39,6 +39,41 @@ export function lessonSidebarItemClass(active: boolean): string {
   );
 }
 
+/**
+ * Readers that keep the number visible on every row (Claude, Codex, data
+ * infrastructure, operator, Data Science, data engineering) mark the current
+ * row with a 6px ink square in the left padding instead of replacing the
+ * number. The square sits on the first text line.
+ */
+export const LESSON_SIDEBAR_ITEM_SQUARE_MARKER_CLASS =
+  "relative before:absolute before:left-0 before:top-[1.05rem] before:size-1.5 before:bg-foreground";
+
+/**
+ * A lesson or chapter number that stays visible in every row: 12px, 600,
+ * tabular. Never Mennige (Mennige text on the tonal fill is 4.4:1) and never
+ * mono.
+ */
+export const LESSON_SIDEBAR_INDEX_CLASS =
+  "w-6 shrink-0 text-center text-xs font-semibold tabular-nums";
+
+/** Row classes for a numbered reader: tonal fill, 600 and the ink square. */
+export function lessonSidebarLinkClass(active: boolean): string {
+  return cx(
+    LESSON_SIDEBAR_ITEM_BASE_CLASS,
+    active
+      ? cx(LESSON_SIDEBAR_ITEM_ACTIVE_CLASS, LESSON_SIDEBAR_ITEM_SQUARE_MARKER_CLASS)
+      : LESSON_SIDEBAR_ITEM_IDLE_CLASS,
+  );
+}
+
+/** Number classes for a numbered reader: ink on the current row. */
+export function lessonSidebarIndexClass(active: boolean): string {
+  return cx(
+    LESSON_SIDEBAR_INDEX_CLASS,
+    active ? "text-foreground" : "text-muted-foreground",
+  );
+}
+
 /** Shorthand used by every reader: the idle and active rows together. */
 export const LESSON_SIDEBAR_ITEM_CLASS = {
   active: lessonSidebarItemClass(true),

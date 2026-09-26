@@ -26,13 +26,15 @@ afterEach(() => {
 });
 
 describe("<WordDemo>", () => {
-  it("renders the header, the default Eckdaten and the empty preview state", () => {
+  it("renders the default Eckdaten and the generated brief on load", () => {
     render(<WordDemo />);
 
-    expect(screen.getByText("Word-Lab mit KI-Assistent")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "prüfbar bleiben.",
-    );
+    // No kicker and no two-colour slogan; one plain sr-only landmark heading.
+    expect(screen.queryByText("Word-Lab mit KI-Assistent")).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Projektbrief-Entwurf mit Prüfschritten");
+    expect(heading.querySelector("span")).toBeNull();
 
     // Wrapped-label inputs carry their INITIAL values.
     expect(screen.getByLabelText("Adressat")).toHaveValue("Fiktivwerk Beispiel GmbH (rein fiktiv)");
@@ -45,15 +47,16 @@ describe("<WordDemo>", () => {
     // Filename stub = first token of the explicitly fictional addressee.
     expect(screen.getByText(/Projektbrief_Fiktivwerk_/)).toBeInTheDocument();
 
-    // Ungenerated: placeholder shown, brief + SIMULIERT badge absent.
-    expect(screen.getByText(/Eckdaten ausfüllen und/)).toBeInTheDocument();
+    // Final state first: the brief for the default inputs is on screen, with
+    // its sentence-case "Simuliert" label; there is no "press the button"
+    // placeholder.
     expect(
-      screen.queryByText(/Projektbrief: Wartungs-KI Produktionslinie/),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText("◆ SIMULIERT")).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Projektbrief erstellen/ }),
-    ).toBeEnabled();
+      screen.getByText(/Projektbrief: Wartungs-KI Produktionslinie/),
+    ).toBeInTheDocument();
+    expect(screen.getByText("68.000 €")).toBeInTheDocument();
+    expect(screen.getByText("Simuliert")).toBeInTheDocument();
+    expect(screen.queryByText(/Eckdaten ausfüllen und/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Neu erstellen/ })).toBeEnabled();
   });
 
   it("re-derives the doc filename live when the Adressat changes", () => {
@@ -72,15 +75,15 @@ describe("<WordDemo>", () => {
     try {
       render(<WordDemo />);
 
-      fireEvent.click(
-        screen.getByRole("button", { name: /Projektbrief erstellen/ }),
-      );
+      fireEvent.click(screen.getByRole("button", { name: /Neu erstellen/ }));
 
       // Generation enters the busy state synchronously.
       const busy = screen.getByRole("button", { name: /Wird erstellt/ });
       expect(busy).toBeDisabled();
-      // Preview is still the placeholder before the ladder finishes.
-      expect(screen.getByText(/Eckdaten ausfüllen und/)).toBeInTheDocument();
+      // While the ladder runs, the preview says what is happening.
+      expect(
+        screen.getByText(/Der Entwurf wird aus deinen Eckdaten erstellt/),
+      ).toBeInTheDocument();
 
       // Final timer fires at 2400ms and sets genStep = 4.
       act(() => {
@@ -95,13 +98,13 @@ describe("<WordDemo>", () => {
       // Budget "68000" rendered through toLocaleString("de-DE").
       expect(screen.getByText("68.000 €")).toBeInTheDocument();
       // Generated affordances appear.
-      expect(screen.getByText("◆ SIMULIERT")).toBeInTheDocument();
+      expect(screen.getByText("Simuliert")).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: /Neu erstellen/ }),
       ).toBeEnabled();
-      // Placeholder is replaced by the real doc.
+      // The progress note is replaced by the real doc.
       expect(
-        screen.queryByText(/Eckdaten ausfüllen und/),
+        screen.queryByText(/Der Entwurf wird aus deinen Eckdaten erstellt/),
       ).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();
@@ -116,9 +119,7 @@ describe("<WordDemo>", () => {
       fireEvent.change(screen.getByLabelText("Rahmenwert"), {
         target: { value: "125000" },
       });
-      fireEvent.click(
-        screen.getByRole("button", { name: /Projektbrief erstellen/ }),
-      );
+      fireEvent.click(screen.getByRole("button", { name: /Neu erstellen/ }));
       act(() => {
         vi.advanceTimersByTime(2400);
       });
@@ -142,15 +143,18 @@ describe("<WordDemo>", () => {
     });
 
     const button = screen.getByRole("button", {
-      name: /Projektbrief erstellen/,
+      name: /Neu erstellen/,
     });
     expect(button).toBeDisabled();
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Rahmenwert muss eine Zahl größer 0 sein.",
     );
 
+    // Clicking does not regenerate: the last valid brief stays, and no
+    // "NaN €" line appears.
     fireEvent.click(button);
-    expect(screen.queryByText(/SIMULIERT/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Wird erstellt/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/NaN/)).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("Rahmenwert"), {
       target: { value: "50000" },

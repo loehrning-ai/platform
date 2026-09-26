@@ -38,9 +38,9 @@
 
 | Workshop scene | Open |
 |---|---|
-| Twelve files, eleven months | `rohdaten_2025/Werk_Nord/Strom/`, `Zaehlerstaende_2025.csv`, `erwartet/abdeckung_wie_angeliefert.csv` |
-| What does "1.240 MWh" mean? | `Jahresuebersicht_2025_Oekostrom.md` in `rohdaten_2025/Werk_Sued/` |
-| Whose bill is this? | `Jahresrechnung_TB_2025.md` in `rohdaten_2025/Werk_Nord/Strom/` |
+| Twelve files, eleven months | `rohdaten_2025/werk_nord/strom/`, `zaehlerstaende_2025.csv`, `erwartet/abdeckung_wie_angeliefert.csv` |
+| What does "1.240 MWh" mean? | `jahresuebersicht_2025_oekostrom.md` in `rohdaten_2025/werk_sued/` |
+| Whose bill is this? | `jahresrechnung_tb_2025.md` in `rohdaten_2025/werk_nord/strom/` |
 | Six errors, 48.7 tonnes apart | `erwartet/wasserfall.csv` |
 | The ledger | `belegtabelle/belegtabelle_2025_leer.csv`, `erwartet/belegtabelle_2025.csv`, `erwartet/kontrollsumme_strom_2025.csv` |
 | Trace three figures | `vorlagen/uebung_drei_zahlen.md`, answers in `erwartet/uebung_drei_zahlen_antworten.md` |

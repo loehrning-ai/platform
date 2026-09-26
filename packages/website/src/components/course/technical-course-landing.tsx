@@ -28,6 +28,8 @@ interface TechnicalCourseSectionHeadingProps {
   readonly title: string;
   readonly intro?: string;
   readonly id?: string;
+  /** Id for the h2 itself, for a section that is `aria-labelledby` it. */
+  readonly headingId?: string;
 }
 
 /**
@@ -149,6 +151,7 @@ export function TechnicalCourseSectionHeading({
   title,
   intro,
   id,
+  headingId,
 }: TechnicalCourseSectionHeadingProps): JSX.Element {
   const note = eyebrow ? plainLabel(eyebrow) : "";
   return (
@@ -158,7 +161,10 @@ export function TechnicalCourseSectionHeading({
       data-technical-section-heading
     >
       <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h2 className="min-w-0 max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground text-balance">
+        <h2
+          id={headingId}
+          className="min-w-0 max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground text-balance"
+        >
           {title}
         </h2>
         {note ? (

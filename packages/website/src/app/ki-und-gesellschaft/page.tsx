@@ -13,7 +13,6 @@ import {
   CourseNextLink,
   CourseNoteList,
   CourseOutcomeList,
-  formatCourseMinutes,
 } from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
@@ -55,7 +54,6 @@ interface LandingCopy {
   readonly whyHeading: string;
   readonly whyBody: string;
   readonly curriculumHeading: string;
-  readonly curriculumCaption: (blocks: number, minutes: string) => string;
   readonly minutes: (count: number) => string;
   readonly methods: readonly {
     readonly number: string;
@@ -113,7 +111,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     whyBody:
       "Prognosen zum Arbeitsmarkt, die Echtheit eines Videos und die Fairness einer automatisierten Entscheidung lassen sich nicht mit derselben Checkliste bewerten. Der Kurs ordnet für jedes Thema die relevante Datenbasis, typische Fehlschlüsse und konkrete Prüfschritte. Quellen und Prüfstände stehen direkt in den Lektionen.",
     curriculumHeading: "Lehrplan",
-    curriculumCaption: (blocks, minutes) => `${blocks} Blöcke · ${minutes}`,
     minutes: (count) => `${count} Min.`,
     methods: [
       {
@@ -186,7 +183,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     whyBody:
       "A labour-market forecast, the authenticity of a video, and the fairness of an automated decision cannot be assessed with one checklist. For each topic, the course identifies the relevant evidence, common reasoning errors, and concrete review steps. Sources and review dates appear in the lessons.",
     curriculumHeading: "Course plan",
-    curriculumCaption: (blocks, minutes) => `${blocks} blocks · ${minutes}`,
     minutes: (count) => `${count} min`,
     methods: [
       {
@@ -357,16 +353,7 @@ export default async function KiUndGesellschaftLandingPage() {
           />
         </CourseLandingSection>
 
-        <CourseLandingSection
-          title={copy.curriculumHeading}
-          caption={copy.curriculumCaption(
-            blocks.length,
-            formatCourseMinutes(
-              blocks.reduce((sum, block) => sum + block.durationMinutes, 0),
-              locale,
-            ),
-          )}
-        >
+        <CourseLandingSection title={copy.curriculumHeading}>
           <CourseBlockLedger
             rows={blocks.map((block, index) => ({
               id: block.id,

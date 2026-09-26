@@ -8,14 +8,14 @@ import OutboundWorkflowDemo from "./outbound-workflow-demo";
  * Drives the real <OutboundWorkflowDemo>. Two deterministic states exist without
  * wall-clock timers:
  *
- *  - Idle: normal motion, but the polyfilled IntersectionObserver never reports
- *    the demo in-view, so useVisibleAutoplay keeps visible=false and the stage
- *    machine stays on stage 0 (the `if (!visible) return;` early exit). The lead
- *    card, pipeline labels and the derived recipient address all render, but the
- *    stage>=4 "was fehlt vor Versand" checklist is absent.
- *  - Reduced motion: the effect jumps straight to `setStage(4)`, so the full
- *    generated email body, the send-simulated header, the token footer and the
- *    failure-mode checklist toggle all render immediately.
+ *  - On load: final state first (design direction, principle 6). The stage
+ *    machine starts at 4, so the email body, the send-simulated header, the
+ *    token footer and the pre-send checklist toggle render immediately.
+ *  - Replay: "Neu abspielen" rewinds to stage 0. The polyfilled
+ *    IntersectionObserver never reports the demo in view, so the replay waits
+ *    at stage 0 (the `if (!visible)` branch): the lead card, pipeline labels
+ *    and recipient address render, the stage>=4 checklist does not.
+ *  - Reduced motion: always stage 4.
  *
  * matchMedia + IntersectionObserver are polyfilled in src/test/setup.ts; we
  * override matchMedia locally to force the reduced-motion branch. leadIndex is
@@ -44,24 +44,30 @@ describe("<OutboundWorkflowDemo>", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("renders the pipeline, the first lead and the derived recipient address while idle (stage 0)", () => {
+  it("renders the pipeline, the first lead and the derived recipient address while a replay waits (stage 0)", () => {
     render(<OutboundWorkflowDemo />);
 
-    // Header + section heading.
+    // No kicker and no slogan; one plain sr-only landmark heading.
     expect(
-      screen.getByText("Signalbasierte Nachricht · Pipeline"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Öffentliche Signale.",
-    );
+      screen.queryByText("Signalbasierte Nachricht · Pipeline"),
+    ).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Nachricht aus öffentlichen Signalen");
+    expect(heading.querySelector("span")).toBeNull();
+
+    // Final state on load; replay rewinds to stage 0 (off-screen in jsdom).
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
 
     // The four pipeline stage labels always render (independent of the stage).
     expect(screen.getByText("DB · Kontakte")).toBeInTheDocument();
     expect(screen.getByText("Text-Generierung")).toBeInTheDocument();
     expect(screen.getByText("Versandfreigabe simuliert")).toBeInTheDocument();
 
-    // First lead card (LEAD #0412, row 1/3 - leadIdx=0 padded to 4 digits).
-    expect(screen.getByText("LEAD #0412")).toBeInTheDocument();
+    // First lead card (Lead #0412, row 1/3).
+    expect(screen.getByText("Lead #0412")).toBeInTheDocument();
     expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
     expect(
       screen.getByText("Head of Ops · Fiktivwerk Alpha (rein fiktiv)"),
@@ -99,8 +105,7 @@ describe("<OutboundWorkflowDemo>", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("reveals the generated email, the send-simulated footer and the pre-send checklist under reduced motion (stage 4)", () => {
-    setReducedMotion(true);
+  it("shows the generated email, the send-simulated footer and the pre-send checklist on load (stage 4)", () => {
     render(<OutboundWorkflowDemo />);
 
     // the full generated email body for the first lead is shown.
@@ -111,8 +116,10 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(screen.getByText("T. Muster")).toBeInTheDocument();
 
     // Send-simulated status header + token/trace footer (stage>=3 / stage>=4).
-    expect(screen.getByText("● Versand simuliert 09:14")).toBeInTheDocument();
-    expect(screen.getByText("◆ 247 Tokens")).toBeInTheDocument();
+    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
+    expect(
+      screen.getByText("247 Tokens · Sonnet 4.6 · 1,8 s · Quelle geprüft"),
+    ).toBeInTheDocument();
     expect(
       screen.getByText("touched_at = 2026-04-21 09:14:03"),
     ).toBeInTheDocument();
@@ -144,7 +151,7 @@ describe("<OutboundWorkflowDemo>", () => {
     setReducedMotion(true);
     render(<OutboundWorkflowDemo />);
 
-    expect(screen.getByText("● Versand simuliert 09:14")).toBeInTheDocument();
+    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
 
     const slider = screen.getByRole("slider", {
       name: "Minimale Score-Schwelle für den Versand",
@@ -152,10 +159,10 @@ describe("<OutboundWorkflowDemo>", () => {
     fireEvent.change(slider, { target: { value: "95" } });
 
     expect(
-      screen.getByText("⛔ Nicht gesendet: unter Score-Schwelle"),
+      screen.getByText("Nicht gesendet: unter Score-Schwelle"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText("● Versand simuliert 09:14"),
+      screen.queryByText("Versand simuliert 09:14"),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByText("touched_at = 2026-04-21 09:14:03"),
@@ -167,7 +174,7 @@ describe("<OutboundWorkflowDemo>", () => {
     render(<OutboundWorkflowDemo />);
 
     expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
-    expect(screen.getByText("CRM · ROW 1/3")).toBeInTheDocument();
+    expect(screen.getByText("CRM · Zeile 1/3")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Alpha" })).toHaveAttribute(
       "aria-pressed",
       "true",
@@ -183,7 +190,7 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(
       screen.getByText("Kundendienst-Entlastung: Kurze Rückfrage"),
     ).toBeInTheDocument();
-    expect(screen.getByText("CRM · ROW 2/3")).toBeInTheDocument();
+    expect(screen.getByText("CRM · Zeile 2/3")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Beta" })).toHaveAttribute(
       "aria-pressed",
       "true",

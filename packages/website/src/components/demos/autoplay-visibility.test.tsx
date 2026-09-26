@@ -81,49 +81,68 @@ describe("demo autoplay visibility lifecycle", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("stops the agent status loops on exit and completes a bounded replay after re-entry", () => {
+  it("shows the agent memo on load, replays only on click, and pauses off-screen", () => {
     const { container } = render(<AgentPipelineDemo />);
+    const memo = "KI-Einführung in 2 Phasen, Start Q3/2026.";
 
+    // Final state first: the memo and the full trace are there on load.
     expectNoInfiniteAnimation(container);
+    expect(screen.getByText(memo)).toBeInTheDocument();
+    expect(screen.getByText("Schritt 14 / 14")).toBeInTheDocument();
 
-    setIntersecting(true);
-    expect(
-      container.querySelectorAll('[style*="infinite"]').length,
-    ).toBeGreaterThan(0);
-    expect(container.querySelector('[aria-current="step"]')).not.toBeNull();
-
-    setIntersecting(false);
-    expectNoInfiniteAnimation(container);
-    expect(container.querySelector('[aria-current="step"]')).toBeNull();
-
+    // Scrolling the engine into view does not start a run by itself.
     setIntersecting(true);
     act(() => vi.advanceTimersByTime(5_100));
+    expect(screen.getByText("Schritt 14 / 14")).toBeInTheDocument();
+    expect(container.querySelector('[aria-current="step"]')).toBeNull();
 
+    // "Neu abspielen" is the only trigger; the current step is marked by
+    // tone and edge, never by a looping animation.
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(container.querySelector('[aria-current="step"]')).not.toBeNull();
     expectNoInfiniteAnimation(container);
-    expect(
-      screen.getByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
-    ).toBeInTheDocument();
+    expect(screen.getByText(memo)).toBeInTheDocument();
+
+    // Leaving the viewport pauses the run.
+    setIntersecting(false);
+    expect(container.querySelector('[aria-current="step"]')).toBeNull();
+
+    // Re-entry completes one bounded run and settles on the final state.
+    setIntersecting(true);
+    act(() => vi.advanceTimersByTime(5_100));
+    expectNoInfiniteAnimation(container);
+    expect(screen.getByText("Schritt 14 / 14")).toBeInTheDocument();
+    expect(container.querySelector('[aria-current="step"]')).toBeNull();
+    expect(screen.getByText(memo)).toBeInTheDocument();
   });
 
-  it("does not pulse outbound before visibility, stops on exit, and replays to review", () => {
+  it("shows the outbound draft on load, replays only on click, and never loops", () => {
     const { container } = render(<OutboundWorkflowDemo />);
 
+    // Final state first, with no looping pulse, scan or caret.
     expectNoInfiniteAnimation(container);
+    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
 
-    setIntersecting(true);
-    expect(container.querySelectorAll('[style*="infinite"]')).toHaveLength(2);
-
-    act(() => vi.advanceTimersByTime(400));
-    expect(container.querySelectorAll('[style*="infinite"]')).toHaveLength(3);
-
-    setIntersecting(false);
-    expectNoInfiniteAnimation(container);
-
+    // Entering the viewport does not start a run by itself.
     setIntersecting(true);
     act(() => vi.advanceTimersByTime(3_000));
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(400));
+    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
     expectNoInfiniteAnimation(container);
-    expect(screen.getByText("● Versand simuliert 09:14")).toBeInTheDocument();
+
+    // Leaving the viewport pauses the replay at the start.
+    setIntersecting(false);
+    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+
+    // Re-entry completes one bounded run and settles on the final state.
+    setIntersecting(true);
+    act(() => vi.advanceTimersByTime(3_000));
+    expectNoInfiniteAnimation(container);
+    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
 
     const checklist = screen.getByRole("button", {
       name: "Was fehlt vor einem echten Versand?",
@@ -132,14 +151,21 @@ describe("demo autoplay visibility lifecycle", () => {
     expect(checklist).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("unmounts the invoice scan loop on exit and completes a bounded replay after re-entry", () => {
+  it("shows the invoice extract on load and runs one finite scan per replay", () => {
     const { container } = render(<RechnungZuSapDemo />);
 
     expectNoInfiniteAnimation(container);
+    expect(screen.getByText("Industrie-Sensoren Typ S-2200")).toBeInTheDocument();
 
     setIntersecting(true);
+    act(() => vi.advanceTimersByTime(3_600));
+    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
     act(() => vi.advanceTimersByTime(300));
-    expect(container.querySelectorAll('[style*="infinite"]')).toHaveLength(1);
+    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
+    // The OCR scan line plays once; nothing loops.
+    expectNoInfiniteAnimation(container);
 
     setIntersecting(false);
     expectNoInfiniteAnimation(container);

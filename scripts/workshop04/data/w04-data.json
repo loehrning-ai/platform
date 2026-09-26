@@ -153,82 +153,82 @@
     "firstMonth": 1,
     "lastMonth": 1,
     "kwh": 210000,
-    "file": "2025-01_Strom_WN.md"
+    "file": "2025-01_strom_wn.md"
    },
    {
     "invoice": "4711-02",
     "firstMonth": 2,
     "lastMonth": 2,
     "kwh": 195000,
-    "file": "2025-02_Strom_WN.md"
+    "file": "2025-02_strom_wn.md"
    },
    {
     "invoice": "4711-03",
     "firstMonth": 3,
     "lastMonth": 3,
     "kwh": 205000,
-    "file": "2025-03_Strom_WN.md"
+    "file": "2025-03_strom_wn.md"
    },
    {
     "invoice": "4711-04",
     "firstMonth": 4,
     "lastMonth": 4,
     "kwh": 190000,
-    "file": "2025-04_Strom_WN.md"
+    "file": "2025-04_strom_wn.md"
    },
    {
     "invoice": "4711-05",
     "firstMonth": 5,
     "lastMonth": 5,
     "kwh": 185000,
-    "file": "2025-05_Strom_WN.md"
+    "file": "2025-05_strom_wn.md"
    },
    {
     "invoice": "4711-06",
     "firstMonth": 6,
     "lastMonth": 6,
     "kwh": 180000,
-    "file": "2025-06_Strom_WN.md"
+    "file": "2025-06_strom_wn.md"
    },
    {
     "invoice": "4711-07",
     "firstMonth": 7,
     "lastMonth": 7,
     "kwh": 175000,
-    "file": "2025-07_Strom_WN.md"
+    "file": "2025-07_strom_wn.md"
    },
    {
     "invoice": "4711-08",
     "firstMonth": 8,
     "lastMonth": 8,
     "kwh": 120000,
-    "file": "2025-08_Strom_WN.md"
+    "file": "2025-08_strom_wn.md"
    },
    {
     "invoice": "4711-09",
     "firstMonth": 9,
     "lastMonth": 9,
     "kwh": 190000,
-    "file": "2025-09_Strom_WN.md"
+    "file": "2025-09_strom_wn.md"
    },
    {
     "invoice": "4711-11",
     "firstMonth": 11,
     "lastMonth": 12,
     "kwh": 410000,
-    "file": "2025-11-12_Strom_WN.md"
+    "file": "2025-11-12_strom_wn.md"
    }
   ],
   "wnDuplicate": {
    "invoice": "4711-03",
    "kwh": 205000,
-   "file": "Scan_Rechnung_Maerz.md"
+   "file": "scan_rechnung_maerz.md"
   },
   "wnMissingInvoice": "4711-10",
   "jvBill": {
    "invoice": "TB-2025-12",
    "kwh": 1000000,
-   "file": "Jahresrechnung_TB_2025.md",
+   "file": "jahresrechnung_tb_2025.md",
    "meter": "DE0005678900TB07"
   },
   "meterReadings": [
@@ -319,7 +319,7 @@
     "kwhExact": 1849999.98336,
     "kwhPrinted": 1850000,
     "invoice": "G-2025-0417",
-    "file": "Gas_Jahresrechnung_WN_2025.md"
+    "file": "gas_jahresrechnung_wn_2025.md"
    },
    "WS": {
     "m3": 22077,
@@ -328,7 +328,7 @@
     "kwhExact": 239999.95008,
     "kwhPrinted": 240000,
     "invoice": "G-2025-0418",
-    "file": "Gas_Jahresrechnung_WS_2025.md"
+    "file": "gas_jahresrechnung_ws_2025.md"
    }
   },
   "dieselMonthL": [
@@ -4445,7 +4445,7 @@
    "basis": "",
    "qty_norm": "210000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-01_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-01_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 210.000 kWh",
    "invoice_no": "4711-01",
@@ -4476,7 +4476,7 @@
    "basis": "",
    "qty_norm": "195000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-02_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-02_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 195.000 kWh",
    "invoice_no": "4711-02",
@@ -4507,7 +4507,7 @@
    "basis": "",
    "qty_norm": "205000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-03_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-03_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 205.000 kWh",
    "invoice_no": "4711-03",
@@ -4538,7 +4538,7 @@
    "basis": "",
    "qty_norm": "0",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/Scan_Rechnung_Maerz.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/scan_rechnung_maerz.md",
    "source_page": "1",
    "source_quote": "Verbrauch 205.000 kWh",
    "invoice_no": "4711-03",
@@ -4569,7 +4569,7 @@
    "basis": "",
    "qty_norm": "190000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-04_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-04_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 190.000 kWh",
    "invoice_no": "4711-04",
@@ -4600,7 +4600,7 @@
    "basis": "",
    "qty_norm": "185000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-05_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-05_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 185.000 kWh",
    "invoice_no": "4711-05",
@@ -4631,7 +4631,7 @@
    "basis": "",
    "qty_norm": "180000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-06_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-06_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 180.000 kWh",
    "invoice_no": "4711-06",
@@ -4662,7 +4662,7 @@
    "basis": "",
    "qty_norm": "175000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-07_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-07_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 175.000 kWh",
    "invoice_no": "4711-07",
@@ -4693,7 +4693,7 @@
    "basis": "",
    "qty_norm": "120000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-08_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-08_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 120.000 kWh",
    "invoice_no": "4711-08",
@@ -4724,7 +4724,7 @@
    "basis": "",
    "qty_norm": "190000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-09_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-09_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 190.000 kWh",
    "invoice_no": "4711-09",
@@ -4755,7 +4755,7 @@
    "basis": "",
    "qty_norm": "200000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Zaehlerstaende_2025.csv",
+   "source_file": "rohdaten_2025/werk_nord/zaehlerstaende_2025.csv",
    "source_page": "Zeilen 30.09.2025 und 31.10.2025",
    "source_quote": "30.09.2025;...;4812300 / 31.10.2025;...;5012300",
    "invoice_no": "4711-10 (angefordert)",
@@ -4786,7 +4786,7 @@
    "basis": "",
    "qty_norm": "410000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/2025-11-12_Strom_WN.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/2025-11-12_strom_wn.md",
    "source_page": "1",
    "source_quote": "Verbrauch 410.000 kWh",
    "invoice_no": "4711-11",
@@ -4817,7 +4817,7 @@
    "basis": "",
    "qty_norm": "0",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Nord/Strom/Jahresrechnung_TB_2025.md",
+   "source_file": "rohdaten_2025/werk_nord/strom/jahresrechnung_tb_2025.md",
    "source_page": "1",
    "source_quote": "Rechnungsempfänger: Talbrück Beschichtung GmbH",
    "invoice_no": "TB-2025-12",
@@ -4848,7 +4848,7 @@
    "basis": "",
    "qty_norm": "1240000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Werk_Sued/Jahresuebersicht_2025_Oekostrom.md",
+   "source_file": "rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md",
    "source_page": "1",
    "source_quote": "Verbrauch 2025: 1.240 MWh",
    "invoice_no": "",
@@ -4879,7 +4879,7 @@
    "basis": "",
    "qty_norm": "30000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q1_2025.md",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q1_2025.md",
    "source_page": "1",
    "source_quote": "Unterzähler LO-UZ-03: 30.000 kWh",
    "invoice_no": "",
@@ -4910,7 +4910,7 @@
    "basis": "",
    "qty_norm": "25000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q2_2025.md",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q2_2025.md",
    "source_page": "1",
    "source_quote": "Unterzähler LO-UZ-03: 25.000 kWh",
    "invoice_no": "",
@@ -4941,7 +4941,7 @@
    "basis": "",
    "qty_norm": "25000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q3_2025.md",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q3_2025.md",
    "source_page": "1",
    "source_quote": "Unterzähler LO-UZ-03: 25.000 kWh",
    "invoice_no": "",
@@ -4972,7 +4972,7 @@
    "basis": "",
    "qty_norm": "30000",
    "unit_norm": "kWh",
-   "source_file": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q4_2025.md",
+   "source_file": "rohdaten_2025/lager_ost/nebenkosten_strom_q4_2025.md",
    "source_page": "1",
    "source_quote": "Unterzähler LO-UZ-03: 30.000 kWh",
    "invoice_no": "",
@@ -5003,7 +5003,7 @@
    "basis": "Hs",
    "qty_norm": "1850000",
    "unit_norm": "kWh(Hs)",
-   "source_file": "rohdaten_2025/Werk_Nord/Gas/Gas_Jahresrechnung_WN_2025.md",
+   "source_file": "rohdaten_2025/werk_nord/gas/gas_jahresrechnung_wn_2025.md",
    "source_page": "1 (Menge), 2 (Basis)",
    "source_quote": "Energiemenge 1.850.000 kWh; Seite 2: Brennwert (Hs)",
    "invoice_no": "G-2025-0417",
@@ -5034,7 +5034,7 @@
    "basis": "Hs",
    "qty_norm": "240000",
    "unit_norm": "kWh(Hs)",
-   "source_file": "rohdaten_2025/Werk_Sued/Gas_Jahresrechnung_WS_2025.md",
+   "source_file": "rohdaten_2025/werk_sued/gas_jahresrechnung_ws_2025.md",
    "source_page": "1 (Menge), 2 (Basis)",
    "source_quote": "Energiemenge 240.000 kWh; Seite 2: Brennwert (Hs)",
    "invoice_no": "G-2025-0418",
@@ -5065,7 +5065,7 @@
    "basis": "",
    "qty_norm": "38000",
    "unit_norm": "l",
-   "source_file": "rohdaten_2025/Flotte/Tankkarten_2025.csv",
+   "source_file": "rohdaten_2025/flotte/tankkarten_2025.csv",
    "source_page": "Summe produkt = Diesel",
    "source_quote": "produkt=Diesel; einheit=l",
    "invoice_no": "",
@@ -5096,7 +5096,7 @@
    "basis": "",
    "qty_norm": "0",
    "unit_norm": "l",
-   "source_file": "rohdaten_2025/Flotte/Tankkarten_2025.csv",
+   "source_file": "rohdaten_2025/flotte/tankkarten_2025.csv",
    "source_page": "Summe produkt = AdBlue",
    "source_quote": "produkt=AdBlue; einheit=l",
    "invoice_no": "",
@@ -5127,7 +5127,7 @@
    "basis": "",
    "qty_norm": "1240000",
    "unit_norm": "kWh (abgedeckt)",
-   "source_file": "rohdaten_2025/Werk_Sued/HKN_Bestaetigung_2025.md",
+   "source_file": "rohdaten_2025/werk_sued/hkn_bestaetigung_2025.md",
    "source_page": "1",
    "source_quote": "Herkunftsnachweise über 1.240 MWh ... entwertet ... Lieferstelle Werk Süd",
    "invoice_no": "",
@@ -5377,7 +5377,7 @@
    ],
    "factor": "F-EL-LB-2025",
    "quote": "Verbrauch 2025: 1.240 MWh",
-   "file": "Jahresuebersicht_2025_Oekostrom.md",
+   "file": "jahresuebersicht_2025_oekostrom.md",
    "arithmetic_en": "1,240 MWh x 1,000 = 1,240,000 kWh; x 0.40 kg/kWh = 496,000 kg = 496.0 t",
    "arithmetic_de": "1.240 MWh x 1.000 = 1.240.000 kWh; x 0,40 kg/kWh = 496.000 kg = 496,0 t"
   },
@@ -5425,9 +5425,10 @@
    "slip_key": "trace_slip_grid_t"
   }
  ],
+ "rawFolder": "rohdaten_2025",
  "documents": [
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-01_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-01_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-01",
     "",
@@ -5460,7 +5461,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-02_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-02_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-02",
     "",
@@ -5493,7 +5494,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-03_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-03_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-03",
     "",
@@ -5526,7 +5527,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-04_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-04_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-04",
     "",
@@ -5559,7 +5560,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-05_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-05_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-05",
     "",
@@ -5592,7 +5593,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-06_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-06_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-06",
     "",
@@ -5625,7 +5626,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-07_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-07_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-07",
     "",
@@ -5658,7 +5659,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-08_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-08_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-08",
     "",
@@ -5691,7 +5692,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-09_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-09_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-09",
     "",
@@ -5724,7 +5725,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/2025-11-12_Strom_WN.md",
+   "path": "rohdaten_2025/werk_nord/strom/2025-11-12_strom_wn.md",
    "lines": [
     "# Stromrechnung 4711-11",
     "",
@@ -5757,7 +5758,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/Scan_Rechnung_Maerz.md",
+   "path": "rohdaten_2025/werk_nord/strom/scan_rechnung_maerz.md",
    "lines": [
     "WG: Rechnung März (weitergeleitet vom Einkauf, erneut gescannt)",
     "",
@@ -5793,7 +5794,7 @@
    "note_en": "Same invoice number 4711-03; OCR noise in supplier name and a stray line break, invoice number clean."
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Strom/Jahresrechnung_TB_2025.md",
+   "path": "rohdaten_2025/werk_nord/strom/jahresrechnung_tb_2025.md",
    "lines": [
     "# Stromrechnung TB-2025-12",
     "",
@@ -5826,7 +5827,7 @@
    "note_en": "Contract party, customer number and meter belong to the JV; Kellbrunn purchasing only checks the invoice."
   },
   {
-   "path": "rohdaten_2025/Werk_Sued/Jahresuebersicht_2025_Oekostrom.md",
+   "path": "rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md",
    "lines": [
     "# Jahresübersicht Strom 2025",
     "",
@@ -5845,7 +5846,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Sued/HKN_Bestaetigung_2025.md",
+   "path": "rohdaten_2025/werk_sued/hkn_bestaetigung_2025.md",
    "lines": [
     "# Bestätigung über entwertete Herkunftsnachweise 2025",
     "",
@@ -5862,7 +5863,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Nord/Gas/Gas_Jahresrechnung_WN_2025.md",
+   "path": "rohdaten_2025/werk_nord/gas/gas_jahresrechnung_wn_2025.md",
    "lines": [
     "# Gas-Jahresrechnung G-2025-0417",
     "",
@@ -5893,7 +5894,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Werk_Sued/Gas_Jahresrechnung_WS_2025.md",
+   "path": "rohdaten_2025/werk_sued/gas_jahresrechnung_ws_2025.md",
    "lines": [
     "# Gas-Jahresrechnung G-2025-0418",
     "",
@@ -5924,7 +5925,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q1_2025.md",
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q1_2025.md",
    "lines": [
     "# Nebenkostenabrechnung Strom Q1 2025",
     "",
@@ -5941,7 +5942,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q2_2025.md",
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q2_2025.md",
    "lines": [
     "# Nebenkostenabrechnung Strom Q2 2025",
     "",
@@ -5958,7 +5959,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q3_2025.md",
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q3_2025.md",
    "lines": [
     "# Nebenkostenabrechnung Strom Q3 2025",
     "",
@@ -5975,7 +5976,7 @@
    "note_en": ""
   },
   {
-   "path": "rohdaten_2025/Lager_Ost/Nebenkosten_Strom_Q4_2025.md",
+   "path": "rohdaten_2025/lager_ost/nebenkosten_strom_q4_2025.md",
    "lines": [
     "# Nebenkostenabrechnung Strom Q4 2025",
     "",
@@ -6016,5 +6017,11 @@
    "asks about other Scope 1 sources"
   ],
   "table": []
+ },
+ "kitRules": {
+  "monthChangeFlagPct": 25,
+  "restatementThresholdPct": 5,
+  "mwhToKwh": 1000,
+  "traceExerciseMinutes": 4
  }
 }

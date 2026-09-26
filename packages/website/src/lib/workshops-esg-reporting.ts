@@ -5,7 +5,7 @@ const base = "/workshops/esg-berichte-mit-ki";
 
 /**
  * Workshop 04. Every number in this copy comes from
- * public/workshops/esg-berichte-mit-ki/data/w04-data.json, built by
+ * scripts/workshop04/data/w04-data.json (repository root), built by
  * scripts/workshop04/build_dataset.py; the company, its bills and the factors
  * are invented teaching data. The agenda follows the deck's seven acts: the
  * act minutes 4.0 / 7.5 / 16.0 / 16.5 / 15.5 / 7.0 / 10.0 are rounded half to
@@ -15,8 +15,8 @@ const base = "/workshops/esg-berichte-mit-ki";
  * aiOutputsRecordedAt.
  */
 
-/** Size of kellbrunn-esg-kit.zip (92,262 bytes), in the page locale's number format. */
-const KIT_SIZE_LABEL = "90 KB";
+/** Size of kellbrunn-esg-kit.zip (92,968 bytes), in the page locale's number format. */
+const KIT_SIZE_LABEL = "91 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 

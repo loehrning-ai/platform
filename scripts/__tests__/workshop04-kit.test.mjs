@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -11,6 +11,7 @@ import {
   KIT_DIR,
   KIT_PREFIX,
   REPO_ROOT,
+  WORKSHOP_DIR,
   ZIP_PATH,
   buildKitArchive,
   buildKitArchiveFromDir,
@@ -63,7 +64,7 @@ test("the zip holds text files only, all under esg-kit/, and passes the zip insp
   assert.match(factors.text.split("\n")[0], /illustrative teaching values/);
 });
 
-test("the kit and the published data match what build_dataset.py writes", { skip: python.status !== 0 && "python3 is not available" }, (t) => {
+test("the kit and the dataset match what build_dataset.py writes", { skip: python.status !== 0 && "python3 is not available" }, (t) => {
   const out = mkdtempSync(path.join(os.tmpdir(), "w04-dataset-"));
   t.after(() => rmSync(out, { force: true, recursive: true }));
   const run = spawnSync("python3", [path.join(REPO_ROOT, "scripts/workshop04/build_dataset.py"), "--out-dir", out], { encoding: "utf8" });
@@ -76,23 +77,39 @@ test("the kit and the published data match what build_dataset.py writes", { skip
   }
 });
 
-test("working copies of the data used by the deck, demo and page builders carry the same numbers", () => {
+test("one dataset script writes the one dataset file every builder reads", () => {
+  assert.equal(path.relative(REPO_ROOT, DATA_JSON).split(path.sep).join("/"), "scripts/workshop04/data/w04-data.json");
   const canonical = JSON.parse(readFileSync(DATA_JSON, "utf8"));
   assert.ok(canonical.kitRules, "kitRules present");
-  for (const copy of ["scripts/workshop04/w04-data.json", "scripts/workshop04/data/w04-data.json"]) {
-    const file = path.join(REPO_ROOT, copy);
-    if (!existsSync(file)) continue;
-    const other = JSON.parse(readFileSync(file, "utf8"));
-    assert.deepEqual(other.numbers, canonical.numbers, `${copy} carries different numbers`);
-    assert.deepEqual(other.waterfall, canonical.waterfall, `${copy} carries a different waterfall`);
-    assert.deepEqual(other.combinations, canonical.combinations, `${copy} carries different trap combinations`);
+  // Former copies that drifted apart: a second generator and two more copies of the JSON.
+  for (const gone of ["scripts/workshop04/data/build_dataset.py", "scripts/workshop04/w04-data.json", "packages/website/public/workshops/esg-berichte-mit-ki/data/w04-data.json"]) {
+    assert.ok(!existsSync(path.join(REPO_ROOT, gone)), `${gone} is a second copy; build_dataset.py writes scripts/workshop04/data/w04-data.json only`);
+  }
+  for (const builder of ["build-deck.mjs", "build-demo.mjs", "build-pages.mjs"]) {
+    const source = readFileSync(path.join(REPO_ROOT, "scripts/workshop04", builder), "utf8");
+    assert.match(source, /join\((?:HERE|here), "data(?:\/w04-data\.json|", "w04-data\.json)"\)/, `${builder} reads data/w04-data.json next to it`);
   }
 });
 
-test("no output carries a path-shaped token the public scanner reads as a secret", () => {
+test("raw-folder paths are lower case, and no output carries a path-shaped token the public scanner reads as a secret", () => {
   const shaped = (text) => (text.match(/[A-Za-z0-9+/_-]{40,}/g) ?? []).filter((token) => /[a-z]/.test(token) && /[A-Z]/.test(token) && /[0-9]/.test(token));
+  const data = JSON.parse(readFileSync(DATA_JSON, "utf8"));
+  for (const doc of data.documents) assert.equal(doc.path, doc.path.toLowerCase(), doc.path);
+  for (const row of data.ledger) assert.equal(row.source_file, row.source_file.toLowerCase(), row.row_id);
+  for (const file of listKitFiles()) {
+    if (!["START-HERE.md", "ASSET-RIGHTS.md", "CHANGELOG.md"].includes(file)) assert.equal(file, file.toLowerCase(), file);
+  }
   assert.deepEqual(shaped(readFileSync(DATA_JSON, "utf8")), []);
   for (const file of listKitFiles()) assert.deepEqual(shaped(readFileSync(path.join(KIT_DIR, file), "utf8")), [], file);
+  // Everything the builders write next to the deck, and their sources. Like the scanner, a run inside a
+  // public URL (a cited source) does not count.
+  const withoutUrls = (text) => text.replace(/https?:\/\/[^\s"'<>)\]]+/g, " ");
+  const texts = (dir) => readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && /\.(?:html|js|mjs|css|py|json|md|csv)$/.test(entry.name))
+    .map((entry) => path.join(entry.parentPath ?? entry.path, entry.name));
+  for (const file of [...texts(WORKSHOP_DIR), ...texts(path.join(REPO_ROOT, "scripts/workshop04"))]) {
+    assert.deepEqual(shaped(withoutUrls(readFileSync(file, "utf8"))), [], path.relative(REPO_ROOT, file));
+  }
 });
 
 test("ASSET_MANIFEST.json records the published zip with its exact size and hash", () => {

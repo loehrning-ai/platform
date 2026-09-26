@@ -13,7 +13,6 @@ import {
   CourseNextLink,
   CourseNoteList,
   CourseOutcomeList,
-  formatCourseMinutes,
   type CourseOutcome,
 } from "@/components/course/course-landing-sections";
 import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
@@ -54,7 +53,6 @@ interface LandingCopy {
   readonly outcomesHeading: string;
   readonly outcomes: readonly CourseOutcome[];
   readonly curriculumHeading: string;
-  readonly curriculumCaption: (blocks: number, minutes: string) => string;
   readonly minutes: (count: number) => string;
   readonly legalHeading: string;
   readonly whyBody: string;
@@ -118,7 +116,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       },
     ],
     curriculumHeading: "Lehrplan",
-    curriculumCaption: (blocks, minutes) => `${blocks} Blöcke · ca. ${minutes}`,
     minutes: (count) => `${count} Min.`,
     legalHeading: "Rechtsgrundlage",
     whyBody:
@@ -184,7 +181,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       },
     ],
     curriculumHeading: "Course plan",
-    curriculumCaption: (blocks, minutes) => `${blocks} blocks · about ${minutes}`,
     minutes: (count) => `${count} min`,
     legalHeading: "Legal basis",
     whyBody:
@@ -316,11 +312,6 @@ export default async function KiFuehrerscheinLandingPage() {
   const totalLessons = getTotalLessonCount(COURSE_SLUG, locale);
   const courseHref = localizeHref(`${COURSE_PATH}/kurs`, locale);
 
-  const totalMinutes = blocks.reduce(
-    (sum, block) => sum + block.durationMinutes,
-    0,
-  );
-
   return (
     <>
       <JsonLd data={courseGraph(locale)} id="ki-fuehrerschein-landing-jsonld" />
@@ -354,13 +345,7 @@ export default async function KiFuehrerscheinLandingPage() {
           <CourseOutcomeList items={copy.outcomes} />
         </CourseLandingSection>
 
-        <CourseLandingSection
-          title={copy.curriculumHeading}
-          caption={copy.curriculumCaption(
-            blocks.length,
-            formatCourseMinutes(totalMinutes, locale),
-          )}
-        >
+        <CourseLandingSection title={copy.curriculumHeading}>
           <CourseBlockLedger
             rows={blocks.map((block, index) => ({
               id: block.id,

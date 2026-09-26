@@ -28,10 +28,12 @@ describe("<CostDriftObservabilityDemo>", () => {
   it("renders the header, chart-caption disclosure, aggregate spend KPI, and the default app detail", () => {
     render(<CostDriftObservabilityDemo />);
 
-    expect(screen.getByText("Observability & Kosten")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "LLM-Kosten und Drift",
-    );
+    // No kicker and no slogan; one plain sr-only landmark heading.
+    expect(screen.queryByText("Observability & Kosten")).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Kosten und Drift im Betrieb");
+    expect(heading.querySelector("span")).toBeNull();
 
     // The engine states the mode exactly zero times now (the detail shell's
     // EvidenceBadge owns that). What has to survive is the extrapolation

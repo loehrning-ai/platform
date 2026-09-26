@@ -1,6 +1,6 @@
 # Answers: trace three figures
 
-2 · G-WN-01 and G-WS-01; Gas_Jahresrechnung_WN_2025.md and Gas_Jahresrechnung_WS_2025.md; "Energiemenge 1.850.000 kWh" and "Energiemenge 240.000 kWh"; F-GAS-HS, basis Hs, page 2.
+2 · G-WN-01 and G-WS-01; gas_jahresrechnung_wn_2025.md and gas_jahresrechnung_ws_2025.md; "Energiemenge 1.850.000 kWh" and "Energiemenge 240.000 kWh"; F-GAS-HS, basis Hs, page 2.
 (1,850,000 + 240,000) kWh(Hs) × 0.18 = 376.2 t.
 If you got 418.0 t: you used 0.20, the Hi factor, on Hs kWh. Page 2 of both bills says Brennwert (Hs).
 If you got 376.6 t: you converted to Hi first (2,090,000 / 1.11 = 1,882,883 kWh(Hi) × 0.20). That route is also right; the 0.4 t difference is the rounding of the teaching value 0.18.

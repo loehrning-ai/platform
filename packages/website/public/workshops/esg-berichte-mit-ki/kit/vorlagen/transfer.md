@@ -4,7 +4,7 @@ Use an invented or anonymised bill. No company data goes into any tool.
 
 | Box | What to write | Worked example (Kellbrunn, Werk Süd) |
 |---|---|---|
-| 1 Source | File, page and the exact line you read | `Jahresuebersicht_2025_Oekostrom.md`, page 1, "Verbrauch 2025: 1.240 MWh" |
+| 1 Source | File, page and the exact line you read | `jahresuebersicht_2025_oekostrom.md`, page 1, "Verbrauch 2025: 1.240 MWh" |
 | 2 Period | From, to, months covered; gaps or overlaps with other bills | 01.01.2025 to 31.12.2025, 12 months, no overlap. Last year on the same page: 1.250 MWh |
 | 3 Unit | Value and unit as printed → normalised value, and the rule | 1.240 MWh → 1,240,000 kWh (MWh × 1,000; the dot separates thousands). Check: 22,545 kWh per employee, close to last year |
 | 4 Boundary | Legal entity on the document; in or out; which rule | Kellbrunn Präzisionsteile GmbH, Werk Süd; in; operational control |

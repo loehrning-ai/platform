@@ -2,25 +2,34 @@
 """Workshop 04 (esg-berichte-mit-ki): single source of truth for every number.
 
 Standard library only. All arithmetic in decimal.Decimal. Every raw input and
-every teaching factor is defined ONCE below; everything else is derived.
+every teaching factor is defined ONCE below; everything else is derived. This is
+the only dataset script for the workshop, and it writes the only dataset file.
 
 Writes (paths relative to the repository root):
-  packages/website/public/workshops/esg-berichte-mit-ki/data/w04-data.json
-      consumed by slides, presenter notes, demo, guide, kit, registry
+  scripts/workshop04/data/w04-data.json
+      the dataset. Read by build-deck.mjs (slides, lib/w04-data.js, presenter
+      notes), build-demo.mjs (demo.html), build-pages.mjs (guide, field card,
+      transfer sheet), kit-archive.mjs (release date of the zip) and the tests
+      (src/lib/workshops-esg-reporting.test.ts, scripts/__tests__/workshop04-kit.test.mjs).
+      It is build input only; the site never serves it.
   packages/website/public/workshops/esg-berichte-mit-ki/kit/...
       the whole kit tree: CSV files, the 20 text-rendered bills (.md) and the
       Markdown sheets (START-HERE, rules, prompts, templates, expected results).
       The folder is owned by this script and rewritten from scratch on every run.
 
-Regenerate (from the repository root), then rebuild and check the zip:
+Regenerate (from the repository root) and rebuild everything that reads the data:
   python3 scripts/workshop04/build_dataset.py
+  node scripts/workshop04/build-deck.mjs
+  node scripts/workshop04/build-demo.mjs
+  node scripts/workshop04/build-pages.mjs
   node scripts/workshop04/kit-archive.mjs          # writes kellbrunn-esg-kit.zip
-  node scripts/workshop04/kit-archive.mjs --check  # fails if the zip is stale
+Each of the five takes --check (exit 1 when its output is stale; nothing is written).
   node --test scripts/__tests__/workshop04-kit.test.mjs
 If the zip bytes change, refresh its ASSET_MANIFEST.json row with
   node scripts/scaffold-asset.mjs packages/website/public/workshops/esg-berichte-mit-ki/kellbrunn-esg-kit.zip \
     --owner "Tim Löhr" --source "..." --license LicenseRef-Loehrning-Brand --redistribution "..."
-(copy owner, source, license and redistribution from the existing row).
+(copy owner, source, license and redistribution from the existing row), and the
+kit sizeLabel in packages/website/src/lib/workshops-esg-reporting.ts.
 Never edit a file under kit/ or data/ by hand.
 
 Conventions
@@ -30,11 +39,19 @@ Conventions
     rounded end total (asserted below).
   * Negative numbers are displayed with U+2212. EN "1,915.2", DE "1.915,2".
   * No en or em dashes anywhere in generated text (asserted below).
+  * Folder and file names in the raw folder and the kit are lower case
+    (werk_nord/strom/2025-01_strom_wn.md), apart from the three conventional
+    sheets START-HERE.md, ASSET-RIGHTS.md and CHANGELOG.md (asserted below).
+    The public scanner fails any run of 40+ characters from [A-Za-z0-9+/_-]
+    that mixes lower case, upper case and digits (base64-secret heuristic); a
+    mixed-case raw-folder path is such a run.
 
 Options
   --out-dir DIR   write data/w04-data.json and kit/ below DIR instead of the
-                  published workshop folder (the kit test uses this to rebuild
-                  into a temporary folder and compare).
+                  canonical places (the kit test uses this to rebuild into a
+                  temporary folder and compare).
+  --check         build into a temporary folder and compare with the canonical
+                  data/w04-data.json and kit/; exit 1 if either is stale.
 """
 from __future__ import annotations
 
@@ -44,22 +61,34 @@ import json
 import os
 import shutil
 import sys
+import tempfile
 from decimal import Decimal as D, ROUND_HALF_UP
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 PUBLISHED = os.path.join(REPO, "packages", "website", "public", "workshops", "esg-berichte-mit-ki")
-OUT_DIR = PUBLISHED
+CANONICAL_KIT = os.path.join(PUBLISHED, "kit")
+CANONICAL_JSON = os.path.join(HERE, "data", "w04-data.json")
+CHECK = "--check" in sys.argv
 if "--out-dir" in sys.argv:
     OUT_DIR = os.path.abspath(sys.argv[sys.argv.index("--out-dir") + 1])
-KIT = os.path.join(OUT_DIR, "kit")
-DATA_JSON = os.path.join(OUT_DIR, "data", "w04-data.json")
+elif CHECK:
+    OUT_DIR = tempfile.mkdtemp(prefix="w04-check-")
+else:
+    OUT_DIR = None
+KIT = os.path.join(OUT_DIR, "kit") if OUT_DIR else CANONICAL_KIT
+DATA_JSON = os.path.join(OUT_DIR, "data", "w04-data.json") if OUT_DIR else CANONICAL_JSON
 MINUS = "−"
+RAW_FOLDER = "rohdaten_2025"
 
 
 def raw(*parts: str) -> str:
-    """Path inside the kit's raw folder. Built from parts so no source line holds a long path."""
-    return "/".join(("rohdaten_2025",) + parts)
+    """Path inside the kit's raw folder, from lower-case folder and file names."""
+    path = "/".join((RAW_FOLDER,) + parts)
+    assert path == path.lower(), f"raw-folder path must be lower case: {path}"
+    return path
+
+
 T = D("1000")  # kg per tonne
 
 # ---------------------------------------------------------------------------
@@ -79,10 +108,10 @@ META = {
     "landlord": "Grundstücksverwaltung Lager Ost GbR",
     "location_de": "Erfundener Standort in Hessen",
     "location_en": "Invented site in Hesse, Germany",
-    "factorLabel_en": "Teaching values, not official factors.",
-    "factorLabel_de": "Lehrwerte, keine amtlichen Faktoren.",
-    "constructedLabel_en": "Constructed: what the answer looks like when all six traps fire. Not a recorded run.",
-    "constructedLabel_de": "Konstruiert: So sieht die Antwort aus, wenn alle sechs Fallen zuschlagen. Kein aufgezeichneter Lauf.",
+    "factorLabel_en": "Illustrative teaching values, not official factors.",
+    "factorLabel_de": "Illustrative Lehrwerte, keine amtlichen Faktoren.",
+    "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.",
+    "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sechs Fallen zuschlagen. Kein aufgezeichneter Lauf.",
     "targetLabel_en": "Target answer, constructed. Not a recorded run.",
     "targetLabel_de": "Zielantwort, konstruiert. Kein aufgezeichneter Lauf.",
 }
@@ -123,20 +152,20 @@ MONTH_END = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 # Werk Nord monthly electricity bills (month index 1..12 -> kWh). October has no bill.
 WN_BILLS = [  # (invoice, first_month, last_month, kWh, file)
-    ("4711-01", 1, 1, 210000, "2025-01_Strom_WN.md"),
-    ("4711-02", 2, 2, 195000, "2025-02_Strom_WN.md"),
-    ("4711-03", 3, 3, 205000, "2025-03_Strom_WN.md"),
-    ("4711-04", 4, 4, 190000, "2025-04_Strom_WN.md"),
-    ("4711-05", 5, 5, 185000, "2025-05_Strom_WN.md"),
-    ("4711-06", 6, 6, 180000, "2025-06_Strom_WN.md"),
-    ("4711-07", 7, 7, 175000, "2025-07_Strom_WN.md"),
-    ("4711-08", 8, 8, 120000, "2025-08_Strom_WN.md"),  # real dip: plant holiday
-    ("4711-09", 9, 9, 190000, "2025-09_Strom_WN.md"),
-    ("4711-11", 11, 12, 410000, "2025-11-12_Strom_WN.md"),  # two months on one bill
+    ("4711-01", 1, 1, 210000, "2025-01_strom_wn.md"),
+    ("4711-02", 2, 2, 195000, "2025-02_strom_wn.md"),
+    ("4711-03", 3, 3, 205000, "2025-03_strom_wn.md"),
+    ("4711-04", 4, 4, 190000, "2025-04_strom_wn.md"),
+    ("4711-05", 5, 5, 185000, "2025-05_strom_wn.md"),
+    ("4711-06", 6, 6, 180000, "2025-06_strom_wn.md"),
+    ("4711-07", 7, 7, 175000, "2025-07_strom_wn.md"),
+    ("4711-08", 8, 8, 120000, "2025-08_strom_wn.md"),  # real dip: plant holiday
+    ("4711-09", 9, 9, 190000, "2025-09_strom_wn.md"),
+    ("4711-11", 11, 12, 410000, "2025-11-12_strom_wn.md"),  # two months on one bill
 ]
-WN_DUPLICATE = ("4711-03", 3, 3, 205000, "Scan_Rechnung_Maerz.md")
+WN_DUPLICATE = ("4711-03", 3, 3, 205000, "scan_rechnung_maerz.md")
 WN_OCT_INVOICE = "4711-10"  # missing
-JV_BILL = ("TB-2025-12", 1, 12, 1000000, "Jahresrechnung_TB_2025.md")
+JV_BILL = ("TB-2025-12", 1, 12, 1000000, "jahresrechnung_tb_2025.md")
 METER_WN = "DE0005678900WN01"
 METER_WS = "DE0005678900WS01"
 METER_TB = "DE0005678900TB07"
@@ -162,8 +191,8 @@ LO_QUARTERS = [("Q1", 30000), ("Q2", 25000), ("Q3", 25000), ("Q4", 30000)]
 
 # Gas bills: page 1 prints the rounded Energiemenge; page 2 prints the conversion (Hs).
 GAS = {
-    "WN": dict(m3=169817, z=D("0.9600"), hs=D("11.348"), kwh_printed=1850000, invoice="G-2025-0417", file="Gas_Jahresrechnung_WN_2025.md"),
-    "WS": dict(m3=22077, z=D("0.9600"), hs=D("11.324"), kwh_printed=240000, invoice="G-2025-0418", file="Gas_Jahresrechnung_WS_2025.md"),
+    "WN": dict(m3=169817, z=D("0.9600"), hs=D("11.348"), kwh_printed=1850000, invoice="G-2025-0417", file="gas_jahresrechnung_wn_2025.md"),
+    "WS": dict(m3=22077, z=D("0.9600"), hs=D("11.324"), kwh_printed=240000, invoice="G-2025-0418", file="gas_jahresrechnung_ws_2025.md"),
 }
 
 # Fuel card (litres per month), AdBlue 100 l per month, 2 washes per month.
@@ -618,7 +647,7 @@ put("intensity_lb_t_per_meur", RIGHT["lb"] / COMPANY["turnover_meur"], "t/Mio. E
 # ---------------------------------------------------------------------------
 TRACE = [
     dict(n=1, mode="worked", figure_key="ws_lb_2025", rows=["E-WS-01"], factor="F-EL-LB-2025",
-         quote="Verbrauch 2025: 1.240 MWh", file="Jahresuebersicht_2025_Oekostrom.md",
+         quote="Verbrauch 2025: 1.240 MWh", file="jahresuebersicht_2025_oekostrom.md",
          arithmetic_en="1,240 MWh x 1,000 = 1,240,000 kWh; x 0.40 kg/kWh = 496,000 kg = 496.0 t",
          arithmetic_de="1.240 MWh x 1.000 = 1.240.000 kWh; x 0,40 kg/kWh = 496.000 kg = 496,0 t"),
     dict(n=2, mode="half", figure_key="s1_gas_2025", rows=["G-WN-01", "G-WS-01"], factor="F-GAS-HS",
@@ -720,7 +749,7 @@ for inv, m1, m2, kwh, fn in WN_BILLS:
     idx = f"{m1:02d}" if m1 != 11 else "11"
     add(row_id=f"E-WN-{idx}", site_id="WN", entity_on_document=ENT_WN, in_boundary="ja", carrier="Strom",
         period_start=ps, period_end=pe, months=str(m2 - m1 + 1), qty_source=de_int(kwh), unit_source="kWh",
-        qty_norm=str(kwh), unit_norm="kWh", source_file=raw("Werk_Nord", "Strom", fn), source_page="1",
+        qty_norm=str(kwh), unit_norm="kWh", source_file=raw("werk_nord", "strom", fn), source_page="1",
         source_quote=f"Verbrauch {de_int(kwh)} kWh", invoice_no=inv, meter_id=METER_WN, status="actual",
         reason="Einbruch bestätigt: Betriebsferien" if m1 == 8 else ("zwei Monate auf einer Rechnung" if m1 == 11 else ""),
         factor_lb="F-EL-LB-2025", factor_mb="F-EL-RM-2025", dq="A",
@@ -728,24 +757,24 @@ for inv, m1, m2, kwh, fn in WN_BILLS:
     if m1 == 3:
         add(row_id="E-WN-03D", site_id="WN", entity_on_document=ENT_WN, in_boundary="ja", carrier="Strom",
             period_start=ps, period_end=pe, months="1", qty_source=de_int(kwh), unit_source="kWh", qty_norm="0", unit_norm="kWh",
-            source_file=raw("Werk_Nord", "Strom", WN_DUPLICATE[4]), source_page="1", source_quote=f"Verbrauch {de_int(kwh)} kWh",
+            source_file=raw("werk_nord", "strom", WN_DUPLICATE[4]), source_page="1", source_quote=f"Verbrauch {de_int(kwh)} kWh",
             invoice_no=inv, meter_id=METER_WN, status="excluded", reason="Duplikat von E-WN-03 (Rechnung 4711-03, gleicher Zeitraum, gleicher Zähler)",
             dq="", t_lb="0,0", t_mb="0,0", role_proposed_by="Clerk (Regel Schlüssel)")
     if m1 == 9:
         add(row_id="E-WN-10", site_id="WN", entity_on_document=ENT_WN, in_boundary="ja", carrier="Strom",
             period_start="2025-10-01", period_end="2025-10-31", months="1", qty_source="5.012.300 minus 4.812.300", unit_source="kWh (Zählerstand)",
-            qty_norm=str(oct_kwh), unit_norm="kWh", source_file=raw("Werk_Nord", "Zaehlerstaende_2025.csv"), source_page="Zeilen 30.09.2025 und 31.10.2025",
+            qty_norm=str(oct_kwh), unit_norm="kWh", source_file=raw("werk_nord", "zaehlerstaende_2025.csv"), source_page="Zeilen 30.09.2025 und 31.10.2025",
             source_quote="30.09.2025;...;4812300 / 31.10.2025;...;5012300", invoice_no="4711-10 (angefordert)", meter_id=METER_WN,
             status="actual_meter", reason="Rechnung fehlt; Zählerstand bis zur Rechnung", factor_lb="F-EL-LB-2025", factor_mb="F-EL-RM-2025", dq="B",
             t_lb=dec_de(D(oct_kwh) * f["F-EL-LB-2025"] / T), t_mb=dec_de(D(oct_kwh) * f["F-EL-RM-2025"] / T), role_proposed_by="Clerk (Regel Abdeckung)")
 add(row_id="E-TB-01", site_id="TB", entity_on_document="Talbrück Beschichtung GmbH, Halle 3", in_boundary="nein", carrier="Strom",
     period_start="2025-01-01", period_end="2025-12-31", months="12", qty_source=de_int(JV_BILL[3]), unit_source="kWh", qty_norm="0", unit_norm="kWh",
-    source_file=raw("Werk_Nord", "Strom", JV_BILL[4]), source_page="1", source_quote="Rechnungsempfänger: Talbrück Beschichtung GmbH",
+    source_file=raw("werk_nord", "strom", JV_BILL[4]), source_page="1", source_quote="Rechnungsempfänger: Talbrück Beschichtung GmbH",
     invoice_no=JV_BILL[0], meter_id=METER_TB, status="excluded", reason="Grenze: operative Kontrolle liegt beim Partner (Kellbrunn 40 %); Kandidat Scope 3 Kat. 15",
     t_lb="0,0", t_mb="0,0", role_proposed_by="Clerk (Regel Grenze)")
 add(row_id="E-WS-01", site_id="WS", entity_on_document=ENT_WS, in_boundary="ja", carrier="Strom", period_start="2025-01-01", period_end="2025-12-31",
     months="12", qty_source=WS_MWH_PRINTED, unit_source="MWh", qty_norm=str(WS_KWH), unit_norm="kWh",
-    source_file=raw("Werk_Sued", "Jahresuebersicht_2025_Oekostrom.md"), source_page="1", source_quote=f"Verbrauch 2025: {WS_MWH_PRINTED} MWh",
+    source_file=raw("werk_sued", "jahresuebersicht_2025_oekostrom.md"), source_page="1", source_quote=f"Verbrauch 2025: {WS_MWH_PRINTED} MWh",
     meter_id=METER_WS, status="actual", instrument_id="I-WS-GO", factor_lb="F-EL-LB-2025", factor_mb="F-EL-GO", dq="A",
     t_lb=dec_de(D(WS_KWH) * f["F-EL-LB-2025"] / T), t_mb="0,0")
 for qi, (q, kwh) in enumerate(LO_QUARTERS):
@@ -753,12 +782,12 @@ for qi, (q, kwh) in enumerate(LO_QUARTERS):
     ps, pe = period(m1, m2)
     add(row_id=f"E-LO-{q}", site_id="LO", entity_on_document=ENT_LO, in_boundary="ja", carrier="Strom", period_start=ps, period_end=pe, months="3",
         qty_source=de_int(kwh), unit_source="kWh", qty_norm=str(kwh), unit_norm="kWh",
-        source_file=raw("Lager_Ost", f"Nebenkosten_Strom_{q}_2025.md"), source_page="1", source_quote=f"Unterzähler {METER_LO}: {de_int(kwh)} kWh",
+        source_file=raw("lager_ost", f"nebenkosten_strom_{q.lower()}_2025.md"), source_page="1", source_quote=f"Unterzähler {METER_LO}: {de_int(kwh)} kWh",
         meter_id=METER_LO, status="actual", factor_lb="F-EL-LB-2025", factor_mb="F-EL-RM-2025", dq="A",
         t_lb=dec_de(D(kwh) * f["F-EL-LB-2025"] / T), t_mb=dec_de(D(kwh) * f["F-EL-RM-2025"] / T))
 for site, rid, ent in (("WN", "G-WN-01", ENT_WN), ("WS", "G-WS-01", ENT_WS)):
     g = GAS[site]
-    folder = "Werk_Nord/Gas" if site == "WN" else "Werk_Sued"
+    folder = "werk_nord/gas" if site == "WN" else "werk_sued"
     add(row_id=rid, site_id=site, entity_on_document=ent, in_boundary="ja", carrier="Erdgas", period_start="2025-01-01", period_end="2025-12-31", months="12",
         qty_source=de_int(g["kwh_printed"]), unit_source="kWh", basis="Hs", qty_norm=str(g["kwh_printed"]), unit_norm="kWh(Hs)",
         source_file=raw(folder, f"{g['file']}"), source_page="1 (Menge), 2 (Basis)",
@@ -766,16 +795,16 @@ for site, rid, ent in (("WN", "G-WN-01", ENT_WN), ("WS", "G-WS-01", ENT_WS)):
         factor_lb="F-GAS-HS", factor_mb="F-GAS-HS", dq="A",
         t_lb=dec_de(D(g["kwh_printed"]) * f["F-GAS-HS"] / T), t_mb=dec_de(D(g["kwh_printed"]) * f["F-GAS-HS"] / T))
 add(row_id="D-FL-01", site_id="FL", entity_on_document=ENT_FL, in_boundary="ja", carrier="Diesel", period_start="2025-01-01", period_end="2025-12-31",
-    months="12", qty_source=de_int(diesel_l), unit_source="l", qty_norm=str(diesel_l), unit_norm="l", source_file=raw("Flotte", "Tankkarten_2025.csv"),
+    months="12", qty_source=de_int(diesel_l), unit_source="l", qty_norm=str(diesel_l), unit_norm="l", source_file=raw("flotte", "tankkarten_2025.csv"),
     source_page="Summe produkt = Diesel", source_quote="produkt=Diesel; einheit=l", status="actual", factor_lb="F-DSL", factor_mb="F-DSL", dq="A",
     t_lb=dec_de(D(diesel_l) * f["F-DSL"] / T), t_mb=dec_de(D(diesel_l) * f["F-DSL"] / T), role_proposed_by="Clerk (Regel Produktfilter)")
 add(row_id="D-FL-02", site_id="FL", entity_on_document=ENT_FL, in_boundary="ja", carrier="AdBlue", period_start="2025-01-01", period_end="2025-12-31",
-    months="12", qty_source=de_int(adblue_l), unit_source="l", qty_norm="0", unit_norm="l", source_file=raw("Flotte", "Tankkarten_2025.csv"),
+    months="12", qty_source=de_int(adblue_l), unit_source="l", qty_norm="0", unit_norm="l", source_file=raw("flotte", "tankkarten_2025.csv"),
     source_page="Summe produkt = AdBlue", source_quote="produkt=AdBlue; einheit=l", status="excluded", reason="kein Kraftstoff (Harnstofflösung)",
     t_lb="0,0", t_mb="0,0", role_proposed_by="Clerk (Regel Produktfilter)")
 add(row_id="I-WS-GO", site_id="WS", entity_on_document=ENT_WS, in_boundary="ja", carrier="Herkunftsnachweis", period_start="2025-01-01", period_end="2025-12-31",
     months="12", qty_source=de_int(GO_MWH), unit_source="MWh", qty_norm=str(GO_KWH), unit_norm="kWh (abgedeckt)",
-    source_file=raw("Werk_Sued", "HKN_Bestaetigung_2025.md"), source_page="1",
+    source_file=raw("werk_sued", "hkn_bestaetigung_2025.md"), source_page="1",
     source_quote="Herkunftsnachweise über 1.240 MWh ... entwertet ... Lieferstelle Werk Süd", status="instrument",
     reason="deckt E-WS-01 vollständig, sonst nichts", dq="A", role_proposed_by="Clerk (Regel Scope 2)")
 
@@ -856,14 +885,14 @@ def doc(path, lines, trap=None, note_en=""):
 
 ADDR_WN = ["Kellbrunn Präzisionsteile GmbH", "Werk Nord, Werkstraße 12", "(erfundener Standort in Hessen)"]
 for inv, m1, m2, kwh, fn in WN_BILLS:
-    doc(raw("Werk_Nord", "Strom", fn), el_bill(inv, m1, m2, kwh, addressee_lines=ADDR_WN, meter=METER_WN),
+    doc(raw("werk_nord", "strom", fn), el_bill(inv, m1, m2, kwh, addressee_lines=ADDR_WN, meter=METER_WN),
         trap=("two-month" if m1 == 11 else ("real-dip" if m1 == 8 else None)))
-doc(raw("Werk_Nord", "Strom", WN_DUPLICATE[4]),
+doc(raw("werk_nord", "strom", WN_DUPLICATE[4]),
     el_bill(*WN_DUPLICATE[:4], addressee_lines=["Kellbrunn Präzisionsteile GmbH", "Werk Nord,", "Werkstraße 12", "(erfundener Standort in Hessen)"],
             meter=METER_WN, noisy=True,
             header=["WG: Rechnung März (weitergeleitet vom Einkauf, erneut gescannt)", ""]),
     trap="T1", note_en="Same invoice number 4711-03; OCR noise in supplier name and a stray line break, invoice number clean.")
-doc(raw("Werk_Nord", "Strom", JV_BILL[4]),
+doc(raw("werk_nord", "strom", JV_BILL[4]),
     el_bill(JV_BILL[0], 1, 12, JV_BILL[3], addressee_lines=["Talbrück Beschichtung GmbH", "Halle 3, Werkstraße 12", "z. Hd. Einkauf Kellbrunn Präzisionsteile GmbH (Rechnungsprüfung laut Dienstleistungsvertrag)"], meter=METER_TB, customer_no=CUSTOMER_NO_JV),
     trap="T3", note_en="Contract party, customer number and meter belong to the JV; Kellbrunn purchasing only checks the invoice.")
 
@@ -881,7 +910,7 @@ ws_lines = [
     "",
     "Ihr Tarif Ökostrom Plus: Für Ihre Liefermenge wurden Herkunftsnachweise entwertet (Bestätigung liegt bei).",
 ]
-doc(raw("Werk_Sued", "Jahresuebersicht_2025_Oekostrom.md"), ws_lines, trap="T4")
+doc(raw("werk_sued", "jahresuebersicht_2025_oekostrom.md"), ws_lines, trap="T4")
 go_lines = [
     "# Bestätigung über entwertete Herkunftsnachweise 2025",
     "",
@@ -894,7 +923,7 @@ go_lines = [
     "",
     "Andere Lieferstellen sind von dieser Bestätigung nicht erfasst.",
 ]
-doc(raw("Werk_Sued", "HKN_Bestaetigung_2025.md"), go_lines, trap="scope2")
+doc(raw("werk_sued", "hkn_bestaetigung_2025.md"), go_lines, trap="scope2")
 
 
 def gas_bill(site):
@@ -928,11 +957,11 @@ def gas_bill(site):
     ]
 
 
-doc(raw("Werk_Nord", "Gas", "Gas_Jahresrechnung_WN_2025.md"), gas_bill("WN"), trap="T5")
-doc(raw("Werk_Sued", "Gas_Jahresrechnung_WS_2025.md"), gas_bill("WS"), trap="T5")
+doc(raw("werk_nord", "gas", "gas_jahresrechnung_wn_2025.md"), gas_bill("WN"), trap="T5")
+doc(raw("werk_sued", "gas_jahresrechnung_ws_2025.md"), gas_bill("WS"), trap="T5")
 for q, kwh in LO_QUARTERS:
     qi = int(q[1])
-    doc(raw("Lager_Ost", f"Nebenkosten_Strom_{q}_2025.md"), [
+    doc(raw("lager_ost", f"nebenkosten_strom_{q.lower()}_2025.md"), [
         f"# Nebenkostenabrechnung Strom {q} 2025",
         "",
         f"{META['landlord']} · (erfundene Vermieterin)",
@@ -946,19 +975,17 @@ for q, kwh in LO_QUARTERS:
     ])
 
 # ---------------------------------------------------------------------------
-# 15b. File references in the outputs: folder and file name, never one long path.
-#      The public scanner fails any run of 40+ characters from [A-Za-z0-9+/_-]
-#      that mixes lower case, upper case and digits (base64-secret heuristic),
-#      and the full raw-folder path of the Werk Sued annual statement is one.
-#      Every file name in the raw folder is unique, so the ledger's source_file
-#      holds the file name alone; the site_id says where it lives.
+# 15b. File references in the outputs. Every raw-folder path is lower case (see
+#      raw()), so a full path such as rohdaten_2025/werk_sued/<file> never mixes
+#      upper and lower case and the ledger's source_file keeps the full path.
+#      File names are unique across the raw folder, so builders may also look a
+#      document up by its file name alone.
 # ---------------------------------------------------------------------------
-RAW_FOLDER = "rohdaten_2025"
 _names = [d["path"].rsplit("/", 1)[1] for d in DOCS]
 assert len(_names) == len(set(_names)), "raw-folder file names must be unique"
 for row in LEDGER:
     assert row["source_file"].startswith(RAW_FOLDER + "/"), row["source_file"]
-    row["source_file"] = row["source_file"].rsplit("/", 1)[1]
+    assert row["source_file"] == row["source_file"].lower(), row["source_file"]
 
 
 def secret_shaped_runs(text):
@@ -994,7 +1021,7 @@ if os.path.isdir(KIT):
 for d in DOCS:
     write_text(d["path"], d["lines"])
 
-write_csv(raw("Werk_Nord", "Zaehlerstaende_2025.csv"), ["datum", "zaehler", "wandlerfaktor", "stand_kwh", "erfasst_von"],
+write_csv(raw("werk_nord", "zaehlerstaende_2025.csv"), ["datum", "zaehler", "wandlerfaktor", "stand_kwh", "erfasst_von"],
           [[dt, METER_WN, "1", str(val), "Haustechnik"] for dt, val in METER_READINGS])
 
 # fuel card transactions
@@ -1023,9 +1050,9 @@ fuel_rows.sort(key=lambda x: (x[0][3:5], x[0][0:2]))
 chk_d = sum(D(x[3].replace(",", ".")) for x in fuel_rows if x[2] == "Diesel")
 chk_a = sum(D(x[3].replace(",", ".")) for x in fuel_rows if x[2] == "AdBlue")
 assert chk_d == diesel_l and chk_a == adblue_l, (chk_d, chk_a)
-write_csv(raw("Flotte", "Tankkarten_2025.csv"), ["datum", "kennzeichen", "produkt", "menge", "einheit", "betrag_eur"], fuel_rows)
+write_csv(raw("flotte", "tankkarten_2025.csv"), ["datum", "kennzeichen", "produkt", "menge", "einheit", "betrag_eur"], fuel_rows)
 
-write_csv("vorjahr/THG_2024_Zusammenfassung.csv",
+write_csv("vorjahr/thg_2024_zusammenfassung.csv",
           ["zeile", "standort", "traeger", "menge", "einheit", "faktor_lb", "t_lb", "faktor_mb", "t_mb", "grenze", "dq", "quelle"],
           [["V24-01", "WN", "Strom", str(PRIOR_2024["el_WN"]), "kWh", "F-EL-LB-2024", dec_de(D(PRIOR_2024["el_WN"]) * f["F-EL-LB-2024"] / T), "F-EL-RM-2024", dec_de(D(PRIOR_2024["el_WN"]) * f["F-EL-RM-2024"] / T), "operative Kontrolle; Talbrück ausgeschlossen", "B", "Berater, Zusammenfassung ohne Einzelrechnungen"],
            ["V24-02", "WS", "Strom", str(PRIOR_2024["el_WS"]), "kWh", "F-EL-LB-2024", dec_de(D(PRIOR_2024["el_WS"]) * f["F-EL-LB-2024"] / T), "F-EL-RM-2024", dec_de(D(PRIOR_2024["el_WS"]) * f["F-EL-RM-2024"] / T), "operative Kontrolle; Talbrück ausgeschlossen", "B", "Berater"],
@@ -1128,7 +1155,7 @@ data = {
     "coverage": {"rows": GRID_ROWS, "expected": grid_expected, "asDelivered": grid_raw, "legend": GRID_LEGEND},
     "traceTwo": TRACE,
     "rawFolder": RAW_FOLDER,
-    "documents": [dict(folder=d["path"].rsplit("/", 1)[0], file=d["path"].rsplit("/", 1)[1], **{k: v for k, v in d.items() if k != "path"}) for d in DOCS],
+    "documents": DOCS,
     "runs": {
         "status": "not_captured",
         "plannedConditions": ["A: raw folder", "B: ledger + coverage grid + rules", "C (optional): raw folder without the factor file"],
@@ -1256,9 +1283,9 @@ write_text("START-HERE.md", [
     "",
     "| Workshop scene | Open |",
     "|---|---|",
-    "| Twelve files, eleven months | `rohdaten_2025/Werk_Nord/Strom/`, `Zaehlerstaende_2025.csv`, `erwartet/abdeckung_wie_angeliefert.csv` |",
-    f"| What does \"{WS_PRINTED}\" mean? | `Jahresuebersicht_2025_Oekostrom.md` in `rohdaten_2025/Werk_Sued/` |",
-    f"| Whose bill is this? | `{JV_BILL[4]}` in `rohdaten_2025/Werk_Nord/Strom/` |",
+    "| Twelve files, eleven months | `rohdaten_2025/werk_nord/strom/`, `zaehlerstaende_2025.csv`, `erwartet/abdeckung_wie_angeliefert.csv` |",
+    f"| What does \"{WS_PRINTED}\" mean? | `jahresuebersicht_2025_oekostrom.md` in `rohdaten_2025/werk_sued/` |",
+    f"| Whose bill is this? | `{JV_BILL[4]}` in `rohdaten_2025/werk_nord/strom/` |",
     f"| Six errors, {V('gap_lb_t')} tonnes apart | `erwartet/wasserfall.csv` |",
     "| The ledger | `belegtabelle/belegtabelle_2025_leer.csv`, `erwartet/belegtabelle_2025.csv`, `erwartet/kontrollsumme_strom_2025.csv` |",
     "| Trace three figures | `vorlagen/uebung_drei_zahlen.md`, answers in `erwartet/uebung_drei_zahlen_antworten.md` |",
@@ -1327,7 +1354,7 @@ write_text("prompts/00_run_protocol.md", [
     "Hold constant, and write down:",
     "- model name and version, tool (app with file upload and analysis, or an agent in a terminal), date",
     "- the prompt text below, copied exactly",
-    "- `faktoren/faktoren_lehrwerte.csv` and `vorjahr/THG_2024_Zusammenfassung.csv`",
+    "- `faktoren/faktoren_lehrwerte.csv` and `vorjahr/thg_2024_zusammenfassung.csv`",
     "",
     "Prompt for both conditions:",
     f"\"{QUESTION_EN} Use the attached files.\"",
@@ -1466,7 +1493,7 @@ write_text("vorlagen/uebung_drei_zahlen.md", [
     f"Work in pairs, on paper, no tools. {KIT_RULES['traceExerciseMinutes']} minutes. For each figure write: rows, file, quoted line, factor ID, arithmetic.",
     "",
     f"## 1 · Worked: Werk Süd, location-based, {N(t1['figure_key'])}",
-    f"Rows: {', '.join(t1['rows'])} · File: {t1['file']} (in rohdaten_2025/Werk_Sued/) · Line: \"{t1['quote']}\" · Factor: {t1['factor']} ({FV(t1['factor'])})",
+    f"Rows: {', '.join(t1['rows'])} · File: {t1['file']} (in rohdaten_2025/werk_sued/) · Line: \"{t1['quote']}\" · Factor: {t1['factor']} ({FV(t1['factor'])})",
     f"Arithmetic: {X(t1['arithmetic_en'])}",
     "",
     f"## 2 · Half done: Scope 1 gas, {N(t2['figure_key'])}",
@@ -1572,7 +1599,7 @@ write_text("vorlagen/transfer.md", [
     "",
     "| Box | What to write | Worked example (Kellbrunn, Werk Süd) |",
     "|---|---|---|",
-    f"| 1 Source | File, page and the exact line you read | `Jahresuebersicht_2025_Oekostrom.md`, page 1, \"Verbrauch 2025: {WS_PRINTED}\" |",
+    f"| 1 Source | File, page and the exact line you read | `jahresuebersicht_2025_oekostrom.md`, page 1, \"Verbrauch 2025: {WS_PRINTED}\" |",
     f"| 2 Period | From, to, months covered; gaps or overlaps with other bills | 01.01.2025 to 31.12.2025, {YEAR_MONTHS} months, no overlap. Last year on the same page: {WS_PRIOR} |",
     f"| 3 Unit | Value and unit as printed → normalised value, and the rule | {WS_PRINTED} → {N('el_ws_kwh')} (MWh × {en_int(KIT_RULES['mwhToKwh'])}; the dot separates thousands). Check: {N('ws_kwh_per_employee')} per employee, close to last year |",
     f"| 4 Boundary | Legal entity on the document; in or out; which rule | {META['company']}, Werk Süd; in; operational control |",
@@ -1591,8 +1618,11 @@ data["kitRules"] = KIT_RULES
 text = json.dumps(data, ensure_ascii=False, indent=1)
 assert "–" not in text and "—" not in text, "en/em dash in data"
 assert not secret_shaped_runs(text), secret_shaped_runs(text)[:3]
+CONVENTIONAL_SHEETS = {"START-HERE.md", "ASSET-RIGHTS.md", "CHANGELOG.md"}
 for root, _, files in os.walk(KIT):
     for fn in files:
+        rel = os.path.relpath(os.path.join(root, fn), KIT).replace(os.sep, "/")
+        assert rel in CONVENTIONAL_SHEETS or rel == rel.lower(), f"kit path must be lower case: {rel}"
         with open(os.path.join(root, fn), encoding="utf-8") as fh:
             body = fh.read()
         assert "–" not in body and "—" not in body, fn
@@ -1600,6 +1630,34 @@ for root, _, files in os.walk(KIT):
 os.makedirs(os.path.dirname(DATA_JSON), exist_ok=True)
 with open(DATA_JSON, "w", encoding="utf-8") as fh:
     fh.write(text + "\n")
+
+
+def tree(root):
+    """Every file below root as {relative POSIX path: bytes}."""
+    out = {}
+    for base, _, files in os.walk(root):
+        for fn in files:
+            full = os.path.join(base, fn)
+            with open(full, "rb") as fh:
+                out[os.path.relpath(full, root).replace(os.sep, "/")] = fh.read()
+    return out
+
+
+if CHECK:
+    stale = []
+    if not os.path.isfile(CANONICAL_JSON) or open(CANONICAL_JSON, "rb").read() != open(DATA_JSON, "rb").read():
+        stale.append(os.path.relpath(CANONICAL_JSON, REPO))
+    fresh, current = tree(KIT), (tree(CANONICAL_KIT) if os.path.isdir(CANONICAL_KIT) else {})
+    for rel in sorted(set(fresh) | set(current)):
+        if fresh.get(rel) != current.get(rel):
+            stale.append(os.path.relpath(os.path.join(CANONICAL_KIT, rel), REPO))
+    if "--out-dir" not in sys.argv:
+        shutil.rmtree(OUT_DIR, ignore_errors=True)
+    if stale:
+        print("out of date (run python3 scripts/workshop04/build_dataset.py):\n  " + "\n  ".join(stale), file=sys.stderr)
+        sys.exit(1)
+    print(f"checked: {os.path.relpath(CANONICAL_JSON, REPO)} and {len(current)} kit files are up to date")
+    sys.exit(0)
 
 # console summary
 for k in ("total_lb_2025", "total_mb_2025", "wrong_total_lb", "wrong_total_mb", "chg_lb_pct", "chg_mb_pct", "wrong_chg_lb_pct", "gap_lb_t", "gap_lb_pct",

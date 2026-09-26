@@ -15,7 +15,8 @@ interface DataNumber {
   readonly en: string;
   readonly de: string;
 }
-const data = JSON.parse(readFileSync(resolve(root, "data/w04-data.json"), "utf8")) as {
+// The dataset is build input and is not served: scripts/workshop04/data/w04-data.json at the repository root.
+const data = JSON.parse(readFileSync(resolve(process.cwd(), "..", "..", "scripts/workshop04/data/w04-data.json"), "utf8")) as {
   numbers: Record<string, DataNumber>;
   inputs: { ws: { printed: string; priorYearPrinted: string } };
 };

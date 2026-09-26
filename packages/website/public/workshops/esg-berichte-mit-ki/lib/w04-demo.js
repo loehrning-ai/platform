@@ -218,6 +218,7 @@
   function caught(text) { return el("p", { "class": "caught" }, [el("b", { text: "Caught by" }), " " + text]); }
   function fileName(p) { return p.split("/").pop(); }
   function docBy(name) { return D.documents.filter(function (d) { return fileName(d.path) === name; })[0]; }
+  function docFileByTrap(trap) { return fileName(D.documents.filter(function (d) { return d.trap === trap; })[0].path); }
   function rowsFor(path) { return D.ledger.filter(function (r) { return r.source_file === path; }); }
   function rowById(id) { return D.ledger.filter(function (r) { return r.row_id === id; })[0]; }
   function quoteParts(q) {
@@ -344,7 +345,7 @@
         list.push({ cells: [m.date, n0(m.kwh), diff], cls: key ? "is-key" : null });
       });
       var a = R.filter(function (m) { return m.date === "31.10.2025"; })[0].kwh, b = R.filter(function (m) { return m.date === "30.09.2025"; })[0].kwh;
-      return { title: "October from the meter readings", sub: "rohdaten_2025/Werk_Nord/Zaehlerstaende_2025.csv", nodes: [
+      return { title: "October from the meter readings", sub: rowById("E-WN-10").source_file, nodes: [
         para("Invoice " + D.inputs.wnMissingInvoice + " is not in the folder. The month-end readings of meter " + D.inputs.meters.WN + " give October anyway. There is no reading for the end of November, because November and December came on one bill."),
         dtable(["Date", "Reading (kWh)", "Since previous reading"], list, { num: [1, 2] }),
         el("p", { "class": "arith" }, [n0(a) + " − " + n0(b) + " = " + key("oct_kwh") + " for October", el("span", { text: "Grade B: a meter reading, used until the invoice arrives." })]),
@@ -356,7 +357,7 @@
       var M = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       dl.forEach(function (v, i) { sd += v; sa += ab[i]; rows.push({ cells: [M[i], n0(v), n0(ab[i])] }); });
       rows.push({ cells: ["Year", n0(sd), n0(sa)], cls: "sum" });
-      return { title: "Fuel-card export, summed by product", sub: "rohdaten_2025/Flotte/Tankkarten_2025.csv", nodes: [
+      return { title: "Fuel-card export, summed by product", sub: rowById("D-FL-01").source_file, nodes: [
         caught("the product filter on the fuel-card export. It keeps diesel and drops the rest."),
         para("The export lists every card transaction: diesel, AdBlue, car washes and shop items."),
         dtable(["Month", "Diesel (l)", "AdBlue (l)"], rows, { num: [1, 2] }),
@@ -401,7 +402,7 @@
       return { title: "Guarantees of origin: " + key("drv_mb_cert_t"), sub: "drivers.mb · market-based", nodes: [
         el("p", { "class": "arith" }, [d.en + ": " + C.signed(d.t) + " t", el("span", { text: d.arithmetic.replace(/ x /g, " × ") + " kg" })]),
         para("The certificate covers the " + key("el_ws_mwh") + " of Werk Süd since January 2025 and no other site. That is " + key("drv_mb_cert_share_pct") + " of the market-based decrease."),
-        openBtn("Open the certificate confirmation", "doc:HKN_Bestaetigung_2025.md"),
+        openBtn("Open the certificate confirmation", "doc:" + docFileByTrap("scope2")),
         rowsBlock([rowById("I-WS-GO"), rowById("E-WS-01")], "The rows behind it")
       ] };
     },
@@ -441,7 +442,7 @@
     if (k.indexOf("trap:") === 0) {
       var id = k.slice(5);
       return { T1: VIEWS.dup, T2: VIEWS.meter, T3: function () { return docView(D.inputs.jvBill.file); },
-        T4: function () { return docView("Jahresuebersicht_2025_Oekostrom.md"); },
+        T4: function () { return docView(docFileByTrap("T4")); },
         T5: function () { return docView(D.inputs.gas.WN.file); }, T6: VIEWS.fuel, T7: VIEWS.factors }[id]();
     }
     if (k === "chg:lb") return VIEWS.chg("lb");

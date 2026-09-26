@@ -6,7 +6,7 @@
  * compression, so the bytes never depend on the zlib build), UTF-8 names,
  * 0644 file modes, no extra fields, no platform metadata, entries sorted by
  * path and one fixed modification time for every entry (the kit release date
- * from data/w04-data.json, meta.builtOn, at 00:00). Every archive is checked
+ * from scripts/workshop04/data/w04-data.json, meta.builtOn, at 00:00). Every archive is checked
  * with the repository's ZIP inspection rules before it is returned.
  *
  * Source: packages/website/public/workshops/esg-berichte-mit-ki/kit/, written
@@ -27,7 +27,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
 export const WORKSHOP_DIR = path.join(REPO_ROOT, "packages/website/public/workshops/esg-berichte-mit-ki");
 export const KIT_DIR = path.join(WORKSHOP_DIR, "kit");
-export const DATA_JSON = path.join(WORKSHOP_DIR, "data/w04-data.json");
+/** The one Workshop 04 dataset, written by build_dataset.py next to it (build input, not served). */
+export const DATA_JSON = path.join(HERE, "data/w04-data.json");
 export const ZIP_NAME = "kellbrunn-esg-kit.zip";
 export const ZIP_PATH = path.join(WORKSHOP_DIR, ZIP_NAME);
 export const KIT_PREFIX = "esg-kit/";

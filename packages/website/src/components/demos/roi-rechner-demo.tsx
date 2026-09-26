@@ -147,36 +147,11 @@ export default function RoiRechnerDemo() {
       {/* Craftsman slider styles — scoped via data-demo-id attribute */}
       <style>{craftsmanSliderCss}</style>
 
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {text(
-            "Annahmen-Rechner · Transparente Formel",
-            "Assumptions calculator · explicit formula",
-          )}
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          {text("Zahlen statt", "Inspect the")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("Bauchgefühl.", "assumptions.")}
-          </span>
-        </h2>
-      </div>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {text("Annahmen-Rechner", "Assumptions calculator")}
+      </h2>
 
       <div
         style={{
@@ -236,19 +211,14 @@ export default function RoiRechnerDemo() {
             background: DEMO.ink,
             color: DEMO.kalk,
             padding: 20,
-            borderTop: `3px solid var(--color-brand-orange)`,
             display: "flex",
             flexDirection: "column",
           }}
         >
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
+              ...DEMO.label,
               color: "rgba(243,240,233,0.6)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              fontWeight: 700,
             }}
           >
             {text("Szenario-Wert pro Jahr", "Annual scenario value")}
@@ -261,7 +231,7 @@ export default function RoiRechnerDemo() {
               lineHeight: 1.02,
               fontWeight: 800,
               color: "var(--color-kupfer-light)",
-              letterSpacing: "-0.045em",
+              letterSpacing: "-0.01em",
               marginTop: 6,
               fontVariantNumeric: "tabular-nums",
             }}
@@ -270,11 +240,8 @@ export default function RoiRechnerDemo() {
           </div>
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
+              ...DEMO.label,
               color: "rgba(243,240,233,0.62)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
               marginTop: 2,
             }}
           >
@@ -324,12 +291,8 @@ export default function RoiRechnerDemo() {
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
+                ...DEMO.label,
                 color: "rgba(243,240,233,0.62)",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
                 marginBottom: 8,
               }}
             >
@@ -409,17 +372,13 @@ export default function RoiRechnerDemo() {
           aria-controls="roi-annahmen-panel"
           style={{
             all: "unset",
+            ...DEMO.label,
             display: "flex",
             minHeight: 44,
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
             cursor: "pointer",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
             color: DEMO.schiefer,
             padding: "4px 0",
           }}
@@ -429,7 +388,7 @@ export default function RoiRechnerDemo() {
             aria-hidden
             style={{
               fontFamily: DEMO.font.mono,
-              color: "var(--color-brand-orange)",
+              color: DEMO.ink,
               fontSize: 14,
               transition: reducedMotion ? "none" : "transform 200ms ease",
               transform: annahmenOpen ? "rotate(45deg)" : "rotate(0deg)",
@@ -537,12 +496,8 @@ function Slider({
       >
         <span
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
+            ...DEMO.label,
             color: DEMO.schiefer,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            fontWeight: 700,
           }}
         >
           {label}
@@ -551,9 +506,8 @@ function Slider({
           style={{
             fontFamily: DEMO.font.mono,
             fontSize: 15,
-            fontWeight: 800,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "-0.02em",
+            fontWeight: 700,
+            color: DEMO.ink,
             fontVariantNumeric: "tabular-nums",
           }}
         >
@@ -604,12 +558,8 @@ function Row({
     >
       <span
         style={{
-          fontFamily: DEMO.font.mono,
-          fontSize: 12,
+          ...DEMO.label,
           color: "rgba(243,240,233,0.6)",
-          letterSpacing: "0.1em",
-          textTransform: "uppercase",
-          fontWeight: 700,
         }}
       >
         {label}
@@ -642,11 +592,8 @@ function Assumption({ k, d }: { k: string; d: string }) {
     >
       <span
         style={{
-          color: "var(--color-brand-orange)",
-          fontWeight: 700,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          fontSize: 12,
+          ...DEMO.label,
+          color: "var(--color-muted-foreground)",
           flex: "1 1 128px",
           overflowWrap: "anywhere",
         }}
@@ -684,11 +631,9 @@ const craftsmanSliderCss = `
   .roi-craftsman-slider:focus {
     outline: none;
   }
-  .roi-craftsman-slider:focus-visible::-webkit-slider-thumb {
-    box-shadow: 0 0 0 3px rgba(249,115,22,0.35), 0 2px 4px rgba(11,9,8,0.25);
-  }
-  .roi-craftsman-slider:focus-visible::-moz-range-thumb {
-    box-shadow: 0 0 0 3px rgba(249,115,22,0.35), 0 2px 4px rgba(11,9,8,0.25);
+  .roi-craftsman-slider:focus-visible {
+    outline: 3px solid var(--color-brand-orange);
+    outline-offset: 2px;
   }
 
   /* Track — WebKit */
@@ -696,8 +641,8 @@ const craftsmanSliderCss = `
     height: 8px;
     background: linear-gradient(
       to right,
-      var(--color-brand-orange) 0%,
-      var(--color-brand-orange) var(--roi-fill, 50%),
+      #0B0908 0%,
+      #0B0908 var(--roi-fill, 50%),
       rgba(11,9,8,0.12) var(--roi-fill, 50%),
       rgba(11,9,8,0.12) 100%
     );
@@ -713,65 +658,38 @@ const craftsmanSliderCss = `
   }
   .roi-craftsman-slider::-moz-range-progress {
     height: 8px;
-    background: var(--color-brand-orange);
+    background: #0B0908;
     border-radius: 0;
   }
 
-  /* Thumb — WebKit (craftsman knob: chunky square with grooves) */
+  /* Thumb: a flat ink square with a paper edge. No grooves, no drop
+     shadow and no hover lift (design direction 5.6 and 5.7). */
   .roi-craftsman-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 22px;
     height: 22px;
     margin-top: -8px;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        rgba(11,9,8,0.18) 0 1px,
-        transparent 1px 4px
-      ),
-      var(--color-brand-orange);
-    border: 1.5px solid #0B0908;
-    border-radius: 2px;
-    box-shadow: 0 2px 0 rgba(11,9,8,0.25);
+    background: #0B0908;
+    border: 2px solid #F3F0E9;
+    outline: 1px solid #0B0908;
+    border-radius: 0;
     cursor: grab;
-    transition: transform 120ms ease, box-shadow 120ms ease;
-  }
-  .roi-craftsman-slider::-webkit-slider-thumb:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 0 rgba(11,9,8,0.3);
   }
   .roi-craftsman-slider::-webkit-slider-thumb:active {
     cursor: grabbing;
-    transform: translateY(0);
-    box-shadow: 0 1px 0 rgba(11,9,8,0.35);
   }
-
-  /* Thumb — Firefox */
   .roi-craftsman-slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        rgba(11,9,8,0.18) 0 1px,
-        transparent 1px 4px
-      ),
-      var(--color-brand-orange);
-    border: 1.5px solid #0B0908;
-    border-radius: 2px;
-    box-shadow: 0 2px 0 rgba(11,9,8,0.25);
+    width: 18px;
+    height: 18px;
+    background: #0B0908;
+    border: 2px solid #F3F0E9;
+    outline: 1px solid #0B0908;
+    border-radius: 0;
     cursor: grab;
-    transition: transform 120ms ease, box-shadow 120ms ease;
-  }
-  .roi-craftsman-slider::-moz-range-thumb:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 0 rgba(11,9,8,0.3);
   }
   .roi-craftsman-slider::-moz-range-thumb:active {
     cursor: grabbing;
-    transform: translateY(0);
-    box-shadow: 0 1px 0 rgba(11,9,8,0.35);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -48,9 +48,9 @@ const LANDING_COPY = {
       "wiederholbare Abläufe mit klaren Kontrollen entwerfen",
     ],
     eyebrow: "AI-Native Arbeitskurs · kostenlos",
-    heading: "Mit Claude wiederkehrende Arbeit automatisieren.",
+    heading: "Routinearbeit mit Claude automatisieren.",
     intro:
-      "Du beschreibst eine Aufgabe so, dass Claude sie ohne Rückfragen bearbeitet, richtest Claude für ein festes Projekt ein und prüfst, ob sich eine wiederkehrende Aufgabe als n8n-Ablauf eignet. Programmieren musst du dafür nicht.",
+      "Der Kurs ist für Menschen, die jede Woche dieselben Mails, Notizen und Berichte bearbeiten. Im Abschlussprojekt baust du einen Ablauf aus deiner eigenen Arbeit als Pilot und legst fest, wie du ihn prüfst. Programmieren musst du dafür nicht.",
     start: "Mit Modul 1 beginnen",
     workspace: "Kursstand öffnen",
     factsLabel: "Auf einen Blick",
@@ -64,15 +64,15 @@ const LANDING_COPY = {
       },
       {
         title: "Claude für ein festes Projekt einrichten",
-        detail: "Damit nicht jeder Chat bei null anfängt.",
+        detail: "In einem Claude-Projekt mit festen Anweisungen, Beispieldateien und Skills.",
       },
       {
         title: "Material aus Mails, Notizen und Ordnern durchsuchbar ablegen",
-        detail: "Modul 3 baut dafür eine gepflegte Wissensbasis auf.",
+        detail: "In Modul 3 legst du dafür eine Wissensbasis in Obsidian an.",
       },
       {
         title: "Prüfen, ob sich eine wiederkehrende Aufgabe als n8n-Ablauf eignet",
-        detail: "Mit festgelegten Kontrollen, bevor etwas automatisch läuft.",
+        detail: "Du legst die Kontrollen fest, bevor etwas automatisch läuft.",
       },
     ],
     modulesHeading: "Module",
@@ -121,9 +121,9 @@ const LANDING_COPY = {
       "design repeatable workflows with explicit controls",
     ],
     eyebrow: "AI-Native Workflow Course · free",
-    heading: "Automate recurring work with Claude.",
+    heading: "Automate routine work with Claude.",
     intro:
-      "You describe a task so that Claude can work on it without follow-up questions, set Claude up for one fixed project, and check whether a recurring task fits an n8n workflow. No coding required.",
+      "The course is for people who handle the same emails, notes and reports every week. In the final project you build a pilot workflow from your own work and decide how you check it. You do not need to write code.",
     start: "Start with module 1",
     workspace: "Open course progress",
     factsLabel: "At a glance",
@@ -137,15 +137,15 @@ const LANDING_COPY = {
       },
       {
         title: "Set Claude up for one fixed project",
-        detail: "So that not every chat starts from zero.",
+        detail: "In a Claude project with fixed instructions, sample files and skills.",
       },
       {
         title: "Keep material from emails, notes and folders in one searchable place",
-        detail: "Module 3 builds a maintained knowledge base for this.",
+        detail: "In module 3 you set up a knowledge base in Obsidian for this.",
       },
       {
         title: "Check whether a recurring task fits an n8n workflow",
-        detail: "With agreed checks in place before anything runs on its own.",
+        detail: "You set the checks before anything runs on its own.",
       },
     ],
     modulesHeading: "Modules",
@@ -315,8 +315,8 @@ export default async function AiNativePage() {
             `${meta.totalModules} ${locale === "de" ? "Module" : "modules"}`,
             `${meta.totalLessons} ${copy.lessonsLabel}`,
             locale === "de"
-              ? `Rund ${lessonHours} Std. Lektionen, ${meta.targetDurationHours} Std. mit Übungen`
-              : `About ${lessonHours} hrs of lessons, ${meta.targetDurationHours} hrs with exercises`,
+              ? `ca. ${lessonHours} Std. Lesezeit, ca. ${meta.targetDurationHours} Std. mit Übungen`
+              : `About ${lessonHours} hrs of reading, about ${meta.targetDurationHours} hrs with exercises`,
             locale === "de" ? "Kostenlos, mit Lernkonto" : "Free, with a learning account",
           ]}
           factsLabel={copy.factsLabel}
@@ -334,10 +334,7 @@ export default async function AiNativePage() {
           <CourseOutcomeList items={copy.outcomes} />
         </CourseLandingSection>
 
-        <CourseLandingSection
-          title={copy.modulesHeading}
-          caption={`${meta.totalModules} ${locale === "de" ? "Module" : "modules"} · ${meta.totalLessons} ${copy.lessonsLabel}`}
-        >
+        <CourseLandingSection title={copy.modulesHeading}>
           <CourseBlockLedger
             rows={modules.map((module) => ({
               id: module.id,

@@ -3,7 +3,7 @@
 //   scripts/workshop04/demo.template.html  (page, styles, static copy)
 //   scripts/workshop04/demo-core.js        (pure state and number formatting, shared with the page)
 //   scripts/workshop04/demo-app.js         (interaction)
-//   w04-data.json                          (every number; produced by build_dataset.py)
+//   scripts/workshop04/data/w04-data.json  (every number; written by scripts/workshop04/build_dataset.py)
 // and writes the two scripts next to the page as lib/w04-demo-core.js and lib/w04-demo.js
 // (loaded with <script src defer>; the page has no inline executable script).
 // The final state (every trap fixed, location-based) is rendered into the HTML, so the page reads without JS.
@@ -25,8 +25,7 @@ const di = args.indexOf("--data");
 const DATA_CANDIDATES = [
   di !== -1 ? path.resolve(args[di + 1]) : null,
   process.env.W04_DATA ? path.resolve(process.env.W04_DATA) : null,
-  path.join(here, "data", "w04-data.json"), // canonical (data/build_dataset.py), also read by the deck and pages builds
-  path.join(here, "w04-data.json"),
+  path.join(here, "data", "w04-data.json"), // the one dataset (build_dataset.py), also read by the deck and pages builds
 ].filter(Boolean);
 const dataPath = DATA_CANDIDATES.find((p) => existsSync(p));
 if (!dataPath) {
@@ -191,13 +190,17 @@ assert(M0.total === n("total_lb_2025") && M0.vs === n("chg_lb_pct"), "default me
 // Visible link text names the document; the file name is in the title and in the drawer header.
 const T4DOC = fileName(D.documents.find((d) => d.trap === "T4").path);
 const TWO = fileName(D.documents.find((d) => d.trap === "two-month").path);
+// The two CSV exports are not documents; their paths come from the ledger rows they produced.
+const rowFile = (id) => D.ledger.find((r) => r.row_id === id).source_file;
+const METER_CSV = rowFile("E-WN-10");
+const FUEL_CSV = rowFile("D-FL-01");
 const DOCLINK = {
   T1: ["Scanned March bill", D.inputs.wnDuplicate.file],
-  T2: ["Meter readings", "Zaehlerstaende_2025.csv"],
+  T2: ["Meter readings", fileName(METER_CSV)],
   T3: ["Talbrück annual bill", D.inputs.jvBill.file],
   T4: ["Werk Süd statement", T4DOC],
   T5: ["Two gas bills", D.inputs.gas.WN.file + " and " + D.inputs.gas.WS.file],
-  T6: ["Fuel-card export", "Tankkarten_2025.csv"],
+  T6: ["Fuel-card export", fileName(FUEL_CSV)],
   T7: ["Factor file", "faktoren_lehrwerte.csv"],
 };
 function style(g) { return g ? ` style="--l:${g.l}%;--w:${g.w}%;--cl:${g.cl}%;--cw:${g.cw}%"` : ""; }
@@ -283,13 +286,16 @@ for (const d of D.documents) {
   if (!g) folders.push((g = { name: f, items: [] }));
   g.items.push({ label: fileName(d.path), open: "doc:" + fileName(d.path), tag: TAG[d.trap] || "" });
 }
-const wnS = folders.find((f) => f.name === "Werk_Nord/Strom");
-wnS.items.splice(9, 0, { label: "2025-10_Strom_WN.md", open: "trap:T2", tag: "missing", missing: true });
-folders.push({ name: "Werk_Nord", items: [{ label: "Zaehlerstaende_2025.csv", open: "trap:T2", tag: "T2 October" }] });
-folders.push({ name: "Flotte", items: [{ label: "Tankkarten_2025.csv", open: "trap:T6", tag: "T6 AdBlue" }] });
+const wnS = folders.find((f) => f.name === "werk_nord/strom");
+// October has no bill: the tree shows the file that should be there, named like its neighbours.
+const OCT_FILE = D.inputs.wnBills.find((b) => b.firstMonth === 9).file.replace("2025-09_", "2025-10_");
+assert(OCT_FILE.startsWith("2025-10_") && !D.documents.some((d) => fileName(d.path) === OCT_FILE), "missing October file name");
+wnS.items.splice(9, 0, { label: OCT_FILE, open: "trap:T2", tag: "missing", missing: true });
+folders.push({ name: folderOf(METER_CSV), items: [{ label: fileName(METER_CSV), open: "trap:T2", tag: "T2 October" }] });
+folders.push({ name: folderOf(FUEL_CSV), items: [{ label: fileName(FUEL_CSV), open: "trap:T6", tag: "T6 AdBlue" }] });
 folders.push({ name: "faktoren", items: [{ label: "faktoren_lehrwerte.csv", open: "trap:T7", tag: "T7 method" }] });
 // the order the folders have on disk: Werk Nord (electricity, meter readings, gas), Werk Süd, Lager Ost, fleet, factors
-const DISK = ["Werk_Nord/Strom", "Werk_Nord", "Werk_Nord/Gas", "Werk_Sued", "Lager_Ost", "Flotte", "faktoren"];
+const DISK = ["werk_nord/strom", "werk_nord", "werk_nord/gas", "werk_sued", "lager_ost", "flotte", "faktoren"];
 assert(folders.length === DISK.length && folders.every((f) => DISK.includes(f.name)), "folder list differs from the disk order: " + folders.map((f) => f.name).join(", "));
 folders.sort((a, b) => DISK.indexOf(a.name) - DISK.indexOf(b.name));
 const treeHtml = folders.map((f) => `<section class="folder" aria-label="${esc(f.name)}"><h3>${esc(f.name)}/<span>${f.items.filter((i) => !i.missing).length} ${f.items.filter((i) => !i.missing).length === 1 ? "file" : "files"}</span></h3>

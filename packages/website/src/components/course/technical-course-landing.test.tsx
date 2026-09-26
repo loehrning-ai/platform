@@ -25,6 +25,7 @@ describe("TechnicalCourseLanding", () => {
         />
         <TechnicalCourseSectionHeading
           id="map-heading"
+          headingId="map-title"
           eyebrow="Course map"
           title="Eight decisions"
         />
@@ -66,7 +67,7 @@ describe("TechnicalCourseLanding", () => {
     );
     expect(
       screen.getByRole("heading", { level: 2, name: "Eight decisions" }),
-    ).toBeInTheDocument();
+    ).toHaveAttribute("id", "map-title");
     const sectionHeading = document.querySelector(
       "[data-technical-section-heading]",
     );

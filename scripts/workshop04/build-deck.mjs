@@ -6,8 +6,8 @@
 //   node scripts/workshop04/build-deck.mjs --check  change nothing; exit 1 if any output would change
 //                                                   or a lint finding exists
 //
-// Inputs: scripts/workshop04/data/w04-data.json (built by data/build_dataset.py) and the presenter
-// note sources in scripts/workshop04/notes/*.mjs. The resolver is the deck's own lib/w04-fill.js, so
+// Inputs: scripts/workshop04/data/w04-data.json (built by scripts/workshop04/build_dataset.py) and the
+// presenter note sources in scripts/workshop04/notes/*.mjs. The resolver is the deck's own lib/w04-fill.js, so
 // build time and run time format every number the same way.
 //
 // Generated fragments live between <!-- gen:NAME key=value … --> and <!-- /gen:NAME --> in
@@ -26,17 +26,17 @@ import vm from "node:vm";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "..", "..");
 const DECK = path.join(REPO, "packages/website/public/workshops/esg-berichte-mit-ki");
-// --data <file> reads another copy of the dataset (for example the published data/w04-data.json, whose
-// documents carry folder and file instead of a full path); both shapes are handled below.
+// --data <file> reads another copy of the dataset (for example one written by build_dataset.py --out-dir).
+// Documents may carry a full path or folder and file; both shapes are handled below.
 const DATA_ARG = process.argv.indexOf("--data");
 const DATA_PATH = DATA_ARG > 0 ? path.resolve(process.argv[DATA_ARG + 1]) : path.join(HERE, "data/w04-data.json");
 const CHECK = process.argv.includes("--check");
 
 const data = JSON.parse(readFileSync(DATA_PATH, "utf8"));
-// The published copy (lib/w04-data.js) carries no full raw-folder paths: a path such as
-// rohdaten_2025/Werk_Sued/Jahresuebersicht_2025_Oekostrom.md is a 40+ character mixed-case run that
-// the public scanner reads as a possible secret. Each document keeps folder and file separately (as
-// the published data/w04-data.json does) and each ledger row keeps the file name only.
+// The deck addresses a document by its file name (gen:doc file=…, data-j="documents.<name>.lines.N")
+// and shows the file name alone in the ledger excerpt, so lib/w04-data.js keeps folder and file per
+// document and the file name per ledger row. Raw-folder names are lower case (build_dataset.py
+// asserts it), so neither a full path nor a file name mixes upper and lower case.
 for (const d of data.documents) {
   if (typeof d.path === "string") {
     d.folder = d.path.split("/").slice(0, -1).join("/");

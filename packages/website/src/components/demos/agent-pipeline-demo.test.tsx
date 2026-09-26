@@ -5,16 +5,12 @@ import AgentPipelineDemo from "./agent-pipeline-demo";
 /**
  * agent-pipeline-demo.test.tsx (regression coverage)
  *
- * Drives the real <AgentPipelineDemo>. The demo has two deterministic states we
- * can exercise without wall-clock timers:
- *
- *  - Idle: normal motion, but the polyfilled IntersectionObserver never reports
- *    the demo in-view, so useVisibleAutoplay keeps visible=false and the
- *    autoplay timers never start. The scripted log stays empty and the memo is
- *    still pending.
- *  - Reduced motion: the effect replays the entire scripted log at once and sets
- *    done=true, so the full log (with the fixed 10:42:15.000 timestamp base
- *    computed by the private fmtTs) and the finished memo render immediately.
+ * Drives the real <AgentPipelineDemo>. The engine renders its final state
+ * first (design direction, principle 6): the whole scripted log and the memo
+ * are on screen on load, with no "memo appears later" placeholder. The
+ * polyfilled IntersectionObserver never reports the demo in view, so a
+ * replay started with "Neu abspielen" rewinds to step 0 and waits there; the
+ * Zurück/Weiter buttons are a deterministic stand-in for its timers.
  *
  * matchMedia + IntersectionObserver are polyfilled in src/test/setup.ts; we
  * override matchMedia locally to force the reduced-motion branch.
@@ -41,33 +37,37 @@ describe("<AgentPipelineDemo>", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("renders the four agents and the idle placeholders before the pipeline starts", () => {
-    render(<AgentPipelineDemo />);
+  it("renders the four agents, the full trace and the memo on load", () => {
+    const { container } = render(<AgentPipelineDemo />);
 
-    expect(screen.getByText("Multi-Agent Workflow")).toBeInTheDocument();
+    // No visible kicker or slogan: the page H1 names the demo. The engine
+    // keeps one plain sr-only h2 as a landmark into the instrument.
+    expect(screen.queryByText("Multi-Agent Workflow")).toBeNull();
     const heading = screen.getByRole("heading", { level: 2 });
-    expect(heading).toHaveTextContent("Vier Agenten.");
-    expect(heading).toHaveTextContent("Ein Memo.");
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Agent-Pipeline: Spur und Memo");
+    expect(heading.querySelector("span")).toBeNull();
 
-    // All four agent cards render regardless of run state (no logs yet, so each
-    // agent name appears exactly once).
-    expect(screen.getByText("Scout")).toBeInTheDocument();
-    expect(screen.getByText("Analyst")).toBeInTheDocument();
-    expect(screen.getByText("Kritiker")).toBeInTheDocument();
-    expect(screen.getByText("Redakteur")).toBeInTheDocument();
+    // All four agent cards render.
     expect(
       screen.getByText("Verfasst strukturiertes Memo für Geschäftsführung"),
     ).toBeInTheDocument();
+    expect(screen.getByText("01 · Research")).toBeInTheDocument();
 
-    // Idle: empty-log placeholder + memo-pending placeholder are shown.
-    expect(screen.getByText(/warten auf pipeline start/)).toBeInTheDocument();
+    // Final state first: the full log, the memo, and no current step.
+    expect(screen.getByText("Schritt 14 / 14")).toBeInTheDocument();
+    expect(screen.getByText("Starte Archiv-Suche…")).toBeInTheDocument();
     expect(
-      screen.getByText(/MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS/),
+      screen.getByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
     ).toBeInTheDocument();
-    // The finished memo has not been produced yet.
-    expect(
-      screen.queryByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
-    ).not.toBeInTheDocument();
+    expect(container.querySelector('[aria-current="step"]')).toBeNull();
+    expect(screen.queryByText(/MEMO ERSCHEINT|memo appears/i)).toBeNull();
+    expect(screen.queryByText(/Wartet auf den ersten Schritt/)).toBeNull();
+    // No looping glow, no Tailwind-orange wash, no two-colour memo heading.
+    expect(container.querySelectorAll('[style*="infinite"]')).toHaveLength(0);
+    expect(container.innerHTML).not.toMatch(/249,\s*115,\s*22|linear-gradient/);
+    const memoHeading = screen.getByRole("heading", { level: 3 });
+    expect(memoHeading.querySelector("span")).toBeNull();
   });
 
   it("replays the full log with deterministic timestamps and the finished memo under reduced motion", async () => {
@@ -87,26 +87,29 @@ describe("<AgentPipelineDemo>", () => {
     expect(
       screen.getByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
     ).toBeInTheDocument();
-    expect(screen.getByText("§1 · KERNTHESE")).toBeInTheDocument();
-    expect(screen.getByText("2,4k TOKENS · 18 QUELLEN")).toBeInTheDocument();
-
-    // Both idle placeholders are gone once the pipeline has replayed.
-    expect(
-      screen.queryByText(/warten auf pipeline start/),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS/),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("§1 · Kernthese")).toBeInTheDocument();
+    expect(screen.getByText("2,4k Tokens · 18 Quellen")).toBeInTheDocument();
   });
 
-  it("steps through the log manually via Zurück/Weiter (autoplay never starts in jsdom)", () => {
+  it("rewinds on Neu abspielen and then steps through the log via Zurück/Weiter", () => {
     render(<AgentPipelineDemo />);
 
-    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
     const back = screen.getByRole("button", { name: "◀ Zurück" });
     const next = screen.getByRole("button", { name: "Weiter ▶" });
+    // At rest the run is complete: forward is exhausted, back is open.
+    expect(next).toBeDisabled();
+    expect(back).not.toBeDisabled();
+
+    // Replay is the only trigger into a run; jsdom never reports the
+    // engine in view, so the run waits at step 0.
+    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
+    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
+    expect(screen.getByText(/Wartet auf den ersten Schritt/)).toBeInTheDocument();
     expect(back).toBeDisabled();
-    expect(next).not.toBeDisabled();
+    // The memo stays on screen while the trace refills.
+    expect(
+      screen.getByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
+    ).toBeInTheDocument();
 
     fireEvent.click(next);
     expect(screen.getByText("Schritt 1 / 14")).toBeInTheDocument();
@@ -121,19 +124,17 @@ describe("<AgentPipelineDemo>", () => {
     expect(back).toBeDisabled();
   });
 
-  it("resets to step 0 when Replay is clicked after stepping forward", () => {
+  it("steps back from the final state one log line at a time", () => {
     render(<AgentPipelineDemo />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
-    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
-    expect(screen.getByText("Schritt 2 / 14")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt 0 / 14")).toBeInTheDocument();
-    expect(screen.getByText(/warten auf pipeline start/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "◀ Zurück" }));
+    expect(screen.getByText("Schritt 13 / 14")).toBeInTheDocument();
+    expect(
+      screen.queryByText("✓ Memo fertig (2,4k Tokens, 18 Quellen)"),
+    ).not.toBeInTheDocument();
   });
 
-  it("switches to the pricing scenario and plays a different outcome", () => {
+  it("switches to the pricing scenario and shows its own final memo", () => {
     render(<AgentPipelineDemo />);
 
     const contractsToggle = screen.getByRole("button", {
@@ -145,17 +146,14 @@ describe("<AgentPipelineDemo>", () => {
 
     fireEvent.click(pricingToggle);
     expect(pricingToggle).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByText("Schritt 0 / 7")).toBeInTheDocument();
-
-    const next = screen.getByRole("button", { name: "Weiter ▶" });
-    for (let i = 0; i < 7; i++) fireEvent.click(next);
-
+    // A new task opens on its final state too.
+    expect(screen.getByText("Schritt 7 / 7")).toBeInTheDocument();
     expect(
       screen.getByText(
         "Preiserhöhung von 4 % in 5 von 6 Segmenten; Segment 3 zurückstellen.",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByText("1,1k TOKENS · 6 QUELLEN")).toBeInTheDocument();
+    expect(screen.getByText("1,1k Tokens · 6 Quellen")).toBeInTheDocument();
     expect(
       screen.queryByText("KI-Einführung in 2 Phasen, Start Q3/2026."),
     ).not.toBeInTheDocument();
