@@ -67,6 +67,13 @@ Verified state of the tree:
 - `data-readiness-kit.zip` (W03, 1.1 MB) shows as a "large binary asset" note; it was already on main.
 - Pushed commits named "WIP" are unverified snapshots; CI on them is expected to be red.
 
+## Recipe: make W04 pass `scan:public`
+
+- Rule (`packages/website/scripts/open-source/export-denylist.mjs`, `GENERIC_BASE64_RE` + `hasBase64SecretShape`): any run of 40+ characters from `[A-Za-z0-9+/_-]` that contains a lowercase letter, an uppercase letter AND a digit fails. W04 raw paths such as `rohdaten_2025/Werk_Sued/Jahresuebersicht_2025_Oekostrom` are one such run (`/`, `_`, `-` do not break it; `.` and spaces do).
+- Fix: make every raw path lower case (e.g. `rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md`). Change the folder and file-name constants in `scripts/workshop04/data/build_dataset.py` (`Werk_Nord`, `Werk_Sued`, `Lager_Ost`, `Flotte`, the `Strom`/`Gas` sub-folders, `WN_DUPLICATE`, `JV_BILL`, `fn`, `g['file']`), NOT the German prose words "Strom"/"Gas". Also `scripts/workshop04/demo-app.js:302` has one hard-coded path.
+- Data consumers: `build-deck.mjs` reads `scripts/workshop04/data/w04-data.json`; `build-demo.mjs` and `build-pages.mjs` read `scripts/workshop04/w04-data.json` (an identical copy). Keep one copy and point all three at it.
+- Rebuild in order: `python3 scripts/workshop04/data/build_dataset.py`, `node scripts/workshop04/build-deck.mjs`, `node scripts/workshop04/build-demo.mjs`, `node scripts/workshop04/build-pages.mjs`, `node scripts/workshop04/kit-archive.mjs`. Then refresh the kit zip's ASSET_MANIFEST row with `node scripts/scaffold-asset.mjs`, keeping `\u00f6`-style ASCII escapes in the JSON (write with `ensure_ascii=True`). Update the kit `sizeLabel` in `src/lib/workshops-esg-reporting.ts` if the size changes (a test measures it), and run each builder with `--check`, `bun run scan:public` and `bunx vitest run src/lib/workshops-esg-reporting.test.ts`.
+
 ## Open questions for the owner
 
 - Courses "too broad": the concrete per-course promises and the overlap analysis are in `research/map-course-surfaces.md` sections 6 and 7 (AI-Native claims ~12 h but its lessons sum to ~5 h; AI-Native Operator spans 39 lessons; DEF and Data Infrastructure overlap on ~6 of 12 topics). Merging or trimming courses was not done and needs a decision.
