@@ -2,7 +2,7 @@
 
 import { useState, type JSX, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/components/werk";
 
 /**
  * Client island for MarkdownRenderer's `copyable` feature: the clipboard
@@ -47,8 +47,8 @@ function CopyButton({
       type="button"
       onClick={onClick}
       aria-label={copied ? "Kopiert" : "Prompt kopieren"}
-      className={cn(
-        "inline-flex min-h-11 items-center gap-1 border border-border bg-background/80 px-2 py-1 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground",
+      className={cx(
+        "inline-flex min-h-11 items-center gap-1.5 border border-border bg-background/80 px-3 py-1 text-label text-muted-foreground transition-colors hover:border-foreground hover:text-foreground",
         className,
       )}
     >
@@ -84,7 +84,7 @@ export function CopyableBlockquote({
   const looksLikePrompt = text.length >= 20;
   return (
     <div className="relative mb-4 group">
-      <blockquote className="border-l-2 border-brand-orange pl-4 italic text-muted-foreground">
+      <blockquote className="border-l-2 border-hairline pl-4 italic text-muted-foreground">
         {children}
       </blockquote>
       {looksLikePrompt && (

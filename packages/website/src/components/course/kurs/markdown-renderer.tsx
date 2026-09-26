@@ -33,12 +33,12 @@ export function MarkdownRenderer({
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mb-6 mt-10 text-3xl font-bold tracking-[-0.03em] text-foreground first:mt-0">
+            <h1 className="mb-6 mt-10 text-fluid-h2 font-bold text-foreground first:mt-0">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mb-4 mt-8 text-2xl font-bold tracking-[-0.03em] text-foreground">
+            <h2 className="mb-4 mt-8 text-fluid-h3 font-bold text-foreground">
               {children}
             </h2>
           ),
@@ -68,7 +68,7 @@ export function MarkdownRenderer({
             copyable ? (
               <CopyableBlockquote>{children}</CopyableBlockquote>
             ) : (
-              <blockquote className="mb-4 border-l-2 border-brand-orange pl-4 italic text-muted-foreground">
+              <blockquote className="mb-4 border-l-2 border-hairline pl-4 italic text-muted-foreground">
                 {children}
               </blockquote>
             ),

@@ -120,7 +120,7 @@ export function DemoDetailLayout({
         <div className="mx-auto max-w-[75rem]">
           <Link
             href={catalogHref}
-            className="group inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-foreground"
+            className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-foreground"
           >
             <ArrowGlyph className="rotate-180" />
             {pageCopy.allExamples}

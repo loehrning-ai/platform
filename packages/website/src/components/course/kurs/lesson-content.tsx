@@ -220,7 +220,7 @@ export function LessonContent({
           className={cn(
             "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
             activeTab === "lernen"
-              ? "border-brand-orange text-brand-orange"
+              ? "border-foreground font-semibold text-foreground"
               : "border-transparent text-muted-foreground hover:text-foreground",
           )}
         >
@@ -243,7 +243,7 @@ export function LessonContent({
             className={cn(
               "inline-flex min-h-11 items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
               activeTab === "quiz"
-                ? "border-brand-orange text-brand-orange"
+                ? "border-foreground font-semibold text-foreground"
                 : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
