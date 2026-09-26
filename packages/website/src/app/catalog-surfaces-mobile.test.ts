@@ -150,7 +150,7 @@ describe("catalog surfaces below lg", () => {
 
     // Paper hero: tighter padding on a phone, the reviewed spacing from sm.
     expect(demos).toContain(
-      'className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-12"',
+      'className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-12"',
     );
     // Lead and check list stack on a phone and sit side by side from lg.
     expect(demos).toContain(

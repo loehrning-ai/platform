@@ -463,7 +463,7 @@ describe("Data Science German overview and chapters 01-12", () => {
 
   it("preserves reviewed formulas and code identifiers in German", async () => {
     const expected = {
-      home: ["12", "22", "~2h", "10k"],
+      home: ["12", "22", "2 Std.", "10k"],
       fund: ["180,000", "2.3%", "1/√n", "n=4", "SE≈1.7", "n=100", "SE≈0.35"],
       explore: ["1.5 × IQR", "Mahalanobis-Distanz"],
       clean: ["[0, 1]", "feature_was_missing"],
