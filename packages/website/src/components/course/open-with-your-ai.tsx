@@ -69,13 +69,13 @@ export function OpenWithYourAi({
       data-open-with-your-ai={kind}
       className="mx-auto w-full max-w-[70rem] px-4 py-4 sm:px-6 lg:px-8"
     >
-      <div className="border border-foreground bg-card">
+      <div className="border border-hairline bg-card">
         <div className="grid gap-3 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-4">
           <div className="min-w-0">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+            <p className="text-label text-muted-foreground">
               {copy.label}
             </p>
-            <p className="mt-2 text-sm font-bold leading-6 text-foreground">
+            <p className="mt-2 text-body font-semibold text-foreground">
               {kindCopy.heading}
             </p>
             <p className="mt-1 max-w-[62ch] text-sm leading-6 text-muted-foreground">
@@ -87,7 +87,7 @@ export function OpenWithYourAi({
             <button
               type="button"
               onClick={copyPrompt}
-              className="inline-flex min-h-11 min-w-11 items-center gap-2 border border-foreground bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground outline-none transition-colors duration-150 hover:bg-kupfer-mist focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none"
+              className="inline-flex min-h-11 min-w-11 items-center gap-2 border border-foreground bg-transparent px-4 text-label text-foreground outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none"
             >
               {copyState === "copied" ? (
                 <Check size={14} aria-hidden="true" />
@@ -99,26 +99,26 @@ export function OpenWithYourAi({
             <Link
               href={helpHref}
               prefetch={false}
-              className="inline-flex min-h-11 min-w-11 items-center border border-border px-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground outline-none transition-colors duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none"
+              className="inline-flex min-h-11 min-w-11 items-center px-3 text-label text-foreground underline decoration-border underline-offset-4 outline-none transition-colors duration-150 hover:decoration-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none"
             >
               {copy.helpLink}
             </Link>
           </div>
         </div>
 
-        <dl className="grid gap-px border-t border-border bg-border sm:grid-cols-[9rem_minmax(0,1fr)]">
-          <dt className="bg-card px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+        <dl className="grid border-t border-hairline sm:grid-cols-[9rem_minmax(0,1fr)]">
+          <dt className="border-b border-hairline px-4 py-2 text-label text-muted-foreground sm:border-b-0">
             {copy.serverLabel}
           </dt>
-          <dd className="bg-card px-4 py-2">
+          <dd className="border-b border-hairline px-4 py-2 last:border-b-0 sm:[&:not(:last-child)]:border-b">
             <code className="break-all font-mono text-xs text-foreground">
               {serverUrl}
             </code>
           </dd>
-          <dt className="bg-card px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+          <dt className="border-b border-hairline px-4 py-2 text-label text-muted-foreground sm:border-b-0">
             {resources.length === 1 ? copy.addressLabel : copy.addressesLabel}
           </dt>
-          <dd className="bg-card px-4 py-2">
+          <dd className="border-b border-hairline px-4 py-2 last:border-b-0 sm:[&:not(:last-child)]:border-b">
             <ul className="grid gap-1">
               {resources.map((resource) => (
                 <li key={resource.uri} className="min-w-0">
@@ -137,7 +137,7 @@ export function OpenWithYourAi({
           className={
             copyState === "idle"
               ? "sr-only"
-              : "border-t border-border px-4 py-2 text-xs leading-5 text-muted-foreground"
+              : "border-t border-hairline px-4 py-2 text-caption text-muted-foreground"
           }
         >
           {copyState === "copied" ? copy.copiedNotice : null}
@@ -145,11 +145,11 @@ export function OpenWithYourAi({
         </p>
 
         {copyState === "failed" ? (
-          <div className="border-t border-border px-4 pb-4 pt-2">
-            <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+          <div className="border-t border-hairline px-4 pb-4 pt-2">
+            <p className="text-label text-muted-foreground">
               {copy.promptLabel}
             </p>
-            <pre className="mt-2 overflow-x-auto border border-border bg-background p-3 font-mono text-xs leading-5 text-foreground">
+            <pre className="mt-2 overflow-x-auto bg-inset p-3 font-mono text-xs leading-5 text-foreground">
               {prompt}
             </pre>
           </div>
