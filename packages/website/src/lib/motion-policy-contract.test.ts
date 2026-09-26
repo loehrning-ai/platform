@@ -178,7 +178,9 @@ describe("website motion policy", () => {
     expect(renderer).toContain('document.addEventListener("visibilitychange"');
     expect(renderer).toContain('"pagehide"');
     expect(renderer).toContain("SCROLL_HOLD_MS");
-    expect(renderer).toContain("{ cap: 2, fps: 60 }");
+    // Top tier: DPR capped at 2, drift at 30 fps, never above 60 fps while active.
+    expect(renderer).toContain("{ cap: 2, drift: 30, active: 60 }");
+    expect(renderer).not.toMatch(/active:\s*(?:[7-9]\d|1\d\d)/);
     expect(renderer).toContain("frozen = true");
     // The opening is finite and exists only without a reduced-motion preference.
     expect(css).toContain("prefers-reduced-motion: no-preference");

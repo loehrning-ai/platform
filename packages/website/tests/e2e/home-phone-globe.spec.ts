@@ -79,7 +79,11 @@ test.describe("phone home globe", () => {
     });
 
     const cdp = await page.context().newCDPSession(page);
-    const touch = (type: string, x: number, y: number) =>
+    const touch = (
+      type: "touchStart" | "touchMove" | "touchEnd",
+      x: number,
+      y: number,
+    ) =>
       cdp.send("Input.dispatchTouchEvent", {
         type,
         touchPoints: type === "touchEnd" ? [] : [{ x, y }],
