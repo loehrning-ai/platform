@@ -50,7 +50,9 @@ describe("<WorkshopsContent>", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 
     const rows = screen.getAllByTestId("workshop-row");
+    const esg = getWorkshops("en").find((w) => w.number === "04");
     expect(rows.map((row) => row.id)).toEqual([
+      "workshop-esg-berichte-mit-ki",
       "workshop-datenbereitschaft-fuer-ki",
       "workshop-geschaeftsberichte-mit-ki-lesen",
       "workshop-ki-prognosen-einschaetzen",
@@ -60,15 +62,21 @@ describe("<WorkshopsContent>", () => {
         (row) => within(row).getByRole("heading", { level: 3 }).textContent,
       ),
     ).toEqual([
+      esg?.title,
       "Are your data ready for AI?",
       "Read business reports with AI",
       "Can AI predict the future?",
     ]);
     expect(
       rows.map((row) => row.querySelector("[data-workshop-output]")?.textContent),
-    ).toEqual(["Five-field template", "Metrics skill + dashboard", "Go/no-go rule"]);
+    ).toEqual([
+      esg?.outcome,
+      "Five-field template",
+      "Metrics skill + dashboard",
+      "Go/no-go rule",
+    ]);
 
-    const [w03, w02, w01] = rows;
+    const [, w03, w02, w01] = rows;
     expect(
       within(w03).getByText("Workshop 03 · Live 90 min · Alone about 60 min"),
     ).toBeInTheDocument();
@@ -139,6 +147,7 @@ describe("<WorkshopsContent>", () => {
       ["01Forecasts", "#workshop-ki-prognosen-einschaetzen"],
       ["02Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
       ["03Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
+      [`04${esg?.topic}`, "#workshop-esg-berichte-mit-ki"],
     ]);
 
     // The hub links to workshop pages only; materials live on the detail page.
@@ -168,15 +177,7 @@ describe("<WorkshopsContent>", () => {
   });
 
   it("marks workshop 04 as new and lists it first, while the button keeps 03", () => {
-    const [w03] = getWorkshops("de").filter((w) => w.number === "03");
-    const w04: Workshop = {
-      ...w03,
-      slug: "esg-berichte-mit-ki",
-      number: "04",
-      topic: "ESG-Berichte",
-      title: "ESG-Berichte mit KI: Von Rohdaten zu klaren Erkenntnissen",
-    };
-    const workshops = [...getWorkshops("de"), w04];
+    const workshops = getWorkshops("de");
 
     expect(orderWorkshopsForHub(workshops).map((w) => w.number)).toEqual([
       "04",
@@ -205,12 +206,11 @@ describe("<WorkshopsContent>", () => {
     const heading = screen.getByRole("heading", { level: 2, name: "Mit deinem Team" });
     expect(heading.closest("[data-workshop-teams]")).not.toBeNull();
     expect(
-      screen.getByText(
-        "Workshop 03 hat eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P. Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.",
-      ),
+      screen.getByText(/^Workshops 03 und 04 haben eine Moderationsansicht mit Notizen/),
     ).toBeInTheDocument();
+    expect(screen.getByText(/Öffne das Deck und drück P\./)).toBeInTheDocument();
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
-    expect(screen.getByText("Workshops · 3 Fälle")).toBeInTheDocument();
+    expect(screen.getByText("Workshops · 4 Fälle")).toBeInTheDocument();
     expect(
       screen.getAllByText(/kostenlos/).map((node) => node.textContent),
     ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
@@ -242,13 +242,18 @@ describe("<WorkshopsContent>", () => {
     // Only real deck covers are images; the others get the CSS mini-cover,
     // so every row shows the same graphit cover language.
     const previews = container.querySelectorAll("img");
-    expect(previews).toHaveLength(1);
+    expect(previews).toHaveLength(2);
     expect(previews[0]).toHaveAttribute(
       "src",
-      "/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
+      "/workshops/esg-berichte-mit-ki/card-preview.webp",
     );
     expect(previews[0]).toHaveAttribute("loading", "eager");
     expect(previews[0]).toHaveAttribute("fetchpriority", "high");
+    expect(previews[1]).toHaveAttribute(
+      "src",
+      "/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
+    );
+    expect(previews[1]).toHaveAttribute("loading", "lazy");
     const miniCovers = container.querySelectorAll("[data-workshop-mini-cover]");
     expect(miniCovers).toHaveLength(2);
     for (const cover of miniCovers) {

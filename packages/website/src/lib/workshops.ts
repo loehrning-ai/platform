@@ -17,6 +17,7 @@
 
 import type { Locale } from "./i18n/locale";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
+import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
 /** Two-digit catalogue number. "04" is reserved for the ESG workshop. */
 export type WorkshopNumber = "01" | "02" | "03" | "04";
@@ -1471,8 +1472,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 export const WORKSHOPS_BY_LOCALE: Readonly<
   Record<Locale, readonly Workshop[]>
 > = {
-  de: [...WORKSHOPS_DE, DATA_READINESS_WORKSHOP.de],
-  en: [...WORKSHOPS_EN, DATA_READINESS_WORKSHOP.en],
+  de: [...WORKSHOPS_DE, DATA_READINESS_WORKSHOP.de, ESG_REPORTING_WORKSHOP.de],
+  en: [...WORKSHOPS_EN, DATA_READINESS_WORKSHOP.en, ESG_REPORTING_WORKSHOP.en],
 };
 
 /** German remains the canonical catalog for machine endpoints and legacy imports. */

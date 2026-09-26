@@ -46,7 +46,8 @@ Verified state of the tree:
 - `bunx eslint` on the touched files: 0 errors.
 - `bun run content:lint`: 0 errors (400 warnings, by design).
 - Not yet run: `bun run build`, e2e, Lighthouse, `scan:public` after the W04 build.
-- W04 is built (deck 29 scenes, presenter, demo, guide, field card, transfer sheet, kit zip, `src/lib/workshops-esg-reporting.ts`) but **not yet wired** into `src/lib/workshops.ts`. Do step 5 below.
+- W04 is built and **wired** into `src/lib/workshops.ts`, `src/lib/analytics/registry.ts` and `src/lib/i18n/content-parity.ts`. It has a card preview (manifest row added) and is shown with its deck cover on the hub. The unit suite is **8576/8576** and the test typecheck is clean. Still open from step 5: the e2e specs (`tests/e2e/route-workshops-locales.spec.ts` needs the W04 route and materialCount; mobile WebKit shard capacity) and `SITE_CONTENT_DATE` / page inventory if bumped.
+- `bun run scan:public` still fails on W04 data only: `scripts/workshop04/w04-data.json` and `scripts/workshop04/data/w04-data.json` (two copies; keep one), `scripts/workshop04/data/build_dataset.py`, `scripts/workshop04/demo-app.js`, `public/workshops/esg-berichte-mit-ki/demo.html` and `lib/w04-data.js`. Cause: long mixed-case raw file paths such as `rohdaten_2025/Werk_Nord/...`. Shorten them in `build_dataset.py`, then rerun `build-deck.mjs`, `build-demo.mjs` and `kit-archive.mjs`, and update the kit zip's manifest row.
 - Build scripts for W04: `scripts/workshop04/` (`build_dataset.py`, `build-deck.mjs --check`, `build-demo.mjs --check`, `kit-archive.mjs --check`).
 
 ## Remaining plan, in order

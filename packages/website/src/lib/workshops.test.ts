@@ -72,12 +72,12 @@ describe("workshops catalog", () => {
 
   it("numbers workshops from data and follows one naming pattern in both locales", () => {
     const formats = {
-      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck"],
-      en: ["Self-study kit", "Self-study kit", "Live workshop with deck"],
+      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck", "Live-Workshop mit Deck"],
+      en: ["Self-study kit", "Self-study kit", "Live workshop with deck", "Live workshop with deck"],
     } as const;
     for (const locale of ["de", "en"] as const) {
       const workshops = getWorkshops(locale);
-      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03"]);
+      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03", "04"]);
       for (const [index, workshop] of workshops.entries()) {
         expect(workshop.eyebrow).toBe(
           `Workshop ${workshop.number} · ${workshop.topic}`,

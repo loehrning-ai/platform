@@ -33,7 +33,7 @@ const NEW_WORKSHOPS: ReadonlySet<WorkshopNumber> = new Set(["04"]);
  * (design-direction 10.4). Every other row renders the CSS mini-cover from
  * 6.7, so the list stays uniform until the other covers are regenerated.
  */
-const DECK_COVERS: ReadonlySet<WorkshopNumber> = new Set(["03"]);
+const DECK_COVERS: ReadonlySet<WorkshopNumber> = new Set(["03", "04"]);
 
 /**
  * The cover-band button is a recommendation, not "the newest": it stays on

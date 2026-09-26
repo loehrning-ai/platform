@@ -59,6 +59,7 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/ueber-mich",
   "/workshops",
   "/workshops/datenbereitschaft-fuer-ki",
+  "/workshops/esg-berichte-mit-ki",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/ki-prognosen-einschaetzen",
 ]);
