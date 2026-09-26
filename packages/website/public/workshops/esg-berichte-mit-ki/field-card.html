@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f0e9">
+<title>ESG Reporting with AI · Field card · loehrning.ai</title>
+<meta name="description" content="Workshop 04, ESG Reporting with AI: one printable A4 page with seven checks to run before you trust an ESG number, each with the case figure it comes from.">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preload" href="./assets/fonts/Typing-Static-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./lib/workshop-frame.css">
+<link rel="stylesheet" href="./lib/w04-pages.css">
+</head>
+<body class="wf-page">
+<a class="wf-skip" href="#main">Skip to content</a>
+<header class="wf-strip" data-wf-slug="esg-berichte-mit-ki">
+  <a class="wf-brand" href="/en/workshops"><img src="./assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
+  <nav class="wf-back" aria-label="Workshop page">
+    <a class="wf-back-main" href="/en/workshops/esg-berichte-mit-ki">← Back to workshop</a>
+    <a class="wf-back-alt" href="/workshops/esg-berichte-mit-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
+  </nav>
+  <nav class="wf-mats" aria-label="Workshop materials">
+    <a href="./slides.html"><span>01</span>Deck</a>
+    <a href="./demo.html"><span>02</span>Interactive demo</a>
+    <a href="./guide.html"><span>03</span>Learner guide</a>
+    <a href="./field-card.html" aria-current="page"><span>04</span>Field card</a>
+    <a href="./transfer.html"><span>05</span>Transfer sheet</a>
+    <a href="./esg-kit.zip" download><span>06</span>Kit</a>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1" class="pg sheet sheet--card">
+  <header class="sheet-mast">
+    <div>
+      <p class="wf-kicker">Workshop 04 · ESG Reporting with AI · Field card</p>
+      <h1 class="wf-h1">Before you trust an ESG number</h1>
+      <p class="wf-lead">Seven checks. Each one comes from Workshop 04.</p>
+    </div>
+    <div class="glyph" aria-hidden="true"><svg width="134" height="18" viewBox="0 0 134 18" aria-hidden="true" focusable="false"><rect x="1" y="8" width="9" height="9" fill="#121212"/><rect x="12" y="8" width="9" height="9" fill="#121212"/><rect x="23" y="8" width="9" height="9" fill="#b73a15"/><rect x="23" y="1" width="9" height="5" fill="#b73a15"/><rect x="34" y="8" width="9" height="9" fill="#121212"/><rect x="45" y="8" width="9" height="9" fill="#121212"/><rect x="56" y="8" width="9" height="9" fill="#121212"/><rect x="67" y="8" width="9" height="9" fill="#121212"/><rect x="78" y="8" width="9" height="9" fill="#121212"/><rect x="89" y="8" width="9" height="9" fill="#121212"/><rect x="100.5" y="8.5" width="8" height="8" fill="none" stroke="#121212" stroke-dasharray="2 1.5"/><rect x="111" y="8" width="9" height="9" fill="#121212"/><rect x="122" y="8" width="9" height="9" fill="#121212"/></svg></div>
+  </header>
+  <div class="sheet-tools no-print">
+    <button type="button" class="wf-btn wf-btn--primary" id="print-page">Print this card</button>
+    <p class="wf-small">Prints on one A4 page.</p>
+  </div>
+
+  <table class="fc">
+    <thead>
+      <tr><th scope="col" class="n">No.</th><th scope="col">Check</th><th scope="col">Do</th><th scope="col">Don't</th><th scope="col">From the case</th><th scope="col">Deck scene</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="n">1</td><th scope="row" class="chk">Months, not files</th><td data-label="Do">Fill a site × month grid before you add anything up.</td><td class="dont" data-label="Don't">Count files and call the year complete.</td><td class="case" data-label="From the case"><b>12 files, 11 months</b></td><td class="scene" data-label="Deck scene">Month grid</td></tr>
+      <tr><td class="n">2</td><th scope="row" class="chk">One bill once</th><td data-label="Do">Key = invoice no. + period + meter. Normalise look-alike characters first; fall back to period + meter + quantity.</td><td class="dont" data-label="Don't">Trust that a rescanned bill looks different.</td><td class="case" data-label="From the case">Duplicate March <b>+205,000 kWh</b></td><td class="scene" data-label="Deck scene">Month grid</td></tr>
+      <tr><td class="n">3</td><th scope="row" class="chk">Unit as printed</th><td data-label="Do">Keep value and unit as printed next to the kWh. Check kWh per employee and last year's value.</td><td class="dont" data-label="Don't">Convert in your head or in the prompt.</td><td class="case" data-label="From the case">“1.240 MWh” misread: <b>−495.5 t</b></td><td class="scene" data-label="Deck scene">One unit</td></tr>
+      <tr><td class="n">4</td><th scope="row" class="chk">Whose name is on it</th><td data-label="Do">Check the entity on the document against your written boundary. Keep excluded rows with a reason.</td><td class="dont" data-label="Don't">Include whatever is in your folder.</td><td class="case" data-label="From the case">Talbrück bill: <b>+400.0 t</b></td><td class="scene" data-label="Deck scene">Whose bill</td></tr>
+      <tr><td class="n">5</td><th scope="row" class="chk">Factor with ID, year, basis, edition</th><td data-label="Do">Pick from a pinned table. Match the gas basis (Hs or Hi) to the bill.</td><td class="dont" data-label="Don't">Let the AI supply a value.</td><td class="case" data-label="From the case">Last year's grid factor: <b>+72.2 t</b></td><td class="scene" data-label="Deck scene">Six rules</td></tr>
+      <tr><td class="n">6</td><th scope="row" class="chk">Two Scope 2 numbers</th><td data-label="Do">Report location-based and market-based. Certificate only for the kWh it covers; then supplier rate; then residual mix.</td><td class="dont" data-label="Don't">Turn one certificate into “green power”.</td><td class="case" data-label="From the case"><b>1,444.0 t</b> and <b>1,422.0 t</b>; 34.3% covered</td><td class="scene" data-label="Deck scene">Two Scope 2 numbers</td></tr>
+      <tr><td class="n">7</td><th scope="row" class="chk">Split the change</th><td data-label="Do">Name grid factor, certificates and own use; say which part is yours.</td><td class="dont" data-label="Don't">Write “efficiency” without production data.</td><td class="case" data-label="From the case"><b>−102.3 t</b>: 72.2 grid, 30.1 own use</td><td class="scene" data-label="Deck scene">What drove it</td></tr>
+    </tbody>
+  </table>
+
+  <ul class="fc-lines">
+    <li><b>Roles.</b> The reader quotes, the clerk applies rules in a spreadsheet, the writer cites rows. The AI may propose rules; a spreadsheet applies them, and a person approves the list.</li>
+    <li><b>Before you send:</b> control total <span class="tick" aria-hidden="true"></span><span class="visually-hidden">(tick box)</span> · what you did not check, written next to the number <span class="tick" aria-hidden="true"></span><span class="visually-hidden">(tick box)</span></li>
+  </ul>
+
+  <footer class="sheet-foot">
+    <p>Fictional case, teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
+  </footer>
+</main>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are teaching values, not official factors.</p></footer>
+<script src="./lib/w04-pages.js"></script>
+</body>
+</html>

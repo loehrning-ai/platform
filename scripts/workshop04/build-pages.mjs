@@ -156,8 +156,7 @@ function figMonths() {
   const head = MONTHS.map((m) => `<span>${m.slice(0, 1)}</span>`).join("");
   return `<figure class="fig" aria-labelledby="fig-months-cap">
   <div class="mg">
-    <div class="mg-row mg-row--head" aria-hidden="true"><span class="mg-lab"></span><span class="mg-cells">${head}</span></div>
-    <div class="mg-row"><span class="mg-lab">As the folder arrived<small>${esc(num("files_wn_electricity"))} files, Werk Nord electricity</small></span><span class="mg-cells" role="img" aria-label="As the folder arrived: ${dup} twice, ${gap} missing, November and December on one bill.">${monthStrip(raw, "raw")}</span></div>
+    <div class="mg-row"><span class="mg-lab">As the folder arrived<small>${esc(num("files_wn_electricity"))} files, Werk Nord electricity</small></span><span class="mg-wrap"><span class="mg-mon" aria-hidden="true">${head}</span><span class="mg-cells" role="img" aria-label="As the folder arrived: ${dup} twice, ${gap} missing, November and December on one bill.">${monthStrip(raw, "raw")}</span></span></div>
     <div class="mg-row"><span class="mg-lab">In the ledger<small>one row per bill, October from the meter</small></span><span class="mg-cells" role="img" aria-label="In the ledger: every month once, October from the meter readings, November and December on one bill.">${monthStrip(exp, "ledger")}</span></div>
   </div>
   <p class="fig-sum"><span class="mono">+${esc(num("dup_kwh"))} − ${esc(num("oct_kwh"))} = ${esc(num("wn_net_raw_vs_right_kwh"))}</span><span>the duplicate March bill minus the missing October</span></p>
@@ -270,20 +269,23 @@ function figControl() {
 }
 
 function figDot() {
-  // One printed line from the Werk Süd statement, drawn at a fixed monospace advance so the dot can be marked.
+  // One printed line from the Werk Süd statement. The dot is its own tspan in Mennige, so it is
+  // marked exactly whatever the font; the underline below it uses the monospace advance.
   const line = data.inputs.ws.printed;            // "1.240 MWh"
   const prefix = "Verbrauch 2025: ";
   const full = prefix + line;
-  const adv = 10.2, x0 = 16, size = 17;
   const dotIndex = full.indexOf(".");
-  const width = Math.ceil(x0 * 2 + full.length * adv);
-  const cx = x0 + dotIndex * adv + adv / 2;
+  const size = 17, adv = size * 0.6, x0 = 16;
+  const file = `${data.traceTwo[0].file} · page ${data.ledger.find((r) => r.row_id === "E-WS-01").source_page}`;
+  if (data.traceTwo[0].quote !== full) fail("dot figure: the quote differs from the printed line");
+  const width = Math.ceil(x0 * 2 + Math.max(full.length * adv, file.length * 12 * 0.6));
+  const ux = x0 + dotIndex * adv;
   return `<figure class="fig fig-dot" aria-labelledby="fig-dot-cap">
-  <svg class="dot-svg" viewBox="0 0 ${width} 78" width="${width}" height="78" role="img" aria-label="The printed line reads ${esc(full)}. The dot after the 1 is marked: on a German document it separates thousands.">
-    <rect x="0.5" y="0.5" width="${width - 1}" height="77" class="dot-paper"/>
-    <text x="${x0}" y="22" class="dot-file">Jahresuebersicht_2025_Oekostrom.md · page 1</text>
-    <text x="${x0}" y="55" class="dot-line" textLength="${(full.length * adv).toFixed(1)}" lengthAdjust="spacing" font-size="${size}">${esc(full)}</text>
-    <rect x="${(cx - 9).toFixed(1)}" y="36" width="18" height="26" class="dot-mark"/>
+  <svg class="dot-svg" viewBox="0 0 ${width} 84" width="${width}" height="84" role="img" aria-label="The printed line reads ${esc(full)}. The dot after the 1 is marked: on a German document it separates thousands.">
+    <rect x="0.5" y="0.5" width="${width - 1}" height="83" class="dot-paper"/>
+    <text x="${x0}" y="24" class="dot-file">${esc(file)}</text>
+    <text x="${x0}" y="58" class="dot-line" font-size="${size}">${esc(full.slice(0, dotIndex))}<tspan class="dot-hit">.</tspan>${esc(full.slice(dotIndex + 1))}</text>
+    <rect x="${(ux - 1).toFixed(1)}" y="66" width="${(adv + 2).toFixed(1)}" height="3" class="dot-under"/>
   </svg>
   <dl class="dot-read">
     <div><dt>Dot separates thousands</dt><dd><span class="mono">${esc(num("el_ws_kwh"))}</span> · ${esc(num("ws_kwh_per_employee"))} per employee</dd></div>
@@ -346,12 +348,12 @@ const ALLOWED_PHRASES = [
   // study figures (SPEC §4 §13, §10 sources)
   "ESGReveal, GPT-4, 2023: 76.9%", "ESG Insight, DeepSeek, 2026: 78.2%",
   // durations and course facts
-  "about 25 minutes", "optional, 20 minutes", "5 minutes plus an optional 30-minute stretch", "After 90 minutes",
+  "about 25 minutes", "Optional, 20 minutes", "5 minutes plus an optional 30-minute stretch", "After 90 minutes",
   // unit rule (a definition, not a value)
-  "MWh × 1,000", "Workshop 04", "Scope 1 + 2",
+  "MWh × 1,000", "Workshop 04", "one A4 page", "Scope 1 + 2", "Scope 1 and 2",
 ];
 const ALLOWED_TOKEN = [/^20\d\d$/];                  // years
-const ALLOWED_AFTER = /(Scope|prompt|Prompt|Scope-)\s?$/;  // "Scope 1", "prompt 01"
+const ALLOWED_AFTER = /(Scope|prompt|Prompt|page)\s$/;  // "Scope 1", "prompt 01", "page 2"
 
 function auditTemplate(name, tpl) {
   let text = tpl
@@ -378,7 +380,7 @@ function render(name, tpl) {
   auditTemplate(name, tpl);
   let sec = 0;
   let html = tpl.replace(/\{\{([a-z]+):?([^}]*)\}\}/g, (all, kind, rest) => {
-    const [a, b = ""] = rest.split(/:(?=[a-z]+$)/);
+    const [a, b = ""] = rest.split(/:(?=[a-z][a-z0-9]*$)/);
     switch (kind) {
       case "n": return esc(num(a, b));
       case "j": return esc(j(a, b));
@@ -395,7 +397,7 @@ function render(name, tpl) {
     html = html.split("{{toc}}").join(`<ol>${list}</ol>`).replace("{{toccount}}", String(items.length));
   }
   // output checks
-  if (/[–—]/.test(html)) fail(`${name}: en or em dash in output`);
+  if (/[\u2013\u2014]/.test(html)) fail(`${name}: en or em dash in output`);
   if (/\son[a-z]+\s*=/i.test(html.replace(/<script[\s\S]*?<\/script>/g, ""))) fail(`${name}: inline event handler attribute`);
   if (/\b(fetch|localStorage|innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval)\b/.test(html)) fail(`${name}: forbidden sink`);
   if (/<iframe/i.test(html)) fail(`${name}: iframe`);
@@ -403,7 +405,7 @@ function render(name, tpl) {
   for (const [tok] of html.matchAll(/[A-Za-z0-9_+/=-]{40,}/g)) if (/[a-z]/.test(tok) && /[A-Z]/.test(tok)) fail(`${name}: mixed-case token of 40+ chars: ${tok.slice(0, 50)}`);
   if (/\{\{|\?\?[a-z_.]+\?\?/.test(html)) fail(`${name}: unresolved placeholder`);
   for (const [, href] of html.matchAll(/(?:href|src)="\.\/([^"#?]+)"/g)) {
-    if (!existsSync(join(outDir, href)) && href !== "esg-kit.zip") fail(`${name}: local reference missing: ${href}`);
+    if (!existsSync(join(outDir, href)) && href !== "esg-kit.zip" && !["guide.html", "field-card.html", "transfer.html"].includes(href)) fail(`${name}: local reference missing: ${href}`);
   }
   return html;
 }

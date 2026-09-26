@@ -665,5 +665,589 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": [
       "appendix-scope2-order"
     ]
+  },
+  "rematch": {
+    "purpose": "Ask the same question on the ledger: every figure names its rows, both Scope 2 methods, and what was not checked.",
+    "mode": "listen",
+    "clock": {
+      "start": "44:00",
+      "end": "48:00",
+      "budget_seconds": 240
+    },
+    "say": [
+      "Same question, same model. This time every figure names its rows, the meter reading is labelled as one, both Scope 2 numbers use the right method, and the answer says what it did not check.",
+      "On press 3: the total moved by 48.7 tonnes. More important, every tonne now has a row and a page behind it.",
+      "If the answer is still the constructed target: say so. 'This is the answer we expect; the recorded runs are in appendix A3.'"
+    ],
+    "sayAt": {
+      "0": [
+        1
+      ],
+      "1": [
+        3
+      ],
+      "2": [
+        1
+      ]
+    },
+    "ask": [
+      {
+        "at": 1,
+        "text": "Which number in this answer would you check first?",
+        "aloud": true
+      }
+    ],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Question card, unchanged stamp",
+      "Answer with row IDs and label",
+      "Recalculation check",
+      "Side-by-side table",
+      "Known gap (placeholder until capture)"
+    ],
+    "cut": "Skip the side-by-side table.",
+    "appendixRoutes": [
+      "appendix-arithmetic",
+      "appendix-run-record"
+    ]
+  },
+  "trace-two": {
+    "purpose": "Pairs trace three figures back to paper: worked, half done, alone.",
+    "mode": "pair",
+    "clock": {
+      "start": "48:00",
+      "end": "54:00",
+      "budget_seconds": 360
+    },
+    "say": [
+      "Work in pairs, on paper, no tools. The first figure is done, the second is half done, the third is yours. Four minutes.",
+      "Presenter cue: walk the room at minute two; point stuck pairs to page 2 of the gas bill.",
+      "On press 2: compare. On press 3: two slips, and one other route that is also right.",
+      "This is what a customer's auditor does with your page: pick a number, ask for the rows, pick a row, ask for the paper."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        1
+      ],
+      "2": [
+        2
+      ],
+      "3": [
+        3
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [
+      "Common slips: 418.0 t for gas (Hi factor); 3,650,000 kWh for the grid bar. Add real shares only after the O3 test runs."
+    ],
+    "revealOrder": [
+      "Worksheet with three figures",
+      "Timer running",
+      "Expected answers",
+      "If yours differs"
+    ],
+    "cut": "Do figures 1 and 2 only; show figure 3's answer.",
+    "appendixRoutes": []
+  },
+  "what-drove-it": {
+    "purpose": "Split the change against 2024 into drivers, per method, and rewrite the AI's reason from the driver lines.",
+    "mode": "vote",
+    "clock": {
+      "start": "54:00",
+      "end": "59:30",
+      "budget_seconds": 330
+    },
+    "say": [
+      "On press 2: in this case's teaching values, 71% of the location-based decrease is the lower grid factor. It is real, and it is not Kellbrunn's doing.",
+      "On press 3: the market-based decrease is almost all the certificate for Werk Süd: 95%.",
+      "Kellbrunn's own lower use is 30.1 t location-based, and without production figures nobody can call that efficiency yet.",
+      "On press 4: read the sentence. Every number in it has a driver line behind it.",
+      "If someone quotes a fall of about 39.4% since 2023: appendix A6."
+    ],
+    "sayAt": {
+      "0": [
+        2
+      ],
+      "1": [
+        3
+      ],
+      "2": [
+        3
+      ],
+      "3": [
+        4
+      ],
+      "4": [
+        4
+      ]
+    },
+    "ask": [
+      {
+        "at": 1,
+        "text": "What made location-based emissions fall 102.3 t?",
+        "options": [
+          "Our efficiency measures",
+          "A lower grid factor",
+          "We produced less"
+        ],
+        "expected": "Most pick efficiency."
+      }
+    ],
+    "expectedAudience": [
+      "Most pick efficiency, which is the AI's claim."
+    ],
+    "revealOrder": [
+      "Two bridges with both totals, and the struck AI sentence",
+      "Room vote",
+      "Location-based bridge",
+      "Market-based bridge and caption",
+      "Rewritten sentence"
+    ],
+    "cut": "Skip the market-based bridge; say the 744.0 t in one sentence.",
+    "appendixRoutes": [
+      "appendix-baseline",
+      "appendix-arithmetic"
+    ]
+  },
+  "ask-back": {
+    "purpose": "Sort five requests: calculate what the ledger supports, ask back where a person decides, refuse or rewrite claims the evidence cannot carry.",
+    "mode": "do",
+    "clock": {
+      "start": "59:30",
+      "end": "64:00",
+      "budget_seconds": 270
+    },
+    "say": [
+      "A useful assistant does three different things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
+      "On card 4: refuse it because nothing in the ledger supports it. Since 27 September 2026, Directive 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG).",
+      "Must say: Not legal advice. Check the German transposition.",
+      "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number."
+    ],
+    "sayAt": {
+      "0": [
+        1
+      ],
+      "1": [
+        4
+      ],
+      "2": [
+        4
+      ],
+      "3": [
+        5
+      ]
+    },
+    "ask": [
+      {
+        "at": 1,
+        "text": "Sort the five requests: calculate, ask back, refuse or rewrite.",
+        "aloud": true
+      }
+    ],
+    "expectedAudience": [
+      "Card 3 is often put under Calculate; answer: rewrite with the share and the site.",
+      "Card 5 splits the room."
+    ],
+    "revealOrder": [
+      "Three empty columns",
+      "Five unsorted cards",
+      "Calculate column",
+      "Ask back column",
+      "Refuse or rewrite column",
+      "Target ask-back answer"
+    ],
+    "cut": "Use cards 1, 3 and 4 only.",
+    "appendixRoutes": [
+      "appendix-claims",
+      "appendix-regulation",
+      "appendix-baseline"
+    ]
+  },
+  "limits": {
+    "purpose": "Say in plain words what the session does not show.",
+    "mode": "listen",
+    "clock": {
+      "start": "64:00",
+      "end": "66:30",
+      "budget_seconds": 150
+    },
+    "say": [
+      "Today does not show that any tool gets this right or wrong in general.",
+      "On press 3: the ledger lets you check a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
+      "Must say: Not legal or audit advice."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        2
+      ],
+      "2": [
+        4
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Row 1",
+      "Row 2",
+      "Row 3",
+      "Row 4",
+      "Row 5"
+    ],
+    "cut": "Read rows 1, 3 and 5.",
+    "appendixRoutes": [
+      "appendix-regulation",
+      "appendix-run-record"
+    ]
+  },
+  "your-bill": {
+    "purpose": "Each person fills the five boxes for one bill of their own, then compares with a partner.",
+    "mode": "write",
+    "clock": {
+      "start": "66:30",
+      "end": "73:30",
+      "budget_seconds": 420
+    },
+    "say": [
+      "Must say: No company data goes into any tool today.",
+      "Take one bill you know from work, or invent a realistic one. Fill the five boxes: where it comes from, which period, which unit, whether it is inside your boundary, and which factor with which year.",
+      "On press 6: tell your neighbour which box was hardest. Two pairs share with the room."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        1
+      ],
+      "2": [
+        6
+      ]
+    },
+    "ask": [
+      {
+        "at": 6,
+        "text": "Which box was hardest?",
+        "aloud": true
+      }
+    ],
+    "expectedAudience": [
+      "Boundary and factor are the usual hardest boxes."
+    ],
+    "revealOrder": [
+      "Sheet with example",
+      "Box 1 Source",
+      "Box 2 Period",
+      "Box 3 Unit",
+      "Box 4 Boundary",
+      "Box 5 Factor",
+      "Pair share"
+    ],
+    "cut": "Pairs only, no room sharing.",
+    "appendixRoutes": []
+  },
+  "resolution": {
+    "purpose": "Close the loop: both answers, the number ladder, the same vote as at the start, four questions to take home.",
+    "mode": "vote",
+    "clock": {
+      "start": "73:30",
+      "end": "76:30",
+      "budget_seconds": 180
+    },
+    "say": [
+      "At the start many of you would have sent the first number. It was close to right, and its explanation was wrong.",
+      "On press 2: read the ladder. The change moved 2.4 points, from −7.5% to −5.1%. The explanation moved from 'efficiency' to 'mostly the grid factor'.",
+      "On press 3: same vote as at the start.",
+      "On press 4: four questions for any AI tool you are offered. Then point to the materials link and stop talking."
+    ],
+    "sayAt": {
+      "0": [
+        1
+      ],
+      "1": [
+        2
+      ],
+      "2": [
+        3
+      ],
+      "3": [
+        4
+      ]
+    },
+    "ask": [
+      {
+        "at": 3,
+        "text": "Send the raw-folder answer to the bank now?",
+        "options": [
+          "Send",
+          "Ask back first",
+          "Refuse"
+        ],
+        "expected": "Almost no one sends."
+      }
+    ],
+    "expectedAudience": [
+      "Compare with the hands at scene 6."
+    ],
+    "revealOrder": [
+      "Question card",
+      "Both answers side by side",
+      "Number ladder",
+      "Callback vote",
+      "Four questions and the materials link"
+    ],
+    "cut": "Skip the ladder; do the vote.",
+    "appendixRoutes": []
+  },
+  "appendix-arithmetic": {
+    "purpose": "Every line of the case arithmetic, for questions like 'where does 1,422 come from?'.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Point to the line that answers the question; every figure here is also in the kit file erwartet/ergebnisse_2025.md.",
+      "Totals are computed from unrounded values and rounded once. The location-based shares are rounded one by one, which is why only the top three are shown."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-factors": {
+    "purpose": "Where real factors come from, and what to record about each one.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "The case uses teaching values so everyone can check the arithmetic. None of them is an official factor.",
+      "For a real inventory, record source, edition, year, region, basis and licence for every factor, and check the licence before you paste values into an external tool.",
+      "The UBA values come from search summaries read on 26 September 2026, and UBA revises earlier years; re-check them before quoting."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ],
+      "2": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-run-record": {
+    "purpose": "How the two answers were produced, and what is still missing.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Both answers on the slides are constructed. The raw-folder answer shows what happens when all six traps fire; it is not a recorded run.",
+      "Before publication both conditions are run five times each with the protocol in the kit, and this table is filled from the runs."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-regulation": {
+    "purpose": "What is true about the rules on 26 September 2026, with the items that need a check before the session.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Read the date first: this page is the state of 26 September 2026.",
+      "Do not claim that Germany has, or has not, finished transposing the CSRD, or how the German UWG amendment reads in detail.",
+      "Do not claim that AI output, or this ledger, is audit-ready or produces a compliant report.",
+      "Do not claim that the teaching factors or any factor quoted from memory are official values, or that new Scope 2 rules already apply.",
+      "Must say: Not legal advice. Check the German transposition."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ],
+      "2": [
+        0
+      ],
+      "3": [
+        0
+      ],
+      "4": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-claims": {
+    "purpose": "Each sentence of the raw-folder answer against the evidence.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Two of the six sentences are false, not only imprecise: the green electricity claim and the rise in Scope 1.",
+      "The per-employee figure looked like a check, but it was computed from the same wrong total."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-baseline": {
+    "purpose": "A separate teaching variant: restating the base year after a divestment.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "This variant does not connect to the 2024 comparison in the main case.",
+      "Lead with the restated base year and the like-for-like change. The unrestated figure only shows what the comparison would wrongly claim."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-steel": {
+    "purpose": "Scope 3 from a supplier's reply: which of the three numbers to use.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Only the product footprint describes the steel Kellbrunn bought. The supplier's own Scope 1 and 2 intensity leaves out most of the steel's footprint.",
+      "Spend-based figures move with prices: the tonnage stayed flat while the nominal spend rose."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-scope2-order": {
+    "purpose": "The market-based order: which rate applies to which kilowatt hour.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "Certificates first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
+      "The kit's bills leave out the Stromkennzeichnung, so step 2 is empty in this case. Real bills carry it."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ],
+      "1": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
+  },
+  "appendix-sources": {
+    "purpose": "The sources behind the rules, dates and published figures in this workshop.",
+    "mode": "listen",
+    "clock": {
+      "budget_seconds": 0
+    },
+    "say": [
+      "All links were read on 26 September 2026. Items marked secondary or unverified on the rules page need a check before the session."
+    ],
+    "sayAt": {
+      "0": [
+        0
+      ]
+    },
+    "ask": [],
+    "expectedAudience": [],
+    "revealOrder": [
+      "Whole scene"
+    ],
+    "cut": "Appendix; show on request.",
+    "appendixRoutes": []
   }
 });

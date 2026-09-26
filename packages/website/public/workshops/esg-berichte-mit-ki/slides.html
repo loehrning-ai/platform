@@ -24,7 +24,14 @@
   <link rel="stylesheet" href="./lib/scenes/the-ledger.css" />
   <link rel="stylesheet" href="./lib/scenes/six-rules.css" />
   <link rel="stylesheet" href="./lib/scenes/two-scope-2.css" />
-  <!-- act 4 onward: add each scene stylesheet here, in scene order -->
+  <link rel="stylesheet" href="./lib/scenes/rematch.css" />
+  <link rel="stylesheet" href="./lib/scenes/trace-two.css" />
+  <link rel="stylesheet" href="./lib/scenes/what-drove-it.css" />
+  <link rel="stylesheet" href="./lib/scenes/ask-back.css" />
+  <link rel="stylesheet" href="./lib/scenes/limits.css" />
+  <link rel="stylesheet" href="./lib/scenes/your-bill.css" />
+  <link rel="stylesheet" href="./lib/scenes/resolution.css" />
+  <link rel="stylesheet" href="./lib/scenes/appendix.css" />
   <script src="./lib/deck-stage.js"></script>
 </head>
 <body>
@@ -482,11 +489,539 @@
     </div>
   </section>
 
-  <!-- ================================================================ ACT 4 BEGINS HERE · Ask again
-       Main path continues with rematch, trace-two and what-drove-it (act 4, data-act="4"), then acts 5
-       and 6, then the appendix scenes (data-kind="appendix", data-seconds="0"). Bind every number with
-       data-num / data-j, add the scene stylesheet link in <head>, add the notes in
-       scripts/workshop04/notes/, and run node scripts/workshop04/build-deck.mjs. -->
+  <!-- ================================================================ ACT 4 · Ask again -->
+
+  <section class="slide" id="rematch" data-act="4" data-kind="main" data-label="Rematch" data-section="Ask again · the same question on the ledger" data-seconds="240" data-mode="listen" data-note-key="rematch" data-note="Same question, same model, now on the ledger. Every figure names its rows, the meter reading is labelled, both Scope 2 numbers use the right method, and the answer says what it did not check." data-route="shown">
+    <h1 class="scene-title" id="rematch-title">The same question on the ledger</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="q-card is-unchanged rm-question" id="rematch-question" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+      <span class="q-card__stamp">Unchanged</span>
+    </div>
+    <article class="ev-run rm-answer" id="rematch-answer" data-step="1" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>AI answer · ledger, coverage grid, six rules</span></div>
+      <p class="w-label rm-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <div class="rm-text">
+        <p>Scope 1 2025: <b><span class="num" data-num="s1_2025">471.2 t</span></b> CO₂e <span class="rm-rows rm-rows--line">G-WN-01, G-WS-01, D-FL-01</span></p>
+        <p>Scope 2 location-based: <b><span class="num" data-num="s2lb_2025">1,444.0 t</span></b> <span class="rm-rows rm-rows--line">E-WN-01 to E-WN-11, E-WS-01, E-LO-Q1 to Q4 · F-EL-LB-2025</span></p>
+        <p>Scope 2 market-based: <b><span class="num" data-num="s2mb_2025">1,422.0 t</span></b> <span class="rm-rows rm-rows--line">Werk Süd at 0 under I-WS-GO · <span class="num" data-num="el_uncovered_kwh">2,370,000 kWh</span> at F-EL-RM-2025</span></p>
+        <p class="rm-total">Scope 1 + 2: <b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b> location-based, <span class="num" data-num="chg_lb_pct" data-form="abs">5.1%</span> below 2024 (<span class="num" data-num="total_lb_2024">2,017.5 t</span>); <b><span class="num" data-num="total_mb_2025">1,893.2 t</span></b> market-based, <span class="num" data-num="chg_mb_pct" data-form="abs">29.2%</span> below 2024 (<span class="num" data-num="total_mb_2024">2,674.5 t</span>).</p>
+        <p>One row is a meter reading: <span class="rm-rows">E-WN-10, grade B</span>. Excluded: <span class="rm-rows">E-WN-03D</span> duplicate, <span class="rm-rows">E-TB-01</span> boundary, <span class="rm-rows">D-FL-02</span> not a fuel.</p>
+        <p class="rm-unchecked">Not checked: Scope 1 sources without documents in the folder (refrigerants, forklifts, generator).</p>
+      </div>
+    </article>
+    <div class="check rm-check" id="rematch-check" data-step="2" data-motion="rise">
+      <p class="check__head"><svg class="icon" aria-hidden="true"><use href="#i-table" /></svg>Recalculated in the spreadsheet</p>
+      <ul class="rm-check__list">
+        <li><span>Scope 2 location-based</span><b><span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:1"><use href="#i-pass" /></svg></li>
+        <li><span>Scope 2 market-based</span><b><span class="num" data-num="s2mb_2025" data-form="bare">1,422.0</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:2"><use href="#i-pass" /></svg></li>
+        <li><span>Scope 1</span><b><span class="num" data-num="s1_2025" data-form="bare">471.2</span></b><svg class="icon icon--32" aria-hidden="true" data-motion="stamp" style="--order:3"><use href="#i-pass" /></svg></li>
+      </ul>
+    </div>
+    <table class="rm-compare" id="rematch-compare" data-step="3" data-motion="rise">
+      <thead><tr><th></th><th>Scope 1 + 2</th><th>vs 2024</th></tr></thead>
+      <tbody>
+        <tr class="rm-compare__raw"><td><span class="rm-swatch rm-swatch--raw" aria-hidden="true"></span>Raw folder</td><td><span class="num" data-num="wrong_total_lb">1,866.5 t</span></td><td><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span></td></tr>
+        <tr><td><span class="rm-swatch rm-swatch--ink" aria-hidden="true"></span>Ledger, location-based</td><td><b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b></td><td><b><span class="num" data-num="chg_lb_pct">−5.1%</span></b></td></tr>
+        <tr><td><span class="rm-swatch rm-swatch--ink" aria-hidden="true"></span>Ledger, market-based</td><td><b><span class="num" data-num="total_mb_2025">1,893.2 t</span></b></td><td><b><span class="num" data-num="chg_mb_pct">−29.2%</span></b></td></tr>
+      </tbody>
+    </table>
+    <p class="rm-gap" id="rematch-gap" data-step="4" data-motion="rise"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span><b>Known gap</b> · written from the recorded run once it is captured. Until then the protocol and the planned runs are in appendix A3.</span></p>
+  </section>
+
+  <section class="slide" id="trace-two" data-act="4" data-kind="main" data-label="Trace three figures" data-section="Ask again · trace three figures to paper" data-seconds="360" data-recovery-seconds="120" data-mode="pair" data-note-key="trace-two" data-note="Pairs, paper, no tools, four minutes. Figure 1 is worked, figure 2 half done, figure 3 is theirs. Then the answers and the usual slips." data-route="shown">
+    <h1 class="scene-title" id="trace-two-title">Trace three figures to paper</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <p class="tt-task" id="trace-two-task" data-motion="fade"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>In pairs, on paper, no tools. For each figure: rows, file, quote, factor, arithmetic.</span></p>
+    <p class="stamp tt-timer" id="trace-two-timer" data-step="1" data-step-until="2" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg><span>4 minutes</span></p>
+    <ol class="tt-cards" id="trace-two-cards">
+      <li class="tt-card" id="trace-two-card-1" data-motion="rise" style="--order:0">
+        <p class="tt-card__head"><span class="tt-card__n">1</span><span class="tt-card__mode">Worked</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="ws_lb_2025">496.0 t</span><span class="tt-card__what">Werk Süd electricity, location-based</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd class="w-mono" data-j="traceTwo.0.rows.0">E-WS-01</dd></div>
+          <div><dt>File</dt><dd class="w-mono tt-files" data-j="traceTwo.0.file">Jahresuebersicht_2025_Oekostrom.md</dd></div>
+          <div><dt>Quote</dt><dd>“<span data-j="traceTwo.0.quote">Verbrauch 2025: 1.240 MWh</span>”</dd></div>
+          <div><dt>Factor</dt><dd class="w-mono" data-j="traceTwo.0.factor">F-EL-LB-2025</dd></div>
+          <div class="tt-math"><dt>Arithmetic</dt><dd data-j="traceTwo.0.arithmetic_en" data-form="math">1,240 MWh × 1,000 = 1,240,000 kWh; × 0.40 kg/kWh = 496,000 kg = 496.0 t</dd></div>
+        </dl>
+      </li>
+      <li class="tt-card" id="trace-two-card-2" data-motion="rise" style="--order:1">
+        <p class="tt-card__head"><span class="tt-card__n">2</span><span class="tt-card__mode">Half done</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="s1_gas_2025">376.2 t</span><span class="tt-card__what">Scope 1 gas, both sites</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd><span class="w-mono" data-j="traceTwo.1.rows.0">G-WN-01</span>, <span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade" data-j="traceTwo.1.rows.1">G-WS-01</span></dd></div>
+          <div><dt>Files</dt><dd class="w-mono tt-files">Gas_Jahresrechnung_WN_2025.md<br />Gas_Jahresrechnung_WS_2025.md</dd></div>
+          <div><dt>Quote</dt><dd>“<span data-j="traceTwo.1.quote">Energiemenge 1.850.000 kWh / 240.000 kWh; Seite 2: Brennwert (Hs)</span>”</dd></div>
+          <div><dt>Factor</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade"><span class="w-mono" data-j="traceTwo.1.factor">F-GAS-HS</span>, basis Hs, page 2</span></dd></div>
+          <div class="tt-math"><dt>Arithmetic</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade" data-j="traceTwo.1.arithmetic_en" data-form="math">(1,850,000 + 240,000) kWh(Hs) × 0.18 = 376.2 t</span></dd></div>
+        </dl>
+      </li>
+      <li class="tt-card" id="trace-two-card-3" data-motion="rise" style="--order:2">
+        <p class="tt-card__head"><span class="tt-card__n">3</span><span class="tt-card__mode">Your turn</span></p>
+        <p class="tt-card__fig"><span class="num" data-num="drv_lb_grid_t">−72.2 t</span><span class="tt-card__what">Grid factor bar, location-based</span></p>
+        <dl>
+          <div><dt>Rows</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade"><span data-j="traceTwo.2.rows.0">E-WN-01 to E-WN-11</span>, <span data-j="traceTwo.2.rows.1">E-WS-01</span>, <span data-j="traceTwo.2.rows.2">E-LO-Q1 to E-LO-Q4</span></span></dd></div>
+          <div><dt>Factors</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill w-mono" data-step="2" data-motion="fade" data-j="traceTwo.2.factor">F-EL-LB-2025 and F-EL-LB-2024</span></dd></div>
+          <div class="tt-math"><dt>Arithmetic</dt><dd><span class="tt-blank" data-step-until="2">?</span><span class="tt-fill" data-step="2" data-motion="fade" data-j="traceTwo.2.arithmetic_en" data-form="math">3,610,000 kWh × (0.40 − 0.42) = −72,200 kg = −72.2 t</span></dd></div>
+        </dl>
+      </li>
+    </ol>
+    <div class="tt-differs" id="trace-two-differs" data-step="3" data-motion="rise">
+      <p class="tt-differs__head">If yours differs</p>
+      <div class="tt-slip" data-motion="rise" style="--order:0"><b><span class="num" data-num="wrong_s1_gas">418.0 t</span>?</b><span>You used 0.20 (Hi) on Hs kWh. Page 2 says Brennwert (Hs).</span></div>
+      <div class="tt-slip tt-slip--ok" data-motion="rise" style="--order:1"><b><span class="num" data-num="gas_hi_route_t">376.6 t</span>?</b><span>You converted to Hi first with 1.11. That is also right; the <span class="num" data-num="gas_hi_route_diff_t">0.4 t</span> is the rounding of the teaching value 0.18.</span></div>
+      <div class="tt-slip" data-motion="rise" style="--order:2"><b><span class="num" data-num="trace_slip_grid_t">−73.0 t</span>?</b><span>You used 2024 kWh. The factor effect uses 2025 consumption.</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="what-drove-it" data-act="4" data-kind="main" data-label="What drove it" data-section="Ask again · what made the number go down" data-seconds="330" data-mode="vote" data-note-key="what-drove-it" data-note="Vote first. Location-based: most of the fall is the grid factor. Market-based: almost all of it is the certificate. Own lower use is about 30 t, and nobody can call it efficiency without production figures." data-route="shown">
+    <h1 class="scene-title" id="what-drove-it-title">What made the number go down?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <p class="wd-claim" id="what-drove-it-claim" data-motion="fade"><span class="wd-claim__who">The AI's reason</span><span class="wd-claim__text">“The reduction comes mainly from efficiency measures at Werk Nord.”<svg class="wd-strike" width="100%" height="12" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 100 12"><line x1="0" y1="6" x2="100" y2="6" /></svg></span></p>
+    <div class="wd-chart wd-chart--lb" id="what-drove-it-lb-wrap">
+      <p class="wd-chart__head">Location-based · fell <span class="num" data-num="chg_lb_t" data-form="absunit">102.3 t</span></p>
+      <!-- gen:drivers method=lb step=2 --><svg class="dv" id="what-drove-it-lb" viewBox="0 0 820 356" width="820" height="356" role="img" aria-label="Location-based Scope 1 and 2, 2024 to 2025: one bar per driver."><g class="dv-frame"><path class="dv-axis" d="M4 284H804" /><path class="dv-break" d="M-2 294l10 -20M8 294l10 -20" /><rect class="dv-bar dv-bar--prior" x="22" y="70.1" width="92" height="213.9" /><text class="dv-val" x="68" y="56.1" text-anchor="middle" data-num="total_lb_2024" data-form="bare">2,017.5</text><rect class="dv-bar dv-bar--now" x="702" y="218.5" width="92" height="65.5" /><text class="dv-val" x="748" y="204.5" text-anchor="middle" data-num="total_lb_2025" data-form="bare">1,915.2</text><text class="dv-name" x="68" y="318" text-anchor="middle">2024</text><text class="dv-name" x="204" y="318" text-anchor="middle">Grid</text><text class="dv-name dv-name--sub" x="204" y="344" text-anchor="middle">factor</text><text class="dv-name" x="340" y="318" text-anchor="middle">Less</text><text class="dv-name dv-name--sub" x="340" y="344" text-anchor="middle">electricity</text><text class="dv-name" x="476" y="318" text-anchor="middle">Less</text><text class="dv-name dv-name--sub" x="476" y="344" text-anchor="middle">gas</text><text class="dv-name" x="612" y="318" text-anchor="middle">Less</text><text class="dv-name dv-name--sub" x="612" y="344" text-anchor="middle">diesel</text><text class="dv-name" x="748" y="318" text-anchor="middle">2025</text></g><g class="dv-changes" data-step="2"><path class="dv-link" d="M114 70.1H158" data-motion="draw" style="--order:0" /><rect class="dv-bar dv-bar--change dv-bar--lead" x="158" y="70.1" width="92" height="104.7" data-motion="grow" style="--grow-origin: 50% 0%; --order:0" /><text class="dv-val dv-val--change" x="204" y="206.8" text-anchor="middle" data-num="drv_lb_grid_t" data-form="bare" data-motion="fade" style="--order:0">−72.2</text><path class="dv-link" d="M250 174.8H294" data-motion="draw" style="--order:1" /><rect class="dv-bar dv-bar--change" x="294" y="174.8" width="92" height="24.4" data-motion="grow" style="--grow-origin: 50% 0%; --order:1" /><text class="dv-val dv-val--change" x="340" y="231.2" text-anchor="middle" data-num="drv_lb_elec_t" data-form="bare" data-motion="fade" style="--order:1">−16.8</text><path class="dv-link" d="M386 199.2H430" data-motion="draw" style="--order:2" /><rect class="dv-bar dv-bar--change" x="430" y="199.2" width="92" height="15.7" data-motion="grow" style="--grow-origin: 50% 0%; --order:2" /><text class="dv-val dv-val--change" x="476" y="246.8" text-anchor="middle" data-num="drv_lb_gas_t" data-form="bare" data-motion="fade" style="--order:2">−10.8</text><path class="dv-link" d="M522 214.8H566" data-motion="draw" style="--order:3" /><rect class="dv-bar dv-bar--change" x="566" y="214.8" width="92" height="3.6" data-motion="grow" style="--grow-origin: 50% 0%; --order:3" /><text class="dv-val dv-val--change" x="612" y="250.5" text-anchor="middle" data-num="drv_lb_diesel_t" data-form="bare" data-motion="fade" style="--order:3">−2.5</text><path class="dv-link" d="M658 218.5H702" data-motion="draw" style="--order:4" /><g class="dv-own"><path class="dv-own__bracket" d="M288 76.1V62.1H664V76.1" data-motion="draw" style="--order:4" /><text class="dv-own__label" x="476" y="48.1" text-anchor="middle" data-motion="fade" style="--order:4">own use <tspan class="dv-own__num" data-num="drv_lb_own_t">−30.1 t</tspan></text></g></g></svg><!-- /gen:drivers -->
+      <p class="wd-share wd-share--lb" data-step="2" data-motion="fade"><b><span class="num" data-num="drv_lb_grid_share_pct">71%</span></b> of the location-based decrease is the lower grid factor. No production volumes in the folder: “used less” is supported, “more efficient” is not.</p>
+    </div>
+    <div class="wd-chart wd-chart--mb" id="what-drove-it-mb-wrap">
+      <p class="wd-chart__head">Market-based · fell <span class="num" data-num="chg_mb_t" data-form="absunit">781.3 t</span></p>
+      <!-- gen:drivers method=mb step=3 --><svg class="dv" id="what-drove-it-mb" viewBox="0 0 820 356" width="820" height="356" role="img" aria-label="Market-based Scope 1 and 2, 2024 to 2025: one bar per driver."><g class="dv-frame"><path class="dv-axis" d="M4 284H668" /><path class="dv-break" d="M-2 294l10 -20M8 294l10 -20" /><rect class="dv-bar dv-bar--prior" x="22" y="68.8" width="92" height="215.2" /><text class="dv-val" x="68" y="54.8" text-anchor="middle" data-num="total_mb_2024" data-form="bare">2,674.5</text><rect class="dv-bar dv-bar--now" x="566" y="222.4" width="92" height="61.6" /><text class="dv-val" x="612" y="208.4" text-anchor="middle" data-num="total_mb_2025" data-form="bare">1,893.2</text><text class="dv-name" x="68" y="318" text-anchor="middle">2024</text><text class="dv-name" x="204" y="318" text-anchor="middle">Guarantees</text><text class="dv-name dv-name--sub" x="204" y="344" text-anchor="middle">of origin</text><text class="dv-name" x="340" y="318" text-anchor="middle">Less</text><text class="dv-name dv-name--sub" x="340" y="344" text-anchor="middle">electricity</text><text class="dv-name" x="476" y="318" text-anchor="middle">Less gas</text><text class="dv-name dv-name--sub" x="476" y="344" text-anchor="middle">and diesel</text><text class="dv-name" x="612" y="318" text-anchor="middle">2025</text></g><g class="dv-changes" data-step="3"><path class="dv-link" d="M114 68.8H158" data-motion="draw" style="--order:0" /><rect class="dv-bar dv-bar--change dv-bar--lead" x="158" y="68.8" width="92" height="146.3" data-motion="grow" style="--grow-origin: 50% 0%; --order:0" /><text class="dv-val dv-val--change" x="204" y="247.1" text-anchor="middle" data-num="drv_mb_cert_t" data-form="bare" data-motion="fade" style="--order:0">−744.0</text><path class="dv-link" d="M250 215.1H294" data-motion="draw" style="--order:1" /><rect class="dv-bar dv-bar--change" x="294" y="215.1" width="92" height="4.7" data-motion="grow" style="--grow-origin: 50% 0%; --order:1" /><text class="dv-val dv-val--change" x="340" y="251.8" text-anchor="middle" data-num="drv_mb_elec_t" data-form="bare" data-motion="fade" style="--order:1">−24.0</text><path class="dv-link" d="M386 219.8H430" data-motion="draw" style="--order:2" /><rect class="dv-bar dv-bar--change" x="430" y="219.8" width="92" height="3.0" data-motion="grow" style="--grow-origin: 50% 0%; --order:2" /><text class="dv-val dv-val--change" x="476" y="254.8" text-anchor="middle" data-num="drv_mb_s1_t" data-form="bare" data-motion="fade" style="--order:2">−13.3</text><path class="dv-link" d="M522 222.4H566" data-motion="draw" style="--order:3" /><g class="dv-own"><path class="dv-own__bracket" d="M288 74.8V60.8H528V74.8" data-motion="draw" style="--order:3" /><text class="dv-own__label" x="408" y="46.8" text-anchor="middle" data-motion="fade" style="--order:3">own use <tspan class="dv-own__num" data-num="drv_mb_own_t">−37.3 t</tspan></text></g></g></svg><!-- /gen:drivers -->
+      <p class="wd-share wd-share--mb" data-step="3" data-motion="fade"><b><span class="num" data-num="drv_mb_cert_share_pct">95%</span></b> of the market-based decrease is the certificate. The residual mix stays at <span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span> in both years on purpose, so no factor effect here. Real residual mixes change every year.</p>
+    </div>
+    <div class="room-vote" id="what-drove-it-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">What made location-based emissions fall <span class="num" data-num="chg_lb_t" data-form="absunit">102.3 t</span>?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Our efficiency measures</span><span class="room-vote__option">A lower grid factor</span><span class="room-vote__option">We produced less</span></div>
+    </div>
+    <div class="wd-sentence" id="what-drove-it-sentence" data-step="4" data-motion="rise">
+      <p class="wd-sentence__label"><svg class="icon" aria-hidden="true"><use href="#i-contract" /></svg>The sentence, rewritten from the driver lines</p>
+      <p class="wd-sentence__text">Scope 1 and 2 fell <span class="num" data-num="chg_lb_pct" data-form="abs">5.1%</span> location-based (<span class="num" data-num="chg_lb_t">−102.3 t</span>). In this case's teaching values, <span class="num" data-num="drv_lb_grid_t" data-form="absunit">72.2 t</span> of that comes from a lower grid factor and <span class="num" data-num="drv_lb_own_t" data-form="absunit">30.1 t</span> from using less electricity, gas and diesel. Market-based fell <span class="num" data-num="chg_mb_pct" data-form="abs">29.2%</span>; <span class="num" data-num="drv_mb_cert_t" data-form="absunit">744.0 t</span> of that is guarantees of origin covering Werk Süd since January 2025.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 5 · Honest limits -->
+
+  <section class="slide" id="ask-back" data-act="5" data-kind="main" data-label="Ask back" data-section="Honest limits · calculate, ask back or refuse" data-seconds="270" data-mode="do" data-note-key="ask-back" data-note="The room sorts five requests into calculate, ask back, refuse or rewrite. Card 4 is refused on evidence. Then the answer we want from the raw folder: seven points before any number." data-route="shown">
+    <h1 class="scene-title" id="ask-back-title">Calculate, ask back or refuse?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <ol class="ab-tray" id="ask-back-tray" data-step-until="5">
+      <li class="ab-req" data-step="1" data-step-until="2" data-motion="rise" style="--order:0"><span class="ab-req__n">1</span><span>“Sum Scope 2 for 2025.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="3" data-motion="rise" style="--order:1"><span class="ab-req__n">2</span><span>“Fill in October.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="4" data-motion="rise" style="--order:2"><span class="ab-req__n">3</span><span>“Write that we run on green electricity.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="4" data-motion="rise" style="--order:3"><span class="ab-req__n">4</span><span>“Write that we are climate-neutral.”</span></li>
+      <li class="ab-req" data-step="1" data-step-until="2" data-motion="rise" style="--order:4"><span class="ab-req__n">5</span><span>“Explain why emissions fell compared with 2024.”</span></li>
+    </ol>
+    <div class="ab-cols" id="ask-back-cols" data-step-until="5">
+      <section class="ab-col" aria-labelledby="ask-back-h-calc">
+        <h2 class="ab-col__head" id="ask-back-h-calc"><svg class="icon icon--40" aria-hidden="true"><use href="#i-table" /></svg>Calculate from the ledger</h2>
+        <div class="ab-item" data-step="2" data-motion="rise" style="--order:0"><p class="ab-item__req"><span class="ab-req__n">1</span>“Sum Scope 2 for 2025.”</p><p><span class="num" data-num="s2lb_2025">1,444.0 t</span> location-based and <span class="num" data-num="s2mb_2025">1,422.0 t</span> market-based, with rows.</p></div>
+        <div class="ab-item" data-step="2" data-motion="rise" style="--order:1"><p class="ab-item__req"><span class="ab-req__n">5</span>“Explain why emissions fell.”</p><p>Calculate the bridge first, then draft citing the driver lines. No “efficiency” without production data.</p></div>
+      </section>
+      <section class="ab-col" aria-labelledby="ask-back-h-ask">
+        <h2 class="ab-col__head" id="ask-back-h-ask"><svg class="icon icon--40" aria-hidden="true"><use href="#i-question" /></svg>Ask back</h2>
+        <div class="ab-item" data-step="3" data-motion="rise"><p class="ab-item__req"><span class="ab-req__n">2</span>“Fill in October.”</p><p>“Use the meter reading, <span class="num" data-num="oct_kwh">200,000 kWh</span>, grade B, or an estimate with a stated method?”</p></div>
+      </section>
+      <section class="ab-col" aria-labelledby="ask-back-h-refuse">
+        <h2 class="ab-col__head" id="ask-back-h-refuse"><svg class="icon icon--40" aria-hidden="true"><use href="#i-refuse" /></svg>Refuse or rewrite</h2>
+        <div class="ab-item" data-step="4" data-motion="rise" style="--order:0"><p class="ab-item__req"><span class="ab-req__n">3</span>“We run on green electricity.”</p><p>Rewrite: “<span class="num" data-num="renewable_share_el_pct">34.3%</span> of our electricity (Werk Süd, <span class="num" data-num="go_mwh">1,240 MWh</span>) is covered by cancelled guarantees of origin.”</p></div>
+        <div class="ab-item ab-item--refuse" data-step="4" data-motion="rise" style="--order:1"><p class="ab-item__req"><span class="ab-req__n">4</span>“We are climate-neutral.”</p><p>Refuse: nothing in the ledger supports it.</p></div>
+      </section>
+    </div>
+    <p class="w-note ab-foot" id="ask-back-foot" data-step="4" data-step-until="5" data-motion="fade">Rules as of 26 Sep 2026. Not legal advice. Check the German transposition.</p>
+    <article class="ev-run ab-answer" id="ask-back-answer" data-step="5" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>The answer we want from the raw folder</span></div>
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <p class="ab-answer__lead">“I can give a provisional figure, but these points need your decision first:</p>
+      <ol class="ab-points">
+        <li>October is missing for Werk Nord. The meter file shows <span class="num" data-num="oct_kwh">200,000 kWh</span>. Use it?</li>
+        <li>Two files carry invoice <span data-j="inputs.wnDuplicate.invoice">4711-03</span>. I counted March once.</li>
+        <li>One bill is addressed to Talbrück Beschichtung GmbH with its own meter. Inside your boundary? I left it out.</li>
+        <li>Werk Süd reports “<span data-j="inputs.ws.printed">1.240 MWh</span>”. I read <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span>; last year's <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span> on the same page fits.</li>
+        <li>The gas bills state Brennwert (Hs) on page 2. I used <span class="w-mono ab-nowrap">F-GAS-HS</span>.</li>
+        <li>August is almost a third below July (<span class="num" data-num="aug_vs_jul_pct">−31%</span>). Plant holiday? I did not change it.</li>
+        <li>The folder has no refrigerant service invoices and no forklift fuel. Are there other Scope 1 sources?”</li>
+      </ol>
+    </article>
+  </section>
+
+  <section class="slide" id="limits" data-act="5" data-kind="main" data-label="Limits" data-section="Honest limits · what this does not prove" data-seconds="150" data-mode="listen" data-note-key="limits" data-note="Five limits, one per press. The case is constructed, published accuracy figures come from reports rather than bills, and rules only catch what they were written for." data-route="shown">
+    <h1 class="scene-title" id="limits-title">What this does not prove</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <ol class="lm-rows" id="limits-rows">
+      <li class="lm-row" data-motion="rise"><span class="lm-n">1</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-gap" /></svg><p><b>One fictional case</b><span>The raw-folder answer is constructed. Recorded runs, when captured, are in appendix A3 with a per-trap catch table.</span></p></li>
+      <li class="lm-row" data-step="1" data-motion="rise"><span class="lm-n">2</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-book" /></svg><p><b>Published accuracy</b><span>Two studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</span></p></li>
+      <li class="lm-row" data-step="2" data-motion="rise"><span class="lm-n">3</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-checklist" /></svg><p><b>Rules catch what they are written for</b><span>No documents for refrigerant top-ups, forklifts at Lager Ost, an emergency generator or heating oil: nothing was checked there.</span></p></li>
+      <li class="lm-row" data-step="3" data-motion="rise"><span class="lm-n">4</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg><p><b>A thin comparison year</b><span>The 2024 figures are a consultant summary, grade B, with no bills. Same boundary, same factor file.</span></p></li>
+      <li class="lm-row" data-step="4" data-motion="rise"><span class="lm-n">5</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-factor" /></svg><p><b>Teaching factors, simplified bills</b><span>Kit bills leave out the supplier mix disclosure. Rules as of 26 Sep 2026. Not legal or audit advice.</span></p></li>
+    </ol>
+  </section>
+
+  <!-- ================================================================ ACT 6 · Your turn -->
+
+  <section class="slide" id="your-bill" data-act="6" data-kind="main" data-label="Your bill" data-section="Your turn · one bill, five boxes" data-seconds="420" data-recovery-seconds="120" data-mode="write" data-note-key="your-bill" data-note="Five minutes alone on one bill, invented or anonymised, then two minutes in pairs. No company data goes into any tool." data-route="shown">
+    <h1 class="scene-title" id="your-bill-title">Your turn: one bill, five boxes</h1>
+    <p class="yb-privacy" id="your-bill-privacy"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Use an invented or anonymised bill. No company data goes into any tool.</span></p>
+    <div class="yb-sheet" id="your-bill-sheet" role="table" aria-label="Transfer sheet: five boxes, with the Werk Süd example">
+      <div class="yb-head" role="row"><span role="columnheader">Box</span><span role="columnheader">What you write</span><span role="columnheader">Example · Kellbrunn, Werk Süd</span></div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">1</span>Source</span>
+        <span class="yb-what" role="cell">File, page and the exact line you read</span>
+        <span class="yb-ex" role="cell"><span class="w-mono">Jahresuebersicht_2025_Oekostrom.md</span>, page 1, “<span data-j="traceTwo.0.quote">Verbrauch 2025: 1.240 MWh</span>”</span>
+        <span class="yb-mark" data-step="1" data-step-until="2" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">2</span>Period</span>
+        <span class="yb-what" role="cell">From, to, months covered; gaps or overlaps with other bills</span>
+        <span class="yb-ex" role="cell">January to December 2025, 12 months, no overlap. Last year on the same page: <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span></span>
+        <span class="yb-mark" data-step="2" data-step-until="3" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">3</span>Unit</span>
+        <span class="yb-what" role="cell">Value and unit as printed, the normalised value, and the rule</span>
+        <span class="yb-ex" role="cell"><span data-j="inputs.ws.printed">1.240 MWh</span> → <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span> (MWh × 1,000; the dot separates thousands). Check: <span class="num" data-num="ws_kwh_per_employee">22,545 kWh</span> per employee, close to last year</span>
+        <span class="yb-mark" data-step="3" data-step-until="4" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">4</span>Boundary</span>
+        <span class="yb-what" role="cell">Legal entity on the document; in or out; which rule</span>
+        <span class="yb-ex" role="cell">Kellbrunn Präzisionsteile GmbH, Werk Süd; in; operational control</span>
+        <span class="yb-mark" data-step="4" data-step-until="5" aria-hidden="true"></span>
+      </div>
+      <div class="yb-row" role="row">
+        <span class="yb-box" role="cell"><span class="yb-n">5</span>Factor</span>
+        <span class="yb-what" role="cell">Factor ID, year, basis, edition; method; any certificate</span>
+        <span class="yb-ex" role="cell">Location-based: F-EL-LB-2025 (<span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span>, teaching value) → <span class="num" data-num="ws_lb_2025">496.0 t</span>. Market-based: F-EL-GO under I-WS-GO (<span class="num" data-num="go_mwh">1,240 MWh</span> guarantees of origin, cancelled, Werk Süd only) → 0 t</span>
+        <span class="yb-mark" data-step="5" data-step-until="6" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="yb-now" id="your-bill-now">
+      <svg class="icon icon--48" aria-hidden="true"><use href="#i-person" /></svg>
+      <p class="yb-now__text" data-step-until="1">Take one bill you know from work, or invent a realistic one. Five minutes alone.</p>
+      <p class="yb-now__text" data-step="1" data-step-until="2" data-motion="fade"><b>Now:</b> Source</p>
+      <p class="yb-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> Period</p>
+      <p class="yb-now__text" data-step="3" data-step-until="4" data-motion="fade"><b>Now:</b> Unit</p>
+      <p class="yb-now__text" data-step="4" data-step-until="5" data-motion="fade"><b>Now:</b> Boundary</p>
+      <p class="yb-now__text" data-step="5" data-step-until="6" data-motion="fade"><b>Now:</b> Factor</p>
+      <p class="yb-now__text" data-step="6" data-motion="fade">Compare with a partner. Two pairs share their hardest box.</p>
+    </div>
+  </section>
+
+  <section class="slide" id="resolution" data-act="6" data-kind="main" data-label="Resolution" data-section="Your turn · what changed between the two answers" data-seconds="180" data-mode="vote" data-note-key="resolution" data-note="Both answers side by side, the number ladder, the same vote as at the start, then four questions for any AI tool and the materials link." data-route="shown">
+    <h1 class="scene-title" id="resolution-title">What changed between the two answers?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="q-card q-card--hero rs-question" id="resolution-question" data-step-until="1" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+    </div>
+    <div class="rs-answers" id="resolution-answers" data-step="1">
+      <div class="rs-ans rs-ans--raw" data-motion="rise" style="--order:0">
+        <p class="rs-ans__head">Raw folder <span data-j="meta.constructedLabel_en" class="rs-ans__label">Constructed: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+        <p class="rs-ans__nums"><b><span class="num" data-num="wrong_total_lb">1,866.5 t</span></b><span><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span>, “through efficiency”</span></p>
+        <p class="rs-ans__foot">No rows, one site's unit misread, a joint venture counted, market-based on the grid average</p>
+      </div>
+      <div class="rs-ans rs-ans--ledger" data-motion="rise" style="--order:1">
+        <p class="rs-ans__head">Ledger <span data-j="meta.targetLabel_en" class="rs-ans__label">Target answer, constructed. Not a recorded run.</span></p>
+        <p class="rs-ans__nums"><b><span class="num" data-num="total_lb_2025">1,915.2 t</span></b><span><span class="num" data-num="chg_lb_pct">−5.1%</span> location-based · <span class="num" data-num="total_mb_2025">1,893.2 t</span>, <span class="num" data-num="chg_mb_pct">−29.2%</span> market-based</span></p>
+        <p class="rs-ans__foot">Every figure cites its rows; one meter reading labelled; what was not checked is named</p>
+      </div>
+    </div>
+    <ol class="rs-ladder" id="resolution-ladder" data-step="2">
+      <li class="rs-rung rs-rung--raw" data-motion="rise" style="--order:0"><span class="rs-rung__n">1</span><p>AI said: <b><span class="num" data-num="wrong_chg_lb_pct">−7.5%</span></b>, “through efficiency”.</p></li>
+      <li class="rs-rung" data-motion="rise" style="--order:1"><span class="rs-rung__n">2</span><p>Right data: <b><span class="num" data-num="chg_lb_pct">−5.1%</span></b>.</p></li>
+      <li class="rs-rung rs-rung--focus" data-motion="rise" style="--order:2"><span class="rs-rung__n">3</span><p>Of the <span class="num" data-num="chg_lb_t" data-form="absunit">102.3 t</span>, <b><span class="num" data-num="drv_lb_grid_t" data-form="absunit">72.2 t</span></b> is the grid factor (teaching values).</p></li>
+      <li class="rs-rung" data-motion="rise" style="--order:3"><span class="rs-rung__n">4</span><p><b><span class="num" data-num="drv_lb_own_t" data-form="absunit">30.1 t</span></b> is own lower use. Efficiency is not proven.</p></li>
+    </ol>
+    <div class="room-vote" id="resolution-vote" data-step="3" data-step-until="4" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · same as at the start</span><p class="room-vote__q">Send the raw-folder answer to the bank now?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Send</span><span class="room-vote__option">Ask back first</span><span class="room-vote__option">Refuse</span></div>
+    </div>
+    <div class="rs-close" id="resolution-close" data-step="4">
+      <p class="rs-close__head" data-motion="fade">Ask any AI tool you are offered</p>
+      <ol class="rs-qs">
+        <li data-motion="rise" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-invoice" /></svg><span>Does each number link to its document?</span></li>
+        <li data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><span>Which factor, which edition?</span></li>
+        <li data-motion="rise" style="--order:2"><svg class="icon icon--40" aria-hidden="true"><use href="#i-refuse" /></svg><span>What was excluded, and why?</span></li>
+        <li data-motion="rise" style="--order:3"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>Who approved it?</span></li>
+      </ol>
+      <p class="rs-materials" data-motion="fade" style="--order:4"><span class="rs-materials__label">Materials</span> <span class="rs-materials__url">loehrning.ai/workshops/esg-berichte-mit-ki</span> <span class="rs-materials__label">· Try it</span> <a class="rs-materials__url deck-link" href="./demo.html" target="_blank" rel="noopener">interactive demo</a><img class="rs-lockup" src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /></p>
+    </div>
+  </section>
+
+  <!-- ================================================================ APPENDIX (data-kind="appendix", on request) -->
+
+  <section class="slide" id="appendix-arithmetic" data-kind="appendix" data-label="Every calculation" data-section="Appendix A1 · every calculation on one page" data-seconds="0" data-note-key="appendix-arithmetic" data-note="For questions like 'where does 1,422 come from?'. Every line of the case arithmetic, both waterfalls, the drivers and the largest sources." data-route="hidden">
+    <h1 class="scene-title">Every calculation on one page</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="ax-col ax-col--totals">
+      <p class="ax-head">Totals, t CO₂e · LB location-based, MB market-based</p>
+      <table class="ax-table">
+        <thead><tr><th></th><th class="ax-num">2024</th><th class="ax-num">2025</th></tr></thead>
+        <tbody>
+          <tr><td>Electricity, kWh</td><td class="ax-num"><span class="num" data-num="el_total_2024_kwh" data-form="bare">3,650,000</span></td><td class="ax-num"><span class="num" data-num="el_total_kwh" data-form="bare">3,610,000</span></td></tr>
+          <tr><td>Scope 1</td><td class="ax-num"><span class="num" data-num="s1_2024" data-form="bare">484.5</span></td><td class="ax-num"><span class="num" data-num="s1_2025" data-form="bare">471.2</span></td></tr>
+          <tr><td>Scope 2 LB</td><td class="ax-num"><span class="num" data-num="s2lb_2024" data-form="bare">1,533.0</span></td><td class="ax-num"><span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span></td></tr>
+          <tr><td>Scope 2 MB</td><td class="ax-num"><span class="num" data-num="s2mb_2024" data-form="bare">2,190.0</span></td><td class="ax-num"><span class="num" data-num="s2mb_2025" data-form="bare">1,422.0</span></td></tr>
+          <tr class="ax-sum"><td>Scope 1 + 2, LB</td><td class="ax-num"><span class="num" data-num="total_lb_2024" data-form="bare">2,017.5</span></td><td class="ax-num"><span class="num" data-num="total_lb_2025" data-form="bare">1,915.2</span></td></tr>
+          <tr class="ax-sum"><td>Scope 1 + 2, MB</td><td class="ax-num"><span class="num" data-num="total_mb_2024" data-form="bare">2,674.5</span></td><td class="ax-num"><span class="num" data-num="total_mb_2025" data-form="bare">1,893.2</span></td></tr>
+        </tbody>
+      </table>
+      <p class="ax-head">2025, line by line</p>
+      <ul class="ax-lines">
+        <li>Gas <span class="num" data-num="s1_gas_wn_2025" data-form="bare">333.0</span> + <span class="num" data-num="s1_gas_ws_2025" data-form="bare">43.2</span> = <span class="num" data-num="s1_gas_2025">376.2 t</span>; diesel <span class="num" data-num="s1_diesel_2025">95.0 t</span></li>
+        <li>Scope 2 LB <span class="num" data-num="wn_el_lb_2025" data-form="bare">904.0</span> + <span class="num" data-num="ws_lb_2025" data-form="bare">496.0</span> + <span class="num" data-num="lo_el_lb_2025" data-form="bare">44.0</span> = <span class="num" data-num="s2lb_2025">1,444.0 t</span></li>
+        <li>Bridge <span class="num" data-num="s2lb_2025" data-form="bare">1,444.0</span> <span class="num" data-num="bridge_cert_t" data-form="bare">−496.0</span> <span class="num" data-num="bridge_rm_t" data-form="bare">+474.0</span> = <span class="num" data-num="s2mb_2025">1,422.0 t</span></li>
+        <li>Change LB <span class="num" data-num="chg_lb_t">−102.3 t</span> (<span class="num" data-num="chg_lb_pct">−5.1%</span>); MB <span class="num" data-num="chg_mb_t">−781.3 t</span> (<span class="num" data-num="chg_mb_pct">−29.2%</span>)</li>
+        <li>Control total <span class="num" data-num="ctl_docs_kwh" data-form="bare">4,615,000</span> − <span class="num" data-num="ctl_excluded_kwh" data-form="bare">1,205,000</span> + <span class="num" data-num="ctl_meter_kwh" data-form="bare">200,000</span> = <span class="num" data-num="ctl_total_kwh">3,610,000 kWh</span></li>
+      </ul>
+    </div>
+    <div class="ax-col ax-col--wf">
+      <p class="ax-head">Both waterfalls, Scope 1 + 2, t</p>
+      <!-- gen:wftable --><table class="ax-table ax-wf"><thead><tr><th>Correction, in order</th><th class="ax-num">LB</th><th class="ax-num">running</th><th class="ax-num">MB</th><th class="ax-num">running</th></tr></thead><tbody><tr><td>Raw-folder answer</td><td class="ax-num"></td><td class="ax-num"><span data-j="waterfall.lb.start.running_en">1,866.5</span></td><td class="ax-num"></td><td class="ax-num"><span data-j="waterfall.mb.start.running_en">1,866.0</span></td></tr><tr><td>T1 duplicate out</td><td class="ax-num"><span data-j="waterfall.lb.T1.change_en">−82.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T1.running_en">1,784.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T1.change_en">−82.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T1.running_en">1,784.0</span></td></tr><tr><td>T2 October in</td><td class="ax-num"><span data-j="waterfall.lb.T2.change_en">+80.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T2.running_en">1,864.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T2.change_en">+80.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T2.running_en">1,864.0</span></td></tr><tr><td>T3 Talbrück out</td><td class="ax-num"><span data-j="waterfall.lb.T3.change_en">−400.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T3.running_en">1,464.5</span></td><td class="ax-num"><span data-j="waterfall.mb.T3.change_en">−400.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T3.running_en">1,464.0</span></td></tr><tr><td>T4 unit as MWh</td><td class="ax-num"><span data-j="waterfall.lb.T4.change_en">+495.5</span></td><td class="ax-num"><span data-j="waterfall.lb.T4.running_en">1,960.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T4.change_en">0.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T4.running_en">1,464.0</span></td></tr><tr><td>T5 Hs gas factor</td><td class="ax-num"><span data-j="waterfall.lb.T5.change_en">−41.8</span></td><td class="ax-num"><span data-j="waterfall.lb.T5.running_en">1,918.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T5.change_en">−41.8</span></td><td class="ax-num"><span data-j="waterfall.mb.T5.running_en">1,422.2</span></td></tr><tr><td>T6 AdBlue out</td><td class="ax-num"><span data-j="waterfall.lb.T6.change_en">−3.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T6.running_en">1,915.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T6.change_en">−3.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T6.running_en">1,419.2</span></td></tr><tr><td>T7 residual mix</td><td class="ax-num"><span data-j="waterfall.lb.T7.change_en">0.0</span></td><td class="ax-num"><span data-j="waterfall.lb.T7.running_en">1,915.2</span></td><td class="ax-num"><span data-j="waterfall.mb.T7.change_en">+474.0</span></td><td class="ax-num"><span data-j="waterfall.mb.T7.running_en">1,893.2</span></td></tr></tbody></table><!-- /gen:wftable -->
+      <p class="ax-note">Same fixed order T1 to T7. In market-based, T1 to T3 are valued at the factor in force at that step, so they differ from the location-based bars.</p>
+    </div>
+    <div class="ax-col ax-col--drivers">
+      <p class="ax-head">Drivers, 2024 to 2025</p>
+      <table class="ax-table ax-drivers">
+        <tbody>
+          <tr class="ax-sub"><td colspan="2">Location-based</td></tr>
+          <tr><td data-j="drivers.lb.grid_factor.en">Grid factor 0.42 to 0.40 (teaching values)</td><td class="ax-num"><span class="num" data-num="drv_lb_grid_t" data-form="bare">−72.2</span></td></tr>
+          <tr><td data-j="drivers.lb.less_electricity.en">Less electricity</td><td class="ax-num"><span class="num" data-num="drv_lb_elec_t" data-form="bare">−16.8</span></td></tr>
+          <tr><td data-j="drivers.lb.less_gas.en">Less gas</td><td class="ax-num"><span class="num" data-num="drv_lb_gas_t" data-form="bare">−10.8</span></td></tr>
+          <tr><td data-j="drivers.lb.less_diesel.en">Less diesel</td><td class="ax-num"><span class="num" data-num="drv_lb_diesel_t" data-form="bare">−2.5</span></td></tr>
+          <tr class="ax-sub"><td colspan="2">Market-based</td></tr>
+          <tr><td data-j="drivers.mb.certificates.en">Guarantees of origin for Werk Süd</td><td class="ax-num"><span class="num" data-num="drv_mb_cert_t" data-form="bare">−744.0</span></td></tr>
+          <tr><td data-j="drivers.mb.less_electricity.en">Less electricity</td><td class="ax-num"><span class="num" data-num="drv_mb_elec_t" data-form="bare">−24.0</span></td></tr>
+          <tr><td data-j="drivers.mb.less_gas_diesel.en">Less gas and diesel (Scope 1)</td><td class="ax-num"><span class="num" data-num="drv_mb_s1_t" data-form="bare">−13.3</span></td></tr>
+        </tbody>
+      </table>
+      <p class="ax-head">Largest sources, 2025</p>
+      <p class="ax-rank"><b>Location-based</b> <span data-j="ranking.lb.0.en">WN electricity</span> <span class="num" data-num="wn_el_lb_2025">904.0 t</span> (<span data-j="ranking.lb.0.share_pct" data-form="pct">47.2%</span>), <span data-j="ranking.lb.1.en">WS electricity</span> <span class="num" data-num="ws_lb_2025">496.0 t</span> (<span data-j="ranking.lb.1.share_pct" data-form="pct">25.9%</span>), <span data-j="ranking.lb.2.en">WN gas</span> <span class="num" data-num="s1_gas_wn_2025">333.0 t</span> (<span data-j="ranking.lb.2.share_pct" data-form="pct">17.4%</span>)</p>
+      <p class="ax-rank"><b>Market-based</b> <span data-j="ranking.mb.0.en">WN electricity</span> <span class="num" data-num="wn_el_mb_2025">1,356.0 t</span> (<span data-j="ranking.mb.0.share_pct" data-form="pct">71.6%</span>), <span data-j="ranking.mb.1.en">WN gas</span> <span class="num" data-num="s1_gas_wn_2025">333.0 t</span> (<span data-j="ranking.mb.1.share_pct" data-form="pct">17.6%</span>), <span data-j="ranking.mb.2.en">Diesel fleet</span> <span class="num" data-num="s1_diesel_2025">95.0 t</span> (<span data-j="ranking.mb.2.share_pct" data-form="pct">5%</span>)</p>
+      <p class="ax-note">Werk Süd electricity drops to 0 t in market-based because of the certificate, not because of lower use.</p>
+    </div>
+    <p class="ax-foot">Rounding: totals from unrounded values, rounded once to 0.1 t, half up; the rounded waterfall bars still add up to the end totals.</p>
+  </section>
+
+  <section class="slide" id="appendix-factors" data-kind="appendix" data-label="Real factors" data-section="Appendix A2 · where real factors come from" data-seconds="0" data-note-key="appendix-factors" data-note="For questions about real emission factors: who publishes them, how often, and what the licence allows." data-route="hidden">
+    <h1 class="scene-title">Where real factors come from</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="af-teach">
+      <p class="ax-head">This case: the pinned teaching table</p>
+      <!-- gen:factors ids=F-EL-LB-2025,F-EL-LB-2024,F-EL-RM-2025,F-EL-GO,F-GAS-HS,F-GAS-HI,F-DSL --><table class="ft"><thead><tr><th>factor_id</th><th>year</th><th>basis</th><th class="ft-num">value</th><th>unit</th></tr></thead><tbody><tr data-factor="F-EL-LB-2025"><td class="ft-id">F-EL-LB-2025</td><td><span data-j="factors.F-EL-LB-2025.year">2025</span></td><td><span data-j="factors.F-EL-LB-2025.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-LB-2024"><td class="ft-id">F-EL-LB-2024</td><td><span data-j="factors.F-EL-LB-2024.year">2024</span></td><td><span data-j="factors.F-EL-LB-2024.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2024.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-RM-2025"><td class="ft-id">F-EL-RM-2025</td><td><span data-j="factors.F-EL-RM-2025.year">2025</span></td><td><span data-j="factors.F-EL-RM-2025.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span></td><td class="ft-unit"><span data-j="factors.F-EL-RM-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-GO"><td class="ft-id">F-EL-GO</td><td><span data-j="factors.F-EL-GO.year">alle</span></td><td><span data-j="factors.F-EL-GO.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span></td><td class="ft-unit"><span data-j="factors.F-EL-GO.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-GAS-HS"><td class="ft-id">F-GAS-HS</td><td><span data-j="factors.F-GAS-HS.year">alle</span></td><td><span data-j="factors.F-GAS-HS.basis">Hs</span></td><td class="ft-num"><span data-j="factors.F-GAS-HS.value" data-form="fix2">0.18</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HS.unit">kg CO2e/kWh(Hs)</span></td></tr><tr data-factor="F-GAS-HI"><td class="ft-id">F-GAS-HI</td><td><span data-j="factors.F-GAS-HI.year">alle</span></td><td><span data-j="factors.F-GAS-HI.basis">Hi</span></td><td class="ft-num"><span data-j="factors.F-GAS-HI.value" data-form="fix2">0.20</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HI.unit">kg CO2e/kWh(Hi)</span></td></tr><tr data-factor="F-DSL"><td class="ft-id">F-DSL</td><td><span data-j="factors.F-DSL.year">alle</span></td><td><span data-j="factors.F-DSL.basis"></span></td><td class="ft-num"><span data-j="factors.F-DSL.value" data-form="fix1">2.5</span></td><td class="ft-unit"><span data-j="factors.F-DSL.unit">kg CO2e/l</span></td></tr></tbody></table><!-- /gen:factors -->
+      <p class="ax-note">Edition <span data-j="factorEdition">Lehrwerte v1.0, 2026-01-15</span>. <span data-j="meta.factorLabel_en">Teaching values, not official factors.</span></p>
+    </div>
+    <ul class="af-real">
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><p><b>UBA grid factor, Germany</b><span>Published every year: 433, 386 and 363 g CO₂/kWh for 2022 to 2024, direct CO₂ only. Read in search summaries on 26 Sep 2026; UBA revises earlier years in each publication.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg><p><b>AIB European residual mix</b><span>New every year. The 2025 results were published on 26 May 2026.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-table" /></svg><p><b>DESNZ conversion factors</b><span>The UK set, published every June.</span></p></li>
+      <li><svg class="icon icon--40" aria-hidden="true"><use href="#i-contract" /></svg><p><b>IEA and ecoinvent</b><span>Licensed. The licence limits sharing, so check it before you paste values into an external tool or a kit.</span></p></li>
+    </ul>
+    <p class="focus-line af-rule">Always record source, edition, year, region, basis and licence.</p>
+  </section>
+
+  <section class="slide" id="appendix-run-record" data-kind="appendix" data-label="Run record" data-section="Appendix A3 · how the two answers were produced" data-seconds="0" data-note-key="appendix-run-record" data-note="For questions about whether the answers are real runs. Not yet: both are constructed; the capture protocol and the empty catch table are here." data-route="hidden">
+    <h1 class="scene-title">How the two answers were produced</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="ar-status">
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.constructedLabel_en">Constructed: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+      <p class="w-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.targetLabel_en">Target answer, constructed. Not a recorded run.</span></p>
+      <p class="stamp ar-stamp"><svg class="icon" aria-hidden="true"><use href="#i-calendar" /></svg><span>Capture planned before publication</span></p>
+    </div>
+    <div class="ar-protocol">
+      <p class="ax-head">Held constant</p>
+      <p class="ar-text">Model and version, tool surface, prompt text, factor file, 2024 summary, date. Protocol: kit <span class="w-mono">prompts/00_run_protocol.md</span>.</p>
+      <p class="ax-head">Conditions, <span data-j="runs.runsPerCondition">5</span> runs each</p>
+      <ul class="ar-conds">
+        <li data-j="runs.plannedConditions.0">A: raw folder</li>
+        <li data-j="runs.plannedConditions.1">B: ledger + coverage grid + rules</li>
+        <li data-j="runs.plannedConditions.2">C (optional): raw folder without the factor file</li>
+      </ul>
+      <p class="ax-head">Recorded per run</p>
+      <p class="ar-text">Model, date, prompt hash, run number, Scope 1, both Scope 2 figures, the change, which traps were caught, whether August was flagged, whether other Scope 1 sources were asked about.</p>
+    </div>
+    <table class="ax-table ar-table">
+      <thead><tr><th>Scored item</th><th>A · raw folder</th><th>B · ledger</th></tr></thead>
+      <tbody>
+        <tr><td data-j="runs.scoredItems.0">Scope 1</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.1">Scope 2 LB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.2">Scope 2 MB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.3">change vs 2024 LB</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.4">flag T1</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.5">flag T2</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.6">flag T3</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.7">flag T4</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.8">flag T5</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.9">flag T6</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.10">method T7</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.11">August flagged not corrected</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+        <tr><td data-j="runs.scoredItems.12">asks about other Scope 1 sources</td><td class="ar-empty">not captured</td><td class="ar-empty">not captured</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide" id="appendix-regulation" data-kind="appendix" data-label="Rules in September 2026" data-section="Appendix A4 · what is true on 26 September 2026" data-seconds="0" data-note-key="appendix-regulation" data-note="For questions about CSRD, the voluntary standard, Scope 2 rules and green claims. Dated 26 September 2026; items marked unverified or secondary need a check before the session." data-route="hidden">
+    <h1 class="scene-title">What is true on 26 September 2026</h1>
+    <ol class="rg-grid">
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">1</span>Fewer companies must report</p><p class="rg-body">Since 18 March 2026 (Directive (EU) 2026/470) the CSRD at EU level covers companies with more than 1,000 employees and more than €450m net turnover; both must be met. National law by 19 March 2027. Kellbrunn has never been in scope.</p><p class="rg-src">Council press release, 24 Feb 2026 · EUR-Lex 2026/470</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">2</span>The standards got shorter</p><p class="rg-body">Revised ESRS were published on 21 September 2026 (Delegated Regulation (EU) 2026/1563): mandatory for financial years from 1 January 2027, optional for 2026.</p><p class="rg-src">Commission, 3 Jul 2026 · OJ, 21 Sep 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">3</span>Customers can ask, within a cap</p><p class="rg-body">Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests beyond the voluntary standard (Delegated Regulation (EU) 2026/1560). Transposition by 19 March 2027. Check whether 2026/1560 keeps the Scope 1 and 2 datapoints.</p><p class="rg-src">EP press release, Dec 2025 · EUR-Lex 2026/1560</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">4</span>VSME Basic Module: Scope 1 and 2</p><p class="rg-body">EFRAG VSME, December 2024: 11 disclosures, including energy and Scope 1 and 2; no double materiality assessment, no assurance required. Which Scope 2 methods B3 requires: check the EFRAG text.</p><p class="rg-src">EFRAG</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">5</span>Scope 2 is reported twice</p><p class="rg-body">The 2015 GHG Protocol Scope 2 Guidance asks for location-based and market-based, and it still applies. A joint GHG Protocol and ISO standard is planned: consultation Q2 2027, publication Q4 2028.</p><p class="rg-src">Scope 2 Guidance · GHG Protocol update, 29 Jul 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">6</span>Green-claim rules from 27 Sep 2026</p><p class="rg-body">Directive (EU) 2024/825 bans, towards consumers, generic environmental claims unless recognised excellent environmental performance can be shown, and product climate claims based on offsetting. Who a text is aimed at is for a lawyer to judge. Misleading claims to business customers are banned too (§ 5 UWG).</p><p class="rg-src">EUR-Lex 2024/825 · Commission FAQ · UWG route <span class="rg-tag">secondary</span></p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">7</span>The Green Claims Directive is stalled</p><p class="rg-body">The Commission announced its intent to withdraw it on 20 June 2025; the file is formally pending.</p><p class="rg-src">Status in September 2026 <span class="rg-tag">unverified</span></p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">8</span>Assurance stays limited</p><p class="rg-body">For companies that must report, the route to reasonable assurance was removed; a limited-assurance standard is due by 1 July 2027.</p><p class="rg-src">Accountancy Europe factsheet, 29 Jan 2026</p></li>
+      <li class="rg-card"><p class="rg-head"><span class="rg-n">9</span>Germany's CSRD law</p><p class="rg-body">The CSRD-Umsetzungsgesetz had a Bundestag committee hearing on 13 April 2026. Check the current status before you say more.</p><p class="rg-src">Final passage <span class="rg-tag">unverified</span></p></li>
+    </ol>
+    <p class="rg-foot">Rules as of 26 Sep 2026. Not legal advice. Check before you present: German CSRD transposition, German UWG amendment for 2024/825, Green Claims Directive status, GHG Protocol timeline.</p>
+  </section>
+
+  <section class="slide" id="appendix-claims" data-kind="appendix" data-label="Claims checked" data-section="Appendix A5 · six sentences from the AI's answer, checked" data-seconds="0" data-note-key="appendix-claims" data-note="For questions about which parts of the raw-folder answer were wrong, and why: each sentence against the evidence." data-route="hidden">
+    <h1 class="scene-title">Six sentences from the AI's answer, checked</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <table class="ax-table cl-table">
+      <thead><tr><th>Sentence in the raw-folder answer</th><th>Evidence</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>“<span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span> below 2024”</td><td>Right data: <span class="num" data-num="chg_lb_pct">−5.1%</span></td><td class="cl-verdict">Wrong</td></tr>
+        <tr><td>“Since 2025 Kellbrunn runs on green electricity”</td><td>Certificates cover <span class="num" data-num="renewable_share_el_pct">34.3%</span>, all at Werk Süd</td><td class="cl-verdict">False; rewrite with share and site</td></tr>
+        <tr><td>“The reduction comes mainly from efficiency measures”</td><td><span class="num" data-num="drv_lb_grid_share_pct">71%</span> is the grid factor (location-based, teaching values); no production data</td><td class="cl-verdict">Unsupported</td></tr>
+        <tr><td>“Scope 1 rose by <span class="num" data-num="wrong_chg_s1_pct" data-form="abs">6.5%</span>, probably due to higher heating demand”</td><td>Scope 1 <span class="num" data-num="chg_s1_pct">−2.7%</span>, gas kWh <span class="num" data-num="gas_change_pct">−2.8%</span></td><td class="cl-verdict">False direction, invented cause</td></tr>
+        <tr><td>“Scope 2 market-based: <span class="num" data-num="wrong_s2mb">1,350.0 t</span>”</td><td>Grid average used for power without a certificate</td><td class="cl-verdict">Wrong method; <span class="num" data-num="s2mb_2025">1,422.0 t</span></td></tr>
+        <tr><td>“<span class="num" data-num="wrong_per_employee_t">10.4 t</span> per employee”</td><td>Right data: <span class="num" data-num="per_employee_2025_t">10.6 t</span></td><td class="cl-verdict">Wrong, and not a check</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="slide" id="appendix-baseline" data-kind="appendix" data-label="Base year" data-section="Appendix A6 · when the base year must be restated" data-seconds="0" data-note-key="appendix-baseline" data-note="For 'our emissions fell 40 percent since 2023'. A separate teaching variant: restate the base year after a divestment, then compare like for like." data-route="hidden">
+    <h1 class="scene-title">When the base year must be restated</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <p class="bl-variant"><b>Separate teaching variant.</b> It does not connect to the 2024 comparison in the main case. Kellbrunn's first inventory was 2023, and it sold a foundry, Werk 3, on 1 July 2024. The GHG Protocol Corporate Standard requires recalculating the base year for a significant structural change such as a divestment.</p>
+    <div class="bl-cards">
+      <div class="bl-card">
+        <p class="ax-head">Restated 2023 base, location-based</p>
+        <p class="bl-line"><span>As first reported</span><span class="num" data-num="var_2023_lb_reported_t">3,160.0 t</span></p>
+        <p class="bl-line"><span>Werk 3 removed</span><span class="num" data-num="var_w3_t">945.0 t</span></p>
+        <p class="bl-line bl-line--sum"><span>Restated</span><b><span class="num" data-num="var_2023_lb_restated_t">2,215.0 t</span></b></p>
+      </div>
+      <div class="bl-card bl-card--main">
+        <p class="ax-head">Like for like, 2023 to 2025</p>
+        <p class="bl-big"><span class="num" data-num="var_chg_vs_restated_pct">−13.5%</span> <span class="bl-big__t">(<span class="num" data-num="var_chg_vs_restated_t">−299.8 t</span>)</span></p>
+        <p class="bl-line"><span>Less electricity</span><span class="num" data-num="var_drv_elec_t">−94.5 t</span></p>
+        <p class="bl-line"><span>Grid factor</span><span class="num" data-num="var_drv_grid_t">−180.5 t</span></p>
+        <p class="bl-line"><span>Less gas</span><span class="num" data-num="var_drv_gas_t">−19.8 t</span></p>
+        <p class="bl-line"><span>Less diesel</span><span class="num" data-num="var_drv_diesel_t">−5.0 t</span></p>
+      </div>
+      <div class="bl-card bl-card--wrong">
+        <p class="ax-head">What the unrestated comparison would wrongly show</p>
+        <p class="bl-big"><span class="num" data-num="var_chg_vs_reported_pct">−39.4%</span></p>
+        <p class="bl-text">against <span class="num" data-num="var_2023_lb_reported_t">3,160.0 t</span> as first reported, with the foundry still in the base year</p>
+      </div>
+    </div>
+    <p class="bl-mb">Market-based 2023 was never reported. Recalculated from 2023 activity data with the 2023 residual mix (teaching value <span data-j="factors.F-EL-RM-2023.value" data-form="fix2">0.60</span>) and labelled “recalculated, restated”: <b><span class="num" data-num="var_2023_mb_restated_t">2,788.0 t</span></b> (<span class="num" data-num="var_2023_mb_reported_t">3,868.0 t</span> with Werk 3). Like for like <span class="num" data-num="var_chg_mb_vs_restated_pct">−32.1%</span>.</p>
+    <p class="focus-line bl-sentence">“Our Scope 1 and 2 emissions (location-based, CO₂e) fell <span class="num" data-num="var_chg_vs_restated_pct" data-form="abs">13.5%</span> from 2023 to 2025 at the sites we still run. The base year is restated without Werk 3, sold in July 2024.”</p>
+    <p class="ax-note bl-note">Grid-factor changes that reflect a real change in the grid are not a reason to restate; they appear as a driver. A switch of factor source or method is a methodology change and is checked against the same significance threshold. Inputs: continuing sites <span data-j="inputs.variant2023.el_continuing" data-form="int">3,820,000</span> kWh electricity, <span data-j="inputs.variant2023.gas_continuing" data-form="int">2,200,000</span> kWh(Hs) gas, <span data-j="inputs.variant2023.diesel_l" data-form="int">40,000</span> l diesel; Werk 3 <span data-j="inputs.variant2023.el_W3" data-form="int">900,000</span> kWh electricity and <span data-j="inputs.variant2023.gas_W3" data-form="int">3,000,000</span> kWh(Hs) gas.</p>
+  </section>
+
+  <section class="slide" id="appendix-steel" data-kind="appendix" data-label="Supplier numbers" data-section="Appendix A7 · which number from the supplier's reply" data-seconds="0" data-note-key="appendix-steel" data-note="For questions about Scope 3: the supplier sends three different numbers, and only one is the product footprint for the steel Kellbrunn bought." data-route="hidden">
+    <h1 class="scene-title">Which number from the supplier's reply?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <p class="st-case"><svg class="icon icon--48" aria-hidden="true"><use href="#i-rows" /></svg><span>Steel strip from Bandstahl Wendelin GmbH (fictional): <b><span data-j="inputs.steel.t_2024" data-form="int">2,400</span> t in 2024 and in 2025</b>. Spend €<span data-j="inputs.steel.eur_2024" data-form="int">1,800,000</span> in 2024 and €<span data-j="inputs.steel.eur_2025" data-form="int">2,160,000</span> in 2025.</span></p>
+    <ol class="st-opts">
+      <li class="st-opt st-opt--right">
+        <p class="st-opt__head"><span class="chip chip--pass"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg>Use this one</span></p>
+        <p class="st-opt__what">Product footprint from the supplier</p>
+        <p class="st-opt__calc"><span data-j="inputs.steel.supplierPcf_kg_per_t" data-form="int">1,650</span> kg CO₂e per t × <span data-j="inputs.steel.t_2025" data-form="int">2,400</span> t</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_supplier_t">3,960 t</span></p>
+      </li>
+      <li class="st-opt">
+        <p class="st-opt__head"><span class="st-opt__tag">Wrong number</span></p>
+        <p class="st-opt__what">The supplier's own Scope 1 + 2 intensity</p>
+        <p class="st-opt__calc"><span data-j="inputs.steel.supplierS12Intensity_t_per_t">0.12</span> t per t × <span data-j="inputs.steel.t_2025" data-form="int">2,400</span> t</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_intensity_wrong_t">288 t</span> <span class="st-opt__pct"><span class="num" data-num="steel_intensity_wrong_pct">−93%</span></span></p>
+      </li>
+      <li class="st-opt">
+        <p class="st-opt__head"><span class="st-opt__tag">Moves with prices</span></p>
+        <p class="st-opt__what">Spend-based, on nominal 2025 euros</p>
+        <p class="st-opt__calc">€<span data-j="inputs.steel.eur_2025" data-form="int">2,160,000</span> × <span data-j="inputs.steel.spendFactor_kg_per_eur">2.4</span> kg CO₂e per €</p>
+        <p class="st-opt__big"><span class="num" data-num="steel_spend_nominal_t">5,184 t</span> <span class="st-opt__pct"><span class="num" data-num="steel_spend_yoy_pct">+20%</span></span></p>
+        <p class="st-opt__note">while the tonnage stayed flat. In 2024 prices (deflator <span data-j="inputs.steel.deflator_2025_vs_2024">1.2</span>): <span class="num" data-num="steel_spend_deflated_t">4,320 t</span>, the same as the 2024 spend figure <span class="num" data-num="steel_spend_2024_t">4,320 t</span>.</p>
+      </li>
+    </ol>
+    <p class="focus-line st-line">Steel alone (<span class="num" data-num="steel_supplier_t">3,960 t</span>) is larger than Scope 1 and 2 together (<span class="num" data-num="total_lb_2025">1,915.2 t</span> location-based).</p>
+  </section>
+
+  <section class="slide" id="appendix-scope2-order" data-kind="appendix" data-label="Market-based order" data-section="Appendix A8 · market-based: which rate for which kWh" data-seconds="0" data-note-key="appendix-scope2-order" data-note="For questions about the market-based method: which rate applies to which kilowatt hour, in which order." data-route="hidden">
+    <h1 class="scene-title">Market-based: which rate for which kWh?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <p class="so-lead">The order from the GHG Protocol Scope 2 Guidance (2015), applied to Kellbrunn's <span class="num" data-num="el_total_mwh">3,610 MWh</span>:</p>
+    <ol class="so-steps">
+      <li class="so-step">
+        <span class="so-n">1</span>
+        <p class="so-what"><b>Energy attribute certificates</b><span>for the kWh they cover: guarantees of origin, cancelled</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg><span>Werk Süd <span class="num" data-num="go_mwh">1,240 MWh</span> × <span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span> = 0 t</span></p>
+      </li>
+      <li class="so-step so-step--empty">
+        <span class="so-n">2</span>
+        <p class="so-what"><b>Supplier-specific emission rate</b><span>if it meets the quality criteria. Every German bill carries the Stromkennzeichnung under § 42 EnWG; check whether it qualifies.</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Empty here: the kit's bills leave out the Stromkennzeichnung for simplicity.</span></p>
+      </li>
+      <li class="so-step">
+        <span class="so-n">3</span>
+        <p class="so-what"><b>Residual mix</b><span>for the rest</span></p>
+        <p class="so-case"><svg class="icon icon--40" aria-hidden="true"><use href="#i-factor" /></svg><span>Werk Nord and Lager Ost <span class="num" data-num="el_uncovered_mwh">2,370 MWh</span> × <span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span> = <b><span class="num" data-num="s2mb_2025">1,422.0 t</span></b></span></p>
+      </li>
+    </ol>
+    <p class="ax-note so-small so-small--a">Simplified: the Guidance also lists direct contracts (PPAs), and allows a grid average only where no residual mix is published. AIB publishes one for Germany.</p>
+    <p class="ax-note so-small so-small--b">Hourly matching and deliverability were consultation proposals (Oct 2025 to Jan 2026). The 2015 Guidance still applies.</p>
+  </section>
+
+  <section class="slide" id="appendix-sources" data-kind="appendix" data-label="Sources" data-section="Appendix · sources" data-seconds="0" data-note-key="appendix-sources" data-note="For questions about where a rule, a date or a published figure comes from. All links were read on 26 September 2026." data-route="hidden">
+    <h1 class="scene-title">Sources, read on 26 September 2026</h1>
+    <div class="sc-col">
+      <p class="ax-head">Regulation</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/dir/2026/470/oj/eng" target="_blank" rel="noopener">Directive (EU) 2026/470</a><span>EUR-Lex</span></li>
+        <li><a class="deck-link" href="https://www.consilium.europa.eu/en/press/press-releases/2026/02/24/council-signs-off-simplification-of-sustainability-reporting-and-due-diligence-requirements-to-boost-eu-competitiveness" target="_blank" rel="noopener">Council press release, 24 Feb 2026</a><span>consilium.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.europarl.europa.eu/news/en/press-room/20251211IPR32164/simplified-sustainability-reporting-and-due-diligence-rules-for-businesses" target="_blank" rel="noopener">European Parliament press release, Dec 2025</a><span>value-chain cap</span></li>
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/reg_del/2026/1560/oj/eng" target="_blank" rel="noopener">Delegated Regulation (EU) 2026/1560</a><span>voluntary standard</span></li>
+        <li><a class="deck-link" href="https://finance.ec.europa.eu/news/commission-adopts-revised-sustainability-reporting-standards-reduce-administrative-burdens-eu-2026-07-03_en" target="_blank" rel="noopener">Revised ESRS, Commission, 3 Jul 2026</a><span>finance.ec.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.efrag.org/en/news-and-calendar/news/efrag-releases-the-voluntary-sustainability-reporting-standard-for-nonlisted-smes" target="_blank" rel="noopener">EFRAG VSME</a><span>efrag.org</span></li>
+        <li><a class="deck-link" href="https://accountancyeurope.eu/wp-content/uploads/2026/01/260129-Omnibus-explained-CSRD-factsheet.pdf" target="_blank" rel="noopener">Omnibus explained, 29 Jan 2026</a><span>Accountancy Europe</span></li>
+        <li><a class="deck-link" href="https://eur-lex.europa.eu/eli/dir/2024/825/oj/eng" target="_blank" rel="noopener">Directive (EU) 2024/825</a><span>EUR-Lex</span></li>
+        <li><a class="deck-link" href="https://commission.europa.eu/document/download/3c257883-bb2a-4dd9-a6dc-501d587bb34f_en?filename=faq-empowerting-consumers-gtd.pdf" target="_blank" rel="noopener">Commission FAQ on 2024/825</a><span>commission.europa.eu</span></li>
+        <li><a class="deck-link" href="https://www.ebnerstolz.de/de/unser-angebot/leistungen/rechtsberatung/wirtschaftsrecht-commercial/umsetzung-empco-richtlinie-99600.html" target="_blank" rel="noopener">UWG transposition, Ebner Stolz</a><span>secondary</span></li>
+        <li><a class="deck-link" href="https://kpmg-law.de/die-empco-tritt-in-kraft-antworten-auf-die-wichtigsten-praxisfragen" target="_blank" rel="noopener">UWG transposition, KPMG Law</a><span>secondary</span></li>
+        <li><a class="deck-link" href="https://www.europarl.europa.eu/legislative-train/theme-a-european-green-deal/file-substantiating-green-claims" target="_blank" rel="noopener">Green Claims Directive, legislative train</a><span>europarl.europa.eu</span></li>
+        <li><a class="deck-link" href="https://blogs.pwc.de/de/accounting-and-reporting/article/254119/aktuelle-entwicklungen-zur-umsetzung-der-csrd-in-deutsches-recht" target="_blank" rel="noopener">CSRD transposition in Germany, PwC</a><span>secondary</span></li>
+      </ul>
+    </div>
+    <div class="sc-col sc-col--right">
+      <p class="ax-head">Carbon accounting</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://ghgprotocol.org/corporate-standard" target="_blank" rel="noopener">GHG Protocol Corporate Standard</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/sites/default/files/2023-03/Scope%202%20Guidance.pdf" target="_blank" rel="noopener">Scope 2 Guidance, 2015</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/blog/ghg-protocol-announces-key-standard-development-updates" target="_blank" rel="noopener">Standard development update, 29 Jul 2026</a><span>ghgprotocol.org</span></li>
+        <li><a class="deck-link" href="https://ghgprotocol.org/blog/release-ghg-protocol-opens-public-consultations-scope-2-and-electricity-sector-consequential" target="_blank" rel="noopener">Scope 2 consultation</a><span>ghgprotocol.org</span></li>
+      </ul>
+      <p class="ax-head">Factors (real-world anchors only)</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://www.umweltbundesamt.de/themen/co2-emissionen-pro-kilowattstunde-strom-2024" target="_blank" rel="noopener">UBA grid factor 2024</a><span>umweltbundesamt.de</span></li>
+        <li><a class="deck-link" href="https://www.aib-net.org/facts/european-residual-mix/2024" target="_blank" rel="noopener">AIB European residual mix 2024</a><span>aib-net.org</span></li>
+        <li><a class="deck-link" href="https://www.aib-net.org/sites/default/files/assets/eecs/Residual%20Mix/AIB_2025_Residual_Mix_Final%20Results_%2026052026.pdf" target="_blank" rel="noopener">AIB residual mix, 2025 results</a><span>26 May 2026</span></li>
+        <li><a class="deck-link" href="https://ecoinvent.org/licenses" target="_blank" rel="noopener">ecoinvent licences</a><span>ecoinvent.org</span></li>
+        <li><a class="deck-link" href="https://www.iea.org/data-and-statistics/data-product/emissions-factors-2025" target="_blank" rel="noopener">IEA emissions factors</a><span>licensed</span></li>
+        <li><a class="deck-link" href="https://www.entega.de/ratgeber/gas/gasverbrauch/heizwert-gas" target="_blank" rel="noopener">Gas: Brennwert, Heizwert and m³ to kWh</a><span>entega.de</span></li>
+      </ul>
+      <p class="ax-head">AI extraction accuracy</p>
+      <ul class="sc-list">
+        <li><a class="deck-link" href="https://arxiv.org/abs/2312.17264" target="_blank" rel="noopener">ESGReveal</a><span>arXiv</span></li>
+        <li><a class="deck-link" href="https://link.springer.com/article/10.1007/s13042-026-03146-w" target="_blank" rel="noopener">ESG Insight</a><span>Springer</span></li>
+        <li><a class="deck-link" href="https://arxiv.org/html/2507.18932v2" target="_blank" rel="noopener">MMESGBench</a><span>arXiv</span></li>
+      </ul>
+    </div>
+  </section>
 
 </deck-stage>
 </main>

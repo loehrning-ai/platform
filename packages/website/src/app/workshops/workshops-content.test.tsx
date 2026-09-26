@@ -23,11 +23,11 @@ describe("<WorkshopsContent>", () => {
 
     const heading = screen.getByRole("heading", {
       level: 1,
-      name: "Workshops mit einem Fall und einer Vorlage für deine Arbeit",
+      name: "Workshops mit Fall und Vorlage",
     });
     expect(heading).not.toHaveStyle({ opacity: "0" });
     expect(heading.closest("[data-cover-band]")).toHaveClass("dark-section");
-    expect(screen.getByText("Workshops · 0 Fälle · kostenlos")).toBeVisible();
+    expect(screen.getByText("Workshops · 0 Fälle")).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Derzeit ist kein Workshop veröffentlicht.",
     );
@@ -44,7 +44,7 @@ describe("<WorkshopsContent>", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Workshops with one case and a template for your own work",
+        name: "Workshops with a case and a template",
       }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
@@ -82,8 +82,25 @@ describe("<WorkshopsContent>", () => {
     ).toBeInTheDocument();
     expect(within(w03).getByText("A browser, no AI account")).toBeInTheDocument();
     expect(
-      within(w02).getByText(/^The Claude desktop app with Claude Code/),
+      within(w02).getByText(
+        "Claude desktop app and a Claude plan that includes Claude Code",
+      ),
     ).toBeInTheDocument();
+    // U+2212 reads like a dash in the brand face; the hub shows ASCII minus.
+    expect(w03.textContent).not.toContain("\u2212");
+    expect(within(w03).getByText(/-€19,960/)).toBeInTheDocument();
+    // Seven material roles fold to four nouns plus a count, in a fixed order.
+    expect(w03.querySelector("[data-workshop-roles]")?.textContent).toBe(
+      "Deck · Demo · Kit · Learner guide · 3 more",
+    );
+    expect(w03.textContent).not.toContain("For data teams");
+    for (const item of w03.querySelectorAll("[data-workshop-roles] > span")) {
+      expect(item).toHaveClass("whitespace-nowrap");
+    }
+    expect(screen.getByText("Newest first")).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/\bfree\b/i).map((node) => node.textContent),
+    ).toEqual(["All materials free, no sign-up"]);
     expect(
       within(w03).getByText("Run live on 25 September 2026"),
     ).toBeInTheDocument();
@@ -106,9 +123,9 @@ describe("<WorkshopsContent>", () => {
       screen.getByRole("link", { name: "View workshop: Can AI predict the future?" }),
     ).toHaveAttribute("href", "/en/workshops/ki-prognosen-einschaetzen");
 
-    // The one primary action goes into the first row's workshop page.
+    // The one primary action goes into the recommended start, Workshop 03.
     expect(
-      screen.getByRole("link", { name: "Start with workshop 03" }),
+      screen.getByRole("link", { name: "Start with Workshop 03" }),
     ).toHaveAttribute("href", "/en/workshops/datenbereitschaft-fuer-ki");
 
     const index = screen.getByRole("navigation", {
@@ -150,7 +167,7 @@ describe("<WorkshopsContent>", () => {
     ).toHaveAttribute("data-callout", "boundary");
   });
 
-  it("marks workshop 04 as new and leads with it once it is in the registry", () => {
+  it("marks workshop 04 as new and lists it first, while the button keeps 03", () => {
     const [w03] = getWorkshops("de").filter((w) => w.number === "03");
     const w04: Workshop = {
       ...w03,
@@ -173,8 +190,30 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[0]).getByText("Neu")).toHaveAttribute("data-chip", "meta");
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
     expect(
-      screen.getByRole("link", { name: "Mit Workshop 04 beginnen" }),
-    ).toHaveAttribute("href", "/workshops/esg-berichte-mit-ki");
+      screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
+    ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");
+    expect(screen.queryByRole("link", { name: /Workshop 04 beginnen/ })).toBeNull();
+    // The team note names every workshop with a presenter view.
+    expect(
+      screen.getByText(/^Workshops 03 und 04 haben eine Moderationsansicht/),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the team note small and says how to open the presenter view", () => {
+    render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
+
+    const heading = screen.getByRole("heading", { level: 2, name: "Mit deinem Team" });
+    expect(heading.closest("[data-workshop-teams]")).not.toBeNull();
+    expect(
+      screen.getByText(
+        "Workshop 03 hat eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P. Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
+    expect(screen.getByText("Workshops · 3 Fälle")).toBeInTheDocument();
+    expect(
+      screen.getAllByText(/kostenlos/).map((node) => node.textContent),
+    ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
   });
 
   it("uses deck-cover previews on flat Werkzeichnung rows", () => {
@@ -200,11 +239,25 @@ describe("<WorkshopsContent>", () => {
 
     const rows = container.querySelectorAll("[data-testid='workshop-row']");
     for (const row of rows) expect(row).toHaveClass("border-b", "border-hairline");
+    // Only real deck covers are images; the others get the CSS mini-cover,
+    // so every row shows the same graphit cover language.
     const previews = container.querySelectorAll("img");
-    expect(previews).toHaveLength(3);
+    expect(previews).toHaveLength(1);
+    expect(previews[0]).toHaveAttribute(
+      "src",
+      "/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
+    );
     expect(previews[0]).toHaveAttribute("loading", "eager");
     expect(previews[0]).toHaveAttribute("fetchpriority", "high");
-    expect(previews[1]).toHaveAttribute("loading", "lazy");
-    expect(previews[2]).toHaveAttribute("loading", "lazy");
+    const miniCovers = container.querySelectorAll("[data-workshop-mini-cover]");
+    expect(miniCovers).toHaveLength(2);
+    for (const cover of miniCovers) {
+      expect(cover).toHaveAttribute("aria-hidden", "true");
+      expect(cover.querySelector("[data-werk-globe-country]")).toBeNull();
+    }
+    // Keyboard focus rings the whole clickable row.
+    for (const row of rows) {
+      expect(row).toHaveClass("has-[a:focus-visible]:outline-[3px]");
+    }
   });
 });

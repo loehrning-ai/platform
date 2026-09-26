@@ -288,7 +288,82 @@ function genBridge() {
   return `<svg class="br" id="two-scope-2-bridge" viewBox="0 0 ${W} ${rows.length * rh}" width="${W}" height="${rows.length * rh}" role="img" aria-label="Bridge from location-based to market-based Scope 2, 2025.">${out}</svg>`;
 }
 
-const GENERATORS = { doc: genDoc, waterfall: genWaterfall, grid: genGrid, ledger: genLedger, factors: genFactors, stack: genStack, bridge: genBridge };
+// The 2024 to 2025 bridge on `what-drove-it`, one per method, from drivers.lb / drivers.mb. Bars start
+// at a cut (break mark on the baseline), as on `anatomy`; each chart has its own scale. The frame with
+// both totals shows on entry; the change bars appear on press `step`. Params: method (lb|mb), step.
+function genDrivers(params) {
+  const m = params.method;
+  const list = data.drivers[m];
+  const startKey = `total_${m}_2024`, endKey = `total_${m}_2025`;
+  const start = data.numbers[startKey].value, end = data.numbers[endKey].value;
+  const keyFor = {
+    lb: { grid_factor: "drv_lb_grid_t", less_electricity: "drv_lb_elec_t", less_gas: "drv_lb_gas_t", less_diesel: "drv_lb_diesel_t" },
+    mb: { certificates: "drv_mb_cert_t", less_electricity: "drv_mb_elec_t", less_gas_diesel: "drv_mb_s1_t" },
+  }[m];
+  const names = {
+    grid_factor: ["Grid", "factor"], certificates: ["Guarantees", "of origin"], less_electricity: ["Less", "electricity"],
+    less_gas: ["Less", "gas"], less_diesel: ["Less", "diesel"], less_gas_diesel: ["Less gas", "and diesel"],
+  };
+  const W = 820, H = 356, top = 52, bottom = 284, col = 136, barW = 92, x0 = 22;
+  const span = start - end;
+  const lo = Math.floor((end - 0.4 * span) / 10) * 10, hi = Math.ceil((start + 0.1 * span) / 10) * 10;
+  const y = (v) => top + ((hi - v) / (hi - lo)) * (bottom - top);
+  const frame = [], bars = [];
+  const colX = (k) => x0 + k * col;
+  const total = (k, key, cls) => {
+    const v = data.numbers[key].value, yt = y(v);
+    frame.push(`<rect class="dv-bar ${cls}" x="${colX(k)}" y="${fmt(yt)}" width="${barW}" height="${fmt(bottom - yt)}" />`);
+    frame.push(`<text class="dv-val" x="${colX(k) + barW / 2}" y="${fmt(yt - 14)}" text-anchor="middle" data-num="${key}" data-form="bare">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
+  };
+  total(0, startKey, "dv-bar--prior");
+  let running = start;
+  list.forEach((d, i) => {
+    const k = i + 1, next = running + d.t;
+    const a = y(running), b = y(next), h = Math.max(3, b - a);
+    const key = keyFor[d.id];
+    if (!key) throw new Error(`gen:drivers no number key for ${m}.${d.id}`);
+    bars.push(`<path class="dv-link" d="M${colX(k - 1) + barW} ${fmt(a)}H${colX(k)}" data-motion="draw" style="--order:${i}" />`);
+    bars.push(`<rect class="dv-bar dv-bar--change${i === 0 ? " dv-bar--lead" : ""}" x="${colX(k)}" y="${fmt(a)}" width="${barW}" height="${fmt(h)}" data-motion="grow" style="--grow-origin: 50% 0%; --order:${i}" />`);
+    bars.push(`<text class="dv-val dv-val--change" x="${colX(k) + barW / 2}" y="${fmt(a + h + 32)}" text-anchor="middle" data-num="${key}" data-form="bare" data-motion="fade" style="--order:${i}">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
+    running = next;
+  });
+  const endK = list.length + 1;
+  bars.push(`<path class="dv-link" d="M${colX(endK - 1) + barW} ${fmt(y(running))}H${colX(endK)}" data-motion="draw" style="--order:${list.length}" />`);
+  total(endK, endKey, "dv-bar--now");
+  // Own use: a bracket over every bar after the first (the factor or the certificate).
+  const ownKey = `drv_${m}_own_t`;
+  const bx1 = colX(2) - 6, bx2 = colX(endK - 1) + barW + 6;
+  const by = y(start) - 8;
+  bars.push(`<g class="dv-own"><path class="dv-own__bracket" d="M${bx1} ${fmt(by + 14)}V${fmt(by)}H${bx2}V${fmt(by + 14)}" data-motion="draw" style="--order:${list.length}" />`
+    + `<text class="dv-own__label" x="${(bx1 + bx2) / 2}" y="${fmt(by - 14)}" text-anchor="middle" data-motion="fade" style="--order:${list.length}">own use <tspan class="dv-own__num" data-num="${ownKey}">${esc(fillApi.numberText(data, ownKey))}</tspan></text></g>`);
+  const labels = [];
+  const colNames = [["2024", ""], ...list.map((d) => names[d.id]), ["2025", ""]];
+  colNames.forEach(([l1, l2], k) => {
+    labels.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text>`);
+    if (l2) labels.push(`<text class="dv-name dv-name--sub" x="${colX(k) + barW / 2}" y="${bottom + 60}" text-anchor="middle">${esc(l2)}</text>`);
+  });
+  const axis = `<path class="dv-axis" d="M${x0 - 18} ${bottom}H${colX(endK) + barW + 10}" /><path class="dv-break" d="M${x0 - 24} ${bottom + 10}l10 -20M${x0 - 14} ${bottom + 10}l10 -20" />`;
+  const label = m === "lb" ? "Location-based Scope 1 and 2, 2024 to 2025" : "Market-based Scope 1 and 2, 2024 to 2025";
+  return `<svg class="dv" id="what-drove-it-${m}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${attr(label)}: one bar per driver.">`
+    + `<g class="dv-frame">${axis}${frame.join("")}${labels.join("")}</g>`
+    + `<g class="dv-changes"${stepAttr(params.step)}>${bars.join("")}</g></svg>`;
+}
+
+// Both waterfalls as one table on `appendix-arithmetic`: step, location-based change and running
+// total, market-based change and running total (waterfall.lb / waterfall.mb, same order T1 to T7).
+function genWfTable() {
+  const lb = data.waterfall.lb, mb = data.waterfall.mb;
+  const names = { start: "Raw-folder answer", T1: "T1 duplicate out", T2: "T2 October in", T3: "T3 Talbrück out", T4: "T4 unit as MWh", T5: "T5 Hs gas factor", T6: "T6 AdBlue out", T7: "T7 residual mix" };
+  const rows = lb.map((s, i) => {
+    const t = mb[i];
+    if (t.step !== s.step) throw new Error("gen:wftable waterfall order differs");
+    const c = (w, field) => (w[field] == null ? "" : j(`waterfall.${w === s ? "lb" : "mb"}.${w.step}.${field}`));
+    return `<tr><td>${esc(names[s.step])}</td><td class="ax-num">${c(s, "change_en")}</td><td class="ax-num">${c(s, "running_en")}</td><td class="ax-num">${c(t, "change_en")}</td><td class="ax-num">${c(t, "running_en")}</td></tr>`;
+  }).join("");
+  return `<table class="ax-table ax-wf"><thead><tr><th>Correction, in order</th><th class="ax-num">LB</th><th class="ax-num">running</th><th class="ax-num">MB</th><th class="ax-num">running</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+const GENERATORS = { doc: genDoc, waterfall: genWaterfall, grid: genGrid, ledger: genLedger, factors: genFactors, stack: genStack, bridge: genBridge, drivers: genDrivers, wftable: genWfTable };
 
 function parseParams(text) {
   const params = {};
@@ -339,6 +414,11 @@ const normals = (token) => {
 // Legal references and thresholds (Directive 2024/825, 2026/470, 1,000 employees, €450m, Scope 3
 // categories 13 and 15, § 42 EnWG, § 5 UWG), the canvas, and one rounded vote option ("About 500 t").
 const LEGAL = new Set(["825", "470", "1000", "450", "15", "13", "42", "5", "1920", "1080", "500"]);
+// Reference facts quoted on the appendix and limits scenes (SPEC §2.4 A2, §2.3 limits, §9), which are
+// not case data: Delegated Regulations 2026/1560 and 2026/1563, the 2015 Scope 2 Guidance, the UBA
+// grid factor 2022 (433 g CO2/kWh; 386 and 363 are in the factor notes of the dataset) and the two
+// published extraction accuracies (ESGReveal 76.9%, ESG Insight 78.2%).
+for (const ref of ["1560", "1563", "2015", "433", "76.9", "78.2"]) LEGAL.add(ref);
 const visible = html
   .replace(/<script[\s\S]*?<\/script>/g, " ")
   .replace(/<style[\s\S]*?<\/style>/g, " ")

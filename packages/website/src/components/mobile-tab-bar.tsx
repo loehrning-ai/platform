@@ -93,7 +93,7 @@ export function buildMobileTabs(locale: Locale): readonly MobileTab[] {
  */
 const TAB_BAR_CLASS_NAME = [
   "fixed inset-x-0 bottom-0 z-40",
-  "border-t border-border bg-background",
+  "border-t border-hairline bg-background",
   "px-safe pb-safe",
   "lg:hidden",
   "[:root[data-reader=focus]_&]:hidden",

@@ -210,6 +210,10 @@ describe("mobile tab bar active state", () => {
 
     const current = within(tabBar()).getAllByRole("link", { current: "page" });
     expect(current.map((link) => link.textContent)).toEqual(["Kurse"]);
+    // The active tab is an ink rule plus weight, so the state is not carried
+    // by colour alone and the persistent chrome spends no Mennige.
+    expect(current[0]).toHaveClass("border-foreground", "font-semibold");
+    expect(current[0].className).not.toContain("brand-orange");
   });
 
   it("resolves the locale prefix before deciding the active tab", async () => {

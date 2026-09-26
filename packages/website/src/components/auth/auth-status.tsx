@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LogIn, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cx as cn } from "@/components/werk/cx";
 import { hasSupabasePublicConfig } from "@/lib/supabase/config";
 import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
 import { localizeHref } from "@/lib/i18n/locale";
@@ -79,8 +79,8 @@ export function AuthStatus({
       prefetch={false}
       onClick={onNavigate}
       className={cn(
-        "inline-flex min-h-11 min-w-[6.75rem] items-center justify-center gap-2 rounded-xl border border-brand-cobalt bg-brand-cobalt px-3 py-2 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-[background-color,border-color,color,transform] duration-150 hover:-translate-y-0.5 hover:border-foreground hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none",
-        mobile && "mt-3 w-full justify-between border-brand-cobalt px-4",
+        "inline-flex min-h-11 min-w-[6.75rem] items-center justify-center gap-2 border border-foreground bg-transparent px-3 py-2 text-sm font-semibold text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+        mobile && "mt-3 w-full justify-between px-4",
       )}
     >
       <Icon size={14} aria-hidden="true" />

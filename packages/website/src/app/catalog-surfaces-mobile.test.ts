@@ -127,9 +127,10 @@ describe("catalog surfaces below lg", () => {
     );
     expect(row).toContain("md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]");
     // The cover-band index is a one-line rail on a phone, keyboard reachable
-    // through its links, and a wrapping row from sm that never scrolls.
+    // through its links, and a wrapping row from sm that never scrolls. End
+    // padding lets the last item snap fully clear of the edge.
     expect(workshops).toContain(
-      "flex snap-x gap-x-6 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible",
+      "flex snap-x scroll-px-4 gap-x-6 overflow-x-auto pb-2 pr-4 sm:flex-wrap sm:overflow-visible sm:pr-0",
     );
     expect(workshops).toContain("pt-14 sm:pt-20");
   });

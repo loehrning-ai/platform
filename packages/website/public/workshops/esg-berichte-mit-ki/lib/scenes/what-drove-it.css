@@ -1,0 +1,208 @@
+/* what-drove-it: the AI's reason struck through in ink, then two bridges from 2024 to 2025, one per
+   method, each on its own cut scale. 2024 in slate, 2025 solid ink, one ink bar per driver. The
+   share line of the chart under discussion carries the Mennige bar. Press 4: the rewritten sentence. */
+
+#what-drove-it > .wd-claim {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin: 0;
+}
+
+#what-drove-it .wd-claim__who {
+  color: var(--slate);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+#what-drove-it .wd-claim__text {
+  position: relative;
+  font-size: var(--t-lead);
+  font-weight: 600;
+}
+
+#what-drove-it .wd-strike {
+  position: absolute;
+  top: calc(50% - 4px);
+  left: -6px;
+  width: calc(100% + 12px);
+  height: 12px;
+  overflow: visible;
+}
+
+#what-drove-it .wd-strike line {
+  stroke: var(--ink);
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+}
+
+#what-drove-it > .wd-chart {
+  position: absolute;
+  top: 304px;
+  display: grid;
+  width: 820px;
+  gap: 4px;
+}
+
+#what-drove-it > .wd-chart--lb { left: var(--margin-x); }
+#what-drove-it > .wd-chart--mb { right: var(--margin-x); }
+
+#what-drove-it .wd-chart__head {
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+#what-drove-it .wd-chart__head .num {
+  color: var(--ink);
+  font-size: inherit;
+}
+
+#what-drove-it .dv {
+  display: block;
+  overflow: visible;
+}
+
+#what-drove-it .dv-bar--prior {
+  fill: var(--slate-soft);
+}
+
+#what-drove-it .dv-bar--now,
+#what-drove-it .dv-bar--change {
+  fill: var(--ink);
+}
+
+#what-drove-it .dv-link {
+  fill: none;
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+}
+
+#what-drove-it .dv-axis,
+#what-drove-it .dv-break {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#what-drove-it .dv-val {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 26px;
+  font-weight: 700;
+  font-feature-settings: "tnum" 1;
+}
+
+#what-drove-it .dv-name {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+#what-drove-it .dv-name--sub {
+  fill: var(--slate);
+  font-weight: 500;
+}
+
+#what-drove-it .dv-own__bracket {
+  fill: none;
+  stroke: var(--slate);
+  stroke-width: 3;
+}
+
+#what-drove-it .dv-own__label {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+#what-drove-it .dv-own__num {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+#what-drove-it .wd-share {
+  position: relative;
+  margin: 4px 0 0;
+  padding: 2px 0 2px 18px;
+  color: var(--slate);
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+#what-drove-it .wd-share::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 6px;
+  background: var(--ink);
+}
+
+#what-drove-it .wd-share b {
+  color: var(--ink);
+}
+
+#what-drove-it .wd-share b .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* One Mennige figure per step: the location-based share on press 2, the market-based one on press 3. */
+#what-drove-it[data-step-current="2"] .wd-share--lb::before,
+#what-drove-it[data-step-current="3"] .wd-share--mb::before {
+  background: var(--mennige);
+}
+
+#what-drove-it > .wd-sentence {
+  position: absolute;
+  top: 800px;
+  left: var(--margin-x);
+  width: 1728px;
+  padding: 14px var(--s4) 16px calc(var(--s4) + 8px);
+  border: 4px solid var(--ink);
+  background: var(--papier);
+}
+
+#what-drove-it > .wd-sentence::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  width: 12px;
+  background: var(--mennige);
+}
+
+#what-drove-it .wd-sentence__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  color: var(--slate);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+#what-drove-it .wd-sentence__label .icon {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2.5px;
+}
+
+#what-drove-it .wd-sentence__text {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.35;
+}

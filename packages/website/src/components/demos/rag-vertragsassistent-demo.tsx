@@ -1120,7 +1120,6 @@ function RagContractAssistantEnglish() {
         style={{
           border: `1px solid ${DEMO.ink}`,
           background: DEMO.kalk,
-          boxShadow: `3px 3px 0 ${DEMO.ink}`,
           minWidth: 0,
         }}
       >

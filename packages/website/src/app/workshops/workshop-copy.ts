@@ -25,7 +25,7 @@ export interface WorkshopPageCopy {
   readonly catalog: {
     // Hub (design-direction 7.1, workshop-standard 4.2).
     readonly empty: string;
-    /** Cover-band kicker, e.g. "Workshops · 3 Fälle · kostenlos". Works for any count. */
+    /** Cover-band kicker, e.g. "Workshops · 3 Fälle". Works for any count. */
     readonly hubKicker: (count: number) => string;
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
@@ -41,7 +41,8 @@ export interface WorkshopPageCopy {
     /** Five stations, the spine every workshop follows. Static: a description, not progress. */
     readonly routeStations: readonly WorkshopRouteStation[];
     readonly listHeading: string;
-    readonly listCaption: (count: number) => string;
+    /** Right-hand note of the list head: says how the list is ordered. */
+    readonly listCaption: string;
     /** "Workshop 03", the start of a row's kicker line. */
     readonly workshopNumber: (number: string) => string;
     /** Label before the workshop's fixed question on a row. */
@@ -55,6 +56,18 @@ export interface WorkshopPageCopy {
     readonly requirementBrowserOnly: string;
     /** Label before the material roles caption. */
     readonly materialLabel: string;
+    /**
+     * Hub nouns for material roles whose detail-page label does not read as
+     * a material (the detail label of "builder" names an audience).
+     */
+    readonly materialNouns: Partial<Readonly<Record<WorkshopMaterialRole, string>>>;
+    /** Tail of a capped material list: "3 weitere". */
+    readonly moreMaterials: (count: number) => string;
+    /**
+     * Short hub wording of a workshop's limiting need, keyed by slug, where
+     * needs[0] is written for the detail page and reads long in a row.
+     */
+    readonly requirementShort: Readonly<Record<string, string>>;
     /** "Live 90 Min." */
     readonly minutesLive: (minutes: number) => string;
     /** "Allein ca. 60 Min." */
@@ -64,7 +77,8 @@ export interface WorkshopPageCopy {
     readonly newBadge: string;
     readonly viewWorkshop: string;
     readonly teamsHeading: string;
-    readonly teamsBody: string;
+    /** Takes the numbers of the workshops that ship a presenter view. */
+    readonly teamsBody: (numbers: readonly string[]) => string;
     /** Shown once under the list. */
     readonly boundary: string;
   };
@@ -159,15 +173,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
     catalog: {
       empty: "Derzeit ist kein Workshop veröffentlicht.",
       hubKicker: (count) =>
-        `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"} · kostenlos`,
-      hubHeading: "Workshops mit einem Fall und einer Vorlage für deine Arbeit",
+        `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
+      hubHeading: "Workshops mit Fall und Vorlage",
       hubLead:
         "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du prüfst eine Antwort an den Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
       hubIndexLabel: "Workshops auf dieser Seite",
       routeHeading: "So läuft jeder Workshop",
-      routeCaption: "75 bis 90 Minuten",
+      routeCaption: "60 bis 90 Minuten",
       routeStations: [
         { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
         { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
@@ -176,7 +190,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         { label: "Deine Vorlage", caption: "Eine Seite für deinen eigenen Fall" },
       ],
       listHeading: "Workshops",
-      listCaption: (count) => `${count} · kostenlos`,
+      listCaption: "Neueste zuerst",
       workshopNumber: (number) => `Workshop ${number}`,
       questionLabel: "Die Frage",
       quote: (text) => `„${text}“`,
@@ -184,14 +198,28 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       requirementLabel: "Du brauchst",
       requirementBrowserOnly: "Einen Browser, kein KI-Konto",
       materialLabel: "Material",
+      materialNouns: { builder: "Bauanleitung" },
+      moreMaterials: (count) => `${count} weitere`,
+      requirementShort: {
+        "geschaeftsberichte-mit-ki-lesen":
+          "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
+      },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Allein ca. ${minutes} Min.`,
       liveTested: (date) => `Live gehalten am ${date}`,
       newBadge: "Neu",
       viewWorkshop: "Workshop ansehen",
       teamsHeading: "Mit deinem Team",
-      teamsBody:
-        "Workshops mit Deck haben eine Moderationsansicht mit Notizen und Abstimmungsfragen; du öffnest sie mit P. Was du dafür brauchst, steht auf der jeweiligen Workshop-Seite.",
+      teamsBody: (numbers) => {
+        const tail =
+          "Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.";
+        if (numbers.length === 0) return tail;
+        const list =
+          numbers.length === 1
+            ? `Workshop ${numbers[0]} hat`
+            : `Workshops ${numbers.slice(0, -1).join(", ")} und ${numbers.at(-1)} haben`;
+        return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P. ${tail}`;
+      },
       boundary:
         "Alle Übungsfirmen sind erfunden. Wo echte Zahlen vorkommen, nennt die Workshop-Seite die Quelle. Gezeigte KI-Antworten sind Aufzeichnungen mit Datum und keine Live-Abfragen.",
     },
@@ -317,15 +345,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
     catalog: {
       empty: "No workshop is currently published.",
       hubKicker: (count) =>
-        `Workshops · ${count} ${count === 1 ? "case" : "cases"} · free`,
-      hubHeading: "Workshops with one case and a template for your own work",
+        `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
+      hubHeading: "Workshops with a case and a template",
       hubLead:
         "Each workshop centres on one question about an invented company. You check an answer against the data and finish by writing down how it applies to your own work.",
-      hubStart: (number) => `Start with workshop ${number}`,
+      hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
       hubIndexLabel: "Workshops on this page",
       routeHeading: "How every workshop runs",
-      routeCaption: "75 to 90 minutes",
+      routeCaption: "60 to 90 minutes",
       routeStations: [
         { label: "The question", caption: "One case and a question that stays to the end" },
         { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
@@ -334,22 +362,35 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         { label: "Your template", caption: "One page for your own case" },
       ],
       listHeading: "Workshops",
-      listCaption: (count) => `${count} · free`,
+      listCaption: "Newest first",
       workshopNumber: (number) => `Workshop ${number}`,
       questionLabel: "The question",
       quote: (text) => `“${text}”`,
-      leaveWith: "What you leave with",
+      leaveWith: "You leave with",
       requirementLabel: "You need",
       requirementBrowserOnly: "A browser, no AI account",
       materialLabel: "Materials",
+      materialNouns: { builder: "Build guide" },
+      moreMaterials: (count) => `${count} more`,
+      requirementShort: {
+        "geschaeftsberichte-mit-ki-lesen":
+          "Claude desktop app and a Claude plan that includes Claude Code",
+      },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Alone about ${minutes} min`,
       liveTested: (date) => `Run live on ${date}`,
       newBadge: "New",
       viewWorkshop: "View workshop",
       teamsHeading: "With your team",
-      teamsBody:
-        "Workshops with a deck have a presenter view with notes and room votes; press P to open it. Each workshop page lists what you need for it.",
+      teamsBody: (numbers) => {
+        const tail = "What you need for a group is on the workshop page.";
+        if (numbers.length === 0) return tail;
+        const list =
+          numbers.length === 1
+            ? `Workshop ${numbers[0]} has`
+            : `Workshops ${numbers.slice(0, -1).join(", ")} and ${numbers.at(-1)} have`;
+        return `${list} a presenter view with notes and voting questions. Open the deck and press P. ${tail}`;
+      },
       boundary:
         "All practice companies are invented. Where real figures appear, the workshop page names the source. AI answers shown are dated recordings, not live requests.",
     },

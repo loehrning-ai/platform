@@ -332,7 +332,8 @@ describe("landing page reframe", () => {
 
   it("landing page states concrete classification outcomes", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("eine konkrete Nutzung den Rollen Anbieter");
+    expect(content).toContain("Eine konkrete Nutzung einer Rolle zuordnen");
+    expect(content).toContain("Anbieter, Betreiber, Einführer oder Händler");
     expect(content).toContain("Risikoklassifizierung");
   });
 

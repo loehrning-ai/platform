@@ -287,7 +287,6 @@ function OutboundWorkflowDemoGerman() {
             flexDirection: "column",
             gap: 10,
             minWidth: 0,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
           {/* Lead picker — switches which of the 3 fictional contacts is shown */}
@@ -650,7 +649,6 @@ function OutboundWorkflowDemoGerman() {
             flexDirection: "column",
             minHeight: 260,
             minWidth: 0,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
           }}
         >
           <div
@@ -1367,7 +1365,6 @@ function OutboundWorkflowDemoEnglish() {
             border: `1px solid ${DEMO.ink}`,
             background: "white",
             color: "#222",
-            boxShadow: `3px 3px 0 ${DEMO.ink}`,
           }}
         >
           <div

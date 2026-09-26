@@ -249,7 +249,6 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
       style={{
         background: DEMO.kalk,
         border: `1px solid ${DEMO.ink}`,
-        boxShadow: `2px 2px 0 0 ${DEMO.leinen}`,
         display: "flex",
         flexDirection: "column",
         minWidth: 0,
@@ -661,7 +660,6 @@ function OutputShell({
         borderRight: `1px solid ${DEMO.ink}`,
         borderBottom: `1px solid ${DEMO.ink}`,
         borderLeft: `1px solid ${DEMO.ink}`,
-        boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
         padding: "14px 16px 16px",
       }}
     >
@@ -1104,7 +1102,6 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   background: "var(--color-brand-orange)",
                   position: "absolute",
                   bottom: 0,
-                  boxShadow: `2px 2px 0 0 ${DEMO.ink}`,
                 }}
               />
               {/* Value label */}

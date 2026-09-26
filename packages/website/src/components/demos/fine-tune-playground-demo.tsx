@@ -452,7 +452,6 @@ export default function FineTunePlaygroundDemo() {
             borderBottom: `2px solid var(--color-brand-orange)`,
             borderLeft: `2px solid var(--color-brand-orange)`,
             padding: 14,
-            boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
             position: "relative",
           }}
         >
@@ -469,7 +468,6 @@ export default function FineTunePlaygroundDemo() {
               fontWeight: 700,
               letterSpacing: "0.1em",
               border: `1px solid ${DEMO.ink}`,
-              boxShadow: `1px 1px 0 0 ${DEMO.ink}`,
             }}
           >
             +{accuracyDelta} {text("Punkte · Beispiel", "points · sample")}

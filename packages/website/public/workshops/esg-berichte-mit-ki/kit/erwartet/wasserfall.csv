@@ -1,0 +1,17 @@
+methode;umfang;reihenfolge;falle;schritt;aenderung_t;laufende_summe_t
+standortbasiert;Scope 1 + 2;0;start;Antwort auf den Rohordner (konstruiert);;1.866,5
+standortbasiert;Scope 1 + 2;1;T1;Doppelte Märzrechnung entfernen;-82,0;1.784,5
+standortbasiert;Scope 1 + 2;2;T2;Oktober aus den Zählerständen ergänzen;+80,0;1.864,5
+standortbasiert;Scope 1 + 2;3;T3;Talbrück (GU) ausschließen;-400,0;1.464,5
+standortbasiert;Scope 1 + 2;4;T4;Werk Süd als 1.240 MWh lesen;+495,5;1.960,0
+standortbasiert;Scope 1 + 2;5;T5;Hs-Gasfaktor verwenden;-41,8;1.918,2
+standortbasiert;Scope 1 + 2;6;T6;AdBlue herausnehmen;-3,0;1.915,2
+standortbasiert;Scope 1 + 2;7;T7;Residualmix für kWh ohne Nachweis;0,0;1.915,2
+marktbasiert;Scope 1 + 2;0;start;Antwort auf den Rohordner (konstruiert);;1.866,0
+marktbasiert;Scope 1 + 2;1;T1;Doppelte Märzrechnung entfernen;-82,0;1.784,0
+marktbasiert;Scope 1 + 2;2;T2;Oktober aus den Zählerständen ergänzen;+80,0;1.864,0
+marktbasiert;Scope 1 + 2;3;T3;Talbrück (GU) ausschließen;-400,0;1.464,0
+marktbasiert;Scope 1 + 2;4;T4;Werk Süd als 1.240 MWh lesen;0,0;1.464,0
+marktbasiert;Scope 1 + 2;5;T5;Hs-Gasfaktor verwenden;-41,8;1.422,2
+marktbasiert;Scope 1 + 2;6;T6;AdBlue herausnehmen;-3,0;1.419,2
+marktbasiert;Scope 1 + 2;7;T7;Residualmix für kWh ohne Nachweis;+474,0;1.893,2

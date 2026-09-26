@@ -20,7 +20,7 @@ import {
 } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
-import { cn } from "@/lib/utils";
+import { cx as cn } from "@/components/werk/cx";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { GITHUB_ORG } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
@@ -95,8 +95,8 @@ function NoScriptMobileGroup({
   readonly copy: GlobalNavigationCopy;
 }) {
   return (
-    <div className="border-t border-border pt-3">
-      <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+    <div className="border-t border-hairline pt-3">
+      <p className="text-label text-muted-foreground">
         {label}
       </p>
       <div className="mt-1 flex flex-col">
@@ -112,6 +112,21 @@ function NoScriptMobileGroup({
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * The current destination inside a menu: a small ink square plus a weight
+ * change, so the state never rests on colour alone. The slot is always
+ * reserved, so marking a row moves nothing.
+ */
+function ActiveMarker({ active }: { readonly active: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      data-nav-active-marker={active ? "true" : undefined}
+      className={cn("size-1.5 shrink-0", active ? "bg-foreground" : "bg-transparent")}
+    />
   );
 }
 
@@ -143,14 +158,14 @@ function LogoWordmark({
     >
       <m.div
         data-logo-mark
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
+        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center bg-mennige"
         aria-hidden="true"
         style={{
           rotate: prefersReducedMotion ? 0 : iconRotate,
         }}
       >
         <span
-          className="text-lg leading-none text-background"
+          className="text-lg leading-none text-paper"
           style={{
             fontFamily: LOCKUP_FONT_STACK,
             fontWeight: 900,
@@ -439,10 +454,10 @@ export function Nav() {
           onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
           onKeyDown={handleTriggerKeyDown(id)}
           className={cn(
-            "relative inline-flex min-h-11 cursor-pointer items-center gap-1 border-b-[3px] px-1 text-sm outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+            "relative inline-flex min-h-11 cursor-pointer items-center gap-1 border-y-2 border-t-transparent px-1 text-sm font-medium outline-none transition-colors duration-[120ms] hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
             active
-              ? "border-brand-orange text-foreground"
-              : "border-transparent text-muted-foreground",
+              ? "border-b-foreground text-foreground"
+              : "border-b-transparent text-muted-foreground",
           )}
         >
           {label}
@@ -465,7 +480,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-border/70 bg-paper p-2 shadow-card-hover"
+              className="absolute left-0 top-full mt-2 w-64 border border-foreground bg-card py-1 shadow-overlay"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -479,12 +494,13 @@ export function Nav() {
                     onClick={() => setOpenDropdown(null)}
                     aria-current={isCurrentPage(item.href) ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center border-l-[3px] px-3 py-2 text-sm outline-none transition-[background-color,border-color,color] duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
+                      "flex min-h-11 items-center gap-3 px-3 py-2 text-sm outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
                       isActivePath(item.href)
-                        ? "border-brand-orange text-foreground"
-                        : "border-transparent text-muted-foreground hover:text-foreground",
+                        ? "font-semibold text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
+                    <ActiveMarker active={isActivePath(item.href)} />
                     <span>{itemLabel}</span>
                   </Link>
                 );
@@ -499,8 +515,8 @@ export function Nav() {
   // The mobile dialog uses the same task groups as desktop.
   function renderMobileGroup(label: string, items: readonly NavItem[]) {
     return (
-      <section className="border-t border-border pt-3">
-        <p className="font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+      <section className="border-t border-hairline pt-3">
+        <p className="text-label text-muted-foreground">
           {label}
         </p>
         <div className="mt-1 flex flex-col">
@@ -514,13 +530,12 @@ export function Nav() {
                 onClick={() => setMobileOpen(false)}
                 aria-current={isCurrentPage(item.href) ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center border-l-[3px] px-3 text-sm text-muted-foreground transition-[background-color,border-color,color] duration-150 hover:bg-card-hover hover:text-foreground motion-reduce:transition-none",
-                  isActivePath(item.href) &&
-                    "border-brand-orange text-foreground",
-                  !isActivePath(item.href) && "border-transparent",
+                  "inline-flex min-h-11 items-center gap-3 px-1 text-sm text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground motion-reduce:transition-none",
+                  isActivePath(item.href) && "font-semibold text-foreground",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 )}
               >
+                <ActiveMarker active={isActivePath(item.href)} />
                 {itemLabel}
               </Link>
             );
@@ -531,18 +546,19 @@ export function Nav() {
   }
 
   return (
-    // Two shells, one markup tree. Below lg the bar is flush with the top edge
-    // of the viewport and exactly --nav-h-compact tall, which is the offset
-    // <main> reserves, so page content begins directly under it. The outer
-    // inset, the rounded pill, its shadow and the full border frame return at
-    // lg, where --nav-h reserves that pill, its inset and a breathing gap.
+    // One flat paper band at every width. It is flush with the top edge of the
+    // viewport and exactly as tall as the offset <main> reserves:
+    // --nav-h-compact below lg, --nav-h from lg. A hairline separates it from
+    // the page; there is no pill, no inset and no shadow. From lg the side
+    // padding lines the wordmark up with the site's max-w-6xl content column
+    // while the band itself stays full bleed.
     <nav
       aria-label={copy.mainNavigation}
-      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
+      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background/85 px-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:shadow-card"
+        className="flex h-[var(--nav-h-compact)] w-full items-center justify-between border-b border-hairline bg-background px-3 sm:px-5 lg:h-[var(--nav-h)] lg:px-[max(1.5rem,calc(50%_-_36rem))]"
       >
         <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
@@ -573,10 +589,10 @@ export function Nav() {
                 routePathname === hrefPathname(link.href) ? "page" : undefined
               }
               className={cn(
-                "inline-flex min-h-11 items-center border-b-[3px] px-1 text-sm transition-colors duration-150 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                "inline-flex min-h-11 items-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                 isActivePath(link.href)
-                  ? "border-brand-orange text-foreground"
-                  : "border-transparent text-muted-foreground",
+                  ? "border-b-foreground text-foreground"
+                  : "border-b-transparent text-muted-foreground",
               )}
             >
               {copy[link.label]}
@@ -593,7 +609,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={copy.githubOrganisation}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             <Github size={17} aria-hidden="true" />
           </a>
@@ -616,7 +632,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center p-2 text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -632,7 +648,7 @@ export function Nav() {
           It remains hidden during normal operation and replaces the
           interactive desktop/mobile controls through the layout's
           <noscript> stylesheet. */}
-      <div className="no-js-mobile-nav mx-2 mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 py-4 shadow-card sm:mx-3 sm:px-6 lg:mx-0 lg:hidden">
+      <div className="no-js-mobile-nav hidden border-b border-hairline bg-background px-4 py-4 sm:px-6 lg:hidden">
         <div className="grid gap-4 sm:grid-cols-2">
           <NoScriptMobileGroup
             label={copy.learning}
@@ -647,7 +663,7 @@ export function Nav() {
             copy={copy}
           />
         </div>
-        <div className="mt-3 flex flex-col border-t border-border pt-2">
+        <div className="mt-3 flex flex-col border-t border-hairline pt-2">
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
@@ -694,7 +710,7 @@ export function Nav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16 }}
-            className="mx-2 mt-2 overscroll-contain rounded-2xl border border-border/70 bg-paper shadow-card-hover sm:mx-3 lg:hidden"
+            className="mx-2 mt-2 overscroll-contain border border-foreground bg-card shadow-overlay sm:mx-3 lg:hidden"
           >
             {/* The sheet hangs 8px under the compact bar, so its own ceiling is
                 that bar plus the same gap again at the foot of the screen.
@@ -704,7 +720,7 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-pink/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />
@@ -713,7 +729,7 @@ export function Nav() {
               </div>
               {renderMobileGroup(copy.learning, lernenNavItems)}
               {renderMobileGroup(copy.practice, praxisNavItems)}
-              <div className="flex flex-col border-t border-border pt-2">
+              <div className="flex flex-col border-t border-hairline pt-2">
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -722,12 +738,11 @@ export function Nav() {
                     onClick={() => setMobileOpen(false)}
                     aria-current={isCurrentPage(link.href) ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center border-l-[3px] px-3 text-sm font-medium text-muted-foreground transition-[background-color,border-color,color] duration-150 hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
-                      isActivePath(link.href)
-                        ? "border-brand-orange text-foreground"
-                        : "border-transparent",
+                      "flex min-h-11 items-center gap-3 px-1 text-sm font-medium text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                      isActivePath(link.href) && "font-semibold text-foreground",
                     )}
                   >
+                    <ActiveMarker active={isActivePath(link.href)} />
                     {copy[link.label]}
                   </Link>
                 ))}
@@ -736,10 +751,11 @@ export function Nav() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex min-h-11 items-center gap-2 border-l-[3px] border-transparent px-3 text-sm font-medium text-muted-foreground transition-colors duration-150 hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className="inline-flex min-h-11 items-center gap-3 px-1 text-sm font-medium text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                 >
-                  <Github size={16} aria-hidden="true" />
+                  <ActiveMarker active={false} />
                   GitHub
+                  <Github size={16} aria-hidden="true" />
                 </a>
                 <AuthStatus mobile onNavigate={() => setMobileOpen(false)} />
               </div>

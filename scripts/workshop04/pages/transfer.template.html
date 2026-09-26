@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f0e9">
+<title>ESG Reporting with AI · Transfer sheet · loehrning.ai</title>
+<meta name="description" content="Workshop 04, ESG Reporting with AI: the one-page transfer sheet. Five boxes for one bill (source, period, unit, boundary, factor) with the Werk Süd worked example, printable on A4.">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="preload" href="./assets/fonts/Typing-Static-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./lib/workshop-frame.css">
+<link rel="stylesheet" href="./lib/w04-pages.css">
+</head>
+<body class="wf-page">
+<a class="wf-skip" href="#main">Skip to content</a>
+{{strip:transfer.html}}
+
+<main id="main" tabindex="-1" class="pg sheet sheet--transfer">
+  <header class="sheet-mast">
+    <div>
+      <p class="wf-kicker">Workshop 04 · ESG Reporting with AI · Transfer sheet</p>
+      <h1 class="wf-h1">One bill, five boxes</h1>
+      <p class="wf-lead">Use an invented or anonymised bill. No company data goes into any tool.</p>
+    </div>
+  </header>
+  <div class="sheet-tools no-print">
+    <button type="button" class="wf-btn wf-btn--primary" id="print-page">Print this sheet</button>
+    <p class="wf-small">Prints on one A4 page. Write in the dashed boxes; the worked example is Kellbrunn's Werk Süd electricity.</p>
+  </div>
+
+  <ol class="boxes">
+    <li class="box">
+      <div><h2><span>{{sec}}</span>Source</h2><p class="what">File, page and the exact line you read.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p><code>{{j:traceTwo.0.file}}</code>, page {{j:ledger.E-WS-01.source_page}}, “{{j:traceTwo.0.quote}}”</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>{{sec}}</span>Period</h2><p class="what">From, to, months covered; gaps or overlaps with other bills.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>{{j:ledger.E-WS-01.period_start:dmy}} to {{j:ledger.E-WS-01.period_end:dmy}}, {{j:ledger.E-WS-01.months}} months, no overlap. Last year on the same page: {{j:inputs.ws.priorYearPrinted}}.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>{{sec}}</span>Unit</h2><p class="what">Value and unit as printed → normalised value, and the rule.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>{{j:inputs.ws.printed}} → {{n:el_ws_kwh}} (MWh × 1,000; the dot separates thousands). Check: {{n:ws_kwh_per_employee}} per employee, close to last year's {{n:ws_2024_kwh_per_employee}}.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>{{sec}}</span>Boundary</h2><p class="what">Legal entity on the document; in or out; which rule.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>{{j:ledger.E-WS-01.entity_on_document}}; in; operational control.</p></div>
+    </li>
+    <li class="box">
+      <div><h2><span>{{sec}}</span>Factor</h2><p class="what">Factor ID, year, basis, edition; method; any certificate.</p></div>
+      <div class="write"><span class="visually-hidden">Space to write</span></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>Location-based: <code>{{j:ledger.E-WS-01.factor_lb}}</code> ({{j:factors.F-EL-LB-2025.value:fix2}}, teaching value) → {{n:ws_lb_2025}}.</p><p>Market-based: <code>{{j:ledger.E-WS-01.factor_mb}}</code> under <code>{{j:ledger.E-WS-01.instrument_id}}</code> ({{n:go_mwh}} guarantees of origin, cancelled, Werk Süd only) → {{j:factors.F-EL-GO.value:fix1}} t.</p></div>
+    </li>
+  </ol>
+
+  <section class="sentence" aria-labelledby="sentence-title">
+    <h2 class="wf-kicker" id="sentence-title">End with one sentence</h2>
+    <p>“This number comes from [document, line], covers [period], was converted by [rule], belongs to [entity] under [boundary rule], and uses [factor ID, year, edition]. Still open: [one thing].”</p>
+    <p class="de" lang="de">„Diese Zahl stammt aus [Beleg, Zeile], deckt [Zeitraum] ab, wurde mit [Regel] umgerechnet, gehört zu [Gesellschaft] nach [Regel zur Bilanzgrenze] und nutzt [Faktor-ID, Jahr, Stand]. Noch offen: [eine Sache].“</p>
+    <div class="write"><span class="visually-hidden">Space to write your sentence</span></div>
+  </section>
+
+  <section class="sentence sentence--ex" aria-labelledby="worked-title">
+    <h2 class="wf-kicker" id="worked-title">Worked sentence</h2>
+    <p>This number comes from the Werk Süd annual statement 2025, line “{{j:traceTwo.0.quote}}”, covers January to December 2025, was converted with MWh × 1,000, belongs to {{j:ledger.E-WS-01.entity_on_document}}, under operational control, and uses <code>{{j:ledger.E-WS-01.factor_lb}}</code> (edition {{j:factorEdition}}). Still open: the monthly split, if the customer asks for quarters.</p>
+  </section>
+
+  <footer class="sheet-foot">
+    <p>Fictional case, teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
+  </footer>
+</main>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are teaching values, not official factors.</p></footer>
+<script src="./lib/w04-pages.js"></script>
+</body>
+</html>
