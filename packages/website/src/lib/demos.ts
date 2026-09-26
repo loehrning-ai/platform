@@ -161,7 +161,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Nachrichten erklären.",
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
-      "Pipeline nimmt fiktive Beispielkontakte, markiert belegte Signale und erstellt einen Nachrichtentwurf, der vor jedem Versand im Review bleibt.",
+      "Pipeline nimmt fiktive Beispielkontakte, markiert belegte Signale und erstellt einen Nachrichtenentwurf, der vor jedem Versand im Review bleibt.",
     tags: ["DAG", "Git-Ops", "Open"],
     meta: [
       { label: "Lernziel", value: "Signalbezug" },

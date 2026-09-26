@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
+import { render } from "@testing-library/react";
 
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: vi.fn(),
@@ -72,16 +73,13 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       courseId: "ai-native",
       lang: "en",
     });
-    const moduleDisclosureNames = findElements(landing, "summary")
-      .map(
-        (summary) =>
-          (summary.props as { readonly "aria-label"?: unknown })["aria-label"],
-      )
-      .filter((label): label is string => typeof label === "string");
+    const rendered = render(landing);
+    const moduleDisclosureNames = Array.from(
+      rendered.container.querySelectorAll("summary[aria-label]"),
+    ).map((summary) => summary.getAttribute("aria-label") ?? "");
+    rendered.unmount();
     expect(moduleDisclosureNames).toEqual(
-      getModules("en").map(
-        (module) => `Decisions and exercises: ${module.title}`,
-      ),
+      getModules("en").map((module) => `Topics in this module: ${module.title}`),
     );
     expect(new Set(moduleDisclosureNames).size).toBe(
       moduleDisclosureNames.length,

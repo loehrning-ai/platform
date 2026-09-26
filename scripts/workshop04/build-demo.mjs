@@ -192,9 +192,9 @@ const board = `<p class="mobhint">Under each switch: the effect if only that tra
 <div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span>Fixing the active traps in order</span><span class="r">Fix</span><span class="r">Running total</span></div>
 <div id="board" role="tabpanel" aria-labelledby="tab-lb" data-method="lb"><ul class="board">
 <li class="tot tot--start">
-  <p class="tot__label"><b>${esc(V0.start.label)}</b><span>Start of the chart. The axis is cut: bars start well above zero.</span></p>
+  <p class="tot__label"><b>${esc(V0.start.label)}</b><span class="tot__sub">${V0.ghost ? `Dashed outline: the raw-folder answer, ${esc(V0.start.gt)} t. The axis is cut.` : "Start of the chart. The axis is cut: bars start well above zero."}</span></p>
   <div class="track" aria-hidden="true"><span class="cut"></span><span class="ghost" style="--l:0%;--w:${V0.start.gw}%"${V0.ghost ? "" : " hidden"}></span><span class="bar" style="--l:0%;--w:${V0.start.w}%"></span></div>
-  <p class="fx num">${esc(V0.start.gt)}</p>
+  <p class="fx num"></p>
   <p class="run num">${esc(V0.start.t)}</p>
 </li>
 ${rowsHtml}

@@ -178,7 +178,8 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .bar,.ghost{position:absolute;top:5px;height:20px;left:var(--l,0%);width:var(--w,0%);min-width:2px;transition:left var(--m-bar) var(--ease),width var(--m-bar) var(--ease)}
 .bar{background:var(--ink)}
 .bar.is-up{background:var(--papier) var(--hatch);border:1.5px solid var(--ink)}
-.ghost{border:1.5px dashed var(--kante);background:transparent}
+.ghost{border:1.5px dashed var(--kante);background:transparent;z-index:2}
+.tot .ghost{border-color:var(--ink)}
 .bar[hidden],.ghost[hidden]{display:none}
 .fx,.run{text-align:right;white-space:nowrap;font-feature-settings:"tnum" 1}
 .fx{font:600 15px/1.2 var(--sans)}
@@ -301,6 +302,7 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .paper table{width:100%;margin:8px 0;border-collapse:collapse;font-size:12.5px}
 .paper td,.paper th{padding:3px 6px 3px 0;border-bottom:1px solid var(--leinen);text-align:left;vertical-align:top;font-weight:400}
 .paper th{font-weight:600}
+.paper td+td{white-space:nowrap}
 .paper .pagebreak{margin:14px -18px;padding:4px 18px;border-top:1px dashed var(--kante);border-bottom:1px dashed var(--kante);font-size:12px;color:var(--slate)}
 mark{background:none;color:inherit;box-shadow:inset 0 -.55em 0 #f2c7b5;padding:0 1px}
 mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
@@ -315,7 +317,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 .dtab{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 0}
 .dtab th{padding:0 10px 6px 0;border-bottom:2px solid var(--ink);text-align:left;font:600 13px/1.3 var(--sans);color:var(--slate)}
 .dtab td{padding:6px 10px 6px 0;border-bottom:1px solid var(--leinen);font:400 13px/1.4 var(--mono)}
-.dtab td.n,.dtab th.n{text-align:right}
+.dtab td.n,.dtab th.n{text-align:right;white-space:nowrap}
+.dtab td{overflow-wrap:anywhere}
+.dtab td:first-child{white-space:nowrap}
 .dtab tr.is-key td{font-weight:700;background:#fbe9e2}
 .dtab tr.sum td{border-top:2px solid var(--ink);font-weight:700}
 .dnote{margin:10px 0 0;padding:10px 14px;border:1px dashed var(--ink);font-size:14px;line-height:1.5;max-width:66ch}
@@ -413,6 +417,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .drawer__top{padding:6px 16px}
   .drawer__body{padding:14px 16px 32px}
   .papers--2{grid-template-columns:minmax(0,1fr)}
+  .dtab{font-size:13px}
+  .dtab td{font-size:12px;padding-right:8px}
+  .paper{padding:12px 12px}
+  .paper table{font-size:11.5px}
   .rowcard dl{grid-template-columns:minmax(0,1fr)}
   .rowcard dt{padding:4px 0 0}
   .rowcard dd{padding:0 0 3px}
@@ -534,9 +542,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span>Fixing the active traps in order</span><span class="r">Fix</span><span class="r">Running total</span></div>
 <div id="board" role="tabpanel" aria-labelledby="tab-lb" data-method="lb"><ul class="board">
 <li class="tot tot--start">
-  <p class="tot__label"><b>This answer: every trap fixed</b><span>Start of the chart. The axis is cut: bars start well above zero.</span></p>
+  <p class="tot__label"><b>This answer: every trap fixed</b><span class="tot__sub">Dashed outline: the raw-folder answer, 1,866.5 t. The axis is cut.</span></p>
   <div class="track" aria-hidden="true"><span class="cut"></span><span class="ghost" style="--l:0%;--w:52.06%"></span><span class="bar" style="--l:0%;--w:55.94%"></span></div>
-  <p class="fx num">1,866.5</p>
+  <p class="fx num"></p>
   <p class="run num">1,915.2</p>
 </li>
 <li class="trap is-ghost" data-trap="T1">
@@ -992,8 +1000,9 @@ var W04Core = (function () {
     setText($(".run", st), v.start.t);
     var sb = $(".bar", st); setVar(sb, "--w", v.start.w); sb.classList.toggle("is-raw", v.mask !== 0);
     var sg = $(".ghost", st);
-    if (v.ghost) { sg.hidden = false; setVar(sg, "--w", v.start.gw); setText($(".fx", st), v.start.gt); }
-    else { sg.hidden = true; setText($(".fx", st), ""); }
+    sg.hidden = !v.ghost;
+    if (v.ghost) setVar(sg, "--w", v.start.gw);
+    setText($(".tot__sub", st), v.ghost ? "Dashed outline: the raw-folder answer, " + v.start.gt + " t. The axis is cut." : "Start of the chart. The axis is cut: bars start well above zero.");
     var en = $(".tot--end"); setText($(".run", en), v.end.t); setVar($(".bar", en), "--w", v.end.w);
     setText($("#m-total"), v.meters.total);
     setText($("#m-s"), "Scope 1 " + v.meters.s1 + " · Scope 2 " + v.meters.s2);

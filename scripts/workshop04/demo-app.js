@@ -61,8 +61,9 @@
     setText($(".run", st), v.start.t);
     var sb = $(".bar", st); setVar(sb, "--w", v.start.w); sb.classList.toggle("is-raw", v.mask !== 0);
     var sg = $(".ghost", st);
-    if (v.ghost) { sg.hidden = false; setVar(sg, "--w", v.start.gw); setText($(".fx", st), v.start.gt); }
-    else { sg.hidden = true; setText($(".fx", st), ""); }
+    sg.hidden = !v.ghost;
+    if (v.ghost) setVar(sg, "--w", v.start.gw);
+    setText($(".tot__sub", st), v.ghost ? "Dashed outline: the raw-folder answer, " + v.start.gt + " t. The axis is cut." : "Start of the chart. The axis is cut: bars start well above zero.");
     var en = $(".tot--end"); setText($(".run", en), v.end.t); setVar($(".bar", en), "--w", v.end.w);
     setText($("#m-total"), v.meters.total);
     setText($("#m-s"), "Scope 1 " + v.meters.s1 + " · Scope 2 " + v.meters.s2);
