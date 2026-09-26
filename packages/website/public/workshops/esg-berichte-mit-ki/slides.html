@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#141414" />
+  <title>ESG Reporting with AI · loehrning.ai</title>
+  <meta name="description" content="A workshop deck: one fictional company, one question about Scope 1 and 2 emissions, asked of an AI twice. First on a raw folder of bills, then on a ledger where every number points to a page." />
+  <link rel="icon" href="./assets/favicon.svg" />
+  <link rel="stylesheet" href="./lib/tokens.css" />
+  <link rel="stylesheet" href="./lib/cover-globe.css" />
+  <link rel="stylesheet" href="./lib/story.css" />
+  <link rel="stylesheet" href="./lib/w04-deck.css" />
+  <link rel="stylesheet" href="./lib/scenes/cover.css" />
+  <link rel="stylesheet" href="./lib/scenes/host.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-case.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-arc.css" />
+  <link rel="stylesheet" href="./lib/scenes/raw-folder.css" />
+  <link rel="stylesheet" href="./lib/scenes/raw-answer.css" />
+  <link rel="stylesheet" href="./lib/scenes/month-grid.css" />
+  <link rel="stylesheet" href="./lib/scenes/one-unit.css" />
+  <link rel="stylesheet" href="./lib/scenes/whose-bill.css" />
+  <link rel="stylesheet" href="./lib/scenes/anatomy.css" />
+  <link rel="stylesheet" href="./lib/scenes/the-ledger.css" />
+  <link rel="stylesheet" href="./lib/scenes/six-rules.css" />
+  <link rel="stylesheet" href="./lib/scenes/two-scope-2.css" />
+  <!-- act 4 onward: add each scene stylesheet here, in scene order -->
+  <script src="./lib/deck-stage.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#stage">Skip to workshop</a>
+<main aria-label="ESG Reporting with AI workshop">
+<svg class="icon-sprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs><pattern id="story-hatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="14" fill="#121212" /></pattern></defs>
+<symbol id="i-ai-model" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="26" y="26" width="48" height="48"/><path d="M38 10v16M50 10v16M62 10v16M38 74v16M50 74v16M62 74v16M10 38h16M10 50h16M10 62h16M74 38h16M74 50h16M74 62h16"/><g fill="currentColor" stroke="none"><path d="M50 36l14 14-14 14-14-14z"/></g></symbol>
+<symbol id="i-bank" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 34L50 10l42 24zM10 90h80M20 42v38M40 42v38M60 42v38M80 42v38"/><g fill="currentColor" stroke="none"><rect x="44" y="20" width="12" height="10"/></g></symbol>
+<symbol id="i-book" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="16" y="8" width="68" height="72"/><path d="M28 8v72M16 80v12h68V80M40 46h24"/><g fill="currentColor" stroke="none"><rect x="40" y="22" width="32" height="12"/></g></symbol>
+<symbol id="i-calendar" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 32v58h80V32M30 8v10M70 8v10"/><rect x="20" y="52" width="12" height="12"/><rect x="44" y="52" width="12" height="12"/><rect x="68" y="52" width="12" height="12"/><g fill="currentColor" stroke="none"><rect x="8" y="16" width="84" height="16"/></g></symbol>
+<symbol id="i-certificate" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 12h80v56H62M38 68H10z"/><path d="M24 28h52M24 42h26"/><rect x="40" y="52" width="20" height="20"/><path d="M40 72v18l10-8 10 8V72"/><g fill="currentColor" stroke="none"><rect x="46" y="58" width="8" height="8"/></g></symbol>
+<symbol id="i-checklist" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="14" y="14" width="72" height="78"/><path d="M26 44l8 8 14-14M56 46h18M26 72l8 8 14-14M56 74h18"/><g fill="currentColor" stroke="none"><rect x="34" y="8" width="32" height="12"/></g></symbol>
+<symbol id="i-company" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 90V18h42v72M58 40h26v50M8 90h84M28 32h18M28 48h18M28 64h18"/><g fill="currentColor" stroke="none"><rect x="30" y="74" width="14" height="16"/></g></symbol>
+<symbol id="i-contract" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M20 8h40l20 20v64H20z"/><path d="M60 8v20h20M32 40h36M32 54h36M32 68h14"/><g fill="currentColor" stroke="none"><rect x="56" y="66" width="14" height="14"/></g></symbol>
+<symbol id="i-factor" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="8" width="84" height="84"/><path d="M22 50h56"/><rect x="38" y="60" width="24" height="20"/><g fill="currentColor" stroke="none"><rect x="38" y="20" width="24" height="20"/></g></symbol>
+<symbol id="i-fail" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M32 32l36 36M68 32L32 68"/></symbol>
+<symbol id="i-fleet" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 24h54v46H8zM62 40h16l14 16v14H62"/><g fill="currentColor" stroke="none"><rect x="18" y="68" width="16" height="16"/><rect x="68" y="68" width="16" height="16"/></g></symbol>
+<symbol id="i-folder" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 18h30l8 10h46v60H8z"/><path d="M8 40h84"/><g fill="currentColor" stroke="none"><rect x="70" y="66" width="12" height="12"/></g></symbol>
+<symbol id="i-gap" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M10 26V10h16M42 10h16M74 10h16v16M90 42v16M10 42v16M10 74v16h16M42 90h16"/><g fill="currentColor" stroke="none"><rect x="72" y="72" width="20" height="20"/></g></symbol>
+<symbol id="i-gas" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M50 8l26 34v28L50 92 24 70V42l12 14z"/><g fill="currentColor" stroke="none"><rect x="44" y="62" width="12" height="12"/></g></symbol>
+<symbol id="i-invoice" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M18 8h64v84l-10-8-11 8-11-8-11 8-11-8-10 8z"/><path d="M30 26h40M30 42h40M30 58h18"/><g fill="currentColor" stroke="none"><rect x="56" y="54" width="14" height="14"/></g></symbol>
+<symbol id="i-meter" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="12" width="80" height="76"/><rect x="22" y="26" width="56" height="22"/><path d="M36 26v22M50 26v22M64 26v22M24 72h28"/><g fill="currentColor" stroke="none"><rect x="64" y="64" width="14" height="14"/></g></symbol>
+<symbol id="i-pass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="10" width="80" height="80"/><path d="M28 50l14 14 30-30"/></symbol>
+<symbol id="i-person" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="50" cy="28" r="16"/><path d="M18 92V72l16-16h32l16 16v20"/></symbol>
+<symbol id="i-question" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M8 12h84v60H46L28 90V72H8z"/><path d="M38 24h24v14H50v8"/><g fill="currentColor" stroke="none"><rect x="46" y="54" width="8" height="8"/></g></symbol>
+<symbol id="i-refuse" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M34 8h32l26 26v32L66 92H34L8 66V34z"/><g fill="currentColor" stroke="none"><rect x="26" y="44" width="48" height="12"/></g></symbol>
+<symbol id="i-room-vote" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><circle cx="38" cy="24" r="12"/><path d="M22 92V50h32v42M54 56l20-20V8"/></symbol>
+<symbol id="i-rows" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="10" y="42" width="80" height="16"/><rect x="10" y="70" width="80" height="16"/><g fill="currentColor" stroke="none"><rect x="8" y="12" width="84" height="20"/></g></symbol>
+<symbol id="i-scope" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="8" width="84" height="84"/><rect x="26" y="26" width="48" height="48"/><g fill="currentColor" stroke="none"><rect x="42" y="42" width="16" height="16"/></g></symbol>
+<symbol id="i-shield" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><path d="M16 10h68v48L50 92 16 58z"/><g fill="currentColor" stroke="none"><rect x="40" y="34" width="20" height="20"/></g></symbol>
+<symbol id="i-table" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="square" stroke-linejoin="miter" stroke-miterlimit="4"><rect x="8" y="14" width="84" height="72"/><path d="M8 38h84M8 62h84M36 38v48M64 38v48"/></symbol>
+</svg>
+<deck-stage id="stage" width="1920" height="1080" data-deck-title="ESG Reporting with AI" data-route-stations="Wrong answer|Why it failed|The fix|Ask again|Honest limits|Your turn">
+
+  <!-- ================================================================ ACT 0 · before the route -->
+
+  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="ESG Reporting with AI" data-section="Workshop 04 · the question" data-seconds="40" data-mode="listen" data-note-key="cover" data-note="One question about one fictional company, held fixed for the whole session. Read it once and advance." data-route="none">
+    <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
+    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
+    <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 04 · Rules as of 26 September 2026</p>
+    <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">ESG Reporting<br />with AI.</h1>
+    <p class="cover-sub" id="cover-sub" data-motion="rise" style="--order:1">From raw inputs to clearer insights</p>
+    <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <div>
+        <span class="q-card__label">One question, held fixed</span>
+        <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+      </div>
+    </div>
+    <p class="cover-meta" id="cover-meta" data-motion="fade" style="--order:2">76 minutes · one fictional company · teaching factors</p>
+  </section>
+
+  <section class="slide" id="host" data-act="0" data-kind="main" data-label="Your host" data-section="Your host" data-seconds="30" data-mode="listen" data-note-key="host" data-note="Thirty seconds: who you are, and that the company, the numbers and the factors are invented. Then move on." data-route="hidden">
+    <figure class="host-portrait" id="host-portrait" data-motion="fade" style="--order:0"><img src="./assets/tim-loehr.jpg" width="480" height="480" alt="Portrait of workshop host Tim Löhr" /></figure>
+    <div class="host-links" id="host-links" data-motion="fade" style="--order:1">
+      <span>timloehr.me</span>
+      <span>GitHub @Mavengence</span>
+      <span>LinkedIn Tim Löhr</span>
+    </div>
+    <p class="host-over" id="host-over" data-motion="fade" style="--order:0">Your host</p>
+    <h1 class="scene-title" id="host-name" data-motion="fade" style="--order:0">Tim Löhr</h1>
+    <p class="host-role" id="host-role" data-motion="fade" style="--order:0">Data Engineer at Meta, Warsaw</p>
+    <p class="host-lede" id="host-lede" data-motion="fade" data-focus style="--order:1">I build the data pipelines behind reports like this one. Today we follow one emissions figure from the bill it came from to the sentence that reports it.</p>
+    <div class="host-cols host-cols--static" id="host-cols" data-motion="rise" style="--order:2">
+      <div class="host-col" aria-labelledby="host-experience">
+        <h2 id="host-experience">Experience</h2>
+        <div class="host-item"><b>Data Engineer</b><span class="host-org">Meta</span></div>
+        <div class="host-item"><b>Data Scientist</b><span class="host-org">Red Bull, Apple</span></div>
+      </div>
+      <div class="host-col" aria-labelledby="host-education">
+        <h2 id="host-education">Education</h2>
+        <div class="host-item"><b>M.Sc. Computer Science</b><span class="host-org">University of Erlangen-Nuremberg</span></div>
+        <div class="host-item"><b>B.Sc. Computer Science</b><span class="host-org">TH Nuremberg</span></div>
+      </div>
+    </div>
+    <p class="host-boundary" id="host-boundary" data-motion="fade" style="--order:2"><svg class="icon icon--40" aria-hidden="true"><use href="#i-shield" /></svg><span>Fictional company, invented numbers, teaching factors. No employer data.</span></p>
+  </section>
+
+  <section class="slide" id="the-case" data-act="0" data-kind="main" data-label="The case" data-section="The case · Kellbrunn and its question" data-seconds="100" data-mode="listen" data-note-key="the-case" data-note="Introduce Kellbrunn, its boundary and the people who send the question. Keep the second half of the question in mind." data-route="hidden">
+    <h1 class="scene-title" id="the-case-title" data-motion="rise" style="--order:0">A bank and a customer ask the same question every spring.</h1>
+    <p class="case-tag" id="the-case-tag">Fictional company · teaching factors</p>
+    <div class="q-card the-case-question" id="the-case-question" data-motion="rise" style="--order:0">
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and <span class="the-case-key" id="the-case-key">did they go down<svg class="the-case-u" id="the-case-u" data-step="2" data-focus aria-hidden="true"><line data-motion="draw" x1="0" y1="4" x2="100%" y2="4" /></svg></span> compared with 2024?</p>
+    </div>
+    <div class="the-case-company" id="the-case-company" data-motion="rise" style="--order:1">
+      <svg class="icon icon--72" aria-hidden="true"><use href="#i-company" /></svg>
+      <p class="the-case-company__text"><b>Kellbrunn Präzisionsteile GmbH</b><span>Metal parts supplier · <span class="num" data-num="staff">180</span> staff · three sites · turnover €<span class="num" data-j="company.turnover_meur">38</span>m</span></p>
+    </div>
+    <div class="the-case-map" id="the-case-map" role="img" aria-label="Boundary sketch: Werk Nord, Werk Süd, Lager Ost and the fleet inside the operational control boundary; Talbrück Beschichtung outside it." data-motion="fade" style="--order:2">
+      <div class="the-case-boundary">
+        <span class="the-case-boundary__label">Inside the boundary · operational control</span>
+        <div class="the-case-site" id="the-case-wn"><b>Werk Nord</b><span>HQ · stamping, assembly</span><span><span class="num" data-j="company.staff_WN">110</span> staff</span></div>
+        <div class="the-case-site" id="the-case-ws"><b>Werk Süd</b><span>CNC machining</span><span><span class="num" data-j="company.staff_WS">55</span> staff</span></div>
+        <div class="the-case-site" id="the-case-lo"><b>Lager Ost</b><span>Leased warehouse</span><span><span class="num" data-j="company.staff_LO">15</span> staff</span></div>
+        <div class="the-case-site" id="the-case-fl"><b>Fleet</b><span>Vans and cars</span><span><span class="num" data-j="company.vehicles">14</span> vehicles</span></div>
+      </div>
+      <svg class="the-case-link" width="120" height="40" viewBox="0 0 120 40" aria-hidden="true"><path class="edge edge--dashed" d="M0 20H120" /></svg>
+      <div class="the-case-jv" id="the-case-jv"><b>Talbrück Beschichtung GmbH</b><span>Kellbrunn holds <span class="num" data-j="company.jv_share_pct" data-form="pct">40%</span>, the partner runs it</span><span>Halle 3, on the Werk Nord premises</span></div>
+    </div>
+    <ol class="the-case-senders" id="the-case-senders" data-step="1">
+      <li class="the-case-sender" data-motion="rise" style="--order:0"><svg class="icon icon--56" aria-hidden="true"><use href="#i-bank" /></svg><p><b>House bank</b><span>Scope 1 and 2 for loan pricing</span></p></li>
+      <li class="the-case-sender" data-motion="rise" style="--order:1"><svg class="icon icon--56" aria-hidden="true"><use href="#i-company" /></svg><p><b>OEM customer</b><span>Supplier questionnaire</span></p></li>
+      <li class="the-case-sender" data-motion="rise" style="--order:2"><svg class="icon icon--56" aria-hidden="true"><use href="#i-book" /></svg><p><b>Voluntary report</b><span>Based on the VSME Basic Module: energy, Scope 1 and 2</span></p></li>
+    </ol>
+    <p class="w-note the-case-foot" id="the-case-foot" data-motion="fade" style="--order:3">Kellbrunn has never been in CSRD scope. It still gets asked. Rules as of 26 Sep 2026.</p>
+  </section>
+
+  <section class="slide" id="the-arc" data-act="0" data-kind="main" data-label="The arc" data-section="The arc · one question, two data states" data-seconds="70" data-mode="listen" data-note-key="the-arc" data-note="Two runs of the same AI: first on the raw folder, then on the prepared ledger. Then show the route." data-route="final">
+    <h1 class="scene-title" id="the-arc-title">One question, asked twice.</h1>
+    <p class="lead the-arc-lead" id="the-arc-lead" data-motion="fade" style="--order:0">Same question, same AI, same factor table. Only the data changes.</p>
+    <svg class="the-arc-wires" width="1728" height="560" viewBox="0 0 1728 560" aria-hidden="true">
+      <path class="edge" d="M512 110H646" data-motion="draw" style="--order:1" /><path class="edge-head" d="M660 110l-14-7v14z" />
+      <path class="edge" d="M816 110H950" data-motion="draw" style="--order:2" /><path class="edge-head" d="M964 110l-14-7v14z" />
+      <path class="edge" d="M512 410H646" data-motion="draw" style="--order:1" /><path class="edge-head" d="M660 410l-14-7v14z" />
+      <path class="edge" d="M816 410H950" data-motion="draw" style="--order:2" /><path class="edge-head" d="M964 410l-14-7v14z" />
+    </svg>
+    <div class="the-arc-src the-arc-src--raw" id="the-arc-raw" data-motion="rise" style="--order:0">
+      <span class="the-arc-swatch" aria-hidden="true"></span>
+      <p><b>Raw folder</b><span><span class="num" data-num="files_raw_2025">22</span> files, as Kellbrunn has them today</span></p>
+    </div>
+    <div class="the-arc-src the-arc-src--ledger" id="the-arc-ledger" data-motion="rise" style="--order:1">
+      <span class="the-arc-swatch" aria-hidden="true"></span>
+      <p><b>Prepared data</b><span>One ledger, one coverage grid, one page of rules</span></p>
+    </div>
+    <div class="node the-arc-ai" id="the-arc-ai-1"><div class="node__box" data-motion="fade" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg></div><span class="node__label">AI</span></div>
+    <div class="node the-arc-ai" id="the-arc-ai-2"><div class="node__box" data-motion="fade" style="--order:2"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg></div><span class="node__label">Same AI</span></div>
+    <div class="the-arc-answer the-arc-answer--raw" id="the-arc-answer-1" data-motion="rise" style="--order:2">
+      <span class="lane lane--export"><span class="lane__swatch"></span>Answer 1</span>
+      <p>A total and a trend, from files nobody has checked</p>
+    </div>
+    <div class="the-arc-answer the-arc-answer--ledger" id="the-arc-answer-2" data-motion="rise" style="--order:3">
+      <span class="lane lane--approved"><span class="lane__swatch"></span>Answer 2</span>
+      <p>The same question, answered from rows that point to pages</p>
+    </div>
+    <div class="the-arc-pointer" id="the-arc-pointer" data-step="1" data-focus>
+      <svg width="24" height="96" viewBox="0 0 24 96" aria-hidden="true"><path class="the-arc-pointer__line" d="M12 96V14" data-motion="draw" /><path class="the-arc-pointer__head" d="M0 20L12 0L24 20Z" data-motion="fade" style="--order:2" /></svg>
+      <p class="callout" data-motion="rise" style="--order:1">The route stays at the top of every scene from here on.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 1 · Wrong answer -->
+
+  <section class="slide" id="raw-folder" data-act="1" data-kind="main" data-label="The raw folder" data-section="Wrong answer · what the AI gets" data-seconds="150" data-mode="listen" data-note-key="raw-folder" data-note="A normal folder: monthly bills, an annual statement, landlord statements, a fuel-card export. Twelve bills for Werk Nord looks like a full year." data-route="shown">
+    <h1 class="scene-title" id="raw-folder-title">What the AI gets: <span class="num" data-num="files_raw_2025">22</span> files from 2025.</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="rf-tree" id="raw-folder-tree">
+      <p class="rf-root"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">rohdaten_2025</span></p>
+      <ul class="rf-list">
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">Werk_Nord</span><span class="rf-desc">Werk Nord, headquarters</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:0"><svg class="icon icon--32" aria-hidden="true"><use href="#i-invoice" /></svg><span class="w-mono">Strom</span><span class="rf-count" id="raw-folder-count-12"><span class="num" data-num="files_wn_electricity">12</span><span class="rf-box" data-step="2" data-motion="stamp" aria-hidden="true"></span></span><span class="rf-desc">electricity bills</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-gas" /></svg><span class="w-mono">Gas</span><span class="rf-count">1</span><span class="rf-desc">annual gas bill</span></li>
+        <li class="rf-row rf-row--sub" data-step="1" data-motion="fade" style="--order:1"><svg class="icon icon--32" aria-hidden="true"><use href="#i-meter" /></svg><span class="w-mono">Zaehlerstaende_2025.csv</span><span class="rf-count">1</span><span class="rf-desc">meter readings</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">Werk_Sued</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:2">3</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:2">annual statement, certificate, gas bill</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">Lager_Ost</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:3">4</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:3">quarterly statements from the landlord</span></li>
+        <li class="rf-row rf-row--site"><svg class="icon icon--40" aria-hidden="true"><use href="#i-folder" /></svg><span class="w-mono">Flotte</span><span class="rf-count" data-step="1" data-motion="fade" style="--order:4">1</span><span class="rf-desc" data-step="1" data-motion="fade" style="--order:4">fuel-card export</span></li>
+      </ul>
+      <div class="rf-also" data-step="1" data-motion="fade" style="--order:4">
+        <p class="rf-also__lead">Plus last year's figures from the consultant, and the factor table.</p>
+        <p class="rf-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-table" /></svg><span class="w-mono">vorjahr/THG_2024_Zusammenfassung.csv</span></p>
+        <p class="rf-row"><svg class="icon icon--32" aria-hidden="true"><use href="#i-factor" /></svg><span class="w-mono">faktoren/faktoren_lehrwerte.csv</span></p>
+      </div>
+    </div>
+    <div class="rf-docs" id="raw-folder-docs" data-motion="rise" style="--order:1">
+      <!-- gen:doc file=2025-01_Strom_WN.md lines=0,2,4-7,9-12,14-16,22 cls=doc--narrow id=raw-folder-bill --><figure class="doc doc--narrow" id="raw-folder-bill"><figcaption class="doc__file">2025-01_Strom_WN.md</figcaption><div class="doc__sheet"><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.4">Rechnungsempfänger:</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.5">Kellbrunn Präzisionsteile GmbH</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.6">Werk Nord, Werkstraße 12</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.7">(erfundener Standort in Hessen)</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.9">Kundennummer: 55-0192</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.10">Rechnungsnummer: 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.11">Zählpunkt: DE0005678900WN01</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.01.2025</span></p><div class="doc__table"><p class="doc__tr doc__tr--head"><span data-j="documents.2025-01_Strom_WN.lines.14" data-form="cell:0">Position</span><span data-j="documents.2025-01_Strom_WN.lines.14" data-form="cell:1">Menge</span><span data-j="documents.2025-01_Strom_WN.lines.14" data-form="cell:2">Preis</span><span data-j="documents.2025-01_Strom_WN.lines.14" data-form="cell:3">Betrag</span></p><p class="doc__tr"><span data-j="documents.2025-01_Strom_WN.lines.16" data-form="cell:0">Verbrauch (Arbeitspreis)</span><span data-j="documents.2025-01_Strom_WN.lines.16" data-form="cell:1">210.000 kWh</span><span data-j="documents.2025-01_Strom_WN.lines.16" data-form="cell:2">0,2150 €/kWh</span><span data-j="documents.2025-01_Strom_WN.lines.16" data-form="cell:3">45.150,00 €</span></p></div></div></figure><!-- /gen:doc -->
+      <!-- gen:doc file=Jahresuebersicht_2025_Oekostrom.md lines=0-9,11 id=raw-folder-ws --><figure class="doc" id="raw-folder-ws"><figcaption class="doc__file">Jahresuebersicht_2025_Oekostrom.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.0" data-form="md">Jahresübersicht Strom 2025</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.2">Lindmark Energie GmbH · Tarif Ökostrom Plus · (erfundener Lieferant)</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.4">Kunde: Kellbrunn Präzisionsteile GmbH, Werk Süd</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.5">Zählpunkt: DE0005678900WS01</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.6">Zeitraum: 01.01.2025 bis 31.12.2025</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.8">Verbrauch 2025: 1.240 MWh</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.9">Vorjahr: 1.250 MWh</span></p></div></figure><!-- /gen:doc -->
+    </div>
+  </section>
+
+  <section class="slide" id="raw-answer" data-act="1" data-kind="main" data-label="The raw answer" data-section="Wrong answer · the AI's answer from the raw folder" data-seconds="300" data-mode="vote" data-note-key="raw-answer" data-note="Constructed answer, all six traps firing. Read the total and the 7.5%, show the five checks it passes, then the vote. Do not reveal what is wrong." data-route="shown">
+    <h1 class="scene-title" id="raw-answer-title">The AI's answer from the raw folder</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="q-card raw-answer-question" id="raw-answer-question" data-motion="rise" data-focus>
+      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
+      <p class="q-card__text">What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?</p>
+    </div>
+    <article class="ev-run ra-answer" id="raw-answer-card" data-step="1" data-motion="rise">
+      <div class="ev-head"><svg class="icon" aria-hidden="true"><use href="#i-ai-model" /></svg><span>AI answer · raw folder</span></div>
+      <p class="w-label ra-label"><svg class="icon" aria-hidden="true"><use href="#i-gap" /></svg><span data-j="meta.constructedLabel_en">Constructed: what the answer looks like when all six traps fire. Not a recorded run.</span></p>
+      <p class="ra-text">“Kellbrunn's 2025 emissions: Scope 1 <span class="num" data-num="wrong_s1">516.0 t</span> CO₂e, Scope 2 <span class="num" data-num="wrong_s2lb">1,350.5 t</span> CO₂e (location-based), total <b class="ra-total" data-focus><span class="num" data-num="wrong_total_lb">1,866.5 t</span></b>. That is <b class="ra-total"><span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span></b> below 2024 (<span class="num" data-num="total_lb_2024">2,017.5 t</span>). Scope 2 market-based: <span class="num" data-num="wrong_s2mb">1,350.0 t</span>. Since 2025 Kellbrunn runs on green electricity (Ökostrom Plus). The reduction comes mainly from efficiency measures at Werk Nord. Scope 1 rose by <span class="num" data-num="wrong_chg_s1_pct" data-form="abs">6.5%</span>, probably due to higher heating demand.”</p>
+    </article>
+    <div class="ra-checks" id="raw-answer-checks" data-step="2" data-motion="rise">
+      <p class="ra-checks__head">Looks trustworthy</p>
+      <ul class="ra-checks__list">
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:1"><use href="#i-pass" /></svg><span><span class="num" data-num="wrong_chg_lb_pct" data-form="abs">7.5%</span> below last year</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:2"><use href="#i-pass" /></svg><span><span class="num" data-num="wrong_per_employee_t">10.4 t</span> per employee (last year <span class="num" data-num="per_employee_2024_t" data-form="bare">11.2</span>)</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:3"><use href="#i-pass" /></svg><span><span class="num" data-num="files_wn_electricity">12</span> files in Werk Nord</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:4"><use href="#i-pass" /></svg><span>Shows its sums</span></li>
+        <li><svg class="icon icon--48" aria-hidden="true" data-motion="stamp" style="--order:4"><use href="#i-pass" /></svg><span>Both Scope 2 numbers given</span></li>
+      </ul>
+    </div>
+    <div class="room-vote" id="raw-answer-vote" data-step="3" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · remember your hand</span><p class="room-vote__q">Send this to the bank?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Send</span><span class="room-vote__option">Ask back first</span><span class="room-vote__option">Refuse</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 2 · Why it failed -->
+
+  <section class="slide" id="month-grid" data-act="2" data-kind="main" data-label="Month grid" data-section="Why it failed · twelve files, eleven months" data-seconds="300" data-mode="vote" data-note-key="month-grid" data-note="Twelve files are not twelve months. March twice, October missing, November and December on one bill. August is real." data-route="shown">
+    <h1 class="scene-title" id="month-grid-title">Twelve files, eleven months</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="mg-wrap" id="month-grid-wrap">
+      <!-- gen:grid --><svg class="mg" id="month-grid-svg" viewBox="0 0 1246 396" width="1246" height="396" role="img" aria-label="Site by month grid for 2025: which documents cover which months."><g class="mg-frame" data-step="1"><text class="mg-month" x="368" y="30" text-anchor="middle">J</text><text class="mg-month" x="444" y="30" text-anchor="middle">F</text><text class="mg-month" x="520" y="30" text-anchor="middle">M</text><text class="mg-month" x="596" y="30" text-anchor="middle">A</text><text class="mg-month" x="672" y="30" text-anchor="middle">M</text><text class="mg-month" x="748" y="30" text-anchor="middle">J</text><text class="mg-month" x="824" y="30" text-anchor="middle">J</text><text class="mg-month" x="900" y="30" text-anchor="middle">A</text><text class="mg-month" x="976" y="30" text-anchor="middle">S</text><text class="mg-month" x="1052" y="30" text-anchor="middle">O</text><text class="mg-month" x="1128" y="30" text-anchor="middle">N</text><text class="mg-month" x="1204" y="30" text-anchor="middle">D</text><text class="mg-row" x="0" y="80"><tspan class="mg-row__site">Werk Nord</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="138"><tspan class="mg-row__site">Werk Süd</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="196"><tspan class="mg-row__site">Lager Ost</tspan><tspan class="mg-row__carrier" dx="10">electricity</tspan></text><text class="mg-row" x="0" y="254"><tspan class="mg-row__site">Werk Nord</tspan><tspan class="mg-row__carrier" dx="10">gas</tspan></text><text class="mg-row" x="0" y="312"><tspan class="mg-row__site">Werk Süd</tspan><tspan class="mg-row__carrier" dx="10">gas</tspan></text><text class="mg-row" x="0" y="370"><tspan class="mg-row__site">Fleet</tspan><tspan class="mg-row__carrier" dx="10">diesel</tspan></text><rect class="mg-cell" x="334" y="51" width="68" height="44" /><rect class="mg-cell" x="410" y="51" width="68" height="44" /><rect class="mg-cell" x="486" y="51" width="68" height="44" /><rect class="mg-cell" x="562" y="51" width="68" height="44" /><rect class="mg-cell" x="638" y="51" width="68" height="44" /><rect class="mg-cell" x="714" y="51" width="68" height="44" /><rect class="mg-cell" x="790" y="51" width="68" height="44" /><rect class="mg-cell" x="866" y="51" width="68" height="44" /><rect class="mg-cell" x="942" y="51" width="68" height="44" /><rect class="mg-cell" x="1018" y="51" width="68" height="44" /><rect class="mg-cell" x="1094" y="51" width="68" height="44" /><rect class="mg-cell" x="1170" y="51" width="68" height="44" /><rect class="mg-cell" x="334" y="109" width="68" height="44" /><rect class="mg-cell" x="410" y="109" width="68" height="44" /><rect class="mg-cell" x="486" y="109" width="68" height="44" /><rect class="mg-cell" x="562" y="109" width="68" height="44" /><rect class="mg-cell" x="638" y="109" width="68" height="44" /><rect class="mg-cell" x="714" y="109" width="68" height="44" /><rect class="mg-cell" x="790" y="109" width="68" height="44" /><rect class="mg-cell" x="866" y="109" width="68" height="44" /><rect class="mg-cell" x="942" y="109" width="68" height="44" /><rect class="mg-cell" x="1018" y="109" width="68" height="44" /><rect class="mg-cell" x="1094" y="109" width="68" height="44" /><rect class="mg-cell" x="1170" y="109" width="68" height="44" /><rect class="mg-cell" x="334" y="167" width="68" height="44" /><rect class="mg-cell" x="410" y="167" width="68" height="44" /><rect class="mg-cell" x="486" y="167" width="68" height="44" /><rect class="mg-cell" x="562" y="167" width="68" height="44" /><rect class="mg-cell" x="638" y="167" width="68" height="44" /><rect class="mg-cell" x="714" y="167" width="68" height="44" /><rect class="mg-cell" x="790" y="167" width="68" height="44" /><rect class="mg-cell" x="866" y="167" width="68" height="44" /><rect class="mg-cell" x="942" y="167" width="68" height="44" /><rect class="mg-cell" x="1018" y="167" width="68" height="44" /><rect class="mg-cell" x="1094" y="167" width="68" height="44" /><rect class="mg-cell" x="1170" y="167" width="68" height="44" /><rect class="mg-cell" x="334" y="225" width="68" height="44" /><rect class="mg-cell" x="410" y="225" width="68" height="44" /><rect class="mg-cell" x="486" y="225" width="68" height="44" /><rect class="mg-cell" x="562" y="225" width="68" height="44" /><rect class="mg-cell" x="638" y="225" width="68" height="44" /><rect class="mg-cell" x="714" y="225" width="68" height="44" /><rect class="mg-cell" x="790" y="225" width="68" height="44" /><rect class="mg-cell" x="866" y="225" width="68" height="44" /><rect class="mg-cell" x="942" y="225" width="68" height="44" /><rect class="mg-cell" x="1018" y="225" width="68" height="44" /><rect class="mg-cell" x="1094" y="225" width="68" height="44" /><rect class="mg-cell" x="1170" y="225" width="68" height="44" /><rect class="mg-cell" x="334" y="283" width="68" height="44" /><rect class="mg-cell" x="410" y="283" width="68" height="44" /><rect class="mg-cell" x="486" y="283" width="68" height="44" /><rect class="mg-cell" x="562" y="283" width="68" height="44" /><rect class="mg-cell" x="638" y="283" width="68" height="44" /><rect class="mg-cell" x="714" y="283" width="68" height="44" /><rect class="mg-cell" x="790" y="283" width="68" height="44" /><rect class="mg-cell" x="866" y="283" width="68" height="44" /><rect class="mg-cell" x="942" y="283" width="68" height="44" /><rect class="mg-cell" x="1018" y="283" width="68" height="44" /><rect class="mg-cell" x="1094" y="283" width="68" height="44" /><rect class="mg-cell" x="1170" y="283" width="68" height="44" /><rect class="mg-cell" x="334" y="341" width="68" height="44" /><rect class="mg-cell" x="410" y="341" width="68" height="44" /><rect class="mg-cell" x="486" y="341" width="68" height="44" /><rect class="mg-cell" x="562" y="341" width="68" height="44" /><rect class="mg-cell" x="638" y="341" width="68" height="44" /><rect class="mg-cell" x="714" y="341" width="68" height="44" /><rect class="mg-cell" x="790" y="341" width="68" height="44" /><rect class="mg-cell" x="866" y="341" width="68" height="44" /><rect class="mg-cell" x="942" y="341" width="68" height="44" /><rect class="mg-cell" x="1018" y="341" width="68" height="44" /><rect class="mg-cell" x="1094" y="341" width="68" height="44" /><rect class="mg-cell" x="1170" y="341" width="68" height="44" /></g><g class="mg-fill" data-step="3"><rect class="mg-doc" x="334" y="51" width="68" height="44" /><rect class="mg-doc" x="410" y="51" width="68" height="44" /><g class="mg-dup" data-focus><rect class="mg-doc" x="486" y="51" width="68" height="44" /><rect class="mg-badge" x="524" y="45" width="34" height="34" /><text class="mg-badge__t" x="541" y="70" text-anchor="middle">2</text></g><rect class="mg-doc" x="562" y="51" width="68" height="44" /><rect class="mg-doc" x="638" y="51" width="68" height="44" /><rect class="mg-doc" x="714" y="51" width="68" height="44" /><rect class="mg-doc" x="790" y="51" width="68" height="44" /><rect class="mg-doc" x="866" y="51" width="68" height="44" /><rect class="mg-doc" x="942" y="51" width="68" height="44" /><rect class="mg-missing" x="1018" y="51" width="68" height="44" /><rect class="mg-doc mg-doc--span" x="1094" y="51" width="144" height="44" /><text class="mg-tag" x="1166" y="80" text-anchor="middle">one bill</text><rect class="mg-doc mg-doc--span" x="334" y="109" width="904" height="44" /><text class="mg-tag" x="786" y="138" text-anchor="middle">annual statement</text><rect class="mg-doc mg-doc--span" x="334" y="167" width="220" height="44" /><text class="mg-tag" x="444" y="196" text-anchor="middle">Q1</text><rect class="mg-doc mg-doc--span" x="562" y="167" width="220" height="44" /><text class="mg-tag" x="672" y="196" text-anchor="middle">Q2</text><rect class="mg-doc mg-doc--span" x="790" y="167" width="220" height="44" /><text class="mg-tag" x="900" y="196" text-anchor="middle">Q3</text><rect class="mg-doc mg-doc--span" x="1018" y="167" width="220" height="44" /><text class="mg-tag" x="1128" y="196" text-anchor="middle">Q4</text><rect class="mg-doc mg-doc--span" x="334" y="225" width="904" height="44" /><text class="mg-tag" x="786" y="254" text-anchor="middle">annual statement</text><rect class="mg-doc mg-doc--span" x="334" y="283" width="904" height="44" /><text class="mg-tag" x="786" y="312" text-anchor="middle">annual statement</text><rect class="mg-doc" x="334" y="341" width="68" height="44" /><rect class="mg-doc" x="410" y="341" width="68" height="44" /><rect class="mg-doc" x="486" y="341" width="68" height="44" /><rect class="mg-doc" x="562" y="341" width="68" height="44" /><rect class="mg-doc" x="638" y="341" width="68" height="44" /><rect class="mg-doc" x="714" y="341" width="68" height="44" /><rect class="mg-doc" x="790" y="341" width="68" height="44" /><rect class="mg-doc" x="866" y="341" width="68" height="44" /><rect class="mg-doc" x="942" y="341" width="68" height="44" /><rect class="mg-doc" x="1018" y="341" width="68" height="44" /><rect class="mg-doc" x="1094" y="341" width="68" height="44" /><rect class="mg-doc" x="1170" y="341" width="68" height="44" /><path class="mg-dip" d="M892 97l8 9 8-9" /></g><g class="mg-meter" data-step="5" data-focus><rect x="1018" y="51" width="68" height="44" data-motion="fade" /><text x="1052" y="80" text-anchor="middle" data-motion="fade">meter</text></g></svg><!-- /gen:grid -->
+    </div>
+    <div class="mg-extra" id="month-grid-extra" data-step="3" data-motion="fade" style="--order:2">
+      <span class="mg-extra__label">Also in the folder</span>
+      <span class="mg-extra__bar"><span>Talbrück Beschichtung GmbH · 12 months</span></span>
+    </div>
+    <div class="mg-side" id="month-grid-side">
+      <p class="stamp mg-files" id="month-grid-files"><svg class="icon" aria-hidden="true"><use href="#i-folder" /></svg><span><span class="w-mono">Werk_Nord/Strom</span> · <span class="num" data-num="files_wn_electricity">12</span> files</span></p>
+      <ul class="mg-legend" data-step="3" data-motion="fade" style="--order:1">
+        <li><span class="mg-key mg-key--doc"></span>Bill in the folder</li>
+        <li><span class="mg-key mg-key--dup">2</span>Same bill twice</li>
+        <li><span class="mg-key mg-key--missing"></span>No bill for the month</li>
+        <li><span class="mg-key mg-key--span"></span>One bill, several months</li>
+        <li data-step="5"><span class="mg-key mg-key--meter"></span>Meter reading</li>
+      </ul>
+      <p class="mg-aug" data-step="3" data-step-until="4" data-motion="fade" style="--order:3"><b>August <span class="num" data-num="aug_kwh">120,000 kWh</span></b><span><span class="num" data-num="aug_vs_jul_pct">−31%</span> against July. Error or real?</span></p>
+    </div>
+    <div class="room-vote" id="month-grid-vote" data-step="2" data-step-until="3" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How many months does the Werk Nord folder cover?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">12</span><span class="room-vote__option">11</span><span class="room-vote__option">Can't tell from the file count</span></div>
+    </div>
+    <div class="mg-march" id="month-grid-march" data-step="4" data-motion="rise">
+      <!-- gen:doc file=2025-03_Strom_WN.md lines=0,2,10,12,22 box=10 cls=doc--compact id=month-grid-march-a --><figure class="doc doc--compact" id="month-grid-march-a"><figcaption class="doc__file">2025-03_Strom_WN.md</figcaption><div class="doc__sheet"></div></figure><!-- /gen:doc -->
+      <!-- gen:doc file=Scan_Rechnung_Maerz.md lines=0,2,4,13,15,25 box=13 mark=4 cls=doc--compact id=month-grid-march-b --><figure class="doc doc--compact" id="month-grid-march-b"><figcaption class="doc__file">Scan_Rechnung_Maerz.md</figcaption><div class="doc__sheet"></div></figure><!-- /gen:doc -->
+    </div>
+    <div class="mg-meter-rows" id="month-grid-meter" data-step="5" data-motion="rise">
+      <p class="doc__file">Werk_Nord/Zaehlerstaende_2025.csv</p>
+      <div class="mg-csv">
+        <p><span data-j="inputs.meterReadings.9.date">30.09.2025</span><span data-j="inputs.meterReadings.9.kwh">4812300</span></p>
+        <p><span data-j="inputs.meterReadings.10.date">31.10.2025</span><span data-j="inputs.meterReadings.10.kwh">5012300</span></p>
+      </div>
+      <p class="mg-sub"><span data-j="inputs.meterReadings.10.kwh" data-form="int">5,012,300</span> − <span data-j="inputs.meterReadings.9.kwh" data-form="int">4,812,300</span> = <b><span class="num" data-num="oct_kwh">200,000 kWh</span></b> in October</p>
+    </div>
+    <p class="focus-line mg-net" id="month-grid-net" data-step="6" data-motion="rise">+<span class="num" data-num="dup_kwh" data-form="bare">205,000</span> − <span class="num" data-num="oct_kwh" data-form="bare">200,000</span> = <span class="num" data-num="wn_net_raw_vs_right_kwh">+5,000 kWh</span></p>
+  </section>
+
+  <section class="slide" id="one-unit" data-act="2" data-kind="main" data-label="One unit" data-section="Why it failed · a dot that means a thousand" data-seconds="225" data-mode="vote" data-note-key="one-unit" data-note="On a German bill the dot separates thousands. Vote, reveal C, show what the misread does, then the two checks that catch it." data-route="shown">
+    <h1 class="scene-title" id="one-unit-title">What does “1.240 MWh” mean?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <!-- gen:doc file=Jahresuebersicht_2025_Oekostrom.md lines=0-9 mark=8 id=one-unit-doc cls=ou-doc --><figure class="doc ou-doc" id="one-unit-doc"><figcaption class="doc__file">Jahresuebersicht_2025_Oekostrom.md</figcaption><div class="doc__sheet"><p class="doc__title"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.0" data-form="md">Jahresübersicht Strom 2025</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.2">Lindmark Energie GmbH · Tarif Ökostrom Plus · (erfundener Lieferant)</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.4">Kunde: Kellbrunn Präzisionsteile GmbH, Werk Süd</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.5">Zählpunkt: DE0005678900WS01</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.6">Zeitraum: 01.01.2025 bis 31.12.2025</span></p><p class="doc__gap" aria-hidden="true"></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.8">Verbrauch 2025: 1.240 MWh</span></p><p class="doc__line"><span data-j="documents.Jahresuebersicht_2025_Oekostrom.lines.9">Vorjahr: 1.250 MWh</span></p></div></figure><!-- /gen:doc -->
+    <ol class="ou-options" id="one-unit-options">
+      <li class="ou-opt" data-motion="rise" style="--order:0"><span class="ou-opt__letter">A</span><span class="ou-opt__text"><span class="w-mono">1.24</span> MWh</span></li>
+      <li class="ou-opt" data-motion="rise" style="--order:1"><span class="ou-opt__letter">B</span><span class="ou-opt__text"><span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh</span></li>
+      <li class="ou-opt ou-opt--c" id="one-unit-c" data-motion="rise" style="--order:2"><span class="ou-opt__letter">C</span><span class="ou-opt__text"><span class="num" data-num="el_ws_mwh">1,240 MWh</span> = <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span></span><span class="ou-right" data-step="2" data-motion="stamp"><span class="chip chip--pass"><svg class="icon" aria-hidden="true"><use href="#i-pass" /></svg>Right reading</span></span><span class="ou-ring" data-step="2" data-step-until="3" data-focus aria-hidden="true"></span></li>
+    </ol>
+    <p class="w-note ou-same" data-step="3" data-motion="fade">A and B are the same reading, and both are a thousand times too small.</p>
+    <div class="ou-effect" id="one-unit-effect" data-step="3" data-motion="rise">
+      <div class="ou-bar-row"><span class="ou-bar-label">Read as <span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh</span><span class="ou-bar ou-bar--misread" data-motion="grow" data-axis="x"></span></div>
+      <div class="ou-bar-row"><span class="ou-bar-label">Read as <span class="num" data-num="el_ws_kwh">1,240,000 kWh</span></span><span class="ou-bar ou-bar--right" data-motion="grow" data-axis="x" style="--order:1"></span></div>
+      <p class="ou-effect__t" data-focus><span class="num" data-num="unit_lb_t">−495.5 t</span> location-based</p>
+    </div>
+    <div class="check ou-check" id="one-unit-check" data-step="4" data-motion="rise">
+      <p class="check__head"><svg class="icon" aria-hidden="true"><use href="#i-person" /></svg>Two checks that need no number format</p>
+      <p><span data-j="inputs.ws.misreadKwh" data-form="int">1,240</span> kWh ÷ <span class="num" data-j="company.staff_WS">55</span> staff = <b><span class="num" data-num="ws_misread_kwh_per_employee">23 kWh</span></b> per person per year. Correct: <span class="num" data-num="ws_kwh_per_employee">22,545 kWh</span>.</p>
+      <p>Last year on the same page: <span data-j="inputs.ws.priorYearPrinted">1.250 MWh</span>.</p>
+    </div>
+    <div class="room-vote" id="one-unit-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">What does “1.240 MWh” mean?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">A</span><span class="room-vote__option">B</span><span class="room-vote__option">C</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="whose-bill" data-act="2" data-kind="main" data-label="Whose bill" data-section="Why it failed · whose bill is this?" data-seconds="180" data-mode="vote" data-note-key="whose-bill" data-note="The bill is addressed to the joint venture. Operational control, written down before the run, keeps it out; the row stays with its reason." data-route="shown">
+    <h1 class="scene-title" id="whose-bill-title">Whose bill is this?</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <!-- gen:doc file=Jahresrechnung_TB_2025.md lines=0,2,4-7,9-12,14-16,22 mark=5-7 id=whose-bill-doc cls=wb-doc --><figure class="doc wb-doc" id="whose-bill-doc"><figcaption class="doc__file">Jahresrechnung_TB_2025.md</figcaption><div class="doc__sheet"><p class="doc__line"><span data-j="documents.Jahresrechnung_TB_2025.lines.4">Rechnungsempfänger:</span></p><p class="doc__line is-mark" data-focus><span data-j="documents.Jahresrechnung_TB_2025.lines.5">Talbrück Beschichtung GmbH</span></p><p class="doc__line is-mark" data-focus><span data-j="documents.Jahresrechnung_TB_2025.lines.6">Halle 3, Werkstraße 12</span></p><p class="doc__line is-mark" data-focus><span data-j="documents.Jahresrechnung_TB_2025.lines.7">z. Hd. Einkauf Kellbrunn Präzisionsteile GmbH (Rechnungsprüfung laut Dienstleistungsvertrag)</span></p><p class="doc__line"><span data-j="documents.Jahresrechnung_TB_2025.lines.9">Kundennummer: 55-0388</span></p><p class="doc__line"><span data-j="documents.Jahresrechnung_TB_2025.lines.10">Rechnungsnummer: TB-2025-12</span></p><p class="doc__line"><span data-j="documents.Jahresrechnung_TB_2025.lines.11">Zählpunkt: DE0005678900TB07</span></p><p class="doc__line"><span data-j="documents.Jahresrechnung_TB_2025.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.12.2025</span></p><div class="doc__table"><p class="doc__tr doc__tr--head"><span data-j="documents.Jahresrechnung_TB_2025.lines.14" data-form="cell:0">Position</span><span data-j="documents.Jahresrechnung_TB_2025.lines.14" data-form="cell:1">Menge</span><span data-j="documents.Jahresrechnung_TB_2025.lines.14" data-form="cell:2">Preis</span><span data-j="documents.Jahresrechnung_TB_2025.lines.14" data-form="cell:3">Betrag</span></p><p class="doc__tr"><span data-j="documents.Jahresrechnung_TB_2025.lines.16" data-form="cell:0">Verbrauch (Arbeitspreis)</span><span data-j="documents.Jahresrechnung_TB_2025.lines.16" data-form="cell:1">1.000.000 kWh</span><span data-j="documents.Jahresrechnung_TB_2025.lines.16" data-form="cell:2">0,2150 €/kWh</span><span data-j="documents.Jahresrechnung_TB_2025.lines.16" data-form="cell:3">215.000,00 €</span></p></div></div></figure><!-- /gen:doc -->
+    <div class="callout wb-note" id="whose-bill-note" data-motion="rise" style="--order:1">
+      <p>Kellbrunn holds <span class="num" data-j="company.jv_share_pct" data-form="pct">40%</span>. The partner runs it.</p>
+      <p>Own customer number <span class="w-mono" data-j="inputs.customerNoJV">55-0388</span></p>
+      <p>Own meter <span class="w-mono" data-j="inputs.meters.TB">DE0005678900TB07</span></p>
+    </div>
+    <div class="wb-map" id="whose-bill-map" role="img" aria-label="Boundary sketch: Werk Nord, Werk Süd, Lager Ost and fleet inside; Talbrück outside." data-motion="fade" style="--order:2">
+      <div class="wb-inside"><span class="wb-inside__label">Inside · operational control</span><span>Werk Nord · Werk Süd · Lager Ost · fleet</span></div>
+      <div class="wb-outside"><b>Talbrück</b><span>outside</span></div>
+    </div>
+    <div class="wb-answer" id="whose-bill-answer" data-step="2" data-motion="rise">
+      <p class="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-refuse" /></svg><span>Leave it out and note it</span></p>
+      <p class="wb-answer__why">Operational control: the partner runs the plant, and the contract and the meter are Talbrück's.</p>
+      <p class="wb-row"><span class="w-mono">E-TB-01</span><span>excluded · boundary · Scope 3 Category 15 candidate</span></p>
+    </div>
+    <div class="wb-effect" id="whose-bill-effect" data-step="3" data-motion="rise">
+      <p class="w-label">If it is counted</p>
+      <p class="wb-effect__row"><span class="num" data-num="jv_kwh">1,000,000 kWh</span></p>
+      <p class="wb-effect__row" data-focus><span class="num" data-num="jv_lb_t">+400.0 t</span> location-based</p>
+      <p class="wb-effect__row"><span class="num" data-num="jv_rm_t">+600.0 t</span> at the residual mix</p>
+    </div>
+    <div class="room-vote" id="whose-bill-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Whose bill is this?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Include 100%</span><span class="room-vote__option">Include <span data-j="company.jv_share_pct" data-form="pct">40%</span></span><span class="room-vote__option">Leave it out and note it</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="anatomy" data-act="2" data-kind="main" data-label="Anatomy" data-section="Why it failed · six errors, one small gap" data-seconds="255" data-mode="vote" data-note-key="anatomy" data-note="Prediction vote first. Then remove the errors in pairs: duplicate and October, Talbrück and the unit, gas and AdBlue. The total swings and lands 48.7 t away." data-route="shown">
+    <h1 class="scene-title" id="anatomy-title">Six errors, <span class="num" data-num="gap_lb_t" data-form="bare">48.7</span> tonnes apart</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="an-chart" id="anatomy-chart">
+      <!-- gen:waterfall --><svg class="wf" id="anatomy-wf" viewBox="0 0 1360 530" width="1360" height="530" role="img" aria-label="Waterfall, location-based Scope 1 and 2: from the raw-folder answer, one correction per bar, to the right total."><path class="wf-axis" d="M16 456H1292" /><path class="wf-break" d="M10 466l10 -20M20 466l10 -20" /><g class="wf-col" data-col="start" data-step="0"><rect class="wf-bar wf-bar--raw" x="40" y="145.0" width="104" height="311.0" data-motion="grow" /><text class="wf-val" x="92" y="131.0" text-anchor="middle" data-j="waterfall.lb.start.running_en">1,866.5</text><text class="wf-name" x="92" y="490" text-anchor="middle">Raw-folder</text><text class="wf-name wf-name--sub" x="92" y="518" text-anchor="middle">answer</text></g><g class="wf-col" data-col="T1" data-step="2"><path class="wf-link" d="M144 145.0H204" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="204" y="145.0" width="104" height="54.7" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="256" y="233.7" text-anchor="middle" data-j="waterfall.lb.T1.change_en">−82.0</text><text class="wf-name" x="256" y="490" text-anchor="middle">Duplicate</text><text class="wf-name wf-name--sub" x="256" y="518" text-anchor="middle">March</text></g><g class="wf-col" data-col="T2" data-step="2"><path class="wf-link" d="M308 199.7H368" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="368" y="146.3" width="104" height="53.3" data-motion="grow" style="--grow-origin: 50% 100%" /><text class="wf-val wf-val--change" x="420" y="132.3" text-anchor="middle" data-j="waterfall.lb.T2.change_en">+80.0</text><text class="wf-name" x="420" y="490" text-anchor="middle">October</text><text class="wf-name wf-name--sub" x="420" y="518" text-anchor="middle">missing</text></g><g class="wf-col" data-col="T3" data-step="3"><path class="wf-link" d="M472 146.3H532" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="532" y="146.3" width="104" height="266.7" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="584" y="447.0" text-anchor="middle" data-j="waterfall.lb.T3.change_en">−400.0</text><text class="wf-name" x="584" y="490" text-anchor="middle">Talbrück</text><text class="wf-name wf-name--sub" x="584" y="518" text-anchor="middle">bill</text></g><g class="wf-col" data-col="T4" data-step="3"><path class="wf-link" d="M636 413.0H696" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="696" y="82.7" width="104" height="330.3" data-motion="grow" style="--grow-origin: 50% 100%" /><text class="wf-val wf-val--change" x="748" y="68.7" text-anchor="middle" data-j="waterfall.lb.T4.change_en">+495.5</text><text class="wf-name" x="748" y="490" text-anchor="middle">1.240 MWh</text><text class="wf-name wf-name--sub" x="748" y="518" text-anchor="middle">misread</text></g><g class="wf-col" data-col="T5" data-step="4"><path class="wf-link" d="M800 82.7H860" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="860" y="82.7" width="104" height="27.9" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="912" y="144.5" text-anchor="middle" data-j="waterfall.lb.T5.change_en">−41.8</text><text class="wf-name" x="912" y="490" text-anchor="middle">Gas</text><text class="wf-name wf-name--sub" x="912" y="518" text-anchor="middle">Hs / Hi</text></g><g class="wf-col" data-col="T6" data-step="4"><path class="wf-link" d="M964 110.5H1024" data-motion="draw" /><rect class="wf-bar wf-bar--change" x="1024" y="110.5" width="104" height="3.0" data-motion="grow" style="--grow-origin: 50% 0%" /><text class="wf-val wf-val--change" x="1076" y="147.5" text-anchor="middle" data-j="waterfall.lb.T6.change_en">−3.0</text><text class="wf-name" x="1076" y="490" text-anchor="middle">AdBlue</text><text class="wf-name wf-name--sub" x="1076" y="518" text-anchor="middle">as diesel</text></g><g class="wf-col" data-col="end" data-step="0"><rect class="wf-bar wf-bar--ink" x="1188" y="112.5" width="104" height="343.5" data-motion="grow" /><text class="wf-val wf-val--end" x="1240" y="98.5" text-anchor="middle" data-num="total_lb_2025" data-form="bare">1,915.2</text><text class="wf-name" x="1240" y="490" text-anchor="middle">Right</text><text class="wf-name wf-name--sub" x="1240" y="518" text-anchor="middle">total</text></g><g class="wf-swing" data-step="5" data-focus><path class="wf-swing__line" d="M40 82.7H1320M40 413.0H1320" data-motion="draw" /><path class="wf-swing__bracket" d="M1320 82.7h14V413.0h-14" data-motion="draw" style="--order:1" /><text class="wf-swing__label" x="1346" y="92.7" data-num="wf_lb_max_t" data-motion="fade" style="--order:2">1,960.0 t</text><text class="wf-swing__label" x="1346" y="423.0" data-num="wf_lb_min_t" data-motion="fade" style="--order:2">1,464.5 t</text></g></svg><!-- /gen:waterfall -->
+    </div>
+    <div class="an-cards" id="anatomy-cards" data-step="4">
+      <div class="callout an-card" data-motion="rise" style="--order:0"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gas" /></svg><p>Gas bill says Brennwert (Hs) on page 2; the AI picked the Hi factor: <b><span class="num" data-num="gasbasis_t">+41.8 t</span></b></p></div>
+      <div class="callout an-card" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-fleet" /></svg><p>AdBlue is not diesel: <b><span class="num" data-num="adblue_t">+3.0 t</span></b></p></div>
+    </div>
+    <p class="w-note an-caption" id="anatomy-caption" data-step="2" data-motion="fade">Computed from the traps: what they do when they fire. Location-based Scope 1 and 2; the raw-folder answer is constructed, not a recorded run.</p>
+    <p class="stamp an-accident" id="anatomy-accident" data-step="5" data-motion="stamp" style="--order:3"><span>The total was right by accident.</span></p>
+    <div class="an-predict" id="anatomy-predict" data-step-until="1" data-motion="fade" style="--order:2">
+      <svg class="icon icon--56" aria-hidden="true"><use href="#i-question" /></svg>
+      <p>Predict: how far is the AI's total from the right one?</p>
+    </div>
+    <div class="room-vote" id="anatomy-vote" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote · prediction</span><p class="room-vote__q">How far is the AI's total from the right one?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">Less than 5%</span><span class="room-vote__option">About 10%</span><span class="room-vote__option">More than 20%</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 3 · The fix -->
+
+  <section class="slide" id="the-ledger" data-act="3" data-kind="main" data-label="The ledger" data-section="The fix · one row per quantity" data-seconds="390" data-recovery-seconds="90" data-mode="do" data-note-key="the-ledger" data-note="Hold the question, model, prompt and factor table constant; change how the data arrives. Then the ledger, one evidence row, and three rows the room completes." data-route="shown">
+    <h1 class="scene-title" id="the-ledger-title">One row per quantity, and every row points to a page</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <div class="tl-same" id="the-ledger-same" data-step-until="1">
+      <div class="tl-col" data-motion="rise" style="--order:0">
+        <p class="tl-col__head">Same</p>
+        <ul>
+          <li>The question</li>
+          <li>The AI model, named in the run record</li>
+          <li>The prompt</li>
+          <li>The factor table</li>
+          <li>The <span>2024</span> figures</li>
+        </ul>
+      </div>
+      <div class="tl-col tl-col--changed" data-motion="rise" style="--order:1">
+        <p class="tl-col__head">Changed</p>
+        <div class="tl-change">
+          <p class="tl-change__from"><span class="tl-swatch tl-swatch--raw" aria-hidden="true"></span><span><span class="num" data-num="files_raw_2025">22</span> raw files</span></p>
+          <svg width="56" height="24" viewBox="0 0 56 24" aria-hidden="true"><path class="edge" d="M4 12H40" /><path class="edge-head" d="M38 3L52 12L38 21Z" /></svg>
+          <ul class="tl-change__to">
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one ledger</li>
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one coverage grid</li>
+            <li><span class="tl-swatch tl-swatch--ink" aria-hidden="true"></span>one page of rules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tl-table" id="the-ledger-table" data-step="1" data-motion="rise">
+      <!-- gen:ledger rows=E-WN-01,E-WN-03D,E-TB-01,D-FL-02 id=the-ledger-excerpt --><table class="lg" id="the-ledger-excerpt"><thead><tr><th>row_id</th><th class="lg-entity-head" id="the-ledger-entity-head">entity_on_document</th><th>period</th><th>qty_source</th><th>unit_source</th><th>qty_norm</th><th>status</th><th>source (file · quote)</th></tr></thead><tbody><tr class="lg-row" data-row="E-WN-01"><td class="lg-id"><span data-j="ledger.E-WN-01.row_id">E-WN-01</span></td><td class="lg-entity"><span data-j="ledger.E-WN-01.entity_on_document">Kellbrunn Präzisionsteile GmbH, Werk Nord</span></td><td class="lg-period"><span data-j="ledger.E-WN-01.period_start">2025-01-01</span><br /><span data-j="ledger.E-WN-01.period_end">2025-01-31</span></td><td class="lg-num"><span data-j="ledger.E-WN-01.qty_source">210.000</span></td><td><span data-j="ledger.E-WN-01.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-WN-01.qty_norm">210000</span></td><td class="lg-status"><span data-j="ledger.E-WN-01.status">actual</span></td><td class="lg-src"><span class="lg-file">2025-01_Strom_WN.md</span><span class="lg-quote" data-j="ledger.E-WN-01.source_quote">Verbrauch 210.000 kWh</span></td></tr><tr class="lg-row lg-row--excluded" data-row="E-WN-03D"><td class="lg-id"><span data-j="ledger.E-WN-03D.row_id">E-WN-03D</span></td><td class="lg-entity"><span data-j="ledger.E-WN-03D.entity_on_document">Kellbrunn Präzisionsteile GmbH, Werk Nord</span></td><td class="lg-period"><span data-j="ledger.E-WN-03D.period_start">2025-03-01</span><br /><span data-j="ledger.E-WN-03D.period_end">2025-03-31</span></td><td class="lg-num"><span data-j="ledger.E-WN-03D.qty_source">205.000</span></td><td><span data-j="ledger.E-WN-03D.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-WN-03D.qty_norm">0</span></td><td class="lg-status"><span data-j="ledger.E-WN-03D.status">excluded</span></td><td class="lg-src"><span class="lg-file">Scan_Rechnung_Maerz.md</span><span class="lg-quote" data-j="ledger.E-WN-03D.source_quote">Verbrauch 205.000 kWh</span></td></tr><tr class="lg-row lg-row--excluded" data-row="E-TB-01"><td class="lg-id"><span data-j="ledger.E-TB-01.row_id">E-TB-01</span></td><td class="lg-entity"><span data-j="ledger.E-TB-01.entity_on_document">Talbrück Beschichtung GmbH, Halle 3</span></td><td class="lg-period"><span data-j="ledger.E-TB-01.period_start">2025-01-01</span><br /><span data-j="ledger.E-TB-01.period_end">2025-12-31</span></td><td class="lg-num"><span data-j="ledger.E-TB-01.qty_source">1.000.000</span></td><td><span data-j="ledger.E-TB-01.unit_source">kWh</span></td><td class="lg-num"><span data-j="ledger.E-TB-01.qty_norm">0</span></td><td class="lg-status"><span data-j="ledger.E-TB-01.status">excluded</span></td><td class="lg-src"><span class="lg-file">Jahresrechnung_TB_2025.md</span><span class="lg-quote" data-j="ledger.E-TB-01.source_quote">Rechnungsempfänger: Talbrück Beschichtung GmbH</span></td></tr><tr class="lg-row lg-row--excluded" data-row="D-FL-02"><td class="lg-id"><span data-j="ledger.D-FL-02.row_id">D-FL-02</span></td><td class="lg-entity"><span data-j="ledger.D-FL-02.entity_on_document">Kellbrunn Präzisionsteile GmbH</span></td><td class="lg-period"><span data-j="ledger.D-FL-02.period_start">2025-01-01</span><br /><span data-j="ledger.D-FL-02.period_end">2025-12-31</span></td><td class="lg-num"><span data-j="ledger.D-FL-02.qty_source">1.200</span></td><td><span data-j="ledger.D-FL-02.unit_source">l</span></td><td class="lg-num"><span data-j="ledger.D-FL-02.qty_norm">0</span></td><td class="lg-status"><span data-j="ledger.D-FL-02.status">excluded</span></td><td class="lg-src"><span class="lg-file">Tankkarten_2025.csv</span><span class="lg-quote" data-j="ledger.D-FL-02.source_quote">produkt=AdBlue; einheit=l</span></td></tr></tbody></table><!-- /gen:ledger -->
+    </div>
+    <div class="tl-evidence" id="the-ledger-evidence" data-step="2" data-step-until="4" data-motion="rise">
+      <!-- gen:doc file=2025-01_Strom_WN.md lines=0,5-6,10-12,22 mark=22 cls=doc--compact id=the-ledger-bill --><figure class="doc doc--compact" id="the-ledger-bill"><figcaption class="doc__file">2025-01_Strom_WN.md</figcaption><div class="doc__sheet"><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.5">Kellbrunn Präzisionsteile GmbH</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.6">Werk Nord, Werkstraße 12</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.10">Rechnungsnummer: 4711-01</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.11">Zählpunkt: DE0005678900WN01</span></p><p class="doc__line"><span data-j="documents.2025-01_Strom_WN.lines.12">Abrechnungszeitraum: 01.01.2025 bis 31.01.2025</span></p></div></figure><!-- /gen:doc -->
+      <p class="tl-evidence__link"><span class="w-mono">E-WN-01</span> → page 1, line “Verbrauch <span data-j="ledger.E-WN-01.qty_source">210.000</span> kWh”</p>
+    </div>
+    <p class="callout tl-ask" id="the-ledger-ask" data-step="3" data-step-until="4" data-motion="rise" data-focus>Which column would have caught the Talbrück bill?</p>
+    <div class="tl-rows" id="the-ledger-rows" data-step="4">
+      <article class="tl-card" id="the-ledger-card-1" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WN-03</span><span class="tl-card__mode">Worked</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="w-mono">2025-03_Strom_WN.md</span> · “<span data-j="ledger.E-WN-03.source_quote">Verbrauch 205.000 kWh</span>”</dd></div>
+          <div><dt>As printed</dt><dd><span data-j="ledger.E-WN-03.qty_source">205.000</span> <span data-j="ledger.E-WN-03.unit_source">kWh</span></dd></div>
+          <div><dt>kWh</dt><dd><span data-j="ledger.E-WN-03.qty_norm" data-form="int">205,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span data-j="ledger.E-WN-03.status">actual</span> · <span data-j="ledger.E-WN-03.dq">A</span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span data-j="ledger.E-WN-03.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WN-03.factor_mb">F-EL-RM-2025</span></dd></div>
+        </dl>
+      </article>
+      <article class="tl-card" id="the-ledger-card-2" data-step="5" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WS-01</span><span class="tl-card__mode">Half done</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="w-mono">Jahresuebersicht_2025_Oekostrom.md</span></dd></div>
+          <div><dt>As printed</dt><dd><span data-j="ledger.E-WS-01.qty_source">1.240</span> <span data-j="ledger.E-WS-01.unit_source">MWh</span></dd></div>
+          <div><dt>kWh</dt><dd><span class="tl-blank" data-step-until="6">?</span><span class="tl-fill" data-step="6" data-motion="fade" data-j="ledger.E-WS-01.qty_norm" data-form="int">1,240,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span data-j="ledger.E-WS-01.status">actual</span> · <span data-j="ledger.E-WS-01.dq">A</span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span class="tl-blank" data-step-until="6">?</span><span class="tl-fill" data-step="6" data-motion="fade"><span data-j="ledger.E-WS-01.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WS-01.factor_mb">F-EL-GO</span></span></dd></div>
+        </dl>
+      </article>
+      <article class="tl-card" id="the-ledger-card-3" data-step="6" data-motion="rise">
+        <p class="tl-card__head"><span class="w-mono">E-WN-10</span><span class="tl-card__mode">Your turn · October</span></p>
+        <dl>
+          <div><dt>Source</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span class="w-mono">Zaehlerstaende_2025.csv</span> · meter reading</span></dd></div>
+          <div><dt>As printed</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span data-j="ledger.E-WN-10.qty_source">5.012.300 minus 4.812.300</span></span></dd></div>
+          <div><dt>kWh</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade" data-j="ledger.E-WN-10.qty_norm" data-form="int">200,000</span></dd></div>
+          <div><dt>Status · grade</dt><dd><span class="tl-blank" data-step-until="7">?</span><span class="tl-fill" data-step="7" data-motion="fade"><span data-j="ledger.E-WN-10.status">actual_meter</span> · <span data-j="ledger.E-WN-10.dq">B</span></span></dd></div>
+          <div><dt>Factors</dt><dd class="w-mono"><span data-j="ledger.E-WN-10.factor_lb">F-EL-LB-2025</span> · <span data-j="ledger.E-WN-10.factor_mb">F-EL-RM-2025</span></dd></div>
+        </dl>
+      </article>
+    </div>
+    <div class="check tl-control" id="the-ledger-control" data-step="7" data-motion="rise">
+      <p><svg class="icon icon--40" aria-hidden="true"><use href="#i-pass" /></svg><span>Control total: documents <span class="num" data-num="ctl_docs_kwh" data-form="bare">4,615,000</span> − excluded <span class="num" data-num="ctl_excluded_kwh" data-form="bare">1,205,000</span> + October meter <span class="num" data-num="ctl_meter_kwh" data-form="bare">200,000</span> = <b><span class="num" data-num="ctl_total_kwh">3,610,000 kWh</span></b></span></p>
+    </div>
+  </section>
+
+  <section class="slide" id="six-rules" data-act="3" data-kind="main" data-label="Six rules" data-section="The fix · rules written before the run" data-seconds="270" data-mode="vote" data-note-key="six-rules" data-note="Six plain rules a controller would sign, each against one trap, three roles. The factor rule matters most for a comparison." data-route="shown">
+    <h1 class="scene-title" id="six-rules-title">Six rules, written down before the AI runs</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <ol class="sr-rules" id="six-rules-list">
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:0"><span class="sr-n">1</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-company" /></svg><p><b>Boundary</b><span>Check <span class="w-mono">entity_on_document</span> against the written boundary.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:1"><span class="sr-n">2</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-calendar" /></svg><p><b>Coverage</b><span>Fill the site × month grid first. Key: invoice + period + meter.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="1" data-motion="rise" style="--order:2"><span class="sr-n">3</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-meter" /></svg><p><b>Units</b><span>Keep value and unit as printed. Convert only by the table.</span></p><span class="sr-role">Reader</span></li>
+      <li class="sr-rule" data-step="2" data-motion="rise" style="--order:0"><span class="sr-n">4</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-factor" /></svg><p><b>Factors</b><span>Pick an ID from the pinned table. Record the edition.</span></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule sr-rule--tall" data-step="2" data-motion="rise" style="--order:1"><span class="sr-n">5</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-certificate" /></svg><p><b>Scope 2</b><span>Report both. Market-based: certificate, then supplier rate, then residual mix.</span><small>Kit bills leave out the supplier mix disclosure (Stromkennzeichnung); real bills carry it.</small></p><span class="sr-role">Clerk</span></li>
+      <li class="sr-rule" data-step="2" data-motion="rise" style="--order:2"><span class="sr-n">6</span><svg class="icon icon--48" aria-hidden="true"><use href="#i-contract" /></svg><p><b>Citations</b><span>Every number names its rows. No claim word without a number.</span></p><span class="sr-role">Writer</span></li>
+    </ol>
+    <p class="sr-approve" id="six-rules-approve" data-step="2" data-motion="fade" style="--order:3"><svg class="icon icon--40" aria-hidden="true"><use href="#i-person" /></svg><span>The AI may propose rules; a spreadsheet applies them, and a person approves the list.</span></p>
+    <div class="sr-factors" id="six-rules-factors" data-motion="rise" style="--order:1">
+      <p class="doc__file">faktoren/faktoren_lehrwerte.csv</p>
+      <!-- gen:factors ids=F-EL-LB-2025,F-EL-LB-2024,F-EL-RM-2025,F-EL-GO,F-GAS-HS,F-GAS-HI,F-DSL --><table class="ft"><thead><tr><th>factor_id</th><th>year</th><th>basis</th><th class="ft-num">value</th><th>unit</th></tr></thead><tbody><tr data-factor="F-EL-LB-2025"><td class="ft-id">F-EL-LB-2025</td><td><span data-j="factors.F-EL-LB-2025.year">2025</span></td><td><span data-j="factors.F-EL-LB-2025.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-LB-2025.value" data-form="fix2">0.40</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-LB-2024"><td class="ft-id">F-EL-LB-2024</td><td><span data-j="factors.F-EL-LB-2024.year">2024</span></td><td><span data-j="factors.F-EL-LB-2024.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span></td><td class="ft-unit"><span data-j="factors.F-EL-LB-2024.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-RM-2025"><td class="ft-id">F-EL-RM-2025</td><td><span data-j="factors.F-EL-RM-2025.year">2025</span></td><td><span data-j="factors.F-EL-RM-2025.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-RM-2025.value" data-form="fix2">0.60</span></td><td class="ft-unit"><span data-j="factors.F-EL-RM-2025.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-EL-GO"><td class="ft-id">F-EL-GO</td><td><span data-j="factors.F-EL-GO.year">alle</span></td><td><span data-j="factors.F-EL-GO.basis"></span></td><td class="ft-num"><span data-j="factors.F-EL-GO.value" data-form="fix2">0.00</span></td><td class="ft-unit"><span data-j="factors.F-EL-GO.unit">kg CO2e/kWh</span></td></tr><tr data-factor="F-GAS-HS"><td class="ft-id">F-GAS-HS</td><td><span data-j="factors.F-GAS-HS.year">alle</span></td><td><span data-j="factors.F-GAS-HS.basis">Hs</span></td><td class="ft-num"><span data-j="factors.F-GAS-HS.value" data-form="fix2">0.18</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HS.unit">kg CO2e/kWh(Hs)</span></td></tr><tr data-factor="F-GAS-HI"><td class="ft-id">F-GAS-HI</td><td><span data-j="factors.F-GAS-HI.year">alle</span></td><td><span data-j="factors.F-GAS-HI.basis">Hi</span></td><td class="ft-num"><span data-j="factors.F-GAS-HI.value" data-form="fix2">0.20</span></td><td class="ft-unit"><span data-j="factors.F-GAS-HI.unit">kg CO2e/kWh(Hi)</span></td></tr><tr data-factor="F-DSL"><td class="ft-id">F-DSL</td><td><span data-j="factors.F-DSL.year">alle</span></td><td><span data-j="factors.F-DSL.basis"></span></td><td class="ft-num"><span data-j="factors.F-DSL.value" data-form="fix1">2.5</span></td><td class="ft-unit"><span data-j="factors.F-DSL.unit">kg CO2e/l</span></td></tr></tbody></table><!-- /gen:factors -->
+      <p class="w-note sr-edition">Edition <span data-j="factorEdition">Lehrwerte v1.0, 2026-01-15</span>. <span data-j="meta.factorLabel_en">Teaching values, not official factors.</span></p>
+    </div>
+    <div class="sr-answer" id="six-rules-answer" data-step="4" data-motion="rise">
+      <p class="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-factor" /></svg><span>A pinned table; the AI only picks an ID</span></p>
+      <p class="sr-answer__effect">Last year's grid factor (<span data-j="factors.F-EL-LB-2024.value" data-form="fix2">0.42</span>) on 2025 electricity adds <b><span class="num" data-num="last_year_factor_effect_t" data-form="absunit">72.2 t</span></b>: the whole grid effect in this year's change.</p>
+    </div>
+    <div class="room-vote" id="six-rules-vote" data-step="3" data-step-until="4" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">Where should the grid factor come from?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">The AI knows it</span><span class="room-vote__option">The AI searches the web</span><span class="room-vote__option">A pinned table; the AI only picks an ID</span></div>
+    </div>
+  </section>
+
+  <section class="slide" id="two-scope-2" data-act="3" data-kind="main" data-label="Two Scope 2 numbers" data-section="The fix · one certificate, two Scope 2 numbers" data-seconds="330" data-mode="vote" data-note-key="two-scope-2" data-note="Report both Scope 2 figures. The certificate covers Werk Süd only; the residual mix puts most of it back. Market-based ends 22 t below location-based." data-route="shown">
+    <h1 class="scene-title" id="two-scope-2-title">One certificate, two Scope 2 numbers</h1>
+    <p class="case-tag">Fictional company · teaching factors</p>
+    <!-- gen:doc file=HKN_Bestaetigung_2025.md lines=0,2,4-7,9 mark=9 id=two-scope-2-doc cls=ts-doc --><figure class="doc ts-doc" id="two-scope-2-doc"><figcaption class="doc__file">HKN_Bestaetigung_2025.md</figcaption><div class="doc__sheet"><p class="doc__line"><span data-j="documents.HKN_Bestaetigung_2025.lines.4">Herkunftsnachweise über 1.240 MWh, Erzeugungsjahr 2025, Wasserkraft,</span></p><p class="doc__line"><span data-j="documents.HKN_Bestaetigung_2025.lines.5">entwertet im Herkunftsnachweisregister für die Liefermenge an</span></p><p class="doc__line"><span data-j="documents.HKN_Bestaetigung_2025.lines.6">Kellbrunn Präzisionsteile GmbH, Lieferstelle Werk Süd,</span></p><p class="doc__line"><span data-j="documents.HKN_Bestaetigung_2025.lines.7">Zählpunkt DE0005678900WS01.</span></p></div></figure><!-- /gen:doc -->
+    <div class="ts-stack" id="two-scope-2-stack" data-motion="rise" style="--order:1">
+      <!-- gen:stack --><div class="st" style="--st-ws:357px"><div class="st__bar"><span class="st__ws" data-motion="grow" data-axis="x"><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg></span><span class="st__rest" data-motion="grow" data-axis="x" style="--order:1"></span></div><p class="st__lab st__lab--ws"><b>Werk Süd <span class="num" data-num="el_ws_mwh">1,240 MWh</span></b><span>covered by guarantees of origin</span></p><p class="st__lab st__lab--rest"><b>Werk Nord + Lager Ost <span class="num" data-num="el_uncovered_mwh">2,370 MWh</span></b><span>no certificate</span></p><p class="st__total">2025 electricity <span class="num" data-num="el_total_mwh">3,610 MWh</span> · covered <span class="num" data-num="renewable_share_el_pct">34.3%</span></p></div><!-- /gen:stack -->
+    </div>
+    <div class="ts-nums" id="two-scope-2-nums" data-step="2">
+      <div class="bignum ts-num" data-motion="rise" style="--order:0"><span class="bignum__label">Location-based</span><span class="bignum__value"><span class="num" data-num="s2lb_2025">1,444.0 t</span></span><span class="bignum__scope">grid average where the power is used</span></div>
+      <div class="bignum ts-num" data-motion="rise" style="--order:1"><span class="bignum__label">Market-based</span><span class="bignum__value"><span class="num" data-num="s2mb_2025">1,422.0 t</span></span><span class="bignum__scope">what Kellbrunn bought: <span class="num" data-num="el_ws_mwh">1,240 MWh</span> at 0, the rest at the residual mix</span></div>
+    </div>
+    <div class="ts-wrong" id="two-scope-2-wrong" data-step="3" data-step-until="5">
+      <div class="ts-wrong__opt" data-motion="rise" style="--order:0"><span class="ts-wrong__letter">A</span><p><b>0 t for the whole company</b><span>The certificate covers Werk Süd only</span></p></div>
+      <div class="ts-wrong__opt" data-motion="rise" style="--order:1"><span class="ts-wrong__letter">B</span><p><b><span class="num" data-num="mb_grid_avg_wrong_s2_t">948.0 t</span></b><span>Grid average on the rest: <span class="num" data-num="mb_grid_avg_too_low_t">474.0 t</span> too low</span></p></div>
+    </div>
+    <p class="callout ts-claim" id="two-scope-2-claim" data-step="3" data-step-until="5" data-motion="rise" data-focus>“We run on green electricity” is false: certificates cover <span class="num" data-num="renewable_share_el_pct">34.3%</span> of the electricity, all of it at Werk Süd.</p>
+    <div class="ts-bridge" id="two-scope-2-bridge-wrap" data-step="5" data-focus>
+      <!-- gen:bridge --><svg class="br" id="two-scope-2-bridge" viewBox="0 0 1500 256" width="1500" height="256" role="img" aria-label="Bridge from location-based to market-based Scope 2, 2025."><g class="br-row" style="--order:0"><text class="br-label" x="276" y="34" text-anchor="end">Location-based</text><rect class="br-bar br-bar--lb" x="300.0" y="8" width="866.4" height="44" data-motion="grow" data-axis="x" style="--order:0" /><text class="br-val" x="1182.4" y="38" data-num="s2lb_2025" data-motion="fade" style="--order:0">1,444.0 t</text></g><g class="br-row" style="--order:1"><text class="br-label" x="276" y="98" text-anchor="end">Certificate, Werk Süd</text><rect class="br-bar br-bar--minus" x="868.8" y="72" width="297.6" height="44" data-motion="grow" data-axis="x" style="--order:1" /><text class="br-val" x="1182.4" y="102" data-num="bridge_cert_t" data-motion="fade" style="--order:1">−496.0 t</text></g><g class="br-row" style="--order:2"><text class="br-label" x="276" y="162" text-anchor="end">Residual mix on the rest</text><rect class="br-bar br-bar--plus" x="868.8" y="136" width="284.4" height="44" data-motion="grow" data-axis="x" style="--order:2" /><text class="br-val" x="1169.2" y="166" data-num="bridge_rm_t" data-motion="fade" style="--order:2">+474.0 t</text></g><g class="br-row" style="--order:3"><text class="br-label" x="276" y="226" text-anchor="end">Market-based</text><rect class="br-bar br-bar--mb" x="300.0" y="200" width="853.2" height="44" data-motion="grow" data-axis="x" style="--order:3" /><text class="br-val" x="1169.2" y="230" data-num="s2mb_2025" data-motion="fade" style="--order:3">1,422.0 t</text></g></svg><!-- /gen:bridge -->
+    </div>
+    <p class="focus-line ts-net" id="two-scope-2-net" data-step="6" data-motion="rise">Market-based is <span class="num" data-num="bridge_net_t" data-form="absunit">22.0 t</span> below location-based, even with a green tariff.</p>
+    <div class="room-vote" id="two-scope-2-vote-1" data-step="1" data-step-until="2" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How do you calculate market-based Scope 2?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option"><b>A</b> 0 for the whole company</span><span class="room-vote__option"><b>B</b> 0 for Werk Süd, grid average for the rest</span><span class="room-vote__option"><b>C</b> 0 for Werk Süd, residual mix for the rest, and location-based too</span></div>
+    </div>
+    <div class="room-vote" id="two-scope-2-vote-2" data-step="4" data-step-until="5" data-motion="rise">
+      <svg class="icon" aria-hidden="true"><use href="#i-room-vote" /></svg>
+      <div><span class="room-vote__label">Room vote</span><p class="room-vote__q">How far below location-based is market-based?</p></div>
+      <div class="room-vote__options"><span class="room-vote__option">About 500 t</span><span class="room-vote__option">Zero</span><span class="room-vote__option">About 20 t</span></div>
+    </div>
+  </section>
+
+  <!-- ================================================================ ACT 4 BEGINS HERE · Ask again
+       Main path continues with rematch, trace-two and what-drove-it (act 4, data-act="4"), then acts 5
+       and 6, then the appendix scenes (data-kind="appendix", data-seconds="0"). Bind every number with
+       data-num / data-j, add the scene stylesheet link in <head>, add the notes in
+       scripts/workshop04/notes/, and run node scripts/workshop04/build-deck.mjs. -->
+
+</deck-stage>
+</main>
+
+<script src="./lib/w04-data.js"></script>
+<script src="./lib/w04-fill.js"></script>
+<script src="./lib/deck-runtime.js"></script>
+</body>
+</html>

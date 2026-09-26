@@ -264,10 +264,19 @@ describe("<WorkshopDecisionLab>", () => {
     expect(choice?.className).not.toMatch(
       /translate|motion-safe|motion-reduce/,
     );
+    // Sentence-case kicker in Schiefer: no orange, no mono caps.
     expect(screen.getByText(workshop!.decisionLab.kicker)).toHaveClass(
-      "text-xs",
-      "text-brand-orange",
+      "text-label",
+      "text-muted-foreground",
     );
+    // Square radio rows on the Beton band, no per-option boxes.
+    expect(choice).toHaveClass("border-b", "border-hairline", "min-h-12");
+    expect(choice?.className).not.toMatch(/(?:^| )border(?: |$)|border-2/);
+    expect(
+      screen.getByRole("radio", { name: /Allocate proportionally/ }),
+    ).toHaveClass("appearance-none", "border-2", "border-foreground");
+    const lab = document.querySelector("[data-workshop-decision-lab]");
+    expect(lab).toHaveClass("border-t-2", "border-foreground", "bg-inset");
 
     const source = readFileSync(
       resolve(
@@ -278,8 +287,9 @@ describe("<WorkshopDecisionLab>", () => {
     );
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/motion-safe|motion-reduce|animate-|shadow-/);
+    expect(source).not.toMatch(/border-l-\[\d+px\]|uppercase|font-mono|font-black/);
     expect(source).toContain(
-      "grid grid-cols-1 border-y border-border sm:grid-cols-3",
+      "grid grid-cols-1 border-t border-hairline sm:grid-cols-3",
     );
   });
 });
@@ -373,13 +383,15 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "en")!;
     const lab = workshop.decisionLab;
     const { container } = render(<WorkshopDecisionLab config={lab} locale="en" />);
+    // No Mennige in the lab before a check.
+    expect(container.querySelector("[data-strongest-mark]")).toBeNull();
 
     fireEvent.click(screen.getByRole("radio", { name: lab.choices[1].label }));
     fireEvent.click(screen.getByRole("radio", { name: lab.evidence[1].label }));
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     let outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "wrong");
-    expect(outcome).toHaveClass("border-destructive");
+    expect(outcome.querySelector('[data-pictogram="fail"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Not quite/);
     expect(outcome.querySelector("svg")).not.toBeNull();
     const wrongPick = screen.getByRole("radio", { name: lab.choices[1].label });
@@ -387,7 +399,13 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     expect(wrongPick.closest("label")).toHaveAttribute("data-option-mark", "wrong-pick");
     const rightChoice = screen.getByRole("radio", { name: lab.choices[0].label });
     expect(rightChoice).toHaveAccessibleDescription("Correct answer");
-    expect(rightChoice.closest("label")).toHaveClass("border-brand-teal");
+    expect(rightChoice.closest("label")).toHaveAttribute("data-option-mark", "correct");
+    expect(rightChoice.closest("label")?.querySelector('[data-pictogram="pass"]')).not.toBeNull();
+    // The lab's one Mennige mark sits on the strongest-evidence square, only after a check.
+    const marked = document.querySelectorAll("[data-strongest-mark]");
+    expect(marked).toHaveLength(1);
+    expect(marked[0]).toHaveAttribute("value", lab.strongestEvidenceId);
+    expect(marked[0]).toHaveClass("outline-mennige");
     expect(screen.getByRole("button", { name: "Decide again" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Decide again" }));
@@ -396,7 +414,7 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "correct");
-    expect(outcome).toHaveClass("border-brand-teal");
+    expect(outcome.querySelector('[data-chip="pass"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Correct/);
     expect(screen.getByRole("radio", { name: lab.choices[0].label })).toHaveAccessibleDescription("Your pick · correct");
     expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
@@ -407,7 +425,7 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     fireEvent.click(screen.getByRole("button", { name: "Check decision" }));
     outcome = container.querySelector("[data-outcome]")!;
     expect(outcome).toHaveAttribute("data-outcome", "partial");
-    expect(outcome).toHaveClass("border-brand-amber");
+    expect(outcome.querySelector('[data-chip="gap"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Almost/);
   });
 });

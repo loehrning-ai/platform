@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
 import {
   ALL_COURSE_CATALOG,
   type CatalogCourse,
@@ -12,7 +11,7 @@ import {
   COURSE_LEVEL_LABELS_BY_LOCALE,
   localizeCatalog,
 } from "@/lib/courses/catalog-copy";
-import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
+import { coursePromise } from "@/lib/courses/course-hub-copy";
 import { courseGroupFor, courseSections } from "@/lib/courses/tracks";
 import {
   getCompletedLessonsCount,
@@ -31,7 +30,10 @@ import {
 } from "@/lib/courses/goals";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
-import { cn } from "@/lib/utils";
+import { ArrowGlyph } from "@/components/werk/arrow-glyph";
+import { BUTTON_CLASSES } from "@/components/werk/button-link";
+import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
+import { cx } from "@/components/werk/cx";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import type { CourseAccessBySlug } from "@/lib/courses/access";
 import {
@@ -41,6 +43,7 @@ import {
   isLiveCourse,
   type Course,
   type CourseStat,
+  type LedgerRowCopy,
 } from "./course-ledger-row";
 
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
@@ -68,126 +71,88 @@ function matchesLevel(course: Course, level: LevelFilter): boolean {
 
 const ATLAS_COPY = {
   de: {
-    eyebrow: "Lernatlas · ein nächster Schritt",
-    heading: "Welchen Nachweis brauchst du als Nächstes?",
+    heading: "Womit fängst du an?",
     intro:
-      "Wähle ein Ziel. Der Atlas ordnet die Kurse und setzt den ersten offenen Arbeitsschritt nach vorn.",
+      "Wähle, was auf dich zutrifft. Der Pfad zeigt die passenden Kurse in der empfohlenen Reihenfolge.",
     goalLabel: "Lernziel auswählen",
-    selectedPath: "Gewählter Pfad",
-    nextProof: "Nächster Nachweis",
-    pathPosition: "Position im Pfad",
+    pathLabel: "Kurse in diesem Pfad",
+    nextProof: "Empfohlen als Nächstes",
+    pathPosition: (position: number, total: number) =>
+      `${position} von ${total}`,
     complete: "abgeschlossen",
     inProgress: "begonnen",
     queued: "offen",
+    completedLabel: "Abgeschlossen",
+    levelTerm: "Stufe",
     allCourses: "Alle Kurse",
     allCoursesIntro:
-      "Der Pfad ist eine Empfehlung. Jeder Kurs bleibt direkt erreichbar.",
+      "Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
     levelLabel: "Kursstufe wählen",
     allLevels: "Alle",
     levelCount: (visible: number, total: number) =>
       `${visible} von ${total} Kursen`,
     viewProgress: "Fortschritt in deinem Konto ansehen",
     tryDemo: (count: number) =>
-      count > 1 ? `${count} Praxisbeispiele testen` : "Praxisbeispiel testen",
+      count > 1 ? `${count} Praxisbeispiele ansehen` : "Praxisbeispiel ansehen",
     sourceCode: "Quellcode",
     sourceCommit: "Commit",
-    start: "Nachweis beginnen",
-    continue: "Nachweis fortsetzen",
-    viewRecord: "Nachweis ansehen",
+    start: "Kurs starten",
+    continue: "Weiterlernen",
+    viewRecord: "Abschluss ansehen",
     accountRequired: "Lernkonto nötig",
     unavailable: "Hier nicht verfügbar",
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
     openAlternative: "Offene Alternative ohne Lernkonto",
     openRecommendation: "Offener Einstieg ohne Lernkonto",
-    pathCourse: "Teil des gewählten Pfads",
+    pathCourse: "Teil deines Pfads",
     goals: LEARNING_GOALS.de,
-    proofs: {
-      "ki-fuehrerschein":
-        "Prüfe eine reale Aufgabe auf Eingabe, Datenrisiko und Ergebnisqualität.",
-      "ki-und-gesellschaft":
-        "Trenne bei einem Beispiel Quelle, Interesse und Unsicherheit.",
-      "eu-ai-act-kurs":
-        "Klassifiziere einen Anwendungsfall und ordne Rolle und Pflichten zu.",
-      "ai-native":
-        "Dokumentiere Absicht, Kontext, Prüfschritt und Abbruchkriterium.",
-      claude:
-        "Baue einen begrenzten Prompt mit Kontext und überprüfbarem Ergebnis.",
-      codex: "Spezifiziere eine Codeänderung mit Tests und Review-Kriterium.",
-      "data-engineering-fundamentals":
-        "Verfolge einen Pipelinefehler von der Quelle bis zur Nutzung.",
-      "data-infrastructure":
-        "Begründe eine Speicher-, Streaming- oder Konsistenzentscheidung.",
-      "data-science":
-        "Fordere eine Modellkennzahl mit einem Gegenbeispiel heraus.",
-      "ai-native-operator":
-        "Definiere einen KI-Ablauf mit Eigentümer, Kontrolle und Messgröße.",
-    },
   },
   en: {
-    eyebrow: "Learning atlas · one next move",
-    heading: "What proof do you need next?",
+    heading: "Where do you want to start?",
     intro:
-      "Choose a goal. The atlas orders the courses and brings the first open piece of work forward.",
+      "Pick what fits you. The path shows the matching courses in the suggested order.",
     goalLabel: "Choose a learning goal",
-    selectedPath: "Selected path",
-    nextProof: "Next proof",
-    pathPosition: "Position in path",
+    pathLabel: "Courses in this path",
+    nextProof: "Suggested next",
+    pathPosition: (position: number, total: number) =>
+      `${position} of ${total}`,
     complete: "complete",
     inProgress: "started",
     queued: "open",
+    completedLabel: "Completed",
+    levelTerm: "Level",
     allCourses: "All courses",
-    allCoursesIntro:
-      "The path is a recommendation. Every course remains directly accessible.",
+    allCoursesIntro: "You can open any course directly, with or without a path.",
     levelLabel: "Choose a course level",
     allLevels: "All",
     levelCount: (visible: number, total: number) =>
       `${visible} of ${total} courses`,
     viewProgress: "View your progress in your account",
     tryDemo: (count: number) =>
-      count > 1 ? `Try ${count} applied examples` : "Try the applied example",
+      count > 1 ? `See ${count} applied examples` : "See the applied example",
     sourceCode: "Source code",
     sourceCommit: "Commit",
-    start: "Start this proof",
-    continue: "Continue this proof",
-    viewRecord: "View record",
+    start: "Start course",
+    continue: "Continue",
+    viewRecord: "View completion",
     accountRequired: "Account required",
     unavailable: "Unavailable here",
     unavailableAction: "Unavailable here · Course overview",
     openAlternative: "Open alternative without an account",
     openRecommendation: "Open starting point without an account",
-    pathCourse: "Part of the selected path",
+    pathCourse: "Part of your path",
     goals: LEARNING_GOALS.en,
-    proofs: {
-      "ki-fuehrerschein":
-        "Check one real task for input quality, data risk, and output quality.",
-      "ki-und-gesellschaft":
-        "Separate source, interest, and uncertainty in one example.",
-      "eu-ai-act-kurs":
-        "Classify one use case and map its role and obligations.",
-      "ai-native":
-        "Document intent, context, review step, and stopping condition.",
-      claude: "Build a bounded prompt with context and a verifiable result.",
-      codex: "Specify one code change with tests and a review criterion.",
-      "data-engineering-fundamentals":
-        "Trace one pipeline failure from source to consumption.",
-      "data-infrastructure":
-        "Justify one storage, streaming, or consistency decision.",
-      "data-science": "Challenge one model metric with a counterexample.",
-      "ai-native-operator":
-        "Define one AI workflow with an owner, control, and measure.",
-    },
   },
 } as const satisfies Readonly<
   Record<
     Locale,
-    {
-      readonly eyebrow: string;
+    LedgerRowCopy & {
       readonly heading: string;
       readonly intro: string;
       readonly goalLabel: string;
-      readonly selectedPath: string;
+      readonly pathLabel: string;
       readonly nextProof: string;
-      readonly pathPosition: string;
+      readonly pathPosition: (position: number, total: number) => string;
       readonly complete: string;
       readonly inProgress: string;
       readonly queued: string;
@@ -197,20 +162,9 @@ const ATLAS_COPY = {
       readonly allLevels: string;
       readonly levelCount: (visible: number, total: number) => string;
       readonly viewProgress: string;
-      readonly tryDemo: (count: number) => string;
-      readonly sourceCode: string;
-      readonly sourceCommit: string;
-      readonly start: string;
-      readonly continue: string;
-      readonly viewRecord: string;
-      readonly accountRequired: string;
-      readonly unavailable: string;
-      readonly unavailableAction: string;
       readonly openAlternative: string;
       readonly openRecommendation: string;
-      readonly pathCourse: string;
       readonly goals: readonly LearningGoal[];
-      readonly proofs: Readonly<Record<string, string>>;
     }
   >
 >;
@@ -357,140 +311,132 @@ export function LearningAtlas({
 
   return (
     <div data-testid="learning-atlas">
-      <section
-        aria-labelledby="learning-atlas-heading"
-        className="border border-border border-t-[3px] border-t-brand-orange bg-card"
-      >
-        <div className="border-b border-border p-4 sm:p-5">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
+      <section aria-labelledby="learning-atlas-heading">
+        {/* The Kopflinie head. Below sm the intro stays in the accessibility
+            tree only, so the goal tabs and the recommended course fit the
+            first phone viewport. */}
+        <header className="border-t-2 border-foreground pt-4">
           <h2
             id="learning-atlas-heading"
-            className="mt-2 text-[25px] font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-[30px]"
+            className="text-fluid-h2 font-bold text-foreground"
           >
             {copy.heading}
           </h2>
-          <p className="sr-only text-sm leading-relaxed text-muted-foreground sm:not-sr-only sm:mt-2 sm:block sm:max-w-[68ch]">
+          <p className="sr-only max-w-[64ch] text-body text-muted-foreground text-pretty sm:not-sr-only sm:mt-2 sm:block">
             {copy.intro}
           </p>
+        </header>
 
-          {/* Below lg the four goals form one segmented control: two joined
-              rows of 44px segments that share their hairlines, all four
-              visible at once so the decision is complete without scrolling.
-              The ordinal is desktop-only so every label fits on one line at
-              390px. From lg the reviewed 56px tiles return. */}
-          <div
-            className="mt-4 grid grid-cols-2 lg:grid-cols-4 lg:gap-2"
-            role="group"
-            aria-label={copy.goalLabel}
-          >
-            {copy.goals.map((candidate, goalIndex) => {
-              const selected = candidate.id === goal.id;
-              return (
-                <button
-                  key={candidate.id}
-                  type="button"
-                  aria-pressed={selected}
-                  aria-controls="selected-learning-path"
-                  onClick={() => selectGoal(candidate.id)}
-                  data-learning-goal={candidate.id}
-                  className={cn(
-                    "relative flex min-h-11 min-w-0 items-center gap-2 overflow-hidden border px-3 py-2 text-left text-sm font-bold transition-[border-color,color,background-color] duration-150 motion-reduce:transition-none lg:grid lg:min-h-14 lg:grid-cols-[1.75rem_minmax(0,1fr)]",
-                    goalIndex % 2 === 1 && "-ml-px lg:ml-0",
-                    goalIndex >= 2 && "-mt-px lg:mt-0",
-                    selected
-                      ? "z-[1] border-brand-orange bg-kupfer-mist text-foreground"
-                      : "border-border bg-background text-foreground hover:z-[1] hover:border-brand-orange focus-visible:z-[1] focus-visible:border-brand-orange",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "hidden font-mono text-xs tabular-nums lg:block",
-                      selected ? "text-brand-orange" : "text-muted-foreground",
-                    )}
-                    aria-hidden="true"
-                  >
-                    {String(goalIndex + 1).padStart(2, "0")}
-                  </span>
-                  <span className="min-w-0 break-words">{candidate.label}</span>
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-brand-orange transition-transform duration-200 motion-reduce:transition-none",
-                      selected ? "scale-x-100" : "scale-x-0",
-                    )}
-                  />
-                </button>
-              );
-            })}
-          </div>
+        {/* Four square tabs on one hairline grid: two joined rows of 44px
+            segments below lg, one joined row of 56px segments from lg. The
+            chosen goal is an ink fill, which carries the state without
+            colour. The buttons stay aria-pressed toggles so the choice keeps
+            working as a plain form of four buttons. */}
+        <div
+          className="mt-4 grid grid-cols-2 sm:mt-6 lg:grid-cols-4"
+          role="group"
+          aria-label={copy.goalLabel}
+        >
+          {copy.goals.map((candidate, goalIndex) => {
+            const selected = candidate.id === goal.id;
+            return (
+              <button
+                key={candidate.id}
+                type="button"
+                aria-pressed={selected}
+                aria-controls="selected-learning-path"
+                onClick={() => selectGoal(candidate.id)}
+                data-learning-goal={candidate.id}
+                className={cx(
+                  "relative flex min-h-11 min-w-0 items-center border px-3 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:px-4",
+                  goalIndex % 2 === 1 && "-ml-px",
+                  goalIndex === 2 && "lg:-ml-px",
+                  goalIndex >= 2 && "-mt-px lg:mt-0",
+                  selected
+                    ? "z-[1] border-foreground bg-foreground text-background"
+                    : "border-border bg-transparent text-foreground hover:z-[1] hover:border-foreground hover:bg-card-hover",
+                )}
+              >
+                <span className="min-w-0 break-words">{candidate.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div
           id="selected-learning-path"
-          className="grid min-w-0 overflow-hidden lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)]"
+          className="mt-6 grid min-w-0 gap-8 sm:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,27rem)] lg:gap-14"
         >
-          <div className="p-4 sm:p-5" data-testid="selected-path-sequence">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-              {copy.selectedPath}
-            </p>
-            <h3 className="mt-1 text-xl font-bold tracking-[-0.02em] text-foreground">
+          <div className="min-w-0" data-testid="selected-path-sequence">
+            <h3 className="text-fluid-h3 font-bold text-foreground">
               {goal.label}
             </h3>
-            <p className="mt-1 text-sm text-muted-foreground">{goal.summary}</p>
+            <p className="mt-1 max-w-[60ch] text-body text-muted-foreground">
+              {goal.summary}
+            </p>
 
-            <ol className="mt-4" data-learning-path-stepper>
+            {/* The deck's Route, vertical: square stations on a 2px line.
+                Finished courses are solid, the recommended one carries the
+                inset square, open ones are outlined behind a dashed line. The
+                state is also a word inside each link. */}
+            <ol
+              className="mt-6"
+              aria-label={copy.pathLabel}
+              data-learning-path-stepper
+            >
               {pathCourses.map((course, index) => {
                 const stat = stats[course.slug] ?? defaultStat(course);
                 const isNext = nextCourse?.slug === course.slug;
+                const state: StationState = stat.certified
+                  ? "past"
+                  : isNext
+                    ? "current"
+                    : "future";
                 const status = stat.certified
                   ? copy.complete
                   : stat.started
                     ? copy.inProgress
                     : copy.queued;
+                const last = index === pathCourses.length - 1;
                 return (
                   <li
                     key={course.slug}
-                    className="relative min-w-0 pb-2 last:pb-0"
+                    data-state={state}
+                    className="relative grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-4 pb-3 last:pb-0"
                   >
-                    {index < pathCourses.length - 1 ? (
+                    {last ? null : (
                       <span
                         aria-hidden="true"
-                        className="absolute bottom-0 left-[0.875rem] top-7 w-px bg-border"
+                        data-route-line={state === "past" ? "solid" : "dashed"}
+                        className={cx(
+                          "absolute -bottom-[1.375rem] left-[9px] top-[1.375rem] border-l-2",
+                          state === "past"
+                            ? "border-foreground"
+                            : "border-dashed border-muted",
+                        )}
                       />
-                    ) : null}
+                    )}
+                    <span
+                      aria-hidden="true"
+                      className="relative z-10 flex h-11 items-center justify-center"
+                    >
+                      <StationSquare state={state} />
+                    </span>
                     <Link
                       href={localizeHref(course.href, locale)}
                       aria-current={isNext ? "step" : undefined}
-                      className={cn(
-                        "relative grid min-h-11 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-3 border border-transparent px-2 py-2 text-sm transition-[background-color,border-color] duration-150 hover:border-border hover:bg-card-hover focus-visible:border-brand-orange focus-visible:bg-card-hover motion-reduce:transition-none lg:min-h-14",
-                        isNext && "border-brand-orange bg-kupfer-mist",
-                      )}
+                      className="group flex min-h-11 min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5"
                     >
                       <span
-                        className={cn(
-                          "relative z-[1] flex h-7 w-7 items-center justify-center border bg-background font-mono text-xs tabular-nums",
-                          stat.certified
-                            ? "border-brand-orange bg-kupfer-mist text-brand-orange"
-                            : isNext
-                              ? "border-brand-orange text-brand-orange"
-                              : "border-border text-muted-foreground",
+                        className={cx(
+                          "min-w-0 break-words text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-foreground motion-reduce:transition-none",
+                          isNext ? "font-bold" : "font-semibold",
                         )}
                       >
-                        {stat.certified ? (
-                          <Check size={14} aria-hidden="true" />
-                        ) : (
-                          String(index + 1).padStart(2, "0")
-                        )}
+                        {course.title}
                       </span>
-                      <span className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                        <span className="min-w-0 break-words font-semibold text-foreground">
-                          {course.title}
-                        </span>
-                        <span className="font-mono text-xs text-muted-foreground">
-                          {status}
-                        </span>
+                      <span className="text-caption text-muted-foreground tabular-nums">
+                        {course.duration} · {status}
                       </span>
                     </Link>
                   </li>
@@ -500,109 +446,100 @@ export function LearningAtlas({
           </div>
 
           <aside
-            className="order-first min-w-0 border-b border-border bg-kupfer-mist p-4 sm:p-5 lg:order-none lg:border-b-0 lg:border-l"
+            className="order-first min-w-0 border border-hairline bg-card p-5 sm:p-6 lg:order-none lg:self-start"
             aria-live="polite"
             aria-atomic="true"
             data-testid="next-proof"
           >
-            <div className="relative min-w-0 pb-2 pr-2" data-next-proof-stack>
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-x-2 translate-y-2 border border-border bg-card"
-              />
-              <div
-                data-next-proof-card
-                className="relative min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-paper p-4 sm:p-5"
-              >
-                {nextCourse && nextStat && nextAction ? (
-                  <>
-                    <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-                      {openDefault ? copy.openRecommendation : copy.nextProof}{" "}
-                      {goal.courseSlugs.includes(nextCourse.slug) ? (
-                        <span className="text-muted-foreground">
-                          · {goal.courseSlugs.indexOf(nextCourse.slug) + 1}/
-                          {goal.courseSlugs.length}
-                          <span className="sr-only"> {copy.pathPosition}</span>
-                        </span>
-                      ) : null}
-                    </p>
-                    <h3 className="mt-2 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
-                      {nextCourse.title}
-                    </h3>
-                    <p className="mt-2 max-w-[48ch] text-sm leading-snug text-foreground">
-                      {(copy.proofs as Readonly<Record<string, string>>)[
-                        nextCourse.slug
-                      ] ?? nextCourse.tagline}
-                    </p>
-                    <Link
-                      href={nextAction.href}
-                      prefetch={false}
-                      className="mt-4 inline-flex min-h-11 max-w-full items-center justify-between gap-3 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-background transition-[background-color,border-color,color] duration-150 hover:border-brand-cobalt hover:bg-brand-cobalt hover:text-white focus-visible:border-brand-cobalt focus-visible:bg-brand-cobalt focus-visible:text-white motion-reduce:transition-none"
-                    >
-                      <span className="min-w-0 break-words">
-                        {nextAction.label}
-                      </span>
-                      <span className="sr-only">: {nextCourse.title}</span>
-                      <ArrowRight
-                        className="h-4 w-4 shrink-0"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                    {openAlternative && alternativeAction ? (
-                      <Link
-                        href={alternativeAction.href}
-                        prefetch={false}
-                        data-open-course-alternative
-                        className="mt-2 inline-flex min-h-11 max-w-full items-center text-sm font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground focus-visible:decoration-foreground"
-                      >
-                        {copy.openAlternative}: {openAlternative.title}
-                      </Link>
-                    ) : null}
-                  </>
+            {nextCourse && nextStat && nextAction ? (
+              <>
+                <p className="text-label text-muted-foreground tabular-nums">
+                  {openDefault ? copy.openRecommendation : copy.nextProof}{" "}
+                  {goal.courseSlugs.includes(nextCourse.slug) ? (
+                    <span>
+                      ·{" "}
+                      {copy.pathPosition(
+                        goal.courseSlugs.indexOf(nextCourse.slug) + 1,
+                        goal.courseSlugs.length,
+                      )}
+                    </span>
+                  ) : null}
+                </p>
+                <h3 className="mt-2 text-fluid-h3 font-bold text-foreground">
+                  {nextCourse.title}
+                </h3>
+                <p className="mt-2 max-w-[52ch] text-body text-foreground">
+                  {coursePromise(nextCourse.slug, locale) ??
+                    nextCourse.tagline}
+                </p>
+                <p className="mt-2 text-caption text-muted-foreground tabular-nums">
+                  {nextCourse.duration}
+                </p>
+                <Link
+                  href={nextAction.href}
+                  prefetch={false}
+                  className={cx(
+                    BUTTON_CLASSES.paper.primary,
+                    "mt-5 max-w-full py-2",
+                  )}
+                >
+                  <span className="min-w-0 break-words">
+                    {nextAction.label}
+                  </span>
+                  <span className="sr-only">: {nextCourse.title}</span>
+                  <ArrowGlyph />
+                </Link>
+                {openAlternative && alternativeAction ? (
+                  <Link
+                    href={alternativeAction.href}
+                    prefetch={false}
+                    data-open-course-alternative
+                    className={cx(
+                      BUTTON_CLASSES.paper.text,
+                      "mt-2 flex max-w-full",
+                    )}
+                  >
+                    {copy.openAlternative}: {openAlternative.title}
+                  </Link>
                 ) : null}
-              </div>
-            </div>
+              </>
+            ) : null}
           </aside>
         </div>
       </section>
 
-      <section aria-labelledby="all-courses-heading" className="mt-8 lg:mt-10">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-          {courses.length.toString().padStart(2, "0")} · {copy.allCourses}
-        </p>
-        <h2
-          id="all-courses-heading"
-          className="mt-1 text-[25px] font-bold tracking-[-0.03em] text-foreground sm:text-[30px]"
-        >
-          {copy.allCourses}
-        </h2>
-        <div className="mt-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          {/* The same treatment the atlas intro above already gets: this
-              sentence is orientation, not a decision, and below sm it costs
-              two printed lines and pushes the progress link onto a third
-              directly above the level chips. It stays in the accessibility
-              tree and returns as visible text from sm. */}
-          <p className="sr-only text-sm text-muted-foreground sm:not-sr-only">
+      <section aria-labelledby="all-courses-heading" className="mt-16 lg:mt-20">
+        <header className="border-t-2 border-foreground pt-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h2
+              id="all-courses-heading"
+              className="text-fluid-h2 font-bold text-foreground"
+            >
+              {copy.allCourses}
+            </h2>
+            <Link
+              href={localizeHref("/konto", locale)}
+              prefetch={false}
+              className={BUTTON_CLASSES.paper.text}
+            >
+              {copy.viewProgress}
+              <ArrowGlyph />
+            </Link>
+          </div>
+          {/* Orientation, not a decision: below sm it stays in the
+              accessibility tree and leaves the printed page. */}
+          <p className="sr-only text-body text-muted-foreground sm:not-sr-only sm:mt-1">
             {copy.allCoursesIntro}
           </p>
-          <Link
-            href={localizeHref("/konto", locale)}
-            prefetch={false}
-            className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand-orange underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-brand-orange focus-visible:decoration-brand-orange motion-reduce:transition-none"
-          >
-            {copy.viewProgress}
-            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-          </Link>
-        </div>
+        </header>
 
         {/* Level chips, phone only. They stick under the compact top bar while
-            the ledger scrolls, so the list can be narrowed from anywhere in it.
-            "alle" is the server default and hydration never flips a row. The
-            bar carries js-shell-only: four inert buttons without scripting
-            would be worse than the complete list that reader already has. */}
+            the ledger scrolls. "alle" is the server default and hydration
+            never flips a row. js-shell-only: four inert buttons without
+            scripting would be worse than the complete list. */}
         <div
           data-course-level-filter
-          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 -mx-4 mt-4 border-b border-border bg-background px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden"
+          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 mt-4 border-b border-hairline bg-background py-2 lg:hidden"
         >
           <div
             role="group"
@@ -618,12 +555,7 @@ export function LearningAtlas({
                   aria-pressed={selected}
                   onClick={() => setLevelFilter(level)}
                   data-course-level-chip={level}
-                  className={cn(
-                    "inline-flex min-h-11 shrink-0 items-center border px-3 text-xs font-bold transition-[border-color,background-color] duration-150 motion-reduce:transition-none",
-                    selected
-                      ? "border-brand-orange bg-kupfer-mist text-foreground"
-                      : "border-border bg-background text-foreground hover:border-brand-orange focus-visible:border-brand-orange",
-                  )}
+                  className={cx(FILTER_CHIP_CLASS, "shrink-0")}
                 >
                   {level === "alle" ? copy.allLevels : levelLabels[level]}
                 </button>
@@ -635,31 +567,31 @@ export function LearningAtlas({
           </p>
         </div>
 
-        <div className="mt-4 space-y-6 lg:mt-5 lg:space-y-8">
+        <div className="mt-8 space-y-12 lg:mt-10 lg:space-y-16">
           {groups.map((group) => (
             <section
               key={group.id}
               id={group.id}
               aria-labelledby={`${group.id}-heading`}
-              className={cn(
+              className={cx(
                 "scroll-mt-24",
                 !group.courses.some((course) =>
                   matchesLevel(course, levelFilter),
                 ) && "hidden lg:block",
               )}
             >
-              <div className="flex flex-wrap items-end justify-between gap-2 border-b border-foreground pb-2">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-foreground pb-3">
                 <h3
                   id={`${group.id}-heading`}
-                  className="text-xl font-bold tracking-[-0.02em] text-foreground"
+                  className="text-fluid-h3 font-bold text-foreground"
                 >
                   {group.title}
                 </h3>
-                <p className="font-mono text-xs text-muted-foreground">
+                <p className="text-caption text-muted-foreground tabular-nums">
                   {group.eyebrow}
                 </p>
               </div>
-              <ol className="mt-3 grid gap-2">
+              <ol>
                 {group.courses.map((course, index) => (
                   <CourseLedgerRow
                     key={course.slug}
@@ -677,18 +609,25 @@ export function LearningAtlas({
             </section>
           ))}
         </div>
-
-        <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-          {COURSE_GALLERY_COPY[locale].workshopLead}{" "}
-          <Link
-            href={localizeHref("/workshops", locale)}
-            className="inline-flex min-h-11 items-center font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-          >
-            /workshops
-          </Link>
-          .
-        </p>
       </section>
     </div>
   );
+}
+
+type StationState = "past" | "current" | "future";
+
+function StationSquare({ state }: { readonly state: StationState }) {
+  if (state === "current") {
+    return (
+      <span className="flex size-5 shrink-0 items-center justify-center bg-foreground">
+        <span className="size-2 bg-background" />
+      </span>
+    );
+  }
+  if (state === "future") {
+    return (
+      <span className="size-4 shrink-0 border-2 border-foreground bg-background" />
+    );
+  }
+  return <span className="size-4 shrink-0 bg-foreground" />;
 }

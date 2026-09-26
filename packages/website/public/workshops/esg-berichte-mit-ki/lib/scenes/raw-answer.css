@@ -1,0 +1,80 @@
+/* raw-answer: the fixed question across the top, the constructed answer (hatched lane) on the left,
+   the five checks it passes on the right, then the room vote. */
+
+#raw-answer > .raw-answer-question {
+  position: absolute;
+  top: 232px;
+  left: var(--margin-x);
+  width: 1728px;
+  max-width: 1728px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  align-items: center;
+}
+
+#raw-answer > .ra-answer {
+  position: absolute;
+  top: 360px;
+  left: var(--margin-x);
+  width: 1088px;
+  gap: 10px;
+  padding: 20px 32px 22px 52px;
+}
+
+/* The hatched rail marks the answer as coming from raw input. */
+#raw-answer > .ra-answer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  border-right: 3px solid var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#raw-answer .ra-text {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.38;
+}
+
+#raw-answer .ra-total {
+  font-weight: 700;
+}
+
+#raw-answer > .ra-checks {
+  position: absolute;
+  top: 360px;
+  right: var(--margin-x);
+  width: 584px;
+  padding: 20px 28px 24px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#raw-answer .ra-checks__head {
+  margin: 0 0 12px;
+  color: var(--slate);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+#raw-answer .ra-checks__list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#raw-answer .ra-checks__list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: var(--t-body);
+  line-height: 1.25;
+}

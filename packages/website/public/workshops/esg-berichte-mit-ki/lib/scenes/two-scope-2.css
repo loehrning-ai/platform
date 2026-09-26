@@ -1,0 +1,207 @@
+/* two-scope-2: the certificate confirmation, the 2025 electricity split into covered (solid ink with
+   the certificate) and uncovered (hatch), both Scope 2 numbers, the wrong readings and the claim
+   line, then the location-based to market-based bridge. */
+
+#two-scope-2 > .ts-doc {
+  position: absolute;
+  top: 232px;
+  left: var(--margin-x);
+  width: 620px;
+}
+
+#two-scope-2 > .ts-stack {
+  position: absolute;
+  top: 246px;
+  right: var(--margin-x);
+  width: 1040px;
+}
+
+#two-scope-2 .st {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+#two-scope-2 .st__bar {
+  display: flex;
+  height: 72px;
+  border: 3px solid var(--ink);
+}
+
+#two-scope-2 .st__ws {
+  display: grid;
+  flex: none;
+  width: var(--st-ws);
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+}
+
+#two-scope-2 .st__rest {
+  flex: 1;
+  border-left: 3px solid var(--ink);
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#two-scope-2 .st__lab {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+#two-scope-2 .st__lab b {
+  font-size: var(--t-body);
+}
+
+#two-scope-2 .st__lab span {
+  color: var(--slate);
+}
+
+#two-scope-2 .st__lab--ws {
+  position: absolute;
+  top: 88px;
+  left: 0;
+  width: var(--st-ws);
+}
+
+#two-scope-2 .st__lab--rest {
+  position: absolute;
+  top: 88px;
+  left: calc(var(--st-ws) + 24px);
+}
+
+#two-scope-2 .st__total {
+  margin: 76px 0 0;
+  padding-top: 8px;
+  border-top: 2px solid var(--leinen);
+  color: var(--slate);
+  font-size: 22px;
+}
+
+#two-scope-2 > .ts-nums {
+  position: absolute;
+  top: 470px;
+  right: var(--margin-x);
+  display: grid;
+  width: 1040px;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+#two-scope-2 .ts-num {
+  padding: 12px 24px 16px;
+  border: 4px solid var(--ink);
+  background: var(--papier);
+}
+
+#two-scope-2 .ts-num .bignum__value {
+  font-size: 64px;
+}
+
+#two-scope-2 .ts-num .bignum__scope {
+  color: var(--slate);
+  font-size: 22px;
+}
+
+#two-scope-2 > .ts-wrong {
+  position: absolute;
+  top: 676px;
+  right: var(--margin-x);
+  display: grid;
+  width: 1040px;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+#two-scope-2 .ts-wrong__opt {
+  display: flex;
+  align-items: stretch;
+  border: 3px dashed var(--ink);
+  background: var(--papier);
+}
+
+#two-scope-2 .ts-wrong__letter {
+  display: grid;
+  flex: none;
+  width: 64px;
+  place-items: center;
+  border-right: 3px dashed var(--ink);
+  font-size: var(--t-lead);
+  font-weight: 700;
+}
+
+#two-scope-2 .ts-wrong__opt p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 10px 16px;
+  font-size: 22px;
+}
+
+#two-scope-2 .ts-wrong__opt b {
+  font-size: var(--t-body);
+}
+
+#two-scope-2 .ts-wrong__opt span {
+  color: var(--slate);
+}
+
+#two-scope-2 > .ts-claim {
+  position: absolute;
+  top: 600px;
+  left: var(--margin-x);
+  width: 620px;
+  max-width: none;
+}
+
+#two-scope-2 > .ts-bridge {
+  position: absolute;
+  top: 616px;
+  left: var(--margin-x);
+}
+
+#two-scope-2 .br {
+  display: block;
+  overflow: visible;
+}
+
+#two-scope-2 .br-label {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+#two-scope-2 .br-val {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#two-scope-2 .br-bar--lb,
+#two-scope-2 .br-bar--mb {
+  fill: var(--ink);
+}
+
+#two-scope-2 .br-bar--minus {
+  fill: var(--papier);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#two-scope-2 .br-bar--plus {
+  fill: url(#story-hatch);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#two-scope-2 > .ts-net {
+  position: absolute;
+  top: 892px;
+  left: var(--margin-x);
+}
