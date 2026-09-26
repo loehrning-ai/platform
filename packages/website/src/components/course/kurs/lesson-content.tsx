@@ -162,10 +162,10 @@ export function LessonContent({
       {/* Lesson Header */}
       <div className="mb-6 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="mb-1 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
+          <p className="mb-1 text-label text-muted-foreground tabular-nums">
             {copy.position(lesson.number, totalLessons)}
           </p>
-          <h2 className="break-words text-2xl font-bold tracking-[-0.03em]">
+          <h2 className="break-words text-fluid-h2 font-bold">
             {lesson.title}
           </h2>
           {lesson.subtitle && (

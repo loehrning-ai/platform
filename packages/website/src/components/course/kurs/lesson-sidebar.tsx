@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Circle, Clock } from "lucide-react";
+import { CheckCircle2, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Lesson } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";

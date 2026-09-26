@@ -106,7 +106,7 @@ export function BlockPageShell({
             {copy.block.allBlocks}
           </Link>
           <div className="order-3 col-span-2 min-w-0 text-left sm:order-none sm:col-span-1 sm:text-center">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <span className="text-label text-muted-foreground tabular-nums">
               {copy.block.blockPosition(block.orderIndex + 1, blocks.length)}
             </span>
             <span className="mx-2 hidden text-border sm:inline">|</span>
