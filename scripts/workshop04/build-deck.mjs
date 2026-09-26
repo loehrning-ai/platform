@@ -68,7 +68,7 @@ function parseRange(spec, max) {
   const out = [];
   for (const part of spec.split(",")) {
     const [a, b] = part.split("-").map(Number);
-    for (let i = a; i <= (Number.isNaN(b) ? a : b); i += 1) out.push(i);
+    for (let i = a; i <= (b === undefined ? a : b); i += 1) out.push(i);
   }
   return out;
 }
@@ -82,29 +82,39 @@ function genDoc(params) {
   const show = parseRange(params.lines, d.lines.length);
   const mark = new Set(params.mark ? parseRange(params.mark) : []);
   const box = new Set(params.box ? parseRange(params.box) : []);
-  const rows = [];
-  let tableOpen = false;
-  const closeTable = () => { if (tableOpen) { rows.push("</div>"); tableOpen = false; } };
+  // Each item is one rendered line; consecutive marked (Mennige) or boxed (ink) lines share one frame.
+  const items = [];
+  let table = null;
+  const flush = () => { if (table) { items.push({ html: `<div class="doc__table">${table.join("")}</div>`, flag: table.flag }); table = null; } };
   for (const i of show) {
     const line = d.lines[i];
-    if (line === undefined) continue;
-    const flags = `${mark.has(i) ? " is-mark" : ""}${box.has(i) ? " is-box" : ""}`;
-    const focus = mark.has(i) ? " data-focus" : "";
-    if (/^\|[-| ]+\|$/.test(line)) continue;
+    if (line === undefined || /^\|[-| ]+\|$/.test(line)) continue;
+    const flag = mark.has(i) ? "mark" : box.has(i) ? "box" : "";
     if (line.startsWith("|")) {
-      if (!tableOpen) { rows.push('<div class="doc__table">'); tableOpen = true; }
+      if (!table || table.flag !== flag) { flush(); table = []; table.flag = flag; }
       const cells = line.split("|").slice(1, -1);
-      const head = i > 0 && /^\|[-| ]+\|$/.test(d.lines[i + 1] || "");
-      rows.push(`<p class="doc__tr${head ? " doc__tr--head" : ""}${flags}"${focus}>${cells.map((_, c) => j(`${base}.${i}`, `cell:${c}`)).join("")}</p>`);
+      const head = /^\|[-| ]+\|$/.test(d.lines[i + 1] || "");
+      table.push(`<p class="doc__tr${head ? " doc__tr--head" : ""}">${cells.map((_, c) => j(`${base}.${i}`, `cell:${c}`)).join("")}</p>`);
       continue;
     }
-    closeTable();
-    if (line.trim() === "") { rows.push('<p class="doc__gap" aria-hidden="true"></p>'); continue; }
-    if (line.startsWith("# ")) { rows.push(`<p class="doc__title${flags}"${focus}>${j(`${base}.${i}`, "md")}</p>`); continue; }
-    if (/^--- .* ---$/.test(line)) { rows.push(`<p class="doc__page${flags}">${j(`${base}.${i}`)}</p>`); continue; }
-    rows.push(`<p class="doc__line${flags}"${focus}>${j(`${base}.${i}`)}</p>`);
+    flush();
+    let html;
+    if (line.trim() === "") html = '<p class="doc__gap" aria-hidden="true"></p>';
+    else if (line.startsWith("# ")) html = `<p class="doc__title">${j(`${base}.${i}`, "md")}</p>`;
+    else if (/^--- .* ---$/.test(line)) html = `<p class="doc__page">${j(`${base}.${i}`)}</p>`;
+    else html = `<p class="doc__line">${j(`${base}.${i}`)}</p>`;
+    items.push({ html, flag });
   }
-  closeTable();
+  flush();
+  const rows = [];
+  for (let k = 0; k < items.length;) {
+    const flag = items[k].flag;
+    let e = k;
+    while (e < items.length && items[e].flag === flag) e += 1;
+    const chunk = items.slice(k, e).map((it) => it.html).join("");
+    rows.push(flag ? `<div class="doc__${flag}"${flag === "mark" ? " data-focus" : ""}>${chunk}</div>` : chunk);
+    k = e;
+  }
   const caption = params.caption === "no" ? "" : `<figcaption class="doc__file">${esc(params.file)}</figcaption>`;
   return `<figure class="doc${params.cls ? ` ${params.cls}` : ""}"${params.id ? ` id="${params.id}"` : ""}>${caption}<div class="doc__sheet">${rows.join("")}</div></figure>`;
 }
@@ -114,7 +124,7 @@ function genWaterfall() {
   const steps = data.waterfall.lb.filter((s) => s.step !== "T7");
   const W = 1360, top = 56, bottom = 456, lo = 1400, hi = 2000;
   const y = (v) => top + ((hi - v) / (hi - lo)) * (bottom - top);
-  const col = 164, barW = 104, x0 = 40;
+  const col = 150, barW = 104, x0 = 40;
   const reveal = { start: 0, T1: 2, T2: 2, T3: 3, T4: 3, T5: 4, T6: 4, end: 0 };
   const names = { start: ["Raw-folder", "answer"], T1: ["Duplicate", "March"], T2: ["October", "missing"], T3: ["Talbrück", "bill"], T4: ["1.240 MWh", "misread"], T5: ["Gas", "Hs / Hi"], T6: ["AdBlue", "as diesel"], end: ["Right", "total"] };
   const parts = [];
@@ -131,7 +141,7 @@ function genWaterfall() {
       const last = steps[steps.length - 1];
       const yt = y(last.running_t);
       g.push(`<rect class="wf-bar wf-bar--ink" x="${x}" y="${fmt(yt)}" width="${barW}" height="${fmt(bottom - yt)}" data-motion="grow" />`);
-      g.push(`<text class="wf-val wf-val--end" x="${x + barW / 2}" y="${fmt(yt - 14)}" text-anchor="middle" data-num="total_lb_2025" data-form="bare">${esc(fillApi.numberText(data, "total_lb_2025", "bare"))}</text>`);
+      g.push(`<text class="wf-val wf-val--end" x="${x + barW / 2}" y="${fmt(yt + 40)}" text-anchor="middle" data-num="total_lb_2025" data-form="bare">${esc(fillApi.numberText(data, "total_lb_2025", "bare"))}</text>`);
     } else {
       const prev = steps[c.i - 1].running_t;
       const a = y(Math.max(prev, c.running_t));
@@ -189,10 +199,10 @@ function genGrid() {
       if (v === "0") {
         fills.push(`<rect class="mg-missing" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" />`);
       } else if (v === "2") {
-        fills.push(`<g class="mg-dup" data-focus><rect class="mg-doc" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-badge" x="${x + w - 30}" y="${yy + 1}" width="34" height="34" /><text class="mg-badge__t" x="${x + w - 13}" y="${yy + 26}" text-anchor="middle">2</text></g>`);
+        fills.push(`<g class="mg-dup" data-focus><rect class="mg-doc-bg" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-doc" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-badge" x="${x + w - 30}" y="${yy + 1}" width="34" height="34" /><text class="mg-badge__t" x="${x + w - 13}" y="${yy + 26}" text-anchor="middle">2</text></g>`);
       } else {
         const tag = v === "J" ? "annual statement" : v === "Q" ? `Q${Math.floor(i / 3) + 1}` : v === "S" ? "one bill" : "";
-        fills.push(`<rect class="mg-doc${span > 1 ? " mg-doc--span" : ""}" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" />`);
+        fills.push(`<rect class="mg-doc-bg" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-doc${span > 1 ? " mg-doc--span" : ""}" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" />`);
         if (tag) fills.push(`<text class="mg-tag" x="${x + w / 2}" y="${yy + 36}" text-anchor="middle">${tag}</text>`);
       }
       i += span;
@@ -259,7 +269,7 @@ function genStack() {
 
 // The location-based to market-based bridge on `two-scope-2` (press 5).
 function genBridge() {
-  const W = 1500, x0 = 300, k = 0.6; // px per t, bars start at 0
+  const W = 1728, x0 = 300, k = 0.9; // px per t, bars start at 0
   const lb = data.numbers.s2lb_2025.value, cert = data.numbers.bridge_cert_t.value, rm = data.numbers.bridge_rm_t.value, mb = data.numbers.s2mb_2025.value;
   const rows = [
     { label: "Location-based", a: 0, b: lb, cls: "br-bar--lb", key: "s2lb_2025", order: 0 },

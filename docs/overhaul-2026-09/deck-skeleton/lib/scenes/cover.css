@@ -1,0 +1,145 @@
+/* cover (spec C.1): the dark globe cover. The globe keeps its canonical contract (lib/cover-globe.css
+   and the #cover .workshop-globe crop in lib/story.css); everything here sits above it. The one
+   accent is the question card's Mennige left bar (q-card--dark). */
+
+#cover > .cover-brand,
+#cover > .cover-date,
+#cover > .cover-question,
+#cover > .cover-experiment,
+#cover > .cover-meta {
+  position: absolute;
+  z-index: 1;
+  left: var(--margin-x);
+  margin: 0;
+}
+
+#cover > .scene-title {
+  z-index: 1;
+  top: 248px;
+  color: var(--papier);
+  font-size: var(--t-display);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+/* The lockup. (Workshop 03 appends "× Brainster" here with ::after; Workshop 04 has no co-brand.) */
+#cover > .cover-brand {
+  top: 64px;
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  color: var(--leinen);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+#cover .cover-brand__lockup {
+  display: block;
+  width: auto;
+  height: 40px;
+}
+
+#cover > .cover-date {
+  top: 192px;
+  color: var(--leinen);
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+#cover > .cover-question {
+  top: 496px;
+  width: 1040px;
+  max-width: 1040px;
+}
+
+#cover > .cover-question .q-card__label {
+  color: var(--leinen);
+}
+
+/* Step 1: the three constants sit in one bracket labelled "Held fixed"; arrows lead only to what changes and
+   what is measured. The row keeps 52 px from the question card and ends (with its bracket label) 40 px above
+   the meta line. */
+#cover > .cover-experiment {
+  top: 736px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+#cover .cover-fixed {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+/* The bracket: a leinen hairline under the three chips with short end ticks. */
+#cover .cover-fixed::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 12px;
+  border: 2px solid var(--leinen);
+  border-top: 0;
+}
+
+#cover .cover-fixed__label {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  color: var(--leinen);
+  font-size: var(--t-label);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+#cover .cover-arrow {
+  margin-top: 20px;
+}
+
+#cover .cover-stamp {
+  padding: 12px 20px;
+  border-color: var(--papier);
+  background: var(--graphit);
+  color: var(--papier);
+  white-space: nowrap;
+}
+
+/* The one thing that changes: the standard stamp with the Mennige outline for focus (no fill). */
+#cover .cover-stamp--change {
+  border-color: var(--mennige);
+  outline: 3px solid var(--mennige);
+  outline-offset: 3px;
+}
+
+#cover .cover-arrow {
+  flex: none;
+  overflow: visible;
+}
+
+#cover .cover-arrow__line {
+  fill: none;
+  stroke: var(--papier);
+  stroke-width: 3;
+  stroke-linecap: square;
+}
+
+#cover .cover-arrow__head {
+  fill: var(--papier);
+  stroke: none;
+}
+
+#cover > .cover-meta {
+  top: 920px;
+  color: var(--leinen);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}

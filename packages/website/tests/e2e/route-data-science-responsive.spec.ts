@@ -80,7 +80,7 @@ async function openLessonReference(page: Page) {
     .waitFor({ state: "attached" });
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
-  await reference.locator("summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveAttribute("open", "");
 }
 

@@ -163,7 +163,7 @@ test.describe("learning density and value contract", () => {
   });
 
   for (const course of TECHNICAL_COURSE_CASES) {
-    test(`${course.label} checkpoint starts with one mission, studio, and closed reference`, async ({
+    test(`${course.label} checkpoint starts with one mission, studio, and the open lesson text`, async ({
       page,
     }) => {
       await openLearningRoute(page, course.checkpoint);
@@ -184,10 +184,10 @@ test.describe("learning density and value contract", () => {
         await reference.evaluate(
           (details) => (details as HTMLDetailsElement).open,
         ),
-      ).toBe(false);
+      ).toBe(true);
     });
 
-    test(`${course.label} non-checkpoint starts directly on one closed reference`, async ({
+    test(`${course.label} non-checkpoint starts directly on the open lesson text`, async ({
       page,
     }) => {
       await openLearningRoute(page, course.nonCheckpoint);
@@ -207,7 +207,7 @@ test.describe("learning density and value contract", () => {
         await reference.evaluate(
           (details) => (details as HTMLDetailsElement).open,
         ),
-      ).toBe(false);
+      ).toBe(true);
       await expectToStartInFirstViewportBand(
         page,
         reference,

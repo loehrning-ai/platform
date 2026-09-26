@@ -8,6 +8,10 @@
   width: 900px;
 }
 
+#whose-bill > .wb-doc .doc__sheet {
+  font-size: 22px;
+}
+
 #whose-bill > .wb-note {
   position: absolute;
   top: 240px;

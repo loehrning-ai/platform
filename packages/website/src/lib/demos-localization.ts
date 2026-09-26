@@ -23,10 +23,10 @@ type DemoLocalizedFields = Pick<
 const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   excel: {
     title: "Claude in Excel.",
-    titleKicker: "Formulas, pivots, forecasts.",
+    titleKicker: "Check formulas and a forecast.",
     background: "Excel add-in · Microsoft 365 · no additional software",
     description:
-      "An analyst selects a sample range. The example shows how formula suggestions, pivot-table drafts, and forecast checks can fit into an existing spreadsheet workflow.",
+      "You select a range of invented sales figures and get formula suggestions, a pivot-table draft and a forecast that you check.",
     tags: ["Excel add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Check formulas" },
@@ -44,7 +44,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Structure documents.",
     background: "Word lab · style checks with sample documents",
     description:
-      "Enter a brief and inspect a structured draft, followed by checks for style, sources, approval, and sensitive data.",
+      "You enter a brief and get a structured draft. Then you check style, sources, approval and personal data.",
     tags: ["Word add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Refine a brief" },
@@ -62,8 +62,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Explain each message.",
     background: "Sample database · signal scan · draft · review gate",
     description:
-      "The pipeline takes fictional contacts, marks supported signals, and drafts a message that remains behind a review gate before any send action.",
-    tags: ["DAG", "GitOps", "Open workflow"],
+      "The pipeline reads fictional contacts, marks each signal with its source and drafts a message. A review comes before any send.",
+    tags: ["Pipeline", "Review gate", "Sources"],
     meta: [
       { label: "Learning objective", value: "Ground messages in signals" },
       { label: "Tools", value: "Sample DB · LLM · review" },
@@ -79,10 +79,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "agent-pipeline": {
     title: "Agent pipeline.",
-    titleKicker: "Four roles, one memo.",
+    titleKicker: "One memo in four steps.",
     background: "Multi-agent pattern · specialist roles · recorded trace",
     description:
-      "A scout researches, an analyst synthesizes, a critic challenges, and an editor writes. This is a recorded editorial workflow, not a live agent run.",
+      "You read the recorded trace of four agents writing one memo together, from the first research step to the final draft.",
     tags: ["Multi-agent", "Opus 4.5", "Recorded trace"],
     meta: [
       { label: "Learning objective", value: "Separate roles" },
@@ -97,10 +97,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "n8n-supply-chain": {
     title: "n8n supply chain.",
-    titleKicker: "A dispatcher workflow.",
+    titleKicker: "A delivery delay with sign-off.",
     background: "n8n pattern · simulated DHL, SAP, Slack, and email steps",
     description:
-      "A fictional delivery delay moves through stock checks, a customer-message draft, escalation, and manual approval.",
+      "A fictional delivery delay runs through a stock check, a customer draft and an escalation. A person signs off at the end.",
     tags: ["n8n", "Self-hosted", "Supply chain"],
     meta: [
       { label: "Learning objective", value: "Read an automation flow" },
@@ -118,7 +118,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Answers with clause references.",
     background: "Keyword search · 8 sample documents · answers with source cards",
     description:
-      "Keyword search finds and quotes sample clauses, then adds an uncertainty note. The example also shows when the system should refuse to answer.",
+      "Keyword search finds clauses in eight sample contracts and quotes them with their location. For questions without a match, the system does not answer.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -153,10 +153,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "prompt-scanner": {
     title: "Prompt scanner.",
-    titleKicker: "Data and IP guard.",
+    titleKicker: "Flag personal data.",
     background: "Rule-based token classification · runs locally in the browser",
     description:
-      "Rules mark personal data, IBANs, and confidential terms before a prompt is released. Matches are warnings, not complete classification.",
+      "Rules flag names, IBANs and confidential terms before a prompt is released. The flags are hints and miss some cases.",
     tags: ["GDPR", "On-premises", "Rule-based"],
     meta: [
       { label: "Learning objective", value: "Identify sensitive data" },
@@ -171,10 +171,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "cost-drift-observability": {
     title: "Cost and drift.",
-    titleKicker: "Inspect operating signals.",
+    titleKicker: "Read cost and drift.",
     background: "Seeded scenarios · cost, errors, and drift as a learning trace",
     description:
-      "Seeded scenarios expose cost, error, and drift indicators. Values are fixed learning assumptions, not measured production telemetry.",
+      "An operations view with fixed sample values for cost, latency, errors and drift. You read off where a budget alert would fire.",
     tags: ["OpenTelemetry", "Alerts", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure operations" },
@@ -194,7 +194,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Base model versus domain examples.",
     background: "Side-by-side baseline and domain-example responses",
     description:
-      "Compare two sample answers to the same question: a baseline and a domain-adapted response. The example also identifies when retrieval or prompting is the simpler option.",
+      "You ask the same question twice and compare the base model's answer with a domain-adapted one. Alongside, you see when retrieval or a better prompt would do.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Learning objective", value: "Compare against a baseline" },
@@ -211,10 +211,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "roi-rechner": {
     title: "Assumptions calculator.",
-    titleKicker: "Expose the formula.",
+    titleKicker: "Change one assumption at a time.",
     background: "Headcount × hourly cost × adoption × hours saved",
     description:
-      "Which assumptions make an AI use case plausible? The calculator exposes the formula and uncertainty range instead of presenting a return promise.",
+      "You enter team size, hourly rate and adoption and see the formula and the range of the result.",
     tags: ["ROI", "Scenario model", "Transparent"],
     meta: [
       { label: "Inputs", value: "4 assumptions" },
@@ -229,10 +229,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "llm-observability": {
     title: "LLM quality measurement.",
-    titleKicker: "Evaluation, drift, feedback.",
+    titleKicker: "Compare automated and human scores.",
     background: "Fictional evaluation metrics · drift indicator · human review",
     description:
-      "Inspect evaluation metrics, drift detection, and the point at which automated and human assessments disagree. All values are fixed examples.",
+      "For four sample answers you compare the automated score with a human rating. In one case they disagree, and a drift indicator fires.",
     tags: ["Observability", "Evaluation", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure quality" },

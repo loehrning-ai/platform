@@ -95,3 +95,7 @@
   align-items: start;
   gap: 24px;
 }
+
+#raw-folder .rf-docs .doc__sheet {
+  font-size: 21px;
+}

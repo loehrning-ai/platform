@@ -13,7 +13,7 @@
   font-size: 22px;
 }
 
-#one-unit > .ou-doc .is-mark {
+#one-unit > .ou-doc .doc__mark {
   font-size: 28px;
 }
 
@@ -130,9 +130,13 @@
   left: var(--margin-x);
   width: 1728px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px 32px;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 4px 48px;
+}
+
+#one-unit .ou-check .check__head {
+  grid-column: 1 / -1;
 }
 
 #one-unit .ou-check p {

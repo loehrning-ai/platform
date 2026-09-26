@@ -18,6 +18,7 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { trackDemoFilter } from "@/lib/analytics";
+import { BUTTON_CLASSES, cx, FILTER_CHIP_CLASS } from "@/components/werk";
 import { DemoTile } from "./demo-tile";
 
 export interface DemoGridInitialFilters {
@@ -154,36 +155,42 @@ export function DemoGrid({
     return () => window.removeEventListener("keydown", handler);
   }, [clearAll]);
 
+  const selectClass =
+    "min-h-11 w-full rounded-none border border-border bg-background px-3 text-label text-foreground";
+
   return (
     <div ref={atlasRef} data-demo-atlas>
-      <div
-        className="border border-foreground/60 bg-card"
-        data-demo-filter-console
-      >
-        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2 sm:px-4">
-          <p
-            role="status"
-            aria-live="polite"
-            className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground"
+      <div data-demo-filter-console>
+        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t-2 border-foreground pt-4">
+          <h2
+            id="demo-gallery-heading"
+            className="text-fluid-h2 font-bold text-foreground"
           >
-            <span className="text-brand-orange tabular-nums">
-              {String(filtered.length).padStart(2, "0")}
-            </span>{" "}
-            {filtered.length === 1 ? copy.resultSingular : copy.resultPlural}
-            {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
-          </p>
-          {isFiltered && filtered.length > 0 ? (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="inline-flex min-h-11 items-center border border-border bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none"
+            {copy.galleryHeading}
+          </h2>
+          <div className="flex flex-wrap items-center gap-x-4">
+            <p
+              role="status"
+              aria-live="polite"
+              className="text-caption text-muted-foreground tabular-nums"
             >
-              {copy.reset}
-            </button>
-          ) : null}
-        </div>
+              {filtered.length}{" "}
+              {filtered.length === 1 ? copy.resultSingular : copy.resultPlural}
+              {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
+            </p>
+            {isFiltered && filtered.length > 0 ? (
+              <button
+                type="button"
+                onClick={clearAll}
+                className={BUTTON_CLASSES.paper.text}
+              >
+                {copy.reset}
+              </button>
+            ) : null}
+          </div>
+        </header>
 
-        <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+        <div className="mt-4 border-b border-hairline">
           <FilterRow
             label={copy.level}
             mobileControl={
@@ -194,7 +201,7 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("level", event.currentTarget.value, "alle")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={selectClass}
               >
                 <option value="alle">
                   {copy.all} ({catalog.length})
@@ -242,7 +249,7 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("cat", event.currentTarget.value, "Alle")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={selectClass}
               >
                 <option value="Alle">{copy.all}</option>
                 {DEMO_CATEGORIES.map((item) => {
@@ -290,7 +297,7 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("industry", event.currentTarget.value, "")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={cx(selectClass, "sm:max-w-xs")}
               >
                 <option value="">{copy.all}</option>
                 {industries.map((item) => (
@@ -306,40 +313,29 @@ export function DemoGrid({
 
       {/* Grid / empty state */}
       {filtered.length === 0 ? (
-        <div className="mt-6 flex flex-col items-start gap-3 border border-border border-l-[3px] border-l-brand-orange px-4 py-6">
-          <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.emptyKicker}
-          </div>
-          <div className="text-xl font-bold tracking-[-0.02em] text-foreground">
+        <div className="mt-8 flex max-w-[64ch] flex-col items-start gap-3 border-b border-hairline pb-8">
+          <h3 className="text-fluid-h3 font-bold text-foreground">
             {copy.emptyTitle}
-          </div>
-          <p className="max-w-md text-sm text-muted-foreground">
-            {copy.emptyBody}
-          </p>
+          </h3>
+          <p className="text-body text-muted-foreground">{copy.emptyBody}</p>
           <button
             type="button"
             onClick={clearAll}
-            className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            className={BUTTON_CLASSES.paper.ink}
           >
             {copy.reset}
           </button>
         </div>
       ) : (
-        <div className="mt-4 grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
-          {/* grid-flow-row-dense is a safety net for FILTERED subsets, not the
-              mechanism. The unfiltered catalog packs exactly (see the tiling
-              invariant in lib/demos.ts), so dense changes nothing in the
-              default view. An arbitrary filtered subset can leave a span-area
-              that no four-column packing closes; dense backfills those gaps
-              instead of leaving visible holes. DOM order stays catalog order,
-              so reading and tab order are unaffected. */}
+        <div className="mt-8 grid grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* A calm bento: registry sizes give the hero and the tall tiles
+              more room, every tile is the same paper sheet. The unfiltered
+              catalog packs exactly (see the tiling invariant in lib/demos.ts);
+              grid-flow-row-dense only backfills arbitrary FILTERED subsets.
+              DOM order stays catalog order, so reading and tab order are
+              unaffected. */}
           {filtered.map((d) => (
-            <DemoTile
-              key={d.slug}
-              demo={d}
-              total={catalog.length}
-              locale={locale}
-            />
+            <DemoTile key={d.slug} demo={d} locale={locale} />
           ))}
         </div>
       )}
@@ -360,21 +356,30 @@ function FilterRow({
   mobileControl?: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0 px-3 py-3 sm:px-4" role="group" aria-label={label}>
-      <span className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        {label}:
-      </span>
+    <div
+      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-center sm:gap-4"
+      role="group"
+      aria-label={label}
+    >
+      <span className="text-label text-muted-foreground">{label}</span>
+      {/* Below sm the select stands in for the chips; the hidden one takes
+          no grid cell, so the label column pairs with whichever is shown. */}
       {children ? (
         <>
-          {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
+          {mobileControl ? (
+            <div className="min-w-0 sm:hidden">{mobileControl}</div>
+          ) : null}
           <div
-            className={`flex flex-wrap gap-1.5 ${mobileControl ? "hidden sm:flex" : ""}`}
+            className={cx(
+              "flex min-w-0 flex-wrap gap-2",
+              mobileControl ? "hidden sm:flex" : undefined,
+            )}
           >
             {children}
           </div>
         </>
       ) : (
-        mobileControl
+        <div className="min-w-0">{mobileControl}</div>
       )}
     </div>
   );
@@ -395,11 +400,7 @@ function Chip({
       data-filter-chip
       onClick={onClick}
       aria-pressed={active}
-      className={`min-h-11 border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none ${
-        active
-          ? "border-brand-orange bg-brand-orange text-white"
-          : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
-      }`}
+      className={cx(FILTER_CHIP_CLASS, "tabular-nums")}
     >
       {children}
     </button>

@@ -10,8 +10,8 @@
   position: absolute;
   top: 240px;
   left: var(--margin-x);
-  width: 1104px;
-  max-width: 1104px;
+  width: 1152px;
+  max-width: 1152px;
 }
 
 #the-case > .the-case-question .q-card__text {
@@ -40,10 +40,10 @@
 
 #the-case > .the-case-company {
   position: absolute;
-  top: 432px;
+  top: 412px;
   left: var(--margin-x);
   display: flex;
-  width: 1104px;
+  width: 1152px;
   align-items: center;
   gap: var(--s3);
 }
@@ -67,10 +67,10 @@
 /* Boundary sketch: four sites inside one solid ink line; the joint venture outside, dashed. */
 #the-case > .the-case-map {
   position: absolute;
-  top: 560px;
+  top: 528px;
   left: var(--margin-x);
   display: flex;
-  width: 1104px;
+  width: 1152px;
   align-items: center;
 }
 
@@ -78,7 +78,7 @@
   position: relative;
   display: grid;
   flex: none;
-  width: 720px;
+  width: 680px;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   padding: 56px 24px 24px;
@@ -132,7 +132,7 @@
   top: 240px;
   right: var(--margin-x);
   display: grid;
-  width: 560px;
+  width: 504px;
   gap: 24px;
   margin: 0;
   padding: 0;
@@ -166,7 +166,7 @@
 
 #the-case > .the-case-foot {
   position: absolute;
-  top: 912px;
+  top: 904px;
   left: var(--margin-x);
   max-width: none;
 }

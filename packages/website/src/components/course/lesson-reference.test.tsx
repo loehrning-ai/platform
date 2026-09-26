@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { LessonReference } from "./lesson-reference";
 
 describe("LessonReference", () => {
-  it("uses a closed native details element while keeping content in the document", () => {
+  it("renders the lesson open in a native details element so the text is the first thing a reader sees", () => {
     const { container } = render(
       <LessonReference
         locale="en"
@@ -15,21 +15,23 @@ describe("LessonReference", () => {
     );
 
     const details = container.querySelector("details[data-lesson-reference]");
-    expect(details).not.toHaveAttribute("open");
+    expect(details).toHaveAttribute("open");
+    expect(details?.className).not.toMatch(/border-l-|bg-brand-orange|uppercase|font-mono/);
     expect(details?.querySelector("summary")).toHaveClass("grid-cols-1");
     expect(details?.querySelector("summary")).toHaveClass(
       "sm:grid-cols-[minmax(0,1fr)_auto]",
     );
-    expect(screen.getByText("Lesson reference")).toBeInTheDocument();
+    expect(screen.getByText("Lesson")).toHaveClass("text-label");
     expect(screen.getByText("Evidence before automation")).toBeInTheDocument();
     expect(
       screen.getByText("Separate claims from verified observations."),
     ).toBeInTheDocument();
-    expect(screen.getByText("Open reference")).toBeInTheDocument();
+    expect(screen.getByText("Collapse")).toBeInTheDocument();
+    expect(screen.getByText("Expand")).toBeInTheDocument();
     expect(screen.getByText("Authored lesson evidence")).toBeInTheDocument();
   });
 
-  it("stays closed with German labels and omits an empty objective", () => {
+  it("uses German labels, starts open and omits an empty objective", () => {
     const { container } = render(
       <LessonReference locale="de" title="Belege vor Automatisierung">
         <p>Autorisierter Lektionstext</p>
@@ -38,10 +40,10 @@ describe("LessonReference", () => {
 
     expect(
       container.querySelector("details[data-lesson-reference]"),
-    ).not.toHaveAttribute("open");
-    expect(screen.getByText("Lektionsreferenz")).toBeInTheDocument();
+    ).toHaveAttribute("open");
+    expect(screen.getByText("Lektion")).toBeInTheDocument();
     expect(screen.getByText("Belege vor Automatisierung")).toBeInTheDocument();
-    expect(screen.getByText("Referenz öffnen")).toBeInTheDocument();
+    expect(screen.getByText("Einklappen")).toBeInTheDocument();
     expect(screen.getByText("Autorisierter Lektionstext")).toBeInTheDocument();
   });
 
@@ -71,6 +73,9 @@ describe("LessonReference", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Evidence before automation",
     );
+
+    details.open = false;
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 
     details.open = true;
 

@@ -219,16 +219,18 @@
   display: none;
 }
 
-.doc .is-mark {
-  outline: 3px solid var(--mennige);
-  outline-offset: 4px;
+/* One frame around a group of consecutive lines: Mennige for the line under discussion, ink for a
+   line to compare. */
+.doc__mark,
+.doc__box {
+  margin: 4px -10px;
+  padding: 4px 10px;
+  border: 3px solid var(--mennige);
   font-weight: 700;
 }
 
-.doc .is-box {
-  outline: 3px solid var(--ink);
-  outline-offset: 4px;
-  font-weight: 700;
+.doc__box {
+  border-color: var(--ink);
 }
 
 /* ------------------------------------------------------------ ledger (belegtabelle) */
@@ -246,7 +248,7 @@
   background: var(--paper);
   color: var(--slate);
   font-family: var(--mono);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   text-align: left;
   white-space: nowrap;
@@ -256,18 +258,18 @@
   padding: 8px 12px;
   border-top: 1px solid var(--leinen);
   font-family: var(--mono);
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.3;
   vertical-align: top;
   overflow-wrap: anywhere;
 }
 
 .lg th:nth-child(1) { width: 150px; }
-.lg th:nth-child(2) { width: 300px; }
+.lg th:nth-child(2) { width: 350px; }
 .lg th:nth-child(3) { width: 150px; }
-.lg th:nth-child(4) { width: 170px; }
-.lg th:nth-child(5) { width: 150px; }
-.lg th:nth-child(6) { width: 130px; }
+.lg th:nth-child(4) { width: 140px; }
+.lg th:nth-child(5) { width: 130px; }
+.lg th:nth-child(6) { width: 120px; }
 .lg th:nth-child(7) { width: 140px; }
 
 .lg .lg-num {

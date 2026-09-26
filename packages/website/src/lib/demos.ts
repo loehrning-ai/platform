@@ -1,15 +1,15 @@
 /**
- * Demos catalog — single source of truth for the /demos gallery.
+ * Demos catalog: single source of truth for the /demos gallery.
  *
  * Each entry is an AI capability showcase surfaced as an interactive widget.
  * Demo metadata drives the gallery tile, the /demos/[slug] detail page,
  * and the per-demo OpenGraph image.
  *
  * Size class rationale (`size` field):
- *   s-hero  : signature opener — 2x2 tile, most valuable real estate
- *   s-wide  : dark statement demo — 2x1 tile, strong horizontal story
- *   s-tall  : secondary narrative — 1x2 tile, vertical rhythm break
- *   s-med   : default — 1x1 tile
+ *   s-hero  : signature opener, 2x2 tile, most valuable real estate
+ *   s-wide  : statement demo, 2x1 tile, strong horizontal story
+ *   s-tall  : secondary narrative, 1x2 tile, vertical rhythm break
+ *   s-med   : default, 1x1 tile
  *
  * TILING INVARIANT (enforced by demo-bento-tiling.test.ts):
  * The four-column gallery packs exactly when the sizes sum to a whole number
@@ -58,6 +58,11 @@ export interface Demo {
   readonly category: DemoCategory;
   readonly level: DemoLevel;
   readonly size: DemoSize;
+  /**
+   * The interactive engine itself is dark (a terminal, a node canvas). Only
+   * the engine frame on the detail page turns graphit; gallery tiles and the
+   * page band stay paper.
+   */
   readonly dark: boolean;
   readonly accent: boolean;
   readonly title: string;
@@ -90,10 +95,10 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Claude in Excel.",
-    titleKicker: "Formel, Pivot, Prognose.",
+    titleKicker: "Formeln und Prognose prüfen.",
     background: "Excel-Add-In · Microsoft 365 · keine neue Software",
     description:
-      "Analyst markiert einen Beispielbereich: Das Praxisbeispiel zeigt, wie Formelvorschläge, Pivot-Entwurf und Forecast-Prüfung im gewohnten Tabellenkontext aussehen können.",
+      "Du markierst einen Bereich mit erfundenen Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und eine Prognose, die du gegenprüfst.",
     tags: ["Excel-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Formeln prüfen" },
@@ -127,7 +132,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Dokumente strukturieren.",
     background: "Word-Lab + Stilprüfung mit Musterdokumenten",
     description:
-      "Briefing eingeben: Das Praxisbeispiel zeigt einen strukturierten Entwurf mit anschließender Stil-, Quellen-, Freigabe- und Datenschutzprüfung.",
+      "Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe und personenbezogene Daten.",
     tags: ["Word-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Briefing schärfen" },
@@ -161,8 +166,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Nachrichten erklären.",
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
-      "Pipeline nimmt fiktive Beispielkontakte, markiert belegte Signale und erstellt einen Nachrichtenentwurf, der vor jedem Versand im Review bleibt.",
-    tags: ["DAG", "Git-Ops", "Open"],
+      "Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor jedem Versand steht ein Review.",
+    tags: ["Pipeline", "Review-Gate", "Quellen"],
     meta: [
       { label: "Lernziel", value: "Signalbezug" },
       { label: "Werkzeug", value: "Beispiel-DB · LLM · Review" },
@@ -192,10 +197,10 @@ export const demos: readonly Demo[] = [
     dark: true,
     accent: true,
     title: "Agent-Pipeline.",
-    titleKicker: "Vier Köpfe, ein Memo.",
+    titleKicker: "Ein Memo in vier Schritten.",
     background: "Multi-Agent-Muster · spezialisierte Rollen · aufgezeichnete Spur",
     description:
-      "Scout recherchiert, Analyst synthetisiert, Kritiker red-teamt, Redakteur formuliert. Redaktion statt Generalist.",
+      "Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschritt bis zur Schlussfassung.",
     tags: ["Multi-Agent", "Opus 4.5", "Trace"],
     meta: [
       { label: "Lernziel", value: "Rollen trennen" },
@@ -226,10 +231,10 @@ export const demos: readonly Demo[] = [
     dark: true,
     accent: false,
     title: "n8n Supply-Chain.",
-    titleKicker: "Disponenten-Morgen, automatisch.",
+    titleKicker: "Lieferverzug mit Freigabe.",
     background: "n8n-Muster · simulierte DHL/SAP/Mail-Schritte",
     description:
-      "Ein Lieferverzug läuft als simulierte Prozesskette durch Bestand, Kundenentwurf, Eskalation und manuelle Freigabe.",
+      "Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch frei.",
     tags: ["n8n", "Self-host", "Supply-Chain"],
     meta: [
       { label: "Lernziel", value: "Flow lesen" },
@@ -260,10 +265,10 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Vertrags-Assistent.",
-    titleKicker: "Chat mit §-Verweis.",
+    titleKicker: "Antworten mit Fundstelle.",
     background: "Keyword-Suche · 8 Beispieldokumente · Antwort mit Quellenkarte",
     description:
-      "Beispielklauseln werden per Keyword-Suche gefunden, zitiert und mit einer Unsicherheitsnotiz versehen. Das Praxisbeispiel zeigt auch, wann ein System nicht antworten sollte.",
+      "Eine Keyword-Suche findet Klauseln in acht Beispielverträgen und zitiert sie mit Fundstelle. Auf Fragen ohne Treffer antwortet das System nicht.",
     tags: ["Keyword-Suche", "Regelbasiert", "DE / EN"],
     meta: [
       { label: "Lernziel", value: "Quellenpflicht" },
@@ -328,11 +333,11 @@ export const demos: readonly Demo[] = [
     dark: true,
     accent: false,
     title: "Prompt-Scanner.",
-    titleKicker: "DSGVO-Guard.",
+    titleKicker: "Personendaten markieren.",
     background: "Regelbasierte Token-Klassifikation · lokal ausführbares Muster",
     description:
-      "Regeln markieren PII, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Treffer sind Hinweise, keine fehlerfreie Klassifikation.",
-    tags: ["DSGVO", "On-Prem", "Live"],
+      "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Die Treffer sind Hinweise und übersehen manche Fälle.",
+    tags: ["DSGVO", "On-Prem", "Regelbasiert"],
     meta: [
       { label: "Lernziel", value: "PII erkennen" },
       { label: "Pattern", value: "lokale Prüfung" },
@@ -362,10 +367,10 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Cost & Drift.",
-    titleKicker: "Kosten und Drift im Blick.",
+    titleKicker: "Kosten und Drift ablesen.",
     background: "Seed-Szenarien · Kosten, Fehler und Drift als Lernspur",
     description:
-      "Seed-Szenarien zeigen Kosten, Fehler und Drift-Indikatoren. Die Werte sind Lernannahmen, keine gemessene Produktionsmetrik.",
+      "Eine Betriebsansicht mit festen Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du liest ab, wo ein Budget-Alarm anschlagen würde.",
     tags: ["OTel", "Alerts", "Drift"],
     meta: [
       { label: "Lernziel", value: "Betrieb messen" },
@@ -399,7 +404,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Basismodell vs. Domäne.",
     background: "Vergleich Baseline vs. Domänenbeispiele",
     description:
-      "Dieselbe Frage, zwei Beispielantworten: Baseline und domänennahe Antwort. Das Praxisbeispiel zeigt auch, wann RAG oder Prompting naheliegender ist.",
+      "Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit einer domänennahen Antwort. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Lernziel", value: "Baseline vergleichen" },
@@ -430,10 +435,10 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Annahmen-Rechner.",
-    titleKicker: "Formel statt Bauchgefühl.",
+    titleKicker: "Annahmen einzeln ändern.",
     background: "Headcount × Stundensatz × Adoption × gesparte Stunden",
     description:
-      "Welche Annahmen machen einen KI-Use-Case plausibel? Das Praxisbeispiel legt Formel und Unsicherheitsband offen.",
+      "Du trägst Teamgröße, Stundensatz und Nutzungsquote ein und siehst die Formel und die Spanne des Ergebnisses.",
     tags: ["ROI", "Kalkulation", "Transparent"],
     meta: [
       { label: "Eingaben", value: "4 Annahmen" },
@@ -464,10 +469,10 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: false,
     title: "LLM-Qualitätsmessung.",
-    titleKicker: "Eval, Drift, Feedback-Loop.",
+    titleKicker: "Automatik und Mensch vergleichen.",
     background: "Fiktive Eval-Metriken · Drift-Indikator · menschliches Feedback vs. Auto-Eval",
     description:
-      "Wie misst man, ob ein LLM-System besser oder schlechter wird? Das Praxisbeispiel zeigt Eval-Metriken, Drift-Erkennung und den Moment, wo automatische und menschliche Bewertung auseinanderlaufen.",
+      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In einem Fall widersprechen sich beide, und ein Drift-Indikator schlägt an.",
     tags: ["Observability", "Eval", "Drift"],
     meta: [
       { label: "Lernziel", value: "Qualität messen" },

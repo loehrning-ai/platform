@@ -4,14 +4,15 @@
 
 #the-arc > .the-arc-lead {
   position: absolute;
-  top: 232px;
+  top: 840px;
   left: var(--margin-x);
-  max-width: 1100px;
+  max-width: 1400px;
+  font-weight: 600;
 }
 
 #the-arc > .the-arc-wires {
   position: absolute;
-  top: 320px;
+  top: 290px;
   left: var(--margin-x);
   overflow: visible;
 }
@@ -27,8 +28,8 @@
   background: var(--papier);
 }
 
-#the-arc > #the-arc-raw { top: 340px; }
-#the-arc > #the-arc-ledger { top: 640px; border-width: 4px; }
+#the-arc > #the-arc-raw { top: 310px; }
+#the-arc > #the-arc-ledger { top: 570px; border-width: 4px; }
 
 #the-arc .the-arc-swatch {
   flex: none;
@@ -69,8 +70,8 @@
   left: 762px;
 }
 
-#the-arc > #the-arc-ai-1 { top: 362px; }
-#the-arc > #the-arc-ai-2 { top: 662px; }
+#the-arc > #the-arc-ai-1 { top: 332px; }
+#the-arc > #the-arc-ai-2 { top: 592px; }
 
 #the-arc > .the-arc-answer {
   position: absolute;
@@ -86,8 +87,8 @@
   background: var(--papier);
 }
 
-#the-arc > #the-arc-answer-1 { top: 340px; border-style: dashed; }
-#the-arc > #the-arc-answer-2 { top: 640px; border-width: 4px; }
+#the-arc > #the-arc-answer-1 { top: 310px; border-style: dashed; }
+#the-arc > #the-arc-answer-2 { top: 570px; border-width: 4px; }
 
 #the-arc .the-arc-answer p {
   margin: 0;

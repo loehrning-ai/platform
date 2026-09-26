@@ -21,8 +21,7 @@ const LANDING = "/eu-ai-act-kurs";
 const HUB = "/eu-ai-act-kurs/kurs";
 const BLOCK = "/eu-ai-act-kurs/kurs/block_1"; // first real blockId, always prerendered
 const LANDING_HEADING = "Rollen, Risiken und Pflichten einordnen.";
-const CURRICULUM_HEADING =
-  "Sechs Blöcke, eine durchgehende Klassifikationslogik.";
+const CURRICULUM_HEADING = "Lehrplan";
 const START_CTA = "Kurs mit Lernkonto starten";
 
 test.describe("/eu-ai-act-kurs landing", () => {

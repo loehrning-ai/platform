@@ -8,7 +8,7 @@
   left: var(--margin-x);
   display: grid;
   width: 1728px;
-  grid-template-columns: 640px 1fr;
+  grid-template-columns: 760px 1fr;
   gap: 48px;
 }
 
@@ -99,7 +99,7 @@
 
 #the-ledger > .tl-evidence {
   position: absolute;
-  top: 596px;
+  top: 572px;
   left: var(--margin-x);
   display: flex;
   align-items: flex-end;
@@ -127,7 +127,7 @@
 
 #the-ledger > .tl-ask {
   position: absolute;
-  top: 620px;
+  top: 600px;
   right: var(--margin-x);
   max-width: 420px;
   font-size: var(--t-lead);
@@ -137,7 +137,7 @@
 /* Completion rows (presses 4 to 7). */
 #the-ledger > .tl-rows {
   position: absolute;
-  top: 588px;
+  top: 572px;
   left: var(--margin-x);
   display: grid;
   width: 1728px;
@@ -215,7 +215,7 @@
 
 #the-ledger > .tl-control {
   position: absolute;
-  top: 900px;
+  top: 888px;
   left: var(--margin-x);
   width: 1728px;
   padding-top: 10px;

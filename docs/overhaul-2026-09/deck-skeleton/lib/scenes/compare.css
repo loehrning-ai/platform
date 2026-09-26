@@ -1,0 +1,65 @@
+/* compare: a two-column comparison. Step 0: both column heads. Step 1: the left body and its
+   chip. Step 2: the right body and its chip. Section coordinates, 1920 x 1080. */
+
+#compare > .cmp-cols {
+  position: absolute;
+  top: 248px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  height: 680px;
+  grid-template-columns: minmax(0, 1fr) 3px minmax(0, 1fr);
+  gap: 0 72px;
+}
+
+#compare .cmp-rule {
+  background: var(--ink);
+}
+
+#compare .cmp-col {
+  display: grid;
+  align-content: start;
+  gap: var(--s4);
+  min-width: 0;
+}
+
+#compare .cmp-quote {
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-lead);
+  line-height: 1.35;
+}
+
+#compare .cmp-col--draft .cmp-quote {
+  border-style: dashed;
+}
+
+#compare .cmp-list {
+  display: grid;
+  gap: var(--s1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-body);
+}
+
+#compare .cmp-list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+}
+
+#compare .cmp-list li::before {
+  content: "";
+  flex: none;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+  transform: translateY(-3px);
+}
+
+#compare .cmp-chip-row {
+  display: flex;
+}

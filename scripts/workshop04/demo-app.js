@@ -286,7 +286,7 @@
       var rows = [rowById("E-WN-03"), rowById("E-WN-03D")];
       var inv = D.inputs.wnDuplicate.invoice;
       return { title: "Two March bills, one invoice", sub: fileName(a.path) + " · " + fileName(b.path), nodes: [
-        para(TRAP.T1.caughtBy_en + ". Both files carry invoice " + inv + ", the same period and the same meter. " + b.note_en),
+        para("Check that catches it: " + TRAP.T1.caughtBy_en + ". Both files carry invoice " + inv + ", the same period and the same meter. " + b.note_en),
         el("div", { "class": "papers papers--2" }, [paper(a, termsFor(a, [rows[0]]), [inv]), paper(b, termsFor(b, [rows[1]]), [inv])]),
         rowsBlock(rows, "The two ledger rows")
       ] };
@@ -312,7 +312,7 @@
       dl.forEach(function (v, i) { sd += v; sa += ab[i]; rows.push({ cells: [M[i], n0(v), n0(ab[i])] }); });
       rows.push({ cells: ["Year", n0(sd), n0(sa)], cls: "sum" });
       return { title: "Fuel-card export, summed by product", sub: "rohdaten_2025/Flotte/Tankkarten_2025.csv", nodes: [
-        para("The export lists every card transaction: diesel, AdBlue, car washes and shop items. " + TRAP.T6.caughtBy_en + " keeps diesel and drops the rest."),
+        para("The export lists every card transaction: diesel, AdBlue, car washes and shop items. " + "The " + TRAP.T6.caughtBy_en.charAt(0).toLowerCase() + TRAP.T6.caughtBy_en.slice(1) + " keeps diesel and drops the rest."),
         dtable(["Month", "Diesel (l)", "AdBlue (l)"], rows, { num: [1, 2] }),
         rowsBlock([rowById("D-FL-01"), rowById("D-FL-02")], "The two ledger rows")
       ] };
@@ -321,7 +321,7 @@
       var ids = ["F-EL-LB-2025", "F-EL-RM-2025", "F-EL-GO"];
       var unc = NUM.el_uncovered_kwh.value;
       return { title: "Market-based: which factor for which kWh", sub: "faktoren/faktoren_lehrwerte.csv", nodes: [
-        para(TRAP.T7.caughtBy_en + ". The certificate covers Werk Süd only. The other " + key("el_uncovered_kwh") + " have no certificate, so they take the residual mix."),
+        para("Check that catches it: " + TRAP.T7.caughtBy_en + ". The certificate covers Werk Süd only. The other " + key("el_uncovered_kwh") + " have no certificate, so they take the residual mix."),
         dtable(["Factor ID", "Label", "kg CO₂e per kWh"], ids.map(function (id) { return { cells: [id, F[id].label_en, f2(id)] }; }), { num: [2] }),
         el("p", { "class": "arith" }, [n0(unc) + " kWh × " + f2("F-EL-RM-2025") + " = " + key("s2mb_2025") + " (residual mix, right)",
           el("span", { text: n0(unc) + " kWh × " + f2("F-EL-LB-2025") + " = " + key("mb_grid_avg_wrong_s2_t") + " with the grid average, which is " + key("mb_grid_avg_too_low_t") + " too low." })]),
@@ -376,7 +376,7 @@
     if (doc.trap === "T5") keys = ["Brennwert (Hs)"];
     if (doc.trap === "T4") keys = [D.inputs.ws.priorYearPrinted];
     var intro = {
-      T3: TRAP.T3.caughtBy_en + ". " + doc.note_en,
+      T3: "Check that catches it: " + TRAP.T3.caughtBy_en + ". " + doc.note_en,
       T4: "“" + D.inputs.ws.printed + "” uses the German thousands point, so it means " + key("el_ws_mwh") + ", which is " + key("el_ws_kwh") + ". Read as kWh it becomes " + n0(D.inputs.ws.misreadKwh) + " kWh. The prior year on the same page, " + D.inputs.ws.priorYearPrinted + ", shows the scale.",
       T5: "Page 1 prints the energy in kWh. Only page 2 says the basis is the gross calorific value (Hs), so the factor must be " + "F-GAS-HS" + ", not the first gas factor in the file.",
       "real-dip": D.trapNotes.august_en,
@@ -414,7 +414,7 @@
     $("#drawer-close").focus();
     if (v.scrollTo) {
       var t = $(v.scrollTo, body);
-      if (t && t.getBoundingClientRect().bottom > body.getBoundingClientRect().bottom - 40) {
+      if (t && (v.scrollTo === ".pagebreak" || t.getBoundingClientRect().bottom > body.getBoundingClientRect().bottom - 40)) {
         body.scrollTop = Math.max(0, t.offsetTop - 120);
       }
     }

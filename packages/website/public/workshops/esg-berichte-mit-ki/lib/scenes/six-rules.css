@@ -6,7 +6,7 @@
   top: 236px;
   left: var(--margin-x);
   display: grid;
-  width: 1080px;
+  width: 1112px;
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -18,8 +18,8 @@
   grid-template-columns: 44px 48px 1fr 110px;
   align-items: center;
   gap: 20px;
-  min-height: 66px;
-  padding: 6px 16px 6px 0;
+  min-height: 60px;
+  padding: 4px 16px 4px 0;
   border-bottom: 2px solid var(--leinen);
 }
 
@@ -34,12 +34,19 @@
   font-weight: 700;
 }
 
+/* Name and rule on one line; rule 5 carries a second line of small print. */
 #six-rules .sr-rule p {
   display: grid;
-  gap: 2px;
+  grid-template-columns: 150px 1fr;
+  gap: 2px 16px;
+  align-items: baseline;
   margin: 0;
   font-size: 24px;
   line-height: 1.25;
+}
+
+#six-rules .sr-rule small {
+  grid-column: 2;
 }
 
 #six-rules .sr-rule b {
@@ -61,7 +68,7 @@
 
 #six-rules > .sr-approve {
   position: absolute;
-  top: 716px;
+  top: 700px;
   left: var(--margin-x);
   display: flex;
   width: 1080px;
@@ -77,7 +84,7 @@
   top: 236px;
   right: var(--margin-x);
   display: grid;
-  width: 580px;
+  width: 560px;
   gap: 8px;
 }
 

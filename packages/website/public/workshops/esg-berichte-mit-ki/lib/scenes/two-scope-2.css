@@ -84,7 +84,7 @@
 
 #two-scope-2 > .ts-nums {
   position: absolute;
-  top: 470px;
+  top: 456px;
   right: var(--margin-x);
   display: grid;
   width: 1040px;
@@ -99,7 +99,7 @@
 }
 
 #two-scope-2 .ts-num .bignum__value {
-  font-size: 64px;
+  font-size: 60px;
 }
 
 #two-scope-2 .ts-num .bignum__scope {
@@ -109,7 +109,7 @@
 
 #two-scope-2 > .ts-wrong {
   position: absolute;
-  top: 676px;
+  top: 648px;
   right: var(--margin-x);
   display: grid;
   width: 1040px;
@@ -160,7 +160,7 @@
 
 #two-scope-2 > .ts-bridge {
   position: absolute;
-  top: 616px;
+  top: 520px;
   left: var(--margin-x);
 }
 
@@ -202,6 +202,6 @@
 
 #two-scope-2 > .ts-net {
   position: absolute;
-  top: 892px;
+  top: 836px;
   left: var(--margin-x);
 }
