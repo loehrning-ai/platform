@@ -1,432 +1,519 @@
 "use client";
 
-import { DEMO } from "@/lib/demo-tokens";
+import { useId, type ReactNode } from "react";
+import { ArrowGlyph, cx, Pictogram, type PictogramName } from "@/components/werk";
+import { useDemoLocale } from "./demo-locale";
 
-const PV: React.CSSProperties = { padding: "0 16px 12px" };
-const MONO = DEMO.font.mono;
-const SANS = DEMO.font.sans;
-const ACCENT = "var(--color-brand-orange)"; // #A5370F, AA on the light preview surfaces
-// Kupfer #A5370F is only ~2.98:1 on the near-black (#0B0908) blocks/dark tiles;
-// Peach keeps small copper-adjacent labels above AA on the atmospheric indigo
-// and ink preview surfaces.
-const ACCENT_DARK = "var(--color-brand-peach)";
-const STATUS_GREEN = DEMO.statusGreen; // #22c55e, bright green for dots/fills + text on dark
-// #22c55e is only ~2:1 as TEXT on the light preview surface; green-800 #166534
-// reaches >=5.6:1 there. Use for green status TEXT on light backgrounds.
-const GREEN_TEXT_LIGHT = "#166534";
+/*
+ * Gallery previews as schematic drawings (Werkzeichnung), not app windows.
+ *
+ * Grammar, shared with the Workshop 03 deck:
+ * - hatch   = raw or unapproved input (an export, a scan, a draft)
+ * - ink     = the processing step or an approved result
+ * - dashed  = a gate that is still open (review, sign-off, a known gap)
+ * - Mennige = the one thing to look at; at most one mark per drawing
+ *
+ * Every preview renders inside the tile's aria-hidden band, so its short
+ * labels are decoration for sighted readers only. Labels stay at 12px or
+ * larger anyway; mono is used only for data (values, clause numbers, code).
+ */
 
-// Light-on-dark token set for tiles with `dark: true`
-const DK = {
-  text: "rgba(243,240,233,0.9)",
-  muted: "rgba(243,240,233,0.55)",
-  border: "rgba(243,240,233,0.2)",
-  fill: "rgba(243,240,233,0.07)",
+const LABEL = "text-[0.75rem] font-semibold leading-tight text-foreground";
+const DATA = "font-mono text-[0.75rem] leading-tight text-foreground tabular-nums";
+
+function Hatch({ className }: { readonly className?: string }) {
+  const raw = useId();
+  const id = `pv-hatch-${raw.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  return (
+    <svg
+      aria-hidden="true"
+      className={cx(
+        "pointer-events-none absolute inset-0 size-full text-foreground/30",
+        className,
+      )}
+    >
+      <defs>
+        <pattern
+          id={id}
+          width="10"
+          height="10"
+          patternUnits="userSpaceOnUse"
+          patternTransform="rotate(45)"
+        >
+          <line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" strokeWidth="1.5" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
+type NodeTone = "plain" | "raw" | "ink" | "gate" | "mark";
+
+const NODE_TONES: Record<NodeTone, string> = {
+  plain: "border border-foreground bg-card text-foreground",
+  raw: "border border-foreground bg-card text-foreground",
+  ink: "border border-foreground bg-foreground text-background",
+  gate: "border border-dashed border-foreground bg-transparent text-foreground",
+  mark: "border-2 border-mennige bg-card text-kupfer-dark",
 };
 
-export function ExcelPreview() {
-  // s-hero (2x2) — largest tile. Full Excel mockup with formula bar + data + forecast.
-  const rows = [
-    ["KW 15", "West", "188", "911.800"],
-    ["KW 16", "Nord", "161", "780.850"],
-    ["KW 16", "West", "203", "984.550"],
-    ["KW 17", "Süd",  "174", "843.200"],
-  ] as const;
+/** A square station with a pictogram and a label underneath. */
+function Node({
+  icon,
+  label,
+  tone = "plain",
+  text,
+  className,
+}: {
+  readonly icon?: PictogramName;
+  readonly label: string;
+  readonly tone?: NodeTone;
+  /** Short word drawn inside the square instead of a pictogram. */
+  readonly text?: string;
+  readonly className?: string;
+}) {
   return (
-    <div style={PV}>
-      <div style={{ background: DEMO.kalk, border: `1px solid ${DEMO.ink}`, fontFamily: MONO, fontSize: 10, overflow: "hidden" }}>
-        {/* Chrome: filename tab */}
-        <div style={{ background: "#107C41", color: "white", padding: "3px 8px", fontSize: 9, letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 12, height: 12, background: "white", color: "#107C41", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900 }}>X</span>
-          Absatz-KW.xlsx
-          <span style={{ marginLeft: "auto", fontSize: 8 }}>SHEET1</span>
-        </div>
-        {/* Formula bar */}
-        <div style={{ background: "white", borderBottom: `1px solid ${DEMO.leinen}`, padding: "3px 8px", display: "flex", alignItems: "center", gap: 6, fontSize: 9, color: DEMO.ink }}>
-          <span style={{ color: DEMO.schiefer, fontWeight: 700 }}>E5</span>
-          <span style={{ color: DEMO.schiefer }}>ƒx</span>
-          <span style={{ color: ACCENT, fontWeight: 700 }}>=CLAUDE(</span>
-          <span style={{ color: DEMO.ink }}>&quot;Prognose&nbsp;KW18&quot;, B2:D17</span>
-          <span style={{ color: ACCENT, fontWeight: 700 }}>)</span>
-        </div>
-        {/* Table */}
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, tableLayout: "fixed" }}>
-          <colgroup>
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "34%" }} />
-          </colgroup>
-          <thead>
-            <tr style={{ background: DEMO.birke, borderBottom: `1px solid ${DEMO.leinen}` }}>
-              {["KW", "Region", "Menge", "Umsatz €"].map((h, i) => (
-                <th key={i} style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, textAlign: i > 1 ? "right" : "left", fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.08em", fontWeight: 700 }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={i} style={{ borderBottom: `1px solid ${DEMO.leinen}` }}>
-                {r.map((c, j) => (
-                  <td key={j} style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, textAlign: j > 1 ? "right" : "left" }}>{c}</td>
+    <div className={cx("demo-pv-rise flex min-w-0 flex-col items-center gap-2", className)}>
+      <div
+        className={cx(
+          "relative grid size-12 shrink-0 place-items-center overflow-hidden sm:size-14",
+          NODE_TONES[tone],
+        )}
+      >
+        {tone === "raw" ? <Hatch /> : null}
+        {text ? (
+          <span className="relative text-[0.75rem] font-bold">{text}</span>
+        ) : icon ? (
+          <Pictogram name={icon} className="relative size-6 sm:size-7" />
+        ) : null}
+      </div>
+      <span className={cx(LABEL, "max-w-[6.5rem] text-center")}>{label}</span>
+    </div>
+  );
+}
+
+function Arrow({ className }: { readonly className?: string }) {
+  return (
+    <ArrowGlyph
+      className={cx("mb-6 size-4 shrink-0 text-muted-foreground sm:size-5", className)}
+    />
+  );
+}
+
+function Flow({ children, className }: { readonly children: ReactNode; readonly className?: string }) {
+  return (
+    <div
+      className={cx(
+        "flex w-full items-center justify-center gap-2 px-4 py-5 sm:gap-3",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** A sheet of paper drawn as lines; `raw` hatches it. */
+function Sheet({
+  lines = 4,
+  raw = false,
+  className,
+  children,
+}: {
+  readonly lines?: number;
+  readonly raw?: boolean;
+  readonly className?: string;
+  readonly children?: ReactNode;
+}) {
+  return (
+    <div className={cx("relative overflow-hidden border border-foreground bg-card p-3", className)}>
+      {raw ? <Hatch /> : null}
+      <div className="relative flex flex-col gap-2">
+        {children}
+        {Array.from({ length: lines }, (_, index) => (
+          <span
+            key={index}
+            className="block h-1.5 bg-hairline"
+            style={{ width: `${[92, 78, 86, 64, 72, 55][index % 6]}%` }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function ExcelPreview() {
+  const { text } = useDemoLocale();
+  const bars = [52, 44, 60, 48];
+  return (
+    <div className="grid w-full grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1fr)] items-center gap-3 px-5 py-6 sm:gap-5 sm:px-8">
+      <div className="demo-pv-rise min-w-0">
+        <div className="relative overflow-hidden border border-foreground bg-card">
+          <div className="grid grid-cols-3 border-b border-foreground">
+            {[text("KW", "Week"), text("Region", "Region"), text("Umsatz", "Revenue")].map(
+              (head) => (
+                <span key={head} className={cx(LABEL, "truncate px-2 py-1.5")}>
+                  {head}
+                </span>
+              ),
+            )}
+          </div>
+          <div className="relative">
+            <Hatch />
+            {[
+              ["15", text("West", "West"), "911.800"],
+              ["16", text("Nord", "North"), "780.850"],
+              ["16", text("West", "West"), "984.550"],
+              ["17", text("Süd", "South"), "843.200"],
+            ].map((row, index) => (
+              <div key={index} className="relative grid grid-cols-3 border-b border-hairline last:border-b-0">
+                {row.map((cell, cellIndex) => (
+                  <span key={cellIndex} className={cx(DATA, "truncate px-2 py-1")}>
+                    {cell}
+                  </span>
                 ))}
-              </tr>
+              </div>
             ))}
-            {/* Prognose row — highlighted */}
-            <tr style={{ background: "rgba(249,115,22,0.08)", borderBottom: `1px solid ${ACCENT}` }}>
-              <td style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, color: ACCENT, fontWeight: 700 }}>KW 18</td>
-              <td style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, color: ACCENT, fontWeight: 700 }}>Alle</td>
-              <td style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, textAlign: "right", color: ACCENT, fontWeight: 700 }}>195</td>
-              <td style={{ padding: "3px 6px", borderRight: `1px solid ${DEMO.leinen}`, textAlign: "right", color: ACCENT, fontWeight: 800 }}>938.240 ◆</td>
-            </tr>
-          </tbody>
-        </table>
-        {/* Status bar */}
-        <div style={{ background: DEMO.birke, padding: "3px 8px", borderTop: `1px solid ${DEMO.leinen}`, fontSize: 8, color: DEMO.schiefer, fontWeight: 700, letterSpacing: "0.08em", display: "flex", justifyContent: "space-between" }}>
-          <span style={{ color: ACCENT }}>◆ CLAUDE-ADD-IN · AKTIV</span>
-          <span>PROGNOSE · KONF. 94%</span>
+          </div>
         </div>
+        <p className={cx(LABEL, "mt-2")}>{text("Absatzdaten, Export", "Sales export")}</p>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <Node tone="ink" text="Claude" label={text("Formel", "Formula")} />
+      </div>
+
+      <div className="demo-pv-rise min-w-0">
+        <div className="flex h-28 items-end gap-2 border-b border-l border-foreground px-2 sm:h-36">
+          {bars.map((height, index) => (
+            <span key={index} className="w-full bg-foreground" style={{ height: `${height}%` }} />
+          ))}
+          <span className="w-full bg-mennige" style={{ height: "56%" }} />
+        </div>
+        <p className={cx(LABEL, "mt-2")}>
+          {text("Prognose KW 18, zu prüfen", "Week 18 forecast, to check")}
+        </p>
       </div>
     </div>
   );
 }
 
 export function WordPreview() {
-  // s-tall (1x2) — vertical project brief document preview.
+  const { text } = useDemoLocale();
+  const checks: ReadonlyArray<{ label: string; open?: boolean }> = [
+    { label: text("Stil", "Style") },
+    { label: text("Quellen", "Sources") },
+    { label: text("Personendaten", "Personal data") },
+    { label: text("Freigabe offen", "Approval open"), open: true },
+  ];
   return (
-    <div style={PV}>
-      <div style={{ background: "white", border: `1px solid ${DEMO.ink}`, overflow: "hidden" }}>
-        {/* Chrome */}
-        <div style={{ background: "#2B579A", color: "white", padding: "3px 8px", fontFamily: MONO, fontSize: 9, letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 12, height: 12, background: "white", color: "#2B579A", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900 }}>W</span>
-          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Projektbrief_Fiktivwerk_Demo.docx</span>
-        </div>
-        {/* Letterhead */}
-        <div style={{ padding: "10px 14px", fontFamily: "Georgia, serif", fontSize: 10, lineHeight: 1.5, color: "#222" }}>
-          <div style={{ fontFamily: MONO, fontSize: 7, color: "#666", letterSpacing: "0.14em", marginBottom: 6, textTransform: "uppercase", display: "flex", justifyContent: "space-between" }}>
-            <span>Fiktivwerk Beispiel GmbH · Musterstadt</span>
-            <span>23. 04. 2026</span>
-          </div>
-          <strong style={{ fontSize: 11, display: "block", lineHeight: 1.3, color: "#111" }}>Projektbrief: Wartungs-KI Produktionslinie 3</strong>
-          <p style={{ marginTop: 6, fontSize: 9, color: "#444", lineHeight: 1.5 }}>Guten Tag, Fiktivkontakt Alpha,</p>
-          <p style={{ marginTop: 4, fontSize: 9, color: "#444", lineHeight: 1.5 }}>anbei der neutrale Projektbrief zur Prüfung einer predictiven Wartungs-KI auf Ihrer PL-3…</p>
-          {/* Signature hint */}
-          <div style={{ marginTop: 8, borderTop: `1px solid #eee`, paddingTop: 6, fontFamily: MONO, fontSize: 7, color: "#666", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", justifyContent: "space-between" }}>
-            <span>Interne Freigabe</span>
-            <span style={{ color: ACCENT, fontWeight: 700 }}>◆ FIKTIV</span>
-          </div>
-        </div>
-      </div>
+    <div className="flex w-full flex-col gap-4 px-5 py-6">
+      <Sheet lines={5} raw className="demo-pv-rise">
+        <span className="block h-2.5 w-3/5 bg-foreground" />
+      </Sheet>
+      <ul className="flex flex-col gap-2">
+        {checks.map((check) => (
+          <li
+            key={check.label}
+            className={cx(
+              "demo-pv-rise flex items-center gap-2 px-2 py-1.5",
+              check.open ? "border-2 border-dashed border-mennige" : "border-b border-hairline",
+            )}
+          >
+            <Pictogram
+              name={check.open ? "gap" : "pass"}
+              className={cx("size-4", check.open ? "text-kupfer-dark" : "text-foreground")}
+            />
+            <span className={LABEL}>{check.label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
 export function OutboundWorkflowPreview() {
-  // s-tall (1x2) — public-signal review card. Carries a second signal and the
-  // gated draft because this demo was promoted from a 1x1 tile: the original
-  // 1x1 mockup left ~165px of empty paper above it in the taller band.
+  const { text } = useDemoLocale();
   return (
-    <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 5, fontFamily: MONO, fontSize: 10 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <div style={{ background: DEMO.ink, color: ACCENT_DARK, padding: "2px 6px", fontSize: 8, letterSpacing: "0.12em", fontWeight: 800 }}>SIGNALPRÜFUNG</div>
-        <div style={{ fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.1em" }}>#0414</div>
-        <div style={{ marginLeft: "auto", color: ACCENT, fontWeight: 700, fontSize: 12, letterSpacing: "-0.02em" }}>
-          91<span style={{ color: DEMO.schiefer, fontSize: 9, fontWeight: 400 }}>/100</span>
+    <div className="flex w-full flex-col gap-3 px-5 py-6">
+      {[
+        text("Fördersignal", "Funding signal"),
+        text("Stellenanzeige", "Job posting"),
+      ].map((signal) => (
+        <div key={signal} className="demo-pv-rise flex items-center gap-3 border-b border-hairline pb-2">
+          <Pictogram name="table" className="size-5 text-foreground" />
+          <span className={LABEL}>{signal}</span>
+          <span className={cx(DATA, "ml-auto text-muted-foreground")}>
+            {text("Quelle", "Source")}
+          </span>
         </div>
-      </div>
-      <div style={{ fontSize: 11, color: DEMO.ink, fontWeight: 700, letterSpacing: "-0.02em", fontFamily: SANS, lineHeight: 1.15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-        Fiktivkontakt Gamma · Fiktivwerk Gamma
-      </div>
-      <div style={{ background: DEMO.birke, border: `1px dashed ${ACCENT}`, padding: "4px 7px", fontSize: 9, color: DEMO.ink, lineHeight: 1.3 }}>
-        <span style={{ color: ACCENT, fontWeight: 800, letterSpacing: "0.1em" }}>SIGNAL</span>
-        <span style={{ color: DEMO.schiefer }}>{" · "}</span>
-        Fiktives Fördersignal · ungeprüft
-      </div>
-      <div style={{ background: DEMO.birke, border: `1px dashed ${DEMO.leinen}`, padding: "4px 7px", fontSize: 9, color: DEMO.ink, lineHeight: 1.3 }}>
-        <span style={{ color: DEMO.schiefer, fontWeight: 800, letterSpacing: "0.1em" }}>SIGNAL</span>
-        <span style={{ color: DEMO.schiefer }}>{" · "}</span>
-        Fiktive Stellenausschreibung · ungeprüft
-      </div>
-      <div style={{ border: `1px solid ${DEMO.leinen}`, padding: "5px 7px", fontFamily: SANS, fontSize: 10, lineHeight: 1.35, color: DEMO.ink }}>
-        <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.12em", fontWeight: 700, marginBottom: 3 }}>
-          ENTWURF · VOR VERSAND IM REVIEW
-        </div>
-        Guten Tag, mit Blick auf das oben belegte Signal…
-      </div>
-      <div style={{ fontSize: 8, color: GREEN_TEXT_LIGHT, letterSpacing: "0.1em", fontWeight: 700, display: "flex", justifyContent: "space-between" }}>
-        <span>✓ NOTIZ · 08:42</span>
-        <span style={{ color: DEMO.schiefer }}>→ REVIEW 09:07</span>
+      ))}
+      <Sheet lines={3} className="demo-pv-rise border-dashed">
+        <span className={LABEL}>{text("Entwurf", "Draft")}</span>
+      </Sheet>
+      <div className="demo-pv-rise flex items-center gap-2 border-2 border-mennige bg-card px-3 py-2">
+        <Pictogram name="person" className="size-5 text-kupfer-dark" />
+        <span className={LABEL}>{text("Review vor Versand", "Review before sending")}</span>
       </div>
     </div>
   );
 }
 
 export function AgentPipelinePreview() {
-  // s-wide (2x1) dark tile — horizontal 4-agent flow with arrow connectors.
-  const roles = [
-    { n: "01", role: "SCOUT", sub: "Quellen · 14", active: true, dotColor: ACCENT_DARK },
-    { n: "02", role: "ANALYST", sub: "Synthese", active: true, dotColor: ACCENT_DARK },
-    { n: "03", role: "KRITIKER", sub: "Red-Team", active: false, dotColor: "rgba(243,240,233,0.4)" },
-    { n: "04", role: "REDAKTEUR", sub: "Memo v3", active: false, dotColor: "rgba(243,240,233,0.25)" },
-  ] as const;
-  const cells: React.ReactNode[] = [];
-  roles.forEach((r, i) => {
-    cells.push(
-      <div
-        key={r.n}
-        style={{
-          background: i === 0 ? ACCENT : DK.fill,
-          color: i === 0 ? DEMO.kalk : DK.text,
-          borderTop: `2px solid ${i === 0 ? ACCENT : DK.border}`,
-          padding: "6px 7px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-          minWidth: 0,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: 8, fontWeight: 700 }}>{r.n}</span>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: r.dotColor, display: "inline-block", marginLeft: "auto" }} />
-        </div>
-        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em", lineHeight: 1 }}>{r.role}</div>
-        <div style={{ fontSize: 8, letterSpacing: "0.04em" }}>{r.sub}</div>
-      </div>,
-    );
-    if (i < roles.length - 1) {
-      cells.push(
-        <div
-          key={`arr-${i}`}
-          style={{ color: i === 0 ? ACCENT_DARK : DK.border, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}
-        >
-          →
-        </div>,
-      );
-    }
-  });
+  const { text } = useDemoLocale();
+  const stations = [
+    text("Recherche", "Research"),
+    text("Zusammenfassung", "Summary"),
+    text("Fehlersuche", "Error check"),
+    text("Redaktion", "Editing"),
+  ];
   return (
-    <div style={{ ...PV, fontFamily: MONO }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr 10px 1fr 10px 1fr", gap: 4, alignItems: "stretch" }}>
-        {cells}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 8, color: DK.muted, letterSpacing: "0.12em", fontWeight: 700 }}>
-        <span>MEMO · REV 3</span>
-        <span style={{ color: ACCENT_DARK }}>4:31 MIN</span>
-      </div>
+    <div className="flex w-full items-center gap-4 px-5 py-6 sm:gap-6 sm:px-8">
+      <ol className="relative grid min-w-0 flex-1 grid-cols-4">
+        <span className="absolute left-[12.5%] right-[12.5%] top-[0.6875rem] h-0.5 bg-foreground" />
+        {stations.map((station, index) => (
+          <li key={station} className="demo-pv-rise relative flex min-w-0 flex-col items-center gap-2">
+            <span
+              className={cx(
+                "grid size-6 place-items-center border-2 text-[0.75rem] font-bold tabular-nums",
+                index === 2
+                  ? "border-mennige bg-mennige text-paper"
+                  : "border-foreground bg-foreground text-background",
+              )}
+            >
+              {index + 1}
+            </span>
+            <span className={cx(LABEL, "max-w-full truncate text-center")}>{station}</span>
+          </li>
+        ))}
+      </ol>
+      <ArrowGlyph className="mb-6 size-5 shrink-0 text-muted-foreground" />
+      <Sheet lines={4} className="demo-pv-rise w-20 shrink-0 sm:w-24">
+        <span className={LABEL}>Memo</span>
+      </Sheet>
     </div>
   );
 }
 
 export function N8nSupplyChainPreview() {
-  // s-wide (2x1) dark tile — 3-node horizontal workflow: DHL → Claude → Actions.
+  const { text } = useDemoLocale();
   return (
-    <div style={{ ...PV, fontFamily: MONO, fontSize: 10 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 10px 1fr 10px 1fr", gap: 6, alignItems: "stretch" }}>
-        <div style={{ background: DK.fill, padding: "6px 8px", border: `1px solid ${ACCENT_DARK}`, color: ACCENT_DARK, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4, fontWeight: 700 }}>
-            <span style={{ width: 5, height: 5, borderRadius: "50%", background: ACCENT_DARK, display: "inline-block" }} />
-            <span style={{ letterSpacing: "0.04em" }}>DHL</span>
-          </div>
-          <div style={{ fontSize: 8, color: DK.muted, letterSpacing: "0.06em" }}>VERZUG · 31H</div>
-        </div>
-        <div style={{ color: ACCENT_DARK, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>→</div>
-        <div style={{ background: ACCENT, padding: "6px 8px", color: DEMO.kalk, borderTop: `2px solid ${ACCENT}`, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-          <div style={{ fontWeight: 800, letterSpacing: "0.04em" }}>◈ CLAUDE</div>
-          <div style={{ fontSize: 8, letterSpacing: "0.06em" }}>BRIEF + ACTION</div>
-        </div>
-        <div style={{ color: ACCENT_DARK, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>→</div>
-        <div style={{ background: DK.fill, padding: "6px 8px", border: `1px solid ${DK.border}`, color: DK.text, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-          <div style={{ fontWeight: 700, letterSpacing: "0.04em" }}>✉ · ◉ · SAP</div>
-          <div style={{ fontSize: 8, color: DK.muted, letterSpacing: "0.06em" }}>MAIL · SLACK · MM</div>
-        </div>
-      </div>
-      <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 8, color: DK.muted, letterSpacing: "0.12em", fontWeight: 700 }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, color: STATUS_GREEN }}>
-          <span style={{ width: 5, height: 5, background: STATUS_GREEN, borderRadius: "50%", display: "inline-block" }} />
-          SIM
-        </span>
-        <span style={{ color: ACCENT_DARK }}>REAKTION · 4 SEK</span>
-      </div>
-    </div>
+    <Flow>
+      <Node tone="raw" icon="clock" label={text("Verzug 31 h", "31 h delay")} />
+      <Arrow />
+      <Node icon="table" label={text("Bestand", "Stock")} />
+      <Arrow />
+      <Node icon="canvas" label={text("Kundenentwurf", "Customer draft")} />
+      <Arrow />
+      <Node tone="mark" icon="person" label={text("Freigabe", "Sign-off")} />
+    </Flow>
   );
 }
 
 export function RagVertragsassistentPreview() {
-  // s-tall (1x2) — chat snippet with citations. Carries a second exchange
-  // because this demo was promoted from a 1x1 tile: the original one-question
-  // mockup left ~180px of empty paper above it in the taller band.
+  const { text } = useDemoLocale();
   return (
-    <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 5 }}>
-      <div style={{ alignSelf: "flex-end", background: DEMO.ink, color: DEMO.kalk, padding: "4px 9px", fontSize: 11, maxWidth: "82%", fontFamily: SANS, lineHeight: 1.25 }}>
-        Kündigungsfrist?
+    <div className="flex w-full flex-col gap-3 px-5 py-6">
+      <div className="demo-pv-rise flex items-center gap-2 self-end border border-foreground bg-card px-3 py-2">
+        <Pictogram name="question" className="size-4" />
+        <span className={LABEL}>{text("Kündigungsfrist?", "Notice period?")}</span>
       </div>
-      <div style={{ background: DEMO.birke, borderLeft: `3px solid ${ACCENT}`, padding: "5px 9px", fontSize: 11, lineHeight: 1.35, fontFamily: SANS, color: DEMO.ink }}>
-        <div style={{ fontFamily: MONO, fontSize: 8, color: ACCENT, letterSpacing: "0.12em", fontWeight: 800, marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
-          <span>§ 5 · 2 QUELLEN</span>
-          <span>94%</span>
-        </div>
-        3 Monate zum Quartalsende…
+      <Sheet lines={3} className="demo-pv-rise">
+        <span className="flex items-baseline gap-2">
+          <span className={cx(DATA, "font-bold")}>§ 5 (2)</span>
+          <span className="block h-1.5 flex-1 border-b-2 border-mennige" />
+        </span>
+      </Sheet>
+      <div className="demo-pv-rise flex items-center gap-2 self-end border border-foreground bg-card px-3 py-2">
+        <Pictogram name="question" className="size-4" />
+        <span className={LABEL}>{text("Haftung Dritter?", "Third-party liability?")}</span>
       </div>
-      <div style={{ alignSelf: "flex-end", background: DEMO.ink, color: DEMO.kalk, padding: "4px 9px", fontSize: 11, maxWidth: "82%", fontFamily: SANS, lineHeight: 1.25 }}>
-        Und die Haftungsgrenze?
-      </div>
-      <div style={{ background: DEMO.birke, borderLeft: `3px solid ${ACCENT}`, padding: "5px 9px", fontSize: 11, lineHeight: 1.35, fontFamily: SANS, color: DEMO.ink }}>
-        <div style={{ fontFamily: MONO, fontSize: 8, color: ACCENT, letterSpacing: "0.12em", fontWeight: 800, marginBottom: 2, display: "flex", justifyContent: "space-between" }}>
-          <span>§ 9 · 1 QUELLE</span>
-          <span>88%</span>
-        </div>
-        Begrenzt auf das Jahreshonorar…
-      </div>
-      <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.1em", fontWeight: 700, display: "flex", justifyContent: "space-between" }}>
-        <span>RAHMENVEREINBARUNG V3.2</span>
-        <span>ANLAGE 2</span>
+      <div className="demo-pv-rise flex items-center gap-2 border border-dashed border-foreground px-3 py-2">
+        <Pictogram name="gap" className="size-4" />
+        <span className={LABEL}>{text("Kein Treffer, keine Antwort", "No match, no answer")}</span>
       </div>
     </div>
   );
 }
 
 export function RechnungZuSapPreview() {
-  // s-med (1x1) — invoice document → SAP IDoc JSON flow.
+  const { text } = useDemoLocale();
   return (
-    <div style={{ ...PV, display: "flex", gap: 8, alignItems: "stretch" }}>
-      {/* Invoice thumb */}
-      <div style={{ width: 46, background: DEMO.birke, border: `1px solid ${DEMO.leinen}`, padding: "5px 4px", display: "flex", flexDirection: "column", gap: 2, flexShrink: 0 }}>
-        <div style={{ fontFamily: MONO, fontSize: 6, color: ACCENT, letterSpacing: "0.1em", fontWeight: 800, marginBottom: 2 }}>RE</div>
-        {([1, 0.85, 1, 0.55, 1, 0.75] as const).map((w, i) => (
-          <div key={i} style={{ height: 1.5, width: `${w * 100}%`, background: DEMO.schiefer }} />
+    <Flow>
+      <Node tone="raw" icon="canvas" label="PDF" />
+      <Arrow />
+      <div className="demo-pv-rise mb-6 flex min-w-0 flex-col border border-foreground bg-card">
+        {[
+          [text("Nr.", "No."), "04211"],
+          [text("Brutto", "Gross"), "100.317"],
+        ].map(([label, value]) => (
+          <span key={label} className="flex items-baseline justify-between gap-3 border-b border-hairline px-2 py-1 last:border-b-0">
+            <span className={LABEL}>{label}</span>
+            <span className={DATA}>{value}</span>
+          </span>
         ))}
-        <div style={{ marginTop: "auto", fontFamily: MONO, fontSize: 7, color: DEMO.ink, fontWeight: 700, textAlign: "right" }}>100.317</div>
       </div>
-      <div style={{ color: ACCENT, fontSize: 16, fontWeight: 800, display: "flex", alignItems: "center" }}>→</div>
-      {/* IDoc JSON */}
-      <div style={{ fontFamily: MONO, fontSize: 10, flex: 1, background: DEMO.ink, color: DEMO.kalk, padding: "6px 8px", lineHeight: 1.45, minWidth: 0 }}>
-        <div style={{ fontSize: 7, color: ACCENT_DARK, letterSpacing: "0.14em", fontWeight: 800, marginBottom: 3 }}>IDOC · INVOIC02</div>
-        <div style={{ color: DK.muted, fontSize: 8 }}><span style={{ color: ACCENT_DARK }}>nr</span> RE-2026-04211</div>
-        <div style={{ color: DK.muted, fontSize: 8 }}><span style={{ color: ACCENT_DARK }}>brutto</span> 100.317 €</div>
-        <div style={{ color: STATUS_GREEN, fontSize: 8, fontWeight: 700 }}>✓ conf 0.97</div>
-      </div>
-    </div>
+      <Arrow />
+      <Node tone="mark" icon="person" label="Review" />
+    </Flow>
   );
 }
 
 export function PromptScannerPreview() {
-  // s-med (1x1) dark — redacted prompt highlighting PII + blocked status.
+  const { text } = useDemoLocale();
   return (
-    <div style={PV}>
-      <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.04em", color: DK.text, padding: "4px 6px", background: "rgba(255,255,255,0.03)", border: `1px solid ${DK.border}`, lineHeight: 1.6 }}>
-        <span style={{ background: `${DEMO.statusRedOnDark}40`, borderBottom: `1px solid ${DEMO.statusRedOnDark}`, padding: "0 3px", color: DEMO.kalk }}>Fiktivperson Alpha</span>
-        {", IBAN "}
-        <span className="demo-pv-snap" style={{ display: "inline-block", background: DEMO.kalk, color: DEMO.ink, padding: "1px 5px", fontWeight: 800 }}>▓▓▓▓▓▓</span>
-        {" fragt zu "}
-        <span style={{ background: `${DEMO.statusAmber}40`, borderBottom: `1px solid ${DEMO.statusAmber}`, padding: "0 3px", color: DEMO.kalk }}>Vertragsdetail</span>.
+    <div className="flex w-full flex-col gap-3 px-5 py-6">
+      <div className="demo-pv-rise flex flex-wrap items-center gap-1.5 border border-foreground bg-card p-3">
+        <span className="h-3 w-10 bg-hairline" />
+        <span className="demo-pv-snap h-3 w-16 bg-foreground" />
+        <span className="h-3 w-6 bg-hairline" />
+        <span className={cx(DATA, "border-b-2 border-mennige px-0.5")}>IBAN</span>
+        <span className="h-3 w-12 bg-hairline" />
+        <span className="h-3 w-8 bg-hairline" />
       </div>
-      <div style={{ marginTop: 8, display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: MONO, fontSize: 8, fontWeight: 800, letterSpacing: "0.14em" }}>
-        <span style={{ color: DEMO.statusRedOnDark }}>■ BLOCKIERT</span>
-        <span style={{ color: DK.muted }}>1 PII</span>
-        <span style={{ color: ACCENT_DARK }}>42 MS</span>
-      </div>
-    </div>
-  );
-}
-
-export function CostDriftObservabilityPreview() {
-  // s-med (1x1) — spend sparkline + live indicator. Compact observability readout.
-  return (
-    <div style={PV}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", fontFamily: MONO, marginBottom: 4 }}>
-        <span style={{ fontSize: 15, fontWeight: 700, color: ACCENT, letterSpacing: "-0.02em" }}>1.247k</span>
-        <span style={{ fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.12em", fontWeight: 700 }}>TOKENS · 24H</span>
-      </div>
-      <svg width="100%" height="38" viewBox="0 0 220 38" preserveAspectRatio="xMidYMid meet" style={{ display: "block" }}>
-        <defs>
-          <linearGradient id="gcd" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={ACCENT} stopOpacity="0.28" />
-            <stop offset="100%" stopColor={ACCENT} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <polyline
-          className="demo-pv-draw"
-          pathLength={1}
-          strokeDasharray={1}
-          points="0,30 20,25 40,28 60,17 80,22 100,11 120,18 140,6 160,14 180,3 200,11 220,8"
-          fill="none"
-          stroke={ACCENT}
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
-        <polyline
-          className="demo-pv-fade"
-          points="0,38 0,30 20,25 40,28 60,17 80,22 100,11 120,18 140,6 160,14 180,3 200,11 220,8 220,38"
-          fill="url(#gcd)"
-        />
-      </svg>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, marginTop: 4, letterSpacing: "0.12em", fontWeight: 700 }}>
-        <span>p95 · 2.4 s</span>
-        <span style={{ color: GREEN_TEXT_LIGHT, display: "inline-flex", alignItems: "center", gap: 3 }}>
-          <span style={{ width: 5, height: 5, background: STATUS_GREEN, borderRadius: "50%", display: "inline-block" }} />
-          SIM
+      <div className="flex flex-wrap gap-2">
+        <span className="demo-pv-rise inline-flex items-center gap-1.5 border border-foreground bg-card px-2 py-1">
+          <Pictogram name="shield" className="size-4" />
+          <span className={LABEL}>{text("2 markiert", "2 flagged")}</span>
+        </span>
+        <span className="demo-pv-rise inline-flex items-center gap-1.5 border border-dashed border-foreground px-2 py-1">
+          <Pictogram name="gap" className="size-4" />
+          <span className={LABEL}>{text("1 übersehen", "1 missed")}</span>
         </span>
       </div>
     </div>
   );
 }
 
-export function FineTunePlaygroundPreview() {
-  // s-med (1x1) — side-by-side BASIS vs FINE-TUNED comparison.
+export function CostDriftObservabilityPreview() {
+  const { text } = useDemoLocale();
   return (
-    <div style={{ ...PV, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, position: "relative" }}>
-      <div className="demo-pv-rise" style={{ background: DEMO.birke, border: `1px solid ${DEMO.leinen}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3 }}>
-        <div style={{ fontSize: 8, fontWeight: 800, letterSpacing: "0.12em", color: DEMO.schiefer, borderBottom: `1px solid ${DEMO.leinen}`, paddingBottom: 3 }}>BASIS</div>
-        <div style={{ fontSize: 9, lineHeight: 1.4, color: DEMO.ink, fontFamily: SANS }}>„Leider keine Auskunft…&ldquo;</div>
-        <div style={{ fontSize: 7, color: DEMO.schiefer, letterSpacing: "0.1em", marginTop: "auto", fontWeight: 700 }}>KONF · 41%</div>
-      </div>
-      <div className="demo-pv-rise" style={{ background: DEMO.kalk, border: `2px solid ${ACCENT}`, padding: "5px 7px", fontFamily: MONO, display: "flex", flexDirection: "column", gap: 3, boxShadow: `2px 2px 0 0 ${ACCENT}` }}>
-        <div style={{ fontSize: 8, fontWeight: 800, letterSpacing: "0.12em", color: ACCENT, borderBottom: `1px solid ${DEMO.leinen}`, paddingBottom: 3, display: "flex", justifyContent: "space-between" }}>
-          <span>SIMULIERT</span>
-          <span>+38%</span>
-        </div>
-        <div style={{ fontSize: 9, lineHeight: 1.4, color: DEMO.ink, fontFamily: SANS }}>„Laut § 5 Abs. 2 AGB…&ldquo;</div>
-        <div style={{ fontSize: 7, color: ACCENT, letterSpacing: "0.1em", marginTop: "auto", fontWeight: 800 }}>KONF · 96%</div>
+    <div className="flex w-full flex-col gap-2 px-5 py-5">
+      <svg viewBox="0 0 220 90" className="h-24 w-full" preserveAspectRatio="none" aria-hidden="true">
+        {[22, 45, 68].map((y) => (
+          <line key={y} x1="0" x2="220" y1={y} y2={y} className="stroke-hairline" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        ))}
+        <line x1="0" x2="220" y1="30" y2="30" className="stroke-mennige" strokeWidth="1.5" strokeDasharray="6 4" vectorEffect="non-scaling-stroke" />
+        <polyline
+          className="demo-pv-draw stroke-foreground"
+          pathLength={1}
+          strokeDasharray={1}
+          points="0,74 22,68 44,70 66,58 88,62 110,50 132,54 154,40 176,44 198,24 220,30"
+          fill="none"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className={LABEL}>{text("Kosten pro Tag", "Cost per day")}</span>
+        <span className={cx(LABEL, "text-kupfer-dark")}>{text("Budgetgrenze", "Budget line")}</span>
       </div>
     </div>
   );
 }
 
-export function RoiRechnerPreview() {
-  // s-med (1x1) — hero ROI number + transparent formula.
+export function FineTunePlaygroundPreview() {
+  const { text } = useDemoLocale();
+  const columns = [
+    { label: text("Basismodell", "Base model"), score: 41, mark: false },
+    { label: text("Domäne", "Domain"), score: 79, mark: true },
+  ];
   return (
-    <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 4 }}>
-      <div style={{ fontFamily: MONO, fontSize: 28, fontWeight: 800, letterSpacing: "-0.045em", color: ACCENT, lineHeight: 0.95, fontVariantNumeric: "tabular-nums" }}>
-        247 h
+    <div className="grid w-full grid-cols-2 gap-3 px-5 py-6">
+      {columns.map((column) => (
+        <div key={column.label} className="demo-pv-rise flex min-w-0 flex-col gap-2">
+          <Sheet lines={3} className="p-2.5">
+            <span className={LABEL}>{column.label}</span>
+          </Sheet>
+          <span className="block h-2 bg-hairline">
+            <span
+              className={cx("block h-2", column.mark ? "bg-mennige" : "bg-foreground")}
+              style={{ width: `${column.score}%` }}
+            />
+          </span>
+          <span className={cx(DATA, "text-muted-foreground")}>
+            {text("Holdout", "Holdout")} {column.score}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function RoiRechnerPreview() {
+  const { text } = useDemoLocale();
+  const factors = [
+    text("Team", "Team"),
+    text("Satz", "Rate"),
+    text("Quote", "Adoption"),
+    text("Stunden", "Hours"),
+  ];
+  return (
+    <div className="flex w-full flex-col gap-4 px-5 py-6">
+      <div className="flex flex-wrap items-center gap-1.5">
+        {factors.map((factor, index) => (
+          <span key={factor} className="inline-flex items-center gap-1.5">
+            {index > 0 ? <span className={cx(DATA, "text-muted-foreground")}>×</span> : null}
+            <span className={cx(LABEL, "demo-pv-rise border border-foreground bg-card px-2 py-1")}>
+              {factor}
+            </span>
+          </span>
+        ))}
       </div>
-      <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.14em", fontWeight: 700 }}>PRO JAHR · MODELLANNAHME</div>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, borderTop: `1px solid ${DEMO.leinen}`, paddingTop: 5, marginTop: 2, letterSpacing: "0.04em" }}>
-        <span style={{ color: DEMO.ink, fontWeight: 700 }}>42 Rollen</span>
-        <span>×</span>
-        <span style={{ color: DEMO.ink, fontWeight: 700 }}>1,8h/Wo</span>
-        <span>×</span>
-        <span style={{ color: DEMO.ink, fontWeight: 700 }}>Freigabegrad</span>
+      <div className="demo-pv-rise">
+        <div className="relative h-4 border-x-2 border-foreground">
+          <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground" />
+          <span className="absolute left-[46%] top-0 h-4 w-2 bg-mennige" />
+        </div>
+        <div className="mt-2 flex justify-between">
+          <span className={DATA}>{text("niedrig", "low")}</span>
+          <span className={LABEL}>{text("Szenario", "Scenario")}</span>
+          <span className={DATA}>{text("hoch", "high")}</span>
+        </div>
       </div>
     </div>
   );
 }
 
 export function LlmObservabilityPreview() {
-  // s-med (1x1) — eval/drift summary strip.
+  const { text } = useDemoLocale();
+  const rows = [
+    { auto: true, human: true },
+    { auto: true, human: true },
+    { auto: true, human: false },
+    { auto: false, human: false },
+  ];
   return (
-    <div style={{ ...PV, display: "flex", flexDirection: "column", gap: 6 }}>
-      <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.14em", fontWeight: 700 }}>EVAL · DRIFT · FEEDBACK</div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-        {[["HOCH", "#166534", "#dcfce7"], ["MITTEL", "#a16207", "#fef9c3"], ["HOCH", "#166534", "#dcfce7"], ["DRIFT", "#b45309", "#fef3c7"]].map(([label, fg, bg], i) => (
-          <div key={i} className="demo-pv-rise" style={{ border: `1px solid ${fg}`, background: bg, padding: "2px 5px", fontFamily: MONO, fontSize: 8, fontWeight: 700, color: fg, letterSpacing: "0.08em" }}>
-            {label}
+    <div className="flex w-full flex-col gap-1 px-5 py-5">
+      <div className="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] gap-2 pb-1">
+        <span />
+        <span className={cx(LABEL, "text-center")}>{text("Auto", "Auto")}</span>
+        <span className={cx(LABEL, "text-center")}>{text("Mensch", "Human")}</span>
+      </div>
+      {rows.map((row, index) => {
+        const disagree = row.auto !== row.human;
+        return (
+          <div
+            key={index}
+            className={cx(
+              "demo-pv-rise grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-2 px-1 py-1",
+              disagree ? "border-2 border-mennige" : "border-b border-hairline",
+            )}
+          >
+            <span className={DATA}>
+              {text("Antwort", "Answer")} {index + 1}
+            </span>
+            {[row.auto, row.human].map((passed, cellIndex) => (
+              <span key={cellIndex} className="grid place-items-center">
+                <Pictogram name={passed ? "pass" : "fail"} className="size-4" />
+              </span>
+            ))}
           </div>
-        ))}
-      </div>
-      <div style={{ fontFamily: MONO, fontSize: 8, color: DEMO.schiefer, letterSpacing: "0.04em", borderTop: `1px solid ${DEMO.leinen}`, paddingTop: 4 }}>
-        <span style={{ color: DEMO.ink, fontWeight: 700 }}>2</span> Auto/Mensch Abweichungen
-      </div>
+        );
+      })}
     </div>
   );
 }

@@ -642,7 +642,10 @@ export function extractHtmlUnits(raw) {
   const cleaned = raw.replace(/<!--[\s\S]*?-->/g, blank).replace(HTML_NON_PROSE, blank);
   const segments = [];
   for (const match of cleaned.matchAll(HTML_PROSE_BLOCK)) {
+    // Angle brackets are dropped after decoding: an encoded "&lt;tag" must
+    // never turn back into markup. The result is lint text, never HTML.
     const text = decodeHtmlEntities(match[2].replace(HTML_INLINE_TAG, "").replace(/<[^>]+>/g, " "))
+      .replace(/[<>]/g, " ")
       .replace(/\s+/g, " ")
       .trim();
     if (text === "" || HTML_DASH_PLACEHOLDER.test(text)) continue;

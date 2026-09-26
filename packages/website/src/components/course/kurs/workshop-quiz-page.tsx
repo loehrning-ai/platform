@@ -596,7 +596,7 @@ export function WorkshopQuizPage({
     return (
       <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
         <div className="max-w-lg text-center">
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-fluid-h2 font-bold text-foreground">
             {copy.completeLessonsTitle}
           </h1>
           <p className="mt-3 text-muted-foreground">
@@ -604,7 +604,7 @@ export function WorkshopQuizPage({
           </p>
           <Link
             href={localizedCoursePath}
-            className="mt-6 inline-flex min-h-11 items-center gap-2 border-2 border-foreground px-5 text-sm font-bold text-foreground"
+            className="mt-6 inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.backToCourse}
@@ -618,7 +618,7 @@ export function WorkshopQuizPage({
     return (
       <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
         <div className="max-w-lg text-center">
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-fluid-h2 font-bold text-foreground">
             {copy.loadErrorTitle}
           </h1>
           <p role="alert" className="mt-3 text-muted-foreground">
@@ -628,7 +628,7 @@ export function WorkshopQuizPage({
             <button
               type="button"
               onClick={() => setLoadAttempt((attempt) => attempt + 1)}
-              className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 text-sm font-bold text-white transition-colors hover:bg-foreground hover:text-background"
+              className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               {copy.retry}
@@ -672,7 +672,7 @@ export function WorkshopQuizPage({
       return (
         <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
           <div className="max-w-lg text-center">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-fluid-h2 font-bold text-foreground">
               {copy.saveErrorTitle}
             </h1>
             <p role="alert" className="mt-3 text-muted-foreground">
@@ -685,7 +685,7 @@ export function WorkshopQuizPage({
                   setResultSaveStatus("pending");
                   setResultSaveAttempt((attempt) => attempt + 1);
                 }}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 text-sm font-bold text-white transition-colors hover:bg-foreground hover:text-background"
+                className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 {copy.retrySave}
@@ -757,7 +757,7 @@ export function WorkshopQuizPage({
                           )
                         : `${config.coursePath}/zertifikat`
                     }
-                    className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                    className="inline-flex min-h-11 items-center gap-2 bg-brand-orange px-6 py-3 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark motion-reduce:transition-none"
                   >
                     {copy.downloadRecord(config.recordNoun.label)}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -818,7 +818,7 @@ export function WorkshopQuizPage({
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.cancel}
           </Link>
-          <span className="order-3 col-span-2 min-w-0 break-words font-mono text-xs font-bold text-brand-orange sm:order-none sm:col-span-1 sm:text-sm">
+          <span className="order-3 col-span-2 min-w-0 break-words text-label text-foreground sm:order-none sm:col-span-1">
             {copy.title}
           </span>
           <span
@@ -839,12 +839,12 @@ export function WorkshopQuizPage({
       <div className="mx-auto max-w-2xl px-6 pb-12 pt-12">
         {/* Progress */}
         <div className="mb-2 flex items-center justify-between">
-          <span className="font-mono text-xs text-muted-foreground">
+          <span className="text-caption text-muted-foreground tabular-nums">
             {copy.questionProgress(currentIndex + 1, total)}
           </span>
         </div>
         <div
-          className="mb-8 h-1 overflow-hidden bg-border"
+          className="mb-8 h-1 overflow-hidden bg-track"
           role="progressbar"
           aria-valuenow={currentIndex + 1}
           aria-valuemin={1}
@@ -852,7 +852,7 @@ export function WorkshopQuizPage({
           aria-label={copy.questionProgress(currentIndex + 1, total)}
         >
           <div
-            className="h-full bg-brand-orange transition-[width,background-color] duration-300"
+            className="h-full bg-foreground transition-[width,background-color] duration-300 motion-reduce:transition-none"
             style={{ width: `${((currentIndex + 1) / total) * 100}%` }}
           />
         </div>
@@ -885,7 +885,7 @@ export function WorkshopQuizPage({
                   const isSelected = selectedId === option.id;
                   const isCorrect = option.isCorrect;
                   let optionClass =
-                    "border-border bg-card hover:border-brand-orange/30";
+                    "border-border bg-card hover:border-foreground";
                   if (showExplanation) {
                     if (isCorrect)
                       optionClass = "border-brand-sand bg-brand-sand/5";
@@ -955,13 +955,11 @@ export function WorkshopQuizPage({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
                   className={cn(
-                    "mt-4 border-l-2 px-4 py-3",
-                    isCorrectAnswer
-                      ? "border-brand-sand bg-brand-sand/5"
-                      : "border-destructive/50 bg-destructive/5",
+                    "mt-4 border bg-card px-4 py-3",
+                    isCorrectAnswer ? "border-pass" : "border-destructive",
                   )}
                 >
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="text-label text-foreground">
                     {isCorrectAnswer ? copy.correct : copy.incorrect}
                   </p>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -981,7 +979,7 @@ export function WorkshopQuizPage({
                     ref={nextButtonRef}
                     type="button"
                     onClick={handleNext}
-                    className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                    className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
                   >
                     {currentIndex < total - 1 ? copy.next : copy.result}
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

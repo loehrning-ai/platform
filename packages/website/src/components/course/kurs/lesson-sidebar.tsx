@@ -27,7 +27,7 @@ export function LessonSidebar({
       className="flex min-w-0 flex-col gap-0.5"
       aria-label={copy.sidebar.navigation}
     >
-      <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="mb-2 text-label text-muted-foreground">
         {copy.sidebar.heading}
       </p>
       {lessons.map((lesson) => {
@@ -50,19 +50,24 @@ export function LessonSidebar({
             // work correctly. Do NOT rewrite aria-label to a value that omits the
             // visible text, or voice-input commands will break.
             className={cn(
-              "flex min-h-11 w-full min-w-0 items-start gap-2 border-l-2 px-2.5 py-2.5 text-left text-[13px] leading-[1.35] transition-colors",
+              "flex min-h-11 w-full min-w-0 items-start gap-2 px-2.5 py-2.5 text-left text-[0.875rem] leading-[1.35] transition-colors duration-[120ms] motion-reduce:transition-none",
               isActive
-                ? "border-brand-orange bg-brand-orange/10 font-semibold text-foreground"
-                : "border-transparent text-muted-foreground hover:border-brand-orange/40 hover:text-foreground",
+                ? "bg-card-hover font-semibold text-foreground"
+                : "text-muted-foreground hover:bg-card-hover hover:text-foreground",
             )}
           >
             <div className="mt-0.5 shrink-0">
               {isCompleted ? (
-                <CheckCircle2 className="h-4 w-4 text-brand-sand" />
+                <CheckCircle2 className="h-4 w-4 text-pass" aria-hidden="true" />
               ) : isActive ? (
-                <Circle className="h-4 w-4 text-brand-orange" />
+                <span
+                  aria-hidden="true"
+                  className="flex h-4 w-4 items-center justify-center bg-foreground"
+                >
+                  <span className="h-1.5 w-1.5 bg-card" />
+                </span>
               ) : (
-                <span className="inline-block w-4 text-center font-mono text-xs text-muted-foreground">
+                <span className="inline-block w-4 text-center text-xs tabular-nums text-muted-foreground">
                   {lesson.number}
                 </span>
               )}
