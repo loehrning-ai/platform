@@ -1,177 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import type { DemoEvidenceMode, DemoExternalActionMode } from "@/lib/demos";
 import type { Locale } from "@/lib/i18n/locale";
 import { DEMO_ACTION_LABELS, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
+import { ArrowGlyph, cx, Pictogram, type PictogramName } from "@/components/werk";
 import { useDemoLocale } from "./demo-locale";
 
-const EVIDENCE_CONFIG: Record<
-  DemoEvidenceMode,
-  {
-    color: string;
-    bg: string;
-    border: string;
-    icon: string;
-  }
-> = {
-  synthetic: {
-    color: "#9a3412",
-    bg: "rgba(249,115,22,0.08)",
-    border: "rgba(249,115,22,0.4)",
-    icon: "◆",
-  },
-  rule_based: {
-    color: "#1d4ed8",
-    bg: "rgba(37,99,235,0.08)",
-    border: "rgba(37,99,235,0.4)",
-    icon: "◎",
-  },
-  recorded_trace: {
-    color: "#4b5563",
-    bg: "rgba(107,114,128,0.08)",
-    border: "rgba(107,114,128,0.4)",
-    icon: "▶",
-  },
-  live_api: {
-    color: "#166534",
-    bg: "rgba(22,163,74,0.08)",
-    border: "rgba(22,163,74,0.4)",
-    icon: "●",
-  },
+/** One deck pictogram per execution mode; the word always sits beside it. */
+const EVIDENCE_ICON: Record<DemoEvidenceMode, PictogramName> = {
+  synthetic: "table",
+  rule_based: "checklist",
+  recorded_trace: "demo",
+  live_api: "export",
 };
 
-/** Renders a coloured mode badge at the TOP of a demo interactive panel. */
+const DISCLOSURE_COPY: Record<Locale, (label: string) => string> = {
+  de: (label) => `Evidenzmodus: ${label}. Details einblenden.`,
+  en: (label) => `Evidence mode: ${label}. Show details.`,
+};
+
+/**
+ * The single evidence line above a demo engine: execution mode (a disclosure
+ * button that expands the explanation), the external-action mode when there
+ * is one, and the one sentence that says what is invented. It replaces the
+ * stacked coloured badges and boxed disclaimers: evidence stays visible and
+ * quiet, in a caption line next to the thing it qualifies.
+ */
 export function EvidenceBadge({
   evidenceMode,
   externalActionMode,
+  note,
   locale = "de",
 }: {
   evidenceMode: DemoEvidenceMode;
   externalActionMode: DemoExternalActionMode;
+  /** What in this example is invented, e.g. the catalog's syntheticDataLabel. */
+  note?: string;
   locale?: Locale;
 }) {
   const [open, setOpen] = useState(false);
-  const cfg = EVIDENCE_CONFIG[evidenceMode];
+  const detailsId = useId();
   const evidenceCopy = DEMO_EVIDENCE_COPY[locale][evidenceMode];
   const actionLabel = DEMO_ACTION_LABELS[locale][externalActionMode];
 
   return (
-    <div
-      style={{
-        marginBottom: 12,
-        fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-      }}
-    >
-      {/* Badge row */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 6,
-          alignItems: "center",
-        }}
-      >
+    <div data-evidence-line>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted-foreground">
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-          aria-label={
-            locale === "de"
-              ? `Evidenzmodus: ${evidenceCopy.label}. Details einblenden.`
-              : `Evidence mode: ${evidenceCopy.label}. Show details.`
-          }
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            minHeight: 44,
-            padding: "8px 10px",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: cfg.color,
-            background: cfg.bg,
-            border: `1px solid ${cfg.border}`,
-            cursor: "pointer",
-            userSelect: "none",
-          }}
+          aria-controls={detailsId}
+          aria-label={DISCLOSURE_COPY[locale](evidenceCopy.label)}
+          data-evidence-mode={evidenceMode}
+          className="inline-flex min-h-11 items-center gap-2 text-label text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
         >
-          <span aria-hidden="true">{cfg.icon}</span>
+          <Pictogram name={EVIDENCE_ICON[evidenceMode]} className="size-4" />
           {evidenceCopy.label}
-          <span aria-hidden="true" style={{ opacity: 0.7, fontSize: 12 }}>
-            {open ? "▲" : "▼"}
-          </span>
+          <ArrowGlyph
+            direction="down"
+            className={cx("size-3.5", open ? "rotate-180" : undefined)}
+          />
         </button>
-
-        {actionLabel && (
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              minHeight: 44,
-              padding: "8px 10px",
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "#4b5563",
-              background: "rgba(107,114,128,0.08)",
-              border: "1px solid rgba(107,114,128,0.3)",
-            }}
-          >
-            ◇ {actionLabel}
+        {actionLabel ? (
+          <span data-evidence-actions>
+            <span aria-hidden="true">· </span>
+            {actionLabel}
           </span>
-        )}
-
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            minHeight: 44,
-            padding: "8px 10px",
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "#92400e",
-            background: "rgba(146,64,14,0.08)",
-            border: "1px solid rgba(146,64,14,0.3)",
-          }}
-        >
-          {locale === "de" ? "SIMULIERT" : "SIMULATED"}
-        </span>
+        ) : null}
+        {note ? (
+          <span className="min-w-0 break-words">
+            <span aria-hidden="true">· </span>
+            {note}
+          </span>
+        ) : null}
       </div>
-
-      {/* Tooltip accordion */}
-      {open && (
-        <div
-          role="tooltip"
-          style={{
-            marginTop: 6,
-            padding: "10px 12px",
-            fontSize: 12,
-            lineHeight: 1.6,
-            color: "#f3f0e9",
-            background: "#0b0908",
-            border: `1px solid ${cfg.border}`,
-            maxWidth: 480,
-          }}
+      {open ? (
+        <p
+          id={detailsId}
+          data-evidence-details
+          className="mt-1 max-w-[64ch] text-caption text-muted-foreground"
         >
           {evidenceCopy.tooltip}
-        </div>
-      )}
+        </p>
+      ) : null}
     </div>
   );
 }
 
 /**
- * Inline simulation disclosure block — renders a one-sentence explanation
- * before any metric or interactive element, following the Ciechanowski
- * "before the claim, co-located with it" disclosure principle.
+ * Inline simulation note: one caption line before a metric or an interactive
+ * element, stated next to the claim it qualifies. No box and no left bar; the
+ * muted token follows the engine's scope, so it stays AA on paper and inside
+ * a dark engine frame.
  */
 export function SimulationDisclosure({
   children,
@@ -181,17 +103,7 @@ export function SimulationDisclosure({
   const { locale } = useDemoLocale();
   return (
     <div
-      style={{
-        marginBottom: 14,
-        padding: "8px 12px",
-        fontSize: 12,
-        lineHeight: 1.5,
-        color: "#9ca3af",
-        background: "rgba(107,114,128,0.06)",
-        borderLeft: "3px solid rgba(107,114,128,0.4)",
-        fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-        letterSpacing: "0.02em",
-      }}
+      className="mb-3 text-caption text-muted-foreground"
       role="note"
       aria-label={
         locale === "de" ? "Hinweis zur Simulation" : "Simulation notice"

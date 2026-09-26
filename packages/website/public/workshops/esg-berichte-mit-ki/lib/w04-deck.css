@@ -124,6 +124,7 @@
 /* ------------------------------------------------------------ paper document (bill, statement, scan) */
 .doc {
   display: grid;
+  align-content: start;
   gap: 6px;
   margin: 0;
 }

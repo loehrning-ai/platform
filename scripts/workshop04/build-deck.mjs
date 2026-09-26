@@ -178,7 +178,7 @@ function genGrid() {
   const rows = data.coverage.rows;
   const label = { "WN Strom": ["Werk Nord", "electricity"], "WS Strom": ["Werk Süd", "electricity"], "LO Strom": ["Lager Ost", "electricity"], "WN Gas": ["Werk Nord", "gas"], "WS Gas": ["Werk Süd", "gas"], "FL Diesel": ["Fleet", "diesel"] };
   const months = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
-  const lx = 0, cx = 330, cw = 76, top = 44, rh = 58, ch = 44;
+  const lx = 0, cx = 330, cw = 76, top = 44, rh = 50, ch = 38;
   const W = cx + 12 * cw + 4;
   const H = top + rows.length * rh + 4;
   const frame = [], fills = [], labels = [];
@@ -186,7 +186,7 @@ function genGrid() {
   rows.forEach((r, ri) => {
     const yy = top + ri * rh;
     const [a, b] = label[r];
-    labels.push(`<text class="mg-row" x="${lx}" y="${yy + 36}"><tspan class="mg-row__site">${esc(a)}</tspan><tspan class="mg-row__carrier" dx="10">${esc(b)}</tspan></text>`);
+    labels.push(`<text class="mg-row" x="${lx}" y="${yy + 34}"><tspan class="mg-row__site">${esc(a)}</tspan><tspan class="mg-row__carrier" dx="10">${esc(b)}</tspan></text>`);
     for (let i = 0; i < 12; i += 1) frame.push(`<rect class="mg-cell" x="${cx + i * cw + 4}" y="${yy + 7}" width="${cw - 8}" height="${ch}" />`);
     const cells = data.coverage.asDelivered[r];
     let i = 0;
@@ -203,7 +203,7 @@ function genGrid() {
       } else {
         const tag = v === "J" ? "annual statement" : v === "Q" ? `Q${Math.floor(i / 3) + 1}` : v === "S" ? "one bill" : "";
         fills.push(`<rect class="mg-doc-bg" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-doc${span > 1 ? " mg-doc--span" : ""}" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" />`);
-        if (tag) fills.push(`<text class="mg-tag" x="${x + w / 2}" y="${yy + 36}" text-anchor="middle">${tag}</text>`);
+        if (tag) fills.push(`<text class="mg-tag" x="${x + w / 2}" y="${yy + 33}" text-anchor="middle">${tag}</text>`);
       }
       i += span;
     }
@@ -211,7 +211,7 @@ function genGrid() {
   const aug = cx + 7 * cw + cw / 2;
   const octX = cx + 9 * cw + 4;
   const dip = `<path class="mg-dip" d="M${aug - 8} ${top + 7 + ch + 2}l8 9 8-9" />`;
-  const meter = `<g class="mg-meter" data-step="5" data-focus><rect x="${octX}" y="${top + 7}" width="${cw - 8}" height="${ch}" data-motion="fade" /><text x="${octX + (cw - 8) / 2}" y="${top + 36}" text-anchor="middle" data-motion="fade">meter</text></g>`;
+  const meter = `<g class="mg-meter" data-step="5" data-focus><rect x="${octX}" y="${top + 7}" width="${cw - 8}" height="${ch}" data-motion="fade" /><text x="${octX + (cw - 8) / 2}" y="${top + 33}" text-anchor="middle" data-motion="fade">meter</text></g>`;
   return `<svg class="mg" id="month-grid-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Site by month grid for 2025: which documents cover which months.">`
     + `<g class="mg-frame" data-step="1">${labels.join("")}${frame.join("")}</g>`
     + `<g class="mg-fill" data-step="3">${fills.join("")}${dip}</g>${meter}</svg>`;

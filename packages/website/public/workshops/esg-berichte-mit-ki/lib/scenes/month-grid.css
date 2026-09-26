@@ -106,7 +106,7 @@
 /* The Talbrück bill: in the folder, but on no row of the grid. */
 #month-grid > .mg-extra {
   position: absolute;
-  top: 636px;
+  top: 588px;
   left: var(--margin-x);
   display: flex;
   width: 1246px;
@@ -227,10 +227,10 @@
 /* Press 4: the two March bills. */
 #month-grid > .mg-march {
   position: absolute;
-  top: 708px;
+  top: 652px;
   left: var(--margin-x);
   display: grid;
-  width: 968px;
+  width: 1000px;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
@@ -248,10 +248,10 @@
 /* Press 5: the meter readings and the subtraction. */
 #month-grid > .mg-meter-rows {
   position: absolute;
-  top: 708px;
+  top: 652px;
   right: var(--margin-x);
   display: grid;
-  width: 720px;
+  width: 680px;
   gap: 8px;
 }
 
@@ -277,7 +277,8 @@
 
 #month-grid > .mg-net {
   position: absolute;
-  top: 892px;
+  top: 876px;
   right: var(--margin-x);
-  width: 720px;
+  width: 680px;
+  font-size: 30px;
 }
