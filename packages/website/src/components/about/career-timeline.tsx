@@ -1,68 +1,71 @@
+import { PROFILE_CONTAINER } from "@/components/about/profile-container";
+import { SectionHead } from "@/components/werk/section-head";
 import type { Locale } from "@/lib/i18n/locale";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 
+/**
+ * Career ledger: one hairline row per station under a Kopflinie. The current
+ * station is marked by an ink square before its period and a sentence-case
+ * "Aktuell" chip in Mennige, the section's one accent; no tinted row.
+ */
 export function CareerTimeline({ locale }: { readonly locale: Locale }) {
   const copy = PROFILE_COPY[locale].timeline;
 
   return (
     <section
       id="laufbahn"
-      className="border-t border-border bg-paper py-10"
+      className="py-10 lg:py-14"
       aria-labelledby="career-heading"
       data-proof-ledger
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(13rem,0.3fr)_minmax(0,1fr)] lg:gap-8 lg:px-8">
-        <header className="min-w-0">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
-          <h2
-            id="career-heading"
-            className="mt-3 max-w-xl text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground"
-          >
-            {copy.title}
-          </h2>
-          <p className="mt-3 max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground">
-            {copy.intro}
-          </p>
-        </header>
+      <div className={PROFILE_CONTAINER}>
+        <SectionHead
+          id="career-heading"
+          title={copy.title}
+          caption={copy.eyebrow}
+          description={copy.intro}
+          size="compact"
+        />
 
-        <ol aria-label={copy.ariaLabel} className="relative min-w-0">
+        <ol
+          aria-label={copy.ariaLabel}
+          className="relative mt-6 min-w-0 border-t border-hairline"
+        >
           {copy.milestones.map((milestone, index) => {
             const current = index === copy.milestones.length - 1;
             return (
               <li
                 key={`${milestone.period}-${milestone.company}`}
-                className={`group relative grid min-w-0 gap-2 border-t border-border py-5 last:border-b sm:grid-cols-[7rem_minmax(8rem,0.62fr)_minmax(0,1fr)] sm:items-start sm:gap-5 ${
-                  current ? "bg-brand-acid/35 pr-4" : ""
-                }`}
+                className="grid min-w-0 gap-1 border-b border-hairline py-4 sm:grid-cols-[8rem_minmax(10rem,0.7fr)_minmax(0,1fr)] sm:items-baseline sm:gap-6"
               >
-                <p className="break-words font-mono text-xs font-bold tabular-nums text-muted-foreground [overflow-wrap:anywhere]">
+                <p className="flex items-center gap-2 break-words text-label text-muted-foreground tabular-nums [overflow-wrap:anywhere]">
+                  {current ? (
+                    <span
+                      aria-hidden="true"
+                      className="size-2 shrink-0 bg-foreground"
+                    />
+                  ) : null}
                   {milestone.period}
                 </p>
                 <div className="min-w-0">
                   <h3
                     translate="no"
-                    className={`break-words text-lg font-bold tracking-[-0.025em] [overflow-wrap:anywhere] ${
-                      current ? "text-brand-orange" : "text-foreground"
-                    }`}
+                    className="break-words text-lg font-bold leading-snug text-foreground [overflow-wrap:anywhere]"
                   >
                     {milestone.company}
                   </h3>
-                  <p className="mt-1 break-words text-sm font-semibold text-foreground [overflow-wrap:anywhere]">
+                  <p className="break-words text-[0.9375rem] font-semibold text-foreground [overflow-wrap:anywhere]">
                     {milestone.role}
                   </p>
                   {current ? (
-                    <p className="mt-2 inline-flex border border-brand-orange px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                    <p className="mt-2 inline-flex h-7 items-center border border-brand-orange px-2.5 text-label text-brand-orange">
                       {copy.currentLabel}
                     </p>
                   ) : null}
                 </div>
-                <div className="flex min-w-0 max-w-full items-start gap-4">
-                  <p className="min-w-0 flex-1 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-                    {milestone.description}
-                  </p>
-                </div>
+                <p className="min-w-0 break-words text-[0.9375rem] leading-relaxed text-muted-foreground [overflow-wrap:anywhere] max-sm:mt-1">
+                  {milestone.description}
+                </p>
               </li>
             );
           })}

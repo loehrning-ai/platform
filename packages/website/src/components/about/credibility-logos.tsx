@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { PROFILE_CONTAINER } from "@/components/about/profile-container";
+import { SectionHead } from "@/components/werk/section-head";
 import type { Locale } from "@/lib/i18n/locale";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 
@@ -38,39 +40,33 @@ const STATIONS = [
   },
 ] as const;
 
-const STATION_STYLES = [
-  "bg-brand-pink/60 sm:-rotate-1",
-  "bg-brand-acid/65 sm:rotate-1",
-  "bg-brand-sky/55 sm:-rotate-1",
-] as const;
-
+/**
+ * Former employers as a flat evidence row: monochrome marks and names in
+ * three hairline-separated cells, under a Kopflinie. The notice beside the
+ * marks states that this is biography, not endorsement.
+ */
 export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
   const copy = PROFILE_COPY[locale].stations;
 
   return (
     <section
-      className="border-t border-border bg-background py-9"
+      className="py-10 lg:py-14"
       aria-label={copy.ariaLabel}
       data-employer-proof
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(14rem,0.42fr)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:px-8">
-        <div className="min-w-0">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
-          <h2 className="mt-2 text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground">
-            {copy.title}
-          </h2>
-          <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-            {copy.notice}
-          </p>
-        </div>
+      <div className={PROFILE_CONTAINER}>
+        <SectionHead
+          title={copy.title}
+          caption={copy.eyebrow}
+          description={copy.notice}
+          size="compact"
+        />
 
-        <ul className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-4">
-          {STATIONS.map((s, index) => (
+        <ul className="mt-6 grid min-w-0 grid-cols-3 border-y border-hairline">
+          {STATIONS.map((s) => (
             <li
               key={s.name}
-              className={`group flex min-h-24 min-w-[9rem] flex-1 items-center justify-center gap-4 px-4 py-4 shadow-card ring-1 ring-foreground/20 transition-transform hover:rotate-0 motion-reduce:transform-none motion-reduce:transition-none ${STATION_STYLES[index]}`}
+              className="flex min-h-20 min-w-0 flex-col items-start justify-center gap-2 border-l border-hairline px-3 py-4 first:border-l-0 first:pl-0 sm:flex-row sm:items-center sm:gap-4 sm:px-6"
             >
               {"mark" in s ? (
                 <svg
@@ -80,7 +76,7 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
                   focusable="false"
                   width={s.width}
                   height={s.height}
-                  className={`${s.size} max-w-full text-foreground opacity-90`}
+                  className={`${s.size} max-w-full text-foreground`}
                 >
                   <path d={s.mark.path} />
                 </svg>
@@ -91,12 +87,12 @@ export function CredibilityLogos({ locale }: { readonly locale: Locale }) {
                   aria-hidden="true"
                   width={s.width}
                   height={s.height}
-                  className={`${s.size} max-w-full object-contain opacity-90 grayscale`}
+                  className={`${s.size} max-w-full object-contain grayscale`}
                 />
               )}
               <span
                 translate="no"
-                className="break-words text-center font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground [overflow-wrap:anywhere]"
+                className="min-w-0 break-words text-label text-foreground [overflow-wrap:anywhere]"
               >
                 {s.name}
               </span>

@@ -1,13 +1,8 @@
 import Image from "next/image";
-import { BookOpen, GraduationCap, Globe2 } from "lucide-react";
+import { PROFILE_CONTAINER } from "@/components/about/profile-container";
+import { SectionHead } from "@/components/werk/section-head";
 import type { Locale } from "@/lib/i18n/locale";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
-
-const ICONS = {
-  degree: GraduationCap,
-  international: Globe2,
-  research: BookOpen,
-} as const;
 
 // Institution marks, keyed by credential id. Only degree carries one today.
 const INSTITUTION_MARKS: Partial<
@@ -16,98 +11,75 @@ const INSTITUTION_MARKS: Partial<
   degree: { src: "/ueber-mich/logos/fau.svg", width: 196, height: 28 },
 };
 
-const CREDENTIAL_STYLES = {
-  degree: "bg-brand-peach/45 md:col-span-7",
-  international: "bg-brand-sky/45 md:col-span-5 md:mt-8",
-  research: "bg-paper md:col-span-10 md:col-start-2",
-} as const;
-
-const ICON_STYLES = {
-  degree: "bg-brand-acid/70",
-  international: "bg-brand-pink/65",
-  research: "bg-brand-teal/45",
-} as const;
-
+/**
+ * Academic background as three flat columns under a Kopflinie, separated by
+ * hairlines from lg and stacked as hairline rows below. Subtitles are
+ * Schiefer on paper (8.08:1), never Mennige on a tint; evidence links are a
+ * plain list with ink square bullets.
+ */
 export function Credentials({ locale }: { readonly locale: Locale }) {
   const copy = PROFILE_COPY[locale].credentials;
 
   return (
     <section
       id="ausbildung"
-      className="border-t border-border bg-background py-10"
+      className="py-10 lg:py-14"
       aria-labelledby="credentials-heading"
       data-credential-spread
     >
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <header className="grid gap-4 border-b border-border pb-6 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-8">
-          <div className="min-w-0">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
-              {copy.eyebrow}
-            </p>
-            <h2
-              id="credentials-heading"
-              className="mt-3 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground"
-            >
-              {copy.title}
-            </h2>
-          </div>
-          <p className="min-w-0 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-            {copy.intro}
-          </p>
-        </header>
+      <div className={PROFILE_CONTAINER}>
+        <SectionHead
+          id="credentials-heading"
+          title={copy.title}
+          caption={copy.eyebrow}
+          description={copy.intro}
+          size="compact"
+        />
 
-        <div className="mt-7 grid min-w-0 gap-4 md:grid-cols-12 md:gap-5">
-          {copy.cards.map((credential, index) => {
-            const Icon = ICONS[credential.id];
+        <div className="mt-6 grid min-w-0 border-t border-hairline lg:grid-cols-3">
+          {copy.cards.map((credential) => {
+            const mark = INSTITUTION_MARKS[credential.id];
             return (
               <article
                 key={credential.id}
-                className={`group relative min-w-0 border-t-[3px] border-foreground p-5 shadow-card ring-1 ring-foreground/15 sm:p-6 ${CREDENTIAL_STYLES[credential.id]}`}
+                className="min-w-0 border-b border-hairline py-5 lg:border-b-0 lg:border-l lg:px-6 lg:py-6 lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <span className={`inline-flex h-11 w-11 items-center justify-center text-foreground ring-1 ring-foreground/25 ${ICON_STYLES[credential.id]}`}>
-                    <Icon size={20} aria-hidden="true" />
-                  </span>
-                  <span className="font-mono text-xs font-bold tabular-nums text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="mt-5 break-words text-pretty text-xl font-bold tracking-[-0.025em] text-foreground [overflow-wrap:anywhere]">
+                <h3 className="break-words text-fluid-h3 font-bold text-foreground text-pretty [overflow-wrap:anywhere] max-sm:text-lg">
                   {credential.title}
                 </h3>
                 {credential.subtitle ? (
-                  <p className="mt-2 break-words text-sm font-semibold text-brand-orange [overflow-wrap:anywhere]">
+                  <p className="mt-1 break-words text-[0.9375rem] font-semibold text-muted-foreground [overflow-wrap:anywhere]">
                     {credential.subtitle}
                   </p>
                 ) : null}
-                {INSTITUTION_MARKS[credential.id] ? (
+                {mark ? (
                   <Image
-                    src={INSTITUTION_MARKS[credential.id]!.src}
+                    src={mark.src}
                     alt=""
                     aria-hidden="true"
-                    width={INSTITUTION_MARKS[credential.id]!.width}
-                    height={INSTITUTION_MARKS[credential.id]!.height}
+                    width={mark.width}
+                    height={mark.height}
                     loading="eager"
-                    className="mt-3 h-7 w-auto max-w-full object-contain object-left opacity-90"
+                    className="mt-3 h-7 w-auto max-w-full object-contain object-left"
                   />
                 ) : null}
-                <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+                <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
                   {credential.detail}
                 </p>
                 {credential.evidence ? (
-                  <ul className="mt-4 grid gap-3 border-t border-border pt-4 md:grid-cols-2">
+                  <ul className="mt-3 grid">
                     {credential.evidence.map((item) => (
                       <li
                         key={item.href}
-                        className="grid min-w-0 grid-cols-[0.5rem_minmax(0,1fr)] gap-3 bg-brand-acid/25 px-3 py-2 text-xs leading-relaxed text-muted-foreground ring-1 ring-foreground/15"
+                        className="grid min-w-0 grid-cols-[0.375rem_minmax(0,1fr)] items-start gap-3"
                       >
                         <span
-                          className="mt-[0.42rem] h-1.5 w-1.5 bg-brand-orange"
+                          className="mt-[1.1rem] size-1.5 bg-foreground"
                           aria-hidden="true"
                         />
                         <a
                           href={item.href}
-                          className="inline-flex min-h-11 min-w-0 items-center break-words underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-current [overflow-wrap:anywhere]"
+                          className="inline-flex min-h-11 min-w-0 items-center break-words py-1 text-sm leading-snug text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground [overflow-wrap:anywhere]"
                         >
                           {item.label}
                         </a>

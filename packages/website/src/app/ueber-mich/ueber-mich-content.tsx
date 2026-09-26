@@ -1,23 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons/brand";
 import { CareerTimeline } from "@/components/about/career-timeline";
 import { CredibilityLogos } from "@/components/about/credibility-logos";
 import { Credentials } from "@/components/about/credentials";
+import { PROFILE_CONTAINER } from "@/components/about/profile-container";
+import { ArrowGlyph } from "@/components/werk/arrow-glyph";
+import { Kicker } from "@/components/werk/kicker";
+import { SectionHead } from "@/components/werk/section-head";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { LOEHRNING_LINKEDIN_URL, TIM_ENTITY } from "@/lib/seo/entity";
 
-const FACT_WIDTHS = ["sm:flex-[0.8]", "sm:flex-[1.4]", "sm:flex-1"] as const;
 
-const CONTACT_STYLES = [
-  "bg-brand-acid/45",
-  "bg-brand-peach/55",
-  "bg-brand-sky/50",
-  "bg-brand-pink/50",
-] as const;
-
+/**
+ * /ueber-mich in the Werkzeichnung grammar: one paper page, the portrait as
+ * the only framed object, and every following section headed by a 2px ink
+ * Kopflinie. Rows are separated by Leinen hairlines; nothing is tinted,
+ * rotated, shadowed or boxed inside a box.
+ */
 export function UeberMichContent({ locale }: { readonly locale: Locale }) {
   const copy = PROFILE_COPY[locale];
   const newTabNotice =
@@ -60,83 +62,57 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
 
   return (
     <article className="w-full overflow-x-clip bg-background">
-      <header className="relative isolate overflow-hidden border-b border-border bg-paper py-10 sm:py-14">
-        <span
-          className="pointer-events-none absolute left-0 top-24 h-24 w-80 bg-brand-acid/65"
-          aria-hidden="true"
-        />
-        <span
-          className="pointer-events-none absolute right-0 bottom-10 h-32 w-72 bg-brand-sky/55"
-          aria-hidden="true"
-        />
+      <header className="pt-10 pb-10 sm:pt-14 lg:pb-14">
         <div
-          className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:items-start lg:gap-10 lg:px-8"
+          className={`${PROFILE_CONTAINER} grid gap-8 lg:grid-cols-12 lg:gap-x-12`}
           data-profile-editorial-spread
         >
-          <div className="relative min-w-0 py-3 lg:col-span-7 lg:py-8">
-            <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-              <span className="h-3 w-3 bg-brand-cobalt" aria-hidden="true" />
-              {copy.hero.eyebrow}
-            </p>
-            <h1 className="relative mt-5 max-w-[15ch] break-words text-pretty text-[clamp(2.65rem,6vw,5.75rem)] font-bold leading-[0.9] tracking-[-0.06em] text-foreground [overflow-wrap:anywhere]">
+          <div className="min-w-0 lg:col-span-7">
+            <Kicker>{copy.hero.eyebrow}</Kicker>
+            <h1 className="mt-4 max-w-[18ch] break-words text-fluid-h1 font-bold text-foreground text-pretty [overflow-wrap:anywhere]">
               {copy.hero.title}
             </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-base font-semibold leading-relaxed text-foreground sm:text-lg">
+            <p className="mt-6 max-w-[56ch] text-lead text-foreground text-pretty max-sm:text-[1.0625rem] max-sm:leading-relaxed">
               {copy.hero.intro}
             </p>
-            <p className="mt-6 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mt-4 max-w-[64ch] text-body text-muted-foreground text-pretty max-sm:text-[0.9375rem]">
               {copy.hero.detail}
             </p>
+
+            <dl className="mt-8 grid border-y border-hairline sm:grid-cols-[0.8fr_1.4fr_1fr]">
+              {facts.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="min-w-0 border-b border-hairline py-3 last:border-b-0 sm:border-b-0 sm:border-l sm:px-4 sm:py-4 sm:first:border-l-0 sm:first:pl-0 sm:last:pr-0"
+                >
+                  <dt className="text-label text-muted-foreground">{label}</dt>
+                  <dd className="mt-1 min-w-0 break-words text-[0.9375rem] font-semibold leading-snug text-foreground [overflow-wrap:anywhere]">
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          <figure className="group relative min-w-0 pb-3 pr-3 lg:col-span-5 lg:row-span-2 lg:rotate-1">
-            <span
-              className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-pink/75"
-              aria-hidden="true"
-            />
-            <div className="relative h-full min-h-[22rem] overflow-hidden bg-paper p-2 shadow-card ring-1 ring-foreground/40">
+          <figure className="min-w-0 max-lg:max-w-[26rem] lg:col-span-5 lg:pt-2">
+            <div className="relative aspect-square overflow-hidden border border-foreground bg-card max-lg:aspect-[4/3]">
               <Image
                 src={TIM_ENTITY.portraitPath}
                 alt={copy.metadata.portraitAlt}
                 width={800}
                 height={800}
                 priority
-                sizes="(min-width: 1024px) 28rem, (min-width: 640px) 42vw, calc(100vw - 2.5rem)"
-                className="h-full min-h-[22rem] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
+                sizes="(min-width: 1024px) 28rem, (min-width: 640px) 26rem, calc(100vw - 2rem)"
+                className="absolute inset-0 h-full w-full object-cover object-[50%_30%]"
               />
-              <figcaption className="absolute inset-x-4 bottom-4 flex min-w-0 items-end justify-between gap-4 bg-paper/95 p-3 text-foreground shadow-card">
-                <span
-                  translate="no"
-                  className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.1em] [overflow-wrap:anywhere]"
-                >
-                  {copy.hero.portraitCaption}
-                </span>
-                <span
-                  className="h-3 w-3 shrink-0 bg-brand-acid"
-                  aria-hidden="true"
-                />
-              </figcaption>
             </div>
+            <figcaption
+              translate="no"
+              className="mt-2 text-caption text-muted-foreground"
+            >
+              {copy.hero.portraitCaption}
+            </figcaption>
           </figure>
-
-          <dl className="flex min-w-0 flex-col gap-4 border-y border-foreground py-5 sm:flex-row sm:gap-0 lg:col-span-7">
-            {facts.map(([label, value], index) => (
-              <div
-                key={label}
-                className={`min-w-0 sm:px-4 sm:first:pl-0 sm:last:pr-0 ${FACT_WIDTHS[index]} ${index > 0 ? "sm:border-l sm:border-border" : ""}`}
-              >
-                <dt className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  <span className="mr-2 tabular-nums text-brand-orange">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span>{label}</span>
-                </dt>
-                <dd className="mt-2 min-w-0 break-words text-sm font-semibold leading-relaxed text-foreground [overflow-wrap:anywhere]">
-                  {value}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </header>
 
@@ -146,78 +122,59 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
 
       <section
         id="kontakt"
-        className="relative isolate overflow-hidden border-t border-border bg-brand-acid/30 py-10"
+        className="pt-10 pb-16 lg:pt-14 lg:pb-24"
         aria-labelledby="contact-heading"
       >
-        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.58fr)_minmax(20rem,0.72fr)] lg:items-stretch lg:gap-8 lg:px-8">
-          <div className="relative flex min-w-0 flex-col justify-between border-l-[3px] border-foreground pl-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-              {copy.contact.eyebrow}
-            </p>
-            <h2
-              id="contact-heading"
-              className="mt-4 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl"
-            >
-              {copy.contact.title}
-            </h2>
-            <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground">
-              {copy.contact.intro}
-            </p>
-            <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
-              {copy.contact.feedbackPrefix}{" "}
-              <Link
-                href={localizeHref("/feedback", locale)}
-                className="font-semibold text-foreground underline decoration-brand-orange/60 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-              >
-                {copy.contact.feedbackLabel}
-              </Link>
-              .
-            </p>
-          </div>
+        <div className={PROFILE_CONTAINER}>
+          <SectionHead
+            id="contact-heading"
+            title={copy.contact.title}
+            caption={copy.contact.eyebrow}
+            description={copy.contact.intro}
+            size="compact"
+          />
 
           <nav
             aria-label={copy.contact.linksLabel}
-            className="grid min-w-0 gap-3"
+            className="mt-6 grid min-w-0 border-t border-hairline sm:grid-cols-2 sm:gap-x-8"
           >
-            {contactLinks.map(
-              ({ href, label, detail, Icon, external }, index) => (
-                <a
-                  key={href}
-                  href={href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noopener noreferrer" : undefined}
-                  aria-label={external ? `${label}${newTabNotice}` : label}
-                  className={`group grid min-h-24 min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 text-foreground shadow-card ring-1 ring-foreground/20 transition-[background-color,transform] hover:-rotate-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transform-none motion-reduce:transition-none ${CONTACT_STYLES[index]}`}
-                  data-link-preview
-                >
-                  <span className="flex h-11 w-11 items-center justify-center bg-paper text-foreground ring-1 ring-foreground/30">
-                    <Icon size={18} aria-hidden="true" />
+            {contactLinks.map(({ href, label, detail, Icon, external }) => (
+              <a
+                key={href}
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+                aria-label={external ? `${label}${newTabNotice}` : label}
+                className="group grid min-h-16 min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-3 border-b border-hairline py-3 text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
+                data-link-preview
+              >
+                <Icon size={20} strokeWidth={1.5} aria-hidden="true" />
+                <span className="min-w-0">
+                  <span className="block text-caption text-muted-foreground">
+                    {detail}
                   </span>
-                  <span className="min-w-0">
-                    <span className="block font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                      {String(index + 1).padStart(2, "0")} · {detail}
-                    </span>
-                    <span className="mt-1 block min-w-0 break-words text-sm font-semibold [overflow-wrap:anywhere]">
-                      {label}
-                    </span>
+                  <span className="block min-w-0 break-words text-[0.9375rem] font-semibold leading-snug underline decoration-transparent underline-offset-4 group-hover:decoration-current [overflow-wrap:anywhere]">
+                    {label}
                   </span>
-                  {external ? (
-                    <ArrowUpRight
-                      size={18}
-                      className="shrink-0 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <ArrowRight
-                      size={18}
-                      className="shrink-0 transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
-                      aria-hidden="true"
-                    />
-                  )}
-                </a>
-              ),
-            )}
+                </span>
+                <ArrowGlyph
+                  direction={external ? "external" : "right"}
+                  className="mr-1"
+                />
+              </a>
+            ))}
           </nav>
+
+          <p className="mt-6 max-w-[64ch] text-[0.9375rem] leading-relaxed text-muted-foreground">
+            {copy.contact.feedbackPrefix}{" "}
+            <Link
+              href={localizeHref("/feedback", locale)}
+              className="font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              {copy.contact.feedbackLabel}
+            </Link>
+            .
+          </p>
         </div>
       </section>
     </article>
