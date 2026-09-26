@@ -30,7 +30,21 @@ describe("<LanguageSwitch />", () => {
       expect(link.className).toContain("min-w-11");
       expect(link.className).toContain("text-label");
       expect(link.className).not.toMatch(/\brounded-|\bbg-brand-|uppercase/);
+      // A visible Mennige focus ring. `ring-inset` is banned here: with the
+      // --color-inset theme token Tailwind v4 also compiles it to a Beton
+      // ring colour that overrides ring-brand-orange (1.12:1 on paper).
+      expect(link.className).toContain("focus-visible:inset-ring-2");
+      expect(link.className).toContain(
+        "focus-visible:inset-ring-brand-orange",
+      );
+      expect(link.className).not.toMatch(/\bring-inset\b/);
     }
+    // The active underline sits on the bottom edge of the 44px target, the
+    // same baseline as the nav's current-page rule.
+    const underline = within(group)
+      .getByRole("link", { name: /Deutsch/ })
+      .querySelector("span[aria-hidden='true']");
+    expect(underline).toHaveClass("bottom-0", "bg-foreground");
   });
 
   it("marks German active and links English to the equivalent prefixed path", () => {

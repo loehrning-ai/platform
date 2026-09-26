@@ -111,9 +111,11 @@ export function EvidenceBadge({
         id={detailsId}
         hidden={!open}
         data-evidence-details={open ? "" : undefined}
-        className="basis-full max-w-[64ch] pb-3 text-caption text-muted-foreground"
+        className="basis-full pb-3 text-caption text-muted-foreground"
       >
-        {evidenceCopy.tooltip}
+        {/* The measure lives on the inner span: a max-width on the flex item
+            itself would clamp its basis and keep it beside the line. */}
+        <span className="block max-w-[64ch]">{evidenceCopy.tooltip}</span>
       </p>
     </>
   );

@@ -75,6 +75,22 @@ describe("TechnicalCourseLanding", () => {
     expect(sectionHeading?.innerHTML).not.toMatch(/uppercase|font-mono|bg-brand-orange/);
   });
 
+  it("places an optional drawing under the facts", () => {
+    render(
+      <TechnicalCourseHeader
+        eyebrow="Kurs"
+        title="Titel"
+        intro="Intro"
+        primaryAction={<a href="/a">Start</a>}
+        facts={["12 Kapitel"]}
+        factsLabel="Auf einen Blick"
+        figure={<figure aria-label="Arbeitszyklus" />}
+      />,
+    );
+    const facts = screen.getByRole("complementary", { name: "Auf einen Blick" });
+    expect(within(facts).getByRole("figure", { name: "Arbeitszyklus" })).toBeInTheDocument();
+  });
+
   it("drops legal-document section marks from labels", () => {
     render(
       <TechnicalCourseHeader

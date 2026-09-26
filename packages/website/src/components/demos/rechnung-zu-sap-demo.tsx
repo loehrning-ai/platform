@@ -636,9 +636,11 @@ export default function RechnungZuSapDemo() {
             }}
           >
             {stages.map((st, idx) => {
-              const done = stage > st.s;
-              const active = stage === st.s;
+              // The last stage is the payoff: at rest it reads as done,
+              // never as "läuft…".
               const payoff = st.s === 4 && stage >= 4;
+              const done = stage > st.s || payoff;
+              const active = stage === st.s && !payoff;
               const payoffColor = data.needsReview
                 ? DEMO.statusAmber
                 : DEMO.statusGreen;

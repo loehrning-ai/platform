@@ -52,7 +52,7 @@ function SwitchLinks({
             aria-label={active ? `${label}, ${copy.language}` : actionLabel}
             hrefLang={targetLocale}
             className={cn(
-              "relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums outline-none transition-colors duration-[120ms] focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
+              "relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums outline-none transition-colors duration-[120ms] focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
               active
                 ? "text-foreground"
                 : "font-medium text-muted-foreground hover:text-foreground",
@@ -60,11 +60,15 @@ function SwitchLinks({
           >
             {targetLocale.toUpperCase()}
             {/* A square ink underline marks the active language; weight and
-                aria-current carry the same state without colour. */}
+                aria-current carry the same state without colour. It sits on
+                the bottom edge of the 44px target, the same baseline as the
+                current-page rule of the nav items beside it.
+                The focus ring is `inset-ring`: with the --color-inset token,
+                Tailwind v4 also reads `ring-inset` as a (Beton) ring colour. */}
             <span
               aria-hidden="true"
               className={cn(
-                "absolute bottom-2 left-1/2 h-0.5 w-5 -translate-x-1/2",
+                "absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2",
                 active ? "bg-foreground" : "bg-transparent",
               )}
             />

@@ -69,7 +69,7 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     courses: "Kurse",
     tools: "Werkzeuge",
     account: "Konto",
-    login: "Login",
+    login: "Anmelden",
     githubOrganisation: "loehrning-ai auf GitHub",
   },
   en: {

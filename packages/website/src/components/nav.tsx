@@ -10,14 +10,7 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import {
-  m,
-  AnimatePresence,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cx as cn } from "@/components/werk/cx";
@@ -117,91 +110,67 @@ function NoScriptMobileGroup({
 
 /**
  * The current destination inside a menu: a small ink square plus a weight
- * change, so the state never rests on colour alone. The slot is always
- * reserved, so marking a row moves nothing.
+ * change, so the state never rests on colour alone. The square hangs in the
+ * row's left gutter, so row text lines up with its group label and marking a
+ * row moves nothing. The row that renders it must be `relative`.
  */
 function ActiveMarker({ active }: { readonly active: boolean }) {
   return (
     <span
       aria-hidden="true"
       data-nav-active-marker={active ? "true" : undefined}
-      className={cn("size-1.5 shrink-0", active ? "bg-foreground" : "bg-transparent")}
+      className={cn(
+        "absolute left-1.5 top-1/2 size-1.5 -translate-y-1/2",
+        active ? "bg-foreground" : "bg-transparent",
+      )}
     />
   );
 }
 
-/* ─── Scroll-driven brand mark ───────────────────────────────────────────── */
+/**
+ * A row in the phone sheet. It runs to the sheet's edges (the sheet pads
+ * px-4 / sm:px-6), so its text lines up with the group labels and the hover
+ * tone spans the sheet. The focus ring is drawn inside the row because the
+ * scrolling sheet clips anything outside it.
+ */
+const MOBILE_ROW_CLASS =
+  "relative -mx-4 flex min-h-11 items-center px-4 text-muted-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none sm:-mx-6 sm:px-6";
 
-const LOCKUP_FONT_STACK =
-  '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
+/* ─── Brand lockup ───────────────────────────────────────────────────────── */
 
+/**
+ * One static lockup: the Mennige square with a paper L, then the wordmark in
+ * the site face, 700, at the headline tracking floor. It is the only Mennige
+ * mark in the chrome and it matches the footer's wordmark. Nothing rotates,
+ * collapses or moves on scroll.
+ */
 function LogoWordmark({
-  scrollY,
   locale,
   homeLabel,
 }: {
-  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
 }) {
-  const prefersReducedMotion = Boolean(useReducedMotion());
-  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
-  const leadingLOpacity = useTransform(scrollY, [40, 120], [1, 0]);
-  const leadingLScale = useTransform(scrollY, [40, 120], [1, 0]);
-  const remainderOffset = useTransform(scrollY, [40, 120], [0, -22]);
-
   return (
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
       className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <m.div
+      <span
         data-logo-mark
-        className="mr-3 flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center bg-mennige"
         aria-hidden="true"
-        style={{
-          rotate: prefersReducedMotion ? 0 : iconRotate,
-        }}
+        className="mr-3 flex size-[38px] shrink-0 items-center justify-center bg-mennige"
       >
-        <span
-          className="text-lg leading-none text-paper"
-          style={{
-            fontFamily: LOCKUP_FONT_STACK,
-            fontWeight: 900,
-          }}
-        >
-          L
-        </span>
-      </m.div>
-
+        <span className="text-lg font-bold leading-none text-paper">L</span>
+      </span>
       <span
         data-logo-wordmark
         aria-hidden="true"
-        className="hidden whitespace-nowrap text-[22px] uppercase text-foreground sm:flex"
-        style={{
-          letterSpacing: "-0.035em",
-          fontFamily: LOCKUP_FONT_STACK,
-          fontWeight: 900,
-        }}
+        translate="no"
+        className="hidden whitespace-nowrap text-[1.25rem] font-bold leading-none tracking-[-0.015em] text-foreground min-[22.5rem]:inline"
       >
-        <m.span
-          data-logo-wordmark-leading-l
-          className="inline-block w-[14px] origin-right overflow-hidden"
-          style={{
-            opacity: prefersReducedMotion ? 1 : leadingLOpacity,
-            scaleX: prefersReducedMotion ? 1 : leadingLScale,
-          }}
-        >
-          L
-        </m.span>
-        <m.span
-          data-logo-wordmark-remainder
-          className="inline-block"
-          style={{ x: prefersReducedMotion ? 0 : remainderOffset }}
-        >
-          OEHRNING<span className="text-brand-orange">.AI</span>
-        </m.span>
+        loehrning.ai
       </span>
       <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
@@ -219,7 +188,6 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
-  const { scrollY } = useScroll();
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const restoreMobileToggleAfterExit = useRef(false);
@@ -236,6 +204,14 @@ export function Nav() {
     closeMobileMenu,
     { restoreFocus: false },
   );
+  // The sheet's header row reads left to right as the language switch, then
+  // the close button, so the X sits under the hidden menu button. The trap
+  // focuses the first control in DOM order; this effect runs after it and
+  // hands initial focus to the close button, where it has always landed.
+  const mobileCloseRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (mobileOpen) mobileCloseRef.current?.focus();
+  }, [mobileOpen]);
   const hrefPathname = (href: string) => href.split(/[?#]/, 1)[0] || "/";
   const isActivePath = (href: string) => {
     if (href.includes("#")) return false;
@@ -472,6 +448,9 @@ export function Nav() {
         </button>
 
         <AnimatePresence>
+          {/* The sheet sizes to its longest row. It sits 16px left of the
+              trigger so each row's text starts under the trigger label, with
+              the current-row square hanging in the row's gutter. */}
           {openDropdown === id && (
             <m.div
               ref={menuRef}
@@ -480,7 +459,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-2 w-64 border border-foreground bg-card py-1 shadow-overlay"
+              className="absolute -left-4 top-full mt-2 w-max min-w-48 border border-foreground bg-card py-1 shadow-overlay"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -494,7 +473,10 @@ export function Nav() {
                     onClick={() => setOpenDropdown(null)}
                     aria-current={isCurrentPage(item.href) ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center gap-3 px-3 py-2 text-sm outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
+                      // inset-ring, never ring-inset: with the --color-inset
+                      // token, Tailwind v4 also reads `ring-inset` as a ring
+                      // colour (Beton) and it wins over ring-brand-orange.
+                      "relative flex min-h-11 items-center py-2 pl-5 pr-3 text-sm outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
                       isActivePath(item.href)
                         ? "font-semibold text-foreground"
                         : "text-muted-foreground hover:text-foreground",
@@ -530,9 +512,9 @@ export function Nav() {
                 onClick={() => setMobileOpen(false)}
                 aria-current={isCurrentPage(item.href) ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center gap-3 px-1 text-sm text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground motion-reduce:transition-none",
+                  MOBILE_ROW_CLASS,
+                  "text-sm",
                   isActivePath(item.href) && "font-semibold text-foreground",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 )}
               >
                 <ActiveMarker active={isActivePath(item.href)} />
@@ -549,8 +531,9 @@ export function Nav() {
     // One flat paper band at every width. It is flush with the top edge of the
     // viewport and exactly as tall as the offset <main> reserves:
     // --nav-h-compact below lg, --nav-h from lg. A hairline separates it from
-    // the page; there is no pill, no inset and no shadow. From lg the side
-    // padding lines the wordmark up with the site's max-w-6xl content column
+    // the page; there is no pill, no inset and no shadow. The side padding is
+    // the page gutter (px-4, sm:px-6), and from lg it lines the wordmark and
+    // the Login edge up with the 75rem content column (144..1296 at 1440)
     // while the band itself stays full bleed.
     <nav
       aria-label={copy.mainNavigation}
@@ -558,63 +541,70 @@ export function Nav() {
     >
       <div
         data-nav-header-row
-        className="flex h-[var(--nav-h-compact)] w-full items-center justify-between border-b border-hairline bg-background px-3 sm:px-5 lg:h-[var(--nav-h)] lg:px-[max(1.5rem,calc(50%_-_36rem))]"
+        className="flex h-[var(--nav-h-compact)] w-full items-center justify-between border-b border-hairline bg-background px-4 sm:px-6 lg:h-[var(--nav-h)] lg:px-[max(1.5rem,calc(50%_-_36rem))]"
       >
-        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
+        <LogoWordmark locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
-            below instead. */}
-        <div className="js-desktop-nav hidden items-center gap-3 lg:flex xl:gap-4">
-          {renderDropdown(
-            "lernen",
-            copy.learning,
-            lernenNavItems,
-            "lernen-nav-menu",
-            isLernenActive,
-          )}
-          {renderDropdown(
-            "praxis",
-            copy.practice,
-            praxisNavItems,
-            "praxis-nav-menu",
-            isPraxisActive,
-          )}
-          {primaryLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={localizeHref(link.href, locale)}
-              prefetch={false}
-              aria-current={
-                routePathname === hrefPathname(link.href) ? "page" : undefined
-              }
-              className={cn(
-                "inline-flex min-h-11 items-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
-                isActivePath(link.href)
-                  ? "border-b-foreground text-foreground"
-                  : "border-b-transparent text-muted-foreground",
-              )}
+            below instead. Two groups, as in the blueprint: the site's places
+            start after the wordmark, and the utilities (language, GitHub,
+            login) sit at the right behind a hairline, so the active language
+            never reads as a sixth current page. */}
+        <div className="js-desktop-nav hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:justify-between lg:gap-6 lg:pl-10">
+          <div className="flex items-center gap-4">
+            {renderDropdown(
+              "lernen",
+              copy.learning,
+              lernenNavItems,
+              "lernen-nav-menu",
+              isLernenActive,
+            )}
+            {renderDropdown(
+              "praxis",
+              copy.practice,
+              praxisNavItems,
+              "praxis-nav-menu",
+              isPraxisActive,
+            )}
+            {primaryLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={localizeHref(link.href, locale)}
+                prefetch={false}
+                aria-current={
+                  routePathname === hrefPathname(link.href) ? "page" : undefined
+                }
+                className={cn(
+                  "inline-flex min-h-11 items-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                  isActivePath(link.href)
+                    ? "border-b-foreground text-foreground"
+                    : "border-b-transparent text-muted-foreground",
+                )}
+              >
+                {copy[link.label]}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2 border-l border-hairline pl-4">
+            <LanguageSwitch />
+
+            {/* Site navigation points at the organisation that publishes this
+                platform, not at the maintainer's personal account. Tim's own
+                profile stays on /ueber-mich, where it belongs. */}
+            <a
+              href={GITHUB_ORG.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={copy.githubOrganisation}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
             >
-              {copy[link.label]}
-            </Link>
-          ))}
+              <Github size={17} aria-hidden="true" />
+            </a>
 
-          <LanguageSwitch />
-
-          {/* Site navigation points at the organisation that publishes this
-              platform, not at the maintainer's personal account. Tim's own
-              profile stays on /ueber-mich, where it belongs. */}
-          <a
-            href={GITHUB_ORG.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={copy.githubOrganisation}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
-          >
-            <Github size={17} aria-hidden="true" />
-          </a>
-
-          <AuthStatus />
+            <AuthStatus />
+          </div>
         </div>
 
         {/* The compact bar carries three controls and no fourth: the brand
@@ -624,7 +614,10 @@ export function Nav() {
             The no-script stylesheet also exposes this compact group on wide
             screens while hiding its inert menu button. */}
         <div className="js-compact-nav flex items-center gap-1 lg:hidden">
-          <LanguageSwitch />
+          {/* Hidden, like the menu button, while the sheet is open: the sheet
+              carries its own switch, and two visible switches read as two
+              different controls. */}
+          <LanguageSwitch className={mobileOpen ? "invisible" : undefined} />
           <button
             type="button"
             ref={mobileToggleRef}
@@ -716,16 +709,19 @@ export function Nav() {
                 that bar plus the same gap again at the foot of the screen.
                 Derived from the token, never from a repeated pixel figure. */}
             <div className="flex max-h-[calc(100dvh-var(--nav-h-compact)-1rem)] flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6">
+              {/* Language first, close second: the X sits at the right edge,
+                  where the thumb just pressed the menu button. */}
               <div className="flex items-center justify-between gap-3">
+                <LanguageSwitch className="-ml-3" />
                 <button
                   type="button"
+                  ref={mobileCloseRef}
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className="-mr-2 inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none sm:-mr-3"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />
                 </button>
-                <LanguageSwitch />
               </div>
               {renderMobileGroup(copy.learning, lernenNavItems)}
               {renderMobileGroup(copy.practice, praxisNavItems)}
@@ -738,7 +734,8 @@ export function Nav() {
                     onClick={() => setMobileOpen(false)}
                     aria-current={isCurrentPage(link.href) ? "page" : undefined}
                     className={cn(
-                      "flex min-h-11 items-center gap-3 px-1 text-sm font-medium text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                      MOBILE_ROW_CLASS,
+                      "text-sm font-medium",
                       isActivePath(link.href) && "font-semibold text-foreground",
                     )}
                   >
@@ -751,9 +748,8 @@ export function Nav() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex min-h-11 items-center gap-3 px-1 text-sm font-medium text-muted-foreground transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className={cn(MOBILE_ROW_CLASS, "gap-2 text-sm font-medium")}
                 >
-                  <ActiveMarker active={false} />
                   GitHub
                   <Github size={16} aria-hidden="true" />
                 </a>

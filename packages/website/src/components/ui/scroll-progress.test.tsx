@@ -43,6 +43,12 @@ describe("<ScrollProgress>", () => {
     expect(
       container.querySelectorAll("[data-scroll-progress-fill]"),
     ).toHaveLength(1);
+    // Ink over the header, no Mennige: the logo square is the chrome's one
+    // red mark, and an unscrolled page draws no line at all.
+    expect(
+      container.querySelector('[data-scroll-progress-fill="top"]'),
+    ).toHaveClass("bg-foreground");
+    expect(thread?.innerHTML).not.toMatch(/brand-orange|mennige|kupfer/);
   });
 
   it("keeps identical progress nodes across server render and hydration", async () => {

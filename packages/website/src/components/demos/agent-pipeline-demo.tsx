@@ -185,7 +185,7 @@ const MEMO_CONTENT: Readonly<Record<Scenario, MemoContent>> = {
         ],
       },
       {
-        title: ["§3 · Nächste schritte", "§3 · Next steps"],
+        title: ["§3 · Nächste Schritte", "§3 · Next steps"],
         body: [
           "Phase 1: begrenzter Tabellenpilot in zwei Teams. Phase 2 nur nach Ergebnis- und Risikoprüfung.",
           "Phase 1: a bounded spreadsheet pilot in two teams. Phase 2 only after outcome and risk review.",
@@ -215,7 +215,7 @@ const MEMO_CONTENT: Readonly<Record<Scenario, MemoContent>> = {
         ],
       },
       {
-        title: ["§3 · Nächste schritte", "§3 · Next steps"],
+        title: ["§3 · Nächste Schritte", "§3 · Next steps"],
         body: [
           "Erhöhung in 5 Segmenten zum Quartalswechsel. Segment 3 erst nach Regionalanalyse.",
           "Roll out the increase in 5 segments at quarter-end. Hold segment 3 for a regional review.",
@@ -311,7 +311,12 @@ export default function AgentPipelineDemo() {
         ? script[0][0]
         : -1;
 
+  // Follow the newest log line only once the step moves (a replay or a
+  // manual step). At rest the log opens at its first line.
+  const shownStepRef = useRef(stepIndex);
   useEffect(() => {
+    if (shownStepRef.current === stepIndex) return;
+    shownStepRef.current = stepIndex;
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [stepIndex]);
 
@@ -573,7 +578,9 @@ export default function AgentPipelineDemo() {
             fontFamily: DEMO.font.mono,
             fontSize: 12,
             overflowY: "auto",
-            maxHeight: 260,
+            // Tall enough for the whole 14-line trace at rest, so the final
+            // state shows the log from its first line.
+            maxHeight: 400,
             minHeight: 180,
             borderTop: `2px solid ${DARK_EDGE}`,
           }}

@@ -28,3 +28,9 @@
 - KF block descriptions in src/lib/course/data.ts contain an em dash ("täglich nutzt — und warum").
 - AI-Native fact "12 h" comes from course meta (lessons sum to about 5 h).
 - Quiz option letters and certificate dates stay mono (data).
+
+## Polish pass (2026-09-26, after the design critique)
+Full log: impl/B4-course-landings-polish.md.
+
+- In my ownership: outcome grid by item count, mobile ledger, no `overflow-wrap:anywhere` in the kit, balanced kicker, and a lesson head above the disclosure (summary holds only the toggle; the DS/DEF chapter eyebrow and meta are hidden). Also mission tabs without mid-word breaks, the AI-Native H1, lead and fact, repeated Lehrplan captions removed, the EU landing in Sie form, and a shared numbered-sidebar recipe.
+- Outside my ownership: 7 ready-to-apply, tested patches in impl/B4-course-landings-polish/patches/ (sidebars AA fix, Claude widgets, technical ledgers and copy, lesson readers, mobile reader chrome, course copy, Data Science landing rebuild).

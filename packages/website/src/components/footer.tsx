@@ -9,6 +9,7 @@ type FooterLinkKey =
   | "allCourses"
   | "foundationPath"
   | "technicalCourses"
+  | "aiCheck"
   | "learningBooks"
   | "workshops"
   | "appliedExamples"
@@ -21,7 +22,7 @@ type FooterLinkKey =
   | "privacy"
   | "licensePolicy";
 
-type FooterGroupKey = "courses" | "practice" | "blog" | "about";
+type FooterGroupKey = "learning" | "practice" | "contact";
 
 interface FooterCopy {
   readonly sectionLabel: string;
@@ -44,15 +45,15 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     navigationLabel: "Navigation in der Fußzeile",
     disclosureLabel: "Alle Bereiche",
     groups: {
-      courses: "Kurse",
+      learning: "Lernen",
       practice: "Praxis",
-      blog: "Blog",
-      about: "Über mich",
+      contact: "Hilfe und Kontakt",
     },
     links: {
       allCourses: "Alle Kurse",
       foundationPath: "Grundlagenpfad",
       technicalCourses: "Technikkurse",
+      aiCheck: "KI-Check",
       learningBooks: "Lernbücher",
       workshops: "Workshops",
       appliedExamples: "Praxisbeispiele",
@@ -78,15 +79,15 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     navigationLabel: "Footer navigation",
     disclosureLabel: "All sections",
     groups: {
-      courses: "Courses",
+      learning: "Learning",
       practice: "Practice",
-      blog: "Blog",
-      about: "About me",
+      contact: "Help and contact",
     },
     links: {
       allCourses: "All courses",
       foundationPath: "Foundation path",
       technicalCourses: "Technical courses",
+      aiCheck: "AI check",
       learningBooks: "Learning books",
       workshops: "Workshops",
       appliedExamples: "Applied examples",
@@ -109,6 +110,9 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
   },
 };
 
+// The same task groups as the header: "Lernen" holds what the header's
+// Lernen menu holds, "Praxis" what you build and read about, and the last
+// group is where you ask or reach a person. No heading repeats its only link.
 const FOOTER_GROUPS: readonly {
   readonly id: FooterGroupKey;
   readonly links: readonly {
@@ -117,11 +121,12 @@ const FOOTER_GROUPS: readonly {
   }[];
 }[] = [
   {
-    id: "courses",
+    id: "learning",
     links: [
       { href: "/kurse", key: "allCourses" },
       { href: "/kurse#lernpfad", key: "foundationPath" },
       { href: "/kurse#tiefer-gehen", key: "technicalCourses" },
+      { href: "/ki-check", key: "aiCheck" },
       { href: "/buecher", key: "learningBooks" },
     ],
   },
@@ -131,14 +136,11 @@ const FOOTER_GROUPS: readonly {
       { href: "/workshops", key: "workshops" },
       { href: "/demos", key: "appliedExamples" },
       { href: "/open-source", key: "openSource" },
+      { href: "/blog", key: "blog" },
     ],
   },
   {
-    id: "blog",
-    links: [{ href: "/blog", key: "blog" }],
-  },
-  {
-    id: "about",
+    id: "contact",
     links: [
       { href: "/ueber-mich", key: "aboutTim" },
       { href: "/hilfe", key: "help" },
@@ -164,8 +166,8 @@ const INTERNAL_LINK_CLASS =
 const EXTERNAL_LINK_CLASS =
   "inline-flex min-h-11 items-center gap-2 border border-border px-3 py-2 text-sm font-medium text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
-// Below lg the four link columns are eleven 44px targets stacked two abreast,
-// roughly 350px of footer before the legal row even starts, so they live
+// Below lg the three link columns are twelve 44px targets stacked two abreast,
+// roughly 450px of footer before the legal row even starts, so they live
 // inside a native <details>. The element owns its open state, which means the
 // disclosure works with scripting disabled and nothing flips at hydration.
 //
@@ -195,9 +197,13 @@ export async function Footer() {
     // solid #141414 keeps every text token resolvable for axe; structure comes
     // from hairlines only.
     <footer className="dark-section">
-      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+      {/* The 75rem page container: with sm:px-6 the content runs 144..1296 at
+          1440, the same column as the header's wordmark and Login edge. */}
+      <div className="mx-auto w-full max-w-[75rem] px-4 py-10 sm:px-6 sm:py-12">
         <div className="grid min-w-0 gap-6 border-b border-hairline pb-8 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
-          <div className="min-w-0">
+          {/* From lg the brand column starts on the same hairline as the link
+              groups, so the whole row hangs from one continuous rule. */}
+          <div className="min-w-0 lg:border-t lg:border-hairline lg:pt-3">
             <p className="text-label text-muted-foreground">
               {copy.sectionLabel}
             </p>
@@ -208,7 +214,7 @@ export async function Footer() {
               aria-label={`loehrning.ai - ${copy.homeLabel}`}
               translate="no"
             >
-              loehrning<span className="text-brand-orange">.ai</span>
+              loehrning.ai
             </Link>
 
             <div className="mt-3 flex flex-wrap gap-2">
@@ -261,7 +267,7 @@ export async function Footer() {
                   {"\u2212"}
                 </span>
               </summary>
-              <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6 pt-4 md:grid-cols-4 md:gap-x-6 lg:pt-0">
+              <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-6 pt-4 md:grid-cols-3 md:gap-x-6 lg:pt-0">
                 {FOOTER_GROUPS.map((group) => (
                   <section
                     key={group.id}

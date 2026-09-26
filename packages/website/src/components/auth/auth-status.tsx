@@ -73,14 +73,16 @@ export function AuthStatus({
   const label = signedIn ? copy.account : copy.login;
   const Icon = signedIn ? UserRound : LogIn;
 
+  // min-w fits the widest label ("Anmelden") so the control keeps its width
+  // when the session resolves to "Konto" and nothing beside it shifts.
   return (
     <Link
       href={href}
       prefetch={false}
       onClick={onNavigate}
       className={cn(
-        "inline-flex min-h-11 min-w-[6.75rem] items-center justify-center gap-2 border border-foreground bg-transparent px-3 py-2 text-sm font-semibold text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
-        mobile && "mt-3 w-full justify-between px-4",
+        "inline-flex min-h-11 min-w-[7.25rem] items-center justify-center gap-2 border border-foreground bg-transparent px-3 py-2 text-sm font-semibold text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+        mobile && "mt-3 w-full px-4",
       )}
     >
       <Icon size={14} aria-hidden="true" />

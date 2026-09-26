@@ -365,7 +365,7 @@ function FilterRow({
 }) {
   return (
     <div
-      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-center sm:gap-4"
+      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:items-center sm:gap-x-3"
       role="group"
       aria-label={label}
     >
@@ -380,8 +380,8 @@ function FilterRow({
           <div
             className={
               mobileControl
-                ? "hidden min-w-0 flex-wrap gap-2 sm:flex"
-                : "flex min-w-0 flex-wrap gap-2"
+                ? "hidden min-w-0 flex-wrap gap-x-1.5 gap-y-2 sm:flex"
+                : "flex min-w-0 flex-wrap gap-x-1.5 gap-y-2"
             }
           >
             {children}

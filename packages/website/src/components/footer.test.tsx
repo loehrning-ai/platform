@@ -49,7 +49,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Kurse", "Praxis", "Blog", "Über mich"]);
+    ).toEqual(["Lernen", "Praxis", "Hilfe und Kontakt"]);
     expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
       "href",
       "/kurse",
@@ -64,6 +64,10 @@ describe("Footer locale and information architecture", () => {
     expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
       "href",
       "/blog",
+    );
+    expect(screen.getByRole("link", { name: "KI-Check" })).toHaveAttribute(
+      "href",
+      "/ki-check",
     );
     expect(screen.getByRole("link", { name: "Über mich" })).toHaveAttribute(
       "href",
@@ -87,7 +91,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Courses", "Practice", "Blog", "About me"]);
+    ).toEqual(["Learning", "Practice", "Help and contact"]);
     expect(
       screen.queryByText(/Free courses, workshops, and open-source materials/),
     ).not.toBeInTheDocument();
@@ -101,6 +105,10 @@ describe("Footer locale and information architecture", () => {
     expect(
       screen.getByRole("link", { name: "Technical courses" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
+    expect(screen.getByRole("link", { name: "AI check" })).toHaveAttribute(
+      "href",
+      "/en/ki-check",
+    );
 
     for (const link of document.querySelectorAll<HTMLAnchorElement>(
       "a[href^='/']",
@@ -153,6 +161,43 @@ describe("Footer semantics and stable public dates", () => {
       expect(link.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
       expect(link.className).toContain("min-h-11");
     }
+  });
+
+  it("mirrors the header's task groups and never heads a group with its only link", async () => {
+    await renderFooter("de");
+
+    const nav = screen.getByRole("navigation", {
+      name: "Navigation in der Fußzeile",
+    });
+    for (const section of nav.querySelectorAll("section")) {
+      const heading = section.querySelector("h2")?.textContent;
+      const links = Array.from(section.querySelectorAll("a")).map(
+        (link) => link.textContent,
+      );
+      expect(links.length).toBeGreaterThan(1);
+      expect(links[0]).not.toBe(heading);
+    }
+  });
+
+  it("sits on the 75rem page column and starts every desktop column on one rule", async () => {
+    await renderFooter("de");
+
+    const inner = document.querySelector("footer > div");
+    expect(inner).toHaveClass("max-w-[75rem]", "px-4", "sm:px-6");
+    expect(inner).not.toHaveClass("max-w-6xl");
+    const brandColumn = screen
+      .getByText("Freie Lernplattform")
+      .closest("div");
+    expect(brandColumn).toHaveClass("lg:border-t", "lg:border-hairline");
+  });
+
+  it("uses the same ink wordmark as the header, with no Mennige", async () => {
+    await renderFooter("de");
+
+    const home = screen.getByRole("link", { name: "loehrning.ai - Startseite" });
+    expect(home).toHaveTextContent(/^loehrning\.ai$/);
+    expect(home.innerHTML).not.toMatch(/brand-orange|mennige/);
+    expect(home).toHaveClass("font-bold", "tracking-[-0.015em]");
   });
 
   it("is a flat graphit band with hairlines and no decorative shapes", async () => {
@@ -215,13 +260,13 @@ describe("Footer link disclosure below lg", () => {
     getRequestLocaleMock.mockReset();
   });
 
-  it("collapses the four link columns into a disclosure that starts closed", async () => {
+  it("collapses the three link columns into a disclosure that starts closed", async () => {
     await renderFooter("de");
 
     const disclosure = screen.getByTestId("footer-group-disclosure");
     expect(disclosure.tagName).toBe("DETAILS");
     // Closed markup is what the first paint of a phone gets. An `open`
-    // attribute here would restore the roughly 350px column stack the
+    // attribute here would restore the roughly 450px column stack the
     // disclosure exists to remove.
     expect(disclosure).not.toHaveAttribute("open");
 
@@ -256,6 +301,7 @@ describe("Footer link disclosure below lg", () => {
       "Alle Kurse",
       "Grundlagenpfad",
       "Technikkurse",
+      "KI-Check",
       "Lernbücher",
       "Workshops",
       "Praxisbeispiele",
@@ -310,7 +356,7 @@ describe("Footer link disclosure below lg", () => {
 
     const grid = disclosure.querySelector("summary + div");
     expect(grid?.className).toContain("grid-cols-2");
-    expect(grid?.className).toContain("md:grid-cols-4");
+    expect(grid?.className).toContain("md:grid-cols-3");
     // Open-state breathing room below lg only; desktop spacing is untouched.
     expect(grid?.className).toContain("lg:pt-0");
   });

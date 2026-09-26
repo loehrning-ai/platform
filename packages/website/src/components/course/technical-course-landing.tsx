@@ -17,6 +17,11 @@ interface TechnicalCourseHeaderProps {
   readonly facts: readonly string[];
   readonly factsLabel: string;
   readonly progress?: ReactNode;
+  /**
+   * An optional drawing under the facts, such as a course's working cycle
+   * (design direction 7.4). It must carry information, not decoration.
+   */
+  readonly figure?: ReactNode;
 }
 
 interface TechnicalCourseSectionHeadingProps {
@@ -98,6 +103,7 @@ export function TechnicalCourseHeader({
   facts,
   factsLabel,
   progress,
+  figure,
 }: TechnicalCourseHeaderProps): JSX.Element {
   return (
     <header
@@ -136,6 +142,7 @@ export function TechnicalCourseHeader({
             </li>
           ))}
         </ul>
+        {figure ? <div className="mt-8 min-w-0">{figure}</div> : null}
         {progress ? (
           <div className="mt-5 empty:hidden" data-course-progress-card>
             {progress}

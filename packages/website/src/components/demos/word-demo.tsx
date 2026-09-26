@@ -436,7 +436,7 @@ function WordDemoGerman() {
                   <br />
                 </div>
                 <div
-                  style={{ fontSize: 12, color: "#777", textAlign: "right" }}
+                  style={{ fontSize: 12, color: "#595959", textAlign: "right" }}
                 >
                   Berlin, {new Date().toLocaleDateString("de-DE")}
                 </div>
@@ -803,7 +803,7 @@ function WordDemoEnglish() {
                   display: "grid",
                   placeItems: "center",
                   textAlign: "center",
-                  color: "#777",
+                  color: DEMO.schiefer,
                 }}
               >
                 The draft is being built from your inputs …

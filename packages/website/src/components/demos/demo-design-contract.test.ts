@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -103,5 +103,57 @@ describe("demo atlas visual contract", () => {
       /requestAnimationFrame|IntersectionObserver|useMotionAllowed/,
     );
     expect(table).toContain("{value}");
+  });
+});
+
+/*
+ * The interactive engines (*-demo.tsx) sit inside the calm detail frame, so
+ * they carry the same Werkzeichnung rules: no kicker or slogan header over
+ * the page H1, no Tailwind-orange washes or glows, no app chrome, no
+ * decorative textures, no looping animation, no coloured left rules and no
+ * mono-uppercase tracked labels.
+ */
+const ENGINES = readdirSync(__dirname)
+  .filter((file) => /-demo\.tsx$/.test(file))
+  .sort();
+
+function engine(file: string): string {
+  return readFileSync(join(__dirname, file), "utf8");
+}
+
+describe("demo engine visual contract", () => {
+  it("covers every engine file", () => {
+    expect(ENGINES.length).toBeGreaterThanOrEqual(12);
+  });
+
+  it.each(ENGINES)("keeps %s headings plain: no visible h2 slogan, no two-colour h2", (file) => {
+    const text = engine(file);
+    // The page H1 and lead name the demo; an engine h2 is an sr-only landmark.
+    for (const match of text.matchAll(/<h2\b[^>]*>/g)) {
+      expect(match[0], file).toContain('className="sr-only"');
+    }
+    expect(text).not.toMatch(
+      /<h2\b[^>]*>(?:(?!<\/h2>)[\s\S])*color: "var\(--color-brand-orange\)"(?:(?!<\/h2>)[\s\S])*<\/h2>/,
+    );
+  });
+
+  it.each(ENGINES)("keeps %s on the deck palette without glows, textures or app chrome", (file) => {
+    const text = engine(file);
+    // Off-palette Tailwind orange (#f97316) washes and glows.
+    expect(text).not.toMatch(/rgba\(\s*249\s*,\s*115\s*,\s*22/);
+    // Product title bars (Excel green, Word blue) and dot-grid canvases.
+    expect(text).not.toMatch(/#107C41|#2B579A/i);
+    expect(text).not.toMatch(/radial-gradient\(/);
+    // Offset stamp shadows, inline or in scoped CSS.
+    expect(text).not.toMatch(/\b\d+px \d+px 0(?: 0)? (?:var|\$\{|#|rgba)/);
+  });
+
+  it.each(ENGINES)("keeps %s motion finite and its rules and labels calm", (file) => {
+    const text = engine(file);
+    expect(text).not.toMatch(/\binfinite\b/);
+    expect(text).not.toMatch(/borderLeft:\s*[`"][3-9]px/);
+    expect(text).not.toMatch(/textTransform:\s*"uppercase"/);
+    expect(text).not.toMatch(/letterSpacing:\s*"0\.(?:0[89]|1\d?)\d*em"/);
+    expect(text).not.toMatch(/letterSpacing:\s*"-0\.0[2-9]/);
   });
 });

@@ -90,9 +90,10 @@ function confLabel(pct: number): "niedrig" | "mittel" | "hoch" {
 }
 
 const CONF_LABEL_CONFIG = {
-  niedrig: { label: "Niedrig", color: "#b91c1c", bg: "rgba(220,38,38,0.1)" },
-  mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
-  hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
+  // A word in an outlined chip, AA on paper; no pastel fill.
+  niedrig: { label: "Niedrig", color: "#991b1b", bg: "transparent" },
+  mittel: { label: "Mittel", color: "#78350f", bg: "transparent" },
+  hoch: { label: "Hoch", color: "#205b46", bg: "transparent" },
 } as const;
 
 function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
@@ -110,7 +111,7 @@ function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
         padding: "2px 7px",
         color: accentColor ?? cfg.color,
         background: cfg.bg,
-        border: `1px solid ${cfg.color}30`,
+        border: `1px solid ${accentColor ?? cfg.color}`,
         cursor: "help",
       }}
     >
@@ -233,8 +234,8 @@ export default function FineTunePlaygroundDemo() {
           height: 4px;
           background: linear-gradient(
             to right,
-            var(--color-brand-orange) 0%,
-            var(--color-brand-orange) var(--ft-progress, 60%),
+            ${DEMO.ink} 0%,
+            ${DEMO.ink} var(--ft-progress, 60%),
             ${DEMO.leinen} var(--ft-progress, 60%),
             ${DEMO.leinen} 100%
           );
@@ -247,15 +248,16 @@ export default function FineTunePlaygroundDemo() {
         }
         [data-demo-id="fine-tune-playground"] [data-ft-slider]::-moz-range-progress {
           height: 4px;
-          background: var(--color-brand-orange);
+          background: ${DEMO.ink};
         }
         [data-demo-id="fine-tune-playground"] [data-ft-slider]::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
           width: 16px;
           height: 16px;
-          background: var(--color-brand-orange);
-          border: 2px solid ${DEMO.ink};
+          background: ${DEMO.ink};
+          border: 2px solid ${DEMO.kalk};
+          outline: 1px solid ${DEMO.ink};
           margin-top: -7px;
           cursor: grab;
         }
@@ -265,17 +267,18 @@ export default function FineTunePlaygroundDemo() {
         [data-demo-id="fine-tune-playground"] [data-ft-slider]::-moz-range-thumb {
           width: 14px;
           height: 14px;
-          background: var(--color-brand-orange);
-          border: 2px solid ${DEMO.ink};
+          background: ${DEMO.ink};
+          border: 2px solid ${DEMO.kalk};
+          outline: 1px solid ${DEMO.ink};
           border-radius: 0;
           cursor: grab;
         }
         [data-demo-id="fine-tune-playground"] [data-ft-slider]:focus-visible {
-          outline: 2px solid var(--color-brand-orange);
+          outline: 3px solid var(--color-brand-orange);
           outline-offset: 2px;
         }
         [data-demo-id="fine-tune-playground"] [data-ft-tab]:focus-visible {
-          outline: 2px solid var(--color-brand-orange);
+          outline: 3px solid var(--color-brand-orange);
           outline-offset: 2px;
         }
       `}</style>

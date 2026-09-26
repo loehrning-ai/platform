@@ -32,22 +32,25 @@ describe("<Nav />", () => {
     navigationMock.pathname = "/";
   });
 
-  it("renders the brand link", () => {
+  it("renders the brand link as one static lockup in the site face", () => {
     const { container } = renderGerman();
     const brand = screen.getByRole("link", { name: /Startseite/ });
     expect(brand).toHaveAttribute("href", "/");
-    expect(container.querySelector("[data-logo-mark]")).not.toBeNull();
-    expect(
-      container.querySelector("[data-logo-wordmark-leading-l]"),
-    ).toHaveTextContent("L");
-    expect(
-      container.querySelector("[data-logo-wordmark-remainder]"),
-    ).toHaveTextContent("OEHRNING.AI");
-    expect(
-      [...brand.querySelectorAll<HTMLElement>("[style]")].some(
-        (element) => element.style.opacity === "0",
-      ),
-    ).toBe(false);
+    expect(brand).toHaveAccessibleName("loehrning.ai - Startseite");
+
+    const mark = container.querySelector("[data-logo-mark]");
+    expect(mark).toHaveClass("bg-mennige");
+    expect(mark).toHaveTextContent("L");
+    const wordmark = container.querySelector("[data-logo-wordmark]");
+    expect(wordmark).toHaveTextContent(/^loehrning\.ai$/);
+    // Werkzeichnung type rules: 700, sentence case, tracking no tighter than
+    // -0.015em, and ink only (the square is the chrome's one Mennige mark).
+    expect(wordmark).toHaveClass("font-bold", "tracking-[-0.015em]", "text-foreground");
+    expect(brand.innerHTML).not.toMatch(
+      /uppercase|font-black|Arial Black|brand-orange|rotate/,
+    );
+    // Nothing is driven by scroll: no inline transform, opacity or font.
+    expect(brand.querySelectorAll("[style]")).toHaveLength(0);
   });
 
   it("exposes task-based disclosures plus direct Blog, Open Source, and Über mich links", () => {
@@ -132,6 +135,9 @@ describe("<Nav />", () => {
     expect(menu).toHaveClass("shadow-overlay", "border-foreground");
     expect(menu.className).not.toMatch(/\brounded-/);
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
+    // The sheet fits its rows instead of a fixed 256px of empty paper.
+    expect(menu).toHaveClass("w-max");
+    expect(menu).not.toHaveClass("w-64");
   });
 
   it("marks only the canonical course link current on the course hub", () => {
@@ -173,10 +179,35 @@ describe("<Nav />", () => {
     const menu = openDropdown(/Lernen/);
     const current = within(menu).getByRole("link", { name: "Alle Kurse" });
     expect(current).toHaveClass("font-semibold");
-    expect(
-      current.querySelector('[data-nav-active-marker="true"]'),
-    ).toHaveAttribute("aria-hidden", "true");
+    const marker = current.querySelector('[data-nav-active-marker="true"]');
+    expect(marker).toHaveAttribute("aria-hidden", "true");
+    // The square hangs in the row's gutter, so it never indents the text.
+    expect(marker).toHaveClass("absolute");
+    expect(current).toHaveClass("relative");
     expect(menu.innerHTML).not.toMatch(/border-l-\[/);
+  });
+
+  it("draws every menu-row and language focus ring in Mennige, never as ring-inset", () => {
+    // With the --color-inset theme token, Tailwind v4 compiles `ring-inset`
+    // to a Beton ring colour as well, and that rule wins over
+    // ring-brand-orange: the ring was 1.12:1 on paper. inset-ring keeps the
+    // ring inside the target and in Mennige.
+    renderGerman();
+    const menu = openDropdown(/Lernen/);
+    const focusables = [
+      ...within(menu).getAllByRole("link"),
+      ...within(
+        document.querySelector(".js-desktop-nav") as HTMLElement,
+      ).getAllByRole("link", { name: /Oberfläche|Sprache/ }),
+    ];
+    expect(focusables.length).toBeGreaterThan(5);
+    for (const element of focusables) {
+      expect(element.className).toContain("focus-visible:inset-ring-2");
+      expect(element.className).toContain(
+        "focus-visible:inset-ring-brand-orange",
+      );
+      expect(element.className).not.toMatch(/\bring-inset\b/);
+    }
   });
 
   it("is a flush band, --nav-h-compact below lg and --nav-h from lg", () => {
@@ -197,6 +228,26 @@ describe("<Nav />", () => {
       "w-full",
     );
     expect(row?.className).not.toMatch(/rounded|shadow|border-x|border-t\b/);
+    // The header gutter is the page gutter, so the wordmark and the content
+    // below start on the same x at every width.
+    expect(row).toHaveClass("px-4", "sm:px-6");
+  });
+
+  it("separates the desktop places from the utilities, so DE never reads as a current page", () => {
+    renderGerman();
+    const desktop = document.querySelector<HTMLElement>(".js-desktop-nav");
+    expect(desktop?.children).toHaveLength(2);
+    const [places, utilities] = Array.from(desktop?.children ?? []);
+    expect(
+      within(places as HTMLElement).getByRole("button", { name: /Lernen/ }),
+    ).toBeInTheDocument();
+    expect(
+      within(places as HTMLElement).queryByRole("group", { name: "Sprache" }),
+    ).toBeNull();
+    expect(
+      within(utilities as HTMLElement).getByRole("group", { name: "Sprache" }),
+    ).toBeInTheDocument();
+    expect(utilities).toHaveClass("border-l", "border-hairline");
   });
 
   it("carries only the wordmark, the language switch and the menu button below lg", () => {
@@ -280,13 +331,55 @@ describe("<Nav />", () => {
     const close = within(dialog).getByRole("button", {
       name: "Menü schließen",
     });
+    // Initial focus lands on the close button, although the sheet's header
+    // row now reads language switch first, close button second.
     expect(close).toHaveFocus();
     const links = within(dialog).getAllByRole("link");
+    const first = links[0];
+    expect(first).toHaveAttribute("hreflang", "de");
+    // Tab from the last control wraps to the first one in reading order,
+    // Shift+Tab from the first wraps back to the last.
     links.at(-1)?.focus();
     fireEvent.keyDown(links.at(-1)!, { key: "Tab" });
-    expect(close).toHaveFocus();
-    fireEvent.keyDown(close, { key: "Escape" });
+    expect(first).toHaveFocus();
+    fireEvent.keyDown(first, { key: "Tab", shiftKey: true });
+    expect(links.at(-1)).toHaveFocus();
+    fireEvent.keyDown(links.at(-1)!, { key: "Escape" });
     expect(toggle).toHaveFocus();
+  });
+
+  it("puts the close button on the opener's side and shows one language switch while open", () => {
+    const { container } = renderGerman();
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const close = within(dialog).getByRole("button", {
+      name: "Menü schließen",
+    });
+    const headerRow = close.parentElement as HTMLElement;
+    expect(headerRow.lastElementChild).toBe(close);
+    expect(headerRow.firstElementChild).toHaveAttribute(
+      "data-language-switch",
+    );
+    // The bar's own switch hides with the menu button behind the sheet.
+    expect(
+      container.querySelector(".js-compact-nav [data-language-switch]"),
+    ).toHaveClass("invisible");
+  });
+
+  it("lines phone-sheet rows up with their group labels and hangs the marker in the gutter", () => {
+    navigationMock.pathname = "/workshops";
+    renderGerman();
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const current = within(dialog).getByRole("link", { name: "Workshops" });
+    expect(current).toHaveClass("relative", "-mx-4", "px-4", "font-semibold");
+    expect(
+      current.querySelector('[data-nav-active-marker="true"]'),
+    ).toHaveClass("absolute");
+    // Rows inside the scrolling sheet draw their ring inside the row, where
+    // the sheet cannot clip it.
+    expect(current.className).toContain("focus-visible:inset-ring-2");
+    expect(current.className).not.toMatch(/ring-offset|\bring-inset\b/);
   });
 
   it("removes the background from navigation and the accessibility tree while mobile is open", () => {
@@ -344,11 +437,11 @@ describe("<Nav />", () => {
     expect(main).not.toHaveAttribute("data-nav-menu-inert");
   });
 
-  it("closes the mobile dialog when Login navigation starts", () => {
+  it("closes the mobile dialog when Anmelden navigation starts", () => {
     renderGerman();
     fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
-    const login = within(dialog).getByRole("link", { name: /login/i });
+    const login = within(dialog).getByRole("link", { name: "Anmelden" });
 
     fireEvent.click(login);
 

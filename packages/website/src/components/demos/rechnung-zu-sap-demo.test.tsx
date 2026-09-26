@@ -143,9 +143,9 @@ describe("<RechnungZuSapDemo>", () => {
     expect(
       screen.getByText("Manuelle Prüfung erforderlich"),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByText("IDoc INVOIC02 · Entwurf"),
-    ).not.toBeInTheDocument();
+    // Only the stage list names the IDoc step; the result panel does not
+    // claim an IDoc draft for the flagged document.
+    expect(screen.getAllByText("IDoc INVOIC02 · Entwurf")).toHaveLength(1);
     expect(
       screen.getByText("Sonderrabatt (handschriftlich)"),
     ).toBeInTheDocument();
