@@ -325,7 +325,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials([
       [
-        "Deck · 28 Szenen",
+        "Deck · 20 Szenen",
         "Etwa 77 Minuten Programm und 13 Minuten Fragen; die Demo ist optional (10 Min.). Pfeiltasten führen weiter, P öffnet die Moderationsansicht. Am besten auf einem großen Bildschirm im Querformat.",
       ],
       [
@@ -639,7 +639,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials([
       [
-        "Deck · 28 scenes",
+        "Deck · 20 scenes",
         "About 77 minutes of content and 13 minutes of questions; the demo is optional (10 min). Use the arrow keys; P opens the presenter view. Best on a large screen in landscape.",
       ],
       [

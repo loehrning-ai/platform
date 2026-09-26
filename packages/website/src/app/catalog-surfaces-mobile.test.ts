@@ -148,7 +148,7 @@ describe("catalog surfaces below lg", () => {
     );
     // The stats are the shared StatRow (two columns on a phone, one row of
     // three from sm), not a bespoke figure grid.
-    expect(demos).toContain("<StatRow stats={stats}");
+    expect(demos).toMatch(/<StatRow\s+stats=\{stats\}/);
   });
 
   it("keeps the open-source cover and ledger frames bounded on phones", () => {

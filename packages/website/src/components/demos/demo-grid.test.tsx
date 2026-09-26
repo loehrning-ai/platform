@@ -68,7 +68,7 @@ describe("<DemoGrid>", () => {
     expect(levelFilters.lastElementChild).not.toHaveClass("overflow-x-auto");
     expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
-    expect(container.querySelector(".lg\\:grid-cols-4")).toBeTruthy();
+    expect(container.querySelector(".lg\\:grid-cols-3")).toBeTruthy();
     // Section head with a Kopflinie; square filter chips, ink fill when pressed.
     expect(
       screen.getByRole("heading", { level: 2, name: "Alle Beispiele" }),

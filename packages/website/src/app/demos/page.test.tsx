@@ -36,7 +36,8 @@ describe("DemosPage URL filter boundary", () => {
     expect(h1).toBeVisible();
     // One colour: no accent span inside the headline.
     expect(h1.querySelector("span")).toBeNull();
-    expect(screen.getByText("Praxisbeispiele · 12")).toBeVisible();
+    // The kicker names the collection; the count lives in the stats below.
+    expect(h1.previousElementSibling).toHaveTextContent("Praxisbeispiele");
     expect(
       screen.getByRole("list", { name: "Was du an jedem Beispiel prüfst" }),
     ).toBeVisible();

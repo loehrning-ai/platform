@@ -42,13 +42,8 @@ All implementation agents finished. The weekly usage limit then stopped six poli
 
 Verified state of the tree:
 - `bunx tsc --noEmit -p tsconfig.typecheck.json` (packages/website): **0 errors**.
-- `bunx vitest run`: **8564 passed, 6 failed** (711 files). Failing:
-  1. `src/app/api/knowledge-graph.json/route.test.ts` › localizes demo risk notes (demo copy changed in B5)
-  2. `src/app/catalog-surfaces-mobile.test.ts` › keeps the demo cover compact (B5 hero changed)
-  3. `src/app/demos/page.test.tsx` › renders the paper hero, the check list and registry-derived stats
-  4. `src/components/demos/demo-detail-layout.test.tsx` › wires each industry to a filtered gallery link
-  5. `src/components/demos/demo-grid.test.tsx` › renders every demo when no filter is seeded
-  6. `src/lib/workshops-esg-reporting.test.ts` › names the deck's scene count and act timings (the registry copy must match the final deck: 20 main scenes, 9 appendix, 76:30)
+- `bunx vitest run`: **8570 passed, 0 failed** (711 files), after aligning six stale tests with the restyle and fixing the W04 deck label (20 main scenes).
+- `bunx eslint` on the touched files: 0 errors.
 - `bun run content:lint`: 0 errors (400 warnings, by design).
 - Not yet run: `bun run build`, e2e, Lighthouse, `scan:public` after the W04 build.
 - W04 is built (deck 29 scenes, presenter, demo, guide, field card, transfer sheet, kit zip, `src/lib/workshops-esg-reporting.ts`) but **not yet wired** into `src/lib/workshops.ts`. Do step 5 below.

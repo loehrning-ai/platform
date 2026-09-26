@@ -195,6 +195,7 @@ describe("<DemoDetailLayout>", () => {
       name: "Praxisbeispiele im Arbeitskontext Controlling",
     });
     expect(link).toHaveClass("min-h-11", "underline");
-    expect(link.className).not.toMatch(/\bborder\b/);
+    // decoration-border only colours the underline; no box border utilities.
+    expect(link.className).not.toMatch(/(?:^|\s)border(?:-|\s|$)/);
   });
 });
