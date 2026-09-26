@@ -1,10 +1,22 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+/**
+ * ScrollToTop resets the scroll position once the app hydrates. A click on a
+ * row far down the hub before that can be scrolled out from under the tap,
+ * so hub interactions wait for the hydration marker first.
+ */
+async function openHub(page: Page): Promise<void> {
+  await page.goto("/workshops");
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+}
 
 test.describe("workshop self-study journey", () => {
   test("lists and opens the annual-report self-study workshop", async ({
     page,
   }) => {
-    await page.goto("/workshops");
+    await openHub(page);
     // Each hub row has exactly one link into its workshop page.
     const workshop = page.getByRole("link", {
       name: "Workshop ansehen: Geschäftsberichte mit KI lesen",
@@ -115,5 +127,49 @@ test.describe("workshop self-study journey", () => {
     const response = await request.get(`${base}/data-readiness-kit.zip`);
     expect(response.status()).toBe(200);
     expect((await response.body()).subarray(0, 2).toString("ascii")).toBe("PK");
+  });
+
+  test("lists the workshops as compact rows on a phone, each one tap target", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openHub(page);
+    const rows = page.getByTestId("workshop-row");
+    await expect(rows).toHaveCount(4);
+
+    // A phone row is a list line, not a card: tile, duration, title and one
+    // "you leave with" sentence. 140px leaves room for the wider fallback
+    // face; the brand face measures 97 to 117px.
+    for (const row of await rows.all()) {
+      const box = await row.boundingBox();
+      expect(box, "row bounds").not.toBeNull();
+      expect(box!.height).toBeLessThan(140);
+      await expect(row.locator("[data-workshop-question]")).toBeHidden();
+      await expect(row.locator("h3 + p")).toBeHidden();
+      await expect(row.locator("[data-workshop-tile]")).toBeVisible();
+      // The one link covers the whole row on a phone.
+      const link = row.getByRole("link");
+      await expect(link).toHaveCount(1);
+      const target = await link.boundingBox();
+      expect(target!.height).toBeGreaterThanOrEqual(Math.min(44, box!.height));
+      expect(target!.width).toBeGreaterThanOrEqual(box!.width - 1);
+      // The outcome runs the full text width: it never sits in a narrow
+      // column beside its label.
+      const facts = await row.locator("dl").boundingBox();
+      const heading = await row.locator("h3").boundingBox();
+      expect(facts!.x).toBeLessThanOrEqual(heading!.x + 1);
+      expect(facts!.width).toBeGreaterThanOrEqual(heading!.width);
+    }
+    // No route rail between cover and list on a phone.
+    await expect(page.locator("#workshop-route-heading")).toBeHidden();
+    // The first workshop starts inside the first screen.
+    const first = await rows.first().boundingBox();
+    expect(first!.y).toBeLessThan(664);
+    // Tapping the row body (not the arrow) opens the workshop.
+    const outcome = rows.nth(2).locator("[data-workshop-output]");
+    await outcome.scrollIntoViewIfNeeded();
+    const spot = await outcome.boundingBox();
+    await page.mouse.click(spot!.x + 20, spot!.y + spot!.height / 2);
+    await expect(page).toHaveURL(/\/workshops\/geschaeftsberichte-mit-ki-lesen$/);
   });
 });

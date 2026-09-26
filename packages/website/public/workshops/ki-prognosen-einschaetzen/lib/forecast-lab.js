@@ -398,8 +398,11 @@
           // label sits right of its dashed line, with a paper halo so data lines never cut through it
           ctx.save(); ctx.font = "700 15px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
           const mt = ctx.measureText(cfg.markerLabel), up = mt.fontBoundingBoxAscent != null ? mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent : 17;
-          ctx.fillStyle = 'rgba(255,253,247,.92)'; ctx.fillRect(xToPx(cfg.marker) + 3, y0 + 14 - up - 1, mt.width + 6, up + 2);
-          ctx.fillStyle = C.sub; ctx.fillText(cfg.markerLabel, xToPx(cfg.marker) + 6, y0 + 14); ctx.restore();
+          // no room either side: the label ends at the plot's right edge, inside the replay region
+          const mx = xToPx(cfg.marker), room = mx + 9 + mt.width <= x1, flip = !room && mx - 9 - mt.width >= x0;
+          const lx = room ? mx + 6 : flip ? mx - 6 - mt.width : Math.max(x0, x1 - 3 - mt.width);
+          ctx.fillStyle = 'rgba(255,253,247,.92)'; ctx.fillRect(lx - 3, y0 + 14 - up - 1, mt.width + 6, up + 2);
+          ctx.fillStyle = C.sub; ctx.fillText(cfg.markerLabel, lx, y0 + 14); ctx.restore();
         }
       }
       // series

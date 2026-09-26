@@ -7,6 +7,7 @@ import { MobileRails } from "@/components/home/mobile-rails";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HorizonGlobeFrame } from "@/components/werk/horizon-globe-frame";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -53,13 +54,19 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* 0. Companion shell only (below lg): the seat for "where you left
-             off". Reserved in the server HTML, filled in the browser once the
-             active learning namespace is known. */}
-      <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
-
-      {/* 1. Hero — the promise, stated once */}
-      <HeroSection locale={locale} />
+      {/* 1. Hero — the promise, stated once. Below lg it is one graphit
+             band: the promise, the horizon globe (its first frame computed
+             here on the server) and, docked as the band's last row, the
+             companion seat for "where you left off". The seat is reserved in
+             the server HTML and filled in the browser once the active
+             learning namespace is known. */}
+      <HeroSection
+        locale={locale}
+        phoneGlobe={<HorizonGlobeFrame />}
+        continueSlot={
+          <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
+        }
+      />
 
       {/* 2. Kurse — the learning path + deeper labs */}
       <Offering locale={locale} />

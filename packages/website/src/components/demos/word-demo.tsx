@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
@@ -27,6 +27,64 @@ const INITIAL: FormState = {
 function isValidBudget(value: string): boolean {
   const n = Number(value);
   return value.trim() !== "" && Number.isFinite(n) && n > 0;
+}
+
+/**
+ * Below sm the finished draft comes first and the inputs fold behind one
+ * summary line and a 44px "Eckdaten ändern" button; from sm up the form
+ * shows beside the draft as before. The summary reads the brief the draft
+ * was built from, so it always matches the draft above it.
+ */
+function BriefSummary({
+  brief,
+  open,
+  onToggle,
+  controlsId,
+  locale,
+}: {
+  brief: FormState;
+  open: boolean;
+  onToggle: () => void;
+  controlsId: string;
+  locale: "de" | "en";
+}) {
+  const amount = Number(brief.budget || 0).toLocaleString(
+    locale === "de" ? "de-DE" : "en-GB",
+  );
+  const summary = [
+    brief.kunde.replace(/\s*\([^)]*\)\s*$/, ""),
+    brief.projekt,
+    locale === "de" ? `${amount} €` : `€${amount}`,
+    brief.zeitraum,
+  ].join(" · ");
+  return (
+    <div className="sm:hidden" data-word-brief-summary>
+      <p
+        className="text-[14px]"
+        style={{ margin: 0, lineHeight: 1.45, color: DEMO.ink, overflowWrap: "anywhere" }}
+      >
+        {summary}
+      </p>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={controlsId}
+        className="mt-1 inline-flex min-h-11 items-center gap-1.5 underline decoration-[#E3DFD6] underline-offset-4"
+        style={{
+          ...DEMO.label,
+          background: "transparent",
+          border: 0,
+          padding: 0,
+          color: DEMO.ink,
+          cursor: "pointer",
+        }}
+      >
+        {locale === "de" ? "Eckdaten ändern" : "Change the inputs"}
+        <span aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+    </div>
+  );
 }
 
 type StepState = "idle" | "running" | "done";
@@ -102,6 +160,8 @@ function WordDemoGerman() {
   const [focusedField, setFocusedField] = useState<keyof FormState | null>(
     null,
   );
+  const [editOpen, setEditOpen] = useState(false);
+  const fieldsId = useId();
   const {
     isGenerating,
     reducedMotion,
@@ -146,7 +206,8 @@ function WordDemoGerman() {
           alignItems: "stretch",
         }}
       >
-        {/* FORM PANEL — flex 1 1 260px, stacks above preview on narrow screens */}
+        {/* FORM PANEL — flex 1 1 260px. Below sm it follows the draft and
+            folds behind a summary line. */}
         <div
           style={{
             flex: "1 1 260px",
@@ -156,6 +217,18 @@ function WordDemoGerman() {
             gap: 10,
           }}
         >
+          <BriefSummary
+            brief={brief}
+            open={editOpen}
+            onToggle={() => setEditOpen((v) => !v)}
+            controlsId={fieldsId}
+            locale="de"
+          />
+          <div
+            id={fieldsId}
+            data-word-fields
+            className={editOpen ? "flex flex-col gap-2.5" : "flex flex-col gap-2.5 max-sm:hidden"}
+          >
           <Overline>Eckdaten</Overline>
           {(
             [
@@ -186,6 +259,8 @@ function WordDemoGerman() {
                   onFocus={() => setFocusedField(k)}
                   onBlur={() => setFocusedField(null)}
                   inputMode={k === "budget" ? "numeric" : undefined}
+                  // 16px below lg: iOS (phone and iPad) zooms into any focused field under 16px.
+                  className="text-base lg:text-[12px]"
                   style={{
                     minHeight: 44,
                     background: DEMO.birke,
@@ -198,7 +273,6 @@ function WordDemoGerman() {
                     outlineOffset: 2,
                     padding: "9px 11px",
                     fontFamily: k === "budget" ? DEMO.font.mono : "inherit",
-                    fontSize: 12,
                     color: DEMO.ink,
                     transition: reducedMotion ? "none" : "border-color 120ms",
                     width: "100%",
@@ -344,10 +418,14 @@ function WordDemoGerman() {
                 ? "Neu erstellen"
                 : "Projektbrief erstellen"}
           </button>
+          </div>
         </div>
 
-        {/* WORD PREVIEW — flex 2 2 340px, takes more room on wide screens */}
+        {/* WORD PREVIEW — flex 2 2 340px, takes more room on wide screens;
+            first below sm, so the payoff opens the instrument. */}
         <div
+          className="max-sm:order-first"
+          data-word-draft
           style={{
             flex: "2 2 340px",
             minWidth: 0,
@@ -384,10 +462,10 @@ function WordDemoGerman() {
             </span>
           </div>
           <div
+            className="text-[13px] sm:text-[12px]"
             style={{
               padding: "22px clamp(18px, 4vw, 30px)",
               fontFamily: "Georgia, serif",
-              fontSize: 12,
               lineHeight: 1.5,
               color: "#222",
               flex: 1,
@@ -514,12 +592,11 @@ function WordDemoGerman() {
       </div>
 
       {/* Metric row — auto-fit keeps it 4-up on wide, 2-up on mid, 1-up on narrow */}
+      {/* Below sm the three figures sit in one unboxed row under a
+          hairline; from sm up they are the boxed tiles. */}
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-          gap: 8,
-        }}
+        className="grid grid-cols-3 gap-2 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))]"
+        data-word-metrics
       >
         {(
           [
@@ -530,12 +607,8 @@ function WordDemoGerman() {
         ).map(([l, v]) => (
           <div
             key={l}
-            style={{
-              background: DEMO.kalk,
-              border: `1px solid ${DEMO.leinen}`,
-              padding: 10,
-              minWidth: 0,
-            }}
+            className="border-t border-[#E3DFD6] pt-2 sm:border sm:bg-[#F3F0E9] sm:p-2.5"
+            style={{ minWidth: 0 }}
           >
             <div
               style={{
@@ -592,6 +665,8 @@ function WordDemoEnglish() {
     () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
     [form.kunde],
   );
+  const [editOpen, setEditOpen] = useState(false);
+  const fieldsId = useId();
   const fields = [
     ["kunde", "Recipient"],
     ["projekt", "Project title"],
@@ -618,7 +693,7 @@ function WordDemoEnglish() {
         {/* The page H1 and lead name the demo; this heading only gives
           screen-reader users a landmark into the instrument. */}
         <h2 className="sr-only">Project brief draft with review steps</h2>
-        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
+        <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
           The output is assembled from fixed browser templates. No Word file,
           Microsoft 365 tenant, or AI provider is contacted.
         </p>
@@ -642,6 +717,18 @@ function WordDemoEnglish() {
             gap: 10,
           }}
         >
+          <BriefSummary
+            brief={brief}
+            open={editOpen}
+            onToggle={() => setEditOpen((v) => !v)}
+            controlsId={fieldsId}
+            locale="en"
+          />
+          <div
+            id={fieldsId}
+            data-word-fields
+            className={editOpen ? "flex flex-col gap-2.5" : "flex flex-col gap-2.5 max-sm:hidden"}
+          >
           <Overline>Brief inputs</Overline>
           {fields.map(([key, label]) => (
             <label key={key} style={{ display: "grid", gap: 4, minWidth: 0 }}>
@@ -671,9 +758,9 @@ function WordDemoEnglish() {
                   background: DEMO.birke,
                   color: DEMO.ink,
                   padding: "10px 11px",
-                  font: "inherit",
-                  fontSize: 12,
+                  fontFamily: "inherit",
                 }}
+                className="text-base lg:text-[12px]"
                 aria-invalid={key === "budget" && !budgetValid}
                 aria-describedby={
                   key === "budget" && !budgetValid
@@ -757,10 +844,13 @@ function WordDemoEnglish() {
                 ? "Rebuild sample brief"
                 : "Build sample brief"}
           </button>
+          </div>
         </section>
 
         <section
           aria-live="polite"
+          className="max-sm:order-first"
+          data-word-draft
           style={{
             minWidth: 0,
             display: "flex",
@@ -786,12 +876,12 @@ function WordDemoEnglish() {
             <span style={{ marginLeft: "auto", opacity: 0.75 }}>simulated</span>
           </div>
           <div
+            className="text-[13px] sm:text-[12px]"
             style={{
               flex: 1,
               padding: "clamp(18px, 5vw, 32px)",
               color: "#222",
               fontFamily: "Georgia, serif",
-              fontSize: 12,
               lineHeight: 1.62,
               overflowWrap: "anywhere",
             }}

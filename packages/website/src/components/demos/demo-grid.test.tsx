@@ -129,6 +129,35 @@ describe("<DemoGrid>", () => {
     expect(window.location.search).toBe("?level=einstieg&cat=RAG");
   });
 
+  it("puts the phone selects behind one Filter button that counts active filters", () => {
+    render(
+      <DemoGrid initialFilters={{ ...DEFAULT_FILTERS, category: "RAG" }} />,
+    );
+    const toggle = screen.getByRole("button", { name: /^Filter(?:,|$)/ });
+    const panel = document.getElementById(
+      toggle.getAttribute("aria-controls") ?? "",
+    );
+    // Closed: the panel is hidden below sm only; from sm up the chip rows
+    // always show and the button itself is sm:hidden.
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveClass("min-h-11", "sm:hidden");
+    expect(toggle).toHaveAccessibleName("Filter, 1 aktiv");
+    expect(panel).toHaveAttribute("data-demo-filter-panel");
+    expect(panel).toHaveClass("max-sm:hidden");
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(panel).not.toHaveClass("max-sm:hidden");
+    // 16px below lg, so iOS does not zoom when a select takes focus.
+    expect(screen.getByRole("combobox", { name: "Reifegrad" })).toHaveClass(
+      "text-base",
+      "lg:text-label",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Filter zurücksetzen/ }));
+    expect(toggle).toHaveAccessibleName("Filter");
+  });
+
   it("filters to a single category match", () => {
     render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     // RAG has exactly one demo in the catalog.

@@ -74,6 +74,23 @@ function laneRows(c) {
     ["Change vs 2024, market-based", C.pct(c.vs2024_mb_pct), ""],
   ].map(([k, v, cls]) => `<div><dt>${esc(k)}</dt><dd class="num${cls ? " " + cls : ""}">${esc(v)}</dd></div>`).join("");
 }
+/* phones (below 700px): the two lanes become one comparison table, grouped by Scope 2 method, so
+   both answers sit side by side on one screen. Same values as the lanes; CSS shows one or the other. */
+function cmpTable() {
+  const row = (label, w, r, total) => `<tr${total ? ' class="is-total"' : ""}><th scope="row">${esc(label)}</th><td class="num">${esc(w)}</td><td class="num">${esc(r)}</td></tr>`;
+  const group = (name, m) => `<tbody><tr class="cmp__grp"><th scope="rowgroup" colspan="3">${name}</th></tr>
+    ${row("Scope 2", C.num(W["s2" + m + "_t"]) + " t", C.num(R["s2" + m + "_t"]) + " t")}
+    ${row("Total", C.num(W[m + "_t"]) + " t", C.num(R[m + "_t"]) + " t", true)}
+    ${row("vs 2024", C.pct(W["vs2024_" + m + "_pct"]), C.pct(R["vs2024_" + m + "_pct"]))}</tbody>`;
+  return `<table class="cmp">
+  <caption class="sr-only">The raw-folder answer and the ledger answer, figure by figure</caption>
+  <thead><tr><td></td><th scope="col" class="cmp__raw"><span>Raw folder</span></th><th scope="col" class="cmp__led">Ledger</th></tr></thead>
+  <tbody>${row("Scope 1", C.num(W.s1_t) + " t", C.num(R.s1_t) + " t")}</tbody>
+  ${group("Location-based", "lb")}
+  ${group("Market-based", "mb")}
+</table>
+<p class="caption cmp__note"><b>Raw folder:</b> ${esc(D.meta.constructedLabel_en)} <b>Ledger:</b> computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>`;
+}
 const lanes = `<div class="lanes">
   <article class="lane lane--export" aria-labelledby="lane-raw">
     <h3 class="lane__head" id="lane-raw"><span>Raw folder</span></h3>
@@ -86,6 +103,7 @@ const lanes = `<div class="lanes">
     <dl>${laneRows(R)}</dl>
   </article>
 </div>
+${cmpTable()}
 <p class="gapline">The raw-folder total is <b class="num">${esc(n("gap_lb_t"))} below</b> the right one, ${esc(n("gap_lb_pct"))} of the total. Its change against 2024 is off by ${esc(n("chg_lb_pp_shift"))} percentage points, and its explanation is wrong.</p>
 <details class="more">
   <summary>Read the raw-folder answer as text</summary>
@@ -178,9 +196,9 @@ const consoleBlock = `<div class="console">
     </div>
   </div>
   <div class="meters">
-    <p class="meter">${lbl("This answer", "This answer")}<b id="m-total" class="num">${esc(M0.total)}</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 ${esc(M0.s1)}</span> · <span class="nw" id="m-s2">Scope 2 ${esc(M0.s2)}</span></span></p>
-    <p class="meter meter--dist${M0.distZero ? " is-zero" : ""}" id="meter-dist">${lbl("Distance from the right answer", "Distance")}<b id="m-dist" class="num">${esc(M0.dist)}</b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:${M0.distW}%"></i></span><span class="sub" id="m-dist-pct">${esc(M0.distPct)}</span></p>
-    <p class="meter">${lbl("Change vs 2024", "vs 2024")}<b id="m-vs" class="num">${esc(M0.vs)}</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:${M0.vsRightPos}%"></s><i id="g-vs" style="--p:${M0.vsPos}%"></i></span><span class="sub" id="m-vs-right">Right answer: ${esc(M0.vsRight)}</span></p>
+    <p class="meter">${lbl("This answer", "Answer")}<b id="m-total" class="num">${esc(M0.total)}</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 ${esc(M0.s1)}</span> · <span class="nw" id="m-s2">Scope 2 ${esc(M0.s2)}</span></span></p>
+    <p class="meter meter--dist${M0.distZero ? " is-zero" : ""}" id="meter-dist">${lbl("Distance from the right answer", "Distance")}<b id="m-dist" class="num"><span class="d-sign" id="m-dist-sign" aria-hidden="true">${esc(M0.distSign)}</span><span id="m-dist-n">${esc(M0.distN)}</span><span class="d-side" id="m-dist-side">${esc(M0.distSide)}</span></b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:${M0.distW}%"></i></span><span class="sub" id="m-dist-pct">${esc(M0.distPct)}</span></p>
+    <p class="meter">${lbl("Change vs 2024", "vs 2024")}<b id="m-vs" class="num">${esc(M0.vs)}</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:${M0.vsRightPos}%"></s><i id="g-vs" style="--p:${M0.vsPos}%"></i></span><span class="sub sub--vs"><span class="l-long">Right answer: </span><span class="l-short">Right: </span><span id="m-vs-right">${esc(M0.vsRight)}</span></span></p>
   </div>
   <p class="sr-only" id="live" aria-live="polite"></p>
 </div>`;
@@ -213,7 +231,7 @@ function trapRow(t) {
     <p class="trap__name"><span class="trap__id">${t.id}</span><span class="trap__t"><span id="tn-${t.id}">${esc(trapTitle(t))}</span>${scope}</span></p>
     <p class="trap__meta"><span class="tag">${esc(t.role)}</span>${docBtn("trap:" + t.id, DOCLINK[t.id][0], DOCLINK[t.id][1])}</p>
   </div>
-  <button class="sw" type="button" data-trap="${t.id}" aria-pressed="${r.pressed}" aria-labelledby="tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">${esc(r.sw)}</span></button>
+  <button class="sw" type="button" data-trap="${t.id}" aria-pressed="${r.pressed}" aria-labelledby="tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">${esc(r.sw)}</span><span class="sw__s" aria-hidden="true">${esc(r.swShort)}</span></button>
   <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only">: ${esc(trapTitle(t))}</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:${t.id}" aria-hidden="true"><span class="ghost"${style(r.ghost)}${r.ghost ? "" : " hidden"}></span><span class="bar${r.bar && !r.bar.neg ? " is-up" : ""}"${style(r.bar)}${r.bar ? "" : " hidden"}></span></div>

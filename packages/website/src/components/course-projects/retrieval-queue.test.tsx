@@ -205,6 +205,15 @@ describe("RetrievalQueue", () => {
     );
 
     expect(screen.getByText("0 reviews are due")).toBeInTheDocument();
+    // Nothing due: the queue stays out of the phone layout and its dot is
+    // neutral rather than the Mennige alarm colour.
+    const section = screen
+      .getByText("0 reviews are due")
+      .closest("section");
+    expect(section).toHaveClass("max-sm:hidden");
+    expect(section?.querySelector("[aria-hidden='true']")).toHaveClass(
+      "bg-muted-foreground",
+    );
     expect(
       screen.getByText("Not due yet · retrieval established"),
     ).toBeInTheDocument();

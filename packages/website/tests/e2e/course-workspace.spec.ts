@@ -303,6 +303,13 @@ async function activateStudio(page: Page, reader: ReaderCase) {
     `[data-course-project][data-engine-kind="${reader.engine}"]`,
   );
   await expect(studio).toHaveCount(1);
+  // Below md the frame starts as its header plus one toggle row; the studio
+  // controls sit behind it until the learner opens the workshop.
+  const phoneToggle = studio.locator("[data-course-workspace-phone-toggle]");
+  if (await phoneToggle.isVisible()) {
+    await phoneToggle.click();
+    await expect(phoneToggle).toHaveAttribute("aria-expanded", "true");
+  }
   await studio.getByRole("button", { name: reader.activateLabel }).click();
   await expect(
     studio.getByText(reader.engineMarker, { exact: false }).first(),
@@ -400,24 +407,21 @@ test.describe("canonical course workspace", () => {
       if (course.surface === "workspace") {
         await expect(studio).toHaveCount(1);
         await expect(studio).toHaveAttribute("data-engine-kind", course.engine);
-        const mobileToolbar = page.locator(
-          "[data-lesson-shell-mobile-toolbar]",
-        );
-        await expect(mobileToolbar).toBeVisible();
-        await expect
-          .poll(() =>
-            mobileToolbar.evaluate(
-              (element) => getComputedStyle(element).position,
-            ),
-          )
-          .toBe("sticky");
-        const [toolbarBox, contentBox] = await Promise.all([
-          mobileToolbar.boundingBox(),
+        // One drawer control below lg: the reader bar's. No sticky toolbar
+        // sits under the compact top bar, so content starts right below it.
+        await expect(
+          page.locator("[data-lesson-shell-mobile-toolbar]"),
+        ).toHaveCount(0);
+        await expect(
+          page.locator("[data-reader-focus-bar] [data-reader-focus-navigation]"),
+        ).toBeVisible();
+        const [headerBox, contentBox] = await Promise.all([
+          page.locator("[data-nav-header-row]").boundingBox(),
           page.locator("[data-lesson-shell-content]").boundingBox(),
         ]);
-        expect(toolbarBox).not.toBeNull();
+        expect(headerBox).not.toBeNull();
         expect(contentBox).not.toBeNull();
-        expect(toolbarBox!.y + toolbarBox!.height).toBeLessThanOrEqual(
+        expect(headerBox!.y + headerBox!.height).toBeLessThanOrEqual(
           contentBox!.y + 1,
         );
       } else {

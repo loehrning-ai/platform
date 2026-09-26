@@ -35,7 +35,7 @@ ul,ol{padding:0;list-style:none}
 h1,h2,h3,h4{font-weight:700;text-wrap:balance}
 button{font:inherit;color:inherit}
 code{font-family:var(--mono);font-size:.86em;font-variant-ligatures:none;overflow-wrap:anywhere}
-.lane__note code,.wf-foot code{font-size:13px}
+.lane__note code,.cmp__note code,.wf-foot code{font-size:13px}
 a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--kante);text-underline-offset:3px}
 a:hover{color:var(--mennige-deep);text-decoration-color:currentColor}
 :focus-visible{outline:3px solid var(--mennige);outline-offset:2px}
@@ -96,6 +96,8 @@ main:focus{outline:none}
 .lane dt{font-size:15px;color:var(--slate)}
 .lane dd{font:700 20px/1.2 var(--sans);white-space:nowrap}
 .lane dd.big{font-size:26px;letter-spacing:-.01em}
+/* phones: one comparison table instead of the two lanes (build-demo.mjs cmpTable) */
+.cmp,.cmp__note{display:none}
 .gapline{margin:14px 0 0;font:600 17px/1.45 var(--sans);max-width:70ch}
 .gapline b{color:var(--mennige)}
 details.more{margin:10px 0 0}
@@ -153,7 +155,7 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .meter .sub{grid-row:4}
 .meter:first-child .sub{grid-row:3 / span 2}
 .nw{white-space:nowrap}
-.l-short{display:none}
+.l-short,.d-sign,.sw__s,.lead-ph{display:none}
 .meter b{display:block;font:700 clamp(20px,1.1rem + .6vw,28px)/1.15 var(--sans);letter-spacing:-.01em;white-space:nowrap}
 .meter--dist b{color:var(--mennige)}
 .meter--dist.is-zero b{color:var(--ink)}
@@ -405,16 +407,29 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .head{padding-top:22px}
   .beat{padding-top:36px}
   .beat__body{margin-top:16px}
-  .lanes{grid-template-columns:minmax(0,1fr);gap:12px}
-  .lane__head{padding:8px 14px;font-size:16px;min-height:44px}
-  .lane__note{padding:8px 14px 0;font-size:14px}
-  .lane dl{padding:2px 14px 8px}
-  .lane dl div{padding:6px 0}
-  .lane dt{font-size:14px;line-height:1.3}
-  .lane dd{font-size:20px}
-  .lane dd.big{font-size:24px}
-  .qcard{grid-template-columns:32px minmax(0,1fr);gap:12px;padding:14px 16px 14px 22px}
-  .qicon{width:32px;height:32px}
+  .lanes{display:none}
+  .cmp{display:table;width:100%;margin-top:14px;border-collapse:collapse;font-size:14px;line-height:1.3}
+  .cmp thead th{height:40px;padding:0 8px;border:1px solid var(--ink);font:700 15px/1.2 var(--sans);text-align:right;white-space:nowrap}
+  .cmp thead td{border-bottom:1px solid var(--ink)}
+  .cmp__raw{background:var(--papier) var(--hatch)}
+  .cmp__raw span{padding:2px 4px;background:var(--papier)}
+  .cmp__led{background:var(--ink);color:var(--papier)}
+  .cmp tbody th{padding:7px 8px 7px 0;text-align:left;font-weight:400;color:var(--slate)}
+  .cmp tbody td{padding:7px 8px;text-align:right;font:700 16px/1.2 var(--sans);white-space:nowrap}
+  .cmp tbody tr{border-bottom:1px solid var(--leinen)}
+  .cmp tbody tr.cmp__grp{border-bottom:0}
+  .cmp tbody tr.cmp__grp th{padding:12px 0 2px;font:600 13px/1.3 var(--sans);letter-spacing:.01em;color:var(--ink)}
+  .cmp tr.is-total td{font-size:18px}
+  .cmp tr.is-total th{color:var(--ink);font-weight:600}
+  .cmp__note{display:block;margin-top:8px;font-size:13px;line-height:1.45}
+  .cmp__note b{font-weight:600;color:var(--slate)}
+  /* the question as a ruled line, not a framed card */
+  .qcard{grid-template-columns:minmax(0,1fr);padding:10px 0 0;border:0;border-top:1px solid var(--ink);background:none}
+  .qcard::before,.qicon{display:none}
+  .qcard blockquote{margin-top:2px;font-size:16px;line-height:1.4}
+  /* the lead keeps its first sentence; the provenance is in the comparison note and the board caption */
+  .lead-more,.lede-more{display:none}
+  .lead-ph{display:inline}
   .gapline{font-size:16px}
   /* phones: tabs and presets scroll away; only the three meters stay at the top while section 2 is in view */
   .console{display:contents}
@@ -422,20 +437,33 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .meters{position:sticky;top:0;z-index:12;margin-top:12px;padding:8px 0;gap:0 12px;background:var(--paper);border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
   .l-long{display:none}
   .l-short{display:inline}
-  .meter .label{font-size:14px;line-height:1.25}
-  .meter b{font-size:18px;white-space:normal;line-height:1.15}
-  .meter .sub{font-size:14px;line-height:1.3}
-  .sub--scopes{display:none!important}
-  .gauge{margin:6px 0 6px}
+  .meters{padding:6px 0}
+  .meter .label{font-size:13px;line-height:1.25}
+  .meter b{font-size:18px;white-space:nowrap;line-height:1.15}
+  /* distance as a signed number; "above" or "below" stays for screen readers */
+  .d-sign{display:inline}
+  .d-side{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+  /* fixed height: the rows under the sticky meters do not jump when a switch changes the numbers */
+  .meters{min-height:72px}
+  .meter .sub{font-size:13px;line-height:1.3}
+  .sub--scopes,#m-dist-pct{display:none!important}
+  .sub--vs{white-space:nowrap}
+  .gauge{height:6px;margin:5px 0 4px}
   .presets{gap:6px}
   .presets .btn{font-size:14px;padding:6px 10px}
   .tab{padding:8px 12px;font-size:14px}
-  .trap{grid-template-columns:minmax(0,1fr) 164px;grid-template-areas:"name sw" "iso track";padding:8px 0;gap:2px 10px}
+  .trap{grid-template-columns:minmax(0,1fr) 132px;grid-template-areas:"name sw" "iso track";padding:8px 0;gap:2px 10px}
   .trap>.mob{grid-template-columns:minmax(0,1fr) 50px 58px;gap:0 6px}
   .trap .fx,.trap .run{font-size:14px}
   .trap>.iso{gap:0 8px;line-height:1.2}
   .trap .iso__tail{display:none}
   .trap.trap--note{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name nosw" "note note"}
+  /* the note row is a note, not a control */
+  .nosw{min-height:0;padding:0;border:0;background:none;justify-content:flex-end;font:400 13px/1.3 var(--sans);color:var(--slate)}
+  .trap--note .trap__id{visibility:hidden}
+  .trap--note .nosw{align-self:start;padding-top:3px}
+  .seq{margin-bottom:12px}
+  .tot--start .tot__label>span{font-size:13px;line-height:1.35}
   .trap>.trap__main .trap__meta{display:none}
   .trap--note>.trap__main .trap__meta{display:flex;margin-left:30px}
   .trap>.iso{font-size:15px}
@@ -444,6 +472,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .kopf p{display:none}
   .beat__lead{font-size:15px;line-height:1.5}
   .chip{white-space:normal;min-height:26px;padding:3px 9px;line-height:1.3}
+  .provline{display:none}
   .rank td.n{white-space:normal}
   .rank table{font-size:14px}
   .covtab--wide{display:none}
@@ -451,13 +480,14 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .head .lede{font-size:16px}
   #coverage .beat__lead{display:none}
   .kopf h2{font-size:23px}
-  .cov td{height:26px}
   .runs .proto:not([open]){margin:0}
   .wf-foot{margin-top:40px;font-size:14px}
   .console .caption{display:none}
   .trap__name{font-size:15px;grid-template-columns:26px minmax(0,1fr)}
   .sw{font-size:14px;gap:8px;padding:6px 8px 6px 6px}
   .sw__box{width:32px}
+  /* one or two lines of state word, the same height either way */
+  .trap>.sw{min-height:48px;line-height:1.2}
   .sw[aria-pressed="true"] .sw__box::after{left:14px}
   .steps>li{grid-template-columns:24px minmax(0,1fr);padding:10px 0}
   .boardfoot{grid-template-columns:minmax(0,1fr)}
@@ -466,8 +496,11 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .brow__l,.brow__v{font-size:14px}
   .sentence{padding:12px 14px}
   .sentence p,.nbtn{font-size:16px}
+  /* the tap area grows through a pseudo-element, so the sentence keeps its line spacing */
+  .nbtn{position:relative;padding:0 2px;line-height:inherit}
+  .nbtn::after{content:"";position:absolute;inset:-10px -3px}
   .cov table{border-spacing:2px}
-  .cov td{min-width:30px;height:30px;font-size:13px}
+  .cov td{min-width:30px;height:28px;font-size:13px}
   .cov th{font-size:14px;padding:2px 4px}
   .cov th.pin,.covtab--tall tbody th{position:sticky;left:0;z-index:1;background:var(--paper)}
   .covtab--tall thead th{white-space:normal;line-height:1.15;vertical-align:bottom;padding:2px 2px}
@@ -483,10 +516,21 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .rowcard dt{padding:4px 0 0}
   .rowcard dd{padding:0 0 3px}
 }
+/* the smallest phones: the switch shrinks to a square (its state stays in aria-pressed and in the
+   knob), so name, effect and switch share two lines and the bar gets the full width below them */
 @media (max-width:359px){
-  .trap{grid-template-columns:minmax(0,1fr);grid-template-areas:"name" "sw" "iso" "track"}
-  .trap.trap--note{grid-template-columns:minmax(0,1fr);grid-template-areas:"name" "nosw" "note"}
-  .nosw{justify-self:start}
+  .trap{grid-template-columns:minmax(0,1fr) 64px;grid-template-areas:"name sw" "iso sw" "track track";gap:0 8px;padding:6px 0}
+  /* the switch keeps a short state word under its box: Fixed or AI */
+  .trap>.sw{align-self:start;flex-direction:column;justify-content:center;gap:3px;width:64px;min-height:48px;padding:5px 0 4px}
+  .sw__t{display:none}
+  .sw__s{display:block;font:600 12px/1.1 var(--sans)}
+  .trap.is-on{box-shadow:inset 0 2px 0 var(--mennige)}
+  .trap>.iso .linkish.only{display:inline-flex;align-items:center;min-height:44px}
+  .trap.trap--note{grid-template-columns:minmax(0,1fr) auto}
+  .meters{min-height:64px}
+  .trap--note>.trap__main .trap__meta{margin-left:26px}
+  .meter .sub,.meter .sub--vs,#m-vs-right{display:none!important}
+  .gauge{height:4px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -526,7 +570,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <header class="head wrap">
   <p class="label">Workshop 04 · Interactive demo · 10 minutes</p>
   <h1>How can a total be almost right when six of its parts are wrong?</h1>
-  <p class="lede">Kellbrunn Präzisionsteile GmbH asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of 22 files. Each switch below puts back one trap from that folder and shows what it does to the total, in both Scope 2 methods.</p>
+  <p class="lede">Kellbrunn Präzisionsteile GmbH asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of 22 files.<span class="lede-more"> Each switch below puts back one trap from that folder and shows what it does to the total, in both Scope 2 methods.</span></p>
   <p class="provline"><span class="chip chip--muted">Fictional company</span><span class="chip chip--muted">Teaching factors, not official values</span><span class="chip chip--gap">The raw-folder answer is constructed from documented failure modes</span></p>
 </header>
 
@@ -554,6 +598,20 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <dl><div><dt>Scope 1</dt><dd class="num">471.2 t</dd></div><div><dt>Scope 2 location-based</dt><dd class="num">1,444.0 t</dd></div><div><dt>Scope 2 market-based</dt><dd class="num">1,422.0 t</dd></div><div><dt>Total, location-based</dt><dd class="num big">1,915.2 t</dd></div><div><dt>Total, market-based</dt><dd class="num">1,893.2 t</dd></div><div><dt>Change vs 2024, location-based</dt><dd class="num">−5.1%</dd></div><div><dt>Change vs 2024, market-based</dt><dd class="num">−29.2%</dd></div></dl>
   </article>
 </div>
+<table class="cmp">
+  <caption class="sr-only">The raw-folder answer and the ledger answer, figure by figure</caption>
+  <thead><tr><td></td><th scope="col" class="cmp__raw"><span>Raw folder</span></th><th scope="col" class="cmp__led">Ledger</th></tr></thead>
+  <tbody><tr><th scope="row">Scope 1</th><td class="num">516.0 t</td><td class="num">471.2 t</td></tr></tbody>
+  <tbody><tr class="cmp__grp"><th scope="rowgroup" colspan="3">Location-based</th></tr>
+    <tr><th scope="row">Scope 2</th><td class="num">1,350.5 t</td><td class="num">1,444.0 t</td></tr>
+    <tr class="is-total"><th scope="row">Total</th><td class="num">1,866.5 t</td><td class="num">1,915.2 t</td></tr>
+    <tr><th scope="row">vs 2024</th><td class="num">−7.5%</td><td class="num">−5.1%</td></tr></tbody>
+  <tbody><tr class="cmp__grp"><th scope="rowgroup" colspan="3">Market-based</th></tr>
+    <tr><th scope="row">Scope 2</th><td class="num">1,350.0 t</td><td class="num">1,422.0 t</td></tr>
+    <tr class="is-total"><th scope="row">Total</th><td class="num">1,866.0 t</td><td class="num">1,893.2 t</td></tr>
+    <tr><th scope="row">vs 2024</th><td class="num">−30.2%</td><td class="num">−29.2%</td></tr></tbody>
+</table>
+<p class="caption cmp__note"><b>Raw folder:</b> Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run. <b>Ledger:</b> computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>
 <p class="gapline">The raw-folder total is <b class="num">48.7 t below</b> the right one, 2.5% of the total. Its change against 2024 is off by 2.4 percentage points, and its explanation is wrong.</p>
 <details class="more">
   <summary>Read the raw-folder answer as text</summary>
@@ -567,7 +625,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="traps" aria-labelledby="h-traps">
   <header class="kopf"><h2 id="h-traps">Which trap moves the total, and by how much?</h2><p>2 of 6 · Trap switches</p></header>
-  <p class="beat__lead">Every switch starts at “Fixed”. Set one to “As the AI did it” and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the 128 precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</p>
+  <p class="beat__lead">Every switch starts at “Fixed”. Set one to “As the AI did it”<span class="lead-more"> and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the 128 precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
   <div class="beat__body">
     <details class="seq" id="seq">
   <summary>Guided sequence<span>6 steps, about 6 minutes</span></summary>
@@ -599,9 +657,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     </div>
   </div>
   <div class="meters">
-    <p class="meter"><span class="label"><span class="l-long">This answer</span><span class="l-short">This answer</span></span><b id="m-total" class="num">1,915.2 t</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 471.2 t</span> · <span class="nw" id="m-s2">Scope 2 1,444.0 t</span></span></p>
-    <p class="meter meter--dist is-zero" id="meter-dist"><span class="label"><span class="l-long">Distance from the right answer</span><span class="l-short">Distance</span></span><b id="m-dist" class="num">0.0 t</b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:0%"></i></span><span class="sub" id="m-dist-pct">matches the right answer</span></p>
-    <p class="meter"><span class="label"><span class="l-long">Change vs 2024</span><span class="l-short">vs 2024</span></span><b id="m-vs" class="num">−5.1%</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:52.2%"></s><i id="g-vs" style="--p:52.2%"></i></span><span class="sub" id="m-vs-right">Right answer: −5.1%</span></p>
+    <p class="meter"><span class="label"><span class="l-long">This answer</span><span class="l-short">Answer</span></span><b id="m-total" class="num">1,915.2 t</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 471.2 t</span> · <span class="nw" id="m-s2">Scope 2 1,444.0 t</span></span></p>
+    <p class="meter meter--dist is-zero" id="meter-dist"><span class="label"><span class="l-long">Distance from the right answer</span><span class="l-short">Distance</span></span><b id="m-dist" class="num"><span class="d-sign" id="m-dist-sign" aria-hidden="true"></span><span id="m-dist-n">0.0 t</span><span class="d-side" id="m-dist-side"></span></b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:0%"></i></span><span class="sub" id="m-dist-pct">matches the right answer</span></p>
+    <p class="meter"><span class="label"><span class="l-long">Change vs 2024</span><span class="l-short">vs 2024</span></span><b id="m-vs" class="num">−5.1%</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:52.2%"></s><i id="g-vs" style="--p:52.2%"></i></span><span class="sub sub--vs"><span class="l-long">Right answer: </span><span class="l-short">Right: </span><span id="m-vs-right">−5.1%</span></span></p>
   </div>
   <p class="sr-only" id="live" aria-live="polite"></p>
 </div>
@@ -619,7 +677,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T1</span><span class="trap__t"><span id="tn-T1">Duplicate March bill counted</span></span></p>
     <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T1" title="scan_rechnung_maerz.md"><span class="sr-only">Open the evidence: </span>Scanned March bill</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T1" aria-pressed="false" aria-labelledby="tn-T1" aria-describedby="te-T1"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T1" aria-pressed="false" aria-labelledby="tn-T1" aria-describedby="te-T1"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T1"><b>+82.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T1">Only this trap<span class="sr-only">: Duplicate March bill counted</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T1" aria-hidden="true"><span class="ghost" style="--l:45.84%;--w:6.43%;--cl:42.06%;--cw:7.94%"></span><span class="bar" hidden></span></div>
@@ -632,7 +690,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T2</span><span class="trap__t"><span id="tn-T2">October missing</span></span></p>
     <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T2" title="zaehlerstaende_2025.csv"><span class="sr-only">Open the evidence: </span>Meter readings</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T2" aria-pressed="false" aria-labelledby="tn-T2" aria-describedby="te-T2"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T2" aria-pressed="false" aria-labelledby="tn-T2" aria-describedby="te-T2"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T2"><b>−80.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T2">Only this trap<span class="sr-only">: October missing</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T2" aria-hidden="true"><span class="ghost" style="--l:45.84%;--w:6.27%;--cl:50%;--cw:7.75%"></span><span class="bar" hidden></span></div>
@@ -653,7 +711,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T3</span><span class="trap__t"><span id="tn-T3">Joint venture bill included</span></span></p>
     <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T3" title="jahresrechnung_tb_2025.md"><span class="sr-only">Open the evidence: </span>Talbrück annual bill</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T3" aria-pressed="false" aria-labelledby="tn-T3" aria-describedby="te-T3"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T3" aria-pressed="false" aria-labelledby="tn-T3" aria-describedby="te-T3"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T3"><b>+400.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T3">Only this trap<span class="sr-only">: Joint venture bill included</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T3" aria-hidden="true"><span class="ghost" style="--l:20.74%;--w:31.37%;--cl:11.25%;--cw:38.75%"></span><span class="bar" hidden></span></div>
@@ -666,7 +724,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T4</span><span class="trap__t"><span id="tn-T4">“1.240 MWh” read as 1,240 kWh</span></span></p>
     <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T4" title="jahresuebersicht_2025_oekostrom.md"><span class="sr-only">Open the evidence: </span>Werk Süd statement</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T4" aria-pressed="false" aria-labelledby="tn-T4" aria-describedby="te-T4"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T4" aria-pressed="false" aria-labelledby="tn-T4" aria-describedby="te-T4"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T4"><b>−495.5 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T4">Only this trap<span class="sr-only">: “1.240 MWh” read as 1,240 kWh</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T4" aria-hidden="true"><span class="ghost" style="--l:20.74%;--w:38.86%;--cl:50%;--cw:48%"></span><span class="bar" hidden></span></div>
@@ -679,7 +737,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T5</span><span class="trap__t"><span id="tn-T5">Hi factor on Hs kWh</span></span></p>
     <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T5" title="gas_jahresrechnung_wn_2025.md and gas_jahresrechnung_ws_2025.md"><span class="sr-only">Open the evidence: </span>Two gas bills</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T5" aria-pressed="false" aria-labelledby="tn-T5" aria-describedby="te-T5"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T5" aria-pressed="false" aria-labelledby="tn-T5" aria-describedby="te-T5"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T5"><b>+41.8 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T5">Only this trap<span class="sr-only">: Hi factor on Hs kWh</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T5" aria-hidden="true"><span class="ghost" style="--l:56.33%;--w:3.28%;--cl:45.95%;--cw:4.05%"></span><span class="bar" hidden></span></div>
@@ -692,7 +750,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T6</span><span class="trap__t"><span id="tn-T6">AdBlue counted as diesel</span></span></p>
     <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T6" title="tankkarten_2025.csv"><span class="sr-only">Open the evidence: </span>Fuel-card export</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T6" aria-pressed="false" aria-labelledby="tn-T6" aria-describedby="te-T6"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T6" aria-pressed="false" aria-labelledby="tn-T6" aria-describedby="te-T6"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso" id="te-T6"><b>+3.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T6">Only this trap<span class="sr-only">: AdBlue counted as diesel</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T6" aria-hidden="true"><span class="ghost" style="--l:56.09%;--w:0.24%;--cl:49.71%;--cw:0.29%"></span><span class="bar" hidden></span></div>
@@ -705,7 +763,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <p class="trap__name"><span class="trap__id">T7</span><span class="trap__t"><span id="tn-T7">Grid average instead of residual mix</span> <span class="tag tag--scope" id="ts-T7">Market-based only</span></span></p>
     <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T7" title="faktoren_lehrwerte.csv"><span class="sr-only">Open the evidence: </span>Factor file</button></p>
   </div>
-  <button class="sw" type="button" data-trap="T7" aria-pressed="false" aria-labelledby="tn-T7 ts-T7" aria-describedby="te-T7"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span></button>
+  <button class="sw" type="button" data-trap="T7" aria-pressed="false" aria-labelledby="tn-T7 ts-T7" aria-describedby="te-T7"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">Fixed</span><span class="sw__s" aria-hidden="true">Fixed</span></button>
   <p class="iso is-zero" id="te-T7"><b>0 t for this number</b><span class="iso__tail"></span> <button class="linkish only" type="button" data-only="T7">Only this trap<span class="sr-only">: Grid average instead of residual mix</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T7" aria-hidden="true"><span class="ghost" hidden></span><span class="bar" hidden></span></div>

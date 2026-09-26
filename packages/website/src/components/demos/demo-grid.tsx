@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   DEMO_CATEGORIES,
   DEMO_LEVELS,
@@ -20,6 +20,7 @@ import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { trackDemoFilter } from "@/lib/analytics";
 import { BUTTON_CLASSES, cx, FILTER_CHIP_CLASS } from "@/components/werk";
 import { DemoTile } from "./demo-tile";
+import { DisclosureGlyph } from "./evidence-badge";
 
 export interface DemoGridInitialFilters {
   readonly level: DemoLevel | "alle";
@@ -64,6 +65,12 @@ export function DemoGrid({
     [catalog, level, cat, industry],
   );
   const isFiltered = level !== "alle" || cat !== "Alle" || Boolean(industry);
+  const activeFilterCount =
+    Number(level !== "alle") + Number(cat !== "Alle") + Number(Boolean(industry));
+  // Below sm the three selects sit behind one "Filter" button, so the first
+  // examples reach the first screen. From sm up the chip rows always show.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterPanelId = useId();
 
   useEffect(() => {
     trackDemoFilter(cat, level, industry || "alle");
@@ -155,20 +162,47 @@ export function DemoGrid({
     return () => window.removeEventListener("keydown", handler);
   }, [clearAll]);
 
+  // 16px below lg: iOS (phone and iPad) zooms into any focused control
+  // under 16px.
   const selectClass =
-    "min-h-11 w-full rounded-none border border-border bg-background px-3 text-label text-foreground";
+    "min-h-11 w-full rounded-none border border-border bg-background px-3 text-base text-foreground lg:text-label";
 
   return (
     <div ref={atlasRef} data-demo-atlas>
       <div data-demo-filter-console>
-        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t-2 border-foreground pt-4">
+        {/* Below sm: the heading and the "Filter" button share the first
+            line; the live count and the reset take a second line once a
+            filter is set. From sm up the button is gone and the count sits
+            beside the heading, as before. */}
+        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t-2 border-foreground pt-4 max-sm:items-center max-sm:gap-x-3 max-sm:gap-y-0 max-sm:pt-3">
           <h2
             id="demo-gallery-heading"
             className="text-fluid-h2 font-bold text-foreground"
           >
             {copy.galleryHeading}
           </h2>
-          <div className="flex flex-wrap items-center gap-x-4">
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((open) => !open)}
+            aria-expanded={filtersOpen}
+            aria-controls={filterPanelId}
+            data-demo-filter-toggle
+            className="inline-flex min-h-11 items-center gap-2 border border-border px-3 text-label text-foreground tabular-nums transition-colors duration-[120ms] hover:border-foreground aria-expanded:border-foreground motion-reduce:transition-none sm:hidden"
+          >
+            <span>
+              {copy.filterToggle}
+              {activeFilterCount > 0 ? (
+                <>
+                  <span aria-hidden="true"> · {activeFilterCount}</span>
+                  <span className="sr-only">
+                    , {copy.activeFilters(activeFilterCount)}
+                  </span>
+                </>
+              ) : null}
+            </span>
+            <DisclosureGlyph open={filtersOpen} />
+          </button>
+          <div className="flex flex-wrap items-center gap-x-4 max-sm:basis-full max-sm:justify-between">
             <p
               role="status"
               aria-live="polite"
@@ -199,7 +233,14 @@ export function DemoGrid({
           </div>
         </header>
 
-        <div className="mt-4 border-b border-hairline">
+        <div
+          id={filterPanelId}
+          data-demo-filter-panel
+          className={cx(
+            "mt-4 border-b border-hairline max-sm:mt-3",
+            filtersOpen ? null : "max-sm:hidden",
+          )}
+        >
           <FilterRow
             label={copy.level}
             mobileControl={
@@ -338,7 +379,7 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3 max-sm:mt-4 max-sm:divide-y max-sm:divide-hairline">
+        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3 max-sm:mt-1 max-sm:divide-y max-sm:divide-hairline">
           {/* Uniform 3/2/1 grid (blueprint 6.14): no spans, no tile borders,
               whitespace between tiles. Works for any filtered subset. Below
               sm the tiles are ledger rows split by hairlines. */}
@@ -365,7 +406,7 @@ function FilterRow({
 }) {
   return (
     <div
-      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[7rem_minmax(0,1fr)] sm:items-center sm:gap-x-3"
+      className="grid min-w-0 grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 border-t border-hairline py-2 sm:grid-cols-[7rem_minmax(0,1fr)] sm:py-3"
       role="group"
       aria-label={label}
     >

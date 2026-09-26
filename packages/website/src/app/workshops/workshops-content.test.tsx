@@ -29,7 +29,7 @@ describe("<WorkshopsContent>", () => {
     expect(heading.closest("[data-cover-band]")).toHaveClass("dark-section");
     // Two lines in both locales from xl; the globe starts at lg and its mask
     // keeps the text column clear.
-    expect(heading).toHaveClass("max-w-[14ch]", "xl:max-w-[16ch]");
+    expect(heading).toHaveClass("sm:max-w-[14ch]", "xl:max-w-[16ch]");
     const band = heading.closest("[data-cover-band]");
     expect(band).toHaveClass("md:max-lg:[&>[data-cover-globe]]:hidden");
     expect(band?.className).toMatch(
@@ -199,13 +199,17 @@ describe("<WorkshopsContent>", () => {
     render(<WorkshopsContent workshops={workshops} locale="de" />);
     const rows = screen.getAllByTestId("workshop-row");
     expect(rows).toHaveLength(4);
-    expect(within(rows[0]).getByText("Neu")).toHaveAttribute("data-chip", "meta");
+    // Desktop carries the "Neu" chip; the phone row says it in its meta line.
+    const newMarks = within(rows[0]).getAllByText("Neu");
+    expect(newMarks).toHaveLength(2);
+    expect(newMarks[0].closest("[data-workshop-meta]")).not.toBeNull();
+    expect(newMarks[1]).toHaveAttribute("data-chip", "meta");
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
     // Hyphenated words such as "Scope-1-und-2-Frage" are not amounts.
     expect(within(rows[0]).getByText(/Scope-1-und-2-Frage/).tagName).toBe("P");
-    expect(rows[0].querySelector("p > .whitespace-nowrap")).toBeNull();
+    expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
     ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");
@@ -214,6 +218,105 @@ describe("<WorkshopsContent>", () => {
     expect(
       screen.getByText(/^Workshops 03 und 04 haben eine Moderationsansicht/),
     ).toBeInTheDocument();
+  });
+
+  it("turns each row into a compact phone list item with one tap target", () => {
+    render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
+    const rows = screen.getAllByTestId("workshop-row");
+
+    for (const row of rows) {
+      // Tile column plus text column below md, the reviewed sheet from md.
+      expect(row).toHaveClass(
+        "grid-cols-[3.5rem_minmax(0,1fr)]",
+        "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+        "py-4",
+        "md:py-10",
+      );
+      // The details the workshop page repeats stay out of a phone row.
+      expect(row.querySelector("[data-workshop-question]")).toHaveClass(
+        "hidden",
+        "md:grid",
+      );
+      expect(row.querySelector("[data-workshop-roles]")).toHaveClass(
+        "hidden",
+        "md:block",
+      );
+      // The title is the phone hook: the summary returns from md.
+      const summary = row.querySelector("h3 + p");
+      expect(summary).toHaveClass("hidden", "md:block");
+      expect(summary).not.toHaveClass("line-clamp-2");
+      // "Du gehst mit" is one flowing sentence over the full width.
+      const facts = row.querySelector("dl")!;
+      expect(facts).toHaveClass("max-md:line-clamp-2", "grid");
+      expect(facts.querySelector("dt")).toHaveClass(
+        "max-md:inline",
+        "max-md:after:content-[':']",
+      );
+      expect(row.querySelector("[data-workshop-output]")).toHaveClass("max-md:inline");
+      // One link; on a phone it covers the row and shows only the arrow, so
+      // the text keeps the full width. Tapping gives visible feedback.
+      const links = within(row).getAllByRole("link");
+      expect(links).toHaveLength(1);
+      expect(links[0]).toHaveClass(
+        "min-h-11",
+        "min-w-11",
+        "after:inset-0",
+        "max-md:absolute",
+        "max-md:inset-0",
+        "[-webkit-tap-highlight-color:transparent]",
+      );
+      expect(links[0].querySelector("span")).toHaveClass("max-md:sr-only");
+      expect(links[0].parentElement).not.toHaveClass("grid");
+      expect(row).toHaveClass("relative", "has-[a:active]:bg-card-hover");
+      expect(row.querySelector("h3")).toHaveClass("pr-8");
+      expect(
+        row.querySelector("[data-workshop-meta] > span:last-child"),
+      ).toHaveClass("whitespace-nowrap");
+    }
+
+    // The phone meta line is a short duration line; the row the cover
+    // button recommends says so.
+    expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
+      "Neu · Live 90 · allein 60 Min.",
+    );
+    expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
+      /^Einstieg · /,
+    );
+    for (const row of [rows[0], rows[2], rows[3]]) {
+      expect(row.querySelector("[data-workshop-meta]")).not.toHaveTextContent(
+        "Einstieg",
+      );
+    }
+    expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
+      /^Allein \d+ Min\.$/,
+    );
+    // A long title shows its head on a phone; the heading keeps the full name.
+    const w04 = getWorkshops("de").find((w) => w.number === "04")!;
+    const heading = within(rows[0]).getByRole("heading", { level: 3 });
+    expect(heading).toHaveAccessibleName(w04.title);
+    expect(heading.querySelector("span")).toHaveClass("sr-only", "md:not-sr-only");
+
+    // Phones get a one-sentence lead; from sm the full lead returns.
+    expect(
+      screen.getByText(/^Du prüfst eine KI-Antwort an den Daten/),
+    ).toHaveClass("sm:hidden");
+    expect(screen.getByText(/^Jeder Workshop dreht sich/)).toHaveClass(
+      "hidden",
+      "sm:block",
+    );
+    // The index row repeats the list on a phone, so it starts at md.
+    expect(
+      screen.getByRole("navigation", { name: "Workshops auf dieser Seite" }),
+    ).toHaveClass("hidden", "md:block");
+    // Phones skip the route (each workshop page shows its own agenda), so
+    // the list follows the cover; from sm it is the reviewed row.
+    const rail = screen.getByRole("group", { name: "So läuft jeder Workshop" });
+    expect(rail).toHaveAttribute("tabindex", "0");
+    expect(rail.closest("section")).toHaveClass("hidden", "sm:block");
+    // The phone H1 matches the detail H1 and is not held to 14ch.
+    expect(
+      screen.getByRole("heading", { level: 1 }),
+    ).toHaveClass("text-[1.875rem]/[1.08]", "sm:max-w-[14ch]", "sm:text-display");
   });
 
   it("keeps the team note small and says how to open the presenter view", () => {
@@ -263,8 +366,10 @@ describe("<WorkshopsContent>", () => {
       "src",
       "/workshops/esg-berichte-mit-ki/card-preview.webp",
     );
-    expect(previews[0]).toHaveAttribute("loading", "eager");
-    expect(previews[0]).toHaveAttribute("fetchpriority", "high");
+    // The H1 is the LCP element and the previews are hidden on phones, so
+    // every preview is lazy: a lazy image in a display:none box is never fetched.
+    expect(previews[0]).toHaveAttribute("loading", "lazy");
+    expect(previews[0]).not.toHaveAttribute("fetchpriority");
     expect(previews[1]).toHaveAttribute(
       "src",
       "/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
@@ -275,6 +380,17 @@ describe("<WorkshopsContent>", () => {
     for (const cover of miniCovers) {
       expect(cover).toHaveAttribute("aria-hidden", "true");
       expect(cover.querySelector("[data-werk-globe-country]")).toBeNull();
+      expect(cover).toHaveClass("hidden", "md:block");
+    }
+    // Phones: a decorative 56px graphit tile with the number replaces the
+    // cover, one per row, and no tile carries the Germany trace.
+    const tiles = container.querySelectorAll("[data-workshop-tile]");
+    expect(tiles).toHaveLength(4);
+    for (const [position, tile] of [...tiles].entries()) {
+      expect(tile).toHaveAttribute("aria-hidden", "true");
+      expect(tile).toHaveClass("size-14", "md:hidden");
+      expect(tile.textContent).toBe(["04", "03", "02", "01"][position]);
+      expect(tile.querySelector("[data-werk-globe-country]")).toBeNull();
     }
     // Keyboard focus rings the whole clickable row.
     for (const row of rows) {

@@ -67,11 +67,11 @@
 
 /* material route: text tabs with a square station, 3px ink underline on the current one */
 .wf-mats{flex-basis:100%;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin:0 0 -1px;padding:0;
-  scroll-padding-inline:16px;scroll-snap-type:x proximity}
+  scroll-padding-inline:48px;scroll-snap-type:x proximity}
 .wf-mats::-webkit-scrollbar{display:none}
-.wf-mats[data-more="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
-.wf-mats[data-more="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px);mask-image:linear-gradient(90deg,transparent,#000 48px)}
-.wf-mats[data-more="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}
+.wf-mats[data-more="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent)}
+.wf-mats[data-more="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px);mask-image:linear-gradient(90deg,transparent,#000 32px)}
+.wf-mats[data-more="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent)}
 .wf-mats a{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px 0 0;margin-right:4px;box-sizing:border-box;
   color:var(--wf-slate);text-decoration:none;white-space:nowrap;font-weight:500;border-bottom:3px solid transparent;scroll-snap-align:start;
   transition:color var(--wf-fade) var(--wf-ease),border-color var(--wf-fade) var(--wf-ease)}
@@ -82,6 +82,9 @@
 .wf-mats a[aria-current="page"]{color:var(--wf-ink);font-weight:700;border-bottom-color:var(--wf-ink)}
 .wf-mats a[aria-current="page"]::before{background:var(--wf-ink)}
 .wf-mats a[aria-current="page"] span{color:var(--wf-ink)}
+/* optional short tab names: <span class="wf-long">Learner guide</span><span class="wf-short">Guide</span>; the short one shows on phones */
+.wf-mats a .wf-long,.wf-mats a .wf-short{font:inherit;color:inherit}
+.wf-mats a .wf-short{display:none}
 .wf-strip a:focus-visible,.wf-mats a:focus-visible,.wf-foot a:focus-visible,.wf-skip:focus-visible{outline:3px solid var(--wf-mennige);outline-offset:2px}
 
 /* ------------------------------------------------------------------ footer */
@@ -222,7 +225,24 @@ a.wf-card:hover{border-color:var(--wf-ink)}
 .wf-chart-focus{stroke:var(--wf-mennige);fill:var(--wf-mennige)}
 
 /* ------------------------------------------------------------------ media */
-@media (max-width:600px){.wf-brand img{width:136px}.wf-strip{font-size:14px}.wf-mats a{padding-right:14px}.wf-row{grid-template-columns:32px minmax(0,1fr) auto}}
+/* phones: brand and back link share one row, the materials are one scroll rail below (strip 88px).
+   The strip script scrolls the current tab to 48px inside the rail, past the 32px edge fade.
+   The language link shows its code (DE/EN, from hreflang); its accessible name stays the full text. */
+@media (max-width:600px){
+  .wf-strip{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:0 12px;padding-top:0;font-size:14px}
+  .wf-brand img{width:112px}
+  .wf-back{flex-wrap:nowrap;justify-content:flex-end;gap:0 4px;min-width:0}
+  .wf-back a{white-space:nowrap}
+  .wf-back-alt{justify-content:flex-end;min-width:44px;font-size:0}
+  .wf-back-alt::after{content:attr(hreflang);content:attr(hreflang) / "";font-size:14px;text-transform:uppercase}
+  .wf-mats{grid-column:1 / -1}
+  .wf-mats a{min-height:44px;padding-right:14px}
+  .wf-mats a .wf-long{display:none}.wf-mats a .wf-short{display:inline}
+  .wf-foot{margin-top:32px}
+  .wf-row{grid-template-columns:32px minmax(0,1fr) auto}
+}
+/* narrow phones: the brand mark alone, so "← Zurück zum Workshop" still fits on the row */
+@media (max-width:374px){.wf-brand{min-width:44px}.wf-brand img{width:30px;height:30px;object-fit:cover;object-position:0 50%}}
 @media (prefers-reduced-motion:reduce){.wf-mats a,.wf-btn,a.wf-card,a.wf-row,.wf-row__go{transition:none}}
 @media (forced-colors:active){.wf-stamp--fail::before{background:none;border-style:dashed}}
 @media print{.wf-skip,.wf-strip,.wf-foot{display:none!important}.wf-cover{background:#fff;color:var(--wf-ink)}.wf-cover__globe{display:none}

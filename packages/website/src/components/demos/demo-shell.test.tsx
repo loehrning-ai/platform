@@ -134,6 +134,21 @@ describe("<DemoShell>", () => {
     expect(shell.className).not.toContain("bg-background");
   });
 
+  it("flattens the frame below sm: rules only for light, a full-bleed band for dark", () => {
+    const { container, unmount } = render(<DemoShell demo={excel} />);
+    const light = container.firstChild as HTMLElement;
+    expect(light).toHaveClass("max-sm:border-x-0", "max-sm:border-b-0", "max-sm:bg-transparent");
+    // The evidence line alone fills the phone header row.
+    expect(
+      screen.getByText("Interaktives Beispiel").closest("span"),
+    ).toHaveClass("max-sm:hidden");
+    unmount();
+
+    const dark = render(<DemoShell demo={agent} />).container
+      .firstChild as HTMLElement;
+    expect(dark).toHaveClass("max-sm:-mx-4", "max-sm:border-x-0");
+  });
+
   it("always mounts the EngagementTracker for the demo slug", () => {
     render(<DemoShell demo={excel} />);
     expect(screen.getByTestId("engagement-tracker")).toHaveAttribute(

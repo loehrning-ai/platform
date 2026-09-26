@@ -24,13 +24,13 @@ export function CourseLandingSection({
   children,
 }: CourseLandingSectionProps): JSX.Element {
   return (
-    <section className="mt-12 min-w-0 scroll-mt-24 lg:mt-14" id={id}>
+    <section className="mt-12 min-w-0 scroll-mt-24 max-sm:mt-8 lg:mt-14" id={id}>
       <TechnicalCourseSectionHeading
         title={title}
         eyebrow={caption}
         intro={intro}
       />
-      <div className="mt-6 min-w-0">{children}</div>
+      <div className="mt-6 min-w-0 max-sm:mt-4">{children}</div>
     </section>
   );
 }
@@ -69,7 +69,7 @@ export function CourseOutcomeList({
       {items.map((item) => (
         <li
           key={item.title}
-          className="min-w-0 border-b border-hairline py-4"
+          className="min-w-0 border-b border-hairline py-4 max-sm:py-3"
         >
           <p className="break-words text-body font-semibold text-foreground">
             {item.title}
@@ -118,7 +118,7 @@ export function CourseBlockLedger({
       {rows.map((row) => (
         <li
           key={row.id}
-          className="grid min-w-0 grid-cols-1 gap-y-1 border-b border-hairline py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-4"
+          className="grid min-w-0 grid-cols-1 gap-y-1 border-b border-hairline py-5 max-sm:py-4 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-4"
           data-course-ledger-row
         >
           <span className="hidden text-label text-muted tabular-nums sm:col-start-1 sm:row-start-1 sm:block">
@@ -165,7 +165,7 @@ export function CourseBoundaryDetails({
   readonly children: ReactNode;
 }): JSX.Element {
   return (
-    <details className="group/boundary mt-12 border-y border-hairline lg:mt-14">
+    <details className="group/boundary mt-12 border-y border-hairline max-sm:mt-8 lg:mt-14">
       <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 text-label text-foreground [&::-webkit-details-marker]:hidden">
         {summary}
         <span
@@ -231,7 +231,7 @@ export function CourseNextLink({
   readonly children: ReactNode;
 }): JSX.Element {
   return (
-    <p className="mt-8">
+    <p className="mt-8 max-sm:mt-4">
       <ButtonLink href={href} variant="text">
         {children}
       </ButtonLink>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MobileRails } from "./mobile-rails";
+import { BOOK_RAIL_SHOWN, MobileRails } from "./mobile-rails";
 import { HOME_COPY } from "./home-copy";
 import { books } from "@/lib/books";
 import { getDemosForLocale } from "@/lib/demos-localization";
@@ -16,14 +16,14 @@ describe("MobileRails", () => {
     expect(container.firstElementChild).toHaveClass("lg:hidden");
   });
 
-  it("names both subjects as headings", () => {
+  it("names each rail's subject as a heading", () => {
     render(<MobileRails />);
     expect(
       screen.getByRole("heading", { level: 2, name: "Praxisbeispiele" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "Lernbücher" }),
-    ).toBeInTheDocument();
+      screen.queryByRole("heading", { level: 2, name: "Lernbücher" }) !== null,
+    ).toBe(BOOK_RAIL_SHOWN);
   });
 
   it("gives each rail a distinct accessible name", () => {
@@ -32,8 +32,14 @@ describe("MobileRails", () => {
       screen.getByRole("list", { name: "Praxisbeispiele zum Ausprobieren" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("list", { name: "Lernbücher der Plattform" }),
-    ).toBeInTheDocument();
+      screen.queryByRole("list", { name: "Lernbücher der Plattform" }) !== null,
+    ).toBe(BOOK_RAIL_SHOWN);
+  });
+
+  // A rail of one is a single card with dead space beside it; the board's
+  // Lernbücher row is the phone's path to the book until a second one ships.
+  it("renders the books rail only while more than one book is routed", () => {
+    expect(BOOK_RAIL_SHOWN).toBe(books.length > 1);
   });
 
   it("shows six applied examples", () => {
@@ -56,7 +62,8 @@ describe("MobileRails", () => {
       container.querySelectorAll('[data-home-rail-tile="book"]'),
     );
 
-    expect(bookTiles).toHaveLength(books.length);
+    expect(bookTiles).toHaveLength(BOOK_RAIL_SHOWN ? books.length : 0);
+    if (!BOOK_RAIL_SHOWN) return;
     for (const [index, book] of books.entries()) {
       expect(bookTiles[index]).toHaveAttribute("href", book.readerHref);
       expect(bookTiles[index]).toHaveTextContent(book.title);
@@ -87,7 +94,7 @@ describe("MobileRails", () => {
   it("scroll-snaps horizontally and skips the work while off-screen", () => {
     const { container } = render(<MobileRails />);
     const rails = Array.from(container.querySelectorAll("ul"));
-    expect(rails).toHaveLength(2);
+    expect(rails).toHaveLength(BOOK_RAIL_SHOWN ? 2 : 1);
 
     for (const rail of rails) {
       expect(rail.className).toContain("overflow-x-auto");
@@ -102,6 +109,9 @@ describe("MobileRails", () => {
       for (const item of Array.from(rail.children)) {
         expect(item.className).toContain("snap-start");
         expect(item.className).toContain("shrink-0");
+        // Tiles shrink with the viewport, so 200% text cannot push a tile
+        // past a narrow phone.
+        expect(item.className).toMatch(/w-\[min\(\d+rem,78vw\)\]/);
       }
     }
   });
@@ -128,10 +138,11 @@ describe("MobileRails", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: "Applied examples" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Learning books" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/10 chapters/)).toBeInTheDocument();
+    if (BOOK_RAIL_SHOWN) {
+      expect(
+        screen.getByRole("heading", { level: 2, name: "Learning books" }),
+      ).toBeInTheDocument();
+    }
     expect(container.textContent).not.toMatch(
       /\b(?:Praxisbeispiele|Lernbücher|Kapitel|Ausprobieren|Nachlesen|Ressourcen|Lektionen)\b/,
     );

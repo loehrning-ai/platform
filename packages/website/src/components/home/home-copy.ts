@@ -9,9 +9,16 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
-      introduction:
-        "Wähle ein Ziel. Triff eine Entscheidung. Teste sie an einem Modell und nimm einen überprüfbaren Arbeitsbeleg mit. Frei, zweisprachig und quelloffen.",
+      // One sentence on phones (lead + "."), the full introduction from lg:
+      // lead + detail + "." + facts. Below lg the facts sit above the
+      // headline as the band's label instead.
+      introduction: {
+        lead: "Wähle ein Ziel. Triff eine Entscheidung. Teste sie an einem Modell",
+        detail: " und nimm einen überprüfbaren Arbeitsbeleg mit",
+        facts: "Frei, zweisprachig und quelloffen.",
+      },
       primaryCta: "Lernroute wählen",
+      globeToggle: "Globus anhalten",
       pillars: [
         {
           title: "Lernen",
@@ -53,26 +60,36 @@ export const HOME_COPY = {
         {
           label: "Blog",
           body: "Einordnungen zu KI und Recht mit Primärquellen.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "KI und Recht, mit Quellen",
           href: "/blog",
         },
         {
           label: "Lernbücher",
           body: "Vertiefungen mit Kapiteln, Quellen und Begriffen.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Kapitel mit Quellen",
           href: "/buecher",
         },
         {
           label: "Praxisbeispiele",
           body: "Modelle zum Ausprobieren, mit Annahmen und Grenzen.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Modelle zum Ausprobieren",
           href: "/demos",
         },
         {
           label: "Workshops",
           body: "Geführte Fälle für gemeinsame Entscheidungen.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Fälle für Teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
           body: "Werkzeuge mit Quellcode, Version und Lizenz.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Code, Version, Lizenz",
           href: "/open-source",
         },
       ],
@@ -136,9 +153,13 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
-      introduction:
-        "Choose a goal. Commit to a decision. Test it against a model and leave with a reviewable work artifact. Free, bilingual and open source.",
+      introduction: {
+        lead: "Choose a goal. Commit to a decision. Test it against a model",
+        detail: " and leave with a reviewable work artifact",
+        facts: "Free, bilingual and open source.",
+      },
       primaryCta: "Choose a learning route",
+      globeToggle: "Pause the globe",
       pillars: [
         {
           title: "Learn",
@@ -180,26 +201,36 @@ export const HOME_COPY = {
         {
           label: "Blog",
           body: "AI and legal analysis with primary sources.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "AI and law, with sources",
           href: "/blog",
         },
         {
           label: "Learning books",
           body: "Deeper chapters with sources and definitions.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Chapters with sources",
           href: "/buecher",
         },
         {
           label: "Applied examples",
           body: "Models to try, with assumptions and limits.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Models to try",
           href: "/demos",
         },
         {
           label: "Workshops",
           body: "Guided cases for shared decisions.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Cases for teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
           body: "Tools with source, version and licence.",
+          // Phone rows: one line at 320px, never truncated.
+          short: "Code, version, licence",
           href: "/open-source",
         },
       ],

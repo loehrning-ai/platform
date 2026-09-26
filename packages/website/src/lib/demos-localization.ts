@@ -13,6 +13,7 @@ type DemoLocalizedFields = Pick<
   | "titleKicker"
   | "background"
   | "description"
+  | "teaser"
   | "tags"
   | "meta"
   | "industries"
@@ -27,6 +28,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Excel add-in · Microsoft 365 · no additional software",
     description:
       "You select a range of invented sales figures and get formula suggestions, a pivot-table draft and a forecast that you check.",
+    teaser: "You check formulas and a forecast on invented sales figures.",
     tags: ["Excel add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Check formulas" },
@@ -49,6 +51,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Word lab · style checks with sample documents",
     description:
       "You enter a brief and get a structured draft. Then you check style, sources, approval and personal data.",
+    teaser: "A brief becomes a draft that you check for style and facts.",
     tags: ["Word add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Refine a brief" },
@@ -71,6 +74,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Sample database · signal scan · draft · review gate",
     description:
       "The pipeline reads fictional contacts, marks each signal with its source and drafts a message. A review comes before any send.",
+    teaser: "A pipeline drafts messages, and you review each one before it goes out.",
     tags: ["Pipeline", "Review gate", "Sources"],
     meta: [
       { label: "Learning objective", value: "Ground messages in signals" },
@@ -93,6 +97,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Four roles: research, synthesis, critique, editing",
     description:
       "You read the recorded trace of four agents writing one memo together, from the first research step to the final draft.",
+    teaser: "You read the trace of four agents writing one memo together.",
     tags: ["Multi-agent", "Opus 4.5", "Recorded trace"],
     meta: [
       { label: "Learning objective", value: "Separate roles" },
@@ -114,6 +119,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "n8n pattern · simulated DHL, SAP, Slack, and email steps",
     description:
       "A fictional delivery delay runs through a stock check, a customer draft and an escalation. A person signs off at the end.",
+    teaser: "A fictional delivery delay runs through the workflow to sign-off.",
     tags: ["n8n", "Self-hosted", "Supply chain"],
     meta: [
       { label: "Learning objective", value: "Read an automation flow" },
@@ -135,6 +141,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Keyword search · 8 sample documents · answers with source cards",
     description:
       "Keyword search finds clauses in eight sample contracts and quotes them with their location. For questions without a match, the system does not answer.",
+    teaser: "Keyword search quotes clauses from eight sample contracts.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -156,6 +163,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "OCR pattern · structured extraction · simulated SAP check",
     description:
       "A sample invoice is extracted, checked against explicit rules, and stopped for review before a simulated SAP import.",
+    teaser: "A sample invoice is checked and stopped before the SAP import.",
     tags: ["OCR", "SAP · IDoc", "Invoice controls"],
     meta: [
       { label: "Learning objective", value: "Extract fields" },
@@ -177,6 +185,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Rule-based token classification · runs locally in the browser",
     description:
       "Rules flag names, IBANs and confidential terms before a prompt is released. They miss some cases, so treat each flag as a hint.",
+    teaser: "Rules flag names and IBANs before a prompt is released.",
     tags: ["GDPR", "On-premises", "Rule-based"],
     meta: [
       { label: "Learning objective", value: "Identify sensitive data" },
@@ -198,6 +207,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Seeded scenarios · cost, errors, and drift as a learning trace",
     description:
       "An operations view with fixed sample values for cost, latency, errors and drift. You read off where a budget alert would fire.",
+    teaser: "You read off when a budget alert fires on cost or drift.",
     tags: ["OpenTelemetry", "Alerts", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure operations" },
@@ -219,6 +229,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Base model compared with domain examples",
     description:
       "You ask the same question twice and compare the base model's answer with that of an adapted model. Alongside, you see when retrieval or a better prompt would do.",
+    teaser: "You compare a base model with an adapted one.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Learning objective", value: "Compare against a baseline" },
@@ -240,6 +251,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Headcount × hourly cost × adoption × hours saved",
     description:
       "You enter team size, hourly rate and adoption and see the formula and the range of the result.",
+    teaser: "You see the formula and the range behind your team's ROI.",
     tags: ["ROI", "Scenario model", "Transparent"],
     meta: [
       { label: "Inputs", value: "4 assumptions" },
@@ -260,7 +272,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Automated and human scores side by side.",
     background: "Fictional evaluation metrics · drift indicator · human review",
     description:
-      "For four sample answers you compare the automated score with a human rating. In one case they disagree.",
+      "For four sample answers you compare the automated score with a human rating. In two cases the automated score is off.",
+    teaser: "You check where the automated score is wrong.",
     tags: ["Observability", "Evaluation", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure quality" },

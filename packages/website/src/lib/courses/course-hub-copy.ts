@@ -27,6 +27,8 @@ export const COURSE_HUB_COPY = {
     intro:
       "Vier Grundlagenkurse für alle, die KI im Job nutzen, und sechs Technikkurse zu Prompting, Coding-Agenten und Daten.",
     firstStep: "Unsicher, wo du stehst?",
+    /** The same question on a phone under 430px, so it and the link share one line. */
+    firstStepShort: "Unsicher?",
     checkLabel: "In fünf Minuten einordnen",
     workshopsHeading: "Lieber an einem Fall arbeiten?",
     workshopsBody: (count: number) =>
@@ -36,6 +38,9 @@ export const COURSE_HUB_COPY = {
     accessHeading: "Kosten und Konto",
     accessBody:
       "Alle Kurse sind kostenlos. Für die vier Grundlagenkurse legst du ein Lernkonto an, damit dein Fortschritt auf jedem Gerät gleich ist. Technikkurse, Workshops und Bücher öffnest du ohne Konto; nur das PDF des Lernbuchs braucht eins. Die Teilnahmebestätigung stellt loehrning.ai selbst aus, sie ist nicht akkreditiert.",
+    /** The phone version of `accessBody`: the same three facts in two sentences. */
+    accessBodyShort:
+      "Alle Kurse sind kostenlos. Ein Lernkonto brauchst du nur für die vier Grundlagenkurse und das PDF des Lernbuchs; die Teilnahmebestätigung ist nicht akkreditiert.",
     accessAction: "Lernkonto anlegen",
   },
   en: {
@@ -49,6 +54,7 @@ export const COURSE_HUB_COPY = {
     intro:
       "Four foundation courses for anyone using AI at work, plus six technical courses on prompting, coding agents and data.",
     firstStep: "Unsure where you stand?",
+    firstStepShort: "Unsure?",
     checkLabel: "Find out in five minutes",
     workshopsHeading: "Rather work through a case?",
     workshopsBody: (count: number) =>
@@ -58,6 +64,8 @@ export const COURSE_HUB_COPY = {
     accessHeading: "Cost and account",
     accessBody:
       "All courses are free. For the four foundation courses you create a learning account so your progress is the same on every device. Technical courses, workshops and books open without an account; only the learning book's PDF needs one. loehrning.ai issues the certificate of participation itself; it is not accredited.",
+    accessBodyShort:
+      "All courses are free. You only need a learning account for the four foundation courses and the learning book's PDF; the certificate of participation is not accredited.",
     accessAction: "Create a learning account",
   },
 } as const satisfies Readonly<
@@ -127,4 +135,64 @@ export function coursePromise(
   locale: Locale,
 ): string | undefined {
   return COURSE_PROMISES[locale][slug];
+}
+
+/**
+ * The phone preview of each promise: one clause of at most 45 characters,
+ * so a ledger row states what the course is about without an ellipsis. The
+ * full promise stays in the accessibility tree and prints from sm.
+ */
+export const COURSE_PROMISES_SHORT: Readonly<
+  Record<Locale, Readonly<Record<string, string>>>
+> = {
+  de: {
+    "ki-fuehrerschein": "Daten richtig einsetzen, KI-Antworten prüfen",
+    "ki-und-gesellschaft": "KI-Schlagzeilen und Deepfakes einordnen",
+    "eu-ai-act-kurs": "Risikoklasse, Rolle und Pflichten bestimmen",
+    "ai-native": "Claude-Projekt und n8n-Ablauf einrichten",
+    claude: "Prompts mit festem Format und CLAUDE.md",
+    codex: "Codex beauftragen, Pull Requests prüfen",
+    "data-infrastructure": "Design einer Datenplattform begründen",
+    "data-engineering-fundamentals": "Pipelines zeichnen, Bruchstellen kennen",
+    "data-science": "Kennzahlen und A/B-Tests hinterfragen",
+    "ai-native-operator": "KI-Aufgaben, Freigaben und Nutzen festlegen",
+  },
+  en: {
+    "ki-fuehrerschein": "Share data safely, check AI answers",
+    "ki-und-gesellschaft": "Read AI headlines and deepfakes critically",
+    "eu-ai-act-kurs": "Name risk class, role and duties",
+    "ai-native": "Set up a Claude project and an n8n workflow",
+    claude: "Prompts with a fixed format, plus CLAUDE.md",
+    codex: "Brief Codex, review its pull requests",
+    "data-infrastructure": "Justify a data platform's design choices",
+    "data-engineering-fundamentals": "Sketch pipelines, know where they break",
+    "data-science": "Question metrics and A/B tests",
+    "ai-native-operator": "Decide what AI does and who signs off",
+  },
+};
+
+export function coursePromiseShort(
+  slug: string,
+  locale: Locale,
+): string | undefined {
+  return COURSE_PROMISES_SHORT[locale][slug];
+}
+
+/**
+ * A phone-length duration where the catalog label would wrap the facts
+ * caption. Only courses listed here differ; the rest print their catalog
+ * duration at every width.
+ */
+export const COURSE_DURATIONS_SHORT: Readonly<
+  Record<Locale, Readonly<Record<string, string>>>
+> = {
+  de: { "ai-native": "ca. 5 bis 12 Std." },
+  en: { "ai-native": "about 5 to 12 hrs" },
+};
+
+export function courseDurationShort(
+  slug: string,
+  locale: Locale,
+): string | undefined {
+  return COURSE_DURATIONS_SHORT[locale][slug];
 }

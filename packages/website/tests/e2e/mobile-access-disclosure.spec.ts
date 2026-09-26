@@ -130,7 +130,7 @@ for (const locale of ["de", "en"] as const) {
         await expectReadable(disclosure);
         await expectTapTarget(card);
         const cardBox = await card.boundingBox();
-        expect(cardBox!.height).toBe(76);
+        expect(cardBox!.height).toBe(56);
         await page.screenshot({
           path: testInfo.outputPath("home-before-tap.png"),
         });

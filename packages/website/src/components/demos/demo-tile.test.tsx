@@ -58,6 +58,7 @@ function makeDemo(overrides: Partial<Demo> = {}): Demo {
     titleKicker: "Formel, Pivot, Prognose.",
     background: "Excel-Add-In - Microsoft 365 - keine neue Software",
     description: "Beschreibung der Demo als Fliesstext.",
+    teaser: "Ein ganzer Satz für die Zeile am Telefon.",
     tags: ["Excel"],
     meta: [],
     industries: ["Controlling"],
@@ -139,13 +140,36 @@ describe("<DemoTile>", () => {
     expect(container.querySelector("[data-chip]")).toBeNull();
   });
 
+  it("slims the phone ledger row: no caption or open line, one arrow by the name", () => {
+    const { container } = render(<DemoTile demo={makeDemo()} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveClass("max-sm:py-4");
+    // The content-visibility placeholder matches the row, not the 420px card.
+    expect(link.className).toContain("max-sm:[contain-intrinsic-size:auto_132px]!");
+    expect(container.querySelector("[data-demo-tile-meta]")).toHaveClass(
+      "max-sm:hidden",
+    );
+    expect(screen.getByText("Beispiel öffnen").closest("span")).toHaveClass(
+      "max-sm:hidden",
+    );
+    const phoneArrow = screen
+      .getByRole("heading", { level: 3 })
+      .parentElement?.querySelector("svg[data-arrow]");
+    expect(phoneArrow).toHaveClass("sm:hidden");
+    expect(phoneArrow).toHaveAttribute("aria-hidden", "true");
+  });
+
   it("renders the full description and the plain name as a one-colour heading", () => {
     const demo = makeDemo();
     render(<DemoTile demo={demo} />);
     const description = screen.getByText(demo.description);
-    // Full text from sm up; only the phone ledger row clamps to two lines.
-    expect(description.className).not.toMatch(/(?:^|\s)line-clamp/);
-    expect(description).toHaveClass("max-sm:line-clamp-2");
+    // Full text from sm up; the phone row swaps in the one-sentence teaser.
+    // Neither is clamped at any width, so no row ends mid-sentence.
+    expect(description.className).not.toMatch(/line-clamp/);
+    expect(description).toHaveClass("max-sm:hidden");
+    const teaser = screen.getByText(demo.teaser);
+    expect(teaser.className).not.toMatch(/line-clamp|truncate/);
+    expect(teaser).toHaveClass("sm:hidden");
     // Only the name, without its full stop; the task phrase is not repeated.
     const heading = screen.getByRole("heading", { level: 3 });
     expect(heading).toHaveTextContent(/^Claude in Excel$/);

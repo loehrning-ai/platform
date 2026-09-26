@@ -112,7 +112,10 @@ export default async function DataScienceOverviewPage() {
     >
       <JsonLd data={courseJsonLd} id="data-science-course-jsonld" />
       <DataScienceLocaleProvider locale={locale}>
-        <div className="content min-w-0">
+        {/* `ov-landing` scopes the phone layer in ds-v8-scope.css: below sm
+            the overview drops the card grid for Werkzeichnung hairline rows.
+            From sm the landing renders exactly as before. */}
+        <div className="content ov-landing min-w-0">
           <OverviewComponent chapter={overview.meta} />
           <nav
             className="tb mt-12 min-w-0 flex-wrap gap-3"

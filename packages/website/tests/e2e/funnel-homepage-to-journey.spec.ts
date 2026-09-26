@@ -69,9 +69,6 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
   const desktopLearning = page.getByRole("button", { name: "Lernen" });
   if (await desktopLearning.isVisible()) {
     const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
-    await expect(
-      nav.getByRole("link", { name: "Open Source", exact: true }),
-    ).toBeVisible();
 
     await openDesktopDisclosure(desktopLearning);
     await expect(
@@ -90,6 +87,13 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
         name: "Workshops",
       }),
     ).toHaveAttribute("href", "/workshops");
+    // Open Source is part of Praxis, as in the menu sheet, the footer and
+    // the tab bar.
+    await expect(
+      page.locator("#praxis-nav-menu").getByRole("link", {
+        name: "Open Source",
+      }),
+    ).toHaveAttribute("href", "/open-source");
 
     // The trigger's click handler still has to work, so exercise it on the
     // deterministic half of the toggle. The state is committed by now (the

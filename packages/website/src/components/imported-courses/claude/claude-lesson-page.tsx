@@ -96,6 +96,7 @@ export function ClaudeLessonPage({
         title={lesson.title}
         objective={lesson.hook}
         headingLevel={isProjectCheckpoint ? 2 : 1}
+        objectiveRepeatedAbove={isProjectCheckpoint}
       >
         <ClaudeLessonReader
           lesson={lesson}

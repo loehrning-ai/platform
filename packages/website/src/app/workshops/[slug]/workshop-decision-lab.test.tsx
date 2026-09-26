@@ -466,3 +466,23 @@ describe("keepNumbersWithUnits", () => {
     );
   });
 });
+
+describe("<WorkshopDecisionLab> number and unit binding", () => {
+  it("never breaks the W04 prompt, options or facts between a number and its unit", () => {
+    const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
+    const container = document.createElement("div");
+    container.innerHTML = renderToStaticMarkup(
+      <WorkshopDecisionLab config={workshop.decisionLab} locale="de" />,
+    );
+    const prompt = container.querySelector("h2 + p")!;
+    // Plain spaces: the text and the radio names stay the registry strings.
+    expect(prompt.textContent).toContain("7,5 % unter dem Vorjahr");
+    expect(
+      [...prompt.querySelectorAll("[data-number-unit]")].map((span) => span.textContent),
+    ).toEqual(expect.arrayContaining(["1.866,5 t", "7,5 %"]));
+    const bound = container.querySelectorAll("[data-number-unit]");
+    expect(container.querySelectorAll("label [data-number-unit]").length).toBeGreaterThan(0);
+    expect(container.querySelectorAll("dd [data-number-unit]").length).toBeGreaterThan(0);
+    for (const span of bound) expect(span).toHaveClass("whitespace-nowrap");
+  });
+});

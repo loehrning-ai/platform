@@ -162,4 +162,25 @@ describe("<WordDemo>", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(button).not.toBeDisabled();
   });
+  it("puts the draft first below sm and folds the inputs behind a summary", () => {
+    const { container } = render(<WordDemo />);
+    expect(container.querySelector("[data-word-draft]")).toHaveClass("max-sm:order-first");
+    const summary = container.querySelector("[data-word-brief-summary]");
+    expect(summary).toHaveClass("sm:hidden");
+    expect(summary).toHaveTextContent(
+      "Fiktivwerk Beispiel GmbH · Wartungs-KI Produktionslinie · 68.000 € · Juli-September 2026",
+    );
+    const toggle = screen.getByRole("button", { name: /Eckdaten ändern/ });
+    expect(toggle).toHaveClass("min-h-11");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    const fields = container.querySelector("[data-word-fields]");
+    expect(toggle).toHaveAttribute("aria-controls", fields?.id);
+    expect(fields).toHaveClass("max-sm:hidden");
+    // The fields and "Neu erstellen" live inside the disclosure.
+    expect(fields).toContainElement(screen.getByLabelText("Adressat"));
+    expect(fields).toContainElement(screen.getByRole("button", { name: "Neu erstellen" }));
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(fields).not.toHaveClass("max-sm:hidden");
+  });
 });

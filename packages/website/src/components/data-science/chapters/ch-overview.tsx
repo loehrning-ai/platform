@@ -184,9 +184,9 @@ export default function ChOverview() {
     <>
       <section className="ov-hero">
         <div className="ov-hero-copy">
-          <div className="ov-hero-eyebrow">Data Science Fundamentals · v8</div>
+          <div className="ov-hero-eyebrow">Data science course · free</div>
           <h1 className="ov-hero-title">
-            Data Science means
+            Data Science means{" "}
             <br />
             <span className="accent">turning data into decisions.</span>
           </h1>
@@ -201,7 +201,7 @@ export default function ChOverview() {
               href={dsChapterHref("fund", "en")}
               prefetch={false}
             >
-              Begin &nbsp;→
+              Start chapter 1 &nbsp;→
             </Link>
           </div>
           <div className="ov-hero-stats">
@@ -214,8 +214,8 @@ export default function ChOverview() {
               <div className="v">live simulations</div>
             </div>
             <div className="ov-stat">
-              <div className="k">~2h</div>
-              <div className="v">end-to-end</div>
+              <div className="k">2 h</div>
+              <div className="v">approximate study time</div>
             </div>
           </div>
         </div>
@@ -228,7 +228,7 @@ export default function ChOverview() {
         <div className="ov-section-head">
           <div className="ov-kicker">Outcomes</div>
           <h2 className="ov-h2">
-            Apply the methods and test
+            Apply the methods and test{" "}
             <br />
             <em> how much they say.</em>
           </h2>
@@ -248,7 +248,7 @@ export default function ChOverview() {
         <div className="ov-section-head">
           <div className="ov-kicker">The curriculum</div>
           <h2 className="ov-h2">
-            Twelve chapters: build the model,
+            Twelve chapters: build the model,{" "}
             <br />
             then prove the effect.
           </h2>
@@ -292,7 +292,7 @@ export default function ChOverview() {
         <div className="ov-section-head ov-sh-tight">
           <div className="ov-kicker">Tools in the course</div>
           <h2 className="ov-h2">
-            Common open-source tools
+            Common open-source tools{" "}
             <br />
             for day-to-day data science.
           </h2>

@@ -18,9 +18,15 @@ export const DEMOS_PAGE_COPY = {
     catalog: {
       kicker: "Praxisbeispiele",
       heading: "KI-Arbeitsabläufe prüfen",
+      // Two sentences: phones show only the first, from sm up both.
       introduction:
-        "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe. Zu jedem Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
+        "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe.",
+      introductionDetail:
+        "Zu jedem Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
       statsLabel: "Umfang der Sammlung",
+      // Phone stat line; the StatRow carries the same numbers from sm up.
+      statsLine: (examples: number, modes: number, actions: number) =>
+        `${examples} Beispiele · ${modes} Ausführungsarten · ${actions} Außenaktionen`,
       stats: {
         examples: { label: "Praxisbeispiele", note: "im Browser, ohne Konto" },
         modes: {
@@ -50,6 +56,9 @@ export const DEMOS_PAGE_COPY = {
       emptyBody:
         "Für diese Kombination ist kein Praxisbeispiel veröffentlicht. Setze einen Filter zurück.",
       reset: "Filter zurücksetzen",
+      // Phone filter disclosure: one 44px button instead of three selects.
+      filterToggle: "Filter",
+      activeFilters: (count: number) => `${count} aktiv`,
     },
     tile: {
       kind: "Praxisbeispiel",
@@ -69,6 +78,8 @@ export const DEMOS_PAGE_COPY = {
       aboutHeading: "Worum es geht",
       checksHeading: "Was du prüfen kannst",
       runHeading: "So läuft dieses Beispiel",
+      // Phone-only button that folds the checks and the run table.
+      notesToggle: "So prüfst du das Beispiel",
       dataLabel: "Daten",
       executionLabel: "Ausführung",
       actionsLabel: "Externe Aktionen",
@@ -139,8 +150,12 @@ export const DEMOS_PAGE_COPY = {
       kicker: "Practice examples",
       heading: "Inspect AI workflows",
       introduction:
-        "Each example runs one workflow on invented data, from the input to the sign-off. Next to it you see where the data comes from, how the example runs and which actions are only simulated.",
+        "Each example runs one workflow on invented data, from the input to the sign-off.",
+      introductionDetail:
+        "Next to it you see where the data comes from, how the example runs and which actions are only simulated.",
       statsLabel: "What the collection holds",
+      statsLine: (examples: number, modes: number, actions: number) =>
+        `${examples} examples · ${modes} execution modes · ${actions} external actions`,
       stats: {
         examples: { label: "Practice examples", note: "in the browser, no account" },
         modes: {
@@ -170,6 +185,8 @@ export const DEMOS_PAGE_COPY = {
       emptyBody:
         "No published example matches this combination. Clear one of the filters.",
       reset: "Reset filters",
+      filterToggle: "Filters",
+      activeFilters: (count: number) => `${count} active`,
     },
     tile: {
       kind: "Example",
@@ -189,6 +206,7 @@ export const DEMOS_PAGE_COPY = {
       aboutHeading: "What this covers",
       checksHeading: "What you can check",
       runHeading: "How this example runs",
+      notesToggle: "How to check this example",
       dataLabel: "Data",
       executionLabel: "Execution",
       actionsLabel: "External actions",

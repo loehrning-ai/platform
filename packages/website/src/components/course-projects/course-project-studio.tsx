@@ -839,15 +839,19 @@ function CourseProjectCheckpointStudio({
         locale={locale}
         projectId={config.id}
         engineKind={config.engineKind}
+        phoneExpanded={effectiveActivated}
+        phoneStatus={done ? copy.done : copy.pending}
         header={
-          <div className="flex min-w-0 flex-col border-b-2 border-foreground bg-foreground text-background sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0 px-4 py-3 sm:px-5">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere]">
-                {copy.eyebrow} · {config.engineKind}
+          // Below sm the band is one row with sentence-case labels, so the
+          // collapsed phone frame is this band plus its toggle row.
+          <div className="flex min-w-0 flex-row items-center justify-between border-b-2 border-foreground bg-foreground text-background">
+            <div className="min-w-0 px-4 py-3 max-sm:py-2 sm:px-5">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere] max-sm:font-sans max-sm:text-sm max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal">
+                {copy.eyebrow}
               </p>
             </div>
             <div
-              className="flex shrink-0 items-center gap-2 border-t border-background/30 px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] sm:border-l sm:border-t-0 sm:px-5"
+              className="flex shrink-0 items-center gap-2 border-l border-background/30 px-4 py-3 max-sm:py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] max-sm:max-w-[45%] max-sm:font-sans max-sm:text-sm max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal sm:px-5"
               role="status"
               aria-live="polite"
             >

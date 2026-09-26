@@ -316,16 +316,26 @@ const DARK_HAIRLINE = "rgba(243,240,233,0.16)";
 // Paper text on the Mennige node: 5.40:1 (#edded4 at 0.9 alpha was 4.4:1).
 const ON_MENNIGE = "#f9f7f2";
 
-function StatusPill({ status }: { status: NodeStatus }) {
+function StatusPill({
+  status,
+  settled = false,
+}: {
+  status: NodeStatus;
+  /** A finished run: the node is paper, so "Run" takes the Mennige ink. */
+  settled?: boolean;
+}) {
   const map: Record<NodeStatus, { label: string; color: string; bg: string }> =
     {
       // No pastel pill: a word in the node's own ink. "OK" carries the
       // pass tick, so the state never rests on colour alone.
       pending: { label: "Wait", color: DEMO.schiefer, bg: "transparent" },
       active: { label: "Run", color: ON_MENNIGE, bg: "transparent" },
-      done: { label: "✓ OK", color: "#205b46", bg: "transparent" },
+      done: { label: "✓ OK", color: DEMO.ink, bg: "transparent" },
     };
-  const s = map[status];
+  const s =
+    status === "active" && settled
+      ? { ...map.active, color: "var(--color-mennige)" }
+      : map[status];
   return (
     <span
       style={{
@@ -361,6 +371,8 @@ export default function N8nSupplyChainDemo() {
   const events = eventsForStep(activeStep, scenario, sourceEvents, lowConfidenceEvent);
   const totalEvents = scenario === "lowConfidence" ? 4 : sourceEvents.length;
   const allDone = activeStep >= maxStep;
+  // Below sm the log folds to its last line behind "Protokoll".
+  const [logOpen, setLogOpen] = useState(false);
 
   // Reduced motion: jump straight to the scenario's final state. Deliberately
   // NOT keyed on activeStep, so a manual Zurück/Weiter click after this fires
@@ -418,10 +430,10 @@ export default function N8nSupplyChainDemo() {
         "Simulierter n8n-Lieferkettenablauf",
         "Simulated n8n supply-chain flow",
       )}
+      className="gap-3 sm:gap-3.5"
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 14,
         fontFamily: DEMO.font.sans,
         color: DEMO.kalk,
         minHeight: DEMO_HEIGHT,
@@ -463,15 +475,22 @@ export default function N8nSupplyChainDemo() {
             fontVariantNumeric: "tabular-nums",
           }}
         >
-          <span>{stepLabel}</span>
+          {/* "Schritt 4 / 4" from sm up; below sm the count alone, so the
+              step and the three icon buttons share one 44px row. */}
+          <span>
+            <span className="max-sm:hidden">
+              {stepLabel.replace(/\s\S+ \/ \d+$/, " ")}
+            </span>
+            {stepLabel.replace(/^\S+\s/, "")}
+          </span>
           <button
             type="button"
             onClick={handleBack}
+            className="px-3 max-sm:px-0"
             disabled={activeStep <= 0}
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
               color: activeStep <= 0 ? "rgba(243,240,233,0.45)" : DEMO.kalk,
               border: `1px solid ${activeStep <= 0 ? DARK_HAIRLINE : DARK_EDGE}`,
@@ -479,16 +498,17 @@ export default function N8nSupplyChainDemo() {
               ...DEMO.label,
             }}
           >
-            {text("◀ Zurück", "◀ Back")}
+            <span aria-hidden="true">◀</span>
+            <span className="max-sm:sr-only">{text(" Zurück", " Back")}</span>
           </button>
           <button
             type="button"
             onClick={handleNext}
+            className="px-3 max-sm:px-0"
             disabled={activeStep >= maxStep}
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
               color: activeStep >= maxStep ? "rgba(243,240,233,0.45)" : DEMO.kalk,
               border: `1px solid ${activeStep >= maxStep ? DARK_HAIRLINE : DARK_EDGE}`,
@@ -496,15 +516,16 @@ export default function N8nSupplyChainDemo() {
               ...DEMO.label,
             }}
           >
-            {text("Weiter ▶", "Next ▶")}
+            <span className="max-sm:sr-only">{text("Weiter ", "Next ")}</span>
+            <span aria-hidden="true">▶</span>
           </button>
           <button
             type="button"
             onClick={handleReplay}
+            className="px-3 max-sm:px-0"
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
               color: DEMO.kalk,
               border: `1px solid ${DARK_EDGE}`,
@@ -512,12 +533,13 @@ export default function N8nSupplyChainDemo() {
               ...DEMO.label,
             }}
           >
-            {text("↻ Neu abspielen", "↻ Replay")}
+            <span aria-hidden="true">↻</span>
+            <span className="max-sm:sr-only">{text(" Neu abspielen", " Replay")}</span>
           </button>
         </div>
 
         <div
-          style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
+          className="flex flex-wrap gap-1.5 max-sm:grid max-sm:w-full max-sm:grid-cols-2 max-sm:gap-0"
           role="group"
           aria-label={text("Szenario wählen", "Choose scenario")}
         >
@@ -567,10 +589,10 @@ export default function N8nSupplyChainDemo() {
             style={{ display: "flex", flexDirection: "column", gap: 14 }}
           >
             <div
+              className="gap-1.5 sm:gap-2"
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 8,
                 minWidth: 0,
               }}
             >
@@ -585,10 +607,15 @@ export default function N8nSupplyChainDemo() {
               {col.nodes.map((n) => {
                 const status = statusFor(n.step, activeStep);
                 const isActive = status !== "pending";
-                const isCurrent = status === "active";
+                // A finished run draws its last step as run nodes (paper,
+                // solid ink) with only "Run" in Mennige; the Mennige fill
+                // marks the one step that is animating.
+                const settled = allDone;
+                const isCurrent = status === "active" && !settled;
                 return (
                   <div
                     key={n.id}
+                    className="px-2.5 py-[9px] max-sm:py-[7px]"
                     style={{
                       // Constant Mennige: inside the dark frame the accent token
                       // flips to #e07050, where paper text drops to 2.8:1.
@@ -599,7 +626,7 @@ export default function N8nSupplyChainDemo() {
                       // Pending nodes are drawn dashed (not yet run), run
                       // nodes solid; no coloured left rule.
                       border: `1px ${isActive ? "solid" : "dashed"} ${isCurrent ? "var(--color-mennige)" : DEMO.ink}`,
-                      padding: "9px 10px",
+
                       transition: reduced
                         ? "none"
                         : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out",
@@ -634,7 +661,10 @@ export default function N8nSupplyChainDemo() {
                         >
                           {n.t}
                         </div>
+                        {/* Below sm the node kind leads the note line, so a
+                            node is two lines instead of three. */}
                         <div
+                          className="max-sm:hidden"
                           style={{
                             ...DEMO.label,
                             color: isCurrent ? ON_MENNIGE : DEMO.schiefer,
@@ -644,7 +674,7 @@ export default function N8nSupplyChainDemo() {
                           {n.k}
                         </div>
                       </div>
-                      <StatusPill status={status} />
+                      <StatusPill status={status} settled={settled} />
                     </div>
                     <div
                       style={{
@@ -656,6 +686,7 @@ export default function N8nSupplyChainDemo() {
                         wordBreak: "break-word",
                       }}
                     >
+                      <span className="sm:hidden">{n.k} · </span>
                       {n.note}
                     </div>
                   </div>
@@ -685,8 +716,12 @@ export default function N8nSupplyChainDemo() {
         ))}
       </div>
 
-      {/* Terminal-style log */}
+      {/* Terminal-style log. Below sm it folds to its last line behind a
+          44px "Protokoll · 6 Ereignisse" button; the nodes above already
+          show each step. From sm up it reads in full, as before. */}
       <div
+        className="sm:min-h-[150px]"
+        data-n8n-log
         style={{
           background: DEMO.ink,
           color: DEMO.kalk,
@@ -694,14 +729,34 @@ export default function N8nSupplyChainDemo() {
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           lineHeight: 1.7,
-          minHeight: 150,
           border: `1px solid ${DARK_HAIRLINE}`,
           borderTop: `2px solid ${DARK_EDGE}`,
         }}
       >
-        <div
+        <button
+          type="button"
+          onClick={() => setLogOpen((open) => !open)}
+          aria-expanded={logOpen}
+          className="-mt-2.5 flex min-h-11 w-full items-center justify-between gap-2 text-left sm:hidden"
           style={{
-            display: "flex",
+            ...DEMO.label,
+            background: "transparent",
+            border: 0,
+            padding: 0,
+            color: DEMO.kalk,
+            cursor: "pointer",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {text("Protokoll", "Log")} · {events.length}{" "}
+          {text("Ereignisse", "events")}
+          <span aria-hidden="true" style={{ fontSize: 16 }}>
+            {logOpen ? "−" : "+"}
+          </span>
+        </button>
+        <div
+          className="flex max-sm:hidden"
+          style={{
             justifyContent: "space-between",
             alignItems: "center",
             borderBottom: `1px solid ${DARK_HAIRLINE}`,
@@ -719,7 +774,7 @@ export default function N8nSupplyChainDemo() {
           </span>
         </div>
         {events.length === 0 && (
-          <div style={{ color: DARK_MUTED }}>
+          <div className={logOpen ? undefined : "max-sm:hidden"} style={{ color: DARK_MUTED }}>
             {text("Wartet auf das Webhook-Ereignis …", "Waiting for the webhook event …")}
           </div>
         )}
@@ -735,8 +790,12 @@ export default function N8nSupplyChainDemo() {
           return (
             <div
               key={e.id}
+              className={
+                logOpen || (!allDone && e.id === events.length - 1)
+                  ? "flex"
+                  : "flex max-sm:hidden"
+              }
               style={{
-                display: "flex",
                 gap: 8,
                 flexWrap: "wrap",
                 alignItems: "baseline",
@@ -841,9 +900,11 @@ export default function N8nSupplyChainDemo() {
             "Alternate path: low confidence → human review",
           )}
         </div>
+        {/* The chain is what the "Konfidenz niedrig" scenario above already
+            draws, so below sm only the heading and the sentence stay. */}
         <div
+          className="flex max-sm:hidden"
           style={{
-            display: "flex",
             alignItems: "center",
             gap: 8,
             fontSize: 12,
@@ -923,9 +984,21 @@ export default function N8nSupplyChainDemo() {
         </div>
       </div>
 
+      {/* Below sm the canvas drops its own frame and inset: the dark shell
+          band already frames it, so the nodes are the first box. */}
       <style>{`
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-h { display: none; }
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-v { display: inline; }
+        @media (max-width: 639.98px) {
+          [data-demo-id="n8n-supply-chain"] .demo-n8n-grid {
+            border: 0 !important;
+            padding: 0 !important;
+            gap: 16px !important;
+          }
+          /* The stacked columns read top to bottom; a 16px gap replaces
+             the down arrows. */
+          [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow { display: none !important; }
+        }
         @media (min-width: 640px) {
           [data-demo-id="n8n-supply-chain"] .demo-n8n-grid {
             display: grid !important;

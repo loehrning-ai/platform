@@ -3,6 +3,11 @@ import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import {
+  ACCOUNT_ROUTES,
+  LEARNING_ROUTES,
+  PRACTICE_ROUTES,
+} from "@/lib/navigation/site-sections";
+import {
   MobileTabBarLinks,
   type MobileTab,
 } from "@/components/mobile-tab-bar-links";
@@ -37,18 +42,22 @@ import {
  * would give up the CDN cacheability the crawl surface is built around. Nothing
  * in this subtree may read `cookies()`.
  *
- * The earlier signed-in shortcut pointed the Werkzeuge tab at
- * `/konto#werkzeuge`. Nothing on the account page carries that id, so it landed
- * at the top of `/konto` - the Konto tab's own destination - while this tab went
- * on claiming `/open-source` as the surface it marks active. The public tools
- * surface is the honest destination for both audiences, and the signed-in
- * workbench stays one tap away on the Konto tab.
+ * An earlier signed-in shortcut pointed a tab at `/konto#werkzeuge`, an id
+ * nothing on the account page carries. Every tab now lands on a public page
+ * for both audiences, and the signed-in workbench stays one tap away on the
+ * Konto tab.
+ *
+ * The two middle tabs are the header's two task groups, Lernen and Praxis,
+ * with the same labels and the same section table behind them, so the
+ * header, the menu sheet, the footer and this bar group every page the same
+ * way. Lernen lands on the course hub and Praxis on the workshops, the first
+ * page of its group. No path belongs to two tabs.
  */
 export function buildMobileTabs(locale: Locale): readonly MobileTab[] {
   // Every label, this landmark's accessible name included, comes from
-  // GLOBAL_NAVIGATION_COPY. `start` / `courses` / `tools` are the short
-  // tab-bar forms recorded there; `home` and `allCourses` are the long ones
-  // the desktop menu uses and do not fit a quarter of a 320px viewport.
+  // GLOBAL_NAVIGATION_COPY. `start` is the short tab-bar form of `home`,
+  // which does not fit a quarter of a 320px viewport; `learning` and
+  // `practice` are the header's own group labels.
   const globalCopy = GLOBAL_NAVIGATION_COPY[locale];
   const iconClassName = "size-5 shrink-0";
 
@@ -56,28 +65,28 @@ export function buildMobileTabs(locale: Locale): readonly MobileTab[] {
     {
       id: "start",
       href: localizeHref("/", locale),
-      matchPath: "/",
+      matchPaths: ["/"],
       label: globalCopy.start,
       icon: <Home aria-hidden="true" className={iconClassName} />,
     },
     {
-      id: "kurse",
+      id: "lernen",
       href: localizeHref("/kurse", locale),
-      matchPath: "/kurse",
-      label: globalCopy.courses,
+      matchPaths: LEARNING_ROUTES,
+      label: globalCopy.learning,
       icon: <GraduationCap aria-hidden="true" className={iconClassName} />,
     },
     {
-      id: "werkzeuge",
-      href: localizeHref("/open-source", locale),
-      matchPath: "/open-source",
-      label: globalCopy.tools,
+      id: "praxis",
+      href: localizeHref("/workshops", locale),
+      matchPaths: PRACTICE_ROUTES,
+      label: globalCopy.practice,
       icon: <Wrench aria-hidden="true" className={iconClassName} />,
     },
     {
       id: "konto",
       href: localizeHref("/konto", locale),
-      matchPath: "/konto",
+      matchPaths: ACCOUNT_ROUTES,
       label: globalCopy.account,
       icon: <UserRound aria-hidden="true" className={iconClassName} />,
     },
@@ -90,10 +99,19 @@ export function buildMobileTabs(locale: Locale): readonly MobileTab[] {
  * the root element, or on the outermost wrapper a reader route owns inside
  * `<main>`. Both are server rendered by the route, so the bar is absent in the
  * first response and never appears and then vanishes.
+ *
+ * The top hairline is an inset shadow, drawn inside the band rather than on
+ * top of it, so the bar is exactly `--tabbar-band-h` tall: the band the body
+ * reserves, and not one pixel more over the end of the page.
+ *
+ * While the menu sheet is open the bar stays visible but inert behind the
+ * scrim, and its tab row fades (see MobileTabBarLinks) so it does not look
+ * available. The row fades, not the bar, so the bar's paper stays opaque and
+ * the page never shows through it.
  */
 const TAB_BAR_CLASS_NAME = [
   "fixed inset-x-0 bottom-0 z-40",
-  "border-t border-hairline bg-background",
+  "bg-background shadow-[inset_0_1px_0_var(--color-hairline)]",
   "px-safe pb-safe",
   "lg:hidden",
   "[:root[data-reader=focus]_&]:hidden",

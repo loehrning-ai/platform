@@ -190,8 +190,28 @@ export function keepNumbersWithUnits(text: string): string {
   return text.replace(/(\d) (?=[\p{L}€%])/gu, "$1\u00a0");
 }
 
+/** A number with the unit or word after it: "7,5 %", "1.866,5 t", "(−5,1 %)". */
+const NUMBER_WITH_UNIT = /(\S*\d [\p{L}€%][^\s]*)/u;
+
+/**
+ * Prose with each number held to its unit by a nowrap span, not a no-break
+ * space, so the text and a radio's accessible name stay exactly the registry
+ * string ("7,5 %" never breaks into "7,5 / %" on a phone).
+ */
+export function NumberUnitText({ text }: { readonly text: string }) {
+  return text.split(NUMBER_WITH_UNIT).map((part, position) =>
+    position % 2 === 1 ? (
+      <span key={position} data-number-unit="" className="whitespace-nowrap">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
+
 const OPTION_ROW =
-  "flex min-h-12 cursor-pointer items-start gap-3 border-b border-hairline px-2 py-3 text-left transition-colors duration-[120ms] hover:bg-card has-[:checked]:bg-card";
+  "flex min-h-12 cursor-pointer items-start gap-3 border-b border-hairline px-2 py-2.5 text-left sm:py-3 transition-colors duration-[120ms] hover:bg-card has-[:checked]:bg-card";
 
 /**
  * Square radio, the same shape as the Route's current station: an ink frame
@@ -271,7 +291,7 @@ function DecisionOption({
             mark === "other" ? "text-muted-foreground" : "text-foreground",
           )}
         >
-          {option.label}
+          <NumberUnitText text={option.label} />
         </span>
         {markText ? (
           <span
@@ -460,40 +480,44 @@ export function WorkshopDecisionLab({
       data-workshop-decision-lab
       className="scroll-mt-20 border-t-2 border-foreground bg-inset"
     >
-      <div className="mx-auto grid max-w-[75rem] gap-8 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
+      <div className="mx-auto grid max-w-[75rem] gap-5 px-4 py-6 sm:gap-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <header className="min-w-0">
           <p className="text-label text-muted-foreground tabular-nums">
             {config.kicker}
           </p>
           <h2
             id={`${decisionName}-title`}
-            className="mt-3 max-w-[24ch] text-fluid-h2 font-bold text-foreground text-balance"
+            className="mt-1.5 max-w-[24ch] text-[1.375rem]/[1.15] font-bold text-foreground text-balance sm:mt-3 sm:text-fluid-h2"
           >
             {keepNumbersWithUnits(config.title)}
           </h2>
-          <p className="mt-4 max-w-[52ch] text-body text-muted-foreground text-pretty">
-            {config.prompt}
+          <p className="mt-2 max-w-[52ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
+            <NumberUnitText text={config.prompt} />
           </p>
           {/* One row from 26rem: equal columns, but a column never gets
               narrower than its longest word ("12 Stromrechnungen"), so a
-              value wraps between words and never inside one. */}
+              value wraps between words and never inside one. Below 26rem
+              each fact is one label-and-value line. */}
           <dl
             data-lab-facts=""
-            className="mt-6 grid grid-cols-1 gap-x-4 gap-y-3 border-t border-hairline pt-3 min-[26rem]:grid-flow-col min-[26rem]:grid-cols-none min-[26rem]:auto-cols-[minmax(min-content,1fr)]"
+            className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1 border-t border-hairline pt-2 sm:mt-6 min-[26rem]:gap-y-3 min-[26rem]:pt-3 min-[26rem]:grid-flow-col min-[26rem]:grid-cols-none min-[26rem]:auto-cols-[minmax(min-content,1fr)]"
           >
             {config.facts.map((fact) => {
               const { label, value } = splitFact(fact);
               return (
-                <div key={fact}>
+                <div
+                  key={fact}
+                  className="flex items-baseline justify-between gap-3 min-[26rem]:block"
+                >
                   <dt className="text-label text-muted-foreground">{label}</dt>
-                  <dd className="mt-1 break-words text-[1.25rem] font-bold leading-tight text-foreground tabular-nums">
-                    {value}
+                  <dd className="break-words text-right text-[1.0625rem] font-bold leading-tight text-foreground tabular-nums min-[26rem]:mt-1 min-[26rem]:text-left min-[26rem]:text-[1.25rem]">
+                    <NumberUnitText text={value} />
                   </dd>
                 </div>
               );
             })}
           </dl>
-          <p className="mt-6 flex items-start gap-2 text-caption text-muted-foreground">
+          <p className="mt-3 flex items-start gap-2 text-caption text-muted-foreground sm:mt-6">
             <Pictogram name="shield" className="mt-0.5 size-4" />
             <span>{config.privacyNote}</span>
           </p>
@@ -516,7 +540,7 @@ export function WorkshopDecisionLab({
               {copy.noScript}
             </p>
           </noscript>
-          <div className="grid gap-8">
+          <div className="grid gap-5 sm:gap-8">
             <fieldset
               disabled={!hydrated}
               className="min-w-0"
@@ -613,7 +637,7 @@ export function WorkshopDecisionLab({
             ) : null}
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-4 flex flex-wrap items-center gap-4 sm:mt-6">
             {submitted ? (
               <button
                 key="reset"

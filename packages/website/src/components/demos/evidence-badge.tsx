@@ -25,7 +25,7 @@ const EVIDENCE_ICON: Record<DemoEvidenceMode, PictogramName> = {
  * visible "Was heißt das?" label, so the minus never reads as a dash inside
  * the evidence phrase.
  */
-function DisclosureGlyph({ open }: { open: boolean }) {
+export function DisclosureGlyph({ open }: { open: boolean }) {
   return (
     <svg
       viewBox="0 0 16 16"

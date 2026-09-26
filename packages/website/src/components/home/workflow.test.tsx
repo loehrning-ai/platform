@@ -78,4 +78,26 @@ describe("Ressourcen section (Workflow)", () => {
       dataset: expect.objectContaining({ prefetch: "false" }),
     });
   });
+
+  it("gives each destination one path on a phone and never truncates a row", async () => {
+    const { BOOK_RAIL_SHOWN } = await import("./mobile-rails");
+    const { container } = render(<Workflow />);
+    const rowFor = (href: string) =>
+      container.querySelector(`a[href="${href}"]`)?.closest("li");
+    // The demos rail above owns /demos below lg; /buecher only while the
+    // books rail is shown (a rail of one is no rail).
+    expect(rowFor("/demos")).toHaveClass("max-lg:hidden");
+    expect(rowFor("/buecher")?.classList.contains("max-lg:hidden")).toBe(
+      BOOK_RAIL_SHOWN,
+    );
+    for (const href of ["/blog", "/workshops", "/open-source"]) {
+      expect(rowFor(href)).not.toHaveClass("max-lg:hidden");
+    }
+    expect(container.innerHTML).not.toContain("max-lg:truncate");
+    // Phone rows carry their own short line, one line at 320px.
+    expect(screen.getByText("KI und Recht, mit Quellen")).toHaveClass("lg:hidden");
+    // The Kopflinie heads the section below lg; the kicker is for assistive
+    // tech only there.
+    expect(screen.getByText("Ressourcen")).toHaveClass("max-lg:sr-only");
+  });
 });

@@ -68,4 +68,16 @@ describe("CredibilityStrip", () => {
       screen.getByText(/Autorschaft, Überarbeitungsstand/),
     ).toBeInTheDocument();
   });
+
+  it("makes the visible headline the section heading, not the label", () => {
+    render(<CredibilityStrip />);
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Was hier nicht verhandelbar ist.",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Betriebsprinzipien").tagName).toBe("P");
+    expect(screen.getByText("Betriebsprinzipien")).toHaveClass("max-lg:sr-only");
+  });
 });

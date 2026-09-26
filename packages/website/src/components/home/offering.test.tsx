@@ -88,7 +88,27 @@ describe("Offering section", () => {
       screen.getByRole("link", { name: /View all courses/ }),
     ).toHaveAttribute("href", "/en/kurse");
     expect(container.textContent).not.toMatch(
-      /\b(?:Kurse|Kurs|Bücher|Deutsch|Englisch|Lektionen|Dauer|Grundlagenpfad|Konto|Quellen|ansehen)\b/,
+      /\b(?:Kurse|Kurs|Bücher|Deutsch|Englisch|Lektionen|Blöcke|Module|Dauer|Grundlagenpfad|Konto|Quellen|ansehen)\b/,
     );
+  });
+
+  it("keeps phone rows to one colour and one meta line", () => {
+    const { container } = render(<Offering />);
+    // No two-colour headline below lg.
+    expect(screen.getByText("Eine klare Reihenfolge.")).toHaveClass(
+      "max-lg:text-foreground",
+    );
+    // Below lg the lesson count steps out and the duration never wraps, so
+    // no row orphans "Min.".
+    const counts = Array.from(
+      container.querySelectorAll("[data-home-course-card] span"),
+    ).filter((span) => /^\s*·\s*\d+ Lektionen$/.test(span.textContent ?? ""));
+    expect(counts).toHaveLength(4);
+    for (const count of counts) expect(count).toHaveClass("max-lg:hidden");
+    const durations = container.querySelectorAll(
+      "[data-home-course-card] .whitespace-nowrap",
+    );
+    expect(durations).toHaveLength(4);
+    expect(screen.getByText("Grundlagenpfad")).toHaveClass("max-lg:sr-only");
   });
 });

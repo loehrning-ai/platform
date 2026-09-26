@@ -56,7 +56,12 @@ export function LessonMissionFrame({
           )
         ) : null}
       </div>
-      <div className="min-w-0 border-l-4 border-brand-orange pl-3">
+      <div
+        className={cn(
+          "min-w-0 border-l-4 border-brand-orange pl-3",
+          compactOnMobile && "max-sm:border-l-0 max-sm:pl-0",
+        )}
+      >
         <p className="break-words text-sm font-semibold leading-snug text-foreground">
           {frame.objective}
         </p>
@@ -73,8 +78,10 @@ export function LessonMissionFrame({
                 key={concept}
                 className={cn(
                   "max-w-full break-words border border-border bg-background px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground",
+                  // On a phone the concepts read as a sentence-case caption
+                  // run; from sm they return to mono tags.
                   compactOnMobile &&
-                    "border-0 bg-transparent px-0 py-0 sm:border sm:bg-background sm:px-2 sm:py-1",
+                    "max-sm:border-0 max-sm:bg-transparent max-sm:px-0 max-sm:py-0 max-sm:font-sans max-sm:text-[13px] max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground",
                 )}
               >
                 {concept}

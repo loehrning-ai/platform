@@ -66,7 +66,7 @@ The root layout declares `width=device-width, initial-scale=1, viewport-fit=cove
 ### What the shell does below lg
 
 - The top bar is compact: wordmark, language switch, menu button, `--nav-h-compact` tall in total. The existing menu dialog and its focus trap are kept as they are.
-- A bottom tab bar carries exactly four destinations: Start (`/`), Kurse (`/kurse`), Werkzeuge (`/open-source`), Konto (`/konto`). Every destination is a pure function of the locale, which middleware derives from the request path. Nothing in the bar reads the auth cookie or any other request state, and that is a cache contract: the bar sits in the root layout, so it is part of every public document, and `src/proxy.ts` caches those for an hour in the shared cache without `Vary: Cookie`. A cookie-dependent destination would let one cached entry serve either audience the other's variant, and adding `Vary: Cookie` to every public document to compensate would give up that cacheability. The signed-in tools workbench stays one tap away on the Konto tab.
+- A bottom tab bar carries exactly four destinations: Start (`/`), Lernen (`/kurse`), Praxis (`/workshops`), Konto (`/konto`). Lernen and Praxis are the header's two task groups, read from the same section table (`src/lib/navigation/site-sections.ts`), so the header, the menu sheet, the footer and the tab bar group every page the same way. Every destination is a pure function of the locale, which middleware derives from the request path. Nothing in the bar reads the auth cookie or any other request state, and that is a cache contract: the bar sits in the root layout, so it is part of every public document, and `src/proxy.ts` caches those for an hour in the shared cache without `Vary: Cookie`. A cookie-dependent destination would let one cached entry serve either audience the other's variant, and adding `Vary: Cookie` to every public document to compensate would give up that cacheability. The signed-in tools workbench stays one tap away on the Konto tab.
 - The active tab is taken from the request path and marked with `aria-current="page"`. A server component is the intended implementation. A client island is acceptable only where the path cannot reach a server component, and it must then render identical markup on the server and add nothing beyond the link list and the pathname hook.
 - Every internal href stays locale prefixed through `localizeHref`, and every label comes from `GLOBAL_NAVIGATION_COPY`.
 - The first decision on a route comes before its explanation, and long stacks of identical cards become horizontal rails with scroll snap and `content-visibility: auto`. Rails keep a visible edge and stay reachable by keyboard. A rail lists items; it does not close with a tile for the subject's own landing page when a section that renders at every width already links there, because that would be the same destination twice in one document.
@@ -149,7 +149,7 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - Learner-triggered state transitions take 120–200ms; finite structural reveals take 250–450ms.
 - Animate transforms and opacity. Do not use `transition: all`.
 - One region may carry meaningful motion at a time.
-- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. The homepage globe is the single narrow exception defined below.
+- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. The homepage globe is the single narrow exception defined below: the desktop projection from 1024px, the phone horizon globe below it, never both.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
 
 ### Homepage globe: narrow continuous-motion exception
@@ -164,6 +164,19 @@ The exception has four enforced boundaries:
 - Projection work follows the historical production cadence: a 60fps cap, a 7-second location cycle, a 78% dwell, and a 2-second opening delay. This replaces the visibly stepped 10fps ambient mode and the accelerated 4.6-second cycle. Unit sphere vectors are precomputed, frame rotation trigonometry runs once per frame, and high-refresh displays remain capped. Local Lighthouse is indicative; the CI median and its 200ms total-blocking-time cap remain authoritative.
 
 A CSS rotation of one pre-rendered disc was rejected because it breaks the country projection and disconnects the typed resource word from the destination pan. Keeping the real projection with desktop-only loading, viewport suspension, scroll suspension, document-visibility suspension, and a 60fps cap preserves the information while bounding unnecessary main-thread and paint work.
+
+### Phone globe: narrow continuous-motion exception
+
+Below 1024px the homepage hero is one graphit band, and its identity anchor is the horizon globe: the Workshop 03 line globe seen from orbit, only its upper limb crossing the band, Europe below the horizon and Germany traced in Mennige. It is a separate module from the desktop projection (`werk/horizon-globe-frame.tsx`, `werk/horizon-globe-renderer.ts`, `home/phone-globe.tsx`, `home/phone-hero.css`) and uses its own attribute namespace, `data-home-globe*`. The desktop globe's `data-hero-*` attributes never appear below 1024px. It is decorative (`aria-hidden`, nothing focusable inside) and carries no information that the page does not state in text.
+
+The exception has these enforced boundaries:
+
+- **The first frame is server-rendered SVG** in its exact final position, so the band is complete at first paint, the H1 stays the LCP element and nothing shifts. Reduced motion, `prefers-reduced-data`, Save-Data and no-JS visitors keep this frame: they download no renderer and get no pause control.
+- **The opening is finite and CSS only.** The limb draws out from the apex, the graticule opens radially from Germany, Germany traces last, and one light sweep runs along the horizon. It lasts 3.3 seconds, runs once, exists only under `prefers-reduced-motion: no-preference`, and every animation ends in the frame's natural state.
+- **The live renderer loads last.** A dynamic import after `load` plus an idle callback, after the opening has finished, and only below lg (re-evaluated when the viewport crosses the breakpoint; crossing it destroys the renderer and every listener). It draws the same frame into one canvas before hiding the SVG, so the handover is invisible.
+- **The drift is slow and bounded.** About 3 degrees per second, eased in, time-based, capped at 60fps on high-refresh screens, backing store capped at DPR 2. A frame governor steps down to DPR 1.5, then 30fps, then DPR 1 at 20fps, and finally freezes on the current frame. Nothing is drawn while the page scrolls (one moving region), while the band is off screen, while the document is hidden or after `pagehide`.
+- **It has a pause control** (WCAG 2.2.2, because the drift lasts longer than five seconds): a real 44px button after the primary action, with a localized name, `aria-pressed`, and a choice remembered in this browser. It exists only while the renderer runs.
+- **Touch never blocks scrolling.** The globe sets `touch-action: pan-y`; only a clearly horizontal drag spins it, with inertia that decays within about 1.2 seconds.
 
 ### Gallery previews: why there are no live miniatures
 

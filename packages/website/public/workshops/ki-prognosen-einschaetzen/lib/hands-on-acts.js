@@ -345,7 +345,7 @@
       var cw = chartWrap("clamp(220px,32vh,320px)");
       this.chart = cw.chart; this.cv = cw.cv;
 
-      this.live = liveTag("Parcel network | ZIP capacity shadow replay");
+      this.live = liveTag("Parcel network · ZIP capacity shadow replay");
       this.rowBase = this._racer("Same weekday last week", "#655c54");
       this.rowChal = this._racer(RUNGS[this.model].who, BLUE);
       var racers = el("div", { class: "hs-racers" }, [this.rowBase.row, this.rowChal.row]);
@@ -359,8 +359,13 @@
         function (v) { self.model = v; self.rowChal.who.textContent = RUNGS[v].who; self.reset(); }
       );
 
+      // phone charts are too narrow for in-plot event labels: they move to this key under the chart
+      this.evKey = el("p", { class: "hs-evkey", hidden: "" }, [
+        el("span", { class: "k-promo" }, [el("i", { "aria-hidden": "true" }), document.createTextNode("promo day, on the calendar")]),
+        el("span", { class: "k-shock" }, [el("i", { "aria-hidden": "true" }), document.createTextNode("shock, not on the calendar")])
+      ]);
       this.appendChild(el("div", { class: "hs-card" }, [
-        this.live, cw.wrap,
+        this.live, cw.wrap, this.evKey,
         el("div", { class: "hs-ctl" }, [
           field("Forecast the planner can use", segModel),
           el("div", { class: "hs-field", style: "flex:0 0 auto;min-width:0;display:flex;align-items:flex-end" }, [this.btn])
@@ -435,7 +440,7 @@
       this.rowBase.row.classList.remove("win"); this.rowChal.row.classList.remove("win");
       this.rowBase.who.classList.remove("front"); this.rowChal.who.classList.remove("front");
       this.btn.disabled = false; this.btn.textContent = "Run shadow replay"; this.btn.classList.add("hot");
-      this.live._state(false, false, "Parcel network | ZIP capacity shadow replay");
+      this.live._state(false, false, "Parcel network · ZIP capacity shadow replay");
       if (!silent) this.setPrimer();
       this.render();
     },
@@ -494,6 +499,8 @@
         { pts: chal, color: C.blue, width: 2.8, dash: [8, 5] }
       ];
       var PROMO = 118, SHOCK = SHOCK_DAY, PRIOR = 90;
+      var tiny = !!(this.cv && this.cv.clientWidth && this.cv.clientWidth < 400);
+      if (this.evKey) this.evKey.hidden = !tiny;
       var after = function (ctx, m) {
         // faint tick on the prior promo the model learns from
         var pxp = m.xToPx(PRIOR);
@@ -508,10 +515,12 @@
         stick(PROMO, rgba("#205b46", 0.95), 3.5);
         stick(SHOCK, C.red, 3.5);
         ctx.font = "800 12px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = "center";
-        // narrow charts get the short labels; the act copy above names both days in full
+        // narrow charts get the short labels; phone charts show none and use the key under the chart
         var narrow = m.x1 - m.x0 < 440, half = narrow ? 30 : 92;
-        ctx.fillStyle = TEAL; haloText(ctx, narrow ? "promo" : "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 30, m.y1 - 8));
-        ctx.fillStyle = C.red; haloText(ctx, narrow ? "shock" : "shock, not on the calendar", clamp(m.xToPx(SHOCK), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[SHOCK]) + 22, m.y0 + 30, m.y1 - 6));
+        if (!tiny) {
+          ctx.fillStyle = TEAL; haloText(ctx, narrow ? "promo" : "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 30, m.y1 - 8));
+          ctx.fillStyle = C.red; haloText(ctx, narrow ? "shock" : "shock, not on the calendar", clamp(m.xToPx(SHOCK), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[SHOCK]) + 22, m.y0 + 30, m.y1 - 6));
+        }
         // replay cursor
         if (cur > START && cur < n) {
           var cx = m.xToPx(cur);
@@ -527,7 +536,7 @@
         xmin: X0, xmax: n - 1, ymin: lo - pad, ymax: hi + pad,
         marker: START, markerLabel: "replay starts",
         regions: [{ x0: START, x1: n - 1, color: rgba("#121212", 0.04) }],
-        xlabels: [{ x: X0 + 7, t: "wk -12" }, { x: START, t: "wk -6" }, { x: n - 4, t: "today" }]
+        xlabels: tiny ? [{ x: X0 + 7, t: "wk -12" }, { x: n - 4, t: "today" }] : [{ x: X0 + 7, t: "wk -12" }, { x: START, t: "wk -6" }, { x: n - 4, t: "today" }]
       });
       var k = clamp(Math.floor(cur - START), 0, this.cum.base.length - 1);
       var vb = cur > START ? this.cum.base[k] : 0, vc = cur > START ? this.cum.chal[k] : 0;
@@ -535,7 +544,12 @@
       this.rowBase.fill.style.width = (100 * vb / maxv) + "%"; this.rowBase.amt.textContent = money(vb);
       this.rowChal.fill.style.width = (100 * vc / maxv) + "%"; this.rowChal.amt.textContent = money(vc);
     },
-    resize: function () { this.chart && this.chart.resize(); },
+    resize: function () {
+      if (!this.chart) return;
+      // crossing the phone width swaps in-plot labels for the key, so redraw with the new data
+      if (this.evKey && this.cv && (this.cv.clientWidth < 400) === this.evKey.hidden) this.render();
+      this.chart.resize();
+    },
     onActive: function (a) {
       if (!a && this._sweep && this._sweep.running) { this._sweep.stop(); this.cur = this.n; this.finish(); this.render(); }
     }

@@ -41,6 +41,8 @@ const TECHNICAL_COURSE_CASES = [
 const WORKSHOP_ROUTES = [
   "/workshops/ki-prognosen-einschaetzen",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
+  "/workshops/datenbereitschaft-fuer-ki",
+  "/workshops/esg-berichte-mit-ki",
 ] as const;
 
 async function openLearningRoute(page: Page, route: string): Promise<void> {
@@ -221,18 +223,22 @@ test.describe("learning density and value contract", () => {
   // The workshop detail page follows workshop-standard 4.1 and
   // design-direction 7.2: the cover answers what the workshop is about and
   // where to start, a compact agenda follows, and the decision lab comes
-  // right after it as a taste of the first act. The lab therefore no longer
-  // starts in the first viewport (on a 390x664 phone the cover alone fills
-  // it). What stays pinned: the cover's start action is inside the first
-  // viewport, nothing but the agenda sits between the cover and the lab, and
-  // the lab starts within two and a half viewports, which fails as soon as
-  // material, case or any other section is moved above it.
+  // right after it as a taste of the first act. The lab therefore does not
+  // start in the first viewport (on a 390x664 phone the compact cover alone
+  // nearly fills it). What stays pinned: the cover's start action is inside
+  // the first viewport, nothing but the agenda sits between the cover and the
+  // lab, and the lab starts within 1.7 viewports on a phone and 1.85 on the
+  // desktop project. The compact phone cover and the agenda rail keep it at
+  // 1.35 to 1.56 on a 390x664 phone even with the wider fallback face (it was
+  // 2.3 to 2.6 with the stacked agenda); desktop sits near 1.6 at 1280x720.
+  // The bound fails as soon as the agenda turns back into a vertical stack
+  // or any other section is moved above the lab.
   for (const route of WORKSHOP_ROUTES) {
     test(`${route} keeps its start action in the first viewport and the decision lab right after the agenda`, async ({
       page,
     }) => {
       await openLearningRoute(page, route);
-      const start = page.locator("[data-cover-band] a").first();
+      const start = page.locator("[data-cover-band] a:not([data-cover-back])").first();
       await expectFullyInFirstViewportBand(page, start, `${route} start action`);
 
       const lab = page.locator("[data-workshop-decision-lab]");
@@ -250,12 +256,13 @@ test.describe("learning density and value contract", () => {
       expect(order.coverBeforeAgenda, `${route} cover precedes the agenda`).toBe(true);
 
       const viewport = page.viewportSize()!;
+      const limit = viewport.width < 640 ? 1.7 : 1.85;
       const bounds = await lab.boundingBox();
       expect(bounds, `${route} decision lab needs bounds`).not.toBeNull();
       expect(
         bounds!.y,
-        `${route} decision lab must start within 2.5 viewports`,
-      ).toBeLessThan(viewport.height * 2.5);
+        `${route} decision lab must start within ${limit} viewports`,
+      ).toBeLessThan(viewport.height * limit);
     });
   }
 });

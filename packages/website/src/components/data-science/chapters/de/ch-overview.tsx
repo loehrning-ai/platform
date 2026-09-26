@@ -180,9 +180,9 @@ export default function ChOverviewDe() {
     <DataScienceLocaleProvider locale="de">
       <section className="ov-hero">
         <div className="ov-hero-copy">
-          <div className="ov-hero-eyebrow">Data Science Fundamentals · v8</div>
+          <div className="ov-hero-eyebrow">Data-Science-Kurs · kostenlos</div>
           <h1 className="ov-hero-title">
-            Data Science bedeutet,
+            Data Science bedeutet,{" "}
             <br />
             <span className="accent">aus Daten Entscheidungen abzuleiten.</span>
           </h1>
@@ -197,7 +197,7 @@ export default function ChOverviewDe() {
               href={dsChapterHref("fund")}
               prefetch={false}
             >
-              Beginnen &nbsp;→
+              Kapitel 1 starten &nbsp;→
             </Link>
           </div>
           <div className="ov-hero-stats">
@@ -210,8 +210,8 @@ export default function ChOverviewDe() {
               <div className="v">interaktive Simulationen</div>
             </div>
             <div className="ov-stat">
-              <div className="k">~2h</div>
-              <div className="v">vom Anfang bis zum Ende</div>
+              <div className="k">2 Std.</div>
+              <div className="v">ungefähre Lernzeit</div>
             </div>
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function ChOverviewDe() {
         <div className="ov-section-head">
           <div className="ov-kicker">Ergebnisse</div>
           <h2 className="ov-h2">
-            Verfahren anwenden und ihre
+            Verfahren anwenden und ihre{" "}
             <br />
             <em> Aussagekraft prüfen.</em>
           </h2>
@@ -244,7 +244,7 @@ export default function ChOverviewDe() {
         <div className="ov-section-head">
           <div className="ov-kicker">Lehrplan</div>
           <h2 className="ov-h2">
-            Zwölf Kapitel: Modell entwickeln,
+            Zwölf Kapitel: Modell entwickeln,{" "}
             <br />
             Wirkung nachweisen.
           </h2>
@@ -289,7 +289,7 @@ export default function ChOverviewDe() {
         <div className="ov-section-head ov-sh-tight">
           <div className="ov-kicker">Werkzeuge im Kurs</div>
           <h2 className="ov-h2">
-            Verbreitete Open-Source-Werkzeuge
+            Verbreitete Open-Source-Werkzeuge{" "}
             <br />
             für den Data-Science-Alltag.
           </h2>

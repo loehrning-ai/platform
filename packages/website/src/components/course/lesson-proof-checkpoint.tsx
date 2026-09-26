@@ -193,7 +193,7 @@ export function LessonProofCheckpoint({
       <form onSubmit={commit} className="space-y-3 py-4">
         <label
           htmlFor={inputId}
-          className="block text-[13px] font-semibold text-foreground"
+          className="block text-[13px] font-semibold text-foreground max-lg:text-sm"
         >
           {copy.label}
         </label>
@@ -207,7 +207,7 @@ export function LessonProofCheckpoint({
           autoComplete="off"
           disabled={!progressReady || !prerequisitesMet}
           aria-describedby={helpId}
-          className="w-full resize-y border border-border bg-card px-3 py-2 text-[14px] leading-relaxed text-foreground outline-none placeholder:text-muted-foreground focus:border-foreground focus:ring-2 focus:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full resize-y border border-border bg-card px-3 py-2 text-[14px] max-lg:text-base leading-relaxed text-foreground outline-none placeholder:text-muted-foreground focus:border-foreground focus:ring-2 focus:ring-brand-orange disabled:cursor-not-allowed disabled:opacity-60"
         />
         <div
           id={helpId}

@@ -13,7 +13,14 @@ test.describe("Homepage learning-platform transparency", () => {
     await expect(kurse).toContainText("KI-Führerschein");
     const courseImages = kurse.locator("[data-course-artwork] img");
     await expect(courseImages).toHaveCount(4);
+    // Below lg the course rows carry no artwork (course-artwork.tsx), so the
+    // lazy images are never requested there; from lg every one loads.
+    const wide = (page.viewportSize()?.width ?? 1280) >= 1024;
     for (const image of await courseImages.all()) {
+      if (!wide) {
+        await expect(image).toBeHidden();
+        continue;
+      }
       await expect(image).toHaveAttribute("src", /cover-v3\.webp/);
       await expect
         .poll(() =>

@@ -18,6 +18,7 @@ import {
   demosForCourse,
 } from "./demos";
 import { COURSE_CATALOG } from "./courses/catalog";
+import { getDemosForLocale } from "./demos-localization";
 
 describe("demosForCourse", () => {
   it("binds the twelve demos to exactly the three courses that have them", () => {
@@ -84,6 +85,19 @@ describe("demos catalog", () => {
 
   it("every demo uses a known category", () => {
     for (const d of demos) expect(DEMO_CATEGORIES).toContain(d.category);
+  });
+
+  it("every demo has a one-sentence teaser in both locales, short enough for a phone row", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const demo of getDemosForLocale(locale)) {
+        const teaser = demo.teaser;
+        expect(teaser, `${locale}:${demo.slug}`).toMatch(/^[A-ZÄÖÜ].*\.$/);
+        expect(teaser.length, `${locale}:${demo.slug}`).toBeLessThanOrEqual(75);
+        // One sentence, no dashes (voice rule).
+        expect(teaser.slice(0, -1), `${locale}:${demo.slug}`).not.toMatch(/[.!?]\s/);
+        expect(teaser, `${locale}:${demo.slug}`).not.toMatch(/[\u2013\u2014]/);
+      }
+    }
   });
 
   it("every demo uses a known level", () => {

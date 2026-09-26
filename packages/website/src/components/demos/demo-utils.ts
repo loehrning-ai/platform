@@ -27,6 +27,33 @@ export function usePrefersReducedMotion(): boolean {
 }
 
 /**
+ * True when the viewport is at least Tailwind's `sm` (40rem) wide. For the
+ * few phone layouts that move an element rather than restyle it (a follow-up
+ * chip that joins the input rail below sm), so the element exists once.
+ * The engines are client-only (`dynamic(..., { ssr: false })`), so the first
+ * render already reads the real viewport.
+ */
+export function useSmUp(): boolean {
+  const query = "(min-width: 40rem)";
+  const [matches, setMatches] = useState(() =>
+    typeof window !== "undefined" && typeof window.matchMedia === "function"
+      ? window.matchMedia(query).matches
+      : true,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia(query);
+    setMatches(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  return matches;
+}
+
+/**
  * Fires the callback once the demo enters the viewport and the tab is visible.
  * Pauses the caller's own animation loop when the tab is hidden.
  *

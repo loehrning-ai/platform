@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* `.overline` is the site's kicker class (below). Tailwind would also read it
+   as its `overline` text-decoration utility and draw a second rule over every
+   kicker, so the utility is never generated. */
+@source not inline("overline");
+
 /* Versioned, self-hosted brand faces. Regular and Bold cover the first-view
    copy; Medium and SemiBold remain demand-loaded. `optional` keeps a slow font
    response from replacing already-painted text, while the metric-adjusted

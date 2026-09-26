@@ -15,11 +15,13 @@ main:focus{outline:none}
 .mono,.num{font-family:var(--wf-mono);font-feature-settings:"tnum" 1}
 small{font-size:inherit}
 .nowrap{white-space:nowrap}
+.wf-page code{font-size:max(.9em,12px)}
 
 /* ------------------------------------------------------------------ page head */
 .pg{max-width:var(--wf-max);margin:0 auto;padding:0 var(--wf-gutter)}
 .pg-head{padding:clamp(28px,5vw,56px) 0 28px}
 .pg-head .wf-h1{max-width:22ch}
+.k-ph{display:none}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;padding:0;list-style:none}
 .chip{display:inline-flex;align-items:center;min-height:28px;padding:3px 10px;border:1px solid var(--wf-kante);color:var(--wf-slate);font:600 13px/1.3 var(--wf-sans)}
 .chip--gap{border-style:dashed;border-color:var(--wf-ink);color:var(--wf-ink)}
@@ -81,6 +83,28 @@ details.reveal>div{padding:2px 18px 16px;border-top:var(--wf-hair)}
 details.reveal>div p{margin:12px 0 0}
 details.reveal>div ul{margin:12px 0 0;padding-left:20px}
 details.reveal>div li{margin:0 0 6px}
+
+/* section fold: every section body sits in <details class="g-fold"> (build-pages.mjs). On phones the
+   section shows its heading and key point, then a "Read the section" toggle. From 641px the body is
+   rendered through ::details-content and the toggle is hidden, so the wide layout reads as one page;
+   w04-pages.js opens the folds instead (html.g-fold-js) where ::details-content is not supported. */
+.g-fold>summary{display:flex;align-items:center;gap:10px;min-height:44px;padding:0;cursor:pointer;list-style:none;color:var(--wf-ink);font:600 15px/1.3 var(--wf-sans)}
+.g-fold>summary::-webkit-details-marker{display:none}
+.g-fold>summary:hover{color:var(--wf-mennige-deep)}
+.g-fold>summary:focus-visible,.fold-all__btn:focus-visible{outline:3px solid var(--wf-mennige);outline-offset:2px}
+.g-fold__hide,.g-fold[open]>summary .g-fold__show,.fold-all__btn.is-open .g-fold__show{display:none}
+.g-fold[open]>summary .g-fold__hide,.fold-all__btn.is-open .g-fold__hide{display:inline}
+.fold-all__btn.is-open .pm::after{transform:rotate(0deg)}
+.fold-all{display:none}
+.fold-all__btn{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0;border:0;background:none;color:var(--wf-slate);cursor:pointer;font:600 15px/1.3 var(--wf-sans)}
+.fold-all__btn:hover{color:var(--wf-mennige-deep)}
+@supports selector(::details-content){
+  @media (min-width:641px){
+    .g-fold>summary{display:none}
+    .g-fold::details-content{content-visibility:visible;display:block}
+  }
+}
+@media (min-width:641px){.g-fold-js .g-fold>summary{display:none}}
 
 /* key point: a hairline and a label, not a box */
 .key{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;margin:24px 0 0!important;padding:12px 0 0;border-top:var(--wf-hair)}
@@ -229,7 +253,14 @@ details.reveal>div li{margin:0 0 6px}
 .gloss dt{padding-right:16px;font-weight:700}
 .gloss dd{margin:0}
 .gloss i{font-style:normal;color:var(--wf-slate)}
-@media (max-width:640px){.gloss{grid-template-columns:1fr}.gloss dt{padding-bottom:0}.gloss dd{border-top:0;padding-top:2px}}
+/* phones: terms run in (the term in bold, then its definition on the same line), one hairline per term */
+@media (max-width:640px){
+  .gloss{display:block;font-size:14px;line-height:1.45}
+  .gloss dt{display:inline;margin-right:.3em;padding:0;border:0}
+  .gloss dt::before{content:"";display:block;margin-top:7px;padding-top:7px;border-top:var(--wf-hair)}
+  .gloss dt:first-child::before{margin-top:0;padding-top:0;border-top:0}
+  .gloss dd{display:inline;padding:0;border:0}
+}
 
 .links{list-style:none;margin:0;padding:0;border-top:var(--wf-hair)}
 .links li{padding:10px 0;border-bottom:var(--wf-hair)}
@@ -271,6 +302,31 @@ details.reveal>div li{margin:0 0 6px}
   .fc td[data-label]::before{content:attr(data-label);display:block;color:var(--wf-slate);font:600 13px/1.3 var(--wf-sans)}
   .fc td.scene{white-space:normal}
 }
+/* phones: the check number sits before the check's name (no number column), Do / Don't / From the
+   case run in after their label, and the deck cross-reference is left to the printed card */
+@media screen and (max-width:640px){
+  .fc{font-size:15px;line-height:1.45}
+  .fc tr{grid-template-columns:auto minmax(0,1fr);gap:0 8px;padding:12px 0}
+  .fc td,.fc tbody th{grid-column:1 / -1}
+  .fc td.n{grid-column:1;grid-row:1;width:auto;min-width:1.2em;padding:1px 0 0;font-size:17px;line-height:1.35}
+  .fc .chk{grid-column:2;grid-row:1;padding:0 0 4px;font-size:17px}
+  .fc td[data-label]{padding:2px 0}
+  .fc td[data-label]::before{display:inline;margin-right:6px}
+  .fc td.scene{display:none}
+  .fc-lines li{padding:8px 0;font-size:15px}
+  .sheet{padding-top:20px}
+  .sheet-mast{gap:12px 24px;padding-bottom:14px}
+  .sheet-mast .wf-lead{margin-top:8px;font-size:17px}
+  /* printing is a side action on a phone: a text button on the same row as its note */
+  .sheet-tools{display:block;margin-top:16px;line-height:1.5}
+  .sheet-tools .wf-small{display:inline}
+  .sheet .k-ctx{display:none}
+  /* 44px tall to tap, but it only takes one line of the paragraph */
+  .sheet-tools #print-page,.sheet-tools #print-page:hover{min-height:44px;margin:-11px 10px -11px 0;padding:0;border:0;background:none;color:var(--wf-ink);font-size:15px;text-decoration:underline;text-decoration-color:var(--wf-kante);text-underline-offset:3px}
+  .sheet-tools #print-page:hover{color:var(--wf-mennige-deep);text-decoration-color:currentColor}
+  .fc tbody tr:last-child{border-bottom:0}
+  .sheet-foot{margin-top:14px}
+}
 
 .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
@@ -297,6 +353,20 @@ details.reveal>div li{margin:0 0 6px}
   .box{grid-template-columns:minmax(0,1fr);gap:10px}
   .write{min-height:72px}
 }
+/* phones: tighter boxes, and the two sentence panels become ruled blocks instead of framed boxes */
+@media screen and (max-width:640px){
+  .box{gap:6px;padding:12px 0}
+  .box h2{font-size:18px;margin-bottom:2px}
+  /* worked examples: a hairline and a run-in label, not a filled box */
+  .ex{padding:8px 0 0;border:0;border-top:var(--wf-hair);background:none;font-size:14px}
+  .ex .wf-kicker{display:inline;margin:0 6px 0 0;white-space:nowrap}
+  .ex .wf-kicker+p{display:inline}
+  .ex code{font-size:13px;overflow-wrap:anywhere}
+  .sentence{margin-top:14px;padding:12px 0 0;border:0;border-top:2px solid var(--wf-ink);background:none}
+  .sentence p{font-size:16px;line-height:1.5}
+  .sentence--ex p{font-size:15px}
+  .boxes+.sentence{margin-top:0;border-top:0}
+}
 /* a phone cannot write in a dashed box: the boxes appear on the printed sheet only */
 @media screen and (max-width:600px){
   .write{display:none}
@@ -311,6 +381,89 @@ details.reveal>div li{margin:0 0 6px}
   details.reveal>div{padding:2px 14px 14px}
   .key{grid-template-columns:1fr}
 }
+/* phones: 16px text, a compact head, and the guide as a list of sections that open one at a time */
+@media (max-width:640px){
+  .wf-page main{font-size:16px;line-height:1.55}
+  .wf-page code{font-size:max(.9em,13px)}
+  .wf-foot{margin-top:32px}
+  /* guide head: the question and the way into the sections within the first screen */
+  .pg-head{padding:20px 0 16px}
+  .pg-head>.wf-kicker{margin-bottom:8px;font-size:13px}
+  /* the strip's material rail already names the page and links the other materials */
+  .k-ctx{display:none}
+  .k-ph{display:inline}
+  .pg-head .wf-h1{max-width:none;font-size:clamp(28px,8.2vw,34px);line-height:1.08}
+  .pg-head .wf-lead{margin-top:10px;font-size:16px;line-height:1.5}
+  .pg-head .wf-qcard{margin-top:16px;padding:12px 14px 12px calc(14px + var(--wf-bar))}
+  .pg-head .wf-qcard .wf-kicker{margin:0 0 2px;font-size:13px}
+  .pg-head .wf-qcard p{font-size:17px;line-height:1.35}
+  .pg-head .chips{display:block;margin-top:10px;color:var(--wf-slate);font:500 13px/1.45 var(--wf-sans)}
+  .pg-head .chip{display:inline;min-height:0;padding:0;border:0;font:inherit;color:inherit}
+  .pg-head .chip+.chip::before{content:" · "}
+  .pg-head .actions{display:none}
+  /* contents and open-all share one row; an open contents list takes the full width */
+  .g-tools{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 16px;margin-top:14px}
+  .toc-phone{flex:1 1 0;min-width:0;margin:0}
+  .toc-phone[open]{flex-basis:100%}
+  .toc-phone summary{min-height:44px;padding:8px 12px}
+  .toc-n{display:none}
+  .toc-phone ol{padding:0 12px 6px}
+  .fold-all:not([hidden]){display:block;flex:none;margin:0}
+  .fold-all__btn{padding:0 2px}
+  .g-layout{border-top:0}
+  /* sections: rule, kicker, heading, key point, toggle */
+  .g-sec{display:flex;flex-direction:column;margin-top:24px;scroll-margin-top:8px}
+  .g-sec:first-child{margin-top:16px}
+  .g-kopf{padding-top:10px;margin:0 0 6px}
+  .g-kopf .wf-kicker{margin:0 0 2px;font-size:13px}
+  .g-kopf h2{display:grid;grid-template-columns:1.4em minmax(0,1fr);align-items:baseline;font-size:21px;line-height:1.22}
+  .g-n{min-width:0}
+  .g-sec>.key{order:1;display:block;margin:0!important;padding:0;border-top:0;line-height:1.45}
+  .g-sec>.key b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .g-fold{order:2}
+  .g-fold__b{padding:4px 0 4px}
+  /* an open section keeps its "Close the section" toggle at the top of the screen while it is in view */
+  .g-fold[open]>summary{position:sticky;top:0;z-index:2;background:var(--wf-paper);border-bottom:var(--wf-hair)}
+  /* inside an open section: tighter rhythm */
+  .g-sec p{margin-bottom:12px}
+  .g-sec h3{margin:20px 0 6px}
+  .recall{margin-top:16px}
+  .recall-q{margin-bottom:8px!important}
+  details.reveal{margin-bottom:8px}
+  details.reveal>summary{min-height:44px}
+  .fig{margin:16px 0}
+  .fig figcaption{margin-top:8px}
+  .answer{margin:12px 0;padding:10px 12px}
+  .answer--raw{padding-left:calc(12px + 10px)}
+  .answer--raw::before{width:10px}
+  .nums{margin-bottom:12px}
+  .nums>div,.nums>div:nth-child(3n+1),.nums:has(>div:nth-child(4))>div:nth-child(-n+3){padding:6px 0}
+  .nums dd{font-size:18px}
+  .g-sec .wf-steps>li{grid-template-columns:28px 1fr;gap:8px;padding:10px 0}
+  .g-sec .wf-steps p{margin:0}
+  .ab-row{padding:10px 0}
+  .g-sec .ab-row__req{font-size:17px}
+  .g-sec .ab-row__desc{font-size:15px}
+  .g-sec .wf-note{padding:10px 12px;font-size:14px}
+  .links li{padding:8px 0}
+  .dot-read>div{padding:6px 0}
+  .legend{gap:4px 14px;font-size:13px}
+  .mg-lab{font-size:14px}
+}
+/* the smallest phones: the toggles keep their plus sign and drop the word, and the guide head
+   tightens so the first section's heading starts inside the first screen */
+@media (max-width:360px){
+  details.reveal>summary .toggle>span:not(.pm),.toc-phone summary .toggle>span:not(.pm){display:none}
+  details.reveal>summary{gap:12px}
+  .pg-head{padding-top:14px}
+  .pg-head .wf-h1{font-size:27px}
+  .pg-head .wf-lead{display:none}
+  .pg-head .wf-qcard{margin-top:14px;padding:8px 10px 8px calc(10px + var(--wf-bar))}
+  .pg-head .wf-qcard p{font-size:16px;line-height:1.3}
+  .pg-head .chips{margin-top:8px}
+  .c-tail{display:none}
+  .g-tools{margin-top:10px}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pm::before,.pm::after,details.reveal>summary{transition:none}}
 /* forced colours: the month cells and their legend swatches are the data (fill = what the document is),
    so they keep their own colours; the bars fall back to outlines */
@@ -320,7 +473,7 @@ details.reveal>div li{margin:0 0 6px}
 @media print{
   html,body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body.wf-page{font-size:10.5pt;line-height:1.45}
-  .no-print,.actions,.toc-phone,.toc-side,.sheet-tools{display:none!important}
+  .no-print,.actions,.toc-phone,.toc-side,.sheet-tools,.fold-all,.g-fold>summary{display:none!important}
   .pg{padding:0;max-width:none}
   .g-layout{display:block;border:0}
   .g-main{max-width:none}
@@ -329,6 +482,7 @@ details.reveal>div li{margin:0 0 6px}
   .fig,.recall,.answer,.nums{break-inside:avoid}
   details.reveal>div{display:block}
   details.reveal::details-content{content-visibility:visible;display:block}
+  .g-fold::details-content{content-visibility:visible;display:block}
   details.reveal .toggle{display:none}
   a{color:inherit}
   .wf-h1{font-size:24pt}

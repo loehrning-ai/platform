@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
-import { WorkshopDetailContent } from "./workshop-detail-content";
+import { phoneDescription, WorkshopDetailContent } from "./workshop-detail-content";
 
 function follows(first: Element, second: Element): boolean {
   return Boolean(
@@ -204,7 +204,9 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
     expect(source).not.toMatch(/shadow-/);
     expect(source).not.toMatch(/border-l-(?:\[\d+px\]|\d)/);
-    expect(source).not.toMatch(/uppercase|font-black|font-mono/);
+    // Sentence case only: the one uppercase allowed is the first letter of
+    // the phone facts line once the minutes move to the agenda.
+    expect(source).not.toMatch(/(?<!first-letter:)uppercase|font-black|font-mono/);
     expect(source).not.toMatch(/tracking-\[-0\.0[2-9]/);
     expect(source).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt|teal)/);
     expect(source).not.toMatch(/<details/);
@@ -322,9 +324,15 @@ describe("<WorkshopDetailContent>", () => {
     for (const material of workshop.materials) {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
     }
-    expect(
-      screen.getByRole("link", { name: "Zurück zu allen Workshops" }),
-    ).toHaveAttribute("href", "/workshops");
+    // Two back links: the bar from sm, the kicker-line link on phones. Each
+    // is display:none at the other size, so one is ever in the tree.
+    const back = screen.getAllByRole("link", { name: "Zurück zu allen Workshops" });
+    expect(back).toHaveLength(2);
+    for (const link of back) expect(link).toHaveAttribute("href", "/workshops");
+    expect(back[0].closest("nav")).toHaveClass("max-sm:hidden");
+    expect(back[1]).toHaveAttribute("data-cover-back");
+    expect(back[1]).toHaveClass("min-h-11", "sm:hidden");
+    expect(back[1].closest("[data-cover-band]")).not.toBeNull();
   });
 
   it("renders the English page with the real-world case source, dates and no German interface copy", () => {
@@ -352,9 +360,9 @@ describe("<WorkshopDetailContent>", () => {
     expect(container.querySelector('time[datetime="2026-07-29"]')).not.toBeNull();
     expect(container.querySelector('time[datetime="2026-08-26"]')).not.toBeNull();
 
-    expect(
-      screen.getByRole("link", { name: "Back to all workshops" }),
-    ).toHaveAttribute("href", "/en/workshops");
+    for (const link of screen.getAllByRole("link", { name: "Back to all workshops" })) {
+      expect(link).toHaveAttribute("href", "/en/workshops");
+    }
     expect(container.querySelector("[data-cover-band]")).toHaveTextContent(
       "free, no sign-up",
     );
@@ -363,5 +371,55 @@ describe("<WorkshopDetailContent>", () => {
       /Für wen|Alle Workshops|Die offene Entscheidung|Material zum Mitnehmen|Kostenlos/,
     );
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
+  });
+});
+
+describe("phoneDescription", () => {
+  it("keeps the first clause of a material description for a phone row", () => {
+    expect(
+      phoneDescription(
+        "Etwa 77 Minuten Programm und 13 Minuten Fragen; die Demo ist optional (10 Min.). Pfeiltasten führen weiter.",
+      ),
+    ).toBe("Etwa 77 Minuten Programm und 13 Minuten Fragen.");
+    expect(
+      phoneDescription(
+        "Die wöchentliche Nachfrage für die Übung (demand-weekly.csv). Erfundene Übungsdaten.",
+      ),
+    ).toBe("Die wöchentliche Nachfrage für die Übung.");
+    const single = "Sieben Prüfungen auf einer A4-Seite, bevor du einer ESG-Zahl traust.";
+    expect(phoneDescription(single)).toBe(single);
+    // Longer than two phone lines: cut at the last comma, never mid-word.
+    expect(
+      phoneDescription(
+        "Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile, die daraus in der Belegtabelle wird.",
+      ),
+    ).toBe("Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile …");
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        for (const material of workshop.materials) {
+          expect(phoneDescription(material.description).length).toBeLessThanOrEqual(74);
+        }
+      }
+    }
+  });
+
+  it("gives phones the short text and keeps the full one from sm", () => {
+    const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
+    const { container } = render(
+      <WorkshopDetailContent workshop={workshop} locale="de" />,
+    );
+    const deck = container.querySelector('[data-material-role="deck"]')!;
+    const short = deck.querySelector("[data-material-short]")!;
+    expect(short).toHaveTextContent("Etwa 77 Minuten Programm und 13 Minuten Fragen.");
+    expect(short).toHaveClass("sm:hidden");
+    expect(short.nextElementSibling).toHaveClass("hidden", "sm:block");
+    expect(deck).toHaveClass("has-[a:active]:bg-card-hover", "grid-cols-[1.5rem_minmax(0,1fr)]");
+    // The link covers the row on a phone; the text keeps the full width.
+    expect(within(deck as HTMLElement).getByRole("link")).toHaveClass(
+      "max-sm:absolute",
+      "max-sm:inset-0",
+      "[-webkit-tap-highlight-color:transparent]",
+    );
+    expect(deck.querySelector("h4")).toHaveClass("max-sm:pr-8");
   });
 });

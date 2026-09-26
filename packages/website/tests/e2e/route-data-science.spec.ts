@@ -10,7 +10,7 @@ import { COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY } from "@/lib/progress/types
  *     IS the ported Overview chapter itself (Hero + FlowingPipeline +
  *     curriculum grid), not a from-scratch marketing splash and not a
  *     grid of real chapter routes' links. The ported curriculum controls
- *     and "Begin" CTA use semantic anchors for real course routes, so this
+ *     and "Start chapter 1" CTA use semantic anchors for real course routes, so this
  *     spec verifies navigation through the public link contract.
  *   - "home" is never a [chapterSlug] route entry (Done Criteria: no home
  *     route collision) — the first real chapter route is "/fund".
@@ -165,7 +165,7 @@ function encodeCertHash(payload: {
 }
 
 test.describe("Data Science Fundamentals golden path", () => {
-  test("landing: renders the Overview and its Begin CTA navigates into the first chapter", async ({
+  test("landing: renders the Overview and its Start chapter 1 CTA navigates into the first chapter", async ({
     page,
   }) => {
     const res = await page.goto(LANDING, { waitUntil: "domcontentloaded" });
@@ -173,7 +173,9 @@ test.describe("Data Science Fundamentals golden path", () => {
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    const beginLink = page.getByRole("link", { name: /Begin/ }).first();
+    const beginLink = page
+      .getByRole("link", { name: /Start chapter 1/ })
+      .first();
     await expect(beginLink).toBeVisible();
     await beginLink.click();
     await expect(page).toHaveURL(new RegExp(`${CHAPTER_ROUTE}$`));

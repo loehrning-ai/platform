@@ -2,7 +2,11 @@ import Link from "next/link";
 import type { CatalogCourse, ImportedCourse } from "@/lib/courses/catalog";
 import { COURSE_LEVEL_LABELS_BY_LOCALE } from "@/lib/courses/catalog-copy";
 import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
-import { coursePromise } from "@/lib/courses/course-hub-copy";
+import {
+  courseDurationShort,
+  coursePromise,
+  coursePromiseShort,
+} from "@/lib/courses/course-hub-copy";
 import { demosForCourse } from "@/lib/demos";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { CourseAccess } from "@/lib/courses/access";
@@ -29,6 +33,11 @@ export type Course = CatalogCourse | ImportedCourse;
 /** The atlas copy a ledger row reads. `ATLAS_COPY[locale]` satisfies it. */
 export interface LedgerRowCopy {
   readonly tryDemo: (count: number) => string;
+  /**
+   * The end of `tryDemo` a phone leaves out of the visible label (" ansehen"),
+   * so the demo link fits beside the action. It stays in the accessible name.
+   */
+  readonly tryDemoPhoneTail: string;
   readonly sourceCode: string;
   readonly sourceCommit: string;
   readonly start: string;
@@ -105,12 +114,12 @@ export function courseAction(
   };
 }
 
-interface SourceRepository {
+export interface SourceRepository {
   readonly owner: string;
   readonly name: string;
 }
 
-function sourceRepository(sourceHref: string): SourceRepository {
+export function sourceRepository(sourceHref: string): SourceRepository {
   try {
     const [owner = "", name = ""] = new URL(sourceHref).pathname
       .split("/")
@@ -143,6 +152,8 @@ export function CourseLedgerRow({
   locale,
   copy,
   access,
+  accessInGroupHead = false,
+  sourceInGroupHead = false,
 }: {
   readonly course: Course;
   readonly index: number;
@@ -156,6 +167,16 @@ export function CourseLedgerRow({
   readonly locale: Locale;
   readonly copy: LedgerRowCopy;
   readonly access: CourseAccess;
+  /**
+   * The group head already states this row's access word (every course in
+   * the group shares it), so the phone caption leaves it out.
+   */
+  readonly accessInGroupHead?: boolean;
+  /**
+   * The group head carries the shared repository and commit below lg, so the
+   * row's own attribution prints from lg only.
+   */
+  readonly sourceInGroupHead?: boolean;
 }) {
   const galleryCopy = COURSE_GALLERY_COPY[locale];
   const levelLabel = COURSE_LEVEL_LABELS_BY_LOCALE[locale][course.level];
@@ -170,6 +191,8 @@ export function CourseLedgerRow({
   const sourceCommit = course.sourceCommit;
   const source = sourceHref ? sourceRepository(sourceHref) : null;
   const promise = coursePromise(course.slug, locale) ?? course.tagline;
+  const promiseShort = coursePromiseShort(course.slug, locale);
+  const durationShort = courseDurationShort(course.slug, locale);
   const accessWord =
     live && access !== "open"
       ? access === "account-required"
@@ -181,11 +204,96 @@ export function CourseLedgerRow({
   const courseDemos = live ? demosForCourse(course.slug) : [];
   const courseDemo = courseDemos[0];
   const demoCount = courseDemos.length;
+  const demoLabel = copy.tryDemo(demoCount);
+  const demoTail =
+    copy.tryDemoPhoneTail && demoLabel.endsWith(copy.tryDemoPhoneTail)
+      ? copy.tryDemoPhoneTail
+      : "";
+
+  const links =
+    courseDemo || (sourceHref && source) ? (
+      <div
+        data-course-links
+        className="contents lg:col-start-2 lg:row-start-2 lg:mt-1 lg:flex lg:flex-wrap lg:items-center lg:gap-x-5"
+      >
+        {courseDemo ? (
+          <Link
+            href={localizeHref(
+              `/demos/${courseDemo.slug}?source=gallery`,
+              locale,
+            )}
+            prefetch={false}
+            className="inline-flex min-h-11 items-center text-label text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
+          >
+            {/* One inline wrapper, so the space before the tail stays: in
+                the inline-flex link a bare whitespace node between two
+                flex items would be dropped ("Praxisbeispielansehen"). */}
+            {demoTail ? (
+              <span>
+                {demoLabel.slice(0, -demoTail.length)}{" "}
+                <span className="max-sm:sr-only">{demoTail.trim()}</span>
+              </span>
+            ) : (
+              demoLabel
+            )}
+          </Link>
+        ) : null}
+        {/* Attribution for the imported MIT courses. Mono because it is
+            a code identifier. From lg it prints on every row. Below lg,
+            when all rows of the group share one repository and commit, the
+            group head prints it once and the row leaves it out; otherwise
+            it stays here, with the owner and the word "Commit" left to the
+            accessible name. */}
+        {sourceHref && source ? (
+          <p
+            data-course-source
+            className={cx(
+              "flex flex-wrap items-center gap-x-3 font-mono text-caption text-muted-foreground",
+              sourceInGroupHead && "max-lg:hidden",
+            )}
+          >
+            <a
+              href={sourceHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              <span>
+                {source.owner ? (
+                  <span className="sr-only lg:not-sr-only">
+                    {source.owner}/
+                  </span>
+                ) : null}
+                {source.name}
+              </span>
+              <span className="sr-only">
+                : {copy.sourceCode}, {course.title}
+              </span>
+            </a>
+            {sourceCommitHref && sourceCommit ? (
+              <a
+                href={sourceCommitHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground"
+              >
+                <span>
+                  <span className="sr-only lg:not-sr-only">
+                    {copy.sourceCommit}
+                  </span>{" "}
+                  #{sourceCommit.slice(0, 7)}
+                </span>
+              </a>
+            ) : null}
+          </p>
+        ) : null}
+      </div>
+    ) : null;
 
   return (
     <li
       className={cx(
-        "border-b border-hairline px-1 py-5 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none sm:px-2",
+        "border-b border-hairline px-1 py-2.5 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none sm:px-2 sm:py-5",
         !visible && "hidden lg:list-item",
       )}
       data-course-slug={course.slug}
@@ -202,12 +310,17 @@ export function CourseLedgerRow({
               : "open"
       }
     >
-      {/* No cover thumbnail: the ledger stays image-free (see the test). */}
+      {/* No cover thumbnail: the ledger stays image-free (see the test).
+          Below lg a row is a dense list item: number, title, one line of
+          promise, one caption of facts, then one wrapping line of links with
+          the action first. From lg the links line is the second grid row
+          under the title and the facts and action sit in the right-hand
+          columns, spanning both rows so the links stay under the promise. */}
       <div className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-x-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-x-3 lg:grid-cols-[3.5rem_minmax(0,1fr)_15rem] lg:gap-x-6 xl:grid-cols-[3.5rem_minmax(0,1fr)_10rem_15rem]">
         <span
           data-course-number
           aria-hidden="true"
-          className="flex h-11 items-center gap-1.5 text-label text-muted tabular-nums sm:gap-2"
+          className="flex h-8 items-center gap-1.5 text-label text-muted tabular-nums sm:h-11 sm:gap-2"
         >
           <span
             data-path-marker
@@ -216,11 +329,14 @@ export function CourseLedgerRow({
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        <div className="min-w-0">
-          <h4 className="text-[1.25rem] font-bold leading-snug text-foreground">
+        <div className="min-w-0 lg:col-start-2 lg:row-start-1">
+          {/* The title link keeps its 44px target on a phone but gives 6px
+              of it back above and below, into the row padding and the
+              promise, which are not interactive. */}
+          <h4 className="text-[1.0625rem] font-bold leading-snug text-foreground sm:text-[1.25rem]">
             <Link
               href={localizeHref(course.href, locale)}
-              className="inline-flex min-h-11 items-center underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
+              className="-my-1.5 flex min-h-11 items-center underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none sm:my-0 sm:inline-flex"
             >
               {course.title}
             </Link>
@@ -234,8 +350,21 @@ export function CourseLedgerRow({
               {copy.completedLabel}
             </p>
           ) : null}
-          <p className="mt-1 max-w-[62ch] text-body text-muted-foreground text-pretty">
-            {promise}
+          {/* On a phone the row prints the short promise, one clause that
+              ends where it should instead of mid-sentence; the full promise
+              stays in the accessibility tree and prints from sm. Two lines
+              at most, also for a course without a short form. */}
+          <p className="mt-0.5 line-clamp-2 max-w-[62ch] text-[0.9375rem]/[1.45] text-muted-foreground text-pretty sm:mt-1 sm:line-clamp-none sm:text-body">
+            {promiseShort ? (
+              <>
+                <span aria-hidden="true" data-promise-short className="sm:hidden">
+                  {promiseShort}
+                </span>
+                <span className="max-sm:sr-only">{promise}</span>
+              </>
+            ) : (
+              promise
+            )}
           </p>
           {/* Below lg the facts column is absent, so level, duration and
               access print as one caption after the promise. */}
@@ -243,135 +372,92 @@ export function CourseLedgerRow({
             data-course-level-label
             className="mt-1 text-caption text-muted-foreground tabular-nums lg:hidden"
           >
-            {levelLabel} · {course.duration}
-            {accessWord ? (
+            {levelLabel} ·{" "}
+            {durationShort ? (
+              <>
+                <span className="sm:hidden">{durationShort}</span>
+                <span className="max-sm:hidden">{course.duration}</span>
+              </>
+            ) : (
+              course.duration
+            )}
+            {accessWord && !accessInGroupHead ? (
               <>
                 {" · "}
-                <span data-course-access-label className="text-foreground">
-                  {accessWord}
-                </span>
+                <span data-course-access-label>{accessWord}</span>
               </>
             ) : null}
           </p>
-          {courseDemo || (sourceHref && source) ? (
-            <div className="mt-1 flex flex-wrap items-center gap-x-5">
-              {courseDemo ? (
-                <Link
-                  href={localizeHref(
-                    `/demos/${courseDemo.slug}?source=gallery`,
-                    locale,
-                  )}
-                  prefetch={false}
-                  className="inline-flex min-h-11 items-center text-label text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
-                >
-                  {copy.tryDemo(demoCount)}
-                </Link>
+        </div>
+
+        {/* One wrapping line of links on a phone, the action first; from lg
+            this wrapper dissolves and its cells take their grid places. The
+            DOM keeps the desktop reading order (demo and source under the
+            promise, then the right-hand action); only the phone moves the
+            action forward. The 44px targets reach 4px up and 8px down into
+            the row's padding, which is not interactive. */}
+        <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-x-5 max-lg:-mb-2 max-lg:-mt-1 lg:contents">
+          {links}
+          <div className="contents lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:flex lg:min-w-0 lg:flex-col lg:gap-1 xl:contents">
+            <dl
+              data-course-meta
+              className="hidden text-caption text-muted-foreground tabular-nums lg:block lg:pt-3 xl:col-start-3 xl:row-span-2 xl:row-start-1"
+            >
+              <dt className="sr-only">{galleryCopy.duration}</dt>
+              <dd className="text-foreground">{course.duration}</dd>
+              <dt className="sr-only">{copy.levelTerm}</dt>
+              <dd>{levelLabel}</dd>
+              {accessWord ? (
+                <>
+                  <dt className="sr-only">{copy.accessTerm}</dt>
+                  <dd className="text-foreground">{accessWord}</dd>
+                </>
               ) : null}
-              {/* Attribution for the imported MIT courses. This is the only
-                  place the repository and pinned commit render as page
-                  content, so it stays visible on the row. Mono because it is
-                  a code identifier. Below lg the owner and the word "Commit"
-                  leave the visible label; the accessible name keeps both. */}
-              {sourceHref && source ? (
-                <p
-                  data-course-source
-                  className="flex flex-wrap items-center gap-x-3 font-mono text-caption text-muted-foreground"
+            </dl>
+
+            <div
+              data-course-action
+              className="min-w-0 max-lg:order-first xl:col-start-4 xl:row-span-2 xl:row-start-1"
+            >
+              {live && action ? (
+                <Link
+                  href={action.href}
+                  prefetch={false}
+                  className={BUTTON_CLASSES.paper.text}
                 >
-                  <a
-                    href={sourceHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground"
-                  >
-                    <span>
-                      {source.owner ? (
-                        <span className="sr-only lg:not-sr-only">
-                          {source.owner}/
-                        </span>
-                      ) : null}
-                      {source.name}
-                    </span>
-                    <span className="sr-only">
-                      : {copy.sourceCode}, {course.title}
-                    </span>
-                  </a>
-                  {sourceCommitHref && sourceCommit ? (
-                    <a
-                      href={sourceCommitHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center underline decoration-border underline-offset-4 hover:decoration-foreground"
-                    >
-                      <span>
-                        <span className="sr-only lg:not-sr-only">
-                          {copy.sourceCommit}
-                        </span>{" "}
-                        #{sourceCommit.slice(0, 7)}
-                      </span>
-                    </a>
+                  {/* The whitespace text nodes keep the spaces in the accessible
+                      name; a flex container drops them from the layout. */}
+                  {action.before ? (
+                    <>
+                      <span className="sr-only">{action.before}</span>{" "}
+                    </>
                   ) : null}
-                </p>
+                  <span>{action.verb}</span>
+                  {action.after ? (
+                    <>
+                      {" "}
+                      <span className="sr-only">{action.after}</span>
+                    </>
+                  ) : null}
+                  <span className="sr-only">: {course.title}</span>
+                  <ArrowGlyph />
+                </Link>
+              ) : course.launchHref ? (
+                <a
+                  href={course.launchHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={BUTTON_CLASSES.paper.text}
+                >
+                  <span>{galleryCopy.openCourse}</span>
+                  <span className="sr-only">
+                    : {course.title}, {galleryCopy.externalNewTab}
+                  </span>
+                  <ArrowGlyph direction="external" />
+                </a>
               ) : null}
             </div>
-          ) : null}
-        </div>
-
-        <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-1 xl:contents">
-        <dl
-          data-course-meta
-          className="hidden text-caption text-muted-foreground tabular-nums lg:block lg:pt-3"
-        >
-          <dt className="sr-only">{galleryCopy.duration}</dt>
-          <dd className="text-foreground">{course.duration}</dd>
-          <dt className="sr-only">{copy.levelTerm}</dt>
-          <dd>{levelLabel}</dd>
-          {accessWord ? (
-            <>
-              <dt className="sr-only">{copy.accessTerm}</dt>
-              <dd className="text-foreground">{accessWord}</dd>
-            </>
-          ) : null}
-        </dl>
-
-        <div data-course-action className="col-start-2 min-w-0 lg:col-start-auto">
-          {live && action ? (
-            <Link
-              href={action.href}
-              prefetch={false}
-              className={BUTTON_CLASSES.paper.text}
-            >
-              {/* The whitespace text nodes keep the spaces in the accessible
-                  name; a flex container drops them from the layout. */}
-              {action.before ? (
-                <>
-                  <span className="sr-only">{action.before}</span>{" "}
-                </>
-              ) : null}
-              <span>{action.verb}</span>
-              {action.after ? (
-                <>
-                  {" "}
-                  <span className="sr-only">{action.after}</span>
-                </>
-              ) : null}
-              <span className="sr-only">: {course.title}</span>
-              <ArrowGlyph />
-            </Link>
-          ) : course.launchHref ? (
-            <a
-              href={course.launchHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={BUTTON_CLASSES.paper.text}
-            >
-              <span>{galleryCopy.openCourse}</span>
-              <span className="sr-only">
-                : {course.title}, {galleryCopy.externalNewTab}
-              </span>
-              <ArrowGlyph direction="external" />
-            </a>
-          ) : null}
-        </div>
+          </div>
         </div>
       </div>
     </li>

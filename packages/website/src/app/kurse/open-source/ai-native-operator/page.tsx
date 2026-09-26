@@ -140,7 +140,7 @@ export default async function AiNativeOperatorLandingPage() {
           secondaryAction={
             <Link
               href="#syllabus"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.syllabusLink}
             </Link>

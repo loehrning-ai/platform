@@ -124,6 +124,29 @@ describe("HeroSection responsive globe", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("gives phones the horizon globe slot, never the projection tree", async () => {
+    setDesktopMatch(false);
+    const { container } = render(
+      <HeroSection
+        locale="en"
+        phoneGlobe={<svg data-testid="horizon-frame" aria-hidden="true" />}
+      />,
+    );
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+    // The phone globe has its own namespace and is hidden from lg up by CSS;
+    // the desktop projection and its surface control stay desktop-only.
+    const slot = container.querySelector("[data-home-globe]");
+    expect(slot).not.toBeNull();
+    expect(slot).toHaveClass("lg:hidden");
+    expect(slot).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByTestId("horizon-frame")).toBeInTheDocument();
+    expect(container.querySelector("[data-hero-globe-motion]")).toBeNull();
+    expect(screen.queryByTestId("hero-network")).not.toBeInTheDocument();
+  });
+
   it("uses the globe surface instead of a visible overlay control", async () => {
     setDesktopMatch(true);
     render(<HeroSection locale="en" />);

@@ -13,7 +13,7 @@ const repo = path.resolve(here, "../..");
 const source = path.join(here, "workshop-frame.css");
 
 /** Workshop folders that link lib/workshop-frame.css. Add a slug here when a workshop adopts the frame. */
-export const FRAME_WORKSHOPS = ["ki-prognosen-einschaetzen", "geschaeftsberichte-mit-ki-lesen"];
+export const FRAME_WORKSHOPS = ["ki-prognosen-einschaetzen", "geschaeftsberichte-mit-ki-lesen", "esg-berichte-mit-ki"];
 
 export function frameCopyPath(slug) {
   return path.join(repo, "packages/website/public/workshops", slug, "lib/workshop-frame.css");

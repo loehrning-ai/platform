@@ -158,19 +158,30 @@ export function RetrievalQueue({
     locale,
   );
   const currentLessonPath = currentLessonHref.split("#", 1)[0];
+  // On phones an empty queue ("0 reviews are due", or no local state yet)
+  // is an 80px box with nothing to do, sitting between the mission and the
+  // lesson text. It stays out of the phone layout until a review is due.
+  // From sm it renders as before; the server markup matches the empty state,
+  // so nothing jumps after hydration.
+  const phoneQuiet = manuallyExpanded === null && dueCount === 0;
 
   return (
     <section
       aria-labelledby="course-retrieval-queue-title"
-      className="mb-6 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere]"
+      data-retrieval-queue-quiet={phoneQuiet ? "" : undefined}
+      className={`mb-6 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere] max-sm:border ${phoneQuiet ? "max-sm:hidden" : ""}`}
     >
       <div
         data-retrieval-queue-header
-        className="grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-3 sm:flex sm:px-4"
+        className="grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-3 max-sm:py-2 sm:flex sm:px-4"
       >
-        <span className="h-3 w-3 shrink-0 rounded-full bg-brand-orange ring-4 ring-brand-orange/20" />
+        <span
+          aria-hidden="true"
+          className={`h-3 w-3 shrink-0 rounded-full ${dueCount > 0 ? "bg-brand-orange ring-4 ring-brand-orange/20" : "bg-muted-foreground ring-0"}`}
+        />
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+          {/* Below sm the labels are sentence case; from sm unchanged. */}
+          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark max-sm:font-sans max-sm:text-[13px] max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground">
             {copy.eyebrow}
           </span>
           <span
@@ -183,7 +194,7 @@ export function RetrievalQueue({
         <span
           role="status"
           aria-live="polite"
-          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-xs font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] sm:shrink-0 sm:text-right"
+          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-xs font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] max-sm:font-sans max-sm:text-[13px] max-sm:font-normal max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground sm:shrink-0 sm:text-right"
         >
           {available ? copy.due(dueCount) : copy.unavailableShort}
         </span>

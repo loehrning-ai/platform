@@ -2,10 +2,12 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import {
   TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_LESSON_ROW_COLUMNS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
+  TechnicalCourseLessonNumber,
   TechnicalCourseSectionHeading,
 } from "./technical-course-landing";
 
@@ -89,6 +91,42 @@ describe("TechnicalCourseLanding", () => {
     );
     const facts = screen.getByRole("complementary", { name: "Auf einen Blick" });
     expect(within(facts).getByRole("figure", { name: "Arbeitszyklus" })).toBeInTheDocument();
+  });
+
+  it("renders the facts as one wrapping caption line below lg and the ruled column from lg", () => {
+    render(
+      <TechnicalCourseHeader
+        eyebrow="Kurs"
+        title="Titel"
+        intro="Intro"
+        primaryAction={<a href="/a">Start</a>}
+        facts={["5 Blöcke, 18 Lektionen", "ca. 1 Std. 40 Min."]}
+        factsLabel="Auf einen Blick"
+      />,
+    );
+    const facts = screen.getByRole("complementary", { name: "Auf einen Blick" });
+    expect(facts).toHaveClass("border-t-2", "border-foreground", "max-lg:border-t");
+    // The visible label repeats the landmark name, so it is visually hidden
+    // below lg only.
+    expect(within(facts).getByText("Auf einen Blick")).toHaveClass("max-lg:sr-only");
+    const list = facts.querySelector("[data-course-onboarding-checklist]");
+    expect(list).toHaveClass("max-lg:flex", "max-lg:flex-wrap");
+    const rows = within(facts).getAllByRole("listitem");
+    expect(rows).toHaveLength(2);
+    for (const row of rows) {
+      // Desktop rows keep their hairline and 17px body; phones drop both.
+      expect(row).toHaveClass("border-b", "py-2.5", "text-body", "max-lg:border-0", "max-lg:py-0");
+    }
+    expect(screen.getByText("Intro")).toHaveClass("text-lead", "max-sm:text-[1.0625rem]");
+  });
+
+  it("shows a two-digit lesson number on phones and the full label from sm", () => {
+    render(<TechnicalCourseLessonNumber label="Lektion 3" number={3} />);
+    expect(screen.getByText("03")).toHaveClass("sm:hidden");
+    expect(screen.getByText("03")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByText("Lektion 3")).toHaveClass("max-sm:sr-only");
+    expect(TECHNICAL_COURSE_LESSON_ROW_COLUMNS).toContain("grid-cols-[2rem_minmax(0,1fr)_1rem]");
+    expect(TECHNICAL_COURSE_LESSON_ROW_COLUMNS).toContain("sm:grid-cols-[4.75rem_minmax(0,1fr)_1rem]");
   });
 
   it("drops legal-document section marks from labels", () => {

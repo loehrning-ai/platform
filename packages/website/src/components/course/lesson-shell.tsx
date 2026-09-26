@@ -167,6 +167,16 @@ export interface LessonShellProps {
   readonly readerBar?: LessonShellReaderBar;
   /** Allows the course-owned reader action to focus its own opaque content. */
   readonly contentRef?: Ref<HTMLDivElement>;
+  /**
+   * Reader focus mode (docs/experience-system.md). On by default: a lesson or
+   * chapter reader swaps the tab bar for the compact reader bar below lg.
+   *
+   * A course landing that borrows the shell only for its desktop rail passes
+   * `false`. It is a marketing page, so below lg it keeps the site tab bar and
+   * renders no reader bar and no drawer control: the landing's own chapter
+   * list is the navigation there. From lg the rail is unchanged.
+   */
+  readonly readerFocus?: boolean;
 }
 
 export function LessonShell({
@@ -184,9 +194,10 @@ export function LessonShell({
   renderSidebar,
   readerBar,
   contentRef,
+  readerFocus = true,
 }: LessonShellProps) {
-  const toggleButtonRef = useRef<HTMLButtonElement>(null);
-  const lastNavOpenerRef = useRef<HTMLButtonElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const lastNavOpenerRef = useRef<HTMLElement | null>(null);
   const previousNavOpenRef = useRef(navOpen);
   const closeNav = useCallback(() => onNavOpenChange(false), [onNavOpenChange]);
   const drawerRef = useFocusTrap<HTMLElement>(navOpen, closeNav, {
@@ -244,7 +255,14 @@ export function LessonShell({
     let attempts = 0;
     const restore = () => {
       if (cancelled) return;
-      const toggle = lastNavOpenerRef.current ?? toggleButtonRef.current;
+      // The drawer is opened from the reader bar: its contents button when a
+      // reader supplies a next step, otherwise the bar's own action.
+      const toggle =
+        lastNavOpenerRef.current ??
+        shellRef.current?.querySelector<HTMLElement>(
+          "[data-reader-focus-navigation], [data-reader-focus-action]",
+        ) ??
+        null;
       if (toggle?.isConnected && !toggle.closest("[inert]")) {
         toggle.focus();
       }
@@ -305,12 +323,14 @@ export function LessonShell({
   // attribute is static markup on the wrapper this shell owns inside <main>,
   // so it is in the first response, never toggles, and the mobile tab bar
   // (`body:has([data-reader="focus"])`) is absent from the first paint on.
+  // A landing (`readerFocus={false}`) omits it and keeps the tab bar.
   return (
     <div
+      ref={shellRef}
       className="flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip bg-background"
       data-lesson-shell
       data-content-mode={contentMode}
-      data-reader="focus"
+      data-reader={readerFocus ? "focus" : undefined}
     >
       {/* Desktop sidebar */}
       <aside
@@ -421,43 +441,18 @@ export function LessonShell({
         </>
       )}
 
-      {/* Main content */}
-      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 pb-6 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
-        {/* No subheader is assumed. A caller with an occupied sticky band may
-            supply the inherited token; ordinary technical readers reserve zero. */}
-        <div
-          data-lesson-shell-mobile-toolbar
-          className="sticky top-[calc(var(--nav-h-compact)+var(--lesson-subheader-h,0px))] z-40 -mx-4 mb-4 flex h-[var(--lesson-toolbar-h)] min-w-0 items-center justify-between gap-3 overflow-hidden border-b border-hairline bg-background px-4 sm:-mx-5 sm:px-5 lg:hidden"
-        >
-          <span className="min-w-0 break-words text-label text-foreground">
-            {navLabel}
-          </span>
-          <button
-            ref={toggleButtonRef}
-            type="button"
-            onClick={(event) => {
-              lastNavOpenerRef.current = event.currentTarget;
-              onNavOpenChange(true);
-            }}
-            tabIndex={navOpen ? -1 : undefined}
-            aria-hidden={navOpen || undefined}
-            aria-expanded={navOpen}
-            aria-controls={navId}
-            aria-label={openNavLabel}
-            className={`flex h-11 w-11 shrink-0 items-center justify-center border border-foreground bg-transparent text-foreground outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none lg:hidden ${
-              navOpen ? "pointer-events-none invisible" : ""
-            }`}
-          >
-            <Menu className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </div>
+      {/* Main content. Below lg there is no sticky toolbar under the compact
+          top bar: the reader bar at the bottom edge already carries the
+          drawer control, and a second control for the same drawer cost 48px
+          of fixed chrome on every phone screen. */}
+      <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 pb-6 pt-4 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
         <div
           ref={contentRef}
           data-lesson-shell-content
           data-content-mode={contentMode}
           data-lesson-stage
           className={cn(
-            "mx-auto w-full min-w-0 overflow-x-clip pt-2 [&>*]:min-w-0",
+            "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0",
             CONTENT_WIDTH_CLASS[contentMode],
           )}
         >
@@ -468,48 +463,53 @@ export function LessonShell({
       {/* Compact reader bar below lg. A sibling of the drawer, so the drawer's
           inert sweep covers it like the rest of the page.
 
-          It is rendered unconditionally, and that is the whole point of it:
-          `data-reader="focus"` above removes the mobile tab bar below lg, so a
-          shell that rendered no bar here would take the phone's only bottom
-          navigation away and put nothing back. The chapter reader is the
-          precedent - it renders its bar unconditionally too.
+          In focus mode it is rendered unconditionally, and that is the whole
+          point of it: `data-reader="focus"` above removes the mobile tab bar
+          below lg, so a shell that rendered no bar here would take the
+          phone's only bottom navigation away and put nothing back. The
+          chapter reader is the precedent - it renders its bar unconditionally
+          too. A landing outside focus mode keeps the tab bar and renders
+          neither this bar nor a drawer control.
 
-          The bar's fallback action is the one thing the shell genuinely owns:
-          the lesson list in its own drawer, the counterpart of the chapter
-          reader's contents sheet. It is named `navLabel` rather than
-          `openNavLabel`, because the sticky toolbar above already owns that
-          name and two controls sharing one accessible name would make every
-          name-based query against this shell ambiguous. Like any scripted
-          control it carries `js-shell-only` and is removed without
+          The bar is also the only place the drawer opens from below lg. With
+          a reader's next step it holds a contents button named `openNavLabel`
+          beside that action; without one, the lesson list itself is the
+          action, named `navLabel` after its visible text. Like any scripted
+          control both carry `js-shell-only` and are removed without
           JavaScript, where the drawer cannot open anyway. */}
-      <ReaderFocusBar
-        position={readerBar?.position}
-        positionLabel={readerBar?.positionLabel}
-        action={
-          readerBar?.next ?? {
-            kind: "button",
-            label: navLabel,
-            onSelect: () => onNavOpenChange(true),
+      {readerFocus ? (
+        <ReaderFocusBar
+          position={readerBar?.position}
+          positionLabel={readerBar?.positionLabel}
+          action={
+            readerBar?.next ?? {
+              kind: "button",
+              label: navLabel,
+              onSelect: () => {
+                lastNavOpenerRef.current = null;
+                onNavOpenChange(true);
+              },
+            }
           }
-        }
-      >
-        {readerBar?.next ? (
-          <button
-            type="button"
-            data-reader-focus-navigation
-            aria-label={navLabel}
-            aria-expanded={navOpen}
-            aria-controls={navId}
-            onClick={(event) => {
-              lastNavOpenerRef.current = event.currentTarget;
-              onNavOpenChange(true);
-            }}
-            className="js-shell-only inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-          >
-            <Menu className="h-5 w-5" aria-hidden="true" />
-          </button>
-        ) : null}
-      </ReaderFocusBar>
+        >
+          {readerBar?.next ? (
+            <button
+              type="button"
+              data-reader-focus-navigation
+              aria-label={openNavLabel}
+              aria-expanded={navOpen}
+              aria-controls={navId}
+              onClick={(event) => {
+                lastNavOpenerRef.current = event.currentTarget;
+                onNavOpenChange(true);
+              }}
+              className="js-shell-only inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none"
+            >
+              <Menu className="h-5 w-5" aria-hidden="true" />
+            </button>
+          ) : null}
+        </ReaderFocusBar>
+      ) : null}
     </div>
   );
 }

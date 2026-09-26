@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { DemoDetailLayout } from "./demo-detail-layout";
 import { demos } from "@/lib/demos";
 
@@ -58,13 +58,51 @@ describe("<DemoDetailLayout>", () => {
     expect(
       screen.getByRole("link", { name: "Alle Praxisbeispiele" }),
     ).toHaveAttribute("href", "/demos");
-    expect(
-      screen.getByText(/Praxisbeispiel 01 · Grundlagen · Einstieg/),
-    ).toBeInTheDocument();
+    // The kicker drops its "Praxisbeispiel" word below sm, where it shares
+    // one row with the back link; the text content keeps the full phrase.
+    const kicker = screen.getByText((_, el) =>
+      el?.tagName === "P" &&
+      /^Praxisbeispiel 01 · Grundlagen · Einstieg$/.test(el.textContent ?? ""),
+    );
+    expect(kicker.querySelector("span")).toHaveClass("max-sm:hidden");
     // The H1 is the plain name: no full stop, no second sentence.
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       /^Claude in Excel$/,
     );
+  });
+
+  it("shares one phone row between back link and kicker and leads with the teaser", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    const top = container.querySelector("[data-demo-detail-top]");
+    // One flex row below sm, stacked from sm up.
+    expect(top).toHaveClass("flex", "flex-wrap", "sm:block");
+    expect(top?.querySelector("nav a")).toHaveClass("min-h-11");
+    // The phone lead is the one-sentence teaser; the full description
+    // returns from sm up. Neither is clamped.
+    const teaser = container.querySelector("[data-demo-detail-teaser]");
+    expect(teaser).toHaveTextContent(excel.teaser);
+    expect(teaser).toHaveClass("sm:hidden");
+    const description = screen.getByText(excel.description);
+    expect(description).toHaveClass("max-sm:hidden", "text-lead");
+    expect(`${teaser?.className} ${description.className}`).not.toMatch(/line-clamp/);
+  });
+
+  it("folds the checks and the run table behind one closed phone button", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    const toggle = screen.getByRole("button", { name: "So prüfst du das Beispiel" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveClass("min-h-11", "sm:hidden");
+    const panels = Array.from(container.querySelectorAll("[data-demo-notes-panel]"));
+    expect(panels.map((p) => p.getAttribute("data-demo-notes-panel"))).toEqual(["checks", "run"]);
+    expect(toggle.getAttribute("aria-controls")?.split(" ")).toEqual(panels.map((p) => p.id));
+    for (const panel of panels) expect(panel).toHaveClass("max-sm:hidden");
+    // Execution and actions repeat the engine's evidence line, so they stay
+    // off the phone even when the panel is open.
+    const rows = Array.from(container.querySelectorAll("[data-demo-run-rows] > div"));
+    expect(rows.map((r) => r.classList.contains("max-sm:hidden"))).toEqual([false, true, true, false]);
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    for (const panel of panels) expect(panel).not.toHaveClass("max-sm:hidden");
   });
 
   it("derives a module lesson label + deep link for a modul_x_lesson_y lessonId", () => {
@@ -114,6 +152,10 @@ describe("<DemoDetailLayout>", () => {
     // starts with that visible text and adds the target.
     const next = container.querySelector("[data-demo-next]");
     expect(next?.children[1]).toHaveTextContent(/^Claude in Word$/);
+    // The next example carries its full one-sentence teaser, never clamped.
+    const word = demos.find((d) => d.slug === "word")!;
+    expect(next?.children[2]).toHaveTextContent(word.teaser);
+    expect(next?.children[2]?.className).not.toMatch(/line-clamp/);
     expect(next?.children[1]).toHaveClass("text-fluid-h3", "font-bold");
     const link = screen.getByRole("link", {
       name: "Beispiel öffnen: Claude in Word",

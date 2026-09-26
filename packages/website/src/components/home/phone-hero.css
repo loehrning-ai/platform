@@ -1,0 +1,410 @@
+/*
+ * Phone home hero: one graphit band below lg (64rem).
+ *
+ * Everything here is scoped to `width < 64rem`; from lg the reviewed desktop
+ * hero in hero.tsx is untouched. The rules are unlayered on purpose: they
+ * outrank the desktop utilities on the same elements (which live in
+ * Tailwind's layers) without !important, so the band owns its geometry below
+ * lg and nothing leaks upward.
+ *
+ * Layout: a single-column grid between the compact top bar and the tab bar.
+ *
+ *   kicker     facts label (hidden on short screens)
+ *   title      the two-line promise (h1, the LCP element; never animated)
+ *   lead       one sentence
+ *   sky        flexible; the horizon globe starts here, just under the lead
+ *   actions    the primary action on the ground, and the globe's pause control
+ *   continue   the companion seat, docked above the tab bar
+ *
+ * The globe spans sky and actions behind the text. Its composition is a
+ * ratio of the band width (werk/horizon-projection.ts), so the apex sits
+ * 0.1 x width under the lead on every phone. In the server frame the band
+ * height only crops; the live renderer then pushes in to fill a tall band.
+ * The band is a min-height, never a fixed height, so 200% text grows it
+ * instead of clipping the actions.
+ */
+
+@media (width < 64rem) {
+  [data-section="hero"] {
+    /* Graphit band tokens: the same values as .dark-section, scoped to the
+       phone band so the desktop hero stays on paper. */
+    --color-background: #141414;
+    --color-foreground: #f2f1ee;
+    --color-muted-foreground: #d4cec5;
+    --color-muted: #a8a097;
+    --color-brand-orange: #e07050;
+    --color-kupfer: #e07050;
+    --color-border: rgba(242, 241, 238, 0.4);
+    --color-track: rgba(242, 241, 238, 0.16);
+    --color-hairline: rgba(242, 241, 238, 0.16);
+    --color-card: #1c1b1a;
+    --color-card-hover: #242321;
+    --hz-gutter: 1rem;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto minmax(7.5rem, 1fr) auto auto;
+    grid-template-areas:
+      "kicker"
+      "title"
+      "lead"
+      "sky"
+      "actions"
+      "continue";
+    min-height: calc(
+      100svh - var(--nav-h-compact) - var(--tabbar-band-h) - 1px
+    );
+    padding: 0;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* No paper grain on graphit. */
+  [data-section="hero"].berlin-grain::after {
+    content: none;
+  }
+
+  /* The desktop grid wrappers step aside so every row lands on the band's grid. */
+  [data-section="hero"] :is([data-hero-body], [data-hero-grid], [data-hero-copy]) {
+    display: contents;
+  }
+
+  [data-section="hero"] [data-hero-kicker] {
+    grid-area: kicker;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 1.25rem var(--hz-gutter) 0;
+    font-size: 0.875rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-muted-foreground);
+  }
+
+  [data-section="hero"] h1 {
+    grid-area: title;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0.625rem var(--hz-gutter) 0;
+    line-height: 1;
+    letter-spacing: -0.015em !important;
+    text-wrap: balance;
+    color: var(--color-foreground);
+  }
+
+  [data-section="hero"] [data-hero-lead] {
+    grid-area: lead;
+    position: relative;
+    z-index: 2;
+    max-width: 34ch;
+    margin: 0.75rem var(--hz-gutter) 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+    text-wrap: pretty;
+  }
+
+  /* ---- globe slot ---------------------------------------------------- */
+
+  [data-section="hero"] [data-home-globe] {
+    grid-row: 4 / 6;
+    grid-column: 1;
+    position: relative;
+    z-index: 0;
+    min-height: 0;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    container-type: inline-size;
+    /* Vertical swipes stay a native page scroll; only a horizontal drag spins. */
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  [data-home-globe] > canvas,
+  [data-home-globe] > svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  [data-home-globe] > canvas {
+    z-index: 1;
+  }
+
+  [data-home-globe] > .hz-sky {
+    z-index: 2;
+  }
+
+  /* Once the canvas has drawn its first frame, the server frame steps out. */
+  [data-home-globe][data-home-globe-live] > [data-home-globe-ssr] {
+    display: none;
+  }
+
+  /* Ground shade: the near surface sinks into the band, so the action sits
+     on calm ground and the continue row meets the globe without an edge. */
+  [data-home-globe]::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 3;
+    height: min(55%, 20rem);
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgb(20 20 20 / 0),
+      rgb(20 20 20 / 0.62) 55%,
+      rgb(20 20 20 / 0.9)
+    );
+  }
+
+  /* ---- actions ------------------------------------------------------- */
+
+  [data-section="hero"] [data-hero-actions] {
+    grid-area: actions;
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 1rem var(--hz-gutter) 1.25rem;
+  }
+
+  /* The primary action on graphit is the paper button: square, flat, ink
+     text (17.5:1), never white on the lightened accent. */
+  [data-section="hero"] [data-hero-actions] > a {
+    min-height: 3rem;
+    padding: 0 1.25rem;
+    gap: 0.625rem;
+    border: 0;
+    border-radius: 0;
+    background: #f2f1ee;
+    color: #141414;
+    box-shadow: none;
+    font-size: 1rem;
+    /* Wraps instead of clipping under large text; one line at 100%. */
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: normal;
+    text-align: left;
+    transform: none;
+    transition: background-color 120ms var(--ease-deck);
+  }
+
+  [data-section="hero"] [data-hero-actions] > a:hover {
+    background: #e8e5de;
+    color: #141414;
+  }
+
+  [data-section="hero"] [data-hero-actions] > a:focus-visible {
+    outline: 2px solid #e07050;
+    outline-offset: 3px;
+  }
+
+  [data-section="hero"] [data-home-continue-slot] {
+    grid-area: continue;
+    position: relative;
+    z-index: 4;
+  }
+}
+
+/* Short screens: the label goes, the promise and the action stay. */
+@media (width < 64rem) and (max-height: 43.75rem) {
+  [data-section="hero"] [data-hero-kicker] {
+    display: none;
+  }
+
+  [data-section="hero"] h1 {
+    padding-top: 1rem;
+  }
+
+  [data-section="hero"] [data-hero-actions] {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Narrow phones (320): a slightly smaller lead keeps it to two lines, and a
+   tighter button keeps the longest label ("Choose a learning route") on one
+   line beside the pause control. */
+@media (width < 22.5rem) {
+  [data-section="hero"] [data-hero-lead] {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  [data-section="hero"] [data-hero-actions] {
+    gap: 0.75rem;
+  }
+
+  [data-section="hero"] [data-hero-actions] > a {
+    padding: 0 0.875rem;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Tablets below lg: wider gutters, the band keeps its structure. */
+@media (48rem <= width < 64rem) {
+  [data-section="hero"] {
+    --hz-gutter: 2rem;
+  }
+}
+
+/* Landscape phones: auto height, a shallow horizon, text never clipped. */
+@media (width < 64rem) and (max-height: 30rem) {
+  [data-section="hero"] {
+    min-height: 0;
+    grid-template-rows: auto auto auto 8rem auto auto;
+  }
+}
+
+/* ---- the globe's pause control ----------------------------------------- */
+
+/* Quiet on purpose: a 44px target with no frame and a small glyph at
+   reduced contrast, so it never reads as a second button beside the action.
+   It arrives with a fade when the live globe takes over. */
+.phone-globe-toggle {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(242 241 238 / 0.55);
+  cursor: pointer;
+  transition: color 120ms var(--ease-deck), border-color 120ms var(--ease-deck);
+}
+
+.phone-globe-toggle:hover {
+  color: #f2f1ee;
+  border-color: rgb(242 241 238 / 0.4);
+}
+
+.phone-globe-toggle:focus-visible {
+  color: #f2f1ee;
+  outline: 2px solid #e07050;
+  outline-offset: -2px;
+}
+
+.phone-globe-toggle svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+
+@media (width >= 64rem) {
+  .phone-globe-toggle {
+    display: none;
+  }
+}
+
+/* ---- opening: finite, 3.3 s in total, first paint only --------------------
+ *
+ * The server frame is drawn in: the limb grows out from the apex, the
+ * graticule and coastlines open radially from Germany, Germany traces in
+ * Mennige, the Lernroute then shoots from Berlin down towards the action with
+ * its stations landing one by one, and one light sweep runs along the
+ * horizon. Every animation ends
+ * in the frame's natural state (fill-mode backwards), so the resting frame is
+ * exactly the reduced-motion and no-support frame. Under reduced motion none
+ * of this exists. The live renderer waits for these animations to finish
+ * before it takes over.
+ */
+@media (width < 64rem) and (prefers-reduced-motion: no-preference) {
+  [data-home-globe] .hz-limb {
+    stroke-dasharray: 1;
+    animation: hz-draw 1.1s var(--ease-deck) 0.1s backwards;
+  }
+
+  [data-home-globe] :is(.hz-glint, .hz-scale) {
+    animation: hz-fade 0.8s var(--ease-fade) 0.7s backwards;
+  }
+
+  [data-home-globe] .hz-lines {
+    animation: hz-reveal 1.6s var(--ease-deck) 0.35s backwards;
+  }
+
+  [data-home-globe] .hz-de {
+    stroke-dasharray: 1;
+    animation: hz-draw 1s var(--ease-deck) 1.15s backwards;
+  }
+
+  [data-home-globe] :is(.hz-de-fill, .hz-berlin) {
+    animation: hz-fade 0.5s var(--ease-fade) 1.85s backwards;
+  }
+
+  [data-home-globe] .hz-route {
+    stroke-dasharray: 1;
+    animation: hz-draw 0.9s var(--ease-deck) 2.05s backwards;
+  }
+
+  [data-home-globe] .hz-stations > g {
+    animation: hz-fade 0.3s var(--ease-fade) backwards;
+    animation-delay: calc(2.12s + var(--hz-i, 0) * 0.1s);
+  }
+
+  [data-home-globe] .hz-sweep {
+    animation: hz-sweep 1.3s var(--ease-fade) 2s backwards;
+  }
+
+  .phone-globe-toggle {
+    animation: hz-fade 0.4s var(--ease-fade) backwards;
+  }
+
+  /* The continue row arrives with a short fade instead of popping in. */
+  [data-home-continue-card] {
+    animation: hz-fade 0.2s var(--ease-fade) backwards;
+  }
+}
+
+@keyframes hz-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hz-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes hz-reveal {
+  from {
+    clip-path: circle(0 at var(--hz-fx) var(--hz-fy));
+  }
+  to {
+    clip-path: circle(200cqw at var(--hz-fx) var(--hz-fy));
+  }
+}
+
+@keyframes hz-sweep {
+  from {
+    stroke-dashoffset: 0.12;
+  }
+  to {
+    stroke-dashoffset: -1.12;
+  }
+}

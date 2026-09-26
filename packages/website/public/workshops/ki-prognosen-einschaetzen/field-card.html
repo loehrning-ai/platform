@@ -214,7 +214,7 @@ try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getIt
 if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
 m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
-if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-48);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
 u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>

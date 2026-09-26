@@ -17,6 +17,7 @@ function collectErrors(page: Page) {
 for (const viewport of [
   { width: 1440, height: 900 },
   { width: 390, height: 844 },
+  { width: 320, height: 568 },
 ]) {
   test.describe(`workshop 03 demo at ${viewport.width}px`, () => {
     test.use({ viewport });
@@ -54,6 +55,46 @@ for (const viewport of [
       }));
       expect(layout.overflow).toBeLessThanOrEqual(0);
       expect(layout.hidden).toBe(0);
+
+      // On phones the material strip is two rows: brand + back link, then the materials rail.
+      if (viewport.width <= 600) {
+        const strip = await page.locator(".wf-strip").evaluate((node) => node.getBoundingClientRect().height);
+        expect(strip).toBeLessThanOrEqual(96);
+        await expect(page.getByRole("link", { name: "Workshop-Seite auf Deutsch" })).toBeVisible();
+
+        // The three material tabs fit without scrolling (short names), so none sits under the edge fade.
+        const rail = await page.locator(".wf-mats").evaluate((node) => ({
+          overflow: node.scrollWidth - node.clientWidth,
+          text: (node as HTMLElement).innerText.replace(/\s+/g, " ").trim(),
+        }));
+        expect(rail.overflow).toBeLessThanOrEqual(0);
+        expect(rail.text).toBe("01 Course 02 Guide 03 Demo");
+        await expect(page.getByRole("link", { name: "Interactive demo" })).toBeHidden();
+
+        // The route is one row of numbered 44px stations; each keeps its step name as its accessible name.
+        const route = page.locator("#route a");
+        await expect(route).toHaveCount(6);
+        await expect(page.getByRole("link", { name: "Wrong answer, 2 min" })).toBeVisible();
+        const stations = await route.evaluateAll((links) =>
+          links.map((link) => {
+            const box = link.getBoundingClientRect();
+            return { top: Math.round(box.top), width: box.width, height: box.height };
+          }),
+        );
+        expect(new Set(stations.map((station) => station.top)).size).toBe(1);
+        for (const station of stations) {
+          expect(station.width).toBeGreaterThanOrEqual(44);
+          expect(station.height).toBeGreaterThanOrEqual(44);
+        }
+
+        // The question card starts inside the first screen (fully visible at 390).
+        const card = await page.locator("#wrong .qcard").evaluate((node) => {
+          const box = node.getBoundingClientRect();
+          return { top: box.top + window.scrollY, bottom: box.bottom + window.scrollY };
+        });
+        expect(card.top).toBeLessThan(viewport.height);
+        if (viewport.width >= 390) expect(card.bottom).toBeLessThanOrEqual(viewport.height);
+      }
 
       await page.locator("#hood > summary").click();
       await expect(page.locator("#hood-body")).toContainText("mrr_summary_monthly");

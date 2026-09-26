@@ -152,6 +152,13 @@
   .stage .hs-live{display:flex;align-items:center;min-height:16px}
   .stage .hs-live>span:last-child{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .stage .hs-racer{min-height:32px}
+  /* event key under the parcel chart, shown by the script when the chart is phone-narrow */
+  .hs-evkey{display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0 0;font-size:13px;line-height:1.35;color:#4f4640}
+  .hs-evkey[hidden]{display:none}
+  .hs-evkey span{display:inline-flex;align-items:center;gap:6px}
+  .hs-evkey i{width:10px;height:10px;flex:none}
+  .hs-evkey .k-promo i{background:#205b46}.hs-evkey .k-shock i{background:#121212}
+  @media (max-width:400px){.stage .hs-live>span:last-child{white-space:normal;overflow:visible;text-overflow:clip}}
   .stage .hs-racer .who{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.12;align-self:center}
   .act[data-company=parcel] .stage .hs-verdict{min-height:100px}
   .act[data-company=device] .stage .hs-verdict{min-height:92px}
@@ -385,7 +392,7 @@ try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getIt
 if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
 m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
-if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-48);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
 u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>

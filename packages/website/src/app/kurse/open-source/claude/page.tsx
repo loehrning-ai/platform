@@ -3,14 +3,17 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import {
   TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_LESSON_ROW_COLUMNS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
+  TechnicalCourseLessonNumber,
   TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
 import { HeroOrrery } from "@/components/imported-courses/claude/hero-orrery";
 import { HeroTransform } from "@/components/imported-courses/claude/hero-transform";
+import { PhoneDisclosure } from "@/components/course/phone-disclosure";
 import { getClaudeCourseBundle } from "@/lib/claude-course/localization";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -42,6 +45,7 @@ const LANDING_COPY = {
     demoEyebrow: "Prompt-Bausteine",
     demoIntro:
       "Aktiviere einzelne Bestandteile und vergleiche die simulierten Ergebnisse.",
+    demoToggle: "Prompt-Werkbank ausprobieren",
     courseEyebrow: "Kursplan",
     courseTitle: "Vier Themenbereiche, zwölf Lektionen",
     courseIntro:
@@ -78,6 +82,7 @@ const LANDING_COPY = {
     demoEyebrow: "Prompt components",
     demoIntro:
       "Toggle individual components and compare the simulated results.",
+    demoToggle: "Try the prompt workbench",
     courseEyebrow: "Course map",
     courseTitle: "Four tracks, twelve lessons",
     courseIntro:
@@ -98,6 +103,7 @@ const LANDING_COPY = {
 } as const;
 
 const BASE_PATH = TECHNICAL_COURSE_ROUTES.claude.basePath;
+
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -152,32 +158,47 @@ export default async function ClaudeCourseLandingPage() {
           secondaryAction={
             <Link
               href="#lessons"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.courseMap}
             </Link>
           }
         />
 
-        <section className="mt-12 min-w-0" aria-labelledby="prompt-lab-heading">
+        {/* Below lg the two workbenches (about 1600px) collapse into one row,
+            so the course plan follows the hero instead of three screens later.
+            From lg they render open, exactly as before. */}
+        <section
+          className="mt-12 min-w-0 max-sm:mt-4"
+          aria-labelledby="prompt-lab-heading"
+        >
+          {/* Below lg the heading and intro stay for assistive technology
+              only: the toggle row names the workbench and carries the intro
+              as its second line. */}
           <h2
             id="prompt-lab-heading"
-            className="text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
+            className="text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground max-lg:sr-only sm:text-[32px]"
           >
             {copy.demoEyebrow}
           </h2>
-          <p className="mt-2 max-w-[640px] text-sm leading-[1.55] text-muted-foreground">
+          <p className="mt-2 max-w-[640px] text-sm leading-[1.55] text-muted-foreground max-lg:sr-only">
             {copy.demoIntro}
           </p>
-          <div className="mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
-            <HeroOrrery locale={locale} />
-          </div>
-          <div className="mt-6 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
-            <HeroTransform locale={locale} />
-          </div>
+          <PhoneDisclosure
+            id="prompt-lab-instruments"
+            label={copy.demoToggle}
+            hint={copy.demoIntro}
+          >
+            <div className="lg:mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
+              <HeroOrrery locale={locale} />
+            </div>
+            <div className="mt-6 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
+              <HeroTransform locale={locale} />
+            </div>
+          </PhoneDisclosure>
         </section>
 
-        <section id="lessons" className="mt-12 scroll-mt-24">
+        <section id="lessons" className="mt-12 scroll-mt-24 max-sm:mt-6">
           <TechnicalCourseSectionHeading
             eyebrow={copy.courseEyebrow}
             title={copy.courseTitle}
@@ -210,16 +231,17 @@ export default async function ClaudeCourseLandingPage() {
                             lessonId: lesson.id,
                           })}
                           prefetch={false}
-                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[4.75rem_minmax(0,1fr)_1rem]`}
+                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} ${TECHNICAL_COURSE_LESSON_ROW_COLUMNS}`}
                         >
-                          <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                            {copy.lessonLabel} {lesson.number}
-                          </p>
+                          <TechnicalCourseLessonNumber
+                            label={`${copy.lessonLabel} ${lesson.number}`}
+                            number={lesson.number}
+                          />
                           <div className="min-w-0">
                             <h4 className="break-words text-[15px] font-semibold text-foreground">
                               {lesson.title}
                             </h4>
-                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground">
+                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground max-sm:text-[14px]">
                               {lesson.subtitle}
                             </p>
                           </div>

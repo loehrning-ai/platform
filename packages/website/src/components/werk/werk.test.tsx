@@ -80,6 +80,13 @@ describe("Kicker and SectionHead", () => {
     expect(screen.getByText("Kostenlos, ohne Konto")).toHaveClass("text-caption");
     expect(screen.getByText("Alles zum Nacharbeiten.")).toBeInTheDocument();
   });
+
+  it("sets a compact head one step smaller below sm only", () => {
+    render(<SectionHead title="Ablauf" size="compact" />);
+    const heading = screen.getByRole("heading", { level: 2, name: "Ablauf" });
+    expect(heading).toHaveClass("text-[1.375rem]", "sm:text-fluid-h2", "font-bold");
+    expect(heading).not.toHaveClass("text-fluid-h2");
+  });
 });
 
 describe("Pictogram", () => {
@@ -173,6 +180,28 @@ describe("Route", () => {
   it("switches from vertical on phones to horizontal from sm", () => {
     const { container } = render(<Route stations={stations} />);
     expect(container.querySelector("ol")).toHaveClass("grid-cols-1", "sm:grid-flow-col", "sm:auto-cols-fr");
+    expect(container.querySelector("[data-route-rail]")).toBeNull();
+  });
+
+  it("offers an opt-in phone rail inside a focusable, labelled group", () => {
+    const { container } = render(
+      <Route label="Ablauf" stations={stations} mode="description" layout="rail" className="mt-4" />,
+    );
+    const rail = screen.getByRole("group", { name: "Ablauf" });
+    expect(rail).toHaveAttribute("tabindex", "0");
+    expect(rail).toHaveClass("overflow-x-auto", "snap-x", "sm:overflow-visible", "mt-4");
+    expect(rail.className).toMatch(/focus-visible:outline-\[3px\]/);
+    // The list keeps its name and turns into the sm row from sm.
+    const list = within(rail).getByRole("list", { name: "Ablauf" });
+    expect(list).toHaveClass("flex", "sm:grid", "sm:grid-flow-col", "sm:auto-cols-fr");
+    for (const item of within(list).getAllByRole("listitem")) {
+      expect(item).toHaveClass("shrink-0", "snap-start");
+    }
+    // Horizontal segments at every width.
+    for (const line of container.querySelectorAll("[data-route-line]")) {
+      expect(line).toHaveClass("border-t-2");
+      expect(line).not.toHaveClass("border-l-2");
+    }
   });
 });
 
@@ -192,6 +221,18 @@ describe("QuestionCard", () => {
   it("scopes the dark tone with the graphit tokens", () => {
     const { container } = render(<QuestionCard tone="dark" question="Zeige den MRR." />);
     expect(container.querySelector("figure")).toHaveClass("dark-section", "border-dark-fg", "bg-dark-bg");
+  });
+
+  it("tightens only below sm in the compact density", () => {
+    const { container } = render(<QuestionCard tone="dark" density="compact" question="Zeige den MRR." />);
+    const figure = container.querySelector("figure");
+    expect(figure).toHaveClass("py-3.5", "pl-5", "sm:py-5", "sm:pl-7", "dark-section");
+    expect(figure).not.toHaveClass("py-5");
+    expect(container.querySelector('[data-pictogram="question"]')).toHaveClass("size-6", "sm:size-10");
+    expect(container.querySelector("blockquote")).toHaveClass("text-[1.0625rem]", "sm:text-[1.375rem]");
+    // The default stays as reviewed.
+    const { container: plain } = render(<QuestionCard question="Zeige den MRR." />);
+    expect(plain.querySelector("figure")).toHaveClass("py-5", "pl-7");
   });
 });
 
@@ -385,5 +426,22 @@ describe("GlobeLines and CoverBand", () => {
       </CoverBand>,
     );
     expect(container.querySelector("[data-cover-globe]")).toBeNull();
+  });
+
+  it("adds a cropped phone globe only on request", () => {
+    const { container, rerender } = render(
+      <CoverBand>
+        <p>Hub</p>
+      </CoverBand>,
+    );
+    expect(container.querySelector("[data-cover-globe-phone]")).toBeNull();
+    rerender(
+      <CoverBand phoneGlobe>
+        <p>Hub</p>
+      </CoverBand>,
+    );
+    const phone = container.querySelector("[data-cover-globe-phone]");
+    expect(phone).toHaveAttribute("aria-hidden", "true");
+    expect(phone).toHaveClass("md:hidden", "pointer-events-none", "-z-10");
   });
 });

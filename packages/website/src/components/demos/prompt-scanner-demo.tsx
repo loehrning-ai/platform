@@ -369,6 +369,8 @@ export default function PromptScannerDemo() {
           onChange={(e) => setText(e.target.value)}
           rows={3}
           spellCheck={false}
+          // 16px below lg: iOS (phone and iPad) zooms into any focused field under 16px.
+          className="text-base lg:text-[12px]"
           style={{
             width: "100%",
             minHeight: 44,
@@ -377,7 +379,6 @@ export default function PromptScannerDemo() {
             border: "none",
             color: DEMO.kalk,
             fontFamily: DEMO.font.mono,
-            fontSize: 12,
             resize: "vertical",
             lineHeight: 1.7,
             display: "block",

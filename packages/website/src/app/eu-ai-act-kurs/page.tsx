@@ -52,7 +52,7 @@ const LANDING_COPY = {
     heading: "Rollen, Risiken und",
     headingAccent: "Pflichten einordnen.",
     introduction:
-      "Sie nehmen ein KI-Tool aus Ihrem Unternehmen und bestimmen seine Risikoklasse, Ihre Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27.\u00a0Juli\u00a02026 geltenden Fassung.",
+      "Sie nehmen ein KI-Tool aus Ihrem Unternehmen und bestimmen seine Risikoklasse, Ihre Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
@@ -63,6 +63,7 @@ const LANDING_COPY = {
       "24 Lektionen",
       "ca. 1 Std. 50 Min. Lernzeit",
       "Abschlussquiz mit 27 Fragen",
+      "Rechtsstand: VO (EU) 2024/1689, Fassung seit 27.\u00a0Juli\u00a02026",
     ],
     legalHeading: "Was Artikel 4 verlangt",
     legalBody:
@@ -135,7 +136,7 @@ const LANDING_COPY = {
     heading: "Map roles, risks,",
     headingAccent: "and duties.",
     introduction:
-      "You take one AI tool your company uses and work out its risk class, your role as provider or deployer, and the duties that follow. The basis is Regulation (EU) 2024/1689 in the amended version in force since 27 July 2026.",
+      "You take one AI tool your company uses and work out its risk class, your role as provider or deployer, and the duties that follow.",
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
@@ -146,6 +147,7 @@ const LANDING_COPY = {
       "24 lessons",
       "About 1 hr 50 min of study",
       "Final quiz with 27 questions",
+      "Legal basis: Regulation (EU) 2024/1689 as in force since 27\u00a0July\u00a02026",
     ],
     legalHeading: "What Article 4 requires",
     legalBody:

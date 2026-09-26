@@ -46,6 +46,7 @@
       var sw = $(".sw", li);
       sw.setAttribute("aria-pressed", r.pressed ? "true" : "false");
       setText($(".sw__t", sw), r.sw);
+      setText($(".sw__s", sw), r.swShort);
       li.classList.toggle("is-on", r.pressed);
       li.classList.toggle("is-ghost", v.ghost);
       var iso = $(".iso", li);
@@ -75,12 +76,14 @@
     setText($("#m-total"), v.meters.total);
     setText($("#m-s1"), "Scope 1 " + v.meters.s1);
     setText($("#m-s2"), "Scope 2 " + v.meters.s2);
-    setText($("#m-dist"), v.meters.dist);
+    setText($("#m-dist-sign"), v.meters.distSign);
+    setText($("#m-dist-n"), v.meters.distN);
+    setText($("#m-dist-side"), v.meters.distSide);
     $("#meter-dist").classList.toggle("is-zero", v.meters.distZero);
     setText($("#m-dist-pct"), v.meters.distPct);
     setVar($("#g-dist"), "--w", v.meters.distW);
     setText($("#m-vs"), v.meters.vs);
-    setText($("#m-vs-right"), "Right answer: " + v.meters.vsRight);
+    setText($("#m-vs-right"), v.meters.vsRight);
     setVar($("#g-vs"), "--p", v.meters.vsPos);
     setVar($("#g-vs-right"), "--p", v.meters.vsRightPos);
     setText($("#board-caption"), v.caption);

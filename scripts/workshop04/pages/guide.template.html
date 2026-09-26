@@ -18,7 +18,7 @@
 <main id="main" tabindex="-1">
 <div class="pg">
 <header class="pg-head">
-  <p class="wf-kicker">Workshop 04 · ESG Reporting with AI · Learner guide · to read after the session · about 25 minutes</p>
+  <p class="wf-kicker"><span class="k-ctx">Workshop 04 · ESG Reporting with AI · Learner guide · to read</span><span class="k-ph">To read</span> after the session · about 25 minutes</p>
   <h1 class="wf-h1">From a folder of energy bills to a figure you can trace</h1>
   <p class="wf-lead">This guide follows one invented company and one question through the session, in the same order as the deck. Every figure on this page comes from the workshop's dataset.</p>
   <div class="wf-qcard">
@@ -28,7 +28,7 @@
   <ul class="chips" aria-label="What the figures are">
     <li class="chip">Fictional company</li>
     <li class="chip">{{factorlabel}}</li>
-    <li class="chip chip--gap">Raw-folder answer: constructed from documented failure modes</li>
+    <li class="chip chip--gap">Raw-folder answer: constructed<span class="c-tail"> from documented failure modes</span></li>
   </ul>
   <nav class="actions" aria-label="Other materials">
     <a class="wf-btn wf-btn--primary" href="./slides.html">Open the deck</a>
@@ -36,10 +36,13 @@
     <a class="wf-btn" href="./field-card.html">Field card</a>
     <a class="wf-btn" href="./transfer.html">Transfer sheet</a>
   </nav>
+  <div class="g-tools">
   <details class="toc-phone">
-    <summary><span>On this page · {{toccount}} sections</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary>
+    <summary><span>On this page<span class="toc-n"> · {{toccount}} sections</span></span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary>
     <nav aria-label="On this page">{{toc}}</nav>
   </details>
+  <p class="fold-all" hidden><button type="button" class="fold-all__btn" id="fold-all"><span class="pm" aria-hidden="true"></span><span class="g-fold__show">Open all</span><span class="g-fold__hide">Close all</span><span class="visually-hidden"> sections</span></button></p>
+  </div>
 </header>
 </div>
 
@@ -50,6 +53,7 @@
 
 <section class="g-sec" aria-labelledby="why-asked">
   <div class="g-kopf"><p class="wf-kicker">The case</p><h2 id="why-asked"><span class="g-n">{{sec}}</span>Why does a {{j:company.staff_2025}}-person company get this question?</h2></div>
+  {{fold}}
   <p>Kellbrunn Präzisionsteile GmbH is invented. It makes stamped and machined metal parts at two plants, Werk Nord and Werk Süd, and runs a leased warehouse, Lager Ost. It has {{j:company.staff_2025}} staff and has never been in CSRD scope. Its house bank asks for Scope 1 and 2 emissions to price a loan, and a car maker's supplier questionnaire asks the same, plus whether the number went down. The question for the whole workshop is: “{{j:question.en}}”</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two thresholds decide CSRD scope since 18 March 2026?</p>
@@ -57,11 +61,13 @@
       <p>A company must have more than 1,000 employees and more than €450m turnover, both. That is the EU rule; member states must bring national law in line by 19 March 2027. Kellbrunn, with {{j:company.staff_2025}} staff and €{{j:company.turnover_meur}}m turnover, is far below both.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>A company outside the reporting law still gets asked, by the people who lend it money and buy its parts.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="first-answer">
   <div class="g-kopf"><p class="wf-kicker">Wrong answer</p><h2 id="first-answer"><span class="g-n">{{sec}}</span>The first answer, and the checks it passed</h2></div>
+  {{fold}}
   <p>We gave an AI the 2025 folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: {{n:wrong_total_lb}}&nbsp;CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
   <div class="answer answer--raw">
     <p class="wf-kicker">Raw-folder answer · constructed</p>
@@ -87,11 +93,13 @@
       </ul>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>A total close to last year's does not show that each bill was counted once.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="twelve-files">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="twelve-files"><span class="g-n">{{sec}}</span>Twelve files, eleven months</h2></div>
+  {{fold}}
   <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number <span class="nowrap">{{j:inputs.wnDuplicate.invoice}}</span> is next to the first. October is missing. The November and December bill covers two months. The twelfth file is an annual bill addressed to another company, Talbrück (see “Whose bill is it?”).</p>
   <p>The facility manager's meter readings show October: {{j:inputs.meterReadings.10.kwh:int}} minus {{j:inputs.meterReadings.9.kwh:int}} is {{n:oct_kwh}}. The duplicate adds {{n:dup_kwh}} and the gap removes {{n:oct_kwh:bare}}, so the Werk Nord sum is only {{n:wn_net_raw_vs_right_kwh:absunit}} off. August is low ({{n:aug_kwh}}, {{n:aug_vs_jul_pct}} against July) because of the plant holiday. That is real, and a good assistant flags it for a person without changing it.</p>
   {{fig:months}}
@@ -101,11 +109,13 @@
       <p>Two errors cancel. The duplicate March bill adds {{n:dup_kwh}}, and the missing October takes out {{n:oct_kwh}}. A check on the Werk Nord total cannot see either error; a month-by-month grid shows both at once.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Fill a site-by-month grid before you add anything up. Count months, not files.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="dot">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="dot"><span class="g-n">{{sec}}</span>A dot that means a thousand</h2></div>
+  {{fold}}
   <p>The Werk Süd statement says “Verbrauch 2025: {{j:inputs.ws.printed}}”. On a German document the dot separates thousands, so this is {{n:el_ws_mwh}}, or {{n:el_ws_kwh}}. Read as {{j:inputs.ws.misreadKwh:int}}&nbsp;kWh, Werk Süd almost disappears and location-based Scope 2 drops by {{n:unit_lb_t:absunit}}.</p>
   <p>Two checks catch it without knowing the number format: {{j:inputs.ws.misreadKwh:int}}&nbsp;kWh would be {{n:ws_misread_kwh_per_employee}} per Werk Süd employee per year, against {{n:ws_kwh_per_employee}} when read correctly, and the same page prints last year's value, {{j:inputs.ws.priorYearPrinted}}.</p>
   {{fig:dot}}
@@ -115,11 +125,13 @@
       <p>Nothing. Werk Süd counts as zero in market-based either way, because the certificate covers all of its electricity.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Keep the value and unit exactly as printed in the row, and convert with a written rule.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="whose-bill">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="whose-bill"><span class="g-n">{{sec}}</span>Whose bill is it?</h2></div>
+  {{fold}}
   <p>One annual bill in the Werk Nord folder is addressed to {{j:meta.jv}}, a powder-coating company on the same premises. Kellbrunn holds {{j:company.jv_share_pct:pct}} and the partner runs it; the contract and the meter are Talbrück's, and the bill carries Talbrück's own customer number, {{j:inputs.customerNoJV}}. Kellbrunn chose the operational control approach, so the bill is out.</p>
   <p>Counting it adds {{n:jv_kwh}} and {{n:jv_lb_t:absunit}} location-based ({{n:jv_rm_t:absunit}} at the residual mix). The row stays in the ledger as excluded, with the reason, and is a candidate for Scope 3 category 15 later.</p>
   <div class="recall">
@@ -128,11 +140,13 @@
       <p>Only if the company had chosen and written down the equity-share approach. Kellbrunn wrote down operational control before any AI run, so Talbrück counts as zero here.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>The name on the document decides, checked against a boundary written down before the AI runs.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="looked-right">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="looked-right"><span class="g-n">{{sec}}</span>Why the total looked right</h2></div>
+  {{fold}}
   <p>Six errors are inside the first answer. The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: {{n:adblue_t}}.</p>
   <p>When you remove the errors one by one, the running total swings between {{n:wf_lb_min_t}} and {{n:wf_lb_max_t}} and ends at {{n:total_lb_2025}}, {{n:gap_lb_t}} away from where it started.</p>
   {{fig:waterfall}}
@@ -142,11 +156,13 @@
       <p>The duplicate March bill ({{n:dup_lb_t}}) and the missing October ({{n:oct_lb_t}}) cancel to {{n:pair_dup_oct_t}}. The Talbrück bill ({{n:jv_lb_t}}) hides {{n:jv_hides_unit_share_pct}} of the misread Werk Süd unit ({{n:unit_lb_t}}); together the two move the total by {{n:pair_jv_unit_t}}.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>A small gap in the total can hide large errors in the parts.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="ledger">
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="ledger"><span class="g-n">{{sec}}</span>The ledger</h2></div>
+  {{fold}}
   <p>A ledger (Belegtabelle) has one row for each quantity on a document. Each row keeps the file, the page, the quoted line, the value and unit as printed, the normalised value, the legal entity on the document, whether it is inside the boundary, the status and the factor ID. Excluded rows stay in with a reason: the duplicate March scan, the Talbrück bill and the AdBlue litres. The October row is a meter reading, so it gets data-quality grade B.</p>
   <p>A control total ties it together: all electricity on documents ({{n:ctl_docs_kwh:bare}}) minus what was excluded with a reason ({{n:ctl_excluded_kwh:bare}}) plus October from the meter ({{n:ctl_meter_kwh:bare}}) equals the {{n:ctl_total_kwh}} in the ledger.</p>
   {{fig:control}}
@@ -156,11 +172,13 @@
       <p>The column <code>entity_on_document</code>, checked against the written boundary, catches the Talbrück bill. Its row stays in with the status excluded and the reason boundary. The site-by-month coverage grid catches the missing month: October has no bill, so its cell stays empty until a person decides how to fill it.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Every number points to a page, including the numbers you left out.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="six-rules">
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="six-rules"><span class="g-n">{{sec}}</span>Six rules and a pinned factor table</h2></div>
+  {{fold}}
   <p>The rules are written before the AI runs: boundary, coverage, units, factors, Scope 2 and citations. The work splits into three roles. The reader extracts rows and quotes what is printed. The clerk applies the rules in a spreadsheet, never by mental arithmetic. The writer drafts sentences that cite rows. The AI may propose rules; a spreadsheet applies them, and a person approves the list.</p>
   <ol class="wf-steps">
     <li><p><b>Boundary</b> (clerk). Check the entity on each document against the written list of sites. A name not on the list stops the sum until a person decides.</p></li>
@@ -177,11 +195,13 @@
       <p>A value from memory has no year, no edition and no basis that anyone can check. It may be last year's grid factor, which here adds {{n:last_year_factor_effect_t:absunit}}, or a gas factor on the wrong calorific basis, which adds {{n:gasbasis_t:absunit}}. A factor ID points to one row in a table a person approved.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>The AI picks an ID. The value, year and edition are in a table a person approved.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="two-scope-2">
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="two-scope-2"><span class="g-n">{{sec}}</span>Two Scope 2 numbers</h2></div>
+  {{fold}}
   <p>Location-based Scope 2 uses the average grid factor where the power is used: {{n:el_total_kwh}} × {{j:factors.F-EL-LB-2025.value:fix2}} = {{n:s2lb_2025}}. Market-based Scope 2 uses what the company bought. The guarantees of origin cover {{n:go_mwh}} at Werk Süd and nothing else, so Werk Süd is zero. The other {{n:el_uncovered_kwh}} get, in order, a qualifying supplier-specific rate if one exists, otherwise the residual mix: {{j:factors.F-EL-RM-2025.value:fix2}} in the teaching values, giving {{n:s2mb_2025}}.</p>
   <p>Under the GHG Protocol a company buying power in a market with certificates and supplier contracts, such as Germany, reports both figures. The kit's bills leave out the supplier mix disclosure that real German bills carry, so here the residual mix applies. The certificate removes {{n:bridge_cert_t:absunit}} and the residual mix adds {{n:bridge_rm_t:absunit}} back, so market-based is only {{n:bridge_net_t:absunit}} below location-based. “We run on green electricity” is false; {{n:renewable_share_el_pct}} of the electricity is covered.</p>
   {{fig:bridge}}
@@ -191,11 +211,13 @@
       <p>It uses the grid average for the power without a certificate, and comes out {{n:mb_grid_avg_too_low_t}} too low. Market-based takes the residual mix for that power, because the renewable share of the grid has already been sold to others as certificates.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Report both numbers, and count a certificate only for the kWh it covers.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="same-question">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="same-question"><span class="g-n">{{sec}}</span>The same question on the ledger</h2></div>
+  {{fold}}
   <p>With the ledger, the coverage grid and the rules, the same AI gets the same question. The target answer names row IDs for every figure.</p>
   <div class="answer answer--target">
     <p class="wf-kicker">{{j:meta.targetLabel_en}}</p>
@@ -214,11 +236,13 @@
       <p>One example: Werk Süd electricity, {{n:ws_lb_2025}} location-based. Ask for row <code>E-WS-01</code> and page 1 of the Werk Süd annual statement, line “Verbrauch 2025: {{j:inputs.ws.printed}}”. For its market-based zero, ask for the instrument row <code>I-WS-GO</code> and the certificate confirmation it points to, <code>{{j:ledger.I-WS-GO.source_file:file}}</code>.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>The total moved by {{n:gap_lb_t}}. Every tonne now has a row behind it.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="drivers">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="drivers"><span class="g-n">{{sec}}</span>What drove the change</h2></div>
+  {{fold}}
   <p>Location-based emissions fell {{n:chg_lb_t:absunit}}. In this case's teaching values, {{n:drv_lb_grid_t:absunit}} of that ({{n:drv_lb_grid_share_pct}}) comes from the lower grid factor and {{n:drv_lb_own_t:absunit}} from using less electricity, gas and diesel. Market-based fell {{n:chg_mb_t:absunit}}, and {{n:drv_mb_cert_t:absunit}} of that ({{n:drv_mb_cert_share_pct}}) is the guarantees of origin for Werk Süd. The residual mix is held at {{j:factors.F-EL-RM-2025.value:fix2}} in both years on purpose; real residual mixes change every year.</p>
   <p>The folder has no production volumes, so “used less” is supported and “more efficient” is not. The largest sources also depend on the method: location-based, Werk Nord electricity leads with {{n:wn_el_lb_2025}}, then Werk Süd electricity with {{n:ws_lb_2025}}; market-based, Werk Nord electricity is {{n:wn_el_mb_2025}} and Werk Süd electricity drops to zero.</p>
   {{fig:drivers}}
@@ -228,11 +252,13 @@
       <p>Without production volumes nobody can tell whether Kellbrunn used less energy per part or made fewer parts. And {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor, which Kellbrunn did not cause. A sentence the ledger supports: “Location-based emissions fell by {{n:chg_lb_t:absunit}}; {{n:drv_lb_grid_t:absunit}} came from the lower grid factor (teaching values) and {{n:drv_lb_own_t:absunit}} from lower electricity, gas and diesel use.”</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Say which part of a change you caused, and which part came from the grid or from certificates.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="ask-back">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
+  {{fold}}
   <p>Five requests, three jobs for a useful assistant: calculate, ask back, refuse.</p>
   <ul class="ab-rows" aria-label="Five requests and the job each one needs">
     <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Sum Scope 2”</p><p class="ab-row__desc">A calculation from the ledger rows.</p></div></li>
@@ -248,11 +274,13 @@
       <p>“Fill in October.” A person chooses between the meter reading, which gets grade B, and a labelled estimate, and the ledger records who chose. The assistant names the choice and does not make it silently.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>A good assistant asks back when a person has to decide, and names the decision.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="limits">
   <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="limits"><span class="g-n">{{sec}}</span>What this does not prove</h2></div>
+  {{fold}}
   <p>This is one fictional case. The raw-folder answer is constructed; recorded runs, with date and model, are listed separately. Two published studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</p>
   <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are illustrative teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
   <div class="recall">
@@ -261,30 +289,37 @@
       <p>Any two of these: refrigerant top-ups for air conditioning or cooling, LPG or diesel forklifts at Lager Ost, an emergency generator, heating oil. Ask for the service invoices and fuel deliveries by name, and write next to the number which of them you did not check.</p>
     </div></details>
   </div>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Write what you did not check on the page, next to the number.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="your-bill">
   <div class="g-kopf"><p class="wf-kicker">Your turn</p><h2 id="your-bill"><span class="g-n">{{sec}}</span>Your bill</h2></div>
+  {{fold}}
   <p>Take one bill you know, or invent one, and fill the five boxes of the transfer sheet: source, period, unit, boundary, factor. The Werk Süd example is next to each box. Use no company data in any tool. The field card holds the seven checks on one page.</p>
   <nav class="actions" aria-label="Sheets for your bill">
     <a class="wf-btn wf-btn--primary" href="./transfer.html">Open the transfer sheet</a>
     <a class="wf-btn" href="./field-card.html">Open the field card</a>
   </nav>
+  {{endfold}}
   <p class="key"><b>Key point</b><span>Fill five boxes for one bill and end with one sentence that says where the number comes from.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="try-it">
   <div class="g-kopf"><p class="wf-kicker">Your turn</p><h2 id="try-it"><span class="g-n">{{sec}}</span>Try it with an AI</h2></div>
+  {{fold}}
   <p class="provline">Optional, 20 minutes, needs an AI account.</p>
   <p>Open the kit. Run <code>prompts/01_auslesen.md</code> (the reader) on the raw folder and compare your rows with <code>erwartet/belegtabelle_2025.csv</code>. Run <code>prompts/02_pruefen.md</code> (the clerk) on the rows and check whether it flags the duplicate, October, Talbrück and the unit. Use only the kit's invented files, never company data in a tool your company has not approved.</p>
   <nav class="actions" aria-label="Kit">
     <a class="wf-btn" href="./{{kit:href}}" download>Download the kit (.zip, {{kit:size}})</a>
   </nav>
+  {{endfold}}
+  <p class="key"><b>Key point</b><span>Run the reader and the clerk on the kit's invented files, never on company data.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="week-later">
   <div class="g-kopf"><p class="wf-kicker">After the session</p><h2 id="week-later"><span class="g-n">{{sec}}</span>One week later</h2></div>
+  {{fold}}
   <p class="provline">Follow-up: 5 minutes plus an optional 30-minute stretch.</p>
   <p>Answer each question from memory before you open it.</p>
   <div class="recall">
@@ -313,10 +348,13 @@
   </div>
   <h3>Stretch task</h3>
   <p>Build the ledger from <code>rohdaten_2025/</code> yourself and compare it with <code>erwartet/belegtabelle_2025.csv</code>. You are done when your location-based total is {{n:total_lb_2025}} and your control total is {{n:ctl_total_kwh}}.</p>
+  {{endfold}}
+  <p class="key"><b>Key point</b><span>Answer the four questions from memory, then rebuild the ledger yourself if you have half an hour.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="glossary">
   <div class="g-kopf"><p class="wf-kicker">Reference</p><h2 id="glossary"><span class="g-n">{{sec}}</span>Glossary</h2></div>
+  {{fold:terms}}
   <dl class="gloss">
     <dt>Scope 1</dt><dd>Direct emissions from sources the company owns or runs, here the gas for heating and washing lines and the diesel fleet.</dd>
     <dt>Scope 2</dt><dd>Emissions from producing the electricity the company buys and uses.</dd>
@@ -341,10 +379,12 @@
     <dt>CSRD</dt><dd>The EU Corporate Sustainability Reporting Directive, which sets who must publish a sustainability report.</dd>
     <dt>Directive 2024/825 <i>(EmpCo)</i></dt><dd>The EU directive on empowering consumers for the green transition; it restricts generic environmental claims and offset-based neutrality claims towards consumers.</dd>
   </dl>
+  {{endfold}}
 </section>
 
 <section class="g-sec" aria-labelledby="deeper">
   <div class="g-kopf"><p class="wf-kicker">Reference</p><h2 id="deeper"><span class="g-n">{{sec}}</span>Where to go deeper</h2></div>
+  {{fold:links}}
   <ul class="links">
     <li><a href="https://ghgprotocol.org/corporate-standard" rel="noopener">GHG Protocol Corporate Standard</a><small>Boundaries, operational control and equity share</small></li>
     <li><a href="https://ghgprotocol.org/sites/default/files/2023-03/Scope%202%20Guidance.pdf" rel="noopener">GHG Protocol Scope 2 Guidance</a><small>Location-based and market-based, quality criteria for certificates and supplier rates</small></li>
@@ -354,6 +394,7 @@
     <li><a href="https://eur-lex.europa.eu/eli/dir/2024/825/oj/eng" rel="noopener">Directive (EU) 2024/825 on EUR-Lex</a><small>The text of the green-claims rules towards consumers</small></li>
     <li><a href="https://commission.europa.eu/document/download/3c257883-bb2a-4dd9-a6dc-501d587bb34f_en?filename=faq-empowerting-consumers-gtd.pdf" rel="noopener">European Commission: questions and answers on Directive 2024/825</a><small>How the Commission reads the directive</small></li>
   </ul>
+  {{endfold}}
 </section>
 
 </div>

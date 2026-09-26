@@ -30,6 +30,8 @@ export interface WorkshopPageCopy {
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
     readonly hubLead: string;
+    /** One-sentence lead for phones, where the full lead would push the list below the fold. */
+    readonly hubLeadShort: string;
     /** The one Mennige-group action of the page: into the first workshop of the list. */
     readonly hubStart: (number: string) => string;
     /** Line next to the cover-band button. */
@@ -72,9 +74,13 @@ export interface WorkshopPageCopy {
     readonly minutesLive: (minutes: number) => string;
     /** "Allein ca. 60 Min." */
     readonly minutesSelfStudy: (minutes: number) => string;
+    /** Compact duration line of a phone row: "Live 90 · allein 60 Min." */
+    readonly rowTimes: (live: number | undefined, self: number) => string;
     /** Takes an already formatted date. */
     readonly liveTested: (date: string) => string;
     readonly newBadge: string;
+    /** Phone meta-line marker on the row the cover button recommends. */
+    readonly startHere: string;
     readonly viewWorkshop: string;
     readonly teamsHeading: string;
     /** Takes the numbers of the workshops that ship a presenter view. */
@@ -86,6 +92,8 @@ export interface WorkshopPageCopy {
     readonly navigation: string;
     readonly backAria: string;
     readonly allWorkshops: string;
+    /** Phone back link in the cover kicker line. */
+    readonly workshopsShort: string;
     /** Label above the q-card in the cover band. */
     readonly questionLabel: string;
     /** Secondary cover-band button that jumps to the material list. */
@@ -176,6 +184,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubHeading: "Workshops mit Fall und Vorlage",
       hubLead:
         "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du prüfst eine Antwort an den Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
+      hubLeadShort:
+        "Du prüfst eine KI-Antwort an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
       hubIndexLabel: "Workshops auf dieser Seite",
@@ -205,8 +215,13 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Allein ca. ${minutes} Min.`,
+      rowTimes: (live, self) =>
+        live === undefined
+          ? `Allein ${self} Min.`
+          : `Live ${live} · allein ${self} Min.`,
       liveTested: (date) => `Live gehalten am ${date}`,
       newBadge: "Neu",
+      startHere: "Einstieg",
       viewWorkshop: "Workshop ansehen",
       teamsHeading: "Mit deinem Team",
       teamsBody: (numbers) => {
@@ -226,6 +241,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       navigation: "Workshopnavigation",
       backAria: "Zurück zu allen Workshops",
       allWorkshops: "Alle Workshops",
+      workshopsShort: "Workshops",
       questionLabel: "Die Frage des Workshops",
       seeMaterials: "Material ansehen",
       primaryAction: {
@@ -349,6 +365,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubHeading: "Workshops with a case and a template",
       hubLead:
         "Each workshop centres on one question about an invented company. You check an answer against the data and finish by writing down how it applies to your own work.",
+      hubLeadShort:
+        "You check an AI answer against the data of an invented company and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
       hubIndexLabel: "Workshops on this page",
@@ -378,8 +396,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Alone about ${minutes} min`,
+      rowTimes: (live, self) =>
+        live === undefined ? `Alone ${self} min` : `Live ${live} · alone ${self} min`,
       liveTested: (date) => `Run live on ${date}`,
       newBadge: "New",
+      startHere: "Start here",
       viewWorkshop: "View workshop",
       teamsHeading: "With your team",
       teamsBody: (numbers) => {
@@ -398,6 +419,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       navigation: "Workshop navigation",
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
+      workshopsShort: "Workshops",
       questionLabel: "The workshop's question",
       seeMaterials: "See materials",
       primaryAction: {

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { ArrowGlyph } from "@/components/werk/arrow-glyph";
 import type { ContinueCourse } from "@/components/home/continue-courses";
 import {
   getCompletedLessonsCount,
@@ -150,27 +150,28 @@ export function ContinueCard({
         ? course.continueHref
         : course.startHref;
 
+  // One line names the decision and the course, one line states access and
+  // the time it takes: two lines at 3.5rem, docked above the tab bar.
+  const lead = resuming ? copy.resumeEyebrow : `${copy.startEyebrow}:`;
+
   return (
     <Link
       href={href}
       prefetch={false}
       data-home-continue-card={target.mode}
       data-home-course-access={course.access}
-      className="flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-foreground/10 bg-brand-acid/60 px-4 shadow-card outline-none transition-[border-color,box-shadow] duration-200 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group flex h-full w-full items-center gap-3 overflow-hidden bg-background pl-4 pr-1 outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none md:pl-8 md:pr-5"
     >
       <span className="min-w-0 flex-1">
-        <span className="block font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-          {resuming ? copy.resumeEyebrow : copy.startEyebrow}
+        <span className="block truncate text-base font-semibold leading-snug text-foreground">
+          {lead} {course.title}
         </span>
-        <span className="mt-0.5 block truncate text-base font-bold tracking-[-0.02em] text-foreground">
-          {course.title}
-        </span>
-        <span className="flex min-w-0 gap-1 text-xs leading-snug text-muted-foreground">
+        <span className="flex min-w-0 gap-1 text-sm leading-snug text-muted">
           <span data-home-access-label className="shrink-0">
             {copy.access[course.access]}
           </span>
           <span aria-hidden="true">·</span>
-          <span className="min-w-0 truncate">
+          <span className="min-w-0 truncate tabular-nums">
             {resuming
               ? copy.lessonsDone(target.completed, course.totalLessons)
               : course.duration}
@@ -179,9 +180,9 @@ export function ContinueCard({
       </span>
       <span
         aria-hidden="true"
-        className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-foreground/15 bg-paper text-brand-cobalt"
+        className="flex size-11 shrink-0 items-center justify-center text-foreground transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
       >
-        <ArrowRight size={16} />
+        <ArrowGlyph />
       </span>
     </Link>
   );

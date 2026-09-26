@@ -207,6 +207,25 @@ describe("<AuthStatus>", () => {
     expect(screen.getByRole("link").className).not.toContain("w-full");
   });
 
+  it("renders a quiet text link for the phone menu sheet", () => {
+    mockCreateBrowserSupabaseClient.mockReturnValue(null);
+    const onNavigate = vi.fn();
+
+    renderGerman(<AuthStatus variant="quiet" onNavigate={onNavigate} />);
+    const link = screen.getByRole("link", { name: "Anmelden" });
+    expect(link).toHaveAttribute("href", "/login");
+    // A 44px target with no border, fill or icon: the Konto tab owns sign-in.
+    expect(link.className).toContain("min-h-11");
+    expect(link.className).toContain("min-w-11");
+    expect(link.className).not.toMatch(/\bborder\b|border-foreground|bg-brand-/);
+    expect(link.querySelector("svg")).toBeNull();
+    expect(link.className).toContain("focus-visible:inset-ring-brand-orange");
+    expect(link.className).toContain("motion-reduce:transition-none");
+
+    fireEvent.click(link);
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+  });
+
   it("notifies the mobile navigation shell before following its link", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
     const onNavigate = vi.fn();

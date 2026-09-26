@@ -232,6 +232,135 @@ test.describe("/kurse mobile", () => {
   });
 });
 
+// Phone density. The shell's fixed chrome is the 48px top bar and the 56px
+// tab bar (plus the device inset, zero here), so the free screen ends at
+// viewport height - 56. Bounds carry about 15% headroom over the measured
+// values (2026-09-26) so a copy edit or a cold load in the fallback face
+// stays green while a desktop sheet that stacks back onto the phone fails.
+// Measured 2026-09-26 after the polish pass. Brand face: rail top 284 at
+// every phone, 6.5 / 4.0 / 3.5 screens, and at 320 the start action sits
+// whole above the tab bar (467-511). Cold, in this runner's wide fallback
+// face: rail top 362 / 284 / 307, 6.9 / 4.2 / 3.7 screens, rows up to 197.
+const PHONES = [
+  { width: 320, height: 568, goalsTop: 410, maxScreens: 8, maxRow: 225 },
+  { width: 390, height: 844, goalsTop: 350, maxScreens: 4.8, maxRow: 225 },
+  { width: 430, height: 932, goalsTop: 350, maxScreens: 4.3, maxRow: 225 },
+] as const;
+
+for (const phone of PHONES) {
+  test(`/kurse stays a dense companion list at ${phone.width}x${phone.height}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: phone.width, height: phone.height });
+    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+
+    const metrics = await page.evaluate(() => {
+      const box = (selector: string) => {
+        const element = document.querySelector(selector);
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return { top: rect.top + scrollY, bottom: rect.bottom + scrollY };
+      };
+      const rail = document.querySelector("[data-learning-goal-rail]");
+      return {
+        documentHeight: document.scrollingElement?.scrollHeight ?? 0,
+        scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
+        goals: box("[data-learning-goal-rail]"),
+        railScrolls: rail ? rail.scrollWidth > rail.clientWidth : false,
+        nextAction: box('[data-testid="next-proof"] a'),
+        rowSources: Array.from(
+          document.querySelectorAll("[data-course-source]"),
+          (element) => getComputedStyle(element).display,
+        ),
+        groupSource: (() => {
+          const link = document.querySelector("[data-group-source]");
+          if (!link) return null;
+          const rect = link.getBoundingClientRect();
+          return { height: rect.height, display: getComputedStyle(link).display };
+        })(),
+        levelChipsRight: (() => {
+          const group = document.querySelector("[data-course-level-filter] [role=group]");
+          return group ? group.getBoundingClientRect().right : 0;
+        })(),
+        rows: Array.from(
+          document.querySelectorAll("[data-course-slug]"),
+          (row) => row.getBoundingClientRect().height,
+        ),
+      };
+    });
+
+    expect(metrics.scrollWidth).toBeLessThanOrEqual(phone.width + 1);
+    // The first decision is on the first screen: the goal rail is one row.
+    expect(metrics.goals?.top).toBeLessThanOrEqual(phone.goalsTop);
+    expect(
+      (metrics.goals?.bottom ?? 0) - (metrics.goals?.top ?? 0),
+    ).toBeLessThanOrEqual(48);
+    // On every phone but the smallest, the recommended course's action is
+    // fully inside the first screen, above the tab bar.
+    if (phone.height >= 800) {
+      expect(metrics.nextAction?.bottom).toBeLessThanOrEqual(phone.height - 56);
+    } else {
+      // On the smallest phone it starts inside the first screen (above the
+      // tab bar in the brand face; the fallback face pushes it about 80px
+      // lower).
+      expect(metrics.nextAction?.top).toBeLessThan(phone.height);
+    }
+    // The MIT attribution prints once, in the technical group head, and the
+    // rows leave it to lg.
+    expect(metrics.rowSources).toHaveLength(6);
+    expect(new Set(metrics.rowSources)).toEqual(new Set(["none"]));
+    expect(metrics.groupSource?.display).not.toBe("none");
+    expect(metrics.groupSource?.height).toBeGreaterThanOrEqual(44);
+    // The level chips run to the screen edge like the goal rail.
+    expect(Math.round(metrics.levelChipsRight)).toBe(phone.width);
+    expect(metrics.rows).toHaveLength(10);
+    for (const height of metrics.rows) {
+      expect(height).toBeLessThanOrEqual(phone.maxRow);
+    }
+    expect(metrics.documentHeight / phone.height).toBeLessThanOrEqual(
+      phone.maxScreens,
+    );
+  });
+}
+
+test("/kurse scrolls a shared goal's chip into the phone rail", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${ROUTE}?goal=data`, { waitUntil: "domcontentloaded" });
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+
+  const chip = page.locator('[data-learning-goal="data"]');
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+  const inView = await chip.evaluate((element) => {
+    const rail = element.closest("[data-learning-goal-rail]") as HTMLElement;
+    const chipBox = element.getBoundingClientRect();
+    const railBox = rail.getBoundingClientRect();
+    return chipBox.left >= railBox.left && chipBox.right <= railBox.right + 1;
+  });
+  expect(inView).toBe(true);
+  // The page itself did not scroll to reveal it.
+  expect(await page.evaluate(() => scrollY)).toBe(0);
+});
+
+test("/kurse prints the source attribution on every technical row from lg", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+  const sources = page.locator("[data-course-source]");
+  await expect(sources).toHaveCount(6);
+  for (const source of await sources.all()) {
+    await expect(source).toBeVisible();
+  }
+  await expect(page.locator("[data-group-source]")).toBeHidden();
+});
+
 for (const route of ["/kurse", "/en/kurse"] as const) {
   test(`${route} renders the complete ten-course atlas`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });

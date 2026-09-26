@@ -19,7 +19,42 @@
   .hub-body .wf-section:first-child{margin-top:0}
   .hub-lenses td:first-child{font-weight:600;white-space:nowrap}
   .hub-data code{font-size:14px}
+  .hub-short{display:none}
   @media (max-width:900px){.hub-cover-grid,.hub-body{grid-template-columns:1fr}.hub-body{padding-top:40px}.hub-aside .wf-section:first-child{margin-top:16px}}
+  /* phones: a shorter cover so the materials start in the first screen; no globe (as on the site) */
+  @media (max-width:600px){
+    .wf-cover__globe{display:none}
+    .wf-cover__body{padding-top:20px;padding-bottom:24px}
+    .hub-cover-grid{gap:20px}
+    .wf-cover .wf-h1--hero{font-size:34px}
+    .wf-cover .wf-lead{margin-top:12px;font-size:16px;line-height:1.5}
+    .hub-lead-more{display:none}
+    .hub-ctas{flex-wrap:nowrap;gap:8px}
+    .hub-ctas .wf-btn{flex:1 1 0;min-width:0;min-height:44px;padding:8px 12px;font-size:14px;text-align:center;white-space:nowrap}
+    .hub-long{display:none}.hub-short{display:inline}
+    .wf-cover .wf-meta{margin-top:12px;font-size:14px}
+    /* the question is a ruled quote in the band, not a box: only the Mennige bar stays */
+    .wf-cover .wf-qcard{padding:0 0 0 14px;border:0;background:none}
+    .wf-cover .wf-qcard::before{top:0;bottom:0;left:0;width:3px}
+    .wf-cover .wf-qcard p{font-size:16px}
+    .wf-cover .wf-qcard .wf-kicker{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    .hub-ctas{margin-top:16px}
+    .hub-body{padding-top:28px;gap:0}
+    .hub-body .wf-section{margin-top:36px}
+    .hub-aside .wf-section:first-child{margin-top:36px}
+    .hub-body .wf-kopf{margin-bottom:12px}
+    .hub-body .wf-row{padding:12px 0;gap:2px 12px}
+    .hub-body .wf-row__desc{font-size:15px;line-height:1.45}
+    /* outcomes: the frame's 32px gutter and one-sentence rows */
+    .hub-aside .wf-steps>li{grid-template-columns:32px minmax(0,1fr);gap:0;padding:12px 0;font-size:16px;line-height:1.5}
+    .hub-aside .wf-steps>li::before{line-height:1.7}
+    /* the three companies stack: name in bold, the question full width under it */
+    .hub-lenses thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    .hub-lenses,.hub-lenses tbody,.hub-lenses tr,.hub-lenses td{display:block}
+    .hub-lenses tr{padding:12px 0;border-bottom:var(--wf-hair)}
+    .hub-lenses td{padding:0;border:0}
+    .hub-lenses td:first-child{white-space:normal;margin-bottom:2px}
+  }
 </style>
 </head>
 <body class="wf-page">
@@ -47,12 +82,12 @@
         <div>
           <p class="wf-kicker">Workshop 01 · Forecasting decisions</p>
           <h1 class="wf-h1 wf-h1--hero" id="hub-title">Turn a forecast into a decision</h1>
-          <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve. You work through three practice companies and a demand simulator that runs in your browser.</p>
+          <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve.<span class="hub-lead-more"> You work through three practice companies and a demand simulator that runs in your browser.</span></p>
           <div class="hub-ctas">
-            <a class="wf-btn wf-btn--primary" href="./hands-on.html">Open the hands-on lab</a>
-            <a class="wf-btn" href="./case-study/index.html">Read the business case</a>
+            <a class="wf-btn wf-btn--primary" href="./hands-on.html"><span class="hub-long">Open the hands-on lab</span><span class="hub-short">Hands-on lab</span></a>
+            <a class="wf-btn" href="./case-study/index.html"><span class="hub-long">Read the business case</span><span class="hub-short">Business case</span></a>
           </div>
-          <p class="wf-meta"><b>About 90 minutes</b> · self-study · runs in your browser · English</p>
+          <p class="wf-meta"><b>About 90 minutes</b><span class="hub-long"> · self-study</span> · runs in your browser<span class="hub-long"> · English</span></p>
         </div>
         <figure class="wf-qcard">
           <figcaption class="wf-kicker">The question you answer</figcaption>
@@ -116,7 +151,7 @@ try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getIt
 if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
 m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
-if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-48);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
 u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>

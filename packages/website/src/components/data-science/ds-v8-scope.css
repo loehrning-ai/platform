@@ -3113,3 +3113,309 @@
     padding: 32px 20px;
   }
 }
+
+/* ========================================================================
+   Landing on phones (below sm): Werkzeichnung
+   ------------------------------------------------------------------------
+   The overview is the course's marketing landing. Below 640px it drops the
+   v7 card grid for the platform's landing grammar: a sentence-case kicker,
+   an ink headline at the site H1 size, one square Mennige action, the facts
+   as one caption line, and hairline rows instead of boxes. Every rule is
+   scoped to `.ov-landing` (the landing route's content wrapper), so the
+   numbered chapter readers are untouched, and from sm the landing renders
+   exactly as the layers above describe. The number column and tool names
+   stay tabular or mono because they are data.
+   ======================================================================== */
+@media (max-width: 639.98px) {
+  .ds-v8-scope .ov-landing.content {
+    padding: 0 0 24px;
+  }
+
+  /* Hero */
+  .ds-v8-scope .ov-landing .ov-hero {
+    gap: 24px;
+    padding: 0 0 8px;
+    margin-bottom: 32px;
+    border-bottom: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-hero::after,
+  .ds-v8-scope .ov-landing .ov-hero-eyebrow::before,
+  .ds-v8-scope .ov-landing .ov-kicker::before {
+    content: none;
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-eyebrow,
+  .ds-v8-scope .ov-landing .ov-kicker {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-muted-foreground);
+    margin-bottom: 8px;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-title {
+    font-family: var(--font-sans);
+    /* 32px at 320 (the site token floors at 36px, which set this headline
+       in five lines), 36px from 390. */
+    font-size: clamp(2rem, 1.2rem + 3.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: var(--text-fluid-h1--line-height);
+    letter-spacing: var(--text-fluid-h1--letter-spacing);
+    color: var(--ink-1);
+    margin: 0 0 16px;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-title br,
+  .ds-v8-scope .ov-landing .ov-h2 br {
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-title .accent,
+  .ds-v8-scope .ov-landing .ov-hero-title em,
+  .ds-v8-scope .ov-landing .ov-h2 em {
+    font-style: normal;
+    background: none;
+    color: inherit;
+    -webkit-text-fill-color: currentColor;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-hook {
+    font-size: 17px;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-cta {
+    margin-bottom: 16px;
+  }
+  .ds-v8-scope .ov-landing .ov-cta-btn {
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: 0;
+    font-size: 15px !important;
+    font-weight: 600;
+  }
+  /* "12 Kapitel · 22 interaktive Simulationen · ~2h vom Anfang bis zum Ende" */
+  .ds-v8-scope .ov-landing .ov-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 0;
+    border: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+  }
+  .ds-v8-scope .ov-landing .ov-stat {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    white-space: nowrap;
+  }
+  /* The separator trails its item, so a wrapped line never starts with it. */
+  .ds-v8-scope .ov-landing .ov-stat:not(:last-child)::after {
+    content: "·";
+    margin: 0 0.45em 0 0.15em;
+    color: var(--color-muted-foreground);
+  }
+  .ds-v8-scope .ov-landing .ov-stat .k {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: 0;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-v8-scope .ov-landing .ov-stat .v {
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-loop-wrap {
+    border-radius: 0;
+  }
+  /* The decorative course-cycle drawing reserved 260px of blank paper at
+     the foot of the first screen and then painted a multicolour loop that
+     is not in the Werkzeichnung palette. On phones it is dropped: an element
+     with display:none never intersects, so LazyFlowingPipeline never mounts
+     and the outcomes follow the facts line directly. From sm it renders. */
+  .ds-v8-scope .ov-landing .ov-hero-sim {
+    display: none;
+  }
+
+  /* Section heads: a 2px ink Kopflinie instead of a ruled mono kicker. */
+  .ds-v8-scope .ov-landing .section {
+    margin-bottom: 40px;
+  }
+  .ds-v8-scope .ov-landing .ov-section-head,
+  .ds-v8-scope .ov-landing .ov-section-head.ov-sh-tight {
+    border-top: 2px solid var(--ink-1);
+    padding-top: 16px;
+    margin-bottom: 16px;
+  }
+  .ds-v8-scope .ov-landing .ov-kicker {
+    font-size: 13px !important;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-bottom: 4px;
+  }
+  .ds-v8-scope .ov-landing .ov-h2 {
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-h2);
+    font-weight: 700;
+    line-height: var(--text-fluid-h2--line-height);
+    letter-spacing: var(--text-fluid-h2--letter-spacing);
+    margin: 0 0 8px;
+  }
+  .ds-v8-scope .ov-landing .ov-lede {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Outcomes: hairline rows, title and one line, no glyph icons. */
+  .ds-v8-scope .ov-landing .ov-outcomes {
+    display: block;
+    border: 0;
+    border-top: 1px solid var(--color-hairline);
+    border-radius: 0;
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome {
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-hairline);
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome::before,
+  .ds-v8-scope .ov-landing .ov-outcome-icon {
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome-t {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0;
+    margin: 0 0 2px;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome-d {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Curriculum: ledger rows (number, title, one line, arrow), not cards. */
+  .ds-v8-scope .ov-landing .ov-curriculum {
+    display: block;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-course {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr) 1rem;
+    grid-template-areas:
+      "n title arrow"
+      ". blurb arrow";
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: baseline;
+    min-height: 44px;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--color-hairline);
+    border-radius: 0;
+    background: none;
+    overflow: visible;
+  }
+  .ds-v8-scope .ov-landing .ov-course::before {
+    content: none;
+  }
+  .ds-v8-scope .ov-landing .ov-course::after {
+    content: "→" / "";
+    grid-area: arrow;
+    align-self: center;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--color-muted-foreground);
+  }
+  .ds-v8-scope .ov-landing .ov-course:hover {
+    background: var(--color-card-hover);
+  }
+  .ds-v8-scope .ov-landing .ov-course:hover::after {
+    color: var(--instrument-accent);
+  }
+  .ds-v8-scope .ov-landing .ov-course-top {
+    display: contents;
+  }
+  .ds-v8-scope .ov-landing .ov-course-n {
+    grid-area: n;
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-v8-scope .ov-landing .ov-course-dot,
+  .ds-v8-scope .ov-landing .ov-course-tag,
+  .ds-v8-scope .ov-landing .ov-course-cta {
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-course-title {
+    grid-area: title;
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0;
+    hyphens: manual;
+  }
+  .ds-v8-scope .ov-landing .ov-course-blurb {
+    grid-area: blurb;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Tools: a two-column hairline list, name and role on one line. */
+  .ds-v8-scope .ov-landing .ov-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 16px;
+    background: none;
+    border: 0;
+    border-top: 1px solid var(--color-hairline);
+    border-radius: 0;
+    overflow: visible;
+  }
+  .ds-v8-scope .ov-landing .ov-tool {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5em;
+    min-width: 0;
+    padding: 8px 0;
+    background: none;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-tool-n {
+    font-size: 14px;
+  }
+  .ds-v8-scope .ov-landing .ov-tool-r {
+    margin: 0;
+    font-size: 13px !important;
+    font-style: normal;
+    color: var(--color-muted-foreground);
+  }
+
+  /* The closing "next chapter" pagination repeated the hero action right
+     after the chapter list, whose every row is already a link. */
+  .ds-v8-scope .ov-landing .tb {
+    display: none;
+  }
+}

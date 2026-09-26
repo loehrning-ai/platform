@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { COURSE_CATALOG } from "./catalog";
 import { localizeCatalog } from "./catalog-copy";
-import { COURSE_HUB_COPY, COURSE_PROMISES } from "./course-hub-copy";
+import {
+  COURSE_DURATIONS_SHORT,
+  COURSE_HUB_COPY,
+  COURSE_PROMISES,
+  COURSE_PROMISES_SHORT,
+} from "./course-hub-copy";
 import { courseBadges, courseSections } from "./tracks";
 
 describe("course catalogue locale copy", () => {
@@ -87,7 +92,31 @@ describe("course catalogue locale copy", () => {
       expect(COURSE_PROMISES.de[course.slug], course.slug).not.toMatch(/^Nach dem Kurs/);
       expect(COURSE_PROMISES.en[course.slug], course.slug).not.toMatch(/^After this/);
     }
+    // The phone preview: one clause of at most 45 characters for every
+    // course, never an ellipsis.
+    for (const course of COURSE_CATALOG) {
+      for (const locale of ["de", "en"] as const) {
+        const short = COURSE_PROMISES_SHORT[locale][course.slug];
+        expect(short, `${locale} ${course.slug}`).toBeDefined();
+        expect(short?.length, `${locale} ${course.slug}`).toBeLessThanOrEqual(45);
+        expect(short).not.toMatch(/…|\.$/);
+      }
+    }
+    // The phone cost note keeps the three facts in at most two sentences.
+    for (const locale of ["de", "en"] as const) {
+      const short = COURSE_HUB_COPY[locale].accessBodyShort;
+      expect(short.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
+      expect(short.length).toBeLessThan(COURSE_HUB_COPY[locale].accessBody.length);
+    }
+    expect(COURSE_HUB_COPY.de.accessBodyShort).toContain("nicht akkreditiert");
+    expect(COURSE_HUB_COPY.en.accessBodyShort).toContain("not accredited");
     for (const text of [
+      ...Object.values(COURSE_PROMISES_SHORT.de),
+      ...Object.values(COURSE_PROMISES_SHORT.en),
+      ...Object.values(COURSE_DURATIONS_SHORT.de),
+      ...Object.values(COURSE_DURATIONS_SHORT.en),
+      COURSE_HUB_COPY.de.accessBodyShort,
+      COURSE_HUB_COPY.en.accessBodyShort,
       ...Object.values(COURSE_PROMISES.de),
       ...Object.values(COURSE_PROMISES.en),
       COURSE_HUB_COPY.de.accessBody,

@@ -81,8 +81,11 @@ export function MarkdownRenderer({
                 </code>
               );
             }
+            // A fence without a language arrives here too, inside a <pre>.
+            // There it is a block: as a cloned inline box, each wrapped line
+            // carried its padding 2px past the text column on a phone.
             return (
-              <code className="whitespace-normal bg-inset px-1 py-px font-mono text-[0.875em] text-foreground [box-decoration-break:clone] [overflow-wrap:anywhere]">
+              <code className="whitespace-normal bg-inset px-1 py-px font-mono text-[0.875em] text-foreground [box-decoration-break:clone] [overflow-wrap:anywhere] [pre_&]:block">
                 {children}
               </code>
             );

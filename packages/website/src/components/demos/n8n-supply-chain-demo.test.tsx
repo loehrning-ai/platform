@@ -20,6 +20,16 @@ import N8nSupplyChainDemo from "./n8n-supply-chain-demo";
 
 const originalMatchMedia = window.matchMedia;
 
+/** The step counter splits "Schritt" (sm up) from "4 / 4" (every width). */
+function getStep(label: string): HTMLElement {
+  return screen.getByText(
+    (_, el) =>
+      el?.tagName === "SPAN" &&
+      el.textContent === label &&
+      el.firstElementChild?.classList.contains("max-sm:hidden") === true,
+  );
+}
+
 function setReducedMotion(reduced: boolean): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).matchMedia = (query: string) => ({
@@ -53,7 +63,7 @@ describe("<N8nSupplyChainDemo>", () => {
     ).toBeInTheDocument();
 
     // Final state first.
-    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    expect(getStep("Schritt 4 / 4")).toBeInTheDocument();
     expect(screen.getByText(/Workflow-Simulation abgeschlossen/)).toBeInTheDocument();
     expect(screen.getByText("SAP · MM-BANF")).toBeInTheDocument();
     expect(screen.queryByText(/Wartet auf das Webhook-Ereignis/)).toBeNull();
@@ -65,43 +75,73 @@ describe("<N8nSupplyChainDemo>", () => {
     expect(screen.getByText("Beispiel-Reaktionszeit")).toBeInTheDocument();
   });
 
-  it("keeps paper text on the current Mennige node at AA", () => {
+  it("draws a finished run in paper and keeps Mennige for the animating node", () => {
     const { container } = render(<N8nSupplyChainDemo />);
-    // The three action nodes are current at rest; their sub-lines were
-    // rgba(243,240,233,0.9), 4.4:1 on Mennige.
+    // At rest the three action nodes are run nodes: paper with an ink edge,
+    // only their "Run" word in Mennige, so the page keeps one accent.
+    const restNote = screen.getByText("einkauf@fiktivwerk.example");
+    expect(restNote).toHaveStyle({ color: "rgba(11,9,8,0.62)" });
+    expect(container.innerHTML).not.toMatch(/background: var\(--color-mennige\)/);
+    // While stepping, the current node is Mennige with paper text at AA;
+    // the old rgba(243,240,233,0.9) sub-lines were 4.4:1.
+    fireEvent.click(screen.getByRole("button", { name: "Neu abspielen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
     expect(container.innerHTML).not.toContain("rgba(243,240,233,0.9)");
-    const note = screen.getByText("einkauf@fiktivwerk.example");
+    const note = screen.getByText("Lager: 14 Stk · 2 Tage Reichweite");
     expect(note).toHaveStyle({ color: "#f9f7f2" });
+  });
+
+  it("fits the phone controls in one row and folds the log to its last line", () => {
+    render(<N8nSupplyChainDemo />);
+    // Icon-only below sm: the word is sr-only there, the glyph aria-hidden.
+    for (const name of ["Zurück", "Weiter", "Neu abspielen"]) {
+      const button = screen.getByRole("button", { name });
+      expect(button).toHaveClass("max-sm:px-0");
+      expect(button).toHaveStyle({ minWidth: "44px", minHeight: "44px" });
+      expect(button.querySelector(".max-sm\\:sr-only")).toHaveTextContent(name);
+    }
+    expect(
+      screen.getByRole("group", { name: "Szenario wählen" }),
+    ).toHaveClass("max-sm:grid-cols-2");
+    const toggle = screen.getByRole("button", { name: /Protokoll · 6 Ereignisse/ });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveClass("sm:hidden", "min-h-11");
+    expect(screen.getByText("SAP · MM-BANF").parentElement).toHaveClass("max-sm:hidden");
+    expect(screen.getByText(/Workflow-Simulation abgeschlossen/)).not.toHaveClass("max-sm:hidden");
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("SAP · MM-BANF").parentElement).not.toHaveClass("max-sm:hidden");
   });
 
   it("enables Zurück and disables Weiter at the finished state", () => {
     render(<N8nSupplyChainDemo />);
 
-    expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeEnabled();
-    expect(screen.getByRole("button", { name: "Weiter ▶" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zurück" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Weiter" })).toBeDisabled();
   });
 
   it("rewinds on Neu abspielen and then steps through the log one line at a time", () => {
     render(<N8nSupplyChainDemo />);
 
-    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt - / 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Neu abspielen" }));
+    expect(getStep("Schritt - / 4")).toBeInTheDocument();
     expect(screen.getByText(/Wartet auf das Webhook-Ereignis/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zurück" })).toBeDisabled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
-    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    expect(getStep("Schritt 1 / 4")).toBeInTheDocument();
     expect(screen.getByText("DHL-Webhook")).toBeInTheDocument();
     // Step 0 is Zurück's floor.
-    expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Zurück" })).toBeDisabled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Weiter ▶" }));
-    expect(screen.getByText("Schritt 2 / 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    expect(getStep("Schritt 2 / 4")).toBeInTheDocument();
     expect(screen.getByText("SAP · MM02")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "◀ Zurück" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Zurück" })).toBeEnabled();
 
-    fireEvent.click(screen.getByRole("button", { name: "◀ Zurück" }));
-    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Zurück" }));
+    expect(getStep("Schritt 1 / 4")).toBeInTheDocument();
     expect(screen.queryByText("SAP · MM02")).not.toBeInTheDocument();
   });
 
@@ -109,8 +149,8 @@ describe("<N8nSupplyChainDemo>", () => {
     render(<N8nSupplyChainDemo />);
 
     fireEvent.click(screen.getByRole("button", { name: "Konfidenz niedrig" }));
-    expect(screen.getByText("Schritt 3 / 3")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Weiter ▶" })).toBeDisabled();
+    expect(getStep("Schritt 3 / 3")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Weiter" })).toBeDisabled();
     expect(screen.getByText(/Konfidenz < Schwellenwert/)).toBeInTheDocument();
     expect(
       screen.getByText(/Automatisierter Pfad gestoppt/),
@@ -121,7 +161,7 @@ describe("<N8nSupplyChainDemo>", () => {
     setReducedMotion(true);
     render(<N8nSupplyChainDemo />);
 
-    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
+    expect(getStep("Schritt 4 / 4")).toBeInTheDocument();
     expect(
       screen.getByText(/Workflow-Simulation abgeschlossen/),
     ).toBeInTheDocument();

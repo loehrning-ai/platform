@@ -138,8 +138,10 @@ export function ClaudeLessonReader({
   return (
     <ClaudeWidgetLocaleProvider locale={locale}>
       <div key={readiness.checkpointKey} lang={locale} className="min-w-0">
-        <header className="mb-6 border-b border-border pb-5">
-          <p className="mb-1 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+        {/* Below sm: a sentence-case position label and the concepts as a
+            caption run instead of boxed chips; from sm unchanged. */}
+        <header className="mb-6 border-b border-border pb-5 max-sm:mb-4 max-sm:pb-4">
+          <p className="lesson-head-position mb-1 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange max-sm:font-sans max-sm:text-sm max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground">
             {copy.lessonProgress(lesson.number, totalLessons)}
           </p>
           <h1 className="text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
@@ -149,15 +151,15 @@ export function ClaudeLessonReader({
             {lesson.subtitle}
           </p>
           {lesson.keyConcepts.length > 0 && (
-            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <div className="lesson-head-concepts mt-3 flex flex-wrap items-center gap-1.5 max-sm:mt-2 max-sm:gap-x-3 max-sm:gap-y-0.5">
               <Tag
-                className="h-4 w-4 text-muted-foreground"
+                className="h-4 w-4 text-muted-foreground max-sm:hidden"
                 aria-hidden="true"
               />
               {lesson.keyConcepts.map((concept) => (
                 <span
                   key={concept}
-                  className="border border-border bg-card px-2 py-1 text-[12px] font-medium text-muted-foreground"
+                  className="border border-border bg-card px-2 py-1 text-[12px] font-medium text-muted-foreground max-sm:border-0 max-sm:bg-transparent max-sm:p-0 max-sm:text-[13px]"
                 >
                   {concept}
                 </span>
@@ -180,18 +182,20 @@ export function ClaudeLessonReader({
                   </span>
                 </div>
                 <MarkdownRenderer content={section.content} />
+                {/* Below sm the takeaway is a plain labelled paragraph: no
+                    tint, stripe or icon, so the page keeps one side bar. */}
                 {section.keyTakeaway && (
-                  <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-4 py-3">
+                  <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-4 py-3 max-sm:border-0 max-sm:bg-transparent max-sm:p-0">
                     <div className="flex items-start gap-2.5">
                       <Lightbulb
-                        className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange"
+                        className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange max-sm:hidden"
                         aria-hidden="true"
                       />
                       <div>
-                        <p className="text-[12px] font-bold uppercase tracking-wider text-brand-orange">
+                        <p className="text-[12px] font-bold uppercase tracking-wider text-brand-orange max-sm:text-label max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground">
                           {copy.takeaway}
                         </p>
-                        <p className="mt-1.5 text-[14px] leading-relaxed text-foreground">
+                        <p className="mt-1.5 text-[14px] leading-relaxed text-foreground max-sm:mt-0.5 max-sm:text-base max-sm:font-semibold">
                           {section.keyTakeaway}
                         </p>
                       </div>

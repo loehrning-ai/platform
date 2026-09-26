@@ -52,7 +52,12 @@ interface TechnicalCourseSectionHeadingProps {
 export const TECHNICAL_COURSE_PRIMARY_ACTION_CLASS =
   "inline-flex min-h-12 max-w-full min-w-0 items-center justify-center gap-2 bg-brand-orange px-5 py-3 text-center text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
-/** Secondary action: square ink outline, same height as the primary. */
+/**
+ * Secondary action: square ink outline, same height as the primary. A
+ * landing whose secondary action only jumps to its own syllabus adds
+ * `max-sm:hidden`: on a phone the syllabus follows the hero directly, and at
+ * 320 the second button took its own row.
+ */
 export const TECHNICAL_COURSE_SECONDARY_ACTION_CLASS =
   "inline-flex min-h-12 max-w-full min-w-0 items-center justify-center gap-2 border border-foreground bg-transparent px-5 py-3 text-center text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
@@ -62,6 +67,34 @@ export const TECHNICAL_COURSE_SECONDARY_ACTION_CLASS =
  */
 export const TECHNICAL_COURSE_LEDGER_LINK_CLASS =
   "group relative grid min-h-14 min-w-0 items-center gap-2 border-b border-hairline bg-transparent px-0 py-4 transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
+
+/**
+ * Lesson number cell of a ledger row. From sm it reads "Lektion 1" in a
+ * 4.75rem column; on a phone the column is 2rem and shows "01", which gives
+ * the title about 44px more width. The full label stays in the accessibility
+ * tree at every width, and neither form is mono caps.
+ */
+export function TechnicalCourseLessonNumber({
+  label,
+  number,
+}: {
+  /** The full label, for example "Lektion 1". */
+  readonly label: string;
+  readonly number: number;
+}): JSX.Element {
+  return (
+    <p className="text-label text-muted-foreground tabular-nums">
+      <span aria-hidden="true" className="sm:hidden">
+        {String(number).padStart(2, "0")}
+      </span>
+      <span className="max-sm:sr-only">{label}</span>
+    </p>
+  );
+}
+
+/** Grid columns for a ledger row that starts with a lesson number. */
+export const TECHNICAL_COURSE_LESSON_ROW_COLUMNS =
+  "grid-cols-[2rem_minmax(0,1fr)_1rem] sm:grid-cols-[4.75rem_minmax(0,1fr)_1rem]";
 
 /** Legal-document "§ " prefixes are dropped from labels on the landing. */
 function plainLabel(label: string): string {
@@ -105,21 +138,27 @@ export function TechnicalCourseHeader({
   progress,
   figure,
 }: TechnicalCourseHeaderProps): JSX.Element {
+  // Below lg the hero is phone-first: a 17px lead, tighter rhythm, and the
+  // facts as one wrapping caption line ("5 Blöcke · 18 Lektionen · …")
+  // instead of four 57px hairline rows, so the action and the facts both land
+  // in the first screen. From lg the facts return to the ruled side column.
   return (
     <header
-      className="grid min-w-0 gap-x-12 gap-y-8 pb-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:pb-12"
+      className="grid min-w-0 gap-x-12 gap-y-8 pb-10 max-lg:gap-y-5 max-lg:pb-8 max-sm:pb-4 lg:grid-cols-[minmax(0,1fr)_20rem] lg:pb-12"
       data-technical-course-header
     >
       <div className="min-w-0">
         <Kicker className="text-balance">{kickerLabel(eyebrow)}</Kicker>
-        <h1 className="mt-3 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance">
+        {/* 32px below 375 (the shared token floors at 36px, which set every
+            landing headline in three lines at 320); from 375 unchanged. */}
+        <h1 className="mt-3 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance max-[374.98px]:text-[2rem]">
           {title}
         </h1>
-        <p className="mt-5 max-w-[56ch] break-words text-lead text-muted-foreground text-pretty">
+        <p className="mt-5 max-w-[56ch] break-words text-lead text-muted-foreground text-pretty max-sm:mt-3 max-sm:text-[1.0625rem] max-sm:leading-normal">
           {intro}
         </p>
         <div
-          className="mt-7 flex min-w-0 flex-wrap items-center gap-3"
+          className="mt-7 flex min-w-0 flex-wrap items-center gap-3 max-sm:mt-5"
           data-course-entry-actions
         >
           {primaryAction}
@@ -129,14 +168,19 @@ export function TechnicalCourseHeader({
 
       <aside
         aria-label={factsLabel}
-        className="min-w-0 self-start border-t-2 border-foreground pt-4"
+        className="min-w-0 self-start border-t-2 border-foreground pt-4 max-lg:border-t max-lg:border-hairline max-lg:pt-3"
       >
-        <p className="text-label text-foreground">{plainLabel(factsLabel)}</p>
-        <ul className="mt-3" data-course-onboarding-checklist>
+        <p className="text-label text-foreground max-lg:sr-only">
+          {plainLabel(factsLabel)}
+        </p>
+        <ul
+          className="mt-3 min-w-0 max-lg:mt-0 max-lg:flex max-lg:flex-wrap"
+          data-course-onboarding-checklist
+        >
           {facts.map((fact) => (
             <li
               key={fact}
-              className="min-w-0 break-words border-b border-hairline py-2.5 text-body text-foreground tabular-nums"
+              className="min-w-0 break-words border-b border-hairline py-2.5 text-body text-foreground tabular-nums max-lg:border-0 max-lg:py-0 max-lg:text-[0.9375rem] max-lg:leading-normal max-lg:after:mx-2 max-lg:after:text-muted-foreground max-lg:after:content-['·'_/_''] max-lg:last:after:content-none"
             >
               {fact}
             </li>
@@ -174,8 +218,12 @@ export function TechnicalCourseSectionHeading({
         >
           {title}
         </h2>
+        {/* On a phone the note wrapped under the heading like a stray
+            footnote; the heading already names the section. */}
         {note ? (
-          <p className="text-caption text-muted-foreground">{note}</p>
+          <p className="text-caption text-muted-foreground max-sm:hidden">
+            {note}
+          </p>
         ) : null}
       </div>
       {intro ? (

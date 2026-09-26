@@ -66,8 +66,8 @@ describe("LearningAtlas", () => {
     // still marks the path's own first course as current.
     expect(next).toHaveTextContent(
       locale === "de"
-        ? "Dein Pfad beginnt mit KI-Führerschein, der hier nicht verfügbar ist."
-        : "Your path starts with AI Fundamentals, which is unavailable here.",
+        ? "KI-Führerschein ist hier nicht verfügbar."
+        : "AI Fundamentals isn't available here.",
     );
     const stations = screen
       .getByTestId("selected-path-sequence")
@@ -92,7 +92,15 @@ describe("LearningAtlas", () => {
     expect(container.querySelector('[data-learning-goal="build"]')).toHaveAttribute("aria-pressed", "true");
     const row = container.querySelector('[data-course-slug="ai-native"]');
     expect(row).toHaveAttribute("data-course-access", "unavailable");
-    expect(row?.querySelector("[data-course-access-label]")).not.toHaveClass("sr-only");
+    // All four foundation courses share the state, so the phone says it once
+    // in the group head instead of on every row; from lg each row's facts
+    // column prints it (below).
+    expect(row?.querySelector("[data-course-access-label]")).toBeNull();
+    const groupAccess = container.querySelector("#lernpfad [data-group-access]");
+    expect(groupAccess).toHaveClass("lg:hidden");
+    expect(groupAccess).toHaveTextContent(
+      locale === "de" ? "· hier nicht verfügbar" : "· unavailable here",
+    );
     const rowAction = row?.querySelector("[data-course-action] a");
     expect(rowAction).toHaveAttribute("href", `${prefix}/ai-native`);
     // The state prints once, in the facts; the action shows the verb and
@@ -165,7 +173,10 @@ describe("LearningAtlas", () => {
     const action = within(screen.getByTestId("next-proof")).getByRole("link");
     expect(action).toHaveTextContent("Account required");
     expect(action).toHaveAttribute("href", "/en/ki-fuehrerschein/kurs");
-    expect(container.querySelector('[data-course-slug="ki-fuehrerschein"] [data-course-access-label]')).toHaveTextContent("Account required");
+    // Shared by the whole foundation group: stated once in the phone group
+    // head, per row in the lg facts column.
+    expect(container.querySelector("#lernpfad [data-group-access]")).toHaveTextContent("· account required");
+    expect(container.querySelector('[data-course-slug="ki-fuehrerschein"] [data-course-meta]')).toHaveTextContent("Account required");
   });
 
   it("keeps server-rendered discovery independent of browser auth cookies", () => {
@@ -302,6 +313,23 @@ describe("LearningAtlas", () => {
     expect(container.querySelectorAll("[data-course-source]")).toHaveLength(
       COURSE_CATALOG.filter((course) => course.sourceHref).length,
     );
+    // Below lg the six rows share one repository and commit, so the group
+    // head prints the attribution once and each row's copy prints from lg.
+    for (const source of container.querySelectorAll("[data-course-source]")) {
+      expect(source).toHaveClass("max-lg:hidden");
+    }
+    const technicalHead = container.querySelectorAll("[data-group-source]");
+    expect(technicalHead).toHaveLength(1);
+    const groupSource = technicalHead[0] as HTMLElement;
+    expect(groupSource.closest("#tiefer-gehen")).not.toBeNull();
+    expect(groupSource).toHaveClass("lg:hidden", "min-h-11", "font-mono");
+    expect(groupSource).toHaveAttribute(
+      "href",
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101",
+    );
+    expect(groupSource).toHaveAccessibleName(
+      /^interactive-courses #0e5dfd3: Quellcode aller Technikkurse \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
+    );
 
     // Back to the ledger brief's zero-image rule. A cover thumbnail was tried
     // here and removed: the artwork is a wide illustration that crops to mush
@@ -326,8 +354,9 @@ describe("LearningAtlas", () => {
     expect(foundation.querySelectorAll("[data-course-slug]")).toHaveLength(4);
     expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(6);
 
-    // A readable ladder: the group head sits one step above the 20px row
-    // titles at every width (22px on phones, 26px from sm), under a Kopflinie.
+    // A readable ladder: the group head sits one step above the row titles
+    // at every width (22px over 17px on phones, 26px over 20px from sm),
+    // under a Kopflinie.
     const groupHead = within(foundation).getByRole("heading", {
       level: 3,
       name: "Grundlagenpfad",
@@ -335,7 +364,7 @@ describe("LearningAtlas", () => {
     expect(groupHead).toHaveClass("text-[1.375rem]", "sm:text-[1.625rem]");
     expect(groupHead.parentElement).toHaveClass("border-t-2", "border-foreground");
     for (const title of within(foundation).getAllByRole("heading", { level: 4 })) {
-      expect(title).toHaveClass("text-[1.25rem]");
+      expect(title).toHaveClass("text-[1.0625rem]", "sm:text-[1.25rem]");
     }
 
     for (const slug of [
@@ -486,6 +515,14 @@ describe("LearningAtlas", () => {
       '[data-course-slug="ki-fuehrerschein"]',
     );
     expect(single).toHaveTextContent("Praxisbeispiel ansehen");
+    // A phone prints the noun only, so the link fits beside the action; the
+    // verb stays in the accessible name, which starts with the visible label.
+    const demo = within(aiNative as HTMLElement).getByRole("link", {
+      name: "9 Praxisbeispiele ansehen",
+    });
+    expect(demo.querySelector(".max-sm\\:sr-only")).toHaveTextContent(
+      /^ansehen$/,
+    );
   });
 });
 
@@ -624,28 +661,137 @@ describe("LearningAtlas phone ledger", () => {
     );
   });
 
-  it("renders the goal decision as joined square tabs: 44px in two rows below lg, one 56px row from lg", () => {
+  it("renders the goal decision as a chip rail below lg and one joined row of 56px tabs from lg", () => {
     render(<LearningAtlas access={getCourseAccess(true)} />);
     const goals = screen.getByRole("group", { name: "Lernziel auswählen" });
-    expect(goals).toHaveClass("grid-cols-2", "lg:grid-cols-4");
+    // One horizontal row below lg that bleeds to the screen edge and
+    // scrolls; the four-column grid returns at lg.
+    expect(goals).toHaveClass("flex", "w-max", "gap-2", "lg:grid", "lg:grid-cols-4", "lg:gap-0");
+    const rail = goals.closest("[data-learning-goal-rail]");
+    expect(rail).toHaveClass("-mx-4", "overflow-x-auto", "snap-x", "lg:mx-0", "lg:overflow-visible");
 
     const buttons = within(goals).getAllByRole("button");
     expect(buttons).toHaveLength(4);
     for (const button of buttons) {
       expect(button.className).toContain("min-h-11");
       expect(button.className).toContain("lg:min-h-14");
+      expect(button).toHaveClass("shrink-0", "snap-start", "whitespace-nowrap", "lg:whitespace-normal");
       expect(button.className).not.toMatch(/kupfer-mist|rounded/);
     }
-    // Shared hairlines: neighbours overlap by 1px at both widths.
-    expect(buttons[1]).toHaveClass("-ml-px");
-    expect(buttons[2]).toHaveClass("-mt-px", "lg:mt-0", "lg:-ml-px");
-    expect(buttons[3]).toHaveClass("-ml-px", "-mt-px");
-    expect(buttons[0]).not.toHaveClass("-ml-px");
-    expect(buttons[0]).not.toHaveClass("-mt-px");
+    // Separate chips on a phone; shared hairlines from lg, where neighbours
+    // overlap by 1px.
+    expect(buttons[0]).not.toHaveClass("lg:-ml-px");
+    for (const button of buttons.slice(1)) {
+      expect(button).toHaveClass("lg:-ml-px");
+      expect(button.className).not.toMatch(/(?:^|\s)-m[lt]-px/);
+    }
     // The chosen goal is an ink fill.
     expect(buttons[0]).toHaveClass("bg-foreground", "text-background");
     expect(buttons[1]).not.toHaveClass("bg-foreground");
   });
+
+  it("keeps the phone path, sheet and rows compact and hands the reviewed layout back at sm and lg", () => {
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
+
+    // The Route puts title, duration and state on one 44px line on a phone
+    // and stacks them again from sm.
+    const station = screen
+      .getByTestId("selected-path-sequence")
+      .querySelector<HTMLElement>("[data-learning-path-stepper] > li");
+    expect(station).toHaveClass("sm:pb-3");
+    expect(station?.className).not.toMatch(/(?:^|\s)pb-3/);
+    expect(station?.querySelector("a")).toHaveClass(
+      "min-h-11",
+      "flex-wrap",
+      "items-baseline",
+      "sm:flex-col",
+      "sm:items-start",
+    );
+
+    // The sheet joins the duration to its kicker line on a phone and gives
+    // the Mennige action the full width.
+    const next = screen.getByTestId("next-proof");
+    expect(next).toHaveClass("p-4", "sm:p-6");
+    const kicker = next.querySelector("p");
+    const phoneDuration = kicker?.querySelector(":scope > .sm\\:hidden:not([aria-hidden])");
+    expect(phoneDuration).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(within(next).getAllByRole("link")[0]).toHaveClass(
+      "w-full",
+      "justify-between",
+      "sm:w-auto",
+    );
+
+    // Rows: a short promise on a phone (the full one in the accessibility
+    // tree), one wrapping line of links with the action moved first; from lg
+    // the links take the second grid row under the promise.
+    for (const row of container.querySelectorAll<HTMLElement>("[data-course-slug]")) {
+      const slug = row.dataset.courseSlug ?? "";
+      const promise = row.querySelector("h4 ~ p.text-pretty");
+      expect(promise, slug).toHaveClass(
+        "line-clamp-2",
+        "sm:line-clamp-none",
+        "sm:text-body",
+      );
+      const short = promise?.querySelector("[data-promise-short]");
+      expect(short, slug).toHaveAttribute("aria-hidden", "true");
+      expect(short).toHaveClass("sm:hidden");
+      expect(short?.textContent?.length).toBeLessThanOrEqual(45);
+      expect(short?.textContent).not.toMatch(/…|\.\.\.$/);
+      expect(short?.nextElementSibling).toHaveClass("max-sm:sr-only");
+      expect(row).toHaveClass("py-2.5", "sm:py-5");
+      const action = row.querySelector("[data-course-action]");
+      expect(action).toHaveClass("max-lg:order-first");
+      const phoneLine = action?.parentElement?.parentElement;
+      expect(phoneLine).toHaveClass(
+        "col-start-2",
+        "flex",
+        "flex-wrap",
+        "max-lg:-mt-1",
+        "max-lg:-mb-2",
+        "lg:contents",
+      );
+      const links = row.querySelector("[data-course-links]");
+      if (links) {
+        expect(links.parentElement).toBe(phoneLine);
+        // DOM order follows the desktop reading order (WCAG 2.4.3): the
+        // links under the promise come before the right-hand action.
+        expect(
+          links.compareDocumentPosition(action!) & Node.DOCUMENT_POSITION_FOLLOWING,
+        ).toBeTruthy();
+        expect(links).toHaveClass("contents", "lg:flex", "lg:col-start-2", "lg:row-start-2");
+      }
+    }
+
+    // The phone duration for the one long catalog label.
+    const aiNative = container.querySelector('[data-course-slug="ai-native"] [data-course-level-label]');
+    expect(aiNative?.querySelector(".sm\\:hidden")).toHaveTextContent("ca. 5 bis 12 Std.");
+    expect(aiNative?.querySelector(".max-sm\\:hidden")).toHaveTextContent(
+      "ca. 5 Std. Lektionen, 12 Std. mit Übungen",
+    );
+
+    // The level chips run to the screen edge like the goal rail.
+    const levels = screen.getByRole("group", { name: "Kursstufe wählen" });
+    expect(levels).toHaveClass("-mx-4", "px-4", "scroll-px-4", "snap-x", "sm:-mx-6", "sm:px-6");
+    for (const chip of within(levels).getAllByRole("button")) {
+      expect(chip).toHaveClass("snap-start");
+    }
+
+    // The goal question is the chips' own label on a phone.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Womit fängst du an?" }),
+    ).toHaveClass("max-sm:sr-only");
+
+    // The level bar stops sticking on short phones.
+    expect(container.querySelector("[data-course-level-filter]")).toHaveClass(
+      "[@media(max-height:700px)]:static",
+    );
+    // The ledger head's account link leaves the phone; the Konto tab and the
+    // cost note carry it there.
+    expect(
+      screen.getByRole("link", { name: "Fortschritt in deinem Konto ansehen" }),
+    ).toHaveClass("max-lg:hidden");
+  });
+
   it("localizes the level chips in English", () => {
     window.history.replaceState({}, "", "/en/kurse");
     render(<LearningAtlas locale="en" access={getCourseAccess(true)} />);

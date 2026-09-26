@@ -149,4 +149,40 @@ describe("website motion policy", () => {
       "The projection module and SVG tree are not loaded or rendered on mobile",
     );
   });
+
+  it("bounds the phone horizon globe exception", () => {
+    const hero = read("components/home/hero.tsx");
+    const loader = read("components/home/phone-globe.tsx");
+    const renderer = read("components/werk/horizon-globe-renderer.ts");
+    const css = read("components/home/phone-hero.css");
+    const policy = readFileSync(
+      join(SRC, "..", "docs/experience-system.md"),
+      "utf8",
+    );
+
+    // Its own namespace: the desktop attributes never describe the phone globe.
+    expect(hero).toContain('data-home-globe-motion="static"');
+    expect(renderer).not.toContain("data-hero-");
+    expect(loader).not.toContain("data-hero-");
+    // The renderer is a lazy chunk, gated on width, motion, data and Save-Data.
+    expect(hero).not.toContain("horizon-globe-renderer");
+    expect(loader).toContain('import("@/components/werk/horizon-globe-renderer")');
+    expect(loader).toContain('"(min-width: 64rem)"');
+    expect(loader).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(loader).toContain('"(prefers-reduced-data: reduce)"');
+    expect(loader).toContain("saveData");
+    expect(loader).toContain("requestIdleCallback");
+    expect(loader).toContain("aria-pressed={globe.paused}");
+    // Suspension, caps and the governor.
+    expect(renderer).toContain("IntersectionObserver");
+    expect(renderer).toContain('document.addEventListener("visibilitychange"');
+    expect(renderer).toContain('"pagehide"');
+    expect(renderer).toContain("SCROLL_HOLD_MS");
+    expect(renderer).toContain("{ cap: 2, fps: 60 }");
+    expect(renderer).toContain("frozen = true");
+    // The opening is finite and exists only without a reduced-motion preference.
+    expect(css).toContain("prefers-reduced-motion: no-preference");
+    expect(css).not.toMatch(/\binfinite\b/);
+    expect(policy).toContain("Phone globe: narrow continuous-motion exception");
+  });
 });

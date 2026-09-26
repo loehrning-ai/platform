@@ -16,7 +16,9 @@ describe("LessonReference", () => {
 
     const block = container.querySelector("[data-lesson-reference-block]");
     expect(block).toHaveClass("border-t-2", "border-foreground");
-    expect(block?.className).not.toMatch(/border-l-|bg-brand-orange|uppercase|font-mono/);
+    expect(block?.className).not.toMatch(
+      /border-l-|bg-brand-orange|uppercase|font-mono/,
+    );
     const details = container.querySelector("details[data-lesson-reference]");
     expect(details).toHaveAttribute("open");
     expect(block).toContainElement(details as HTMLElement);
@@ -58,8 +60,14 @@ describe("LessonReference", () => {
     );
 
     const kicker = screen.getByText("Lektion 2 von 12");
-    expect(kicker).toHaveClass("text-label", "text-muted-foreground", "tabular-nums");
-    expect(kicker.className).not.toMatch(/uppercase|font-mono|text-brand-orange/);
+    expect(kicker).toHaveClass(
+      "text-label",
+      "text-muted-foreground",
+      "tabular-nums",
+    );
+    expect(kicker.className).not.toMatch(
+      /uppercase|font-mono|text-brand-orange/,
+    );
     expect(screen.queryByText("Lektion")).not.toBeInTheDocument();
   });
 
@@ -92,7 +100,8 @@ describe("LessonReference", () => {
     expect(heading.closest("details")).toBeNull();
     expect(heading).toHaveClass("text-fluid-h2", "font-bold");
     expect(
-      screen.getByText("Behauptungen von geprüften Beobachtungen trennen.")
+      screen
+        .getByText("Behauptungen von geprüften Beobachtungen trennen.")
         .closest("details"),
     ).toBeNull();
   });
@@ -146,5 +155,49 @@ describe("LessonReference", () => {
 
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(container.querySelectorAll("h1")).toHaveLength(1);
+  });
+
+  it("reduces the head to screen-reader text on phones below a mission", () => {
+    const { container } = render(
+      <LessonReference
+        locale="de"
+        title="Was Claude tatsächlich ist"
+        objective="Kontext statt Gedächtnis."
+        position="Lektion 1 von 12"
+        objectiveRepeatedAbove
+      >
+        <p className="lesson-head-position">Lektion 1 von 12</p>
+        <p>Lektionstext</p>
+      </LessonReference>,
+    );
+
+    // Still the page's level-one heading, visible from sm.
+    const heading = screen.getByRole("heading", {
+      level: 1,
+      name: "Was Claude tatsächlich ist",
+    });
+    expect(container.querySelector("[data-lesson-reference-head]")).toHaveClass(
+      "sr-only",
+      "sm:not-sr-only",
+    );
+    expect(heading.closest("[data-lesson-reference-head]")).not.toBeNull();
+    expect(container.querySelector("summary")).toHaveClass("max-sm:hidden");
+    expect(container.querySelector("details")).toHaveAttribute("open");
+    const content = container.querySelector("[data-lesson-reference-content]");
+    expect(content?.className).toContain(
+      "max-sm:[&_.lesson-head-position]:hidden!",
+    );
+  });
+
+  it("keeps the full head on phones without a mission above", () => {
+    const { container } = render(
+      <LessonReference locale="en" title="Evidence before automation">
+        <p>Text</p>
+      </LessonReference>,
+    );
+    expect(
+      container.querySelector("[data-lesson-reference-head]"),
+    ).not.toHaveClass("sr-only");
+    expect(container.querySelector("summary")).not.toHaveClass("max-sm:hidden");
   });
 });

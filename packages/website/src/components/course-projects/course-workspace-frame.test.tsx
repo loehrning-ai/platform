@@ -96,12 +96,14 @@ function frameElement({
   storageId = STORAGE_ID,
   titleId = "test-workspace-title",
   title = "Evidence project",
+  phoneExpanded,
 }: {
   readonly locale?: "de" | "en";
   readonly id?: string;
   readonly storageId?: string;
   readonly titleId?: string;
   readonly title?: string;
+  readonly phoneExpanded?: boolean;
 } = {}) {
   return (
     <CourseWorkspaceFrame
@@ -112,6 +114,7 @@ function frameElement({
       locale={locale}
       projectId={`project-${storageId}`}
       engineKind="data"
+      phoneExpanded={phoneExpanded}
       header={<div>Persistent header</div>}
       brief={<h2 id={titleId}>{title}</h2>}
       workspace={<button type="button">Workspace action</button>}
@@ -492,5 +495,83 @@ describe("CourseWorkspaceFrame", () => {
     expect(
       screen.getByRole("button", { name: "Vollbild öffnen" }),
     ).toBeInTheDocument();
+  });
+
+  it("starts below md as its header plus one toggle row and opens on that row", () => {
+    setDockedLayoutViewport(false);
+    render(frameElement({ locale: "de" }));
+
+    const toggle = screen.getByRole("button", {
+      name: "Projektwerkstatt: Evidence project",
+    });
+    expect(toggle).toHaveClass("md:hidden", "min-h-11", "js-shell-only");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    const body = document.getElementById(
+      toggle.getAttribute("aria-controls") ?? "",
+    );
+    // CSS-only collapse: the body stays in the DOM and is shown from md.
+    expect(body).toHaveClass("max-md:hidden");
+    expect(body).toContainElement(
+      screen.getByRole("toolbar", { name: "Arbeitsbereich-Layout" }),
+    );
+    expect(screen.getByText("Persistent header")).toBeInTheDocument();
+    // Collapsed, the band only repeats the row, so it is hidden below md.
+    expect(screen.getByText("Persistent header").parentElement).toHaveClass(
+      "max-md:hidden",
+    );
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(body).not.toHaveClass("max-md:hidden");
+    expect(
+      screen.getByText("Persistent header").parentElement,
+    ).not.toHaveClass("max-md:hidden");
+  });
+
+  it("appends the phone status to the collapsed row", () => {
+    setDockedLayoutViewport(false);
+    render(
+      <CourseWorkspaceFrame
+        id="status-frame"
+        titleId="status-title"
+        title="Evidence project"
+        storageId={STORAGE_ID}
+        locale="de"
+        projectId="project-status"
+        engineKind="prompt"
+        phoneStatus="Noch nicht verifiziert"
+        header={<div>Persistent header</div>}
+        brief={<h2 id="status-title">Evidence project</h2>}
+        workspace={<button type="button">Workspace action</button>}
+      />,
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "Projektwerkstatt: Evidence project · Noch nicht verifiziert",
+      }),
+    ).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("stays open on phones once the studio activates the workspace", () => {
+    setDockedLayoutViewport(false);
+    render(frameElement({ phoneExpanded: true }));
+
+    expect(
+      document.querySelector("[data-course-workspace-phone-toggle]"),
+    ).toBeNull();
+    const toolbar = screen.getByRole("toolbar", { name: "Workspace layout" });
+    expect(toolbar.parentElement).not.toHaveClass("max-md:hidden");
+  });
+
+  it("hides the dock control on phones, where docking is impossible", () => {
+    setDockedLayoutViewport(false);
+    renderFrame();
+
+    expect(
+      screen.getByRole("button", { name: "Dock panes side by side" }),
+    ).toHaveClass("max-md:hidden");
+    expect(
+      screen.getByRole("button", { name: "Collapse project brief" }),
+    ).not.toHaveClass("max-md:hidden");
   });
 });

@@ -1,10 +1,14 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/locale";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
+import { DisclosureGlyph } from "./evidence-badge";
+
+/** Sheet rows a phone shows before "Alle 9 Zeilen" opens the rest. */
+const PHONE_SHEET_ROWS = 5;
 
 type RegionKey = "Nord" | "Süd" | "West";
 
@@ -67,7 +71,7 @@ const TASKS: readonly Task[] = [
   },
   {
     id: "forecast",
-    title: { de: "Forecast KW 17–20", en: "Forecast, weeks 17–20" },
+    title: { de: "Forecast KW 17 bis 20", en: "Forecast, weeks 17 to 20" },
     detail: {
       de: "Lineare Projektion mit 90 %-Konfidenz",
       en: "Linear projection with a 90% confidence band",
@@ -139,10 +143,11 @@ export default function ExcelDemo() {
         "Excel-Lab mit KI-Assistent",
         "Spreadsheet analysis example",
       )}
+      // Tighter rhythm below sm so the first task reaches the first screen.
+      className="gap-3 sm:gap-[18px]"
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 18,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
         minHeight: DEMO_HEIGHT,
@@ -152,11 +157,15 @@ export default function ExcelDemo() {
     >
       {/* Header: the page H1 and lead name the demo, so the engine keeps
           only an sr-only landmark heading and its one-line scope note. */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      {/* display:contents below sm: with the note hidden the wrapper would
+          only add an empty flex gap above the sheet. */}
+      <div className="flex flex-col gap-1.5 max-sm:contents">
         <h2 className="sr-only">
           {text("Excel-Beispiel mit KI-Assistent", "Spreadsheet example with an AI assistant")}
         </h2>
-        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
+        {/* Below sm the evidence line above ("Synthetisch · Was heißt das?")
+            and the run table's data row carry this, so the note hides. */}
+        <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
           {text(
             "Neun fiktive Verkaufszeilen, rein im Browser. Keine Verbindung zu Excel, Microsoft 365 oder einem KI-Anbieter.",
             "This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.",
@@ -192,6 +201,10 @@ export default function ExcelDemo() {
 
 function Spreadsheet({ locale }: { readonly locale: Locale }) {
   const isDe = locale === "de";
+  // Below sm the sheet shows its first five rows; the status bar's button
+  // opens the other four. From sm up every row always shows.
+  const [allRows, setAllRows] = useState(false);
+  const tableId = useId();
   return (
     <div
       style={{
@@ -203,19 +216,18 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
       }}
     >
       {/* File bar: ink band with the file name as data; no product
-          colours or logo. */}
+          colours or logo. Below sm it merges with the formula bar into one
+          light 32px row ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
       <div
+        data-excel-file-bar
+        className="min-h-8 bg-[#0B0908] px-2.5 py-[7px] text-[12px] text-[#F3F0E9] max-sm:bg-[#F7F4ED] max-sm:py-1 max-sm:text-[13px] max-sm:text-[#0B0908]"
         style={{
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",
           gap: 8,
-          padding: "7px 10px",
-          background: DEMO.ink,
-          color: DEMO.kalk,
           borderBottom: `1px solid ${DEMO.leinen}`,
           fontFamily: DEMO.font.mono,
-          fontSize: 12,
           minWidth: 0,
         }}
       >
@@ -228,16 +240,19 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           }}
         >
           {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
+          <span className="sm:hidden" style={{ color: DEMO.schiefer }}>
+            {isDe ? " · F2 = Wachstum W/W" : " · F2 = Growth W/W"}
+          </span>
         </span>
-        <span style={{ marginLeft: "auto", fontSize: 12 }}>
+        <span className="max-sm:hidden" style={{ marginLeft: "auto", fontSize: 12 }}>
           {isDe ? "· gespeichert" : "· local sample"}
         </span>
       </div>
 
-      {/* Formula bar */}
+      {/* Formula bar (from sm up; below sm it joins the file bar) */}
       <div
+        className="flex max-sm:hidden"
         style={{
-          display: "flex",
           alignItems: "center",
           gap: 8,
           padding: "5px 10px",
@@ -271,6 +286,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           route-ai-native-locales.spec.ts, which checks that every horizontally
           scrolling region stays contained inside the lesson column. */}
       <div
+        id={tableId}
         data-course-horizontal-scroll
         role="region"
         aria-label={isDe ? "Beispiel-Arbeitsblatt" : "Sample worksheet data"}
@@ -278,21 +294,23 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
         style={{ overflowX: "auto", overscrollBehaviorX: "contain" }}
       >
+        {/* Below sm the five columns fit a 320px screen (no hidden
+            "Umsatz" column) and the data reads at 13px; from sm up the
+            desktop sheet returns: 12px, 430px minimum, wider cell padding. */}
         <table
+          className="min-w-[280px] text-[13px] leading-[1.35] sm:min-w-[430px] sm:text-[12px] sm:leading-[inherit] [&_td]:px-1.5 [&_td]:py-[3px] [&_th]:px-1.5 [&_th]:py-1 sm:[&_td]:px-2 sm:[&_td]:py-1 sm:[&_th]:px-2 sm:[&_th]:py-[5px]"
           style={{
             width: "100%",
-            minWidth: 430,
             borderCollapse: "collapse",
             fontFamily: DEMO.font.mono,
-            fontSize: 12,
             tableLayout: "fixed",
           }}
         >
           <colgroup>
-            <col style={{ width: 28 }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "16%" }} />
+            <col className="w-[26px] sm:w-[28px]" />
+            <col className="w-[20%] sm:w-[22%]" />
+            <col className="w-[24%] sm:w-[22%]" />
+            <col className="w-[14%] sm:w-[16%]" />
             <col />
           </colgroup>
           <thead>
@@ -304,9 +322,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
                 <th
                   key={h + i}
                   style={{
-                    padding: "5px 8px",
                     borderBottom: `1px solid ${DEMO.ink}`,
-                    fontSize: 12,
                     textAlign: i > 2 ? "right" : "left",
                     fontWeight: i === 0 ? 400 : 700,
                     letterSpacing: "0.06em",
@@ -324,31 +340,30 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
             {ROWS.map((r, i) => (
               <tr
                 key={`${r.w}-${r.region}`}
+                className={
+                  i >= PHONE_SHEET_ROWS && !allRows ? "max-sm:hidden" : undefined
+                }
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
                   background: "transparent",
                 }}
               >
                 <td
+                  className="px-1!"
                   style={{
-                    padding: "4px 8px",
                     background: DEMO.birke,
                     color: DEMO.schiefer,
-                    fontSize: 12,
                     textAlign: "center",
                     borderRight: `1px solid ${DEMO.leinen}`,
                   }}
                 >
                   {i + 2}
                 </td>
-                <td style={{ padding: "4px 8px" }}>{weekLabel(r.w, locale)}</td>
-                <td style={{ padding: "4px 8px" }}>
-                  {isDe ? r.region : REGION_EN[r.region]}
-                </td>
-                <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.stk}</td>
+                <td>{weekLabel(r.w, locale)}</td>
+                <td>{isDe ? r.region : REGION_EN[r.region]}</td>
+                <td style={{ textAlign: "right" }}>{r.stk}</td>
                 <td
                   style={{
-                    padding: "4px 8px",
                     textAlign: "right",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
@@ -378,7 +393,20 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           marginTop: "auto",
         }}
       >
-        <span>{isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}</span>
+        <span className="max-sm:hidden">
+          {isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}
+        </span>
+        <button
+          type="button"
+          onClick={() => setAllRows((open) => !open)}
+          aria-expanded={allRows}
+          aria-controls={tableId}
+          className="-my-[7px] inline-flex min-h-11 items-center gap-1.5 text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground sm:hidden"
+          style={{ ...DEMO.label, background: "transparent", border: 0, padding: 0, cursor: "pointer" }}
+        >
+          {isDe ? `Alle ${ROWS.length} Zeilen` : `All ${ROWS.length} rows`}
+          <DisclosureGlyph open={allRows} />
+        </button>
         <span
           style={{
             color: DEMO.ink,
@@ -413,9 +441,18 @@ function TaskPicker({
   readonly text: (de: string, en: string) => string;
 }) {
   const isDe = locale === "de";
+  // From sm up each task is a bordered card and the selected one is ink
+  // filled, as before. Below sm the tasks are hairline ledger rows: the
+  // selected row carries a 2px ink tick on the left instead of a black
+  // fill, and the "Formel generieren" line drops because the whole row is
+  // the button.
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+    <div
+      className="gap-0 sm:gap-2.5"
+      style={{ display: "flex", flexDirection: "column", minWidth: 0 }}
+    >
       <div
+        className="max-sm:border-b max-sm:border-[#0B0908] max-sm:pb-1.5"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -436,41 +473,25 @@ function TaskPicker({
 
       {TASKS.map((t, i) => {
         const active = activeId === t.id;
+        const muted = active
+          ? "text-[rgba(11,9,8,0.62)] sm:text-[rgba(243,240,233,0.75)]"
+          : "text-[rgba(11,9,8,0.62)]";
         return (
           <button
             key={t.id}
             type="button"
             onClick={() => onSelect(t.id)}
             aria-pressed={active}
-            style={{
-              position: "relative",
-              minHeight: 44,
-              width: "100%",
-              minWidth: 0,
-              textAlign: "left",
-              padding: "11px 13px",
-              background: active ? DEMO.ink : DEMO.birke,
-              color: active ? DEMO.kalk : DEMO.ink,
-              // Selected = ink fill (the site's chip grammar): flat, no
-              // offset shadow and no lift.
-              border: `1px solid ${active ? DEMO.ink : DEMO.leinen}`,
-              cursor: "pointer",
-              fontFamily: "inherit",
-              transition: "background-color 120ms, border-color 120ms",
-              overflow: "hidden",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) {
-                e.currentTarget.style.borderColor = DEMO.ink;
-                e.currentTarget.style.background = DEMO.kalk;
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!active) {
-                e.currentTarget.style.borderColor = DEMO.leinen;
-                e.currentTarget.style.background = DEMO.birke;
-              }
-            }}
+            data-excel-task={t.id}
+            className={[
+              "relative min-h-11 w-full min-w-0 cursor-pointer overflow-hidden text-left transition-colors duration-[120ms] motion-reduce:transition-none",
+              "max-sm:border-b max-sm:border-l-2 max-sm:border-b-[#E3DFD6] max-sm:bg-transparent max-sm:py-2.5 max-sm:pl-3 max-sm:pr-0",
+              "sm:border sm:px-[13px] sm:py-[11px]",
+              active
+                ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-[#0B0908] sm:bg-[#0B0908] sm:text-[#F3F0E9]"
+                : "text-[#0B0908] max-sm:border-l-transparent sm:border-[#E3DFD6] sm:bg-[#F7F4ED] sm:hover:border-[#0B0908] sm:hover:bg-[#F3F0E9]",
+            ].join(" ")}
+            style={{ fontFamily: "inherit" }}
           >
             <div
               style={{
@@ -482,10 +503,9 @@ function TaskPicker({
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                 <span
+                  className={`text-[13px] sm:text-[12px] ${muted}`}
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -493,8 +513,8 @@ function TaskPicker({
                   0{i + 1}
                 </span>
                 <span
+                  className="text-[14px] sm:text-[13px]"
                   style={{
-                    fontSize: 13,
                     fontWeight: 700,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -505,10 +525,9 @@ function TaskPicker({
                 </span>
               </div>
               <span
+                className={`text-[13px] sm:text-[12px] ${muted}`}
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   flexShrink: 0,
                 }}
               >
@@ -516,20 +535,19 @@ function TaskPicker({
               </span>
             </div>
             <div
+              className={`text-[13px] sm:text-[12px] ${muted}`}
               style={{
-                fontSize: 12,
                 marginTop: 4,
                 lineHeight: 1.45,
-                color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
               }}
             >
               {isDe ? t.detail.de : t.detail.en}
             </div>
             <div
+              className="max-sm:hidden"
               style={{
                 marginTop: 7,
                 ...DEMO.label,
-                color: active ? DEMO.kalk : DEMO.ink,
               }}
             >
               {(isDe ? t.action.de : t.action.en)} →
@@ -620,13 +638,9 @@ function FormulaOutput({ text }: OutputProps) {
           'IF(INDIRECT("E"&ROW()-3)=0,"",(E2-INDIRECT("E"&ROW()-3))/INDIRECT("E"&ROW()-3))',
         )}
       </div>
-      <div
-        style={{
-          display: "grid",
-          gap: 8,
-          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-          marginTop: 12,
-        }}
+      <dl
+        className="grid gap-0 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-2"
+        style={{ marginTop: 12, marginBottom: 0 }}
       >
         <FormulaNote
           k={text("Region-Bezug", "Region reference")}
@@ -640,7 +654,7 @@ function FormulaOutput({ text }: OutputProps) {
           k={text("Format", "Format")}
           v={text("Prozent, 1 Nachk.", "Percent, 1 decimal")}
         />
-      </div>
+      </dl>
       <p
         style={{
           fontSize: 12,
@@ -659,26 +673,27 @@ function FormulaOutput({ text }: OutputProps) {
 }
 
 function FormulaNote({ k, v }: { readonly k: string; readonly v: string }) {
+  // A small Birke box from sm up; below sm a hairline row, so the result
+  // panel does not hold a third level of boxes.
   return (
     <div
-      style={{
-        border: `1px solid ${DEMO.leinen}`,
-        background: DEMO.birke,
-        padding: "7px 9px",
-        minWidth: 0,
-      }}
+      className="flex items-baseline justify-between gap-3 border-b border-[#E3DFD6] py-2 first:border-t sm:block sm:border sm:bg-[#F7F4ED] sm:px-[9px] sm:py-[7px]"
+      style={{ minWidth: 0 }}
     >
-      <div
+      <dt
         style={{
           ...DEMO.label,
           color: DEMO.schiefer,
         }}
       >
         {k}
-      </div>
-      <div style={{ fontSize: 12, color: DEMO.ink, fontWeight: 700, marginTop: 2 }}>
+      </dt>
+      <dd
+        className="m-0 text-right text-[13px] sm:mt-0.5 sm:text-left sm:text-[12px]"
+        style={{ color: DEMO.ink, fontWeight: 700 }}
+      >
         {v}
-      </div>
+      </dd>
     </div>
   );
 }
@@ -827,7 +842,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
 
   return (
     <OutputShell
-      label={text("Forecast · KW 17–20", "Forecast · weeks 17–20")}
+      label={text("Forecast · KW 17 bis 20", "Forecast · weeks 17 to 20")}
       caption={text("Konfidenz 90 %", "90% confidence")}
     >
       <label

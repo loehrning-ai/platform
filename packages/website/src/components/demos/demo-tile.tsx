@@ -34,15 +34,19 @@ export function DemoTile({
       data-demo-tile={demo.slug}
       data-demo-size={demo.size}
       aria-label={copy.openAria(name)}
-      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:py-5"
+      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:py-4 max-sm:[contain-intrinsic-size:auto_132px]!"
     >
       {/* Schematic drawing on a recessed Beton panel, the tile's only box
           (blueprint 6.14). Every tile has the same 4:3 panel, so a row lines
           up without spans. Hover darkens the panel one tone; no lift, no
           shadow. Decorative: the tile's aria-label and visible text carry the
           meaning, so screen readers skip the drawing's short labels. Below
-          sm the tile is a ledger row (blueprint 6.6): no drawing, two lines
-          of description, hairlines between rows. */}
+          sm the tile is a ledger row (blueprint 6.6): no drawing, a
+          one-sentence teaser, hairlines between rows. The whole row is the
+          link, so the row drops the caption and the "open" line and carries
+          one arrow beside the name instead. Its content-visibility
+          placeholder matches the row height, not the 420px card, so the
+          page height does not jump while scrolling. */}
       <div
         aria-hidden="true"
         data-demo-preview
@@ -69,16 +73,28 @@ export function DemoTile({
           {categoryLabel}
           {leadIndustry ? ` · ${leadIndustry}` : ""}
         </p>
-        <h3 className="mt-2 break-words text-fluid-h3 font-bold text-foreground text-balance hyphens-manual">
-          {name}
-        </h3>
-        <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground max-sm:mt-2 max-sm:line-clamp-2">
+        <div className="mt-2 flex items-start justify-between gap-3 max-sm:mt-1">
+          <h3 className="min-w-0 break-words text-fluid-h3 font-bold text-foreground text-balance hyphens-manual">
+            {name}
+          </h3>
+          <ArrowGlyph className="mt-1 sm:hidden" />
+        </div>
+        {/* The phone row carries the one-sentence teaser in full; the long
+            description returns from sm up. Neither is clamped, so no row
+            ends mid-sentence. */}
+        <p
+          className="mt-1 break-words text-[0.9375rem] leading-normal text-muted-foreground sm:hidden"
+          data-demo-tile-teaser
+        >
+          {demo.teaser}
+        </p>
+        <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground max-sm:hidden">
           {demo.description}
         </p>
-        <p className="mt-auto pt-3 text-caption text-muted-foreground" data-demo-tile-meta>
+        <p className="mt-auto pt-3 text-caption text-muted-foreground max-sm:hidden" data-demo-tile-meta>
           {evidenceLabel} · {levelLabel}
         </p>
-        <span className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 group-hover:decoration-foreground">
+        <span className="mt-1 inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 group-hover:decoration-foreground max-sm:hidden">
           {copy.open}
           <ArrowGlyph />
         </span>

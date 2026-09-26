@@ -11,9 +11,16 @@ import { useLocale } from "@/components/i18n/locale-context";
 
 export function AuthStatus({
   mobile = false,
+  variant = "ticket",
   onNavigate,
 }: {
   readonly mobile?: boolean;
+  /**
+   * `ticket` is the outlined desktop control. `quiet` is a plain text link
+   * for the phone menu sheet, where the Konto tab already owns sign-in and
+   * the navigation, not the account, should carry the weight.
+   */
+  readonly variant?: "ticket" | "quiet";
   readonly onNavigate?: () => void;
 }) {
   const locale = useLocale();
@@ -72,6 +79,24 @@ export function AuthStatus({
   const href = localizeHref(signedIn ? "/konto" : "/login", locale);
   const label = signedIn ? copy.account : copy.login;
   const Icon = signedIn ? UserRound : LogIn;
+
+  if (variant === "quiet") {
+    // No border, no fill and no icon: one word in ink on a 44px target, so
+    // the sheet header fits the wordmark, this link and the close button in
+    // a 320px row. The ring is drawn inside the target, like the close
+    // button's beside it.
+    return (
+      <Link
+        href={href}
+        prefetch={false}
+        onClick={onNavigate}
+        data-auth-status="quiet"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label text-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:decoration-current focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+      >
+        {label}
+      </Link>
+    );
+  }
 
   // min-w fits the widest label ("Anmelden") so the control keeps its width
   // when the session resolves to "Konto" and nothing beside it shifts.

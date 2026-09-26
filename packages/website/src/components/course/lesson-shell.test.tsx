@@ -103,6 +103,15 @@ beforeEach(() => {
   }
 });
 
+/**
+ * Every course reader passes a next step, so the drawer opener below lg is
+ * the reader bar's contents button, named by `openNavLabel`.
+ */
+const READER_BAR: LessonShellReaderBar = {
+  position: "Lektion 2 von 5",
+  next: { kind: "link", label: "Weiter", href: "/kurs/03" },
+};
+
 /** A controlled harness so tests can drive navOpen like a real consumer would. */
 function Harness({
   navLabel = "Testnavigation",
@@ -110,16 +119,19 @@ function Harness({
   collapseNavLabel,
   expandNavLabel,
   readerBar,
+  readerFocus,
 }: {
   readonly navLabel?: string;
   readonly contentMode?: LessonShellContentMode;
   readonly collapseNavLabel?: string;
   readonly expandNavLabel?: string;
   readonly readerBar?: LessonShellReaderBar;
+  readonly readerFocus?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   return (
     <LessonShell
+      readerFocus={readerFocus}
       navOpen={open}
       onNavOpenChange={setOpen}
       navLabel={navLabel}
@@ -151,6 +163,7 @@ function DocumentHarness() {
           navOpen={open}
           onNavOpenChange={setOpen}
           navLabel="Course navigation"
+          readerBar={READER_BAR}
           sidebar={
             <nav aria-label="Course links">
               <button type="button">Lesson one</button>
@@ -201,24 +214,12 @@ describe("<LessonShell>", () => {
     expect(
       desktopSidebar?.querySelector(`#mobile-lesson-nav-desktop`),
     ).toHaveClass("overflow-y-auto");
+    // Below lg there is no sticky toolbar under the compact top bar: the
+    // reader bar is the one place the drawer opens from, so the phone keeps
+    // 105px of fixed chrome instead of 153px.
     expect(
-      screen.getByRole("button", { name: "Navigation öffnen" }),
-    ).toHaveClass("lg:hidden");
-    const mobileToolbar = document.querySelector(
-      "[data-lesson-shell-mobile-toolbar]",
-    ) as HTMLElement;
-    // A structure-agnostic shell cannot assume the caller has a subheader.
-    expect(mobileToolbar).toHaveClass(
-      "sticky",
-      "top-[calc(var(--nav-h-compact)+var(--lesson-subheader-h,0px))]",
-      "lg:hidden",
-    );
-    expect(mobileToolbar).not.toHaveClass("top-28");
-    expect(within(mobileToolbar).getByText("Testnavigation")).toBeVisible();
-    expect(mobileToolbar).toHaveClass("border-hairline", "bg-background");
-    expect(
-      screen.getByRole("button", { name: "Navigation öffnen" }),
-    ).not.toHaveClass("fixed");
+      document.querySelector("[data-lesson-shell-mobile-toolbar]"),
+    ).toBeNull();
 
     const stage = document.querySelector("[data-lesson-stage]");
     expect(stage).not.toHaveClass("border-t-[3px]", "border-brand-orange");
@@ -318,7 +319,7 @@ describe("<LessonShell>", () => {
   });
 
   it("opens the mobile drawer on toggle, traps focus, and closes on Escape", () => {
-    render(<Harness />);
+    render(<Harness readerBar={READER_BAR} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Navigation öffnen" }));
     expect(
@@ -345,7 +346,7 @@ describe("<LessonShell>", () => {
   });
 
   it("closes on backdrop click and restores focus to the toggle", async () => {
-    render(<Harness />);
+    render(<Harness readerBar={READER_BAR} />);
     const toggle = screen.getByRole("button", { name: "Navigation öffnen" });
     fireEvent.click(toggle);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -392,7 +393,7 @@ describe("<LessonShell>", () => {
       vi.fn(() => mediaQuery),
     );
 
-    render(<Harness />);
+    render(<Harness readerBar={READER_BAR} />);
     const mainContent = screen
       .getByTestId("main-content")
       .closest("div")!.parentElement!;
@@ -415,7 +416,7 @@ describe("<LessonShell>", () => {
   });
 
   it("marks the main content inert while the drawer is open, and restores it on close", () => {
-    render(<Harness />);
+    render(<Harness readerBar={READER_BAR} />);
     // The desktop aside's parent-of-parent is the main content wrapper — assert
     // on the rendered content directly, mirroring the real inert-sweep target.
     const mainContent = screen
@@ -476,7 +477,7 @@ describe("<LessonShell>", () => {
   });
 
   it("wires aria-expanded and aria-controls on the toggle button", () => {
-    render(<Harness />);
+    render(<Harness readerBar={READER_BAR} />);
     const toggle = screen.getByRole("button", { name: "Navigation öffnen" });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     expect(toggle).toHaveAttribute("aria-controls");
@@ -500,7 +501,7 @@ describe("<LessonShell> reader focus mode", () => {
     expect(document.querySelectorAll('[data-reader="focus"]')).toHaveLength(1);
   });
 
-  it("still fills the band with a bar when no course reader supplies one", () => {
+  it("still fills the band with a bar when no course reader supplies one", async () => {
     // Focus mode above removes the mobile tab bar below lg. If this shell
     // rendered a bar only for a caller that passes `readerBar`, every course
     // lesson would lose the phone's bottom navigation and get nothing back -
@@ -519,11 +520,13 @@ describe("<LessonShell> reader focus mode", () => {
     });
     expect(lessonList).toHaveClass("min-h-11", "js-shell-only");
 
-    // It opens the lesson drawer, and its name stays distinct from the sticky
-    // toolbar's opener so neither query becomes ambiguous.
+    // It opens the lesson drawer, and focus returns to it when the drawer
+    // closes, because it is the only opener on the page.
     expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(lessonList);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => expect(lessonList).toHaveFocus());
   });
 
   it("names the fallback control in the caller's locale", () => {
@@ -551,9 +554,33 @@ describe("<LessonShell> reader focus mode", () => {
 
     const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
     expect(within(bar!).getByRole("link", { name: "Weiter" })).toBeVisible();
+    // With the toolbar gone this is the only drawer opener, so it takes the
+    // descriptive opener name instead of the bare list label.
+    const opener = within(bar!).getByRole("button", {
+      name: "Navigation öffnen",
+    });
+    expect(opener).toHaveAttribute("data-reader-focus-navigation");
+    expect(opener).toHaveClass("h-11", "w-11", "js-shell-only");
     expect(
-      within(bar!).getByRole("button", { name: "Testnavigation" }),
-    ).toHaveAttribute("data-reader-focus-navigation");
+      screen.getAllByRole("button", { name: "Navigation öffnen" }),
+    ).toHaveLength(1);
+  });
+
+  it("keeps a landing out of focus mode: tab bar stays, no reader bar or drawer control", () => {
+    render(<Harness readerFocus={false} readerBar={READER_BAR} />);
+
+    const shell = document.querySelector("[data-lesson-shell]");
+    expect(shell).not.toHaveAttribute("data-reader");
+    expect(document.querySelector('[data-reader="focus"]')).toBeNull();
+    expect(document.querySelector("[data-reader-focus-bar]")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Navigation öffnen" }),
+    ).toBeNull();
+    // The desktop rail is unchanged.
+    expect(
+      document.querySelector("[data-lesson-shell-desktop-sidebar]"),
+    ).toHaveClass("hidden", "lg:block");
+    expect(screen.getByTestId("main-content")).toBeInTheDocument();
   });
 
   it("renders the compact reader bar with position and a scripted next action", () => {

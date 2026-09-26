@@ -113,26 +113,36 @@ describe("catalog surfaces below lg", () => {
     expect(buecher).toContain("sm:w-56 md:w-full");
   });
 
-  it("stacks the workshop row cover first and turns the index into a rail", () => {
+  it("keeps the workshop row in phone order and compacts it below md", () => {
     const workshops = source("workshops/workshops-content.tsx");
     const row = workshops.slice(workshops.indexOf("function WorkshopRow"));
 
-    // Phone order is source order: the cover on top at full width, then the
-    // kicker, the title, the question and the one link. From md the same DOM
-    // becomes the two-column sheet (cover left), so nothing needs `order`.
+    // Phone order is source order: the tile, then the duration line, the
+    // title, what you leave with and the one link. From md the same DOM becomes the
+    // two-column sheet (cover left), so nothing needs `order`.
     expect(row.indexOf("<figure")).toBeLessThan(row.indexOf("<h3"));
+    expect(row.indexOf("data-workshop-meta")).toBeLessThan(row.indexOf("<h3"));
     expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("data-workshop-question"));
     expect(row.indexOf("data-workshop-question")).toBeLessThan(
       row.indexOf("<Link"),
     );
-    expect(row).toContain("md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]");
-    // The cover-band index is a one-line rail on a phone, keyboard reachable
-    // through its links, and a wrapping row from sm that never scrolls. End
-    // padding lets the last item snap fully clear of the edge.
-    expect(workshops).toContain(
-      "flex snap-x scroll-px-4 gap-x-6 overflow-x-auto pb-2 pr-4 sm:flex-wrap sm:overflow-visible sm:pr-0",
+    // A phone row is a 56px tile beside the text; md returns the sheet.
+    expect(row).toContain(
+      "grid-cols-[3.5rem_minmax(0,1fr)] items-start gap-x-3.5 border-b border-hairline py-4",
     );
-    expect(workshops).toContain("pt-14 sm:pt-20");
+    expect(row).toContain("md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-stretch md:gap-10 md:py-10");
+    // The summary is md-only; "Du gehst mit" is one clamped sentence.
+    expect(row).toContain('className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block"');
+    expect(row).toContain("max-md:line-clamp-2");
+    // The link covers the row on a phone; the text keeps the full width.
+    expect(row).toContain("max-md:absolute max-md:inset-0");
+    expect(row).not.toContain("grid-cols-[minmax(0,1fr)_2.75rem]");
+    // The cover-band index repeats the list, so it only appears from md.
+    expect(workshops).toContain('className="mt-12 hidden border-t border-hairline pt-2 md:block"');
+    expect(workshops).toContain("pb-10 pt-7 sm:pb-24 sm:pt-20");
+    expect(workshops).toContain('layout="rail"');
+    // The route section starts at sm, so the list follows the cover.
+    expect(workshops).toContain('className="hidden pt-6 sm:block sm:pt-20"');
   });
 
   it("keeps the demo cover compact without moving the desktop console", () => {
@@ -173,5 +183,74 @@ describe("catalog surfaces below lg", () => {
     );
     expect(ledger).toContain("grid-cols-2 border-l border-t border-foreground");
     expect(ledger).toContain("sm:grid-cols-4");
+  });
+});
+
+// /kurse is the fifth catalog surface. Its atlas is a client island (goal and
+// level state), so it sits outside the server-only list above, but it follows
+// the same pairing rule: every phone value is handed back at a breakpoint.
+const KURSE = [
+  "kurse/page.tsx",
+  "kurse/learning-atlas.tsx",
+  "kurse/course-ledger-row.tsx",
+] as const;
+
+function kurseSource(path: (typeof KURSE)[number]): string {
+  return readFileSync(join(__dirname, path), "utf8");
+}
+
+describe("/kurse below lg", () => {
+  it.each(KURSE)(
+    "restores every element %s hides or reorders on phones",
+    (path) => {
+      for (const list of classLists(kurseSource(path))) {
+        if (hasUtility(list, "hidden")) {
+          expect(list).toMatch(/\b(?:sm|md|lg|xl):(?:block|flex|inline|inline-flex|inline-block|grid)\b/);
+        }
+        if (hasUtility(list, "order-first") || hasUtility(list, "-order-1")) {
+          expect(list).toMatch(/\b(?:sm|md|lg|xl):order-none\b/);
+        }
+      }
+    },
+  );
+
+  it("sets the hero, heads and rows one step smaller on phones and pairs each with its reviewed size", () => {
+    const page = kurseSource("kurse/page.tsx");
+    const atlas = kurseSource("kurse/learning-atlas.tsx");
+    const row = kurseSource("kurse/course-ledger-row.tsx");
+
+    // Hero: a 30px headline and a 15px lead, the fluid tokens from sm.
+    expect(page).toContain("text-[1.875rem]/[1.08]");
+    expect(page).toContain("sm:text-fluid-h1");
+    expect(page).toContain("text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-lead");
+    expect(page).toContain("px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10");
+    // The "Unsicher?" line is the link's 44px target on a phone, and the
+    // short cost note trades places with the full one at sm.
+    expect(page).toContain("max-sm:flex max-sm:flex-wrap max-sm:items-center");
+    expect(page).toMatch(/accessBodyShort[\s\S]*max-sm:hidden/);
+    expect(page).toContain('size="compact"');
+
+    // Atlas and ledger heads: 22px on a phone, the fluid h2 from sm.
+    // The goal question leaves the phone page (the chips read as the
+    // question); the ledger head stays.
+    expect(atlas).toContain("text-[1.375rem]/[1.15] font-bold text-foreground max-sm:sr-only sm:text-fluid-h2");
+    expect(atlas).toContain("text-[1.375rem]/[1.15] font-bold text-foreground sm:text-fluid-h2");
+    // The goal rail scrolls below lg and is a joined grid from lg.
+    expect(atlas).toContain("flex w-max gap-2 px-4 sm:px-6 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-0 lg:px-0");
+
+    // A row keeps its 44px title target while giving 6px back on a phone.
+    expect(row).toContain("-my-1.5 flex min-h-11");
+    expect(row).toContain("sm:my-0 sm:inline-flex");
+    expect(row).toContain("flex h-8 items-center");
+    expect(row).toContain("sm:h-11");
+    // From lg the right-hand cells span both rows, so the links line stays
+    // directly under the promise as it did inside the text column.
+    expect(row).toContain("lg:col-start-3 lg:row-span-2 lg:row-start-1");
+    expect(row).toContain("xl:col-start-4 xl:row-span-2 xl:row-start-1");
+    // The phone moves the action first; the DOM keeps the desktop order.
+    expect(row).toContain("max-lg:order-first xl:col-start-4");
+    // Short promise below sm, full promise from sm.
+    expect(row).toContain('className="sm:hidden"');
+    expect(row).toContain('className="max-sm:sr-only"');
   });
 });

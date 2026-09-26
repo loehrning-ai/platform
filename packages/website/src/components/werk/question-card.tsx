@@ -11,6 +11,11 @@ export type QuestionCardProps = {
   readonly tone?: "paper" | "dark";
   /** `hero` sets the question larger, for a cover. */
   readonly size?: "default" | "hero";
+  /**
+   * `compact` tightens the card below sm (smaller pictogram, padding and
+   * question type) and hands back the default values from sm.
+   */
+  readonly density?: "default" | "compact";
   readonly className?: string;
 };
 
@@ -28,15 +33,19 @@ export function QuestionCard({
   label,
   tone = "paper",
   size = "default",
+  density = "default",
   className,
 }: QuestionCardProps) {
   const dark = tone === "dark";
+  const compact = density === "compact";
 
   return (
     <figure
       data-question-card={tone}
       className={cx(
         "relative grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-4 border py-5 pl-7 pr-6 sm:grid-cols-[2.5rem_minmax(0,1fr)]",
+        compact &&
+          "grid-cols-[1.5rem_minmax(0,1fr)] gap-3 py-3.5 pl-5 pr-4 sm:gap-4 sm:py-5 sm:pl-7 sm:pr-6",
         dark ? "dark-section border-dark-fg bg-dark-bg" : "border-foreground bg-card",
         className,
       )}
@@ -46,7 +55,11 @@ export function QuestionCard({
         data-question-card-bar=""
         className="absolute -inset-y-px -left-px w-1.5 bg-mennige"
       />
-      <Pictogram name="question" strokeWidth={2} className="size-8 text-foreground sm:size-10" />
+      <Pictogram
+        name="question"
+        strokeWidth={2}
+        className={cx("size-8 text-foreground sm:size-10", compact && "size-6")}
+      />
       <div className="min-w-0">
         {label ? (
           <figcaption className="text-label text-muted-foreground">{label}</figcaption>
@@ -58,6 +71,7 @@ export function QuestionCard({
             size === "hero"
               ? "text-[1.375rem] leading-snug sm:text-[1.75rem] sm:leading-[1.2]"
               : "text-[1.25rem] leading-snug sm:text-[1.375rem]",
+            compact && "text-[1.0625rem]",
           )}
         >
           {question}

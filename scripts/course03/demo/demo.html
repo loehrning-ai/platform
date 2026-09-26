@@ -67,6 +67,7 @@ main:focus{outline:none}
 .route a[aria-current="step"]::before{background:var(--ink);box-shadow:inset 0 0 0 3px var(--ink),inset 0 0 0 6px var(--papier)}
 .route a:hover{color:var(--ink)}
 .route .t{font-weight:400;font-size:13px;color:var(--slate-soft)}
+.route .n,.lede--short,.caption--short{display:none}
 @media (min-width:900px){.route-bar{position:sticky;top:0;z-index:10}}
 
 /* ------------------------------------------------ beats */
@@ -112,6 +113,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 details.more>summary:hover{color:var(--mennige-deep)}
 pre.code{position:relative;margin:8px 0 0;padding:14px 16px;max-width:100%;overflow-x:auto;background:var(--beton);border-top:2px solid var(--ink);font-size:13px;line-height:1.55;white-space:pre;tab-size:2}
 pre.code code{font-size:inherit;overflow-wrap:normal}
+.deny pre.code{white-space:pre-wrap;overflow-wrap:anywhere}
 
 /* beat 1 */
 .b1{display:grid;gap:24px;grid-template-columns:minmax(0,1fr);grid-template-areas:"q" "run" "look"}
@@ -308,11 +310,11 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
 .wf-back a{display:inline-flex;align-items:center;min-height:44px;color:#121212;text-decoration:none;font-weight:600}
 .wf-back a:hover{color:#97300f;text-decoration:underline;text-underline-offset:4px}
 .wf-back-alt{font-weight:400!important;color:#4f4640!important}
-.wf-mats{flex-basis:100%;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin:0 0 -1px;padding:0;scroll-padding-inline:16px;scroll-snap-type:x proximity}
+.wf-mats{flex-basis:100%;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin:0 0 -1px;padding:0;scroll-padding-inline:48px;scroll-snap-type:x proximity}
 .wf-mats::-webkit-scrollbar{display:none}
-.wf-mats[data-more="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}
-.wf-mats[data-more="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px);mask-image:linear-gradient(90deg,transparent,#000 48px)}
-.wf-mats[data-more="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}
+.wf-mats[data-more="r"]{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 32px),transparent)}
+.wf-mats[data-more="l"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px);mask-image:linear-gradient(90deg,transparent,#000 32px)}
+.wf-mats[data-more="lr"]{-webkit-mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(90deg,transparent,#000 32px,#000 calc(100% - 32px),transparent)}
 .wf-mats a{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 20px 0 0;margin-right:4px;color:#4f4640;text-decoration:none;white-space:nowrap;font-weight:500;border-bottom:3px solid transparent;scroll-snap-align:start;transition:color 160ms var(--ease),border-color 160ms var(--ease)}
 .wf-mats a::before{content:"";flex:none;width:8px;height:8px;border:2px solid #121212;background:#f9f7f2}
 .wf-mats a span{font:500 14px/1 var(--sans);color:#655c54;letter-spacing:0}
@@ -320,20 +322,46 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
 .wf-mats a[aria-current="page"]{color:#121212;font-weight:700;border-bottom-color:#121212}
 .wf-mats a[aria-current="page"]::before{background:#121212}
 .wf-mats a[aria-current="page"] span{color:#121212}
+.wf-mats a .wf-long,.wf-mats a .wf-short{font:inherit;color:inherit}
+.wf-mats a .wf-short{display:none}
 .wf-strip a:focus-visible,.wf-mats a:focus-visible,.wf-foot a:focus-visible,.wf-skip:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
+/* phones: brand and back link share one row, the materials are one scroll rail below (as lib/workshop-frame.css) */
+@media (max-width:600px){
+  .wf-strip{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:0 12px;padding-top:0;font-size:14px}
+  .wf-brand img{width:112px}
+  .wf-back{flex-wrap:nowrap;justify-content:flex-end;gap:0 4px;min-width:0}
+  .wf-back a{white-space:nowrap}
+  .wf-back-alt{justify-content:flex-end;min-width:44px;font-size:0}
+  .wf-back-alt::after{content:attr(hreflang);content:attr(hreflang) / "";font-size:14px;text-transform:uppercase}
+  .wf-mats{grid-column:1 / -1}
+  .wf-mats a{min-height:44px;padding-right:12px}
+  .wf-mats a .wf-long{display:none}.wf-mats a .wf-short{display:inline}
+  .wf-mats a{padding-right:10px;margin-right:0}.wf-mats a:last-child{padding-right:0}
+}
+@media (max-width:374px){.wf-brand{min-width:44px}.wf-brand img{width:30px;height:30px;object-fit:cover;object-position:0 50%}}
 .wf-foot{box-sizing:border-box;max-width:var(--wf-max);margin:64px auto 0;padding:20px var(--wf-gutter) 32px;border-top:1px solid #d4cec5;color:#4f4640;font:400 14px/1.5 var(--sans)}
 .wf-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .wf-foot a:hover{color:#97300f}
+@media (max-width:600px){.wf-foot{margin-top:32px}}
 
 @media (max-width:699px){
   body{font-size:16px}
   .head{padding-top:24px}
-  .route{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:0}
-  .route li:nth-child(3)::after{display:none}
-  .route a{min-height:48px;font-size:13px}
-  .route .t{display:none}
+  .head .lede{margin-top:12px;font-size:16px}
+  .lede-more{display:none}
+  .head .caption{margin-top:10px;font-size:13px}
+  /* phones: six numbered 44px stations on one row; the step names live in each link's aria-label */
+  .route-bar{margin-top:16px}
+  .route a{align-items:center;justify-content:center;width:44px;min-height:44px;margin:6px auto;padding:0}
+  .route a::before{display:none}
+  .route .nm,.route .t{display:none}
+  .route .n{display:grid;place-items:center;position:relative;z-index:1;box-sizing:border-box;width:30px;height:30px;border:2px solid var(--ink);background:var(--papier);color:var(--ink);font:600 14px/1 var(--sans);font-feature-settings:"tnum" 1}
+  .route li::after{left:calc(50% + 15px);right:calc(15px - 50%);top:28px}
+  .route li.is-past .n{background:var(--ink);color:var(--papier)}
+  .route a[aria-current="step"] .n{background:var(--ink);color:var(--papier);outline:2px solid var(--ink);outline-offset:2px}
+  .lede--long,.caption--long{display:none}
+  .head .lede--short,.head .caption--short{display:block}
   .beat{padding-top:36px}
-  .wf-mats a{padding-right:12px}
   .qcard>.caption{display:none}
   .pair thead .i,.pair thead .ev__row:nth-child(2) .swatch{display:none}
   .pair thead th{font-size:13px;padding:10px 8px}
@@ -341,6 +369,12 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
   .pair .db.r{box-shadow:none;border-right:1px solid var(--ink)}
   .pair tbody td.db.r{padding-left:0}
   .pair .chip{padding:3px 6px;gap:4px}
+  .pair tbody .chip{padding:3px;gap:0}
+  .pair tbody .chip__t{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+  .pair thead .ev__row:nth-child(2){display:block}
+  .pair thead .chip{display:inline-flex;white-space:nowrap}
+  .pair thead .chip .i{display:block}
+  .pair thead .chip__t{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
   .gaps .chip{font-size:14px}
   .beat__body{margin-top:20px}
   .qcard blockquote{font-size:18px}
@@ -352,8 +386,15 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
   .vals dd{font-size:22px}
   .vals div{padding:7px 0}
   .look li{padding:3px 0;font-size:16px}
-  .vote{margin-top:24px;padding:18px 16px}
-  .vote label{min-height:46px;padding:8px 8px 8px 2px}
+  /* the vote is a ruled block, not a filled box: kicker, question, options, then the privacy note */
+  .vote{display:flex;flex-direction:column;margin-top:24px;padding:14px 0 12px;background:none;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+  .vote .side{display:contents}
+  .vote .opts-wrap{order:1;margin-top:6px}
+  .vote .hint{order:2;margin-top:4px;font-size:13px}
+  .vote legend{font-size:19px}
+  .vote .opts{margin-top:10px}
+  .vote label{min-height:44px;padding:6px 8px 6px 2px;font-size:16px}
+  .vote .status{margin-top:4px;min-height:0}
   .plot{--h:236px;--neg:46px;--top:40px}
   .bar b{font-size:13px}
   .blanks{margin-top:10px;gap:8px}
@@ -375,6 +416,19 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
   .rules li{padding:8px 0}
   .stamp{font-size:16px}
   .hood>summary{font-size:19px}
+}
+@media (max-width:380px){
+  .head{padding-top:16px}
+  .head h1{font-size:32px}
+  .head .lede{font-size:15px;line-height:1.45}
+  .route-bar{margin-top:10px}
+  .beat{padding-top:26px}
+  .beat__body{margin-top:14px}
+  .kopf h2{font-size:22px}
+  .pair th,.pair td{padding:6px 4px}
+  .pair tbody td.run.r,.pair tbody td.db.l{font-size:16px}
+  .pair thead th{padding:10px 6px}
+  .pair thead code{overflow-wrap:normal}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -420,28 +474,30 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
     <a class="wf-back-alt" href="/workshops/datenbereitschaft-fuer-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
   </nav>
   <nav class="wf-mats" aria-label="Workshop materials">
-    <a href="./slides.html"><span>01</span>Interactive course</a>
-    <a href="./guide.html"><span>02</span>Learner guide</a>
-    <a href="./demo.html" aria-current="page"><span>03</span>Interactive demo</a>
+    <a href="./slides.html"><span>01</span><span class="wf-long">Interactive course</span><span class="wf-short">Course</span></a>
+    <a href="./guide.html"><span>02</span><span class="wf-long">Learner guide</span><span class="wf-short">Guide</span></a>
+    <a href="./demo.html" aria-current="page"><span>03</span><span class="wf-long">Interactive demo</span><span class="wf-short">Demo</span></a>
   </nav>
 </header>
 
 <main id="main" tabindex="-1">
 <header class="head wrap">
-  <p class="label">Workshop 03 · Interactive demo · 10 minutes</p>
+  <p class="label">Workshop 03 · Interactive demo · 10 min</p>
   <h1>Ending MRR, asked twice</h1>
-  <p class="lede">In <span data-v="recorded.month">August 2026</span> an AI answered one question about FOLDLINE, a made-up software company with <span data-v="company.accounts">144</span> business accounts. The first run read <span data-v="bad.count">seven</span> raw export tables. The second run read <span data-v="ready.count">five</span> approved views through a login that can read nothing else. This page replays both runs and checks them against the database.</p>
-  <p class="caption">Replayed data. The AI runs were recorded on <span data-v="recorded.on">23 Aug 2026</span>, and their SQL ran again on PostgreSQL <span data-v="postgres">16.13</span> on <span data-v="captured.on">25 Sep 2026</span>. Nothing on this page calls an AI or a database.</p>
+  <p class="lede lede--long">In <span data-v="recorded.month">August 2026</span> an AI answered one question about FOLDLINE, a made-up software company with <span data-v="company.accounts">144</span> business accounts. The first run read <span data-v="bad.count">seven</span> raw export tables. The second run read <span data-v="ready.count">five</span> approved views through a login that can read nothing else.<span class="lede-more"> This page replays both runs and checks them against the database.</span></p>
+  <p class="lede lede--short">An AI answered one question about FOLDLINE, a made-up company, twice: first from <span data-v="bad.count">seven</span> raw export tables, then from <span data-v="ready.count">five</span> approved views behind a login that reads nothing else.</p>
+  <p class="caption caption--long">Replayed data. The AI runs were recorded on <span data-v="recorded.on">23 Aug 2026</span>, and their SQL ran again on PostgreSQL <span data-v="postgres">16.13</span> on <span data-v="captured.on">25 Sep 2026</span>. Nothing on this page calls an AI or a database.</p>
+  <p class="caption caption--short">Replayed runs. No live AI or database calls.</p>
 </header>
 
 <nav class="route-bar" aria-label="Demo route">
   <ol class="route" id="route">
-    <li><a href="#wrong">Wrong answer<span class="t">2 min</span></a></li>
-    <li><a href="#failed">Why it failed<span class="t">3 min</span></a></li>
-    <li><a href="#fix">The fix<span class="t">2 min</span></a></li>
-    <li><a href="#again">Ask again<span class="t">1 min</span></a></li>
-    <li><a href="#limits">Honest limits<span class="t">1 min</span></a></li>
-    <li><a href="#turn">Your turn<span class="t">1 min</span></a></li>
+    <li><a href="#wrong" aria-label="Wrong answer, 2 min"><span class="n" aria-hidden="true">1</span><span class="nm">Wrong answer</span><span class="t">2 min</span></a></li>
+    <li><a href="#failed" aria-label="Why it failed, 3 min"><span class="n" aria-hidden="true">2</span><span class="nm">Why it failed</span><span class="t">3 min</span></a></li>
+    <li><a href="#fix" aria-label="The fix, 2 min"><span class="n" aria-hidden="true">3</span><span class="nm">The fix</span><span class="t">2 min</span></a></li>
+    <li><a href="#again" aria-label="Ask again, 1 min"><span class="n" aria-hidden="true">4</span><span class="nm">Ask again</span><span class="t">1 min</span></a></li>
+    <li><a href="#limits" aria-label="Honest limits, 1 min"><span class="n" aria-hidden="true">5</span><span class="nm">Honest limits</span><span class="t">1 min</span></a></li>
+    <li><a href="#turn" aria-label="Your turn, 1 min"><span class="n" aria-hidden="true">6</span><span class="nm">Your turn</span><span class="t">1 min</span></a></li>
   </ol>
 </nav>
 
@@ -458,7 +514,7 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
     </figure>
     <article class="ev" id="run-bad" aria-labelledby="run-bad-h">
       <p class="ev__row" id="run-bad-h"><svg class="i" aria-hidden="true"><use href="#i-ai-model"/></svg>Recorded AI run on the export tables</p>
-      <p class="ev__row"><span class="swatch swatch--hatch" aria-hidden="true"></span>Picked <code data-v="g01.bad.picked">monthly_revenue</code></p>
+      <p class="ev__row"><span class="swatch swatch--hatch" aria-hidden="true"></span><span>Picked <code data-v="g01.bad.picked">monthly_revenue</code></span></p>
       <dl class="vals">
         <div><dt data-v="g01.m0">April</dt><dd class="num" data-count data-v="g01.bad.v0">−€19,960</dd></div>
         <div><dt data-v="g01.m1">May</dt><dd class="num" data-count data-v="g01.bad.v1">€9,775</dd></div>
@@ -483,9 +539,9 @@ ORDER BY mt.revenue_month</code></pre></details>
     <div class="look">
       <h3 class="h3">Why the answer looks trustworthy</h3>
       <ul>
-        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>The query ran without errors.</li>
-        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>The SQL is valid.</li>
-        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>The result column is named <code data-v="g01.bad.col">ending_mrr</code>.</li>
+        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span>The query ran without errors.</span></li>
+        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span>The SQL is valid.</span></li>
+        <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span>The result column is named <code data-v="g01.bad.col">ending_mrr</code>.</span></li>
         <li><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span><span data-v="g01.bad.rows">Three</span> tidy rows, one per month.</span></li>
       </ul>
     </div>
@@ -493,7 +549,7 @@ ORDER BY mt.revenue_month</code></pre></details>
   <form class="vote" id="vote" aria-describedby="vote-hint">
     <div class="side">
       <p class="label">Your call, before the check</p>
-      <p class="hint" id="vote-hint"><svg class="i i--s" aria-hidden="true"><use href="#i-shield"/></svg>Your choice stays in this browser tab and is not sent anywhere.</p>
+      <p class="hint" id="vote-hint"><svg class="i i--s" aria-hidden="true"><use href="#i-shield"/></svg><span>Your choice stays in this tab. Nothing is sent.</span></p>
     </div>
     <div class="opts-wrap">
       <fieldset>
@@ -662,13 +718,13 @@ ORDER BY mt.revenue_month</code></pre></details>
         <tr>
           <th scope="col" class="run l r" colspan="2"><span class="ev__row"><svg class="i" aria-hidden="true"><use href="#i-ai-model"/></svg>Recorded AI run on the approved views</span><span class="ev__row"><span class="swatch swatch--ink" aria-hidden="true"></span>Picked <code data-v="g01.ready.picked">mrr_summary_monthly</code></span></th>
           <td class="eq" aria-hidden="true"></td>
-          <th scope="col" class="db l r" colspan="2"><span class="ev__row"><svg class="i" aria-hidden="true"><use href="#i-database"/></svg>Database check G01</span><span class="ev__row"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>Values match, <span data-v="g01.ready.matches">3 of 3</span></span></span></th>
+          <th scope="col" class="db l r" colspan="2"><span class="ev__row"><svg class="i" aria-hidden="true"><use href="#i-database"/></svg>Database check G01</span><span class="ev__row"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span class="chip__t">Values match, </span><span data-v="g01.ready.matches">3 of 3</span></span></span></th>
         </tr>
       </thead>
       <tbody>
-        <tr><th scope="row" class="run l" data-v="g01.m0">April</th><td class="run r" data-v="g01.ready.v0">€334,675</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v0">€334,675</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></td></tr>
-        <tr><th scope="row" class="run l" data-v="g01.m1">May</th><td class="run r" data-v="g01.ready.v1">€344,450</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v1">€344,450</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></td></tr>
-        <tr><th scope="row" class="run l" data-v="g01.m2">June</th><td class="run r" data-v="g01.ready.v2">€387,015</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v2">€387,015</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg>Matches</span></td></tr>
+        <tr><th scope="row" class="run l" data-v="g01.m0">April</th><td class="run r" data-v="g01.ready.v0">€334,675</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v0">€334,675</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span class="chip__t">Matches</span></span></td></tr>
+        <tr><th scope="row" class="run l" data-v="g01.m1">May</th><td class="run r" data-v="g01.ready.v1">€344,450</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v1">€344,450</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span class="chip__t">Matches</span></span></td></tr>
+        <tr><th scope="row" class="run l" data-v="g01.m2">June</th><td class="run r" data-v="g01.ready.v2">€387,015</td><td class="eq" aria-hidden="true"><span>=</span></td><td class="db l" data-v="g01.db.v2">€387,015</td><td class="db r"><span class="chip chip--pass"><svg class="i i--s" aria-hidden="true"><use href="#i-pass"/></svg><span class="chip__t">Matches</span></span></td></tr>
       </tbody>
       <tfoot>
         <tr><td class="run l r caption" colspan="2">One recorded run. An observation, not a benchmark.</td><td class="eq" aria-hidden="true"></td><td class="db l r caption" colspan="2">From the kit's <code>70_checks.sql</code>, run on the same data.</td></tr>
@@ -862,8 +918,10 @@ ORDER BY mrr_summary_monthly.month_start</code></pre></details>
       var box = el("div");
       var h = el("h4");
       h.appendChild(el("span", { "class": "swatch " + (key === "bad" ? "swatch--hatch" : "swatch--ink"), "aria-hidden": "true" }));
-      h.appendChild(document.createTextNode(laneName[key] + ", login "));
-      h.appendChild(el("code", null, lane.role));
+      var hn = el("span");
+      hn.appendChild(document.createTextNode(laneName[key] + ", login "));
+      hn.appendChild(el("code", null, lane.role));
+      h.appendChild(hn);
       box.appendChild(h);
       lane.relations.forEach(function (r) {
         var d = el("details", { "class": "rel" });
@@ -941,7 +999,7 @@ try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getIt
 if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
 m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
-if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-48);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
 u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>

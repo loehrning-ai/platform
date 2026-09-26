@@ -417,8 +417,9 @@ function ChoiceProbe({
       >
         {probe.prompt[locale]}
       </Heading>
+      {/* Below sm the choices are hairline rows, not boxes. */}
       <div
-        className="mt-5 grid gap-3"
+        className="mt-5 grid gap-3 max-sm:mt-3 max-sm:gap-0 max-sm:border-t max-sm:border-hairline"
         style={{
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 14rem), 1fr))",
@@ -442,10 +443,10 @@ function ChoiceProbe({
                 }
               }}
               className={cn(
-                "min-h-14 min-w-0 border p-4 text-left outline-none transition-[border-color,background-color,color] duration-[120ms] motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "min-h-14 min-w-0 border p-4 text-left outline-none transition-[border-color,background-color,color] duration-[120ms] motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background max-sm:min-h-12 max-sm:p-3",
                 selected
                   ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-background text-foreground hover:border-foreground hover:bg-card-hover",
+                  : "border-border bg-background text-foreground hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
                 locked && "cursor-not-allowed opacity-75",
               )}
             >
@@ -457,7 +458,7 @@ function ChoiceProbe({
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="mt-2 block break-words text-sm font-bold leading-relaxed">
+              <span className="mt-2 block break-words text-sm font-bold leading-relaxed max-sm:mt-0.5">
                 {entry.label[locale]}
               </span>
             </button>
@@ -1077,7 +1078,9 @@ export function LessonMissionControl({
 
       <div id={`${headingId}-body`} hidden={displayState.collapsed}>
         <div className="min-w-0 border-b border-hairline">
-          <div className="min-w-0 border-b border-hairline bg-card p-2 sm:p-4">
+          {/* Below sm the summary sits flat on the page; from sm it is the
+              lighter-paper card. */}
+          <div className="min-w-0 border-b border-hairline bg-card p-2 max-sm:bg-transparent max-sm:px-0 sm:p-4">
             <LessonMissionFrame
               frame={frame}
               locale={locale}
@@ -1114,7 +1117,7 @@ export function LessonMissionControl({
             </details>
           </div>
 
-          <div className="min-w-0 p-2 sm:p-4">
+          <div className="min-w-0 p-2 max-sm:px-0 sm:p-4">
             <ol
               className="grid min-w-0 grid-cols-3 gap-1"
               aria-label={copy.title}
@@ -1231,7 +1234,7 @@ export function LessonMissionControl({
                     </span>
                   </p>
                   <fieldset
-                    className="mt-3 grid gap-3 sm:mt-5"
+                    className="mt-3 grid gap-2 max-sm:gap-0 max-sm:border-t max-sm:border-hairline sm:mt-5 sm:gap-3"
                     disabled={displayState.revealed || !controlsEnabled}
                     style={{
                       gridTemplateColumns:
@@ -1246,10 +1249,10 @@ export function LessonMissionControl({
                         key={entry.id}
                         data-lesson-prediction-choice
                         className={cn(
-                          "relative flex min-h-14 min-w-0 cursor-pointer items-start gap-3 border p-3 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
+                          "relative flex min-h-12 min-w-0 cursor-pointer items-start gap-3 border p-3 sm:min-h-14 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
                           displayState.predictionId === entry.id
                             ? "border-foreground bg-foreground text-background"
-                            : "border-border bg-background hover:border-foreground hover:bg-card-hover",
+                            : "border-border bg-background hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
                           displayState.revealed && "cursor-default",
                         )}
                       >
@@ -1264,7 +1267,7 @@ export function LessonMissionControl({
                               predictionId: entry.id,
                             }))
                           }
-                          className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)]"
+                          className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-brand-orange)]"
                         />
                         <span className="min-w-0 break-words text-sm font-bold leading-relaxed">
                           <span className="mr-2 text-label text-muted-foreground tabular-nums">
@@ -1449,7 +1452,7 @@ export function LessonMissionControl({
                         onChange={(event) =>
                           setRetrievalRecall(event.target.value)
                         }
-                        className="mt-2 min-h-28 w-full resize-y border border-border bg-background p-3 text-sm leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
+                        className="mt-2 min-h-28 w-full resize-y border border-border bg-background p-3 text-sm max-lg:text-base leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
                       />
                       <p
                         id={`${headingId}-retrieval-recall-hint`}
@@ -1592,7 +1595,7 @@ export function LessonMissionControl({
                       maxLength={280}
                       onChange={(event) => setScratch(event.target.value)}
                       aria-describedby={`${headingId}-scratch-hint`}
-                      className="mt-2 min-h-24 w-full resize-y border border-border bg-background p-3 text-sm leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
+                      className="mt-2 min-h-24 w-full resize-y border border-border bg-background p-3 text-sm max-lg:text-base leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
                     />
                     <p
                       id={`${headingId}-scratch-hint`}
@@ -1643,7 +1646,15 @@ export function LessonMissionControl({
               ) : null}
             </div>
 
-            <div className="mt-7 flex justify-end border-t border-border pt-4">
+            {/* On a phone the reset row waits until there is something to
+                reset; before the first answer it was 70px of chrome. */}
+            <div
+              className={`mt-7 flex justify-end border-t border-border pt-4 max-sm:mt-4 max-sm:pt-3${
+                missionResetEnabled && !hasLessonMissionInteraction(state)
+                  ? " max-sm:hidden"
+                  : ""
+              }`}
+            >
               <button
                 type="button"
                 onClick={resetMission}

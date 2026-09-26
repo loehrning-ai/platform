@@ -49,6 +49,15 @@ describe("DemosPage URL filter boundary", () => {
     );
     // 12 demos, 3 execution modes in use, 0 actions that reach a real system.
     expect(values).toEqual(["12", "3", "0"]);
+    // Below sm the StatRow gives way to one caption line with the same
+    // registry numbers, and the check list (which repeats the lead) hides.
+    expect(stats).toHaveClass("max-sm:hidden");
+    expect(container.querySelector("[data-demo-stats-line]")).toHaveTextContent(
+      "12 Beispiele · 3 Ausführungsarten · 0 Außenaktionen",
+    );
+    expect(container.querySelector("[data-demo-scope]")).toHaveClass(
+      "max-sm:hidden",
+    );
     expect(container.querySelector("[data-demo-atlas-hero]")).toBeTruthy();
   });
 

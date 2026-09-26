@@ -177,7 +177,7 @@ export default async function DataEngineeringFundamentalsLandingPage() {
           secondaryAction={
             <Link
               href="#chapters"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.browse}
             </Link>

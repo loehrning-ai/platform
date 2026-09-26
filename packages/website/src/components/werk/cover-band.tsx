@@ -9,6 +9,12 @@ export type CoverBandProps = {
   /** Show the line globe on the right (md and up). Defaults to true. */
   readonly globe?: boolean;
   readonly globeProps?: Omit<GlobeLinesProps, "className">;
+  /**
+   * Also draw a small, cropped globe in the top-right corner below md, where
+   * the full globe is hidden, so a phone cover does not read as a flat slab.
+   * Static, aria-hidden and masked away from the text. Defaults to false.
+   */
+  readonly phoneGlobe?: boolean;
   /** Extra classes for the inner content container. */
   readonly contentClassName?: string;
   readonly className?: string;
@@ -29,6 +35,7 @@ export function CoverBand({
   labelledBy,
   globe = true,
   globeProps,
+  phoneGlobe = false,
   contentClassName,
   className,
 }: CoverBandProps) {
@@ -48,6 +55,15 @@ export function CoverBand({
             {...globeProps}
             className="absolute right-[-24rem] top-1/2 h-auto w-[68rem] max-w-none -translate-y-[37%] lg:right-[-22rem] lg:w-[78rem]"
           />
+        </div>
+      ) : null}
+      {phoneGlobe ? (
+        <div
+          aria-hidden="true"
+          data-cover-globe-phone=""
+          className="pointer-events-none absolute -right-36 -top-6 -z-10 size-[21rem] [mask-image:linear-gradient(to_right,transparent_8%,black_58%)] md:hidden"
+        >
+          <GlobeLines {...globeProps} className="size-full" />
         </div>
       ) : null}
       <div

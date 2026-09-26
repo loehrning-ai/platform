@@ -19,6 +19,7 @@ import {
   SectionHead,
 } from "@/components/werk";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
+import { splitTitle } from "./workshop-title";
 
 interface Props {
   readonly workshops: readonly Workshop[];
@@ -59,6 +60,14 @@ const MATERIAL_ORDER: readonly WorkshopMaterialRole[] = [
 const MATERIAL_CAP = 4;
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
+
+/**
+ * Each phone tile turns the line globe to a different longitude, so the four
+ * tiles read as one family without repeating the same picture.
+ */
+function tileView(number: WorkshopNumber) {
+  return { centerLat: 28, centerLon: -50 + Number(number) * 35, radius: 500 };
+}
 
 /**
  * Registry prose uses U+2212 for negative numbers. Loehrning Sans draws it as
@@ -160,24 +169,33 @@ export function WorkshopsContent({ workshops, locale }: Props) {
           globe layer: the text column ends before that at 1024 to 1920 in
           both locales, and Germany sits past the 50% stop, so nothing drawn
           runs under the copy. The bottom padding matches the top. */}
+      {/* Phones get a compact band: a cropped corner globe, a 34px heading,
+          the one-sentence lead and the start button, then straight into the
+          list. From sm the reviewed desktop band returns unchanged. */}
       <CoverBand
         labelledBy="workshops-hub-heading"
+        phoneGlobe
         className="md:max-lg:[&>[data-cover-globe]]:hidden lg:[&>[data-cover-globe]]:[mask-image:linear-gradient(to_right,transparent_32%,black_50%)]"
-        contentClassName="pb-12 lg:pb-16"
+        contentClassName="pt-6 pb-6 sm:pt-16 sm:pb-12 lg:pt-24 lg:pb-16"
       >
         <Kicker>{copy.hubKicker(workshops.length)}</Kicker>
         {/* 16ch from xl keeps the EN heading on two lines; below xl the wider
             measure would reach the Germany trace. */}
         <h1
           id="workshops-hub-heading"
-          className="mt-4 max-w-[14ch] text-display font-bold text-balance text-foreground xl:max-w-[16ch]"
+          className="mt-3 text-[1.875rem]/[1.08] font-bold text-balance text-foreground max-sm:tracking-[-0.01em] sm:mt-4 sm:max-w-[14ch] sm:text-display xl:max-w-[16ch]"
         >
           {copy.hubHeading}
         </h1>
-        <p className="mt-6 max-w-[56ch] text-lead md:max-w-[46ch] xl:max-w-[56ch] text-muted-foreground text-pretty">
+        <p className="mt-3 max-w-[40ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:hidden">
+          {copy.hubLeadShort}
+        </p>
+        <p className="mt-6 hidden max-w-[56ch] text-lead md:max-w-[46ch] xl:max-w-[56ch] text-muted-foreground text-pretty sm:block">
           {copy.hubLead}
         </p>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+        {/* Below 360px the button spans the column, so it never breaks into
+            two lines beside a ragged caption. */}
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8 sm:gap-y-3">
           {first ? (
             <ButtonLink
               href={localizeHref(`/workshops/${first.slug}`, locale)}
@@ -194,13 +212,13 @@ export function WorkshopsContent({ workshops, locale }: Props) {
           <nav
             aria-label={copy.hubIndexLabel}
             data-workshop-index=""
-            className="mt-10 border-t border-hairline pt-2 sm:mt-12"
+            className="mt-12 hidden border-t border-hairline pt-2 md:block"
           >
-            {/* A rail on phones: one line, scroll-snapped, with the edge
-                visible. From sm the row wraps and nothing scrolls. */}
-            <ol className="-mb-2 flex snap-x scroll-px-4 gap-x-6 overflow-x-auto pb-2 pr-4 sm:flex-wrap sm:overflow-visible sm:pr-0">
+            {/* Below md the compact list itself is the index, so the row of
+                anchors only appears with the two-column sheet. */}
+            <ol className="-mb-2 flex flex-wrap gap-x-6 pb-2">
               {index.map((workshop) => (
-                <li key={workshop.slug} className="shrink-0 snap-start">
+                <li key={workshop.slug} className="shrink-0">
                   <a
                     href={`#workshop-${workshop.slug}`}
                     className="inline-flex min-h-11 items-center gap-2 text-label text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
@@ -217,23 +235,28 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         ) : null}
       </CoverBand>
 
+      {/* Phones skip the route: every workshop page opens with its own
+          agenda, and here it would push the list below the first screen. */}
       <section
         aria-labelledby="workshop-route-heading"
-        className="pt-14 sm:pt-20"
+        className="hidden pt-6 sm:block sm:pt-20"
       >
         <div className={CONTAINER}>
           <SectionHead
             id="workshop-route-heading"
             title={copy.routeHeading}
             caption={copy.routeCaption}
+            size="compact"
           />
-          {/* Captions at 14px so the five columns do not wrap into ragged
-              one-word lines; the route is capped so it reads as deliberate. */}
+          {/* Phones: the five station names on one scroll-snapped rail, no
+              captions. From sm the captions return at 14px so the five
+              columns do not wrap into ragged one-word lines; the route is
+              capped so it reads as deliberate. */}
           <Route
             stations={copy.routeStations.map((station) => ({
               label: station.label,
               caption: (
-                <span className="block text-[0.875rem] leading-snug text-pretty">
+                <span className="hidden text-[0.875rem] leading-snug text-pretty sm:block">
                   {station.caption}
                 </span>
               ),
@@ -241,20 +264,22 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             mode="description"
             label={copy.routeHeading}
             locale={locale}
-            className="mt-8 max-w-[60rem]"
+            layout="rail"
+            className="mt-4 max-w-[60rem] sm:mt-8"
           />
         </div>
       </section>
 
       <section
         aria-labelledby="workshop-list-heading"
-        className="pb-16 pt-14 sm:pb-24 sm:pt-20"
+        className="pb-10 pt-7 sm:pb-24 sm:pt-20"
       >
         <div className={CONTAINER}>
           <SectionHead
             id="workshop-list-heading"
             title={copy.listHeading}
             caption={ordered.length > 1 ? copy.listCaption : undefined}
+            size="compact"
           />
 
           {ordered.length === 0 ? (
@@ -266,13 +291,9 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             </p>
           ) : (
             <ol className="mt-2" data-workshop-list="">
-              {ordered.map((workshop, position) => (
+              {ordered.map((workshop) => (
                 <li key={workshop.slug} className="min-w-0">
-                  <WorkshopRow
-                    workshop={workshop}
-                    locale={locale}
-                    eager={position === 0}
-                  />
+                  <WorkshopRow workshop={workshop} locale={locale} />
                 </li>
               ))}
             </ol>
@@ -281,19 +302,19 @@ export function WorkshopsContent({ workshops, locale }: Props) {
           {/* A note, not a section: two sentences do not earn a Kopflinie. */}
           <div
             data-workshop-teams=""
-            className="mt-10 grid max-w-[64ch] gap-2 border-t border-hairline pt-6"
+            className="mt-6 grid max-w-[64ch] gap-1 border-t border-hairline pt-4 sm:mt-10 sm:gap-2 sm:pt-6"
           >
             <h2
               id="workshop-teams-heading"
-              className="text-[1.25rem] font-bold leading-[1.25] text-foreground"
+              className="text-[1.0625rem] font-bold leading-[1.25] text-foreground sm:text-[1.25rem]"
             >
               {copy.teamsHeading}
             </h2>
-            <p className="text-body text-muted-foreground text-pretty">
+            <p className="text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:text-body">
               {copy.teamsBody(withPresenter)}
             </p>
           </div>
-          <Callout variant="boundary" className="mt-6 max-w-[64ch]">
+          <Callout variant="boundary" className="mt-4 max-w-[64ch] sm:mt-6">
             {copy.boundary}
           </Callout>
         </div>
@@ -305,11 +326,9 @@ export function WorkshopsContent({ workshops, locale }: Props) {
 function WorkshopRow({
   workshop,
   locale,
-  eager,
 }: {
   readonly workshop: Workshop;
   readonly locale: Locale;
-  readonly eager: boolean;
 }) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
   const headingId = `workshop-${workshop.slug}-heading`;
@@ -325,7 +344,16 @@ function WorkshopRow({
       : null,
     copy.minutesSelfStudy(workshop.minutesSelfStudy),
   ].filter((part): part is string => part !== null);
+  const isNew = NEW_WORKSHOPS.has(workshop.number);
+  const isStart = workshop.number === RECOMMENDED_START;
+  const title = splitTitle(workshop.title);
 
+  // Below md a row is a list line, not a card: a 56px graphit tile with the
+  // number, a duration line, the title head and one flowing "you leave with"
+  // sentence, with an arrow top right. The summary, the question, the need,
+  // the materials and the live date live on the workshop page. The row bleeds
+  // to the screen edge so the tap highlight and hairline run full width. From
+  // md the same DOM is the reviewed two-column sheet.
   return (
     <article
       id={`workshop-${workshop.slug}`}
@@ -333,19 +361,34 @@ function WorkshopRow({
       aria-labelledby={headingId}
       // The link's ::after makes the whole row clickable, so keyboard focus
       // rings the whole row too. Without :has() the link keeps its own ring.
-      className="group relative grid min-w-0 scroll-mt-24 gap-6 border-b border-hairline py-10 outline-offset-4 has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-10"
+      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[3.5rem_minmax(0,1fr)] items-start gap-x-3.5 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-stretch md:gap-10 md:py-10"
     >
       <figure className="min-w-0">
+        <div
+          aria-hidden="true"
+          data-workshop-tile=""
+          className="relative isolate flex size-14 items-end overflow-hidden bg-dark-bg p-1.5 md:hidden"
+        >
+          <GlobeLines
+            highlightGermany={false}
+            step={15}
+            view={tileView(workshop.number)}
+            className="absolute -right-7 -top-7 -z-10 size-[4.75rem] max-w-none"
+          />
+          <span className="text-[1.0625rem] font-bold leading-none tabular-nums text-dark-fg">
+            {workshop.number}
+          </span>
+        </div>
         {DECK_COVERS.has(workshop.number) ? (
-          <div className="aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground">
+          <div className="hidden aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground md:block">
             <Image
               src={`/workshops/${workshop.slug}/card-preview.webp`}
               alt=""
               width={1024}
               height={576}
-              {...(eager
-                ? { loading: "eager" as const, fetchPriority: "high" as const }
-                : { loading: "lazy" as const })}
+              // Below the cover band at every width, and hidden on phones,
+              // where a lazy image in a display:none box is never fetched.
+              loading="lazy"
               sizes="(min-width: 1200px) 470px, (min-width: 768px) 40vw, calc(100vw - 32px)"
               className="size-full object-cover"
             />
@@ -353,33 +396,63 @@ function WorkshopRow({
         ) : (
           <MiniCover workshop={workshop} />
         )}
-        <figcaption className="mt-2 text-caption text-muted-foreground">
+        <figcaption className="mt-2 hidden text-caption text-muted-foreground md:block">
           {workshop.format}
         </figcaption>
       </figure>
 
       <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        {/* The arrow sits beside the title, so only the title keeps clear
+            of it (pr-8); the meta line uses the full width. */}
+        <p
+          data-workshop-meta=""
+          className="text-caption text-muted-foreground tabular-nums md:hidden"
+        >
+          {isStart ? (
+            <>
+              <span className="font-semibold text-foreground">
+                {copy.startHere}
+              </span>
+              {" · "}
+            </>
+          ) : null}
+          {isNew ? (
+            <>
+              <span className="font-semibold text-foreground">
+                {copy.newBadge}
+              </span>
+              {" · "}
+            </>
+          ) : null}
+          <span className="whitespace-nowrap">
+            {copy.rowTimes(workshop.minutesLive, workshop.minutesSelfStudy)}
+          </span>
+        </p>
+        <div className="hidden flex-wrap items-center gap-x-3 gap-y-2 md:flex">
           <Kicker>
             {[copy.workshopNumber(workshop.number), ...times].join(" · ")}
           </Kicker>
-          {NEW_WORKSHOPS.has(workshop.number) ? (
-            <Chip>{copy.newBadge}</Chip>
-          ) : null}
+          {isNew ? <Chip>{copy.newBadge}</Chip> : null}
         </div>
+        {/* A phone row shows the title head only; the subtitle stays in the
+            heading's text and accessible name. */}
         <h3
           id={headingId}
-          className="mt-2 max-w-[28ch] text-[1.5rem] font-bold leading-[1.2] tracking-[-0.01em] text-foreground text-balance decoration-2 underline-offset-4 group-hover:underline sm:text-[1.75rem]"
+          className="mt-0.5 max-w-[28ch] pr-8 text-[1.0625rem] font-bold leading-[1.2] tracking-[-0.01em] text-foreground text-balance decoration-2 underline-offset-4 group-hover:underline md:mt-2 md:text-[1.75rem]"
         >
-          {workshop.title}
+          {title.head}
+          {title.subtitle ? (
+            <span className="sr-only md:not-sr-only">: {title.subtitle}</span>
+          ) : null}
         </h3>
-        <p className="mt-3 max-w-[56ch] text-body text-muted-foreground text-pretty">
+        {/* The title is the phone hook; the summary returns from md. */}
+        <p className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block">
           <AmountText text={workshop.summary} />
         </p>
 
         <figure
           data-workshop-question=""
-          className="mt-5 grid max-w-[56ch] grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3"
+          className="hidden max-w-[56ch] grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 md:mt-5 md:grid"
         >
           <Pictogram
             name="question"
@@ -397,24 +470,36 @@ function WorkshopRow({
         </figure>
 
         {/* 73ch at 13px is the 56ch measure of the 17px summary above, so
-            the facts line up with the prose instead of wrapping early. */}
-        <dl className="mt-5 grid max-w-[73ch] gap-y-1 text-caption sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-4">
-          <dt className="font-semibold text-foreground">{copy.leaveWith}</dt>
-          <dd data-workshop-output="" className="text-muted-foreground">
+            the facts line up with the prose instead of wrapping early. On a
+            phone only the first pair stays, as one flowing sentence over the
+            full width, capped at two lines: what you leave with. */}
+        <dl className="mt-1 grid max-w-[73ch] grid-cols-[auto_minmax(0,1fr)] gap-x-1.5 gap-y-1 text-caption max-md:line-clamp-2 md:mt-5 md:gap-x-4">
+          <dt className="font-semibold text-foreground max-md:mr-1 max-md:inline max-md:after:content-[':']">
+            {copy.leaveWith}
+          </dt>
+          <dd
+            data-workshop-output=""
+            className="text-muted-foreground max-md:inline"
+          >
             {workshop.outcome}
           </dd>
           {need ? (
             <>
-              <dt className="mt-2 font-semibold text-foreground sm:mt-0">
+              <dt className="hidden font-semibold text-foreground md:block">
                 {copy.requirementLabel}
               </dt>
-              <dd className="text-muted-foreground text-pretty">{need}</dd>
+              <dd className="hidden text-muted-foreground text-pretty md:block">
+                {need}
+              </dd>
             </>
           ) : null}
-          <dt className="mt-2 font-semibold text-foreground sm:mt-0">
+          <dt className="hidden font-semibold text-foreground md:block">
             {copy.materialLabel}
           </dt>
-          <dd data-workshop-roles="" className="text-muted-foreground">
+          <dd
+            data-workshop-roles=""
+            className="hidden text-muted-foreground md:block"
+          >
             {/* Each separator stays on the line of the word before it. */}
             {roles.map((role, position) => (
               <span key={role} className="whitespace-nowrap">
@@ -425,22 +510,24 @@ function WorkshopRow({
           </dd>
         </dl>
         {workshop.provenance.liveRunAt ? (
-          <p className="mt-2 text-caption text-muted-foreground">
+          <p className="mt-2 hidden text-caption text-muted-foreground md:block">
             {copy.liveTested(formatDate(workshop.provenance.liveRunAt, locale))}
           </p>
         ) : null}
 
         {/* One link per row. Its ::after stretches over the whole row, so the
             cover and the text are clickable too; the row carries the focus
-            ring where :has() is supported. */}
+            ring where :has() is supported. On a phone the link itself covers
+            the row and shows only the arrow, top right beside the title; the
+            label stays its name. */}
         <Link
           href={localizeHref(`/workshops/${workshop.slug}`, locale)}
           // Starts with the visible label (WCAG 2.5.3). An sr-only span would
           // be blockified inside inline-flex and put a space before the colon.
           aria-label={`${copy.viewWorkshop}: ${workshop.title}`}
-          className="mt-4 inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] after:absolute after:inset-0 hover:decoration-foreground group-hover:decoration-foreground motion-reduce:transition-none supports-[selector(:has(*))]:focus-visible:outline-none"
+          className="inline-flex min-h-11 min-w-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 hover:decoration-foreground group-hover:decoration-foreground motion-reduce:transition-none supports-[selector(:has(*))]:focus-visible:outline-none max-md:absolute max-md:inset-0 max-md:items-start max-md:justify-end max-md:px-4 max-md:pt-[2.375rem] sm:max-md:px-6 md:mt-4"
         >
-          {copy.viewWorkshop}
+          <span className="max-md:sr-only">{copy.viewWorkshop}</span>
           <ArrowGlyph />
         </Link>
       </div>
@@ -459,7 +546,7 @@ function MiniCover({ workshop }: { readonly workshop: Workshop }) {
     <div
       aria-hidden="true"
       data-workshop-mini-cover=""
-      className="relative isolate aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground"
+      className="relative isolate hidden aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground md:block"
     >
       <GlobeLines
         highlightGermany={false}

@@ -81,7 +81,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Kostenloser Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
       audience: "Erwachsene ohne technische Vorkenntnisse",
     },
-    eyebrow: "KI-Führerschein · Grundlagenkurs · kostenlos",
+    eyebrow: "KI-Führerschein · Grundlagenkurs",
     heading: "KI im Alltag:",
     headingAccent: "Was du wissen solltest.",
     introduction:
@@ -146,7 +146,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
         "Free online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
       audience: "Adults without a technical background",
     },
-    eyebrow: "Everyday AI Literacy · Foundation course · free",
+    eyebrow: "Everyday AI Literacy · Foundation course",
     heading: "AI at work:",
     headingAccent: "what you need to know.",
     introduction:
@@ -283,10 +283,11 @@ function courseGraph(locale: Locale) {
 }
 
 /**
- * The clause after the colon is an inline-block: it starts a new line as a
- * whole, so the question word ("Was") never hangs at the end of line one, and
- * it still wraps inside itself on a phone. Plain spaces keep the accessible
- * name identical to the copy.
+ * From sm the clause after the colon is an inline-block: it starts a new line
+ * as a whole, so the question word ("Was") never hangs at the end of line one.
+ * On a phone that block cannot fit one line anyway and wrapped inside itself,
+ * which cost the H1 a third line; there it flows inline and the H1 takes two.
+ * Plain spaces keep the accessible name identical to the copy.
  */
 function KfHeading({
   lead,
@@ -297,7 +298,7 @@ function KfHeading({
 }) {
   return (
     <>
-      {lead} <span className="inline-block">{accent}</span>
+      {lead} <span className="sm:inline-block">{accent}</span>
     </>
   );
 }

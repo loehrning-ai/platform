@@ -437,6 +437,33 @@ function auditTemplate(name, tpl) {
   }
 }
 
+/* ------------------------------------------------------------------ section folds (guide)
+   {{fold}} ... {{endfold}} wraps a section's body in <details class="g-fold">. The HTML never sets
+   "open": on phones the section shows its heading and key point with a "Read the section" toggle;
+   from 641px w04-pages.css renders the body through ::details-content and hides the toggle, so the
+   wide layout reads as before (w04-pages.js opens the folds in browsers without ::details-content).
+   {{fold:terms}} and {{fold:links}} only change the toggle's words. The toggle names its section
+   for screen readers, so a list of controls does not read "Read the section" eighteen times. */
+const FOLD_WORDS = { "": ["Read the section", "Close the section"], terms: ["Show the terms", "Hide the terms"], links: ["Show the links", "Hide the links"] };
+function folds(name, html) {
+  return html.replace(/<section class="g-sec" aria-labelledby="([^"]+)">[\s\S]*?<\/section>/g, (sec, id) => {
+    if (!sec.includes("{{fold")) return sec;
+    const h2 = new RegExp(`<h2 id="${id}"[^>]*>([\\s\\S]*?)</h2>`).exec(sec);
+    const title = h2 ? h2[1].replace(/<span class="g-n">[^<]*<\/span>/, "").replace(/<[^>]+>/g, "").trim() : "";
+    if (!title) fail(`${name}: fold in section ${id} without a heading`);
+    const opens = sec.match(/\{\{fold(?::[a-z]+)?\}\}/g) || [];
+    const closes = sec.match(/\{\{endfold\}\}/g) || [];
+    if (opens.length !== 1 || closes.length !== 1) fail(`${name}: section ${id} needs exactly one {{fold}} and one {{endfold}}`);
+    return sec
+      .replace(/\{\{fold(?::([a-z]+))?\}\}/, (all, variant = "") => {
+        const words = FOLD_WORDS[variant];
+        if (!words) { fail(`${name}: unknown fold ${all}`); return all; }
+        return `<details class="g-fold"><summary><span class="pm" aria-hidden="true"></span><span class="g-fold__show">${words[0]}</span><span class="g-fold__hide">${words[1]}</span><span class="visually-hidden">: ${title}</span></summary><div class="g-fold__b">`;
+      })
+      .replace("{{endfold}}", "</div></details>");
+  });
+}
+
 /* ------------------------------------------------------------------ build one page */
 function render(name, tpl) {
   auditTemplate(name, tpl);
@@ -451,7 +478,7 @@ function render(name, tpl) {
       case "fig": if (!FIGS[a]) { fail(`unknown figure ${a}`); return all; } return FIGS[a]();
       case "strip": return strip(a);
       case "sec": sec += 1; return String(sec);
-      case "toc": case "toccount": return all; // second pass
+      case "toc": case "toccount": case "fold": case "endfold": return all; // second pass
       default: fail(`${name}: unknown placeholder ${all}`); return all;
     }
   });
@@ -460,6 +487,7 @@ function render(name, tpl) {
     const list = items.map(([, id, n, title]) => `<li><a href="#${id}"><span>${n.padStart(2, "0")}</span>${title.replace(/<[^>]+>/g, "")}</a></li>`).join("");
     html = html.split("{{toc}}").join(`<ol>${list}</ol>`).replace("{{toccount}}", String(items.length));
   }
+  if (html.includes("{{fold")) html = folds(name, html);
   // hyphenated IDs (F-EL-LB-2025, E-WS-01, I-WS-GO) never break at a hyphen
   html = html.replace(/<code>([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)<\/code>/g, '<code class="nowrap">$1</code>');
   // output checks

@@ -438,6 +438,7 @@
       line-height: 1.45;
       tab-size: 2;
     }
+    pre code { font-size: inherit; }
 
     code { font-family: inherit; }
     .ck { color: #121212; }
@@ -2302,6 +2303,16 @@
     .next-list a { color: #121212; font-weight: 700; text-underline-offset: 3px; text-decoration-color: #827970; }
     .next-list a:hover { color: #97300f; text-decoration-color: currentColor; }
     .next-rule, .next-links { padding: 18px 20px; }
+    /* phones: one kicker line, then the H1 and the lead in the first screen */
+    .cs-short { display: none; }
+    @media (max-width: 600px) {
+      .paper { padding-top: 12px; }
+      .hero-main { padding-top: 12px; }
+      .s1-main { gap: 12px; }
+      .cs-long, .cs-eyebrow, .cs-disclaimer, .s1-kicker { display: none; }
+      .cs-short { display: inline; }
+      .s1-main h1 { margin: 0; font-size: 32px; line-height: 1.05; }
+    }
   </style>
 <meta name="theme-color" content="#f3f0e9" />
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
@@ -2329,9 +2340,9 @@
 <header class="hero screen s1-bigpicture">
   <div class="hero-main s1-main">
     <div class="brand">
-      <span>Workshop 01 &middot; Forecasting decisions &middot; Business case</span>
+      <span>Workshop 01 &middot; <span class="cs-long">Forecasting decisions &middot; </span>Business case<span class="cs-short"> &middot; practice company, invented figures</span></span>
     </div>
-    <p class="cs-eyebrow">New device launch <span class="sep" aria-hidden="true">|</span> Practice market</p>
+    <p class="cs-eyebrow">New device launch <span class="sep" aria-hidden="true">&middot;</span> Practice market</p>
     <p class="cs-disclaimer">Practice company with invented figures.</p>
     <p class="s1-kicker">System</p>
     <h1>Three teams, one phone launch and a forecast above the stock</h1>
@@ -3176,7 +3187,7 @@ function renderCalendar() {
   [4, 5, 7].forEach(function (i) {
     svg.appendChild(svgEl("circle", { cx: x(i), cy: cy2, r: 6, fill: "#f9f7f2", stroke: red, "stroke-width": 2 }));
   });
-  const guardFs = b.w < 560 ? 11 : 12.5;
+  const guardFs = b.w < 560 ? 12 : 12.5;
   addText(svg, "Leakage guard", x(0), cy2 - 11, { "text-anchor": "start", style: "fill:" + red + ";font-size:12px;font-weight:800;letter-spacing:0.02em" });
   const guardTxt = "use only what is known at forecast time";
   addText(svg, guardTxt, x(0), cy2 + 7, { "text-anchor": "start", style: "fill:" + ink + ";font-size:" + guardFs + "px;font-weight:800" });
@@ -3569,7 +3580,7 @@ try{if(en)sessionStorage.removeItem("wf-lang");else if(!de&&sessionStorage.getIt
 if(!de)return;if(b)b.href="/workshops";a.parentNode.insertBefore(a,m);a.className="wf-back-main";a.textContent="← Zurück zum Workshop";
 m.className="wf-back-alt";m.lang="en";m.hreflang="en";m.textContent="Workshop page in English";})();
 (function(){var n=document.querySelector(".wf-mats");if(!n)return;var c=n.querySelector("[aria-current=page]");
-if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-16);
+if(c&&n.scrollWidth>n.clientWidth)n.scrollLeft=Math.max(0,c.offsetLeft-n.offsetLeft-48);
 function u(){var v=(n.scrollLeft>2?"l":"")+(n.scrollLeft+n.clientWidth<n.scrollWidth-2?"r":"");if(v)n.setAttribute("data-more",v);else n.removeAttribute("data-more")}
 u();n.addEventListener("scroll",u,{passive:true});window.addEventListener("resize",u);})();
 </script>

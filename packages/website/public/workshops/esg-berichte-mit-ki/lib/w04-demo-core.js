@@ -143,6 +143,7 @@ var W04Core = (function () {
       var o = {
         pressed: r.active,
         sw: r.active ? "As the AI did it" : "Fixed",
+        swShort: r.active ? "AI" : "Fixed",
         iso: tenths(iso) === 0 ? "0 t for this number" : t.isolated[method + "_en"] + " t",
         isoZero: tenths(iso) === 0,
         fx: r.active ? signed(r.effect) : "",
@@ -179,6 +180,10 @@ var W04Core = (function () {
         total: num(st.start) + " t",
         dist: tenths(st.deltaT) === 0 ? "0.0 t" : num(Math.abs(st.deltaT)) + " t " + st.side,
         distZero: tenths(st.deltaT) === 0,
+        /* phones show the direction as a sign and keep the word for screen readers */
+        distN: tenths(st.deltaT) === 0 ? "0.0 t" : num(Math.abs(st.deltaT)) + " t",
+        distSign: tenths(st.deltaT) === 0 ? "" : (st.deltaT < 0 ? MINUS : "+"),
+        distSide: tenths(st.deltaT) === 0 ? "" : " " + st.side,
         distPct: tenths(st.deltaT) === 0 ? "matches the right answer" : num(Math.abs(st.deltaPct)) + "% of the right total",
         distW: sc.maxDelta ? r2(Math.abs(st.deltaT) / sc.maxDelta * 100) : 0,
         vs: pct(st.vs2024),

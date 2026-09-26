@@ -329,4 +329,23 @@ describe("ds-v8-scope.css ", () => {
       "48px 0 20px",
     );
   });
+
+  it("scopes the phone landing layer to the landing wrapper below sm", () => {
+    const start = css.indexOf("Landing on phones (below sm)");
+    expect(start).toBeGreaterThan(0);
+    const layer = css.slice(start);
+    expect(layer).toContain("@media (max-width: 639.98px)");
+    const selectors = layer.match(/^\s*\.ds-v8-scope[^{]*\{/gm) ?? [];
+    expect(selectors.length).toBeGreaterThan(20);
+    for (const selector of selectors) {
+      expect(selector).toContain(".ov-landing");
+    }
+    // Square action, no italic accent and no card radius on phones.
+    expect(layer).toMatch(/\.ov-cta-btn \{[^}]*border-radius: 0;/);
+    expect(layer).toMatch(/\.ov-hero-title \.accent,[\s\S]*?font-style: normal;/);
+    expect(layer).toMatch(/\.ov-course \{[^}]*border-radius: 0;/);
+    // The decorative cycle drawing and the repeated pagination are dropped.
+    expect(layer).toMatch(/\.ov-hero-sim \{\s*display: none;/);
+    expect(layer).toMatch(/\.ov-landing \.tb \{\s*display: none;/);
+  });
 });

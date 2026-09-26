@@ -27,12 +27,12 @@ export interface GlobalNavigationCopy {
   readonly openSource: string;
   /**
    * Tab-bar labels. Short by contract: each one has a quarter of a 320px
-   * viewport, which `home` ("Startseite") and `allCourses` ("Alle Kurse")
-   * do not fit. `account` is the fourth tab label and is shared.
+   * viewport, which `home` ("Startseite") does not fit. The two middle tabs
+   * reuse the group labels `learning` and `practice`, so the bar names the
+   * same groups as the header; `account` is the fourth tab label and is
+   * shared.
    */
   readonly start: string;
-  readonly courses: string;
-  readonly tools: string;
   readonly account: string;
   readonly login: string;
   readonly githubOrganisation: string;
@@ -66,8 +66,6 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     aboutTim: "Über mich",
     openSource: "Open Source",
     start: "Start",
-    courses: "Kurse",
-    tools: "Werkzeuge",
     account: "Konto",
     login: "Anmelden",
     githubOrganisation: "loehrning-ai auf GitHub",
@@ -97,8 +95,6 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     aboutTim: "About me",
     openSource: "Open Source",
     start: "Home",
-    courses: "Courses",
-    tools: "Tools",
     account: "Account",
     login: "Login",
     githubOrganisation: "loehrning-ai on GitHub",

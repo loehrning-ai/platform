@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ALL_COURSE_CATALOG,
@@ -11,7 +11,11 @@ import {
   COURSE_LEVEL_LABELS_BY_LOCALE,
   localizeCatalog,
 } from "@/lib/courses/catalog-copy";
-import { coursePromise } from "@/lib/courses/course-hub-copy";
+import {
+  courseDurationShort,
+  coursePromise,
+  coursePromiseShort,
+} from "@/lib/courses/course-hub-copy";
 import { courseGroupFor, courseSections } from "@/lib/courses/tracks";
 import {
   getCompletedLessonsCount,
@@ -35,12 +39,13 @@ import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
 import { cx } from "@/components/werk/cx";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
-import type { CourseAccessBySlug } from "@/lib/courses/access";
+import type { CourseAccess, CourseAccessBySlug } from "@/lib/courses/access";
 import {
   CourseLedgerRow,
   courseAction,
   defaultStat,
   isLiveCourse,
+  sourceRepository,
   type Course,
   type CourseStat,
   type LedgerRowCopy,
@@ -89,7 +94,7 @@ const ATLAS_COPY = {
       "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
     pathHeading: (count: number) => `Dein Pfad · ${count} Kurse`,
     pathStartUnavailable: (title: string) =>
-      `Dein Pfad beginnt mit ${title}, der hier nicht verfügbar ist. Diesen Kurs öffnest du ohne Konto.`,
+      `${title} ist hier nicht verfügbar.`,
     levelLabel: "Kursstufe wählen",
     allLevels: "Alle",
     levelCount: (visible: number, total: number) =>
@@ -97,6 +102,7 @@ const ATLAS_COPY = {
     viewProgress: "Fortschritt in deinem Konto ansehen",
     tryDemo: (count: number) =>
       count > 1 ? `${count} Praxisbeispiele ansehen` : "Praxisbeispiel ansehen",
+    tryDemoPhoneTail: " ansehen",
     sourceCode: "Quellcode",
     sourceCommit: "Commit",
     start: "Kurs starten",
@@ -104,11 +110,15 @@ const ATLAS_COPY = {
     viewRecord: "Abschluss ansehen",
     accountRequired: "Lernkonto nötig",
     unavailable: "Hier nicht verfügbar",
+    groupUnavailable: "hier nicht verfügbar",
+    groupAccountRequired: "Lernkonto nötig",
+    groupSource: "Quellcode aller Technikkurse",
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
     overview: "Kursübersicht",
     accessTerm: "Zugang",
     openAlternative: "Offene Alternative ohne Lernkonto",
     openRecommendation: "Offener Einstieg ohne Lernkonto",
+    openRecommendationShort: "Ohne Konto",
     pathCourse: "Teil deines Pfads",
     goals: LEARNING_GOALS.de,
   },
@@ -131,14 +141,15 @@ const ATLAS_COPY = {
       "Each row says what you can do afterwards. You can open any course directly, with or without a path.",
     pathHeading: (count: number) => `Your path · ${count} courses`,
     pathStartUnavailable: (title: string) =>
-      `Your path starts with ${title}, which is unavailable here. This course opens without an account.`,
+      `${title} isn't available here.`,
     levelLabel: "Choose a course level",
     allLevels: "All",
     levelCount: (visible: number, total: number) =>
       `${visible} of ${total} courses`,
     viewProgress: "View your progress in your account",
     tryDemo: (count: number) =>
-      count > 1 ? `See ${count} applied examples` : "See the applied example",
+      count > 1 ? `${count} applied examples` : "Applied example",
+    tryDemoPhoneTail: "",
     sourceCode: "Source code",
     sourceCommit: "Commit",
     start: "Start course",
@@ -146,11 +157,15 @@ const ATLAS_COPY = {
     viewRecord: "View completion",
     accountRequired: "Account required",
     unavailable: "Unavailable here",
+    groupUnavailable: "unavailable here",
+    groupAccountRequired: "account required",
+    groupSource: "source code of all technical courses",
     unavailableAction: "Unavailable here · Course overview",
     overview: "Course overview",
     accessTerm: "Access",
     openAlternative: "Open alternative without an account",
     openRecommendation: "Open starting point without an account",
+    openRecommendationShort: "No account",
     pathCourse: "Part of your path",
     goals: LEARNING_GOALS.en,
   },
@@ -177,6 +192,10 @@ const ATLAS_COPY = {
       readonly viewProgress: string;
       readonly openAlternative: string;
       readonly openRecommendation: string;
+      readonly openRecommendationShort: string;
+      readonly groupUnavailable: string;
+      readonly groupAccountRequired: string;
+      readonly groupSource: string;
       readonly goals: readonly LearningGoal[];
     }
   >
@@ -215,6 +234,7 @@ export function LearningAtlas({
   const [levelFilter, setLevelFilter] = useState<LevelFilter>("alle");
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
   const levelLabels = COURSE_LEVEL_LABELS_BY_LOCALE[locale];
+  const goalRailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const requestedGoal = new URL(window.location.href).searchParams.get(
@@ -222,6 +242,19 @@ export function LearningAtlas({
     );
     if (isGoalId(requestedGoal)) {
       setGoalId(requestedGoal);
+      // A shared link can name a goal whose chip sits past the phone rail's
+      // edge. Scroll the rail itself, never the page, so the pressed chip is
+      // in view. From lg the rail does not scroll and this is a no-op.
+      const rail = goalRailRef.current;
+      const chip = rail?.querySelector<HTMLElement>(
+        `[data-learning-goal="${requestedGoal}"]`,
+      );
+      if (rail && chip && rail.scrollWidth > rail.clientWidth) {
+        rail.scrollLeft = Math.max(
+          0,
+          chip.offsetLeft - parseFloat(getComputedStyle(rail).scrollPaddingLeft || "0"),
+        );
+      }
     }
 
     return subscribe((progress) => {
@@ -325,13 +358,14 @@ export function LearningAtlas({
   return (
     <div data-testid="learning-atlas">
       <section aria-labelledby="learning-atlas-heading">
-        {/* The Kopflinie head. Below sm the intro stays in the accessibility
-            tree only, so the goal tabs and the recommended course fit the
-            first phone viewport. */}
-        <header className="border-t-2 border-foreground pt-4">
+        {/* The Kopflinie head. Below sm the question and the intro stay in
+            the accessibility tree only: the goal chips read as the question
+            on their own, so the phone hero is followed directly by the
+            choice and the recommended course's action. */}
+        <header className="border-t-2 border-foreground pt-3 max-sm:border-t-0 max-sm:pt-0 sm:pt-4">
           <h2
             id="learning-atlas-heading"
-            className="text-fluid-h2 font-bold text-foreground"
+            className="text-[1.375rem]/[1.15] font-bold text-foreground max-sm:sr-only sm:text-fluid-h2"
           >
             {copy.heading}
           </h2>
@@ -340,63 +374,73 @@ export function LearningAtlas({
           </p>
         </header>
 
-        {/* Four square tabs on one hairline grid: two joined rows of 44px
-            segments below lg, one joined row of 56px segments from lg. The
-            chosen goal is an ink fill, which carries the state without
-            colour. The buttons stay aria-pressed toggles so the choice keeps
-            working as a plain form of four buttons. */}
+        {/* Below lg the four goals are one horizontal rail of square chips
+            that bleeds to the screen edge, so the choice costs one 44px row
+            and a cut chip shows there is more. From lg the same buttons are
+            one joined row of 56px tabs on a shared hairline. The chosen goal
+            is an ink fill, which carries the state without colour. The
+            buttons stay aria-pressed toggles, so the choice keeps working as
+            a plain form of four buttons, and each one is reachable by Tab. */}
         <div
-          className="mt-4 grid grid-cols-2 sm:mt-6 lg:grid-cols-4"
-          role="group"
-          aria-label={copy.goalLabel}
+          ref={goalRailRef}
+          data-learning-goal-rail
+          className="-mx-4 snap-x overflow-x-auto overscroll-x-contain scroll-px-4 [scrollbar-width:none] sm:-mx-6 sm:mt-6 sm:scroll-px-6 lg:mx-0 lg:overflow-visible [&::-webkit-scrollbar]:hidden"
         >
-          {copy.goals.map((candidate, goalIndex) => {
-            const selected = candidate.id === goal.id;
-            return (
-              <button
-                key={candidate.id}
-                type="button"
-                aria-pressed={selected}
-                aria-controls="selected-learning-path"
-                onClick={() => selectGoal(candidate.id)}
-                data-learning-goal={candidate.id}
-                className={cx(
-                  "relative flex min-h-11 min-w-0 items-center border px-3 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:px-4",
-                  goalIndex % 2 === 1 && "-ml-px",
-                  goalIndex === 2 && "lg:-ml-px",
-                  goalIndex >= 2 && "-mt-px lg:mt-0",
-                  selected
-                    ? "z-[1] border-foreground bg-foreground text-background"
-                    : "border-border bg-transparent text-foreground hover:z-[1] hover:border-foreground hover:bg-card-hover",
-                )}
-              >
-                <span className="min-w-0 break-words">{candidate.label}</span>
-              </button>
-            );
-          })}
+          <div
+            className="flex w-max gap-2 px-4 sm:px-6 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-0 lg:px-0"
+            role="group"
+            aria-label={copy.goalLabel}
+          >
+            {copy.goals.map((candidate, goalIndex) => {
+              const selected = candidate.id === goal.id;
+              return (
+                <button
+                  key={candidate.id}
+                  type="button"
+                  aria-pressed={selected}
+                  aria-controls="selected-learning-path"
+                  onClick={() => selectGoal(candidate.id)}
+                  data-learning-goal={candidate.id}
+                  className={cx(
+                    "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
+                    goalIndex > 0 && "lg:-ml-px",
+                    selected
+                      ? "z-[1] border-foreground bg-foreground text-background"
+                      : "border-border bg-transparent text-foreground hover:z-[1] hover:border-foreground hover:bg-card-hover",
+                  )}
+                >
+                  <span className="min-w-0 break-words">{candidate.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div
           id="selected-learning-path"
-          className="mt-6 grid min-w-0 gap-8 sm:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,27rem)] lg:gap-14"
+          className="mt-3 grid min-w-0 gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,27rem)] lg:gap-14"
         >
           <div className="min-w-0" data-testid="selected-path-sequence">
             {/* The tab above already prints the goal; the head names the
                 path. The goal stays in the name so each heading is unique. */}
-            <h3 className="text-fluid-h3 font-bold text-foreground">
+            <h3 className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
               {copy.pathHeading(pathCourses.length)}
               <span className="sr-only">: {goal.label}</span>
             </h3>
-            <p className="mt-1 max-w-[60ch] text-body text-muted-foreground">
+            {/* The pressed chip already names the goal; the summary is
+                orientation for the wider layouts. */}
+            <p className="mt-1 max-w-[60ch] text-body text-muted-foreground max-sm:hidden">
               {goal.summary}
             </p>
 
             {/* The deck's Route, vertical: square stations on a 2px line.
                 Finished courses are solid, the recommended one carries the
                 inset square, open ones are outlined behind a dashed line. The
-                state is also a word inside each link. */}
+                state is also a word inside each link. On a phone each station
+                is one 44px line, title then duration and state; sm stacks
+                the caption under the title again. */}
             <ol
-              className="mt-6 max-w-[34rem]"
+              className="mt-2 max-w-[34rem] sm:mt-6"
               aria-label={copy.pathLabel}
               data-learning-path-stepper
             >
@@ -420,7 +464,7 @@ export function LearningAtlas({
                   <li
                     key={course.slug}
                     data-state={state}
-                    className="relative grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-4 pb-3 last:pb-0"
+                    className="relative grid min-w-0 grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 sm:gap-x-4 sm:pb-3 sm:last:pb-0"
                   >
                     {last ? null : (
                       <span
@@ -443,7 +487,7 @@ export function LearningAtlas({
                     <Link
                       href={localizeHref(course.href, locale)}
                       aria-current={isNext ? "step" : undefined}
-                      className="group flex min-h-11 min-w-0 flex-col items-start gap-0.5 py-2"
+                      className="group flex min-h-11 min-w-0 flex-wrap content-center items-baseline gap-x-2 py-1.5 sm:flex-col sm:flex-nowrap sm:content-normal sm:items-start sm:gap-0.5 sm:py-2"
                     >
                       <span
                         className={cx(
@@ -454,7 +498,11 @@ export function LearningAtlas({
                         {course.title}
                       </span>
                       <span className="text-caption text-muted-foreground tabular-nums">
-                        {course.duration} · {status}
+                        <PhoneDuration
+                          full={course.duration}
+                          short={courseDurationShort(course.slug, locale)}
+                        />{" "}
+                        · {status}
                       </span>
                     </Link>
                   </li>
@@ -464,7 +512,7 @@ export function LearningAtlas({
           </div>
 
           <aside
-            className="order-first min-w-0 border border-hairline bg-card p-5 sm:p-6 lg:order-none lg:self-start"
+            className="order-first min-w-0 border border-hairline bg-card p-4 sm:p-6 lg:order-none lg:self-start"
             aria-live="polite"
             aria-atomic="true"
             data-testid="next-proof"
@@ -472,7 +520,20 @@ export function LearningAtlas({
             {nextCourse && nextStat && nextAction ? (
               <>
                 <p className="text-label text-muted-foreground tabular-nums">
-                  {openDefault ? copy.openRecommendation : copy.nextProof}{" "}
+                  {/* One line at 320: the phone says "Ohne Konto", the
+                      accessible text keeps the full label. */}
+                  {openDefault ? (
+                    <>
+                      <span aria-hidden="true" className="sm:hidden">
+                        {copy.openRecommendationShort}
+                      </span>
+                      <span className="max-sm:sr-only">
+                        {copy.openRecommendation}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{copy.nextProof}</span>
+                  )}{" "}
                   {goal.courseSlugs.includes(nextCourse.slug) ? (
                     <span>
                       ·{" "}
@@ -482,23 +543,42 @@ export function LearningAtlas({
                       )}
                     </span>
                   ) : null}
+                  {/* On a phone the duration joins this line instead of
+                      taking one of its own under the promise. */}
+                  <span className="sm:hidden">
+                    {" · "}
+                    <span className="whitespace-nowrap">
+                      {courseDurationShort(nextCourse.slug, locale) ??
+                        nextCourse.duration}
+                    </span>
+                  </span>
                 </p>
-                <h3 className="mt-2 text-fluid-h3 font-bold text-foreground">
+                <h3 className="mt-1 text-[1.25rem]/[1.2] font-bold text-foreground sm:mt-2 sm:text-fluid-h3">
                   {nextCourse.title}
                 </h3>
-                <p className="mt-2 max-w-[52ch] text-body text-foreground">
-                  {coursePromise(nextCourse.slug, locale) ??
-                    nextCourse.tagline}
+                {/* Under 390px the sheet prints the short promise, so the
+                    Mennige action clears the tab bar on a 568px screen; the
+                    full promise stays in the accessibility tree. */}
+                <p className="mt-1.5 max-w-[52ch] text-[0.9375rem]/[1.5] text-foreground sm:mt-2 sm:text-body">
+                  <PhonePromise
+                    full={
+                      coursePromise(nextCourse.slug, locale) ??
+                      nextCourse.tagline
+                    }
+                    short={coursePromiseShort(nextCourse.slug, locale)}
+                  />
                 </p>
-                <p className="mt-2 text-caption text-muted-foreground tabular-nums">
+                <p className="mt-2 hidden text-caption text-muted-foreground tabular-nums sm:block">
                   {nextCourse.duration}
                 </p>
+                {/* Full width on a phone, label left and arrow right, so the
+                    one Mennige action is a thumb-wide bar. */}
                 <Link
                   href={nextAction.href}
                   prefetch={false}
                   className={cx(
                     BUTTON_CLASSES.paper.primary,
-                    "mt-5 max-w-full py-2",
+                    "mt-3 w-full max-w-full justify-between py-2 sm:mt-5 sm:w-auto sm:justify-start",
                   )}
                 >
                   <span className="min-w-0 break-words">
@@ -510,7 +590,7 @@ export function LearningAtlas({
                 {/* Why the sheet offers a course off the path: the path's
                     own start is unavailable on this deployment. */}
                 {openDefault && pathNextCourse ? (
-                  <p className="mt-4 max-w-[52ch] text-caption text-muted-foreground text-pretty">
+                  <p className="mt-2 max-w-[52ch] text-caption text-muted-foreground text-pretty sm:mt-4">
                     {copy.pathStartUnavailable(pathNextCourse.title)}
                   </p>
                 ) : null}
@@ -533,19 +613,21 @@ export function LearningAtlas({
         </div>
       </section>
 
-      <section aria-labelledby="all-courses-heading" className="mt-16 lg:mt-20">
-        <header className="border-t-2 border-foreground pt-4">
+      <section aria-labelledby="all-courses-heading" className="mt-12 sm:mt-16 lg:mt-20">
+        <header className="border-t-2 border-foreground pt-3 sm:pt-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
             <h2
               id="all-courses-heading"
-              className="text-fluid-h2 font-bold text-foreground"
+              className="text-[1.375rem]/[1.15] font-bold text-foreground sm:text-fluid-h2"
             >
               {copy.allCourses}
             </h2>
+            {/* Below lg the Konto tab and the cost note below already lead
+                to the account, so the phone ledger head keeps its title. */}
             <Link
               href={localizeHref("/konto", locale)}
               prefetch={false}
-              className={BUTTON_CLASSES.paper.text}
+              className={cx(BUTTON_CLASSES.paper.text, "max-lg:hidden")}
             >
               {copy.viewProgress}
               <ArrowGlyph />
@@ -561,7 +643,7 @@ export function LearningAtlas({
           <p
             aria-hidden="true"
             data-path-legend
-            className="mt-2 flex items-center gap-2 text-caption text-muted-foreground"
+            className="mt-1.5 flex items-center gap-2 text-caption sm:mt-2 text-muted-foreground"
           >
             <span className="size-2.5 shrink-0 bg-foreground" />
             {copy.pathCourse}
@@ -569,17 +651,20 @@ export function LearningAtlas({
         </header>
 
         {/* Level chips, phone only. They stick under the compact top bar while
-            the ledger scrolls. "alle" is the server default and hydration
-            never flips a row. js-shell-only: four inert buttons without
-            scripting would be worse than the complete list. */}
+            the ledger scrolls, on screens tall enough to spare the 53px; on a
+            short phone the bar, the top bar and the tab bar together would
+            cover a third of the screen, so there it scrolls away. "alle" is
+            the server default and hydration never flips a row.
+            js-shell-only: four inert buttons without scripting would be
+            worse than the complete list. */}
         <div
           data-course-level-filter
-          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 mt-4 border-b border-hairline bg-background py-2 lg:hidden"
+          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 mt-3 border-b border-hairline bg-background py-1 sm:mt-4 sm:py-2 lg:hidden [@media(max-height:700px)]:static"
         >
           <div
             role="group"
             aria-label={copy.levelLabel}
-            className="flex gap-2 overflow-x-auto [scrollbar-width:none]"
+            className="-mx-4 flex snap-x gap-2 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
           >
             {LEVEL_FILTERS.map((level) => {
               const selected = level === levelFilter;
@@ -590,7 +675,7 @@ export function LearningAtlas({
                   aria-pressed={selected}
                   onClick={() => setLevelFilter(level)}
                   data-course-level-chip={level}
-                  className={cx(FILTER_CHIP_CLASS, "shrink-0")}
+                  className={cx(FILTER_CHIP_CLASS, "shrink-0 snap-start")}
                 >
                   {level === "alle" ? copy.allLevels : levelLabels[level]}
                 </button>
@@ -602,8 +687,11 @@ export function LearningAtlas({
           </p>
         </div>
 
-        <div className="mt-8 space-y-12 lg:mt-10 lg:space-y-16">
-          {groups.map((group) => (
+        <div className="mt-5 space-y-8 sm:mt-8 sm:space-y-12 lg:mt-10 lg:space-y-16">
+          {groups.map((group) => {
+            const groupAccess = sharedAccess(group.courses, access);
+            const groupSource = sharedSource(group.courses);
+            return (
             <section
               key={group.id}
               id={group.id}
@@ -617,7 +705,7 @@ export function LearningAtlas({
             >
               {/* One step below the h2 at every width: 22px on phones, where
                   the fluid h2 bottoms out at 26px, 26px from sm up. */}
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t-2 border-foreground pb-2 pt-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-0.5 border-t-2 border-foreground pb-1 pt-2.5 sm:gap-y-1 sm:pb-2 sm:pt-3">
                 <h3
                   id={`${group.id}-heading`}
                   className="text-[1.375rem] font-bold leading-tight text-foreground sm:text-[1.625rem]"
@@ -626,7 +714,40 @@ export function LearningAtlas({
                 </h3>
                 <p className="text-caption text-muted-foreground tabular-nums">
                   {group.eyebrow}
+                  {/* Every row of the group shares this state, so the phone
+                      says it once here; from lg each row's facts column
+                      states it. */}
+                  {groupAccess ? (
+                    <span data-group-access className="lg:hidden">
+                      {" · "}
+                      {/* The state wraps as one unit, never as a lone word. */}
+                      <span className="whitespace-nowrap">
+                        {groupAccess === "unavailable"
+                          ? copy.groupUnavailable
+                          : copy.groupAccountRequired}
+                      </span>
+                    </span>
+                  ) : null}
                 </p>
+                {/* The MIT attribution once per group below lg, when all
+                    rows share one repository and pinned commit; from lg
+                    every row prints its own. */}
+                {groupSource ? (
+                  <a
+                    data-group-source
+                    href={groupSource.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="-mt-2 inline-flex min-h-11 basis-full items-center font-mono text-caption text-muted-foreground underline decoration-border underline-offset-4 hover:decoration-foreground lg:hidden"
+                  >
+                    {groupSource.name} #{groupSource.commit}
+                    <span className="sr-only">
+                      : {copy.groupSource} ({groupSource.owner}/
+                      {groupSource.name}, {copy.sourceCommit}{" "}
+                      {groupSource.commit})
+                    </span>
+                  </a>
+                ) : null}
               </div>
               <ol>
                 {group.courses.map((course, index) => (
@@ -640,14 +761,102 @@ export function LearningAtlas({
                     locale={locale}
                     copy={copy}
                     access={access[course.slug] ?? "unavailable"}
+                    accessInGroupHead={groupAccess !== null}
+                    sourceInGroupHead={groupSource !== null}
                   />
                 ))}
               </ol>
             </section>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
+  );
+}
+
+/**
+ * The access state every course of a group shares, when it is not "open":
+ * the phone group head then states it once instead of on every row.
+ */
+function sharedAccess(
+  courses: readonly Course[],
+  access: CourseAccessBySlug,
+): Exclude<CourseAccess, "open"> | null {
+  const first = courses[0];
+  if (!first || !courses.every(isLiveCourse)) return null;
+  const state = access[first.slug] ?? "unavailable";
+  if (state === "open") return null;
+  return courses.every(
+    (course) => (access[course.slug] ?? "unavailable") === state,
+  )
+    ? state
+    : null;
+}
+
+/**
+ * The repository and pinned commit every course of a group shares, for the
+ * phone group head. Null when any course lacks a source or differs.
+ */
+function sharedSource(courses: readonly Course[]): {
+  readonly owner: string;
+  readonly name: string;
+  readonly commit: string;
+  readonly href: string;
+} | null {
+  const first = courses[0];
+  if (!first?.sourceHref || !first.sourceCommit) return null;
+  const repository = sourceRepository(first.sourceHref);
+  if (!repository.owner || !repository.name) return null;
+  const same = courses.every((course) => {
+    if (!course.sourceHref || course.sourceCommit !== first.sourceCommit) {
+      return false;
+    }
+    const other = sourceRepository(course.sourceHref);
+    return other.owner === repository.owner && other.name === repository.name;
+  });
+  if (!same) return null;
+  return {
+    owner: repository.owner,
+    name: repository.name,
+    commit: first.sourceCommit.slice(0, 7),
+    href: `https://github.com/${repository.owner}/${repository.name}/tree/${first.sourceCommit}`,
+  };
+}
+
+/** A phone-length duration below sm where one exists, the catalog label from sm. */
+function PhoneDuration({
+  full,
+  short,
+}: {
+  readonly full: string;
+  readonly short?: string;
+}) {
+  if (!short) return <>{full}</>;
+  return (
+    <>
+      <span className="sm:hidden">{short}</span>
+      <span className="max-sm:hidden">{full}</span>
+    </>
+  );
+}
+
+/** The short promise under 390px (aria-hidden), the full one above it. */
+function PhonePromise({
+  full,
+  short,
+}: {
+  readonly full: string;
+  readonly short?: string;
+}) {
+  if (!short) return <>{full}</>;
+  return (
+    <>
+      <span aria-hidden="true" className="min-[390px]:hidden">
+        {short}
+      </span>
+      <span className="max-[389px]:sr-only">{full}</span>
+    </>
   );
 }
 

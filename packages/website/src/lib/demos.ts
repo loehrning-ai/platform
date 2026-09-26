@@ -60,6 +60,12 @@ export interface Demo {
   readonly titleKicker: string;
   readonly background: string;
   readonly description: string;
+  /**
+   * One full sentence (about 70 characters at most) for places with no room
+   * for the description: the phone ledger row, the phone lead on the detail
+   * page and the "next example" block. Never clamped.
+   */
+  readonly teaser: string;
   readonly tags: readonly string[];
   readonly meta: readonly DemoMeta[];
   readonly industries: readonly string[];
@@ -90,6 +96,7 @@ export const demos: readonly Demo[] = [
     background: "Excel-Add-In · Microsoft 365 · keine neue Software",
     description:
       "Du markierst einen Bereich mit erfundenen Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und eine Prognose, die du gegenprüfst.",
+    teaser: "Du prüfst Formeln und eine Prognose an erfundenen Absatzzahlen.",
     tags: ["Excel-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Formeln prüfen" },
@@ -128,6 +135,7 @@ export const demos: readonly Demo[] = [
     background: "Word-Lab + Stilprüfung mit Musterdokumenten",
     description:
       "Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe und personenbezogene Daten.",
+    teaser: "Aus einem Briefing wird ein Entwurf, den du auf Stil und Fakten prüfst.",
     tags: ["Word-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Briefing schärfen" },
@@ -166,6 +174,7 @@ export const demos: readonly Demo[] = [
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
       "Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor jedem Versand steht ein Review.",
+    teaser: "Eine Pipeline entwirft Nachrichten, und vor jedem Versand prüfst du.",
     tags: ["Pipeline", "Review-Gate", "Quellen"],
     meta: [
       { label: "Lernziel", value: "Signalbezug" },
@@ -204,6 +213,7 @@ export const demos: readonly Demo[] = [
     background: "Vier Rollen: Recherche, Synthese, Kritik, Redaktion",
     description:
       "Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschritt bis zur Schlussfassung.",
+    teaser: "Du liest die Spur von vier Agenten, die gemeinsam ein Memo schreiben.",
     tags: ["Multi-Agent", "Opus 4.5", "Trace"],
     meta: [
       { label: "Lernziel", value: "Rollen trennen" },
@@ -241,6 +251,7 @@ export const demos: readonly Demo[] = [
     background: "n8n-Muster · simulierte DHL/SAP/Mail-Schritte",
     description:
       "Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch frei.",
+    teaser: "Ein fiktiver Lieferverzug läuft durch den Workflow bis zur Freigabe.",
     tags: ["n8n", "Self-host", "Supply-Chain"],
     meta: [
       { label: "Lernziel", value: "Flow lesen" },
@@ -278,6 +289,7 @@ export const demos: readonly Demo[] = [
     background: "Keyword-Suche · 8 Beispieldokumente · Antwort mit Quellenkarte",
     description:
       "Eine Keyword-Suche findet Klauseln in acht Beispielverträgen und zitiert sie mit Fundstelle. Auf Fragen ohne Treffer antwortet das System nicht.",
+    teaser: "Eine Keyword-Suche zitiert Klauseln aus acht Beispielverträgen.",
     tags: ["Keyword-Suche", "Regelbasiert", "DE / EN"],
     meta: [
       { label: "Lernziel", value: "Quellenpflicht" },
@@ -315,6 +327,7 @@ export const demos: readonly Demo[] = [
     background: "OCR-Muster + Struktur-Extraktion + simulierte SAP-Prüfung",
     description:
       "Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten.",
+    teaser: "Eine Beispielrechnung wird geprüft und vor dem SAP-Import angehalten.",
     tags: ["OCR", "SAP · IDoc", "UStG"],
     meta: [
       { label: "Lernziel", value: "Felder extrahieren" },
@@ -352,6 +365,7 @@ export const demos: readonly Demo[] = [
     background: "Regelbasierte Token-Klassifikation · lokal ausführbares Muster",
     description:
       "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Manche Fälle übersehen sie, deshalb ist jeder Treffer nur ein Hinweis.",
+    teaser: "Regeln markieren Namen und IBANs, bevor ein Prompt freigegeben wird.",
     tags: ["DSGVO", "On-Prem", "Regelbasiert"],
     meta: [
       { label: "Lernziel", value: "PII erkennen" },
@@ -389,6 +403,7 @@ export const demos: readonly Demo[] = [
     background: "Seed-Szenarien · Kosten, Fehler und Drift als Lernspur",
     description:
       "Eine Betriebsansicht mit festen Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du liest ab, wo ein Budget-Alarm anschlagen würde.",
+    teaser: "Du liest ab, wann ein Budget-Alarm bei Kosten oder Drift anschlägt.",
     tags: ["OTel", "Alerts", "Drift"],
     meta: [
       { label: "Lernziel", value: "Betrieb messen" },
@@ -426,6 +441,7 @@ export const demos: readonly Demo[] = [
     background: "Vergleich Basismodell gegen Domänenbeispiele",
     description:
       "Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit der eines angepassten Modells. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
+    teaser: "Du vergleichst ein Basismodell mit einem angepassten Modell.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Lernziel", value: "Baseline vergleichen" },
@@ -463,6 +479,7 @@ export const demos: readonly Demo[] = [
     background: "Headcount × Stundensatz × Adoption × gesparte Stunden",
     description:
       "Du trägst Teamgröße, Stundensatz und Nutzungsquote ein und siehst die Formel und die Spanne des Ergebnisses.",
+    teaser: "Du siehst die Formel und die Spanne hinter dem ROI deines Teams.",
     tags: ["ROI", "Kalkulation", "Transparent"],
     meta: [
       { label: "Eingaben", value: "4 Annahmen" },
@@ -499,7 +516,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Automatik und Mensch im Vergleich.",
     background: "Fiktive Eval-Metriken · Drift-Indikator · menschliches Feedback vs. Auto-Eval",
     description:
-      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In einem Fall widersprechen sich beide.",
+      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In zwei Fällen liegt die automatische Bewertung daneben.",
+    teaser: "Du prüfst, wo die automatische Bewertung falsch liegt.",
     tags: ["Observability", "Eval", "Drift"],
     meta: [
       { label: "Lernziel", value: "Qualität messen" },

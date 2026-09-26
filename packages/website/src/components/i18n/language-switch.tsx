@@ -12,6 +12,16 @@ interface LanguageSwitchProps {
   readonly className?: string;
 }
 
+interface CompactLanguageSwitchProps extends LanguageSwitchProps {
+  /**
+   * Below lg the bar has no room for a pair whose current half does nothing
+   * when tapped. `compact` renders one link to the other language there and
+   * keeps the DE/EN pair from lg, which only the no-script layout reaches in
+   * the compact cluster.
+   */
+  readonly compact?: boolean;
+}
+
 interface SwitchLinksProps extends LanguageSwitchProps {
   readonly locale: ReturnType<typeof useLocale>;
   readonly pathname: string;
@@ -79,7 +89,45 @@ function SwitchLinks({
   );
 }
 
-export function LanguageSwitch({ className }: LanguageSwitchProps) {
+/**
+ * One 44px link to the other language: "EN" on German pages, "DE" on English
+ * ones. It names its action, declares the target language and carries the
+ * same Mennige inset ring as the pair.
+ */
+function OtherLanguageLink({
+  className,
+  locale,
+  pathname,
+  suffix,
+}: SwitchLinksProps) {
+  const copy = GLOBAL_NAVIGATION_COPY[locale];
+  const targetLocale = locale === "de" ? "en" : "de";
+  const actionLabel =
+    targetLocale === "de" ? copy.switchToGerman : copy.switchToEnglish;
+  // The wrapper carries the hook every language-switch query uses, so a
+  // `[data-language-switch] a` lookup finds this link the way it finds the
+  // pair's.
+  return (
+    <span
+      data-language-switch="compact"
+      className={cn("inline-flex shrink-0", className)}
+    >
+      <a
+        href={`${localizeHref(pathname, targetLocale)}${suffix}`}
+        aria-label={actionLabel}
+        hrefLang={targetLocale}
+        className="relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+      >
+        {targetLocale.toUpperCase()}
+      </a>
+    </span>
+  );
+}
+
+export function LanguageSwitch({
+  className,
+  compact = false,
+}: CompactLanguageSwitchProps) {
   const locale = useLocale();
   const pathname = usePathname() ?? "/";
   const [suffix, setSuffix] = useState("");
@@ -99,9 +147,28 @@ export function LanguageSwitch({ className }: LanguageSwitchProps) {
     };
   }, [pathname]);
 
-  // The server and first client render use the same two concrete anchors.
+  // The server and first client render use the same concrete anchors.
   // Query and fragment state only update their href attributes after hydration;
   // no Suspense fallback or template replacement can move the root cursor.
+  if (compact) {
+    return (
+      <>
+        <SwitchLinks
+          className={cn("hidden lg:inline-flex", className)}
+          locale={locale}
+          pathname={pathname}
+          suffix={suffix}
+        />
+        <OtherLanguageLink
+          className={cn("lg:hidden", className)}
+          locale={locale}
+          pathname={pathname}
+          suffix={suffix}
+        />
+      </>
+    );
+  }
+
   return (
     <SwitchLinks
       className={className}

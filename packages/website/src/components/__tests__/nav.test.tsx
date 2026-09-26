@@ -3,6 +3,10 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { Nav } from "../nav";
 import { LocaleProvider } from "../i18n/locale-context";
+import {
+  LEARNING_ROUTES,
+  PRACTICE_ROUTES,
+} from "@/lib/navigation/site-sections";
 
 const navigationMock = vi.hoisted(() => ({
   pathname: "/",
@@ -43,6 +47,10 @@ describe("<Nav />", () => {
     expect(mark).toHaveTextContent("L");
     const wordmark = container.querySelector("[data-logo-wordmark]");
     expect(wordmark).toHaveTextContent(/^loehrning\.ai$/);
+    // The whole wordmark shows at every width, 320px included: the compact
+    // bar spends one 44px target on the language, not two.
+    expect(wordmark).toHaveClass("inline");
+    expect(wordmark?.className).not.toMatch(/\bhidden\b|min-\[/);
     // Werkzeichnung type rules: 700, sentence case, tracking no tighter than
     // -0.015em, and ink only (the square is the chrome's one Mennige mark).
     expect(wordmark).toHaveClass("font-bold", "tracking-[-0.015em]", "text-foreground");
@@ -53,7 +61,7 @@ describe("<Nav />", () => {
     expect(brand.querySelectorAll("[style]")).toHaveLength(0);
   });
 
-  it("exposes task-based disclosures plus direct Blog, Open Source, and Über mich links", () => {
+  it("exposes Lernen and Praxis disclosures plus direct Blog and Über mich links", () => {
     renderGerman();
     const text = document.body.textContent ?? "";
     expect(text).toMatch(/Lernen/);
@@ -75,6 +83,15 @@ describe("<Nav />", () => {
     expect(
       screen.getAllByRole("button", { name: /Lernen|Praxis/ }),
     ).toHaveLength(2);
+    // Open Source sits inside Praxis, so the desktop places after the two
+    // disclosures are exactly Blog and Über mich.
+    const places = document.querySelector(".js-desktop-nav")
+      ?.firstElementChild as HTMLElement;
+    expect(
+      within(places)
+        .getAllByRole("link")
+        .map((link) => link.getAttribute("href")),
+    ).toEqual(["/blog", "/ueber-mich"]);
   });
 
   it("server-renders a complete small-screen fallback for no-JavaScript users", () => {
@@ -100,6 +117,14 @@ describe("<Nav />", () => {
       ]),
     );
     expect(fallback).toHaveClass("hidden");
+    // The fallback is the sheet's own compact grid, not a stacked list, and
+    // leaves GitHub to the footer.
+    const grids = fallback!.querySelectorAll(".grid-flow-col.grid-cols-2");
+    expect(grids).toHaveLength(3);
+    for (const link of fallback!.querySelectorAll("a")) {
+      expect(link.className).toContain("min-h-11");
+      expect(link.getAttribute("href")).not.toMatch(/github\.com/);
+    }
     expect(container.querySelector(".js-desktop-nav")).not.toBeNull();
     expect(fallback!.querySelector("[data-language-switch]")).toBeNull();
     expect(
@@ -250,7 +275,7 @@ describe("<Nav />", () => {
     expect(utilities).toHaveClass("border-l", "border-hairline");
   });
 
-  it("carries only the wordmark, the language switch and the menu button below lg", () => {
+  it("carries only the wordmark, one language link and the menu button below lg", () => {
     const { container } = renderGerman();
     const row = container.querySelector("[data-nav-header-row]");
     const compact = container.querySelector<HTMLElement>(".js-compact-nav");
@@ -259,34 +284,73 @@ describe("<Nav />", () => {
     // Brand link, desktop cluster, compact cluster. A fourth control in the
     // row would not fit the compact band at 320px.
     expect(row?.children).toHaveLength(3);
-    expect(compact?.children).toHaveLength(2);
-    expect(
-      within(compact as HTMLElement).getByRole("group", { name: "Sprache" }),
-    ).toBeInTheDocument();
-    expect(
-      within(compact as HTMLElement).getByRole("button", {
-        name: "Menü öffnen",
-      }),
-    ).toBeInTheDocument();
+    // The DE/EN pair (from lg, which only the no-script layout reaches in
+    // this cluster), the single link below lg, and the menu button.
+    expect(compact?.children).toHaveLength(3);
+    const [pair, compactSwitch, menuButton] = Array.from(
+      compact?.children ?? [],
+    );
+    expect(pair).toHaveAttribute("role", "group");
+    expect(pair).toHaveClass("hidden", "lg:inline-flex");
+    expect(compactSwitch).toHaveAttribute("data-language-switch", "compact");
+    expect(compactSwitch).toHaveClass("lg:hidden");
+
+    // Below lg one 44px link names the other language and says what it does;
+    // the current language is not a target that does nothing.
+    const single = within(compactSwitch as HTMLElement).getByRole("link");
+    expect(single).toHaveClass("min-h-11", "min-w-11");
+    expect(single).toHaveTextContent(/^EN$/);
+    expect(single).toHaveAccessibleName("Englische Oberfläche öffnen");
+    expect(single).toHaveAttribute("href", "/en");
+    expect(single).toHaveAttribute("hreflang", "en");
+    expect(single).not.toHaveAttribute("aria-current");
+    expect(single.className).toContain("focus-visible:inset-ring-brand-orange");
+
+    expect(menuButton).toHaveAccessibleName("Menü öffnen");
   });
 
-  it("derives the mobile dialog ceiling from the compact bar token", () => {
+  it("points the phone language link back to German on English pages", () => {
+    navigationMock.pathname = "/en/kurse";
+    render(
+      <LocaleProvider locale="en">
+        <Nav />
+      </LocaleProvider>,
+    );
+    const single = document.querySelector(
+      '.js-compact-nav [data-language-switch="compact"] a',
+    );
+    expect(single).toHaveTextContent(/^DE$/);
+    expect(single).toHaveAttribute("href", "/kurse");
+    expect(single).toHaveAttribute("hreflang", "de");
+    expect(single).toHaveAccessibleName("Open the German interface");
+  });
+
+  it("ends the phone sheet above the tab bar band, derived from the tokens", () => {
     renderGerman();
     fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
-    const scroller = dialog.querySelector("div");
-    expect(scroller?.className).toContain(
-      "max-h-[calc(100dvh-var(--nav-h-compact)-1rem)]",
+    // The sheet lies over the compact bar from the top edge and stops at the
+    // tab bar band, so the tab bar is never covered. Both figures come from
+    // the shell tokens, never from a repeated pixel value.
+    expect(dialog).toHaveClass(
+      "top-0",
+      "max-h-[calc(100dvh-var(--tabbar-band-h))]",
     );
+    const header = dialog.querySelector("[data-mobile-menu-header]");
+    expect(header).toHaveClass("h-[var(--nav-h-compact)]");
+    // Only the link list scrolls (landscape phones), never the header row.
+    const list = header?.nextElementSibling;
+    expect(list).toHaveClass("overflow-y-auto", "overscroll-contain");
+    expect(header).toHaveClass("shrink-0");
   });
 
-  it("Praxis contains only workshops and interactive examples", () => {
+  it("Praxis holds the workshops, the applied examples and Open Source", () => {
     renderGerman();
     const menu = openDropdown(/Praxis/);
     const hrefs = within(menu)
       .getAllByRole("link")
       .map((i) => i.getAttribute("href"));
-    expect(hrefs).toEqual(["/workshops", "/demos"]);
+    expect(hrefs).toEqual(["/workshops", "/demos", "/open-source"]);
     within(menu)
       .getAllByRole("link")
       .forEach((i) => expect(i).toHaveAttribute("data-nav-menu-item", "true"));
@@ -332,11 +396,11 @@ describe("<Nav />", () => {
       name: "Menü schließen",
     });
     // Initial focus lands on the close button, although the sheet's header
-    // row now reads language switch first, close button second.
+    // row reads brand link and account link first, close button last.
     expect(close).toHaveFocus();
     const links = within(dialog).getAllByRole("link");
     const first = links[0];
-    expect(first).toHaveAttribute("hreflang", "de");
+    expect(first).toHaveAttribute("href", "/");
     // Tab from the last control wraps to the first one in reading order,
     // Shift+Tab from the first wraps back to the last.
     links.at(-1)?.focus();
@@ -348,22 +412,126 @@ describe("<Nav />", () => {
     expect(toggle).toHaveFocus();
   });
 
-  it("puts the close button on the opener's side and shows one language switch while open", () => {
+  it("puts the close button where the menu button was and repeats no language switch", () => {
     const { container } = renderGerman();
     fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
     const close = within(dialog).getByRole("button", {
       name: "Menü schließen",
     });
-    const headerRow = close.parentElement as HTMLElement;
-    expect(headerRow.lastElementChild).toBe(close);
-    expect(headerRow.firstElementChild).toHaveAttribute(
-      "data-language-switch",
+    // The sheet's header row is the compact bar again: same height token and
+    // gutter, so the X lands on the menu button's 44px square.
+    const header = dialog.querySelector<HTMLElement>(
+      "[data-mobile-menu-header]",
     );
-    // The bar's own switch hides with the menu button behind the sheet.
+    const barRow = container.querySelector("[data-nav-header-row]");
+    expect(header).toHaveClass("h-[var(--nav-h-compact)]", "px-4", "sm:px-6");
+    expect(barRow).toHaveClass("h-[var(--nav-h-compact)]", "px-4", "sm:px-6");
+    expect(header?.lastElementChild?.lastElementChild).toBe(close);
+    expect(close.className).toContain("min-h-11");
+    expect(close.className).toContain("min-w-11");
+    expect(
+      within(header as HTMLElement).getByRole("link", {
+        name: "loehrning.ai - Startseite",
+      }),
+    ).toHaveAttribute("href", "/");
+    // The account link takes the language switch's place in the row, as a
+    // quiet word: the Konto tab owns sign-in, and the sheet's weight belongs
+    // to the navigation.
+    const login = within(header as HTMLElement).getByRole("link", {
+      name: "Anmelden",
+    });
+    expect(login).toHaveAttribute("href", "/login");
+    expect(login).toHaveClass("min-h-11", "text-label", "text-foreground");
+    expect(login.className).not.toMatch(/\bborder\b|border-foreground/);
+    expect(login.className).toContain("focus-visible:inset-ring-brand-orange");
+    expect(login.querySelector("svg")).toBeNull();
+    // DE/EN lives in the bar only; the sheet covers it and repeats nothing.
+    expect(dialog.querySelector("[data-language-switch]")).toBeNull();
     expect(
       container.querySelector(".js-compact-nav [data-language-switch]"),
     ).toHaveClass("invisible");
+  });
+
+  it("lays every phone-menu group out as a two-column grid read down each column", () => {
+    renderGerman();
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const grids = Array.from(
+      dialog.querySelectorAll<HTMLElement>(".grid-cols-2"),
+    );
+    // Lernen, Praxis, and the direct links.
+    expect(grids).toHaveLength(3);
+    // From sm (landscape phones) the groups stand side by side as single
+    // columns, so the sheet never scrolls inside a 390px-high screen.
+    const groups = grids[0].parentElement?.parentElement;
+    expect(groups).toHaveClass("sm:grid", "sm:grid-cols-3");
+    for (const grid of grids) {
+      expect(grid).toHaveClass(
+        "sm:grid-flow-row",
+        "sm:grid-cols-1",
+        "sm:grid-rows-none",
+      );
+      expect(grid.parentElement).toHaveClass("sm:border-t-0");
+    }
+    let rows = 0;
+    for (const grid of grids) {
+      expect(grid).toHaveClass("grid", "grid-flow-col");
+      const cells = grid.querySelectorAll("a");
+      const rowClass = Array.from(grid.classList).find((name) =>
+        /^grid-rows-\d$/.test(name),
+      );
+      expect(rowClass, "every grid names its row count").toBeDefined();
+      const rowCount = Number(rowClass?.slice("grid-rows-".length));
+      // Column-major: the rows are half the cells, rounded up.
+      expect(rowCount).toBe(Math.ceil(cells.length / 2));
+      rows += rowCount;
+      for (const cell of cells) {
+        expect(cell.className).toContain("min-h-11");
+      }
+    }
+    // Six 44px rows plus three short labels is what fits 320x568 above the
+    // tab bar with the header row; a seventh row starts to scroll the sheet.
+    expect(rows).toBeLessThanOrEqual(6);
+    // GitHub lives in the footer and on /open-source, not in the sheet.
+    expect(
+      within(dialog)
+        .getAllByRole("link")
+        .some((link) => /github\.com/.test(link.getAttribute("href") ?? "")),
+    ).toBe(false);
+  });
+
+  it("sets sheet links in ink at body size under small muted group labels", () => {
+    renderGerman();
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const labels = Array.from(dialog.querySelectorAll("section > p")).filter(
+      (label) => label.getAttribute("aria-hidden") !== "true",
+    );
+    expect(labels.map((label) => label.textContent)).toEqual([
+      "Lernen",
+      "Praxis",
+    ]);
+    for (const label of labels) {
+      expect(label).toHaveClass("text-caption", "text-muted-foreground");
+    }
+    const cells = dialog.querySelectorAll("section a");
+    expect(cells).toHaveLength(10);
+    for (const cell of cells) {
+      expect(cell).toHaveClass("text-base", "text-foreground", "min-h-11");
+      expect(cell.className).not.toContain("text-muted-foreground");
+    }
+  });
+
+  it("closes the phone menu from a tap on the scrim beside the sheet", () => {
+    renderGerman();
+    const toggle = screen.getByRole("button", { name: "Menü öffnen" });
+    fireEvent.click(toggle);
+    const scrim = document.querySelector("[data-mobile-menu-scrim]");
+    expect(scrim).toHaveAttribute("aria-hidden", "true");
+    expect(scrim).toHaveClass("fixed", "inset-0", "lg:hidden");
+    fireEvent.click(scrim as Element);
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 
   it("lines phone-sheet rows up with their group labels and hangs the marker in the gutter", () => {
@@ -372,7 +540,16 @@ describe("<Nav />", () => {
     fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
     const current = within(dialog).getByRole("link", { name: "Workshops" });
-    expect(current).toHaveClass("relative", "-mx-4", "px-4", "font-semibold");
+    // The cell reaches one gutter to the left (sheet padding or column gap),
+    // so its text starts on the column edge under the group label.
+    expect(current).toHaveClass(
+      "relative",
+      "-ml-4",
+      "pl-4",
+      "sm:-ml-6",
+      "sm:pl-6",
+      "font-semibold",
+    );
     expect(
       current.querySelector('[data-nav-active-marker="true"]'),
     ).toHaveClass("absolute");
@@ -565,7 +742,7 @@ describe("<Nav />", () => {
     ).toHaveAttribute("href", "/en/ueber-mich");
   });
 
-  it("keeps breakpoint-specific language controls in the header and one inside the mobile dialog", () => {
+  it("keeps breakpoint-specific language controls in the header and none inside the mobile dialog", () => {
     render(
       <LocaleProvider locale="de">
         <Nav />
@@ -579,15 +756,49 @@ describe("<Nav />", () => {
       }),
     ).toHaveLength(2);
 
-    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
-    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
-    const mobileLanguage = within(dialog).getByRole("group", {
-      name: "Sprache",
-    });
+    // The compact switch is the one a phone uses, and it points at /en.
+    const compactLanguage = within(
+      document.querySelector(".js-compact-nav") as HTMLElement,
+    ).getByRole("group", { name: "Sprache" });
     expect(
-      within(mobileLanguage).getByRole("link", {
+      within(compactLanguage).getByRole("link", {
         name: "Englische Oberfläche öffnen",
       }),
     ).toHaveAttribute("href", "/en");
+
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    expect(
+      within(dialog).queryAllByRole("group", { name: "Sprache" }),
+    ).toHaveLength(0);
+  });
+
+  it("marks the Lernen and Praxis groups from the site-section table", () => {
+    for (const route of LEARNING_ROUTES) {
+      navigationMock.pathname = `${route}/kapitel`;
+      const { unmount } = renderGerman();
+      expect(
+        screen.getByRole("button", { name: /Lernen/ }),
+        route,
+      ).toHaveAttribute("aria-current", "true");
+      expect(
+        screen.getByRole("button", { name: /Praxis/ }),
+        route,
+      ).not.toHaveAttribute("aria-current");
+      unmount();
+    }
+    for (const route of PRACTICE_ROUTES) {
+      navigationMock.pathname = route;
+      const { unmount } = renderGerman();
+      expect(
+        screen.getByRole("button", { name: /Praxis/ }),
+        route,
+      ).toHaveAttribute("aria-current", "true");
+      expect(
+        screen.getByRole("button", { name: /Lernen/ }),
+        route,
+      ).not.toHaveAttribute("aria-current");
+      unmount();
+    }
   });
 });
