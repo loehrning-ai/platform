@@ -137,16 +137,63 @@ describe("companion home: the wide layout is untouched", () => {
     expect(hero).toContain("md:mt-8 lg:mt-10");
   });
 
-  it("keeps every section's desktop band and adds a compact companion band", () => {
+  it("keeps every section's compact companion band below lg", () => {
     for (const file of [
       "offering.tsx",
       "workflow.tsx",
       "credibility-strip.tsx",
     ]) {
       const source = read(file);
-      expect(source, `${file} desktop band`).toContain("lg:py-24");
-      expect(source, `${file} tablet band`).toContain("md:py-20");
       expect(source, `${file} companion band`).toContain("max-lg:py-5");
+      // Every section opens with the shared Kopflinie head.
+      expect(source, `${file} section head`).toContain("<HomeSectionHead");
+      // One gutter with the header, the phone hero, the footer and
+      // /ueber-mich: 16px on a phone, never the old 24px px-6 md:px-12.
+      expect(source, `${file} container`).toContain("HOME_CONTAINER");
+      expect(source, `${file} gutter`).not.toMatch(/\bmd:px-12\b/);
+    }
+    // The rails open with the same head, and no eyebrow beside it.
+    expect(read("mobile-rails.tsx")).toContain("<HomeSectionHead");
+    expect(read("mobile-rails.tsx")).not.toContain("RailHeading");
+    // One section head site-wide: the home head is the werk SectionHead in
+    // its compact size (22px phone h2), with no kicker of its own.
+    const head = read("home-section-head.tsx");
+    expect(head).toContain("<SectionHead");
+    expect(head).toContain('size="compact"');
+    expect(head).not.toMatch(/readonly kicker|kicker=/);
+  });
+});
+
+describe("companion home: Werkzeichnung below the hero", () => {
+  // The risograph look (pastel washes, rounded shadowed cards, cobalt and
+  // acid buttons, hover lifts, mono all-caps eyebrows, side stripes) is
+  // retired on every section below the hero.
+  const FILES = [
+    "offering.tsx",
+    "workflow.tsx",
+    "credibility-strip.tsx",
+    "course-artwork.tsx",
+    "home-section-head.tsx",
+    "mobile-rails.tsx",
+    "continue-card.tsx",
+    "continue-slot.tsx",
+  ] as const;
+  const BANNED: ReadonlyArray<readonly [RegExp, string]> = [
+    [/\b(?:bg|text|border|ring)-brand-(?:acid|sky|pink|peach|cobalt|teal)\b/, "risograph palette"],
+    [/\bshadow-(?:card|\[)/, "card shadow"],
+    [/\brounded-(?:xl|2xl|full|\[)/, "rounded card"],
+    [/hover:-?translate-|group-hover:-?translate-[xy]-|hover:-?rotate|group-hover:scale/, "hover lift"],
+    [/\bfont-ui-mono\b|\buppercase\b/, "mono all-caps eyebrow"],
+    [/border-l-\[[3-9]px\]/, "side stripe"],
+    [/\bblur-2xl\b|\bfont-black\b/, "decoration"],
+    [/tracking-\[-0\.0[2-9]/, "crushed headline tracking"],
+    [/from "lucide-react"/, "a second icon family"],
+  ];
+
+  it.each(FILES)("keeps %s flat, square and ink", (file) => {
+    const source = read(file);
+    for (const [pattern, label] of BANNED) {
+      expect(source, `${file}: ${label}`).not.toMatch(pattern);
     }
   });
 });

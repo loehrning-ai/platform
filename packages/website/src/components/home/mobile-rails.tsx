@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getBookDisplay } from "@/app/buecher/book-copy";
+import { HOME_CONTAINER } from "@/components/home/home-container";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HomeSectionHead } from "@/components/home/home-section-head";
 import { books } from "@/lib/books";
 import { getDemosForLocale } from "@/lib/demos-localization";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -40,32 +42,18 @@ const RAIL_DEMO_COUNT = 6;
 export const BOOK_RAIL_SHOWN = books.length > 1;
 
 const RAIL_CLASS =
-  "-mx-6 flex snap-x snap-mandatory list-none gap-2 overflow-x-auto overscroll-x-contain scroll-px-6 px-6 pb-1 [contain-intrinsic-height:auto_6.25rem] [content-visibility:auto] md:-mx-12 md:scroll-px-12 md:px-12";
+  "-mx-4 mt-3 flex snap-x snap-mandatory list-none gap-2 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-1 [contain-intrinsic-height:auto_6.25rem] [content-visibility:auto] sm:-mx-6 sm:scroll-px-6 sm:px-6";
 
 /* Werkzeichnung tile: square, a hairline edge, no fill and no shadow. The
    hover and focus states change tone only. */
 const TILE_CLASS =
   "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 border border-hairline bg-card p-3 outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
-/* Sentence-case label: data (a number, an edition) in Schiefer, never a
-   mono uppercase eyebrow. */
+/* Sentence-case label for data (a book's edition) in Schiefer, never a
+   mono all-caps eyebrow. Demos are not a sequence, so their tiles carry no
+   number and open with the title. */
 const LABEL_CLASS =
   "min-w-0 text-sm font-semibold leading-tight tracking-[0.02em] text-muted-foreground tabular-nums [overflow-wrap:anywhere]";
-
-function RailHeading({
-  eyebrow,
-  title,
-}: {
-  readonly eyebrow: string;
-  readonly title: string;
-}) {
-  return (
-    <header className="mb-3 flex items-baseline justify-between gap-4 border-t-2 border-foreground pt-3">
-      <h2 className="text-xl font-bold text-foreground">{title}</h2>
-      <p className={LABEL_CLASS}>{eyebrow}</p>
-    </header>
-  );
-}
 
 export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].companion;
@@ -76,8 +64,8 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
       className="bg-background py-5 lg:hidden"
       data-testid="companion-rails"
     >
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-12">
-        <RailHeading eyebrow={copy.demosEyebrow} title={copy.demosTitle} />
+      <div className={HOME_CONTAINER}>
+        <HomeSectionHead title={copy.demosTitle} />
         <ul aria-label={copy.demosRailLabel} className={RAIL_CLASS}>
           {demos.map((demo) => (
             <li
@@ -90,12 +78,11 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
                 data-home-rail-tile="demo"
                 className={TILE_CLASS}
               >
-                <span className={LABEL_CLASS}>{demo.n}</span>
                 <span className="min-w-0">
                   <span className="block text-base font-bold leading-snug text-foreground">
                     {demo.title}
                   </span>
-                  <span className="mt-1 block text-[0.8125rem] leading-snug text-muted-foreground">
+                  <span className="mt-1 block text-caption leading-snug text-muted-foreground">
                     {demo.titleKicker}
                   </span>
                 </span>
@@ -106,8 +93,8 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
       </div>
 
       {BOOK_RAIL_SHOWN ? (
-        <div className="mx-auto mt-6 w-full max-w-6xl px-6 md:px-12">
-          <RailHeading eyebrow={copy.booksEyebrow} title={copy.booksTitle} />
+        <div className={`${HOME_CONTAINER} mt-6`}>
+          <HomeSectionHead title={copy.booksTitle} />
           {/* One tile per publicly routed title. Titles on editorial hold
               are unroutable and must not appear, so this list is driven by
               `books`, never by `allBooks`. */}
@@ -130,7 +117,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
                       <span className="block text-base font-bold leading-snug text-foreground">
                         {display.title}
                       </span>
-                      <span className="mt-1 block text-[0.8125rem] leading-snug text-muted-foreground">
+                      <span className="mt-1 block text-caption leading-snug text-muted-foreground">
                         {copy.bookMeta(book.chapters, book.readingTimeMinutes)}
                       </span>
                     </span>

@@ -1,50 +1,36 @@
 import type { ReactNode } from "react";
+import { SectionHead } from "@/components/werk/section-head";
 
 /**
- * Section head for the home sections below the hero, in the Werkzeichnung
- * grammar: a 2px ink Kopflinie, the heading in one colour, and from lg a
- * factual caption on the right (the section's kicker plus one short note).
+ * Section head for the home sections below the hero: the site's one werk
+ * SectionHead in its compact size (a 2px ink Kopflinie, a 22px heading on a
+ * phone and the fluid h2 from sm), with the home's phone rule on top.
  *
- * Below lg the Kopflinie heads the section on its own: the kicker stays for
- * assistive tech only and the introduction steps out, so a phone section
- * opens with its heading and its rows.
+ * No kicker: the Kopflinie does that job. The note is an optional fact
+ * ("57 Lektionen · kostenlos · DE + EN") on the heading's baseline, and the
+ * introduction sits under the heading. Below lg both step out, so a phone
+ * section opens with its heading and its rows.
  */
 export function HomeSectionHead({
   id,
-  kicker,
   title,
   introduction,
   note,
 }: {
   readonly id?: string;
-  /** Sentence-case section label ("Grundlagenpfad"). */
-  readonly kicker: string;
   readonly title: ReactNode;
   readonly introduction?: ReactNode;
-  /** One factual line under the kicker, from lg only. */
+  /** One factual caption on the heading's baseline, from lg only. */
   readonly note?: ReactNode;
 }) {
   return (
-    <header className="grid gap-x-16 gap-y-3 border-t-2 border-foreground pt-4 max-lg:gap-y-0 max-lg:pt-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)]">
-      <div className="lg:order-2 lg:text-right">
-        <p className="text-label text-muted-foreground max-lg:sr-only">{kicker}</p>
-        {note ? (
-          <p className="mt-1 text-caption text-muted-foreground max-lg:hidden">{note}</p>
-        ) : null}
-      </div>
-      <div className="min-w-0 lg:order-1">
-        <h2
-          id={id}
-          className="text-fluid-h2 font-bold text-foreground max-lg:text-2xl max-lg:text-balance"
-        >
-          {title}
-        </h2>
-        {introduction ? (
-          <p className="mt-3 max-w-[56ch] text-body text-muted-foreground text-pretty max-lg:hidden">
-            {introduction}
-          </p>
-        ) : null}
-      </div>
-    </header>
+    <SectionHead
+      id={id}
+      size="compact"
+      title={title}
+      caption={note}
+      description={introduction}
+      className="max-lg:[&_p]:hidden"
+    />
   );
 }

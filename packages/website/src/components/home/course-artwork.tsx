@@ -2,7 +2,9 @@ import Image from "next/image";
 
 /**
  * The course cover as a flat, framed object, from lg only: a 1px ink frame on
- * the Bogen sheet, no shadow, no registration layers and no hover motion. The
+ * the Bogen sheet, no shadow, no registration layers and no hover motion.
+ * The illustration prints in ink: greyscale, multiplied onto the sheet, so
+ * the retired pastel palette does not come back through the images. The
  * phone rows are hairline rows led by the course number, so below lg the
  * plate is not rendered and its lazy image is never requested.
  */
@@ -21,7 +23,7 @@ export function CourseArtwork({ src }: { readonly src: string }) {
         fetchPriority="low"
         decoding="async"
         sizes="(min-width: 1280px) 282px, 23vw"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="absolute inset-0 h-full w-full object-cover object-center grayscale contrast-[1.1] mix-blend-multiply"
       />
     </span>
   );

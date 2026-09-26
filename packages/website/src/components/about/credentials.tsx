@@ -23,7 +23,7 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
   return (
     <section
       id="ausbildung"
-      className="py-10 lg:py-14"
+      className="py-8 lg:py-10"
       aria-labelledby="credentials-heading"
       data-credential-spread
     >
@@ -31,7 +31,6 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
         <SectionHead
           id="credentials-heading"
           title={copy.title}
-          caption={copy.eyebrow}
           description={copy.intro}
           size="compact"
         />
@@ -60,7 +59,7 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
                     width={mark.width}
                     height={mark.height}
                     loading="eager"
-                    className="mt-3 h-7 w-auto max-w-full object-contain object-left"
+                    className="mt-3 h-7 w-auto max-w-full object-contain object-left grayscale"
                   />
                 ) : null}
                 <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">

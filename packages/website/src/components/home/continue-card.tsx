@@ -180,7 +180,7 @@ export function ContinueCard({
       </span>
       <span
         aria-hidden="true"
-        className="flex size-11 shrink-0 items-center justify-center text-foreground transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+        className="flex size-11 shrink-0 items-center justify-center text-foreground"
       >
         <ArrowGlyph />
       </span>

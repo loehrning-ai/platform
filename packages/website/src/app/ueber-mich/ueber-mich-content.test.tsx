@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { LOEHRNING_LINKEDIN_URL, TIM_ENTITY } from "@/lib/seo/entity";
@@ -23,7 +25,6 @@ describe("<UeberMichContent>", () => {
       }),
     ).toHaveAttribute("width", "800");
     for (const heading of [
-      "Frühere Arbeitgeber",
       "Berufliche Stationen",
       "Akademischer Hintergrund",
       "Direkter Kontakt",
@@ -73,12 +74,9 @@ describe("<UeberMichContent>", () => {
     render(<UeberMichContent locale="en" />);
 
     const links = [
-      ["Message me on LinkedIn, opens in a new tab", TIM_ENTITY.linkedInUrl],
-      [
-        "loehrning.ai on LinkedIn, opens in a new tab",
-        LOEHRNING_LINKEDIN_URL,
-      ],
-      ["Open GitHub profile, opens in a new tab", TIM_ENTITY.personalGithubUrl],
+      ["LinkedIn · Tim Löhr, opens in a new tab", TIM_ENTITY.linkedInUrl],
+      ["LinkedIn · loehrning.ai, opens in a new tab", LOEHRNING_LINKEDIN_URL],
+      ["GitHub · Tim Löhr, opens in a new tab", TIM_ENTITY.personalGithubUrl],
     ] as const;
     for (const [name, href] of links) {
       const link = screen.getByRole("link", {
@@ -89,14 +87,36 @@ describe("<UeberMichContent>", () => {
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
     expect(
-      screen.getAllByRole("link", { name: /^Message me on LinkedIn/i }),
+      screen.getAllByRole("link", { name: /^LinkedIn · Tim Löhr/ }),
     ).toHaveLength(1);
     expect(
-      screen.getAllByRole("link", { name: /loehrning\.ai on LinkedIn/i }),
+      screen.getAllByRole("link", { name: /^LinkedIn · loehrning\.ai/ }),
     ).toHaveLength(1);
+    expect(screen.getAllByRole("link", { name: /^GitHub/ })).toHaveLength(1);
+  });
+
+  it("tells contact rows apart by their real destination, without icons", () => {
+    const { container } = render(<UeberMichContent locale="de" />);
+    const nav = screen.getByRole("navigation", { name: "Kontaktwege" });
+    const details = Array.from(
+      nav.querySelectorAll("a > span > span:last-child"),
+    ).map((span) => span.textContent);
+    expect(details).toEqual([
+      TIM_ENTITY.email,
+      "linkedin.com/in/tim-loehr-821ba8188",
+      "linkedin.com/company/loehrning",
+      "github.com/Mavengence",
+    ]);
+    expect(new Set(details).size).toBe(details.length);
+    // The only glyph in a row is its direction arrow.
+    for (const link of nav.querySelectorAll("a")) {
+      expect(link.querySelectorAll("svg")).toHaveLength(1);
+    }
+    // One icon family site-wide: the profile uses no Lucide glyphs.
     expect(
-      screen.getAllByRole("link", { name: /Open GitHub profile/i }),
-    ).toHaveLength(1);
+      readFileSync(join(__dirname, "ueber-mich-content.tsx"), "utf8"),
+    ).not.toMatch(/from "lucide-react"/);
+    expect(container.querySelector("figcaption")).toBeNull();
   });
 
   it("localizes the internal feedback link and keeps contact terminal", () => {
@@ -117,17 +137,20 @@ describe("<UeberMichContent>", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("keeps the former-employer statement inside its labelled region", () => {
-    render(<UeberMichContent locale="en" />);
+  it("names former employers once in the ledger, with the no-endorsement line", () => {
+    const { container } = render(<UeberMichContent locale="en" />);
 
-    const stations = screen.getByRole("region", {
-      name: "Previous professional roles",
+    // No separate logo band: the marks sit beside the names in the ledger.
+    expect(container.querySelector("[data-employer-proof]")).toBeNull();
+    const ledger = screen.getByRole("region", {
+      name: "Professional timeline",
     });
-    expect(
-      within(stations).getByText(/biographical context only/),
-    ).toBeVisible();
+    expect(within(ledger).getByText(/biographical context only/)).toBeVisible();
     for (const employer of ["Apple", "Red Bull", "Meta"]) {
-      expect(within(stations).getByText(employer)).toBeVisible();
+      expect(within(ledger).getByText(employer)).toBeVisible();
+      expect(
+        ledger.querySelector(`[data-employer-mark="${employer}"]`),
+      ).not.toBeNull();
     }
   });
 
@@ -148,5 +171,40 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getAllByRole("link", { name: /Journal article|Conference paper/ }),
     ).toHaveLength(2);
+  });
+
+  it("renders the profile in Werkzeichnung: flat paper, Kopflinien, no risograph", () => {
+    const { container } = render(<UeberMichContent locale="de" />);
+    const html = container.innerHTML;
+    for (const [pattern, label] of [
+      [/\bbg-brand-(?:acid|sky|pink|peach|cobalt|teal)/, "pastel wash"],
+      [/\bshadow-card\b|\bshadow-\[/, "card shadow"],
+      [/(?:^|\s)(?:sm:|lg:|hover:|group-hover:)?-?rotate-/, "rotation"],
+      [/\btranslate-[xy]-3\b|hover:-translate|group-hover:scale/, "offset block or hover lift"],
+      [/\buppercase\b|\bfont-mono\b/, "mono all-caps eyebrow"],
+      [/border-l-\[[3-9]px\]/, "side stripe"],
+      [/tracking-\[-0\.0[2-9]/, "crushed headline tracking"],
+    ] as const) {
+      expect(html, label).not.toMatch(pattern);
+    }
+    // Every section after the header opens with a 2px ink Kopflinie.
+    const sections = container.querySelectorAll("article > section");
+    expect(sections.length).toBe(3);
+    // Section heads carry no kicker-like caption; the ledger's is a fact.
+    for (const caption of [
+      "Berufliche Einordnung",
+      "Laufbahn",
+      "Ausbildung und Forschung",
+      "Kontakt",
+    ]) {
+      expect(screen.queryByText(caption)).not.toBeInTheDocument();
+    }
+    expect(screen.getByText("2021 bis heute")).toBeInTheDocument();
+    for (const section of sections) {
+      expect(section.querySelector("header.border-t-2.border-foreground")).not.toBeNull();
+    }
+    // The portrait is the one framed object, square and unrotated.
+    const portrait = screen.getByRole("img", { name: "Tim Löhr vor der Golden Gate Bridge" });
+    expect(portrait.parentElement).toHaveClass("border", "border-foreground");
   });
 });

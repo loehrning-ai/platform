@@ -67,8 +67,8 @@ async function settle(page: Page) {
       document.fonts.ready,
       new Promise((resolve) => setTimeout(resolve, 10_000)),
     ]);
-    // Bring pending images into view before awaiting them. The profile's
-    // partner logos are loading="lazy" and sit below the fold, and WebKit at
+    // Bring pending images into view before awaiting them. Any lazy profile
+    // image (an institution mark) may sit below the fold, and WebKit at
     // this viewport does not fetch them until they approach it, so their load
     // event never fires and awaiting them below hangs until the test times
     // out. Chromium's lazy-loading distance threshold is generous enough to
@@ -229,7 +229,8 @@ for (const localeCase of LOCALES) {
         width: (image as HTMLImageElement).naturalWidth,
       })),
     );
-    expect(imageState.length).toBeGreaterThanOrEqual(3);
+    // The portrait and the FAU mark; former employers' marks are inline SVG.
+    expect(imageState.length).toBeGreaterThanOrEqual(2);
     expect(
       imageState.every((image) => image.complete && image.width > 0),
       JSON.stringify(imageState),

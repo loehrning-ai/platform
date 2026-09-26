@@ -12,19 +12,19 @@ import { render, screen } from "@testing-library/react";
 import { CredibilityStrip } from "./credibility-strip";
 
 describe("CredibilityStrip", () => {
-  it("exposes the platform-principles section anchor and overline", () => {
+  it("exposes the platform-principles section anchor and heading, without a kicker", () => {
     render(<CredibilityStrip />);
     expect(screen.getByTestId("platform-principles")).toBeInTheDocument();
-    expect(screen.getByText("Betriebsprinzipien")).toBeInTheDocument();
     expect(
-      screen.getByText("Was hier nicht verhandelbar ist."),
+      screen.getByText("Was hier nicht verhandelbar ist"),
     ).toBeInTheDocument();
+    expect(screen.queryByText("Betriebsprinzipien")).not.toBeInTheDocument();
   });
 
   it("renders the same operating facts in English without German labels", () => {
     const { container } = render(<CredibilityStrip locale="en" />);
 
-    expect(screen.getByText("Operating principles")).toBeInTheDocument();
+    expect(screen.getByText("What is not negotiable here")).toBeInTheDocument();
     expect(screen.getByText("No paywall")).toBeInTheDocument();
     expect(
       screen.getByText(/Four readers require a free learning account/),
@@ -34,17 +34,22 @@ describe("CredibilityStrip", () => {
     );
   });
 
-  it("renders all four principles with label and title", () => {
-    render(<CredibilityStrip />);
-    const expected: ReadonlyArray<readonly [string, string]> = [
-      ["Zugang", "Keine Paywall"],
-      ["Sprachen", "Zwei vollständige Fassungen"],
-      ["Quellen", "Stand und Herkunft sichtbar"],
-      ["Redaktion", "Von Tim Löhr redigiert"],
-    ];
-    for (const [label, title] of expected) {
-      expect(screen.getAllByText(new RegExp(label)).length).toBeGreaterThan(0);
-      expect(screen.getByText(title)).toBeInTheDocument();
+  it("renders all four principles as titles, without numbers or labels", () => {
+    const { container } = render(<CredibilityStrip />);
+    const titles = Array.from(container.querySelectorAll("dt")).map(
+      (dt) => dt.textContent,
+    );
+    expect(titles).toEqual([
+      "Keine Paywall",
+      "Zwei vollständige Fassungen",
+      "Stand und Herkunft sichtbar",
+      "Von Tim Löhr redigiert",
+    ]);
+    // The four have no order: no "01 ·" numbering anywhere.
+    expect(container.textContent).not.toMatch(/0\d ·/);
+    // Below sm each fact is one line; the sentence stays for assistive tech.
+    for (const dd of container.querySelectorAll("dd")) {
+      expect(dd).toHaveClass("max-sm:sr-only");
     }
   });
 
@@ -74,10 +79,8 @@ describe("CredibilityStrip", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Was hier nicht verhandelbar ist.",
+        name: "Was hier nicht verhandelbar ist",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Betriebsprinzipien").tagName).toBe("P");
-    expect(screen.getByText("Betriebsprinzipien")).toHaveClass("max-lg:sr-only");
   });
 });

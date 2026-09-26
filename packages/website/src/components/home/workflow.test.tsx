@@ -23,17 +23,22 @@ describe("Ressourcen section (Workflow)", () => {
   it("exposes the ressourcen-section anchor and heading", () => {
     render(<Workflow />);
     expect(screen.getByTestId("ressourcen-section")).toBeInTheDocument();
-    expect(screen.getByText("Ressourcen")).toBeInTheDocument();
     expect(
-      screen.getByText(/Nachlesen, prüfen, übertragen/),
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Material zum Nachlesen und Ausprobieren",
+      }),
     ).toBeInTheDocument();
+    // No kicker; the caption is a fact.
+    expect(screen.queryByText("Ressourcen")).not.toBeInTheDocument();
+    expect(screen.getByText("5 Bereiche · ohne Konto")).toBeInTheDocument();
   });
 
   it("renders English resource copy and preserves the locale in every route", () => {
     const { container } = render(<Workflow locale="en" />);
 
     expect(
-      screen.getByRole("heading", { name: "Read, test, transfer." }),
+      screen.getByRole("heading", { name: "Material to read and try" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Learning books").closest("a")).toHaveAttribute(
       "href",
@@ -96,8 +101,9 @@ describe("Ressourcen section (Workflow)", () => {
     expect(container.innerHTML).not.toContain("max-lg:truncate");
     // Phone rows carry their own short line, one line at 320px.
     expect(screen.getByText("KI und Recht, mit Quellen")).toHaveClass("lg:hidden");
-    // The Kopflinie heads the section below lg; the kicker is for assistive
-    // tech only there.
-    expect(screen.getByText("Ressourcen")).toHaveClass("max-lg:sr-only");
+    // Resource names sit a step under the course titles (18px, not 24px).
+    const name = screen.getByText("Blog");
+    expect(name).toHaveClass("text-lg");
+    expect(name).not.toHaveClass("text-fluid-h3");
   });
 });

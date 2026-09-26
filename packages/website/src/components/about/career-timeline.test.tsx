@@ -33,9 +33,23 @@ describe("<CareerTimeline>", () => {
       expect(within(timeline).getByText(period)).toBeVisible();
     }
     expect(within(timeline).getByText("Aktuell")).toBeVisible();
+    // Newest first: the current station opens the list, and it is marked
+    // once, in its period cell, in Mennige text (no chip box).
+    const items = within(timeline).getAllByRole("listitem");
+    expect(items[0]).toHaveAttribute("data-current");
+    expect(within(items[0]!).getByText("loehrning.ai")).toBeVisible();
+    expect(within(items[4]!).getByText("Amazon")).toBeVisible();
+    const current = within(timeline).getByText("Aktuell");
+    expect(current).toHaveClass("text-brand-orange");
+    expect(current.className).not.toMatch(/\bborder\b/);
+    expect(current.closest("p")).toHaveTextContent("Seit 2026");
     expect(timeline).toHaveClass("relative");
     expect(timeline).not.toHaveClass("divide-y", "border-y");
     expect(timeline.closest("section")).toHaveAttribute("data-proof-ledger");
+    // Hairline ledger: the current station is marked by an ink square and a
+    // sentence-case word, never by a tinted row or mono all-caps.
+    expect(timeline.innerHTML).not.toMatch(/bg-brand-|uppercase|font-mono/);
+    expect(within(timeline).getByText("Aktuell")).not.toHaveClass("uppercase");
   });
 
   it("renders complete English copy while preserving employers and chronology", () => {
@@ -56,6 +70,23 @@ describe("<CareerTimeline>", () => {
     expect(within(timeline).getByText("Current")).toBeVisible();
     expect(within(timeline).queryByText("Werkstudent")).not.toBeInTheDocument();
     expect(within(timeline).queryByText("Aktuell")).not.toBeInTheDocument();
+  });
+
+  it("marks former employers in ink and states that this is no endorsement", () => {
+    render(<CareerTimeline locale="de" />);
+    const section = screen
+      .getByRole("list", { name: "Chronologie der beruflichen Stationen" })
+      .closest("section")!;
+    for (const employer of ["Apple", "Red Bull", "Meta"]) {
+      const mark = section.querySelector(`[data-employer-mark="${employer}"]`);
+      expect(mark).not.toBeNull();
+      expect(mark).toHaveAttribute("aria-hidden", "true");
+      expect(mark).toHaveAttribute("fill", "currentColor");
+    }
+    expect(
+      within(section).getByText(/ausschließlich der biografischen Einordnung/),
+    ).toBeVisible();
+    expect(within(section).getByText("2021 bis heute")).toBeInTheDocument();
   });
 
   it("marks employer names as non-translatable and keeps all content static", () => {

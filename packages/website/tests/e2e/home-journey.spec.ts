@@ -9,7 +9,7 @@ test.describe("Home Page - Resources", () => {
     await section.scrollIntoViewIfNeeded();
     await expect(section).toBeVisible();
     await expect(
-      section.getByRole("heading", { name: "Nachlesen, prüfen, übertragen." }),
+      section.getByRole("heading", { name: "Material zum Nachlesen und Ausprobieren" }),
     ).toBeVisible();
     for (const [name, href] of [
       ["Blog", "/blog"],
@@ -38,7 +38,7 @@ test.describe("Home Page - Resources", () => {
       await section.scrollIntoViewIfNeeded();
       await expect(section).toBeVisible();
       await expect(
-        section.getByRole("heading", { name: "Nachlesen, prüfen, übertragen." }),
+        section.getByRole("heading", { name: "Material zum Nachlesen und Ausprobieren" }),
       ).toBeVisible();
       const box = await section.boundingBox();
       expect(box?.width).toBeLessThanOrEqual(375);

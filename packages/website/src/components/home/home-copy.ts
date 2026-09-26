@@ -38,11 +38,12 @@ export const HOME_COPY = {
       ],
     },
     offering: {
-      overline: "Grundlagenpfad",
-      headline: ["Vier Kurse.", "Eine klare Reihenfolge."],
+      headline: "Vier Kurse in fester Reihenfolge",
       introduction:
         "Beginne mit sicherer Anwendung. Prüfe danach gesellschaftliche Folgen, rechtliche Pflichten und belastbare Arbeitsabläufe.",
-      routeSignal: "Ein Pfad. Vier überprüfbare Ergebnisse.",
+      // Section caption, from lg: facts only, never a restated heading.
+      routeSignal: (lessons: number) =>
+        `${lessons} Lektionen · kostenlos · DE + EN`,
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
@@ -50,11 +51,11 @@ export const HOME_COPY = {
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {
-      overline: "Ressourcen",
-      headline: "Nachlesen, prüfen, übertragen.",
+      headline: "Material zum Nachlesen und Ausprobieren",
       introduction:
         "Wähle nach Aufgabe: nachlesen, ausprobieren, gemeinsam entscheiden oder selbst weiterbauen.",
-      boardLabel: "Kein Content-Labyrinth. Ein Werkzeug pro Absicht.",
+      // Section caption, from lg: facts only.
+      boardLabel: (areas: number) => `${areas} Bereiche · ohne Konto`,
       boardAriaLabel: "Werkzeuge und Lernressourcen",
       resources: [
         {
@@ -107,38 +108,31 @@ export const HOME_COPY = {
       },
       lessonsDone: (done: number, total: number) =>
         `${done} von ${total} Lektionen`,
-      demosEyebrow: "Ausprobieren",
       demosTitle: "Praxisbeispiele",
       demosRailLabel: "Praxisbeispiele zum Ausprobieren",
-      booksEyebrow: "Nachlesen",
       booksTitle: "Lernbücher",
       booksRailLabel: "Lernbücher der Plattform",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} Kapitel · ${minutes} Min.`,
     },
     credibility: {
-      overline: "Betriebsprinzipien",
-      headline: "Was hier nicht verhandelbar ist.",
+      headline: "Was hier nicht verhandelbar ist",
       introduction:
         "Jede Oberfläche folgt denselben Regeln: offen zugänglich, zweisprachig, mit sichtbarer Herkunft und verantworteter Redaktion.",
       principles: [
         {
-          label: "Zugang",
           title: "Keine Paywall",
           body: "Kein Abo. Vier Reader benötigen ein kostenloses Lernkonto.",
         },
         {
-          label: "Sprachen",
           title: "Zwei vollständige Fassungen",
           body: "Alle Kurse sind vollständig auf Deutsch und Englisch verfügbar.",
         },
         {
-          label: "Quellen",
           title: "Stand und Herkunft sichtbar",
           body: "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
         },
         {
-          label: "Redaktion",
           title: "Von Tim Löhr redigiert",
           body: "Autorschaft, Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
         },
@@ -179,11 +173,10 @@ export const HOME_COPY = {
       ],
     },
     offering: {
-      overline: "Foundation path",
-      headline: ["Four courses.", "One defined order."],
+      headline: "Four courses in a set order",
       introduction:
         "Start with safe use. Then test social effects, legal duties and reviewable working methods.",
-      routeSignal: "One path. Four reviewable outcomes.",
+      routeSignal: (lessons: number) => `${lessons} lessons · free · DE + EN`,
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
@@ -191,11 +184,10 @@ export const HOME_COPY = {
       viewAllCourses: "View all courses",
     },
     workflow: {
-      overline: "Resources",
-      headline: "Read, test, transfer.",
+      headline: "Material to read and try",
       introduction:
         "Choose by task: read, experiment, decide together or build on the source.",
-      boardLabel: "No content maze. One instrument for each intent.",
+      boardLabel: (areas: number) => `${areas} areas · no account needed`,
       boardAriaLabel: "Tools and learning resources",
       resources: [
         {
@@ -248,38 +240,31 @@ export const HOME_COPY = {
       },
       lessonsDone: (done: number, total: number) =>
         `${done} of ${total} lessons`,
-      demosEyebrow: "Try it",
       demosTitle: "Applied examples",
       demosRailLabel: "Applied examples to try",
-      booksEyebrow: "Read up",
       booksTitle: "Learning books",
       booksRailLabel: "Learning books on this platform",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} chapters · ${minutes} min`,
     },
     credibility: {
-      overline: "Operating principles",
-      headline: "What is not negotiable here.",
+      headline: "What is not negotiable here",
       introduction:
         "Every surface follows the same rules: open access, complete bilingual editions, visible provenance and accountable editing.",
       principles: [
         {
-          label: "Access",
           title: "No paywall",
           body: "No subscription. Four readers require a free learning account.",
         },
         {
-          label: "Languages",
           title: "Two complete editions",
           body: "Every course is complete in English and German.",
         },
         {
-          label: "Sources",
           title: "Date and origin shown",
           body: "Facts link to sources. Assumptions and simulations are labelled.",
         },
         {
-          label: "Editorial",
           title: "Edited by Tim Löhr",
           body: "Authorship, revision date and known limits stay visible.",
         },
@@ -319,7 +304,8 @@ export const HOME_COURSE_COPY: Readonly<
       title: "AI-Native Arbeitskurs",
       tagline:
         "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
-      duration: "ca. 12 Std.",
+      // /kurse states "ca. 5 Std. Lektionen, 12 Std. mit Übungen".
+      duration: "ca. 5 Std. + Übungen",
     },
   },
   en: {
@@ -342,7 +328,8 @@ export const HOME_COURSE_COPY: Readonly<
       title: "AI-Native Work Course",
       tagline:
         "Clarify intent, provide context, then verify execution and results.",
-      duration: "about 12 hr",
+      // /kurse states "about 5 hrs of lessons, 12 hrs with exercises".
+      duration: "about 5 hr + exercises",
     },
   },
 };

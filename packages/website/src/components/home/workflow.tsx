@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HOME_CONTAINER } from "@/components/home/home-container";
 import { HomeSectionHead } from "@/components/home/home-section-head";
 import { BOOK_RAIL_SHOWN } from "@/components/home/mobile-rails";
 import { ArrowGlyph } from "@/components/werk/arrow-glyph";
@@ -20,7 +21,8 @@ const RESOURCE_GLYPHS: readonly PictogramName[] = [
  * Ressourcen: the supporting areas as one ledger. Every destination is a
  * hairline row with its pictogram, name and one sentence; the account note
  * closes the ledger with a secondary ink button. No tinted boards, no
- * icon tiles and no hover lift.
+ * icon tiles and no hover lift. Names are set at 18px, a step under the
+ * course titles above, so the courses stay the page's first read.
  */
 export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].workflow;
@@ -33,13 +35,12 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="scroll-mt-24 bg-background px-6 py-12 max-lg:py-5 md:px-12"
+      className="scroll-mt-24 bg-background py-12 max-lg:py-5"
       data-testid="ressourcen-section"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className={HOME_CONTAINER}>
         <HomeSectionHead
-          kicker={copy.overline}
-          note={copy.boardLabel}
+          note={copy.boardLabel(copy.resources.length)}
           introduction={copy.introduction}
           title={copy.headline}
         />
@@ -55,7 +56,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
             >
               <Link
                 href={localizeHref(resource.href, locale)}
-                className="group grid min-h-16 min-w-0 grid-cols-[2.5rem_minmax(10rem,16rem)_minmax(0,1fr)_auto] items-center gap-x-6 border-b border-hairline py-3 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-lg:min-h-14 max-lg:grid-cols-[2rem_minmax(0,1fr)_auto] max-lg:gap-3 max-lg:py-2"
+                className="group grid min-h-16 min-w-0 grid-cols-[2.5rem_minmax(9rem,13rem)_minmax(0,1fr)_auto] items-center gap-x-6 border-b border-hairline py-3 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-lg:min-h-14 max-lg:grid-cols-[2rem_minmax(0,1fr)_auto] max-lg:gap-3 max-lg:py-2"
                 data-home-resource-card
               >
                 <Pictogram
@@ -63,14 +64,14 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                   className="size-7 text-foreground max-lg:size-6"
                 />
                 <span className="min-w-0">
-                  <span className="block text-fluid-h3 font-bold text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-current motion-reduce:transition-none max-lg:text-base max-lg:leading-snug max-lg:no-underline">
+                  <span className="block text-lg font-semibold leading-snug text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-current motion-reduce:transition-none max-lg:text-base max-lg:leading-snug max-lg:no-underline">
                     {resource.label}
                   </span>
-                  <span className="block text-[0.8125rem] leading-snug text-muted-foreground lg:hidden">
+                  <span className="block text-caption leading-snug text-muted-foreground lg:hidden">
                     {resource.short}
                   </span>
                 </span>
-                <span className="min-w-0 text-[0.9375rem] leading-relaxed text-muted-foreground max-lg:hidden">
+                <span className="min-w-0 text-body text-muted-foreground max-lg:hidden">
                   {resource.body}
                 </span>
                 <ArrowGlyph className="mr-1 text-foreground" />
@@ -80,7 +81,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
         </ul>
 
         <div className="mt-6 flex items-center justify-between gap-6 max-lg:mt-3 max-lg:grid max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:gap-4">
-          <p className="max-w-[56ch] text-[0.9375rem] leading-relaxed text-muted-foreground max-lg:text-[0.8125rem] max-lg:leading-snug">
+          <p className="max-w-[56ch] text-body text-muted-foreground max-lg:text-caption max-lg:leading-snug">
             {copy.accountBody}
           </p>
           <Link
