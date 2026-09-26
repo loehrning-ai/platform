@@ -44,28 +44,27 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           padding: 70,
           background: "#F3F0E9",
           fontFamily: "system-ui, -apple-system, sans-serif",
-          color: "#0B0908",
+          color: "#121212",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {/* Das Ö mark — hard-cornered umlaut, counter knocked out (evenodd) */}
+          {/* Das Ö mark: hard-cornered umlaut, counter knocked out (evenodd) */}
           <svg width="36" height="48" viewBox="18 8 60 80" fill="#B73A15">
             <rect x="26" y="8" width="16" height="16" />
             <rect x="54" y="8" width="16" height="16" />
             <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
           </svg>
-          <div style={{ display: "flex", fontSize: 26, fontWeight: 900 }}>
+          <div style={{ display: "flex", fontSize: 26, fontWeight: 700 }}>
             loehrning<span style={{ color: "#B73A15" }}>.ai</span>
           </div>
           <div
             style={{
               display: "flex",
               marginLeft: 16,
-              fontFamily: "monospace",
-              fontSize: 14,
-              color: "#a89070",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
+              fontSize: 20,
+              fontWeight: 600,
+              color: "#4f4640",
+              letterSpacing: "0.02em",
             }}
           >
             {categoryLine}
@@ -77,9 +76,9 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
             style={{
               display: "flex",
               fontSize: 68,
-              fontWeight: 900,
-              lineHeight: 1.02,
-              letterSpacing: "-0.035em",
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: "-0.015em",
               maxWidth: 1060,
             }}
           >
@@ -90,7 +89,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
               display: "flex",
               fontSize: 26,
               lineHeight: 1.3,
-              color: "rgba(11,9,8,0.66)",
+              color: "#4f4640",
               maxWidth: 980,
             }}
           >
@@ -109,10 +108,8 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
             style={{
               display: "flex",
               fontFamily: "monospace",
-              fontSize: 14,
-              letterSpacing: "0.18em",
-              color: "rgba(11,9,8,0.55)",
-              textTransform: "uppercase",
+              fontSize: 18,
+              color: "#655c54",
             }}
           >
             {slugLine}
@@ -121,14 +118,10 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
             style={{
               display: "flex",
               background: "#B73A15",
-              color: "white",
-              padding: "10px 18px",
-              border: "2px solid #0B0908",
-              boxShadow: "4px 4px 0 #0B0908",
-              fontWeight: 700,
-              fontSize: 16,
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
+              color: "#f9f7f2",
+              padding: "12px 20px",
+              fontWeight: 600,
+              fontSize: 20,
             }}
           >
             {pageCopy.open}

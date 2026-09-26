@@ -34,7 +34,7 @@ Done in the tree (from the implementation logs in `impl-logs/`):
 | B4 course landings + reader chrome | in progress at hand-off | - |
 | B5 /demos hub + detail + demos copy | in progress: tsc errors in demo-detail-layout.tsx, demo-grid.tsx, tests/e2e/demos.spec.ts (copy keys renamed, components not yet switched) | - |
 | B6 site chrome (nav lang chip, login pill, footer) | not started | - |
-| W04 build (deck engine + scenes + presenter, demo, guide/field card/transfer, kit + registry module) | in progress at hand-off; output in `packages/website/public/workshops/esg-berichte-mit-ki/`, `scripts/workshop04/`, `src/lib/workshops-esg-reporting.ts` | - |
+| W04 build | deck engine + acts 0-3 done (log deck-1.md), demo.html done (log demo.md); deck acts 4-end + appendix (deck-2), guide/field card/transfer, kit + registry module in progress; output in `packages/website/public/workshops/esg-berichte-mit-ki/`, `scripts/workshop04/`, `src/lib/workshops-esg-reporting.ts` | - |
 
 ## Remaining plan, in order
 

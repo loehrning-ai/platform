@@ -659,8 +659,8 @@ export function CourseWorkspaceFrame({
             // with the shell's safe-area tokens (pt-safe, pb-safe, px-safe)
             // rather than reading env() directly, like every other fixed
             // shell surface.
-            "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pt-safe pb-safe px-safe shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
-          : "relative my-10 min-w-0 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-foreground)] [overflow-wrap:anywhere]"
+            "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border border-foreground bg-background pt-safe pb-safe px-safe shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
+          : "relative my-10 min-w-0 overflow-hidden border border-foreground bg-background [overflow-wrap:anywhere]"
       }
     >
       {header}
@@ -668,13 +668,13 @@ export function CourseWorkspaceFrame({
       <div
         role="toolbar"
         aria-label={copy.controls}
-        className="flex min-w-0 flex-wrap items-center gap-2 border-b-2 border-foreground bg-card px-3 py-2 sm:px-5"
+        className="flex min-w-0 flex-wrap items-center gap-2 border-b border-hairline bg-card px-3 py-2 sm:px-5"
       >
         <button
           type="button"
           aria-controls={briefId}
           aria-expanded={!briefCollapsed}
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 max-w-full items-center text-center border border-border bg-transparent px-3 py-2 text-label text-foreground transition-colors duration-[120ms] hover:border-foreground hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
           onClick={() => {
             setPreferencesTouched(true);
             setBriefCollapsed((current) => !current);
@@ -685,7 +685,7 @@ export function CourseWorkspaceFrame({
         <button
           type="button"
           disabled={!splitFeasible || briefCollapsed}
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex min-h-11 max-w-full items-center text-center border border-border bg-transparent px-3 py-2 text-label text-foreground transition-colors duration-[120ms] hover:border-foreground hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
             if (!splitFeasible || briefCollapsed) return;
             setPreferencesTouched(true);
@@ -697,7 +697,7 @@ export function CourseWorkspaceFrame({
         <button
           ref={fullscreenButtonRef}
           type="button"
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-xs font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
+          className="inline-flex min-h-11 max-w-full items-center text-center bg-foreground px-3 py-2 text-label text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
           onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
         >
           {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}

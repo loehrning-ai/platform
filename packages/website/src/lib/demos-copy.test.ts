@@ -9,9 +9,8 @@
  *  - every demo listed in demos.ts must have narrative copy, otherwise the
  *    /demos/[slug] detail page renders an empty body;
  *  - no orphan copy entries point at a slug that is not a real demo;
- *  - every `proof` string is a declared "Sandbox-Szenario" (the module contract
- *    documented in the file header: proof is always an illustrative sandbox
- *    example, never client proof).
+ *  - every `proof` string names what is invented in one plain sentence, without
+ *    the old "Sandbox-Szenario:" prefix that stacked a second disclaimer.
  */
 
 import { describe, expect, it } from "vitest";
@@ -25,7 +24,7 @@ describe("getDemoCopy", () => {
     // Returns the exact record entry (same reference), not a copy.
     expect(copy).toBe(demoCopy.excel);
     expect(copy?.ogSubtitle).toBe(
-      "Excel-Lab: Formel, Pivot, Prognose im Beispiel.",
+      "Formeln, Pivot und Prognose in einer Beispieltabelle prüfen.",
     );
     expect(copy?.why).toContain("Excel");
   });
@@ -51,9 +50,26 @@ describe("demoCopy record integrity", () => {
     }
   });
 
-  it("frames every proof as a Sandbox-Szenario (honest-demo contract)", () => {
+  it("states what is invented in one sentence, without a stacked prefix", () => {
     for (const [slug, copy] of Object.entries(demoCopy)) {
-      expect(copy.proof, `${slug}.proof`).toMatch(/^Sandbox-Szenario:/);
+      expect(copy.proof, `${slug}.proof`).not.toMatch(/^Sandbox-Szenario/);
+      expect(copy.proof, `${slug}.proof`).toMatch(
+        /erfunden|fiktiv|angenommen|hypothetisch|vorgegeben|simuliert|Beispiel/i,
+      );
+      // One sentence: a single terminal full stop.
+      expect(copy.proof.trim().match(/[.!?](\s|$)/g), `${slug}.proof`).toHaveLength(1);
+    }
+  });
+
+  it("opens every why with the case, not with an unsourced rule of thumb", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const demo of demos) {
+        const why = getDemoCopy(demo.slug, locale)?.why ?? "";
+        expect(why, `${locale}:${demo.slug}`).not.toMatch(
+          /^(Viele |KI-Projekte scheitern|Governance gehört|Ein LLM ohne|Many |AI projects rarely|Run an LLM)/,
+        );
+        expect(why, `${locale}:${demo.slug}`).not.toMatch(/Das Praxisbeispiel|[\u2013\u2014]/);
+      }
     }
   });
 
@@ -68,7 +84,7 @@ describe("demoCopy record integrity", () => {
       "von 3 Tagen auf 20 Minuten",
     );
     expect(demoCopy["fine-tune-playground"]?.proof).toContain(
-      "keine Trainingsergebnisse",
+      "kein Modell",
     );
   });
 });

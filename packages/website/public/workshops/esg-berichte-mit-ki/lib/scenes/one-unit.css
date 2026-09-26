@@ -126,11 +126,11 @@
 
 #one-unit > .ou-check {
   position: absolute;
-  top: 844px;
+  top: 832px;
   left: var(--margin-x);
   width: 1728px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   align-items: start;
   gap: 4px 48px;
 }

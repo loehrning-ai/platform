@@ -106,19 +106,19 @@ export function OpenWithYourAi({
           </div>
         </div>
 
-        <dl className="grid border-t border-hairline sm:grid-cols-[9rem_minmax(0,1fr)]">
-          <dt className="border-b border-hairline px-4 py-2 text-label text-muted-foreground sm:border-b-0">
+        <dl className="grid border-t border-hairline sm:grid-cols-[9rem_minmax(0,1fr)] [&>dt:not(:first-child)]:border-t sm:[&>dd:not(:nth-child(2))]:border-t [&>*]:border-hairline">
+          <dt className="px-4 pb-1 pt-2 text-label text-muted-foreground sm:pb-2">
             {copy.serverLabel}
           </dt>
-          <dd className="border-b border-hairline px-4 py-2 last:border-b-0 sm:[&:not(:last-child)]:border-b">
+          <dd className="px-4 pb-2 sm:pt-2">
             <code className="break-all font-mono text-xs text-foreground">
               {serverUrl}
             </code>
           </dd>
-          <dt className="border-b border-hairline px-4 py-2 text-label text-muted-foreground sm:border-b-0">
+          <dt className="px-4 pb-1 pt-2 text-label text-muted-foreground sm:pb-2">
             {resources.length === 1 ? copy.addressLabel : copy.addressesLabel}
           </dt>
-          <dd className="border-b border-hairline px-4 py-2 last:border-b-0 sm:[&:not(:last-child)]:border-b">
+          <dd className="px-4 pb-2 sm:pt-2">
             <ul className="grid gap-1">
               {resources.map((resource) => (
                 <li key={resource.uri} className="min-w-0">

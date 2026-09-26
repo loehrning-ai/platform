@@ -91,7 +91,7 @@
   top: 260px;
   right: var(--margin-x);
   display: grid;
-  width: 300px;
+  width: 360px;
   gap: 20px;
 }
 

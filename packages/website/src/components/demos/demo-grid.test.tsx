@@ -64,11 +64,19 @@ describe("<DemoGrid>", () => {
     // The mount effect reports the complete unfiltered state explicitly.
     expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", "alle");
     const levelFilters = screen.getByRole("group", { name: "Reifegrad" });
-    expect(levelFilters.lastElementChild).toHaveClass("flex", "flex-wrap");
+    expect(levelFilters.lastElementChild).toHaveClass("sm:flex", "flex-wrap");
     expect(levelFilters.lastElementChild).not.toHaveClass("overflow-x-auto");
     expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
     expect(container.querySelector(".lg\\:grid-cols-4")).toBeTruthy();
+    // Section head with a Kopflinie; square filter chips, ink fill when pressed.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Alle Beispiele" }),
+    ).toBeInTheDocument();
+    const allChip = screen.getByRole("button", { name: /Alle \(12\)/ });
+    expect(allChip).toHaveAttribute("aria-pressed", "true");
+    expect(allChip).toHaveClass("min-h-11", "aria-pressed:bg-foreground");
+    expect(allChip.className).not.toMatch(/rounded|uppercase|font-mono/);
   });
 
   it("seeds filter state from the server-provided filters", () => {

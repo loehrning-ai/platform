@@ -10,7 +10,7 @@ test.describe("/demos gallery", () => {
     await page.goto("/demos", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/demos$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page.locator("[data-demo-atlas-hero]")).toBeVisible();
     await expect(page.locator("[data-demo-filter-console]")).toBeVisible();
@@ -24,7 +24,7 @@ test.describe("/demos gallery", () => {
     await page.goto("/demos?cat=RAG&level=einstieg");
     await expect(page).toHaveURL(/\/demos\?cat=RAG&level=einstieg/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page).not.toHaveURL(/\/login/);
   });
@@ -221,7 +221,7 @@ test("English demo hub links every registry item and renders a localized detail"
   expect(hubResponse?.status()).toBe(200);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    `${DEMOS_PAGE_COPY.en.catalog.headingLead} ${DEMOS_PAGE_COPY.en.catalog.headingAccent}`,
+    DEMOS_PAGE_COPY.en.catalog.heading,
   );
   await expect(page.locator("[data-demo-tile]")).toHaveCount(
     englishDemos.length,

@@ -6,7 +6,7 @@
   top: 236px;
   left: var(--margin-x);
   display: grid;
-  width: 1112px;
+  width: 1160px;
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -71,11 +71,11 @@
   top: 700px;
   left: var(--margin-x);
   display: flex;
-  width: 1080px;
+  width: 1160px;
   align-items: center;
   gap: 16px;
   margin: 0;
-  font-size: var(--t-body);
+  font-size: 24px;
   font-weight: 600;
 }
 
@@ -84,7 +84,7 @@
   top: 236px;
   right: var(--margin-x);
   display: grid;
-  width: 560px;
+  width: 520px;
   gap: 8px;
 }
 

@@ -370,10 +370,11 @@ function FilterRow({
             <div className="min-w-0 sm:hidden">{mobileControl}</div>
           ) : null}
           <div
-            className={cx(
-              "flex min-w-0 flex-wrap gap-2",
-              mobileControl ? "hidden sm:flex" : undefined,
-            )}
+            className={
+              mobileControl
+                ? "hidden min-w-0 flex-wrap gap-2 sm:flex"
+                : "flex min-w-0 flex-wrap gap-2"
+            }
           >
             {children}
           </div>

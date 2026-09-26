@@ -282,3 +282,8 @@
   width: 680px;
   font-size: 30px;
 }
+
+/* Once the August question is answered it leaves the column, so the legend ends above the meter rows. */
+#month-grid .mg-aug.is-step-hidden {
+  display: none;
+}

@@ -56,7 +56,7 @@ export function TechnicalCourseProgressBar({
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
+      <div className="flex items-center justify-between gap-3 text-caption text-muted-foreground tabular-nums">
         <span className="break-words">
           {done} / {totalLessons} {unitLabel}
         </span>
@@ -71,7 +71,7 @@ export function TechnicalCourseProgressBar({
         aria-valuemax={100}
       >
         <div
-          className="h-full bg-brand-orange transition-[width] motion-reduce:transition-none"
+          className="h-full bg-foreground transition-[width] motion-reduce:transition-none"
           style={widthStyle(percentage)}
         />
       </div>
@@ -102,7 +102,7 @@ export function TechnicalCourseTrackProgress({
     lessons.length > 0 ? Math.round((totalDone / lessons.length) * 100) : 0;
 
   return (
-    <div aria-label={label} className="border-y border-border" role="group">
+    <div aria-label={label} className="border-y border-hairline" role="group">
       {tracks.map((track) => {
         const trackLessons = lessons.filter(
           (lesson) => lesson.trackId === track.id,
@@ -118,13 +118,13 @@ export function TechnicalCourseTrackProgress({
         return (
           <div
             key={track.id}
-            className="grid min-w-0 gap-2 border-b border-border py-3 sm:grid-cols-[180px_minmax(0,1fr)_7rem] sm:items-center sm:gap-4"
+            className="grid min-w-0 gap-2 border-b border-hairline py-3 sm:grid-cols-[180px_minmax(0,1fr)_7rem] sm:items-center sm:gap-4"
           >
             <div className="min-w-0">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+              <p className="text-label text-muted-foreground">
                 {track.label}
               </p>
-              <p className="mt-0.5 break-words text-[13px] font-semibold text-foreground">
+              <p className="mt-0.5 break-words text-[0.875rem] font-semibold text-foreground">
                 {track.title}
               </p>
             </div>
@@ -137,18 +137,18 @@ export function TechnicalCourseTrackProgress({
               aria-valuemax={100}
             >
               <div
-                className="h-full bg-brand-orange transition-[width] motion-reduce:transition-none"
+                className="h-full bg-foreground transition-[width] motion-reduce:transition-none"
                 style={widthStyle(percentage)}
               />
             </div>
-            <p className="font-mono text-xs tabular-nums text-muted-foreground sm:text-right">
+            <p className="text-caption tabular-nums text-muted-foreground sm:text-right">
               {done} / {trackLessons.length} · {percentage}%
             </p>
           </div>
         );
       })}
       <div className="grid min-w-0 gap-2 py-3 sm:grid-cols-[180px_minmax(0,1fr)_7rem] sm:items-center sm:gap-4">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground">
+        <p className="text-label text-foreground">
           {overallLabel}
         </p>
         <div
@@ -160,11 +160,11 @@ export function TechnicalCourseTrackProgress({
           aria-valuemax={100}
         >
           <div
-            className="h-full bg-brand-orange transition-[width] motion-reduce:transition-none"
+            className="h-full bg-foreground transition-[width] motion-reduce:transition-none"
             style={widthStyle(overallPercentage)}
           />
         </div>
-        <p className="font-mono text-xs font-bold tabular-nums text-foreground sm:text-right">
+        <p className="text-caption font-semibold tabular-nums text-foreground sm:text-right">
           {totalDone} / {lessons.length} · {overallPercentage}%
         </p>
       </div>

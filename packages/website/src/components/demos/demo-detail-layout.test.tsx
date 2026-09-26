@@ -45,7 +45,9 @@ vi.mock("./animated-meta-table", () => ({
 }));
 
 vi.mock("./evidence-badge", () => ({
-  EvidenceBadge: () => <div data-testid="evidence-badge" />,
+  EvidenceBadge: ({ note }: { note?: string }) => (
+    <div data-testid="evidence-badge" data-note={note} />
+  ),
 }));
 
 // excel: ai-native / modul_2_lesson_2 / einstieg
@@ -130,9 +132,29 @@ describe("<DemoDetailLayout>", () => {
     expect(hrefs).not.toContain("/buecher/ki-tools-selbststaendige");
   });
 
-  it("renders the synthetic-data boundary label verbatim", () => {
+  it("renders the synthetic-data boundary label once, next to the engine", () => {
     render(<DemoDetailLayout demo={excel} />);
-    expect(screen.getByText(excel.syntheticDataLabel)).toBeInTheDocument();
+    // getByText throws on duplicates: the page states what is invented once,
+    // on the evidence line, instead of stacking disclaimers.
+    expect(screen.getByTestId("evidence-badge")).toHaveAttribute(
+      "data-note",
+      excel.syntheticDataLabel,
+    );
+    expect(screen.queryByText(/^Sandbox-Szenario/)).toBeNull();
+    expect(screen.queryByText("Sandbox-Grenze")).toBeNull();
+  });
+
+  it("uses one-colour headings and a paper band for a dark engine", () => {
+    const { container } = render(<DemoDetailLayout demo={agent} />);
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1).toHaveTextContent(`${agent.title} ${agent.titleKicker}`);
+    expect(h1.querySelector("span")).toBeNull();
+    const hero = container.querySelector("[data-demo-detail-hero]");
+    expect(hero?.className).not.toContain("dark-section");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "So läuft dieses Beispiel" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Aufgezeichnete Spur")).toBeInTheDocument();
   });
 
   it("places the instrument before evidence notes and the single primary continuation", () => {

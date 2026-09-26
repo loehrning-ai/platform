@@ -12,6 +12,10 @@
   font-size: 22px;
 }
 
+#whose-bill > .wb-doc .doc__title {
+  font-size: 28px;
+}
+
 #whose-bill > .wb-note {
   position: absolute;
   top: 240px;

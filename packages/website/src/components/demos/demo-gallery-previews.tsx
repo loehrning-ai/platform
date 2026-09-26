@@ -264,7 +264,7 @@ export function AgentPipelinePreview() {
   const { text } = useDemoLocale();
   const stations = [
     text("Recherche", "Research"),
-    text("Zusammenfassung", "Summary"),
+    text("Synthese", "Synthesis"),
     text("Fehlersuche", "Error check"),
     text("Redaktion", "Editing"),
   ];
@@ -340,23 +340,27 @@ export function RagVertragsassistentPreview() {
 export function RechnungZuSapPreview() {
   const { text } = useDemoLocale();
   return (
-    <Flow>
-      <Node tone="raw" icon="canvas" label="PDF" />
-      <Arrow />
-      <div className="demo-pv-rise mb-6 flex min-w-0 flex-col border border-foreground bg-card">
-        {[
-          [text("Nr.", "No."), "04211"],
-          [text("Brutto", "Gross"), "100.317"],
-        ].map(([label, value]) => (
-          <span key={label} className="flex items-baseline justify-between gap-3 border-b border-hairline px-2 py-1 last:border-b-0">
-            <span className={LABEL}>{label}</span>
-            <span className={DATA}>{value}</span>
-          </span>
-        ))}
+    <div className="flex w-full flex-col gap-3 px-5 py-5">
+      <div className="flex items-center gap-3">
+        <Node tone="raw" icon="canvas" label="PDF" />
+        <Arrow />
+        <div className="demo-pv-rise mb-6 flex min-w-0 flex-1 flex-col border border-foreground bg-card">
+          {[
+            [text("Nr.", "No."), "04211"],
+            [text("Brutto", "Gross"), "100.317"],
+          ].map(([label, value]) => (
+            <span key={label} className="flex items-baseline justify-between gap-2 border-b border-hairline px-2 py-1 last:border-b-0">
+              <span className={LABEL}>{label}</span>
+              <span className={DATA}>{value}</span>
+            </span>
+          ))}
+        </div>
       </div>
-      <Arrow />
-      <Node tone="mark" icon="person" label="Review" />
-    </Flow>
+      <div className="demo-pv-rise flex items-center gap-2 border-2 border-mennige bg-card px-3 py-1.5">
+        <Pictogram name="person" className="size-4 text-kupfer-dark" />
+        <span className={LABEL}>{text("Review vor SAP-Import", "Review before SAP import")}</span>
+      </div>
+    </div>
   );
 }
 

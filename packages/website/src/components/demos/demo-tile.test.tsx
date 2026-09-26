@@ -2,13 +2,13 @@
  * demo-tile.test.tsx (regression coverage)
  *
  * DemoTile is the gallery card: a next/link to the detail page that carries the
- * gallery origin and renders the demo metadata (number padded against the
- * total, level badge, category + lead industry, thumbnail).
+ * gallery origin and renders the demo metadata (number, category + lead
+ * industry, evidence and level chips, schematic preview).
  * We drive its real logic:
  *  - the deeplink href (`?source=gallery`) + accessible label + data attribute,
- *  - String(total).padStart(2, "0") vs the raw demo.n,
- *  - the `industries[0] ? " - x" : ""` footer conditional,
- *  - levelColorClass picking a dark-tile vs light-tile ink for the level badge,
+ *  - the raw demo.n in the kicker,
+ *  - the `industries[0] ? " · x" : ""` kicker conditional,
+ *  - one paper sheet for every demo, dark or not, with meta chips,
  *  - the gallery-preview slot rendering only when the registry supplies one.
  *
  * next/link, the analytics dispatcher and the preview registry are mocked so the
@@ -88,7 +88,6 @@ describe("<DemoTile>", () => {
           title: "Claude in Word.",
           titleKicker: "Verträge.",
         })}
-        total={12}
       />,
     );
     const link = screen.getByRole("link");
@@ -105,14 +104,15 @@ describe("<DemoTile>", () => {
 
   it("uses registry size to create a preview-led bento hierarchy", () => {
     const { container } = render(
-      <DemoTile demo={makeDemo({ size: "s-hero" })} total={12} />,
+      <DemoTile demo={makeDemo({ size: "s-hero" })} />,
     );
     const link = screen.getByRole("link");
     const preview = container.querySelector("[data-demo-preview]");
-    const heading = screen.getByRole("heading", { level: 2 });
+    const heading = screen.getByRole("heading", { level: 3 });
 
     expect(link).toHaveClass("sm:col-span-2", "lg:row-span-2");
     expect(preview).toBeTruthy();
+    expect(preview).toHaveAttribute("aria-hidden", "true");
     expect(
       (preview as HTMLElement).compareDocumentPosition(heading) &
         Node.DOCUMENT_POSITION_FOLLOWING,
@@ -124,27 +124,28 @@ describe("<DemoTile>", () => {
     );
   });
 
-  it("shows the raw demo number and the zero-padded total", () => {
-    render(<DemoTile demo={makeDemo({ n: "03" })} total={7} />);
-    // demo.n is printed verbatim; total is padded to two digits.
+  it("shows the raw demo number in the kicker", () => {
+    render(<DemoTile demo={makeDemo({ n: "03" })} />);
     expect(screen.getByText("03")).toBeInTheDocument();
-    expect(screen.getByText("07")).toBeInTheDocument();
   });
 
-  it("renders the level label from DEMO_LEVEL_LABELS", () => {
-    render(<DemoTile demo={makeDemo({ level: "fortg" })} total={7} />);
-    expect(screen.getByText("Fortgeschritten")).toBeInTheDocument();
+  it("renders the level label from DEMO_LEVEL_LABELS as a meta chip", () => {
+    render(<DemoTile demo={makeDemo({ level: "fortg" })} />);
+    const chip = screen.getByText("Fortgeschritten");
+    expect(chip).toHaveAttribute("data-chip", "meta");
+    expect(chip).toHaveClass("border-border");
   });
 
-  it("renders the description, title kicker and tech-stack background", () => {
+  it("renders the description and a one-colour title with its kicker", () => {
     const demo = makeDemo();
-    render(<DemoTile demo={demo} total={7} />);
+    render(<DemoTile demo={demo} />);
     expect(screen.getByText(demo.description)).toBeInTheDocument();
-    expect(screen.getByText(demo.titleKicker)).toBeInTheDocument();
-    expect(screen.getByText(demo.background)).toBeInTheDocument();
+    const kicker = screen.getByText(demo.titleKicker);
+    // The title kicker is part of the heading and carries no accent colour.
+    expect(kicker.className).toBe("");
     expect(
       screen.getByRole("heading", {
-        level: 2,
+        level: 3,
         name: `${demo.title} ${demo.titleKicker}`,
       }),
     ).toBeInTheDocument();
@@ -157,55 +158,38 @@ describe("<DemoTile>", () => {
           category: "Grundlagen",
           industries: ["Controlling", "Finance"],
         })}
-        total={7}
       />,
     );
     // Only the FIRST industry is shown next to the category.
-    expect(container.textContent).toContain("Controlling");
+    expect(container.textContent).toContain("Grundlagen · Controlling");
     expect(container.textContent).not.toContain("Finance");
   });
 
   it("shows the bare category (no separator) when there is no industry", () => {
     const { container } = render(
-      <DemoTile
-        demo={makeDemo({ category: "Grundlagen", industries: [] })}
-        total={7}
-      />,
+      <DemoTile demo={makeDemo({ category: "Grundlagen", industries: [] })} />,
     );
     expect(container.textContent).toContain("Grundlagen");
     expect(container.textContent).not.toContain("Controlling");
   });
 
-  it("uses a light-tile ink for the level badge on a light demo", () => {
-    render(
-      <DemoTile
-        demo={makeDemo({ level: "einstieg", dark: false })}
-        total={7}
-      />,
-    );
-    const badge = screen.getByText("Einstieg");
-    // Light einstieg badge uses the darker green ink #166534 for AA on cream.
-    expect(badge.className).toContain("#166534");
-  });
-
-  it("uses a dark-tile ink for the level badge on a dark demo", () => {
-    render(
-      <DemoTile demo={makeDemo({ level: "einstieg", dark: true })} total={7} />,
-    );
-    const badge = screen.getByText("Einstieg");
-    // Dark einstieg badge uses the bright green var, not the light-tile ink.
-    expect(badge.className).toContain("text-[var(--color-risk-green)]");
-    expect(badge.className).not.toContain("#166534");
+  it("renders a dark-engine demo on the same paper sheet as every other tile", () => {
+    render(<DemoTile demo={makeDemo({ dark: true })} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveClass("bg-card", "border-hairline");
+    expect(link.className).not.toMatch(/bg-foreground|dark-section/);
+    // Hover changes the edge colour only: no lift, no offset shadow.
+    expect(link.className).not.toMatch(/shadow|translate/);
   });
 
   it("renders the gallery preview only when the registry supplies one", () => {
     // Default (registry returns undefined): no preview marker.
-    const { unmount } = render(<DemoTile demo={makeDemo()} total={7} />);
+    const { unmount } = render(<DemoTile demo={makeDemo()} />);
     expect(screen.queryByTestId("preview")).toBeNull();
     unmount();
 
     mockedPreview.mockReturnValue(() => <div data-testid="preview" />);
-    render(<DemoTile demo={makeDemo()} total={7} />);
+    render(<DemoTile demo={makeDemo()} />);
     expect(screen.getByTestId("preview")).toBeInTheDocument();
   });
 });

@@ -1034,6 +1034,60 @@
       "source": "Existing platform-inventoried Typing woff2 build, renamed Inter derivative",
       "license": "OFL-1.1",
       "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-400.woff2",
+      "sizeBytes": 141644,
+      "sha256": "3114b3c1543719e35fbcd79171995e87a5e8e6bb598e10c855e2525a89a28063",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-500.woff2",
+      "sizeBytes": 144292,
+      "sha256": "016640b5e194f4694a1ac1a00ac98a7cb389afed1bd3d307fe0c816291aa7ad4",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-600.woff2",
+      "sizeBytes": 144896,
+      "sha256": "be0f9efc556e7d576554004698acd1d0dc759340731d96fdd0b5aa7fdc7dd3ca",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-700.woff2",
+      "sizeBytes": 144608,
+      "sha256": "81cdb156fd821407c6651739d6fe75c679ac9fba973bc3b934c2946494f789c8",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/JetBrainsMono-var.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors",
+      "source": "Existing platform-inventoried JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/tim-loehr.jpg",
+      "sizeBytes": 112101,
+      "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
+      "owner": "Tim L\u00f6hr",
+      "source": "Portr\u00e4tfoto Tim L\u00f6hr, vom Autor bereitgestellt \u2014 Referentenfolie des Workshops",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     }
   ]
 }

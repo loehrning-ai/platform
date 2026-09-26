@@ -9,6 +9,10 @@
   width: 620px;
 }
 
+#two-scope-2 > .ts-doc .doc__title {
+  font-size: 24px;
+}
+
 #two-scope-2 > .ts-stack {
   position: absolute;
   top: 246px;
@@ -152,7 +156,7 @@
 
 #two-scope-2 > .ts-claim {
   position: absolute;
-  top: 600px;
+  top: 596px;
   left: var(--margin-x);
   width: 620px;
   max-width: none;
@@ -160,8 +164,8 @@
 
 #two-scope-2 > .ts-bridge {
   position: absolute;
-  top: 520px;
-  left: var(--margin-x);
+  top: 470px;
+  right: var(--margin-x);
 }
 
 #two-scope-2 .br {
@@ -202,6 +206,6 @@
 
 #two-scope-2 > .ts-net {
   position: absolute;
-  top: 836px;
+  top: 760px;
   left: var(--margin-x);
 }

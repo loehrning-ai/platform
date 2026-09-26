@@ -1,60 +1,70 @@
 /**
  * evidence-badge.test.tsx (regression coverage)
  *
- * EvidenceBadge maps a DemoEvidenceMode to a labelled, colour-coded badge whose
- * tooltip toggles open/closed, plus an optional external-action badge driven by
- * DemoExternalActionMode, plus the always-on SIMULIERT marker. SimulationDisclosure
- * wraps arbitrary children in an accessible "note" region.
+ * EvidenceBadge renders the single evidence line above a demo engine: the mode
+ * as a disclosure button whose explanation toggles open/closed, an optional
+ * external-action label driven by DemoExternalActionMode, and the optional
+ * invented-data note. SimulationDisclosure wraps arbitrary children in an
+ * accessible "note" region.
  *
  * These are pure UI units (state = the open/closed toggle, config = the two
  * lookup tables), so no mocks are needed: we assert the real labels, the real
- * tooltip copy per mode, the toggle behaviour, and the action-label mapping.
+ * explanation per mode, the toggle behaviour, and the action-label mapping.
  */
 
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { EvidenceBadge, SimulationDisclosure } from "./evidence-badge";
 
-describe("<EvidenceBadge> mode badge + tooltip", () => {
+describe("<EvidenceBadge> evidence line + disclosure", () => {
   it.each([
-    ["synthetic", "Synthetisch", "erfundene Beispieldaten", "#9a3412"],
-    ["rule_based", "Regelbasiert", "If-Else-Regeln", "#1d4ed8"],
-    [
-      "recorded_trace",
-      "Aufgezeichnete Spur",
-      "aufgezeichnete Beispielspur",
-      "#4b5563",
-    ],
-    ["live_api", "Live-API", "tatsächliche Anfragen", "#166534"],
+    ["synthetic", "Synthetisch", "Alle Daten in diesem Beispiel sind erfunden"],
+    ["rule_based", "Regelbasiert", "festen Regeln in deinem Browser"],
+    ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichneten Ablauf"],
+    ["live_api", "Live-API", "würde echte Anfragen"],
   ] as const)(
-    "labels the %s badge with an AA-safe tone and reveals/hides its tooltip",
-    (mode, label, tooltipFragment, foreground) => {
-      render(<EvidenceBadge evidenceMode={mode} externalActionMode="none" />);
+    "labels the %s mode in ink and reveals/hides its explanation",
+    (mode, label, detailsFragment) => {
+      const { container } = render(
+        <EvidenceBadge evidenceMode={mode} externalActionMode="none" />,
+      );
 
       const button = screen.getByRole("button", {
         name: new RegExp(`Evidenzmodus: ${label}`),
       });
-      expect(button).toHaveStyle({ color: foreground });
-      expect(button).toHaveStyle({ minHeight: "44px", fontSize: "12px" });
+      // Square text control: 44px target, sentence-case label, ink text.
+      expect(button).toHaveClass("min-h-11", "text-label", "text-foreground");
+      expect(button.className).not.toMatch(/uppercase|rounded/);
+      expect(button).toHaveTextContent(label);
       // Collapsed by default.
       expect(button).toHaveAttribute("aria-expanded", "false");
-      expect(screen.queryByRole("tooltip")).toBeNull();
+      expect(container.querySelector("[data-evidence-details]")).toBeNull();
 
-      // Open -> tooltip appears with this mode's explanation.
+      // Open -> the explanation appears and is wired to the button.
       fireEvent.click(button);
       expect(button).toHaveAttribute("aria-expanded", "true");
-      expect(screen.getByRole("tooltip")).toHaveTextContent(tooltipFragment);
+      const details = container.querySelector("[data-evidence-details]");
+      expect(details).toHaveTextContent(detailsFragment);
+      expect(button).toHaveAttribute("aria-controls", details?.id);
 
       // Toggle closed again.
       fireEvent.click(button);
       expect(button).toHaveAttribute("aria-expanded", "false");
-      expect(screen.queryByRole("tooltip")).toBeNull();
+      expect(container.querySelector("[data-evidence-details]")).toBeNull();
     },
   );
 
-  it("always renders the SIMULIERT marker regardless of mode", () => {
-    render(<EvidenceBadge evidenceMode="live_api" externalActionMode="none" />);
-    expect(screen.getByText("SIMULIERT")).toBeInTheDocument();
+  it("states the invented-data note once on the same line", () => {
+    render(
+      <EvidenceBadge
+        evidenceMode="synthetic"
+        externalActionMode="none"
+        note="Fiktive Tabellenwerte."
+      />,
+    );
+    expect(screen.getByText("Fiktive Tabellenwerte.")).toBeInTheDocument();
+    // The old all-caps SIMULIERT stamp duplicated the mode and is gone.
+    expect(screen.queryByText("SIMULIERT")).toBeNull();
   });
 });
 
@@ -86,6 +96,8 @@ describe("<SimulationDisclosure>", () => {
     const note = screen.getByRole("note", { name: "Hinweis zur Simulation" });
     expect(note).toBeInTheDocument();
     expect(note).toHaveTextContent("Alle Zahlen sind erfunden.");
-    expect(note).toHaveStyle({ fontSize: "12px" });
+    // Caption token (13px); no box and no left bar.
+    expect(note).toHaveClass("text-caption", "text-muted-foreground");
+    expect(note.getAttribute("style")).toBeNull();
   });
 });

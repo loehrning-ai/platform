@@ -88,7 +88,7 @@ describe("<DemoShell>", () => {
     expect(mockedGetComponent).toHaveBeenCalledWith("excel");
     expect(screen.getByText("DEMO BODY")).toBeInTheDocument();
     expect(screen.queryByRole("status")).toBeNull();
-    expect(screen.getByText("Interaktives Labor")).toBeVisible();
+    expect(screen.getByText("Interaktives Beispiel")).toBeVisible();
     expect(container.firstElementChild).toHaveAttribute("data-demo-shell");
   });
 
@@ -103,7 +103,8 @@ describe("<DemoShell>", () => {
   it("applies the light surface classes for a light demo", () => {
     const { container } = render(<DemoShell demo={excel} />);
     const shell = container.firstChild as HTMLElement;
-    expect(shell.className).toContain("bg-background");
+    // Raised Bogen sheet with a 1px ink frame.
+    expect(shell).toHaveClass("bg-card", "border-foreground");
     expect(shell.className).not.toContain("dark-section");
   });
 

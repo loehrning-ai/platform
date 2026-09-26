@@ -269,8 +269,8 @@ function genStack() {
 
 // The location-based to market-based bridge on `two-scope-2` (press 5).
 function genBridge() {
-  const W = 1728, x0 = 300, k = 0.9; // px per t, bars start at 0
   const lb = data.numbers.s2lb_2025.value, cert = data.numbers.bridge_cert_t.value, rm = data.numbers.bridge_rm_t.value, mb = data.numbers.s2mb_2025.value;
+  const W = 1040, x0 = 300, k = (W - x0 - 150) / lb; // px per t, bars start at 0
   const rows = [
     { label: "Location-based", a: 0, b: lb, cls: "br-bar--lb", key: "s2lb_2025", order: 0 },
     { label: "Certificate, Werk Süd", a: lb + cert, b: lb, cls: "br-bar--minus", key: "bridge_cert_t", order: 1 },

@@ -24,22 +24,30 @@ vi.mock("@/components/demos/demo-grid", () => ({
 import DemosPage from "./page";
 
 describe("DemosPage URL filter boundary", () => {
-  it("renders the lab atlas cover, inspection rail, and reviewed facts", async () => {
+  it("renders the paper hero, the check list and registry-derived stats", async () => {
     const { container } = render(
       await DemosPage({ searchParams: Promise.resolve({}) }),
     );
 
+    const h1 = screen.getByRole("heading", {
+      level: 1,
+      name: "KI-Arbeitsabläufe prüfen",
+    });
+    expect(h1).toBeVisible();
+    // One colour: no accent span inside the headline.
+    expect(h1.querySelector("span")).toBeNull();
+    expect(screen.getByText("Praxisbeispiele · 12")).toBeVisible();
     expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
-      }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("complementary", { name: "Was hier geprüft wird" }),
+      screen.getByRole("list", { name: "Was du an jedem Beispiel prüfst" }),
     ).toBeVisible();
     expect(screen.getByText("Eingaben und Annahmen")).toBeVisible();
-    expect(screen.getByText("12", { exact: true })).toBeVisible();
+
+    const stats = screen.getByRole("group", { name: "Umfang der Sammlung" });
+    const values = Array.from(stats.querySelectorAll("dd.text-num-lg")).map(
+      (node) => node.textContent,
+    );
+    // 12 demos, 3 execution modes in use, 0 actions that reach a real system.
+    expect(values).toEqual(["12", "3", "0"]);
     expect(container.querySelector("[data-demo-atlas-hero]")).toBeTruthy();
   });
 
