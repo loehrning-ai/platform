@@ -19,7 +19,7 @@ export const DEMOS_PAGE_COPY = {
       kicker: "Praxisbeispiele",
       heading: "KI-Arbeitsabläufe prüfen",
       introduction:
-        "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe. Am Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
+        "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe. Zu jedem Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
       statsLabel: "Umfang der Sammlung",
       stats: {
         examples: { label: "Praxisbeispiele", note: "im Browser, ohne Konto" },
@@ -74,17 +74,29 @@ export const DEMOS_PAGE_COPY = {
       actionsLabel: "Externe Aktionen",
       stopLabel: "Abbruch",
       noActions: "Keine",
+      // Values for the run table's "Externe Aktionen" row. The evidence line
+      // above the engine keeps the full DEMO_ACTION_LABELS phrase; in the
+      // table the row label already says "Aktionen", so the value is short.
+      actionValue: {
+        none: "Keine",
+        simulated: "Simuliert",
+        review_gated: "Simuliert, mit Freigabe-Schritt",
+        real_disabled: "Deaktiviert",
+      },
       courseHeading: "Im Kurs",
       workContexts: "Arbeitskontexte",
       workContextAria: (context: string) => `Praxisbeispiele im Arbeitskontext ${context}`,
       relatedBooks: "Vertiefende Bücher",
       publicLabel: "Öffentlich",
       nextExample: "Nächstes Praxisbeispiel",
-      openNext: (name: string) => `${name} ansehen`,
     },
     shell: {
       instrument: "Interaktives Beispiel",
       loading: "Praxisbeispiel wird geladen…",
+    },
+    evidence: {
+      explain: "Was heißt das?",
+      explainAria: (mode: string) => `Was heißt das? Ausführung: ${mode}`,
     },
     share: {
       copyPrompt: "Link kopieren:",
@@ -182,17 +194,26 @@ export const DEMOS_PAGE_COPY = {
       actionsLabel: "External actions",
       stopLabel: "Stop point",
       noActions: "None",
+      actionValue: {
+        none: "None",
+        simulated: "Simulated",
+        review_gated: "Simulated, with an approval step",
+        real_disabled: "Disabled",
+      },
       courseHeading: "In the course",
       workContexts: "Work contexts",
       workContextAria: (context: string) => `Practice examples for ${context}`,
       relatedBooks: "Related books",
       publicLabel: "Public",
       nextExample: "Next practice example",
-      openNext: (name: string) => `Open ${name}`,
     },
     shell: {
       instrument: "Interactive example",
       loading: "Loading practice example…",
+    },
+    evidence: {
+      explain: "What this means",
+      explainAria: (mode: string) => `What this means. Execution: ${mode}`,
     },
     share: {
       copyPrompt: "Copy link:",

@@ -326,6 +326,18 @@ describe("LearningAtlas", () => {
     expect(foundation.querySelectorAll("[data-course-slug]")).toHaveLength(4);
     expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(6);
 
+    // A readable ladder: the group head sits one step above the 20px row
+    // titles at every width (22px on phones, 26px from sm), under a Kopflinie.
+    const groupHead = within(foundation).getByRole("heading", {
+      level: 3,
+      name: "Grundlagenpfad",
+    });
+    expect(groupHead).toHaveClass("text-[1.375rem]", "sm:text-[1.625rem]");
+    expect(groupHead.parentElement).toHaveClass("border-t-2", "border-foreground");
+    for (const title of within(foundation).getAllByRole("heading", { level: 4 })) {
+      expect(title).toHaveClass("text-[1.25rem]");
+    }
+
     for (const slug of [
       "ki-fuehrerschein",
       "ki-und-gesellschaft",

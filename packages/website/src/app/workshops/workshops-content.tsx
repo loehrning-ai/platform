@@ -62,11 +62,31 @@ const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
 
 /**
  * Registry prose uses U+2212 for negative numbers. Loehrning Sans draws it as
- * a long bar that reads like a dash, so the hub shows an ASCII hyphen-minus
- * and keeps the euro sign on the number's line.
+ * a long bar that reads like a dash, so the hub shows an ASCII hyphen-minus.
  */
 function plainNumbers(text: string): string {
-  return text.replace(/\u2212/g, "-").replace(/(-\d[\d.,]*) €/g, "$1\u00a0€");
+  return text.replace(/\u2212/g, "-");
+}
+
+/** A negative amount after a space: "-19.960 €" or "-€19,960". */
+const NEGATIVE_AMOUNT = /((?<=^|\s)-€?\d(?:[\d.,]*\d)?(?:\s€)?)/;
+
+/**
+ * Prose with negative amounts kept on one line: a hyphen before "€" is a
+ * line-break opportunity, and "19.960 €" alone on a line reads as positive.
+ */
+function AmountText({ text }: { readonly text: string }) {
+  return plainNumbers(text)
+    .split(NEGATIVE_AMOUNT)
+    .map((part, position) =>
+      position % 2 === 1 ? (
+        <span key={position} className="whitespace-nowrap tabular-nums">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    );
 }
 
 /**
@@ -136,16 +156,21 @@ export function WorkshopsContent({ workshops, locale }: Props) {
   return (
     <>
       {/* Between md and lg the globe would sit under the text column, so it
-          starts at lg here. The bottom padding matches the top. */}
+          starts at lg here. From lg the mask stays clear until 32% of the
+          globe layer: the text column ends before that at 1024 to 1920 in
+          both locales, and Germany sits past the 50% stop, so nothing drawn
+          runs under the copy. The bottom padding matches the top. */}
       <CoverBand
         labelledBy="workshops-hub-heading"
-        className="md:max-lg:[&>[data-cover-globe]]:hidden"
+        className="md:max-lg:[&>[data-cover-globe]]:hidden lg:[&>[data-cover-globe]]:[mask-image:linear-gradient(to_right,transparent_32%,black_50%)]"
         contentClassName="pb-12 lg:pb-16"
       >
         <Kicker>{copy.hubKicker(workshops.length)}</Kicker>
+        {/* 16ch from xl keeps the EN heading on two lines; below xl the wider
+            measure would reach the Germany trace. */}
         <h1
           id="workshops-hub-heading"
-          className="mt-4 max-w-[14ch] text-display font-bold text-balance text-foreground"
+          className="mt-4 max-w-[14ch] text-display font-bold text-balance text-foreground xl:max-w-[16ch]"
         >
           {copy.hubHeading}
         </h1>
@@ -349,7 +374,7 @@ function WorkshopRow({
           {workshop.title}
         </h3>
         <p className="mt-3 max-w-[56ch] text-body text-muted-foreground text-pretty">
-          {plainNumbers(workshop.summary)}
+          <AmountText text={workshop.summary} />
         </p>
 
         <figure
@@ -366,12 +391,14 @@ function WorkshopRow({
               {copy.questionLabel}
             </figcaption>
             <blockquote className="text-body font-semibold text-foreground text-pretty">
-              {copy.quote(plainNumbers(workshop.question))}
+              <AmountText text={copy.quote(workshop.question)} />
             </blockquote>
           </div>
         </figure>
 
-        <dl className="mt-5 grid max-w-[56ch] gap-y-1 text-caption sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-4">
+        {/* 73ch at 13px is the 56ch measure of the 17px summary above, so
+            the facts line up with the prose instead of wrapping early. */}
+        <dl className="mt-5 grid max-w-[73ch] gap-y-1 text-caption sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-4">
           <dt className="font-semibold text-foreground">{copy.leaveWith}</dt>
           <dd data-workshop-output="" className="text-muted-foreground">
             {workshop.outcome}
@@ -381,7 +408,7 @@ function WorkshopRow({
               <dt className="mt-2 font-semibold text-foreground sm:mt-0">
                 {copy.requirementLabel}
               </dt>
-              <dd className="text-muted-foreground">{need}</dd>
+              <dd className="text-muted-foreground text-pretty">{need}</dd>
             </>
           ) : null}
           <dt className="mt-2 font-semibold text-foreground sm:mt-0">

@@ -351,7 +351,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Personendaten im Prompt markieren.",
     background: "Regelbasierte Token-Klassifikation · lokal ausführbares Muster",
     description:
-      "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Die Treffer sind Hinweise und übersehen manche Fälle.",
+      "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Manche Fälle übersehen sie, deshalb ist jeder Treffer nur ein Hinweis.",
     tags: ["DSGVO", "On-Prem", "Regelbasiert"],
     meta: [
       { label: "Lernziel", value: "PII erkennen" },
@@ -370,7 +370,7 @@ export const demos: readonly Demo[] = [
     externalActionMode: "none",
     syntheticDataLabel: "Erfundene Beispieltexte, geprüft in deinem Browser.",
     riskNotes: [
-      "Die Regeln übersehen manche Fälle. Lies den Prompt vor der Freigabe selbst.",
+      "Lies den Prompt vor der Freigabe selbst, auch wenn nichts markiert ist.",
       "Prüfe jede Markierung, weil auch harmlose Wörter getroffen werden.",
     ],
     lastReviewed: "2026-06-19",
@@ -425,7 +425,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Zwei Antworten im Vergleich.",
     background: "Vergleich Basismodell gegen Domänenbeispiele",
     description:
-      "Du stellst dieselbe Frage zweimal und vergleichst Basismodell und domänennahe Antwort. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
+      "Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit der eines angepassten Modells. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Lernziel", value: "Baseline vergleichen" },

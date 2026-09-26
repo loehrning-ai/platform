@@ -4,9 +4,11 @@
 //   scripts/workshop04/demo-core.js        (pure state and number formatting, shared with the page)
 //   scripts/workshop04/demo-app.js         (interaction)
 //   w04-data.json                          (every number; produced by build_dataset.py)
+// and writes the two scripts next to the page as lib/w04-demo-core.js and lib/w04-demo.js
+// (loaded with <script src defer>; the page has no inline executable script).
 // The final state (every trap fixed, location-based) is rendered into the HTML, so the page reads without JS.
 // Usage: node scripts/workshop04/build-demo.mjs [--data path/to/w04-data.json] [--check]
-//   --check exits 1 when demo.html differs from what the build would write (nothing is written).
+//   --check exits 1 when demo.html or the two scripts differ from what the build would write (nothing is written).
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
@@ -15,12 +17,15 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "../..");
 const OUT = path.join(repo, "packages/website/public/workshops/esg-berichte-mit-ki/demo.html");
+const OUT_CORE = path.join(path.dirname(OUT), "lib/w04-demo-core.js");
+const OUT_APP = path.join(path.dirname(OUT), "lib/w04-demo.js");
 const args = process.argv.slice(2);
 const check = args.includes("--check");
 const di = args.indexOf("--data");
 const DATA_CANDIDATES = [
   di !== -1 ? path.resolve(args[di + 1]) : null,
   process.env.W04_DATA ? path.resolve(process.env.W04_DATA) : null,
+  path.join(here, "data", "w04-data.json"), // canonical (data/build_dataset.py), also read by the deck and pages builds
   path.join(here, "w04-data.json"),
 ].filter(Boolean);
 const dataPath = DATA_CANDIDATES.find((p) => existsSync(p));
@@ -50,6 +55,11 @@ function nAbs(key) { return n(key).replace(/^[−+]/, ""); }
 function at(p) { return p.split(".").reduce((o, k) => (o == null ? undefined : o[k]), D); }
 function fileName(p) { return p.split("/").pop(); }
 const t10 = (v) => Math.round(v * 10);
+/* straight double quotes in JSON display text become curly quotes on the page (the JSON stays as it is) */
+function curly(s) { return String(s).replace(/"([^"]*)"/g, "“$1”"); }
+/* T7's JSON name ends in "(market-based)"; the page shows that as a tag instead */
+function trapTitle(t) { return curly(t.en.replace(/\s*\(market-based\)$/, "")).replace(/ (\S+)$/, "\u00a0$1"); }
+const mbOnly = (t) => t10(t.isolated.lb_t) === 0;
 const R = D.combinations["0"], W = D.combinations["127"];
 const V0 = C.view(D, 0, "lb");
 
@@ -91,13 +101,8 @@ assert(t10(Math.abs(W.delta_vs_right_lb_t)) === t10(D.numbers.gap_lb_t.rounded),
 
 /* ------------------------------------------------ section 2: guided sequence */
 const SQ = D.demoSequence;
-function stepRes(s) {
-  if (!s.keys) return "";
-  const m = s.method === "mb" ? " (market-based)" : "";
-  if (s.n === 5) return `Location-based <b>${esc(n(s.keys[0]))}</b>, market-based <b>${esc(n(s.keys[1]))}</b>.`;
-  if (s.n === 6) return "";
-  return `<b>${esc(n(s.keys[0]))}</b> · ${esc(n(s.keys[1]))} vs 2024${m}.`;
-}
+const T = Object.fromEntries(D.traps.map((t) => [t.id, t]));
+assert(t10(T.T4.isolated.lb_t) === t10(D.numbers.unit_lb_t.rounded), "unit_lb_t differs from traps.T4");
 for (const s of SQ) {
   if (s.state_mask === undefined || !s.keys) continue;
   const c = D.combinations[s.state_mask], m = s.method || "lb";
@@ -109,26 +114,50 @@ for (const s of SQ) {
     assert(t10(c["vs2024_" + m + "_pct"]) === t10(D.numbers[s.keys[1]].rounded), `step ${s.n} change differs from combinations[${s.state_mask}]`);
   }
 }
-const T = Object.fromEntries(D.traps.map((t) => [t.id, t]));
-assert(t10(T.T4.isolated.lb_t) === t10(D.numbers.unit_lb_t.rounded), "unit_lb_t differs from traps.T4");
+const stepN = (k) => SQ.find((s) => s.n === k);
+// The step texts rephrase demoSequence[].action_en so they name the controls on the page;
+// every number still comes from the step's own keys.
+assert(D.numbers[stepN(2).keys[1]].rounded > 0 && D.numbers[stepN(3).keys[1]].rounded < 0 && D.numbers[stepN(4).keys[1]].rounded < 0, "guided steps 2 to 4: sign of the change differs from the copy");
+assert(D.factors["F-EL-GO"].value === 0 && t10(T.T4.isolated.mb_t) === 0, "step 4 copy: the certificate factor is not 0");
+assert(stepN(4).method === "mb" && stepN(5).method === "lb" && stepN(5).state_mask === "3", "guided steps 4 and 5: method or mask changed");
+const STEP = {
+  2: { act: `Set only the Talbrück bill (T3) to “As the AI did it”.`,
+       why: `${n(stepN(2).keys[1])} against 2024 makes anyone ask what happened, so this error gets caught.` },
+  3: { act: `Also set the MWh misread (T4) to “As the AI did it”.`,
+       why: `A fall of ${nAbs(stepN(3).keys[1])} looks plausible again, so nobody asks.` },
+  4: { act: `Switch the method to market-based. The MWh row now shows 0 t.`,
+       why: `Market-based hides the unit error completely, because the certificate prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
+  5: { act: `Switch back to location-based, then set only the duplicate March (T1) and October (T2) to “As the AI did it”.`,
+       why: `Together they move the total by only ${n(stepN(5).keys[0])}, so a check on the total misses both. In market-based the pair moves it by ${n(stepN(5).keys[1])}.` },
+  6: { act: `Open the evidence drawer from “${nAbs(stepN(6).keys[0])}” in the rewritten sentence in section 4.`,
+       why: `In this case's teaching values, ${n("drv_lb_grid_share_pct")} of the location-based decrease comes from the lower grid factor. Kellbrunn did nothing for it.` },
+};
+function stepRes(s) {
+  if (!s.keys || s.n === 6) return "";
+  if (s.n === 5) { const c = D.combinations[s.state_mask]; return `<b>${esc(C.num(c.lb_t))} t</b> · ${esc(C.pct(c.vs2024_lb_pct))} vs 2024.`; }
+  const m = s.method === "mb" ? " (market-based)" : "";
+  return `<b>${esc(n(s.keys[0]))}</b> · ${esc(n(s.keys[1]))} vs 2024${m}.`;
+}
 const seqItems = SQ.map((s) => {
   if (s.n === 1) {
-    return `<li><p>${esc(s.action_en)}</p>
+    return `<li><div class="step"><p class="act">${esc(curly(s.action_en))}</p>
       <fieldset class="predict"><legend class="sr-only">Your prediction</legend>
         <div class="opts">
           <label><input type="radio" name="predict" value="T1"> Duplicate March</label>
           <label><input type="radio" name="predict" value="T3"> Talbrück bill</label>
-          <label><input type="radio" name="predict" value="T4"> “1.240 MWh”</label>
+          <label><input type="radio" name="predict" value="T4"> ${esc(curly('"' + D.inputs.ws.printed + '"'))}</label>
         </div>
         <p class="status" id="p-status" role="status"></p>
         <p class="res" id="p-answer" hidden>The MWh misread moves it most: <b>${esc(n(s.answer_key))}</b> on its own, location-based. Talbrück alone adds ${esc(T.T3.isolated.lb_en)} t, the duplicate ${esc(T.T1.isolated.lb_en)} t.</p>
-      </fieldset></li>`;
+      </fieldset></div></li>`;
   }
+  const copy = STEP[s.n];
+  assert(copy, "guided step " + s.n + " has no page text");
   const go = s.n === 6
     ? `<button class="btn" type="button" data-open="drv:grid">Open ${esc(nAbs(s.keys[0]))}</button>`
     : `<button class="btn stepgo" type="button" data-step="${s.n}">Set this up<span class="sr-only">: step ${s.n}</span></button>`;
   const res = stepRes(s);
-  return `<li><p>${esc(s.action_en)}</p>${go}${res ? `<p class="res">${res}</p>` : ""}</li>`;
+  return `<li><div class="step"><p class="act">${esc(copy.act)}</p>${res ? `<p class="res">${res}</p>` : ""}<p class="why"><span class="why__l">Why it matters</span> ${esc(copy.why)}</p></div>${go}</li>`;
 }).join("\n");
 const sequence = `<details class="seq" id="seq">
   <summary>Guided sequence<span>${SQ.length} steps, about 6 minutes</span></summary>
@@ -137,8 +166,9 @@ const sequence = `<details class="seq" id="seq">
 
 /* ------------------------------------------------ section 2: console (tabs, presets, meters) */
 const M0 = V0.meters;
-const consoleBlock = `<div class="console" id="board-top">
-  <div>
+const lbl = (long, short) => `<span class="label"><span class="l-long">${esc(long)}</span><span class="l-short">${esc(short)}</span></span>`;
+const consoleBlock = `<div class="console">
+  <div class="controls" id="board-top">
     <div class="tabs" role="tablist" aria-label="Scope 2 method">
       <button class="tab" type="button" role="tab" id="tab-lb" data-method="lb" aria-selected="true" aria-controls="board" tabindex="0">Location-based</button>
       <button class="tab" type="button" role="tab" id="tab-mb" data-method="mb" aria-selected="false" aria-controls="board" tabindex="-1">Market-based</button>
@@ -149,30 +179,39 @@ const consoleBlock = `<div class="console" id="board-top">
     </div>
   </div>
   <div class="meters">
-    <p class="meter"><span class="label">This answer</span><b id="m-total" class="num">${esc(M0.total)}</b><span class="sub" id="m-s">Scope 1 ${esc(M0.s1)} · Scope 2 ${esc(M0.s2)}</span></p>
-    <p class="meter meter--dist"><span class="label">Distance from the right answer</span><b id="m-dist" class="num">${esc(M0.dist)}</b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:${M0.distW}%"></i></span><span class="sub" id="m-dist-pct">${esc(M0.distPct)}</span></p>
-    <p class="meter"><span class="label">Change vs 2024</span><b id="m-vs" class="num">${esc(M0.vs)}</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:${M0.vsRightPos}%"></s><i id="g-vs" style="--p:${M0.vsPos}%"></i></span><span class="sub" id="m-vs-right">Right answer: ${esc(M0.vsRight)}</span></p>
+    <p class="meter">${lbl("This answer", "This answer")}<b id="m-total" class="num">${esc(M0.total)}</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 ${esc(M0.s1)}</span> · <span class="nw" id="m-s2">Scope 2 ${esc(M0.s2)}</span></span></p>
+    <p class="meter meter--dist${M0.distZero ? " is-zero" : ""}" id="meter-dist">${lbl("Distance from the right answer", "Distance")}<b id="m-dist" class="num">${esc(M0.dist)}</b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:${M0.distW}%"></i></span><span class="sub" id="m-dist-pct">${esc(M0.distPct)}</span></p>
+    <p class="meter">${lbl("Change vs 2024", "vs 2024")}<b id="m-vs" class="num">${esc(M0.vs)}</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:${M0.vsRightPos}%"></s><i id="g-vs" style="--p:${M0.vsPos}%"></i></span><span class="sub" id="m-vs-right">Right answer: ${esc(M0.vsRight)}</span></p>
   </div>
   <p class="sr-only" id="live" aria-live="polite"></p>
 </div>`;
 assert(M0.total === n("total_lb_2025") && M0.vs === n("chg_lb_pct"), "default meters differ from total_lb_2025 / chg_lb_pct");
 
 /* ------------------------------------------------ section 2: board */
-const FILE = {
-  T1: D.inputs.wnDuplicate.file, T2: "Zaehlerstaende_2025.csv", T3: D.inputs.jvBill.file,
-  T4: fileName(D.documents.find((d) => d.trap === "T4").path), T5: D.inputs.gas.WN.file + " (and WS)",
-  T6: "Tankkarten_2025.csv", T7: "faktoren_lehrwerte.csv",
+// Visible link text names the document; the file name is in the title and in the drawer header.
+const T4DOC = fileName(D.documents.find((d) => d.trap === "T4").path);
+const TWO = fileName(D.documents.find((d) => d.trap === "two-month").path);
+const DOCLINK = {
+  T1: ["Scanned March bill", D.inputs.wnDuplicate.file],
+  T2: ["Meter readings", "Zaehlerstaende_2025.csv"],
+  T3: ["Talbrück annual bill", D.inputs.jvBill.file],
+  T4: ["Werk Süd statement", T4DOC],
+  T5: ["Two gas bills", D.inputs.gas.WN.file + " and " + D.inputs.gas.WS.file],
+  T6: ["Fuel-card export", "Tankkarten_2025.csv"],
+  T7: ["Factor file", "faktoren_lehrwerte.csv"],
 };
 function style(g) { return g ? ` style="--l:${g.l}%;--w:${g.w}%;--cl:${g.cl}%;--cw:${g.cw}%"` : ""; }
+const docBtn = (open, label, file) => `<button class="linkish doc" type="button" data-open="${esc(open)}" title="${esc(file)}"><span class="sr-only">Open the evidence: </span>${esc(label)}</button>`;
 function trapRow(t) {
   const r = V0.rows[t.id];
+  const scope = mbOnly(t) ? ` <span class="tag tag--scope" id="ts-${t.id}">Market-based only</span>` : "";
   return `<li class="trap${r.pressed ? " is-on" : ""}${V0.ghost ? " is-ghost" : ""}" data-trap="${t.id}">
   <div class="trap__main">
-    <p class="trap__name"><span class="trap__id">${t.id}</span> <span id="tn-${t.id}">${esc(t.en)}</span></p>
-    <p class="trap__meta"><span class="tag">${esc(t.role)}</span><button class="linkish" type="button" data-open="trap:${t.id}"><span class="sr-only">Open the evidence: </span>${esc(FILE[t.id])}</button></p>
+    <p class="trap__name"><span class="trap__id">${t.id}</span><span class="trap__t"><span id="tn-${t.id}">${esc(trapTitle(t))}</span>${scope}</span></p>
+    <p class="trap__meta"><span class="tag">${esc(t.role)}</span>${docBtn("trap:" + t.id, DOCLINK[t.id][0], DOCLINK[t.id][1])}</p>
   </div>
-  <button class="sw" type="button" data-trap="${t.id}" aria-pressed="${r.pressed}" aria-labelledby="tn-${t.id}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">${esc(r.sw)}</span></button>
-  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only">: ${esc(t.en)}</span></button></p>
+  <button class="sw" type="button" data-trap="${t.id}" aria-pressed="${r.pressed}" aria-labelledby="tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">${esc(r.sw)}</span></button>
+  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only">: ${esc(trapTitle(t))}</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:${t.id}" aria-hidden="true"><span class="ghost"${style(r.ghost)}${r.ghost ? "" : " hidden"}></span><span class="bar${r.bar && !r.bar.neg ? " is-up" : ""}"${style(r.bar)}${r.bar ? "" : " hidden"}></span></div>
     <p class="fx num">${esc(r.fx)}</p>
@@ -180,39 +219,57 @@ function trapRow(t) {
   </div>
 </li>`;
 }
+assert(D.traps.filter(mbOnly).map((t) => t.id).join() === "T7" && /\(market-based\)$/.test(T.T7.en), "only T7 should be tagged market-based only");
 const noteRow = `<li class="trap trap--note">
   <div class="trap__main">
-    <p class="trap__name"><span class="trap__id">·</span> Two months on one bill</p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish" type="button" data-open="doc:${esc(fileName(D.documents.find((d) => d.trap === "two-month").path))}"><span class="sr-only">Open the evidence: </span>${esc(fileName(D.documents.find((d) => d.trap === "two-month").path))}</button></p>
+    <p class="trap__name"><span class="trap__id">·</span><span class="trap__t">Two months on one bill</span></p>
+    <p class="trap__meta"><span class="tag">Clerk</span>${docBtn("doc:" + TWO, "Nov and Dec bill", TWO)}</p>
   </div>
-  <p class="noteline">${esc(D.trapNotes.twoMonthBill_en)} No switch: it changes nothing in the sum.</p>
+  <span class="nosw">No switch</span>
+  <p class="noteline">${esc(D.trapNotes.twoMonthBill_en)}</p>
 </li>`;
 const rowsHtml = D.traps.map((t) => trapRow(t) + (t.id === "T2" ? "\n" + noteRow : "")).join("\n");
-const board = `<p class="mobhint">Under each switch: the effect if only that trap fires, then the bar that fixes it in order, and the running total.</p>
-<div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span>Fixing the active traps in order</span><span class="r">Fix</span><span class="r">Running total</span></div>
+const legend = `<span class="blegend"><span><i class="lg lg--down" aria-hidden="true"></i>Fixing lowers the total</span><span><i class="lg lg--up" aria-hidden="true"></i>Fixing raises it</span></span>`;
+const board = `<div class="mobhint"><p>Under each switch: the effect if only that trap fires, then the bar that fixes it and the running total.</p>${legend}</div>
+<div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span class="bh-chart"><span id="bh-chart">${esc(V0.head)}</span>${legend}</span><span class="r">Fixing it changes the total by</span><span class="r">Running total</span></div>
 <div id="board" role="tabpanel" aria-labelledby="tab-lb" data-method="lb"><ul class="board">
-<li class="tot tot--start">
-  <p class="tot__label"><b>${esc(V0.start.label)}</b><span class="tot__sub">${V0.ghost ? `Dashed outline: the raw-folder answer, ${esc(V0.start.gt)} t. The axis is cut.` : "Start of the chart. The axis is cut: bars start well above zero."}</span></p>
-  <div class="track" aria-hidden="true"><span class="cut"></span><span class="ghost" style="--l:0%;--w:${V0.start.gw}%"${V0.ghost ? "" : " hidden"}></span><span class="bar" style="--l:0%;--w:${V0.start.w}%"></span></div>
+<li class="tot tot--start${V0.ghost ? " is-ghost" : ""}">
+  <p class="tot__label"><b>${esc(V0.start.label)}</b><span class="tot__sub"><span id="ts-sub">${esc(V0.start.sub)}</span><span class="tot__axis" id="ts-axis">${V0.start.sub ? " " : ""}${esc(V0.start.axis)}</span></span></p>
+  <div class="track" aria-hidden="true"><span class="ghost" style="--l:0%;--w:${V0.start.gw}%"${V0.ghost ? "" : " hidden"}></span><span class="bar${V0.start.raw ? " is-raw" : ""}" style="--l:0%;--w:${V0.start.w}%"${V0.ghost ? " hidden" : ""}></span><span class="cut"></span></div>
   <p class="fx num"></p>
   <p class="run num">${esc(V0.start.t)}</p>
 </li>
 ${rowsHtml}
 <li class="tot tot--end">
-  <p class="tot__label"><b>Right answer</b><span>Every trap fixed, computed from the ledger.</span></p>
-  <div class="track" aria-hidden="true"><span class="cut"></span><span class="bar" style="--l:0%;--w:${V0.end.w}%"></span></div>
+  <p class="tot__label"><b>Right answer</b><span class="tot__sub">Every trap fixed, computed from the ledger.</span></p>
+  <div class="track" aria-hidden="true"><span class="bar" style="--l:0%;--w:${V0.end.w}%"></span><span class="cut"></span></div>
   <p class="fx num"></p>
   <p class="run num">${esc(V0.end.t)}</p>
 </li>
 </ul></div>
-<div class="boardfoot"><p class="caption" id="board-caption">${esc(V0.caption)}</p><p class="check" id="board-check">${esc(V0.check)}</p></div>`;
-// the ghost path must be the stored waterfall
+<div class="boardfoot"><p class="caption" id="board-caption">${esc(V0.caption)}</p><p class="check" id="board-check"${V0.check ? "" : " hidden"}>${esc(V0.check)}</p><p class="caption mbnote" id="board-mbnote"${V0.mbNote ? "" : " hidden"}>${esc(V0.mbNote)}</p></div>`;
+// the ghost path must be the stored waterfall, and it must chain from its own start row
 for (const m of ["lb", "mb"]) {
   const st = C.state(D, 127, m);
   D.waterfall[m].slice(1).forEach((w, i) => {
     const r = st.rows[i];
     assert(r.active && t10(r.effect) === t10(w.change_t) && t10(r.to) === t10(w.running_t), `waterfall.${m} ${w.step} differs from the combinations`);
   });
+  const v = C.view(D, 0, m);
+  let run = t10(Number(v.start.t.replace(/,/g, "")));
+  for (const id of C.ORDER) {
+    const r = v.rows[id];
+    if (!r.fx) continue;
+    run += t10(Number(r.fx.replace("−", "-").replace(/[+,]/g, "")));
+    assert(run === t10(Number(r.run.replace(/,/g, ""))), `default ${m}: ${id} running total does not follow from the start row`);
+  }
+  assert(run === t10(Number(v.end.t.replace(/,/g, ""))), `default ${m}: the path does not end at the right answer`);
+}
+{
+  const v = C.view(D, 127, "mb");
+  const want = ["T1", "T2", "T3"].map((id) => T[id].isolated.mb_en);
+  assert(want.every((x) => v.mbNote.includes(x)) && [1, 2, 3].every((i) => v.mbNote.includes(C.signed(D.waterfall.mb[i].change_t))), "market-based caption misses the T1 to T3 values");
+  assert(C.view(D, 127, "lb").mbNote === "" && C.view(D, 1, "mb").mbNote === "", "market-based caption shows without T7");
 }
 for (const k of Object.keys(D.combinations)) for (const m of ["lb", "mb"]) assert(C.state(D, Number(k), m).sumOk, `bars do not add up for mask ${k} ${m}`);
 
@@ -228,9 +285,13 @@ for (const d of D.documents) {
 }
 const wnS = folders.find((f) => f.name === "Werk_Nord/Strom");
 wnS.items.splice(9, 0, { label: "2025-10_Strom_WN.md", open: "trap:T2", tag: "missing", missing: true });
-folders.splice(2, 0, { name: "Werk_Nord", items: [{ label: "Zaehlerstaende_2025.csv", open: "trap:T2", tag: "T2 October" }] });
+folders.push({ name: "Werk_Nord", items: [{ label: "Zaehlerstaende_2025.csv", open: "trap:T2", tag: "T2 October" }] });
 folders.push({ name: "Flotte", items: [{ label: "Tankkarten_2025.csv", open: "trap:T6", tag: "T6 AdBlue" }] });
 folders.push({ name: "faktoren", items: [{ label: "faktoren_lehrwerte.csv", open: "trap:T7", tag: "T7 method" }] });
+// the order the folders have on disk: Werk Nord (electricity, meter readings, gas), Werk Süd, Lager Ost, fleet, factors
+const DISK = ["Werk_Nord/Strom", "Werk_Nord", "Werk_Nord/Gas", "Werk_Sued", "Lager_Ost", "Flotte", "faktoren"];
+assert(folders.length === DISK.length && folders.every((f) => DISK.includes(f.name)), "folder list differs from the disk order: " + folders.map((f) => f.name).join(", "));
+folders.sort((a, b) => DISK.indexOf(a.name) - DISK.indexOf(b.name));
 const treeHtml = folders.map((f) => `<section class="folder" aria-label="${esc(f.name)}"><h3>${esc(f.name)}/<span>${f.items.filter((i) => !i.missing).length} ${f.items.filter((i) => !i.missing).length === 1 ? "file" : "files"}</span></h3>
 <ul class="files">${f.items.map((i) => `<li><button class="file${i.missing ? " file--missing" : ""}" type="button" data-open="${esc(i.open)}"><code>${esc(i.label)}</code>${i.tag ? `<span class="chip${i.missing ? " chip--gap" : " chip--muted"}">${esc(i.tag)}</span>` : ""}</button></li>`).join("")}</ul></section>`).join("\n");
 assert(wnS.items.filter((i) => !i.missing).length === D.numbers.files_wn_electricity.rounded, "Werk Nord electricity file count differs");
@@ -241,13 +302,18 @@ const tree = `<details class="tree" id="tree" open>
 </details>`;
 
 /* ------------------------------------------------ section 4: bridges, sentence, ranking */
+// Both bridges share one axis. It starts at a round value below the lowest total (not at zero),
+// so the total bars are shortened; the page says where the axis starts.
 const all = [D.numbers.total_lb_2024.rounded, D.numbers.total_lb_2025.rounded, D.numbers.total_mb_2024.rounded, D.numbers.total_mb_2025.rounded];
-const hiB = Math.max(...all), loB = Math.min(...all) - (Math.max(...all) - Math.min(...all)) * 0.12;
-const bp = (v) => Math.round((8 + 90 * (v - loB) / (hiB - loB)) * 100) / 100;
+const hiB = Math.max(...all), lowB = Math.min(...all), spanB = hiB - lowB;
+const AXIS_B = Math.floor((lowB - spanB * 0.12) / 100) * 100;
+const topB = hiB + spanB * 0.02;
+const bp = (v) => Math.round(100 * (v - AXIS_B) / (topB - AXIS_B) * 100) / 100;
+assert(AXIS_B > 0 && AXIS_B < lowB, "bridge axis start out of range");
 function bridge(m, title) {
   const y24 = D.numbers[`total_${m}_2024`].rounded, y25 = D.numbers[`total_${m}_2025`].rounded;
   let run = y24, sum = t10(y24);
-  const rows = [`<li class="brow brow--tot"><span class="brow__l">2024</span><span class="track"><span class="cut"></span><span class="bar" style="--l:0%;--w:${bp(y24)}%"></span></span><span class="brow__v">${esc(C.num(y24))}</span></li>`];
+  const rows = [`<li class="brow brow--tot"><span class="brow__l">2024</span><span class="track"><span class="bar" style="--l:0%;--w:${bp(y24)}%"></span><span class="cut"></span></span><span class="brow__v">${esc(C.num(y24))}</span></li>`];
   for (const d of D.drivers[m]) {
     const a = run, b = run + d.t; run = b; sum += t10(d.t);
     const l = Math.min(bp(a), bp(b)), w = Math.abs(bp(b) - bp(a));
@@ -255,11 +321,12 @@ function bridge(m, title) {
     rows.push(`<li class="brow"><span class="brow__l"><button class="linkish" type="button" data-open="${k}">${esc(d.en)}</button></span><span class="track"><span class="bar" style="--l:${l}%;--w:${w}%"></span></span><span class="brow__v">${esc(C.signed(d.t))}</span></li>`);
   }
   assert(sum === t10(y25), `drivers.${m} do not add up to the 2025 total`);
-  rows.push(`<li class="brow brow--tot brow--2025"><span class="brow__l">2025</span><span class="track"><span class="cut"></span><span class="bar" style="--l:0%;--w:${bp(y25)}%"></span></span><span class="brow__v">${esc(C.num(y25))}</span></li>`);
+  rows.push(`<li class="brow brow--tot brow--2025"><span class="brow__l">2025</span><span class="track"><span class="bar" style="--l:0%;--w:${bp(y25)}%"></span><span class="cut"></span></span><span class="brow__v">${esc(C.num(y25))}</span></li>`);
   if (m === "lb") rows.push(`<li class="brow brow--own"><span class="brow__l">Own use together (electricity, gas, diesel)</span><span></span><span class="brow__v">${esc(n("drv_lb_own_t").replace(" t", ""))}</span></li>`);
   return `<figure class="bridge"><h3>${esc(title)}</h3><ol aria-label="${esc(title)}, t CO₂e">${rows.join("")}</ol></figure>`;
 }
-const bridges = `<div class="bridges">${bridge("lb", "Location-based, 2024 to 2025 (t CO₂e)")}${bridge("mb", "Market-based, 2024 to 2025 (t CO₂e)")}</div>`;
+const bridges = `<div class="bridges">${bridge("lb", "Location-based, 2024 to 2025 (t CO₂e)")}${bridge("mb", "Market-based, 2024 to 2025 (t CO₂e)")}</div>
+<p class="caption axisnote">Both bridges share one axis that starts at ${esc(C.num(AXIS_B, 0))} t, not at zero. The change bars are to scale; the 2024 and 2025 bars are shortened.</p>`;
 const nb = (label, k, accent) => `<button class="nbtn${accent ? " nbtn--accent" : ""}" type="button" data-open="${k}">${esc(label)}</button>`;
 const sentence = `<div class="sentence" id="sentence">
   <p class="label">The rewritten sentence. Every number opens its driver line and rows.</p>
@@ -281,14 +348,15 @@ const ranking = `<details class="more rank" id="rank" open>
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const MONTHS_LONG = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const LEG_EN = { "1": "one bill", "2": "counted twice", "0": "missing", S: "part of a bill for two months", Z: "meter reading instead of a bill (grade B)", J: "annual bill", Q: "quarterly statement", X: "outside the boundary" };
+// The JSON codes are German initials (J = Jahresrechnung, Z = Zählerstand, S = split bill). The page shows English glyphs;
+// the class names keep the JSON code. demo-app.js uses the same map.
+const GLYPH = { "1": "1", "2": "2", "0": "0", S: "½", Z: "M", J: "Y", Q: "Q", X: "" };
+assert(Object.keys(D.coverage.legend).every((k) => k in GLYPH), "coverage legend has a code without an English glyph");
 assert(Object.keys(D.coverage.legend).every((k) => LEG_EN[k]), "coverage legend has a code without an English label");
 const ROWNAME = { "WN Strom": "Werk Nord, electricity", "WS Strom": "Werk Süd, electricity", "LO Strom": "Lager Ost, electricity", "WN Gas": "Werk Nord, gas", "WS Gas": "Werk Süd, gas", "FL Diesel": "Fleet, diesel" };
-function covCells(row) {
-  return D.coverage.expected[row].map((code, i) => `<td data-row="${esc(row)}" data-m="${i}" data-month="${MONTHS_LONG[i]}" class="k-${code}" aria-label="${MONTHS_LONG[i]}: ${esc(LEG_EN[code])}"><span aria-hidden="true">${code}</span></td>`).join("");
-}
 const SHORT = { "WN Strom": "WN el.", "WS Strom": "WS el.", "LO Strom": "LO el.", "WN Gas": "WN gas", "WS Gas": "WS gas", "FL Diesel": "Fleet" };
-const cell = (row, i) => { const code = D.coverage.expected[row][i]; return `<td data-row="${esc(row)}" data-m="${i}" data-month="${MONTHS_LONG[i]}" class="k-${code}" aria-label="${MONTHS_LONG[i]}: ${esc(LEG_EN[code])}"><span aria-hidden="true">${code}</span></td>`; };
-const tbCell = (i) => `<td class="k-X tbc" aria-label="Talbrück, ${MONTHS_LONG[i]}: ${esc(LEG_EN.X)}"><span aria-hidden="true">J</span></td>`;
+const cell = (row, i) => { const code = D.coverage.expected[row][i]; return `<td data-row="${esc(row)}" data-m="${i}" data-month="${MONTHS_LONG[i]}" class="k-${code}" aria-label="${MONTHS_LONG[i]}: ${esc(LEG_EN[code])}"><span aria-hidden="true">${GLYPH[code]}</span></td>`; };
+const tbCell = (i) => `<td class="k-X tbc" aria-label="Talbrück, ${MONTHS_LONG[i]}: ${esc(LEG_EN.X)}"><span aria-hidden="true">${GLYPH.J}</span></td>`;
 const wide = `<table class="covtab covtab--wide"><caption class="sr-only">Coverage per site and month, 2025</caption>
       <thead><tr><th scope="col" class="pin">Site</th>${MONTHS.map((m) => `<th scope="col">${m}</th>`).join("")}</tr></thead>
       <tbody>${D.coverage.rows.map((r) => `<tr><th scope="row" class="pin">${esc(ROWNAME[r] || r)}</th>${MONTHS.map((m, i) => cell(r, i)).join("")}</tr>`).join("")}
@@ -297,13 +365,13 @@ const tall = `<table class="covtab covtab--tall"><caption class="sr-only">Covera
       <thead><tr><th scope="col">Month</th>${D.coverage.rows.map((r) => `<th scope="col"><abbr title="${esc(ROWNAME[r] || r)}">${esc(SHORT[r] || r)}</abbr></th>`).join("")}<th scope="col" class="tbc"><abbr title="Talbrück, not ours">TB</abbr></th></tr></thead>
       <tbody>${MONTHS.map((m, i) => `<tr><th scope="row">${m}</th>${D.coverage.rows.map((r) => cell(r, i)).join("")}${tbCell(i)}</tr>`).join("")}</tbody></table>`;
 const grid = `<div class="covwrap">
-  <div class="gridbar"><button class="btn" type="button" id="cov-toggle" aria-pressed="false">As the folder arrived</button><p class="caption" id="cov-caption">As the ledger has it. October comes from the meter readings (grade B).</p></div>
+  <div class="gridbar"><button class="btn" type="button" id="cov-toggle" aria-pressed="false">As the folder arrived</button><p class="caption" id="cov-caption" aria-live="polite">As the ledger has it. October comes from the meter readings (grade B).</p></div>
   <div class="cov" id="cov" data-tb="0" role="region" aria-label="Coverage grid" tabindex="0">
     ${wide}
     ${tall}
   </div>
-  <p class="legend">${["1", "2", "0", "S", "Z", "J", "Q", "X"].map((k) => `<span data-code="${k}" data-label="${esc(LEG_EN[k])}"><i class="k-${k}" aria-hidden="true">${k === "X" ? "" : k}</i>${esc(LEG_EN[k])}</span>`).join("")}</p>
-  <p class="caption">${esc(D.trapNotes.august_en)}</p>
+  <p class="legend">${["1", "2", "0", "S", "Z", "J", "Q", "X"].map((k) => `<span data-code="${k}" data-label="${esc(LEG_EN[k])}" data-glyph="${esc(GLYPH[k])}"><i class="k-${k}" aria-hidden="true">${esc(GLYPH[k])}</i>${esc(LEG_EN[k])}</span>`).join("")}</p>
+  <p class="flagline"><span class="chip chip--muted">Flag, do not correct</span> August ${esc(n("aug_kwh"))} is a real dip during the plant holiday.</p>
 </div>`;
 const STATUS_EN = { enthalten: "included", "ausgeschlossen: Duplikat": "excluded: duplicate", "ausgeschlossen: Grenze": "excluded: boundary", "ergänzt: Zählerstand, DQ B": "added: meter reading, grade B" };
 const docs = D.controlTotal.filter((r) => r.group === "document"), meters = D.controlTotal.filter((r) => r.group === "meter");
@@ -316,7 +384,7 @@ for (const r of D.controlTotal) assert(STATUS_EN[r.status], "control total statu
 const kwh = (k) => esc(n(k).replace(" kWh", ""));
 const control = `<details class="more ctl" id="ctl" open><summary>Control total, electricity 2025 (kWh)</summary><table>
   <tbody>
-    ${docs.map((r) => `<tr><th scope="row">${esc(r.en)}<br><span class="st">${esc(STATUS_EN[r.status])}</span></th><td class="n">${esc(C.num(r.kwh, 0))}</td></tr>`).join("")}
+    ${docs.map((r) => `<tr><th scope="row">${esc(r.en).replace(/(\d+-\d+)/g, '<span class="nw">$1</span>')}<br><span class="st">${esc(STATUS_EN[r.status])}</span></th><td class="n">${esc(C.num(r.kwh, 0))}</td></tr>`).join("")}
     <tr class="sum"><th scope="row">Documents in the folder</th><td class="n">${kwh("ctl_docs_kwh")}</td></tr>
     <tr><th scope="row">minus excluded (duplicate, Talbrück)</th><td class="n">${esc(C.num(-D.numbers.ctl_excluded_kwh.value, 0))}</td></tr>
     <tr><th scope="row">Included documents</th><td class="n">${kwh("ctl_included_kwh")}</td></tr>
@@ -332,7 +400,8 @@ const runsHtml = runs.status === "not_captured" ? `<div class="runs">
   <div>
     <p><span class="chip chip--gap">Not captured yet</span></p>
     <p>${esc(D.meta.constructedLabel_en)}</p>
-    <p>The answer on the ledger in the deck and the guide carries this label: ${esc(D.meta.targetLabel_en)}</p>
+    <p class="tlabel"><span class="chip">${esc(D.meta.targetLabel_en)}</span></p>
+    <p>Used for the ledger answer in the deck and the guide.</p>
   </div>
   <details class="more proto" id="proto" open><summary>The capture protocol</summary><ol aria-label="Run protocol">
     <li>Hold the model, prompt, factor file, 2024 summary and date constant.</li>
@@ -349,12 +418,25 @@ let html = template
   .replace(/\{\{n:([a-z0-9_]+)\}\}/g, (_, k) => esc(n(k)))
   .replace(/\{\{c:count\}\}/g, String(Object.keys(D.combinations).length))
   .replace(/\{\{t:([A-Za-z0-9_.]+)\}\}/g, (_, p) => { const v = at(p); if (v === undefined) throw new Error("missing text " + p); return esc(v); });
-html = html.replace("{{core}}", () => coreSrc.trim()).replace("{{app}}", () => appSrc.trim()).replace("{{data}}", () => safeJson);
+html = html.replace("{{data}}", () => safeJson);
+const GEN = "/* Generated by scripts/workshop04/build-demo.mjs from scripts/workshop04/%s. Edit the source there and rebuild. */\n";
+const coreOut = GEN.replace("%s", "demo-core.js") + coreSrc.trim() + "\n";
+const appOut = GEN.replace("%s", "demo-app.js") + appSrc.trim() + "\n";
 
 /* ------------------------------------------------ page-level checks */
 assert(!/\{\{[^}]*\}\}/.test(html), "unresolved placeholder in output");
 assert(!/[–—]/.test(html), "en or em dash in output");
 assert(!/\son[a-z]+\s*=\s*["']/i.test(html.replace(/<script[\s\S]*?<\/script>/g, "")), "inline event handler attribute in output");
+// no inline executable script: every <script> either has a src or is JSON data
+for (const tag of html.match(/<script\b[^>]*>/g) || []) assert(/\ssrc="/.test(tag) || /type="application\/json"/.test(tag), "inline executable script in output: " + tag);
+for (const [name, src] of [["w04-demo-core.js", coreOut], ["w04-demo.js", appOut]]) {
+  assert(!/[–—]/.test(src), name + ": en or em dash");
+  assert(!/innerHTML|insertAdjacentHTML|document\.write|localStorage|fetch\(|XMLHttpRequest/.test(src), name + ": forbidden API");
+  assert(!(src.match(/[A-Za-z0-9_]{40,}/g) || []).some((t) => /[a-z]/.test(t) && /[A-Z]/.test(t)), name + ": mixed-case token of 40+ chars");
+  assert(html.includes(`<script src="./lib/${name}" defer></script>`), "demo.html does not load lib/" + name);
+}
+assert(!/down to the right answer/.test(html + coreOut + appOut), "caption says 'down to the right answer'");
+assert(D.documents.find((d) => d.trap === "T1").lines.some((l) => l.includes("Enerqie")), "duplicate drawer copy: the scan no longer spells 'Enerqie'");
 assert(!/innerHTML|insertAdjacentHTML|document\.write|localStorage|fetch\(|XMLHttpRequest|<iframe/i.test(html.replace(/<script type="application\/json"[\s\S]*?<\/script>/, "")), "forbidden API in output");
 const longTok = (html.match(/[A-Za-z0-9_]{40,}/g) || []).filter((t) => /[a-z]/.test(t) && /[A-Z]/.test(t));
 assert(longTok.length === 0, "mixed-case token of 40+ chars: " + longTok.slice(0, 3).join(", "));
@@ -381,13 +463,20 @@ if (problems.length) {
   console.error("build-demo: " + problems.length + " problem(s):\n  " + problems.join("\n  "));
   process.exit(1);
 }
-const rel = path.relative(repo, OUT);
+const outputs = [[OUT, html], [OUT_CORE, coreOut], [OUT_APP, appOut]];
 if (check) {
-  const cur = existsSync(OUT) ? readFileSync(OUT, "utf8") : "";
-  if (cur !== html) { console.error(`drift: ${rel} differs from the build (run node scripts/workshop04/build-demo.mjs)`); process.exit(1); }
-  console.log(`${rel} is up to date (${Buffer.byteLength(html)} bytes, data ${path.relative(repo, dataPath)})`);
+  let drift = 0;
+  for (const [file, text] of outputs) {
+    const cur = existsSync(file) ? readFileSync(file, "utf8") : "";
+    if (cur !== text) { drift++; console.error(`drift: ${path.relative(repo, file)} differs from the build (run node scripts/workshop04/build-demo.mjs)`); }
+  }
+  if (drift) process.exit(1);
+  console.log(`demo.html and its two scripts are up to date (${Buffer.byteLength(html)} bytes, data ${path.relative(repo, dataPath)})`);
 } else {
-  mkdirSync(path.dirname(OUT), { recursive: true });
-  writeFileSync(OUT, html);
-  console.log(`wrote ${rel} (${Buffer.byteLength(html)} bytes, data ${path.relative(repo, dataPath)})`);
+  for (const [file, text] of outputs) {
+    mkdirSync(path.dirname(file), { recursive: true });
+    writeFileSync(file, text);
+    console.log(`wrote ${path.relative(repo, file)} (${Buffer.byteLength(text)} bytes)`);
+  }
+  console.log(`data ${path.relative(repo, dataPath)}`);
 }

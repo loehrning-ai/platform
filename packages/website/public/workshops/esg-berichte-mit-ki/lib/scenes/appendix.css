@@ -142,32 +142,6 @@ section[data-kind="appendix"] .ax-sub td {
   width: 760px;
 }
 
-#appendix-factors .ft {
-  width: 100%;
-  border: 4px solid var(--ink);
-  border-collapse: collapse;
-  background: var(--papier);
-  font-family: var(--mono);
-  font-size: 18px;
-}
-
-#appendix-factors .ft th {
-  padding: 8px 10px 6px;
-  border-bottom: 3px solid var(--ink);
-  color: var(--slate);
-  font-weight: 500;
-  text-align: left;
-}
-
-#appendix-factors .ft td {
-  padding: 8px 10px;
-  border-top: 1px solid var(--leinen);
-  white-space: nowrap;
-}
-
-#appendix-factors .ft .ft-num { text-align: right; }
-#appendix-factors .ft .ft-id { font-weight: 700; }
-#appendix-factors .ft .ft-unit { color: var(--slate); font-size: 16px; }
 
 #appendix-factors > .af-real {
   position: absolute;

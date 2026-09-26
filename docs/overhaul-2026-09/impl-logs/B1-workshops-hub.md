@@ -59,3 +59,36 @@
 - werk owner: CoverBand could take the globe breakpoint as a prop (for example `globeFrom="lg"`) in place of the className override used here.
 - Nav/footer (B6): the critique's high issue 3 (8.15 nav, 8.4/8.10/8.11 footer). In the latest capture the nav is already flat. The footer headings are now sentence case, but "Datenstand"/"Aktualisiert" still use mono labels.
 - The Playwright e2e specs were not run (the headless shell binary is missing).
+
+---
+
+# B1 polish pass, retry (2026-09-26, after W04 landed in the registry)
+
+## State found
+The first polish pass (above) is already in the tree through WIP commit 98926a0. Commit 5e25079 wired W04 into the registry, added its deck-cover card-preview.webp, put "04" in `DECK_COVERS` and rewrote the hub test against the real four-workshop list. The hub now renders 4 rows: W04 and W03 show deck covers, W02 and W01 show the CSS mini-cover. The button stays on 03 and the team note reads "Workshops 03 und 04 haben ...". Nav and footer (critique high 3) have landed on the flat Werkzeichnung chrome. Every critique item was re-checked against live captures of the four-workshop page.
+
+## Files changed in this pass
+- src/app/workshops/workshops-content.tsx
+  - Cover band globe (high 2, remainder): from lg, CoverBand gets `lg:[&>[data-cover-globe]]:[mask-image:linear-gradient(to_right,transparent_32%,black_50%)]`. I measured 1024, 1152, 1280, 1440 and 1920 in DE and EN. At the right edge of the text column (h1, lead, button line, index row) the mask alpha is 0 at every width. At the Germany trace it is 1 at every width. No globe line now runs under the H1 or the lead. The existing md..<lg hide stays.
+  - H1: `max-w-[14ch] xl:max-w-[16ch]`. EN "Workshops with a case and a template" went from 3 lines to 2 at 1280 and above. DE was already 2 lines at every width. Below xl, 16ch would push the EN H1 to x=627 at 1024, too close to Germany (x=724), so it stays at 14ch there.
+  - Negative amounts: `plainNumbers` now only maps U+2212 to "-". A new `AmountText` wraps negative amounts (" -19.960 €", " -€19,960") in `span.whitespace-nowrap.tabular-nums`. In EN, a hyphen-minus before "€" is a line-break opportunity, so "-" could end a line. A lookbehind requires a space before the minus, so hyphenated words such as "Scope-1-und-2-Frage" are not touched. The number must end on a digit, so the sentence period stays outside the span. Used for the summary and the question.
+  - Row `dl`: `max-w-[56ch]` becomes `max-w-[73ch]`. At 13px caption that is the same measure as the 17px summary, so the facts line up with the prose. The need `dd` gets `text-pretty`. W02 "Claude-Desktop-App und ein Claude-Plan mit Claude Code" (and the EN line) no longer orphans "Code".
+- src/app/workshops/workshops-content.test.tsx: pins the H1 widths and both band globe classes. Checks that the EN amount "-€19,960" and the DE amount "-19.960 €" are single nowrap/tabular spans, and that the W04 "Scope-1-und-2-Frage" summary is not split.
+- workshop-copy.ts and page.tsx: unchanged in this pass.
+
+## Checks
+- vitest (20 files, 323 tests): src/app/workshops/, catalog-surfaces-mobile, src/components/werk, api/workshops.json, lib/workshops*, learning-surface-density-contract, public-information-density, passive-state-design-contract, access-surfaces-density, sitemap, highlighted-text. All pass.
+- eslint: clean on page.tsx, workshops-content.tsx, workshop-copy.ts and workshops-content.test.tsx.
+- tsc -p tsconfig.typecheck.json: 0 errors in the whole project.
+- bun run content:lint: 0 errors, no warnings in my files.
+- Playwright e2e, run for the first time. The default headless shell 1228 is still missing, so I used a temporary config that extends playwright.config.ts with executablePath /opt/pw-browsers/chromium (deleted afterwards) and E2E_REUSE_EXISTING_SERVER=1 against the dev server. workshops.spec (4), route-workshops-locales.spec (4 widths, DE+EN), heading-band-geometry.spec (4) and workshop-hydration.spec (4): 16 of 16 pass.
+- axe (wcag2a/aa/21aa/22aa): 0 violations on /workshops and /en/workshops at 320, 390, 768, 1024 and 1440. Also at every width: no horizontal overflow, one h1, no text under 12px, no link or button under 44px, 0 material links, and EN links are all /en with no German strings. The row focus ring is 3px solid Mennige at offset 4, and the link drops its own ring. Clicking a row link navigates to the detail page.
+- No en or em dash in the visible copy of <main>. The only U+2212 characters are inside the JSON-LD script (registry `description`), see below.
+- Screenshots: impl/B1-workshops-hub/polish2/ (band2-{de,en}-{1024..1920}.png, full2-{de,en}-{1440,1024,390}.png plus per-row crops, m-*.png, focus-row.png).
+- Screenshot note: the fonts are `font-display: optional` and the container has no Arial for the `local("Arial")` fallback. A cold dev-server fetch therefore leaves a page on DejaVu for its whole lifetime, which is the "fallback font" the critique saw. polish2/lib.mjs serves the woff2 files from memory and adds a block-display FontFace, for screenshots only. In production the fonts are preloaded and cached, so this is not a page issue. The integrator may want to confirm the fallback metrics on a machine that has Arial.
+
+## Still open for other owners / the integrator
+- Covers (critique high 1, rest): regenerate W01 and W02 card-preview.webp from slides.html#cover/0 at 1920x1080, downscaled to 960x540, then add "01" and "02" to `DECK_COVERS`. Until then they render the uniform CSS mini-cover. The W03 cover still prints "75 minutes" in its footer, while the hub says "Live 90 Min." and the route "60 bis 90 Minuten". Regenerate it without that line (critique low: durations).
+- Registry owner: U+2212 is still in the W03 DE/EN `description` and in the W04 `description` ("−5,1 %", "−29,2 %"). These only reach the JSON-LD on the hub, but the detail pages show them. `requirementShort` could move from the catalog copy map into the registry.
+- werk owner: CoverBand could take `globeFrom="lg"` and a `globeMaskStart` prop in place of the two arbitrary-variant overrides passed as className here.
+- Playwright: install chromium_headless_shell-1228 (or pin launchOptions.executablePath) so `bun run test:e2e` runs without a temporary config.

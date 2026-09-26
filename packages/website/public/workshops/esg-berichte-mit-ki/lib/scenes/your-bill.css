@@ -33,7 +33,7 @@
   padding: 10px 20px 8px;
   border-bottom: 3px solid var(--ink);
   color: var(--slate);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
@@ -124,4 +124,8 @@
 /* The lines share one slot: only the current one takes space. */
 #your-bill .yb-now__text.is-step-hidden {
   display: none;
+}
+
+#your-bill .yb-ex .w-mono {
+  font-size: 20px;
 }

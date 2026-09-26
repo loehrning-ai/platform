@@ -215,11 +215,13 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           </div>
 
           <div className="mt-10 border-t border-hairline pt-6" aria-label={copy.catalog.statsLabel} role="group">
-            {/* Below sm three stats stack as hairline rows instead of leaving
-                the third alone in a second row. */}
+            {/* Below sm each stat is one hairline row, value then label
+                ("12 Praxisbeispiele"), without the note. Three columns do not
+                fit German labels such as "Ausführungsarten" at 390px. The
+                DOM order stays label, value for screen readers. */}
             <StatRow
               stats={stats}
-              className="max-sm:grid-cols-1 max-sm:gap-y-0 max-sm:divide-y max-sm:divide-hairline max-sm:[&>div]:py-3"
+              className="max-sm:grid-cols-1 max-sm:gap-y-0 max-sm:divide-y max-sm:divide-hairline max-sm:[&>div]:flex-row-reverse max-sm:[&>div]:items-baseline max-sm:[&>div]:justify-end max-sm:[&>div]:gap-3 max-sm:[&>div]:py-2 max-sm:[&_dd]:mt-0 max-sm:[&_dd+dd]:hidden"
             />
           </div>
         </div>

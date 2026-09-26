@@ -1,10 +1,11 @@
-/* ask-back: five requests in a tray (hatch number: raw request), three columns that fill as the room
-   calls out (calculate, ask back, refuse or rewrite); each card leaves the tray when it is placed.
-   Press 5: the target answer from the raw folder, seven points before any number. */
+/* ask-back: three columns under the title (calculate, ask back, refuse or rewrite) and the five
+   requests in a tray at the foot of the page; each card leaves the tray when the room places it, and
+   its heading in the column is the same text it had in the tray. The emptied tray leaves no gap under
+   the title. Press 5: the target answer from the raw folder, seven points before any number. */
 
 #ask-back > .ab-tray {
   position: absolute;
-  top: 236px;
+  top: 808px;
   left: var(--margin-x);
   display: grid;
   width: 1728px;
@@ -43,7 +44,7 @@
 
 #ask-back .ab-cols {
   position: absolute;
-  top: 404px;
+  top: 244px;
   left: var(--margin-x);
   display: grid;
   width: 1728px;
@@ -55,7 +56,7 @@
   display: grid;
   align-content: start;
   gap: 14px;
-  min-height: 520px;
+  min-height: 536px;
   padding: 0 0 16px;
   border-top: 4px solid var(--ink);
 }
@@ -99,7 +100,7 @@
 
 #ask-back > .ab-foot {
   position: absolute;
-  top: 932px;
+  top: 944px;
   left: var(--margin-x);
   max-width: none;
   font-size: 22px;
@@ -167,4 +168,9 @@
   color: var(--papier);
   font-size: 22px;
   font-weight: 700;
+}
+
+/* The target label is as prominent as the raw answer's label (M20): ink. */
+#ask-back .ab-answer .w-label {
+  color: var(--ink);
 }

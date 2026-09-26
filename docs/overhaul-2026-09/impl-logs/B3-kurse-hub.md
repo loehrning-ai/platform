@@ -116,3 +116,47 @@ Pages: `/kurse` and `/en/kurse` (the EN route re-exports the page, so no EN file
 ## Left for the integrator
 - **Visual baseline:** re-record `visual-regression` `courses-desktop.png` after merge.
 - **Discovery test:** optionally relax `discovery-record-copy.test.ts`, which pins "Quellstand".
+
+---
+
+# Retry pass (verification on the current tree), 2026-09-26
+
+The polish pass above is already in commit 8c0f2a2. This pass re-checked every critique issue against the current tree. Workshop 04 is now in the registry and other agents' chrome has landed since.
+
+## Verified against the critique
+- **Issue 1:** rows line up across both groups. At 1440 the facts sit at x=854 and the action at x=1038 in all 10 rows; at 1024 they share the right cell at x=752, with the promise 616px wide.
+- **Issue 2:** the access state appears once: facts `dd` at lg+, caption span below lg. The action shows the verb only, and the accessible name is unchanged.
+- **Issue 3:** the Route always marks the path's own next course (`aria-current="step"`, inset square). The cold-start sheet keeps the open Claude Course plus the explanatory caption, because `route-kurse-hub` and `mobile-access-disclosure` pin that sheet (heading "Claude Course", kicker "Offener Einstieg ohne Lernkonto", exactly one link) as a provider-free behaviour contract.
+- **Issues 4 to 8:**
+  - the heading ladder at 1440 is 52/36/24/26/20;
+  - the Route head is "Dein Pfad · 4 Kurse" and its stations are stacked;
+  - the promises start with the verb;
+  - "Teil deines Pfads" is sr-only on rows and has one legend.
+- **Issue 9:** still one source line per row. `learning-atlas.test.tsx` pins visible per-row MIT attribution as the only place on the site where repo and commit render, and each `sourceHref` points at the course's own subdirectory.
+- **Issues 10 to 15:**
+  - "kostenlos" no longer appears in the kicker or the band note;
+  - "Kosten und Konto" comes before the band and has one `/konto` link;
+  - the band now reads "In jedem der vier Workshops" (W04 registered);
+  - the level caption comes after the promise on phones;
+  - the Mennige button ends at y=896 at 1440×900 (DE).
+- **Issue 14:** the DE meta description keeps "Quellstand", because `src/app/__tests__/discovery-record-copy.test.ts` (outside my ownership) still pins it.
+
+## Changed in this pass
+- **`src/app/kurse/learning-atlas.tsx`:** the group head h3 is now `text-[1.375rem] sm:text-[1.625rem]`. At 390 it was 26px, the same as the h2 "Alle Kurse", so the ladder was flat on phones; it is now 26 / 22 / 20px.
+- **`src/app/kurse/learning-atlas.test.tsx`:** new assertions pin that ladder: the group head size classes, the Kopflinie on its wrapper, and 20px row titles.
+- **EN promise quotes:** they stay straight ('92% accuracy'). The voice spec (slop-language l.381) treats curly quotes as an English tell.
+
+## Checks
+- **vitest:** 167/167 in `src/app/kurse`, `src/lib/courses` and `discovery-record-copy`.
+- **eslint:** clean on my files. **tsc:** no errors in my files (the whole project was clean at the time). **content:lint:** 0 errors and no warnings in my files.
+- **e2e against the dev server (scratch config):**
+  - `route-kurse-hub` plus `mobile-access-disclosure`: 26 passed, 12 skipped by design.
+  - The `courses` "/kurse unified hub" block including axe, the `a11y-target-size` atlas targets and the `learning-density` gallery first-viewport check: 30 passed.
+- **axe (wcag2a/aa, 21a/aa, 22aa):** 0 violations on /kurse and /en/kurse at 1440 and 390.
+- **Overflow:** none at 390, 1024 or 1440, DE and EN. One h1.
+- **Screenshots:** `impl/B3-kurse-hub-v4/v4-{de,en}-{1440,1024,390}.png` (+ `-fold`), the crops `c4-*`, and `v5-de-390-ledger.png`.
+
+## Left for the integrator
+- **Visual baseline:** re-record `visual-regression` `courses-desktop.png` after merge.
+- **Discovery test:** optionally relax `discovery-record-copy.test.ts` ("Quellstand"), then drop the word from `metadataDescription.de`.
+- **Issue 3:** if the owner prefers the sheet to stay on the path in provider-free deployments, drop `openDefault` in `learning-atlas.tsx` and rewrite the two cold-start e2e tests together (`route-kurse-hub.spec.ts:81`, `mobile-access-disclosure.spec.ts:149`).

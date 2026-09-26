@@ -11,9 +11,10 @@
      absunit  without the sign: "495.5 t"
      de       the German display string
    data-j paths are dot-separated; an array segment is an index or an id matched against row_id,
-   id, step, n or the file name of path without its extension. data-form="cell:N" picks cell N of
+   id, step, n or a document's file name without its extension. data-form="cell:N" picks cell N of
    a Markdown table line, data-form="md" drops a leading "# ", int / fix1 / fix2 / pct format a
-   plain number, and math writes worked arithmetic with × and the minus sign. */
+   plain number, math writes worked arithmetic with × and the minus sign, and seg:A-B keeps the
+   " · " parts A to B of a line. */
 (function (root) {
   "use strict";
 
@@ -38,6 +39,7 @@
     if (/^\d+$/.test(segment)) return list[Number(segment)];
     return list.find((item) => item && typeof item === "object" && (
       item.row_id === segment || item.id === segment || item.step === segment || String(item.n) === segment
+      || (typeof item.file === "string" && item.file.replace(/\.[a-z]+$/, "") === segment)
       || (typeof item.path === "string" && item.path.split("/").pop().replace(/\.[a-z]+$/, "") === segment)));
   }
 
@@ -64,6 +66,10 @@
     // Worked arithmetic from the dataset is written in ASCII ("x", " - ", "-72.2"); on screen it gets
     // the multiplication sign and the minus sign U+2212.
     if (form === "math") text = text.replace(/ x /g, " × ").replace(/ - /g, " − ").replace(/(^|[\s(])-(?=\d)/g, "$1−");
+    // A slide may show only some " · " parts of a long document line (seg:0 or seg:0-1); the kit keeps
+    // the whole line.
+    const seg = /^seg:(\d+)(?:-(\d+))?$/.exec(form || "");
+    if (seg) text = text.split(" · ").slice(Number(seg[1]), Number(seg[2] ?? seg[1]) + 1).join(" · ");
     const cell = /^cell:(\d+)$/.exec(form || "");
     if (cell) {
       const cells = text.split("|").map((part) => part.trim()).filter((part, index, all) => !(part === "" && (index === 0 || index === all.length - 1)));

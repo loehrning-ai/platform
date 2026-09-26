@@ -67,10 +67,12 @@
   font-weight: 700;
 }
 
+/* The labels are part of the answers, not small print: ink, the deck's small size, balanced. */
 #resolution .rs-ans__label {
-  color: var(--slate);
-  font-size: 20px;
+  color: var(--ink);
+  font-size: var(--t-small);
   font-weight: 600;
+  text-wrap: balance;
 }
 
 #resolution .rs-ans__nums {

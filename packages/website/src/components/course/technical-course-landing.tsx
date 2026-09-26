@@ -61,6 +61,16 @@ function plainLabel(label: string): string {
   return label.replace(/^§\s*/, "");
 }
 
+/**
+ * Kicker text for the hero. A no-break space ties each "·" to the part before
+ * it, so a narrow screen breaks after the separator and never starts a line
+ * with it; `text-balance` on the kicker then keeps a short last part such as
+ * "kostenlos" from standing alone on the second line.
+ */
+function kickerLabel(label: string): string {
+  return plainLabel(label).replace(/ · /g, "\u00a0· ");
+}
+
 export function TechnicalCourseFrame({
   children,
   courseId,
@@ -93,11 +103,11 @@ export function TechnicalCourseHeader({
       data-technical-course-header
     >
       <div className="min-w-0">
-        <Kicker>{plainLabel(eyebrow)}</Kicker>
-        <h1 className="mt-3 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance [overflow-wrap:anywhere]">
+        <Kicker className="text-balance">{kickerLabel(eyebrow)}</Kicker>
+        <h1 className="mt-3 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance">
           {title}
         </h1>
-        <p className="mt-5 max-w-[56ch] break-words text-lead text-muted-foreground text-pretty [overflow-wrap:anywhere]">
+        <p className="mt-5 max-w-[56ch] break-words text-lead text-muted-foreground text-pretty">
           {intro}
         </p>
         <div
@@ -148,7 +158,7 @@ export function TechnicalCourseSectionHeading({
       data-technical-section-heading
     >
       <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h2 className="max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground text-balance [overflow-wrap:anywhere]">
+        <h2 className="min-w-0 max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground text-balance">
           {title}
         </h2>
         {note ? (
@@ -156,7 +166,7 @@ export function TechnicalCourseSectionHeading({
         ) : null}
       </div>
       {intro ? (
-        <p className="mt-2 max-w-[64ch] break-words text-body text-muted-foreground text-pretty [overflow-wrap:anywhere]">
+        <p className="mt-2 max-w-[64ch] break-words text-body text-muted-foreground text-pretty">
           {intro}
         </p>
       ) : null}

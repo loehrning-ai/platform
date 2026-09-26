@@ -78,3 +78,17 @@
   font-size: var(--t-body);
   line-height: 1.25;
 }
+
+/* The constructed label is part of the answer, not small print: ink, full label size, balanced
+   over two lines so no word is left alone. */
+#raw-answer .ra-label {
+  align-items: flex-start;
+  color: var(--ink);
+  font-size: var(--t-small);
+  text-wrap: balance;
+}
+
+#raw-answer .ra-label .icon {
+  flex: none;
+  margin-top: 2px;
+}

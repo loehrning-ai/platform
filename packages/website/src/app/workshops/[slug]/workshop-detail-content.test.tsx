@@ -74,6 +74,36 @@ describe("<WorkshopDetailContent>", () => {
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
 
+  it("sets a title's subtitle on its own line and keeps the full title as the heading name", () => {
+    for (const locale of ["de", "en"] as const) {
+      const workshop = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const { unmount } = render(
+        <WorkshopDetailContent workshop={workshop} locale={locale} />,
+      );
+      const [head, subtitle] = workshop.title.split(": ");
+      const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
+      // The text reads as the full title, colon included; only the subtitle
+      // moves to its own line.
+      expect(h1.textContent).toBe(workshop.title);
+      expect(h1.firstChild?.textContent).toBe(head);
+      expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
+      unmount();
+    }
+
+    // A title without a colon stays one run of text.
+    const w03 = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
+    render(<WorkshopDetailContent workshop={w03} locale="de" />);
+    const h1 = screen.getByRole("heading", { level: 1, name: w03.title });
+    expect(h1.querySelector("[data-title-subtitle]")).toBeNull();
+  });
+
+  it("aligns the case figures when a label wraps", () => {
+    const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
+    render(<WorkshopDetailContent workshop={workshop} locale="de" />);
+    const stats = sectionOf("Der Fall").querySelector("dl");
+    expect(stats).toHaveClass("[&>div]:justify-between");
+  });
+
   it("promotes the case, audience, outcomes, needs and limits into visible sections", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
     const { container } = render(

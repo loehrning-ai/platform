@@ -174,9 +174,18 @@ export function DemoGrid({
               aria-live="polite"
               className="text-caption text-muted-foreground tabular-nums"
             >
-              {filtered.length}{" "}
-              {filtered.length === 1 ? copy.resultSingular : copy.resultPlural}
-              {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
+              {/* The unfiltered total already shows in the stat row and the
+                  "Alle (12)" chips; the live count appears once a filter is
+                  set, and the empty live region announces nothing. */}
+              {isFiltered ? (
+                <>
+                  {filtered.length}{" "}
+                  {filtered.length === 1
+                    ? copy.resultSingular
+                    : copy.resultPlural}
+                  {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
+                </>
+              ) : null}
             </p>
             {isFiltered && filtered.length > 0 ? (
               <button
@@ -251,7 +260,9 @@ export function DemoGrid({
                 }
                 className={selectClass}
               >
-                <option value="Alle">{copy.all}</option>
+                <option value="Alle">
+                  {copy.all} ({catalog.length})
+                </option>
                 {DEMO_CATEGORIES.map((item) => {
                   const count = catalog.filter(
                     (demo) => demo.category === item,
@@ -270,7 +281,7 @@ export function DemoGrid({
               active={cat === "Alle"}
               onClick={() => setParam("cat", "Alle", "Alle")}
             >
-              {copy.all}
+              {copy.all} ({catalog.length})
             </Chip>
             {DEMO_CATEGORIES.map((c) => {
               const n = catalog.filter((d) => d.category === c).length;
@@ -327,9 +338,10 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3 max-sm:mt-4 max-sm:divide-y max-sm:divide-hairline">
           {/* Uniform 3/2/1 grid (blueprint 6.14): no spans, no tile borders,
-              whitespace between tiles. Works for any filtered subset. */}
+              whitespace between tiles. Works for any filtered subset. Below
+              sm the tiles are ledger rows split by hairlines. */}
           {filtered.map((d) => (
             <DemoTile key={d.slug} demo={d} locale={locale} />
           ))}
@@ -353,7 +365,7 @@ function FilterRow({
 }) {
   return (
     <div
-      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-center sm:gap-4"
+      className="grid min-w-0 gap-2 border-t border-hairline py-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-center sm:gap-4"
       role="group"
       aria-label={label}
     >

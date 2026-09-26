@@ -1010,7 +1010,10 @@ export function LessonMissionControl({
   // heading and label inside the mission break. German compounds such as
   // "Promptvariante" and "Grounding-Komparator" are wider than a mission
   // column at high browser zoom, and this section clips rather than scrolls,
-  // so without a break they are silently cut off.
+  // so without a break they are silently cut off. `break-word` only breaks a
+  // word that cannot fit on a line of its own; `anywhere` also shrinks the
+  // min-content width and split "Festlegen" into "Festleg|en" on phones.
+  // Flex and grid children therefore carry `min-w-0` so they can shrink.
   return (
     <section
       ref={missionRef}
@@ -1021,7 +1024,7 @@ export function LessonMissionControl({
       data-mission-collapsed={displayState.collapsed ? "true" : "false"}
       data-keyboard-shortcuts="ignore"
       aria-labelledby={headingId}
-      className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-t-2 border-foreground bg-background [overflow-wrap:anywhere]"
+      className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-t-2 border-foreground bg-background [overflow-wrap:break-word]"
     >
       <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-0 border-b border-hairline text-foreground sm:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="min-w-0 py-3">
@@ -1036,7 +1039,7 @@ export function LessonMissionControl({
               {...(missionHeadingLevel === 1
                 ? { role: "heading", "aria-level": 1 }
                 : {})}
-              className="[overflow-wrap:anywhere] text-fluid-h2 font-bold"
+              className="min-w-0 text-fluid-h2 font-bold"
             >
               {frame.title}
             </MissionHeading>
@@ -1155,9 +1158,14 @@ export function LessonMissionControl({
                               : "cursor-not-allowed border-border bg-card text-foreground/70",
                       )}
                     >
+                      {/* Below 420px the three tabs are about 110px wide, so
+                          the number chip gives way to the label. A finished
+                          beat keeps its "OK" chip, which is the only
+                          non-colour sign of completion on the tab. */}
                       <span
                         className={cn(
-                          "grid h-6 w-6 shrink-0 place-items-center border text-xs font-bold tabular-nums",
+                          "h-6 w-6 shrink-0 place-items-center border text-xs font-bold tabular-nums",
+                          complete ? "grid" : "hidden min-[420px]:grid",
                           selected
                             ? "border-background text-background"
                             : complete
@@ -1168,7 +1176,7 @@ export function LessonMissionControl({
                       >
                         {complete ? "OK" : String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="min-w-0 max-w-full text-label [overflow-wrap:anywhere]">
+                      <span className="min-w-0 max-w-full text-label hyphens-auto [overflow-wrap:break-word]">
                         {label}
                       </span>
                     </button>

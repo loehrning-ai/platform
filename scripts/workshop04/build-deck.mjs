@@ -26,10 +26,25 @@ import vm from "node:vm";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "..", "..");
 const DECK = path.join(REPO, "packages/website/public/workshops/esg-berichte-mit-ki");
-const DATA_PATH = path.join(HERE, "data/w04-data.json");
+// --data <file> reads another copy of the dataset (for example the published data/w04-data.json, whose
+// documents carry folder and file instead of a full path); both shapes are handled below.
+const DATA_ARG = process.argv.indexOf("--data");
+const DATA_PATH = DATA_ARG > 0 ? path.resolve(process.argv[DATA_ARG + 1]) : path.join(HERE, "data/w04-data.json");
 const CHECK = process.argv.includes("--check");
 
 const data = JSON.parse(readFileSync(DATA_PATH, "utf8"));
+// The published copy (lib/w04-data.js) carries no full raw-folder paths: a path such as
+// rohdaten_2025/Werk_Sued/Jahresuebersicht_2025_Oekostrom.md is a 40+ character mixed-case run that
+// the public scanner reads as a possible secret. Each document keeps folder and file separately (as
+// the published data/w04-data.json does) and each ledger row keeps the file name only.
+for (const d of data.documents) {
+  if (typeof d.path === "string") {
+    d.folder = d.path.split("/").slice(0, -1).join("/");
+    d.file = d.path.split("/").pop();
+    delete d.path;
+  }
+}
+for (const r of data.ledger) r.source_file = String(r.source_file).split("/").pop();
 const context = { console };
 context.globalThis = context;
 vm.runInNewContext(readFileSync(path.join(DECK, "lib/w04-fill.js"), "utf8"), context);
@@ -50,7 +65,7 @@ const esc = (text) => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").
 const attr = (text) => esc(text).replace(/"/g, "&quot;");
 const n = (key, form) => `<span class="num" data-num="${key}"${form ? ` data-form="${form}"` : ""}>${esc(fillApi.numberText(data, key, form))}</span>`;
 const j = (p, form, cls = "") => `<span${cls ? ` class="${cls}"` : ""} data-j="${attr(p)}"${form ? ` data-form="${form}"` : ""}>${esc(fillApi.pathText(data, p, form) ?? "")}</span>`;
-const doc = (file) => data.documents.find((d) => d.path.split("/").pop() === file);
+const doc = (file) => data.documents.find((d) => d.file === file);
 const stepAttr = (s) => (s === undefined || s === null || s === "" ? "" : ` data-step="${s}"`);
 const fmt = (value, digits = 1) => Number(value).toFixed(digits);
 
@@ -74,7 +89,10 @@ function parseRange(spec, max) {
 }
 
 // A document "paper" card rendered from documents[].lines. Params: file, lines (index ranges),
-// mark (indices outlined in Mennige), box (indices boxed in ink), id, cls, caption (yes/no).
+// mark (indices outlined in Mennige), box (indices boxed in ink), id, cls, caption (yes/no),
+// seg (line:parts, "/"-separated, for example 2:0-1: show only those " · " parts of a long line on
+// the slide) and join (index ranges of continuation lines set as one paragraph, so a sentence the
+// bill breaks over several lines does not break mid-phrase at card width).
 function genDoc(params) {
   const d = doc(params.file);
   if (!d) throw new Error(`gen:doc unknown file ${params.file}`);
@@ -82,6 +100,8 @@ function genDoc(params) {
   const show = parseRange(params.lines, d.lines.length);
   const mark = new Set(params.mark ? parseRange(params.mark) : []);
   const box = new Set(params.box ? parseRange(params.box) : []);
+  const segs = new Map((params.seg || "").split("/").filter(Boolean).map((s) => s.split(":")).map(([i, r]) => [Number(i), `seg:${r}`]));
+  const joined = new Set(params.join ? parseRange(params.join) : []);
   // Each item is one rendered line; consecutive marked (Mennige) or boxed (ink) lines share one frame.
   const items = [];
   let table = null;
@@ -102,8 +122,13 @@ function genDoc(params) {
     if (line.trim() === "") html = '<p class="doc__gap" aria-hidden="true"></p>';
     else if (line.startsWith("# ")) html = `<p class="doc__title">${j(`${base}.${i}`, "md")}</p>`;
     else if (/^--- .* ---$/.test(line)) html = `<p class="doc__page">${j(`${base}.${i}`)}</p>`;
-    else html = `<p class="doc__line">${j(`${base}.${i}`)}</p>`;
-    items.push({ html, flag });
+    else if (joined.has(i) && joined.has(i - 1) && items.length && items[items.length - 1].para && items[items.length - 1].flag === flag) {
+      // A continuation line: append to the paragraph the previous line opened.
+      const last = items[items.length - 1];
+      last.html = last.html.replace(/<\/p>$/, ` ${j(`${base}.${i}`, segs.get(i))}</p>`);
+      continue;
+    } else html = `<p class="doc__line">${j(`${base}.${i}`, segs.get(i))}</p>`;
+    items.push({ html, flag, para: joined.has(i) });
   }
   flush();
   const rows = [];
@@ -208,7 +233,14 @@ function genGrid() {
       } else {
         const tag = v === "J" ? "annual statement" : v === "Q" ? `Q${Math.floor(i / 3) + 1}` : v === "S" ? "one bill" : "";
         fills.push(`<rect class="mg-doc-bg" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" /><rect class="mg-doc${span > 1 ? " mg-doc--span" : ""}" x="${x}" y="${yy + 7}" width="${w}" height="${ch}" />`);
-        if (tag) fills.push(`<text class="mg-tag" x="${x + w / 2}" y="${yy + 33}" text-anchor="middle">${tag}</text>`);
+        // One bill for several months: an ink bracket under the months it covers (as in the legend).
+        if (span > 1) fills.push(`<path class="mg-span" d="M${x + 1} ${yy + 7 + ch + 3}v6H${x + w - 1}v-6" />`);
+        // The tag sits on a paper plate, so the hatch never runs through the letters. The plate width is
+        // estimated from the letter count (21 px bold: about 0.56 em per letter).
+        if (tag) {
+          const pw = Math.round(tag.length * 21 * 0.56 + 16);
+          fills.push(`<rect class="mg-tag-bg" x="${fmt(x + w / 2 - pw / 2)}" y="${yy + 12}" width="${pw}" height="${ch - 10}" /><text class="mg-tag" x="${x + w / 2}" y="${yy + 33}" text-anchor="middle">${tag}</text>`);
+        }
       }
       i += span;
     }
@@ -222,10 +254,15 @@ function genGrid() {
     + `<g class="mg-fill" data-step="3">${fills.join("")}${dip}</g>${meter}</svg>`;
 }
 
-// A ledger excerpt: the eight columns shown on `the-ledger`.
+// A ledger excerpt on `the-ledger`: six columns a controller can read from the back of the room. Each
+// header is a plain label with the CSV field name under it; period is left out (the row ID carries the
+// month) and value and unit as printed share one column.
 function genLedger(params) {
   const ids = params.rows.split(",");
-  const head = ["row_id", "entity_on_document", "period", "qty_source", "unit_source", "qty_norm", "status", "source (file · quote)"];
+  const head = [
+    ["Row", "row_id"], ["Company on the bill", "entity_on_document"], ["As printed", "qty_source"],
+    ["Counted", "qty_norm"], ["Status", "status"], ["Source: file and quote", "source_file, source_quote"],
+  ];
   const body = ids.map((id) => {
     const r = data.ledger.find((row) => row.row_id === id);
     if (!r) throw new Error(`gen:ledger unknown row ${id}`);
@@ -235,27 +272,27 @@ function genLedger(params) {
     return `<tr class="lg-row${excluded ? " lg-row--excluded" : ""}" data-row="${id}">`
       + `<td class="lg-id">${j(`${p}.row_id`)}</td>`
       + `<td class="lg-entity">${j(`${p}.entity_on_document`)}</td>`
-      + `<td class="lg-period">${j(`${p}.period_start`)}<br />${j(`${p}.period_end`)}</td>`
-      + `<td class="lg-num">${j(`${p}.qty_source`)}</td>`
-      + `<td>${j(`${p}.unit_source`)}</td>`
-      + `<td class="lg-num">${j(`${p}.qty_norm`)}</td>`
+      + `<td class="lg-num">${j(`${p}.qty_source`)} ${j(`${p}.unit_source`)}</td>`
+      + `<td class="lg-num">${j(`${p}.qty_norm`, "int")} ${j(`${p}.unit_norm`)}</td>`
       + `<td class="lg-status">${j(`${p}.status`)}</td>`
       + `<td class="lg-src"><span class="lg-file">${esc(file)}</span>${j(`${p}.source_quote`, "", "lg-quote")}</td>`
       + `</tr>`;
   }).join("");
-  return `<table class="lg" id="${params.id || "ledger"}"><thead><tr>${head.map((h, i) => `<th${i === 1 ? ' class="lg-entity-head" id="the-ledger-entity-head"' : ""}>${esc(h)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
+  const th = head.map(([label, field], i) => `<th${i === 1 ? ' class="lg-entity-head" id="the-ledger-entity-head"' : i === 2 || i === 3 ? ' class="lg-num"' : ""}><span class="lg-h">${esc(label)}</span><span class="lg-f">${esc(field)}</span></th>`).join("");
+  return `<table class="lg" id="${params.id || "ledger"}"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`;
 }
 
-// The pinned factor table excerpt on `six-rules`.
+// The pinned factor table excerpt on `six-rules` and `appendix-factors`. Three columns: the ID already
+// carries the year (F-EL-LB-2025) or the gas basis (F-GAS-HS), so year and basis are not repeated.
 function genFactors(params) {
   const ids = params.ids.split(",");
   const rows = ids.map((id) => {
     const f = data.factors[id];
     if (!f) throw new Error(`gen:factors unknown ${id}`);
     const digits = id === "F-DSL" ? "fix1" : "fix2";
-    return `<tr data-factor="${id}"${id === params.mark ? " class=\"is-mark\"" : ""}><td class="ft-id">${esc(id)}</td><td>${j(`factors.${id}.year`)}</td><td>${j(`factors.${id}.basis`)}</td><td class="ft-num">${j(`factors.${id}.value`, digits)}</td><td class="ft-unit">${j(`factors.${id}.unit`)}</td></tr>`;
+    return `<tr data-factor="${id}"${id === params.mark ? " class=\"is-mark\"" : ""}><td class="ft-id">${esc(id)}</td><td class="ft-num">${j(`factors.${id}.value`, digits)}</td><td class="ft-unit">${j(`factors.${id}.unit`)}</td></tr>`;
   }).join("");
-  return `<table class="ft"><thead><tr><th>factor_id</th><th>year</th><th>basis</th><th class="ft-num">value</th><th>unit</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<table class="ft"><thead><tr><th>Factor ID</th><th class="ft-num">Value</th><th>Unit</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 // The stacked bar of 2025 electricity on `two-scope-2`: Werk Süd (covered) and the rest.
@@ -288,75 +325,87 @@ function genBridge() {
     const xa = x0 + Math.min(r.a, r.b) * k, w = Math.abs(r.b - r.a) * k;
     return `<g class="br-row" style="--order:${r.order}"><text class="br-label" x="${x0 - 24}" y="${yy + 34}" text-anchor="end">${esc(r.label)}</text>`
       + `<rect class="br-bar ${r.cls}" x="${fmt(xa)}" y="${yy + 8}" width="${fmt(w)}" height="${rh - 20}" data-motion="grow" data-axis="x" style="--order:${r.order}" />`
+      // The certificate bar is drawn as an outline (tonnes taken out), with a minus sign inside it.
+      + (r.cls === "br-bar--minus" ? `<text class="br-sign" x="${fmt(xa + w / 2)}" y="${yy + 42}" text-anchor="middle" data-motion="fade" style="--order:${r.order}">−</text>` : "")
       + `<text class="br-val" x="${fmt(xa + w + 16)}" y="${yy + 38}" data-num="${r.key}" data-motion="fade" style="--order:${r.order}">${esc(fillApi.numberText(data, r.key))}</text></g>`;
   }).join("");
   return `<svg class="br" id="two-scope-2-bridge" viewBox="0 0 ${W} ${rows.length * rh}" width="${W}" height="${rows.length * rh}" role="img" aria-label="Bridge from location-based to market-based Scope 2, 2025.">${out}</svg>`;
 }
 
-// The 2024 to 2025 bridge on `what-drove-it`, one per method, from drivers.lb / drivers.mb. Bars start
-// at a cut (break mark on the baseline), as on `anatomy`. Both charts share one scale and one cut, so
-// the certificate bar reads ten times the grid-factor bar, as the numbers say. The frame with both
-// totals shows on entry; the change bars and their names appear on press `step` (the driver names
-// would answer the room vote). Params: method (lb|mb), step.
+// The 2024 to 2025 bridges on `what-drove-it`, both methods in one chart on one scale and one baseline
+// (drivers.lb / drivers.mb), so the certificate bar reads ten times the grid-factor bar, as the numbers
+// say. Bars start at a cut (break mark at the left end of the baseline), as on `anatomy`. The frame
+// (group heads, both totals, the 2024 and 2025 names) shows on entry; each group's change bars and
+// driver names appear on its press (the names would answer the room vote). Params: lb, mb (presses).
 function genDrivers(params) {
-  const m = params.method;
-  const list = data.drivers[m];
-  const startKey = `total_${m}_2024`, endKey = `total_${m}_2025`;
-  const start = data.numbers[startKey].value, end = data.numbers[endKey].value;
   const keyFor = {
     lb: { grid_factor: "drv_lb_grid_t", less_electricity: "drv_lb_elec_t", less_gas: "drv_lb_gas_t", less_diesel: "drv_lb_diesel_t" },
     mb: { certificates: "drv_mb_cert_t", less_electricity: "drv_mb_elec_t", less_gas_diesel: "drv_mb_s1_t" },
-  }[m];
+  };
   const names = {
     grid_factor: ["Grid", "factor"], certificates: ["Guarantees", "of origin"], less_electricity: ["Less", "electricity"],
     less_gas: ["Less", "gas"], less_diesel: ["Less", "diesel"], less_gas_diesel: ["Less gas", "and diesel"],
   };
-  const W = 820, top = 50, bottom = 300, H = bottom + 66, col = 136, barW = 92, x0 = 22;
-  const ends = ["lb", "mb"].map((x) => data.numbers[`total_${x}_2025`].value);
-  const starts = ["lb", "mb"].map((x) => data.numbers[`total_${x}_2024`].value);
+  const heads = { lb: ["Location-based", "chg_lb_t"], mb: ["Market-based", "chg_mb_t"] };
+  const W = 1728, headY = 30, top = 112, bottom = 336, H = bottom + 66, col = 150, barW = 96, gap = 150, x0 = 30;
+  const ends = ["lb", "mb"].map((m) => data.numbers[`total_${m}_2025`].value);
+  const starts = ["lb", "mb"].map((m) => data.numbers[`total_${m}_2024`].value);
   const lo = Math.floor((Math.min(...ends) - 40) / 50) * 50, hi = Math.ceil((Math.max(...starts) + 20) / 50) * 50;
   const y = (v) => top + ((hi - v) / (hi - lo)) * (bottom - top);
-  const frame = [], bars = [];
-  const colX = (k) => x0 + k * col;
-  const total = (k, key, cls) => {
-    const v = data.numbers[key].value, yt = y(v);
-    frame.push(`<rect class="dv-bar ${cls}" x="${colX(k)}" y="${fmt(yt)}" width="${barW}" height="${fmt(bottom - yt)}" />`);
-    frame.push(`<text class="dv-val" x="${colX(k) + barW / 2}" y="${fmt(yt - 14)}" text-anchor="middle" data-num="${key}" data-form="bare">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
-  };
-  total(0, startKey, "dv-bar--prior");
-  let running = start;
-  list.forEach((d, i) => {
-    const k = i + 1, next = running + d.t;
-    const a = y(running), b = y(next), h = Math.max(3, b - a);
-    const key = keyFor[d.id];
-    if (!key) throw new Error(`gen:drivers no number key for ${m}.${d.id}`);
-    bars.push(`<path class="dv-link" d="M${colX(k - 1) + barW} ${fmt(a)}H${colX(k)}" data-motion="draw" style="--order:${i}" />`);
-    bars.push(`<rect class="dv-bar dv-bar--change${i === 0 ? " dv-bar--lead" : ""}" x="${colX(k)}" y="${fmt(a)}" width="${barW}" height="${fmt(h)}" data-motion="grow" style="--grow-origin: 50% 0%; --order:${i}" />`);
-    // On the shared scale the small bars sit close to the baseline: every change value goes above its bar.
-    bars.push(`<text class="dv-val dv-val--change" x="${colX(k) + barW / 2}" y="${fmt(a - 12)}" text-anchor="middle" data-num="${key}" data-form="bare" data-motion="fade" style="--order:${i}">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
-    running = next;
-  });
-  const endK = list.length + 1;
-  bars.push(`<path class="dv-link" d="M${colX(endK - 1) + barW} ${fmt(y(running))}H${colX(endK)}" data-motion="draw" style="--order:${list.length}" />`);
-  total(endK, endKey, "dv-bar--now");
-  // Own use: a bracket over every bar after the first (the factor or the certificate).
-  const ownKey = `drv_${m}_own_t`;
-  const bx1 = colX(2) - 6, bx2 = colX(endK - 1) + barW + 6;
-  const by = y(start) - 44;
-  bars.push(`<g class="dv-own"><path class="dv-own__bracket" d="M${bx1} ${fmt(by + 14)}V${fmt(by)}H${bx2}V${fmt(by + 14)}" data-motion="draw" style="--order:${list.length}" />`
-    + `<text class="dv-own__label" x="${(bx1 + bx2) / 2}" y="${fmt(by - 14)}" text-anchor="middle" data-motion="fade" style="--order:${list.length}">own use <tspan class="dv-own__num" data-num="${ownKey}">${esc(fillApi.numberText(data, ownKey))}</tspan></text></g>`);
-  const labels = [];
-  const colNames = [["2024", ""], ...list.map((d) => names[d.id]), ["2025", ""]];
-  colNames.forEach(([l1, l2], k) => {
-    const into = k === 0 || k === endK ? labels : bars;
-    into.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text>`);
-    if (l2) into.push(`<text class="dv-name dv-name--sub" x="${colX(k) + barW / 2}" y="${bottom + 62}" text-anchor="middle">${esc(l2)}</text>`);
-  });
-  const axis = `<path class="dv-axis" d="M${x0 - 18} ${bottom}H${colX(endK) + barW + 10}" /><path class="dv-break" d="M${x0 - 24} ${bottom + 10}l10 -20M${x0 - 14} ${bottom + 10}l10 -20" />`;
-  const label = m === "lb" ? "Location-based Scope 1 and 2, 2024 to 2025" : "Market-based Scope 1 and 2, 2024 to 2025";
-  return `<svg class="dv" id="what-drove-it-${m}" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${attr(label)}: one bar per driver.">`
-    + `<g class="dv-frame">${axis}${frame.join("")}${labels.join("")}</g>`
-    + `<g class="dv-changes"${stepAttr(params.step)}>${bars.join("")}</g></svg>`;
+  const frame = [], groups = [];
+  let gx = x0;
+  for (const m of ["lb", "mb"]) {
+    const list = data.drivers[m];
+    const startKey = `total_${m}_2024`, endKey = `total_${m}_2025`;
+    const start = data.numbers[startKey].value;
+    const endK = list.length + 1;
+    const colX = (k) => gx + k * col;
+    const right = colX(endK) + barW;
+    const bars = [];
+    // Group head: the method and how far it fell, over a hairline the width of the group.
+    const [label, chgKey] = heads[m];
+    // The first head starts at the page margin (its bars start after the break mark).
+    const hx = m === "lb" ? 0 : gx;
+    frame.push(`<text class="dv-head" x="${hx}" y="${headY}">${esc(label)} · fell <tspan class="dv-head__num" data-num="${chgKey}" data-form="absunit">${esc(fillApi.numberText(data, chgKey, "absunit"))}</tspan></text>`);
+    frame.push(`<path class="dv-head__rule" d="M${hx} ${headY + 16}H${right}" />`);
+    const total = (k, key, cls) => {
+      const yt = y(data.numbers[key].value);
+      frame.push(`<rect class="dv-bar ${cls}" x="${colX(k)}" y="${fmt(yt)}" width="${barW}" height="${fmt(bottom - yt)}" />`);
+      frame.push(`<text class="dv-val" x="${colX(k) + barW / 2}" y="${fmt(yt - 14)}" text-anchor="middle" data-num="${key}" data-form="bare">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
+    };
+    total(0, startKey, "dv-bar--prior");
+    let running = start, ownTop = Infinity;
+    list.forEach((d, i) => {
+      const k = i + 1, next = running + d.t;
+      const a = y(running), b = y(next), h = Math.max(3, b - a);
+      const key = keyFor[m][d.id];
+      if (!key) throw new Error(`gen:drivers no number key for ${m}.${d.id}`);
+      if (i > 0) ownTop = Math.min(ownTop, a);
+      bars.push(`<path class="dv-link" d="M${colX(k - 1) + barW} ${fmt(a)}H${colX(k)}" data-motion="draw" style="--order:${i}" />`);
+      bars.push(`<rect class="dv-bar dv-bar--change${i === 0 ? " dv-bar--lead" : ""}" x="${colX(k)}" y="${fmt(a)}" width="${barW}" height="${fmt(h)}" data-motion="grow" style="--grow-origin: 50% 0%; --order:${i}" />`);
+      bars.push(`<text class="dv-val dv-val--change" x="${colX(k) + barW / 2}" y="${fmt(a - 12)}" text-anchor="middle" data-num="${key}" data-form="bare" data-motion="fade" style="--order:${i}">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
+      const [l1, l2] = names[d.id];
+      bars.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle" data-motion="fade" style="--order:${i}">${esc(l1)}</text>`);
+      if (l2) bars.push(`<text class="dv-name dv-name--sub" x="${colX(k) + barW / 2}" y="${bottom + 62}" text-anchor="middle" data-motion="fade" style="--order:${i}">${esc(l2)}</text>`);
+      running = next;
+    });
+    bars.push(`<path class="dv-link" d="M${colX(endK - 1) + barW} ${fmt(y(running))}H${colX(endK)}" data-motion="draw" style="--order:${list.length}" />`);
+    total(endK, endKey, "dv-bar--now");
+    for (const [k, l1] of [[0, "2024"], [endK, "2025"]]) frame.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle">${l1}</text>`);
+    // Own use: a bracket over every bar after the first (the factor or the certificate), clear of their
+    // value labels.
+    const ownKey = `drv_${m}_own_t`;
+    const bx1 = colX(2) - 6, bx2 = colX(endK - 1) + barW + 6;
+    const by = ownTop - 58;
+    bars.push(`<g class="dv-own"><path class="dv-own__bracket" d="M${bx1} ${fmt(by + 14)}V${fmt(by)}H${bx2}V${fmt(by + 14)}" data-motion="draw" style="--order:${list.length}" />`
+      + `<text class="dv-own__label" x="${(bx1 + bx2) / 2}" y="${fmt(by - 14)}" text-anchor="middle" data-motion="fade" style="--order:${list.length}">own use <tspan class="dv-own__num" data-num="${ownKey}">${esc(fillApi.numberText(data, ownKey))}</tspan></text></g>`);
+    groups.push(`<g class="dv-changes dv-changes--${m}"${stepAttr(params[m])}>${bars.join("")}</g>`);
+    gx = right + gap;
+  }
+  frame.push(`<text class="dv-scale" x="${W}" y="${headY}" text-anchor="end">One scale for both</text>`);
+  const axis = `<path class="dv-axis" d="M${x0 - 18} ${bottom}H${gx - gap + 10}" /><path class="dv-break" d="M${x0 - 24} ${bottom + 10}l10 -20M${x0 - 14} ${bottom + 10}l10 -20" />`;
+  return `<svg class="dv" id="what-drove-it-chart" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Scope 1 and 2, 2024 to 2025, location-based and market-based on one scale: one bar per driver.">`
+    + `<g class="dv-frame">${axis}${frame.join("")}</g>${groups.join("")}</svg>`;
 }
 
 // Both waterfalls as one table on `appendix-arithmetic`: step, location-based change and running

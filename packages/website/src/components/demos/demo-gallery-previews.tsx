@@ -88,7 +88,7 @@ function Node({
           <Pictogram name={icon} className="relative size-6" />
         ) : null}
       </div>
-      <span className={cx(LABEL, "max-w-[6.5rem] text-center")}>{label}</span>
+      <span className={cx(LABEL, "max-w-[6.5rem] text-center text-balance")}>{label}</span>
     </div>
   );
 }
@@ -210,16 +210,16 @@ export function WordPreview() {
     { label: text("Freigabe offen", "Approval open"), open: true },
   ];
   return (
-    <div className="flex w-full flex-col gap-4 px-5 py-6">
-      <Sheet lines={5} raw className="demo-pv-rise">
+    <div className="flex w-full flex-col gap-3 px-5 py-4">
+      <Sheet lines={3} raw className="demo-pv-rise">
         <span className="block h-2.5 w-3/5 bg-foreground" />
       </Sheet>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-1">
         {checks.map((check) => (
           <li
             key={check.label}
             className={cx(
-              "demo-pv-rise flex items-center gap-2 px-2 py-1.5",
+              "demo-pv-rise flex items-center gap-2 px-2 py-1",
               check.open ? "border-2 border-dashed border-mennige" : "border-b border-hairline",
             )}
           >
@@ -302,7 +302,7 @@ export function N8nSupplyChainPreview() {
   const { text } = useDemoLocale();
   return (
     <Flow>
-      <Node tone="raw" icon="clock" label={text("Verzug 31 h", "31 h delay")} />
+      <Node tone="raw" icon="clock" label={text("Verzug 31\u00a0h", "31\u00a0h delay")} />
       <Arrow />
       <Node icon="table" label={text("Bestand", "Stock")} />
       <Arrow />
@@ -370,13 +370,27 @@ export function PromptScannerPreview() {
   const { text } = useDemoLocale();
   return (
     <div className="flex w-full flex-col gap-3 px-5 py-6">
-      <div className="demo-pv-rise flex flex-wrap items-center gap-1.5 border border-foreground bg-card p-3">
-        <span className="h-3 w-10 bg-hairline" />
-        <span className="demo-pv-snap h-3 w-16 bg-foreground" />
-        <span className="h-3 w-6 bg-hairline" />
-        <span className={cx(DATA, "border-b-2 border-mennige px-0.5")}>IBAN</span>
-        <span className="h-3 w-12 bg-hairline" />
-        <span className="h-3 w-8 bg-hairline" />
+      <div className="demo-pv-rise flex flex-col gap-3 border border-foreground bg-card p-3">
+        <span className="flex flex-wrap items-center gap-1.5">
+          <span className="h-3 w-10 bg-hairline" />
+          <span className="demo-pv-snap h-3 w-16 bg-foreground" />
+          <span className="h-3 w-6 bg-hairline" />
+          <span className={cx(DATA, "border-b-2 border-mennige px-0.5")}>IBAN</span>
+          <span className="h-3 w-12 bg-hairline" />
+        </span>
+        <span className="flex flex-wrap items-center gap-1.5">
+          <span className="h-3 w-14 bg-hairline" />
+          {/* Dashed = the known gap: a confidential term the rules miss. */}
+          <span className={cx(LABEL, "border-b border-dashed border-foreground px-0.5")}>
+            {text("Projekt Nord", "Project Nord")}
+          </span>
+          <span className="h-3 w-10 bg-hairline" />
+          <span className="h-3 w-8 bg-hairline" />
+        </span>
+        <span className="flex flex-wrap items-center gap-1.5">
+          <span className="h-3 w-20 bg-hairline" />
+          <span className="h-3 w-12 bg-hairline" />
+        </span>
       </div>
       <div className="flex flex-wrap gap-2">
         <span className="demo-pv-rise inline-flex items-center gap-1.5 border border-foreground bg-card px-2 py-1">
@@ -396,7 +410,7 @@ export function CostDriftObservabilityPreview() {
   const { text } = useDemoLocale();
   return (
     <div className="flex w-full flex-col gap-2 px-5 py-5">
-      <svg viewBox="0 0 220 90" className="h-24 w-full" preserveAspectRatio="none" aria-hidden="true">
+      <svg viewBox="0 0 220 90" className="h-36 w-full" preserveAspectRatio="none" aria-hidden="true">
         {[22, 45, 68].map((y) => (
           <line key={y} x1="0" x2="220" y1={y} y2={y} className="stroke-hairline" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         ))}

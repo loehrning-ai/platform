@@ -27,6 +27,14 @@ describe("<WorkshopsContent>", () => {
     });
     expect(heading).not.toHaveStyle({ opacity: "0" });
     expect(heading.closest("[data-cover-band]")).toHaveClass("dark-section");
+    // Two lines in both locales from xl; the globe starts at lg and its mask
+    // keeps the text column clear.
+    expect(heading).toHaveClass("max-w-[14ch]", "xl:max-w-[16ch]");
+    const band = heading.closest("[data-cover-band]");
+    expect(band).toHaveClass("md:max-lg:[&>[data-cover-globe]]:hidden");
+    expect(band?.className).toMatch(
+      /lg:\[&>\[data-cover-globe\]\]:\[mask-image:linear-gradient\(to_right,transparent_32%,black_50%\)\]/,
+    );
     expect(screen.getByText("Workshops · 0 Fälle")).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Derzeit ist kein Workshop veröffentlicht.",
@@ -96,7 +104,10 @@ describe("<WorkshopsContent>", () => {
     ).toBeInTheDocument();
     // U+2212 reads like a dash in the brand face; the hub shows ASCII minus.
     expect(w03.textContent).not.toContain("\u2212");
-    expect(within(w03).getByText(/-€19,960/)).toBeInTheDocument();
+    // The amount keeps its hyphen next to the euro sign on one line.
+    const amount = within(w03).getByText("-€19,960");
+    expect(amount.tagName).toBe("SPAN");
+    expect(amount).toHaveClass("whitespace-nowrap", "tabular-nums");
     // Seven material roles fold to four nouns plus a count, in a fixed order.
     expect(w03.querySelector("[data-workshop-roles]")?.textContent).toBe(
       "Deck · Demo · Kit · Learner guide · 3 more",
@@ -190,6 +201,11 @@ describe("<WorkshopsContent>", () => {
     expect(rows).toHaveLength(4);
     expect(within(rows[0]).getByText("Neu")).toHaveAttribute("data-chip", "meta");
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
+    // German amount: ASCII minus, euro sign on the same line.
+    expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
+    // Hyphenated words such as "Scope-1-und-2-Frage" are not amounts.
+    expect(within(rows[0]).getByText(/Scope-1-und-2-Frage/).tagName).toBe("P");
+    expect(rows[0].querySelector("p > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
     ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");

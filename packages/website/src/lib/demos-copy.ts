@@ -46,7 +46,7 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "Jeder Entwurf hält vor dem Versand am Review an.",
   },
   "agent-pipeline": {
-    why: "Vier Agenten schreiben ein Memo: einer recherchiert, einer fasst zusammen, einer sucht Fehler, einer redigiert. Das lohnt sich nur, wenn die Fehlersuche das Memo besser macht.",
+    why: "Vier Agenten schreiben ein Memo: einer recherchiert, einer fasst zusammen, einer sucht Fehler, einer redigiert. Du prüfst, ob die Fehlersuche das Memo tatsächlich besser macht.",
     proof:
       "Der Auftrag ist erfunden, und der Zeitvergleich zwischen manuellem und assistiertem Entwurf ist hypothetisch.",
     ogSubtitle: "Vier Agenten arbeiten nacheinander an einem Memo.",
@@ -87,14 +87,14 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "Ein Budget-Alarm würde bei der Anwendung anschlagen, die ihr Limit überschreitet.",
   },
   "llm-observability": {
-    why: "Ob ein LLM-System besser oder schlechter wird, zeigen nur eigene Messpunkte. Hier stehen Eval-Metriken, ein Drift-Indikator und die Bewertung durch einen Menschen nebeneinander, und du siehst, wo die automatische Bewertung danebenliegt.",
+    why: "Du vergleichst Eval-Metriken, einen Drift-Indikator und das Urteil eines Menschen für vier Antworten und siehst, wo die automatische Bewertung danebenliegt.",
     proof:
       "Die vier Antworten, ihre Scores und die menschlichen Bewertungen sind erfunden, der Drift-Indikator ist vorgegeben.",
     ogSubtitle: "Eval-Score, Drift und menschliches Urteil im Vergleich.",
     stop: "Wo Score und menschliches Urteil auseinanderliegen, listet das Beispiel die Antwort auf.",
   },
   "fine-tune-playground": {
-    why: "Fine-Tuning hilft nur, wenn Trainingsdaten und Evaluation stimmen. Du siehst Baseline, Anpassung und Holdout-Prüfung deshalb getrennt.",
+    why: "Du siehst Baseline, Anpassung und Holdout-Prüfung getrennt und prüfst, ob die Anpassung etwas bringt.",
     proof:
       "Die 2.400 gelabelten Fragen und die Differenz von 38 Punkten sind vorgegebene Beispielwerte, trainiert wurde dafür kein Modell.",
     ogSubtitle: "Basismodell und Domänenantwort für dieselbe Frage vergleichen.",
@@ -131,7 +131,7 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "Every draft stops at the review before sending.",
   },
   "agent-pipeline": {
-    why: "Four agents write one memo: one researches, one summarises, one looks for errors, one edits. This only pays off when the error check makes the memo better.",
+    why: "Four agents write one memo: one researches, one summarises, one looks for errors, one edits. You check whether the error search actually makes the memo better.",
     proof:
       "The brief is invented, and the time comparison between manual and assisted drafting is hypothetical.",
     ogSubtitle: "Four agents work on one memo in turn.",
@@ -170,14 +170,14 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "A budget alert would fire for the application that exceeds its limit.",
   },
   "llm-observability": {
-    why: "Only your own measurements tell you whether an LLM system is getting better or worse. Here eval metrics, a drift indicator and a human rating sit side by side, and you see where the automated score is off.",
+    why: "You compare eval metrics, a drift indicator and a human rating for four answers and see where the automated score is off.",
     proof:
       "The four answers, their scores and the human ratings are invented, and the drift indicator is seeded.",
     ogSubtitle: "Eval score, drift and human judgement side by side.",
     stop: "Where the score and the human rating diverge, the example lists the answer.",
   },
   "fine-tune-playground": {
-    why: "Fine-tuning helps only when the training data and the evaluation hold up. So you see baseline, adaptation and holdout check separately.",
+    why: "You see baseline, adaptation and holdout check separately and check whether the adaptation helps.",
     proof:
       "The 2,400 labelled questions and the 38-point difference are seeded sample values; no model was trained for them.",
     ogSubtitle: "Compare a base model and a domain answer to the same question.",

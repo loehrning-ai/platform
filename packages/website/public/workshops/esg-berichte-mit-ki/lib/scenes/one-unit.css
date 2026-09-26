@@ -146,3 +146,13 @@
 #one-unit .ou-check .check__head {
   margin: 0;
 }
+
+/* One Mennige mark per press: the printed line until the answer (entry and vote), the ring on C
+   (press 2), the effect figure (press 3). Earlier marks fall back to ink. */
+#one-unit:not([data-step-current="0"]):not([data-step-current="1"]) .ou-doc .doc__mark {
+  border-color: var(--ink);
+}
+
+#one-unit[data-step-current="4"] .ou-effect__t {
+  border-color: var(--ink);
+}

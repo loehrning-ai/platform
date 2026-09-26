@@ -1196,7 +1196,7 @@
     const step = stepNumber(slide.dataset.stepCurrent);
     const total = stepNumber(slide.dataset.stepTotal);
     const mode = window.FoldlineDemo?.mode || "replay";
-    const status = window.FoldlineDemo?.statusDetail || (window.FoldlineDemo ? "Initializing" : "Recorded deck · no live checks");
+    const status = window.FoldlineDemo?.statusDetail || (window.FoldlineDemo ? "Initializing" : "Static deck · no live checks");
     // In an appendix: the scene Esc returns to, or null when the appendix was opened directly.
     const returnSlide = (slide.dataset.kind || "main") === "appendix" ? stage?.appendixReturnSlide || null : undefined;
     const appendixReturn = returnSlide === undefined ? undefined

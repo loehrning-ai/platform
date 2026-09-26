@@ -295,6 +295,10 @@ describe("<WorkshopDecisionLab>", () => {
     expect(facts).toHaveClass("border-t", "border-hairline");
     expect(facts?.querySelectorAll("dt")).toHaveLength(3);
     expect(facts?.querySelectorAll("dd")).toHaveLength(3);
+    // A column is never narrower than its longest word, so "12 Stromrechnungen"
+    // wraps between the words instead of inside one.
+    expect(facts).toHaveClass("min-[26rem]:auto-cols-[minmax(min-content,1fr)]");
+    expect(facts).not.toHaveClass("min-[26rem]:grid-cols-3");
   });
 });
 

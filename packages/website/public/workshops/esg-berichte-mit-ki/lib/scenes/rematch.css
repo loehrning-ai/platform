@@ -49,7 +49,7 @@
   color: var(--slate);
   white-space: nowrap;
   font-family: var(--mono);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 500;
 }
 
@@ -109,7 +109,7 @@
   padding: 10px 14px 8px;
   border-bottom: 3px solid var(--ink);
   color: var(--slate);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
   text-align: right;
   white-space: nowrap;
@@ -174,4 +174,10 @@
 
 #rematch .rm-gap .icon {
   flex: none;
+}
+
+/* The target label is as prominent as the raw answer's label (M20): ink, balanced. */
+#rematch .rm-label {
+  color: var(--ink);
+  text-wrap: balance;
 }

@@ -34,17 +34,19 @@ export function DemoTile({
       data-demo-tile={demo.slug}
       data-demo-size={demo.size}
       aria-label={copy.openAria(name)}
-      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground"
+      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:py-5"
     >
       {/* Schematic drawing on a recessed Beton panel, the tile's only box
           (blueprint 6.14). Every tile has the same 4:3 panel, so a row lines
           up without spans. Hover darkens the panel one tone; no lift, no
           shadow. Decorative: the tile's aria-label and visible text carry the
-          meaning, so screen readers skip the drawing's short labels. */}
+          meaning, so screen readers skip the drawing's short labels. Below
+          sm the tile is a ledger row (blueprint 6.6): no drawing, two lines
+          of description, hairlines between rows. */}
       <div
         aria-hidden="true"
         data-demo-preview
-        className="relative flex aspect-[4/3] overflow-hidden bg-inset transition-colors duration-[120ms] group-hover:bg-[color-mix(in_srgb,var(--color-inset),var(--color-foreground)_5%)] motion-reduce:transition-none"
+        className="relative flex aspect-[4/3] overflow-hidden bg-inset transition-colors duration-[120ms] group-hover:bg-[color-mix(in_srgb,var(--color-inset),var(--color-foreground)_5%)] motion-reduce:transition-none max-sm:hidden"
       >
         <div
           className="flex w-full items-center justify-center motion-reduce:transform-none motion-reduce:transition-none"
@@ -60,7 +62,7 @@ export function DemoTile({
 
       {/* The text block takes the row's slack so the link sits on one line
           across a row. */}
-      <div className="flex min-w-0 flex-1 flex-col pt-4">
+      <div className="flex min-w-0 flex-1 flex-col pt-4 max-sm:pt-0">
         <p className="text-label text-muted-foreground tabular-nums">
           <span>{demo.n}</span>
           {" · "}
@@ -70,7 +72,7 @@ export function DemoTile({
         <h3 className="mt-2 break-words text-fluid-h3 font-bold text-foreground text-balance hyphens-manual">
           {name}
         </h3>
-        <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground">
+        <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground max-sm:mt-2 max-sm:line-clamp-2">
           {demo.description}
         </p>
         <p className="mt-auto pt-3 text-caption text-muted-foreground" data-demo-tile-meta>

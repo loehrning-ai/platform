@@ -14,6 +14,7 @@ html{color-scheme:light;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 main:focus{outline:none}
 .mono,.num{font-family:var(--wf-mono);font-feature-settings:"tnum" 1}
 small{font-size:inherit}
+.nowrap{white-space:nowrap}
 
 /* ------------------------------------------------------------------ page head */
 .pg{max-width:var(--wf-max);margin:0 auto;padding:0 var(--wf-gutter)}
@@ -95,13 +96,23 @@ details.reveal>div li{margin:0 0 6px}
 .answer--raw{position:relative;padding-left:calc(18px + 14px)}
 .answer--raw::before{content:"";position:absolute;top:0;bottom:0;left:0;width:14px;border-right:1px solid var(--wf-ink);background:var(--wf-hatch)}
 
-/* key figures row */
-.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:0;margin:0 0 18px;border-top:1px solid var(--wf-ink);border-bottom:1px solid var(--wf-ink)}
-.nums>div{padding:10px 14px 12px;border-left:var(--wf-hair)}
-.nums>div:first-child{border-left:0;padding-left:0}
-.nums dt{color:var(--wf-slate);font:600 13px/1.3 var(--wf-sans)}
-.nums dd{margin:2px 0 0;font:700 22px/1.2 var(--wf-sans);font-feature-settings:"tnum" 1;white-space:nowrap}
+/* key figures: three per row (Scope 1, Scope 2 LB, Scope 2 MB, then the two totals); values sit
+   at the foot of each tile, so they share a baseline even when a label wraps */
+.nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0 0 18px;border-top:1px solid var(--wf-ink);border-bottom:1px solid var(--wf-ink)}
+.nums>div{display:flex;flex-direction:column;padding:10px 14px 12px;border-left:var(--wf-hair)}
+.nums>div:nth-child(3n+1){border-left:0;padding-left:0}
+.nums:has(>div:nth-child(4))>div:nth-child(-n+3){border-bottom:var(--wf-hair)}
+.answer .nums:last-child{margin-bottom:0}
+.nums dt{margin:0 0 4px;color:var(--wf-slate);font:600 13px/1.3 var(--wf-sans)}
+.nums dd{margin:auto 0 0;font:700 22px/1.2 var(--wf-sans);font-feature-settings:"tnum" 1;white-space:nowrap}
 .nums dd small{display:block;color:var(--wf-slate);font:400 13px/1.35 var(--wf-sans);white-space:normal}
+@media (max-width:600px){
+  .nums{grid-template-columns:minmax(0,1fr)}
+  .nums>div,.nums>div:nth-child(3n+1),.nums:has(>div:nth-child(4))>div:nth-child(-n+3){flex-direction:row;align-items:baseline;justify-content:space-between;gap:4px 12px;padding:9px 0;border-left:0;border-bottom:0;border-top:var(--wf-hair)}
+  .nums>div:first-child,.nums:has(>div:nth-child(4))>div:first-child{border-top:0}
+  .nums dt{margin:0}
+  .nums dd{margin:0;text-align:right;font-size:20px}
+}
 
 /* ------------------------------------------------------------------ figures */
 .fig{margin:24px 0;padding:0}
@@ -117,18 +128,23 @@ details.reveal>div li{margin:0 0 6px}
 .mg-row{display:grid;grid-template-columns:minmax(0,190px) minmax(0,1fr);gap:4px 14px;align-items:center}
 .mg-lab{font:600 15px/1.3 var(--wf-sans)}
 .mg-lab small{display:block;color:var(--wf-slate);font:400 13px/1.35 var(--wf-sans)}
-.mg-cells{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
+/* twelve month columns, then a gap and the thirteenth file: the Talbrück bill (JV) */
+.mg-cells,.mg-mon{display:grid;grid-template-columns:repeat(12,minmax(0,1fr)) minmax(0,2.4fr);gap:3px}
 .mg-row{align-items:end}
 .mg-wrap{display:grid;gap:4px;min-width:0}
-.mg-mon{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px}
 .mg-mon span{text-align:center;color:var(--wf-slate-soft);font:600 13px/1 var(--wf-sans)}
+.mg-mon .mg-mon-other,.mg-c--other,.mg-c--out{margin-left:14px}
 .mg-c{position:relative;display:flex;align-items:center;justify-content:center;height:30px;border:1px solid var(--wf-ink);background:var(--wf-papier)}
 .mg-c--bill{background:var(--wf-papier) var(--wf-hatch)}
 .mg-c--row{background:var(--wf-ink)}
 .mg-c--none{border-style:dashed;background:transparent}
-.mg-c--meter{border-style:dashed;background:var(--wf-beton)}
-.mg-t{padding:0 3px;background:var(--wf-papier);color:var(--wf-ink);font:600 12px/1.25 var(--wf-sans);white-space:nowrap}
-.mg-c--none .mg-t,.mg-c--meter .mg-t{background:transparent}
+.mg-c--meter{border-color:var(--wf-slate);background:var(--wf-slate)}
+.mg-c--other{border:2px solid var(--wf-mennige)}
+.mg-c--out{border-color:var(--wf-kante);background:var(--wf-papier)}
+.mg-t{padding:1px 5px;background:var(--wf-papier);color:var(--wf-ink);font:600 12px/1.25 var(--wf-sans);white-space:nowrap}
+.mg-c--none .mg-t{padding:0;background:transparent;color:var(--wf-slate)}
+.mg-c--meter .mg-t{padding:0;background:transparent;color:var(--wf-on-dark)}
+.mg-c--out .mg-t{color:var(--wf-slate)}
 .mg-c--row .mg-t{background:var(--wf-ink);color:var(--wf-on-dark)}
 .mg-badge{position:absolute;top:-1px;right:-1px;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center;background:var(--wf-mennige);color:#fff;font:700 12px/1 var(--wf-sans)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0;padding:0;list-style:none;color:var(--wf-slate);font-size:var(--wf-t-small)}
@@ -137,19 +153,22 @@ details.reveal>div li{margin:0 0 6px}
 .sw--bill{background:var(--wf-papier) var(--wf-hatch)}
 .sw--twice{background:var(--wf-mennige);border-color:var(--wf-mennige)}
 .sw--none{border-style:dashed;background:transparent}
-.sw--meter{border-style:dashed;background:var(--wf-beton)}
+.sw--other{border:2px solid var(--wf-mennige);background:var(--wf-papier) var(--wf-hatch)}
+.sw--meter{border-color:var(--wf-slate);background:var(--wf-slate)}
+.sw--out{border-color:var(--wf-kante);background:var(--wf-papier)}
 .sw--row{background:var(--wf-ink)}
 @media (max-width:640px){
   .mg-row{grid-template-columns:minmax(0,1fr)}
   .mg-t{display:none}
   .mg-c{height:26px}
+  .mg-mon .mg-mon-other,.mg-c--other,.mg-c--out{margin-left:8px}
 }
 
 /* horizontal bars (waterfall, bridge, drivers) */
 .br{display:grid;gap:0}
 .br-row{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) 84px;gap:0 12px;align-items:stretch}
 .br-lab{align-self:center;padding:6px 0;font:500 15px/1.3 var(--wf-sans)}
-.br-lab small{color:var(--wf-slate);font:400 13px/1.3 var(--wf-sans)}
+.br-lab small{display:block;color:var(--wf-slate);font:400 13px/1.3 var(--wf-sans)}
 .br-row--strong .br-lab{font-weight:700}
 .br-track{position:relative;min-height:38px;border-left:1px solid var(--wf-ink)}
 .br-row--head .br-track{min-height:24px;border-left-color:transparent}
@@ -158,6 +177,8 @@ details.reveal>div li{margin:0 0 6px}
 .br-bar--open{background:var(--wf-papier)}
 .br-bar--slate{background:var(--wf-slate-soft);border-color:var(--wf-slate-soft)}
 .br-bar--accent{background:var(--wf-mennige);border-color:var(--wf-mennige)}
+.br-bar--dash{background:transparent;border:1.5px dashed var(--wf-slate)}
+.br-row--muted .br-lab,.br-val--muted{color:var(--wf-slate)}
 .br-bar--cut{border-left:0}
 .br-bar--cut::before{content:"";position:absolute;left:-1px;top:-4px;bottom:-4px;width:6px;border-left:2px dotted var(--wf-paper)}
 .br-lim{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed var(--wf-mennige)}
@@ -169,6 +190,16 @@ details.reveal>div li{margin:0 0 6px}
   .br-lab{font-size:13px}
   .br-val{font-size:13px}
   .br-limlab{font-size:12px}
+}
+
+/* calculate, ask back, refuse: the job, then the request and what the assistant does */
+.ab-rows{list-style:none;margin:0 0 20px;padding:0;border-top:var(--wf-hair)}
+.ab-row{display:grid;grid-template-columns:7.5rem minmax(0,1fr);column-gap:16px;align-items:baseline;padding:14px 0;border-bottom:var(--wf-hair)}
+.ab-row__job{color:var(--wf-slate);font:600 var(--wf-t-label)/1.4 var(--wf-sans);letter-spacing:.02em;white-space:nowrap}
+.g-sec .ab-row__req{margin:0;font:700 var(--wf-t-h3)/1.3 var(--wf-sans)}
+.g-sec .ab-row__desc{margin:4px 0 0;color:var(--wf-slate);font-size:15px;line-height:1.5}
+@media (max-width:600px){
+  .ab-row{grid-template-columns:minmax(0,1fr);row-gap:2px}
 }
 
 /* control total */
@@ -208,8 +239,9 @@ details.reveal>div li{margin:0 0 6px}
 .sheet{padding-top:clamp(24px,4vw,48px);padding-bottom:8px}
 .sheet-mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;padding-bottom:18px;border-bottom:var(--wf-edge)}
 .sheet-mast .wf-lead{max-width:60ch}
-.sheet-mast .glyph{flex:none}
-.sheet-mast .glyph svg{display:block}
+.glyph{flex:none;max-width:250px;margin:0}
+.glyph svg{display:block}
+.glyph figcaption{margin:6px 0 0;color:var(--wf-slate);font-size:13px;line-height:1.35}
 .sheet-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:18px 0 0}
 .sheet-tools .wf-small{margin:0}
 .sheet-foot{margin:18px 0 0;color:var(--wf-slate);font-size:var(--wf-t-small);line-height:1.5}
@@ -222,7 +254,7 @@ details.reveal>div li{margin:0 0 6px}
 .fc .n{width:34px;color:var(--wf-slate-soft);font-weight:500;font-feature-settings:"tnum" 1}
 .fc .chk{font:700 16px/1.35 var(--wf-sans);width:17%}
 .fc .case{font-feature-settings:"tnum" 1}
-.fc .case b{color:var(--wf-mennige);font-weight:700;white-space:nowrap}
+.fc .case b{color:var(--wf-ink);font-weight:700;white-space:nowrap}
 .fc .scene{color:var(--wf-slate);font-size:13px;white-space:nowrap}
 .fc .dont{color:var(--wf-slate)}
 .fc-lines{margin:16px 0 0;padding:0;list-style:none;border-top:var(--wf-hair)}
@@ -250,6 +282,7 @@ details.reveal>div li{margin:0 0 6px}
 .box .what{margin:0;color:var(--wf-slate);font-size:15px;line-height:1.45}
 .write{min-height:96px;border:1px dashed var(--wf-kante);background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--wf-leinen) 31px,var(--wf-leinen) 32px);background-position:0 0}
 .write span{display:block;padding:6px 10px;color:var(--wf-slate-soft);font-size:13px}
+.for-phone{display:none}
 .ex{padding:10px 14px;background:var(--wf-papier);border:var(--wf-hair);font-size:14px;line-height:1.45}
 .ex .wf-kicker{margin:0 0 4px;font-size:13px}
 .ex p{margin:0}
@@ -264,6 +297,12 @@ details.reveal>div li{margin:0 0 6px}
   .box{grid-template-columns:minmax(0,1fr);gap:10px}
   .write{min-height:72px}
 }
+/* a phone cannot write in a dashed box: the boxes appear on the printed sheet only */
+@media screen and (max-width:600px){
+  .write{display:none}
+  .for-wide{display:none}
+  .for-phone{display:inline}
+}
 
 /* ------------------------------------------------------------------ media */
 @media (max-width:600px){
@@ -273,9 +312,11 @@ details.reveal>div li{margin:0 0 6px}
   .key{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pm::before,.pm::after,details.reveal>summary{transition:none}}
-@media (forced-colors:active){.mg-c--bill,.sw--bill,.br-bar--hatch{background-image:none}.br-lim{border-left-color:CanvasText}}
+/* forced colours: the month cells and their legend swatches are the data (fill = what the document is),
+   so they keep their own colours; the bars fall back to outlines */
+@media (forced-colors:active){.mg-c,.mg-badge,.legend .sw{forced-color-adjust:none}.br-bar--hatch{background-image:none}.br-lim{border-left-color:CanvasText}}
 
-@page{size:A4;margin:12mm}
+@page{size:A4;margin:10mm 12mm}
 @media print{
   html,body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body.wf-page{font-size:10.5pt;line-height:1.45}
@@ -293,27 +334,40 @@ details.reveal>div li{margin:0 0 6px}
   .wf-h1{font-size:24pt}
   /* one-page sheets */
   .sheet{padding:0}
-  .sheet-mast{padding-bottom:8pt}
-  .sheet .wf-kicker{font-size:8.5pt;margin-bottom:3pt}
-  .sheet .wf-h1{font-size:21pt}
-  .sheet .wf-lead{font-size:11pt;margin-top:4pt}
-  .fc{font-size:10pt;line-height:1.38;margin-top:10pt}
-  .fc thead th{font-size:8.5pt;padding-bottom:4pt}
-  .fc td,.fc tbody th{padding:7pt 8pt 7pt 0}
-  .fc .chk{font-size:11pt}
-  .fc .scene{font-size:8.5pt}
-  .fc-lines{margin-top:8pt}
-  .fc-lines li{padding:6pt 0;font-size:9.5pt}
-  .sheet-foot{margin-top:8pt;font-size:8.5pt}
-  .boxes{margin-top:8pt}
-  .box{grid-template-columns:34mm minmax(0,1fr) 62mm;gap:0 4mm;padding:6pt 0}
+  .sheet-mast{padding-bottom:6pt}
+  /* nothing on a printed sheet is smaller than 9 pt */
+  .sheet .wf-kicker{font-size:9pt;margin-bottom:3pt}
+  .sheet .wf-h1{font-size:22pt}
+  .sheet .wf-lead{font-size:11.5pt;margin-top:2pt}
+  .sheet-mast{flex-wrap:nowrap;align-items:flex-end}
+  .glyph{max-width:52mm}
+  .glyph figcaption{font-size:9pt;margin-top:3pt}
+  .fc{table-layout:fixed;font-size:10.5pt;line-height:1.4;margin-top:12pt}
+  .fc thead th{font-size:9pt;padding-bottom:5pt}
+  .fc thead th:nth-child(1){width:7mm}
+  .fc thead th:nth-child(2){width:30mm}
+  .fc thead th:nth-child(3){width:51mm}
+  .fc thead th:nth-child(4){width:35mm}
+  .fc thead th:nth-child(5){width:39mm}
+  .fc thead th:nth-child(6){width:24mm}
+  .fc td,.fc tbody th{padding:6pt 8pt 6pt 0}
+  .fc .chk{width:auto;font-size:11.5pt}
+  .fc .scene{font-size:9pt;white-space:normal}
+  .fc-lines{margin-top:12pt}
+  .fc-lines li{padding:8pt 0;font-size:10.5pt}
+  .tick{width:11pt;height:11pt}
+  .sheet-foot{margin-top:8pt;font-size:9pt;line-height:1.4}
+  .boxes{margin-top:6pt}
+  .box{grid-template-columns:30mm minmax(0,1fr) 80mm;gap:0 4mm;padding:4pt 0}
   .box h2{font-size:12pt;margin-bottom:2pt}
-  .box .what{font-size:9pt;line-height:1.35}
-  .write{min-height:24mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 7.4mm,var(--wf-leinen) 7.4mm,var(--wf-leinen) 7.65mm)}
-  .ex{padding:5pt 7pt;font-size:8.5pt;line-height:1.35}
-  .ex .wf-kicker{font-size:7.5pt;margin-bottom:1pt}
-  .sentence{margin-top:8pt;padding:7pt 10pt;break-inside:avoid}
-  .sentence p{font-size:9.5pt;margin-bottom:4pt}
-  .sentence .de{font-size:8.5pt}
-  .sentence .write{min-height:18mm;margin-top:4pt}
+  .box .what{font-size:9.5pt;line-height:1.35}
+  .write{display:block;min-height:24mm;background:repeating-linear-gradient(to bottom,transparent 0,transparent 7.7mm,var(--wf-leinen) 7.7mm,var(--wf-leinen) 8mm)}
+  .ex{padding:4pt 7pt;font-size:9pt;line-height:1.33}
+  .ex p+p{margin-top:3pt}
+  .ex .wf-kicker{font-size:9pt;margin-bottom:1pt}
+  .sentence{margin-top:7pt;padding:6pt 10pt;break-inside:avoid}
+  .sentence p{font-size:10pt;margin-bottom:3pt}
+  .sentence .de{font-size:9pt}
+  .sentence .write{min-height:24mm;margin-top:4pt}
+  .sentence--ex p{font-size:9pt;line-height:1.4}
 }

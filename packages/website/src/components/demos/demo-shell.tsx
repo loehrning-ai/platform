@@ -9,6 +9,7 @@ import {
   type DemoOpenSource,
 } from "@/lib/analytics";
 import { EngagementTracker } from "./engagement-tracker";
+import { EvidenceBadge } from "./evidence-badge";
 import { DemoLocaleProvider } from "./demo-locale";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import type { Locale } from "@/lib/i18n/locale";
@@ -63,9 +64,22 @@ export function DemoShell({
       }
       data-demo-shell
     >
-      <div className="flex min-h-11 flex-wrap items-center gap-2 border-b border-hairline px-4 py-2 text-label text-muted-foreground">
-        <Pictogram name="demo" className="size-4" />
-        {shellCopy.instrument}
+      {/* One header row: the instrument label on the left, the evidence
+          line (mode, actions, "Was heißt das?") on the right. When opened,
+          the explanation wraps onto its own full-width row below. */}
+      <div
+        className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 border-b border-hairline px-4"
+        data-demo-shell-header
+      >
+        <span className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground">
+          <Pictogram name="demo" className="size-4" />
+          {shellCopy.instrument}
+        </span>
+        <EvidenceBadge
+          evidenceMode={demo.evidenceMode}
+          externalActionMode={demo.externalActionMode}
+          locale={locale}
+        />
       </div>
       <div className="relative p-2 sm:p-3 lg:p-4">
         <DemoLocaleProvider locale={locale}>

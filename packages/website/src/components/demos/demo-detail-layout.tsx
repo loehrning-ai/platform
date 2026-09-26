@@ -5,11 +5,7 @@ import {
   DEMO_LEVEL_LABELS_BY_LOCALE,
   getNextDemoForLocale,
 } from "@/lib/demos-localization";
-import {
-  DEMO_ACTION_LABELS,
-  DEMO_EVIDENCE_COPY,
-  DEMOS_PAGE_COPY,
-} from "@/lib/demos-ui-copy";
+import { DEMO_EVIDENCE_COPY, DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { books } from "@/lib/books";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
@@ -17,7 +13,6 @@ import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { ArrowGlyph, Kicker, SectionHead } from "@/components/werk";
 import { DemoShell } from "./demo-shell";
-import { EvidenceBadge } from "./evidence-badge";
 import { DemoCta } from "./demo-cta";
 
 /**
@@ -67,6 +62,7 @@ export function DemoDetailLayout({
 }) {
   const copy = getDemoCopy(demo.slug, locale);
   const pageCopy = DEMOS_PAGE_COPY[locale].detail;
+  const tileCopy = DEMOS_PAGE_COPY[locale].tile;
   const next = getNextDemoForLocale(demo, locale);
   const baseCourse = COURSE_CATALOG.find(
     (item) => item.slug === demo.courseSlug,
@@ -89,17 +85,18 @@ export function DemoDetailLayout({
   const categoryLabel = DEMO_CATEGORY_LABELS[locale][demo.category];
   const levelLabel = DEMO_LEVEL_LABELS_BY_LOCALE[locale][demo.level];
   const evidenceLabel = DEMO_EVIDENCE_COPY[locale][demo.evidenceMode].label;
-  const actionLabel =
-    DEMO_ACTION_LABELS[locale][demo.externalActionMode] ?? pageCopy.noActions;
+  const actionValue = pageCopy.actionValue[demo.externalActionMode];
   const localizedLessonLink = localizeHref(lessonLink, locale);
   const name = demoName(demo);
   const nextName = demoName(next);
   // Blueprint 7.6: four rows, values in body. The data row says once what
-  // is invented; the evidence line above the engine no longer repeats it.
+  // is invented; the evidence line in the engine header does not repeat it.
+  // The actions row takes a short value ("Simuliert"), because its label
+  // already says "Externe Aktionen".
   const runRows = [
     { label: pageCopy.dataLabel, value: demo.syntheticDataLabel },
     { label: pageCopy.executionLabel, value: evidenceLabel },
-    { label: pageCopy.actionsLabel, value: actionLabel },
+    { label: pageCopy.actionsLabel, value: actionValue },
     ...(copy ? [{ label: pageCopy.stopLabel, value: copy.stop }] : []),
   ];
 
@@ -122,8 +119,8 @@ export function DemoDetailLayout({
 
       {/*
         Header and instrument share one paper band: kicker, one-colour H1,
-        lead, then a single evidence line (mode and actions) directly above
-        the engine. The engine never server-renders (dynamic(...,
+        lead, then the engine. Its evidence line (mode and actions) sits in
+        the engine's own header row. The engine never server-renders (dynamic(...,
         {ssr:false})), so this band carries first paint. A dark engine only
         turns its own frame graphit (DemoShell); the band stays paper. The
         section is deliberately unnamed: named, it became a region landmark
@@ -149,13 +146,6 @@ export function DemoDetailLayout({
           </p>
 
           <div className="mt-6">
-            <EvidenceBadge
-              evidenceMode={demo.evidenceMode}
-              externalActionMode={demo.externalActionMode}
-              locale={locale}
-            />
-          </div>
-          <div className="mt-4">
             <DemoShell demo={demo} locale={locale} />
           </div>
         </div>
@@ -181,7 +171,7 @@ export function DemoDetailLayout({
                 <h3 className="text-label text-foreground">
                   {pageCopy.checksHeading}
                 </h3>
-                <ul className="mt-3 max-w-[64ch] border-t border-hairline">
+                <ul className="mt-3 max-w-[64ch] border-t border-hairline text-body">
                   {demo.riskNotes.map((note) => (
                     <li
                       key={note}
@@ -205,7 +195,7 @@ export function DemoDetailLayout({
               {runRows.map((row) => (
                 <div
                   key={row.label}
-                  className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 border-b border-hairline py-3"
+                  className="grid grid-cols-[8.5rem_minmax(0,1fr)] items-baseline gap-4 border-b border-hairline py-3"
                 >
                   <dt className="text-label text-muted-foreground">{row.label}</dt>
                   <dd className="min-w-0 break-words text-body text-foreground">
@@ -290,11 +280,19 @@ export function DemoDetailLayout({
               <ArrowGlyph />
             </Link>
           </div>
-          <div className="flex min-w-0 flex-col items-start gap-3 md:border-l md:border-hairline md:pl-12">
+          {/* Same order as the course side: kicker, title, action. Below md
+              the two stack, so a hairline separates them. */}
+          <div
+            data-demo-next
+            className="flex min-w-0 flex-col items-start gap-3 max-md:border-t max-md:border-hairline max-md:pt-6 md:border-l md:border-hairline md:pl-12"
+          >
             <p className="text-label text-muted-foreground tabular-nums">
               {pageCopy.nextExample} · {next.n}
             </p>
-            <p className="max-w-[48ch] text-body text-muted-foreground">
+            <p className="text-fluid-h3 font-bold text-foreground text-balance">
+              {nextName}
+            </p>
+            <p className="max-w-[48ch] text-caption text-muted-foreground line-clamp-2">
               {next.description}
             </p>
             <DemoCta
@@ -302,8 +300,9 @@ export function DemoDetailLayout({
               target="next-demo"
               href={localizeHref(`/demos/${next.slug}?source=next-demo`, locale)}
               variant="secondary"
+              ariaLabel={`${tileCopy.open}: ${nextName}`}
             >
-              {pageCopy.openNext(nextName)}
+              {tileCopy.open}
             </DemoCta>
           </div>
         </div>

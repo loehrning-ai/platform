@@ -68,12 +68,19 @@ export function useLessonReaderBar({
       mission.dispatchEvent(new Event(LESSON_MISSION_OPEN_TASK_EVENT));
       return;
     }
-    const reference = content.querySelector<HTMLDetailsElement>("[data-lesson-reference]");
+    const reference = content.querySelector<HTMLDetailsElement>("details[data-lesson-reference]");
     if (reference) reference.open = true;
     const scope = reference ?? content;
+    // The lesson title sits in the head above the disclosure (LessonReference),
+    // so without a checkpoint the reader lands on that title, not on the
+    // "Einklappen" toggle that comes first inside the details.
+    const lessonHeading = reference
+      ?.closest<HTMLElement>("[data-lesson-reference-block]")
+      ?.querySelector<HTMLElement>('[role="heading"]');
     // A disabled textarea is not a usable next step. Its checkpoint heading
     // and prerequisite hint explain the remaining real task without ticking it.
     const target = scope.querySelector<HTMLElement>('[data-lesson-proof-checkpoint="open"]') ??
+      lessonHeading ??
       scope.querySelector<HTMLElement>("h1, h2, h3, summary");
     if (!target) return;
     if (!target.hasAttribute("tabindex")) target.tabIndex = -1;

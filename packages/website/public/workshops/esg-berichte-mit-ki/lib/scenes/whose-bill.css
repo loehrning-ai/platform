@@ -100,6 +100,7 @@
 
 #whose-bill .wb-row .w-mono {
   color: var(--ink);
+  font-size: 22px;
   font-weight: 700;
 }
 
@@ -127,4 +128,15 @@
 #whose-bill .wb-effect__row[data-focus] {
   padding: 4px 12px;
   border: 3px solid var(--mennige);
+}
+
+/* One Mennige mark per press: the addressee block on entry and during the vote, the answer stamp on
+   press 2, the location-based effect on press 3. Earlier marks fall back to ink. */
+#whose-bill:not([data-step-current="0"]):not([data-step-current="1"]) .wb-doc .doc__mark {
+  border-color: var(--ink);
+}
+
+#whose-bill[data-step-current="3"] .wb-answer .stamp[data-focus] {
+  outline-color: var(--ink);
+  outline-width: 2px;
 }

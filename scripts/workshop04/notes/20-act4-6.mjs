@@ -11,7 +11,7 @@ export default {
     say: [
       "Same question, same model. This time every figure names its rows, the meter reading is labelled as one, both Scope 2 numbers use the right method, and the answer says what it did not check.",
       "On press 3: the total moved by {gap_lb_t|abs} tonnes. More important, every tonne now has a row and a page behind it.",
-      "If the answer is still the constructed target: say so. 'This is the answer we expect; the recorded runs are in appendix A3.'",
+      "If the answer is still the constructed target: say so. 'This is the answer we expect. Recorded runs will go into appendix A3 once they are captured; the capture protocol is there now.'",
     ],
     sayAt: { 0: [1], 1: [3], 2: [1] },
     ask: [{ at: 1, text: "Which number in this answer would you check first?", aloud: true }],
@@ -53,7 +53,7 @@ export default {
     sayAt: { 0: [2], 1: [3], 2: [3], 3: [4], 4: [4] },
     ask: [{ at: 1, text: "What made location-based emissions fall {chg_lb_t|absunit}?", options: ["Our efficiency measures", "A lower grid factor", "We produced less"], expected: "Most pick efficiency." }],
     expectedAudience: ["Most pick efficiency, which is the AI's claim."],
-    revealOrder: ["Two bridges with both totals, and the struck AI sentence", "Room vote", "Location-based bridge", "Market-based bridge and caption", "Rewritten sentence"],
+    revealOrder: ["Both bridges on one scale, totals only; the AI's sentence, not yet struck", "Room vote", "Location-based bars and driver names; the AI's sentence struck through", "Market-based bars, driver names and the residual-mix caption", "Rewritten sentence"],
     cut: "Skip the market-based bridge; say the {drv_mb_cert_t|absunit} in one sentence.",
     appendixRoutes: ["appendix-baseline", "appendix-arithmetic"],
   },

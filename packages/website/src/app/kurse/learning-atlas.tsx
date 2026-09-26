@@ -615,10 +615,12 @@ export function LearningAtlas({
                 ) && "hidden lg:block",
               )}
             >
+              {/* One step below the h2 at every width: 22px on phones, where
+                  the fluid h2 bottoms out at 26px, 26px from sm up. */}
               <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t-2 border-foreground pb-2 pt-3">
                 <h3
                   id={`${group.id}-heading`}
-                  className="text-[1.625rem] font-bold leading-tight text-foreground"
+                  className="text-[1.375rem] font-bold leading-tight text-foreground sm:text-[1.625rem]"
                 >
                   {group.title}
                 </h3>

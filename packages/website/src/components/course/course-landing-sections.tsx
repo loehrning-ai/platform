@@ -40,14 +40,32 @@ export interface CourseOutcome {
   readonly detail?: string;
 }
 
-/** "Was du danach kannst": a two-column hairline list, no icons, no boxes. */
+/**
+ * Columns for an outcome list so every column ends on the same row: two for
+ * an even count, three from lg for a count divisible by three, otherwise a
+ * single reading column. A two-column grid with three items would leave a
+ * hole at the bottom right and a hairline that stops short.
+ */
+export function courseOutcomeColumnsClass(count: number): string {
+  if (count > 1 && count % 2 === 0) return "sm:grid-cols-2";
+  if (count > 1 && count % 3 === 0) return "lg:grid-cols-3";
+  return "max-w-[64ch]";
+}
+
+/** "Was du danach kannst": a hairline list, no icons, no boxes. */
 export function CourseOutcomeList({
   items,
 }: {
   readonly items: readonly CourseOutcome[];
 }): JSX.Element {
   return (
-    <ul className="grid min-w-0 gap-x-12 sm:grid-cols-2" data-course-outcomes>
+    <ul
+      className={cx(
+        "grid min-w-0 gap-x-12",
+        courseOutcomeColumnsClass(items.length),
+      )}
+      data-course-outcomes
+    >
       {items.map((item) => (
         <li
           key={item.title}
@@ -81,6 +99,12 @@ export interface CourseLedgerRow {
  * Curriculum ledger (design direction 6.6): number, title and one line, with
  * the lesson count and time as plain caption text. Rows are not links; the
  * reader behind the landing is gated or has its own entry.
+ *
+ * From sm the number has its own column. On a phone that column would push
+ * every title and description about 56px to the right, so the row is one
+ * column and the number moves into the caption ("01 · 3 Lektionen · 10 Min.").
+ * Exactly one of the two number spans is displayed at any width, so a screen
+ * reader hears the number once.
  */
 export function CourseBlockLedger({
   rows,
@@ -94,23 +118,27 @@ export function CourseBlockLedger({
       {rows.map((row) => (
         <li
           key={row.id}
-          className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 gap-y-1 border-b border-hairline py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline"
+          className="grid min-w-0 grid-cols-1 gap-y-1 border-b border-hairline py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-4"
+          data-course-ledger-row
         >
-          <span className="col-start-1 row-start-1 text-label text-muted tabular-nums">
+          <span className="hidden text-label text-muted tabular-nums sm:col-start-1 sm:row-start-1 sm:block">
             {row.number}
           </span>
-          <h3 className="col-start-2 row-start-1 min-w-0 break-words text-fluid-h3 font-bold text-foreground text-balance">
+          <h3 className="min-w-0 break-words text-fluid-h3 font-bold text-foreground text-balance sm:col-start-2 sm:row-start-1">
             {row.title}
           </h3>
-          {/* Mobile: the facts sit directly under the title, before any
-              disclosure; from sm they move to the right-hand meta column. */}
-          {row.meta ? (
-            <p className="col-start-2 row-start-2 text-caption text-muted-foreground tabular-nums sm:col-start-3 sm:row-start-1 sm:text-right">
-              {row.meta}
-            </p>
-          ) : null}
+          {/* Mobile: number and facts sit directly under the title, before
+              any disclosure; from sm the facts move to the right-hand column
+              and the number to its own column on the left. */}
+          <p className="text-caption text-muted-foreground tabular-nums sm:col-start-3 sm:row-start-1 sm:text-right">
+            <span className="sm:hidden">
+              {row.number}
+              {row.meta ? " · " : ""}
+            </span>
+            {row.meta}
+          </p>
           {row.description || row.extra ? (
-            <div className="col-start-2 row-start-3 min-w-0 sm:row-start-2">
+            <div className="min-w-0 sm:col-start-2 sm:row-start-2">
               {row.description ? (
                 <p className="max-w-[64ch] break-words text-body text-muted-foreground text-pretty">
                   {row.description}

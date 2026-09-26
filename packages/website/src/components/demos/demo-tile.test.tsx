@@ -143,7 +143,9 @@ describe("<DemoTile>", () => {
     const demo = makeDemo();
     render(<DemoTile demo={demo} />);
     const description = screen.getByText(demo.description);
-    expect(description.className).not.toContain("line-clamp");
+    // Full text from sm up; only the phone ledger row clamps to two lines.
+    expect(description.className).not.toMatch(/(?:^|\s)line-clamp/);
+    expect(description).toHaveClass("max-sm:line-clamp-2");
     // Only the name, without its full stop; the task phrase is not repeated.
     const heading = screen.getByRole("heading", { level: 3 });
     expect(heading).toHaveTextContent(/^Claude in Excel$/);

@@ -27,7 +27,7 @@
   </div>
   <ul class="chips" aria-label="What the figures are">
     <li class="chip">Fictional company</li>
-    <li class="chip">{{j:meta.factorLabel_en}}</li>
+    <li class="chip">{{factorlabel}}</li>
     <li class="chip chip--gap">Raw-folder answer: constructed from documented failure modes</li>
   </ul>
   <nav class="actions" aria-label="Other materials">
@@ -49,7 +49,7 @@
 <div class="g-main">
 
 <section class="g-sec" aria-labelledby="why-asked">
-  <div class="g-kopf"><p class="wf-kicker">Before the route</p><h2 id="why-asked"><span class="g-n">{{sec}}</span>Why does a {{j:company.staff_2025}}-person company get this question?</h2></div>
+  <div class="g-kopf"><p class="wf-kicker">The case</p><h2 id="why-asked"><span class="g-n">{{sec}}</span>Why does a {{j:company.staff_2025}}-person company get this question?</h2></div>
   <p>Kellbrunn Präzisionsteile GmbH is invented. It makes stamped and machined metal parts at two plants, Werk Nord and Werk Süd, and runs a leased warehouse, Lager Ost. It has {{j:company.staff_2025}} staff and has never been in CSRD scope. Its house bank asks for Scope 1 and 2 emissions to price a loan, and a car maker's supplier questionnaire asks the same, plus whether the number went down. The question for the whole workshop is: “{{j:question.en}}”</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two thresholds decide CSRD scope since 18 March 2026?</p>
@@ -62,20 +62,21 @@
 
 <section class="g-sec" aria-labelledby="first-answer">
   <div class="g-kopf"><p class="wf-kicker">Wrong answer</p><h2 id="first-answer"><span class="g-n">{{sec}}</span>The first answer, and the checks it passed</h2></div>
-  <p>We gave an AI the 2025 folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: {{n:wrong_total_lb}} CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
+  <p>We gave an AI the 2025 folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: {{n:wrong_total_lb}}&nbsp;CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
   <div class="answer answer--raw">
-    <p class="wf-kicker">Raw-folder answer · constructed from documented failure modes</p>
+    <p class="wf-kicker">Raw-folder answer · constructed</p>
     <dl class="nums">
       <div><dt>Scope 1</dt><dd>{{n:wrong_s1}}</dd></div>
       <div><dt>Scope 2, location-based</dt><dd>{{n:wrong_s2lb}}</dd></div>
-      <div><dt>Scope 1 and 2</dt><dd>{{n:wrong_total_lb}}<small>{{n:wrong_chg_lb_pct}} against 2024</small></dd></div>
-      <div><dt>“Market-based”</dt><dd>{{n:wrong_s2mb}}</dd></div>
+      <div><dt>Scope 2, “market-based”</dt><dd>{{n:wrong_s2mb}}</dd></div>
+      <div><dt>Total, location-based</dt><dd>{{n:wrong_total_lb}}<small>{{n:wrong_chg_lb_pct}} against 2024</small></dd></div>
+      <div><dt>Total, “market-based”</dt><dd>{{n:wrong_total_mb}}<small>{{n:wrong_chg_mb_pct}} against 2024</small></dd></div>
     </dl>
     <p class="provline">{{j:meta.constructedLabel_en}}</p>
   </div>
-  <p>It passes the checks people usually do: the change looks like a normal year, {{n:wrong_per_employee_t}} per employee is close to last year's {{n:per_employee_2024_t}}, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. This answer is constructed from documented failure modes. It shows what happens when all six traps fire; it is not a recorded run.</p>
+  <p>It passes the checks people usually do: the change looks like a normal year, {{n:wrong_per_employee_t}} per employee is close to last year's {{n:per_employee_2024_t}}, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. Six errors are inside it all the same; the next sections take them apart.</p>
   <div class="recall">
-    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it actually test?</p>
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it test?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
       <ul>
         <li>A normal-looking change tests the total against last year's total. Errors that cancel pass it.</li>
@@ -91,7 +92,7 @@
 
 <section class="g-sec" aria-labelledby="twelve-files">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="twelve-files"><span class="g-n">{{sec}}</span>Twelve files, eleven months</h2></div>
-  <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number {{j:inputs.wnDuplicate.invoice}} is next to the first. October is missing. The November and December bill covers two months, which keeps the count at twelve.</p>
+  <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number <span class="nowrap">{{j:inputs.wnDuplicate.invoice}}</span> is next to the first. October is missing. The November and December bill covers two months. The twelfth file is an annual bill addressed to another company, Talbrück (see “Whose bill is it?”).</p>
   <p>The facility manager's meter readings show October: {{j:inputs.meterReadings.10.kwh:int}} minus {{j:inputs.meterReadings.9.kwh:int}} is {{n:oct_kwh}}. The duplicate adds {{n:dup_kwh}} and the gap removes {{n:oct_kwh:bare}}, so the Werk Nord sum is only {{n:wn_net_raw_vs_right_kwh:absunit}} off. August is low ({{n:aug_kwh}}, {{n:aug_vs_jul_pct}} against July) because of the plant holiday. That is real, and a good assistant flags it for a person without changing it.</p>
   {{fig:months}}
   <div class="recall">
@@ -105,8 +106,8 @@
 
 <section class="g-sec" aria-labelledby="dot">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="dot"><span class="g-n">{{sec}}</span>A dot that means a thousand</h2></div>
-  <p>The Werk Süd statement says “Verbrauch 2025: {{j:inputs.ws.printed}}”. On a German document the dot separates thousands, so this is {{n:el_ws_mwh}}, or {{n:el_ws_kwh}}. Read as {{j:inputs.ws.misreadKwh:int}} kWh, Werk Süd almost disappears and location-based Scope 2 drops by {{n:unit_lb_t:absunit}}.</p>
-  <p>Two checks catch it without knowing the number format: {{j:inputs.ws.misreadKwh:int}} kWh would be {{n:ws_misread_kwh_per_employee}} per Werk Süd employee per year, against {{n:ws_kwh_per_employee}} when read correctly, and the same page prints last year's value, {{j:inputs.ws.priorYearPrinted}}.</p>
+  <p>The Werk Süd statement says “Verbrauch 2025: {{j:inputs.ws.printed}}”. On a German document the dot separates thousands, so this is {{n:el_ws_mwh}}, or {{n:el_ws_kwh}}. Read as {{j:inputs.ws.misreadKwh:int}}&nbsp;kWh, Werk Süd almost disappears and location-based Scope 2 drops by {{n:unit_lb_t:absunit}}.</p>
+  <p>Two checks catch it without knowing the number format: {{j:inputs.ws.misreadKwh:int}}&nbsp;kWh would be {{n:ws_misread_kwh_per_employee}} per Werk Süd employee per year, against {{n:ws_kwh_per_employee}} when read correctly, and the same page prints last year's value, {{j:inputs.ws.priorYearPrinted}}.</p>
   {{fig:dot}}
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>What does the misread do to the market-based figure?</p>
@@ -196,7 +197,7 @@
 <section class="g-sec" aria-labelledby="same-question">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="same-question"><span class="g-n">{{sec}}</span>The same question on the ledger</h2></div>
   <p>With the ledger, the coverage grid and the rules, the same AI gets the same question. The target answer names row IDs for every figure.</p>
-  <div class="answer">
+  <div class="answer answer--target">
     <p class="wf-kicker">{{j:meta.targetLabel_en}}</p>
     <dl class="nums">
       <div><dt>Scope 1</dt><dd>{{n:s1_2025}}</dd></div>
@@ -231,14 +232,14 @@
 </section>
 
 <section class="g-sec" aria-labelledby="ask-back">
-  <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
-  <p>Five requests show the three jobs of a useful assistant.</p>
-  <ul class="wf-rows">
-    <li><div class="wf-row"><span class="wf-row__n">Calculate</span><span class="wf-row__title">“Sum Scope 2”</span><p class="wf-row__desc">A calculation from the ledger.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Ask back</span><span class="wf-row__title">“Fill in October”</span><p class="wf-row__desc">Needs a decision: the meter reading (grade B) or a labelled estimate.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Rewrite</span><span class="wf-row__title">“Write that we run on green electricity”</span><p class="wf-row__desc">Gets rewritten with the share ({{n:renewable_share_el_pct}}) and the site (Werk Süd).</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Refuse</span><span class="wf-row__title">“Write that we are climate-neutral”</span><p class="wf-row__desc">Gets refused, because nothing in the ledger supports it.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Explain</span><span class="wf-row__title">“Explain why emissions fell”</span><p class="wf-row__desc">Gets the bridge first, then a draft that cites driver lines.</p></div></li>
+  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
+  <p>Five requests, three jobs for a useful assistant: calculate, ask back, refuse.</p>
+  <ul class="ab-rows" aria-label="Five requests and the job each one needs">
+    <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Sum Scope 2”</p><p class="ab-row__desc">A calculation from the ledger rows.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Ask back</span><div><p class="ab-row__req">“Fill in October”</p><p class="ab-row__desc">A person has to decide: the meter reading (grade B) or a labelled estimate. The assistant asks and names the choice.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Refuse</span><div><p class="ab-row__req">“Write that we run on green electricity”</p><p class="ab-row__desc">The wording is refused. The assistant offers a rewrite with the share ({{n:renewable_share_el_pct}}) and the site (Werk Süd).</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Refuse</span><div><p class="ab-row__req">“Write that we are climate-neutral”</p><p class="ab-row__desc">Refused, because nothing in the ledger supports it.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Explain why emissions fell”</p><p class="ab-row__desc">The assistant calculates the bridge first, then drafts a text that cites the driver lines.</p></div></li>
   </ul>
   <p class="wf-note">For context: since 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as “eco-friendly” unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets. In Germany this happens through an amendment to the UWG, known from secondary sources; check the current text. Whether a text such as your website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG). Rules as of 26 Sep 2026. Not legal advice.</p>
   <div class="recall">
@@ -253,7 +254,7 @@
 <section class="g-sec" aria-labelledby="limits">
   <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="limits"><span class="g-n">{{sec}}</span>What this does not prove</h2></div>
   <p>This is one fictional case. The raw-folder answer is constructed; recorded runs, with date and model, are listed separately. Two published studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</p>
-  <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
+  <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are illustrative teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Name two Scope 1 sources a folder of energy bills never shows.</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
@@ -278,7 +279,7 @@
   <p class="provline">Optional, 20 minutes, needs an AI account.</p>
   <p>Open the kit. Run <code>prompts/01_auslesen.md</code> (the reader) on the raw folder and compare your rows with <code>erwartet/belegtabelle_2025.csv</code>. Run <code>prompts/02_pruefen.md</code> (the clerk) on the rows and check whether it flags the duplicate, October, Talbrück and the unit. Use only the kit's invented files, never company data in a tool your company has not approved.</p>
   <nav class="actions" aria-label="Kit">
-    <a class="wf-btn" href="./esg-kit.zip" download>Download the kit (.zip)</a>
+    <a class="wf-btn" href="./{{kit:href}}" download>Download the kit (.zip, {{kit:size}})</a>
   </nav>
 </section>
 
@@ -301,7 +302,7 @@
   <div class="recall">
     <p class="recall-q">Which part of a year-on-year change is usually not your doing?</p>
     <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>The grid factor in location-based, and in market-based whatever certificates you bought. In this case {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor.</p>
+      <p>The grid factor. Certificates are your purchase, but they lower the market-based figure without any change in your use. Here {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor.</p>
     </div></details>
   </div>
   <div class="recall">
@@ -359,7 +360,7 @@
 </div>
 </div>
 </main>
-<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH and Lindmark Energie GmbH are invented. Emission factors are teaching values, not official factors. Rules as of 26 September 2026. Not legal or audit advice.</p></footer>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH and Lindmark Energie GmbH are invented. Emission factors are illustrative teaching values, not official factors. Rules as of 26 September 2026. Not legal or audit advice.</p></footer>
 <script src="./lib/w04-pages.js"></script>
 </body>
 </html>

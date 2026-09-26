@@ -22,7 +22,7 @@
       <h1 class="wf-h1">Before you trust an ESG number</h1>
       <p class="wf-lead">Seven checks. Each one comes from Workshop 04.</p>
     </div>
-    <div class="glyph" aria-hidden="true">{{fig:glyph}}</div>
+    {{fig:glyph}}
   </header>
   <div class="sheet-tools no-print">
     <button type="button" class="wf-btn wf-btn--primary" id="print-page">Print this card</button>
@@ -40,7 +40,7 @@
       <tr><td class="n">{{sec}}</td><th scope="row" class="chk">Whose name is on it</th><td data-label="Do">Check the entity on the document against your written boundary. Keep excluded rows with a reason.</td><td class="dont" data-label="Don't">Include whatever is in your folder.</td><td class="case" data-label="From the case">Talbrück bill: <b>{{n:jv_lb_t}}</b></td><td class="scene" data-label="Deck scene">Whose bill</td></tr>
       <tr><td class="n">{{sec}}</td><th scope="row" class="chk">Factor with ID, year, basis, edition</th><td data-label="Do">Pick from a pinned table. Match the gas basis (Hs or Hi) to the bill.</td><td class="dont" data-label="Don't">Let the AI supply a value.</td><td class="case" data-label="From the case">Last year's grid factor: <b>{{n:last_year_factor_effect_t}}</b></td><td class="scene" data-label="Deck scene">Six rules</td></tr>
       <tr><td class="n">{{sec}}</td><th scope="row" class="chk">Two Scope 2 numbers</th><td data-label="Do">Report location-based and market-based. Certificate only for the kWh it covers; then supplier rate; then residual mix.</td><td class="dont" data-label="Don't">Turn one certificate into “green power”.</td><td class="case" data-label="From the case"><b>{{n:s2lb_2025}}</b> and <b>{{n:s2mb_2025}}</b>; {{n:renewable_share_el_pct}} covered</td><td class="scene" data-label="Deck scene">Two Scope 2 numbers</td></tr>
-      <tr><td class="n">{{sec}}</td><th scope="row" class="chk">Split the change</th><td data-label="Do">Name grid factor, certificates and own use; say which part is yours.</td><td class="dont" data-label="Don't">Write “efficiency” without production data.</td><td class="case" data-label="From the case"><b>{{n:chg_lb_t}}</b>: {{n:drv_lb_grid_t:abs}} grid, {{n:drv_lb_own_t:abs}} own use</td><td class="scene" data-label="Deck scene">What drove it</td></tr>
+      <tr><td class="n">{{sec}}</td><th scope="row" class="chk">Split the change</th><td data-label="Do">Name grid factor, certificates and own use; say which part is yours.</td><td class="dont" data-label="Don't">Write “efficiency” without production data.</td><td class="case" data-label="From the case"><b>{{n:chg_lb_t}}</b>: {{n:drv_lb_grid_t:absunit}} grid factor, {{n:drv_lb_own_t:absunit}} own use</td><td class="scene" data-label="Deck scene">What drove it</td></tr>
     </tbody>
   </table>
 
@@ -50,10 +50,10 @@
   </ul>
 
   <footer class="sheet-foot">
-    <p>Fictional case, teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
+    <p>Fictional case, illustrative teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
   </footer>
 </main>
-<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are teaching values, not official factors.</p></footer>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are illustrative teaching values, not official factors.</p></footer>
 <script src="./lib/w04-pages.js"></script>
 </body>
 </html>

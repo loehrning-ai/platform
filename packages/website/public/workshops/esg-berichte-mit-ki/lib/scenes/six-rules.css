@@ -55,7 +55,7 @@
 
 #six-rules .sr-rule small {
   color: var(--slate);
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #six-rules .sr-role {
@@ -88,45 +88,9 @@
   gap: 8px;
 }
 
-#six-rules .ft {
-  width: 100%;
-  border: 4px solid var(--ink);
-  border-collapse: collapse;
-  background: var(--papier);
-  font-family: var(--mono);
-  font-size: 18px;
-}
-
-#six-rules .ft th {
-  padding: 8px 8px 6px;
-  border-bottom: 3px solid var(--ink);
-  color: var(--slate);
-  font-weight: 500;
-  text-align: left;
-}
-
-#six-rules .ft td {
-  padding: 7px 8px;
-  border-top: 1px solid var(--leinen);
-  white-space: nowrap;
-}
-
-#six-rules .ft .ft-num {
-  text-align: right;
-}
-
-#six-rules .ft .ft-id {
-  font-weight: 700;
-}
-
-#six-rules .ft .ft-unit {
-  color: var(--slate);
-  font-size: 16px;
-}
-
 #six-rules .sr-edition {
   max-width: none;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #six-rules > .sr-answer {

@@ -16,7 +16,7 @@ const tile = readFileSync(join(__dirname, "demo-tile.tsx"), "utf8");
 describe("demo gallery grid", () => {
   it("lays tiles out in uniform 1/2/3 columns with whitespace between them", () => {
     expect(grid).toContain(
-      "grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3",
+      "grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3",
     );
     expect(grid).not.toContain("grid-flow-row-dense");
     expect(grid).not.toContain("lg:grid-cols-4");

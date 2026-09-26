@@ -5,7 +5,7 @@
   position: absolute;
   top: 240px;
   left: var(--margin-x);
-  width: 820px;
+  width: 800px;
 }
 
 #raw-folder .rf-root,
@@ -90,12 +90,12 @@
   top: 232px;
   right: var(--margin-x);
   display: grid;
-  width: 884px;
-  grid-template-columns: 1fr 1fr;
+  width: 920px;
+  grid-template-columns: 430px 466px;
   align-items: start;
   gap: 24px;
 }
 
 #raw-folder .rf-docs .doc__sheet {
-  font-size: 21px;
+  padding: 28px 22px 18px;
 }

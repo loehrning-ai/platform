@@ -170,3 +170,8 @@
   left: var(--margin-x);
   max-width: none;
 }
+
+/* No word left alone on the partner's card. */
+#the-case .the-case-jv > span {
+  text-wrap: balance;
+}

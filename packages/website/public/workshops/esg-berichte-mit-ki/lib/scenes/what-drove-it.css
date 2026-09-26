@@ -1,10 +1,11 @@
 /* what-drove-it: the AI's reason, struck through in ink once the bars answer the vote (press 2), and
-   two bridges from 2024 to 2025, one per method, on one shared cut scale. 2024 in slate, 2025 solid ink, one ink bar per driver. The
-   share line of the chart under discussion carries the Mennige bar. Press 4: the rewritten sentence. */
+   the two bridges from 2024 to 2025, one per method, in one chart on one scale and one baseline. 2024
+   in slate, 2025 solid ink, one ink bar per driver; driver names appear with their bars. The share
+   line of the bridge under discussion carries the Mennige bar. Press 4: the rewritten sentence. */
 
 #what-drove-it > .wd-claim {
   position: absolute;
-  top: 236px;
+  top: 244px;
   left: var(--margin-x);
   display: flex;
   align-items: baseline;
@@ -42,35 +43,29 @@
 
 #what-drove-it > .wd-chart {
   position: absolute;
-  top: 304px;
-  display: grid;
-  width: 820px;
-  gap: 4px;
+  top: 300px;
+  left: var(--margin-x);
+  width: 1728px;
 }
 
-#what-drove-it > .wd-chart--lb { left: var(--margin-x); }
-#what-drove-it > .wd-chart--mb { right: var(--margin-x); }
-
-#what-drove-it .wd-chart__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin: 0;
-  padding-bottom: 6px;
-  border-bottom: 2px solid var(--ink);
+#what-drove-it .dv-head {
+  fill: var(--ink);
+  font-family: var(--sans);
   font-size: var(--t-body);
   font-weight: 700;
 }
 
-#what-drove-it .wd-chart__scale {
-  color: var(--slate);
-  font-size: 22px;
-  font-weight: 500;
+#what-drove-it .dv-head__rule {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
 }
 
-#what-drove-it .wd-chart__head .num {
-  color: var(--ink);
-  font-size: inherit;
+#what-drove-it .dv-scale {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 500;
 }
 
 #what-drove-it .dv {
@@ -138,13 +133,24 @@
   font-weight: 700;
 }
 
-#what-drove-it .wd-share {
-  position: relative;
-  margin: 4px 0 0;
+#what-drove-it > .wd-share {
+  position: absolute;
+  top: 716px;
+  margin: 0;
   padding: 2px 0 2px 18px;
   color: var(--slate);
   font-size: 22px;
   line-height: 1.3;
+}
+
+#what-drove-it > .wd-share--lb {
+  left: var(--margin-x);
+  width: 850px;
+}
+
+#what-drove-it > .wd-share--mb {
+  right: var(--margin-x);
+  width: 740px;
 }
 
 #what-drove-it .wd-share::before {
@@ -175,10 +181,10 @@
 
 #what-drove-it > .wd-sentence {
   position: absolute;
-  top: 816px;
+  top: 822px;
   left: var(--margin-x);
   width: 1728px;
-  padding: 14px var(--s4) 16px calc(var(--s4) + 8px);
+  padding: 12px var(--s4) 14px calc(var(--s4) + 8px);
   border: 4px solid var(--ink);
   background: var(--papier);
 }
@@ -212,6 +218,6 @@
 
 #what-drove-it .wd-sentence__text {
   margin: 0;
-  font-size: var(--t-body);
+  font-size: var(--t-small);
   line-height: 1.35;
 }

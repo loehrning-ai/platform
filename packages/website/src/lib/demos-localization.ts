@@ -176,7 +176,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Flag personal data in a prompt.",
     background: "Rule-based token classification · runs locally in the browser",
     description:
-      "Rules flag names, IBANs and confidential terms before a prompt is released. The flags are hints and miss some cases.",
+      "Rules flag names, IBANs and confidential terms before a prompt is released. They miss some cases, so treat each flag as a hint.",
     tags: ["GDPR", "On-premises", "Rule-based"],
     meta: [
       { label: "Learning objective", value: "Identify sensitive data" },
@@ -188,7 +188,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     industries: ["Insurance", "Financial services", "Healthcare"],
     syntheticDataLabel: "Invented sample texts, checked in your browser.",
     riskNotes: [
-      "The rules miss some cases. Read the prompt yourself before you release it.",
+      "Read the prompt yourself before you release it, even when nothing is flagged.",
       "Check each flag, because harmless words get caught too.",
     ],
   },
@@ -218,7 +218,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Two answers side by side.",
     background: "Base model compared with domain examples",
     description:
-      "You ask the same question twice and compare the base model with a domain-adapted answer. Alongside, you see when retrieval or a better prompt would do.",
+      "You ask the same question twice and compare the base model's answer with that of an adapted model. Alongside, you see when retrieval or a better prompt would do.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Learning objective", value: "Compare against a baseline" },

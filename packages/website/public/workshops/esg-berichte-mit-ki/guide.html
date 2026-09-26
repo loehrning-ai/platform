@@ -22,10 +22,10 @@
   <nav class="wf-mats" aria-label="Workshop materials">
     <a href="./slides.html"><span>01</span>Deck</a>
     <a href="./demo.html"><span>02</span>Interactive demo</a>
-    <a href="./guide.html" aria-current="page"><span>03</span>Learner guide</a>
-    <a href="./field-card.html"><span>04</span>Field card</a>
-    <a href="./transfer.html"><span>05</span>Transfer sheet</a>
-    <a href="./esg-kit.zip" download><span>06</span>Kit</a>
+    <a href="./kellbrunn-esg-kit.zip" download><span>03</span>Kit</a>
+    <a href="./transfer.html"><span>04</span>Transfer sheet</a>
+    <a href="./guide.html" aria-current="page"><span>05</span>Learner guide</a>
+    <a href="./field-card.html"><span>06</span>Field card</a>
   </nav>
 </header>
 
@@ -41,7 +41,7 @@
   </div>
   <ul class="chips" aria-label="What the figures are">
     <li class="chip">Fictional company</li>
-    <li class="chip">Teaching values, not official factors.</li>
+    <li class="chip">Illustrative teaching values, not official factors</li>
     <li class="chip chip--gap">Raw-folder answer: constructed from documented failure modes</li>
   </ul>
   <nav class="actions" aria-label="Other materials">
@@ -63,7 +63,7 @@
 <div class="g-main">
 
 <section class="g-sec" aria-labelledby="why-asked">
-  <div class="g-kopf"><p class="wf-kicker">Before the route</p><h2 id="why-asked"><span class="g-n">1</span>Why does a 180-person company get this question?</h2></div>
+  <div class="g-kopf"><p class="wf-kicker">The case</p><h2 id="why-asked"><span class="g-n">1</span>Why does a 180-person company get this question?</h2></div>
   <p>Kellbrunn Präzisionsteile GmbH is invented. It makes stamped and machined metal parts at two plants, Werk Nord and Werk Süd, and runs a leased warehouse, Lager Ost. It has 180 staff and has never been in CSRD scope. Its house bank asks for Scope 1 and 2 emissions to price a loan, and a car maker's supplier questionnaire asks the same, plus whether the number went down. The question for the whole workshop is: “What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?”</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two thresholds decide CSRD scope since 18 March 2026?</p>
@@ -76,20 +76,21 @@
 
 <section class="g-sec" aria-labelledby="first-answer">
   <div class="g-kopf"><p class="wf-kicker">Wrong answer</p><h2 id="first-answer"><span class="g-n">2</span>The first answer, and the checks it passed</h2></div>
-  <p>We gave an AI the 2025 folder: 22 files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: 1,866.5 t CO₂e, 7.5% below 2024.</p>
+  <p>We gave an AI the 2025 folder: 22 files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: 1,866.5 t&nbsp;CO₂e, 7.5% below 2024.</p>
   <div class="answer answer--raw">
-    <p class="wf-kicker">Raw-folder answer · constructed from documented failure modes</p>
+    <p class="wf-kicker">Raw-folder answer · constructed</p>
     <dl class="nums">
-      <div><dt>Scope 1</dt><dd>516.0 t</dd></div>
-      <div><dt>Scope 2, location-based</dt><dd>1,350.5 t</dd></div>
-      <div><dt>Scope 1 and 2</dt><dd>1,866.5 t<small>−7.5% against 2024</small></dd></div>
-      <div><dt>“Market-based”</dt><dd>1,350.0 t</dd></div>
+      <div><dt>Scope 1</dt><dd>516.0 t</dd></div>
+      <div><dt>Scope 2, location-based</dt><dd>1,350.5 t</dd></div>
+      <div><dt>Scope 2, “market-based”</dt><dd>1,350.0 t</dd></div>
+      <div><dt>Total, location-based</dt><dd>1,866.5 t<small>−7.5% against 2024</small></dd></div>
+      <div><dt>Total, “market-based”</dt><dd>1,866.0 t<small>−30.2% against 2024</small></dd></div>
     </dl>
-    <p class="provline">Constructed: what the answer looks like when all six traps fire. Not a recorded run.</p>
+    <p class="provline">Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.</p>
   </div>
-  <p>It passes the checks people usually do: the change looks like a normal year, 10.4 t per employee is close to last year's 11.2 t, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. This answer is constructed from documented failure modes. It shows what happens when all six traps fire; it is not a recorded run.</p>
+  <p>It passes the checks people usually do: the change looks like a normal year, 10.4 t per employee is close to last year's 11.2 t, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. Six errors are inside it all the same; the next sections take them apart.</p>
   <div class="recall">
-    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it actually test?</p>
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it test?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
       <ul>
         <li>A normal-looking change tests the total against last year's total. Errors that cancel pass it.</li>
@@ -105,27 +106,29 @@
 
 <section class="g-sec" aria-labelledby="twelve-files">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="twelve-files"><span class="g-n">3</span>Twelve files, eleven months</h2></div>
-  <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number 4711-03 is next to the first. October is missing. The November and December bill covers two months, which keeps the count at twelve.</p>
-  <p>The facility manager's meter readings show October: 5,012,300 minus 4,812,300 is 200,000 kWh. The duplicate adds 205,000 kWh and the gap removes 200,000, so the Werk Nord sum is only 5,000 kWh off. August is low (120,000 kWh, −31% against July) because of the plant holiday. That is real, and a good assistant flags it for a person without changing it.</p>
+  <p>The Werk Nord folder holds twelve electricity files. March is in twice: purchasing forwarded the invoice and someone scanned it again, so a second file with invoice number <span class="nowrap">4711-03</span> is next to the first. October is missing. The November and December bill covers two months. The twelfth file is an annual bill addressed to another company, Talbrück (see “Whose bill is it?”).</p>
+  <p>The facility manager's meter readings show October: 5,012,300 minus 4,812,300 is 200,000 kWh. The duplicate adds 205,000 kWh and the gap removes 200,000, so the Werk Nord sum is only 5,000 kWh off. August is low (120,000 kWh, −31% against July) because of the plant holiday. That is real, and a good assistant flags it for a person without changing it.</p>
   <figure class="fig" aria-labelledby="fig-months-cap">
   <div class="mg">
-    <div class="mg-row"><span class="mg-lab">As the folder arrived<small>12 files, Werk Nord electricity</small></span><span class="mg-wrap"><span class="mg-mon" aria-hidden="true"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span></span><span class="mg-cells" role="img" aria-label="As the folder arrived: March twice, October missing, November and December on one bill."><span class="mg-c mg-c--bill" title="Jan: one bill"></span><span class="mg-c mg-c--bill" title="Feb: one bill"></span><span class="mg-c mg-c--bill mg-c--twice" title="Mar: the same bill twice"><span class="mg-badge">2</span></span><span class="mg-c mg-c--bill" title="Apr: one bill"></span><span class="mg-c mg-c--bill" title="May: one bill"></span><span class="mg-c mg-c--bill" title="Jun: one bill"></span><span class="mg-c mg-c--bill" title="Jul: one bill"></span><span class="mg-c mg-c--bill" title="Aug: one bill"></span><span class="mg-c mg-c--bill" title="Sep: one bill"></span><span class="mg-c mg-c--none" title="Oct: no bill"><span class="mg-t">none</span></span><span class="mg-c mg-c--bill mg-c--span" style="grid-column:span 2" title="Nov to Dec: one bill"><span class="mg-t">one bill</span></span></span></span></div>
-    <div class="mg-row"><span class="mg-lab">In the ledger<small>one row per bill, October from the meter</small></span><span class="mg-cells" role="img" aria-label="In the ledger: every month once, October from the meter readings, November and December on one bill."><span class="mg-c mg-c--row" title="Jan: one bill"></span><span class="mg-c mg-c--row" title="Feb: one bill"></span><span class="mg-c mg-c--row" title="Mar: one bill"></span><span class="mg-c mg-c--row" title="Apr: one bill"></span><span class="mg-c mg-c--row" title="May: one bill"></span><span class="mg-c mg-c--row" title="Jun: one bill"></span><span class="mg-c mg-c--row" title="Jul: one bill"></span><span class="mg-c mg-c--row" title="Aug: one bill"></span><span class="mg-c mg-c--row" title="Sep: one bill"></span><span class="mg-c mg-c--meter" title="Oct: meter reading, grade B"><span class="mg-t">meter</span></span><span class="mg-c mg-c--row mg-c--span" style="grid-column:span 2" title="Nov to Dec: one bill"><span class="mg-t">one bill</span></span></span></div>
+    <div class="mg-row"><span class="mg-lab">As the folder arrived<small>12 files, Werk Nord electricity</small></span><span class="mg-wrap"><span class="mg-mon" aria-hidden="true"><span>J</span><span>F</span><span>M</span><span>A</span><span>M</span><span>J</span><span>J</span><span>A</span><span>S</span><span>O</span><span>N</span><span>D</span><span class="mg-mon-other">JV</span></span><span class="mg-cells" role="img" aria-label="As the folder arrived, 12 files: March twice, October missing, November and December on one bill, and Talbrück's annual bill, which is not Kellbrunn's."><span class="mg-c mg-c--bill" title="Jan: one bill"></span><span class="mg-c mg-c--bill" title="Feb: one bill"></span><span class="mg-c mg-c--bill mg-c--twice" title="Mar: the same bill twice"><span class="mg-badge">2</span></span><span class="mg-c mg-c--bill" title="Apr: one bill"></span><span class="mg-c mg-c--bill" title="May: one bill"></span><span class="mg-c mg-c--bill" title="Jun: one bill"></span><span class="mg-c mg-c--bill" title="Jul: one bill"></span><span class="mg-c mg-c--bill" title="Aug: one bill"></span><span class="mg-c mg-c--bill" title="Sep: one bill"></span><span class="mg-c mg-c--none" title="Oct: no bill"><span class="mg-t">none</span></span><span class="mg-c mg-c--bill mg-c--span" style="grid-column:span 2" title="Nov to Dec: one bill"><span class="mg-t">one bill</span></span><span class="mg-c mg-c--bill mg-c--other" title="Talbrück's annual bill: in the folder, not Kellbrunn's"><span class="mg-t">Talbrück</span></span></span></span></div>
+    <div class="mg-row"><span class="mg-lab">In the ledger<small>every month once, October from the meter</small></span><span class="mg-cells" role="img" aria-label="In the ledger: every month once, October from the meter readings, November and December on one bill, and the Talbrück row kept as excluded."><span class="mg-c mg-c--row" title="Jan: one bill"></span><span class="mg-c mg-c--row" title="Feb: one bill"></span><span class="mg-c mg-c--row" title="Mar: one bill"></span><span class="mg-c mg-c--row" title="Apr: one bill"></span><span class="mg-c mg-c--row" title="May: one bill"></span><span class="mg-c mg-c--row" title="Jun: one bill"></span><span class="mg-c mg-c--row" title="Jul: one bill"></span><span class="mg-c mg-c--row" title="Aug: one bill"></span><span class="mg-c mg-c--row" title="Sep: one bill"></span><span class="mg-c mg-c--meter" title="Oct: meter reading, grade B"><span class="mg-t">meter</span></span><span class="mg-c mg-c--row mg-c--span" style="grid-column:span 2" title="Nov to Dec: one bill"><span class="mg-t">one bill</span></span><span class="mg-c mg-c--out" title="Talbrück's bill: kept in the ledger as excluded, with the reason"><span class="mg-t">out</span></span></span></div>
   </div>
-  <p class="fig-sum"><span class="mono">+205,000 kWh − 200,000 kWh = +5,000 kWh</span><span>the duplicate March bill minus the missing October</span></p>
+  <p class="fig-sum"><span class="mono">+205,000 kWh − 200,000 kWh = +5,000 kWh</span><span>the duplicate March bill minus the missing October</span></p>
   <ul class="legend" aria-label="Legend">
     <li><span class="sw sw--bill"></span>Bill in the folder</li>
     <li><span class="sw sw--twice"></span>Same bill twice</li>
     <li><span class="sw sw--none"></span>No bill for the month</li>
-    <li><span class="sw sw--meter"></span>Meter reading, grade B</li>
+    <li><span class="sw sw--other"></span>Another company's bill</li>
     <li><span class="sw sw--row"></span>Ledger row</li>
+    <li><span class="sw sw--meter"></span>Meter reading, grade B</li>
+    <li><span class="sw sw--out"></span>Excluded row, with the reason</li>
   </ul>
-  <figcaption id="fig-months-cap" class="wf-caption">Werk Nord electricity 2025, month by month. Fictional company.</figcaption>
+  <figcaption id="fig-months-cap" class="wf-caption">Werk Nord electricity 2025, month by month. JV: the joint venture Talbrück, which Kellbrunn does not run. Fictional company.</figcaption>
 </figure>
   <div class="recall">
-    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why did the Werk Nord sum end up only 5,000 kWh off?</p>
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why did the Werk Nord sum end up only 5,000 kWh off?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>Two errors cancel. The duplicate March bill adds 205,000 kWh, and the missing October takes out 200,000 kWh. A check on the Werk Nord total cannot see either error; a month-by-month grid shows both at once.</p>
+      <p>Two errors cancel. The duplicate March bill adds 205,000 kWh, and the missing October takes out 200,000 kWh. A check on the Werk Nord total cannot see either error; a month-by-month grid shows both at once.</p>
     </div></details>
   </div>
   <p class="key"><b>Key point</b><span>Fill a site-by-month grid before you add anything up. Count months, not files.</span></p>
@@ -133,8 +136,8 @@
 
 <section class="g-sec" aria-labelledby="dot">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="dot"><span class="g-n">4</span>A dot that means a thousand</h2></div>
-  <p>The Werk Süd statement says “Verbrauch 2025: 1.240 MWh”. On a German document the dot separates thousands, so this is 1,240 MWh, or 1,240,000 kWh. Read as 1,240 kWh, Werk Süd almost disappears and location-based Scope 2 drops by 495.5 t.</p>
-  <p>Two checks catch it without knowing the number format: 1,240 kWh would be 23 kWh per Werk Süd employee per year, against 22,545 kWh when read correctly, and the same page prints last year's value, 1.250 MWh.</p>
+  <p>The Werk Süd statement says “Verbrauch 2025: 1.240 MWh”. On a German document the dot separates thousands, so this is 1,240 MWh, or 1,240,000 kWh. Read as 1,240&nbsp;kWh, Werk Süd almost disappears and location-based Scope 2 drops by 495.5 t.</p>
+  <p>Two checks catch it without knowing the number format: 1,240&nbsp;kWh would be 23 kWh per Werk Süd employee per year, against 22,545 kWh when read correctly, and the same page prints last year's value, 1.250 MWh.</p>
   <figure class="fig fig-dot" aria-labelledby="fig-dot-cap">
   <svg class="dot-svg" viewBox="0 0 342 84" width="342" height="84" role="img" aria-label="The printed line reads Verbrauch 2025: 1.240 MWh. The dot after the 1 is marked: on a German document it separates thousands.">
     <rect x="0.5" y="0.5" width="341" height="83" class="dot-paper"/>
@@ -143,9 +146,9 @@
     <rect x="188.4" y="66" width="12.2" height="3" class="dot-under"/>
   </svg>
   <dl class="dot-read">
-    <div><dt>Dot separates thousands</dt><dd><span class="mono">1,240,000 kWh</span> · 22,545 kWh per employee</dd></div>
-    <div class="is-wrong"><dt>Dot read as a decimal point</dt><dd><span class="mono">1,240 kWh</span> · 23 kWh per employee</dd></div>
-    <div><dt>Printed on the same page for last year</dt><dd><span class="mono">1.250 MWh</span></dd></div>
+    <div><dt>Dot separates thousands</dt><dd><span class="mono">1,240,000 kWh</span> · 22,545 kWh per employee</dd></div>
+    <div class="is-wrong"><dt>Dot read as a decimal point</dt><dd><span class="mono">1,240 kWh</span> · 23 kWh per employee</dd></div>
+    <div><dt>Printed on the same page for last year</dt><dd><span class="mono">1.250 MWh</span></dd></div>
   </dl>
   <figcaption id="fig-dot-cap" class="wf-caption">Werk Süd annual statement 2025, text rendering from the kit. Per employee: 55 staff at Werk Süd.</figcaption>
 </figure>
@@ -161,7 +164,7 @@
 <section class="g-sec" aria-labelledby="whose-bill">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="whose-bill"><span class="g-n">5</span>Whose bill is it?</h2></div>
   <p>One annual bill in the Werk Nord folder is addressed to Talbrück Beschichtung GmbH, a powder-coating company on the same premises. Kellbrunn holds 40% and the partner runs it; the contract and the meter are Talbrück's, and the bill carries Talbrück's own customer number, 55-0388. Kellbrunn chose the operational control approach, so the bill is out.</p>
-  <p>Counting it adds 1,000,000 kWh and 400.0 t location-based (600.0 t at the residual mix). The row stays in the ledger as excluded, with the reason, and is a candidate for Scope 3 category 15 later.</p>
+  <p>Counting it adds 1,000,000 kWh and 400.0 t location-based (600.0 t at the residual mix). The row stays in the ledger as excluded, with the reason, and is a candidate for Scope 3 category 15 later.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>When would 40% be right?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
@@ -173,26 +176,26 @@
 
 <section class="g-sec" aria-labelledby="looked-right">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="looked-right"><span class="g-n">6</span>Why the total looked right</h2></div>
-  <p>Six errors are inside the first answer. The duplicate and the missing October cancel to 2.0 t. The Talbrück bill hides four fifths (81%) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): +41.8 t. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: +3.0 t.</p>
-  <p>When you remove the errors one by one, the running total swings between 1,464.5 t and 1,960.0 t and ends at 1,915.2 t, 48.7 t away from where it started.</p>
+  <p>Six errors are inside the first answer. The duplicate and the missing October cancel to 2.0 t. The Talbrück bill hides four fifths (81%) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): +41.8 t. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: +3.0 t.</p>
+  <p>When you remove the errors one by one, the running total swings between 1,464.5 t and 1,960.0 t and ends at 1,915.2 t, 48.7 t away from where it started.</p>
   <figure class="fig" aria-labelledby="fig-wf-cap">
-  <div class="br" role="img" aria-label="Waterfall, location-based Scope 1 and 2: the constructed answer 1,866.5 t; removing the errors one by one swings the running total between 1,464.5 t and 1,960.0 t; it ends at the right total, 1,915.2 t.">
-    <div class="br-row br-row--head" aria-hidden="true"><span class="br-lab"></span><span class="br-track"><span class="br-limlab" style="left:10.75%">1,464.5 t</span><span class="br-limlab" style="left:93.33%">1,960.0 t</span><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span></span><span class="br-val"></span></div>
-    <div class="br-row"><span class="br-lab">Raw-folder answer <small>constructed</small></span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--hatch br-bar--cut" style="left:0.00%;width:77.75%"></span></span><span class="br-val">1,866.5 t</span></div>
+  <div class="br" role="img" aria-label="Waterfall, location-based Scope 1 and 2: the constructed answer 1,866.5 t; removing the errors one by one swings the running total between 1,464.5 t and 1,960.0 t; it ends at the right total, 1,915.2 t.">
+    <div class="br-row br-row--head" aria-hidden="true"><span class="br-lab"></span><span class="br-track"><span class="br-limlab" style="left:10.75%">1,464.5 t</span><span class="br-limlab" style="left:93.33%">1,960.0 t</span><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span></span><span class="br-val"></span></div>
+    <div class="br-row"><span class="br-lab">Raw-folder answer <small>constructed</small></span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--hatch br-bar--cut" style="left:0.00%;width:77.75%"></span></span><span class="br-val">1,866.5 t</span></div>
     <div class="br-row"><span class="br-lab">Remove the duplicate March bill</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:64.08%;width:13.67%"></span></span><span class="br-val">−82.0</span></div>
     <div class="br-row"><span class="br-lab">Add October from the meter readings</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:64.08%;width:13.33%"></span></span><span class="br-val">+80.0</span></div>
     <div class="br-row"><span class="br-lab">Exclude Talbrück (JV)</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:10.75%;width:66.67%"></span></span><span class="br-val">−400.0</span></div>
     <div class="br-row"><span class="br-lab">Read Werk Süd as 1,240 MWh</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:10.75%;width:82.58%"></span></span><span class="br-val">+495.5</span></div>
     <div class="br-row"><span class="br-lab">Use the Hs gas factor</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:86.37%;width:6.97%"></span></span><span class="br-val">−41.8</span></div>
     <div class="br-row"><span class="br-lab">Drop AdBlue</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink" style="left:85.87%;width:0.50%"></span></span><span class="br-val">−3.0</span></div>
-    <div class="br-row br-row--strong"><span class="br-lab">Right total</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink br-bar--cut" style="left:0.00%;width:85.87%"></span></span><span class="br-val">1,915.2 t</span></div>
+    <div class="br-row br-row--strong"><span class="br-lab">Right total</span><span class="br-track"><span class="br-lim" style="left:10.75%"></span><span class="br-lim" style="left:93.33%"></span><span class="br-bar br-bar--ink br-bar--cut" style="left:0.00%;width:85.87%"></span></span><span class="br-val">1,915.2 t</span></div>
   </div>
   <figcaption id="fig-wf-cap" class="wf-caption">Location-based Scope 1 and 2, errors removed one at a time in a fixed order. Computed from the traps: what they do when they fire. The raw-folder answer is constructed from documented failure modes, not a recorded run. The axis starts above zero; the dashed lines mark the lowest and highest running total.</figcaption>
 </figure>
   <div class="recall">
-    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two errors cancel to 2.0 t, and which error hides four fifths of another?</p>
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two errors cancel to 2.0 t, and which error hides four fifths of another?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>The duplicate March bill (+82.0 t) and the missing October (−80.0 t) cancel to +2.0 t. The Talbrück bill (+400.0 t) hides 81% of the misread Werk Süd unit (−495.5 t); together the two move the total by −95.5 t.</p>
+      <p>The duplicate March bill (+82.0 t) and the missing October (−80.0 t) cancel to +2.0 t. The Talbrück bill (+400.0 t) hides 81% of the misread Werk Süd unit (−495.5 t); together the two move the total by −95.5 t.</p>
     </div></details>
   </div>
   <p class="key"><b>Key point</b><span>A small gap in the total can hide large errors in the parts.</span></p>
@@ -201,20 +204,20 @@
 <section class="g-sec" aria-labelledby="ledger">
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="ledger"><span class="g-n">7</span>The ledger</h2></div>
   <p>A ledger (Belegtabelle) has one row for each quantity on a document. Each row keeps the file, the page, the quoted line, the value and unit as printed, the normalised value, the legal entity on the document, whether it is inside the boundary, the status and the factor ID. Excluded rows stay in with a reason: the duplicate March scan, the Talbrück bill and the AdBlue litres. The October row is a meter reading, so it gets data-quality grade B.</p>
-  <p>A control total ties it together: all electricity on documents (4,615,000) minus what was excluded with a reason (1,205,000) plus October from the meter (200,000) equals the 3,610,000 kWh in the ledger.</p>
+  <p>A control total ties it together: all electricity on documents (4,615,000) minus what was excluded with a reason (1,205,000) plus October from the meter (200,000) equals the 3,610,000 kWh in the ledger.</p>
   <figure class="fig" aria-labelledby="fig-ct-cap">
   <table class="wf-table ct">
     <thead><tr><th scope="col">Electricity 2025</th><th scope="col" class="num">kWh</th></tr></thead>
     <tbody>
-      <tr><td>Werk Nord: 10 genuine bills<small>included</small></td><td class="num">2,060,000 kWh</td></tr>
-      <tr class="ct-out"><td>Werk Nord: duplicate March (4711-03)<small>excluded: duplicate</small></td><td class="num">205,000 kWh</td></tr>
-      <tr class="ct-out"><td>Talbrück Beschichtung GmbH<small>excluded: boundary</small></td><td class="num">1,000,000 kWh</td></tr>
-      <tr><td>Werk Süd: annual statement<small>included</small></td><td class="num">1,240,000 kWh</td></tr>
-      <tr><td>Lager Ost: 4 quarters<small>included</small></td><td class="num">110,000 kWh</td></tr>
-      <tr class="ct-sum"><td>All electricity on documents</td><td class="num">4,615,000 kWh</td></tr>
-      <tr><td>minus excluded with a reason</td><td class="num">−1,205,000 kWh</td></tr>
-      <tr><td>plus October Werk Nord from meter readings<small>added: meter reading, grade B</small></td><td class="num">+200,000 kWh</td></tr>
-      <tr class="ct-sum ct-total"><td>In the ledger</td><td class="num">3,610,000 kWh</td></tr>
+      <tr><td>Werk Nord: 10 genuine bills<small>included</small></td><td class="num">2,060,000 kWh</td></tr>
+      <tr class="ct-out"><td>Werk Nord: duplicate March (4711-03)<small>excluded: duplicate</small></td><td class="num">205,000 kWh</td></tr>
+      <tr class="ct-out"><td>Talbrück Beschichtung GmbH<small>excluded: boundary</small></td><td class="num">1,000,000 kWh</td></tr>
+      <tr><td>Werk Süd: annual statement<small>included</small></td><td class="num">1,240,000 kWh</td></tr>
+      <tr><td>Lager Ost: 4 quarters<small>included</small></td><td class="num">110,000 kWh</td></tr>
+      <tr class="ct-sum"><td>All electricity on documents</td><td class="num">4,615,000 kWh</td></tr>
+      <tr><td>minus excluded with a reason</td><td class="num">−1,205,000 kWh</td></tr>
+      <tr><td>plus October Werk Nord from meter readings<small>added: meter reading, grade B</small></td><td class="num">+200,000 kWh</td></tr>
+      <tr class="ct-sum ct-total"><td>In the ledger</td><td class="num">3,610,000 kWh</td></tr>
     </tbody>
   </table>
   <figcaption id="fig-ct-cap" class="wf-caption">Control total for electricity, as in the kit file <code>erwartet/kontrollsumme_strom_2025.csv</code>.</figcaption>
@@ -239,11 +242,11 @@
     <li><p><b>Scope 2</b> (clerk). Report location-based and market-based, in the market-based order.</p></li>
     <li><p><b>Citations</b> (writer). Every number in a text names its row IDs. No claim word without a number, a scope and a row.</p></li>
   </ol>
-  <p>Factors come from a pinned table by ID, with the edition recorded (Lehrwerte v1.0, 2026-01-15). Using last year's grid factor (0.42) on 2025 electricity would add 72.2 t, which is the whole grid effect in this year's change.</p>
+  <p>Factors come from a pinned table by ID, with the edition recorded (Lehrwerte v1.0, <span class="nowrap">2026-01-15</span>). Using last year's grid factor (0.42) on 2025 electricity would add 72.2 t, which is the whole grid effect in this year's change.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why should the AI never type a factor from memory?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>A value from memory has no year, no edition and no basis that anyone can check. It may be last year's grid factor, which here adds 72.2 t, or a gas factor on the wrong calorific basis, which adds 41.8 t. A factor ID points to one row in a table a person approved.</p>
+      <p>A value from memory has no year, no edition and no basis that anyone can check. It may be last year's grid factor, which here adds 72.2 t, or a gas factor on the wrong calorific basis, which adds 41.8 t. A factor ID points to one row in a table a person approved.</p>
     </div></details>
   </div>
   <p class="key"><b>Key point</b><span>The AI picks an ID. The value, year and edition are in a table a person approved.</span></p>
@@ -251,22 +254,23 @@
 
 <section class="g-sec" aria-labelledby="two-scope-2">
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="two-scope-2"><span class="g-n">9</span>Two Scope 2 numbers</h2></div>
-  <p>Location-based Scope 2 uses the average grid factor where the power is used: 3,610,000 kWh × 0.40 = 1,444.0 t. Market-based Scope 2 uses what the company bought. The guarantees of origin cover 1,240 MWh at Werk Süd and nothing else, so Werk Süd is zero. The other 2,370,000 kWh get, in order, a qualifying supplier-specific rate if one exists, otherwise the residual mix: 0.60 in the teaching values, giving 1,422.0 t.</p>
-  <p>Under the GHG Protocol a company buying power in a market with certificates and supplier contracts, such as Germany, reports both figures. The kit's bills leave out the supplier mix disclosure that real German bills carry, so here the residual mix applies. The certificate removes 496.0 t and the residual mix adds 474.0 t back, so market-based is only 22.0 t below location-based. “We run on green electricity” is false; 34.3% of the electricity is covered.</p>
+  <p>Location-based Scope 2 uses the average grid factor where the power is used: 3,610,000 kWh × 0.40 = 1,444.0 t. Market-based Scope 2 uses what the company bought. The guarantees of origin cover 1,240 MWh at Werk Süd and nothing else, so Werk Süd is zero. The other 2,370,000 kWh get, in order, a qualifying supplier-specific rate if one exists, otherwise the residual mix: 0.60 in the teaching values, giving 1,422.0 t.</p>
+  <p>Under the GHG Protocol a company buying power in a market with certificates and supplier contracts, such as Germany, reports both figures. The kit's bills leave out the supplier mix disclosure that real German bills carry, so here the residual mix applies. The certificate removes 496.0 t and the residual mix adds 474.0 t back, so market-based is only 22.0 t below location-based. “We run on green electricity” is false; 34.3% of the electricity is covered.</p>
   <figure class="fig" aria-labelledby="fig-bridge-cap">
-  <div class="br" role="img" aria-label="Scope 2 2025: location-based 1,444.0 t; the certificate for Werk Süd removes 496.0 t; the residual mix on the rest adds 474.0 t; market-based 1,422.0 t.">
+  <div class="br" role="img" aria-label="Scope 2 2025: location-based 1,444.0 t; the certificate for Werk Süd removes 496.0 t; stopping there, with the rest at the grid average, gives 948.0 t, which is wrong for market-based; the residual mix on the rest adds 474.0 t; market-based 1,422.0 t.">
     
-    <div class="br-row"><span class="br-lab">Location-based</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:98.04%"></span></span><span class="br-val">1,444.0 t</span></div>
-    <div class="br-row"><span class="br-lab">Certificate, Werk Süd</span><span class="br-track"><span class="br-bar br-bar--open" style="left:64.36%;width:33.68%"></span></span><span class="br-val">−496.0 t</span></div>
-    <div class="br-row"><span class="br-lab">Residual mix on the rest</span><span class="br-track"><span class="br-bar br-bar--slate" style="left:64.36%;width:32.18%"></span></span><span class="br-val">+474.0 t</span></div>
-    <div class="br-row br-row--strong"><span class="br-lab">Market-based</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:96.55%"></span></span><span class="br-val">1,422.0 t</span></div>
+    <div class="br-row"><span class="br-lab">Location-based</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:98.04%"></span></span><span class="br-val">1,444.0 t</span></div>
+    <div class="br-row"><span class="br-lab">Certificate, Werk Süd</span><span class="br-track"><span class="br-bar br-bar--open" style="left:64.36%;width:33.68%"></span></span><span class="br-val">−496.0 t</span></div>
+    <div class="br-row br-row--muted"><span class="br-lab">Rest at the grid average <small>wrong for market-based</small></span><span class="br-track"><span class="br-bar br-bar--dash" style="left:0.00%;width:64.36%"></span></span><span class="br-val br-val--muted">948.0 t</span></div>
+    <div class="br-row"><span class="br-lab">Residual mix on the rest</span><span class="br-track"><span class="br-bar br-bar--slate" style="left:64.36%;width:32.18%"></span></span><span class="br-val">+474.0 t</span></div>
+    <div class="br-row br-row--strong"><span class="br-lab">Market-based</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:96.55%"></span></span><span class="br-val">1,422.0 t</span></div>
   </div>
-  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. Teaching values, not official factors.</figcaption>
+  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. The dashed bar is where the wrong 948.0 t comes from: the certificate is taken off, and the rest stays at the grid average instead of the residual mix. Illustrative teaching values, not official factors.</figcaption>
 </figure>
   <div class="recall">
-    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why is 948.0 t wrong for market-based?</p>
+    <p class="recall-q"><span class="wf-kicker">Before you open</span>Why is 948.0 t wrong for market-based?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>It uses the grid average for the power without a certificate, and comes out 474.0 t too low. Market-based takes the residual mix for that power, because the renewable share of the grid has already been sold to others as certificates.</p>
+      <p>It uses the grid average for the power without a certificate, and comes out 474.0 t too low. Market-based takes the residual mix for that power, because the renewable share of the grid has already been sold to others as certificates.</p>
     </div></details>
   </div>
   <p class="key"><b>Key point</b><span>Report both numbers, and count a certificate only for the kWh it covers.</span></p>
@@ -275,66 +279,66 @@
 <section class="g-sec" aria-labelledby="same-question">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="same-question"><span class="g-n">10</span>The same question on the ledger</h2></div>
   <p>With the ledger, the coverage grid and the rules, the same AI gets the same question. The target answer names row IDs for every figure.</p>
-  <div class="answer">
+  <div class="answer answer--target">
     <p class="wf-kicker">Target answer, constructed. Not a recorded run.</p>
     <dl class="nums">
-      <div><dt>Scope 1</dt><dd>471.2 t</dd></div>
-      <div><dt>Scope 2, location-based</dt><dd>1,444.0 t</dd></div>
-      <div><dt>Scope 2, market-based</dt><dd>1,422.0 t</dd></div>
-      <div><dt>Total, location-based</dt><dd>1,915.2 t<small>−5.1% against 2024</small></dd></div>
-      <div><dt>Total, market-based</dt><dd>1,893.2 t<small>−29.2% against 2024</small></dd></div>
+      <div><dt>Scope 1</dt><dd>471.2 t</dd></div>
+      <div><dt>Scope 2, location-based</dt><dd>1,444.0 t</dd></div>
+      <div><dt>Scope 2, market-based</dt><dd>1,422.0 t</dd></div>
+      <div><dt>Total, location-based</dt><dd>1,915.2 t<small>−5.1% against 2024</small></dd></div>
+      <div><dt>Total, market-based</dt><dd>1,893.2 t<small>−29.2% against 2024</small></dd></div>
     </dl>
   </div>
   <p>It labels the October meter reading, lists the three excluded rows, and says which Scope 1 sources it could not check. Until recorded runs exist, this answer is labelled as constructed.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Pick one number in the answer. Which rows and which page would you ask for?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>One example: Werk Süd electricity, 496.0 t location-based. Ask for row <code>E-WS-01</code> and page 1 of the Werk Süd annual statement, line “Verbrauch 2025: 1.240 MWh”. For its market-based zero, ask for the instrument row <code>I-WS-GO</code> and the certificate confirmation it points to, <code>HKN_Bestaetigung_2025.md</code>.</p>
+      <p>One example: Werk Süd electricity, 496.0 t location-based. Ask for row <code class="nowrap">E-WS-01</code> and page 1 of the Werk Süd annual statement, line “Verbrauch 2025: 1.240 MWh”. For its market-based zero, ask for the instrument row <code class="nowrap">I-WS-GO</code> and the certificate confirmation it points to, <code>HKN_Bestaetigung_2025.md</code>.</p>
     </div></details>
   </div>
-  <p class="key"><b>Key point</b><span>The total moved by 48.7 t. Every tonne now has a row behind it.</span></p>
+  <p class="key"><b>Key point</b><span>The total moved by 48.7 t. Every tonne now has a row behind it.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="drivers">
   <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="drivers"><span class="g-n">11</span>What drove the change</h2></div>
-  <p>Location-based emissions fell 102.3 t. In this case's teaching values, 72.2 t of that (71%) comes from the lower grid factor and 30.1 t from using less electricity, gas and diesel. Market-based fell 781.3 t, and 744.0 t of that (95%) is the guarantees of origin for Werk Süd. The residual mix is held at 0.60 in both years on purpose; real residual mixes change every year.</p>
-  <p>The folder has no production volumes, so “used less” is supported and “more efficient” is not. The largest sources also depend on the method: location-based, Werk Nord electricity leads with 904.0 t, then Werk Süd electricity with 496.0 t; market-based, Werk Nord electricity is 1,356.0 t and Werk Süd electricity drops to zero.</p>
+  <p>Location-based emissions fell 102.3 t. In this case's teaching values, 72.2 t of that (71%) comes from the lower grid factor and 30.1 t from using less electricity, gas and diesel. Market-based fell 781.3 t, and 744.0 t of that (95%) is the guarantees of origin for Werk Süd. The residual mix is held at 0.60 in both years on purpose; real residual mixes change every year.</p>
+  <p>The folder has no production volumes, so “used less” is supported and “more efficient” is not. The largest sources also depend on the method: location-based, Werk Nord electricity leads with 904.0 t, then Werk Süd electricity with 496.0 t; market-based, Werk Nord electricity is 1,356.0 t and Werk Süd electricity drops to zero.</p>
   <figure class="fig" aria-labelledby="fig-drv-cap">
-  <p class="fig-head">Location-based, −102.3 t against 2024</p>
-  <div class="br" role="img" aria-label="Location-based decrease 102.3 t: grid factor 72.2 t, less electricity 16.8 t, less gas 10.8 t, less diesel 2.5 t.">
+  <p class="fig-head">Location-based, −102.3 t against 2024</p>
+  <div class="br" role="img" aria-label="Location-based decrease 102.3 t: grid factor 72.2 t, less electricity 16.8 t, less gas 10.8 t, less diesel 2.5 t.">
     
-    <div class="br-row"><span class="br-lab">Grid factor 0.42 to 0.40 (teaching values)</span><span class="br-track"><span class="br-bar br-bar--accent" style="left:0.00%;width:98.04%"></span></span><span class="br-val wf-accent">−72.2 t</span></div>
-    <div class="br-row"><span class="br-lab">Less electricity</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:22.81%"></span></span><span class="br-val">−16.8 t</span></div>
-    <div class="br-row"><span class="br-lab">Less gas</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:14.67%"></span></span><span class="br-val">−10.8 t</span></div>
-    <div class="br-row"><span class="br-lab">Less diesel</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:3.39%"></span></span><span class="br-val">−2.5 t</span></div>
+    <div class="br-row"><span class="br-lab">Grid factor 0.42 to 0.40 (teaching values)</span><span class="br-track"><span class="br-bar br-bar--accent" style="left:0.00%;width:9.51%"></span></span><span class="br-val wf-accent">−72.2 t</span></div>
+    <div class="br-row"><span class="br-lab">Less electricity</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:2.21%"></span></span><span class="br-val">−16.8 t</span></div>
+    <div class="br-row"><span class="br-lab">Less gas</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:1.42%"></span></span><span class="br-val">−10.8 t</span></div>
+    <div class="br-row"><span class="br-lab">Less diesel</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:0.33%"></span></span><span class="br-val">−2.5 t</span></div>
   </div>
-  <p class="fig-head">Market-based, −781.3 t against 2024</p>
-  <div class="br" role="img" aria-label="Market-based decrease 781.3 t: guarantees of origin 744.0 t, less electricity 24.0 t, less gas and diesel 13.3 t.">
+  <p class="fig-head">Market-based, −781.3 t against 2024</p>
+  <div class="br" role="img" aria-label="Market-based decrease 781.3 t: guarantees of origin 744.0 t, less electricity 24.0 t, less gas and diesel 13.3 t.">
     
-    <div class="br-row"><span class="br-lab">Guarantees of origin for Werk Süd</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:98.04%"></span></span><span class="br-val">−744.0 t</span></div>
-    <div class="br-row"><span class="br-lab">Less electricity</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:3.16%"></span></span><span class="br-val">−24.0 t</span></div>
-    <div class="br-row"><span class="br-lab">Less gas and diesel (Scope 1)</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:1.75%"></span></span><span class="br-val">−13.3 t</span></div>
+    <div class="br-row"><span class="br-lab">Guarantees of origin for Werk Süd</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:98.04%"></span></span><span class="br-val">−744.0 t</span></div>
+    <div class="br-row"><span class="br-lab">Less electricity</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:3.16%"></span></span><span class="br-val">−24.0 t</span></div>
+    <div class="br-row"><span class="br-lab">Less gas and diesel (Scope 1)</span><span class="br-track"><span class="br-bar br-bar--ink" style="left:0.00%;width:1.75%"></span></span><span class="br-val">−13.3 t</span></div>
   </div>
-  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025. Each group has its own scale. Consumption effects use the 2024 factor; the factor effect uses 2025 consumption. The residual mix is held at 0.60 in both years on purpose, so the market-based bridge has no factor effect. Real residual mixes change every year. Teaching values, not official factors.</figcaption>
+  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025. Both groups are drawn on one scale. Consumption effects use the 2024 factor; the factor effect uses 2025 consumption. The residual mix is held at 0.60 in both years on purpose, so the market-based bridge has no factor effect. Real residual mixes change every year. Illustrative teaching values, not official factors.</figcaption>
 </figure>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why can't Kellbrunn write “thanks to efficiency measures”?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>Without production volumes nobody can tell whether Kellbrunn used less energy per part or made fewer parts. And 71% of the location-based decrease came from the grid factor, which Kellbrunn did not cause. A sentence the ledger supports: “Location-based emissions fell by 102.3 t; 72.2 t came from the lower grid factor (teaching values) and 30.1 t from lower electricity, gas and diesel use.”</p>
+      <p>Without production volumes nobody can tell whether Kellbrunn used less energy per part or made fewer parts. And 71% of the location-based decrease came from the grid factor, which Kellbrunn did not cause. A sentence the ledger supports: “Location-based emissions fell by 102.3 t; 72.2 t came from the lower grid factor (teaching values) and 30.1 t from lower electricity, gas and diesel use.”</p>
     </div></details>
   </div>
   <p class="key"><b>Key point</b><span>Say which part of a change you caused, and which part came from the grid or from certificates.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="ask-back">
-  <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="ask-back"><span class="g-n">12</span>Calculate, ask back, refuse</h2></div>
-  <p>Five requests show the three jobs of a useful assistant.</p>
-  <ul class="wf-rows">
-    <li><div class="wf-row"><span class="wf-row__n">Calculate</span><span class="wf-row__title">“Sum Scope 2”</span><p class="wf-row__desc">A calculation from the ledger.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Ask back</span><span class="wf-row__title">“Fill in October”</span><p class="wf-row__desc">Needs a decision: the meter reading (grade B) or a labelled estimate.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Rewrite</span><span class="wf-row__title">“Write that we run on green electricity”</span><p class="wf-row__desc">Gets rewritten with the share (34.3%) and the site (Werk Süd).</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Refuse</span><span class="wf-row__title">“Write that we are climate-neutral”</span><p class="wf-row__desc">Gets refused, because nothing in the ledger supports it.</p></div></li>
-    <li><div class="wf-row"><span class="wf-row__n">Explain</span><span class="wf-row__title">“Explain why emissions fell”</span><p class="wf-row__desc">Gets the bridge first, then a draft that cites driver lines.</p></div></li>
+  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="ask-back"><span class="g-n">12</span>Calculate, ask back, refuse</h2></div>
+  <p>Five requests, three jobs for a useful assistant: calculate, ask back, refuse.</p>
+  <ul class="ab-rows" aria-label="Five requests and the job each one needs">
+    <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Sum Scope 2”</p><p class="ab-row__desc">A calculation from the ledger rows.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Ask back</span><div><p class="ab-row__req">“Fill in October”</p><p class="ab-row__desc">A person has to decide: the meter reading (grade B) or a labelled estimate. The assistant asks and names the choice.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Refuse</span><div><p class="ab-row__req">“Write that we run on green electricity”</p><p class="ab-row__desc">The wording is refused. The assistant offers a rewrite with the share (34.3%) and the site (Werk Süd).</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Refuse</span><div><p class="ab-row__req">“Write that we are climate-neutral”</p><p class="ab-row__desc">Refused, because nothing in the ledger supports it.</p></div></li>
+    <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Explain why emissions fell”</p><p class="ab-row__desc">The assistant calculates the bridge first, then drafts a text that cites the driver lines.</p></div></li>
   </ul>
   <p class="wf-note">For context: since 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as “eco-friendly” unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets. In Germany this happens through an amendment to the UWG, known from secondary sources; check the current text. Whether a text such as your website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG). Rules as of 26 Sep 2026. Not legal advice.</p>
   <div class="recall">
@@ -349,7 +353,7 @@
 <section class="g-sec" aria-labelledby="limits">
   <div class="g-kopf"><p class="wf-kicker">Honest limits</p><h2 id="limits"><span class="g-n">13</span>What this does not prove</h2></div>
   <p>This is one fictional case. The raw-folder answer is constructed; recorded runs, with date and model, are listed separately. Two published studies measured about three in four numbers extracted correctly from ESG reports (ESGReveal, GPT-4, 2023: 76.9%; ESG Insight, DeepSeek, 2026: 78.2%). They tested reports, not bills, and newer models may do better.</p>
-  <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
+  <p>Rules catch only what they are written for: the folder has no refrigerant service invoices, no forklift fuel, no generator and no heating oil, so none of those Scope 1 sources was checked. The 2024 figures are a consultant summary without bills. Factors are illustrative teaching values. Rules are as of 26 September 2026 (the deck's appendix lists what is true, with sources). This is not legal or audit advice.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Name two Scope 1 sources a folder of energy bills never shows.</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
@@ -374,7 +378,7 @@
   <p class="provline">Optional, 20 minutes, needs an AI account.</p>
   <p>Open the kit. Run <code>prompts/01_auslesen.md</code> (the reader) on the raw folder and compare your rows with <code>erwartet/belegtabelle_2025.csv</code>. Run <code>prompts/02_pruefen.md</code> (the clerk) on the rows and check whether it flags the duplicate, October, Talbrück and the unit. Use only the kit's invented files, never company data in a tool your company has not approved.</p>
   <nav class="actions" aria-label="Kit">
-    <a class="wf-btn" href="./esg-kit.zip" download>Download the kit (.zip)</a>
+    <a class="wf-btn" href="./kellbrunn-esg-kit.zip" download>Download the kit (.zip, 90 KB)</a>
   </nav>
 </section>
 
@@ -397,7 +401,7 @@
   <div class="recall">
     <p class="recall-q">Which part of a year-on-year change is usually not your doing?</p>
     <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>The grid factor in location-based, and in market-based whatever certificates you bought. In this case 71% of the location-based decrease came from the grid factor.</p>
+      <p>The grid factor. Certificates are your purchase, but they lower the market-based figure without any change in your use. Here 71% of the location-based decrease came from the grid factor.</p>
     </div></details>
   </div>
   <div class="recall">
@@ -407,7 +411,7 @@
     </div></details>
   </div>
   <h3>Stretch task</h3>
-  <p>Build the ledger from <code>rohdaten_2025/</code> yourself and compare it with <code>erwartet/belegtabelle_2025.csv</code>. You are done when your location-based total is 1,915.2 t and your control total is 3,610,000 kWh.</p>
+  <p>Build the ledger from <code>rohdaten_2025/</code> yourself and compare it with <code>erwartet/belegtabelle_2025.csv</code>. You are done when your location-based total is 1,915.2 t and your control total is 3,610,000 kWh.</p>
 </section>
 
 <section class="g-sec" aria-labelledby="glossary">
@@ -425,7 +429,7 @@
     <dt>Equity share</dt><dd>Boundary approach: count each operation by the company's ownership share.</dd>
     <dt>Activity data</dt><dd>The measured quantity behind an emission, such as kWh, cubic metres or litres.</dd>
     <dt>Emission factor</dt><dd>Kilograms of CO₂e per unit of activity, from a named source and year.</dd>
-    <dt>Factor ID and edition</dt><dd>The key of a factor in the pinned table, such as <code>F-EL-LB-2025</code>, and the version of the table (Lehrwerte v1.0, 2026-01-15).</dd>
+    <dt>Factor ID and edition</dt><dd>The key of a factor in the pinned table, such as <code class="nowrap">F-EL-LB-2025</code>, and the version of the table (Lehrwerte v1.0, <span class="nowrap">2026-01-15</span>).</dd>
     <dt>Gross and net calorific value <i>(Brennwert Hs, Heizwert Hi)</i></dt><dd>Hs includes the heat in the water vapour, Hi does not; the factor's basis must match the basis printed on the bill.</dd>
     <dt>Ledger <i>(Belegtabelle)</i></dt><dd>One row per quantity on a document, with file, page, quote, value as printed, normalised value, entity, boundary, status and factor ID.</dd>
     <dt>Coverage grid</dt><dd>A site-by-month table that shows which document covers each month, filled before anything is added up.</dd>
@@ -455,7 +459,7 @@
 </div>
 </div>
 </main>
-<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH and Lindmark Energie GmbH are invented. Emission factors are teaching values, not official factors. Rules as of 26 September 2026. Not legal or audit advice.</p></footer>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH and Lindmark Energie GmbH are invented. Emission factors are illustrative teaching values, not official factors. Rules as of 26 September 2026. Not legal or audit advice.</p></footer>
 <script src="./lib/w04-pages.js"></script>
 </body>
 </html>

@@ -25,7 +25,7 @@
   </header>
   <div class="sheet-tools no-print">
     <button type="button" class="wf-btn wf-btn--primary" id="print-page">Print this sheet</button>
-    <p class="wf-small">Prints on one A4 page. Write in the dashed boxes; the worked example is Kellbrunn's Werk Süd electricity.</p>
+    <p class="wf-small"><span class="for-wide">Prints on one A4 page. Write in the dashed boxes; the worked example is Kellbrunn's Werk Süd electricity.</span><span class="for-phone">Prints on one A4 page, with space to write next to each box. The worked example is Kellbrunn's Werk Süd electricity.</span></p>
   </div>
 
   <ol class="boxes">
@@ -52,7 +52,7 @@
     <li class="box">
       <div><h2><span>{{sec}}</span>Factor</h2><p class="what">Factor ID, year, basis, edition; method; any certificate.</p></div>
       <div class="write"><span class="visually-hidden">Space to write</span></div>
-      <div class="ex"><p class="wf-kicker">Worked example</p><p>Location-based: <code>{{j:ledger.E-WS-01.factor_lb}}</code> ({{j:factors.F-EL-LB-2025.value:fix2}}, teaching value) → {{n:ws_lb_2025}}.</p><p>Market-based: <code>{{j:ledger.E-WS-01.factor_mb}}</code> under <code>{{j:ledger.E-WS-01.instrument_id}}</code> ({{n:go_mwh}} guarantees of origin, cancelled, Werk Süd only) → {{j:factors.F-EL-GO.value:fix1}} t.</p></div>
+      <div class="ex"><p class="wf-kicker">Worked example</p><p>Location-based: <code>{{j:ledger.E-WS-01.factor_lb}}</code> ({{j:factors.F-EL-LB-2025.value:fix2}}, illustrative teaching value) → {{n:ws_lb_2025}}.</p><p>Market-based: <code>{{j:ledger.E-WS-01.factor_mb}}</code> under <code>{{j:ledger.E-WS-01.instrument_id}}</code> ({{n:go_mwh}} guarantees of origin, cancelled, Werk Süd only) → {{j:factors.F-EL-GO.value:fix1}}&nbsp;t.</p></div>
     </li>
   </ol>
 
@@ -69,10 +69,10 @@
   </section>
 
   <footer class="sheet-foot">
-    <p>Fictional case, teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
+    <p>Fictional case, illustrative teaching factors. Rules as of 26 Sep 2026. Not legal or audit advice. loehrning.ai/workshops/esg-berichte-mit-ki</p>
   </footer>
 </main>
-<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are teaching values, not official factors.</p></footer>
+<footer class="wf-foot"><p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Kellbrunn Präzisionsteile GmbH is invented; emission factors are illustrative teaching values, not official factors.</p></footer>
 <script src="./lib/w04-pages.js"></script>
 </body>
 </html>

@@ -24,7 +24,7 @@
 
 #trace-two > .tt-cards {
   position: absolute;
-  top: 304px;
+  top: 292px;
   left: var(--margin-x);
   display: grid;
   width: 1728px;
@@ -38,8 +38,8 @@
 #trace-two .tt-card {
   display: grid;
   align-content: start;
-  gap: 6px;
-  padding: 16px 22px 18px;
+  gap: 4px;
+  padding: 14px 22px 16px;
   border: 4px solid var(--ink);
   background: var(--papier);
 }
@@ -74,8 +74,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px 16px;
-  margin: 6px 0 4px;
+  gap: 2px 16px;
+  margin: 4px 0 2px;
   font-size: var(--t-num-md);
   font-weight: 700;
   line-height: 1.1;
@@ -84,38 +84,54 @@
 
 #trace-two .tt-card__what {
   color: var(--slate);
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 500;
 }
 
 #trace-two .tt-card dl {
   display: grid;
-  gap: 6px;
+  gap: 4px;
   margin: 0;
 }
 
 #trace-two .tt-card dl > div {
   display: grid;
-  grid-template-columns: 104px 1fr;
+  grid-template-columns: 92px 1fr;
   gap: 10px;
   align-items: baseline;
   min-height: 32px;
 }
 
+/* File names and the arithmetic are the long values: label above, value across the card. */
+#trace-two .tt-card dl > .tt-stack {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
 #trace-two .tt-card dt {
   color: var(--slate);
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #trace-two .tt-card dd {
   margin: 0;
-  font-size: 21px;
+  font-size: 22px;
   line-height: 1.3;
-  overflow-wrap: anywhere;
+}
+
+#trace-two .tt-card dd .w-mono,
+#trace-two .tt-card dd.w-mono {
+  font-size: 22px;
 }
 
 #trace-two .tt-card dd.tt-files {
-  font-size: 16px;
+  font-size: 20px;
+}
+
+/* A row ID never breaks; a list of them breaks only after a comma. */
+#trace-two .tt-card dd [data-j^="traceTwo.2.rows"],
+#trace-two .tt-card dd.w-mono[data-j^="traceTwo.0.rows"] {
+  white-space: nowrap;
 }
 
 #trace-two .tt-math dd {
@@ -142,13 +158,13 @@
 
 #trace-two > .tt-differs {
   position: absolute;
-  top: 760px;
+  top: 788px;
   left: var(--margin-x);
   display: grid;
   width: 1728px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px 32px;
-  padding: 12px 24px 16px;
+  gap: 6px 32px;
+  padding: 10px 24px 12px;
   border-top: 3px solid var(--ink);
   background: var(--beton);
 }
@@ -172,7 +188,7 @@
 }
 
 #trace-two .tt-slip b {
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1.15;
 }
 

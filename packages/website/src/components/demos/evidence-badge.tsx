@@ -3,7 +3,11 @@
 import { useId, useState } from "react";
 import type { DemoEvidenceMode, DemoExternalActionMode } from "@/lib/demos";
 import type { Locale } from "@/lib/i18n/locale";
-import { DEMO_ACTION_LABELS, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
+import {
+  DEMO_ACTION_LABELS,
+  DEMO_EVIDENCE_COPY,
+  DEMOS_PAGE_COPY,
+} from "@/lib/demos-ui-copy";
 import { Pictogram, type PictogramName } from "@/components/werk";
 import { useDemoLocale } from "./demo-locale";
 
@@ -15,14 +19,11 @@ const EVIDENCE_ICON: Record<DemoEvidenceMode, PictogramName> = {
   live_api: "export",
 };
 
-const DISCLOSURE_COPY: Record<Locale, (label: string) => string> = {
-  de: (label) => `Evidenzmodus: ${label}. Details einblenden.`,
-  en: (label) => `Evidence mode: ${label}. Show details.`,
-};
-
 /**
  * Plus when closed, minus when open: a disclosure mark, not a scroll arrow.
- * Square caps and miter joins, like the deck pictograms.
+ * Square caps and miter joins, like the deck pictograms. It sits after the
+ * visible "Was heißt das?" label, so the minus never reads as a dash inside
+ * the evidence phrase.
  */
 function DisclosureGlyph({ open }: { open: boolean }) {
   return (
@@ -43,12 +44,15 @@ function DisclosureGlyph({ open }: { open: boolean }) {
 }
 
 /**
- * The single evidence line above a demo engine: execution mode (a disclosure
- * button that expands the explanation), the external-action mode when there
- * is one, and optionally one sentence that says what is invented (the detail
- * page puts that in its "Daten" row instead, so it is said once). It replaces the
- * stacked coloured badges and boxed disclaimers: evidence stays visible and
- * quiet, in a caption line next to the thing it qualifies.
+ * The evidence line of a demo engine: execution mode and external-action mode
+ * as one plain caption phrase ("Synthetisch · Aktionen simuliert"), the
+ * optional invented-data note, and a last, labelled disclosure button that
+ * expands the explanation of the mode.
+ *
+ * It renders two siblings (the line and, when open, the explanation) so a
+ * wrapping flex parent such as the DemoShell header can give the explanation
+ * its own full-width row without moving the button that opened it. In block
+ * flow the two simply stack.
  */
 export function EvidenceBadge({
   evidenceMode,
@@ -66,50 +70,52 @@ export function EvidenceBadge({
   const detailsId = useId();
   const evidenceCopy = DEMO_EVIDENCE_COPY[locale][evidenceMode];
   const actionLabel = DEMO_ACTION_LABELS[locale][externalActionMode];
+  const disclosure = DEMOS_PAGE_COPY[locale].evidence;
 
   return (
-    <div data-evidence-line>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-caption text-muted-foreground">
+    <>
+      <div
+        data-evidence-line
+        className="flex min-w-0 flex-wrap items-center gap-x-3 text-caption text-muted-foreground"
+      >
+        <span
+          className="inline-flex min-w-0 items-center gap-1.5"
+          data-evidence-mode={evidenceMode}
+        >
+          <Pictogram
+            name={EVIDENCE_ICON[evidenceMode]}
+            className="size-4 shrink-0 text-foreground"
+          />
+          <span className="text-foreground">{evidenceCopy.label}</span>
+          {actionLabel ? (
+            <span data-evidence-actions>
+              <span aria-hidden="true">· </span>
+              {actionLabel}
+            </span>
+          ) : null}
+        </span>
+        {note ? <span className="min-w-0 break-words">{note}</span> : null}
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-controls={detailsId}
-          aria-label={DISCLOSURE_COPY[locale](evidenceCopy.label)}
-          data-evidence-mode={evidenceMode}
-          className="inline-flex min-h-11 items-center gap-2 text-label text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
+          aria-label={disclosure.explainAria(evidenceCopy.label)}
+          className="inline-flex min-h-11 items-center gap-1.5 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
         >
-          <Pictogram name={EVIDENCE_ICON[evidenceMode]} className="size-4" />
-          {evidenceCopy.label}
+          {disclosure.explain}
           <DisclosureGlyph open={open} />
         </button>
-        {actionLabel ? (
-          <span data-evidence-actions>
-            <span aria-hidden="true" className="hidden sm:inline">
-              ·{" "}
-            </span>
-            {actionLabel}
-          </span>
-        ) : null}
-        {note ? (
-          <span className="min-w-0 break-words">
-            <span aria-hidden="true" className="hidden sm:inline">
-              ·{" "}
-            </span>
-            {note}
-          </span>
-        ) : null}
       </div>
-      {open ? (
-        <p
-          id={detailsId}
-          data-evidence-details
-          className="mt-1 max-w-[64ch] text-caption text-muted-foreground"
-        >
-          {evidenceCopy.tooltip}
-        </p>
-      ) : null}
-    </div>
+      <p
+        id={detailsId}
+        hidden={!open}
+        data-evidence-details={open ? "" : undefined}
+        className="basis-full max-w-[64ch] pb-3 text-caption text-muted-foreground"
+      >
+        {evidenceCopy.tooltip}
+      </p>
+    </>
   );
 }
 

@@ -54,8 +54,11 @@ describe("demo atlas visual contract", () => {
     expect(tile).toContain("bg-inset");
     expect(tile).toContain("text-caption text-muted-foreground");
     expect(tile).not.toMatch(/bg-foreground|dark-section|demo\.dark/);
-    // No clamped descriptions: copy is written to fit.
-    expect(tile).not.toContain("line-clamp");
+    // Copy is written to fit: no clamp from sm up. Below sm the tile is a
+    // ledger row (blueprint 6.6) without the drawing and with two lines.
+    expect(tile).not.toMatch(/(?<!max-sm:)line-clamp/);
+    expect(tile).toContain("max-sm:hidden");
+    expect(grid).toContain("max-sm:divide-y max-sm:divide-hairline");
     // Stats are the shared StatRow, with values derived from the registry.
     expect(hub).toContain("<StatRow");
     expect(hub).toContain("stats={stats}");

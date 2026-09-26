@@ -287,9 +287,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Empty grid",
       "Room vote",
       "Grid as delivered, with the August dip",
-      "The two March bills side by side",
+      "The two March bills side by side, invoice numbers marked",
       "Meter rows and the October subtraction",
-      "Net line +5,000 kWh"
+      "Net line: duplicate March, missing October, +5,000 kWh off"
     ],
     "cut": "Skip press 4 and the August question.",
     "appendixRoutes": []
@@ -412,11 +412,12 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 255
     },
     "say": [
-      "Six errors, and the total is 48.7 tonnes off: 2.5%. No check on the total would catch that.",
+      "On press 1: take the hands before any bar moves. The title asks the question and the right total stays a question mark until the vote is done.",
       "On press 2: the duplicate and the missing October cancel to 2.0 tonnes.",
       "On press 3: the Talbrück bill hides four fifths of the unit error.",
       "On press 4: the two small ones. The gas bill states its basis on page 2, and AdBlue is not a fuel.",
-      "On press 5: on the way the total swings between 1,464.5 and 1,960.0 tonnes. Next year the same errors can add up instead of cancelling."
+      "On press 5: on the way the total swings between 1,464.5 and 1,960.0 tonnes. Next year the same errors can add up instead of cancelling.",
+      "Six errors, and the total is 48.7 tonnes off: 2.5%. No check on the total would catch that."
     ],
     "sayAt": {
       "0": [
@@ -432,6 +433,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
         4
       ],
       "4": [
+        5
+      ],
+      "5": [
         5
       ]
     },
@@ -451,12 +455,12 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Most expect a large gap; the 2.5% surprises."
     ],
     "revealOrder": [
-      "Prediction band, start and end bars only",
+      "Prediction band and the raw-folder bar; the right total is a question mark",
       "Room vote",
-      "Duplicate and October bars",
+      "Duplicate and October bars, and the right total",
       "Talbrück and unit bars",
       "Gas and AdBlue bars, two cards",
-      "Swing band and caption"
+      "Swing band; the title now gives the gap"
     ],
     "cut": "Skip press 4; mention gas and AdBlue in one sentence.",
     "appendixRoutes": [
@@ -528,8 +532,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Same and changed columns",
       "Ledger columns with three excluded rows",
       "E-WN-01 evidence expanded",
-      "Call-out: which column (answer: entity_on_document)",
-      "Worked row E-WN-03",
+      "Call-out: which column (answer: Company on the bill, entity_on_document)",
+      "Three completion rows replace the excerpt; worked row E-WN-03",
       "Half-filled row E-WS-01: the room calls out kWh and both factors",
       "E-WS-01 filled; blank row E-WN-10: the room calls out source, kWh, status, grade",
       "E-WN-10 filled; control total"
@@ -677,7 +681,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "say": [
       "Same question, same model. This time every figure names its rows, the meter reading is labelled as one, both Scope 2 numbers use the right method, and the answer says what it did not check.",
       "On press 3: the total moved by 48.7 tonnes. More important, every tonne now has a row and a page behind it.",
-      "If the answer is still the constructed target: say so. 'This is the answer we expect; the recorded runs are in appendix A3.'"
+      "If the answer is still the constructed target: say so. 'This is the answer we expect. Recorded runs will go into appendix A3 once they are captured; the capture protocol is there now.'"
     ],
     "sayAt": {
       "0": [
@@ -800,10 +804,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Most pick efficiency, which is the AI's claim."
     ],
     "revealOrder": [
-      "Two bridges with both totals, and the struck AI sentence",
+      "Both bridges on one scale, totals only; the AI's sentence, not yet struck",
       "Room vote",
-      "Location-based bridge",
-      "Market-based bridge and caption",
+      "Location-based bars and driver names; the AI's sentence struck through",
+      "Market-based bars, driver names and the residual-mix caption",
       "Rewritten sentence"
     ],
     "cut": "Skip the market-based bridge; say the 744.0 t in one sentence.",

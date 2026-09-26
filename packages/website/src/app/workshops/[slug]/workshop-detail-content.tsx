@@ -88,6 +88,21 @@ function formatDate(value: string, locale: Locale): string {
   }).format(new Date(`${monthOnly ? `${value}-01` : value}T00:00:00Z`));
 }
 
+/**
+ * A long title may carry a subtitle after a colon ("ESG-Berichte mit KI: Von
+ * Rohdaten zu klaren Erkenntnissen"). The cover sets the part before the
+ * colon at display size and the subtitle one step down on its own line, so
+ * the display headline never runs to three lines or breaks inside a phrase.
+ */
+function splitTitle(title: string): {
+  readonly head: string;
+  readonly subtitle?: string;
+} {
+  const at = title.indexOf(": ");
+  if (at <= 0) return { head: title };
+  return { head: title.slice(0, at), subtitle: title.slice(at + 2) };
+}
+
 /** Caption lines join facts that start lowercase mid-line; the line itself starts upper case. */
 function sentenceStart(text: string): string {
   return text.charAt(0).toLocaleUpperCase() + text.slice(1);
@@ -233,6 +248,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       material !== primary && SECONDARY_ROLES.includes(material.role),
   );
   const need = limitingNeed(workshop, copy);
+  const title = splitTitle(workshop.title);
 
   const coverFacts = [
     workshop.minutesLive ? copy.minutesLive(workshop.minutesLive) : null,
@@ -256,8 +272,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     .filter(Boolean)
     .join(" · ");
   const agendaCaptionLine = sentenceStart(agendaCaption);
-  // Minutes and activity share one caption line, so the Route stays compact
-  // and the decision lab starts close under it.
   // Minutes on one line, activity and flags on the next, so a narrow station
   // never breaks mid-pair with a dangling separator.
   const labStation = LAB_STATION[workshop.slug];
@@ -342,7 +356,20 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           id="workshop-title"
           className="mt-3 max-w-[22ch] text-fluid-h1 font-bold text-balance text-foreground lg:max-w-[18ch] lg:text-display"
         >
-          {workshop.title}
+          {title.head}
+          {title.subtitle ? (
+            <>
+              {/* The colon stays visible, so the text, the accessible name
+                  and the search snippet all read as the full title. */}
+              :{" "}
+              <span
+                data-title-subtitle=""
+                className="mt-2 block text-fluid-h2 lg:mt-3"
+              >
+                {title.subtitle}
+              </span>
+            </>
+          ) : null}
         </h1>
         <p className="mt-4 max-w-[60ch] text-body text-muted-foreground text-pretty">
           {workshop.summary}
@@ -545,8 +572,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               </ul>
             </Callout>
           </div>
+          {/* justify-between keeps the values on one line when a label wraps. */}
           <StatRow
-            className="mt-10 border-t border-hairline pt-6"
+            className="mt-10 border-t border-hairline pt-6 [&>div]:justify-between"
             stats={caseStudy.metrics.map((metric) => ({
               label: metric.label,
               value: <StatValue>{metric.value}</StatValue>,
@@ -565,7 +593,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 {realWorldCase.narrative}
               </p>
               <StatRow
-                className="mt-8"
+                className="mt-8 [&>div]:justify-between"
                 stats={realWorldCase.metrics.map((metric) => ({
                   label: metric.label,
                   value: <StatValue>{metric.value}</StatValue>,

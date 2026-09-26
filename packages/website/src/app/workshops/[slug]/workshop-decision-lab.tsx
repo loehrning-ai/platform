@@ -474,11 +474,17 @@ export function WorkshopDecisionLab({
           <p className="mt-4 max-w-[52ch] text-body text-muted-foreground text-pretty">
             {config.prompt}
           </p>
-          <dl className="mt-6 grid grid-cols-1 gap-x-4 gap-y-3 border-t border-hairline pt-3 min-[26rem]:grid-cols-3">
+          {/* One row from 26rem: equal columns, but a column never gets
+              narrower than its longest word ("12 Stromrechnungen"), so a
+              value wraps between words and never inside one. */}
+          <dl
+            data-lab-facts=""
+            className="mt-6 grid grid-cols-1 gap-x-4 gap-y-3 border-t border-hairline pt-3 min-[26rem]:grid-flow-col min-[26rem]:grid-cols-none min-[26rem]:auto-cols-[minmax(min-content,1fr)]"
+          >
             {config.facts.map((fact) => {
               const { label, value } = splitFact(fact);
               return (
-                <div key={fact} className="min-w-0">
+                <div key={fact}>
                   <dt className="text-label text-muted-foreground">{label}</dt>
                   <dd className="mt-1 break-words text-[1.25rem] font-bold leading-tight text-foreground tabular-nums">
                     {value}

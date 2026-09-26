@@ -29,7 +29,7 @@ test.describe("/demos gallery", () => {
     await expect(page).not.toHaveURL(/\/login/);
   });
 
-  test("keeps compact filters and the preview atlas usable at 390px", async ({
+  test("keeps compact filters and the ledger rows usable at 390px", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -41,7 +41,9 @@ test.describe("/demos gallery", () => {
     await expect(
       page.getByRole("combobox", { name: "Kategorie" }),
     ).toBeVisible();
-    await expect(page.locator("[data-demo-preview]").first()).toBeVisible();
+    // Below sm the gallery is a ledger: tiles stay, drawings are hidden.
+    await expect(page.locator("[data-demo-tile]").first()).toBeVisible();
+    await expect(page.locator("[data-demo-preview]").first()).toBeHidden();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
       scrollWidth: document.scrollingElement?.scrollWidth ?? 0,

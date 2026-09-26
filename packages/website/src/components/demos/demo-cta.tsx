@@ -13,12 +13,15 @@ export function DemoCta({
   target,
   href,
   variant = "primary",
+  ariaLabel,
   children,
 }: {
   slug: string;
   target: DemoCtaTarget;
   href: string;
   variant?: "primary" | "secondary";
+  /** Only when the visible text needs its target; must start with that text. */
+  ariaLabel?: string;
   children: React.ReactNode;
 }) {
   // Primary: Mennige fill with paper text (5.40:1), once per page.
@@ -32,6 +35,7 @@ export function DemoCta({
     <Link
       href={href}
       onClick={() => trackDemoCta(slug, target)}
+      aria-label={ariaLabel}
       className={className}
     >
       {children}

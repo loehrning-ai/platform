@@ -1,10 +1,10 @@
 /**
  * evidence-badge.test.tsx (regression coverage)
  *
- * EvidenceBadge renders the single evidence line above a demo engine: the mode
- * as a disclosure button whose explanation toggles open/closed, an optional
- * external-action label driven by DemoExternalActionMode, and the optional
- * invented-data note. SimulationDisclosure wraps arbitrary children in an
+ * EvidenceBadge renders the evidence line in a demo engine's header: the mode
+ * and the optional external-action label as one plain phrase, the optional
+ * invented-data note, and a last "Was heißt das?" disclosure button whose
+ * explanation toggles open/closed. SimulationDisclosure wraps arbitrary children in an
  * accessible "note" region.
  *
  * These are pure UI units (state = the open/closed toggle, config = the two
@@ -23,28 +23,43 @@ describe("<EvidenceBadge> evidence line + disclosure", () => {
     ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichneten Ablauf"],
     ["live_api", "Live-API", "würde echte Anfragen"],
   ] as const)(
-    "labels the %s mode in ink and reveals/hides its explanation",
+    "states the %s mode as plain text and reveals/hides its explanation",
     (mode, label, detailsFragment) => {
       const { container } = render(
-        <EvidenceBadge evidenceMode={mode} externalActionMode="none" />,
+        <EvidenceBadge evidenceMode={mode} externalActionMode="simulated" />,
       );
 
+      // The line reads "Label · Aktionen simuliert" with no control glyph
+      // between mode and action, so a minus can never pose as a dash.
+      const line = container.querySelector("[data-evidence-line]");
+      const phrase = line?.querySelector(`[data-evidence-mode="${mode}"]`);
+      expect(phrase).toHaveTextContent(`${label}· Aktionen simuliert`);
+      expect(phrase?.querySelector("button, [data-disclosure-glyph]")).toBeNull();
+
+      // The disclosure is the last item, with a visible label that starts
+      // its accessible name (label in name) and names the mode.
       const button = screen.getByRole("button", {
-        name: new RegExp(`Evidenzmodus: ${label}`),
+        name: `Was heißt das? Ausführung: ${label}`,
       });
-      // Square text control: 44px target, sentence-case label, ink text.
-      expect(button).toHaveClass("min-h-11", "text-label", "text-foreground");
+      expect(line?.lastElementChild).toBe(button);
+      expect(button).toHaveTextContent(/^Was heißt das\?$/);
+      // Square text control: 44px target, sentence case, ink text.
+      expect(button).toHaveClass("min-h-11", "text-foreground");
       expect(button.className).not.toMatch(/uppercase|rounded/);
-      expect(button).toHaveTextContent(label);
-      // Collapsed by default.
+      // Collapsed by default; the controlled region exists but is hidden.
       expect(button).toHaveAttribute("aria-expanded", "false");
       expect(container.querySelector("[data-evidence-details]")).toBeNull();
+      const controlled = container.querySelector(
+        `[id="${button.getAttribute("aria-controls")}"]`,
+      );
+      expect(controlled).not.toBeVisible();
 
       // Open -> the explanation appears and is wired to the button.
       fireEvent.click(button);
       expect(button).toHaveAttribute("aria-expanded", "true");
       const details = container.querySelector("[data-evidence-details]");
       expect(details).toHaveTextContent(detailsFragment);
+      expect(details).toBeVisible();
       expect(button).toHaveAttribute("aria-controls", details?.id);
 
       // Toggle closed again.
@@ -53,6 +68,21 @@ describe("<EvidenceBadge> evidence line + disclosure", () => {
       expect(container.querySelector("[data-evidence-details]")).toBeNull();
     },
   );
+
+  it("names the disclosure in English on the English page", () => {
+    render(
+      <EvidenceBadge
+        evidenceMode="recorded_trace"
+        externalActionMode="none"
+        locale="en"
+      />,
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "What this means. Execution: Recorded trace",
+      }),
+    ).toHaveTextContent(/^What this means$/);
+  });
 
   it("states the invented-data note once on the same line", () => {
     render(
