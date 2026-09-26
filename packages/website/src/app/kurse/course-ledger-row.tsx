@@ -40,6 +40,8 @@ export interface LedgerRowCopy {
   readonly accountRequired: string;
   readonly unavailable: string;
   readonly unavailableAction: string;
+  readonly overview: string;
+  readonly accessTerm: string;
 }
 
 export function isLiveCourse(course: Course): course is CatalogCourse {
@@ -61,11 +63,26 @@ export function courseAction(
   locale: Locale,
   copy: LedgerRowCopy,
   access: CourseAccess,
-): { readonly href: string; readonly label: string } {
+): {
+  readonly href: string;
+  /** The full label with the access state, as the next-step sheet prints it. */
+  readonly label: string;
+  /** The verb alone, as a ledger row prints it next to its access column. */
+  readonly verb: string;
+  /**
+   * Screen-reader text before and after the verb, so the row's accessible
+   * name equals `label`. The row renders the separating spaces.
+   */
+  readonly before: string;
+  readonly after: string;
+} {
   if (access === "unavailable") {
     return {
       href: localizeHref(course.href, locale),
       label: copy.unavailableAction,
+      verb: copy.overview,
+      before: `${copy.unavailable} ·`,
+      after: "",
     };
   }
   const label = stat.certified
@@ -82,6 +99,9 @@ export function courseAction(
       access === "account-required"
         ? `${label} · ${copy.accountRequired}`
         : label,
+    verb: label,
+    before: "",
+    after: access === "account-required" ? `· ${copy.accountRequired}` : "",
   };
 }
 
@@ -104,9 +124,15 @@ function sourceRepository(sourceHref: string): SourceRepository {
 
 /**
  * One ledger row (design direction 6.6): number, title, the one-line promise,
- * duration and level as plain text, and the action as a text link. Rows are
- * separated by hairlines; there is no tonal fill. A course in the selected
- * path gets an ink square before its number instead of a coloured edge.
+ * duration, level and access as plain text, and the action as a text link.
+ * Rows are separated by hairlines; there is no tonal fill. A course in the
+ * selected path gets an ink square before its number instead of a coloured
+ * edge.
+ *
+ * The tracks are fixed so every row of both groups lines up: from xl the
+ * facts and the action are two columns, at lg they share one right-hand cell
+ * (the wrapper switches between flex and `display: contents`), below lg the
+ * facts print as a caption under the promise.
  */
 export function CourseLedgerRow({
   course,
@@ -144,6 +170,12 @@ export function CourseLedgerRow({
   const sourceCommit = course.sourceCommit;
   const source = sourceHref ? sourceRepository(sourceHref) : null;
   const promise = coursePromise(course.slug, locale) ?? course.tagline;
+  const accessWord =
+    live && access !== "open"
+      ? access === "account-required"
+        ? copy.accountRequired
+        : copy.unavailable
+      : null;
   // Seven of the ten courses have no demo. Rather than substituting one from
   // another course, those rows simply omit the link.
   const courseDemos = live ? demosForCourse(course.slug) : [];
@@ -171,11 +203,11 @@ export function CourseLedgerRow({
       }
     >
       {/* No cover thumbnail: the ledger stays image-free (see the test). */}
-      <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] gap-x-3 lg:grid-cols-[3.5rem_minmax(0,1fr)_12rem_auto] lg:gap-x-6">
+      <div className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-x-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-x-3 lg:grid-cols-[3.5rem_minmax(0,1fr)_15rem] lg:gap-x-6 xl:grid-cols-[3.5rem_minmax(0,1fr)_10rem_15rem]">
         <span
           data-course-number
           aria-hidden="true"
-          className="flex h-8 items-center gap-2 text-label text-muted tabular-nums lg:h-11"
+          className="flex h-11 items-center gap-1.5 text-label text-muted tabular-nums sm:gap-2"
         >
           <span
             data-path-marker
@@ -185,13 +217,7 @@ export function CourseLedgerRow({
         </span>
 
         <div className="min-w-0">
-          <p
-            data-course-level-label
-            className="text-caption text-muted-foreground tabular-nums lg:hidden"
-          >
-            {levelLabel} · {course.duration}
-          </p>
-          <h4 className="text-fluid-h3 font-bold text-foreground">
+          <h4 className="text-[1.25rem] font-bold leading-snug text-foreground">
             <Link
               href={localizeHref(course.href, locale)}
               className="inline-flex min-h-11 items-center underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
@@ -200,9 +226,7 @@ export function CourseLedgerRow({
             </Link>
           </h4>
           {inPath ? (
-            <p className="sr-only text-caption text-foreground lg:not-sr-only lg:-mt-1">
-              {copy.pathCourse}
-            </p>
+            <p className="sr-only">{copy.pathCourse}</p>
           ) : null}
           {liveStat?.certified ? (
             <p className="mt-1 flex items-center gap-1.5 text-caption font-semibold text-pass">
@@ -213,16 +237,22 @@ export function CourseLedgerRow({
           <p className="mt-1 max-w-[62ch] text-body text-muted-foreground text-pretty">
             {promise}
           </p>
-          {live && access !== "open" ? (
-            <p
-              data-course-access-label
-              className="mt-2 text-caption font-semibold text-foreground"
-            >
-              {access === "account-required"
-                ? copy.accountRequired
-                : copy.unavailable}
-            </p>
-          ) : null}
+          {/* Below lg the facts column is absent, so level, duration and
+              access print as one caption after the promise. */}
+          <p
+            data-course-level-label
+            className="mt-1 text-caption text-muted-foreground tabular-nums lg:hidden"
+          >
+            {levelLabel} · {course.duration}
+            {accessWord ? (
+              <>
+                {" · "}
+                <span data-course-access-label className="text-foreground">
+                  {accessWord}
+                </span>
+              </>
+            ) : null}
+          </p>
           {courseDemo || (sourceHref && source) ? (
             <div className="mt-1 flex flex-wrap items-center gap-x-5">
               {courseDemo ? (
@@ -286,6 +316,7 @@ export function CourseLedgerRow({
           ) : null}
         </div>
 
+        <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-1 xl:contents">
         <dl
           data-course-meta
           className="hidden text-caption text-muted-foreground tabular-nums lg:block lg:pt-3"
@@ -294,19 +325,35 @@ export function CourseLedgerRow({
           <dd className="text-foreground">{course.duration}</dd>
           <dt className="sr-only">{copy.levelTerm}</dt>
           <dd>{levelLabel}</dd>
+          {accessWord ? (
+            <>
+              <dt className="sr-only">{copy.accessTerm}</dt>
+              <dd className="text-foreground">{accessWord}</dd>
+            </>
+          ) : null}
         </dl>
 
-        <div
-          data-course-action
-          className="col-start-2 lg:col-start-auto lg:justify-self-end"
-        >
+        <div data-course-action className="col-start-2 min-w-0 lg:col-start-auto">
           {live && action ? (
             <Link
               href={action.href}
               prefetch={false}
               className={BUTTON_CLASSES.paper.text}
             >
-              <span>{action.label}</span>
+              {/* The whitespace text nodes keep the spaces in the accessible
+                  name; a flex container drops them from the layout. */}
+              {action.before ? (
+                <>
+                  <span className="sr-only">{action.before}</span>{" "}
+                </>
+              ) : null}
+              <span>{action.verb}</span>
+              {action.after ? (
+                <>
+                  {" "}
+                  <span className="sr-only">{action.after}</span>
+                </>
+              ) : null}
               <span className="sr-only">: {course.title}</span>
               <ArrowGlyph />
             </Link>
@@ -324,6 +371,7 @@ export function CourseLedgerRow({
               <ArrowGlyph direction="external" />
             </a>
           ) : null}
+        </div>
         </div>
       </div>
     </li>

@@ -52,7 +52,7 @@ const LANDING_COPY = {
     heading: "Rollen, Risiken und",
     headingAccent: "Pflichten einordnen.",
     introduction:
-      "Du nimmst ein KI-Tool aus deinem Unternehmen und bestimmst seine Risikoklasse, eure Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27. Juli 2026 geltenden Fassung.",
+      "Du nimmst ein KI-Tool aus deinem Unternehmen und bestimmst seine Risikoklasse, eure Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen. Grundlage ist die Verordnung (EU) 2024/1689 in der seit 27.\u00a0Juli\u00a02026 geltenden Fassung.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
@@ -66,7 +66,7 @@ const LANDING_COPY = {
     ],
     legalHeading: "Was Artikel 4 verlangt",
     legalBody:
-      "Artikel 4 gilt seit 2. Februar 2025. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen treffen, die die KI-Kompetenz ihrer Beschäftigten und weiterer Personen unterstützen, die in ihrem Auftrag mit den Systemen arbeiten. Vorwissen, Erfahrung, Ausbildung, Nutzungskontext und betroffene Personengruppen sind zu berücksichtigen. Die seit 27. Juli 2026 geltende Fassung verlangt kein garantiertes individuelles Kompetenzniveau.",
+      "Artikel 4 gilt seit 2.\u00a0Februar\u00a02025. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen treffen, die die KI-Kompetenz ihrer Beschäftigten und weiterer Personen unterstützen, die in ihrem Auftrag mit den Systemen arbeiten. Vorwissen, Erfahrung, Ausbildung, Nutzungskontext und betroffene Personengruppen sind zu berücksichtigen. Die seit 27.\u00a0Juli\u00a02026 geltende Fassung verlangt kein garantiertes individuelles Kompetenzniveau.",
     tracks: [
       {
         title: "Blöcke 1 und 2 · Orientierung",
@@ -101,7 +101,7 @@ const LANDING_COPY = {
     evidenceHeading: "Was der Teilnahmenachweis belegt",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokalen Abschlussquiz.",
-      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28. Juli 2026 geprüft.",
+      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28.\u00a0Juli\u00a02026 geprüft.",
     ],
     disclaimerLabel: "Hinweis:",
     disclaimer:
@@ -351,6 +351,9 @@ export default async function EuAiActKursLandingPage() {
               meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
             }))}
           />
+          <CourseNextLink href={localizeHref("/ai-native", locale)}>
+            {copy.nextCourse}
+          </CourseNextLink>
         </CourseLandingSection>
 
         <CourseBoundaryDetails summary={copy.boundarySummary}>
@@ -367,10 +370,6 @@ export default async function EuAiActKursLandingPage() {
             </p>
           </CourseBoundaryColumn>
         </CourseBoundaryDetails>
-
-        <CourseNextLink href={localizeHref("/ai-native", locale)}>
-          {copy.nextCourse}
-        </CourseNextLink>
       </TechnicalCourseFrame>
     </>
   );

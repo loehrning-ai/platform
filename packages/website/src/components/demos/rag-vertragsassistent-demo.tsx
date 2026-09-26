@@ -117,7 +117,7 @@ const KONFIDENZ_CONFIG: Record<
 > = {
   hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
   mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
-  niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
+  niedrig: { label: "Niedrig", color: "#b91c1c", bg: "rgba(220,38,38,0.1)" },
 };
 
 function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
@@ -156,7 +156,7 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
         style={{
           fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
           fontSize: 12,
-          color: "#6b7280",
+          color: "#4f4640",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
           marginTop: 2,
@@ -184,7 +184,7 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
     >
       <span
         style={{
-          color: "#6b7280",
+          color: "#4f4640",
           textTransform: "uppercase",
           fontWeight: 700,
         }}
@@ -357,7 +357,7 @@ function RagVertragsassistentGerman() {
         <span
           style={{
             background: "rgba(34,197,94,0.12)",
-            color: DEMO.statusGreen,
+            color: "#166534",
             padding: "3px 8px",
             fontFamily: DEMO.font.mono,
             fontSize: 12,
@@ -527,7 +527,7 @@ function RagVertragsassistentGerman() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: m.isEmpty ? "#6b7280" : "var(--color-brand-orange)",
+                  color: m.isEmpty ? "#4f4640" : "var(--color-brand-orange)",
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                   fontWeight: 700,
@@ -545,9 +545,9 @@ function RagVertragsassistentGerman() {
                   padding: "11px 13px",
                   fontSize: 13,
                   lineHeight: 1.65,
-                  borderLeft: `3px solid ${m.isEmpty ? "#6b7280" : "var(--color-brand-orange)"}`,
+                  borderLeft: `3px solid ${m.isEmpty ? "#4f4640" : "var(--color-brand-orange)"}`,
                   wordBreak: "break-word",
-                  color: m.isEmpty ? "#6b7280" : "inherit",
+                  color: m.isEmpty ? "#4f4640" : "inherit",
                 }}
               >
                 {m.isEmpty
@@ -850,7 +850,7 @@ function RagVertragsassistentGerman() {
             fontWeight: 700,
             textTransform: "uppercase",
             letterSpacing: "0.1em",
-            color: "#6b7280",
+            color: "#4f4640",
             fontSize: 12,
           }}
         >

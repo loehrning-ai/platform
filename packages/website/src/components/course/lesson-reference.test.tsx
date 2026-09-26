@@ -47,6 +47,23 @@ describe("LessonReference", () => {
     expect(screen.getByText("Autorisierter Lektionstext")).toBeInTheDocument();
   });
 
+  it("carries the course position in the kicker so readers need no own eyebrow", () => {
+    render(
+      <LessonReference
+        locale="de"
+        title="Belege vor Automatisierung"
+        position="Lektion 2 von 12"
+      >
+        <p>Text</p>
+      </LessonReference>,
+    );
+
+    const kicker = screen.getByText("Lektion 2 von 12");
+    expect(kicker).toHaveClass("text-label", "text-muted-foreground", "tabular-nums");
+    expect(kicker.className).not.toMatch(/uppercase|font-mono|text-brand-orange/);
+    expect(screen.queryByText("Lektion")).not.toBeInTheDocument();
+  });
+
   it("keeps exactly one accessible level-one heading when closed or open", () => {
     const { container } = render(
       <>

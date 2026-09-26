@@ -2,6 +2,9 @@
 
 import { useState, type CSSProperties, type JSX } from "react";
 import { DEMO } from "@/lib/demo-tokens";
+
+/** Status colours for text on paper: the DEMO status fills fail AA as text. */
+const STATUS_TEXT = { amber: "#854d0e", red: "#b91c1c" } as const;
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
@@ -368,7 +371,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                       style={{
                         border: `1px solid ${DEMO.statusAmber}`,
                         background: "rgba(234,179,8,0.12)",
-                        color: DEMO.statusAmber,
+                        color: STATUS_TEXT.amber,
                         padding: "1px 6px",
                         fontFamily: DEMO.font.mono,
                         fontSize: 12,
@@ -386,7 +389,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                         style={{
                           border: `1px solid ${DEMO.statusRed}`,
                           background: "rgba(239,68,68,0.12)",
-                          color: DEMO.statusRed,
+                          color: STATUS_TEXT.red,
                           padding: "1px 6px",
                           fontFamily: DEMO.font.mono,
                           fontSize: 12,
@@ -474,7 +477,7 @@ export function LlmObservabilityDemo(): JSX.Element {
               style={{
                 border: `1px solid ${DEMO.statusAmber}`,
                 background: "rgba(234,179,8,0.12)",
-                color: DEMO.statusAmber,
+                color: STATUS_TEXT.amber,
                 padding: "2px 8px",
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,

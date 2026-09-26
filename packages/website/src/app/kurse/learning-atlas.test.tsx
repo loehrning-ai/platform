@@ -62,6 +62,18 @@ describe("LearningAtlas", () => {
     expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
     expect(next).toHaveTextContent(locale === "de" ? "Offener Einstieg ohne Lernkonto" : "Open starting point without an account");
     expect(next.textContent).not.toContain("0/4");
+    // The sheet says why it offers a course off the path, and the Route
+    // still marks the path's own first course as current.
+    expect(next).toHaveTextContent(
+      locale === "de"
+        ? "Dein Pfad beginnt mit KI-Führerschein, der hier nicht verfügbar ist."
+        : "Your path starts with AI Fundamentals, which is unavailable here.",
+    );
+    const stations = screen
+      .getByTestId("selected-path-sequence")
+      .querySelectorAll("[data-learning-path-stepper] > li");
+    expect(stations[0]).toHaveAttribute("data-state", "current");
+    expect(stations[0]?.querySelector("a")).toHaveAttribute("aria-current", "step");
   });
 
   it.each(["de", "en"] as const)("preserves an explicit unavailable goal and target in %s", (locale) => {
@@ -81,7 +93,21 @@ describe("LearningAtlas", () => {
     const row = container.querySelector('[data-course-slug="ai-native"]');
     expect(row).toHaveAttribute("data-course-access", "unavailable");
     expect(row?.querySelector("[data-course-access-label]")).not.toHaveClass("sr-only");
-    expect(row?.querySelector("[data-course-action] a")).toHaveAttribute("href", `${prefix}/ai-native`);
+    const rowAction = row?.querySelector("[data-course-action] a");
+    expect(rowAction).toHaveAttribute("href", `${prefix}/ai-native`);
+    // The state prints once, in the facts; the action shows the verb and
+    // keeps the full state in its accessible name.
+    expect(rowAction?.querySelector("span:not(.sr-only)")).toHaveTextContent(
+      locale === "de" ? /^Kursübersicht$/ : /^Course overview$/,
+    );
+    expect(rowAction).toHaveAccessibleName(
+      locale === "de"
+        ? "Hier nicht verfügbar · Kursübersicht: AI-Native Arbeitskurs"
+        : /^Unavailable here · Course overview: /,
+    );
+    expect(row?.querySelector("[data-course-meta]")).toHaveTextContent(
+      locale === "de" ? "Hier nicht verfügbar" : "Unavailable here",
+    );
   });
 
   it("honors a selected goal even when the learner explicitly chooses the default", () => {
@@ -317,6 +343,12 @@ describe("LearningAtlas", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ich baue mit KI" }));
 
     expect(window.location.search).toBe("?goal=build");
+    expect(
+      within(screen.getByTestId("selected-path-sequence")).getByRole("heading", {
+        level: 3,
+        name: "Dein Pfad · 4 Kurse: Ich baue mit KI",
+      }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Ich baue mit KI" }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -657,11 +689,11 @@ describe("LearningAtlas phone ledger", () => {
     );
     expect(marked.length).toBeGreaterThan(0);
     for (const row of marked) {
+      // The square is the visible signal; the words stay for screen
+      // readers only, and the ledger head prints the key once.
       const marker = within(row).getByText("Teil deines Pfads");
-      expect(marker, row.dataset.courseSlug).toHaveClass(
-        "sr-only",
-        "lg:not-sr-only",
-      );
+      expect(marker, row.dataset.courseSlug).toHaveClass("sr-only");
+      expect(marker).not.toHaveClass("lg:not-sr-only");
       // Ink square instead of an orange left edge.
       expect(row.querySelector("[data-path-marker]")).toHaveClass("bg-foreground");
       expect(row.className).not.toMatch(/border-l-/);
@@ -673,8 +705,11 @@ describe("LearningAtlas phone ledger", () => {
     );
 
     const intro = screen.getByText(
-      "Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
+      "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
     );
     expect(intro).toHaveClass("sr-only", "sm:not-sr-only");
+    const legend = container.querySelector("[data-path-legend]");
+    expect(legend).toHaveAttribute("aria-hidden", "true");
+    expect(legend).toHaveTextContent("Teil deines Pfads");
   });
 });

@@ -253,7 +253,7 @@ function OutboundWorkflowDemoGerman() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: current ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
+                  color: current ? DEMO.kalk : DEMO.schiefer,
                   marginTop: 3,
                   letterSpacing: "0.04em",
                 }}
@@ -666,7 +666,7 @@ function OutboundWorkflowDemoGerman() {
               fontWeight: 700,
             }}
           >
-            <span style={{ color: "var(--color-brand-orange)" }}>✉ Review</span>
+            <span style={{ color: "var(--color-kupfer-light)" }}>✉ Review</span>
             <span style={{ opacity: 0.5 }}>›</span>
             <span
               style={{
@@ -1380,7 +1380,7 @@ function OutboundWorkflowDemoEnglish() {
               fontSize: 12,
             }}
           >
-            <strong style={{ color: "var(--color-brand-orange)" }}>
+            <strong style={{ color: "var(--color-kupfer-light)" }}>
               REVIEW DRAFT
             </strong>
             <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>

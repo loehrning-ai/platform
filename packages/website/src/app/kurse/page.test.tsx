@@ -28,6 +28,7 @@ vi.mock("./learning-atlas", () => ({
 
 import KursePage from "./page";
 import { getWorkshops } from "@/lib/workshops";
+import { numberWord } from "@/lib/courses/course-hub-copy";
 
 describe("course hub introduction", () => {
   beforeEach(() => {
@@ -69,11 +70,24 @@ describe("course hub introduction", () => {
       screen.getByRole("link", { name: "Workshops ansehen" }),
     ).toHaveAttribute("href", "/workshops");
     expect(
-      screen.getByText(new RegExp(`In jedem der ${getWorkshops("de").length} Workshops`)),
+      screen.getByText(
+        new RegExp(`In jedem der ${numberWord("de", getWorkshops("de").length)} Workshops`),
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 2, name: "Kosten und Konto" }),
     ).toBeInTheDocument();
+    // The cost note sits before the workshop band and offers one action.
+    expect(
+      screen.getByRole("link", { name: "Lernkonto anlegen" }),
+    ).toHaveAttribute("href", "/konto");
+    expect(screen.queryByRole("link", { name: "Über mich" })).toBeNull();
+    const accessHeading = screen.getByRole("heading", { level: 2, name: "Kosten und Konto" });
+    const band = document.querySelector("[data-kurse-workshops]") as HTMLElement;
+    expect(
+      accessHeading.compareDocumentPosition(band) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     expect(document.querySelector("details")).toBeNull();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 
@@ -93,7 +107,7 @@ describe("course hub introduction", () => {
       screen.queryByText(/Four foundation courses establish the base/),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Map it in five minutes" }),
+      screen.getByRole("link", { name: "Find out in five minutes" }),
     ).toHaveAttribute("href", "/en/ki-check");
     expect(screen.getByTestId("learning-atlas")).toHaveAttribute(
       "data-locale",

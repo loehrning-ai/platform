@@ -5,29 +5,20 @@
  * Demo metadata drives the gallery tile, the /demos/[slug] detail page,
  * and the per-demo OpenGraph image.
  *
- * Size class rationale (`size` field):
- *   s-hero  : signature opener, 2x2 tile, most valuable real estate
- *   s-wide  : statement demo, 2x1 tile, strong horizontal story
- *   s-tall  : secondary narrative, 1x2 tile, vertical rhythm break
- *   s-med   : default, 1x1 tile
+ * `size` is kept as registry metadata (e2e reads it through
+ * `data-demo-size`), but the gallery no longer spans tiles: blueprint 6.14
+ * asks for a uniform 3/2/1 grid, so every tile has the same width and a
+ * fixed 4:3 preview. Adding or removing a demo never opens a hole.
  *
- * TILING INVARIANT (enforced by demo-bento-tiling.test.ts):
- * The four-column gallery packs exactly when the sizes sum to a whole number
- * of rows. With one s-hero the algebra is forced: for 12 tiles across 5 rows,
- * `4(1) + 2b + c = 20` with `1 + b + c = 12` yields b = 5 doubles (s-tall or
- * s-wide) and c = 6 singles. Today that is 1 hero + 3 tall + 2 wide + 6 med.
- * Position matters as much as the count, because sparse row-flow never
- * backfills: a double must sit at DOM index 3 to close the cells beside the
- * hero, and the fifth double at index 6 to anchor the lower block.
- * A 13th demo therefore requires re-balancing the whole set, not appending to
- * it. The test simulates placement and names the index that opens a hole.
+ * Titles: `title` is the plain name and `titleKicker` a short task phrase,
+ * both stored as sentences for surfaces that join them. The gallery and the
+ * detail page show only the name, through `demoName()`.
  *
  * When adding a demo:
  *   1. Append an entry below (keep `n` sequential, zero-padded).
  *   2. Create `src/components/demos/<slug>-demo.tsx` (client component).
  *   3. Add matching copy to `src/lib/demos-copy.ts`.
- *   4. Re-balance the size mix so the tiling invariant above still holds.
- *   5. Update tests.
+ *   4. Update tests.
  */
 
 import type { CourseSlug } from "@/lib/course/types";
@@ -115,8 +106,12 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktive Tabellenwerte; keine Verbindung zu Microsoft 365.",
-    riskNotes: ["Formeln und Forecasts müssen fachlich gegengeprüft werden."],
+    syntheticDataLabel: "Erfundene Absatzzahlen in einer Beispieltabelle.",
+    riskNotes: [
+      "Rechne jede vorgeschlagene Formel an einer Zeile von Hand nach.",
+      "Vergleiche die Prognose mit denselben Wochen im Vorjahr.",
+      "Kläre vor echtem Einsatz, ob dein Microsoft-365-Tenant Claude zulässt.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -129,7 +124,7 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: false,
     title: "Claude in Word.",
-    titleKicker: "Dokumente strukturieren.",
+    titleKicker: "Entwurf aus einem Briefing.",
     background: "Word-Lab + Stilprüfung mit Musterdokumenten",
     description:
       "Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe und personenbezogene Daten.",
@@ -149,8 +144,12 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-nutzungsrichtlinie"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktive Dokumentbeispiele; kein Zugriff auf echte Word-Dateien.",
-    riskNotes: ["Sensible Daten und Quellen müssen vor Nutzung entfernt oder freigegeben sein."],
+    syntheticDataLabel: "Erfundene Briefings und Musterdokumente.",
+    riskNotes: [
+      "Entferne Namen und Kundendaten, bevor das Briefing in den Assistenten geht.",
+      "Prüfe jede Zahl und jede Quelle im Entwurf gegen das Original.",
+      "Gib den Brief erst nach der Datenschutzprüfung frei.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -163,7 +162,7 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: false,
     title: "Signale im CRM.",
-    titleKicker: "Nachrichten erklären.",
+    titleKicker: "Nachrichten mit Quelle.",
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
       "Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor jedem Versand steht ein Review.",
@@ -183,8 +182,12 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "review_gated",
-    syntheticDataLabel: "Fiktive Kontakte und Domains; kein SMTP-Versand.",
-    riskNotes: ["Outbound-Kommunikation braucht Quellenprüfung, Rechtsgrundlage und Opt-out-Pfad."],
+    syntheticDataLabel: "Erfundene Kontakte, Domains und Signale.",
+    riskNotes: [
+      "Prüfe zu jedem Signal die Quelle und ihr Datum.",
+      "Kläre die Rechtsgrundlage, bevor du einen Kontakt anschreibst.",
+      "Jede Nachricht braucht einen Abmeldeweg.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -197,8 +200,8 @@ export const demos: readonly Demo[] = [
     dark: true,
     accent: true,
     title: "Agent-Pipeline.",
-    titleKicker: "Ein Memo in vier Schritten.",
-    background: "Multi-Agent-Muster · spezialisierte Rollen · aufgezeichnete Spur",
+    titleKicker: "Memo aus vier Agentenschritten.",
+    background: "Vier Rollen: Recherche, Synthese, Kritik, Redaktion",
     description:
       "Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschritt bis zur Schlussfassung.",
     tags: ["Multi-Agent", "Opus 4.5", "Trace"],
@@ -217,8 +220,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "recorded_trace",
     externalActionMode: "none",
-    syntheticDataLabel: "Aufgezeichnete Beispielspur; keine Live-Agenten im Browser.",
-    riskNotes: ["Rollenaufteilung ersetzt keine Quellen- und Faktenprüfung."],
+    syntheticDataLabel: "Ein früherer Lauf mit einem erfundenen Auftrag, Schritt für Schritt abgespielt.",
+    riskNotes: [
+      "Prüfe die Quellen der Recherche selbst. Die Kritik-Rolle sieht nur, was die Recherche geliefert hat.",
+      "Vergleiche die Einwände der Kritik mit der Schlussfassung des Memos.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -230,8 +236,8 @@ export const demos: readonly Demo[] = [
     size: "s-wide",
     dark: true,
     accent: false,
-    title: "n8n Supply-Chain.",
-    titleKicker: "Lieferverzug mit Freigabe.",
+    title: "Lieferverzug in n8n.",
+    titleKicker: "Workflow mit Freigabe.",
     background: "n8n-Muster · simulierte DHL/SAP/Mail-Schritte",
     description:
       "Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch frei.",
@@ -251,8 +257,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "simulated",
-    syntheticDataLabel: "Fiktive DHL-, SAP-, Slack- und Mail-Ereignisse.",
-    riskNotes: ["Externe Aktionen bleiben im Review; keine echte Nachbestellung oder Nachricht."],
+    syntheticDataLabel: "Erfundene DHL-, SAP-, Slack- und Mail-Ereignisse.",
+    riskNotes: [
+      "Lies den Entwurf der Kundennachricht, bevor du ihn freigibst.",
+      "Lege fest, wer die Nachbestellung freigibt, wenn die Disponentin fehlt.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -264,7 +273,7 @@ export const demos: readonly Demo[] = [
     size: "s-tall",
     dark: false,
     accent: true,
-    title: "Vertrags-Assistent.",
+    title: "Vertragsassistent.",
     titleKicker: "Antworten mit Fundstelle.",
     background: "Keyword-Suche · 8 Beispieldokumente · Antwort mit Quellenkarte",
     description:
@@ -285,8 +294,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-anbieter-due-diligence"],
     evidenceMode: "rule_based",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktives Vertragsarchiv; keine echte Dokumentensuche.",
-    riskNotes: ["Quellenzitate reduzieren Risiko, garantieren aber keine richtige Rechtsauslegung."],
+    syntheticDataLabel: "Acht erfundene Beispielverträge.",
+    riskNotes: [
+      "Öffne die zitierte Klausel und lies sie im Zusammenhang.",
+      "Eine Fundstelle ersetzt keine Rechtsauslegung. Strittige Fälle gehören in die Rechtsabteilung.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -319,8 +331,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "simulated",
-    syntheticDataLabel: "Fiktive Rechnung und simulierte SAP-Prüfung.",
-    riskNotes: ["Niedrige Extraktionssicherheit muss Import und Buchung stoppen."],
+    syntheticDataLabel: "Eine erfundene Rechnung und eine simulierte SAP-Prüfung.",
+    riskNotes: [
+      "Stoppe Import und Buchung, wenn die Extraktionssicherheit niedrig ist.",
+      "Prüfe Pflichtangaben nach UStG und mögliche Dubletten vor der Freigabe.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -333,7 +348,7 @@ export const demos: readonly Demo[] = [
     dark: true,
     accent: false,
     title: "Prompt-Scanner.",
-    titleKicker: "Personendaten markieren.",
+    titleKicker: "Personendaten im Prompt markieren.",
     background: "Regelbasierte Token-Klassifikation · lokal ausführbares Muster",
     description:
       "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Die Treffer sind Hinweise und übersehen manche Fälle.",
@@ -353,8 +368,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-nutzungsrichtlinie"],
     evidenceMode: "rule_based",
     externalActionMode: "none",
-    syntheticDataLabel: "Regelbasierte Browserdemo mit Beispieltexten.",
-    riskNotes: ["False Positives und False Negatives bleiben möglich."],
+    syntheticDataLabel: "Erfundene Beispieltexte, geprüft in deinem Browser.",
+    riskNotes: [
+      "Die Regeln übersehen manche Fälle. Lies den Prompt vor der Freigabe selbst.",
+      "Prüfe jede Markierung, weil auch harmlose Wörter getroffen werden.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -366,8 +384,8 @@ export const demos: readonly Demo[] = [
     size: "s-med",
     dark: false,
     accent: true,
-    title: "Cost & Drift.",
-    titleKicker: "Kosten und Drift ablesen.",
+    title: "Kosten und Drift im Betrieb.",
+    titleKicker: "Budget, Antwortzeit und Fehler ablesen.",
     background: "Seed-Szenarien · Kosten, Fehler und Drift als Lernspur",
     description:
       "Eine Betriebsansicht mit festen Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du liest ab, wo ein Budget-Alarm anschlagen würde.",
@@ -387,8 +405,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Seed-Szenarien; keine Live-Telemetrie.",
-    riskNotes: ["Echte Observability braucht eigene Messpunkte, Budgets und Eskalationsregeln."],
+    syntheticDataLabel: "Vier erfundene Anwendungen mit festen Messwerten.",
+    riskNotes: [
+      "Lege für jede Anwendung eigene Messpunkte und ein Budget fest.",
+      "Bestimme vorab, wer bei einem Budget-Alarm entscheidet.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -400,11 +421,11 @@ export const demos: readonly Demo[] = [
     size: "s-med",
     dark: false,
     accent: false,
-    title: "Fine-Tuning-Playground.",
-    titleKicker: "Basismodell vs. Domäne.",
-    background: "Vergleich Baseline vs. Domänenbeispiele",
+    title: "Feintuning gegen Basismodell.",
+    titleKicker: "Zwei Antworten im Vergleich.",
+    background: "Vergleich Basismodell gegen Domänenbeispiele",
     description:
-      "Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit einer domänennahen Antwort. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
+      "Du stellst dieselbe Frage zweimal und vergleichst Basismodell und domänennahe Antwort. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Lernziel", value: "Baseline vergleichen" },
@@ -421,8 +442,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktive Trainings- und Holdout-Beispiele.",
-    riskNotes: ["Fine-Tuning ist nicht automatisch besser als RAG, Prompting oder Prozessklarheit."],
+    syntheticDataLabel: "Erfundene Trainings- und Holdout-Beispiele.",
+    riskNotes: [
+      "Prüfe zuerst, ob RAG, ein besserer Prompt oder ein klarerer Prozess dasselbe leisten.",
+      "Bewerte das angepasste Modell nur an Holdout-Fragen, die nicht im Training waren.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -435,7 +459,7 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Annahmen-Rechner.",
-    titleKicker: "Annahmen einzeln ändern.",
+    titleKicker: "Nutzen aus vier Annahmen.",
     background: "Headcount × Stundensatz × Adoption × gesparte Stunden",
     description:
       "Du trägst Teamgröße, Stundensatz und Nutzungsquote ein und siehst die Formel und die Spanne des Ergebnisses.",
@@ -455,8 +479,11 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "rule_based",
     externalActionMode: "none",
-    syntheticDataLabel: "Rechenmodell mit editierbaren Beispielannahmen.",
-    riskNotes: ["ROI ist eine Annahmenrechnung und kein Ergebnisversprechen."],
+    syntheticDataLabel: "Beispielannahmen, die du selbst änderst.",
+    riskNotes: [
+      "Das Ergebnis ist ein Szenario. Belege jede Annahme mit einer eigenen Messung.",
+      "Finde die Annahme, die das Ergebnis am stärksten verschiebt, und belege sie zuerst.",
+    ],
     lastReviewed: "2026-06-19",
   },
   {
@@ -468,11 +495,11 @@ export const demos: readonly Demo[] = [
     size: "s-med",
     dark: false,
     accent: false,
-    title: "LLM-Qualitätsmessung.",
-    titleKicker: "Automatik und Mensch vergleichen.",
+    title: "Antwortqualität messen.",
+    titleKicker: "Automatik und Mensch im Vergleich.",
     background: "Fiktive Eval-Metriken · Drift-Indikator · menschliches Feedback vs. Auto-Eval",
     description:
-      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In einem Fall widersprechen sich beide, und ein Drift-Indikator schlägt an.",
+      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In einem Fall widersprechen sich beide.",
     tags: ["Observability", "Eval", "Drift"],
     meta: [
       { label: "Lernziel", value: "Qualität messen" },
@@ -489,10 +516,10 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktive Eval-Metriken; keine Live-Telemetrie.",
+    syntheticDataLabel: "Erfundene Antworten, Scores und Bewertungen.",
     riskNotes: [
-      "Automatische Eval-Scores ersetzen keine menschliche Qualitätsprüfung.",
-      "Drift-Erkennung braucht eigene Baseline und Schwellenwerte je Anwendungsfall.",
+      "Lass automatische Scores regelmäßig von Menschen gegenprüfen.",
+      "Lege für die Drift eine eigene Baseline und Schwellenwerte je Anwendungsfall fest.",
     ],
     lastReviewed: "2026-06-22",
   },
@@ -520,6 +547,11 @@ export const DEMO_LEVEL_LABELS: Readonly<Record<DemoLevel, string>> = {
   mittel: "Mittel",
   fortg: "Fortgeschritten",
 };
+
+/** The plain demo name for headings: the title without its full stop. */
+export function demoName(demo: Pick<Demo, "title">): string {
+  return demo.title.replace(/\.$/, "");
+}
 
 export function getDemoBySlug(slug: string): Demo | undefined {
   return demos.find((d) => d.slug === slug);

@@ -142,7 +142,9 @@ test.describe("AI-Native course DE/EN integration", () => {
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
-          locale === "en" ? "Describe tasks for Claude" : "Aufgaben für Claude",
+          locale === "en"
+            ? "Automate recurring work with Claude"
+            : "Mit Claude wiederkehrende Arbeit automatisieren",
         );
         await expect(
           page

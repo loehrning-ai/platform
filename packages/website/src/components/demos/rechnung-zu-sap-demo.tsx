@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
+
+/** Status colours for text on paper: the DEMO status fills are 1.6-2:1 as text. */
+const STATUS_TEXT = { green: "#166534", amber: "#854d0e" } as const;
 import {
   DEMO_HEIGHT,
   usePrefersReducedMotion,
@@ -832,8 +835,8 @@ export default function RechnungZuSapDemo() {
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
                       color: data.needsReview
-                        ? DEMO.statusAmber
-                        : DEMO.statusGreen,
+                        ? STATUS_TEXT.amber
+                        : STATUS_TEXT.green,
                       letterSpacing: "0.14em",
                       textTransform: "uppercase",
                       fontWeight: 700,
@@ -853,8 +856,8 @@ export default function RechnungZuSapDemo() {
                       ? "rgba(234,179,8,0.14)"
                       : "rgba(34,197,94,0.12)",
                     color: data.needsReview
-                      ? DEMO.statusAmber
-                      : DEMO.statusGreen,
+                      ? STATUS_TEXT.amber
+                      : STATUS_TEXT.green,
                     padding: "2px 8px",
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
@@ -1007,7 +1010,7 @@ export default function RechnungZuSapDemo() {
                               padding: "6px 4px",
                               textAlign: "right",
                               fontWeight: 700,
-                              color: low ? DEMO.statusAmber : DEMO.statusGreen,
+                              color: low ? STATUS_TEXT.amber : STATUS_TEXT.green,
                             }}
                           >
                             {Math.round(p.conf * 100)}%

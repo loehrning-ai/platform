@@ -55,6 +55,21 @@ const ROLE_PICTOGRAM: Readonly<Record<WorkshopMaterialRole, PictogramName>> = {
 
 const PHASE_ORDER: readonly WorkshopPhase[] = ["before", "during", "after"];
 
+/** Anchor of the decision lab band, linked from the agenda. */
+const LAB_ANCHOR = "workshop-lab";
+
+/**
+ * Agenda station the decision lab mirrors, per workshop. Until the registry
+ * carries this on decisionLab, the page keeps the mapping; a workshop without
+ * an entry still gets the link under the Route, just no marked station.
+ */
+const LAB_STATION: Readonly<Record<string, number>> = {
+  "ki-prognosen-einschaetzen": 0,
+  "geschaeftsberichte-mit-ki-lesen": 5,
+  "datenbereitschaft-fuer-ki": 1,
+  "esg-berichte-mit-ki": 1,
+};
+
 /** Roles that make a sensible second cover button next to the primary one. */
 const SECONDARY_ROLES: readonly WorkshopMaterialRole[] = [
   "demo",
@@ -135,7 +150,10 @@ function MaterialRow({
   const download = material.kind !== "html";
   const notes = [
     material.primary ? copy.startHere : null,
-    material.minutes ? copy.minutes(material.minutes) : null,
+    // Skip the minutes when the label already carries them ("Browserlabor · 12 Min.").
+    material.minutes && !material.label.includes(copy.minutes(material.minutes))
+      ? copy.minutes(material.minutes)
+      : null,
     material.optional ? copy.optional : null,
   ].filter((note): note is string => Boolean(note));
 
@@ -144,14 +162,14 @@ function MaterialRow({
       data-material-row=""
       data-material-role={material.role}
       className={cx(
-        "group relative grid grid-cols-[2rem_minmax(0,1fr)] gap-x-4 gap-y-3 border-b border-hairline py-5 transition-colors duration-[120ms] hover:bg-card-hover sm:grid-cols-[2rem_minmax(0,1fr)_auto_7.5rem] sm:items-center sm:gap-x-6",
+        "group relative grid grid-cols-[2rem_minmax(0,1fr)] gap-x-4 gap-y-2 border-b border-hairline py-5 transition-colors duration-[120ms] hover:bg-card-hover sm:grid-cols-[2rem_minmax(0,1fr)_8.5rem_7.5rem] sm:items-start sm:gap-x-6",
         "has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-brand-orange [&_a:focus-visible]:outline-none",
       )}
     >
       <Pictogram
         name={ROLE_PICTOGRAM[material.role]}
         strokeWidth={2}
-        className="mt-0.5 size-8 text-foreground sm:mt-0"
+        className="-mt-1 size-8 text-foreground"
       />
       <div className="min-w-0">
         <h4 className="text-[1.0625rem] font-bold leading-snug text-foreground">
@@ -172,21 +190,28 @@ function MaterialRow({
           </p>
         ) : null}
       </div>
-      <div className="col-start-2 sm:col-start-auto" aria-hidden="true">
-        <Chip className="tabular-nums">{materialMeta(material)}</Chip>
+      {/* Phones: chip and action share one line under the text. From sm the
+          wrapper dissolves and both sit on the title line in their own columns. */}
+      <div className="col-start-2 flex items-center gap-4 sm:contents">
+        <div
+          className="sm:col-start-auto sm:-mt-0.5 sm:justify-self-start"
+          aria-hidden="true"
+        >
+          <Chip className="tabular-nums">{materialMeta(material)}</Chip>
+        </div>
+        <WorkshopMaterialLink
+          workshopSlug={workshopSlug}
+          material={material}
+          className="inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 after:absolute after:inset-0 after:content-[''] group-hover:decoration-foreground sm:-mt-2.5 sm:self-start"
+        >
+          <span>{download ? copy.downloadAction : copy.openAction}</span>
+          <span className="sr-only">{`: ${material.label}, `}</span>
+          <span className="sr-only">
+            {`${copy.language}: ${materialLanguageLabel(locale, material.language)}`}
+          </span>
+          <ArrowGlyph direction={download ? "down" : "right"} />
+        </WorkshopMaterialLink>
       </div>
-      <WorkshopMaterialLink
-        workshopSlug={workshopSlug}
-        material={material}
-        className="col-start-2 inline-flex min-h-11 items-center gap-1.5 self-start font-semibold text-foreground underline decoration-border underline-offset-4 after:absolute after:inset-0 after:content-[''] group-hover:decoration-foreground sm:col-start-auto sm:self-center"
-      >
-        <span>{download ? copy.downloadAction : copy.openAction}</span>
-        <span className="sr-only">{`: ${material.label}, `}</span>
-        <span className="sr-only">
-          {`${copy.language}: ${materialLanguageLabel(locale, material.language)}`}
-        </span>
-        <ArrowGlyph direction={download ? "down" : "right"} />
-      </WorkshopMaterialLink>
     </li>
   );
 }
@@ -233,17 +258,43 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   const agendaCaptionLine = sentenceStart(agendaCaption);
   // Minutes and activity share one caption line, so the Route stays compact
   // and the decision lab starts close under it.
-  const stations = workshop.agenda.map((item) => ({
-    label: item.label,
-    caption: [
-      copy.minutes(item.minutes),
+  // Minutes on one line, activity and flags on the next, so a narrow station
+  // never breaks mid-pair with a dangling separator.
+  const labStation = LAB_STATION[workshop.slug];
+  const labStationItem =
+    labStation === undefined ? undefined : workshop.agenda[labStation];
+  const stations = workshop.agenda.map((item, index) => {
+    const detail = [
       item.activity ? copy.activityLabels[item.activity] : null,
       item.mode === "live" ? copy.liveOnly : null,
       item.optional ? copy.optional : null,
-    ]
-      .filter(Boolean)
-      .join(" · "),
-  }));
+    ].filter(Boolean);
+    const isLab = index === labStation;
+    return {
+      label: isLab ? (
+        <span className="font-bold" data-lab-station="">
+          {item.label}
+        </span>
+      ) : (
+        item.label
+      ),
+      caption: (
+        <>
+          <span className="block tabular-nums">
+            {copy.minutes(item.minutes)}
+          </span>
+          {detail.length > 0 ? (
+            <span className="block">{detail.join(" · ")}</span>
+          ) : null}
+          {isLab ? (
+            <span className="block font-semibold text-foreground">
+              {copy.labStation}
+            </span>
+          ) : null}
+        </>
+      ),
+    };
+  });
 
   const phases = PHASE_ORDER.map((phase) => ({
     phase,
@@ -289,7 +340,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         <Kicker>{workshop.eyebrow}</Kicker>
         <h1
           id="workshop-title"
-          className="mt-3 max-w-[22ch] text-fluid-h1 font-bold text-balance text-foreground"
+          className="mt-3 max-w-[22ch] text-fluid-h1 font-bold text-balance text-foreground lg:max-w-[18ch] lg:text-display"
         >
           {workshop.title}
         </h1>
@@ -305,7 +356,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             tone="dark"
             label={copy.questionLabel}
             question={workshop.question}
-            className="order-last mt-8 max-w-[42rem] sm:order-none sm:mt-6"
+            className="order-last mt-8 max-w-[42rem] sm:order-none sm:mt-6 md:max-w-[34rem] lg:max-w-[36rem] xl:max-w-[42rem]"
           />
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {primary ? (
@@ -341,21 +392,28 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               </a>
             )}
           </div>
-          <p className="mt-5 max-w-[70ch] text-caption text-muted-foreground tabular-nums">
-            {sentenceStart(coverFacts.join(" · "))}
+          <p className="mt-5 max-w-[48rem] text-caption text-muted-foreground tabular-nums">
+            {coverFacts.map((fact, index) => (
+              <span key={fact}>
+                {index > 0 ? " · " : null}
+                <span className="whitespace-nowrap">
+                  {index === 0 ? sentenceStart(fact) : fact}
+                </span>
+              </span>
+            ))}
           </p>
-          <dl className="mt-1 flex max-w-[70ch] flex-wrap gap-x-6 gap-y-1 text-caption text-muted-foreground">
+          <dl className="mt-3 grid max-w-[48rem] gap-y-1 text-caption text-muted-foreground sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-3">
             {need ? (
-              <div className="flex gap-1.5">
+              <div className="contents">
                 <dt className="font-semibold text-foreground">
-                  {copy.needLabel}:
+                  {copy.needLabel}
                 </dt>
-                <dd>{need}</dd>
+                <dd className="mb-1 sm:mb-0">{need}</dd>
               </div>
             ) : null}
-            <div className="flex gap-1.5">
+            <div className="contents">
               <dt className="font-semibold text-foreground">
-                {copy.leaveWith}:
+                {copy.leaveWith}
               </dt>
               <dd>{workshop.outcome}</dd>
             </div>
@@ -380,13 +438,26 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             locale={locale}
             className="mt-6"
           />
-          <p className="mt-4 text-caption text-muted-foreground">
-            {copy.agendaSource[workshop.agendaSource]}
-          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6">
+            <p className="text-caption text-muted-foreground">
+              {copy.agendaSource[workshop.agendaSource]}
+            </p>
+            <a
+              href={`#${LAB_ANCHOR}`}
+              className="inline-flex min-h-11 items-center gap-1.5 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              {copy.tryBelow(labStationItem?.label)}
+              <ArrowGlyph direction="down" className="size-3.5" />
+            </a>
+          </div>
         </div>
       </section>
 
-      <WorkshopDecisionLab config={workshop.decisionLab} locale={locale} />
+      <WorkshopDecisionLab
+        id={LAB_ANCHOR}
+        config={workshop.decisionLab}
+        locale={locale}
+      />
 
       <section
         id={MATERIAL_ANCHOR}
@@ -397,11 +468,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           <SectionHead
             id="workshop-materials-heading"
             title={copy.materialHeading}
-            caption={
-              copy.materialsLanguage && allMaterialsEnglish
-                ? `${copy.materialsAccess} ${copy.materialsLanguage}`
-                : copy.materialsAccess
-            }
           />
           <div className="mt-6 grid gap-10">
             {phases.map((group) => (
@@ -454,14 +520,12 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               <p className="mt-4 max-w-[64ch] text-body text-foreground text-pretty">
                 {caseStudy.narrative}
               </p>
-              <p className="mt-3 max-w-[64ch] text-caption text-muted-foreground">
-                {caseStudy.isFictional
-                  ? copy.fictionalExplanation(caseStudy.companyName)
-                  : copy.realExplanation(
-                      caseStudy.companyName,
-                      caseStudy.period,
-                    )}
-              </p>
+              {/* An invented case is named once, in the section caption. */}
+              {caseStudy.isFictional ? null : (
+                <p className="mt-3 max-w-[64ch] text-caption text-muted-foreground">
+                  {copy.realExplanation(caseStudy.companyName, caseStudy.period)}
+                </p>
+              )}
               <h4 className="mt-6 text-label text-muted-foreground">
                 {copy.openDecision}
               </h4>
@@ -544,24 +608,15 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       <div className={cx(CONTAINER, SECTION)}>
         <div className="grid gap-14 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-audience-heading">
-            <SectionHead id="workshop-audience-heading" title={copy.forWhom} />
+            <MinorHead id="workshop-audience-heading" title={copy.forWhom} />
             <SquareList items={workshop.audience} className="mt-6" />
             <p className="mt-5 max-w-[60ch] text-caption text-muted-foreground">
               {workshop.notForYou}
             </p>
           </section>
           <section aria-labelledby="workshop-outcomes-heading">
-            <SectionHead
-              id="workshop-outcomes-heading"
-              title={copy.outcomesHeading}
-            />
+            <MinorHead id="workshop-outcomes-heading" title={copy.outcomesHeading} />
             <SquareList items={workshop.outcomes} className="mt-6" />
-            <p className="mt-5 text-caption text-muted-foreground">
-              <span className="font-semibold text-foreground">
-                {copy.leaveWith}:
-              </span>{" "}
-              {workshop.outcome}
-            </p>
           </section>
         </div>
       </div>
@@ -569,10 +624,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       <div className={cx(CONTAINER, SECTION)}>
         <div className="grid gap-14 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-needs-heading">
-            <SectionHead
-              id="workshop-needs-heading"
-              title={copy.needsHeading}
-            />
+            <MinorHead id="workshop-needs-heading" title={copy.needsHeading} />
             <SquareList items={workshop.needs} className="mt-6" />
             <h3 className="mt-8 text-label text-muted-foreground">
               {copy.notNeededHeading}
@@ -587,10 +639,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </Callout>
           </section>
           <section aria-labelledby="workshop-not-covered-heading">
-            <SectionHead
-              id="workshop-not-covered-heading"
-              title={copy.notCoveredHeading}
-            />
+            <MinorHead id="workshop-not-covered-heading" title={copy.notCoveredHeading} />
             <ul className="mt-6 border-t border-hairline">
               {workshop.notCovered.map((item) => (
                 <li
@@ -619,6 +668,27 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </footer>
     </article>
+  );
+}
+
+/**
+ * Kopflinie head for the short two-column blocks (Für wen, Das brauchst du):
+ * still an h2 in the outline, but set at h3 size so the page keeps a clear
+ * step between the main sections and these lists.
+ */
+function MinorHead({
+  id,
+  title,
+}: {
+  readonly id: string;
+  readonly title: ReactNode;
+}) {
+  return (
+    <header className="border-t-2 border-foreground pt-4">
+      <h2 id={id} className="text-fluid-h3 font-bold text-foreground">
+        {title}
+      </h2>
+    </header>
   );
 }
 

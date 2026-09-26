@@ -4,7 +4,7 @@
 
 #rematch > .rm-question {
   position: absolute;
-  top: 236px;
+  top: 244px;
   left: var(--margin-x);
   width: 1728px;
   max-width: 1728px;
@@ -15,7 +15,7 @@
 
 #rematch > .rm-answer {
   position: absolute;
-  top: 360px;
+  top: 368px;
   left: var(--margin-x);
   width: 1088px;
   gap: 10px;
@@ -47,6 +47,7 @@
 
 #rematch .rm-rows {
   color: var(--slate);
+  white-space: nowrap;
   font-family: var(--mono);
   font-size: 20px;
   font-weight: 500;
@@ -68,7 +69,7 @@
 
 #rematch > .rm-check {
   position: absolute;
-  top: 360px;
+  top: 368px;
   right: var(--margin-x);
   width: 584px;
 }
@@ -95,7 +96,7 @@
 
 #rematch > .rm-compare {
   position: absolute;
-  top: 580px;
+  top: 588px;
   right: var(--margin-x);
   width: 584px;
   border: 3px solid var(--ink);
@@ -123,9 +124,6 @@
 }
 
 #rematch .rm-compare td:first-child {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   text-align: left;
 }
 
@@ -134,8 +132,10 @@
 }
 
 #rematch .rm-swatch {
-  flex: none;
+  display: inline-block;
   width: 22px;
+  margin-right: 10px;
+  vertical-align: -3px;
   height: 22px;
   border: 2px solid var(--ink);
 }
@@ -153,7 +153,7 @@
 /* Dashed = not yet there: the known gap is written from the recorded run after capture. */
 #rematch > .rm-gap {
   position: absolute;
-  top: 820px;
+  top: 826px;
   right: var(--margin-x);
   display: flex;
   width: 584px;

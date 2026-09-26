@@ -94,7 +94,7 @@ describe("<DemoTile>", () => {
     expect(link).toHaveAttribute("href", "/demos/word?source=gallery");
     expect(link).toHaveAttribute(
       "aria-label",
-      "Praxisbeispiel öffnen: Claude in Word. Verträge.",
+      "Praxisbeispiel öffnen: Claude in Word",
     );
     expect(link).toHaveAttribute("data-demo-tile", "word");
     expect(link).toHaveAttribute("data-demo-size", "s-med");
@@ -102,7 +102,7 @@ describe("<DemoTile>", () => {
     expect(link).toHaveClass("demo-gallery-tile");
   });
 
-  it("uses registry size to create a preview-led bento hierarchy", () => {
+  it("renders the same preview-led tile whatever the registry size", () => {
     const { container } = render(
       <DemoTile demo={makeDemo({ size: "s-hero" })} />,
     );
@@ -110,14 +110,16 @@ describe("<DemoTile>", () => {
     const preview = container.querySelector("[data-demo-preview]");
     const heading = screen.getByRole("heading", { level: 3 });
 
-    expect(link).toHaveClass("sm:col-span-2", "lg:row-span-2");
+    // Uniform grid (blueprint 6.14): no spans, a fixed 4:3 preview panel.
+    expect(link.className).not.toMatch(/col-span|row-span/);
+    expect(preview).toHaveClass("aspect-[4/3]", "bg-inset");
     expect(preview).toBeTruthy();
     expect(preview).toHaveAttribute("aria-hidden", "true");
     expect(
       (preview as HTMLElement).compareDocumentPosition(heading) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-    expect(link).toHaveClass("motion-reduce:transition-none");
+    expect(preview).toHaveClass("motion-reduce:transition-none");
     expect(container.querySelector("[data-demo-preview-content]")).toHaveClass(
       "motion-reduce:transform-none",
       "motion-reduce:transition-none",
@@ -129,26 +131,24 @@ describe("<DemoTile>", () => {
     expect(screen.getByText("03")).toBeInTheDocument();
   });
 
-  it("renders the level label from DEMO_LEVEL_LABELS as a meta chip", () => {
-    render(<DemoTile demo={makeDemo({ level: "fortg" })} />);
-    const chip = screen.getByText("Fortgeschritten");
-    expect(chip).toHaveAttribute("data-chip", "meta");
-    expect(chip).toHaveClass("border-border");
+  it("renders evidence and level from the registry as one caption line", () => {
+    const { container } = render(<DemoTile demo={makeDemo({ level: "fortg" })} />);
+    const meta = container.querySelector("[data-demo-tile-meta]");
+    expect(meta).toHaveTextContent("Synthetisch · Fortgeschritten");
+    expect(meta).toHaveClass("text-caption", "text-muted-foreground");
+    expect(container.querySelector("[data-chip]")).toBeNull();
   });
 
-  it("renders the description and a one-colour title with its kicker", () => {
+  it("renders the full description and the plain name as a one-colour heading", () => {
     const demo = makeDemo();
     render(<DemoTile demo={demo} />);
-    expect(screen.getByText(demo.description)).toBeInTheDocument();
-    const kicker = screen.getByText(demo.titleKicker);
-    // The title kicker is part of the heading and carries no accent colour.
-    expect(kicker.className).toBe("");
-    expect(
-      screen.getByRole("heading", {
-        level: 3,
-        name: `${demo.title} ${demo.titleKicker}`,
-      }),
-    ).toBeInTheDocument();
+    const description = screen.getByText(demo.description);
+    expect(description.className).not.toContain("line-clamp");
+    // Only the name, without its full stop; the task phrase is not repeated.
+    const heading = screen.getByRole("heading", { level: 3 });
+    expect(heading).toHaveTextContent(/^Claude in Excel$/);
+    expect(heading).toHaveClass("text-balance", "hyphens-manual", "text-foreground");
+    expect(screen.queryByText(demo.titleKicker)).toBeNull();
   });
 
   it("appends the lead industry to the category when one is present", () => {
@@ -176,9 +176,9 @@ describe("<DemoTile>", () => {
   it("renders a dark-engine demo on the same paper sheet as every other tile", () => {
     render(<DemoTile demo={makeDemo({ dark: true })} />);
     const link = screen.getByRole("link");
-    expect(link).toHaveClass("bg-card", "border-hairline");
-    expect(link.className).not.toMatch(/bg-foreground|dark-section/);
-    // Hover changes the edge colour only: no lift, no offset shadow.
+    // Borderless like every tile; the preview panel is the only box.
+    expect(link.className).not.toMatch(/\bborder\b|bg-card|bg-foreground|dark-section/);
+    // Hover darkens the panel only: no lift, no offset shadow.
     expect(link.className).not.toMatch(/shadow|translate/);
   });
 

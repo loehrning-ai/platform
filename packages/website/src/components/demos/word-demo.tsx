@@ -466,7 +466,7 @@ function WordDemoGerman() {
                   gap: 12,
                   padding: "40px 20px",
                   minHeight: 280,
-                  color: "#999",
+                  color: DEMO.schiefer,
                   fontStyle: "italic",
                   textAlign: "center",
                 }}

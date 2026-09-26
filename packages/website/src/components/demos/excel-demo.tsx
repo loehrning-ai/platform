@@ -297,7 +297,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         >
           {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
         </span>
-        <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 12 }}>
+        <span style={{ marginLeft: "auto", fontSize: 12 }}>
           {isDe ? "· gespeichert" : "· local sample"}
         </span>
       </div>
@@ -328,7 +328,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         >
           F2
         </span>
-        <span style={{ opacity: 0.6 }}>ƒx</span>
+        <span style={{ color: DEMO.schiefer }}>ƒx</span>
         <span style={{ color: "var(--color-brand-orange)", fontWeight: 600 }}>
           {isDe ? "Wachstum W/W" : "Growth W/W"}
         </span>
@@ -381,7 +381,9 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
                     color: i === 0 ? DEMO.schiefer : DEMO.ink,
                   }}
                 >
-                  {h}
+                  {h || (
+                    <span className="sr-only">{isDe ? "Zeile" : "Row"}</span>
+                  )}
                 </th>
               ))}
             </tr>
@@ -562,7 +564,7 @@ function TaskPicker({
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
                     letterSpacing: "0.1em",
-                    color: active ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color: active ? "var(--color-kupfer-light)" : DEMO.schiefer,
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -608,7 +610,8 @@ function TaskPicker({
                 marginTop: 7,
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
-                color: "var(--color-brand-orange)",
+                // Mennige is 3.4:1 on the ink card; the light accent is AA.
+                color: active ? "var(--color-kupfer-light)" : "var(--color-brand-orange)",
                 letterSpacing: "0.12em",
                 fontWeight: 700,
               }}

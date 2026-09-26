@@ -86,7 +86,10 @@ const ATLAS_COPY = {
     levelTerm: "Stufe",
     allCourses: "Alle Kurse",
     allCoursesIntro:
-      "Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
+      "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
+    pathHeading: (count: number) => `Dein Pfad · ${count} Kurse`,
+    pathStartUnavailable: (title: string) =>
+      `Dein Pfad beginnt mit ${title}, der hier nicht verfügbar ist. Diesen Kurs öffnest du ohne Konto.`,
     levelLabel: "Kursstufe wählen",
     allLevels: "Alle",
     levelCount: (visible: number, total: number) =>
@@ -102,6 +105,8 @@ const ATLAS_COPY = {
     accountRequired: "Lernkonto nötig",
     unavailable: "Hier nicht verfügbar",
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
+    overview: "Kursübersicht",
+    accessTerm: "Zugang",
     openAlternative: "Offene Alternative ohne Lernkonto",
     openRecommendation: "Offener Einstieg ohne Lernkonto",
     pathCourse: "Teil deines Pfads",
@@ -122,7 +127,11 @@ const ATLAS_COPY = {
     completedLabel: "Completed",
     levelTerm: "Level",
     allCourses: "All courses",
-    allCoursesIntro: "You can open any course directly, with or without a path.",
+    allCoursesIntro:
+      "Each row says what you can do afterwards. You can open any course directly, with or without a path.",
+    pathHeading: (count: number) => `Your path · ${count} courses`,
+    pathStartUnavailable: (title: string) =>
+      `Your path starts with ${title}, which is unavailable here. This course opens without an account.`,
     levelLabel: "Choose a course level",
     allLevels: "All",
     levelCount: (visible: number, total: number) =>
@@ -138,6 +147,8 @@ const ATLAS_COPY = {
     accountRequired: "Account required",
     unavailable: "Unavailable here",
     unavailableAction: "Unavailable here · Course overview",
+    overview: "Course overview",
+    accessTerm: "Access",
     openAlternative: "Open alternative without an account",
     openRecommendation: "Open starting point without an account",
     pathCourse: "Part of your path",
@@ -158,6 +169,8 @@ const ATLAS_COPY = {
       readonly queued: string;
       readonly allCourses: string;
       readonly allCoursesIntro: string;
+      readonly pathHeading: (count: number) => string;
+      readonly pathStartUnavailable: (title: string) => string;
       readonly levelLabel: string;
       readonly allLevels: string;
       readonly levelCount: (visible: number, total: number) => string;
@@ -368,8 +381,11 @@ export function LearningAtlas({
           className="mt-6 grid min-w-0 gap-8 sm:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,27rem)] lg:gap-14"
         >
           <div className="min-w-0" data-testid="selected-path-sequence">
+            {/* The tab above already prints the goal; the head names the
+                path. The goal stays in the name so each heading is unique. */}
             <h3 className="text-fluid-h3 font-bold text-foreground">
-              {goal.label}
+              {copy.pathHeading(pathCourses.length)}
+              <span className="sr-only">: {goal.label}</span>
             </h3>
             <p className="mt-1 max-w-[60ch] text-body text-muted-foreground">
               {goal.summary}
@@ -380,13 +396,15 @@ export function LearningAtlas({
                 inset square, open ones are outlined behind a dashed line. The
                 state is also a word inside each link. */}
             <ol
-              className="mt-6"
+              className="mt-6 max-w-[34rem]"
               aria-label={copy.pathLabel}
               data-learning-path-stepper
             >
               {pathCourses.map((course, index) => {
                 const stat = stats[course.slug] ?? defaultStat(course);
-                const isNext = nextCourse?.slug === course.slug;
+                // The Route marks the path's own next course, also when the
+                // sheet offers an open course because this one is unavailable.
+                const isNext = pathNextCourse?.slug === course.slug;
                 const state: StationState = stat.certified
                   ? "past"
                   : isNext
@@ -425,7 +443,7 @@ export function LearningAtlas({
                     <Link
                       href={localizeHref(course.href, locale)}
                       aria-current={isNext ? "step" : undefined}
-                      className="group flex min-h-11 min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2.5"
+                      className="group flex min-h-11 min-w-0 flex-col items-start gap-0.5 py-2"
                     >
                       <span
                         className={cx(
@@ -489,6 +507,13 @@ export function LearningAtlas({
                   <span className="sr-only">: {nextCourse.title}</span>
                   <ArrowGlyph />
                 </Link>
+                {/* Why the sheet offers a course off the path: the path's
+                    own start is unavailable on this deployment. */}
+                {openDefault && pathNextCourse ? (
+                  <p className="mt-4 max-w-[52ch] text-caption text-muted-foreground text-pretty">
+                    {copy.pathStartUnavailable(pathNextCourse.title)}
+                  </p>
+                ) : null}
                 {openAlternative && alternativeAction ? (
                   <Link
                     href={alternativeAction.href}
@@ -530,6 +555,16 @@ export function LearningAtlas({
               accessibility tree and leaves the printed page. */}
           <p className="sr-only text-body text-muted-foreground sm:not-sr-only sm:mt-1">
             {copy.allCoursesIntro}
+          </p>
+          {/* The key to the ink square on each row; the rows carry the
+              same fact as text for screen readers. */}
+          <p
+            aria-hidden="true"
+            data-path-legend
+            className="mt-2 flex items-center gap-2 text-caption text-muted-foreground"
+          >
+            <span className="size-2.5 shrink-0 bg-foreground" />
+            {copy.pathCourse}
           </p>
         </header>
 
@@ -580,10 +615,10 @@ export function LearningAtlas({
                 ) && "hidden lg:block",
               )}
             >
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-foreground pb-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t-2 border-foreground pb-2 pt-3">
                 <h3
                   id={`${group.id}-heading`}
-                  className="text-fluid-h3 font-bold text-foreground"
+                  className="text-[1.625rem] font-bold leading-tight text-foreground"
                 >
                   {group.title}
                 </h3>

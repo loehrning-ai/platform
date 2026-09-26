@@ -327,13 +327,9 @@ export function DemoGrid({
           </button>
         </div>
       ) : (
-        <div className="mt-8 grid grid-flow-row-dense grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* A calm bento: registry sizes give the hero and the tall tiles
-              more room, every tile is the same paper sheet. The unfiltered
-              catalog packs exactly (see the tiling invariant in lib/demos.ts);
-              grid-flow-row-dense only backfills arbitrary FILTERED subsets.
-              DOM order stays catalog order, so reading and tab order are
-              unaffected. */}
+        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Uniform 3/2/1 grid (blueprint 6.14): no spans, no tile borders,
+              whitespace between tiles. Works for any filtered subset. */}
           {filtered.map((d) => (
             <DemoTile key={d.slug} demo={d} locale={locale} />
           ))}

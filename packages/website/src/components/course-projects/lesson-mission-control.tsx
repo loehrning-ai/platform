@@ -1259,7 +1259,7 @@ export function LessonMissionControl({
                           className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)]"
                         />
                         <span className="min-w-0 break-words text-sm font-bold leading-relaxed">
-                          <span className="mr-2 font-mono text-xs opacity-70">
+                          <span className="mr-2 text-label text-muted-foreground tabular-nums">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           {entry.label[locale]}
@@ -1641,7 +1641,7 @@ export function LessonMissionControl({
                 onClick={resetMission}
                 disabled={!missionResetEnabled}
                 title={missionResetEnabled ? copy.resetLabel : copy.resetLocked}
-                className="min-h-11 border border-border px-3 text-label text-muted-foreground outline-none hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 border border-border px-3 text-label text-muted-foreground outline-none hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {missionResetEnabled ? copy.reset : copy.resetLocked}
               </button>

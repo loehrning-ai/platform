@@ -123,7 +123,7 @@ section[data-kind="appendix"] .ax-sub td {
 
 #appendix-arithmetic > .ax-foot {
   position: absolute;
-  top: 930px;
+  top: 940px;
   left: var(--margin-x);
   width: 1728px;
   margin: 0;

@@ -313,7 +313,7 @@ function StatusPill({ status }: { status: NodeStatus }) {
     {
       pending: {
         label: "WAIT",
-        color: "rgba(243,240,233,0.5)",
+        color: "rgba(243,240,233,0.62)",
         bg: "rgba(243,240,233,0.08)",
       },
       active: {
@@ -323,7 +323,8 @@ function StatusPill({ status }: { status: NodeStatus }) {
       },
       done: {
         label: "OK",
-        color: DEMO.statusGreen,
+        // Dark green: #22c55e on its pale tint was 1.8:1.
+        color: "#166534",
         bg: "rgba(34,197,94,0.15)",
       },
     };
@@ -635,8 +636,10 @@ export default function N8nSupplyChainDemo() {
                   <div
                     key={n.id}
                     style={{
+                      // Constant Mennige: inside the dark frame the accent token
+                      // flips to #e07050, where paper text drops to 2.8:1.
                       background: isCurrent
-                        ? "var(--color-brand-orange)"
+                        ? "var(--color-mennige)"
                         : DEMO.kalk,
                       color: isCurrent ? DEMO.kalk : DEMO.ink,
                       borderTop: `1px solid ${isActive ? "var(--color-brand-orange)" : DEMO.ink}`,
@@ -644,13 +647,9 @@ export default function N8nSupplyChainDemo() {
                       borderBottom: `1px solid ${isActive ? "var(--color-brand-orange)" : DEMO.ink}`,
                       borderLeft: `3px solid var(--color-brand-orange)`,
                       padding: "9px 10px",
-                      boxShadow: isActive
-                        ? `3px 3px 0 0 var(--color-brand-orange)`
-                        : `3px 3px 0 0 ${DEMO.ink}`,
                       transition: reduced
                         ? "none"
-                        : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out, transform 200ms ease-out",
-                      transform: isCurrent ? "translate(-1px,-1px)" : "none",
+                        : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out",
                     }}
                   >
                     <div
@@ -687,9 +686,7 @@ export default function N8nSupplyChainDemo() {
                           style={{
                             fontFamily: DEMO.font.mono,
                             fontSize: 12,
-                            color: isCurrent
-                              ? "rgba(243,240,233,0.7)"
-                              : DEMO.schiefer,
+                            color: isCurrent ? DEMO.kalk : DEMO.schiefer,
                             letterSpacing: "0.12em",
                             textTransform: "uppercase",
                             marginTop: 1,
@@ -814,7 +811,7 @@ export default function N8nSupplyChainDemo() {
           </span>
         </div>
         {events.length === 0 && (
-          <div style={{ color: "rgba(243,240,233,0.5)" }}>
+          <div style={{ color: "rgba(243,240,233,0.62)" }}>
             //{" "}
             {text("warte auf Webhook-Ereignis…", "waiting for webhook event…")}
           </div>
@@ -838,7 +835,7 @@ export default function N8nSupplyChainDemo() {
                 alignItems: "baseline",
               }}
             >
-              <span style={{ color: "rgba(243,240,233,0.45)", flexShrink: 0 }}>
+              <span style={{ color: "rgba(243,240,233,0.62)", flexShrink: 0 }}>
                 {e.t}
               </span>
               <span
@@ -1041,7 +1038,7 @@ export default function N8nSupplyChainDemo() {
                 {n.sub && (
                   <div
                     style={{
-                      color: "rgba(243,240,233,0.5)",
+                      color: "rgba(243,240,233,0.78)",
                       fontWeight: 400,
                       marginTop: 2,
                       fontSize: 12,

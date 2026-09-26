@@ -36,6 +36,24 @@ Done in the tree (from the implementation logs in `impl-logs/`):
 | B6 site chrome (nav lang chip, login pill, footer) | not started | - |
 | W04 build | deck engine + acts 0-3 done (log deck-1.md), demo.html done (log demo.md); deck acts 4-end + appendix (deck-2), guide/field card/transfer, kit + registry module in progress; output in `packages/website/public/workshops/esg-berichte-mit-ki/`, `scripts/workshop04/`, `src/lib/workshops-esg-reporting.ts` | - |
 
+## Status update (end of cloud session, 2026-09-26 ~13:20 UTC)
+
+All implementation agents finished. The weekly usage limit then stopped six polish passes: B4 course landings, B5 demos, B6 site chrome, and the W04 deck, demo and guide. Their critique findings are collected, unapplied, in `impl-logs/UNAPPLIED-CRITIQUES.md` (check each against the current file first).
+
+Verified state of the tree:
+- `bunx tsc --noEmit -p tsconfig.typecheck.json` (packages/website): **0 errors**.
+- `bunx vitest run`: **8564 passed, 6 failed** (711 files). Failing:
+  1. `src/app/api/knowledge-graph.json/route.test.ts` › localizes demo risk notes (demo copy changed in B5)
+  2. `src/app/catalog-surfaces-mobile.test.ts` › keeps the demo cover compact (B5 hero changed)
+  3. `src/app/demos/page.test.tsx` › renders the paper hero, the check list and registry-derived stats
+  4. `src/components/demos/demo-detail-layout.test.tsx` › wires each industry to a filtered gallery link
+  5. `src/components/demos/demo-grid.test.tsx` › renders every demo when no filter is seeded
+  6. `src/lib/workshops-esg-reporting.test.ts` › names the deck's scene count and act timings (the registry copy must match the final deck: 20 main scenes, 9 appendix, 76:30)
+- `bun run content:lint`: 0 errors (400 warnings, by design).
+- Not yet run: `bun run build`, e2e, Lighthouse, `scan:public` after the W04 build.
+- W04 is built (deck 29 scenes, presenter, demo, guide, field card, transfer sheet, kit zip, `src/lib/workshops-esg-reporting.ts`) but **not yet wired** into `src/lib/workshops.ts`. Do step 5 below.
+- Build scripts for W04: `scripts/workshop04/` (`build_dataset.py`, `build-deck.mjs --check`, `build-demo.mjs --check`, `kit-archive.mjs --check`).
+
 ## Remaining plan, in order
 
 1. **Finish B5**: switch `src/components/demos/demo-detail-layout.tsx`, `demo-grid.tsx` and `tests/e2e/demos.spec.ts` to the new keys in `src/lib/demos-ui-copy.ts` / demos copy (`bunx tsc --noEmit -p tsconfig.typecheck.json` in packages/website shows the exact errors). Blueprint: design-direction 6.14, 7.5, 7.6.

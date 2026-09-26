@@ -36,27 +36,37 @@ describe("demo atlas visual contract", () => {
     );
   });
 
-  it("uses the registry hierarchy for a calm, preview-led bento", () => {
+  it("uses a uniform, preview-led grid with borderless tiles", () => {
     const grid = source("demo-grid.tsx");
     const tile = source("demo-tile.tsx");
     const hub = source("../../app/demos/page.tsx");
 
-    expect(grid).toContain("lg:grid-cols-4");
+    expect(grid).toContain("lg:grid-cols-3");
+    expect(grid).toContain("gap-y-12");
     expect(grid).toContain("data-demo-filter-console");
     // Filters sit under a Kopflinie section head as square chips.
     expect(grid).toContain("border-t-2 border-foreground");
     expect(grid).toContain("FILTER_CHIP_CLASS");
-    expect(tile).toContain("tileSizeClass(demo.size)");
-    expect(tile).toContain('case "s-hero"');
     expect(tile).toContain("data-demo-preview");
-    // Every tile is the same paper sheet with a hairline edge; the preview
-    // is a recessed Beton band. No dark tiles inside the paper grid.
-    expect(tile).toContain("border border-hairline bg-card");
+    // Blueprint 6.14: no tile border and no card fill; the recessed Beton
+    // preview is the only box, and meta is one caption line, not chips.
+    expect(tile).not.toMatch(/border border-hairline bg-card|<Chip/);
     expect(tile).toContain("bg-inset");
+    expect(tile).toContain("text-caption text-muted-foreground");
     expect(tile).not.toMatch(/bg-foreground|dark-section|demo\.dark/);
+    // No clamped descriptions: copy is written to fit.
+    expect(tile).not.toContain("line-clamp");
     // Stats are the shared StatRow, with values derived from the registry.
-    expect(hub).toContain("<StatRow stats={stats}");
+    expect(hub).toContain("<StatRow");
+    expect(hub).toContain("stats={stats}");
     expect(hub).toContain("demos.length");
+  });
+
+  it("aligns every demo surface to the site column", () => {
+    for (const path of ["../../app/demos/page.tsx", "demo-detail-layout.tsx"] as const) {
+      expect(source(path)).toContain("max-w-6xl");
+      expect(source(path)).not.toContain("max-w-[75rem]");
+    }
   });
 
   it.each(SURFACES)("keeps %s free of the brutalist look", (path) => {
@@ -75,7 +85,8 @@ describe("demo atlas visual contract", () => {
     const tile = source("demo-tile.tsx");
 
     expect(tile).toContain("transition-colors");
-    expect(tile).toContain("hover:border-foreground");
+    // Hover darkens the preview panel one tone.
+    expect(tile).toContain("group-hover:bg-[color-mix(");
     expect(tile).toContain("motion-reduce:transition-none");
     expect(tile).toContain("motion-reduce:transform-none");
     // No hover lift, scale or offset shadow.

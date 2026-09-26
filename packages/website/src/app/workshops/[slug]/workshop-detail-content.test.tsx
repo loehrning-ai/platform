@@ -38,8 +38,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(questionCards[0]).toHaveAttribute("data-question-card", "dark");
     expect(questionCards[0]).toHaveTextContent(workshop.question);
     expect(cover).toHaveTextContent("Allein ca. 90 Min.");
-    expect(cover).toHaveTextContent("Du gehst mit:Go/No-Go-Regel");
-    expect(cover).toHaveTextContent("Du brauchst:einen Browser, kein KI-Konto");
+    expect(cover).toHaveTextContent("Du gehst mitGo/No-Go-Regel");
+    expect(cover).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
 
     const agenda = sectionOf("Ablauf");
     const lab = container.querySelector("[data-workshop-decision-lab]")!;
@@ -56,6 +56,15 @@ describe("<WorkshopDetailContent>", () => {
       expect(stations[index]).toHaveTextContent(item.label);
       expect(stations[index]).toHaveTextContent(`${item.minutes} Min.`);
     }
+    // The station the lab mirrors is marked, and the agenda links down to the lab.
+    expect(stations[0].querySelector("[data-lab-station]")).not.toBeNull();
+    expect(stations[0]).toHaveTextContent("Übung unten");
+    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(1);
+    const labLink = within(agenda).getByRole("link", {
+      name: `„${workshop.agenda[0].label}“ unten ausprobieren`,
+    });
+    expect(labLink).toHaveAttribute("href", "#workshop-lab");
+    expect(lab).toHaveAttribute("id", "workshop-lab");
     expect(agenda).toHaveTextContent(
       "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
     );
@@ -88,9 +97,15 @@ describe("<WorkshopDetailContent>", () => {
     const audience = sectionOf("Für wen");
     for (const line of workshop.audience) expect(audience).toHaveTextContent(line);
     expect(audience).toHaveTextContent(workshop.notForYou);
-    const outcomes = sectionOf("Danach kannst du");
+    const outcomes = sectionOf("Nach dem Workshop");
     for (const line of workshop.outcomes) expect(outcomes).toHaveTextContent(line);
-    expect(outcomes).toHaveTextContent(`Du gehst mit: ${workshop.outcome}`);
+    // "Du gehst mit" is said once, in the cover.
+    expect(outcomes).not.toHaveTextContent("Du gehst mit");
+    expect(
+      container.querySelector("[data-cover-band]"),
+    ).toHaveTextContent(`Du gehst mit${workshop.outcome}`);
+    // The invented case is named in the section caption only, not again under the narrative.
+    expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
 
     const needs = sectionOf("Das brauchst du");
     for (const line of [...workshop.needs, ...workshop.notNeeded]) {
@@ -199,8 +214,9 @@ describe("<WorkshopDetailContent>", () => {
       ),
     };
     const { container } = render(<WorkshopDetailContent workshop={mixed} locale="de" />);
-    expect(screen.getByText("Kostenlos, ohne Anmeldung.")).toBeInTheDocument();
-    expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
+    expect(container.querySelector("[data-cover-band]")).toHaveTextContent(
+      "kostenlos, ohne Anmeldung",
+    );
     expect(container.querySelector("[data-cover-band]")).not.toHaveTextContent(
       "Material auf Englisch",
     );
@@ -268,9 +284,11 @@ describe("<WorkshopDetailContent>", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
 
+    // The language is said once in the cover; the material rows carry EN chips.
     expect(
-      screen.getByText("Kostenlos, ohne Anmeldung. Alle Materialien auf Englisch."),
-    ).toBeInTheDocument();
+      screen.getByRole("heading", { level: 1 }).closest("[data-cover-band]"),
+    ).toHaveTextContent("Material auf Englisch");
+    expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
     for (const material of workshop.materials) {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
     }
@@ -307,7 +325,9 @@ describe("<WorkshopDetailContent>", () => {
     expect(
       screen.getByRole("link", { name: "Back to all workshops" }),
     ).toHaveAttribute("href", "/en/workshops");
-    expect(screen.getByText("Free, no sign-up.")).toBeInTheDocument();
+    expect(container.querySelector("[data-cover-band]")).toHaveTextContent(
+      "free, no sign-up",
+    );
     expect(screen.queryByText(/All materials in English/)).toBeNull();
     expect(container.textContent).not.toMatch(
       /Für wen|Alle Workshops|Die offene Entscheidung|Material zum Mitnehmen|Kostenlos/,

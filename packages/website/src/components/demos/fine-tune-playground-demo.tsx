@@ -90,7 +90,7 @@ function confLabel(pct: number): "niedrig" | "mittel" | "hoch" {
 }
 
 const CONF_LABEL_CONFIG = {
-  niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
+  niedrig: { label: "Niedrig", color: "#b91c1c", bg: "rgba(220,38,38,0.1)" },
   mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
   hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
 } as const;

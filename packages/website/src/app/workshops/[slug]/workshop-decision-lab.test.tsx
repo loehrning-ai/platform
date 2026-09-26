@@ -13,6 +13,8 @@ import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
 import {
   orderDecisionOptions,
   selectFeedback,
+  splitFact,
+  keepNumbersWithUnits,
   WorkshopDecisionLab,
 } from "./workshop-decision-lab";
 
@@ -288,9 +290,11 @@ describe("<WorkshopDecisionLab>", () => {
     expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(source).not.toMatch(/motion-safe|motion-reduce|animate-|shadow-/);
     expect(source).not.toMatch(/border-l-\[\d+px\]|uppercase|font-mono|font-black/);
-    expect(source).toContain(
-      "grid grid-cols-1 border-t border-hairline sm:grid-cols-3",
-    );
+    // Facts are a hairline fact table: label above value.
+    const facts = lab?.querySelector("header dl");
+    expect(facts).toHaveClass("border-t", "border-hairline");
+    expect(facts?.querySelectorAll("dt")).toHaveLength(3);
+    expect(facts?.querySelectorAll("dd")).toHaveLength(3);
   });
 });
 
@@ -395,8 +399,12 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     expect(outcome).toHaveTextContent(/^Not quite/);
     expect(outcome.querySelector("svg")).not.toBeNull();
     const wrongPick = screen.getByRole("radio", { name: lab.choices[1].label });
-    expect(wrongPick).toHaveAccessibleDescription("Your pick · not the strongest");
+    expect(wrongPick).toHaveAccessibleDescription("Your pick · not correct");
     expect(wrongPick.closest("label")).toHaveAttribute("data-option-mark", "wrong-pick");
+    // A wrong evidence pick says so in evidence terms, a wrong decision does not.
+    expect(
+      screen.getByRole("radio", { name: lab.evidence[1].label }),
+    ).toHaveAccessibleDescription("Your pick · not the strongest evidence");
     const rightChoice = screen.getByRole("radio", { name: lab.choices[0].label });
     expect(rightChoice).toHaveAccessibleDescription("Correct answer");
     expect(rightChoice.closest("label")).toHaveAttribute("data-option-mark", "correct");
@@ -427,5 +435,30 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     expect(outcome).toHaveAttribute("data-outcome", "partial");
     expect(outcome.querySelector('[data-chip="gap"]')).not.toBeNull();
     expect(outcome).toHaveTextContent(/^Almost/);
+  });
+});
+
+describe("splitFact", () => {
+  it("splits authored facts into label and value for the fact table", () => {
+    expect(splitFact("Endbestand 100 €")).toEqual({ label: "Endbestand", value: "100 €" });
+    expect(splitFact("Change +€20")).toEqual({ label: "Change", value: "+€20" });
+    expect(splitFact("Nachfrage p50 1.180")).toEqual({ label: "Nachfrage p50", value: "1.180" });
+    expect(splitFact("KI-Antwort 2025: 1.866,5 t CO₂e")).toEqual({
+      label: "KI-Antwort 2025",
+      value: "1.866,5 t CO₂e",
+    });
+    expect(splitFact("Meiste Mängel · Monat 2")).toEqual({ label: "Meiste Mängel", value: "Monat 2" });
+    expect(splitFact("Revenue €4.12m")).toEqual({ label: "Revenue", value: "€4.12m" });
+  });
+});
+
+describe("keepNumbersWithUnits", () => {
+  it("binds numbers to the unit after them, leaving other spaces alone", () => {
+    expect(keepNumbersWithUnits("100 Euro plus 20 Euro. Wirklich 120?")).toBe(
+      "100\u00a0Euro plus 20\u00a0Euro. Wirklich 120?",
+    );
+    expect(keepNumbersWithUnits("1.050 Stück, 7,5 % weniger")).toBe(
+      "1.050\u00a0Stück, 7,5\u00a0% weniger",
+    );
   });
 });

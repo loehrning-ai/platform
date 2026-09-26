@@ -229,3 +229,8 @@
   margin: 0;
   font-size: var(--t-body);
 }
+
+/* The Werk Süd file name is the longest source: one line at a smaller mono size. */
+#the-ledger #the-ledger-card-2 dl > div:first-child .w-mono {
+  font-size: 16px;
+}

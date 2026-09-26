@@ -376,6 +376,9 @@ export default async function KiUndGesellschaftLandingPage() {
               meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
             }))}
           />
+          <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
+            {copy.nextCourse}
+          </CourseNextLink>
         </CourseLandingSection>
 
         <CourseBoundaryDetails summary={copy.boundarySummary}>
@@ -386,10 +389,6 @@ export default async function KiUndGesellschaftLandingPage() {
             <CourseNoteList items={copy.evidence} />
           </CourseBoundaryColumn>
         </CourseBoundaryDetails>
-
-        <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
-          {copy.nextCourse}
-        </CourseNextLink>
       </TechnicalCourseFrame>
     </>
   );

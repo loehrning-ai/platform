@@ -94,24 +94,30 @@ export function CourseBlockLedger({
       {rows.map((row) => (
         <li
           key={row.id}
-          className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 gap-y-2 border-b border-hairline py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline"
+          className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 gap-y-1 border-b border-hairline py-5 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-baseline"
         >
-          <span className="text-label text-muted tabular-nums">{row.number}</span>
-          <div className="min-w-0">
-            <h3 className="break-words text-fluid-h3 font-bold text-foreground">
-              {row.title}
-            </h3>
-            {row.description ? (
-              <p className="mt-1 max-w-[60ch] break-words text-body text-muted-foreground">
-                {row.description}
-              </p>
-            ) : null}
-            {row.extra}
-          </div>
+          <span className="col-start-1 row-start-1 text-label text-muted tabular-nums">
+            {row.number}
+          </span>
+          <h3 className="col-start-2 row-start-1 min-w-0 break-words text-fluid-h3 font-bold text-foreground text-balance">
+            {row.title}
+          </h3>
+          {/* Mobile: the facts sit directly under the title, before any
+              disclosure; from sm they move to the right-hand meta column. */}
           {row.meta ? (
-            <p className="col-start-2 text-caption text-muted-foreground tabular-nums sm:col-start-auto sm:text-right">
+            <p className="col-start-2 row-start-2 text-caption text-muted-foreground tabular-nums sm:col-start-3 sm:row-start-1 sm:text-right">
               {row.meta}
             </p>
+          ) : null}
+          {row.description || row.extra ? (
+            <div className="col-start-2 row-start-3 min-w-0 sm:row-start-2">
+              {row.description ? (
+                <p className="max-w-[64ch] break-words text-body text-muted-foreground text-pretty">
+                  {row.description}
+                </p>
+              ) : null}
+              {row.extra}
+            </div>
           ) : null}
         </li>
       ))}
@@ -121,7 +127,7 @@ export function CourseBlockLedger({
 
 /**
  * Collapsed boundary notes (legal basis, scope of the record). A quiet
- * disclosure between hairlines; the square marker turns into a minus when open.
+ * disclosure between hairlines; a plain plus turns into a minus when open.
  */
 export function CourseBoundaryDetails({
   summary,
@@ -136,7 +142,7 @@ export function CourseBoundaryDetails({
         {summary}
         <span
           aria-hidden="true"
-          className="flex size-5 shrink-0 items-center justify-center border border-foreground text-sm leading-none"
+          className="w-4 shrink-0 text-center text-label leading-none tabular-nums"
         >
           <span className="group-open/boundary:hidden">+</span>
           <span className="hidden group-open/boundary:inline">−</span>
@@ -185,7 +191,10 @@ export function CourseNoteList({
   );
 }
 
-/** The follow-on course as a text link with an arrow, below the boundary notes. */
+/**
+ * The follow-on course as a text link with an arrow. Place it inside the last
+ * section so it does not float alone above the footer.
+ */
 export function CourseNextLink({
   href,
   children,

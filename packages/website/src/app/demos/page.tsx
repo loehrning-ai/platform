@@ -171,10 +171,10 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
         className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12 sm:pt-12"
         data-demo-atlas-hero
       >
-        <div className="mx-auto max-w-[75rem]">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-12">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
             <div className="min-w-0">
-              <Kicker>{copy.catalog.kicker(demos.length)}</Kicker>
+              <Kicker>{copy.catalog.kicker}</Kicker>
               <h1 className="mt-3 max-w-[22ch] text-fluid-h1 font-bold text-foreground">
                 {copy.catalog.heading}
               </h1>
@@ -182,7 +182,12 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
                 {copy.catalog.introduction}
               </p>
             </div>
-            <div className="min-w-0" data-demo-scope>
+            {/* Top-aligned with the H1 (the kicker line plus its gap sits above
+                it), so both columns share a first line at every width. */}
+            <div
+              className="min-w-0 lg:pt-[calc(var(--text-label)*1.3+0.75rem)]"
+              data-demo-scope
+            >
               <p
                 id="demo-scope-label"
                 className="text-label text-foreground"
@@ -210,7 +215,12 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           </div>
 
           <div className="mt-10 border-t border-hairline pt-6" aria-label={copy.catalog.statsLabel} role="group">
-            <StatRow stats={stats} />
+            {/* Below sm three stats stack as hairline rows instead of leaving
+                the third alone in a second row. */}
+            <StatRow
+              stats={stats}
+              className="max-sm:grid-cols-1 max-sm:gap-y-0 max-sm:divide-y max-sm:divide-hairline max-sm:[&>div]:py-3"
+            />
           </div>
         </div>
       </header>
@@ -219,7 +229,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
         className="px-4 pb-12 sm:px-6 sm:pb-16"
         aria-labelledby="demo-gallery-heading"
       >
-        <div className="mx-auto max-w-[75rem]">
+        <div className="mx-auto max-w-6xl">
           <DemoGrid
             key={filterKey}
             initialFilters={initialFilters}

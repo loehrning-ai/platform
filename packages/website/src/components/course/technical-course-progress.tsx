@@ -41,7 +41,7 @@ export function TechnicalCourseProgressBar({
   totalLessons,
   label,
   unitLabel,
-}: TechnicalCourseProgressBarProps): JSX.Element {
+}: TechnicalCourseProgressBarProps): JSX.Element | null {
   const [done, setDone] = useState(0);
   const [percentage, setPercentage] = useState(0);
 
@@ -53,6 +53,11 @@ export function TechnicalCourseProgressBar({
       }),
     [courseSlug, totalLessons],
   );
+
+  // A visitor with no recorded lesson gets no empty "0 / 18 · 0%" bar in the
+  // hero. The server and first client render both start at 0, so the bar
+  // appears only after stored progress is read: hydration-safe.
+  if (done === 0) return null;
 
   return (
     <div>

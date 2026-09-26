@@ -113,13 +113,13 @@ export interface WorkshopPageCopy {
     readonly agendaSource: { readonly deck: string; readonly plan: string };
     /** Station caption for an item that runs only with a group. */
     readonly liveOnly: string;
+    /** Extra caption line on the station the decision lab mirrors. */
+    readonly labStation: string;
+    /** Link under the agenda to the decision lab, naming the station when known. */
+    readonly tryBelow: (stationLabel?: string) => string;
     readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
     readonly optional: string;
     readonly materialHeading: string;
-    /** Right-hand note of the material section head. */
-    readonly materialsAccess: string;
-    /** Added when every material of the workshop is in English; null where the page is English. */
-    readonly materialsLanguage: string | null;
     readonly phaseLabels: Readonly<Record<WorkshopPhase, string>>;
     readonly roleLabels: Readonly<Record<WorkshopMaterialRole, string>>;
     readonly startHere: string;
@@ -132,7 +132,6 @@ export interface WorkshopPageCopy {
     readonly caseHeading: string;
     readonly syntheticCase: string;
     readonly realCompanyData: string;
-    readonly fictionalExplanation: (companyName: string) => string;
     readonly realExplanation: (companyName: string, period: string) => string;
     readonly openDecision: string;
     readonly limitations: string;
@@ -251,7 +250,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       needLabel: "Du brauchst",
       browserOnly: "einen Browser, kein KI-Konto",
-      outcomesHeading: "Danach kannst du",
+      outcomesHeading: "Nach dem Workshop",
       leaveWith: "Du gehst mit",
       agendaHeading: "Ablauf",
       minutes: (minutes) => `${minutes} Min.`,
@@ -262,6 +261,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
       },
       liveOnly: "nur live",
+      labStation: "Übung unten",
+      tryBelow: (stationLabel) =>
+        stationLabel
+          ? `„${stationLabel}“ unten ausprobieren`
+          : "Unten ausprobieren",
       activityLabels: {
         listen: "Zuhören",
         vote: "Abstimmen",
@@ -270,8 +274,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       optional: "optional",
       materialHeading: "Material",
-      materialsAccess: "Kostenlos, ohne Anmeldung.",
-      materialsLanguage: "Alle Materialien auf Englisch.",
       phaseLabels: {
         before: "Vor dem Workshop",
         during: "Im Workshop",
@@ -301,8 +303,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       caseHeading: "Der Fall",
       syntheticCase: "Erfundener Fall",
       realCompanyData: "Echte Unternehmensdaten",
-      fictionalExplanation: (companyName) =>
-        `${companyName} und alle Zahlen sind für diesen Workshop erfunden.`,
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: öffentlich zugängliche Zahlen aus den Angaben des Unternehmens.`,
       openDecision: "Die offene Entscheidung",
@@ -433,6 +433,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Planned minutes, not yet measured with test readers.",
       },
       liveOnly: "live only",
+      labStation: "Exercise below",
+      tryBelow: (stationLabel) =>
+        stationLabel ? `Try “${stationLabel}” below` : "Try it below",
       activityLabels: {
         listen: "Listen",
         vote: "Vote",
@@ -441,8 +444,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       optional: "optional",
       materialHeading: "Materials",
-      materialsAccess: "Free, no sign-up.",
-      materialsLanguage: null,
       phaseLabels: {
         before: "Before the workshop",
         during: "During the workshop",
@@ -472,8 +473,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       caseHeading: "The case",
       syntheticCase: "Invented case",
       realCompanyData: "Real company data",
-      fictionalExplanation: (companyName) =>
-        `${companyName} and every figure are invented for this workshop.`,
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: publicly available figures from the company's own disclosures.`,
       openDecision: "Decision to make",

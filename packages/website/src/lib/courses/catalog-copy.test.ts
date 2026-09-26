@@ -81,8 +81,11 @@ describe("course catalogue locale copy", () => {
     expect(COURSE_HUB_COPY.en.accessBody).toContain("so your progress");
     // Every course has a down-to-earth promise in both locales.
     for (const course of COURSE_CATALOG) {
-      expect(COURSE_PROMISES.de[course.slug], course.slug).toMatch(/^Nach dem Kurs /);
-      expect(COURSE_PROMISES.en[course.slug], course.slug).toMatch(/^After this you /);
+      // The ledger intro states the frame once; a row opens with the action.
+      expect(COURSE_PROMISES.de[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.de[course.slug], course.slug).not.toMatch(/^Nach dem Kurs/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).not.toMatch(/^After this/);
     }
     for (const text of [
       ...Object.values(COURSE_PROMISES.de),

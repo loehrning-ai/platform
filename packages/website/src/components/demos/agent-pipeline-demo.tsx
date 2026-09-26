@@ -511,7 +511,7 @@ export default function AgentPipelineDemo() {
                   fontSize: 12,
                   color: activeCard
                     ? "var(--color-brand-orange)"
-                    : "rgba(243,240,233,0.5)",
+                    : "rgba(243,240,233,0.62)",
                   letterSpacing: "0.12em",
                   fontWeight: 700,
                 }}
@@ -633,6 +633,10 @@ export default function AgentPipelineDemo() {
       >
         <div
           ref={logRef}
+          // Scrollable log: keyboard users need a focus stop to scroll it.
+          tabIndex={0}
+          role="region"
+          aria-label={text("Agentenprotokoll", "Agent log")}
           style={{
             background: "#070606",
             color: DEMO.kalk,
@@ -691,7 +695,7 @@ export default function AgentPipelineDemo() {
             </span>
           </div>
           {logs.length === 0 && active < 0 && (
-            <div style={{ color: "rgba(243,240,233,0.45)" }}>
+            <div style={{ color: "rgba(243,240,233,0.62)" }}>
               //{" "}
               {text("warten auf pipeline start", "waiting for pipeline start")}
             </div>
@@ -714,12 +718,12 @@ export default function AgentPipelineDemo() {
                 }}
               >
                 <span
-                  style={{ color: "rgba(243,240,233,0.32)", flexShrink: 0 }}
+                  style={{ color: "rgba(243,240,233,0.62)", flexShrink: 0 }}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span
-                  style={{ color: "rgba(243,240,233,0.42)", flexShrink: 0 }}
+                  style={{ color: "rgba(243,240,233,0.62)", flexShrink: 0 }}
                 >
                   {l.ts}
                 </span>
@@ -758,8 +762,9 @@ export default function AgentPipelineDemo() {
             padding: 14,
             minHeight: 200,
             position: "relative",
-            opacity: done ? 1 : 0.5,
-            transition: "opacity 320ms, background 320ms, border-color 320ms",
+            // Full opacity in both states: a half-faded pane pushed the
+            // placeholder text below AA.
+            transition: "background 320ms, border-color 320ms",
           }}
         >
           {!done ? (
@@ -770,7 +775,7 @@ export default function AgentPipelineDemo() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "rgba(243,240,233,0.5)",
+                color: "rgba(243,240,233,0.62)",
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 letterSpacing: "0.14em",

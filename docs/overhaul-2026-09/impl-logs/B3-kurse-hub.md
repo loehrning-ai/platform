@@ -66,3 +66,53 @@ Pages: `/kurse` and `/en/kurse` (the EN route re-exports the page, so no EN file
   - the "Claude Course" DE title;
   - `/konto`, which reads the same catalog descriptions and will show the new wording.
 - The `/ai-native` landing still says "12 Stunden" (lessons plus exercises). That agrees with the new hub label.
+
+---
+
+# Polish pass (design critique), 2026-09-26
+
+## Files changed
+- `src/app/kurse/course-ledger-row.tsx`
+  - **Fixed tracks (high):** `2rem | 1fr` below sm, `2.75rem | 1fr` from sm, `3.5rem | 1fr | 15rem` at lg, `3.5rem | 1fr | 10rem | 15rem` from xl. At lg the facts and the action share the right-hand cell through a wrapper that is `lg:flex lg:flex-col` and `display: contents` below lg and from xl. Both groups now line up: at 1440 the facts sit at x=854 and the action at x=1038 in every row; at 1024 both sit at x=752, and the promise is 616px wide instead of about 340px.
+  - **Access state printed once (high):** from lg it is a third `dt`/`dd` in the facts `dl` ("Zugang"/"Access"). Below lg it is a `data-course-access-label` span inside the level/duration caption, which now comes after the promise. The row action shows only the verb ("Kursübersicht" / "Kurs starten"). `courseAction()` now also returns `verb`, `before` and `after`, so the sr-only text keeps the accessible name identical to the old label ("Hier nicht verfügbar · Kursübersicht: X", "Kurs starten · Lernkonto nötig: X"). The next-step sheet still prints the full label, as the e2e specs require.
+  - **Title and path marker:** the row title h4 is 20px (`text-[1.25rem] leading-snug`). "Teil deines Pfads" is sr-only at every width. The number cell is h-11 at all widths.
+- `src/app/kurse/learning-atlas.tsx`
+  - **Route:** the head is "Dein Pfad · 4 Kurse" / "Your path · 4 courses", with the goal label in an sr-only span. Station links stack the title above the duration and state (`flex-col items-start`), and the Route is capped at `max-w-[34rem]`. The current station now follows `pathNextCourse`, so the path always has an `aria-current="step"` station.
+  - **Group heads:** a Kopflinie above (`border-t-2 pt-3 pb-2`), the h3 at 26px, and the ink rule below the head is removed.
+  - **Ledger intro:** now states the promise frame once ("Jede Zeile sagt, was du nach dem Kurs kannst. …"). Below it is an aria-hidden legend (`data-path-legend`): ink square plus "Teil deines Pfads".
+  - **New ATLAS_COPY keys:** `overview`, `accessTerm`, `pathHeading`, `pathStartUnavailable`.
+- `src/app/kurse/page.tsx`
+  - **Kosten und Konto:** moved inside the container after the atlas and before the Beton band. Its one link is now "Lernkonto anlegen" → `/konto`; "Über mich" and "KI-Check" are gone.
+  - **Workshop band:** the note uses `mt-3` and the grid uses `lg:items-end`.
+  - **Hero spacing:** `lg:pt-10`, `lg:pb-16` and atlas `lg:mt-8`. The Mennige "Kurs starten" now ends at y=896 (DE) and y=868 (EN) at 1440×900, where it was at y=961 before.
+- `src/lib/courses/course-hub-copy.ts`
+  - **Promises:** all 20 are rewritten to open with the action ("Du weißt …", "Eine Schlagzeile … führst du …", "You know …"), with varied openings.
+  - **"kostenlos" reduced:** the kicker is "10 Kurse · Deutsch und Englisch" and workshopsNote is "Material ohne Konto." / "No account needed."
+  - **Metadata:** the description has no "Karte" or "card" any more.
+  - **Other copy:** EN checkLabel is "Find out in five minutes". `accessAction` replaces `aboutMe`/`aiCheck`.
+  - **New `numberWord(locale, n)`:** spells out 2 to 12, so the band reads "In jedem der drei Workshops" and works for four.
+- **Tests:** `learning-atlas.test.tsx`, `page.test.tsx` and `catalog-copy.test.ts` are updated for the new contracts. New assertions cover:
+  - the row verb plus its full accessible name, and the access word in the facts;
+  - the cold-start current station and the sheet's explanation line;
+  - the path heading name and the legend;
+  - the access section's position and its `/konto` link;
+  - the promise format (it no longer starts with "Nach dem Kurs"/"After this").
+
+## Decisions and deviations from the critique
+- **Issue 3 (openDefault), done differently:** I kept the cold-start override. The e2e specs `mobile-access-disclosure` ("the unchosen atlas default offers a disclosed open course") and `route-kurse-hub` ("primary CTA discloses an open course and reaches its public lesson") pin it as a behaviour contract: a provider-free visitor gets one clickable open task. Removing it would weaken those tests. I fixed the contradiction instead:
+  - The Route always marks the path's own next course as current, with the inset square and `aria-current`.
+  - The sheet adds a caption under the button: "Dein Pfad beginnt mit KI-Führerschein, der hier nicht verfügbar ist. Diesen Kurs öffnest du ohne Konto."
+  - If the owner wants the sheet to stay on the path, drop `openDefault` and rewrite those two e2e tests.
+- **Issue 9 (one source line per group) not done:** each course's `sourceHref` points at its own subdirectory (`/tree/<commit>/claude`, `/data-infrastructure`, …). The unit test also pins visible per-row MIT attribution, with the comment "the only place the repository and pinned commit render". Collapsing to one line would lose the per-course links. The rows keep their mono source line.
+- **Issue 8 caption:** I did not change `tracks.ts` `spine.eyebrow`, because the homepage reads it too. The legend lives in the atlas instead.
+- **Issue 14 (meta description):** `src/app/__tests__/discovery-record-copy.test.ts` pins "Zehn Kurse auf Deutsch und Englisch", "Workshops und Lernbücher" and "Quellstand", and that file is outside my ownership. The DE text is now "Zehn Kurse auf Deutsch und Englisch, alle kostenlos, dazu Workshops und Lernbücher mit Material zum Herunterladen. Jeder Kurs nennt Dauer, Stufe und ob du ein Konto brauchst, die Technikkurse auch ihren Quellstand auf GitHub." If the integrator relaxes that test, "Quellstand" can go.
+
+## Checks
+- **vitest:** 167/167 in `src/app/kurse`, `src/lib/courses` and `discovery-record-copy`.
+- **eslint:** clean. **tsc:** no errors in my files.
+- **e2e against the dev server** (scratch config): route-kurse-hub plus mobile-access-disclosure, 26 passed and 12 skipped by design. The `courses` / `a11y-target-size` / `learning-density` hub tests, including axe: 23 passed.
+- **Screenshots:** `impl/B3-kurse-hub/v3-{de,en}-{1440,1024,390}.png` and the crops `c3-*`. There is no horizontal overflow at 390, 1024 or 1440.
+
+## Left for the integrator
+- **Visual baseline:** re-record `visual-regression` `courses-desktop.png` after merge.
+- **Discovery test:** optionally relax `discovery-record-copy.test.ts`, which pins "Quellstand".

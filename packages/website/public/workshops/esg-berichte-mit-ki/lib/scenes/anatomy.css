@@ -143,3 +143,16 @@
   fill: var(--papier);
   font-size: 26px;
 }
+
+/* The title asks until the swing band answers it (press 5); the hidden half takes no space. */
+#anatomy .scene-title .is-step-hidden {
+  display: none;
+}
+
+/* Until the prediction vote is over, the right total is a question mark, not a bar. */
+#anatomy .wf-pending {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 72px;
+  font-weight: 700;
+}

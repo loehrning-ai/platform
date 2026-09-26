@@ -27,3 +27,35 @@
 - The cover-band button follows hub order (newest first). If the owner wants 03 kept as the recommended start after 04 ships, change orderWorkshopsForHub or pick the start explicitly.
 - highlighted-text.test.tsx still mentions workshops-content.tsx in a comment; the component is now used only by buecher.
 - The W01 card-preview.webp is a light, paper-toned page, while W02 and W03 are graphit deck covers. Regenerating the covers (design-direction 10.4) would make the rows uniform.
+
+---
+
+# B1 polish pass (after critique)
+
+## Files changed
+- src/app/workshops/workshops-content.tsx
+  - Covers: `DECK_COVERS` allow-list (only "03"). All other rows render `MiniCover`: an aria-hidden graphit 16:9 block with a GlobeLines (no Germany trace, so a row has no second Mennige mark), the number in the top corner and the title in 20px bold dark-fg. W04 has no card-preview.webp yet, so it gets the mini-cover as well.
+  - Start button: `RECOMMENDED_START = "03"`. The button stays on 03 when 04 leads the newest-first list.
+  - CoverBand: h1 `max-w-[14ch]`, lead `md:max-w-[46ch] xl:max-w-[56ch]`, globe hidden from md to below lg through `md:max-lg:[&>[data-cover-globe]]:hidden` passed as className (werk is not mine), content `pb-12 lg:pb-16` so the bottom matches the top. The phone rail gets `scroll-px-4 pr-4 sm:pr-0`.
+  - Route: `max-w-[60rem]`, with captions passed as `block text-[0.875rem] leading-snug text-pretty` spans.
+  - Materials: a fixed noun order (deck, demo, kit, guide, lab, case, card, exercise, data, hub, presenter, builder), capped at 4 plus "N weitere"/"N more". Each item is a `whitespace-nowrap` span with its " · " joiner. The builder role uses the hub noun "Bauanleitung"/"Build guide".
+  - Requirement: `limitingNeed` uses `catalog.requirementShort[slug]` before needs[0].
+  - `plainNumbers()` turns U+2212 into ASCII "-" in the summary and question, and puts an NBSP before €.
+  - Team section: the SectionHead is gone. There is now a small hairline note (h2 at 20px, kept as h2 for the outline) inside the list section, followed by the Callout at mt-6. The body is generated from the workshops that have a "presenter" material, so W04 is included automatically.
+  - Row focus: the article gets a `has-[a:focus-visible]` 3px Mennige outline at offset 4. The link drops its own ring only under `supports-[selector(:has(*))]`.
+  - The list caption only shows when there are 2 or more rows.
+- src/app/workshops/workshop-copy.ts (catalog only): the kicker no longer says "kostenlos"/"free". listCaption is "Neueste zuerst"/"Newest first" (now a string). hubHeading is "Workshops mit Fall und Vorlage"/"Workshops with a case and a template". routeCaption is "60 bis 90 Minuten". EN hubStart is "Start with Workshop NN" and EN leaveWith is "You leave with". New keys: materialNouns, moreMaterials, requirementShort. teamsBody is now a function of workshop numbers, using the critique's copy.
+- Tests: workshops-content.test.tsx (new headings and kicker; the button stays on 03 with W04; the team note; a single "kostenlos"; the material cap and nowrap; ASCII minus; one img plus 2 mini-covers; row focus class), catalog-surfaces-mobile.test.ts (rail class string), tests/e2e/route-workshops-locales.spec.ts (hub h1 strings).
+
+## Checks
+- vitest: src/app/workshops/, src/components/werk, catalog-surfaces-mobile, public-information-density, passive-state-design-contract, access-surfaces-density, api/workshops.json all pass.
+- eslint clean. tsc: no errors in my files.
+- axe (wcag2a/aa/21aa/22aa): 0 violations on /workshops and /en/workshops at 390/1024/1440. There is no horizontal overflow at any of these widths.
+- Screenshots: impl/B1-workshops-hub/polish/*.png. The row outline was confirmed as a 3px solid computed style (the element screenshot clips the offset ring).
+
+## For the integrator / other owners
+- Covers: regenerate card-preview.webp for W01, W02 and W04 from slides.html#cover/0 (design-direction 10.4), then add their numbers to `DECK_COVERS`. Regenerate the W03 cover without the "75 minutes" line, because the hub now says "60 bis 90 Minuten" and the kicker says "Live 90 Min.".
+- Registry owner: replace U+2212 with ASCII "-" in the W03 DE/EN summary, description and scenes (the hub already normalises the text it shows). Consider adding `requirementShort` to the registry and removing the slug map from the catalog copy.
+- werk owner: CoverBand could take the globe breakpoint as a prop (for example `globeFrom="lg"`) in place of the className override used here.
+- Nav/footer (B6): the critique's high issue 3 (8.15 nav, 8.4/8.10/8.11 footer). In the latest capture the nav is already flat. The footer headings are now sentence case, but "Datenstand"/"Aktualisiert" still use mono labels.
+- The Playwright e2e specs were not run (the headless shell binary is missing).

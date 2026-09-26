@@ -705,7 +705,7 @@ export function CourseWorkspaceFrame({
         {fullscreen ? (
           <span
             id={fullscreenHintId}
-            className="w-full font-mono text-xs font-bold text-muted-foreground sm:w-auto"
+            className="w-full text-caption text-muted-foreground sm:w-auto"
           >
             {copy.fullscreenHint}
           </span>
@@ -757,7 +757,7 @@ export function CourseWorkspaceFrame({
             onLostPointerCapture={handleSeparatorLostPointerCapture}
           >
             <span
-              className="w-0.5 bg-foreground/35 transition-colors group-hover:bg-brand-orange"
+              className="w-0.5 bg-foreground/35 transition-colors group-hover:bg-foreground motion-reduce:transition-none"
               aria-hidden="true"
             />
           </div>

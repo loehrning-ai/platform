@@ -19,6 +19,12 @@ export interface LessonReferenceProps {
   readonly locale: Locale;
   readonly title: string;
   readonly objective?: string | null;
+  /**
+   * Where the lesson sits in the course, for example "Lektion 2 von 12".
+   * Replaces the bare "Lektion" kicker, so a reader does not need its own
+   * progress eyebrow above the text.
+   */
+  readonly position?: string | null;
   /** Use level 2 only when the surrounding custom shell already owns its h1. */
   readonly headingLevel?: 1 | 2;
 }
@@ -37,9 +43,11 @@ export function LessonReference({
   locale,
   title,
   objective,
+  position,
   headingLevel = 1,
 }: LessonReferenceProps): JSX.Element {
   const copy = COPY[locale];
+  const kicker = position?.trim() || copy.eyebrow;
   const normalizedObjective = objective?.trim() || null;
 
   return (
@@ -50,8 +58,8 @@ export function LessonReference({
     >
       <summary className="grid min-h-16 cursor-pointer list-none grid-cols-1 items-start gap-3 py-4 text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-6 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0 [overflow-wrap:anywhere]">
-          <span className="block text-label text-muted-foreground">
-            {copy.eyebrow}
+          <span className="block text-label text-muted-foreground tabular-nums">
+            {kicker}
           </span>
           <span
             role="heading"
@@ -71,7 +79,7 @@ export function LessonReference({
           <span className="hidden group-open:inline">{copy.close}</span>
           <span
             aria-hidden="true"
-            className="flex size-5 items-center justify-center border border-foreground text-sm leading-none no-underline"
+            className="w-4 text-center leading-none tabular-nums no-underline"
           >
             <span className="group-open:hidden">+</span>
             <span className="hidden group-open:inline">−</span>

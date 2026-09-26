@@ -122,7 +122,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     minutes: (count) => `${count} Min.`,
     legalHeading: "Rechtsgrundlage",
     whyBody:
-      "Artikel 4 der EU-KI-Verordnung gilt seit dem 2. Februar 2025. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber kontextbezogene Maßnahmen treffen, die die Entwicklung der KI-Kompetenz unterstützen; Vorwissen, Rolle, Einsatzkontext und betroffene Personen zählen. Vorgeschrieben ist weder ein einheitliches Kursformat noch ein Zertifikat. Dieser Kurs kann solche Maßnahmen ergänzen, belegt aber keine organisationsweite Compliance.",
+      "Artikel 4 der EU-KI-Verordnung gilt seit dem 2.\u00a0Februar\u00a02025. In der seit 27.\u00a0Juli\u00a02026 geltenden Fassung müssen Anbieter und Betreiber kontextbezogene Maßnahmen treffen, die die Entwicklung der KI-Kompetenz unterstützen; Vorwissen, Rolle, Einsatzkontext und betroffene Personen zählen. Vorgeschrieben ist weder ein einheitliches Kursformat noch ein Zertifikat. Dieser Kurs kann solche Maßnahmen ergänzen, belegt aber keine organisationsweite Compliance.",
     evidenceHeading: "Was die Teilnahmebestätigung belegt",
     evidence: [
       "Die lokal erzeugte PDF dokumentiert den Abschluss dieses Kurses; sie ist kein Rechts-, Compliance- oder unabhängiger Kompetenznachweis.",
@@ -286,6 +286,26 @@ function courseGraph(locale: Locale) {
   };
 }
 
+/**
+ * The clause after the colon is an inline-block: it starts a new line as a
+ * whole, so the question word ("Was") never hangs at the end of line one, and
+ * it still wraps inside itself on a phone. Plain spaces keep the accessible
+ * name identical to the copy.
+ */
+function KfHeading({
+  lead,
+  accent,
+}: {
+  readonly lead: string;
+  readonly accent: string;
+}) {
+  return (
+    <>
+      {lead} <span className="inline-block">{accent}</span>
+    </>
+  );
+}
+
 export default async function KiFuehrerscheinLandingPage() {
   const locale = resolveFoundationCourseContentLocale(
     COURSE_SLUG,
@@ -307,7 +327,7 @@ export default async function KiFuehrerscheinLandingPage() {
       <TechnicalCourseFrame courseId={COURSE_SLUG} lang={locale}>
         <TechnicalCourseHeader
           eyebrow={copy.eyebrow}
-          title={`${copy.heading} ${copy.headingAccent}`}
+          title={<KfHeading lead={copy.heading} accent={copy.headingAccent} />}
           intro={copy.introduction}
           primaryAction={
             <Link
@@ -350,6 +370,9 @@ export default async function KiFuehrerscheinLandingPage() {
               meta: `${block.lessons.length} ${copy.lessonsLabel} · ${copy.minutes(block.durationMinutes)}`,
             }))}
           />
+          <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
+            {copy.related}
+          </CourseNextLink>
         </CourseLandingSection>
 
         <CourseBoundaryDetails summary={copy.boundarySummary}>
@@ -360,10 +383,6 @@ export default async function KiFuehrerscheinLandingPage() {
             <CourseNoteList items={copy.evidence} />
           </CourseBoundaryColumn>
         </CourseBoundaryDetails>
-
-        <CourseNextLink href={localizeHref("/eu-ai-act-kurs", locale)}>
-          {copy.related}
-        </CourseNextLink>
       </TechnicalCourseFrame>
     </>
   );

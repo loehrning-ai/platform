@@ -67,7 +67,7 @@ export default async function KursePage() {
       {/* Paper hero, no band: kicker, one ink headline, one lead sentence and
           the KI-Check as a text link. Kept short so the atlas starts inside
           the first phone viewport. */}
-      <div className="mx-auto max-w-[1180px] px-4 pb-14 pt-6 sm:px-6 sm:pt-12 lg:pb-20">
+      <div className="mx-auto max-w-[1180px] px-4 pb-14 pt-6 sm:px-6 sm:pt-12 lg:pb-16 lg:pt-10">
         <header className="max-w-[46rem]">
           <Kicker>{copy.kicker(ALL_COURSE_CATALOG.length)}</Kicker>
           <h1 className="mt-3 text-fluid-h1 font-bold text-foreground text-balance">
@@ -88,8 +88,28 @@ export default async function KursePage() {
           </p>
         </header>
 
-        <section className="mt-8 sm:mt-14" data-learning-gallery>
+        <section className="mt-8 sm:mt-10 lg:mt-8" data-learning-gallery>
           <LearningAtlas locale={locale} access={getCourseAccess()} />
+        </section>
+
+        {/* Cost and account sit with the ledger they explain, before the
+            workshop band, so the page ends ledger, note, band, footer. */}
+        <section
+          aria-labelledby="kurse-access-heading"
+          className="mt-16 lg:mt-20"
+        >
+          <SectionHead id="kurse-access-heading" title={copy.accessHeading} />
+          <p className="mt-4 max-w-[64ch] text-body text-muted-foreground text-pretty">
+            {copy.accessBody}
+          </p>
+          <Link
+            href={localizeHref("/konto", locale)}
+            prefetch={false}
+            className={cx(BUTTON_CLASSES.paper.text, "mt-3")}
+          >
+            {copy.accessAction}
+            <ArrowGlyph />
+          </Link>
         </section>
       </div>
 
@@ -100,7 +120,7 @@ export default async function KursePage() {
         className="bg-inset"
         data-kurse-workshops
       >
-        <div className="mx-auto grid max-w-[1180px] gap-4 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12 lg:py-12">
+        <div className="mx-auto grid max-w-[1180px] gap-4 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12 lg:py-12">
           <div className="min-w-0">
             <h2
               id="kurse-workshops-heading"
@@ -111,7 +131,7 @@ export default async function KursePage() {
             <p className="mt-2 max-w-[60ch] text-body text-foreground text-pretty">
               {copy.workshopsBody(workshopCount)}
             </p>
-            <p className="mt-1 text-caption text-muted-foreground">
+            <p className="mt-3 text-caption text-muted-foreground">
               {copy.workshopsNote}
             </p>
           </div>
@@ -123,35 +143,6 @@ export default async function KursePage() {
           >
             {copy.workshopsAction}
           </ButtonLink>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="kurse-access-heading"
-        className="mx-auto max-w-[1180px] px-4 pb-14 pt-12 sm:px-6 lg:pb-20 lg:pt-16"
-      >
-        <SectionHead
-          id="kurse-access-heading"
-          title={copy.accessHeading}
-        />
-        <p className="mt-4 max-w-[64ch] text-body text-muted-foreground text-pretty">
-          {copy.accessBody}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-x-6">
-          <Link
-            href={localizeHref("/ueber-mich", locale)}
-            className={BUTTON_CLASSES.paper.text}
-          >
-            {copy.aboutMe}
-            <ArrowGlyph />
-          </Link>
-          <Link
-            href={localizeHref("/ki-check", locale)}
-            className={BUTTON_CLASSES.paper.text}
-          >
-            {copy.aiCheck}
-            <ArrowGlyph />
-          </Link>
         </div>
       </section>
     </>

@@ -82,7 +82,7 @@ export function MarkdownRenderer({
               );
             }
             return (
-              <code className="whitespace-normal border border-border bg-card px-1.5 py-0.5 font-mono text-sm text-brand-orange [overflow-wrap:anywhere]">
+              <code className="whitespace-normal bg-inset px-1 py-px font-mono text-[0.875em] text-foreground [box-decoration-break:clone] [overflow-wrap:anywhere]">
                 {children}
               </code>
             );
@@ -115,7 +115,7 @@ export function MarkdownRenderer({
           a: ({ href, children }) => (
             <a
               href={href}
-              className="text-brand-orange underline decoration-brand-orange/30 transition-colors hover:text-kupfer-dark hover:decoration-kupfer-dark/30"
+              className="text-foreground underline decoration-hairline underline-offset-4 transition-colors hover:decoration-foreground motion-reduce:transition-none"
               target="_blank"
               rel="noopener noreferrer"
             >

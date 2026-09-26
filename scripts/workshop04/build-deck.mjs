@@ -125,7 +125,8 @@ function genWaterfall() {
   const W = 1360, top = 56, bottom = 456, lo = 1400, hi = 2000;
   const y = (v) => top + ((hi - v) / (hi - lo)) * (bottom - top);
   const col = 150, barW = 104, x0 = 40;
-  const reveal = { start: 0, T1: 2, T2: 2, T3: 3, T4: 3, T5: 4, T6: 4, end: 0 };
+  // The right total stays hidden until the prediction vote is over (press 2); a "?" holds its place.
+  const reveal = { start: 0, T1: 2, T2: 2, T3: 3, T4: 3, T5: 4, T6: 4, end: 2 };
   const names = { start: ["Raw-folder", "answer"], T1: ["Duplicate", "March"], T2: ["October", "missing"], T3: ["Talbrück", "bill"], T4: ["1.240 MWh", "misread"], T5: ["Gas", "Hs / Hi"], T6: ["AdBlue", "as diesel"], end: ["Right", "total"] };
   const parts = [];
   const cols = [...steps.map((s, i) => ({ ...s, i })), { step: "end", i: steps.length }];
@@ -157,6 +158,10 @@ function genWaterfall() {
     g.push(`<text class="wf-name" x="${x + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text>`);
     g.push(`<text class="wf-name wf-name--sub" x="${x + barW / 2}" y="${bottom + 62}" text-anchor="middle">${esc(l2)}</text>`);
     parts.push(`<g class="wf-col" data-col="${c.step}"${stepAttr(s)}>${g.join("")}</g>`);
+    if (c.step === "end") {
+      parts.push(`<g class="wf-col wf-col--pending" data-step-until="2"><text class="wf-pending" x="${x + barW / 2}" y="${bottom - 120}" text-anchor="middle">?</text>`
+        + `<text class="wf-name" x="${x + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text><text class="wf-name wf-name--sub" x="${x + barW / 2}" y="${bottom + 62}" text-anchor="middle">${esc(l2)}</text></g>`);
+    }
   });
   // Axis: the baseline carries a break mark, because the bars start at a cut, not at zero.
   const axis = `<path class="wf-axis" d="M${x0 - 24} ${bottom}H${x0 + cols.length * col - (col - barW)}" /><path class="wf-break" d="M${x0 - 30} ${bottom + 10}l10 -20M${x0 - 20} ${bottom + 10}l10 -20" />`;
@@ -289,8 +294,10 @@ function genBridge() {
 }
 
 // The 2024 to 2025 bridge on `what-drove-it`, one per method, from drivers.lb / drivers.mb. Bars start
-// at a cut (break mark on the baseline), as on `anatomy`; each chart has its own scale. The frame with
-// both totals shows on entry; the change bars appear on press `step`. Params: method (lb|mb), step.
+// at a cut (break mark on the baseline), as on `anatomy`. Both charts share one scale and one cut, so
+// the certificate bar reads ten times the grid-factor bar, as the numbers say. The frame with both
+// totals shows on entry; the change bars and their names appear on press `step` (the driver names
+// would answer the room vote). Params: method (lb|mb), step.
 function genDrivers(params) {
   const m = params.method;
   const list = data.drivers[m];
@@ -304,9 +311,10 @@ function genDrivers(params) {
     grid_factor: ["Grid", "factor"], certificates: ["Guarantees", "of origin"], less_electricity: ["Less", "electricity"],
     less_gas: ["Less", "gas"], less_diesel: ["Less", "diesel"], less_gas_diesel: ["Less gas", "and diesel"],
   };
-  const W = 820, H = 356, top = 52, bottom = 284, col = 136, barW = 92, x0 = 22;
-  const span = start - end;
-  const lo = Math.floor((end - 0.4 * span) / 10) * 10, hi = Math.ceil((start + 0.1 * span) / 10) * 10;
+  const W = 820, top = 50, bottom = 300, H = bottom + 66, col = 136, barW = 92, x0 = 22;
+  const ends = ["lb", "mb"].map((x) => data.numbers[`total_${x}_2025`].value);
+  const starts = ["lb", "mb"].map((x) => data.numbers[`total_${x}_2024`].value);
+  const lo = Math.floor((Math.min(...ends) - 40) / 50) * 50, hi = Math.ceil((Math.max(...starts) + 20) / 50) * 50;
   const y = (v) => top + ((hi - v) / (hi - lo)) * (bottom - top);
   const frame = [], bars = [];
   const colX = (k) => x0 + k * col;
@@ -324,7 +332,8 @@ function genDrivers(params) {
     if (!key) throw new Error(`gen:drivers no number key for ${m}.${d.id}`);
     bars.push(`<path class="dv-link" d="M${colX(k - 1) + barW} ${fmt(a)}H${colX(k)}" data-motion="draw" style="--order:${i}" />`);
     bars.push(`<rect class="dv-bar dv-bar--change${i === 0 ? " dv-bar--lead" : ""}" x="${colX(k)}" y="${fmt(a)}" width="${barW}" height="${fmt(h)}" data-motion="grow" style="--grow-origin: 50% 0%; --order:${i}" />`);
-    bars.push(`<text class="dv-val dv-val--change" x="${colX(k) + barW / 2}" y="${fmt(a + h + 32)}" text-anchor="middle" data-num="${key}" data-form="bare" data-motion="fade" style="--order:${i}">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
+    // On the shared scale the small bars sit close to the baseline: every change value goes above its bar.
+    bars.push(`<text class="dv-val dv-val--change" x="${colX(k) + barW / 2}" y="${fmt(a - 12)}" text-anchor="middle" data-num="${key}" data-form="bare" data-motion="fade" style="--order:${i}">${esc(fillApi.numberText(data, key, "bare"))}</text>`);
     running = next;
   });
   const endK = list.length + 1;
@@ -333,14 +342,15 @@ function genDrivers(params) {
   // Own use: a bracket over every bar after the first (the factor or the certificate).
   const ownKey = `drv_${m}_own_t`;
   const bx1 = colX(2) - 6, bx2 = colX(endK - 1) + barW + 6;
-  const by = y(start) - 8;
+  const by = y(start) - 44;
   bars.push(`<g class="dv-own"><path class="dv-own__bracket" d="M${bx1} ${fmt(by + 14)}V${fmt(by)}H${bx2}V${fmt(by + 14)}" data-motion="draw" style="--order:${list.length}" />`
     + `<text class="dv-own__label" x="${(bx1 + bx2) / 2}" y="${fmt(by - 14)}" text-anchor="middle" data-motion="fade" style="--order:${list.length}">own use <tspan class="dv-own__num" data-num="${ownKey}">${esc(fillApi.numberText(data, ownKey))}</tspan></text></g>`);
   const labels = [];
   const colNames = [["2024", ""], ...list.map((d) => names[d.id]), ["2025", ""]];
   colNames.forEach(([l1, l2], k) => {
-    labels.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text>`);
-    if (l2) labels.push(`<text class="dv-name dv-name--sub" x="${colX(k) + barW / 2}" y="${bottom + 60}" text-anchor="middle">${esc(l2)}</text>`);
+    const into = k === 0 || k === endK ? labels : bars;
+    into.push(`<text class="dv-name" x="${colX(k) + barW / 2}" y="${bottom + 34}" text-anchor="middle">${esc(l1)}</text>`);
+    if (l2) into.push(`<text class="dv-name dv-name--sub" x="${colX(k) + barW / 2}" y="${bottom + 62}" text-anchor="middle">${esc(l2)}</text>`);
   });
   const axis = `<path class="dv-axis" d="M${x0 - 18} ${bottom}H${colX(endK) + barW + 10}" /><path class="dv-break" d="M${x0 - 24} ${bottom + 10}l10 -20M${x0 - 14} ${bottom + 10}l10 -20" />`;
   const label = m === "lb" ? "Location-based Scope 1 and 2, 2024 to 2025" : "Market-based Scope 1 and 2, 2024 to 2025";
@@ -440,7 +450,7 @@ for (const m of visible.matchAll(/[+−-]?\d[\d.,]*%?/g)) {
 
 for (const file of ["slides.html", "presenter.html"]) {
   const text = file === "slides.html" ? html : readFileSync(path.join(DECK, file), "utf8");
-  if (/[–—]/.test(text)) findings.push(`${file}: en or em dash`);
+  if (/[\u2013\u2014]/.test(text)) findings.push(`${file}: en or em dash`);
 }
 for (const m of html.matchAll(/<p class="q-card__text"[^>]*>([\s\S]*?)<\/p>/g)) {
   const text = m[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
@@ -476,7 +486,7 @@ for (const s of sections) {
   }
   const stepMax = Math.max(0, ...[...html.slice(html.indexOf(`id="${s.id}"`)).split(/<section class="slide/)[0].matchAll(/data-step(?:-until)?="(\d+)"/g)].map((m, i, all) => (m[0].includes("until") ? Number(m[1]) - 1 : Number(m[1]))));
   if (note.revealOrder && note.revealOrder.length !== stepMax + 1) findings.push(`notes ${key}: revealOrder has ${note.revealOrder.length} entries, scene has ${stepMax + 1} states`);
-  if (/[–—]/.test(JSON.stringify(note))) findings.push(`notes ${key}: en or em dash`);
+  if (/[\u2013\u2014]/.test(JSON.stringify(note))) findings.push(`notes ${key}: en or em dash`);
   ordered[key] = { ...note, clock: { ...(note.clock || {}), budget_seconds: seconds } };
 }
 for (const key of Object.keys(notes)) if (!ordered[key]) findings.push(`notes ${key}: no scene uses this key`);

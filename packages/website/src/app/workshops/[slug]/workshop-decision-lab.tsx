@@ -20,6 +20,8 @@ import type { Locale } from "@/lib/i18n/locale";
 interface WorkshopDecisionLabProps {
   readonly config: WorkshopDecisionLabConfig;
   readonly locale: Locale;
+  /** Anchor id of the band, so the agenda can link to it. */
+  readonly id?: string;
 }
 
 type ValidationError = "decision" | "evidence" | null;
@@ -35,7 +37,8 @@ const LAB_COPY = {
     },
     correctOption: "Correct answer",
     yourCorrectPick: "Your pick · correct",
-    yourWrongPick: "Your pick · not the strongest",
+    yourWrongDecision: "Your pick · not correct",
+    yourWrongEvidence: "Your pick · not the strongest evidence",
     resetAfterCorrect: "Reset",
     validation: {
       decision: "Select one decision before checking the result.",
@@ -43,7 +46,7 @@ const LAB_COPY = {
     },
     loading: "The choices unlock once JavaScript has loaded.",
     noScript:
-      "JavaScript is required for this exercise. You can still read the course and download its materials without it.",
+      "JavaScript is required for this exercise. The page and the materials work without it.",
   },
   de: {
     outcome: {
@@ -53,7 +56,8 @@ const LAB_COPY = {
     },
     correctOption: "Richtige Antwort",
     yourCorrectPick: "Deine Wahl · richtig",
-    yourWrongPick: "Deine Wahl · nicht die stärkste",
+    yourWrongDecision: "Deine Wahl · nicht richtig",
+    yourWrongEvidence: "Deine Wahl · nicht der stärkste Beleg",
     resetAfterCorrect: "Zurücksetzen",
     validation: {
       decision: "Wähle eine Entscheidung aus, bevor du das Ergebnis prüfst.",
@@ -61,7 +65,7 @@ const LAB_COPY = {
     },
     loading: "Die Auswahl wird freigeschaltet, sobald JavaScript geladen ist.",
     noScript:
-      "Diese Übung benötigt JavaScript. Du kannst den Kurs und seine Materialien auch ohne JavaScript lesen und herunterladen.",
+      "Diese Übung benötigt JavaScript. Die Seite und das Material funktionieren auch ohne.",
   },
 } as const;
 
@@ -158,6 +162,34 @@ export function orderDecisionOptions(
   return { choices: rotate(config.choices), evidence: rotate(config.evidence) };
 }
 
+/**
+ * Facts are authored as one string ("Endbestand 100 €", "KI-Antwort 2025:
+ * 1.866,5 t CO₂e", "Meiste Mängel · Monat 2"). Split them into label and
+ * value for the fact table: at the first colon or middle dot, otherwise
+ * before the first token that starts with a digit, sign or currency.
+ */
+export function splitFact(fact: string): {
+  readonly label: string;
+  readonly value: string;
+} {
+  for (const separator of [": ", " · "]) {
+    const at = fact.indexOf(separator);
+    if (at > 0)
+      return {
+        label: fact.slice(0, at),
+        value: fact.slice(at + separator.length),
+      };
+  }
+  const match = /^(.*?\S)\s+([+\-−±~≈€$£]*\d.*)$/u.exec(fact);
+  if (match) return { label: match[1], value: match[2] };
+  return { label: "", value: fact };
+}
+
+/** Bind a number to the word or unit after it ("20 Euro", "1.050 Stück"), so a title never breaks between them. */
+export function keepNumbersWithUnits(text: string): string {
+  return text.replace(/(\d) (?=[\p{L}€%])/gu, "$1\u00a0");
+}
+
 const OPTION_ROW =
   "flex min-h-12 cursor-pointer items-start gap-3 border-b border-hairline px-2 py-3 text-left transition-colors duration-[120ms] hover:bg-card has-[:checked]:bg-card";
 
@@ -182,6 +214,7 @@ function DecisionOption({
   selected,
   mark,
   strongest,
+  kind,
   copy,
   onSelect,
   inputRef,
@@ -192,6 +225,8 @@ function DecisionOption({
   readonly mark: OptionMark;
   /** True for the strongest-evidence option once the result is shown. */
   readonly strongest: boolean;
+  /** Which fieldset the option belongs to; picks the wording of a wrong pick. */
+  readonly kind: "decision" | "evidence";
   readonly copy: (typeof LAB_COPY)[Locale];
   readonly onSelect: (id: string) => void;
   readonly inputRef?: RefObject<HTMLInputElement | null>;
@@ -204,7 +239,9 @@ function DecisionOption({
         ? copy.yourCorrectPick
         : copy.correctOption
       : mark === "wrong-pick"
-        ? copy.yourWrongPick
+        ? kind === "decision"
+          ? copy.yourWrongDecision
+          : copy.yourWrongEvidence
         : null;
 
   return (
@@ -308,6 +345,7 @@ function VerdictChip({
 export function WorkshopDecisionLab({
   config,
   locale,
+  id,
 }: WorkshopDecisionLabProps) {
   const copy = LAB_COPY[locale];
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
@@ -417,9 +455,10 @@ export function WorkshopDecisionLab({
 
   return (
     <section
+      id={id}
       aria-labelledby={`${decisionName}-title`}
       data-workshop-decision-lab
-      className="border-t-2 border-foreground bg-inset"
+      className="scroll-mt-20 border-t-2 border-foreground bg-inset"
     >
       <div className="mx-auto grid max-w-[75rem] gap-8 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <header className="min-w-0">
@@ -428,23 +467,26 @@ export function WorkshopDecisionLab({
           </p>
           <h2
             id={`${decisionName}-title`}
-            className="mt-3 max-w-[20ch] text-fluid-h2 font-bold text-foreground text-balance"
+            className="mt-3 max-w-[24ch] text-fluid-h2 font-bold text-foreground text-balance"
           >
-            {config.title}
+            {keepNumbersWithUnits(config.title)}
           </h2>
           <p className="mt-4 max-w-[52ch] text-body text-muted-foreground text-pretty">
             {config.prompt}
           </p>
-          <ul className="mt-6 grid grid-cols-1 border-t border-hairline sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-            {config.facts.map((fact) => (
-              <li
-                key={fact}
-                className="break-words border-b border-hairline py-2.5 text-label text-foreground tabular-nums sm:border-b-0 sm:pr-3 lg:border-b xl:border-b-0"
-              >
-                {fact}
-              </li>
-            ))}
-          </ul>
+          <dl className="mt-6 grid grid-cols-1 gap-x-4 gap-y-3 border-t border-hairline pt-3 min-[26rem]:grid-cols-3">
+            {config.facts.map((fact) => {
+              const { label, value } = splitFact(fact);
+              return (
+                <div key={fact} className="min-w-0">
+                  <dt className="text-label text-muted-foreground">{label}</dt>
+                  <dd className="mt-1 break-words text-[1.25rem] font-bold leading-tight text-foreground tabular-nums">
+                    {value}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
           <p className="mt-6 flex items-start gap-2 text-caption text-muted-foreground">
             <Pictogram name="shield" className="mt-0.5 size-4" />
             <span>{config.privacyNote}</span>
@@ -489,6 +531,7 @@ export function WorkshopDecisionLab({
                     selected={choiceId === option.id}
                     mark={markFor(option, config.recommendedChoiceId, choiceId)}
                     strongest={false}
+                    kind="decision"
                     copy={copy}
                     onSelect={reviseChoice}
                     inputRef={index === 0 ? firstChoiceRef : undefined}
@@ -517,6 +560,7 @@ export function WorkshopDecisionLab({
                     selected={evidenceId === option.id}
                     mark={markFor(option, config.strongestEvidenceId, evidenceId)}
                     strongest={submitted && option.id === config.strongestEvidenceId}
+                    kind="evidence"
                     copy={copy}
                     onSelect={reviseEvidence}
                     inputRef={index === 0 ? firstEvidenceRef : undefined}

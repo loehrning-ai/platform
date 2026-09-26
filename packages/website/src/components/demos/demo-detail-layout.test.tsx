@@ -66,8 +66,9 @@ describe("<DemoDetailLayout>", () => {
     expect(
       screen.getByText(/Praxisbeispiel 01 · Grundlagen · Einstieg/),
     ).toBeInTheDocument();
+    // The H1 is the plain name: no full stop, no second sentence.
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Claude in Excel.",
+      /^Claude in Excel$/,
     );
   });
 
@@ -97,15 +98,14 @@ describe("<DemoDetailLayout>", () => {
     );
   });
 
-  it("maps each demo level to its KI-Kompetenzweg Stufe", () => {
-    const { rerender } = render(<DemoDetailLayout demo={excel} />);
-    expect(screen.getByText(/Stufe 3: Anwenden/)).toBeInTheDocument();
-
-    rerender(<DemoDetailLayout demo={rag} />);
-    expect(screen.getByText(/Stufe 4: Umsetzen/)).toBeInTheDocument();
-
-    rerender(<DemoDetailLayout demo={agent} />);
-    expect(screen.getByText(/Stufe 5: Gestalten/)).toBeInTheDocument();
+  it("names the course once, in the continuation, without a stage label", () => {
+    const { container } = render(<DemoDetailLayout demo={agent} />);
+    const continuation = container.querySelector("[data-demo-continuation]");
+    expect(continuation).toHaveTextContent(/Im Kurs · Modul \d+ · Lektion \d+/);
+    // The stage label contradicted the learning graph; the page no longer
+    // carries one, and no second "Weiterlernen" block repeats the course.
+    expect(container.textContent).not.toMatch(/Stufe \d|Weiterlernen/);
+    expect(screen.queryByRole("heading", { name: "Im Kurs" })).toBeNull();
   });
 
   it("links to the next demo in catalog order", () => {
@@ -114,10 +114,10 @@ describe("<DemoDetailLayout>", () => {
     expect(
       screen.getByText(/Nächstes Praxisbeispiel · 02/),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Weiter" })).toHaveAttribute(
-      "href",
-      "/demos/word?source=next-demo",
-    );
+    // The button names its target instead of a bare "Weiter".
+    expect(
+      screen.getByRole("link", { name: "Claude in Word ansehen" }),
+    ).toHaveAttribute("href", "/demos/word?source=next-demo");
   });
 
   it("surfaces no related book while its bookSlugs target is unpublished", () => {
@@ -132,14 +132,16 @@ describe("<DemoDetailLayout>", () => {
     expect(hrefs).not.toContain("/buecher/ki-tools-selbststaendige");
   });
 
-  it("renders the synthetic-data boundary label once, next to the engine", () => {
-    render(<DemoDetailLayout demo={excel} />);
-    // getByText throws on duplicates: the page states what is invented once,
-    // on the evidence line, instead of stacking disclaimers.
-    expect(screen.getByTestId("evidence-badge")).toHaveAttribute(
-      "data-note",
-      excel.syntheticDataLabel,
-    );
+  it("states what is invented once, in the four-row run table", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    // getByText throws on duplicates: the data row says it once, and the
+    // evidence line above the engine no longer repeats it.
+    expect(screen.getByText(excel.syntheticDataLabel)).toBeInTheDocument();
+    expect(screen.getByTestId("evidence-badge")).not.toHaveAttribute("data-note");
+    const labels = Array.from(
+      container.querySelectorAll("[data-demo-run-rows] dt"),
+    ).map((dt) => dt.textContent);
+    expect(labels).toEqual(["Daten", "Ausführung", "Externe Aktionen", "Abbruch"]);
     expect(screen.queryByText(/^Sandbox-Szenario/)).toBeNull();
     expect(screen.queryByText("Sandbox-Grenze")).toBeNull();
   });
@@ -147,7 +149,8 @@ describe("<DemoDetailLayout>", () => {
   it("uses one-colour headings and a paper band for a dark engine", () => {
     const { container } = render(<DemoDetailLayout demo={agent} />);
     const h1 = screen.getByRole("heading", { level: 1 });
-    expect(h1).toHaveTextContent(`${agent.title} ${agent.titleKicker}`);
+    expect(h1).toHaveTextContent(/^Agent-Pipeline$/);
+    expect(h1).toHaveClass("text-balance", "hyphens-manual");
     expect(h1.querySelector("span")).toBeNull();
     const hero = container.querySelector("[data-demo-detail-hero]");
     expect(hero?.className).not.toContain("dark-section");
@@ -174,6 +177,7 @@ describe("<DemoDetailLayout>", () => {
     expect(orderedSections).toEqual(["instrument", "notes", "continuation"]);
     const continuation = container.querySelector("[data-demo-continuation]");
     expect(continuation?.querySelectorAll("a")).toHaveLength(1);
+    expect(container.querySelectorAll("a.bg-brand-orange")).toHaveLength(1);
     expect(continuation?.querySelector("a")).toHaveClass("bg-brand-orange");
     expect(container.querySelector("[data-demo-detail-hero]")).toBeTruthy();
     expect(container.querySelector("[data-demo-detail-layout]")).toBeTruthy();
@@ -186,5 +190,11 @@ describe("<DemoDetailLayout>", () => {
       .getAllByRole("link")
       .map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("/demos?industry=Controlling");
+    // Text links, not boxed chips that look like filter buttons.
+    const link = screen.getByRole("link", {
+      name: "Praxisbeispiele im Arbeitskontext Controlling",
+    });
+    expect(link).toHaveClass("min-h-11", "underline");
+    expect(link.className).not.toMatch(/\bborder\b/);
   });
 });

@@ -1,5 +1,5 @@
-/* what-drove-it: the AI's reason struck through in ink, then two bridges from 2024 to 2025, one per
-   method, each on its own cut scale. 2024 in slate, 2025 solid ink, one ink bar per driver. The
+/* what-drove-it: the AI's reason, struck through in ink once the bars answer the vote (press 2), and
+   two bridges from 2024 to 2025, one per method, on one shared cut scale. 2024 in slate, 2025 solid ink, one ink bar per driver. The
    share line of the chart under discussion carries the Mennige bar. Press 4: the rewritten sentence. */
 
 #what-drove-it > .wd-claim {
@@ -52,11 +52,20 @@
 #what-drove-it > .wd-chart--mb { right: var(--margin-x); }
 
 #what-drove-it .wd-chart__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   margin: 0;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--ink);
   font-size: var(--t-body);
   font-weight: 700;
+}
+
+#what-drove-it .wd-chart__scale {
+  color: var(--slate);
+  font-size: 22px;
+  font-weight: 500;
 }
 
 #what-drove-it .wd-chart__head .num {
@@ -102,7 +111,7 @@
 #what-drove-it .dv-name {
   fill: var(--ink);
   font-family: var(--sans);
-  font-size: 21px;
+  font-size: 24px;
   font-weight: 600;
 }
 
@@ -120,7 +129,7 @@
 #what-drove-it .dv-own__label {
   fill: var(--slate);
   font-family: var(--sans);
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 600;
 }
 
@@ -166,7 +175,7 @@
 
 #what-drove-it > .wd-sentence {
   position: absolute;
-  top: 800px;
+  top: 816px;
   left: var(--margin-x);
   width: 1728px;
   padding: 14px var(--s4) 16px calc(var(--s4) + 8px);

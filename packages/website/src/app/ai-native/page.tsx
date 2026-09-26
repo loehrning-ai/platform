@@ -48,7 +48,7 @@ const LANDING_COPY = {
       "wiederholbare Abläufe mit klaren Kontrollen entwerfen",
     ],
     eyebrow: "AI-Native Arbeitskurs · kostenlos",
-    heading: "Aufgaben für Claude beschreiben und wiederkehrende Arbeit automatisieren.",
+    heading: "Mit Claude wiederkehrende Arbeit automatisieren.",
     intro:
       "Du beschreibst eine Aufgabe so, dass Claude sie ohne Rückfragen bearbeitet, richtest Claude für ein festes Projekt ein und prüfst, ob sich eine wiederkehrende Aufgabe als n8n-Ablauf eignet. Programmieren musst du dafür nicht.",
     start: "Mit Modul 1 beginnen",
@@ -87,7 +87,7 @@ const LANDING_COPY = {
       {
         href: "/ai-native/demos",
         label: "Kurssimulationen",
-        output: "kontrollierte Beispiele",
+        output: "Kontrollierte Beispiele",
       },
       { href: "/ai-native/glossar", label: "Glossar", output: "70 Begriffe" },
       {
@@ -121,7 +121,7 @@ const LANDING_COPY = {
       "design repeatable workflows with explicit controls",
     ],
     eyebrow: "AI-Native Workflow Course · free",
-    heading: "Describe tasks for Claude and automate recurring work.",
+    heading: "Automate recurring work with Claude.",
     intro:
       "You describe a task so that Claude can work on it without follow-up questions, set Claude up for one fixed project, and check whether a recurring task fits an n8n workflow. No coding required.",
     start: "Start with module 1",
@@ -155,18 +155,18 @@ const LANDING_COPY = {
       {
         href: "/ai-native/fluency-test",
         label: "Fluency self-assessment",
-        output: "starting point",
+        output: "Starting point",
       },
       {
         href: "/ai-native/demos",
         label: "Course simulations",
-        output: "controlled examples",
+        output: "Controlled examples",
       },
       { href: "/ai-native/glossar", label: "Glossary", output: "70 terms" },
       {
         href: "/ai-native/capstone-gallery",
         label: "Capstone rules",
-        output: "publication boundary",
+        output: "Publication boundary",
       },
     ],
     boundarySummary: "Access, record, and provenance",
@@ -275,6 +275,13 @@ export default async function AiNativePage() {
   const copy = LANDING_COPY[locale];
   const meta = getCourseMeta(locale);
   const modules = getModules(locale);
+  // Reading time of the lessons alone; targetDurationHours adds the exercises.
+  const lessonHours = Math.max(
+    1,
+    Math.round(
+      modules.reduce((sum, module) => sum + module.durationMinutes, 0) / 60,
+    ),
+  );
   const trustSignals = getAiNativeTrustSignals(locale);
   const moduleOneHref = localizeHref("/ai-native/kurs/modul_1", locale);
 
@@ -307,8 +314,10 @@ export default async function AiNativePage() {
           facts={[
             `${meta.totalModules} ${locale === "de" ? "Module" : "modules"}`,
             `${meta.totalLessons} ${copy.lessonsLabel}`,
-            `${meta.targetDurationHours} h · ${locale === "de" ? "eigenes Tempo" : "self-paced"}`,
-            locale === "de" ? "kostenloses Lernkonto" : "free learning account",
+            locale === "de"
+              ? `Rund ${lessonHours} Std. Lektionen, ${meta.targetDurationHours} Std. mit Übungen`
+              : `About ${lessonHours} hrs of lessons, ${meta.targetDurationHours} hrs with exercises`,
+            locale === "de" ? "Kostenlos, mit Lernkonto" : "Free, with a learning account",
           ]}
           factsLabel={copy.factsLabel}
           progress={
@@ -359,12 +368,12 @@ export default async function AiNativePage() {
               <Link
                 key={resource.href}
                 href={localizeHref(resource.href, locale)}
-                className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[minmax(0,1fr)_14rem_auto]`}
+                className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[minmax(0,1fr)_1.5rem] sm:grid-cols-[minmax(0,1fr)_auto_1.5rem]`}
               >
                 <span className="break-words text-body font-semibold text-foreground">
                   {resource.label}
                 </span>
-                <span className="hidden break-words text-caption text-muted-foreground sm:block">
+                <span className="hidden break-words text-caption text-muted-foreground tabular-nums sm:block sm:text-right">
                   {resource.output}
                 </span>
                 <span

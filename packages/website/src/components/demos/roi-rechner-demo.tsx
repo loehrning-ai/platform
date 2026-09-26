@@ -260,7 +260,7 @@ export default function RoiRechnerDemo() {
               fontSize: isNarrow ? 40 : 48,
               lineHeight: 1.02,
               fontWeight: 800,
-              color: "var(--color-brand-orange)",
+              color: "var(--color-kupfer-light)",
               letterSpacing: "-0.045em",
               marginTop: 6,
               fontVariantNumeric: "tabular-nums",
@@ -272,7 +272,7 @@ export default function RoiRechnerDemo() {
             style={{
               fontFamily: DEMO.font.mono,
               fontSize: 12,
-              color: "rgba(243,240,233,0.45)",
+              color: "rgba(243,240,233,0.62)",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
               marginTop: 2,
@@ -326,7 +326,7 @@ export default function RoiRechnerDemo() {
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
-                color: "rgba(243,240,233,0.45)",
+                color: "rgba(243,240,233,0.62)",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 fontWeight: 700,
@@ -348,7 +348,7 @@ export default function RoiRechnerDemo() {
               <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
                 {v.headcount}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {" "}
                 {text("MA", "people")}{" "}
               </span>
@@ -357,13 +357,13 @@ export default function RoiRechnerDemo() {
                 {" "}
                 {v.hourly} €
               </span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>/h </span>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>/h </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
               <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
                 {" "}
                 {v.hoursPerWeek} h
               </span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {text("/Wo", "/wk")}{" "}
               </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
@@ -371,7 +371,7 @@ export default function RoiRechnerDemo() {
                 {" "}
                 {adoptionDecimal}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {" "}
                 {text("Adoption", "adoption")}{" "}
               </span>
@@ -380,13 +380,13 @@ export default function RoiRechnerDemo() {
                 {" "}
                 {WEEKS_PER_YEAR}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {" "}
                 {text("Wochen", "weeks")}{" "}
               </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}> = </span>
               <span
-                style={{ color: "var(--color-brand-orange)", fontWeight: 700 }}
+                style={{ color: "var(--color-kupfer-light)", fontWeight: 700 }}
               >
                 {yearly.toLocaleString(numberLocale)} €
               </span>
@@ -619,7 +619,7 @@ function Row({
           fontFamily: DEMO.font.mono,
           fontSize: highlight ? 17 : 13,
           fontWeight: 700,
-          color: highlight ? "var(--color-brand-orange)" : DEMO.kalk,
+          color: highlight ? "var(--color-kupfer-light)" : DEMO.kalk,
           letterSpacing: highlight ? "-0.01em" : undefined,
           fontVariantNumeric: "tabular-nums",
         }}

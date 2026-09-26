@@ -649,6 +649,10 @@ export default function CostDriftObservabilityDemo() {
           ) : null}
         </div>
         <div
+          // Scrollable log: keyboard users need a focus stop to scroll it.
+          tabIndex={0}
+          role="region"
+          aria-label={text("Ereignisprotokoll", "Event log")}
           style={{
             background: DEMO.ink,
             color: DEMO.kalk,
@@ -718,13 +722,13 @@ export default function CostDriftObservabilityDemo() {
             ] as const
           ).map(([ageOffset, lvl, tag, msg, c], i) => (
             <div key={i}>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {`${ageOffset + tick}s`.padStart(4)}{" "}
               </span>
               <span style={{ color: c, letterSpacing: "0.1em" }}>
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>
-              <span style={{ color: "var(--color-brand-orange)" }}>
+              <span style={{ color: "var(--color-kupfer-light)" }}>
                 {" "}
                 {tag.padEnd(14)}
               </span>

@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import type { DemoEvidenceMode, DemoExternalActionMode } from "@/lib/demos";
 import type { Locale } from "@/lib/i18n/locale";
 import { DEMO_ACTION_LABELS, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
-import { ArrowGlyph, cx, Pictogram, type PictogramName } from "@/components/werk";
+import { Pictogram, type PictogramName } from "@/components/werk";
 import { useDemoLocale } from "./demo-locale";
 
 /** One deck pictogram per execution mode; the word always sits beside it. */
@@ -21,9 +21,32 @@ const DISCLOSURE_COPY: Record<Locale, (label: string) => string> = {
 };
 
 /**
+ * Plus when closed, minus when open: a disclosure mark, not a scroll arrow.
+ * Square caps and miter joins, like the deck pictograms.
+ */
+function DisclosureGlyph({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      className="size-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="square"
+      data-disclosure-glyph={open ? "open" : "closed"}
+    >
+      <path d="M3 8h10" />
+      {open ? null : <path d="M8 3v10" />}
+    </svg>
+  );
+}
+
+/**
  * The single evidence line above a demo engine: execution mode (a disclosure
  * button that expands the explanation), the external-action mode when there
- * is one, and the one sentence that says what is invented. It replaces the
+ * is one, and optionally one sentence that says what is invented (the detail
+ * page puts that in its "Daten" row instead, so it is said once). It replaces the
  * stacked coloured badges and boxed disclaimers: evidence stays visible and
  * quiet, in a caption line next to the thing it qualifies.
  */
@@ -58,20 +81,21 @@ export function EvidenceBadge({
         >
           <Pictogram name={EVIDENCE_ICON[evidenceMode]} className="size-4" />
           {evidenceCopy.label}
-          <ArrowGlyph
-            direction="down"
-            className={cx("size-3.5", open ? "rotate-180" : undefined)}
-          />
+          <DisclosureGlyph open={open} />
         </button>
         {actionLabel ? (
           <span data-evidence-actions>
-            <span aria-hidden="true">· </span>
+            <span aria-hidden="true" className="hidden sm:inline">
+              ·{" "}
+            </span>
             {actionLabel}
           </span>
         ) : null}
         {note ? (
           <span className="min-w-0 break-words">
-            <span aria-hidden="true">· </span>
+            <span aria-hidden="true" className="hidden sm:inline">
+              ·{" "}
+            </span>
             {note}
           </span>
         ) : null}

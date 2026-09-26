@@ -77,7 +77,7 @@ function Node({
     <div className={cx("demo-pv-rise flex min-w-0 flex-col items-center gap-2", className)}>
       <div
         className={cx(
-          "relative grid size-12 shrink-0 place-items-center overflow-hidden sm:size-14",
+          "relative grid size-12 shrink-0 place-items-center overflow-hidden",
           NODE_TONES[tone],
         )}
       >
@@ -85,7 +85,7 @@ function Node({
         {text ? (
           <span className="relative text-[0.75rem] font-bold">{text}</span>
         ) : icon ? (
-          <Pictogram name={icon} className="relative size-6 sm:size-7" />
+          <Pictogram name={icon} className="relative size-6" />
         ) : null}
       </div>
       <span className={cx(LABEL, "max-w-[6.5rem] text-center")}>{label}</span>
@@ -96,7 +96,7 @@ function Node({
 function Arrow({ className }: { readonly className?: string }) {
   return (
     <ArrowGlyph
-      className={cx("mb-6 size-4 shrink-0 text-muted-foreground sm:size-5", className)}
+      className={cx("mb-6 size-4 shrink-0 text-muted-foreground", className)}
     />
   );
 }
@@ -105,7 +105,7 @@ function Flow({ children, className }: { readonly children: ReactNode; readonly 
   return (
     <div
       className={cx(
-        "flex w-full items-center justify-center gap-2 px-4 py-5 sm:gap-3",
+        "flex w-full items-center justify-center gap-2 px-4 py-5",
         className,
       )}
     >
@@ -147,32 +147,34 @@ export function ExcelPreview() {
   const { text } = useDemoLocale();
   const bars = [52, 44, 60, 48];
   return (
-    <div className="grid w-full grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1fr)] items-center gap-3 px-5 py-6 sm:gap-5 sm:px-8">
+    <div className="grid w-full grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-6">
       <div className="demo-pv-rise min-w-0">
         <div className="relative overflow-hidden border border-foreground bg-card">
-          <div className="grid grid-cols-3 border-b border-foreground">
-            {[text("KW", "Week"), text("Region", "Region"), text("Umsatz", "Revenue")].map(
-              (head) => (
-                <span key={head} className={cx(LABEL, "truncate px-2 py-1.5")}>
-                  {head}
-                </span>
-              ),
-            )}
+          <div className="grid grid-cols-[auto_minmax(0,1fr)] border-b border-foreground">
+            {[text("KW", "Wk"), text("Umsatz", "Revenue")].map((head) => (
+              <span key={head} className={cx(LABEL, "whitespace-nowrap px-2 py-1.5")}>
+                {head}
+              </span>
+            ))}
           </div>
           <div className="relative">
             <Hatch />
+            {/* Two columns so every value fits whole on a narrow tile: the
+                drawing never truncates its own data. */}
             {[
-              ["15", text("West", "West"), "911.800"],
-              ["16", text("Nord", "North"), "780.850"],
-              ["16", text("West", "West"), "984.550"],
-              ["17", text("Süd", "South"), "843.200"],
-            ].map((row, index) => (
-              <div key={index} className="relative grid grid-cols-3 border-b border-hairline last:border-b-0">
-                {row.map((cell, cellIndex) => (
-                  <span key={cellIndex} className={cx(DATA, "truncate px-2 py-1")}>
-                    {cell}
-                  </span>
-                ))}
+              ["15", "911.800"],
+              ["16", "780.850"],
+              ["17", "984.550"],
+              ["18", "843.200"],
+            ].map((row) => (
+              <div
+                key={row[0]}
+                className="relative grid grid-cols-[auto_minmax(0,1fr)] border-b border-hairline last:border-b-0"
+              >
+                <span className={cx(DATA, "w-9 px-2 py-1")}>{row[0]}</span>
+                <span className={cx(DATA, "whitespace-nowrap px-2 py-1 text-right")}>
+                  {row[1]}
+                </span>
               </div>
             ))}
           </div>
@@ -185,14 +187,14 @@ export function ExcelPreview() {
       </div>
 
       <div className="demo-pv-rise min-w-0">
-        <div className="flex h-28 items-end gap-2 border-b border-l border-foreground px-2 sm:h-36">
+        <div className="flex h-28 items-end gap-1.5 border-b border-l border-foreground px-2">
           {bars.map((height, index) => (
             <span key={index} className="w-full bg-foreground" style={{ height: `${height}%` }} />
           ))}
           <span className="w-full bg-mennige" style={{ height: "56%" }} />
         </div>
         <p className={cx(LABEL, "mt-2")}>
-          {text("Prognose KW 18, zu prüfen", "Week 18 forecast, to check")}
+          {text("Prognose KW 19, zu prüfen", "Week 19 forecast, to check")}
         </p>
       </div>
     </div>
@@ -262,15 +264,16 @@ export function OutboundWorkflowPreview() {
 
 export function AgentPipelinePreview() {
   const { text } = useDemoLocale();
+  // Short station names so all four fit whole on a 300px tile.
   const stations = [
-    text("Recherche", "Research"),
+    text("Suche", "Search"),
     text("Synthese", "Synthesis"),
-    text("Fehlersuche", "Error check"),
-    text("Redaktion", "Editing"),
+    text("Kritik", "Critique"),
+    text("Text", "Edit"),
   ];
   return (
-    <div className="flex w-full items-center gap-4 px-5 py-6 sm:gap-6 sm:px-8">
-      <ol className="relative grid min-w-0 flex-1 grid-cols-4">
+    <div className="flex w-full flex-col gap-5 px-5 py-6">
+      <ol className="relative grid grid-cols-4">
         <span className="absolute left-[12.5%] right-[12.5%] top-[0.6875rem] h-0.5 bg-foreground" />
         {stations.map((station, index) => (
           <li key={station} className="demo-pv-rise relative flex min-w-0 flex-col items-center gap-2">
@@ -284,12 +287,11 @@ export function AgentPipelinePreview() {
             >
               {index + 1}
             </span>
-            <span className={cx(LABEL, "max-w-full truncate text-center")}>{station}</span>
+            <span className={cx(LABEL, "whitespace-nowrap text-center")}>{station}</span>
           </li>
         ))}
       </ol>
-      <ArrowGlyph className="mb-6 size-5 shrink-0 text-muted-foreground" />
-      <Sheet lines={4} className="demo-pv-rise w-20 shrink-0 sm:w-24">
+      <Sheet lines={3} className="demo-pv-rise">
         <span className={LABEL}>Memo</span>
       </Sheet>
     </div>

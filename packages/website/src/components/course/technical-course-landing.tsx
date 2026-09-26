@@ -9,7 +9,8 @@ interface TechnicalCourseFrameProps {
 
 interface TechnicalCourseHeaderProps {
   readonly eyebrow: string;
-  readonly title: string;
+  /** A string, or inline markup that only controls line breaks. */
+  readonly title: ReactNode;
   readonly intro: string;
   readonly primaryAction: ReactNode;
   readonly secondaryAction?: ReactNode;
@@ -53,7 +54,7 @@ export const TECHNICAL_COURSE_SECONDARY_ACTION_CLASS =
  * tonal hover. Consumers add their own grid columns.
  */
 export const TECHNICAL_COURSE_LEDGER_LINK_CLASS =
-  "group relative grid min-h-14 min-w-0 items-center gap-2 border-b border-hairline bg-transparent px-2 py-4 transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
+  "group relative grid min-h-14 min-w-0 items-center gap-2 border-b border-hairline bg-transparent px-0 py-4 transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
 /** Legal-document "§ " prefixes are dropped from labels on the landing. */
 function plainLabel(label: string): string {
@@ -67,7 +68,7 @@ export function TechnicalCourseFrame({
 }: TechnicalCourseFrameProps): JSX.Element {
   return (
     <div
-      className="mx-auto w-full max-w-[75rem] min-w-0 overflow-x-clip px-4 pb-16 pt-6 sm:px-6 sm:pt-10"
+      className="mx-auto w-full max-w-[75rem] min-w-0 overflow-x-clip px-4 pb-12 pt-6 sm:px-6 sm:pt-10"
       data-technical-course={courseId}
       lang={lang}
     >
@@ -93,7 +94,7 @@ export function TechnicalCourseHeader({
     >
       <div className="min-w-0">
         <Kicker>{plainLabel(eyebrow)}</Kicker>
-        <h1 className="mt-3 max-w-[22ch] break-words text-fluid-h1 font-bold text-foreground [overflow-wrap:anywhere]">
+        <h1 className="mt-3 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance [overflow-wrap:anywhere]">
           {title}
         </h1>
         <p className="mt-5 max-w-[56ch] break-words text-lead text-muted-foreground text-pretty [overflow-wrap:anywhere]">
@@ -124,7 +125,7 @@ export function TechnicalCourseHeader({
           ))}
         </ul>
         {progress ? (
-          <div className="mt-5" data-course-progress-card>
+          <div className="mt-5 empty:hidden" data-course-progress-card>
             {progress}
           </div>
         ) : null}
@@ -147,7 +148,7 @@ export function TechnicalCourseSectionHeading({
       data-technical-section-heading
     >
       <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h2 className="max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground [overflow-wrap:anywhere]">
+        <h2 className="max-w-[40ch] break-words text-fluid-h2 font-bold text-foreground text-balance [overflow-wrap:anywhere]">
           {title}
         </h2>
         {note ? (
