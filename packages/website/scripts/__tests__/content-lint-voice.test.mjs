@@ -3,18 +3,23 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { runVoiceLint } from "../content-lint.mjs";
+import { findWorkshopHtmlDashes, runVoiceLint } from "../content-lint.mjs";
 import {
   classifyLearnerFile,
   collectLearnerFacingFiles,
+  extractHtmlUnits,
   extractTsStringLiterals,
+  isLearnerFacingFile,
 } from "../content-prose.mjs";
 import {
+  SHAPE_RULES,
+  VOICE_ADVISORY_PHRASES,
   VOICE_PHRASE_RULES,
   VOICE_RULE_IDS,
   VOICE_STRICT_RULES,
   VOICE_TERM_RULES,
   severityFor,
+  startsWithCloser,
   validateVoiceConfig,
 } from "../content-voice-rules.mjs";
 
@@ -230,12 +235,13 @@ test("TypeScript lessons are scanned through their string literals only", () => 
   assert.deepEqual(imagine.map((f) => f.relFile), [ENGLISH_JSON], "a different surface owns its own per-course budget");
 });
 
-test("every phrase and term rule is covered by the two language fixtures", () => {
+test("every phrase, term and shape rule is covered by the language fixtures", () => {
   const seen = new Set(
-    [...lint("german").all, ...lint("english").all].map((f) => f.phrase),
+    [...lint("german").all, ...lint("english").all, ...lint("slop-v2").all].map((f) => f.phrase),
   );
-  for (const entry of [...VOICE_PHRASE_RULES, ...VOICE_TERM_RULES]) {
-    assert.ok(seen.has(entry.id), `rule ${entry.id} is not exercised by a fixture`);
+  const structural = ["stacked-colons", "fragment-run", "tail-negation-density", "sentence-cv"];
+  for (const id of [...VOICE_PHRASE_RULES, ...VOICE_TERM_RULES, ...SHAPE_RULES].map((entry) => entry.id).concat(structural)) {
+    assert.ok(seen.has(id), `rule ${id} is not exercised by a fixture`);
   }
 });
 
@@ -444,4 +450,283 @@ test("the TypeScript literal scanner skips comments, regexes and module specifie
       ["tpl   end", 7, true],
     ],
   );
+});
+
+// ---------------------------------------------------------------------------
+// Slop patterns, second pass (fixtures/voice/slop-v2)
+// ---------------------------------------------------------------------------
+
+const SLOP_DE = "content/ki-fuehrerschein/block-9-slop-lessons.json";
+const SLOP_EN = "content/ki-fuehrerschein/en/block-9-slop-lessons.json";
+const SLOP_MD = "content/books/slopbuch/01_kapitel.md";
+const SLOP_HTML = "public/workshops/fixture-deck/slides.html";
+const SLOP_COPY = "src/lib/fixture-copy.de.ts";
+
+// Each German fixture section trips exactly one finding; the negative
+// controls at the end of the lesson trip none.
+const SLOP_DE_EXPECTATIONS = [
+  ["VOICE-CONTRAST", "de-contrast-kein-das-ist"],
+  ["VOICE-CONTRAST", "de-contrast-es-geht-nicht"],
+  ["VOICE-CONTRAST", "de-contrast-mehr-als-nur"],
+  ["VOICE-COUNT-LESSON", "de-count-nicht-sondern"],
+  ["VOICE-COUNT-LESSON", "de-count-kein-sondern"],
+  ["VOICE-PUFFERY", "de-puffery-buzz"],
+  ["VOICE-PUFFERY", "de-puffery-rolle-spielen"],
+  ["VOICE-PUFFERY", "de-puffery-eintauchen"],
+  ["VOICE-PUFFERY", "de-puffery-potenzial"],
+  ["VOICE-PUFFERY", "de-puffery-reise"],
+  ["VOICE-COUNT-LESSON", "de-count-entscheidend"],
+  ["VOICE-COUNT-COURSE", "de-count-spannend"],
+  ["VOICE-RESIDUE", "de-residue-chat"],
+  ["VOICE-RESIDUE", "de-residue-sycophancy"],
+  ["VOICE-OPENER", "de-opener-signpost"],
+  ["VOICE-HEDGE", "de-hedge-stack"],
+  ["VOICE-TRANSITION", "de-transition-adverb"],
+  ["VOICE-NOMINAL", "de-nominal-funktionsverb"],
+  ["VOICE-COUNT-LESSON", "de-count-amtsdeutsch"],
+  ["VOICE-CLAIM", "de-claim-untersuchungen-zeigen"],
+  ["VOICE-APHORISM", "de-aphorism"],
+  ["VOICE-SHAPE", "de-shape-colon-reveal"],
+  ["VOICE-SHAPE", "shape-count-fragment"],
+  ["VOICE-SHAPE", "shape-list-colon-opener"],
+  ["VOICE-SHAPE", "shape-rhetorical-reveal"],
+  ["VOICE-SHAPE", "stacked-colons"],
+  ["VOICE-RHYTHM", "fragment-run"],
+];
+
+const SLOP_EN_EXPECTATIONS = [
+  ["VOICE-CONTRAST", "en-contrast-its-not-its"],
+  ["VOICE-CONTRAST", "en-contrast-question-isnt"],
+  ["VOICE-CONTRAST", "en-contrast-not-just"],
+  ["VOICE-PUFFERY", "en-puffery-vocab"],
+  ["VOICE-PUFFERY", "en-puffery-plays-role"],
+  ["VOICE-COUNT-LESSON", "en-count-crucial"],
+  ["VOICE-PUFFERY", "en-puffery-copula"],
+  ["VOICE-RESIDUE", "en-residue-chat"],
+  ["VOICE-RESIDUE", "en-residue-sycophancy"],
+  ["VOICE-OPENER", "en-opener-signpost"],
+  ["VOICE-HEDGE", "en-hedge-stack"],
+  ["VOICE-TRANSITION", "en-transition-adverb"],
+  ["VOICE-NOMINAL", "en-nominal"],
+  ["VOICE-CLAIM", "en-claim-studies-show"],
+  ["VOICE-APHORISM", "en-aphorism"],
+  ["VOICE-SHAPE", "en-shape-colon-reveal"],
+  ["VOICE-SHAPE", "shape-count-fragment"],
+];
+
+const pairs = (findings, relFile) =>
+  findings
+    .filter((f) => f.relFile === relFile)
+    .map((f) => [f.rule, f.phrase])
+    .sort((a, b) => a.join().localeCompare(b.join()));
+const sortedPairs = (expectations) => [...expectations].sort((a, b) => a.join().localeCompare(b.join()));
+
+test("the slop-v2 German lesson trips every new German rule exactly once and no negative control fires", () => {
+  const { all, errors, configErrors } = lint("slop-v2");
+  assert.deepEqual(configErrors, []);
+  assert.deepEqual(errors, [], "nothing is strict, so every finding is a warning");
+  assert.deepEqual(pairs(all, SLOP_DE), sortedPairs(SLOP_DE_EXPECTATIONS));
+});
+
+test("the slop-v2 English lesson trips every new English rule exactly once and no negative control fires", () => {
+  const { all } = lint("slop-v2");
+  assert.deepEqual(pairs(all, SLOP_EN), sortedPairs(SLOP_EN_EXPECTATIONS));
+});
+
+test("density rules fire on the uniform chapter only: tailing negations and sentence-length variation", () => {
+  const { all } = lint("slop-v2");
+  assert.deepEqual(pairs(all, SLOP_MD), [
+    ["VOICE-RHYTHM", "sentence-cv"],
+    ["VOICE-SHAPE", "tail-negation-density"],
+  ]);
+  const density = byPhrase(all, "tail-negation-density")[0];
+  assert.match(density.message, /90 tailing negations/);
+  assert.match(byPhrase(all, "sentence-cv")[0].message, /CV 0\.00 across 90 sentences/);
+});
+
+test("strict scope promotes contrast, puffery and residue, keeps shape and rhythm advisory, and never promotes public/", () => {
+  const relaxed = lint("slop-v2");
+  const strict = lint("slop-v2", { strict: ["content/ki-fuehrerschein/", "content/books/slopbuch/", "public/", "src/lib/"] });
+  assert.equal(relaxed.all.length, strict.all.length, "scope changes severity, never the set of findings");
+
+  const errorPhrases = new Set(strict.errors.map((f) => f.phrase));
+  for (const phrase of [
+    "de-contrast-mehr-als-nur",
+    "en-contrast-not-just",
+    "de-puffery-rolle-spielen",
+    "de-puffery-eintauchen",
+    "en-puffery-vocab",
+    "de-residue-chat",
+    "de-residue-sycophancy",
+    "en-residue-chat",
+    "en-residue-sycophancy",
+    "de-opener-signpost",
+    "en-hedge-stack",
+    "de-transition-adverb",
+    "de-claim-untersuchungen-zeigen",
+    "de-count-kein-sondern",
+  ]) {
+    assert.ok(errorPhrases.has(phrase), `${phrase} should be an error in strict scope`);
+  }
+  for (const rule of ["VOICE-SHAPE", "VOICE-RHYTHM", "VOICE-NOMINAL", "VOICE-APHORISM"]) {
+    assert.equal(byRule(strict.errors, rule).length, 0, `${rule} stays a warning`);
+    assert.ok(byRule(strict.warnings, rule).length > 0, `${rule} is still reported`);
+  }
+  for (const phrase of VOICE_ADVISORY_PHRASES) {
+    assert.equal(byPhrase(strict.errors, phrase).length, 0, `${phrase} is advisory until its current hits are rewritten`);
+  }
+  assert.ok(byPhrase(strict.warnings, "de-contrast-kein-das-ist").length === 1);
+  const publicFindings = strict.all.filter((f) => f.relFile === SLOP_HTML);
+  assert.deepEqual(publicFindings.map((f) => [f.rule, f.phrase]), [["VOICE-RESIDUE", "de-residue-sycophancy"]]);
+  assert.equal(strict.errors.filter((f) => f.relFile.startsWith("public/")).length, 0, "workshop materials are never errors");
+  assert.equal(severityFor({ rule: "VOICE-RESIDUE", relFile: SLOP_HTML, phrase: "de-residue-sycophancy" }, ["public/"]), "warn");
+  assert.equal(severityFor({ rule: "VOICE-RESIDUE", relFile: SLOP_DE, phrase: "de-residue-sycophancy" }, ["content/"]), "error");
+  for (const rule of ["VOICE-CONTRAST", "VOICE-PUFFERY", "VOICE-RESIDUE"]) {
+    assert.ok(VOICE_STRICT_RULES.has(rule));
+  }
+  for (const rule of ["VOICE-NOMINAL", "VOICE-APHORISM", "VOICE-SHAPE", "VOICE-RHYTHM"]) {
+    assert.ok(VOICE_RULE_IDS.includes(rule), `${rule} is known to the allowlist`);
+    assert.ok(!VOICE_STRICT_RULES.has(rule), `${rule} is warning-only`);
+  }
+});
+
+test("ESRS terms of art never match a puffery, contrast, residue or aphorism rule", () => {
+  const terms = [
+    "wesentlich",
+    "wesentliche Auswirkungen",
+    "Wesentlichkeit",
+    "doppelte Wesentlichkeit",
+    "Wesentlichkeitsanalyse",
+    "eine wesentliche Rolle spielt die Lieferkette",
+    "material",
+    "materiality",
+    "double materiality",
+    "material impacts, risks and opportunities",
+  ];
+  const guarded = VOICE_PHRASE_RULES.filter((entry) =>
+    ["puffery", "contrast", "residue", "aphorism", "filler", "claim"].includes(entry.category) ||
+    entry.id === "de-count-entscheidend",
+  );
+  for (const term of terms) {
+    for (const entry of guarded) {
+      assert.ok(!new RegExp(entry.pattern.source, entry.pattern.flags).test(term), `${entry.id} must not match "${term}"`);
+    }
+  }
+  const { all } = lint("slop-v2");
+  assert.ok(all.every((f) => !/Wesentlich|materiality/i.test(f.message)));
+});
+
+// Positive and negative examples per phrase rule (from the research self-test).
+const PHRASE_CASES = {
+  "de-contrast-kein-das-ist": [["Das ist kein Tippfehler. Das ist der teuerste Satz."], ["Das ist kein Problem. Du kannst weitermachen."]],
+  "de-contrast-es-geht-nicht": [["Es geht nicht um Tempo, sondern um Kontrolle."], ["Es geht nicht ohne Freigabe."]],
+  "de-contrast-mehr-als-nur": [["Das ist mehr als nur eine Liste."], ["Das kostet mehr als 100 Euro."]],
+  "de-count-nicht-sondern": [["Der Login ist nicht das Ende, sondern der Anfang."], ["Das gilt nicht nur f\u00fcr Teams, sondern auch f\u00fcr Slack."]],
+  "de-count-kein-sondern": [["Am Ende steht keine Zusammenfassung, sondern eine Entscheidung."], ["Keine Sorge, das geht."]],
+  "en-contrast-its-not-its": [["It's not a tool, it's a mindset."], ["It is not clear whether this is enough."]],
+  "en-contrast-question-isnt": [["The question isn't which model. It's which process."], ["The question is not answered in the report."]],
+  "en-contrast-not-just": [["It's not just a dashboard.", "More than just a checklist."], ["The inventory is not only a list but also a tool.", "Check the variant, not just the brand."]],
+  "de-puffery-buzz": [["Die nahtlose Integration.", "Das Herzst\u00fcck des Kurses."], ["Die Naht h\u00e4lt."]],
+  "de-puffery-rolle-spielen": [["Daten spielen eine entscheidende Rolle.", "Eine zentrale Rolle spielt der Mensch."], ["Die Rolle des Betreibers ist definiert.", "Eine wesentliche Rolle spielt die Lieferkette."]],
+  "de-puffery-eintauchen": [["Tauchen wir ein.", "Lass uns in die Welt der Agenten eintauchen."], ["Taucht ein nicht freigegebenes Verzeichnis auf, stoppst du."]],
+  "de-puffery-potenzial": [["So kannst du dein Potenzial entfalten."], ["Das Potenzial liegt bei 12 Prozent."]],
+  "de-puffery-reise": [["Auf deiner KI-Reise."], ["Die Reisekosten steigen."]],
+  "de-count-entscheidend": [["Das ist entscheidend."], ["Die Entscheidung f\u00e4llt morgen."]],
+  "de-count-spannend": [["Eine spannende Frage."], ["Die Spannung steigt."]],
+  "en-puffery-vocab": [["A pivotal moment.", "This underscores the need."], ["The pivot table."]],
+  "en-puffery-plays-role": [["Data plays a crucial role."], ["Role play works."]],
+  "en-puffery-copula": [["The page serves as a hub."], ["She stands by the door."]],
+  "en-count-crucial": [["This is crucial."], ["A crucible."]],
+  "en-residue-chat": [["Great question! The answer is 4."], ["The question is great."]],
+  "de-residue-chat": [["Gute Frage! Die Antwort ist 4."], ["Eine gute Fragestellung."]],
+  "en-residue-sycophancy": [["Don't worry, it's easy."], ["Worry about the data first."]],
+  "de-residue-sycophancy": [["Keine Sorge, das ist einfach.", "Kennst du das? Der Bericht ist zu lang."], ["Sorgfalt ist Pflicht."]],
+  "en-opener-signpost": [["Here's the thing: it breaks.", "This is where RAG comes in."], ["Here is the file."]],
+  "de-opener-signpost": [["Hier kommt RAG ins Spiel.", "Werfen wir einen Blick auf Excel."], ["Die Folgen sind klar."]],
+  "en-hedge-stack": [["This may potentially help."], ["This may help."]],
+  "de-hedge-stack": [["Das k\u00f6nnte m\u00f6glicherweise helfen."], ["Das kann helfen."]],
+  "en-transition-adverb": [["Additionally, it logs."], ["It is additionally logged."]],
+  "de-transition-adverb": [["Des Weiteren gilt Artikel 4."], ["Weiteres folgt."]],
+  "de-nominal-funktionsverb": [["Die Regel kommt zur Anwendung.", "Die Pr\u00fcfung erfolgt durch das Team."], ["Wende die Regel an."]],
+  "de-count-amtsdeutsch": [["Im Rahmen der Pr\u00fcfung."], ["Der Rahmen h\u00e4lt."]],
+  "en-nominal": [["We carry out a review.", "In order to start."], ["Order to start."]],
+  "en-claim-studies-show": [["Studies show that AI helps."], ["The study shows a 12% gap."]],
+  "de-claim-untersuchungen-zeigen": [["Untersuchungen zeigen, dass KI hilft."], ["Die Untersuchung zeigt 12 Prozent."]],
+  "en-aphorism": [["The real question is trust.", "The value sits in the process."], ["The question is whether trust holds."]],
+  "de-aphorism": [["Die eigentliche Frage ist Vertrauen.", "Daten sind das A und O."], ["Die Frage ist offen."]],
+};
+
+const SHAPE_CASES = {
+  "de-shape-colon-reveal": [["Das Ergebnis: 40 Prozent.", "Das Herzst\u00fcck: Der Skill liegt im Kit."], ["Ergebnis der Messung sind 40 Prozent.", "Die Regel lautet: Projekte haben eine Frist."]],
+  "en-shape-colon-reveal": [["The result: 40 percent.", "In short: Claude continues text."], ["The result of the test was 40 percent."]],
+  "shape-count-fragment": [["F\u00fcnf Prompts, ein Analyst.", "One launch, three numbers, and constrained supply:", "Eine Frage, zwei Datenst\u00e4nde, zwei Antworten."], ["F\u00fcnf Prompts reichen f\u00fcr den Bericht.", "Two sites, however, need approval.", "Zwei Entw\u00fcrfe, eine Stoppuhr"]],
+  "shape-list-colon-opener": [["Memos, Briefe, Vorlagen: jeden Tag dieselbe Arbeit.", "Recherche, Synthese, Kritik, Redaktion: vier Schritte."], ["Titel und Problem: bitte ausf\u00fcllen."]],
+  "shape-rhetorical-reveal": [["Das Ergebnis?", "Why?"], ["Warum steigt der Wert?"]],
+};
+
+test("each new phrase and shape rule matches its examples and none of its counter-examples", () => {
+  const byId = new Map(VOICE_PHRASE_RULES.map((entry) => [entry.id, entry]));
+  for (const [id, [positives, negatives]] of Object.entries(PHRASE_CASES)) {
+    const entry = byId.get(id);
+    assert.ok(entry, `${id} exists`);
+    const pattern = () => new RegExp(entry.pattern.source, entry.pattern.flags);
+    for (const text of positives) assert.ok(pattern().test(text), `${id} should match "${text}"`);
+    for (const text of negatives) assert.ok(!pattern().test(text), `${id} must not match "${text}"`);
+  }
+  for (const rule of SHAPE_RULES) {
+    const [positives, negatives] = SHAPE_CASES[rule.id];
+    for (const text of positives) assert.ok(rule.test.test(text), `${rule.id} should match "${text}"`);
+    for (const text of negatives) assert.ok(!rule.test.test(text), `${rule.id} must not match "${text}"`);
+  }
+});
+
+test("new closer markers end a lesson on a restating summary", () => {
+  for (const text of ["Unterm Strich sparst du Zeit.", "Das Wichtigste in K\u00fcrze", "Alles in allem passt es.", "Overall, it works.", "The bottom line is clear.", "## All in all"]) {
+    assert.ok(startsWithCloser(text), text);
+  }
+  assert.ok(!startsWithCloser("Das Wichtigste steht in Spalte B."));
+});
+
+test("workshop HTML is read through its visible prose; dashes there are warnings with placeholders exempt", () => {
+  const raw = [
+    "<p>Eins \u2014 zwei drei.</p>",
+    "<script>const x = \"Keine Sorge\";</script>",
+    "<td>\u2014</td>",
+    "<li>Ein <em>Wort</em>, dann <strong>zwei</strong>.</li>",
+    "<p>Zeile<br>neu &amp; fertig&nbsp;jetzt.</p>",
+  ].join("\n");
+  const [lesson] = extractHtmlUnits(raw);
+  assert.deepEqual(
+    lesson.segments.map((s) => [s.text, s.line]),
+    [
+      ["Eins \u2014 zwei drei.", 1],
+      ["Ein Wort, dann zwei.", 4],
+      ["Zeile neu & fertig jetzt.", 5],
+    ],
+  );
+  assert.deepEqual(findWorkshopHtmlDashes(path.join(fixtures, "slop-v2")), [
+    { relFile: SLOP_HTML, line: 11, rule: "EM-DASH" },
+    { relFile: SLOP_HTML, line: 15, rule: "EN-DASH" },
+  ], "prose em dash and a month range fire; the attribute, the placeholder cells, the digit range, the style, the script and the comment do not");
+});
+
+test("discovery covers workshop HTML, locale copy modules and the workshop registry modules", () => {
+  assert.deepEqual(collectLearnerFacingFiles(path.join(fixtures, "slop-v2")), [
+    SLOP_MD,
+    SLOP_DE,
+    SLOP_EN,
+    SLOP_HTML,
+    SLOP_COPY,
+    "src/lib/workshops-data-readiness.ts",
+    "src/lib/workshops-esg-reporting.ts",
+  ]);
+  assert.deepEqual(classifyLearnerFile(SLOP_HTML), { kind: "html", lang: "mixed", surface: "public/workshops/fixture-deck" });
+  assert.equal(classifyLearnerFile("src/app/hilfe/eigene-ki/eigene-ki-copy.de.ts").surface, "copy modules");
+  assert.ok(isLearnerFacingFile("public/workshops/ki-prognosen-einschaetzen/case-study/index.html"));
+  assert.ok(!isLearnerFacingFile("public/workshops/datenbereitschaft-fuer-ki/lib/deck-runtime.js"), "scripts stay out of scope");
+  assert.ok(!isLearnerFacingFile("public/index.html"), "only workshop materials are read under public/");
+  const real = collectLearnerFacingFiles(websiteRoot);
+  assert.ok(real.includes("src/lib/workshops-data-readiness.ts"));
+  assert.ok(real.includes("public/workshops/datenbereitschaft-fuer-ki/slides.html"));
+  assert.ok(real.includes("src/app/hilfe/eigene-ki/eigene-ki-copy.de.ts"));
 });

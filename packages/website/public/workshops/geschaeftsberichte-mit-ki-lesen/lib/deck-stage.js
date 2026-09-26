@@ -146,25 +146,27 @@
       .tapzones { display: none; }
     }
 
+    /* Toolbar in the W03 deck language: light, square, 2px ink edge, Mennige focus ring. */
     .overlay {
       position: fixed;
       left: 50%;
-      bottom: 22px;
-      transform: translate(-50%, 6px) scale(0.92);
-      filter: blur(6px);
+      bottom: 16px;
+      transform: translate(-50%, 6px);
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px;
-      background: #000;
-      color: #fff;
-      border-radius: 999px;
-      font-size: 12px;
+      gap: 0;
+      padding: 0;
+      background: #f3f0e9;
+      color: #121212;
+      border: 2px solid #121212;
+      border-radius: 0;
+      font-family: "Typing", system-ui, sans-serif;
+      font-size: 15px;
       font-feature-settings: "tnum" 1;
-      letter-spacing: 0.01em;
+      letter-spacing: 0;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 260ms ease, transform 260ms cubic-bezier(.2,.8,.2,1), filter 260ms ease;
+      transition: opacity 160ms cubic-bezier(.16,1,.3,1), transform 160ms cubic-bezier(.16,1,.3,1);
       transform-origin: center bottom;
       z-index: 2147483000;
       user-select: none;
@@ -173,8 +175,7 @@
     .overlay[data-visible] {
       opacity: 1;
       pointer-events: auto;
-      transform: translate(-50%, 0) scale(1);
-      filter: blur(0);
+      transform: translate(-50%, 0);
     }
 
     .btn {
@@ -184,64 +185,64 @@
       border: 0;
       margin: 0;
       padding: 0;
-      color: inherit;
       font: inherit;
-      cursor: default;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 28px;
-      min-width: 28px;
-      border-radius: 999px;
-      color: rgba(255,255,255,0.72);
-      transition: background 140ms ease, color 140ms ease;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 0;
+      color: #121212;
+      transition: background 120ms ease, color 120ms ease;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
-    .btn:active { background: rgba(255,255,255,0.18); }
-    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .btn:hover { background: #e5e4e2; color: #97300f; }
+    .btn:active { background: #d4cec5; }
+    .btn:focus-visible { outline: 3px solid #b73a15; outline-offset: 2px; position: relative; z-index: 1; }
     .btn::-moz-focus-inner { border: 0; }
-    .btn svg { width: 14px; height: 14px; display: block; }
+    .btn svg { width: 16px; height: 16px; display: block; }
     .btn.reset {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      padding: 0 10px 0 12px;
-      gap: 6px;
-      color: rgba(255,255,255,0.72);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0;
+      padding: 0 12px 0 14px;
+      gap: 8px;
+      color: #121212;
     }
     .btn.reset .kbd {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 16px;
-      height: 16px;
+      min-width: 20px;
+      height: 20px;
       padding: 0 4px;
-      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      font-size: 10px;
+      font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 13px;
       line-height: 1;
-      color: rgba(255,255,255,0.88);
-      background: rgba(255,255,255,0.12);
-      border-radius: 4px;
+      color: #121212;
+      background: transparent;
+      border: 1px solid #827970;
+      border-radius: 0;
     }
 
     .count {
       font-variant-numeric: tabular-nums;
-      color: #fff;
-      font-weight: 500;
-      padding: 0 8px;
-      min-width: 42px;
+      color: #121212;
+      font-weight: 600;
+      padding: 0 10px;
+      min-width: 64px;
       text-align: center;
-      font-size: 12px;
+      font-size: 15px;
     }
-    .count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }
-    .count .total { color: rgba(255,255,255,0.55); }
+    .count .sep { color: #4f4640; margin: 0 3px; font-weight: 400; }
+    .count .total { color: #4f4640; font-weight: 400; }
 
     .divider {
       width: 1px;
-      height: 14px;
-      background: rgba(255,255,255,0.18);
-      margin: 0 2px;
+      height: 44px;
+      background: #d4cec5;
+      margin: 0;
     }
 
     /* ── Print: one page per slide, no chrome ────────────────────────────
@@ -292,12 +293,13 @@
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 68px;
+      bottom: 72px;
       transform: translateX(-50%);
-      padding: 8px 14px;
-      background: #000;
-      color: #fff;
-      font-size: 13px;
+      padding: 10px 16px;
+      background: #121212;
+      color: #f2f1ee;
+      font-family: "Typing", system-ui, sans-serif;
+      font-size: 15px;
       font-weight: 500;
       letter-spacing: 0.01em;
       opacity: 0;
@@ -319,7 +321,6 @@
       background: #f3f0e9;
       color: #121212;
       border: 2px solid #121212;
-      box-shadow: 3px 3px 0 #121212;
       padding: 12px 12px 12px 16px;
       font-size: 15px;
       line-height: 1.4;
@@ -333,7 +334,7 @@
       appearance: none; -webkit-appearance: none;
       flex: 0 0 auto;
       min-width: 44px; min-height: 44px;
-      background: #121212; color: #fff; border: 0;
+      background: #121212; color: #f2f1ee; border: 0;
       font: inherit; font-weight: 700; cursor: pointer;
     }
     @media (orientation: portrait) and (max-width: 600px) {

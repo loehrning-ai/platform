@@ -20,3 +20,16 @@
 - A future tool or project registry entry must include its publication status and status note, structured prerequisites, installation steps, usage steps, integration targets and steps, public documentation, an accessible browser-safe screenshot with exact SHA-256, byte size, and dimensions, and at least one internal related-learning route. Register the screenshot and locally hosted license in `ASSET_MANIFEST.json`; `bun run artifact-assets:check` rejects missing files, manifest drift, byte tampering, and dimension drift. The validator rejects partial entries, and the shared detail page renders this guide without artifact-specific page code.
 - Apply [MEDIA_POLICY.md](MEDIA_POLICY.md) before publishing any video or audio. Captions, transcript, poster, provenance, redistribution rights, hashes, sizes, storage review, and accessibility proof are mandatory.
 - Register stored public assets in `ASSET_MANIFEST.json`. `bun run asset:record` only produces a candidate record; human review remains required.
+
+## Sentence shapes that read as generated
+
+Readers spot machine-written text by its shapes more than by single words. `bun run content:lint` reports the rules below. Contrast, puffery and residue are errors in the strict scope; the other rules are warnings everywhere. Workshop pages under `public/workshops/` are read as well, and every finding there is a warning.
+
+- `VOICE-CONTRAST` reports staged negation. "Das ist kein KI-Problem. Das ist ein Datenproblem." becomes "Bring die Daten zuerst in eine Tabelle." Keep a contrast only when the reader really holds the negated belief; "nicht X, sondern Y" is allowed once per lesson.
+- `VOICE-PUFFERY` reports ratings instead of facts. "Das Herzstück des Kurses ist der Skill" becomes "Im Kit liegt ein halb fertiger Kennzahlen-Skill." The ESRS terms "wesentlich", "Wesentlichkeit", "material" and "double materiality" are never puffery.
+- `VOICE-RESIDUE` reports chat leftovers and reassurance. "Keine Sorge, das ist ganz einfach." becomes "Die Übung dauert 10 Minuten und läuft nur in deinem Browser."
+- `VOICE-NOMINAL` reports nouns where a verb belongs. "Die Prüfung erfolgt durch das Team" becomes "Das Team prüft".
+- `VOICE-APHORISM` reports sayings that sound deep. "Daten sind das A und O." goes; the next sentence with the actual claim stays.
+- `VOICE-SHAPE` reports headline grammar in running prose. "Fünf Prompts, ein Analyst." becomes "Du schreibst in fünf Prompts auf, was jede Kennzahl im Bericht bedeutet." The same rule reports colon reveals ("Das Ergebnis: ..."), list-colon openers ("Memos, Briefe, Vorlagen: ..."), more than one colon in a sentence, a question answered in the next breath ("Das Ergebnis? 40 Prozent.") and more than four tailing negations (", nicht zum Verkaufen.") per 1,000 words.
+- `VOICE-RHYTHM` reports three sentences of four words or fewer in a row ("Du nutzt KI schon. Jeden Tag. Seit Jahren.") and files where every sentence has the same length. Merge fragments into one sentence with a verb; let length follow content.
+- Existing rules also cover signposting ("Hier kommt RAG ins Spiel"), hedge stacks ("könnte möglicherweise"), transition adverbs ("Des Weiteren", "Additionally,"), unsourced authority ("Untersuchungen zeigen") and closers ("Unterm Strich", "Overall").

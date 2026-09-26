@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/highlighted-text";
 
 /**
- * /buecher and /workshops paint their h1 accent as a marker-pen background
+ * /buecher paints its h1 accent as a marker-pen background
  * band (HighlightedText) instead of the inline span's own content-area
  * background specifically because the latter tracks font ascent+descent
  * (~1.21em) independent of leading-[0.9], producing 12.9-27.3px of overlap
@@ -27,7 +27,9 @@ import {
  * wrapping, which is the part a unit test cannot reach.
  */
 
-const ROUTES = ["/buecher", "/en/buecher", "/workshops", "/en/workshops"] as const;
+// /workshops dropped the marker highlight with the Werkzeichnung hub (plain
+// ink headline, no HighlightedText), so only the books catalog is measured.
+const ROUTES = ["/buecher", "/en/buecher"] as const;
 const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1440, height: 900 },

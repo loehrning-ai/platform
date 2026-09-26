@@ -64,7 +64,7 @@ describe("catalog surfaces below lg", () => {
     },
   );
 
-  it("puts the decision first on the two routes that stack a row", () => {
+  it("reorders a stacked row only on the books route", () => {
     const reordering = SURFACES.filter((path) =>
       classLists(source(path)).some(
         (list) =>
@@ -72,13 +72,12 @@ describe("catalog surfaces below lg", () => {
       ),
     );
 
-    // Books and workshops are the two catalog rows whose decision sits under
-    // a summary and a fact list. The demo and open-source rows already lead
-    // with theirs, so a reorder there would be motion for its own sake.
-    expect(reordering).toEqual([
-      "buecher/buecher-content.tsx",
-      "workshops/workshops-content.tsx",
-    ]);
+    // Books is the one catalog row whose decision sits under a summary and a
+    // fact list. The workshop row already reads in phone order in the DOM
+    // (cover, kicker, title, question, link), and the demo and open-source
+    // rows lead with their decision, so a reorder there would be motion for
+    // its own sake.
+    expect(reordering).toEqual(["buecher/buecher-content.tsx"]);
   });
 
   it.each(SURFACES)(
@@ -114,30 +113,25 @@ describe("catalog surfaces below lg", () => {
     expect(buecher).toContain("sm:w-56 md:w-full");
   });
 
-  it("leads the workshop row with its numbered title and hides the catalogue index", () => {
+  it("stacks the workshop row cover first and turns the index into a rail", () => {
     const workshops = source("workshops/workshops-content.tsx");
-    const heading =
-      workshops.match(/<h3\s+id=\{headingId\}\s+className="([^"]+)"/)?.[1] ??
-      "";
-    const decision =
-      workshops.match(/data-workshop-decision\s+className="([^"]+)"/)?.[1] ??
-      "";
+    const row = workshops.slice(workshops.indexOf("function WorkshopRow"));
 
-    // The "Workshop NN: title" heading leads the row on a phone; the quoted
-    // first decision follows it in source order at every width.
-    expect(heading).toContain("order-first");
-    expect(heading).toContain("md:order-none");
-    expect(heading).toContain("text-2xl");
-    expect(heading).toContain("sm:text-4xl");
-    expect(decision).not.toContain("order-first");
-    expect(decision).toContain("font-semibold");
-    // The hero's catalogue index repeats the cards directly below it, so it
-    // costs nothing on a phone and returns from sm.
-    expect(workshops).toContain(
-      '<ol className="mt-5 hidden space-y-2 sm:block">',
+    // Phone order is source order: the cover on top at full width, then the
+    // kicker, the title, the question and the one link. From md the same DOM
+    // becomes the two-column sheet (cover left), so nothing needs `order`.
+    expect(row.indexOf("<figure")).toBeLessThan(row.indexOf("<h3"));
+    expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("data-workshop-question"));
+    expect(row.indexOf("data-workshop-question")).toBeLessThan(
+      row.indexOf("<Link"),
     );
-    expect(workshops).toContain("py-6 sm:py-14");
-    expect(workshops).toContain("gap-6 sm:gap-12");
+    expect(row).toContain("md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]");
+    // The cover-band index is a one-line rail on a phone, keyboard reachable
+    // through its links, and a wrapping row from sm that never scrolls.
+    expect(workshops).toContain(
+      "flex snap-x gap-x-6 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible",
+    );
+    expect(workshops).toContain("pt-14 sm:pt-20");
   });
 
   it("keeps the demo cover compact without moving the desktop console", () => {

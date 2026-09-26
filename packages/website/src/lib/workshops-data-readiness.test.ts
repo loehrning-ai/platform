@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { runInNewContext } from "node:vm";
 import { describe, expect, it } from "vitest";
@@ -10,24 +10,40 @@ const read = (name: string) => readFileSync(resolve(root, name), "utf8");
 const files = (directory = root): string[] => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? files(resolve(directory, entry.name)) : [resolve(directory, entry.name)]);
 
 describe("published Data Readiness workshop", () => {
-  it("is the third workshop in both locales, with exactly three entry points: course, guide and the Claude demo", () => {
+  it("is the third workshop in both locales and lists every learner-facing file, grouped by phase", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = getWorkshops(locale)[2];
       expect(workshop.slug).toBe("datenbereitschaft-fuer-ki");
       expect(workshop.number).toBe("03");
-      expect(workshop.materials).toHaveLength(3);
-      expect(workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length))).toEqual([
+      const relative = workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length));
+      expect(relative).toEqual([
         "slides.html",
-        "guide.html",
+        "presenter.html",
         "demo.html",
+        "data-readiness-kit.zip",
+        "guide.html",
+        "data-readiness-kit/readiness-lab.html",
+        "builder.html",
       ]);
-      expect(workshop.materials.every((material) => material.kind === "html" && material.language === "en")).toBe(true);
-      expect(workshop.materials.some((material) => material.href.endsWith("/presenter.html"))).toBe(false);
-      // The lab, worksheet ZIP and builder guide stay published but are no longer offered here.
-      expect(JSON.stringify(workshop)).not.toMatch(/readiness-lab\.html|data-readiness-kit\.zip|builder\.html|Browserlabor|browser lab|Bauanleitung|Builder guide/i);
+      expect(workshop.materials.map(({ role, phase }) => `${role}/${phase}`)).toEqual([
+        "deck/during",
+        "presenter/during",
+        "demo/during",
+        "kit/during",
+        "guide/after",
+        "lab/after",
+        "builder/after",
+      ]);
+      expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
+      // Presenter view, demo, lab and builder guide are extras; the outcomes do not depend on them.
+      expect(workshop.materials.filter((material) => material.optional).map((material) => material.role)).toEqual(["presenter", "demo", "lab", "builder"]);
+      expect(workshop.materials.every((material) => material.language === "en")).toBe(true);
       for (const material of workshop.materials) {
         expect(existsSync(resolve(root, material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length).split("#")[0])), material.href).toBe(true);
       }
+      // Every HTML page at the bundle root and the browser lab is a learner-facing material.
+      const pages = readdirSync(root).filter((name) => name.endsWith(".html"));
+      for (const page of pages) expect(relative, page).toContain(page);
     }
   });
 
@@ -36,16 +52,41 @@ describe("published Data Readiness workshop", () => {
     const en = getWorkshops("en")[2];
     expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
     expect(en.accessNote).toContain("materials are in English, the live session is introduced in German.");
-    expect(en.accessNote).toMatch(/^The course and the demo need no account or installation;/);
-    expect(de.accessNote).toMatch(/^Für Kurs und Demo brauchst du kein Konto und keine Installation;/);
+    expect(en.accessNote).toMatch(/^The deck, learner guide and demo need only a browser;/);
+    expect(de.accessNote).toMatch(/^Für Deck, Lernbegleiter und Demo brauchst du nur einen Browser;/);
     for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
     expect(de.duration).toBe("~90 Minuten");
     expect(en.duration).toBe("~90 minutes");
-    expect(de.materials[0]?.description).toMatch(/75 Minuten Kurs und 15 Minuten Fragen/);
-    expect(en.materials[0]?.description).toMatch(/75 minutes of course and 15 minutes of questions/);
-    expect(en.materials.map((material) => material.label)).toEqual(["Course · 26 scenes", "Learner guide", "Interactive demo · 10 min"]);
-    expect(de.materials.map((material) => material.label)).toEqual(["Kurs · 26 Szenen", "Lernbegleiter", "Interaktive Demo · 10 Min."]);
+    expect(de.materials[0]?.description).toMatch(/75 Minuten Programm und 15 Minuten Fragen/);
+    expect(en.materials[0]?.description).toMatch(/75 minutes of content and 15 minutes of questions/);
+    expect(en.materials.map((material) => material.label)).toEqual([
+      "Deck · 26 scenes",
+      "Presenter view",
+      "Interactive demo · 10 min",
+      "Readiness kit · .zip",
+      "Learner guide",
+      "Browser lab · 12 min",
+      "Builder guide",
+    ]);
+    expect(de.materials.map((material) => material.label)).toEqual([
+      "Deck · 26 Szenen",
+      "Moderationsansicht",
+      "Interaktive Demo · 10 Min.",
+      "Readiness-Kit · .zip",
+      "Lernbegleiter",
+      "Browserlabor · 12 Min.",
+      "Builder-Leitfaden",
+    ]);
+    expect(de.materials.find((material) => material.kind === "zip")?.sizeLabel).toBe("1,1 MB");
+    expect(en.materials.find((material) => material.kind === "zip")?.sizeLabel).toBe("1.1 MB");
+    // The size label stays true to the published archive (1,144,739 bytes).
+    expect(statSync(resolve(root, "data-readiness-kit.zip")).size).toBeGreaterThan(1_050_000);
+    expect(statSync(resolve(root, "data-readiness-kit.zip")).size).toBeLessThan(1_150_000);
     for (const workshop of [de, en]) expect(JSON.stringify(workshop)).not.toMatch(/certified|zertifiziert/i);
+    // Workshop 03 calls itself a workshop, never a "course" (an SQL course is something it leaves out).
+    expect(JSON.stringify(de).replace("Ein SQL-Kurs", "")).not.toMatch(/Kurs/);
+    expect(JSON.stringify(en).replace("An SQL course", "")).not.toMatch(/\bcourses?\b/i);
+    expect(en.question).toBe("Show ending MRR by month for the last complete quarter.");
     expect(en.description).toContain("Show ending MRR by month for the last complete quarter");
     expect(en.description).toContain("-19,960 / 9,775 / 42,565");
     expect(en.description).toContain("334,675 / 344,450 / 387,015");
@@ -56,8 +97,36 @@ describe("published Data Readiness workshop", () => {
       expect(text).toMatch(/36/);
       expect(text).toMatch(/0 (?:of|von) 3/);
       expect(text).toMatch(/9 (?:of|von) 9/);
+      expect(workshop.provenance.liveRunAt).toBe("2026-09-25");
+      expect(workshop.provenance.aiOutputsRecordedAt).toBe("2026-08");
     }
     expect(JSON.stringify(en)).toMatch(/limited pilot, not signed off/);
+  });
+
+  it("takes its agenda from the deck's acts: 75 minutes of main path plus 15 minutes of questions", () => {
+    const slides = read("slides.html");
+    const seconds = new Map<string, number>();
+    for (const [tag] of slides.matchAll(/<section\b[^>]*>/g)) {
+      if (!/data-kind="main"/.test(tag)) continue;
+      const act = /data-act="(\d+)"/.exec(tag)?.[1];
+      const value = Number(/data-seconds="(\d+)"/.exec(tag)?.[1] ?? 0);
+      if (act !== undefined) seconds.set(act, (seconds.get(act) ?? 0) + value);
+    }
+    expect([...seconds.keys()]).toEqual(["0", "1", "2", "3", "4", "5", "6"]);
+    const deckMinutes = [...seconds.values()].reduce((sum, value) => sum + value, 0) / 60;
+    expect(deckMinutes).toBe(75);
+    for (const locale of ["de", "en"] as const) {
+      const workshop = getWorkshops(locale)[2];
+      expect(workshop.agendaSource).toBe("deck");
+      const acts = workshop.agenda.filter((item) => item.mode !== "live");
+      expect(acts).toHaveLength(seconds.size);
+      for (const [index, item] of acts.entries()) {
+        // Whole minutes, never more than one minute away from the deck's own timing.
+        expect(Math.abs(item.minutes - (seconds.get(String(index)) ?? 0) / 60), item.label).toBeLessThanOrEqual(1);
+      }
+      expect(acts.reduce((sum, item) => sum + item.minutes, 0)).toBe(deckMinutes);
+      expect(workshop.minutesLive).toBe(deckMinutes + 15);
+    }
   });
 
   it("keeps the published file inventory and its content hashes exact", () => {

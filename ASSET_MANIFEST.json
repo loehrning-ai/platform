@@ -600,8 +600,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/card-preview.webp",
-      "sizeBytes": 27908,
-      "sha256": "3b1e0b213580794615e0e392f68b7062b99436f030ea35450f670c7d8557f444",
+      "sizeBytes": 33332,
+      "sha256": "beae2b0d611b25720e551bc1c20519195250c2947ce162c2c00ed2ce9a4e8049",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Decks (slides.html)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -646,9 +646,29 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-Regular.woff2",
       "sizeBytes": 61064,
       "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts/Typing-SemiBold.woff2",
+      "sizeBytes": 60860,
+      "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
@@ -666,10 +686,10 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/card-preview.webp",
-      "sizeBytes": 30258,
-      "sha256": "c2df35d9f5845163203b3f47f6d60c29f1da11e0968dd6139765f6aa99295ac0",
+      "sizeBytes": 37074,
+      "sha256": "d2d374a08c602dd20acce6653b0c4015072f6c4ccae031893a5827c631d03a99",
       "owner": "Tim L\u00f6hr",
-      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html)",
+      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html, Titelband)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -963,8 +983,8 @@
     },
     {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
-      "sizeBytes": 36724,
-      "sha256": "bfacd03ed7ec6ffbef0447c2a819474bfbd56dc71ee7560093c964febc7e978c",
+      "sizeBytes": 24874,
+      "sha256": "9c4d52f05d2862fcacdbf6a7a40fcfa42a8b9418a45f0002f7822780c961a726",
       "owner": "Tim L\u00f6hr",
       "source": "Chromium screenshot of the course cover, resized to 1024 by 576 pixels",
       "license": "LicenseRef-Loehrning-Brand",

@@ -1,4 +1,16 @@
 import type { Locale } from "@/lib/i18n/locale";
+import type {
+  WorkshopActivity,
+  WorkshopMaterialRole,
+  WorkshopPhase,
+  WorkshopProvenance,
+} from "@/lib/workshops";
+
+/** One station of the "So läuft jeder Workshop" route on the hub. */
+export interface WorkshopRouteStation {
+  readonly label: string;
+  readonly caption: string;
+}
 
 export interface WorkshopPageCopy {
   readonly metadata: {
@@ -11,42 +23,99 @@ export interface WorkshopPageCopy {
     readonly detailTitleSuffix: string;
   };
   readonly catalog: {
-    readonly kicker: string;
-    readonly headingLead: string;
-    readonly headingSecond: string;
-    readonly introduction: (count: number) => string;
-    readonly available: string;
-    readonly availableDescription: string;
+    // Hub (design-direction 7.1, workshop-standard 4.2).
     readonly empty: string;
-    readonly catalogueIndex: string;
-    readonly firstDecision: (title: string) => string;
-    readonly proofTarget: string;
-    readonly duration: string;
-    readonly steps: string;
-    readonly materials: string;
-    readonly stepCount: (count: number) => string;
-    readonly materialCount: (count: number) => string;
-    readonly openWorkshop: string;
-    readonly workshopHeading: (number: string) => string;
+    /** Cover-band kicker, e.g. "Workshops · 3 Fälle · kostenlos". Works for any count. */
+    readonly hubKicker: (count: number) => string;
+    /** The H1. Describes the format; not a slogan. */
+    readonly hubHeading: string;
+    readonly hubLead: string;
+    /** The one Mennige-group action of the page: into the first workshop of the list. */
+    readonly hubStart: (number: string) => string;
+    /** Line next to the cover-band button. */
+    readonly hubAccess: string;
+    /** Accessible name of the index row of anchor links in the cover band. */
+    readonly hubIndexLabel: string;
+    readonly routeHeading: string;
+    readonly routeCaption: string;
+    /** Five stations, the spine every workshop follows. Static: a description, not progress. */
+    readonly routeStations: readonly WorkshopRouteStation[];
+    readonly listHeading: string;
+    readonly listCaption: (count: number) => string;
+    /** "Workshop 03", the start of a row's kicker line. */
+    readonly workshopNumber: (number: string) => string;
+    /** Label before the workshop's fixed question on a row. */
+    readonly questionLabel: string;
+    /** Wraps the fixed question in the locale's quotation marks. */
+    readonly quote: (text: string) => string;
+    readonly leaveWith: string;
+    /** Label of the limiting requirement on a row. */
+    readonly requirementLabel: string;
+    /** Requirement value when the workshop runs without any AI account. */
+    readonly requirementBrowserOnly: string;
+    /** Label before the material roles caption. */
+    readonly materialLabel: string;
+    /** "Live 90 Min." */
+    readonly minutesLive: (minutes: number) => string;
+    /** "Allein ca. 60 Min." */
+    readonly minutesSelfStudy: (minutes: number) => string;
+    /** Takes an already formatted date. */
+    readonly liveTested: (date: string) => string;
+    readonly newBadge: string;
+    readonly viewWorkshop: string;
+    readonly teamsHeading: string;
+    readonly teamsBody: string;
+    /** Shown once under the list. */
+    readonly boundary: string;
   };
   readonly detail: {
     readonly navigation: string;
     readonly backAria: string;
     readonly allWorkshops: string;
-    readonly format: string;
-    readonly duration: string;
-    readonly steps: string;
-    readonly materials: string;
-    readonly audiences: string;
+    /** Label above the q-card in the cover band. */
+    readonly questionLabel: string;
+    /** Secondary cover-band button that jumps to the material list. */
+    readonly seeMaterials: string;
+    /** Cover-band buttons, chosen by the role of the material they open. */
+    readonly primaryAction: Readonly<Record<WorkshopMaterialRole, string>>;
+    /** Caption facts in the cover band. */
+    readonly coverFacts: {
+      readonly fictionalCase: string;
+      readonly publicFigures: string;
+      readonly materialsInEnglish: string;
+      readonly free: string;
+    };
+    /** "Du brauchst" in the cover caption, followed by the limiting need. */
+    readonly needLabel: string;
+    /** Limiting need when the workshop runs without any AI account. */
+    readonly browserOnly: string;
+    readonly outcomesHeading: string;
+    readonly leaveWith: string;
+    readonly agendaHeading: string;
+    readonly minutes: (minutes: number) => string;
+    readonly minutesLive: (minutes: number) => string;
+    readonly minutesSelfStudy: (minutes: number) => string;
+    /** Caption on where the agenda minutes come from. */
+    readonly agendaSource: { readonly deck: string; readonly plan: string };
+    /** Station caption for an item that runs only with a group. */
+    readonly liveOnly: string;
+    readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
+    readonly optional: string;
+    readonly materialHeading: string;
+    /** Right-hand note of the material section head. */
     readonly materialsAccess: string;
-    /** Shown only when every material of the workshop is in English. */
+    /** Added when every material of the workshop is in English; null where the page is English. */
     readonly materialsLanguage: string | null;
-    readonly forWhom: string;
-    readonly materialsHeading: string;
-    readonly download: string;
-    readonly openInBrowser: string;
+    readonly phaseLabels: Readonly<Record<WorkshopPhase, string>>;
+    readonly roleLabels: Readonly<Record<WorkshopMaterialRole, string>>;
+    readonly startHere: string;
+    readonly openAction: string;
+    readonly downloadAction: string;
+    /** Screen-reader prefix of the material language ("Sprache: Englisch"). */
     readonly language: string;
-    readonly practiceCase: string;
+    readonly selfHostHeading: string;
+    readonly selfHostBody: string;
+    readonly caseHeading: string;
     readonly syntheticCase: string;
     readonly realCompanyData: string;
     readonly fictionalExplanation: (companyName: string) => string;
@@ -55,160 +124,339 @@ export interface WorkshopPageCopy {
     readonly limitations: string;
     readonly realWorldHeading: string;
     readonly source: string;
-    readonly stepsHeading: (count: number) => string;
-    readonly stepsIntroduction: string;
-    readonly referenceHeading: string;
-    readonly referenceIntroduction: string;
-    readonly whatItCovers: string;
-    readonly accessBoundary: string;
+    readonly published: string;
+    readonly reviewed: string;
+    readonly forWhom: string;
+    readonly needsHeading: string;
+    readonly notNeededHeading: string;
+    readonly notCoveredHeading: string;
+    readonly provenanceHeading: string;
+    readonly provenanceLabels: {
+      readonly author: string;
+      readonly reviewedAt: string;
+      readonly aiOutputsRecordedAt: string;
+      readonly liveRunAt: string;
+      readonly data: string;
+    };
+    readonly provenanceData: Readonly<Record<WorkshopProvenance["data"], string>>;
   };
 }
-
-const NUMBER_WORDS: Readonly<Record<Locale, Readonly<Record<number, string>>>> =
-  {
-    de: { 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun" },
-    en: { 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine" },
-  };
 
 export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
   de: {
     metadata: {
       title: "Workshops für KI im Mittelstand",
       description: (count) =>
-        `${count} kostenlose Selbstlern-Workshop${count === 1 ? "" : "s"} mit vollständigen Fällen, klaren Voraussetzungen und Material zum Nachbauen.`,
+        `${count} kostenlose Workshop${count === 1 ? "" : "s"} zu KI bei der Arbeit, jeder mit einem erfundenen Fall, einem Ablauf in Minuten und Material zum Herunterladen.`,
       openGraphDescription:
-        "Selbstlern-Workshops für konkrete Entscheidungen. Browsermaterial und Dateien sind kostenlos und ohne Konto abrufbar.",
+        "Workshops mit einem erfundenen Fall, einer festen Frage und einer Vorlage für deine eigene Arbeit. Material kostenlos und ohne Konto.",
       collectionDescription:
-        "Selbstlern-Workshops für KI im Mittelstand mit browserbasiertem Material und Dateien zum Nachbauen.",
+        "Workshops zu KI im Mittelstand mit Folien, Laboren im Browser und Dateien zum Nacharbeiten.",
       imageAlt: "Workshop-Katalog auf loehrning.ai",
       missingTitle: "Workshop nicht gefunden",
       detailTitleSuffix: "Workshop",
     },
     catalog: {
-      kicker: "Entscheidungswerkstatt · Selbstgeführt",
-      headingLead: "Selbstlern-Workshops",
-      headingSecond: "für konkrete Entscheidungen.",
-      introduction: (count) =>
-        `${count} geführte${count === 1 ? "r Fall" : " Fälle"}. Erst entscheiden, dann Belege prüfen und die Methode auf den eigenen Kontext übertragen.`,
-      available: "Wähle die Entscheidung",
-      availableDescription: "Jeder Fall beginnt direkt im Entscheidungslabor.",
       empty: "Derzeit ist kein Workshop veröffentlicht.",
-      catalogueIndex: "Im Katalog",
-      firstDecision: (title) => `Erste Entscheidung: „${title}“`,
-      proofTarget: "Ergebnis",
-      duration: "Dauer",
-      steps: "Schritte",
-      materials: "Material",
-      stepCount: (count) => `${count} Schritte`,
-      materialCount: (count) => `${count} ${count === 1 ? "Datei" : "Dateien"}`,
-      openWorkshop: "Workshop öffnen",
-      workshopHeading: (number) => `Workshop ${number}`,
+      hubKicker: (count) =>
+        `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"} · kostenlos`,
+      hubHeading: "Workshops mit einem Fall und einer Vorlage für deine Arbeit",
+      hubLead:
+        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du prüfst eine Antwort an den Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
+      hubStart: (number) => `Mit Workshop ${number} beginnen`,
+      hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
+      hubIndexLabel: "Workshops auf dieser Seite",
+      routeHeading: "So läuft jeder Workshop",
+      routeCaption: "75 bis 90 Minuten",
+      routeStations: [
+        { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
+        { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
+        { label: "Warum sie falsch ist", caption: "Was in den Daten niemand festgelegt hat" },
+        { label: "Die Reparatur", caption: "Was die Antwort richtig macht, Schritt für Schritt" },
+        { label: "Deine Vorlage", caption: "Eine Seite für deinen eigenen Fall" },
+      ],
+      listHeading: "Workshops",
+      listCaption: (count) => `${count} · kostenlos`,
+      workshopNumber: (number) => `Workshop ${number}`,
+      questionLabel: "Die Frage",
+      quote: (text) => `„${text}“`,
+      leaveWith: "Du gehst mit",
+      requirementLabel: "Du brauchst",
+      requirementBrowserOnly: "Einen Browser, kein KI-Konto",
+      materialLabel: "Material",
+      minutesLive: (minutes) => `Live ${minutes} Min.`,
+      minutesSelfStudy: (minutes) => `Allein ca. ${minutes} Min.`,
+      liveTested: (date) => `Live gehalten am ${date}`,
+      newBadge: "Neu",
+      viewWorkshop: "Workshop ansehen",
+      teamsHeading: "Mit deinem Team",
+      teamsBody:
+        "Workshops mit Deck haben eine Moderationsansicht mit Notizen und Abstimmungsfragen; du öffnest sie mit P. Was du dafür brauchst, steht auf der jeweiligen Workshop-Seite.",
+      boundary:
+        "Alle Übungsfirmen sind erfunden. Wo echte Zahlen vorkommen, nennt die Workshop-Seite die Quelle. Gezeigte KI-Antworten sind Aufzeichnungen mit Datum und keine Live-Abfragen.",
     },
     detail: {
       navigation: "Workshopnavigation",
       backAria: "Zurück zu allen Workshops",
       allWorkshops: "Alle Workshops",
-      format: "Format",
-      duration: "Dauer",
-      steps: "Schritte",
-      materials: "Material",
-      audiences: "Zielgruppen",
+      questionLabel: "Die Frage des Workshops",
+      seeMaterials: "Material ansehen",
+      primaryAction: {
+        deck: "Deck öffnen",
+        presenter: "Moderationsansicht öffnen",
+        demo: "Demo starten",
+        guide: "Lernbegleiter lesen",
+        lab: "Labore öffnen",
+        case: "Fall öffnen",
+        card: "Prüfkarte öffnen",
+        exercise: "Übung öffnen",
+        kit: "Kit herunterladen",
+        data: "Datensatz herunterladen",
+        hub: "Übersicht öffnen",
+        builder: "Leitfaden öffnen",
+      },
+      coverFacts: {
+        fictionalCase: "erfundener Fall",
+        publicFigures: "erfundener Fall und öffentliche Zahlen",
+        materialsInEnglish: "Material auf Englisch",
+        free: "kostenlos, ohne Anmeldung",
+      },
+      needLabel: "Du brauchst",
+      browserOnly: "einen Browser, kein KI-Konto",
+      outcomesHeading: "Danach kannst du",
+      leaveWith: "Du gehst mit",
+      agendaHeading: "Ablauf",
+      minutes: (minutes) => `${minutes} Min.`,
+      minutesLive: (minutes) => `Live ${minutes} Min.`,
+      minutesSelfStudy: (minutes) => `allein ca. ${minutes} Min.`,
+      agendaSource: {
+        deck: "Die Minuten stammen aus den Zeiten im Deck.",
+        plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
+      },
+      liveOnly: "nur live",
+      activityLabels: {
+        listen: "Zuhören",
+        vote: "Abstimmen",
+        do: "Mitmachen",
+        write: "Schreiben",
+      },
+      optional: "optional",
+      materialHeading: "Material",
       materialsAccess: "Kostenlos, ohne Anmeldung.",
       materialsLanguage: "Alle Materialien auf Englisch.",
-      forWhom: "Für wen",
-      materialsHeading: "Material zum Mitnehmen",
-      download: "Download",
-      openInBrowser: "Im Browser öffnen",
+      phaseLabels: {
+        before: "Vor dem Workshop",
+        during: "Im Workshop",
+        after: "Danach",
+      },
+      roleLabels: {
+        deck: "Deck",
+        presenter: "Moderation",
+        demo: "Demo",
+        guide: "Lernbegleiter",
+        lab: "Labor",
+        case: "Fall",
+        card: "Prüfkarte",
+        exercise: "Übung",
+        kit: "Kit",
+        data: "Datensatz",
+        hub: "Übersicht",
+        builder: "Für Datenteams",
+      },
+      startHere: "Hier starten",
+      openAction: "Öffnen",
+      downloadAction: "Laden",
       language: "Sprache",
-      practiceCase: "Der Übungsfall",
-      syntheticCase: "Synthetisches Fallbeispiel",
+      selfHostHeading: "Selbst moderieren",
+      selfHostBody:
+        "Öffne das Deck auf dem Beamer und drück P. Die Moderationsansicht zeigt Notizen, Abstimmungsfragen und eine Uhr.",
+      caseHeading: "Der Fall",
+      syntheticCase: "Erfundener Fall",
       realCompanyData: "Echte Unternehmensdaten",
       fictionalExplanation: (companyName) =>
-        `${companyName} ist frei erfunden: kein echtes Unternehmen, keine echten Geschäftszahlen. Die Werte sind realistisch gewählt, damit Berichte, Kennzahlen und die Entscheidung im Workshop einem typischen Analysefall entsprechen.`,
+        `${companyName} und alle Zahlen sind für diesen Workshop erfunden.`,
       realExplanation: (companyName, period) =>
-        `${companyName}, ${period}: echte, öffentlich zugängliche Zahlen. Du arbeitest mit den Angaben des Unternehmens und den Grenzen seiner Berichterstattung.`,
+        `${companyName}, ${period}: öffentlich zugängliche Zahlen aus den Angaben des Unternehmens.`,
       openDecision: "Die offene Entscheidung",
-      limitations: "Was die Daten nicht beantworten können",
-      realWorldHeading: "Anwendung auf reale Daten",
-      source: "Quelle:",
-      stepsHeading: (count) =>
-        `Die ${NUMBER_WORDS.de[count] ?? String(count)} Schritte`,
-      stepsIntroduction: "Der Ablauf zum Nachbauen, Schritt für Schritt.",
-      referenceHeading: "Referenz",
-      referenceIntroduction:
-        "Worum es geht, für wen, der Übungsfall und der Ablauf: zum Nachlesen nach der ersten Entscheidung.",
-      whatItCovers: "Worum es geht",
-      accessBoundary: "Zugang und Datenfluss",
+      limitations: "Was die Daten nicht beantworten",
+      realWorldHeading: "Dieselbe Methode an echten Zahlen",
+      source: "Quelle",
+      published: "veröffentlicht",
+      reviewed: "geprüft",
+      forWhom: "Für wen",
+      needsHeading: "Das brauchst du",
+      notNeededHeading: "Das brauchst du nicht",
+      notCoveredHeading: "Nicht Teil dieses Workshops",
+      provenanceHeading: "Stand und Herkunft",
+      provenanceLabels: {
+        author: "Von",
+        reviewedAt: "zuletzt geprüft",
+        aiOutputsRecordedAt: "KI-Antworten aufgezeichnet",
+        liveRunAt: "live gehalten",
+        data: "Daten",
+      },
+      provenanceData: {
+        synthetic: "erfunden",
+        "synthetic-and-public": "erfunden, dazu öffentliche Zahlen mit Quelle",
+      },
     },
   },
   en: {
     metadata: {
       title: "Practical AI workshops for business",
       description: (count) =>
-        `${count} free self-study workshop${count === 1 ? "" : "s"} with complete cases, explicit requirements, and reusable materials.`,
+        `${count} free workshop${count === 1 ? "" : "s"} on AI at work, each with an invented case, an agenda in minutes and materials to download.`,
       openGraphDescription:
-        "Self-study workshops for concrete decisions. Browser materials and files are available without payment or an account.",
+        "Workshops with an invented case, one fixed question and a template for your own work. Materials are free and need no account.",
       collectionDescription:
-        "Self-study AI workshops for business, with browser-based exercises and reusable files.",
+        "AI workshops for business with slides, browser labs and files to work through.",
       imageAlt: "Workshop catalogue on loehrning.ai",
       missingTitle: "Workshop not found",
       detailTitleSuffix: "Workshop",
     },
     catalog: {
-      kicker: "Decision workshop · Self-guided",
-      headingLead: "Self-study workshops",
-      headingSecond: "for concrete decisions.",
-      introduction: (count) =>
-        `${count} guided case${count === 1 ? "" : "s"}. Decide first, test the evidence, then transfer the method to your own context.`,
-      available: "Choose the decision",
-      availableDescription: "Every case opens directly in the decision lab.",
       empty: "No workshop is currently published.",
-      catalogueIndex: "In the catalogue",
-      firstDecision: (title) => `First decision: “${title}”`,
-      proofTarget: "Output",
-      duration: "Duration",
-      steps: "Steps",
-      materials: "Materials",
-      stepCount: (count) => `${count} steps`,
-      materialCount: (count) => `${count} file${count === 1 ? "" : "s"}`,
-      openWorkshop: "Open workshop",
-      workshopHeading: (number) => `Workshop ${number}`,
+      hubKicker: (count) =>
+        `Workshops · ${count} ${count === 1 ? "case" : "cases"} · free`,
+      hubHeading: "Workshops with one case and a template for your own work",
+      hubLead:
+        "Each workshop centres on one question about an invented company. You check an answer against the data and finish by writing down how it applies to your own work.",
+      hubStart: (number) => `Start with workshop ${number}`,
+      hubAccess: "All materials free, no sign-up",
+      hubIndexLabel: "Workshops on this page",
+      routeHeading: "How every workshop runs",
+      routeCaption: "75 to 90 minutes",
+      routeStations: [
+        { label: "The question", caption: "One case and a question that stays to the end" },
+        { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
+        { label: "Why it is wrong", caption: "What nobody fixed in the data" },
+        { label: "The fix", caption: "What makes the answer right, step by step" },
+        { label: "Your template", caption: "One page for your own case" },
+      ],
+      listHeading: "Workshops",
+      listCaption: (count) => `${count} · free`,
+      workshopNumber: (number) => `Workshop ${number}`,
+      questionLabel: "The question",
+      quote: (text) => `“${text}”`,
+      leaveWith: "What you leave with",
+      requirementLabel: "You need",
+      requirementBrowserOnly: "A browser, no AI account",
+      materialLabel: "Materials",
+      minutesLive: (minutes) => `Live ${minutes} min`,
+      minutesSelfStudy: (minutes) => `Alone about ${minutes} min`,
+      liveTested: (date) => `Run live on ${date}`,
+      newBadge: "New",
+      viewWorkshop: "View workshop",
+      teamsHeading: "With your team",
+      teamsBody:
+        "Workshops with a deck have a presenter view with notes and room votes; press P to open it. Each workshop page lists what you need for it.",
+      boundary:
+        "All practice companies are invented. Where real figures appear, the workshop page names the source. AI answers shown are dated recordings, not live requests.",
     },
     detail: {
       navigation: "Workshop navigation",
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
-      format: "Format",
-      duration: "Duration",
-      steps: "Steps",
-      materials: "Materials",
-      audiences: "Audience groups",
+      questionLabel: "The workshop's question",
+      seeMaterials: "See materials",
+      primaryAction: {
+        deck: "Open the deck",
+        presenter: "Open the presenter view",
+        demo: "Start the demo",
+        guide: "Read the learner guide",
+        lab: "Open the labs",
+        case: "Open the case",
+        card: "Open the field card",
+        exercise: "Open the exercise",
+        kit: "Download the kit",
+        data: "Download the dataset",
+        hub: "Open the overview",
+        builder: "Open the guide",
+      },
+      coverFacts: {
+        fictionalCase: "invented case",
+        publicFigures: "invented case plus public figures",
+        materialsInEnglish: "materials in English",
+        free: "free, no sign-up",
+      },
+      needLabel: "You need",
+      browserOnly: "a browser, no AI account",
+      outcomesHeading: "After this you can",
+      leaveWith: "You leave with",
+      agendaHeading: "Agenda",
+      minutes: (minutes) => `${minutes} min`,
+      minutesLive: (minutes) => `Live ${minutes} min`,
+      minutesSelfStudy: (minutes) => `on your own about ${minutes} min`,
+      agendaSource: {
+        deck: "The minutes come from the timings in the deck.",
+        plan: "Planned minutes, not yet measured with test readers.",
+      },
+      liveOnly: "live only",
+      activityLabels: {
+        listen: "Listen",
+        vote: "Vote",
+        do: "Do",
+        write: "Write",
+      },
+      optional: "optional",
+      materialHeading: "Materials",
       materialsAccess: "Free, no sign-up.",
       materialsLanguage: null,
-      forWhom: "Who this is for",
-      materialsHeading: "Workshop materials",
-      download: "Download",
-      openInBrowser: "Open in browser",
+      phaseLabels: {
+        before: "Before the workshop",
+        during: "During the workshop",
+        after: "Afterwards",
+      },
+      roleLabels: {
+        deck: "Deck",
+        presenter: "Presenter",
+        demo: "Demo",
+        guide: "Learner guide",
+        lab: "Lab",
+        case: "Case",
+        card: "Field card",
+        exercise: "Exercise",
+        kit: "Kit",
+        data: "Dataset",
+        hub: "Overview",
+        builder: "For data teams",
+      },
+      startHere: "Start here",
+      openAction: "Open",
+      downloadAction: "Download",
       language: "Language",
-      practiceCase: "Practice case",
-      syntheticCase: "Synthetic case",
+      selfHostHeading: "Run it yourself",
+      selfHostBody:
+        "Open the deck on the projector and press P. The presenter view shows notes, room votes and a clock.",
+      caseHeading: "The case",
+      syntheticCase: "Invented case",
       realCompanyData: "Real company data",
       fictionalExplanation: (companyName) =>
-        `${companyName} is fictional: it is not a real company and the figures are not real business results. The values are plausible so that the reports, metrics, and decision reflect a typical analysis case.`,
+        `${companyName} and every figure are invented for this workshop.`,
       realExplanation: (companyName, period) =>
-        `${companyName}, ${period}: real, publicly available figures. You work with the company's own disclosures and the limitations of that reporting.`,
+        `${companyName}, ${period}: publicly available figures from the company's own disclosures.`,
       openDecision: "Decision to make",
       limitations: "What the data cannot answer",
-      realWorldHeading: "Apply the method to real data",
-      source: "Source:",
-      stepsHeading: (count) =>
-        `${NUMBER_WORDS.en[count] ?? String(count)} steps`,
-      stepsIntroduction: "The sequence to rebuild, step by step.",
-      referenceHeading: "Reference",
-      referenceIntroduction:
-        "What it covers, who it is for, the practice case and the sequence: for reference after the first decision.",
-      whatItCovers: "What it covers",
-      accessBoundary: "Access and data flow",
+      realWorldHeading: "The same method on real figures",
+      source: "Source",
+      published: "published",
+      reviewed: "reviewed",
+      forWhom: "Who this is for",
+      needsHeading: "What you need",
+      notNeededHeading: "What you don't need",
+      notCoveredHeading: "Not part of this workshop",
+      provenanceHeading: "Provenance",
+      provenanceLabels: {
+        author: "By",
+        reviewedAt: "last reviewed",
+        aiOutputsRecordedAt: "AI answers recorded",
+        liveRunAt: "run live",
+        data: "Data",
+      },
+      provenanceData: {
+        synthetic: "invented",
+        "synthetic-and-public": "invented, plus public figures with source",
+      },
     },
   },
 };

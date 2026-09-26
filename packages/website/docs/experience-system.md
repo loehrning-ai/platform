@@ -18,24 +18,27 @@ Content that does none of these jobs is removed or placed in an on-demand refere
 
 ## Identity
 
-Keep the current loehrning.ai system:
+The visual language is "Werkzeichnung", taken from the Workshop 03 deck (`public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css`): calm paper, precise ink, one red pencil.
 
-- Kalkweiß background, Druckertinte foreground, and Kupfer signal color;
-- a secondary expressive palette (acid, sky, pink, peach, cobalt, teal) as light accent washes on marketing, profile, and orientation surfaces — never a route's structural identity, and absent from the flat/dense surfaces named below;
-- Loehrning Sans for reading and Geist Mono for code, state, measurement, and provenance;
-- the fixed 64px global navigation, restrained editorial grid, and print-registration details;
-- the landing-page globe as the single spatial identity anchor;
-- exactly one global top scroll-progress thread.
+- Kalkweiß `#f3f0e9` ground, Druckschwarz `#121212` ink, Schiefer `#4f4640` secondary text, and Mennige `#b73a15` as the only accent. At most one Mennige group per section: one filled Mennige button per page, one Mennige mark per drawing.
+- Graphit `#141414` appears only as a full-width band (`.dark-section`: workshop cover bands and the footer), never as a card inside a paper grid. Inside it the accent flips to `#e07050` for text, and a filled accent button takes dark ink or becomes a paper button; white on `#e07050` fails AA.
+- The risograph accents (acid, sky, pink, peach, cobalt, teal) and `kupfer-mist` stay defined for routes not yet migrated (home, books, open source) but are not used on courses, workshops or demos, and not in new code.
+- Loehrning Sans for reading; headlines 700, sentence case, tracked no tighter than -0.015em. Labels are sentence case, 600, +0.02em (`text-label`, `.kicker`). Geist Mono only for data: file names, code, IDs, timestamps.
+- Structure comes from lines: a 2px ink Kopflinie above section heads (`.kopflinie`, `<SectionHead>`) and 1px Leinen hairlines (`--color-hairline`) between rows.
+- The line globe (homepage hero, workshop cover bands) is the spatial identity anchor; deck pictograms (`src/components/werk/pictogram.tsx`) are the one icon family on learning surfaces.
+- Exactly one global top scroll-progress thread.
+
+Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand, GlobeLines, Route, QuestionCard, MaterialList, StatRow, Callout, ButtonLink, Chip, Pictogram).
 
 Course distinction comes from the task, instrument, diagram motif, and dataset. It does not come from unrelated base fonts, button shapes, shadows, or product-style color systems.
 
 ## Geometry And Density
 
-- Flat editorial frames use 1px structural boundaries and 3px Kupfer signals.
-- Radius stays between 0 and 8px. Rounded pills are reserved for a genuine compact status or binary control.
-- `shadow-card` / `shadow-card-hover` / `shadow-tile` are the standard soft elevation for editorial and marketing surfaces — portraits, book and workshop tiles, the nav surface, contact links — not only overlays, draggable objects, and the active instrument plane. A named set of dense/functional surfaces (account, login, feedback, the course atlas, ki-check, demos, technical course landings, and the public information routes) stay flat by contract; see `access-surfaces-density.test.ts` and its per-route siblings.
+- Flat editorial frames use 1px structural boundaries (Kante `#827970` for controls, Leinen hairlines for decoration) and a 2px ink Kopflinie for section heads. The question card is the only element with a left bar.
+- Radius is 0 on learning surfaces (courses, workshops, demos), as in the deck. Elsewhere it stays between 0 and 8px while those routes are migrated; no new pills.
+- Elevation is tone, not shadow: Bogen `#f9f7f2` (raised sheet), Kalkweiß (page), Beton `#e5e4e2` (recessed band). `--shadow-overlay` is for floating overlays only (menus, dialogs, popovers). The offset stamp shadow (`shadow-tile`) is removed. `shadow-card` / `shadow-card-hover` remain on routes not yet migrated and are not used on learning surfaces. A named set of dense/functional surfaces (account, login, feedback, the course atlas, ki-check, demos, technical course landings, and the public information routes) stay flat by contract; see `access-surfaces-density.test.ts` and its per-route siblings.
 - Reading measure is at most 68ch. Mixed editorial content is at most 1120px. Widths above 1440px are reserved for workspaces that use the space.
-- UI labels are at least 12px. Mono uppercase is reserved for state, evidence, measurements, code, and provenance.
+- UI labels are at least 12px. Mono is reserved for data (code, file names, IDs, timestamps); labels and eyebrows are sentence case, not uppercase.
 - Section spacing uses 8, 12, 16, 24, 32, or 48px. Larger gaps require a deliberate scene change.
 - The first meaningful action on a learning route starts without scrolling at 390 × 844 and 1440 × 900.
 

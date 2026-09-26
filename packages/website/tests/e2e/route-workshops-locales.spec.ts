@@ -4,8 +4,8 @@ import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 const WORKSHOP_ROUTES = [
   {
     path: "/workshops",
-    deHeading: "Selbstlern-Workshops für konkrete Entscheidungen.",
-    enHeading: "Self-study workshops for concrete decisions.",
+    deHeading: "Workshops mit einem Fall und einer Vorlage für deine Arbeit",
+    enHeading: "Workshops with one case and a template for your own work",
     materialCount: 0,
   },
   {

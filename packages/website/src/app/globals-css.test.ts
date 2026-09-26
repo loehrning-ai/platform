@@ -154,3 +154,65 @@ describe("semantic palette contrast", () => {
     expect(contrastRatio(color!, darkBackground!)).toBeGreaterThanOrEqual(4.5);
   });
 });
+
+describe("Werkzeichnung palette contrast", () => {
+  const theme = getThemeDeclarations();
+  const dark = getDeclarations(".dark-section");
+  const token = (name: string): string => {
+    const value = theme.get(name);
+    if (!value) throw new Error(`${name} must exist in @theme`);
+    return value;
+  };
+  const paperSurfaces = ["--color-background", "--color-card", "--color-inset"] as const;
+
+  it.each([
+    ["--color-foreground", 4.5],
+    ["--color-muted-foreground", 4.5],
+    ["--color-muted", 4.5],
+    ["--color-pass", 4.5],
+    ["--color-kupfer-dark", 4.5],
+  ] as const)("%s stays AA as text on paper, Bogen and Beton", (name, floor) => {
+    for (const surface of paperSurfaces) {
+      expect(contrastRatio(token(name), token(surface))).toBeGreaterThanOrEqual(floor);
+    }
+  });
+
+  it("keeps Mennige accent text AA on paper and Bogen", () => {
+    for (const surface of ["--color-background", "--color-card"] as const) {
+      expect(contrastRatio(token("--color-brand-orange"), token(surface))).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it("keeps the primary button (paper on Mennige) AA at rest and on hover", () => {
+    expect(contrastRatio(token("--color-paper"), token("--color-mennige"))).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(token("--color-paper"), token("--color-kupfer-dark"))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("keeps every graphit text token AA on the dark band", () => {
+    const darkBackground = token("--color-dark-bg");
+    expect(dark.get("--color-background")).toBe(darkBackground);
+    for (const name of ["--color-foreground", "--color-muted-foreground", "--color-muted", "--color-pass"]) {
+      const value = dark.get(name);
+      expect(value, `${name} dark override must exist`).toBeDefined();
+      expect(contrastRatio(value!, darkBackground)).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(contrastRatio(token("--color-dark-fg"), darkBackground)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(token("--color-dark-muted"), darkBackground)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("never offers white text on the lightened dark accent", () => {
+    // White on #e07050 is about 3.2:1; dark ink is the only safe text on it.
+    const darkAccent = dark.get("--color-brand-orange")!;
+    expect(contrastRatio("#ffffff", darkAccent)).toBeLessThan(4.5);
+    expect(contrastRatio(token("--color-dark-bg"), darkAccent)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("keeps the Mennige bar above the 3:1 non-text floor on graphit", () => {
+    expect(contrastRatio(token("--color-mennige"), token("--color-dark-bg"))).toBeGreaterThanOrEqual(3);
+  });
+
+  it("drops the offset stamp shadow and keeps an overlay shadow", () => {
+    expect(theme.has("--shadow-tile")).toBe(false);
+    expect(theme.get("--shadow-overlay")).toBeDefined();
+  });
+});

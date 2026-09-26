@@ -47,38 +47,45 @@
 }
 
 @theme {
-  /* Berlin risograph palette. Copper remains the brand anchor; the broader
-     system now behaves like an independent learning journal instead of a
-     monochrome corporate dashboard. */
-  --color-brand-orange: #a5370f; /* Kupfer — oxidized copper, Berlin Altbau. Darkened from #C4431A (4.43:1, sub-AA) to #A5370F (5.85:1) so accent TEXT on Kalkweiß meets WCAG AA; dark sections override to the lighter #E07050 below. */
+  /* Werkzeichnung palette, taken from the Workshop 03 deck
+     (public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css): calm paper,
+     precise ink and one red pencil. Mennige is the only accent. Contrast
+     ratios are against Kalkweiß #f3f0e9 unless stated. */
+  --color-brand-orange: #b73a15; /* Mennige, 5.08:1 as text. .dark-section flips it to #e07050 (5.79:1 on graphit). */
+  /* The unscoped Mennige for non-text marks that must stay Mennige inside a
+     dark band (question-card bar, globe trace). Never text on graphit (3.18:1). */
+  --color-mennige: #b73a15;
   /* Foreground-safe status/accent tones for light surfaces. These values also
-     remain AA when the same tone is used over its own 20% tint on Birke cards.
+     remain AA when the same tone is used over its own 20% tint on Bogen cards.
      Dark sections restore the lighter display tones below. */
   --color-brand-sand: #604b36;
   --color-brand-amber: #78350f;
   --color-destructive: #991b1b;
 
-  /* Light background system — warmer paper, blue-black ink. */
-  --color-background: #f7f1e7;
-  --color-foreground: #19232d;
-  --color-muted: #655c54; /* Darkened from #9c8f85 (2.76:1, fails AA as text) to #655c54 for legible secondary text on Kalkweiß (5.74:1) AND on the Birke card #E8E3D9 (5.11:1) — #6f665e was 4.39:1 on the card, sub-AA; dark sections override to #c5b9af below. */
-  /* Schiefer ratchet 2026-05-04: was #68605A (~4.8:1, AA only). Moved to
-     #4f4640 to reach ~7.0:1 against Kalkweiß #F3F0E9 — meets WCAG AAA per
-     Brand CI v3.0 contrast targets. */
-  --color-muted-foreground: #4f5356;
+  /* Paper, ink and slate. Elevation is tone: Bogen (+1), Kalkweiß (0), Beton (-1). */
+  --color-background: #f3f0e9; /* Kalkweiß: page ground */
+  --color-foreground: #121212; /* Druckschwarz: text, strokes, ink button, 16.46:1 */
+  --color-muted: #655c54; /* Schiefer hell: captions, future Route labels, 5.74:1 */
+  --color-muted-foreground: #4f4640; /* Schiefer: secondary text, 8.08:1 (AAA) */
   /* Structural boundaries and passive tracks have different contrast jobs.
-     Schiefer reaches 3.45:1 on Kalkweiss and 3.07:1 on Birke, so a 1px frame
-     stays visible. Leinen remains the quiet fill behind progress and inactive
-     states; the compatibility utilities below route legacy bg-border tracks to
-     this dedicated token without weakening border-border. */
+     Kante (#827970) reaches 3.75:1 on Kalkweiß and 3.99:1 on Bogen, so it can
+     be the only boundary of a control. Leinen (#d4cec5, 1.37:1) is decorative
+     only: hairlines between rows, chart grids, passive tracks. The
+     compatibility utilities below route legacy bg-border tracks to the track
+     token without weakening border-border. */
   --color-border: #827970;
-  --color-track: #d9d0c4;
-  --color-card: #fff9ed;
-  --color-card-hover: #f0e7d7;
+  --color-track: #d4cec5;
+  --color-hairline: #d4cec5;
+  --color-card: #f9f7f2; /* Bogen: raised sheet (question card, previews) */
+  --color-card-hover: #efebe2;
+  --color-inset: #e5e4e2; /* Beton: recessed bands (decision lab, code, table heads) */
+  --color-pass: #205b46; /* Befund grün: always with the pass icon and a word */
 
-  /* Expressive discovery surfaces. Bright values are backgrounds and
-     ornament; their darker twins carry normal-sized text. */
-  --color-paper: #fffcf5;
+  /* Alias of Bogen kept for existing classes (.berlin-hero, bg-paper). */
+  --color-paper: #f9f7f2;
+  /* Retired risograph accents. Still defined because home, books and
+     open-source routes use them; new code and the learning surfaces
+     (courses, workshops, demos) do not. */
   --color-brand-acid: #ddf45a;
   --color-brand-sky: #a9ddfc;
   --color-brand-pink: #ffb8c8;
@@ -86,35 +93,40 @@
   --color-brand-cobalt: #2747b5;
   --color-brand-teal: #006c67;
 
-  /* Kupfer scale — full CI palette */
-  --color-kupfer: #a5370f;
-  --color-kupfer-dark: #a5370f;
-  --color-kupfer-light: #e07050;
-  --color-kupfer-mist: #f5e8e2;
+  /* Mennige scale */
+  --color-kupfer: #b73a15;
+  --color-kupfer-dark: #97300f; /* Mennige tief: hover and pressed; Mennige text on Beton (6.02:1) */
+  --color-kupfer-light: #e07050; /* accent text on graphit, 5.79:1 */
+  --color-kupfer-mist: #f5e8e2; /* retired on learning surfaces */
 
-  /* Dark section overrides (scoped via .dark-section) */
-  --color-dark-bg: #242342;
-  --color-dark-fg: #f7f1e7;
-  --color-dark-muted: #9c8f85;
-  --color-dark-border: rgba(247, 241, 231, 0.4);
-  --color-dark-track: rgba(247, 241, 231, 0.14);
+  /* Graphit band (scoped via .dark-section): cover bands and the footer only. */
+  --color-dark-bg: #141414;
+  --color-dark-fg: #f2f1ee;
+  --color-dark-muted: #a8a097;
+  --color-dark-border: rgba(242, 241, 238, 0.4);
+  --color-dark-track: rgba(242, 241, 238, 0.16);
 
   /* Functional */
   --color-risk-green: #14532d;
   --color-risk-yellow: #713f12;
   /* #ef4444 (red-500) is only 3.19:1 as TEXT on warm light surfaces (sub-AA).
-     #b91c1c (red-700) reaches ≥5.0:1 as text on Kalkweiß/Birke and keeps
-     white-on-red badge fills well above AA. Used via text-/border-/bg-risk-red
+     #991b1b stays well above AA as text on Kalkweiß and Bogen and keeps
+     white-on-red badge fills above AA. Used via text-/border-/bg-risk-red
      utilities; no solid bg-risk-red+text pairing exists in the codebase. */
   --color-risk-red: #991b1b;
 
-  /* Soft editorial elevation with one optional ink-stamp shadow for the few
-     remaining brutalist signals. */
+  /* Flat: structure comes from lines and tone. Shadows belong to floating
+     overlays (menus, dialogs, popovers). shadow-card and shadow-card-hover
+     remain for routes that have not moved to Werkzeichnung yet. */
+  --shadow-overlay: 0 1px 2px rgba(18, 18, 18, 0.06), 0 12px 32px rgba(18, 18, 18, 0.1);
   --shadow-card:
-    0 2px 8px rgba(36, 35, 66, 0.05), 0 16px 44px rgba(36, 35, 66, 0.07);
+    0 2px 8px rgba(18, 18, 18, 0.05), 0 16px 44px rgba(18, 18, 18, 0.07);
   --shadow-card-hover:
-    0 4px 12px rgba(36, 35, 66, 0.07), 0 24px 56px rgba(36, 35, 66, 0.12);
-  --shadow-tile: 4px 4px 0 rgba(25, 35, 45, 0.92);
+    0 4px 12px rgba(18, 18, 18, 0.07), 0 24px 56px rgba(18, 18, 18, 0.12);
+
+  /* Motion from the deck's --m-* tokens, scaled for reading. */
+  --ease-deck: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Typography — Loehrning Sans primary, Inter/system fallback.
      Geist Mono is bundled rather than resolved from an OS stack. Course and
@@ -126,15 +138,37 @@
   --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
-  /* Fluid display type scale (responsive-layout hardening) — clamp()-based, no abrupt @media jumps.
-     Available as `text-fluid-h1/h2/h3` utilities AND as var(--text-fluid-h1) in
-     CSS modules (including editorial headings). */
-  --text-fluid-h1: clamp(2.5rem, 1.4rem + 5.2vw, 5.5rem);
-  --text-fluid-h1--line-height: 0.95;
-  --text-fluid-h2: clamp(1.875rem, 1.25rem + 3vw, 3.25rem);
-  --text-fluid-h2--line-height: 1.05;
-  --text-fluid-h3: clamp(1.5rem, 1.15rem + 1.6vw, 2rem);
-  --text-fluid-h3--line-height: 1.15;
+  /* Type scale derived from the deck (104/60/40/32/26/24/22 at 1920px,
+     times 0.75 for 1440px), tuned for reading. Clamp-based, no abrupt @media
+     jumps. Headlines are 700 and never tracked below -0.015em. Available as
+     `text-*` utilities and as var(--text-*) in CSS modules. */
+  --text-display: clamp(2.75rem, 1.6rem + 4.2vw, 4.75rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.015em;
+  --text-display--font-weight: 700;
+  --text-fluid-h1: clamp(2.25rem, 1.5rem + 2.6vw, 3.25rem);
+  --text-fluid-h1--line-height: 1.05;
+  --text-fluid-h1--letter-spacing: -0.012em;
+  --text-fluid-h2: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+  --text-fluid-h2--line-height: 1.15;
+  --text-fluid-h2--letter-spacing: -0.01em;
+  --text-fluid-h3: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-fluid-h3--line-height: 1.2;
+  --text-fluid-h3--letter-spacing: -0.005em;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.45;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  /* Sentence-case labels replace mono-uppercase eyebrows. */
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 600;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-num-lg: 2.5rem;
+  --text-num-lg--line-height: 1;
+  --text-num-lg--letter-spacing: -0.01em;
 
   /* Nav height token — fixed so every sticky offset shares one geometry. */
   --nav-h: 4rem;
@@ -226,13 +260,13 @@
     overflow-x: clip;
   }
 
-  /* One focus treatment for the whole site: a 3px Kupfer bracket held 2px off the
-     element. 3px is the card accent stroke, so the ring reads as part of the
-     system rather than a UA default, and the gap keeps it legible around a
-     Kupfer-filled button, where ring and fill share a hue. Kupfer stays ≥4.75:1
-     against every surface token (Kalkweiß, Birke, Birke-hover, Kupfer-Mist,
-     white); .dark-section swaps it to #E07050 at 6.18:1. The offset stays at 2px
-     because several bordered grids clip their children with overflow-hidden. */
+  /* One focus treatment for the whole site: a 3px Mennige ring held 2px off
+     the element, drawn instantly. The gap keeps it legible around a
+     Mennige-filled button, where ring and fill share a hue. Mennige is 5.08:1
+     on Kalkweiß, 5.40:1 on Bogen and 3.24:1 against an adjacent ink button;
+     .dark-section swaps it to #e07050 at 5.79:1 on graphit. The offset stays
+     at 2px because several bordered grids clip their children with
+     overflow-hidden. */
   :focus-visible {
     outline: 3px solid var(--color-brand-orange);
     outline-offset: 2px;
@@ -371,31 +405,50 @@
     text-decoration-color: currentColor;
   }
 
-  /* Dark section — CSS custom property scoping for inverted sections */
+  /* Graphit band: CSS custom property scoping for the cover band and the
+     footer. Every token keeps AA on #141414; the accent flips to #e07050
+     (5.79:1) because Mennige text would be 3.18:1 there. A filled accent
+     button inside this scope takes dark ink (text-dark-bg) or becomes a paper
+     button: white on #e07050 is 3.18:1 and fails. */
   .dark-section {
-    --color-background: #242342;
-    --color-foreground: #f7f1e7;
-    /* Was #9c8f85 (~3.2:1 against #0d0b09 — sub-AA). Lifted to #c5b9af to
-       reach ~7.5:1 — meets WCAG AAA on the warm-stone dark background. */
-    --color-muted-foreground: #d7d0e4;
-    --color-muted: #d7d0e4;
-    /* Kupfer accent flips to the lighter copper on dark so accent text stays AA
-       (#A5370F would be ~2.4:1 on near-black; #E07050 is ~5.5:1). */
+    --color-background: #141414;
+    --color-foreground: #f2f1ee; /* 16.31:1 */
+    --color-muted-foreground: #d4cec5; /* Leinen, 11.79:1 */
+    --color-muted: #a8a097; /* 7.14:1 */
     --color-brand-orange: #e07050;
     --color-brand-sand: #d8c29e;
     --color-brand-amber: #ffc857;
     --color-kupfer: #e07050;
     --color-destructive: #ff7a59;
+    --color-pass: #6fbf9a; /* 8.42:1 */
     --color-risk-green: #4ade80;
     --color-risk-yellow: #facc15;
-    /* Coral remains visibly critical while clearing AA on the indigo ground. */
     --color-risk-red: #ff7a59;
-    --color-border: rgba(247, 241, 231, 0.4);
-    --color-track: rgba(247, 241, 231, 0.14);
-    --color-card: rgba(247, 241, 231, 0.08);
-    --color-card-hover: rgba(247, 241, 231, 0.14);
+    --color-border: rgba(242, 241, 238, 0.4); /* about 3.52:1, control edge */
+    --color-track: rgba(242, 241, 238, 0.16);
+    --color-hairline: rgba(242, 241, 238, 0.16);
+    --color-card: #1c1b1a;
+    --color-card-hover: #242321;
+    --color-inset: #1c1b1a;
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+
+  /* Werkzeichnung helpers. Tailwind recipes live in src/components/werk. */
+  /* Sentence-case label (kicker): Schiefer, 14px, 600, +0.02em. */
+  .kicker {
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Kopflinie: the 2px ink rule above a section head. */
+  .kopflinie {
+    border-top: 2px solid var(--color-foreground);
+    padding-top: 1rem;
   }
 
   .card-hover {

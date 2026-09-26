@@ -20,7 +20,26 @@
  *   VOICE-PARAGRAPH     paragraph with more than five sentences (warning)
  *   VOICE-CLOSER        trailing paragraph or heading that restates (warning)
  *   VOICE-LISTS         more than 60 percent of a file's lists have three items (warning)
+ *   VOICE-CONTRAST      staged negation ("Das ist kein X. Das ist Y.",
+ *                       "It's not X, it's Y", "mehr als nur")
+ *   VOICE-PUFFERY       significance inflation and brochure register
+ *                       (Herzstueck, nahtlos, pivotal, plays a crucial role)
+ *   VOICE-RESIDUE       chat leftovers and sycophancy ("Gute Frage!",
+ *                       "Keine Sorge", "I hope this helps")
+ *   VOICE-NOMINAL       Funktionsverbgefuege and hidden verbs (warning only)
+ *   VOICE-APHORISM      sayings that sound deep (warning only)
+ *   VOICE-SHAPE         headline grammar in prose: colon reveals, count-first
+ *                       fragments, list-colon openers, stacked colons,
+ *                       rhetorical question plus instant answer, tailing
+ *                       negation density (warning only)
+ *   VOICE-RHYTHM        staccato fragment runs and low sentence-length
+ *                       variation (warning only)
  *   VOICE-CONFIG        an invalid scope, allowlist or form-map file (error)
+ *
+ * VOICE-CONTRAST, VOICE-PUFFERY and VOICE-RESIDUE are strict rules. Phrase ids
+ * listed in VOICE_ADVISORY_PHRASES stay warnings even inside the strict scope
+ * until the copy they currently hit has been rewritten. Files under public/
+ * (workshop decks and handouts) are always advisory.
  *
  * Phrase patterns are spelled with \u escapes so this module stays ASCII-only.
  * Every rule applies to every learner-facing file regardless of language; the
@@ -79,6 +98,13 @@ export const VOICE_RULE_IDS = [
   "VOICE-PARAGRAPH",
   "VOICE-CLOSER",
   "VOICE-LISTS",
+  "VOICE-CONTRAST",
+  "VOICE-PUFFERY",
+  "VOICE-RESIDUE",
+  "VOICE-NOMINAL",
+  "VOICE-APHORISM",
+  "VOICE-SHAPE",
+  "VOICE-RHYTHM",
 ];
 
 /**
@@ -97,7 +123,38 @@ export const VOICE_STRICT_RULES = new Set([
   "VOICE-COUNT-COURSE",
   "VOICE-COUNT-LESSON",
   "VOICE-FORM",
+  "VOICE-CONTRAST",
+  "VOICE-PUFFERY",
+  "VOICE-RESIDUE",
 ]);
+
+/**
+ * Phrase ids that stay warnings inside the strict scope although their rule
+ * is strict. Each entry had hits in strict files when it was added; remove it
+ * once those files are rewritten so the phrase becomes an error there too.
+ * Every other phrase of a strict rule had zero hits in strict files when it
+ * was added and is an error there from day one.
+ */
+export const VOICE_ADVISORY_PHRASES = new Set([
+  // 12 split-sentence contrasts in ki-arbeitsalltag, ki-tools-selbststaendige,
+  // ki-landschaft (DE and EN), eu-ai-act-kurs block 1 and ai-native modul 3/4.
+  "de-contrast-kein-das-ist",
+  "de-contrast-es-geht-nicht",
+  "en-contrast-its-not-its",
+  "en-contrast-question-isnt",
+  // Budget of one "nicht X, sondern Y" per lesson: exceeded in six book
+  // chapters (a Markdown chapter counts as one lesson).
+  "de-count-nicht-sondern",
+  // "massgeschneidert" (ki-arbeitsalltag/08) and "praktisch unerlaesslich"
+  // (ki-arbeitsalltag/13).
+  "de-puffery-buzz",
+  // claude-course/lessons/grounding.ts quotes "studies show" as the bad
+  // example the lesson rewrites; allowlist it, then remove this entry.
+  "en-claim-studies-show",
+]);
+
+/** Path prefixes whose voice findings are always warnings (static workshop materials). */
+export const VOICE_ADVISORY_PATHS = ["public/"];
 
 const CATEGORY_RULE = {
   opener: "VOICE-OPENER",
@@ -106,6 +163,11 @@ const CATEGORY_RULE = {
   hedge: "VOICE-HEDGE",
   transition: "VOICE-TRANSITION",
   claim: "VOICE-CLAIM",
+  contrast: "VOICE-CONTRAST",
+  puffery: "VOICE-PUFFERY",
+  residue: "VOICE-RESIDUE",
+  nominal: "VOICE-NOMINAL",
+  aphorism: "VOICE-APHORISM",
 };
 
 /**
@@ -606,6 +668,284 @@ export const VOICE_PHRASE_RULES = [
     pattern: wordPattern("both [^.!?\\n]{0,80}? and", "i"),
     perLesson: 2,
   },
+  // -------------------------------------------------------------------------
+  // Slop patterns, second pass (research 2026-09: sentence shapes and
+  // brochure register that read as generated). ESRS terms of art
+  // (wesentlich, Wesentlichkeit, material, double materiality) are kept off
+  // every list below on purpose.
+  // -------------------------------------------------------------------------
+  // --- contrast -> VOICE-CONTRAST (staged negation / negative parallelism) ---
+  {
+    id: "de-contrast-kein-das-ist",
+    lang: "de",
+    category: "contrast",
+    label: "Das ist kein X. Das ist Y.",
+    pattern: wordPattern("(?:Das|Dies|Es) (?:ist|sind|war|waren) kein(?:e|en|er)? [^.!?\\n]{1,80}\\.\\s+(?:Das|Dies|Es) (?:ist|sind|war|waren)"),
+    advice: "state Y directly; keep a contrast only when the reader really believes X",
+  },
+  {
+    id: "de-contrast-es-geht-nicht",
+    lang: "de",
+    category: "contrast",
+    label: "Es geht nicht um X, sondern um Y / Die Frage ist nicht X. Die Frage ist Y.",
+    pattern: wordPattern(`(?:Es geht|Entscheidend ist|Wichtig ist|Das Problem ist|Die Frage ist|Das Ziel ist) nicht${CLAUSE}[,.]\\s*(?:sondern|Es geht|Entscheidend ist|Die Frage ist|Das Problem ist)`, "i"),
+  },
+  {
+    id: "de-contrast-mehr-als-nur",
+    lang: "de",
+    category: "contrast",
+    label: "mehr als nur",
+    pattern: wordPattern("(?:weit |viel )?mehr als (?:nur|blo\u00df|ein blo\u00dfe[rs]?)", "i"),
+  },
+  {
+    id: "de-count-nicht-sondern",
+    lang: "de",
+    category: "counter",
+    label: "nicht ... , sondern (without auch)",
+    pattern: wordPattern(`nicht${CLAUSE},\\s*sondern(?! auch)`, "i"),
+    perLesson: 1,
+  },
+  {
+    id: "de-count-kein-sondern",
+    lang: "de",
+    category: "counter",
+    label: "kein X, sondern Y",
+    pattern: wordPattern("kein(?:e|en|er|em)? [^.!?\\n,]{1,60},\\s*sondern(?! auch)", "i"),
+    perLesson: 1,
+  },
+  {
+    id: "en-contrast-its-not-its",
+    lang: "en",
+    category: "contrast",
+    label: "It's not X, it's Y",
+    pattern: wordPattern(`(?:it|this|that)(?:['\u2019]s| is| was) not ${CLAUSE}[,;:.]\\s*(?:it|this|that)(?:['\u2019]s| is| was)`, "i"),
+  },
+  {
+    id: "en-contrast-question-isnt",
+    lang: "en",
+    category: "contrast",
+    label: "The question isn't X. It's Y.",
+    pattern: wordPattern(`The (?:question|problem|point|issue|answer|goal|risk) (?:is not|isn['\u2019]t) ${CLAUSE}[.,;]\\s*(?:it['\u2019]s|it is|the (?:question|problem|point|issue) is)`, "i"),
+  },
+  {
+    id: "en-contrast-not-just",
+    lang: "en",
+    category: "contrast",
+    label: "it's not just / more than just",
+    // "not only ... but also" stays with en-count-not-only-but-also.
+    pattern: wordPattern("(?:is|are|was|were|it['\u2019]s|that['\u2019]s)(?: not|n['\u2019]t) (?:just|merely|simply) (?:a|an|the|about)|more than (?:just|a mere|merely)", "i"),
+  },
+  // --- puffery -> VOICE-PUFFERY (significance inflation, brochure register) ---
+  {
+    id: "de-puffery-buzz",
+    lang: "de",
+    category: "puffery",
+    label: "nahtlos / ma\u00dfgeschneidert / bahnbrechend / Herzst\u00fcck ...",
+    pattern: wordPattern("nahtlos(?:e[nmrs]?)?|ma\u00dfgeschneidert(?:e[nmrs]?)?|bahnbrechend(?:e[nmrs]?)?|revolution(?:\u00e4r(?:e[nmrs]?)?|ieren|iert)|wegweisend(?:e[nmrs]?)?|zukunftsweisend(?:e[nmrs]?)?|facettenreich(?:e[nmrs]?)?|vielschichtig(?:e[nmrs]?)?|Herzst\u00fcck|Eckpfeiler|Schl\u00fcsselrolle|unerl\u00e4sslich(?:e[nmrs]?)?|essen[zt]iell(?:e[nmrs]?)?", "i"),
+  },
+  {
+    id: "de-puffery-rolle-spielen",
+    lang: "de",
+    category: "puffery",
+    label: "eine entscheidende Rolle spielen",
+    pattern: wordPattern(`(?:spiel(?:t|en|te|ten|st)|zukomm(?:t|en)|einnimm?t|einnehmen)${CLAUSE}(?:entscheidende|zentrale|wichtige|gro\u00dfe|ma\u00dfgebliche|tragende) Rolle|(?:entscheidende|zentrale|wichtige|gro\u00dfe|ma\u00dfgebliche|tragende) Rolle (?:spielen|spielt|spielte|spielten|zukommt|einnimmt)`, "i"),
+  },
+  {
+    id: "de-puffery-eintauchen",
+    lang: "de",
+    category: "puffery",
+    label: "eintauchen / in die Welt der",
+    pattern: wordPattern("tauchen wir (?:tiefer |direkt |gleich )?ein|eintauch(?:en|st|t)|in die (?:faszinierende |spannende |gro\u00dfe )?Welt (?:der|des|von)", "i"),
+  },
+  {
+    id: "de-puffery-potenzial",
+    lang: "de",
+    category: "puffery",
+    label: "Potenzial entfalten / aufs n\u00e4chste Level",
+    pattern: wordPattern("Potenzial(?:e)? (?:voll |ganz )?(?:entfalten|heben|aussch\u00f6pfen|freisetzen|entfesseln)|auf (?:das|ein) (?:n\u00e4chste|neues) (?:Level|Niveau)", "i"),
+  },
+  {
+    id: "de-puffery-reise",
+    lang: "de",
+    category: "puffery",
+    label: "deine KI-Reise (figurative)",
+    pattern: wordPattern("(?:deine[mnrs]?|Ihre[mnrs]?|eure[mnrs]?|unsere[mnrs]?|diese[mnrs]?) (?:KI-|Lern-|Daten-)?Reise"),
+  },
+  {
+    id: "de-count-entscheidend",
+    lang: "de",
+    category: "counter",
+    label: "entscheidend",
+    pattern: wordPattern("entscheidend(?:e[nmrs]?)?", "i"),
+    perLesson: 1,
+  },
+  {
+    id: "de-count-spannend",
+    lang: "de",
+    category: "counter",
+    label: "spannend / faszinierend",
+    pattern: wordPattern("spannend(?:e[nmrs]?)?|faszinierend(?:e[nmrs]?)?", "i"),
+    perCourse: 1,
+  },
+  {
+    id: "en-puffery-vocab",
+    lang: "en",
+    category: "puffery",
+    label: "pivotal / tapestry / testament / underscore / showcase / intricate ...",
+    pattern: wordPattern("pivotal|tapestr(?:y|ies)|testament to|underscor(?:e|es|ed|ing)|showcas(?:e|es|ed|ing)|intricac(?:y|ies)|intricate(?:ly)?|meticulous(?:ly)?|commendable|garner(?:s|ed|ing)?|realms?|groundbreaking|renowned|vibrant|multifaceted|transformative|paving the way", "i"),
+  },
+  {
+    id: "en-puffery-plays-role",
+    lang: "en",
+    category: "puffery",
+    label: "plays a crucial role",
+    pattern: wordPattern("plays? an? (?:crucial|key|pivotal|vital|central|important|significant|critical|major) role", "i"),
+  },
+  {
+    id: "en-puffery-copula",
+    lang: "en",
+    category: "puffery",
+    label: "serves as / stands as / boasts",
+    pattern: wordPattern("(?:serv(?:es|ed|ing)|stand(?:s|ing)|function(?:s|ing)) as an?|boasts", "i"),
+  },
+  {
+    id: "en-count-crucial",
+    lang: "en",
+    category: "counter",
+    label: "crucial",
+    // "essential" is left out: "essential services" is statutory wording in Annex III AI Act.
+    pattern: wordPattern("crucial(?:ly)?", "i"),
+    perLesson: 1,
+  },
+  // --- residue -> VOICE-RESIDUE (chat leftovers; strict) ---
+  {
+    id: "en-residue-chat",
+    lang: "en",
+    category: "residue",
+    label: "Great question / I hope this helps / as of my last update",
+    pattern: wordPattern("Great question|I hope this helps|Let me know if|Happy to help|You['\u2019]re absolutely right|Certainly!|Of course!|as of my (?:last|latest) (?:update|training)|my knowledge cutoff", "i"),
+  },
+  {
+    id: "de-residue-chat",
+    lang: "de",
+    category: "residue",
+    label: "Gute Frage / Ich hoffe, das hilft / Stand meines Wissens",
+    pattern: wordPattern("Gute Frage|Ich hoffe,? (?:das|dies) hilft|Lass(?: es)? mich wissen|Gerne helfe ich|Stand meines Wissens|meines Wissensstands", "i"),
+  },
+  {
+    id: "en-residue-sycophancy",
+    lang: "en",
+    category: "residue",
+    label: "Don't worry / You've got this",
+    pattern: wordPattern("Don['\u2019]t worry|No worries|You['\u2019]ve got this|You got this|Rest assured", "i"),
+  },
+  {
+    id: "de-residue-sycophancy",
+    lang: "de",
+    category: "residue",
+    label: "Keine Sorge / Du schaffst das / Kennst du das?",
+    pattern: wordPattern("Keine Sorge|Keine Panik|Du schaffst das|Super, dass du|Toll, dass du|Sch\u00f6n, dass du|Kennst du das\\?|Du fragst dich vielleicht|Du bist nicht allein", "i"),
+  },
+  // --- openers (existing VOICE-OPENER) ---
+  {
+    id: "en-opener-signpost",
+    lang: "en",
+    category: "opener",
+    label: "Here's the thing / This is where X comes in / When it comes to",
+    pattern: wordPattern("Here['\u2019]s (?:the thing|the catch|the kicker|why|what|how)|This is where [^.!?\\n]{1,40} comes? in|Let['\u2019]s (?:break (?:this|it) down|take a (?:closer )?look|unpack)|[Ww]ithout further ado|When it comes to|At its core|The reality is|In a world where"),
+  },
+  {
+    id: "de-opener-signpost",
+    lang: "de",
+    category: "opener",
+    label: "Hier kommt X ins Spiel / Werfen wir einen Blick / Im Folgenden",
+    pattern: wordPattern("[Hh]ier kommt [^.!?\\n]{1,40} ins Spiel|Kommen wir (?:nun )?zu|Schauen wir uns [^.!?\\n]{0,40}an|Werfen wir einen (?:genaueren |kurzen )?Blick|Im Folgenden|Wenn es um [^.!?\\n]{1,40} geht|Im Kern|Am Ende des Tages|Die Wahrheit ist"),
+  },
+  // --- hedges (existing VOICE-HEDGE) ---
+  {
+    id: "en-hedge-stack",
+    lang: "en",
+    category: "hedge",
+    label: "could potentially / may possibly",
+    pattern: wordPattern("(?:could|may|might|can) (?:potentially|possibly|perhaps|arguably)|it could be argued", "i"),
+  },
+  {
+    id: "de-hedge-stack",
+    lang: "de",
+    category: "hedge",
+    label: "k\u00f6nnte m\u00f6glicherweise / gewisserma\u00dfen",
+    pattern: wordPattern("(?:k\u00f6nnte|k\u00f6nnten|kann|k\u00f6nnen|d\u00fcrfte|d\u00fcrften) (?:m\u00f6glicherweise|eventuell|unter Umst\u00e4nden|potenziell|gegebenenfalls)|gewisserma\u00dfen|in gewisser Weise", "i"),
+  },
+  // --- transitions (existing VOICE-TRANSITION) ---
+  {
+    id: "en-transition-adverb",
+    lang: "en",
+    category: "transition",
+    label: "Additionally, / Notably, / Importantly, / Ultimately,",
+    pattern: wordPattern("(?:Additionally|Notably|Importantly|Interestingly|Ultimately|Crucially|Essentially),"),
+  },
+  {
+    id: "de-transition-adverb",
+    lang: "de",
+    category: "transition",
+    label: "Des Weiteren / Ferner / Nicht zuletzt / Letztendlich / Abschlie\u00dfend",
+    pattern: wordPattern("Des Weiteren|Ferner|Nicht zuletzt|Letztendlich|Abschlie\u00dfend"),
+  },
+  // --- nominal style -> VOICE-NOMINAL (warn only) ---
+  {
+    id: "de-nominal-funktionsverb",
+    lang: "de",
+    category: "nominal",
+    label: "Funktionsverbgef\u00fcge (zur Anwendung kommen, erfolgt durch)",
+    pattern: wordPattern("(?:kommt|kommen|kam|kamen|gelangt|gelangen|bringt|bringen|brachte) zu[rm] (?:Anwendung|Einsatz|Durchf\u00fchrung|Umsetzung|Anzeige|Verwendung|Auswertung)|zu[rm] (?:Anwendung|Einsatz|Durchf\u00fchrung|Umsetzung|Anzeige|Kenntnis|Sprache|Verwendung|Auswertung) (?:bringen|bringt|gebracht|kommen|kommt|gekommen|gelangen|gelangt)|Ber\u00fccksichtigung finde[nt]|in Erw\u00e4gung (?:ziehen|zieht|gezogen)|(?:eine|die) (?:Pr\u00fcfung|Analyse|Bewertung|Auswertung|\u00dcberpr\u00fcfung) (?:durchf\u00fchren|durchf\u00fchrt|vornehmen|vornimmt|vorgenommen|durchgef\u00fchrt)|erfolg(?:t|en|te) (?:durch|mittels|\u00fcber|im Rahmen)", "i"),
+    advice: "use the verb: anwenden, pruefen, analysieren; name who does it",
+  },
+  {
+    id: "de-count-amtsdeutsch",
+    lang: "de",
+    category: "counter",
+    label: "im Rahmen / hinsichtlich / bez\u00fcglich / seitens / mittels",
+    pattern: wordPattern("im Rahmen (?:der|des|von|eines|einer)|im Hinblick auf|hinsichtlich|bez\u00fcglich|seitens|mittels", "i"),
+    perLesson: 2,
+  },
+  {
+    id: "en-nominal",
+    lang: "en",
+    category: "nominal",
+    label: "carry out a review / make a decision / in order to",
+    pattern: wordPattern("(?:carry|carries|carried|carrying) out an? (?:review|analysis|assessment|evaluation)|(?:conduct|conducts|conducted) an? (?:review|analysis|assessment)|make an? decision|has the ability to|due to the fact that|in order to|with regard to", "i"),
+  },
+  // --- claims (existing VOICE-CLAIM) ---
+  {
+    id: "en-claim-studies-show",
+    lang: "en",
+    category: "claim",
+    label: "studies show / experts say",
+    pattern: wordPattern("(?:studies|research|surveys) (?:show|shows|suggest|suggests|prove|proves)|experts (?:say|argue|believe|warn)|it is widely (?:known|accepted|believed)", "i"),
+  },
+  {
+    id: "de-claim-untersuchungen-zeigen",
+    lang: "de",
+    category: "claim",
+    label: "Untersuchungen zeigen / Fachleute betonen",
+    // "Studien zeigen" is already UNSOURCED-CLAIM in content-lint.mjs (JSON only).
+    pattern: wordPattern("(?:Untersuchungen|Umfragen) (?:zeigen|belegen|beweisen)|Studien (?:belegen|beweisen)|(?:Experten|Fachleute|Expertinnen) (?:sagen|betonen|warnen|raten)|Es ist (?:allgemein )?bekannt, dass|Man wei\u00df heute"),
+  },
+  // --- aphorism -> VOICE-APHORISM (warn only) ---
+  {
+    id: "en-aphorism",
+    lang: "en",
+    category: "aphorism",
+    label: "the real question is / the value sits in / is the new X",
+    pattern: wordPattern("the real (?:question|problem|issue|work|value|win) (?:is|lies|sits)|what (?:really|actually) matters|is the new [a-z]+|the (?:currency|language|heart|DNA) of|is a feature, not a bug|(?:the )?value sits in", "i"),
+  },
+  {
+    id: "de-aphorism",
+    lang: "de",
+    category: "aphorism",
+    label: "die eigentliche Frage / das A und O / steht und f\u00e4llt mit",
+    pattern: wordPattern("die eigentliche (?:Frage|Arbeit|Aufgabe|Herausforderung)|worauf es (?:wirklich|eigentlich) ankommt|ist das neue \\p{L}+|das A und O|steht und f\u00e4llt mit|der Schl\u00fcssel (?:liegt|zum Erfolg)", "i"),
+  },
 ];
 
 /**
@@ -659,7 +999,7 @@ export const CONNECTOR_RULES = [
 ];
 
 const CLOSER_MARKER = wordPattern(
-  "Zusammenfassung|Fazit|Kurz gesagt|In conclusion|To sum up",
+  "Zusammenfassung|Fazit|Kurz gesagt|Unterm Strich|Das Wichtigste in K\u00fcrze|Alles in allem|Abschlie\u00dfend|In conclusion|To sum up|Overall|The bottom line|Bottom line|All in all",
   "i",
 );
 
@@ -924,6 +1264,7 @@ export function analyzeVoice(units, { formMap }) {
 
     analyzeTerms(unit, findings);
     analyzeStructure(unit, findings);
+    analyzeShapes(unit, findings);
     analyzeForm(unit, formMap, findings);
   }
 
@@ -989,6 +1330,126 @@ function analyzeStructure(unit, findings) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Sentence shapes and rhythm (VOICE-SHAPE, VOICE-RHYTHM; warnings only)
+// ---------------------------------------------------------------------------
+
+/**
+ * Sentence-anchored shapes, tested per sentence of a text or quote paragraph.
+ * Slides may use noun-phrase labels; page prose may not, so these report as
+ * warnings and never become errors.
+ */
+export const SHAPE_RULES = [
+  {
+    id: "de-shape-colon-reveal",
+    label: "Das Ergebnis: / Der Clou: / Das Herzst\u00fcck:",
+    test: /^(?:Das (?:Ergebnis|Problem|Prinzip|Beste|Gute|Fazit|Herzst\u00fcck|Wichtigste|Entscheidende|Ziel)|Der (?:Clou|Haken|Kern|Trick|Grund|Knackpunkt|Unterschied)|Die (?:Pointe|L\u00f6sung|Folge|Idee|gute Nachricht|schlechte Nachricht|Kurzfassung)|Kurz gesagt|Unterm Strich|Spoiler|Hei\u00dft|Sprich|Klartext)\s?:/u,
+  },
+  {
+    id: "en-shape-colon-reveal",
+    label: "The result: / The catch: / In short:",
+    test: /^(?:The (?:result|catch|point|twist|upshot|problem|kicker|trick|key|good news|bad news|bottom line|short version|best part|takeaway)|Bottom line|In short|Short version|Spoiler|Plot twist|Put simply|Simply put)\s?:/iu,
+  },
+  {
+    id: "shape-count-fragment",
+    label: "F\u00fcnf Prompts, ein Analyst.",
+    test: /^(?:Ein|Eine|Einen|Zwei|Drei|Vier|F\u00fcnf|Sechs|Sieben|Acht|Neun|Zehn|Elf|Zw\u00f6lf|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Eleven|Twelve|\d+) [\p{L}-]+,\s(?:(?:und|and) )?(?:ein|eine|einen|zwei|drei|vier|f\u00fcnf|sechs|one|two|three|four|five|six|\d+) [^.!?:]{1,40}[.:]$/u,
+  },
+  {
+    id: "shape-list-colon-opener",
+    label: "Memos, Briefe, Vorlagen: ...",
+    test: /^(?:\p{Lu}[\p{L}-]+,\s){2,5}(?:(?:und|and|oder|or)\s)?[\p{L}-]+:\s/u,
+  },
+  {
+    id: "shape-rhetorical-reveal",
+    label: "Das Ergebnis? 40 Prozent. / Why? Because ...",
+    // Tested on the joined pair "question + next sentence".
+    test: /^(?:Das Ergebnis|Der Haken|Die L\u00f6sung|Die Antwort|Der Grund|Warum|Wieso|Und das Beste|Klingt kompliziert|Klingt gut|The (?:result|catch|answer|problem|twist|best part)|Why|Sounds (?:complicated|hard|simple))\?$/u,
+  },
+];
+
+export const STACKED_COLON_LIMIT = 1;
+export const FRAGMENT_WORDS = 4;
+export const FRAGMENT_RUN_LIMIT = 3;
+export const TAIL_NEGATION_PER_1K = 4;
+export const TAIL_NEGATION_MIN_WORDS = 800;
+export const SENTENCE_CV_MIN = 0.35;
+export const SENTENCE_CV_MIN_SENTENCES = 40;
+
+/** ", nicht zum Verkaufen." / ", not a keystroke." (counted as density only). */
+export const TAIL_NEGATION = /,\s(?:nicht|kein(?:e|en)?|not|never)\s[^.,;:!?\n]{1,40}[.!]/gu;
+const QUOTED = /"[^"\n]*"|\u201e[^\u201c\n]*\u201c|\u201c[^\u201d\n]*\u201d/gu;
+const RHYTHM_EXEMPT = /(?:^|\/)(?:quiz\/|glossary)/;
+
+/** Number of ": " separators in a sentence, quoted strings removed. */
+export function countSentenceColons(sentence) {
+  return (sentence.replace(QUOTED, "").match(/:\s/g) || []).length;
+}
+
+function shapeFindingsForSentence(sentences, index) {
+  const sentence = sentences[index];
+  const hits = [];
+  for (const rule of SHAPE_RULES) {
+    if (!rule.test.test(sentence)) continue;
+    if (rule.id === "shape-rhetorical-reveal") {
+      const next = sentences[index + 1];
+      if (!next || countWords(next) > 8) continue;
+    }
+    hits.push(rule);
+  }
+  return hits;
+}
+
+function analyzeShapes(unit, findings) {
+  let words = 0;
+  let tails = 0;
+  let firstLine = null;
+  const lengths = [];
+  for (const lesson of unit.lessons) {
+    for (const segment of lesson.segments) {
+      const text = blankOutCodeFences(segment.text);
+      words += countWords(text);
+      tails += (text.match(TAIL_NEGATION) || []).length;
+      if (!isProseSegment(text)) continue;
+      for (const block of splitParagraphs(text)) {
+        if (block.type !== "text" && block.type !== "quote") continue;
+        const line = blockLine(segment, block);
+        if (firstLine === null) firstLine = line;
+        const sentences = splitSentences(block.text);
+        let run = 0;
+        sentences.forEach((sentence, index) => {
+          const n = countWords(sentence);
+          lengths.push(n);
+          const excerpt = sentence.length > 60 ? `${sentence.slice(0, 57)}...` : sentence;
+          for (const rule of shapeFindingsForSentence(sentences, index)) {
+            findings.push(finding(unit, line, "VOICE-SHAPE", rule.id, `"${excerpt}" (${rule.label}); write a full sentence with an actor and a verb`));
+          }
+          // Quote blocks hold prompt templates ("Rolle: ... Kontext: ..."),
+          // where labelled fields are the point.
+          const colons = block.type === "quote" ? 0 : countSentenceColons(sentence);
+          if (colons > STACKED_COLON_LIMIT) {
+            findings.push(finding(unit, line, "VOICE-SHAPE", "stacked-colons", `"${excerpt}" has ${colons} colons; keep one colon per sentence, before a list or an example`));
+          }
+          run = n <= FRAGMENT_WORDS ? run + 1 : 0;
+          if (run === FRAGMENT_RUN_LIMIT) {
+            findings.push(finding(unit, line, "VOICE-RHYTHM", "fragment-run", `${FRAGMENT_RUN_LIMIT} sentences of ${FRAGMENT_WORDS} words or fewer in a row ("${excerpt}"); merge them into one sentence with a verb`));
+          }
+        });
+      }
+    }
+  }
+  if (words >= TAIL_NEGATION_MIN_WORDS && (tails / words) * 1000 > TAIL_NEGATION_PER_1K) {
+    findings.push(finding(unit, firstLine ?? 1, "VOICE-SHAPE", "tail-negation-density", `${tails} tailing negations (", nicht X.") in ${words} words, more than ${TAIL_NEGATION_PER_1K} per 1,000; keep them for real scope statements`));
+  }
+  if (lengths.length >= SENTENCE_CV_MIN_SENTENCES && !RHYTHM_EXEMPT.test(unit.relFile)) {
+    const mean = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    const cv = mean === 0 ? 0 : standardDeviation(lengths, mean) / mean;
+    if (mean > 0 && cv < SENTENCE_CV_MIN) {
+      findings.push(finding(unit, firstLine ?? 1, "VOICE-RHYTHM", "sentence-cv", `sentence length varies too little (CV ${cv.toFixed(2)} across ${lengths.length} sentences, minimum ${SENTENCE_CV_MIN}); let length follow content`));
+    }
+  }
+}
+
 function analyzeForm(unit, formMap, findings) {
   if (unit.lang !== "de") return;
   const resolved = resolveCourseForm(unit.relFile, formMap);
@@ -1043,12 +1504,20 @@ export function applyAllowlist(findings, allowlist) {
 
 export function severityFor(item, strict) {
   if (!VOICE_STRICT_RULES.has(item.rule)) return "warn";
+  if (VOICE_ADVISORY_PHRASES.has(item.phrase)) return "warn";
+  if (VOICE_ADVISORY_PATHS.some((prefix) => item.relFile.startsWith(prefix))) return "warn";
   return isStrictFile(item.relFile, strict) ? "error" : "warn";
 }
 
 // ---------------------------------------------------------------------------
 // Metrics (voice report)
 // ---------------------------------------------------------------------------
+
+/** Staged-contrast phrases counted by the report (split form, budgets and "mehr als nur"). */
+const CONTRAST_METRIC_RULES = VOICE_PHRASE_RULES.filter(
+  (entry) => entry.category === "contrast" || entry.id === "de-count-nicht-sondern" || entry.id === "de-count-kein-sondern",
+);
+const COLON_REVEAL_RULES = SHAPE_RULES.filter((rule) => rule.id.endsWith("colon-reveal"));
 
 function standardDeviation(values, mean) {
   if (values.length === 0) return 0;
@@ -1073,11 +1542,18 @@ export function computeVoiceMetrics(unit) {
   let connectorTotal = 0;
   let du = 0;
   let sie = 0;
+  let contrastHits = 0;
+  let colonReveals = 0;
+  let tailNegations = 0;
 
   for (const lesson of unit.lessons) {
     for (const segment of lesson.segments) {
       const text = blankOutCodeFences(segment.text);
       words += countWords(text);
+      tailNegations += (text.match(TAIL_NEGATION) || []).length;
+      for (const entry of CONTRAST_METRIC_RULES) {
+        contrastHits += [...text.matchAll(globalPattern(entry.pattern))].length;
+      }
       for (const marker of findFormMarkers(text)) {
         if (marker.form === "du") du++;
         else sie++;
@@ -1102,7 +1578,10 @@ export function computeVoiceMetrics(unit) {
         if (sentences.length === 0) continue;
         paragraphs++;
         if (sentences.length > PARAGRAPH_SENTENCE_LIMIT) longParagraphs++;
-        for (const sentence of sentences) lengths.push(countWords(sentence));
+        for (const sentence of sentences) {
+          lengths.push(countWords(sentence));
+          if (COLON_REVEAL_RULES.some((rule) => rule.test.test(sentence))) colonReveals++;
+        }
       }
     }
   }
@@ -1111,12 +1590,17 @@ export function computeVoiceMetrics(unit) {
   const sum = lengths.reduce((a, b) => a + b, 0);
   const mean = sentenceCount === 0 ? 0 : sum / sentenceCount;
   const form = du > 0 && sie > 0 ? "mixed" : du > 0 ? "du" : sie > 0 ? "sie" : "none";
+  const sd = standardDeviation(lengths, mean);
+  const shortSentences = lengths.filter((n) => n <= FRAGMENT_WORDS).length;
 
   return {
     words,
     sentences: sentenceCount,
     sentenceLengthMean: mean,
-    sentenceLengthSd: standardDeviation(lengths, mean),
+    sentenceLengthSd: sd,
+    sentenceLengthCv: mean === 0 ? 0 : sd / mean,
+    shortSentences,
+    shortSentenceShare: sentenceCount === 0 ? 0 : shortSentences / sentenceCount,
     sentenceLengthSum: sum,
     sentenceLengthSumSq: lengths.reduce((a, b) => a + b * b, 0),
     paragraphs,
@@ -1131,5 +1615,9 @@ export function computeVoiceMetrics(unit) {
     du,
     sie,
     form,
+    contrastHits,
+    colonReveals,
+    tailNegations,
+    tailNegationsPer1k: words === 0 ? 0 : (tailNegations / words) * 1000,
   };
 }

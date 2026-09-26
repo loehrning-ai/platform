@@ -4,75 +4,38 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Forecasting decisions · Take-home · loehrning.ai</title>
-<meta name="description" content="Workshop 01 take-home in three tiers: play the hands-on lab, make your first honest forecast on a practice dataset, then apply the newsvendor lens to your own domain." />
-
-<style>
-  :root{
-    --paper:#F5F2EA; --card:#FFFFFF; --paper-2:#EFEADE; --ink:#12100B; --ink-soft:#4A443B; --faint:#5f5850;
-    --line:#E1DCCF; --line-strong:#CBC4B4;
-    --rust:#C2410C; --rust-dk:#9A3412; --blue:#0866FF; --ok:#096B78; --amber:#8A6508;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-    --ease: cubic-bezier(.23,1,.32,1);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(circle at 1px 1px, rgba(18,16,11,.045) 1px, transparent 0);background-size:20px 20px}
-  .wrap{max-width:var(--wf-max);margin:0 auto;padding:clamp(20px,4vw,40px) var(--wf-gutter) 80px}
-  .wrap>*{max-width:var(--wf-measure)}
-  .mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.13em;font-size:11px;color:var(--faint)}
-  code{font-family:var(--mono);font-size:.9em;background:color-mix(in srgb,var(--rust) 8%, transparent);border:1px solid var(--line);border-radius:3px;padding:.5px 5px;color:var(--rust-dk)}
-  a{color:var(--rust-dk);text-underline-offset:2px}
-  :focus-visible{outline:2.5px solid var(--rust);outline-offset:2px;border-radius:2px}
-
-  header.mast{border-bottom:3px solid var(--rust);padding-bottom:16px}
-  .mono.kick{color:var(--rust);font-weight:700}
-  h1{font-size:var(--wf-h1-doc);font-weight:850;letter-spacing:0;line-height:1.02;margin:8px 0 0}
-  .intro{font-size:16px;color:var(--ink-soft);margin:16px 0 0}
-  .intro b{color:var(--ink)}
-
-  .kit{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
-  .kit a{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:5px;padding:8px 12px;font-size:13px;transition:.15s var(--ease)}
-  .kit a:hover{border-color:var(--rust)}
-  .kit a .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
-
-  h2.sec{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);margin:36px 0 12px;padding-bottom:6px;border-bottom:1.5px solid var(--line)}
-
-  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
-  td b{color:var(--rust-dk)}
-
-  .tier{background:var(--card);border:1.5px solid var(--line);border-top:3px solid var(--rust);border-radius:8px;padding:20px 22px;margin:16px 0;box-shadow:0 14px 34px -28px rgba(60,30,10,.5)}
-  .tier .th{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-  .tier h3{font-size:22px;font-weight:850;letter-spacing:0;margin:0}
-  .tier h3 .badge{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;background:var(--rust);padding:3px 8px;border-radius:3px;vertical-align:middle;margin-right:10px;letter-spacing:.06em}
-  .tier .time{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.06em}
-  .tier ol,.tier ul{margin:10px 0;padding-left:20px}
-  .tier li{margin:6px 0;font-size:14.5px}
-  .aha{background:color-mix(in srgb,var(--rust) 9%, transparent);border-left:3px solid var(--rust);border-radius:0 5px 5px 0;padding:10px 14px;font-size:14px;margin:12px 0}
-  .aha b{color:var(--rust-dk)}
-  .trains{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--faint);margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
-  .trains b{color:var(--rust-dk)}
-  .dataset{border:1.5px dashed var(--line-strong);border-radius:6px;padding:11px 14px;background:var(--paper-2);font-size:13.5px;margin:10px 0}
-  .dataset .m{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--rust-dk)}
-
-  .check td.g{color:var(--ok)} .check td.a{color:var(--amber)}
-  .pointers{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:16px 20px;font-size:14px}
-  .pointers li{margin:6px 0}
-  main footer{margin-top:30px;font-size:12px;color:var(--faint);border-top:2px solid var(--line-strong);padding-top:14px;font-family:var(--mono);letter-spacing:.03em}
-
-  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-  @media print{body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tier{break-inside:avoid;box-shadow:none}}
-</style>
+<meta name="description" content="Workshop 01 take-home in three levels: set a buffer in the hands-on lab, score two forecasts on a practice dataset, then apply the newsvendor rule to your own work." />
 <meta name="theme-color" content="#f3f0e9" />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="preload" href="assets/fonts/Typing-Regular.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="stylesheet" href="lib/tokens.css" />
-<link rel="stylesheet" href="lib/wf.css" />
+<link rel="stylesheet" href="lib/workshop-frame.css" />
+<style>
+  /* page layer: layout only; colour and type come from lib/workshop-frame.css */
+  *{box-sizing:border-box}
+  .wrap{max-width:var(--wf-max);margin:0 auto;padding:clamp(24px,4vw,48px) var(--wf-gutter) 24px}
+  .wrap>*{max-width:var(--wf-measure)}
+  .hw-kit{display:flex;flex-wrap:wrap;gap:8px 12px;margin:24px 0 0}
+  .tier{margin:0;padding:22px 0 24px;border-bottom:var(--wf-hair)}
+  .tier:first-of-type{padding-top:4px}
+  .tier-head{display:flex;align-items:baseline;justify-content:space-between;gap:4px 16px;flex-wrap:wrap;margin-bottom:8px}
+  .tier-head h3{margin:0;font:700 22px/1.2 var(--wf-sans);letter-spacing:-.01em}
+  .tier-head .wf-kicker{margin:0}
+  .tier p,.tier li{font-size:16px;line-height:1.6}
+  .tier ol{margin:12px 0;padding-left:22px}
+  .tier li{margin:8px 0}
+  .tier .wf-note{font-size:16px}
+  .trains{margin:12px 0 0;color:var(--wf-slate);font-size:14px}
+  .check td:first-child{font-weight:600;white-space:nowrap}
+  .hw-pointers{margin:0;padding:0;list-style:none}
+  .hw-pointers li{padding:10px 0;border-bottom:var(--wf-hair);font-size:16px;line-height:1.55}
+  .hw-foot{margin-top:28px;color:var(--wf-slate);font-size:14px}
+  .wf-table td{font-size:15px}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  @media print{body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tier{break-inside:avoid}.hw-kit{display:none}}
+</style>
 </head>
-<body>
+<body class="wf-page">
 <a class="wf-skip" href="#main">Skip to content</a>
 <header class="wf-strip" data-wf-slug="ki-prognosen-einschaetzen">
   <a class="wf-brand" href="/en/workshops"><img src="assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
@@ -89,98 +52,97 @@
   </nav>
 </header>
 <main class="wrap" id="main" tabindex="-1">
-  <header class="mast">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-      <div class="mono kick">Workshop 01 · Forecasting decisions · Take-home · English</div>
-      <svg width="120" height="30" viewBox="0 0 120 30" aria-hidden="true" style="flex:none">
-        <path d="M2,23 L40,17 L62,19 L84,11" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M84,11 L104,17 L118,8" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 5"/>
-        <circle cx="84" cy="11" r="3.5" fill="var(--rust)"/>
-      </svg>
+  <header>
+    <p class="wf-kicker">Workshop 01 · Forecasting decisions · Take-home</p>
+    <h1 class="wf-h1">Forecasting practice</h1>
+    <p class="wf-lead">Three levels, from 15 minutes to open-ended. Level 1 uses the hands-on lab, level 2 a spreadsheet and the practice dataset, level 3 your own work. Stop after any level.</p>
+    <div class="hw-kit">
+      <a class="wf-btn" href="./hands-on.html">Hands-on lab</a>
+      <a class="wf-btn" href="./case-study/index.html">Business case</a>
+      <a class="wf-btn" href="./field-card.html">Field card</a>
     </div>
-    <h1>Forecasting decision practice</h1>
-    <p class="intro">You have seen forecasts get tuned, stressed and broken in the hands-on lab and the business case. This take-home turns those ~90 minutes into a skill you keep. Do as much as fits your appetite: <b>15 minutes gets the intuition; 45 minutes gets the math; the open challenge makes it yours.</b></p>
-    <div class="kit">
-      <a href="./hands-on.html"><span class="m">Lab</span> The hands-on lab</a>
-      <a href="./case-study/index.html"><span class="m">Case</span> The business case</a>
-      <a href="./field-card.html"><span class="m">Recap</span> The field card</a>
-    </div>
-    <p class="mono" style="margin-top:2px">No login · works offline</p>
   </header>
 
-  <h2 class="sec">Why you're doing this: the 5 pillars</h2>
-  <table>
-    <thead><tr><th>Pillar</th><th>The question</th><th>Where it hurts</th></tr></thead>
-    <tbody>
-      <tr><td><b>1 · Overpredict</b></td><td>What does <i>too much</i> cost?</td><td>Cash frozen, spoilage, markdowns</td></tr>
-      <tr><td><b>2 · Underpredict</b></td><td>What does <i>too little</i> cost?</td><td>Stockouts, walked-away customers</td></tr>
-      <tr><td><b>3 · Safety stock</b></td><td>How much cushion, given 1 vs 2?</td><td>The number that balances both costs</td></tr>
-      <tr><td><b>4 · Many factors</b></td><td>Where do buffers stack up?</td><td>SKUs, regions and suppliers each pad: the bullwhip</td></tr>
-      <tr><td><b>5 · Supply and demand</b></td><td>Why forecast <i>ahead</i> at all?</td><td>Everyone commits on one signal before they know</td></tr>
-    </tbody>
-  </table>
+  <section class="wf-section" aria-labelledby="pillars-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="pillars-title">The five pillars you practise</h2></header>
+    <table class="wf-table">
+      <thead><tr><th>Pillar</th><th>The question</th><th>Where it hurts</th></tr></thead>
+      <tbody>
+        <tr><td><b>1 Overpredict</b></td><td>What does too much cost?</td><td>Cash frozen, spoilage, markdowns</td></tr>
+        <tr><td><b>2 Underpredict</b></td><td>What does too little cost?</td><td>Stockouts, customers who walk away</td></tr>
+        <tr><td><b>3 Safety stock</b></td><td>How much cushion, given 1 and 2?</td><td>The number that balances both costs</td></tr>
+        <tr><td><b>4 Many factors</b></td><td>Where do buffers stack up?</td><td>SKUs, regions and suppliers each pad their order: the bullwhip</td></tr>
+        <tr><td><b>5 Supply and demand</b></td><td>Why forecast ahead at all?</td><td>Everyone commits to one number before demand is known</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-  <h2 class="sec">Your three tiers</h2>
+  <section class="wf-section" aria-labelledby="levels-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="levels-title">Three levels</h2></header>
 
-  <div class="tier">
-    <div class="th"><h3><span class="badge">DO</span>Play the hands-on lab</h3><span class="time">15 min</span></div>
-    <p>Open the <a href="./hands-on.html">hands-on lab</a>. In <b>Act 1</b> (parcel network) switch the forecast between <i>History only</i>, <i>+ Weekday</i> and <i>+ Promo dates</i>. In <b>Act 2</b> (device maker) move the <b>Service target</b> slider and compare <i>Local buffers</i> with <i>Shared forecast</i>. The gap between forecast and order is your <b>safety stock</b>.</p>
-    <ol>
-      <li><b>Hit a high service level.</b> Run Act 2 at a service target of <b>≥ 90%</b>. Feel what it takes to almost never stock out, and watch the cash tied up in inventory grow.</li>
-      <li><b>Beat the manual rule once.</b> In Act 1, find the forecast that beats &ldquo;same weekday last week&rdquo; on the capacity bill, and note the one shock that no forecast catches.</li>
-      <li><b>Write down the buffer that worked.</b> Record the service target that balanced cost and fill rate, then reason about which business deserves the <i>bigger</i> buffer: a bakery (croissants spoil overnight) or a parcel network (a missed delivery costs more than an idle van). The critical ratio decides, and the answer may surprise you.</li>
-    </ol>
-    <div class="aha"><b>Business lesson:</b> chasing 100% service level <i>loses money</i>. The best buffer is set by the cost of over- vs under-forecasting: Pillars 1, 2, 3 in one decision.</div>
-    <div class="trains"><b>Trains:</b> over · under · buffer. Field card <b>§2</b> (newsvendor) &amp; <b>§3</b> (safety stock)</div>
-  </div>
+    <article class="tier">
+      <div class="tier-head"><h3>Level 1: set a buffer in the lab</h3><span class="wf-kicker">15 minutes</span></div>
+      <p>Open the <a href="./hands-on.html">hands-on lab</a>. In act 1 (parcel network) switch the forecast between <i>History only</i>, <i>+ Weekday</i> and <i>+ Promo dates</i>. In act 2 (device maker) move the <b>Service target</b> slider and compare <i>Local buffers</i> with <i>Shared forecast</i>. The gap between forecast and order is your <b>safety stock</b>.</p>
+      <ol>
+        <li><b>Run a high service level.</b> Set act 2 to a service target of at least 90%. Watch the cash tied up in inventory grow as stockouts get rare.</li>
+        <li><b>Beat the manual rule once.</b> In act 1, find the forecast that beats “same weekday last week” on the capacity bill. Note the one shock no forecast catches.</li>
+        <li><b>Write down the buffer that worked.</b> Record the service target that balanced cost and fill rate. Then decide which business needs the bigger buffer: a bakery, where croissants spoil overnight, or a parcel network, where a missed delivery costs more than an idle van. Work it out with the critical ratio.</li>
+      </ol>
+      <p class="wf-note">A 100% service level loses money. Set the buffer from the cost of too much against the cost of too little.</p>
+      <p class="trains">Practises pillars 1 to 3. Field card sections 2 (newsvendor) and 3 (safety stock).</p>
+    </article>
 
-  <div class="tier">
-    <div class="th"><h3><span class="badge">STRETCH</span>Your first honest forecast</h3><span class="time">45 min</span></div>
-    <p>Make two honest forecasts on a practice dataset and score them. <b>No coding required; a spreadsheet is enough.</b> Coders can use any notebook.</p>
-    <div class="dataset"><span class="m">Dataset</span> &nbsp;<a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>: 104 weeks of a product's demand (<code>week_start, units</code>).<br><span style="color:var(--faint)">Two years, weekly, with trend + a Q4 bump. Hide the last 14 rows as your test set, or bring your own series.</span></div>
-    <ol>
-      <li><b>Split.</b> Hide the <b>last ~14 rows</b> (your test period). Never let the model see the answers first. This is <i>backtesting</i>.</li>
-      <li><b>Baseline: naive.</b> Forecast each test day as <b>yesterday's actual</b> (or last week's same day if there's a weekly rhythm). This is the bar to beat.</li>
-      <li><b>Smoothed: pick one.</b> Use a spreadsheet moving average (mean of last 3), or exponential smoothing <code>F = 0.3·actual + 0.7·F_prev</code>; notebook: <code>SimpleExpSmoothing</code>/<code>Holt</code>.</li>
-      <li><b>Score both</b> over 14 days: <b>MAE</b> = <code>AVG(ABS(actual - forecast))</code>; <b>Bias</b> = <code>AVG(forecast - actual)</code> (positive = over-forecast, negative = under).</li>
-      <li><b>Report</b> four numbers (MAE + Bias for naive and smoothed) and one sentence: did smoothing earn its keep?</li>
-    </ol>
-    <div class="trains"><b>Trains:</b> baselines + honest scoring. Field card <b>§5</b> (reading a forecast) and the mindset box</div>
-  </div>
+    <article class="tier">
+      <div class="tier-head"><h3>Level 2: score two forecasts</h3><span class="wf-kicker">45 minutes</span></div>
+      <p>Build two forecasts on the practice dataset and score them. A spreadsheet is enough; a notebook works too.</p>
+      <p class="wf-note wf-note--gap"><b>Dataset:</b> <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of one product's demand (<code>week_start, units</code>), with a trend and a bump in Q4. Hide the last 14 rows as your test set, or use your own series.</p>
+      <ol>
+        <li><b>Split.</b> Hide the last 14 weeks (your test period) so the model never sees the answers. This is <i>backtesting</i>.</li>
+        <li><b>Naive baseline.</b> Forecast each test week as last week's actual. This is the bar to beat.</li>
+        <li><b>Smoothed forecast.</b> Use a moving average of the last 3 weeks, or exponential smoothing <code>F = 0.3·actual + 0.7·F_prev</code>. In a notebook: <code>SimpleExpSmoothing</code> or <code>Holt</code>.</li>
+        <li><b>Score both</b> over the 14 weeks: <b>MAE</b> = <code>AVG(ABS(actual - forecast))</code>; <b>Bias</b> = <code>AVG(forecast - actual)</code> (positive means over-forecast).</li>
+        <li><b>Report</b> four numbers (MAE and bias for naive and smoothed) and one sentence: is the smoothed forecast worth the extra step?</li>
+      </ol>
+      <p class="trains">Practises baselines and backtesting. Field card section 5 and the five checks.</p>
+    </article>
 
-  <div class="tier">
-    <div class="th"><h3><span class="badge">CHALLENGE</span>Your own domain</h3><span class="time">open</span></div>
-    <p>You know a business, team, or system where something runs out or piles up. Apply the <b>S&amp;OP / newsvendor</b> lens in exactly <b>5 sentences</b>:</p>
-    <ol>
-      <li>Name your domain and the one thing whose demand you'd forecast (staff hours? inventory? server capacity? ER beds? ad budget?).</li>
-      <li>Where does <b>over-forecasting</b> cost you most?</li>
-      <li>Where does <b>under-forecasting</b> cost you most?</li>
-      <li>Which is worse, and is your critical ratio closer to a high or low service level?</li>
-      <li>What <b>buffer</b> would you set, and what signal (a season, a lead time, a promo) would make you change it?</li>
-    </ol>
-    <div class="trains"><b>Trains:</b> all 5 pillars, integrated. Field card <b>§1</b> to <b>§4</b></div>
-  </div>
+    <article class="tier">
+      <div class="tier-head"><h3>Level 3: your own work</h3><span class="wf-kicker">Open-ended</span></div>
+      <p>Pick a business, team or system where something runs out or piles up. Apply the newsvendor rule in five sentences:</p>
+      <ol>
+        <li>Name the domain and the one quantity you would forecast: staff hours, inventory, server capacity, hospital beds or ad budget.</li>
+        <li>Where does <b>over-forecasting</b> cost you most?</li>
+        <li>Where does <b>under-forecasting</b> cost you most?</li>
+        <li>Which is worse, and does your critical ratio point to a high or a low service level?</li>
+        <li>What <b>buffer</b> would you set, and which signal (a season, a lead time, a promotion) would make you change it?</li>
+      </ol>
+      <p class="trains">Practises all five pillars. Field card sections 1 to 4.</p>
+    </article>
+  </section>
 
-  <h2 class="sec">How to self-check</h2>
-  <table class="check">
-    <thead><tr><th>Tier</th><th>Green: nailed it</th><th>Amber: revisit</th></tr></thead>
-    <tbody>
-      <tr><td><b>Do</b></td><td class="g">≥ 90% service target in one Act 2 run <b>and</b> found the Act 1 forecast that beats the manual rule; can state the service target that worked</td><td class="a">Picked a setting by luck and can't say which buffer did it</td></tr>
-      <tr><td><b>Stretch</b></td><td class="g">4 numbers reported; smoothed MAE ≤ naive MAE; |Bias| under ~20% of average demand</td><td class="a">Forgot the holdout (peeked), or reported MAE without bias</td></tr>
-      <tr><td><b>Challenge</b></td><td class="g">5 sentences; over- <b>and</b> under-cost both named; buffer justified by which is worse</td><td class="a">Only described the domain; didn't commit to a buffer or say why</td></tr>
-    </tbody>
-  </table>
+  <section class="wf-section" aria-labelledby="check-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="check-title">Check your result</h2></header>
+    <table class="wf-table check">
+      <thead><tr><th>Level</th><th>Done</th><th>Go back if</th></tr></thead>
+      <tbody>
+        <tr><td>Level 1</td><td>One act 2 run at a service target of 90% or more, the act 1 forecast that beats the manual rule, and the service target you would pick</td><td>You found a good setting by chance and cannot say which buffer did it</td></tr>
+        <tr><td>Level 2</td><td>Four numbers reported; smoothed MAE at or below naive MAE; absolute bias under about 20% of average demand</td><td>You looked at the test weeks, or reported MAE without bias</td></tr>
+        <tr><td>Level 3</td><td>Five sentences; the cost of over- and of under-forecasting both named; the buffer follows from which is worse</td><td>You described the domain but did not choose a buffer or say why</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-  <h2 class="sec">Pointers back to your kit</h2>
-  <ul class="pointers">
-    <li><b>Buffer / service-level math:</b> <a href="./field-card.html">field card</a> §2 (newsvendor &amp; critical ratio) + §3 (safety stock).</li>
-    <li><b>Baselines &amp; smoothing for Stretch:</b> field card §5 and the mindset box (&ldquo;start with a baseline&rdquo;).</li>
-    <li><b>MAE, bias &amp; backtesting:</b> field card §5 (reading a forecast).</li>
-    <li><b>The system view:</b> the <a href="./case-study/index.html">business case</a>, one launch and three numbers.</li>
-    <li><b>Stuck on intuition?</b> Replay the <a href="./hands-on.html">3-act hands-on lab</a>: current process, buffer policy, production trust loop.</li>
-  </ul>
+  <section class="wf-section" aria-labelledby="ptr-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="ptr-title">Where to look things up</h2></header>
+    <ul class="hw-pointers">
+      <li><b>Buffer and service-level maths:</b> <a href="./field-card.html">field card</a> section 2 (newsvendor and critical ratio) and section 3 (safety stock).</li>
+      <li><b>Baselines and smoothing for level 2:</b> field card section 5 and the five checks.</li>
+      <li><b>The whole chain:</b> the <a href="./case-study/index.html">business case</a>, one phone launch from forecast to allocation.</li>
+      <li><b>Intuition first:</b> the three acts of the <a href="./hands-on.html">hands-on lab</a> (current process, buffer policy, release gate).</li>
+    </ul>
+  </section>
 
-  <footer>Everything here runs with Wi-Fi off. No account, no personal data, no purchase. Just you, the lab and one practice dataset.</footer>
+  <p class="hw-foot">Everything here runs in your browser without a connection. You need no account and enter no personal data.</p>
 </main>
 <footer class="wf-foot">
   <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>

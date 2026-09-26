@@ -5,9 +5,10 @@ test.describe("workshop self-study journey", () => {
     page,
   }) => {
     await page.goto("/workshops");
+    // Each hub row has exactly one link into its workshop page.
     const workshop = page.getByRole("link", {
-      name: /Geschäftsberichte mit KI lesen/i,
-    }).first();
+      name: "Workshop ansehen: Geschäftsberichte mit KI lesen",
+    });
     await expect(workshop).toBeVisible();
     await workshop.click();
     await expect(page).toHaveURL(

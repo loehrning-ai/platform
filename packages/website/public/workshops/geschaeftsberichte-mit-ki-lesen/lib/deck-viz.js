@@ -35,14 +35,13 @@
       val.appendChild(document.createTextNode('€'+L.rev.toFixed(2)+'M'));
       var chip = el('span', null, (L.ncr>0 ? L.ncr+' NCR' : 'not logged'));
       chip.style.cssText = 'margin-left:16px;font-weight:'+(L.ncr>0?'700':'400')+
-        ';color:'+(L.hot?'var(--mennige)':(L.ncr>0?'var(--ink)':'var(--muted)'))+
-        (L.ncr>0?'':';opacity:.45');
+        ';color:'+(L.hot?'var(--mennige)':(L.ncr>0?'var(--ink)':'var(--muted)'));
       val.appendChild(chip);
       row.appendChild(val);
       wrap.appendChild(row);
     });
     var cap = el('div', null, 'Revenue by line, September · CRAFT is #2 in revenue, #6 in volume, and worst on defects');
-    cap.style.cssText = 'font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:20px';
+    cap.style.cssText = 'font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:.01em;color:var(--muted);margin-top:18px';
     slot.appendChild(wrap); slot.appendChild(cap);
   }
 
@@ -56,17 +55,17 @@
     GROUPS.forEach(function(G){
       var c1 = el('div','nc-col');
       c1.appendChild(el('span','nc-val', String(G.craft)));
-      var b1 = el('span','nc-bar'); b1.dataset.h = (G.craft/MAXN*150).toFixed(0)+'px';
+      var b1 = el('span','nc-bar'); b1.dataset.h = (G.craft/MAXN*80).toFixed(0)+'px';
       c1.appendChild(b1);
-      c1.appendChild(el('span','nc-cap','CRAFT '+G.cap));
+      c1.appendChild(el('span','nc-cap','CRAFT'));
       wrap.appendChild(c1);
 
       var c2 = el('div','nc-col');
-      var v2 = el('span','nc-val', String(G.field)); v2.style.opacity='.5';
+      var v2 = el('span','nc-val', String(G.field)); v2.style.color='var(--muted)';
       c2.appendChild(v2);
-      var b2 = el('span','nc-bar ghost'); b2.dataset.h = (G.field/MAXN*150).toFixed(0)+'px';
+      var b2 = el('span','nc-bar ghost'); b2.dataset.h = (G.field/MAXN*80).toFixed(0)+'px';
       c2.appendChild(b2);
-      var cp = el('span','nc-cap','NEST, next worst'); cp.style.opacity='.5';
+      var cp = el('span','nc-cap','NEST');
       c2.appendChild(cp);
       wrap.appendChild(c2);
     });

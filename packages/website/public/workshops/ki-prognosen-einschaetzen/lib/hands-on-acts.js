@@ -37,11 +37,11 @@
     });
     return n;
   }
-  function money(v) { // dollars in
+  function money(v) { // euros in
     var s = v < 0 ? "-" : "", a = Math.abs(v);
-    if (a >= 1e6) return s + "$" + (a / 1e6).toFixed(a >= 1e7 ? 0 : 1) + "M";
-    if (a >= 1e3) return s + "$" + Math.round(a / 1e3) + "k";
-    return s + "$" + Math.round(a);
+    if (a >= 1e6) return s + "€" + (a / 1e6).toFixed(a >= 1e7 ? 0 : 1) + "M";
+    if (a >= 1e3) return s + "€" + Math.round(a / 1e3) + "k";
+    return s + "€" + Math.round(a);
   }
   function pct(x) { return Math.round(x * 100) + "%"; }
   // inverse normal CDF (Acklam approximation; teaching-widget accuracy)
@@ -74,105 +74,105 @@
     return M.map(function (r) { return r[n]; });
   }
 
-  /* ---------- shared stylesheet ---------- */
-  var BLUE = "#245CFF", INK = "#101014", SUB = "#5e5b55", LINE = "#d8d0bf",
-    PAPER = "#fffdf7", SOFT = "#f2ede1", RUST = "#bd3f10", RED = "#d11f1f",
-    TEAL = "#0b8f99", GREEN = "#0a7d52", GOLD = "#c8952d", OLIVE = "#6b6a45";
-  var EASE = "cubic-bezier(.23,1,.32,1)";
+  /* ---------- shared stylesheet ----------
+     Palette of the W03 deck ("Werkzeichnung"): paper, ink, Leinen hairlines, one Mennige accent
+     (the model line on the canvas), Pass green only with a word. No shadows, gradients or radii.
+     BLUE is the historical name of the "model / look here" colour and is Mennige now. */
+  var BLUE = "#b73a15", INK = "#121212", SUB = "#4f4640", LINE = "#d4cec5",
+    PAPER = "#f9f7f2", SOFT = "#e5e4e2", RUST = "#b73a15", RED = "#121212",
+    TEAL = "#655c54", GREEN = "#205b46", GOLD = "#4f4640", OLIVE = "#d4cec5";
+  var UI = "#121212"; // controls are ink; Mennige stays for the one mark per view
+  var EASE = "cubic-bezier(.16,1,.3,1)";
+  var SANS = "var(--wf-sans,var(--sans,system-ui,sans-serif))", MONO = "var(--wf-mono,var(--mono,ui-monospace,monospace))";
+  var LABEL = "font-family:" + SANS + ";font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--sub)";
   var CSS = "" +
-    ".hs{--blue:" + BLUE + ";--ink:" + INK + ";--sub:" + SUB + ";--line:" + LINE + ";--paper:" + PAPER + ";--soft:" + SOFT + ";--rust:" + RUST + ";--red:" + RED + ";--teal:" + TEAL + ";--green:" + GREEN + ";--gold:" + GOLD + ";--olive:" + OLIVE + ";" +
-    "display:block;font-family:var(--sans,system-ui,sans-serif);color:var(--ink)}" +
+    ".hs{--blue:" + UI + ";--ink:" + INK + ";--sub:" + SUB + ";--line:" + LINE + ";--paper:" + PAPER + ";--soft:" + SOFT + ";--rust:" + RUST + ";--red:" + RED + ";--teal:" + TEAL + ";--green:" + GREEN + ";--gold:" + GOLD + ";--olive:" + OLIVE + ";--accent:" + RUST + ";" +
+    "display:block;font-family:" + SANS + ";color:var(--ink)}" +
     ".hs *{box-sizing:border-box}" +
-	    ".hs-card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;box-shadow:0 18px 54px -42px rgba(6,36,63,.5)}" +
-	    ".hs.dark .hs-card{--paper:#0f2333;--ink:#eef6ff;--sub:#a7b8c8;--line:#25455f;--soft:#142d42;background:var(--paper);box-shadow:0 22px 64px -40px rgba(0,0,0,.8)}" +
-	    ".hs.dark .hs-verdict{color:#eef6ff;background:linear-gradient(90deg,rgba(126,189,255,.12),transparent)}" +
-	    ".hs.dark .hs-verdict b,.hs.dark .hs-note b{color:#ffffff}" +
-	    ".hs.dark .hs-verdict[data-tone=warn]{background:linear-gradient(90deg,rgba(255,90,78,.16),transparent)}" +
-	    ".hs.dark .hs-verdict[data-tone=good]{background:linear-gradient(90deg,rgba(55,194,160,.16),transparent)}" +
-	    ".hs.dark .hs-verdict[data-tone=gold]{background:linear-gradient(90deg,rgba(232,184,75,.16),transparent)}" +
-	    ".hs-chartwrap{position:relative;width:100%}" +
+    ".hs-card{background:var(--paper);border:1px solid var(--line);padding:14px 16px}" +
+    ".hs-chartwrap{position:relative;width:100%}" +
     ".hs-chartwrap canvas{display:block;width:100%;height:100%}" +
-    ".hs-live{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);font-weight:900;margin-bottom:8px}" +
-    ".hs-live .dot{width:8px;height:8px;border-radius:50%;background:var(--teal)}" +
-    ".hs-live[data-on] .dot{animation:hsPulse 1.4s ease-in-out infinite}" +
-    ".hs-live[data-alarm] .dot{background:var(--red);animation:hsPulse .6s ease-in-out infinite}" +
-    "@keyframes hsPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}" +
+    ".hs-live{display:inline-flex;align-items:center;gap:8px;" + LABEL + ";margin-bottom:8px}" +
+    ".hs-live .dot{width:8px;height:8px;background:var(--teal)}" +
+    ".hs-live>span:last-child{display:block}.hs-live>span:last-child::first-letter{text-transform:uppercase}" +
+    ".hs-live[data-on] .dot{animation:hsPulse 1.4s ease-in-out 3}" +
+    ".hs-live[data-alarm] .dot{background:var(--accent)}" +
+    "@keyframes hsPulse{0%,100%{opacity:1}50%{opacity:.35}}" +
     ".hs-ctl{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:flex-end;margin-top:12px}" +
     ".hs-field{flex:1 1 190px;min-width:160px}" +
-    ".hs-lab{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);display:flex;justify-content:space-between;margin-bottom:6px;font-weight:700}" +
-    ".hs-lab b{color:var(--blue);font-variant-numeric:tabular-nums}" +
-    ".hs.dark .hs-lab b{color:#7ebdff}" +
-    ".hs input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:6px;background:var(--line);outline-offset:4px;cursor:pointer}" +
-    ".hs input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue);border:2px solid #fff;box-shadow:0 2px 8px rgba(36,92,255,.4),0 0 0 4px rgba(36,92,255,.12);cursor:grab;transition:transform .18s " + EASE + "}" +
-    ".hs input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}" +
-    ".hs input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);border:2px solid #fff;cursor:grab}" +
-    ".hs-seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}" +
-    ".hs-seg button{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;padding:8px 11px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
+    ".hs-lab{" + LABEL + ";display:flex;justify-content:space-between;margin-bottom:6px}" +
+    ".hs-lab b{color:var(--ink);font-family:" + MONO + ";font-weight:600;font-variant-numeric:tabular-nums}" +
+    ".hs input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--line);outline-offset:6px;cursor:pointer;margin:12px 0}" +
+    ".hs input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:24px;background:var(--ink);border:2px solid var(--paper);cursor:grab}" +
+    ".hs input[type=range]::-moz-range-thumb{width:14px;height:22px;border-radius:0;background:var(--ink);border:2px solid var(--paper);cursor:grab}" +
+    ".hs input[type=range]:focus-visible{outline:3px solid " + RUST + "}" +
+    ".hs-seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--ink);background:var(--paper)}" +
+    ".hs-seg button{font:500 14px/1.1 " + SANS + ";min-height:40px;padding:8px 12px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
     ".hs-seg button:first-child{border-left:0}" +
-    ".hs-seg button[aria-pressed=true]{background:var(--blue);color:#fff}" +
-    ".hs-btn{appearance:none;border:0;border-radius:6px;background:var(--blue);color:#fff;font-family:var(--mono,ui-monospace,monospace);font-size:11.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:11px 16px;cursor:pointer;transition:transform .06s,filter .15s}" +
-    ".hs-btn:hover{filter:brightness(1.1)} .hs-btn:active{transform:scale(.97)}" +
+    ".hs-seg button[aria-pressed=true]{background:var(--ink);color:#f2f1ee;font-weight:600}" +
+    ".hs-seg button:focus-visible,.hs-btn:focus-visible{outline:3px solid " + RUST + ";outline-offset:2px}" +
+    ".hs-btn{appearance:none;display:inline-flex;align-items:center;min-height:44px;border:1px solid var(--ink);background:var(--ink);color:#f2f1ee;font:600 14px/1.1 " + SANS + ";padding:0 18px;cursor:pointer;transition:background-color .16s " + EASE + "}" +
+    ".hs-btn:hover{background:#2b2a28}" +
     ".hs-btn[disabled]{opacity:.55;cursor:default}" +
-    ".hs-btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}" +
-    ".hs-btn.hot{animation:hsInvite 1.8s " + EASE + " infinite}" +
-    "@keyframes hsInvite{0%,100%{box-shadow:0 0 0 0 rgba(36,92,255,.45)}50%{box-shadow:0 0 0 9px rgba(36,92,255,0)}}" +
+    ".hs-btn.ghost{background:transparent;color:var(--ink)}" +
+    ".hs-btn.ghost:hover{background:#efebe2}" +
+    ".hs-btn.hot{outline:3px solid " + RUST + ";outline-offset:2px}" +
     ".hs-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:9px;margin-top:12px}" +
-    ".hs-metric{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--paper)}" +
-    ".hs-metric .k{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);font-weight:700}" +
-    ".hs-metric .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-top:2px;transition:color .3s}" +
-    ".hs-metric.warn{border-color:rgba(209,31,31,.5)} .hs-metric.warn .v{color:var(--red)}" +
-    ".hs-metric.good{border-color:rgba(11,143,153,.5)} .hs-metric.good .v{color:var(--teal)}" +
-    ".hs-metric.accent{border-color:rgba(36,92,255,.5)} .hs-metric.accent .v{color:var(--blue)}" +
-    ".hs.dark .hs-metric.accent .v{color:#7ebdff}" +
-    ".hs-verdict{margin-top:11px;padding:10px 13px;border-radius:6px;font-size:13.5px;line-height:1.38;border-left:4px solid var(--blue);background:linear-gradient(90deg,rgba(36,92,255,.08),transparent);transition:border-color .35s,background .35s}" +
-    ".hs-verdict b{font-weight:800}" +
-    ".hs-verdict[data-tone=warn]{border-left-color:var(--red);background:linear-gradient(90deg,rgba(209,31,31,.10),transparent)}" +
-    ".hs-verdict[data-tone=good]{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(11,143,153,.10),transparent)}" +
-	    ".hs-verdict[data-tone=gold]{border-left-color:var(--gold);background:linear-gradient(90deg,rgba(200,149,45,.12),transparent)}" +
-	    ".hs-note{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.03em;color:var(--sub);margin-top:9px;line-height:1.35}" +
-	    ".hs-note b{color:var(--ink)}" +
-	    ".hs-gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:7px;margin-top:10px}" +
-	    ".hs-gate{border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:var(--paper);min-height:48px}" +
-	    ".hs-gate b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:normal;overflow-wrap:anywhere}" +
-	    ".hs-gate span{display:block;margin-top:4px;font-size:12px;line-height:1.12;font-weight:850;color:var(--ink)}" +
-	    ".hs-gate.pass{border-color:rgba(11,143,153,.55);background:rgba(11,143,153,.08)}" +
-	    ".hs-gate.review{border-color:rgba(200,149,45,.65);background:rgba(200,149,45,.10)}" +
-	    ".hs-gate.hold{border-color:rgba(209,31,31,.58);background:rgba(209,31,31,.10)}" +
-	    ".hs-modebar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:10px}" +
-	    ".hs-modepill{display:inline-flex;align-items:center;min-height:30px;border-radius:6px;padding:7px 10px;background:var(--blue);color:#fff;font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:900}" +
-	    ".hs-modepill.review{background:var(--gold);color:#101014}.hs-modepill.hold{background:var(--red);color:#fff}" +
-	    ".hs-case{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
-	    ".hs-case div{border:1px solid var(--line);border-radius:6px;padding:7px 8px;background:color-mix(in srgb,var(--soft) 58%,transparent)}" +
-	    ".hs-case b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub)}" +
-	    ".hs-case span{display:block;margin-top:3px;font-size:12px;line-height:1.22;font-weight:760;color:var(--ink)}" +
-	    /* act 1 race scoreboard */
+    ".hs-metric{border-top:2px solid var(--ink);padding:8px 2px 0;background:transparent}" +
+    ".hs-metric .k{" + LABEL + "}" +
+    ".hs-metric .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-top:2px}" +
+    ".hs-metric.warn{border-top-style:dashed}" +
+    ".hs-metric.good{border-top-color:var(--green)} .hs-metric.good .v{color:var(--green)}" +
+    ".hs-metric.accent{border-top-color:var(--ink)}" +
+    ".hs-verdict{margin-top:11px;padding:10px 13px;font-size:14px;line-height:1.4;border:1px solid var(--ink);background:transparent;transition:border-color .2s}" +
+    ".hs-verdict b{font-weight:700}" +
+    ".hs-verdict[data-tone=warn]{border-style:dashed}" +
+    ".hs-verdict[data-tone=good]{border-color:var(--green)}" +
+    ".hs-verdict[data-tone=gold]{border-color:var(--sub);border-style:dashed}" +
+    ".hs-note{font-family:" + SANS + ";font-size:13px;color:var(--sub);margin-top:9px;line-height:1.4}" +
+    ".hs-note b{color:var(--ink)}" +
+    ".hs-gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:7px;margin-top:10px}" +
+    ".hs-gate{border:1px solid var(--line);padding:7px 8px;background:transparent;min-height:48px}" +
+    ".hs-gate b{display:block;" + LABEL + ";line-height:1.2;white-space:normal;overflow-wrap:anywhere}" +
+    ".hs-gate span{display:block;margin-top:4px;font-size:13px;line-height:1.15;font-weight:700;color:var(--ink)}" +
+    ".hs-gate.pass{border-color:var(--green)} .hs-gate.pass span{color:var(--green)}" +
+    ".hs-gate.review{border-color:var(--sub);border-style:dashed}" +
+    ".hs-gate.hold{border:1px solid var(--ink);background-image:linear-gradient(135deg,transparent 45%,rgba(18,18,18,.12) 45%,rgba(18,18,18,.12) 55%,transparent 55%);background-size:8px 8px}" +
+    ".hs-modebar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:10px}" +
+    ".hs-modepill{display:inline-flex;align-items:center;min-height:30px;padding:6px 10px;background:var(--ink);color:#f2f1ee;font:600 13px/1.1 " + SANS + "}" +
+    ".hs-modepill.review{background:transparent;color:var(--ink);border:1px dashed var(--ink)}.hs-modepill.hold{background:" + RUST + ";color:#f9f7f2}" +
+    ".hs-case{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
+    ".hs-case div{border-top:1px solid var(--line);padding:7px 2px 0;background:transparent}" +
+    ".hs-case b{display:block;" + LABEL + ";line-height:1.2}" +
+    ".hs-case span{display:block;margin-top:3px;font-size:13px;line-height:1.25;font-weight:600;color:var(--ink)}" +
+    /* act 1 race scoreboard */
     ".hs-racers{display:grid;gap:8px;margin-top:12px}" +
     ".hs-racer{display:grid;grid-template-columns:118px 1fr 76px;gap:10px;align-items:center}" +
-    ".hs-racer .who{font-family:var(--mono,ui-monospace,monospace);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:900;color:var(--sub)}" +
+    ".hs-racer .who{" + LABEL + "}" +
     ".hs-racer .who.front{color:var(--ink)}" +
-    ".hs-racer .track{height:14px;border-radius:4px;background:var(--soft);overflow:hidden;position:relative}" +
-    ".hs-racer .fill{position:absolute;inset:0 auto 0 0;width:0%;border-radius:4px}" +
-    ".hs-racer .amt{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right}" +
-    ".hs-racer.win .track{outline:2px solid var(--teal);outline-offset:1px}" +
+    ".hs-racer .track{height:14px;background:var(--soft);overflow:hidden;position:relative}" +
+    ".hs-racer .fill{position:absolute;inset:0 auto 0 0;width:0%}" +
+    ".hs-racer .amt{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}" +
+    ".hs-racer.win .track{outline:2px solid var(--green);outline-offset:1px}" +
     /* act 2 year strip */
     ".hs-strip{display:grid;grid-template-columns:repeat(52,1fr);gap:2px;margin-top:10px}" +
-    ".hs-strip i{display:block;height:9px;border-radius:2px;background:var(--soft);transition:background .2s}" +
-    ".hs-strip i.ok{background:rgba(11,143,153,.55)}" +
-	    ".hs-strip i.over{background:rgba(107,106,69,.6)}" +
-	    ".hs-strip i.miss{background:var(--red);animation:hsFlash .4s " + EASE + "}" +
-	    "@keyframes hsFlash{0%{transform:scaleY(2.2);filter:brightness(1.6)}100%{transform:none;filter:none}}" +
-	    ".hs-chain{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
-	    ".hs-chain-card{border:1px solid var(--line);border-radius:6px;padding:7px;background:var(--paper);min-width:0}" +
-	    ".hs-chain-card b{display:block;font-family:var(--mono,ui-monospace,monospace);font-size:11px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);white-space:normal;overflow-wrap:anywhere}" +
-	    ".hs-chain-card span{display:block;margin:3px 0 6px;font-size:15px;font-weight:850;font-variant-numeric:tabular-nums}" +
-	    ".hs-chain-card i{display:block;height:7px;border-radius:3px;background:var(--soft);overflow:hidden}" +
-	    ".hs-chain-card i em{display:block;height:100%;width:30%;border-radius:3px;background:var(--blue);transition:width .36s " + EASE + "}" +
-	    /* act 3 shock buttons */
+    ".hs-strip i{display:block;height:9px;background:var(--soft);transition:background .2s}" +
+    ".hs-strip i.ok{background:var(--teal)}" +
+    ".hs-strip i.over{background:var(--line)}" +
+    ".hs-strip i.miss{background:var(--ink)}" +
+    ".hs-chain{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}" +
+    ".hs-chain-card{border-top:1px solid var(--line);padding:7px 2px 0;background:transparent;min-width:0}" +
+    ".hs-chain-card b{display:block;" + LABEL + ";line-height:1.2;white-space:normal;overflow-wrap:anywhere}" +
+    ".hs-chain-card span{display:block;margin:3px 0 6px;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}" +
+    ".hs-chain-card i{display:block;height:7px;background:var(--soft);overflow:hidden}" +
+    ".hs-chain-card i em{display:block;height:100%;width:30%;background:var(--ink);transition:width .36s " + EASE + "}" +
+    /* act 3 shock buttons */
     ".hs-shocks{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}" +
-    ".hs-shocks .hs-btn.shock{background:var(--rust)}" +
-    ".hs-shocks .hs-btn.shock.crash{background:var(--red)}" +
-    /* confetti */
-    ".hs-confetti{position:absolute;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:30;transition:transform 1s " + EASE + ",opacity 1s}" +
+    ".hs-shocks .hs-btn.shock{background:transparent;color:var(--ink)}" +
+    ".hs-shocks .hs-btn.shock:hover{background:#efebe2}" +
+    ".hs-shocks .hs-btn.shock.crash{border-style:dashed}" +
+    /* confetti (kept as a hook; drawn in ink squares) */
+    ".hs-confetti{position:absolute;width:7px;height:7px;pointer-events:none;z-index:30;transition:transform 1s " + EASE + ",opacity 1s}" +
 	    (REDUCE ? ".hs *{transition:none!important;animation:none!important}" : "");
   function ensureCSS() {
     if (document.getElementById("hs-acts-css")) return;
@@ -210,21 +210,9 @@
     };
     return t;
   }
-  function confettiBurst(anchor) {
-    if (REDUCE) return;
-    var r = anchor.getBoundingClientRect(), colors = [BLUE, TEAL, GOLD, RUST];
-    for (var i = 0; i < 14; i++) {
-      var s = el("span", { class: "hs-confetti" });
-      s.style.background = colors[i % colors.length];
-      s.style.left = (r.left + r.width / 2) + "px"; s.style.top = (r.top + r.height / 2) + "px";
-      document.body.appendChild(s);
-      var ang = Math.random() * Math.PI * 2, d = 46 + Math.random() * 74;
-      (function (sp, dx, dy, rot) {
-        requestAnimationFrame(function () { sp.style.transform = "translate(" + dx + "px," + dy + "px) rotate(" + rot + "deg)"; sp.style.opacity = "0"; });
-        setTimeout(function () { sp.remove(); }, 1100);
-      })(s, Math.cos(ang) * d, Math.sin(ang) * d - 30, Math.random() * 300 - 150);
-    }
-  }
+  // The confetti burst was retired with the W03 restyle (motion stays causal and short).
+  function confettiBurst() {}
+
   function emitResult(act, value, label, copy) {
     try { document.dispatchEvent(new CustomEvent("hs:result", { detail: { act: act, value: value, label: label, copy: copy } })); } catch (e) {}
   }
@@ -308,7 +296,7 @@
     var down = mt.fontBoundingBoxDescent != null ? mt.fontBoundingBoxDescent : size * 0.3;
     var left = align === "center" ? x - w / 2 : (align === "right" || align === "end") ? x - w : x;
     var ink = ctx.fillStyle;
-    ctx.fillStyle = halo || "rgba(255,253,247,.92)";
+    ctx.fillStyle = halo || "rgba(249,247,242,.94)";
     ctx.fillRect(left - 3, y - up - 1, w + 6, up + down + 2);
     ctx.fillStyle = ink; ctx.fillText(text, x, y);
   }
@@ -358,7 +346,7 @@
       this.chart = cw.chart; this.cv = cw.cv;
 
       this.live = liveTag("Parcel network | ZIP capacity shadow replay");
-      this.rowBase = this._racer("Same weekday last week", "#8b867c");
+      this.rowBase = this._racer("Same weekday last week", "#655c54");
       this.rowChal = this._racer(RUNGS[this.model].who, BLUE);
       var racers = el("div", { class: "hs-racers" }, [this.rowBase.row, this.rowChal.row]);
 
@@ -388,7 +376,7 @@
     _racer: function (name, color) {
       var who = el("span", { class: "who", text: name });
       var fill = el("i", { class: "fill" }); fill.style.background = color;
-      var amt = el("span", { class: "amt", text: "$0" });
+      var amt = el("span", { class: "amt", text: "€0" });
       var row = el("div", { class: "hs-racer" }, [who, el("div", { class: "track" }, fill), amt]);
       return { row: row, who: who, fill: fill, amt: amt };
     },
@@ -438,7 +426,7 @@
       return { bias: a ? b / a : 0 };
     },
     setPrimer: function () {
-      this.v._set("Six weeks of ZIP demand replay as a shadow pilot. The grey line is <b>same weekday last week</b>, the anchor to beat. Two days are marked: a <b>promo that is on the calendar</b> and a <b>shock that is not</b>. Press Run to score the capacity bill. Underbuild costs $" + COST_UNDER + " a package, overbuild costs $" + COST_OVER + ".", null);
+      this.v._set("Six weeks of ZIP demand replay as a shadow pilot. The grey line is <b>same weekday last week</b>, the anchor to beat. Two days are marked: a <b>promo that is on the calendar</b> and a <b>shock that is not</b>. Press Run to score the capacity bill. Underbuild costs €" + COST_UNDER + " a package, overbuild costs €" + COST_OVER + ".", null);
     },
     reset: function (silent) {
       this._sweep && this._sweep.stop();
@@ -456,7 +444,7 @@
       if (this._sweep && this._sweep.running) return;
       this.reset(true);
       this.btn.disabled = true; this.btn.textContent = "Replaying"; this.btn.classList.remove("hot");
-      this.live._state(true, false, "live replay. week by week");
+      this.live._state(true, false, "Live replay, week by week");
       var dur = 6800, t0 = performance.now(), n = this.n, START = this.START;
       if (REDUCE) { this.cur = n; this.finish(); this.render(); return; }
       var ease = function (x) { return 1 - Math.pow(1 - x, 2); };
@@ -477,7 +465,7 @@
       var totB = cb[cb.length - 1], totC = cc[cc.length - 1];
       this.done = true;
       this.btn.disabled = false; this.btn.textContent = "Run shadow replay again";
-      this.live._state(false, false, "replay complete. six weeks scored");
+      this.live._state(false, false, "Replay complete, six weeks scored");
       var saved = totB - totC, cut = totB > 0 ? saved / totB : 0;
       var chalWon = totC < totB;
       this.rowBase.row.classList.toggle("win", !chalWon);
@@ -502,14 +490,14 @@
       for (var i = X0; i < n; i++) { actual.push({ x: i, y: s[i] }); base.push({ x: i, y: s[i - 7] }); chal.push({ x: i, y: self.predAt(self.model, i) }); }
       var series = [
         { pts: actual, color: C.ink, width: 2.4 },
-        { pts: base, color: "#8b867c", width: 2.0, dash: [3, 4] },
+        { pts: base, color: "#655c54", width: 2.0, dash: [3, 4] },
         { pts: chal, color: C.blue, width: 2.8, dash: [8, 5] }
       ];
       var PROMO = 118, SHOCK = SHOCK_DAY, PRIOR = 90;
       var after = function (ctx, m) {
         // faint tick on the prior promo the model learns from
         var pxp = m.xToPx(PRIOR);
-        ctx.strokeStyle = rgba("#0b8f99", 0.45); ctx.lineWidth = 1.5; ctx.setLineDash([2, 3]);
+        ctx.strokeStyle = rgba("#205b46", 0.45); ctx.lineWidth = 1.5; ctx.setLineDash([2, 3]);
         ctx.beginPath(); ctx.moveTo(pxp, m.y0); ctx.lineTo(pxp, m.y1); ctx.stroke(); ctx.setLineDash([]);
         // landmark error sticks: challenger error at the two marked events
         function stick(t, color, r) {
@@ -517,9 +505,9 @@
           ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(px, ay); ctx.lineTo(px, cy); ctx.stroke();
           ctx.fillStyle = color; ctx.beginPath(); ctx.arc(px, ay, r, 0, 7); ctx.fill();
         }
-        stick(PROMO, rgba("#0b8f99", 0.95), 3.5);
+        stick(PROMO, rgba("#205b46", 0.95), 3.5);
         stick(SHOCK, C.red, 3.5);
-        ctx.font = "800 12px ui-monospace,monospace"; ctx.textAlign = "center";
+        ctx.font = "800 12px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = "center";
         // narrow charts get the short labels; the act copy above names both days in full
         var narrow = m.x1 - m.x0 < 440, half = narrow ? 30 : 92;
         ctx.fillStyle = TEAL; haloText(ctx, narrow ? "promo" : "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 30, m.y1 - 8));
@@ -538,7 +526,7 @@
         series: series, after: after,
         xmin: X0, xmax: n - 1, ymin: lo - pad, ymax: hi + pad,
         marker: START, markerLabel: "replay starts",
-        regions: [{ x0: START, x1: n - 1, color: rgba("#245CFF", 0.04) }],
+        regions: [{ x0: START, x1: n - 1, color: rgba("#121212", 0.04) }],
         xlabels: [{ x: X0 + 7, t: "wk -12" }, { x: START, t: "wk -6" }, { x: n - 4, t: "today" }]
       });
       var k = clamp(Math.floor(cur - START), 0, this.cum.base.length - 1);
@@ -591,8 +579,8 @@
 	      this.live = liveTag("Device maker | laptop handoff bullwhip");
 	      this.mFill = metric("Fill rate", "n/a", "accent");
 	      this.mBull = metric("Bullwhip ratio", "n/a");
-	      this.mCash = metric("Cash tied", "$0");
-	      this.mCost = metric("Decision cost", "$0");
+	      this.mCash = metric("Cash tied", "€0");
+	      this.mCost = metric("Decision cost", "€0");
 
       this.strip = el("div", { class: "hs-strip", "aria-hidden": "true" });
       for (var i = 0; i < 52; i++) this.strip.appendChild(el("i"));
@@ -733,7 +721,7 @@
       this.resetRun();
       this.ranOnce = true;
 	      this.btn.disabled = true; this.btn.textContent = "Running handoff"; this.btn.classList.remove("hot");
-	      this.live._state(true, false, "running: week 1 of 52");
+	      this.live._state(true, false, "Running, week 1 of 52");
       if (REDUCE) { while (this.week < 52) this.stepWeek(); this.render(); return; }
       this.loop.start();
     },
@@ -743,7 +731,7 @@
 	      if (d > o.store) cell.className = "miss";
 	      else cell.className = (o.store - d) > SIGMA * 0.85 ? "over" : "ok";
       this.week++;
-      this.live._state(true, false, "running: week " + this.week + " of 52");
+      this.live._state(true, false, "Running, week " + this.week + " of 52");
       if (this.week >= 52) { this.loop.stop(); this.finish(); }
     },
     finish: function () {
@@ -793,7 +781,7 @@
 	        { pts: sdmLine, color: GOLD, width: 2.5, dash: [2, 4] }
 	      ];
       var after = function (ctx, m) {
-	        ctx.font = "800 10.5px ui-monospace,monospace";
+	        ctx.font = "800 11px 'JetBrains Mono',ui-monospace,monospace";
 	        ctx.textAlign = "left";
 	        var ly = m.y0 + 14, lx = m.x0 + 8;
 	        ctx.fillStyle = C.ink; haloText(ctx, "POS demand", lx, ly);
@@ -803,7 +791,7 @@
         for (var w2 = 0; w2 < self.week; w2++) {
           var d = self.draws[w2], o = self.ordersFor(mode, w2), px = m.xToPx(w2 + 1), py = m.yToPx(d), sy = m.yToPx(o.store);
           var missed = d > o.store;
-          if (missed) { ctx.strokeStyle = rgba("#d11f1f", 0.55); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, sy); ctx.lineTo(px, py); ctx.stroke(); }
+          if (missed) { ctx.strokeStyle = rgba("#121212", 0.55); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, sy); ctx.lineTo(px, py); ctx.stroke(); }
           ctx.beginPath(); ctx.arc(px, py, w2 === self.week - 1 && self.loop.running ? 5.5 : 3.2, 0, 7);
           ctx.fillStyle = missed ? C.red : TEAL; ctx.fill();
         }
@@ -811,8 +799,8 @@
       this.chart.setData({
         series: series,
         bands: [
-          { pts: band2, color: rgba("#245CFF", 0.045) },
-          { pts: band1, color: rgba("#245CFF", 0.095) }
+          { pts: band2, color: rgba("#121212", 0.045) },
+          { pts: band1, color: rgba("#121212", 0.095) }
         ],
         after: after,
 	        xmin: 1, xmax: 52, ymin: lo - (hi - lo) * 0.08, ymax: hi + (hi - lo) * 0.12,
@@ -850,13 +838,13 @@
 	  function capacityLoss(actual, plan) {
 	    return Math.max(0, actual - plan) * META_UNDER + Math.max(0, plan - actual) * META_OVER;
 	  }
-  var DK = { bg: "#0f2333", ink: "#eef6ff", sub: "#a7b8c8", line: "#25455f",
-    blue: "#7ebdff", cyan: "#35d0dd", red: "#ff5a4e", gold: "#e8b84b", teal: "#37c2a0" };
+  var DK = { bg: "#f9f7f2", ink: "#121212", sub: "#4f4640", line: "#d4cec5",
+    blue: "#b73a15", cyan: "#655c54", red: "#121212", gold: "#4f4640", teal: "#205b46" };
 
   define("hs-trust-loop", {
     build: function () {
       var self = this;
-      this.classList.add("dark");
+      // act 3 used a navy "dark" theme; it now shares the paper palette
       this.reset(true);
 
       this.wrap = el("div", { class: "hs-chartwrap" });
@@ -866,10 +854,10 @@
       this.ctx = this.cv.getContext("2d");
 
 	      this.live = liveTag("Social app | live demand capacity release");
-	      this.mBlind = metric("No-gate auto-release loss", "$0", "warn");
-	      this.mGov = metric("Gated release loss", "$0", "accent");
-	      this.mSaved = metric("Avoided capacity loss", "$0", "good");
-	      this.modePill = el("div", { class: "hs-modepill", text: "AUTO RELEASE", style: "min-width:132px;justify-content:center" });
+	      this.mBlind = metric("No-gate auto-release loss", "€0", "warn");
+	      this.mGov = metric("Gated release loss", "€0", "accent");
+	      this.mSaved = metric("Avoided capacity loss", "€0", "good");
+	      this.modePill = el("div", { class: "hs-modepill", text: "Auto release", style: "min-width:132px;justify-content:center" });
 	      this.mDetect = metric("Minutes to detection", "0");
 	      this.mRelease = metric("Minutes to safe release", "0", "accent");
 	      this.gFresh = this._gate("Freshness", "pass", "pass");
@@ -902,7 +890,7 @@
 	        el("div", { class: "hs-gates" }, [this.gFresh, this.gDrift, this.gBias, this.gCoverage, this.gImpact]),
         el("div", { class: "hs-metrics" }, [this.mBlind, this.mGov, this.mSaved]),
         this.v,
-	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>No-gate</b> keeps shipping the deploy-day plan into capacity. <b>Gated AI</b> checks freshness, drift, bias, coverage and business impact before auto-release. Under-capacity costs $" + (META_UNDER / 1000).toFixed(1) + "k per demand point; over-capacity costs $" + (META_OVER / 1000).toFixed(1) + "k. Teaching lens with invented figures; not any company's real system." })
+	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>No-gate</b> keeps shipping the deploy-day plan into capacity. <b>Gated AI</b> checks freshness, drift, bias, coverage and business impact before auto-release. Under-capacity costs €" + (META_UNDER / 1000).toFixed(1) + "k per demand point; over-capacity costs €" + (META_OVER / 1000).toFixed(1) + "k. Teaching lens with invented figures; not any company's real system." })
       ]));
 
       // particles along the pipeline
@@ -928,7 +916,7 @@
       this.rng = mulberry32(777);
       this.alarmMAE = 0;
 	      this.shockStart = -1; this.detectAt = -1; this.releaseAt = -1;
-	      this.releaseMode = "AUTO RELEASE";
+	      this.releaseMode = "Auto release";
       // warm up 40 calm ticks so the room sees a settled system, not a cold start
       for (var i = 0; i < 40; i++) this.tick(true);
       if (!silent) {
@@ -946,14 +934,14 @@
         return;
       }
 	      this.shockStart = this.t; this.detectAt = -1; this.releaseAt = -1;
-	      if (kind === "spike") { this.spikeAge = 0; this.live._state(true, true, "shock: viral creator spike hitting demand"); }
+	      if (kind === "spike") { this.spikeAge = 0; this.live._state(true, true, "Shock: viral creator spike hitting demand"); }
 	      else {
         var nextR = Math.max(this.R * 0.62, 0.32); // floor inside the retrain clamp (0.3) so the loop can always re-track
         if (nextR >= this.R) {
           this.v._set("<b>Demand is already at the floor of this simulation.</b> Press Reset to run the story again.", "warn");
           return;
         }
-	        this.R = nextR; this.live._state(true, true, "shock: regional user demand dropped");
+	        this.R = nextR; this.live._state(true, true, "Shock: regional user demand dropped");
 	      }
 	      this.v._set(kind === "spike"
 	        ? "<b>A viral creator spike.</b> Demand jumps past the recent training window. Watch which policy detects the break before capacity drifts."
@@ -1026,10 +1014,10 @@
 	      var coveragePass = (this.coverage == null ? 1 : this.coverage) >= 0.72;
 	      var impact = Math.max(0, this.lossB - this.lossG);
 	      var impactPass = impact >= 25000;
-	      if (freshPass && driftPass && biasPass && coveragePass) this.releaseMode = "AUTO RELEASE";
-	      else if (driftPass && biasPass) this.releaseMode = "PLANNER ASSIST";
-	      else this.releaseMode = "HOLD + REVIEW";
-	      var cls = this.releaseMode === "AUTO RELEASE" ? "" : (this.releaseMode === "PLANNER ASSIST" ? "review" : "hold");
+	      if (freshPass && driftPass && biasPass && coveragePass) this.releaseMode = "Auto release";
+	      else if (driftPass && biasPass) this.releaseMode = "Planner assist";
+	      else this.releaseMode = "Hold and review";
+	      var cls = this.releaseMode === "Auto release" ? "" : (this.releaseMode === "Planner assist" ? "review" : "hold");
 	      this.modePill.className = "hs-modepill " + cls;
 	      this.modePill.textContent = this.releaseMode;
 	      this._setGate(this.gFresh, freshPass ? "current" : "review", freshPass ? "pass" : "review");
@@ -1047,7 +1035,7 @@
       var alarm = this.state === "alert" || this.state === "override";
       /* ---- pipeline strip (top 86px) ---- */
 	      var PY = 46, nodes = ["Live signals", "AI nowcast", "Trust gate", "Capacity", "Monitor"];
-      var nx = [], i, pad = 34, span = (W - pad * 2) / (nodes.length - 1);
+      var nx = [], i, pad = 52, span = (W - pad * 2) / (nodes.length - 1);
       for (i = 0; i < nodes.length; i++) nx.push(pad + span * i);
       // pipe
       ctx.strokeStyle = DK.line; ctx.lineWidth = 2;
@@ -1057,7 +1045,7 @@
       ctx.setLineDash([4, 5]); ctx.beginPath();
       ctx.moveTo(nx[4], PY); ctx.quadraticCurveTo((nx[4] + nx[1]) / 2, PY + 44, nx[1], PY);
       ctx.stroke(); ctx.setLineDash([]);
-      ctx.font = "700 9px ui-monospace,monospace"; ctx.fillStyle = DK.sub; ctx.textAlign = "center";
+      ctx.font = "700 11px 'JetBrains Mono',ui-monospace,monospace"; ctx.fillStyle = DK.sub; ctx.textAlign = "center";
 	      ctx.fillText("retrain loop", (nx[4] + nx[1]) / 2, PY + 40);
       // particles
       if (!REDUCE) {
@@ -1085,9 +1073,9 @@
         if (hot && !REDUCE) { // pulse ring
           var ph = (performance.now() % 1200) / 1200;
           ctx.beginPath(); ctx.arc(nx[i], PY, 11 + ph * 12, 0, 7);
-          ctx.strokeStyle = "rgba(" + (i === 4 ? "255,90,78," : "232,184,75,") + (0.55 * (1 - ph)) + ")"; ctx.lineWidth = 2; ctx.stroke();
+          ctx.strokeStyle = "rgba(" + (i === 4 ? "18,18,18," : "79,70,64,") + (0.55 * (1 - ph)) + ")"; ctx.lineWidth = 2; ctx.stroke();
         }
-        ctx.fillStyle = hot ? colr : DK.sub; ctx.font = "700 10px ui-monospace,monospace";
+        ctx.fillStyle = hot ? colr : DK.sub; ctx.font = "700 11px 'JetBrains Mono',ui-monospace,monospace";
         ctx.fillText(nodes[i], nx[i], PY - 20);
       }
       /* ---- stream chart ---- */
@@ -1099,9 +1087,9 @@
       var X = function (j) { return x0 + j / (WINDOW - 1) * (x1 - x0); };
       var Y = function (v) { return y1 - (v - lo) / (hi - lo) * (y1 - y0); };
       // grid
-      ctx.strokeStyle = "rgba(126,189,255,.09)"; ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(18,18,18,.07)"; ctx.lineWidth = 1;
       for (i = 0; i <= 3; i++) { var gy = y0 + (y1 - y0) * i / 3; ctx.beginPath(); ctx.moveTo(x0, gy); ctx.lineTo(x1, gy); ctx.stroke();
-        ctx.fillStyle = DK.sub; ctx.font = "600 10px ui-monospace,monospace"; ctx.textAlign = "right";
+        ctx.fillStyle = DK.sub; ctx.font = "600 11px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = "right";
         ctx.fillText(Math.round(hi - (hi - lo) * i / 3), x0 - 7, gy + 3); }
       var line = function (key, color, width, dash) {
         ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = "round";
@@ -1117,17 +1105,17 @@
       if (n) { var hx = X(WINDOW - 1), hy = Y(view[n - 1].a);
         ctx.beginPath(); ctx.arc(hx, hy, 4, 0, 7); ctx.fillStyle = DK.ink; ctx.fill();
         if (!REDUCE) { var hp = (performance.now() % 1000) / 1000;
-          ctx.beginPath(); ctx.arc(hx, hy, 4 + hp * 9, 0, 7); ctx.strokeStyle = "rgba(238,246,255," + (0.5 * (1 - hp)) + ")"; ctx.lineWidth = 1.5; ctx.stroke(); } }
+          ctx.beginPath(); ctx.arc(hx, hy, 4 + hp * 9, 0, 7); ctx.strokeStyle = "rgba(18,18,18," + (0.5 * (1 - hp)) + ")"; ctx.lineWidth = 1.5; ctx.stroke(); } }
       // legend
-      ctx.textAlign = "left"; ctx.font = "700 10px ui-monospace,monospace";
+      ctx.textAlign = "left"; ctx.font = "700 11px 'JetBrains Mono',ui-monospace,monospace";
 	      ctx.fillStyle = DK.ink; ctx.fillText("actual demand", x0 + 4, y0 + 12);
 	      ctx.fillStyle = DK.blue; ctx.fillText("AI nowcast", x0 + 104, y0 + 12);
 	      ctx.fillStyle = DK.red; ctx.fillText("no-gate plan", x0 + 196, y0 + 12);
       /* ---- drift gauge (bottom) ---- */
       var THRESH = 11, gx0 = x0, gx1 = x1, gy0 = H - 24;
-      ctx.fillStyle = DK.sub; ctx.font = "700 9px ui-monospace,monospace"; ctx.textAlign = "left";
-	      ctx.fillText("RELEASE GATE (rolling WAPE vs tolerance)", gx0, gy0 - 6);
-      ctx.fillStyle = "rgba(126,189,255,.12)"; ctx.fillRect(gx0, gy0, gx1 - gx0, 8);
+      ctx.fillStyle = DK.sub; ctx.font = "700 11px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = "left";
+	      ctx.fillText("Release gate (rolling WAPE against tolerance)", gx0, gy0 - 6);
+      ctx.fillStyle = "rgba(18,18,18,.08)"; ctx.fillRect(gx0, gy0, gx1 - gx0, 8);
       var frac = clamp(this.alarmMAE / (THRESH * 1.8), 0, 1);
       ctx.fillStyle = this.alarmMAE > THRESH ? DK.red : DK.teal;
       ctx.fillRect(gx0, gy0, (gx1 - gx0) * frac, 8);
@@ -1135,7 +1123,7 @@
       ctx.strokeStyle = DK.gold; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(tx, gy0 - 3); ctx.lineTo(tx, gy0 + 11); ctx.stroke();
       ctx.fillStyle = this.alarmMAE > THRESH ? DK.red : DK.sub; ctx.textAlign = "right";
-	      ctx.fillText(this.alarmMAE > THRESH ? "HOLD + REVIEW" : "within tolerance", gx1, gy0 - 6);
+	      ctx.fillText(this.alarmMAE > THRESH ? "Hold and review" : "within tolerance", gx1, gy0 - 6);
     },
     resize: function () {
       var w = this.wrap ? this.wrap.clientWidth : 0, h = this.wrap ? this.wrap.clientHeight : 0;

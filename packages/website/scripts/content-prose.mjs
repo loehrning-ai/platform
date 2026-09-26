@@ -9,8 +9,12 @@
  * Learner-facing files (relative to packages/website):
  *   - content/** JSON and Markdown (native courses, books, changelog)
  *   - src/lib/<technical course>/** TypeScript (lessons, modules, config, copy)
- *   - src/lib/** and src/app/** modules named *-copy.ts
- *   - src/lib/workshops.ts, src/lib/books.ts, src/lib/courses/catalog.ts
+ *   - src/lib/** and src/app/** modules named *-copy.ts, *-copy.de.ts, *-copy.en.ts
+ *   - src/lib/workshops.ts, src/lib/workshops-data-readiness.ts,
+ *     src/lib/workshops-esg-reporting.ts (once it exists), src/lib/books.ts,
+ *     src/lib/courses/catalog.ts
+ *   - public/workshops/<slug>/**.html (workshop decks, guides and handouts;
+ *     visible text only, and every finding there is a warning)
  * Test files, type declarations, __tests__ and fixtures directories are never
  * learner-facing.
  *
@@ -90,7 +94,15 @@ export const EXTRA_COPY_MODULE_FILES = [
   "src/lib/books.ts",
   "src/lib/courses/catalog.ts",
   "src/lib/workshops.ts",
+  "src/lib/workshops-data-readiness.ts",
+  // Workshop 04. Discovery only picks up files that exist, so listing it
+  // ahead of time is harmless and keeps the module from shipping unchecked.
+  "src/lib/workshops-esg-reporting.ts",
 ];
+
+/** Static workshop materials: HTML pages below public/workshops/<slug>/. */
+const WORKSHOP_PUBLIC_HTML = /^public\/workshops\/[^/]+\/(?:[^/]+\/)*[^/]+\.html$/;
+const COPY_MODULE = /-copy(?:\.(?:de|en))?\.ts$/;
 
 const EXCLUDED_SEGMENTS = new Set(["__tests__", "fixtures", "node_modules"]);
 
@@ -128,9 +140,10 @@ export function isLearnerFacingFile(relFile) {
   if (rel.startsWith("content/")) {
     return rel.endsWith(".json") || rel.endsWith(".md");
   }
+  if (rel.startsWith("public/")) return WORKSHOP_PUBLIC_HTML.test(rel);
   if (!rel.endsWith(".ts") || isTestOrDeclaration(rel)) return false;
   if (EXTRA_COPY_MODULE_FILES.includes(rel)) return true;
-  if (rel.endsWith("-copy.ts")) {
+  if (COPY_MODULE.test(rel)) {
     return rel.startsWith("src/lib/") || rel.startsWith("src/app/");
   }
   return TECHNICAL_COURSE_DIRS.some((dir) => rel.startsWith(`src/lib/${dir}/`));
@@ -145,6 +158,7 @@ export function collectLearnerFacingFiles(root) {
     ...walk(join(root, "content"), []),
     ...walk(join(root, "src", "lib"), []),
     ...walk(join(root, "src", "app"), []),
+    ...walk(join(root, "public", "workshops"), []),
   ];
   const prefix = toPosix(root).replace(/\/$/, "") + "/";
   return candidates
@@ -164,7 +178,18 @@ export function collectLearnerFacingFiles(root) {
 export function classifyLearnerFile(relFile) {
   const rel = toPosix(relFile);
   const parts = rel.split("/");
-  const kind = rel.endsWith(".json") ? "json" : rel.endsWith(".md") ? "md" : "ts";
+  const kind = rel.endsWith(".json")
+    ? "json"
+    : rel.endsWith(".md")
+      ? "md"
+      : rel.endsWith(".html")
+        ? "html"
+        : "ts";
+
+  if (parts[0] === "public" && parts[1] === "workshops" && parts.length >= 4) {
+    // Decks and handouts carry both locales (lang="de" and lang="en" blocks).
+    return { kind, lang: "mixed", surface: `public/workshops/${parts[2]}` };
+  }
 
   if (parts[0] === "content") {
     if (parts[1] === "books" && parts.length >= 3) {
@@ -189,7 +214,7 @@ export function classifyLearnerFile(relFile) {
   const technical = TECHNICAL_COURSE_DIRS.find((dir) =>
     rel.startsWith(`src/lib/${dir}/`),
   );
-  if (technical && !rel.endsWith("-copy.ts")) {
+  if (technical && !COPY_MODULE.test(rel)) {
     const base = `src/lib/${technical}`;
     if (parts.includes("de")) return { kind, lang: "de", surface: `${base}/de` };
     const parent = parts[parts.length - 2];
@@ -556,6 +581,76 @@ export function extractTsStringLiterals(source) {
   return literals;
 }
 
+const HTML_ENTITIES = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: " ",
+  mdash: "\u2014",
+  ndash: "\u2013",
+  hellip: "\u2026",
+  shy: "",
+  thinsp: " ",
+  rarr: "\u2192",
+  larr: "\u2190",
+  times: "\u00d7",
+  minus: "\u2212",
+  euro: "\u20ac",
+  auml: "\u00e4",
+  ouml: "\u00f6",
+  uuml: "\u00fc",
+  Auml: "\u00c4",
+  Ouml: "\u00d6",
+  Uuml: "\u00dc",
+  szlig: "\u00df",
+  bdquo: "\u201e",
+  ldquo: "\u201c",
+  rdquo: "\u201d",
+  lsquo: "\u2018",
+  rsquo: "\u2019",
+};
+
+/** Decodes named, decimal and hex character references. */
+export function decodeHtmlEntities(text) {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, name) => {
+    if (name[0] === "#") {
+      const code = name[1] === "x" || name[1] === "X" ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+    }
+    return name in HTML_ENTITIES ? HTML_ENTITIES[name] : match;
+  });
+}
+
+const HTML_NON_PROSE = /<(script|style|svg|pre|code|template|noscript|math|textarea|kbd|samp)\b[\s\S]*?<\/\1\s*>/gi;
+const HTML_PROSE_BLOCK = /<(p|li|h[1-6]|td|th|figcaption|blockquote|dd|dt|summary|caption)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi;
+// Inline tags vanish without a gap ("<em>Hallo</em>," stays "Hallo,"); every
+// other tag (div, span blocks, br, nested lists) separates words.
+const HTML_INLINE_TAG = /<\/?(?:a|abbr|b|bdi|cite|data|dfn|em|i|mark|q|s|small|strong|sub|sup|time|u|var|wbr)\b[^>]*>/gi;
+const HTML_DASH_PLACEHOLDER = /^[\u2013\u2014\u2212-]$/;
+
+/**
+ * Visible prose of a static HTML page: the text of paragraphs, list items,
+ * headings, table cells and similar blocks. Scripts, styles, SVG, code and
+ * comments are blanked first (newlines kept, so line numbers survive). A cell
+ * that holds a single dash is a data placeholder and is skipped. Nested
+ * blocks (a <p> inside an <li>) are read once, through the outer block.
+ */
+export function extractHtmlUnits(raw) {
+  const blank = (match) => match.replace(/[^\n]/g, " ");
+  const cleaned = raw.replace(/<!--[\s\S]*?-->/g, blank).replace(HTML_NON_PROSE, blank);
+  const segments = [];
+  for (const match of cleaned.matchAll(HTML_PROSE_BLOCK)) {
+    const text = decodeHtmlEntities(match[2].replace(HTML_INLINE_TAG, "").replace(/<[^>]+>/g, " "))
+      .replace(/\s+/g, " ")
+      .trim();
+    if (text === "" || HTML_DASH_PLACEHOLDER.test(text)) continue;
+    segments.push({ text, line: 1 + countNewlines(cleaned, 0, match.index), physical: false });
+  }
+  return segments.length > 0 ? [{ id: "file", segments }] : [];
+}
+
 function extractTsUnits(raw) {
   const segments = extractTsStringLiterals(raw).map((literal) => ({
     text: literal.text,
@@ -577,6 +672,7 @@ export function extractProseUnits(relFile, raw) {
   let lessons;
   if (classification.kind === "json") lessons = extractJsonUnits(raw);
   else if (classification.kind === "md") lessons = extractMarkdownUnits(raw);
+  else if (classification.kind === "html") lessons = extractHtmlUnits(raw);
   else lessons = extractTsUnits(raw);
   return { relFile: toPosix(relFile), ...classification, lessons };
 }

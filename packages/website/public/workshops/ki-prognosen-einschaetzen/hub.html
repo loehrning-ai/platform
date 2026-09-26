@@ -4,100 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Forecasting decisions · Hub · loehrning.ai</title>
-<meta name="description" content="Workshop 01 hub: price the cost of a wrong forecast, size the buffer, and leave with a go/no-go rule. Hands-on lab, business case, field card and take-home." />
-
-<style>
-  :root{
-    --paper:#F5F2EA; --card:#FFFFFF; --paper-2:#EFEADE; --ink:#12100B; --ink-soft:#4A443B; --faint:#5f5850;
-    --line:#E1DCCF; --line-strong:#CBC4B4;
-    --rust:#C2410C; --rust-dk:#9A3412; --blue:#0866FF; --ok:#096B78; --amber:#8A6508;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
-    --ease: cubic-bezier(.23,1,.32,1);
-  }
-  html,body{margin:0}
-  *{box-sizing:border-box}
-  :focus-visible{outline:2.5px solid var(--rust);outline-offset:3px;border-radius:2px}
-
-  .stage{
-    position:relative;min-height:calc(100dvh - 128px);width:100%;overflow:hidden;
-    background:var(--paper);color:var(--ink);font-family:var(--sans);
-    -webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(circle at 1px 1px, rgba(18,16,11,.045) 1px, transparent 0);background-size:20px 20px;
-    display:flex;flex-direction:column;justify-content:space-between;
-    padding:clamp(26px,3.4vh,46px) max(var(--wf-gutter),calc((100% - var(--wf-max)) / 2 + var(--wf-gutter)));isolation:isolate
-  }
-
-  /* still, quiet editorial forecast chart — same motif as the field card sparkline */
-  .bgfx{position:absolute;right:clamp(-20px,-1vw,0px);bottom:clamp(46px,10vh,96px);width:min(56vw,720px);z-index:0;pointer-events:none;opacity:.9}
-  .bgfx svg{width:100%;height:auto;display:block}
-
-  /* ---- meta line under the lede (eyebrow, h1, lede, meta: same order as the other materials) ---- */
-  .meta{margin:clamp(12px,1.8vh,18px) 0 0;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1.7}
-  .meta b{color:var(--ink);font-weight:700}
-
-  /* ---- body ---- */
-  .body{position:relative;z-index:2;display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(38px,5vw,88px);align-items:center;min-height:0;flex:1}
-  .kick{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-weight:700;font-size:clamp(11px,.85vw,13px);letter-spacing:.13em;text-transform:uppercase;color:var(--rust);margin-bottom:clamp(16px,2.4vh,26px)}
-  .kick::before{content:'';width:26px;height:2px;background:var(--rust)}
-  .h1{font-weight:850;font-size:var(--wf-h1-hero);line-height:.98;letter-spacing:-.015em;margin:0}
-  .h1 .em{color:var(--rust)}
-  .lede{margin:clamp(20px,3vh,30px) 0 0;font-size:clamp(15px,1.15vw,19px);line-height:1.55;max-width:46ch;color:var(--ink-soft)}
-  .lede b{color:var(--ink)}
-
-  .ctas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:clamp(24px,3.4vh,40px)}
-  .cta{flex:1;display:flex;flex-direction:column;gap:9px;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:clamp(14px,1.7vh,20px) clamp(15px,1.2vw,20px);transition:transform .18s var(--ease),border-color .18s var(--ease);position:relative;overflow:hidden}
-  .cta::after{content:'';position:absolute;left:0;bottom:0;height:2.5px;width:0;background:var(--rust);transition:width .28s var(--ease)}
-  .cta:hover,.cta:focus-visible{transform:translateY(-4px);border-color:var(--rust)}
-  .cta:hover::after,.cta:focus-visible::after{width:100%}
-  .cta .cn{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--rust)}
-  .cta .cl{display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:clamp(14px,1.05vw,17px);letter-spacing:0;white-space:nowrap}
-  .cta .cd{font-size:12px;font-weight:600;color:var(--faint);letter-spacing:.01em}
-  .cta .cl .ar{color:var(--line-strong);transition:transform .2s var(--ease),color .2s var(--ease)}
-  .cta:hover .cl .ar,.cta:focus-visible .cl .ar{color:var(--rust);transform:translate(3px,-3px)}
-
-  /* ---- what you'll learn ---- */
-  .panel{border-left:1.5px solid var(--line);padding-left:clamp(26px,2.4vw,42px);display:flex;flex-direction:column}
-  .plabel{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:clamp(6px,1.2vh,12px);padding-bottom:8px;border-bottom:1.5px solid var(--line)}
-  .learn{display:flex;gap:14px;align-items:flex-start;padding:clamp(10px,1.6vh,15px) 0;border-top:1px solid var(--line)}
-  .learn:first-of-type{border-top:none}
-  .learn .ln{font-family:var(--mono);font-weight:700;font-size:12px;color:var(--rust);flex-shrink:0;width:22px;line-height:1.5}
-  .learn .lt{font-size:clamp(14px,1.02vw,17px);line-height:1.42;color:var(--ink)}
-
-  /* ---- footer ---- */
-  .foot{position:relative;z-index:2;display:flex;align-items:center;gap:clamp(20px,2.4vw,40px)}
-  .tk-lab{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1.5;white-space:nowrap}
-  .story-row{display:flex;align-items:center;gap:clamp(22px,3.4vw,58px);flex:1}
-  .story{display:flex;align-items:center;gap:13px}
-  .disclaimer{margin:0;font-size:12px;line-height:1.4;color:var(--ink-soft);max-width:30ch}
-  .dataset{margin:14px 0 0;font-size:13px;color:var(--ink-soft)}
-  .dataset a{color:var(--rust-dk);font-weight:700;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:44px}
-  .dataset code{font-family:var(--mono);font-size:12px}
-  .sco{font-weight:800;font-size:clamp(15px,1.1vw,18px);letter-spacing:0;color:var(--ink)}
-  .sctag{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:3px}
-
-  @media (prefers-reduced-motion:reduce){
-    .cta,.cta::after,.cta .cl .ar{transition:none!important}
-  }
-  @media (max-width:900px){
-    .stage{overflow-y:auto;height:auto;min-height:100vh;min-height:100dvh}
-    .bgfx{position:static;width:100%;margin-top:26px;opacity:.85}
-    .body{grid-template-columns:1fr;gap:28px}
-    .panel{border-left:none;padding-left:0;border-top:1.5px solid var(--line);padding-top:20px}
-    .ctas{grid-template-columns:1fr}
-    .story-row{flex-wrap:wrap;row-gap:14px}
-    .bgfx{order:3}
-    .foot{flex-direction:column;align-items:flex-start}
-    .ctas .cta .cl{white-space:normal}
-  }
-</style>
+<meta name="description" content="Workshop 01 hub: work out what a wrong forecast costs, size the buffer, and write a go/no-go rule with a threshold. Hands-on lab, business case, field card and take-home." />
 <meta name="theme-color" content="#f3f0e9" />
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 <link rel="preload" href="assets/fonts/Typing-Regular.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="stylesheet" href="lib/tokens.css" />
-<link rel="stylesheet" href="lib/wf.css" />
+<link rel="stylesheet" href="lib/workshop-frame.css" />
+<style>
+  /* page layer: layout only; colour and type come from lib/workshop-frame.css */
+  .hub-cover-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:end}
+  .hub-cover-grid .wf-h1{max-width:14ch}
+  .hub-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .hub-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(32px,5vw,72px);padding-top:56px}
+  .hub-body .wf-section:first-child{margin-top:0}
+  .hub-lenses td:first-child{font-weight:600;white-space:nowrap}
+  .hub-data code{font-size:14px}
+  @media (max-width:900px){.hub-cover-grid,.hub-body{grid-template-columns:1fr}.hub-body{padding-top:40px}.hub-aside .wf-section:first-child{margin-top:16px}}
+</style>
 </head>
-<body>
+<body class="wf-page">
 <a class="wf-skip" href="#main">Skip to content</a>
 <header class="wf-strip" data-wf-slug="ki-prognosen-einschaetzen">
   <a class="wf-brand" href="/en/workshops"><img src="assets/lockup-horizontal.svg" width="176" height="34" alt="loehrning.ai workshops"></a>
@@ -113,52 +38,72 @@
     <a href="homework.html"><span>05</span>Take-home</a>
   </nav>
 </header>
-<div class="stage">
-  <div class="bgfx" aria-hidden="true">
-    <svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax meet">
-      <!-- faint forecast cone -->
-      <path d="M840,214 L1168,96 L1168,322 Z" fill="var(--rust)" fill-opacity=".07"/>
-      <!-- now divider -->
-      <line x1="840" y1="70" x2="840" y2="360" stroke="var(--line-strong)" stroke-width="1.4" stroke-dasharray="3 7"/>
-      <!-- history line -->
-      <path d="M40,330 L150,296 L250,312 L350,262 L450,286 L560,232 L660,264 L750,220 L840,214"
-            fill="none" stroke="var(--line-strong)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
-      <!-- central forecast, dashed -->
-      <path d="M840,214 L1000,196 L1168,168" fill="none" stroke="var(--rust)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="10 8" opacity=".85"/>
-      <!-- markers -->
-      <circle cx="840" cy="214" r="5" fill="var(--rust)"/>
-      <circle cx="1168" cy="168" r="4.5" fill="var(--rust)"/>
-    </svg>
+
+<main id="main" tabindex="-1">
+  <section class="wf-cover" aria-labelledby="hub-title">
+    <div class="wf-cover__globe" aria-hidden="true"><img src="assets/globe.svg" alt="" width="1100" height="1033" decoding="async"></div>
+    <div class="wf-wrap wf-cover__body">
+      <div class="hub-cover-grid">
+        <div>
+          <p class="wf-kicker">Workshop 01 · Forecasting decisions</p>
+          <h1 class="wf-h1 wf-h1--hero" id="hub-title">Turn a forecast into a decision</h1>
+          <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve. You work through three practice companies and a demand simulator that runs in your browser.</p>
+          <div class="hub-ctas">
+            <a class="wf-btn wf-btn--primary" href="./hands-on.html">Open the hands-on lab</a>
+            <a class="wf-btn" href="./case-study/index.html">Read the business case</a>
+          </div>
+          <p class="wf-meta"><b>About 90 minutes</b> · self-study · runs in your browser · English</p>
+        </div>
+        <figure class="wf-qcard">
+          <figcaption class="wf-kicker">The question you answer</figcaption>
+          <p>A missed sale costs one amount and a leftover unit another. How much buffer do you carry, and when does a person make the call?</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="wf-wrap hub-body">
+    <div>
+      <section class="wf-section" aria-labelledby="mats-title">
+        <header class="wf-kopf"><h2 class="wf-h2" id="mats-title">Materials</h2><p>Four pages and one dataset, in this order</p></header>
+        <ol class="wf-rows">
+          <li><a class="wf-row" href="./hands-on.html"><span class="wf-row__n">02</span><span class="wf-row__title">Hands-on lab</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Three labs: ZIP capacity for a parcel network, one shared number for a device maker, a release gate for a social app.</span></a></li>
+          <li><a class="wf-row" href="./case-study/index.html"><span class="wf-row__n">03</span><span class="wf-row__title">Business case</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">One phone launch, three teams and a demand forecast that is higher than the stock.</span></a></li>
+          <li><a class="wf-row" href="./field-card.html"><span class="wf-row__n">04</span><span class="wf-row__title">Field card</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">The checks, formulas and thresholds on one A4 page to print.</span></a></li>
+          <li><a class="wf-row" href="./homework.html"><span class="wf-row__n">05</span><span class="wf-row__title">Take-home</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Build two forecasts on the dataset, compare their error and write down your service level.</span></a></li>
+        </ol>
+        <p class="hub-data wf-small">Dataset for the take-home: <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of synthetic demand.</p>
+      </section>
+    </div>
+
+    <div class="hub-aside">
+      <section class="wf-section" aria-labelledby="learn-title">
+        <header class="wf-kopf"><h2 class="wf-h2" id="learn-title">What you can do afterwards</h2></header>
+        <ol class="wf-steps">
+          <li>Check, in euros, whether a model beats the rule “same weekday last week”.</li>
+          <li>Set the service level from the cost of too much and too little stock.</li>
+          <li>Decide which signal stops the automation and who approves the restart.</li>
+          <li>Write a go/no-go rule with a threshold and a named approver.</li>
+        </ol>
+      </section>
+    </div>
   </div>
 
-  <main class="body" id="main" tabindex="-1" aria-label="Workshop overview">
-    <div>
-      <div class="kick">Workshop 01 &middot; Forecasting decisions &middot; Hub &middot; English</div>
-      <h1 class="h1">Turn a forecast<br>into a <span class="em">decision.</span></h1>
-      <p class="lede">A forecast only earns its keep when it changes a decision. In about 90 minutes you price the cost of being wrong, size the buffer that balances it, and leave with <b>a go/no-go policy you can defend</b>, across three operating perspectives and a live demand simulator.</p>
-      <p class="meta"><b>~90 minutes</b> &middot; Self-study kit &middot; Offline&#8209;ready &middot; No sign&#8209;up</p>
-      <nav class="ctas" aria-label="Open workshop surfaces"><a class="cta" href="./hands-on.html"><span class="cn">02</span><span class="cl">Hands&#8209;on lab<span class="ar">&#8599;</span></span><span class="cd">Three decision labs</span></a><a class="cta" href="./case-study/index.html"><span class="cn">03</span><span class="cl">Business case<span class="ar">&#8599;</span></span><span class="cd">One launch, three numbers</span></a><a class="cta" href="./field-card.html"><span class="cn">04</span><span class="cl">Field card<span class="ar">&#8599;</span></span><span class="cd">The one-page checklist</span></a><a class="cta" href="./homework.html"><span class="cn">05</span><span class="cl">Take&#8209;home<span class="ar">&#8599;</span></span><span class="cd">Two forecasts, four numbers</span></a></nav>
-      <p class="dataset"><a href="./data/demand-weekly.csv" download>Dataset &middot; CSV, 104 weeks</a> <span>(<code>demand-weekly.csv</code>, used in the take-home)</span></p>
-    </div>
-    <div class="panel">
-      <div class="plabel">What you'll learn</div>
-      <div class="learn"><span class="ln">01</span><span class="lt">Make a model earn its workflow: beat the process you already trust, in dollars</span></div>
-      <div class="learn"><span class="ln">02</span><span class="lt">Price the buffer: service level is a cost decision, not a gut feeling</span></div>
-      <div class="learn"><span class="ln">03</span><span class="lt">Run the production loop: deploy cheap, watch leading signals, retrain through a gate</span></div>
-      <div class="learn"><span class="ln">04</span><span class="lt">Leave with a go/no-go policy you can defend</span></div>
-    </div>
-  </main>
+  <div class="wf-wrap">
+    <section class="wf-section" aria-labelledby="lens-title">
+      <header class="wf-kopf"><h2 class="wf-h2" id="lens-title">Three practice companies</h2><p>Invented figures, no real company's system</p></header>
+      <table class="wf-table hub-lenses">
+        <thead><tr><th scope="col">Company</th><th scope="col">The question it asks</th></tr></thead>
+        <tbody>
+          <tr><td>Parcel network</td><td>How much delivery capacity do we plan for each ZIP cluster tomorrow?</td></tr>
+          <tr><td>Device maker</td><td>What happens when every tier adds its own buffer on top of the order below it?</td></tr>
+          <tr><td>Social app</td><td>When may a live forecast release capacity without a person checking it?</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</main>
 
-  <footer class="foot">
-    <div class="tk-lab">Three<br>perspectives</div>
-    <div class="story-row">
-      <div class="story"><div><div class="sco">Parcel network</div><div class="sctag">Operations at scale</div></div></div>
-      <div class="story"><div><div class="sco">Device maker</div><div class="sctag">Planning &amp; precision</div></div></div>
-      <div class="story"><div><div class="sco">Social app</div><div class="sctag">Signals &amp; growth</div></div></div>
-    </div>
-    <p class="disclaimer">Teaching lenses with invented figures; not any company's real system.</p>
-  </footer>
-</div>
 <footer class="wf-foot">
   <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>
 </footer>
