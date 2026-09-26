@@ -26,6 +26,12 @@ const WORKSHOP_ROUTES = [
     enHeading: "Are your data ready for AI?",
     materialCount: 7,
   },
+  {
+    path: "/workshops/esg-berichte-mit-ki",
+    deHeading: "ESG-Berichte mit KI: Von Rohdaten zu klaren Erkenntnissen",
+    enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
+    materialCount: 7,
+  },
 ] as const;
 
 const GERMAN_INTERFACE_TOKENS =
