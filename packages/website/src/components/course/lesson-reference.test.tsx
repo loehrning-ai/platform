@@ -14,13 +14,12 @@ describe("LessonReference", () => {
       </LessonReference>,
     );
 
+    const block = container.querySelector("[data-lesson-reference-block]");
+    expect(block).toHaveClass("border-t-2", "border-foreground");
+    expect(block?.className).not.toMatch(/border-l-|bg-brand-orange|uppercase|font-mono/);
     const details = container.querySelector("details[data-lesson-reference]");
     expect(details).toHaveAttribute("open");
-    expect(details?.className).not.toMatch(/border-l-|bg-brand-orange|uppercase|font-mono/);
-    expect(details?.querySelector("summary")).toHaveClass("grid-cols-1");
-    expect(details?.querySelector("summary")).toHaveClass(
-      "sm:grid-cols-[minmax(0,1fr)_auto]",
-    );
+    expect(block).toContainElement(details as HTMLElement);
     expect(screen.getByText("Lesson")).toHaveClass("text-label");
     expect(screen.getByText("Evidence before automation")).toBeInTheDocument();
     expect(
@@ -62,6 +61,55 @@ describe("LessonReference", () => {
     expect(kicker).toHaveClass("text-label", "text-muted-foreground", "tabular-nums");
     expect(kicker.className).not.toMatch(/uppercase|font-mono|text-brand-orange/);
     expect(screen.queryByText("Lektion")).not.toBeInTheDocument();
+  });
+
+  it("keeps the heading and objective out of the disclosure so the toggle has a short name", () => {
+    const { container } = render(
+      <LessonReference
+        locale="de"
+        title="Belege vor Automatisierung"
+        objective="Behauptungen von geprüften Beobachtungen trennen."
+      >
+        <p>Text</p>
+      </LessonReference>,
+    );
+
+    const summary = container.querySelector(
+      "details[data-lesson-reference] > summary",
+    ) as HTMLElement;
+    expect(summary).not.toBeNull();
+    expect(summary.querySelector('[role="heading"]')).toBeNull();
+    expect(summary).not.toHaveTextContent("Belege vor Automatisierung");
+    expect(summary).not.toHaveTextContent("Behauptungen");
+    expect(summary).toHaveClass("min-h-11");
+    // Only the visible verb for the current state plus its context.
+    expect(summary.querySelector(".sr-only")).toHaveTextContent("Lektionstext");
+
+    const heading = screen.getByRole("heading", {
+      level: 1,
+      name: "Belege vor Automatisierung",
+    });
+    expect(heading.closest("details")).toBeNull();
+    expect(heading).toHaveClass("text-fluid-h2", "font-bold");
+    expect(
+      screen.getByText("Behauptungen von geprüften Beobachtungen trennen.")
+        .closest("details"),
+    ).toBeNull();
+  });
+
+  it("hides the chapter's own eyebrow and meta row so only the head names the lesson", () => {
+    const { container } = render(
+      <LessonReference locale="de" title="Datenbereinigung">
+        <p>Text</p>
+      </LessonReference>,
+    );
+    expect(
+      container.querySelector("[data-lesson-reference-content]"),
+    ).toHaveClass(
+      "[&_h1]:hidden",
+      "[&_.hero-eyebrow]:hidden!",
+      "[&_.hero-meta]:hidden!",
+    );
   });
 
   it("keeps exactly one accessible level-one heading when closed or open", () => {

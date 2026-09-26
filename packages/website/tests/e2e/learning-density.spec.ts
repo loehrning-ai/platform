@@ -198,8 +198,10 @@ test.describe("learning density and value contract", () => {
       const content = page.locator("[data-lesson-shell-content]");
       const reference = page.locator("details[data-lesson-reference]");
       await expect(reference).toHaveCount(1);
+      // The lesson head (Kopflinie, title) and the open text form one block,
+      // and that block is the first thing in the reader.
       await expect(content.locator(":scope > *").first()).toHaveAttribute(
-        "data-lesson-reference",
+        "data-lesson-reference-block",
         "true",
       );
       await expect(reference.locator("summary")).toBeVisible();

@@ -1197,11 +1197,24 @@ describe("LessonMissionControl", () => {
     for (const target of targets) {
       expect(target).toHaveClass("min-h-11", "motion-reduce:transition-none");
       expect(target.closest("li")).toHaveClass("min-w-0");
-      expect(target.querySelector("span:last-child")).toHaveClass(
+      const label = target.querySelector("span:last-child");
+      // The label may shrink and break an overlong word (high zoom), but it
+      // hyphenates first and never splits a word that fits on its own line.
+      expect(label).toHaveClass(
+        "min-w-0",
         "max-w-full",
-        "[overflow-wrap:anywhere]",
+        "hyphens-auto",
+        "[overflow-wrap:break-word]",
       );
+      expect(label).not.toHaveClass("[overflow-wrap:anywhere]");
+      // On phones the number chip gives way to the label unless it carries
+      // the "OK" of a finished beat.
+      const chip = target.querySelector("span[aria-hidden='true']");
+      expect(chip).toHaveClass("hidden", "min-[420px]:grid");
     }
+    expect(
+      circuit.closest("[data-lesson-mission]"),
+    ).toHaveClass("[overflow-wrap:break-word]");
     expect(
       within(circuit).getByRole("button", {
         name: "Festlegen: offen, aktuell",
