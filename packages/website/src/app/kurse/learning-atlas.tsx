@@ -455,7 +455,7 @@ export function LearningAtlas({
                   onFocus={revealInRail}
                   data-learning-goal={candidate.id}
                   className={cx(
-                    "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] max-lg:focus-visible:outline-offset-[-3px] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
+                    "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
                     goalIndex > 0 && "lg:-ml-px",
                     selected
                       ? "z-[1] border-foreground bg-foreground text-background"
