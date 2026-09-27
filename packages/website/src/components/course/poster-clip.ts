@@ -823,27 +823,32 @@ export function posterPathBounds(d: string): Box | null {
 }
 
 /**
- * Whether a point is inside the filled path (nonzero rule), from a fine
- * polyline of every segment. For tests that compare two drawings.
+ * A hit test for the filled path (nonzero rule) on a fine polyline of every
+ * segment, for tests that compare two drawings point by point.
  */
-export function posterPathContains(d: string, point: Point): boolean {
-  let winding = 0;
+export function posterPathHitTest(d: string): (point: Point) => boolean {
+  const edges: [Point, Point][] = [];
   for (const subpath of parsePath(d)) {
     for (const segment of subpath) {
       const steps = segment.kind === "line" ? 1 : 256;
       let previous = segment.from;
       for (let step = 1; step <= steps; step += 1) {
         const next = step === steps ? segment.to : segmentPoint(segment, step / steps);
-        if (previous[1] <= point[1] !== next[1] <= point[1]) {
-          const cross =
-            (next[0] - previous[0]) * (point[1] - previous[1]) -
-            (point[0] - previous[0]) * (next[1] - previous[1]);
-          if (next[1] > previous[1] && cross > 0) winding += 1;
-          else if (next[1] <= previous[1] && cross < 0) winding -= 1;
-        }
+        edges.push([previous, next]);
         previous = next;
       }
     }
   }
-  return winding !== 0;
+  return (point) => {
+    let winding = 0;
+    for (const [previous, next] of edges) {
+      if (previous[1] <= point[1] === next[1] <= point[1]) continue;
+      const cross =
+        (next[0] - previous[0]) * (point[1] - previous[1]) -
+        (point[0] - previous[0]) * (next[1] - previous[1]);
+      if (next[1] > previous[1] && cross > 0) winding += 1;
+      else if (next[1] <= previous[1] && cross < 0) winding -= 1;
+    }
+    return winding !== 0;
+  };
 }
